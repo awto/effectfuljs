@@ -1,0 +1,47 @@
+{
+  "name": "@mfjs/compiler",
+  "version": "1.0.0",
+  "description": "Embedding effects in JavaScript using Monads",
+  "main": "compiler.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "coffee -co . src/",
+    "prepublish": "npm run build"
+  },
+  "bin": {
+    "mfjsc": "./bin/mfjsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/awto/mfjs-compiler.git"
+  },
+  "keywords": [
+    "promise",
+    "async",
+    "monad",
+    "linq"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "expect.js": "^0.3.1",
+    "markdox": "^0.1.10",
+    "mocha": "^2.4.5",
+    "rimraf": "^2.5.2"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "escodegen": "^1.8.0",
+    "esprima": "^2.7.2",
+    "esquery": "^0.4.0",
+    "esutils": "^2.0.2",
+    "findup": "^0.1.5",
+    "mkdirp": "^0.5.1",
+    "optimist": "^0.6.1",
+    "resolve": "^1.1.7",
+    "through2": "^2.0.1"
+  }
+}

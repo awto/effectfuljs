@@ -1,0 +1,16 @@
+node_modules
+dist
+tmp-*
+*.js
+*.orig
+!src/**/*.js
+!test/**/*.js
+!samples/**/*.js
+!tests/**/*.js
+!Gulpfile.js
+!bin.js
+*.log
+*~
+*.map
+.DS_Store
+
