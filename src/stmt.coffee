@@ -138,7 +138,7 @@ ActiveVisitor::ForStatement = (stmt, label) ->
     if init.type is "VariableDeclaration"
       wbody.push init
       exprs = []
-      for i in init.declarations
+      for i in init.declarations when i.init
         exprs.push(kit.assign(i.id, i.init))
       stmt.init = kit.seqExpr exprs...
     else
@@ -149,14 +149,17 @@ ActiveVisitor::ForStatement = (stmt, label) ->
   wbody.push(lexpr)
   return @ctx.stmts(wbody)
 
-ActiveVisitor::ForInStatement = (stmt, label) ->
+wrapP = (nowrap, v) ->
+  if nowrap then v else kit.call(kit.packId("p"),[v])
+
+rewriteForIter = (itername, stmt, label, nowrap) ->
   {left,right,body} = stmt
   iterName = @ctx.uniqId("iter")
-  iterCtr = kit.call(kit.packId("forInIterator"),[right])
-  init = kit.call(kit.packId("p"),[iterCtr])
+  iterCtr = kit.call(kit.packId(itername),[right])
+  init = wrapP(nowrap, iterCtr)
   iterDecl = {type:"VariableDeclarator",id:iterName,init}
   resDecls = [iterDecl]
-  decls = {type: "VariableDeclaration", kind: "var", declarations: resDecls}
+  init = {type: "VariableDeclaration", kind: "var", declarations: resDecls}
   if left.type is "VariableDeclaration"
     throw new Error("NOT IMPLEMENTED") unless left.declarations.length is 1
     stmt.left = pat = left.declarations[0].id
@@ -165,11 +168,24 @@ ActiveVisitor::ForInStatement = (stmt, label) ->
     pat = left
   body = kit.flatBlock(kit.exprStmt(
     kit.assign(pat,kit.mem(iterName,kit.id("value")))),body)
-  update = kit.assign(iterName,
-    kit.call(kit.packId("p"),[kit.call(iterName,[])]))
-  b = @ForStatement(
-    {type:"ForStatement",init:decls,test:iterName,update,body}, label)
-  @ctx.bindNode(b,[@ctx.expr(stmt.right).setPosition([iterCtr.arguments,0])])
+  update = kit.assign(iterName, wrapP(nowrap,kit.call(iterName,[])))
+  [{type:"ForStatement",init,test:iterName,update,body},iterCtr]
+
+commonForIter = (itername, stmt, label) ->
+  [b,iterCtr] = rewriteForIter.call(@,itername,stmt,label)
+  bn = @ForStatement(b, label)
+  @ctx.bindNode(bn,[@ctx.expr(stmt.right).setPosition([iterCtr.arguments,0])])
+
+ActiveVisitor::ForInStatement = (stmt, label) ->
+  commonForIter.call(@, "forInIterator", stmt, label)
+
+ActiveVisitor::ForOfStatement = (stmt, label) ->
+  name = if @policy.opts.varCapt is false then "iterator" else "iteratorBuf"
+  b = commonForIter.call(@, name, stmt, label)
+  unless @policy.opts.keepForOf
+    [orig] = rewriteForIter.call(@, "iterator", stmt, label, true)
+    b.setOrig(orig)
+  b
 
 commonWhile = (pre) ->
   (stmt, label) ->

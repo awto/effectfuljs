@@ -86,7 +86,7 @@ Visitor::CallExpression = (e) ->
 directive.$packVar = directive.reflect = (e,arg) ->
   bnd = @policy.opts.bind
   e = @expr arg
-  return @effValNode(e.pureExpr) if bnd and e.pureExpr
+  return @effValNode(e.pureExpr).morphInit(e) if bnd and e.pureExpr
   return e
 
 directive.reify = (e, arg) ->
@@ -220,7 +220,9 @@ ActiveVisitor::ConditionalExpression = (e) ->
     n = @ctx.pureExprNode(e)
   @ctx.bindNode(n, [@ctx.expr(e.test).setPosition([e,"test"])])
 
-directive.answer = directive.yield = (s,arg) -> @root.yieldNode(@expr(arg))
+directive.answer = directive.yield = (s,arg) ->
+  e = @expr(arg) if arg?
+  @root.yieldNode(e)
 
 ActiveVisitor::YieldExpression = (e) ->
   @ctx.root.yieldNode(@ctx.expr(e.argument))

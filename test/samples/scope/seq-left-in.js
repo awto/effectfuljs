@@ -113,3 +113,13 @@ function al() {
   i++;
   eff5(i);
 }
+
+M.profile('defaultMinimal');
+
+function b() {
+  var i = new Something();
+  i = M(i.next());
+  i = M(i.next());
+  i = M(i.next());
+}
+

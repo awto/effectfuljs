@@ -366,6 +366,21 @@ And the imported core library should have following free functions:
                 modern ES function spreads after the tool will start
                 generating it
 
+The compiler requires specific iterator interface. It is not compatible with ES
+iterators because they are mutable, while for some monads execution control may
+backtrack to some already passed position. In fact if ES allowed such iterators
+cloning this compiler wouldn't be needed.
+
+The iterator is a function object, with `value` field for current value. 
+
+ * `M.iterator` - takes ES iterable object returns mfjs compatible iterator, it
+    is just interface adapter, but works like ES one, taking next iterator
+    invalidates previous ones, returned iterator already points to first element
+    or null if input collection is empty
+ * `M.iteratorBuf` - same as `M.iterator` but it will keep all passed values
+    so all iterators are valid
+ * `M.forInIterator` - returns mfjs compatible iterator for `for-in` statement
+
 ## Selective transform
 
 Because of coercions it is pretty ok to transform just everything with "full"
@@ -468,7 +483,8 @@ Here is the set of possible options:
    declaration (default is true).
  * `keepScope` - if it is true the compiler doesn’t remove useless M.scope
     calls
- * `varCapt` - doesn’t do variable capturing if false
+ * `varCapt` - doesn't do variable capturing if false
+ * `keepForOf` - for pure functions don't translate `for-of` statements 
 
 
 ## Directives

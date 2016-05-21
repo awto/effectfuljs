@@ -38,6 +38,11 @@ function e() {
   M["yield"](3);
 }
 
+function f() {
+  M.answer(1);
+  M.answer();
+  M.answer(3);
+}
 
 
 

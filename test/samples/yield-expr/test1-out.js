@@ -60,3 +60,10 @@ function e() {
         }).mopt();
     });
 }
+function f() {
+    return M.scope(function (root) {
+        return root(1).mopt().mbind(root).mopt().mbind(function () {
+            return root(3);
+        }).mopt();
+    });
+}

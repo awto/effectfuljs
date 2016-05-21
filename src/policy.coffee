@@ -127,6 +127,7 @@ options =
   branch: true
   ref: true
   remove: true
+  keepForOf: true
 
 class Policy
   constructor: (@root,start) ->

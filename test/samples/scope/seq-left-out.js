@@ -187,3 +187,23 @@ function al() {
         });
     });
 }
+
+function b() {
+    var i;
+    i = new Something();
+    return M(i.next()).mbind(function (b) {
+        return function (i) {
+            i = b;
+            return M(i.next()).mbind(function (b1) {
+                return function (i) {
+                    i = b1;
+                    return M(i.next()).mapply(function (b2) {
+                        return function (i) {
+                            i = b2;
+                        }(i);
+                    });
+                }(i);
+            });
+        }(i);
+    });
+}
