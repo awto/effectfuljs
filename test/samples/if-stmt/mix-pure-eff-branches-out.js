@@ -1,7 +1,7 @@
 function a() {
     return M.scope(function (root) {
         if (true)
-            return eff(1).mbind(root);
+            return M(eff(1)).mbind(root);
         else
             return root(3);
     });
@@ -60,7 +60,7 @@ function f() {
     return M.scope(function (root) {
         return M(eff('1')).mbind(function (b) {
             if (b)
-                return eff('i').mbind(root);
+                return M(eff('i')).mbind(root);
         }).mbind(function () {
             return eff('2');
         });

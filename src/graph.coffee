@@ -516,7 +516,7 @@ class BreakNode extends JumpNode
       return builder.empty()
     lab = @dst.getLabel()
     if @val
-      vexpr = @val.getBuilder().toExpr() if @val?
+      vexpr = @val.getBuilder().coerceObj().toExpr() if @val?
       expr = if @val.eff
         kit.mbind([vexpr],lab)
       else

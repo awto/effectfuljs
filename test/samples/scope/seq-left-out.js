@@ -187,7 +187,6 @@ function al() {
         });
     });
 }
-
 function b() {
     var i;
     i = new Something();
