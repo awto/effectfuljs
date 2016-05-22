@@ -51,7 +51,7 @@ practically useful in JavaScript but not already available in there.
 ### Command line tool
 
 In the current version it is very simple, offering only running transform
-and saving results to another folder.
+and saving results to another folder or file.
 
     $ npm install @mfjs/compiler
     $ mfjsc input.js --output dist
@@ -62,6 +62,8 @@ command line encoding. For example namespace for core and translation profile
 may be specified via command line too:
 
     $ mfjsc input.js --output dist --transform.packageVar=M --transform.start=defaultFull
+
+It will use stdin/stdout if no input/output files are specified.
 
 ### Browserify transform
 

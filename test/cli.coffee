@@ -13,5 +13,16 @@ describe 'cmd', ->
     execSync(CMD)
     expect(compiler.print(fs.readFileSync(path.join(IDIR,'test1-out.js'),'utf-8')))
       .to.equal(compiler.print(fs.readFileSync(path.join(ODIR,'test1-in.js'),'utf-8')))
-
+    CMD="mfjsc #{path.join(IDIR,'test1-in.js')} --transform.packageVar=KK --transform.start=minimal --dest=#{ODIR}/res1.js"
+    execSync(CMD)
+    expect(compiler.print(fs.readFileSync(path.join(IDIR,'test1-out.js'),'utf-8')))
+      .to.equal(compiler.print(fs.readFileSync(path.join(ODIR,'res1.js'),'utf-8')))
+    CMD="mfjsc #{path.join(IDIR,'test1-in.js')} --transform.packageVar=KK --transform.start=minimal --dest=res3.js -o #{ODIR}"
+    execSync(CMD)
+    expect(compiler.print(fs.readFileSync(path.join(IDIR,'test1-out.js'),'utf-8')))
+      .to.equal(compiler.print(fs.readFileSync(path.join(ODIR,'res3.js'),'utf-8')))
+    CMD="mfjsc --transform.packageVar=KK --transform.start=minimal < #{path.join(IDIR,'test1-in.js')} > #{ODIR}/res2.js"
+    execSync(CMD)
+    expect(compiler.print(fs.readFileSync(path.join(IDIR,'test1-out.js'),'utf-8')))
+      .to.equal(compiler.print(fs.readFileSync(path.join(ODIR,'res2.js'),'utf-8')))
 

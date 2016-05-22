@@ -48,8 +48,8 @@ convOptions = (v,fn) ->
     kit.merge(v, require(path.join(f,CONFIG_NAME))) if f?
   v
 
-root.compile = compile = (str, opts) ->
-  opts = convOptions opts
+root.compile = compile = (str, opts, fn) ->
+  opts = convOptions opts, fn
   ast = esprima.parse str, opts.parser
   nast = transform(ast,opts)
   escodegen.generate nast, opts.printer
