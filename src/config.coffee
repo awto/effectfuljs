@@ -23,7 +23,6 @@ module.exports =
             window: true
             process: true
             assert: true
-          libVar: true
         select: "matchCallName"
         cases:
           false:
