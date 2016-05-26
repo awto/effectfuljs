@@ -42,6 +42,10 @@ root.selector =
     (s) ->
       v = sel(s)
       return @cases[v] if v?
+  prop: (n) ->
+    (s) ->
+      @cases[s.generator ? false]
+  generatorCall: -> false
   matchDeclName: (s,x,tpref) ->
     m = @match
     n = kit.getId(s.id)
@@ -128,6 +132,7 @@ options =
   ref: true
   remove: true
   keepForOf: true
+  mopt: true
 
 class Policy
   constructor: (@root,start) ->
@@ -204,7 +209,10 @@ class Policy
     console.log("#{tpref}: opts #{JSON.stringify(@opts)}") if trace
     oldName = @name
     @libVar = false
+    index = @index
+    @index = 0
     res = fun()
+    @index = index+1
     @name = oldName
     @op = oldOp
     if oldState?

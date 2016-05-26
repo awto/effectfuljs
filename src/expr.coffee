@@ -83,11 +83,17 @@ Visitor::CallExpression = (e) ->
   builder.add(i, args, x) for i, x in args
   builder.result()
 
-directive.$packVar = directive.reflect = (e,arg) ->
+directive.$packVar = (e,arg) ->
   bnd = @policy.opts.bind
   e = @expr arg
   return @effValNode(e.pureExpr).morphInit(e) if bnd and e.pureExpr
   return e
+
+directive.reflect = (e,arg) ->
+  bnd = @policy.opts.bind
+  expr = kit.call(kit.packId("reflect"), [arg])
+  @bindNode(@effValNode(expr),
+    [@expr(arg).setPosition([expr.arguments,0])])
 
 directive.reify = (e, arg) ->
   @reifyNode().setBody(@expr(arg))
@@ -225,6 +231,10 @@ directive.answer = directive.yield = (s,arg) ->
   @root.yieldNode(e)
 
 ActiveVisitor::YieldExpression = (e) ->
+  if @ctx.policy.opts.mopt is false
+    if e.delegate
+      return directive.$packVar.call(@ctx,e,e.argument)
+    return directive.reflect.call(@ctx,e,e.argument)
   @ctx.root.yieldNode(@ctx.expr(e.argument))
 
 ActiveVisitor::BinaryExpression = (e) ->

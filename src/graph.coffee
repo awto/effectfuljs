@@ -201,7 +201,6 @@ class BlockNode extends DynNode
   _getBuilder: ->
     cur = builder.empty()
     {block} = @
-    bl = block.length
     for i,x in block
       cur = cur.append(i.getBuilder())
     cur

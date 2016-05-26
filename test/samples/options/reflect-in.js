@@ -1,7 +1,7 @@
 function a() {
     eff("a");
     M.reflect(monadish);
-    M.reflect(eff(1));
+    M(eff(1));
     M.reflect(monadish + 2);
     console.log(M.reify(function() {
         eff(1);

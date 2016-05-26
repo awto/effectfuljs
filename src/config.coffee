@@ -77,5 +77,20 @@ module.exports =
         cases:
           true: sub: "nothing"
           false: sub: "minimal"
+    regenerator:
+      Function:
+        select: "prop('generator')"
+        cases:
+          true: sub: "regenerate"
+    regenerate:
+      compile: "always"
+      coerce: "none"
+      Function:
+        select: "prop('generator')"
+        cases:
+          false: sub: "regenerator"
+      YieldExpression:
+        mopt: false
+        bind: true
 
 

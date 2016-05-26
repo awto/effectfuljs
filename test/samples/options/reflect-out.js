@@ -1,10 +1,10 @@
 function a() {
     return M(eff('a')).mbind(function () {
-        return monadish;
+        return M.reflect(monadish);
     }).mbind(function () {
         return eff(1);
     }).mbind(function () {
-        return monadish + 2;
+        return M.reflect(monadish + 2);
     }).mapply(function () {
         console.log(M.reify(function () {
             return M(eff(1)).mbind(function () {
