@@ -244,7 +244,8 @@ Many monads may support multiply inner values in single monadic value.
 These are reactive programming, logical programming monads etc.
 
 If monad support this you may use either methods from the interface directly
-or directives (`M.answer` or `M.yield`), `yield` expression. All three are
+or directives (`M.answer` or `M.yield`), `yield` expression
+(if not in "regenerator" profile). All three are
 aliases and have the same encoding. It acts similar to return statement but
 allows continuing same function executions after the point where they were
 invoked adding more answers to result of the function.
@@ -415,6 +416,9 @@ be returned. There are a few predefined states.
     there window, process, and console functions are exceptions)
  * "full" - same as "defaultFull" but starts immediately
  * "minimal" - same as "defaultMinimal" but starts immediately
+ * "regenerator" - very similar to minimal mode but uses generators syntax
+   extensions, it will compile without coercions all `function*`, and in them
+   treat `yield` expression as `M.refect` and `yield*` as `M` in minimal mode. 
 
 ### M.option
 
@@ -487,7 +491,7 @@ Here is the set of possible options:
     calls
  * `varCapt` - doesn't do variable capturing if false
  * `keepForOf` - for pure functions don't translate `for-of` statements 
-
+ * `mopt` - translates `yield` statement to `mopt`, default is true
 
 ## Directives
 
