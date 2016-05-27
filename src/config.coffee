@@ -78,6 +78,7 @@ module.exports =
           true: sub: "nothing"
           false: sub: "minimal"
     regenerator:
+      compile: true
       Function:
         select: "prop('generator')"
         cases:
