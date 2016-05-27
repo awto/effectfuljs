@@ -12,7 +12,7 @@ function aij() {
     var i, j, y;
     i++;
     return M(eff(i)).mbind(function () {
-        return function (i) {
+        return function (i, j) {
             j = 2;
             i++;
             return M(eff(j)).mbind(function () {
@@ -20,7 +20,7 @@ function aij() {
                     return eff(j);
                 });
             });
-        }(i);
+        }(i, j);
     });
 }
 function aij1() {
@@ -48,7 +48,7 @@ function aij2() {
         return function (i) {
             i += 2;
             return M(eff(i)).mbind(function () {
-                return function (i) {
+                return function (i, j) {
                     j = 2;
                     i++;
                     return M(eff(j)).mbind(function () {
@@ -56,7 +56,7 @@ function aij2() {
                             return eff(j);
                         });
                     });
-                }(i);
+                }(i, j);
             });
         }(i);
     });
@@ -66,7 +66,7 @@ function aij3() {
     j = 0;
     i++;
     return M(eff(i)).mbind(function () {
-        return function (i) {
+        return function (i, j) {
             j = 2;
             i++;
             return M(eff(j)).mbind(function () {
@@ -74,7 +74,7 @@ function aij3() {
                     return eff(j);
                 });
             });
-        }(i);
+        }(i, j);
     });
 }
 function ar() {
@@ -89,7 +89,7 @@ function ar() {
                         return function (i) {
                             i++;
                             return M(eff(i)).mbind(function () {
-                                return function (i) {
+                                return function (i, j) {
                                     j = 2;
                                     i += 1;
                                     return M(eff(i)).mbind(function () {
@@ -109,7 +109,7 @@ function ar() {
                                             }(i);
                                         });
                                     });
-                                }(i);
+                                }(i, j);
                             });
                         }(i);
                     });
@@ -130,7 +130,7 @@ function a() {
                         return function (i) {
                             i++;
                             return M(eff(i)).mbind(function () {
-                                return function (i) {
+                                return function (i, j) {
                                     j = 2;
                                     i += 1;
                                     return M(eff(i)).mbind(function () {
@@ -152,7 +152,7 @@ function a() {
                                             });
                                         });
                                     });
-                                }(i);
+                                }(i, j);
                             });
                         }(i);
                     });

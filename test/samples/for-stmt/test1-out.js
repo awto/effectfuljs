@@ -63,17 +63,19 @@
 function a() {
     var i;
     return M(eff('b')).mbind(function () {
-        i = 0;
-        return M.forPar(function (i) {
-            return i < 3;
-        }, function (i) {
-            if (i === 2)
-                console.log(i);
-            return eff(i);
-        }, function (i) {
-            i++;
-            return i;
-        }, i);
+        return function (i) {
+            i = 0;
+            return M.forPar(function (i) {
+                return i < 3;
+            }, function (i) {
+                if (i === 2)
+                    console.log(i);
+                return eff(i);
+            }, function (i) {
+                i++;
+                return i;
+            }, i);
+        }(i);
     }).mbind(function () {
         return eff('a');
     });
@@ -81,24 +83,26 @@ function a() {
 function a1() {
     var i, j;
     return M(eff('b')).mbind(function () {
-        i = 0;
-        j = 10;
-        return M.forPar(M.spread(function (i, j) {
-            return i < 3;
-        }), M.spread(function (i, j) {
-            if (i === 2)
-                console.log(i, j);
-            return eff(i, j);
-        }), M.spread(function (i, j) {
-            i++, j += 2;
-            return [
+        return function (i) {
+            i = 0;
+            j = 10;
+            return M.forPar(M.spread(function (i, j) {
+                return i < 3;
+            }), M.spread(function (i, j) {
+                if (i === 2)
+                    console.log(i, j);
+                return eff(i, j);
+            }), M.spread(function (i, j) {
+                i++, j += 2;
+                return [
+                    i,
+                    j
+                ];
+            }), [
                 i,
                 j
-            ];
-        }), [
-            i,
-            j
-        ]);
+            ]);
+        }(i);
     }).mbind(M.spread(effRes));
 }
 function b() {

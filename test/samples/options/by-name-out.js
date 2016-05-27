@@ -28,11 +28,13 @@ function aM() {
     return effM(1).mbind(function () {
         return effM(2);
     }).mapply(function () {
-        y = function () {
-            eff(1);
-            effM(2);
-            eff(3);
-        };
+        return function (y) {
+            y = function () {
+                eff(1);
+                effM(2);
+                eff(3);
+            };
+        }(y);
     });
 }
 function bM() {

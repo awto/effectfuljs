@@ -29,7 +29,7 @@ function ar2() {
             return function (i) {
                 i++;
                 return M(effl2(i)).mbind(function () {
-                    return function (i) {
+                    return function (i, j) {
                         j = 2;
                         i += 1;
                         return M(effl3(i)).mbind(function () {
@@ -50,7 +50,7 @@ function ar2() {
                                 }(j);
                             }).mbind(M.spread(effr8));
                         });
-                    }(i);
+                    }(i, j);
                 });
             }(i);
         });
@@ -69,7 +69,7 @@ function a() {
                     return function (i) {
                         i++;
                         return M(effr3(i)).mbind(function () {
-                            return function (i) {
+                            return function (i, j) {
                                 j = 2;
                                 i += 1;
                                 return M(effr4(i)).mbind(function () {
@@ -89,7 +89,7 @@ function a() {
                                         });
                                     });
                                 });
-                            }(i);
+                            }(i, j);
                         });
                     }(i);
                 });

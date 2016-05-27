@@ -1,5 +1,4 @@
-M.profile("regenerator")
-
+M.profile("regenerator");
 function* a() {
 }
 
@@ -30,3 +29,5 @@ function* g() {
   yield* eff(2);
 }
 
+(function* () {
+}).some();

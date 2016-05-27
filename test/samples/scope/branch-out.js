@@ -242,35 +242,56 @@ function drawM() {
     var c;
     return M.scope(function (root) {
         return M(event('mousedown')).mbind(function (b) {
-            start = b;
-            console.log('s', start);
-            if (!start)
-                return root(def);
-        }).mbind(function () {
-            return M(event('mouseup')).mapply(function (b1) {
-                end = b1;
-            });
-        }).mbind(function () {
-            console.log('e', end);
-            c = '.box';
-            if (!end) {
-                c = '.draw';
-                return M(event('mousemove')).mapply(function (b2) {
-                    return function (end) {
-                        end = b2;
-                        console.log('m', start, end);
-                        return end;
-                    }(end);
+            return function (start) {
+                start = b;
+                console.log('s', start);
+                return M(function () {
+                    if (!start)
+                        return root(def);
+                }()).mapply(function () {
+                    return start;
                 });
-            } else
-                return end;
-        }).mbind(function (end) {
+            }(start);
+        }).mbind(function (start) {
+            return M(event('mouseup')).mapply(function (b1) {
+                return function (end) {
+                    end = b1;
+                    return [
+                        end,
+                        start
+                    ];
+                }(end);
+            });
+        }).mbind(M.spread(function (end, start) {
+            return function (c) {
+                console.log('e', end);
+                c = '.box';
+                return M(function () {
+                    if (!end) {
+                        c = '.draw';
+                        return M(event('mousemove')).mapply(function (b2) {
+                            return function (end) {
+                                end = b2;
+                                console.log('m', start, end);
+                                return end;
+                            }(end);
+                        });
+                    } else
+                        return end;
+                }()).mapply(function (end) {
+                    return [
+                        end,
+                        start
+                    ];
+                });
+            }(c);
+        })).mbind(M.spread(function (end, start) {
             console.log('s:', start);
             console.log('e:', end);
             return root({
                 s: start,
                 e: end
             });
-        });
+        }));
     });
 }

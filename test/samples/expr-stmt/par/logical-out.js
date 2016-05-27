@@ -108,7 +108,9 @@ function a16() {
 function a17() {
     var k;
     return M(eff(1)).mapply(function (b) {
-        k = b ? 2 : 3;
+        return function (k) {
+            k = b ? 2 : 3;
+        }(k);
     });
 }
 function b() {
@@ -187,7 +189,9 @@ function b() {
         }));
     }).mbind(function () {
         return M(eff(1)).mapply(function (b21) {
-            k = b21 ? 2 : 3;
+            return function (k) {
+                k = b21 ? 2 : 3;
+            }(k);
         });
     });
 }

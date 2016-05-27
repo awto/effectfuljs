@@ -48,8 +48,10 @@ function e() {
         n.eff(3),
         n.eff(4)
     ]).mbind(M.spread(function (b1, b) {
-        k = b1 + b;
-        return eff(5);
+        return function (k) {
+            k = b1 + b;
+            return eff(5);
+        }(k);
     }));
 }
 function f() {

@@ -18,16 +18,18 @@ function b() {
     var i;
     var iter;
     return M(eff('d')).mbind(function (b) {
-        iter = M.iteratorBuf(b);
-        return M.forPar(function (iter) {
-            return iter;
-        }, function (iter) {
-            i = iter.value;
-            return eff(i);
-        }, function (iter) {
-            iter = iter();
-            return iter;
-        }, iter);
+        return function (iter) {
+            iter = M.iteratorBuf(b);
+            return M.forPar(function (iter) {
+                return iter;
+            }, function (iter) {
+                i = iter.value;
+                return eff(i);
+            }, function (iter) {
+                iter = iter();
+                return iter;
+            }, iter);
+        }(iter);
     }).mbind(function () {
         return eff(i);
     });

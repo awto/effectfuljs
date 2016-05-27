@@ -23,10 +23,11 @@ class VarUsage
       w.fin = true unless @after[i]
       w.use = true if @uses[i]
       if @sets[i]
-        if @before[i]
-          w.mod = true
-        else
-          w.set = true
+        #if @before[i]
+        #  w.mod = true
+        #else
+        #  w.set = true
+        w.mod = w.set = true
       if @upds[i]
         w.use = w.mod = true
     deps
@@ -39,10 +40,11 @@ class VarUsage
         @upds[i] = true
   # marks variable with the `name` as used on RHS
   addAssign: (name) ->
-    if @uses[name]
-      @upds[name] = true
-    else
-      @sets[name] = true
+    #if @uses[name]
+    #  @upds[name] = true
+    #else
+    #  @sets[name] = true
+    @upds[name] = true
     @mods[name] = true
     @mod = true
     @

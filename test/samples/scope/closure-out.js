@@ -6,17 +6,19 @@ function a() {
             return M(eff(i++, j++)).mconst(j);
         }(j);
     }).mbind(function (j) {
-        k = function () {
-            var j;
-            return M(eff(i, j)).mbind(function () {
-                return function (j) {
-                    return M(eff(i++, j++)).mconst(j);
-                }(j);
-            }).mbind(function (j) {
-                return eff(i, j);
-            });
-        };
-        return M(k()).mconst(j);
+        return function (k) {
+            k = function () {
+                var j;
+                return M(eff(i, j)).mbind(function () {
+                    return function (j) {
+                        return M(eff(i++, j++)).mconst(j);
+                    }(j);
+                }).mbind(function (j) {
+                    return eff(i, j);
+                });
+            };
+            return M(k()).mconst(j);
+        }(k);
     }).mbind(function (j) {
         return M(eff(i++, j++)).mconst(j);
     }).mapply(function (j) {
@@ -34,21 +36,23 @@ function a1() {
             ]);
         }(i, j);
     }).mbind(M.spread(function (i, j) {
-        k = function (i) {
-            var j;
-            return M(eff(i, j)).mbind(function () {
-                return function (i, j) {
-                    return M(eff(i++, j++)).mconst([
-                        i,
-                        j
-                    ]);
-                }(i, j);
-            }).mbind(M.spread(eff));
-        };
-        return M(k()).mconst([
-            i,
-            j
-        ]);
+        return function (k) {
+            k = function (i) {
+                var j;
+                return M(eff(i, j)).mbind(function () {
+                    return function (i, j) {
+                        return M(eff(i++, j++)).mconst([
+                            i,
+                            j
+                        ]);
+                    }(i, j);
+                }).mbind(M.spread(eff));
+            };
+            return M(k()).mconst([
+                i,
+                j
+            ]);
+        }(k);
     })).mbind(M.spread(function (i, j) {
         return M(eff(i++, j++)).mconst([
             i,

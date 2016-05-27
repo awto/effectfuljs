@@ -5,15 +5,17 @@ module.exports = function (M, it) {
                 return M(def.run(function () {
                     var i;
                     return M(def.rec('b')).mbind(function () {
-                        i = 0;
-                        return M.forPar(function (i) {
-                            return i < 3;
-                        }, function (i) {
-                            return def.rec(i);
-                        }, function (i) {
-                            i++;
-                            return i;
-                        }, i);
+                        return function (i) {
+                            i = 0;
+                            return M.forPar(function (i) {
+                                return i < 3;
+                            }, function (i) {
+                                return def.rec(i);
+                            }, function (i) {
+                                i++;
+                                return i;
+                            }, i);
+                        }(i);
                     }).mbind(function () {
                         return def.rec('a');
                     }).mapply(function () {

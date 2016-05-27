@@ -23,3 +23,6 @@ function g() {
         return eff(2);
     });
 }
+(function () {
+    return M.pure();
+}.some());

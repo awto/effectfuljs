@@ -3,8 +3,10 @@ function a() {
         (function () {
             var k;
             return M(eff(2)).mapply(function (b) {
-                k = b;
-                k + 1;
+                return function (k) {
+                    k = b;
+                    k + 1;
+                }(k);
             });
         }());
         return eff(3);
@@ -15,8 +17,10 @@ function b() {
         (function () {
             var k;
             return M(eff(2)).mapply(function (b) {
-                k = b;
-                k + 1;
+                return function (k) {
+                    k = b;
+                    k + 1;
+                }(k);
             });
         }());
         return eff(3);

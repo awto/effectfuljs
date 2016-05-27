@@ -10,7 +10,7 @@
         return j < len;
     }, function (j) {
         i = ref[j];
-        return eff(i);
+        return M(eff(i)).mconst(i);
     }, function (j) {
         j++;
         return j;

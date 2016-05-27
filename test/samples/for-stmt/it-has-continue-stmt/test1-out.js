@@ -11,39 +11,41 @@
             return M.block(function (labCont) {
                 if (i < 3)
                     return M(eff(i)).mbind(function () {
-                        j = 0, len = ref.length;
-                        return M.block(function (brk) {
-                            return M.repeat(function (j) {
-                                return M.block(function (cont) {
-                                    if (j < len) {
-                                        d = ref[j];
-                                        return M(eff(d)).mbind(function (b) {
-                                            if (b)
-                                                return cont();
-                                        }).mbind(function () {
-                                            return M(eff(2)).mbind(function (b1) {
-                                                if (b1)
-                                                    return labCont([
-                                                        j,
-                                                        len
-                                                    ]);
+                        return function (j, len) {
+                            j = 0, len = ref.length;
+                            return M.block(function (brk) {
+                                return M.repeat(function (j) {
+                                    return M.block(function (cont) {
+                                        if (j < len) {
+                                            d = ref[j];
+                                            return M(eff(d)).mbind(function (b) {
+                                                if (b)
+                                                    return cont();
+                                            }).mbind(function () {
+                                                return M(eff(2)).mbind(function (b1) {
+                                                    if (b1)
+                                                        return labCont([
+                                                            j,
+                                                            len
+                                                        ]);
+                                                });
                                             });
-                                        });
-                                    } else
-                                        return brk(j);
-                                }).mapply(function () {
-                                    return function (j) {
-                                        j++;
-                                        return j;
-                                    }(j);
-                                });
-                            }, j);
-                        });
-                    }).mapply(function (j) {
-                        return [
-                            j,
-                            len
-                        ];
+                                        } else
+                                            return brk(j);
+                                    }).mapply(function () {
+                                        return function (j) {
+                                            j++;
+                                            return j;
+                                        }(j);
+                                    });
+                                }, j);
+                            }).mapply(function (j) {
+                                return [
+                                    j,
+                                    len
+                                ];
+                            });
+                        }(j, len);
                     });
                 else
                     return labBrk();

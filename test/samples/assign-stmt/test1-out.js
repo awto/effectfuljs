@@ -1,8 +1,10 @@
 function a() {
     var b1;
     return M(eff(1)).mbind(function (b) {
-        b1 = b;
-        return eff('a');
+        return function (b1) {
+            b1 = b;
+            return eff('a');
+        }(b1);
     }).mbind(function () {
         return eff('b');
     });
@@ -10,8 +12,10 @@ function a() {
 function a1() {
     var b1;
     return M(eff(1)).mbind(function (b) {
-        b1 = b;
-        return eff('a');
+        return function (b1) {
+            b1 = b;
+            return eff('a');
+        }(b1);
     }).mbind(function () {
         return eff('b');
     });
@@ -19,15 +23,21 @@ function a1() {
 function b() {
     var b1, b2;
     return M(eff(1)).mbind(function (b) {
-        b1 = b;
-        return M(eff(2)).mapply(function (b3) {
-            b2 = b3;
-        });
-    }).mbind(function () {
-        return eff(b1);
-    }).mbind(function () {
-        return eff(b2);
-    });
+        return function (b1) {
+            b1 = b;
+            return M(eff(2)).mapply(function (b3) {
+                return function (b2) {
+                    b2 = b3;
+                    return [
+                        b1,
+                        b2
+                    ];
+                }(b2);
+            });
+        }(b1);
+    }).mbind(M.spread(function (b1, b2) {
+        return M(eff(b1)).mconst(b2);
+    })).mbind(eff);
 }
 function b1() {
     var b1, b2;
@@ -46,36 +56,52 @@ function c() {
     var d, e, f, g, j;
     var x, y, z;
     return M(eff(1)).mbind(function (b7) {
-        a = b7;
-        b = 2;
-        return M(eff(3)).mapply(function (b1) {
-            c = b1;
-        });
+        return function (a, b) {
+            a = b7;
+            b = 2;
+            return M(eff(3)).mapply(function (b1) {
+                return function (c) {
+                    c = b1;
+                }(c);
+            });
+        }(a, b);
     }).mbind(function () {
         return eff('a');
     }).mbind(function () {
         return eff('b');
     }).mbind(function () {
         return M(eff(4)).mbind(function (b2) {
-            d = b2;
-            e = 5;
-            return M(eff(6)).mapply(function (b3) {
-                f = b3;
-            });
+            return function (d, e) {
+                d = b2;
+                e = 5;
+                return M(eff(6)).mapply(function (b3) {
+                    return function (f) {
+                        f = b3;
+                    }(f);
+                });
+            }(d, e);
         }).mbind(function () {
             return M(eff(7)).mapply(function (b4) {
-                g = b4;
+                return function (g) {
+                    g = b4;
+                }(g);
             });
         }).mapply(function () {
-            j = 8;
+            return function (j) {
+                j = 8;
+            }(j);
         });
     }).mbind(function () {
         return M(eff('x')).mbind(function (b5) {
-            x = b5;
-            y = 'y';
-            return M(eff('z')).mapply(function (b6) {
-                z = b6;
-            });
+            return function (x, y) {
+                x = b5;
+                y = 'y';
+                return M(eff('z')).mapply(function (b6) {
+                    return function (z) {
+                        z = b6;
+                    }(z);
+                });
+            }(x, y);
         });
     }).mbind(function () {
         return eff(9);
