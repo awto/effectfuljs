@@ -133,6 +133,7 @@ options =
   remove: true
   keepForOf: true
   mopt: true
+  naming: true
 
 class Policy
   constructor: (@root,start) ->
@@ -262,7 +263,7 @@ directive.profile = (e, arg) ->
 Scope::createPolicy = ->
   return new Policy()
 
-directive.require = (e,c) ->
+requireExpr = (c) ->
   cs = kit.exprToStr c
   f = resolve.sync cs, basedir: path.dirname(config.filename)
   try
@@ -278,13 +279,42 @@ directive.require = (e,c) ->
     if n.type is "Identifier"
       varname = n.name
     m._compile.call(@,[varname])
-  return @pureExprNode(kit.call(kit.id("require"),[c]))
+  return kit.call(kit.id("require"),[c])
+
+directive.require = (e,c) ->
+  return @pureExprNode(requireExpr.call(@,c))
 
 directive.ref = (e) ->
   for a in e.arguments
     i = kit.getId(a)
     unless i?
-      throw kit.exprError('expected identifiers',a)
+      throw kit.exprError("expected identifiers",a)
     @refs[i] = true
   @emptyNode()
+
+freeFuns = [
+  "block", "scope", "repeat", "pure", "coerce", "seq"
+  "reify", "forPar", "raise", "arr", "forInIterator",
+  "iterator", "iteratorBuf"]
+
+directive.use = (_, e) ->
+  if @imported
+    throw kit.exprError("definitions are already imported in this scope")
+  @imported = true
+  config.imported = true
+  blocks = []
+  decls = []
+  if v.type is "Identifier"
+    as = v.name
+  if e.type is "Literal"
+    i = @uniqId("Def")
+    decls.push(kit.declarator(i,requireExpr(e)))
+    e = i
+  else if e.type isnt "Identifier"
+    i = @uniqId("Def")
+    decls.push(kit.declarator(i,e))
+    e = i
+  for i in freeFuns
+    decls.push(kit.declarator(kit.id(i), kit.mem(e,kit.id(i))))
+  return @pureNode([{type:"VariableDeclaration", kind: "var", declarations:decls}])
 

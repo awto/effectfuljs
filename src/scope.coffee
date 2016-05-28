@@ -23,6 +23,7 @@ class Scope
     @scopes = []
     @ids = {}
     @uids = []
+    @curNameId = 0
   # replaces current visitor if current policy requests it
   updateVisitor: ->
     @visitor = @visitor.update(@)
@@ -77,9 +78,22 @@ class Scope
         b = b.append(s)
         ++x
     return b
+  saveConfig: ->
+    @configSave = {
+      imported: config.imported,
+      packageVar: config.packageVar }
+    @
+  restoreConfig: ->
+    for i, v of @configSave
+      config[i] = v
+    @
   # entry point for conversion
   prog: (p) ->
-    @policy.scope => @_prog(p)
+    @saveConfig()
+    try
+      @policy.scope => @_prog(p)
+    finally
+      @restoreConfig()
   _prog: (p) ->
     @root = controlNode = @controlNode("scope")
     @root.label = @uniqId "root"

@@ -34,8 +34,7 @@ kit.blockStmts = (stmt) ->
   return stmt.body if stmt.type is "BlockStatement"
   [stmt]
 
-kit.ret = mkReturn = (argument) ->
-  {type:"ReturnStatement",argument}
+kit.ret = (argument) -> {type:"ReturnStatement",argument}
 
 kit.call = (callee,args) ->
   callee = kit.id(callee) if callee.substr?
@@ -43,19 +42,32 @@ kit.call = (callee,args) ->
 
 kit.id = mkId = (name) -> {type:"Identifier",name}
 
+kit.declarator = (n,v) -> { type: "VariableDeclarator",  id: n, init: v }
+
 kit.varDecl = (n, v) ->
-  {
-    type:"VariableDeclaration", kind: "var",
-    declarations:[{
-      type: "VariableDeclarator"
-      id: n
-      init: v
-      }]}
+  { type:"VariableDeclaration", kind: "var", declarations:[kit.declarator(n,v)]}
 
 kit.packId = packId = (id) ->
+  return mkId(id) if config.imported
   p = config.packageVar
-  return id unless p?
+  return mkId(id) unless p?
   kit.mem (mkId p), (mkId id)
+
+curNameId = 0
+
+kit.genPositionName = (tag,opts) ->
+  n = opts.naming
+  return unless n?
+  return if n isnt true and not n[tag] and not n.all
+  nxt = ++curNameId
+  if opts.naming.prefix?
+    return kit.lit("#{opts.naming.prefix}#{nxt}")
+  kit.lit(nxt)
+
+kit.withName = (tag, opts, c) ->
+  pn = kit.genPositionName(tag,opts)
+  c.arguments.push(pn) if pn?
+  c
 
 kit.spread = (fun) ->
   return kit.call(kit.packId("spread"),[fun])
@@ -178,13 +190,20 @@ kit.extend = extend = (par, other...) ->
       par[j] = n
   par
 
+isPlainObject = (o) ->
+  o? and typeof o == 'object' and o.constructor == Object
+
 kit.merge = merge = (par, other...) ->
   for i in other when i?
     for j, n of i
       if Array.isArray(n)
-        (par[j] ?= []).push(n...)
-      else if Object(n) is n and not (n instanceof Function)
-        merge(par[j] ?= {},n)
+        unless Array.isArray(par[j])
+          par[j] = []
+        par[j].push(n...)
+      else if isPlainObject(n)
+        unless isPlainObject(par[j])
+          par[j] = {}
+        merge(par[j],n)
       else
         par[j] = n
   par

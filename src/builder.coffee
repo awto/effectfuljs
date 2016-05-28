@@ -23,10 +23,6 @@ class VarUsage
       w.fin = true unless @after[i]
       w.use = true if @uses[i]
       if @sets[i]
-        #if @before[i]
-        #  w.mod = true
-        #else
-        #  w.set = true
         w.mod = w.set = true
       if @upds[i]
         w.use = w.mod = true
@@ -345,7 +341,7 @@ class Eff extends Builder
   constructor: -> super()
   eff: true
   mkMap: (args, fun) ->
-    kit.mbind args, fun
+    kit.withName("bind",@opts,kit.mbind(args, fun))
   append: (other) ->
     envBefore(@env,other.env)
     if other.prepend?
@@ -504,7 +500,7 @@ class ExprEff extends Eff
   _coerceObj: ->
     w = @opts.coerce
     return @ if w is "none"
-    root.exprEff(kit.coerceVal(@expr)).morph(@)
+    root.exprEff(kit.withName("coerce",@opts,kit.coerceVal(@expr))).morph(@)
   toExprBuilder: -> @
  
 root.exprEffCoerce = (expr) -> (new ExprEff(expr)).needCoerce()

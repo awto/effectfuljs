@@ -655,7 +655,8 @@ class RepeatNode extends WrapNode
     [fun,vars,b] = getBuilderFun(@body,@ctx)
     if vars.length > 1
       vars = [kit.arr(vars)]
-    expr = kit.call(kit.packId("repeat"),[fun,vars...])
+    expr = kit.withName("repeat",@opts,
+      kit.call(kit.packId("repeat"),[fun,vars...]))
     builder.exprEff(expr).morph(b).mergeEnv(@vdeps).noCapture()
   _fwdPass: (use) ->
     @body.fwdPass({})
@@ -718,8 +719,9 @@ class ControlNode extends WrapNode
     b = b.capture().toBlockBuilder()
     bodyBlock = b.block
     builder.exprEff(
-      kit.call(kit.packId(@kind),[kit.fun([@getLabel()], bodyBlock)])
-      ).morph(b).mergeEnv(@vdeps).noCapture()
+      kit.withName(@kind,@opts,
+        kit.call(kit.packId(@kind),[kit.fun([@getLabel()], bodyBlock)]),
+        )).morph(b).mergeEnv(@vdeps).noCapture()
   _propagateEff: ->
     super()
     for i in @exits
@@ -758,7 +760,8 @@ class LoopNode extends ControlNode
     v.mod = false for i, v of b.env when v.mod
     updVars = [kit.arr(updVars)] if updVars.length > 1
     return builder.exprEff(
-      kit.call(kit.packId("forPar"),[test,body,update,updVars...])
+      kit.withName("forPar",@opts,
+        kit.call(kit.packId("forPar"),[test,body,update,updVars...]))
       ).morph(b).mergeEnv(@vdeps).noCapture()
   _getBuilder: ->
     res = @simpleLoop()
