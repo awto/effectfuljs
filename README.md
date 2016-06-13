@@ -19,32 +19,110 @@ applied to results of other compilers targeting JS such as CoffeeScript,
 TypeScript, Babel etc.
 
 It stratifies input JavaScript code into two levels, namely object and meta
-level. 
+level. Their separation may be either explicit or implicit. 
 
-Object level syntax is represented using higher order abstract functions
-calls in generated code. Their concrete implementation are loaded from
-specific effects libraries in runtime. The interface is based on Monads
-interfaces hierarchy from Haskell (Functor, Applicative, Alternative,
-Monad).
+One of the main transpilers goals is generating human readable code, so
+Generators syntax can be used for explicit level separation. This
+way following code:
 
-The other level, meta-level, is still plain JavaScript code executed by some
-JS engine in browser or with node.js. Code of this level constructs objects
-representing syntax of object level. I will call them monadic values in the
-doc. For well known libraries these are Promise, Rx Observable types etc.
-I will also abuse term *pure* for meta level values and code. This doesn't
+```javascript
+function* () {
+  console.log("x:",yield getX());
+}
+```
+
+will be translated into:
+
+```javascript
+function() {
+  return getX().mapply(function (b) { console.log("x:", b); });
+}
+```
+
+Or with implicit mode input code may be even more succinct:
+
+```javascript
+function() {
+  console.log("x:",getX());
+}
+```
+
+The output will be the same.
+
+The `mapply` function there is abstract. For example its concrete implementation
+for promises is their `then` function. There are a dozen of such function
+required to be implemented in concrete effects implementation  library.
+Most of them may be derived from a few base ones. They are higher order
+abstract functions calls. The interface is based on Monads interfaces
+hierarchy from Haskell (Functor, Applicative, Alternative, Monad).
+
+I will abuse term *pure* for some JS code or values. This doesn't
 mean the code is really pure of course. This is original JavaScript and it
-may use the same side effects already embedded in JavaScript. Including IO,
-references, exceptions etc. 
+is absolutely not a problem to use the side effects already embedded
+in JavaScript. Including IO, references, exceptions etc. 
 
-The transformation is selective, there are means to specify what part of the
-program is effectful or pure. By default there are two translation modes,
-where only expressions wrapped with special function call or all function
-calls are treated as effectful.
+Besides two basic explicit and implicit modes there are means to selectivly
+treat some parts of code to be either effectful or pure.
 
-The tool is not intended for implementations for most used Haskell monad's like
-State, Reader, Exception, IO etc. The toolset is for adding only effects
-practically useful in JavaScript but not already available in there.
+## Background
 
+There are quite a few JavaScript transpilers adding some concrete new effects
+into JavaScript language. This tool adds abstract side effects into language,
+so any concrete effects may be loaded in runtime as implementation of that
+abstract interface.
+
+One of examples is recent ES standard updates with generators and `async/await`.
+It is a new concrete side effects embedded into language. Adding same coroutines
+effects with mfjs doesn't require standard, syntax change and new compilers.
+
+Human readability for generated code aim is shared with
+[kneden](https://github.com/marten-de-vries/kneden) transpiler, and turning
+`async/await` into promises expressions. The same may be achieved using mfjs
+with a tiny adapter from promises interface into mfjs. There is one implemented
+in [@mfjs/promise](https://github.com/awto/mfjs-promise). This means mfjs approach
+does require runtime library loading, while kneden team highlights no runtime
+library dependency as an advantage. There is a plan to implement combinators
+inlining in mfjs, so generated code for promises library will be very similar.
+Also mfjs is more complete than kneden(at the time of writing this). It at least
+can handle `breaks/return/continue` from `try/catch/finally`.
+
+There are other less known JS extensions may be implemented as library using mfjs
+compiler. These are [webppl](https://github.com/probmods/webppl) for probalistic
+programming, [flapjax](http://www.flapjax-lang.org/) language for reactive
+programming.
+
+A few other JS libraries abstract generators interface to any monad, for example
+[burrido](https://github.com/pelotom/burrido). This works pretty well if effects
+don't require re-executing of some control paths several times. Which is the
+case for reactive, logical programming and continuations. Here is a problem
+description for rx monad
+[with burrido](https://gist.github.com/awto/9f5337fcf205df335c92f93a859e2fdf)
+and this is the same
+[with mfjs](https://gist.github.com/awto/d71bc466884dc9a9a6a93026ce363d17).
+
+In other languages the most famous examples of similar tools are Haskell
+do-notation and C# LINQ. They implement explicit separation of meta and
+object levels. They have different syntaxes. In JS burrido does the same.
+The effectful level expressions are generators expressions, with
+interface adapted to arbitrary monad, while pure code parts uses plain JS
+syntax.
+
+In single level syntax the level separation is implicit, and both use the
+same syntax. First mention of this I know is embedding monads using delimited
+control by Andrzej Filinski in
+[Representing monad](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.43.8213&rep=rep1&type=pdf)
+paper from 1994. There is more recent implementation of same idea for Java in
+[quasar framework](http://docs.paralleluniverse.co/quasar/) described in
+[this post](https://www.infoq.com/articles/Dont-graft-Monads-onto-Imperative-Languages).
+Continuations based implementation doesn't allow detecting and automatically
+generating Applicative combinators instead of Monadic ones, for more efficient
+code (more details in [Applicative vs Monad interface](#applicative-vs-monad-interface)).
+
+There are also concrete side effects compilers with single level syntax,
+for example flapjax and webppl.
+
+It is arguable if explicit or implicit level separation is better. This likely
+depend on concrete effects used in code. So mfjs compiler supports both.
 
 ## Usage
 
