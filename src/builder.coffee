@@ -1,4 +1,5 @@
 kit = require "./kit"
+{ctx} = require "./scope"
 config = require "./config"
 root = module.exports = {}
 assert = require "assert"
@@ -36,10 +37,12 @@ class VarUsage
         @upds[i] = true
   # marks variable with the `name` as used on RHS
   addAssign: (name) ->
-    #if @uses[name]
-    #  @upds[name] = true
-    #else
-    #  @sets[name] = true
+    ###
+    if @uses[name]
+      @upds[name] = true
+    else
+      @sets[name] = true
+    ###
     @upds[name] = true
     @mods[name] = true
     @mod = true
@@ -114,6 +117,22 @@ envBefore = (f, s) ->
 root.VarUsage = VarUsage
 
 $debId = 0
+
+captureInClos = (vars, block) ->
+  return block unless vars.length
+  vars = vars.map(kit.id)
+  [kit.ret(kit.call(kit.fun(vars,block),vars))]
+
+captureInLocals = (vars, block) ->
+  return block unless vars.length
+  subst = {}
+  decls = []
+  for i in vars
+    d = subst[i] = ctx().uniqId("_#{i}",true)
+    decls.push(kit.declarator(d,kit.id(i)))
+  kit.subst(subst, block)
+  block.unshift(kit.varDecl(decls))
+  block
 
 # JS AST builder
 # two builders are joined with `append` or `prepend` methods
@@ -243,9 +262,13 @@ class Builder
     for i, v of thisCapt.env when v.mod
       v.mod = false
       closVars.push i unless threadIn[i]
-    closVars = closVars.sort().map(kit.id)
-    if closVars.length
-      block = [kit.ret(kit.call(kit.fun(closVars,block),closVars))]
+    ###
+    block = if @opts.varCapt is "closure"
+      captureInClos(closVars.sort(), block)
+    else 
+      captureInLocals(closVars.sort(), thisCapt.env, block)
+    ###
+    block = captureInClos(closVars.sort(), block)
     for i,v of env when v.mod
       w = thisCapt.env[i] ?= {fin:true}
       w.use = w.mod = true

@@ -40,18 +40,37 @@ kit.call = (callee,args) ->
   callee = kit.id(callee) if callee.substr?
   {type:"CallExpression",callee,arguments:args}
 
-kit.id = mkId = (name) -> {type:"Identifier",name}
+kit.subst = (subst, node) ->
+  walk = (n) ->
+    return n unless n
+    if Array.isArray n
+      for v,i in n
+        n[i] = walk(v)
+    return n unless n.type
+    switch n.type
+      when "FunctionExpression",  "FunctionDeclaration" then n
+      when "Identifier"
+        fn = subst[n.name]
+        if fn then fn else n
+      else
+        n[i] = walk(v) for i, v of n when i isnt "type"
+        n 
+  walk(node)
+
+kit.id = (name) -> {type:"Identifier",name}
 
 kit.declarator = (n,v) -> { type: "VariableDeclarator",  id: n, init: v }
 
 kit.varDecl = (n, v) ->
+  if not v? and Array.isArray n
+    return { type:"VariableDeclaration", kind: "var", declarations:n}
   { type:"VariableDeclaration", kind: "var", declarations:[kit.declarator(n,v)]}
 
 kit.packId = packId = (id) ->
-  return mkId(id) if config.imported
+  return kit.id(id) if config.imported
   p = config.packageVar
-  return mkId(id) unless p?
-  kit.mem (mkId p), (mkId id)
+  return kit.id(id) unless p?
+  kit.mem (kit.id p), (kit.id id)
 
 curNameId = 0
 
@@ -130,6 +149,7 @@ matchSingleCallBlock = (x) ->
   return x
    
 kit.fun = mkFun = (params, stmt) ->
+  params = params.concat()
   stmt = mkBlock stmt
   eta = kit.matchEta params, stmt
   return eta if eta?
@@ -158,16 +178,16 @@ kit.mbind = (from, fun) ->
   assert.ok(Array.isArray(from))
   [from,fun] = kit.spreadApp(from, fun)
   assert.ok(fun?)
-  kit.call(kit.mem(from,mkId("mbind")),[fun])
+  kit.call(kit.mem(from,kit.id("mbind")),[fun])
 kit.catch = (from, arg, to) ->
   args = []
   args.push arg if arg?
-  return kit.call(kit.mem(from,mkId "mhandle"),[mkFun(args, to)])
+  return kit.call(kit.mem(from,kit.id "mhandle"),[mkFun(args, to)])
 kit.finally = (from, to) ->
-  return kit.call(kit.mem(from,mkId "mfinally"), [mkFun [], to])
+  return kit.call(kit.mem(from,kit.id "mfinally"), [mkFun [], to])
 kit.mapply = (from, fun) ->
   [from,fun] = kit.spreadApp(from, fun)
-  kit.call(kit.mem(from,mkId("mapply")),[fun])
+  kit.call(kit.mem(from,kit.id("mapply")),[fun])
 
 kit.pure = (v...) ->
   args = v
@@ -259,7 +279,7 @@ kit.coerceThunk = (block) ->
   kit.call(packId("coerce"),[mkFun([], block)])
 
 kit.coerceVal = (expr) ->
-  kit.call(mkId(config.packageVar),[expr])
+  kit.call(kit.id(config.packageVar),[expr])
 
 getLit = (e) ->
   return null unless e.type is "Literal"

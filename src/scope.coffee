@@ -26,6 +26,7 @@ class Scope
     @ids = {}
     @uids = []
     @curNameId = 0
+    @curUid = 0
   # replaces current visitor if current policy requests it
   updateVisitor: ->
     @visitor = @visitor.update(@)
@@ -36,22 +37,29 @@ class Scope
     return unless subvisitor?
     new Scope(@,subvisitor)
   # returns unique identifier for current nodes
-  uniqId: (p) ->
-    c = @uniqIds[p] ? 0
-    @uniqIds[p] = c + 1
-    c = "" unless c
-    res = kit.id("#{p}#{c}")
+  uniqId: (p,rev) ->
+    res = kit.id("#{p}_uniq_#{@curUid++}")
     res.$dm$orig = p
-    @uids.push res
+    if rev
+      @uids.unshift res
+    else
+      @uids.push res
     res
   # removes identifier duplicates
   commitIds: ->
+    debugger
     for i in @uids
-      if @ids[i.name]
+      n = i.$dm$orig
+      c = @uniqIds[n] ? 0
+      @uniqIds[n] = c + 1
+      c = "" unless c
+      n = "#{n}#{c}"
+      if @ids[n]
         loop
           c = @uniqIds[i.$dm$orig]++
-          i.name = "#{i.$dm$orig}#{c}"
-          break unless @ids[i.name]
+          n = "#{i.$dm$orig}#{c}"
+          break unless @ids[n]
+      i.name = n
     return
   # convert statement with optional label
   stmt: (s, lab) ->
