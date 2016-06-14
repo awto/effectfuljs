@@ -2,6 +2,8 @@ config = require "./config"
 kit = require "./kit"
 {defaultVisitor} = require "./visitor"
 
+current = null
+
 # stores information about translating scope (function body or top)
 class Scope
   constructor: (par,visitor) ->
@@ -91,8 +93,11 @@ class Scope
   prog: (p) ->
     @saveConfig()
     try
+      old = current
+      current = @
       @policy.scope => @_prog(p)
     finally
+      current = old
       @restoreConfig()
   _prog: (p) ->
     @root = controlNode = @controlNode("scope")
@@ -123,5 +128,7 @@ class Scope
     @commitIds()
     kit.block res
 
-module.exports = {Scope}
+ctx = -> current
+
+module.exports = {Scope,ctx}
 

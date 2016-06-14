@@ -1,5 +1,5 @@
 kit = require "./kit"
-{Scope} = require "./scope"
+{Scope,ctx} = require "./scope"
 builder = require "./builder"
 assert = require "assert"
 config = require "./config"
@@ -31,11 +31,10 @@ class Node
     @vdeps = other.vdeps
     @
   # initialize node (called from its smart constructor)
-  init: (ctx) ->
-    @opts = kit.merge({},ctx.policy.opts)
-    @ctx = ctx
-    @vdeps.vars = ctx.vars
-    @vdeps.refs = ctx.refs
+  init: ->
+    @opts = kit.merge({},ctx().policy.opts)
+    @vdeps.vars = ctx().vars
+    @vdeps.refs = ctx().refs
     @
   # sets JS AST statement representing original block
   # translated into node, it is used as is if the node
@@ -80,7 +79,7 @@ class Node
   _propagateEff: ->
     @_propagateEffDone = true
     @eff = true
-    @ctx.eff = true
+    ctx().eff = true
     @
   # converts node into JS AST builder
   getBuilder: ->
@@ -123,7 +122,7 @@ class PureExprNode extends PureNode
     @
   _getBuilder: -> builder.exprPure(@pureExpr)
   ignoreResult: ->
-    @ctx.pureNode([kit.exprStmt(@pureExpr)]).morphInit(@)
+    ctx().pureNode([kit.exprStmt(@pureExpr)]).morphInit(@)
 
 regNodeType "pureNode", PureNode
 regNodeType "pureExprNode", PureExprNode
@@ -218,9 +217,9 @@ class BlockNode extends DynNode
         b = c.block
         n = b.splice(0,x)
         nb = switch n.length
-          when 0 then @ctx.emptyNode()
+          when 0 then ctx().emptyNode()
           when 1 then n[0]
-          else c = @ctx.blockNode().append(n...).fwdPass(ouse)
+          else c = ctx().blockNode().append(n...).fwdPass(ouse)
         s = {}
         j.setBlock(nb,b,s) for j in i
     delete @placeholders
@@ -258,7 +257,7 @@ Scope::nodes = (arr...) ->
   return @blockNode().append(arr...)
 
 Node::append = (args...) ->
-  @ctx.nodes(@,args...)
+  ctx().nodes(@,args...)
 EmptyNode::append = (f,nxt...) ->
   return f.append(nxt...) if nxt.length
   return f
@@ -321,9 +320,9 @@ class PlaceholderNode extends PureExprNode
     @depBlock = n
     unless s.vn?
       @prim = true
-      s.vn = vn = @ctx.uniqId("n")
-      b.unshift(@ctx.reifyNode().setBody(n).setVar(vn).setParent(@))
-      @ctx.refs[i] = true for i of n.vdeps.mods
+      s.vn = vn = ctx().uniqId("n")
+      b.unshift(ctx().reifyNode().setBody(n).setVar(vn).setParent(@))
+      ctx().refs[i] = true for i of n.vdeps.mods
     @setExpr(vn)
   _fwdPass: (use) ->
     lookupPlaceholderTarget.call(@)
@@ -399,7 +398,7 @@ class BindNode extends DynNode
           nxt = commit()
           cur = builder.pure([]).pushEnv(eb.env).setOpts(@opts).append(nxt)
           continue
-      b = e.getBuilder().setBindVar(p[px] = @ctx.uniqId("b"))
+      b = e.getBuilder().setBindVar(p[px] = ctx().uniqId("b"))
       if e.vdeps.mod
         cur = b.append(commit())
       else
@@ -452,13 +451,13 @@ class SharedNode extends DynNode
       @body.setParent(@)
       @eff = true if @body.eff
     @
-  init: (ctx) ->
+  init: ->
     if @def.pureExpr and isSimpleExpr(@def.pureExpr)
       @_ref = @def.pureExpr
       @_simplExpr = true
     else
-      @_ref = @name = ctx.uniqId "s"
-    super(ctx)
+      @_ref = @name = ctx().uniqId "s"
+    super()
   _getBuilder: ->
     return @body.getBuilder() if @_simplExpr
     if @def.pureExpr?
@@ -638,7 +637,7 @@ class WrapNode extends DynNode
     @body.fwdPass(use)
 
 # returns a function with threaded variables representing the node
-getBuilderFun = (node,ctx) ->
+getBuilderFun = (node) ->
   thread = node.vdeps.threadOutMap()
   b = node.getBuilder()
   b.addThread(thread) if thread?
@@ -652,7 +651,7 @@ getBuilderFun = (node,ctx) ->
 class RepeatNode extends WrapNode
   constructor: (body) -> super(body)
   _getBuilder: ->
-    [fun,vars,b] = getBuilderFun(@body,@ctx)
+    [fun,vars,b] = getBuilderFun(@body)
     if vars.length > 1
       vars = [kit.arr(vars)]
     expr = kit.withName("repeat",@opts,
@@ -676,17 +675,17 @@ class ControlNode extends WrapNode
     super()
   setLabel: (lab) ->
     lab ?= "l"
-    @label = @ctx.uniqId(lab)
+    @label = ctx().uniqId(lab)
     @
   getLabel: ->
     return @label if @label?
-    @label = @ctx.uniqId("l")
+    @label = ctx().uniqId("l")
   breakNode: (v) ->
-    res = @ctx.breakNode(@,v)
+    res = ctx().breakNode(@,v)
     @exits.push res
     res
   yieldNode: (v) ->
-    res = @ctx.yieldNode(@,v)
+    res = ctx().yieldNode(@,v)
     @exits.push res
     res
   trimExits: (loopBody) ->
@@ -751,7 +750,7 @@ class LoopNode extends ControlNode
     return for i,v of @inner.unwindBy when v.dst isnt @ and v.dst isnt @cont
     @trimExits(@inner.parent)
     return if @exits.length
-    [update, updVars, b, thread] = getBuilderFun(@update, @ctx)
+    [update, updVars, b, thread] = getBuilderFun(@update)
     tb = @test.getBuilder().toBlockBuilder().capture()
     test = kit.spreadFun(updVars, kit.fun(updVars, tb.block))
     bb = @inner.getBuilder()
@@ -814,7 +813,7 @@ class TryCatchNode extends DynNode
     else
       fdeps = {}
     for i of @body.vdeps.mods when fdeps[i] or hdeps[i]
-      @ctx.refs[i] = true
+      ctx().refs[i] = true
     return
   _propagateEff: ->
     super()
@@ -862,7 +861,7 @@ class ThrowNode extends DynNode
     @
   _getBuilder: ->
     assert.ok(@eff)
-    v = @ctx.uniqId("e")
+    v = ctx().uniqId("e")
     if @val.pureExpr
       return builder.exprEff(kit.call(kit.packId("raise"), [@val.pureExpr]))
     @val.getBuilder().setBindVar(v).setOpts(@opts)
@@ -872,7 +871,7 @@ class ThrowNode extends DynNode
 regNodeType "throwNode", ThrowNode
 
 Node::tryCatch = (hv,h,f) ->
-  @ctx.tryCatchNode().setBody(@)
+  ctx().tryCatchNode().setBody(@)
     .setHandler(hv,h)
     .setFin(f)
 
