@@ -49,19 +49,28 @@ function() {
 
 The output will be the same.
 
+More examples of input/output of the tool may be found in
+[test folder](https://github.com/awto/mfjs-compiler/tree/master/test/samples).
+
 The `mapply` function there is abstract. For example its concrete implementation
 for promises is their `then` function. There are a dozen of such function
-required to be implemented in concrete effects implementation  library.
-Most of them may be derived from a few base ones. They are higher order
-abstract functions calls. The interface is based on Monads interfaces
-hierarchy from Haskell (Functor, Applicative, Alternative, Monad).
+required to be implemented in concrete effects implementation library.
+Default implementations of most of them may be automatically derived from
+a few base ones. They are higher order abstract functions calls. The interface
+is based on Monads interfaces hierarchy from Haskell (Functor, Applicative,
+Alternative, Monad).
+
+It is arguable if explicit or implicit level separation is better. This likely
+depend on what kind effect is used. Succinct and more readable code is good,
+but if effects are heavy making them explicit may be better. So mfjs
+compiler supports both options.
 
 I will abuse term *pure* for some JS code or values. This doesn't
 mean the code is really pure of course. This is original JavaScript and it
 is absolutely not a problem to use the side effects already embedded
 in JavaScript. Including IO, references, exceptions etc. 
 
-Besides two basic explicit and implicit modes there are means to selectivly
+Besides two basic explicit and implicit modes there are means to selectively
 treat some parts of code to be either effectful or pure.
 
 ## Background
@@ -120,9 +129,6 @@ code (more details in [Applicative vs Monad interface](#applicative-vs-monad-int
 
 There are also concrete side effects compilers with single level syntax,
 for example flapjax and webppl.
-
-It is arguable if explicit or implicit level separation is better. This likely
-depend on concrete effects used in code. So mfjs compiler supports both.
 
 ## Usage
 
