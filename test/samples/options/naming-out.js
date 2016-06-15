@@ -17,23 +17,21 @@ function b() {
         return i;
     }, i, 5).mbind(function (i) {
         return M(eff(1), 13).mbind(function (b) {
-            return function (i) {
-                i = b;
-                return M.block(function (brk1) {
-                    return M.repeat(function (i) {
-                        return M(eff(i++), 7).mbind(function (b1) {
-                            return function (i) {
-                                if (i < b1)
-                                    return M(eff(i++), 6).mconst(i);
-                                else
-                                    return brk1();
-                            }(i);
-                        }, 8).mbind(function (i) {
-                            return M(eff(i), 9).mconst(i);
-                        }, 10);
-                    }, i, 11);
-                }, 12);
-            }(i);
+            var _i1 = i;
+            _i1 = b;
+            return M.block(function (brk1) {
+                return M.repeat(function (i) {
+                    return M(eff(i++), 7).mbind(function (b1) {
+                        var _i = i;
+                        if (_i < b1)
+                            return M(eff(_i++), 6).mconst(_i);
+                        else
+                            return brk1();
+                    }, 8).mbind(function (i) {
+                        return M(eff(i), 9).mconst(i);
+                    }, 10);
+                }, i, 11);
+            }, 12);
         }, 14);
     }, 15);
 }
@@ -54,4 +52,3 @@ function d() {
         return eff(2);
     }, 'm18');
 }
-

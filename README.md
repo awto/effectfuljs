@@ -578,7 +578,11 @@ Here is the set of possible options:
    declaration (default is true).
  * `keepScope` - if it is true the compiler doesn’t remove useless M.scope
     calls
- * `varCapt` - doesn't do variable capturing if false
+ * `varCapt` - doesn't do variable capturing if false, if true it will capture
+               variable values using new temporal variables, and if it is
+               string "closure" will use closures for this. Capturing with
+               closures generates cleaner code, but much slower. Default
+               value is true.
  * `keepForOf` - for pure functions don't translate `for-of` statements 
  * `mopt` - translates `yield` statement to `mopt`, default is true
 

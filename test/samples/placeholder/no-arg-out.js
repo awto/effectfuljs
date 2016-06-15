@@ -48,10 +48,9 @@ function e() {
         n.eff(3),
         n.eff(4)
     ]).mbind(M.spread(function (b1, b) {
-        return function (k) {
-            k = b1 + b;
-            return eff(5);
-        }(k);
+        var _k;
+        _k = b1 + b;
+        return eff(5);
     }));
 }
 function f() {
@@ -90,27 +89,25 @@ function g() {
 function g1() {
     var i, j;
     return M(eff1(i, j)).mbind(function () {
-        return function (j) {
-            j++;
-            var n = M.reify(function () {
-                var n1 = M.reify(function () {
-                    return M(eff(i, j)).mbind(function () {
-                        i++;
-                        return eff2(i, j);
-                    });
-                });
-                return M(n1.eff3(i, j)).mbind(function () {
+        var _j1 = j;
+        _j1++;
+        var n = M.reify(function () {
+            var n1 = M.reify(function () {
+                return M(eff(i, j)).mbind(function () {
                     i++;
-                    return eff4(i, j);
+                    return eff2(i, j);
                 });
             });
-            return M(n.eff5(i, j)).mbind(function () {
-                return function (j) {
-                    j++;
-                    return M(eff(i, j)).mconst(j);
-                }(j);
+            return M(n1.eff3(i, j)).mbind(function () {
+                i++;
+                return eff4(i, j);
             });
-        }(j);
+        });
+        return M(n.eff5(i, _j1)).mbind(function () {
+            var _j = j;
+            _j++;
+            return M(eff(i, _j)).mconst(_j);
+        });
     }).mbind(function (j) {
         return eff6(i, j);
     });

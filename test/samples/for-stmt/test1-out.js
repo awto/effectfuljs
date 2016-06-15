@@ -20,13 +20,12 @@
                 } else
                     return brk();
             }).mapply(function (i) {
-                return function (j) {
-                    j++;
-                    return [
-                        i,
-                        j
-                    ];
-                }(j);
+                var _j = j;
+                _j++;
+                return [
+                    i,
+                    _j
+                ];
             });
         }), [
             i,
@@ -63,19 +62,18 @@
 function a() {
     var i;
     return M(eff('b')).mbind(function () {
-        return function (i) {
-            i = 0;
-            return M.forPar(function (i) {
-                return i < 3;
-            }, function (i) {
-                if (i === 2)
-                    console.log(i);
-                return eff(i);
-            }, function (i) {
-                i++;
-                return i;
-            }, i);
-        }(i);
+        var _i;
+        _i = 0;
+        return M.forPar(function (i) {
+            return i < 3;
+        }, function (i) {
+            if (i === 2)
+                console.log(i);
+            return eff(i);
+        }, function (i) {
+            i++;
+            return i;
+        }, _i);
     }).mbind(function () {
         return eff('a');
     });
@@ -83,26 +81,25 @@ function a() {
 function a1() {
     var i, j;
     return M(eff('b')).mbind(function () {
-        return function (i) {
-            i = 0;
-            j = 10;
-            return M.forPar(M.spread(function (i, j) {
-                return i < 3;
-            }), M.spread(function (i, j) {
-                if (i === 2)
-                    console.log(i, j);
-                return eff(i, j);
-            }), M.spread(function (i, j) {
-                i++, j += 2;
-                return [
-                    i,
-                    j
-                ];
-            }), [
+        var _i;
+        _i = 0;
+        j = 10;
+        return M.forPar(M.spread(function (i, j) {
+            return i < 3;
+        }), M.spread(function (i, j) {
+            if (i === 2)
+                console.log(i, j);
+            return eff(i, j);
+        }), M.spread(function (i, j) {
+            i++, j += 2;
+            return [
                 i,
                 j
-            ]);
-        }(i);
+            ];
+        }), [
+            _i,
+            j
+        ]);
     }).mbind(M.spread(effRes));
 }
 function b() {

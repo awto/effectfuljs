@@ -20,13 +20,12 @@
                 } else
                     return brk();
             }().mapply(function (i) {
-                return function (j) {
-                    j++;
-                    return [
-                        i,
-                        j
-                    ];
-                }(j);
+                var _j = j;
+                _j++;
+                return [
+                    i,
+                    _j
+                ];
             });
         }), [
             i,

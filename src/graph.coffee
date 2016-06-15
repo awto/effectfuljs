@@ -643,7 +643,7 @@ getBuilderFun = (node) ->
   b.addThread(thread) if thread?
   b = b.capture().toBlockBuilder()
   thread[i] = true for i of b.env when i.thread
-  vars = (i for i of thread).sort().map(kit.id)
+  vars = (i for i of thread).sort().map(Scope.id)
   fun = kit.spreadFun(vars,kit.fun(vars, b.block))
   return [fun,vars,b,thread]
 
@@ -711,7 +711,7 @@ class ControlNode extends WrapNode
     return @body.getBuilder() unless @exits.length and @eff
     unless @kind is "scope"
       thread = @body.vdeps.threadOutMap()
-      @thread = (i for i of thread).sort().map(kit.id)
+      @thread = (i for i of thread).sort().map(Scope.id)
     else
       @thread = []
     b = @body.getBuilder()

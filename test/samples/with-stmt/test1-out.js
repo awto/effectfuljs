@@ -50,28 +50,25 @@ function a(f) {
 function a(f) {
     var i;
     return M(eff(i, z)).mbind(function () {
-        return function (i) {
-            i++;
-            return M(eff(f)).mbind(function (b) {
-                return function (i) {
-                    with (b) {
-                        console.log(z, i);
-                        z++;
-                        i++;
-                        return M(eff(z, i)).mbind(function () {
-                            return eff(z, i);
-                        }).mbind(function () {
-                            return function (i) {
-                                z++;
-                                i++;
-                                return M(eff(z, i)).mconst(i);
-                            }(i);
-                        }).mbind(function (i) {
-                            return eff(z, i);
-                        });
-                    }
-                }(i);
-            });
-        }(i);
+        var _i2 = i;
+        _i2++;
+        return M(eff(f)).mbind(function (b) {
+            var _i1 = i;
+            with (b) {
+                console.log(z, _i1);
+                z++;
+                _i1++;
+                return M(eff(z, _i1)).mbind(function () {
+                    return eff(z, i);
+                }).mbind(function () {
+                    var _i = i;
+                    z++;
+                    _i++;
+                    return M(eff(z, _i)).mconst(_i);
+                }).mbind(function (i) {
+                    return eff(z, i);
+                });
+            }
+        });
     });
 }

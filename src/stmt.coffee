@@ -114,7 +114,7 @@ ActiveVisitor::VariableDeclaration = (stmt) ->
   orig = []
   for i in stmt.declarations
     @ctx.vars[i.id.name] = true #TODO: ES6
-    @ctx.ids[i.id.name] = true unless i.id.$dm$orig
+    @ctx.ids[i.id.name] = i.id unless i.id.$dm$orig
     declarations.push {type: "VariableDeclarator", id: i.id}
     if @policy.opts.varCapt is false
       @ctx.refs[i.id.name] = true

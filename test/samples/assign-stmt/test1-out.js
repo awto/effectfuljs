@@ -1,10 +1,9 @@
 function a() {
     var b1;
     return M(eff(1)).mbind(function (b) {
-        return function (b1) {
-            b1 = b;
-            return eff('a');
-        }(b1);
+        var _b1;
+        _b1 = b;
+        return eff('a');
     }).mbind(function () {
         return eff('b');
     });
@@ -12,10 +11,9 @@ function a() {
 function a1() {
     var b1;
     return M(eff(1)).mbind(function (b) {
-        return function (b1) {
-            b1 = b;
-            return eff('a');
-        }(b1);
+        var _b1;
+        _b1 = b;
+        return eff('a');
     }).mbind(function () {
         return eff('b');
     });
@@ -23,18 +21,16 @@ function a1() {
 function b() {
     var b1, b2;
     return M(eff(1)).mbind(function (b) {
-        return function (b1) {
-            b1 = b;
-            return M(eff(2)).mapply(function (b3) {
-                return function (b2) {
-                    b2 = b3;
-                    return [
-                        b1,
-                        b2
-                    ];
-                }(b2);
-            });
-        }(b1);
+        var _b1;
+        _b1 = b;
+        return M(eff(2)).mapply(function (b3) {
+            var _b2;
+            _b2 = b3;
+            return [
+                b1,
+                _b2
+            ];
+        });
     }).mbind(M.spread(function (b1, b2) {
         return M(eff(b1)).mconst(b2);
     })).mbind(eff);
@@ -55,53 +51,45 @@ function c() {
     var a, b, c;
     var d, e, f, g, j;
     var x, y, z;
-    return M(eff(1)).mbind(function (b7) {
-        return function (a, b) {
-            a = b7;
-            b = 2;
-            return M(eff(3)).mapply(function (b1) {
-                return function (c) {
-                    c = b1;
-                }(c);
-            });
-        }(a, b);
+    return M(eff(1)).mbind(function (b1) {
+        var _a, _b;
+        _a = b1;
+        _b = 2;
+        return M(eff(3)).mapply(function (b2) {
+            var _c;
+            _c = b2;
+        });
     }).mbind(function () {
         return eff('a');
     }).mbind(function () {
         return eff('b');
     }).mbind(function () {
-        return M(eff(4)).mbind(function (b2) {
-            return function (d, e) {
-                d = b2;
-                e = 5;
-                return M(eff(6)).mapply(function (b3) {
-                    return function (f) {
-                        f = b3;
-                    }(f);
-                });
-            }(d, e);
+        return M(eff(4)).mbind(function (b3) {
+            var _d, _e;
+            _d = b3;
+            _e = 5;
+            return M(eff(6)).mapply(function (b4) {
+                var _f;
+                _f = b4;
+            });
         }).mbind(function () {
-            return M(eff(7)).mapply(function (b4) {
-                return function (g) {
-                    g = b4;
-                }(g);
+            return M(eff(7)).mapply(function (b5) {
+                var _g;
+                _g = b5;
             });
         }).mapply(function () {
-            return function (j) {
-                j = 8;
-            }(j);
+            var _j;
+            _j = 8;
         });
     }).mbind(function () {
-        return M(eff('x')).mbind(function (b5) {
-            return function (x, y) {
-                x = b5;
-                y = 'y';
-                return M(eff('z')).mapply(function (b6) {
-                    return function (z) {
-                        z = b6;
-                    }(z);
-                });
-            }(x, y);
+        return M(eff('x')).mbind(function (b6) {
+            var _x, _y;
+            _x = b6;
+            _y = 'y';
+            return M(eff('z')).mapply(function (b7) {
+                var _z;
+                _z = b7;
+            });
         });
     }).mbind(function () {
         return eff(9);

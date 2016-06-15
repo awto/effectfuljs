@@ -180,7 +180,7 @@ ActiveVisitor::MemberExpression = (e) ->
 ActiveVisitor::Identifier = (e) ->
   res = @ctx.exprNode(e)
   res.vdeps.uses[e.name] = true
-  @ctx.ids[e.name] = true unless e.$dm$orig
+  @ctx.ids[e.name] = e unless e.$dm$orig
   res
 
 Visitor::getExprBuilder = (e) -> new DummyBuilder(e,@ctx)

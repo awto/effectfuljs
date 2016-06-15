@@ -31,14 +31,22 @@ class Scope
   updateVisitor: ->
     @visitor = @visitor.update(@)
     @
+  # cached id objects
+  id: (n) ->
+    i = @ids[n]
+    return i if i?
+    return @ids[n] = kit.id(n)
   # new scope for a function definition inside this scope
   subScope: ->
     subvisitor = @visitor.subScope()
     return unless subvisitor?
     new Scope(@,subvisitor)
+  similarId: (i) ->
+    n = if i.$dm$orig then i.$dm$orig else i.name
+    @uniqId("_#{n}")
   # returns unique identifier for current nodes
   uniqId: (p,rev) ->
-    res = kit.id("#{p}_uniq_#{@curUid++}")
+    res = @id("#{p}_uniq_#{@curUid++}")
     res.$dm$orig = p
     if rev
       @uids.unshift res
@@ -47,7 +55,6 @@ class Scope
     res
   # removes identifier duplicates
   commitIds: ->
-    debugger
     for i in @uids
       n = i.$dm$orig
       c = @uniqIds[n] ? 0
@@ -135,6 +142,7 @@ class Scope
     @eff = node.eff
     @commitIds()
     kit.block res
+  @id: (n) -> ctx().id(n)
 
 ctx = -> current
 

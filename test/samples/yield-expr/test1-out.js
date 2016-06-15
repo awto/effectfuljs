@@ -29,16 +29,14 @@ function c() {
         return function () {
             i = 0;
             return M(eff(1)).mbind(function () {
-                return function (i) {
-                    i++;
-                    return M(eff(i)).mconst(i);
-                }(i);
+                var _i = i;
+                _i++;
+                return M(eff(_i)).mconst(_i);
             }).mbind(root);
         }().mopt().mbind(function () {
-            return function (i) {
-                i++;
-                return eff(i);
-            }(i);
+            var _i1 = i;
+            _i1++;
+            return eff(_i1);
         });
     });
 }

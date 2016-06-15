@@ -1,5 +1,5 @@
 kit = require "./kit"
-{ctx} = require "./scope"
+{Scope,ctx} = require "./scope"
 config = require "./config"
 root = module.exports = {}
 assert = require "assert"
@@ -37,13 +37,10 @@ class VarUsage
         @upds[i] = true
   # marks variable with the `name` as used on RHS
   addAssign: (name) ->
-    ###
     if @uses[name]
-      @upds[name] = true
+     @upds[name] = true
     else
       @sets[name] = true
-    ###
-    @upds[name] = true
     @mods[name] = true
     @mod = true
     @
@@ -73,12 +70,6 @@ class VarUsage
     @upd = true if d.upd
     @upds[i] = true for i,v of d.upds when v
     @uses[i] = true for i,v of d.uses when v
-    for i,v of d.sets when v
-      if @uses[i]
-        @upds[i] = true
-        @upd = true
-      else
-        @sets[i] = true
     return
   threadOutMap: (res) ->
     res ?= {}
@@ -93,7 +84,7 @@ envPush = (dst, src) ->
     w = dst[i] ?= {}
     w.mod = true if v.mod or v.set and w.use
     w.use = true if v.use
-    w.set = true if v.set and not w.mod
+    w.set = true if v.set # and not w.mod
     w.fin = true if v.fin
     w.thread = true if v.thread and not v.fin
   dst
@@ -103,12 +94,13 @@ envMerge = (dst, src) ->
     w = dst[i] ?= {}
     w.use = true if v.use
     w.mod = true if v.mod
+    w.set = true if v.set
     w.fin = true if v.fin
     w.thread = true if v.thread and not v.fin
   dst
 
 envThread = (env) ->
-  (i for i, v of env when v.thread and not v.fin).sort().map(kit.id)
+  (i for i, v of env when v.thread and not v.fin).sort().map(Scope.id)
 envBefore = (f, s) ->
   for i, v of s when (w = f[i]) and w.use
     v.use = true
@@ -120,16 +112,17 @@ $debId = 0
 
 captureInClos = (vars, block) ->
   return block unless vars.length
-  vars = vars.map(kit.id)
+  vars = vars.map(Scope.id)
   [kit.ret(kit.call(kit.fun(vars,block),vars))]
 
-captureInLocals = (vars, block) ->
+captureInLocals = (vars, block, env) ->
   return block unless vars.length
   subst = {}
   decls = []
   for i in vars
-    d = subst[i] = ctx().uniqId("_#{i}",true)
-    decls.push(kit.declarator(d,kit.id(i)))
+    iv = Scope.id(i)
+    d = subst[i] = ctx().similarId(iv)
+    decls.push(kit.declarator(d,if env[i].set then null else iv))
   kit.subst(subst, block)
   block.unshift(kit.varDecl(decls))
   block
@@ -237,8 +230,7 @@ class Builder
       for j, v of capt.env
         w = env[j] ?= {}
         w.use = true if v.use
-        w.mod = true if v.mod or w.use and v.set
-        w.set = true if v.set and not w.mod
+        w.mod = true if v.mod
         w.fin = true if v.fin
         if v.thread and not v.fin
           w.thread = true
@@ -250,7 +242,7 @@ class Builder
       exprs.push(capt.expr)
       bv = capt.getBindVar()
       vars.push(bv) if bv?
-      vars.push(tvars.sort().map(kit.id)...)
+      vars.push(tvars.sort().map(Scope.id)...)
     threadOut = {}
     for i, v of env
       w = @env[i] ? {}
@@ -262,13 +254,12 @@ class Builder
     for i, v of thisCapt.env when v.mod
       v.mod = false
       closVars.push i unless threadIn[i]
-    ###
+    closVars.sort()
     block = if @opts.varCapt is "closure"
-      captureInClos(closVars.sort(), block)
+      captureInClos(closVars, block)
     else 
-      captureInLocals(closVars.sort(), thisCapt.env, block)
-    ###
-    block = captureInClos(closVars.sort(), block)
+      captureInLocals(closVars, block, thisCapt.env)
+    #block = captureInClos(closVars, block)
     for i,v of env when v.mod
       w = thisCapt.env[i] ?= {fin:true}
       w.use = w.mod = true

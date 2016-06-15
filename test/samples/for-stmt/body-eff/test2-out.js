@@ -28,14 +28,13 @@
                 } else
                     return brk();
             }().mapply(M.spread(function (j, len) {
-                return function (i) {
-                    i++;
-                    return [
-                        i,
-                        j,
-                        len
-                    ];
-                }(i);
+                var _i = i;
+                _i++;
+                return [
+                    _i,
+                    j,
+                    len
+                ];
             }));
         }), [
             i,

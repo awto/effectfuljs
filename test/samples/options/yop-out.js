@@ -17,15 +17,14 @@ describe('yop', function () {
         M.run(QM, function () {
             var result;
             return M(addLater(1, 2)).mapply(function (b) {
-                return function (result) {
-                    result = b;
-                    try {
-                        expect(result).to.equal(3);
-                        done();
-                    } catch (err) {
-                        done(err);
-                    }
-                }(result);
+                var _result;
+                _result = b;
+                try {
+                    expect(_result).to.equal(3);
+                    done();
+                } catch (err) {
+                    done(err);
+                }
             });
         });
     });
@@ -62,15 +61,14 @@ describe('yop', function () {
         M.run(QM, function () {
             var result;
             return M(1 + 2).mapply(function (b) {
-                return function (result) {
-                    result = b;
-                    try {
-                        expect(result).to.equal(3);
-                        done();
-                    } catch (err) {
-                        done(err);
-                    }
-                }(result);
+                var _result;
+                _result = b;
+                try {
+                    expect(_result).to.equal(3);
+                    done();
+                } catch (err) {
+                    done(err);
+                }
             });
         });
     });
