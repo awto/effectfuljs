@@ -134,6 +134,7 @@ options =
   keepForOf: true
   mopt: true
   naming: true
+  useSpread: true
 
 class Policy
   constructor: (@root,start) ->

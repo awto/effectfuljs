@@ -2,8 +2,8 @@ kit = module.exports = {}
 config = require "./config"
 escodegen = require "escodegen"
 assert = require "assert"
-esutils = require "esutils"
-esast = esutils.ast
+esast = require("esutils").ast
+{VisitorKeys} = require "estraverse"
 
 kit.block = mkBlock = (args) ->
   return args[0] if args.length is 1 and args[0].type is "BlockStatement"
@@ -41,21 +41,41 @@ kit.call = (callee,args) ->
   {type:"CallExpression",callee,arguments:args}
 
 kit.subst = (subst, node) ->
-  walk = (n) ->
+  #TODO: some generic traversals
+  varsWalk = (res, n) ->
+    return unless n
+    if Array.isArray n
+      varsWalk(res,v) for v in n
+      return
+    return unless n.type
+    return if esast.isExpression(n)
+    switch n.type
+      when "VariableDeclaration"
+        res[j.id.name] = false for j in n.declarations when j.id.name
+        return
+      when "FunctionDeclaration" then return
+      else
+        varsWalk(res,n[i]) for i in VisitorKeys[n.type]
+  walk = (subst, n) ->
     return n unless n
     if Array.isArray n
-      for v,i in n
-        n[i] = walk(v)
+      n[i] = walk(subst,v) for v,i in n
+      return n 
     return n unless n.type
     switch n.type
-      when "FunctionExpression",  "FunctionDeclaration" then n
+      when "FunctionExpression",  "FunctionDeclaration"
+        subst = Object.create(subst)
+        subst[i.name] = false for i in n.params when i.name?
+        varsWalk(subst, n.body)
+        n.body = walk(subst, n.body)
+        n
       when "Identifier"
         fn = subst[n.name]
         if fn then fn else n
       else
-        n[i] = walk(v) for i, v of n when i isnt "type"
-        n 
-  walk(node)
+        n[i] = walk(subst,n[i]) for i in VisitorKeys[n.type]
+        n
+  walk(subst, node)
 
 kit.id = (name) -> {type:"Identifier",name}
 
@@ -88,23 +108,20 @@ kit.withName = (tag, opts, c) ->
   c.arguments.push(pn) if pn?
   c
 
-kit.spread = (fun) ->
-  return kit.call(kit.packId("spread"),[fun])
+kit.spread = (fun) -> kit.call(kit.packId("spread"),[fun])
 
-kit.spreadFun = (args, fun) ->
-  if args.length is 1
-    if fun.$dm$argNum? and fun.$dm$argNum > 1 or
-       fun.params? and fun.params.length > 1
-      return kit.spread(fun)
+kit.isFunction = (fun) -> fun.type is "FunctionExpression" or fun.type is "FunctionDeclaration"
+
+kit.destructArr = (inp, args, fun) ->
+  decls = (kit.declarator(i, kit.mem(inp, kit.lit(x))) for i,x in args)
+  if kit.isFunction(fun)
+    b = fun.body.body
+    if b.length and b[0].type is "VariableDeclaration"
+      b[0].declarations.unshift(decls...)
+    else
+      b.unshift(kit.varDecl(decls))
     return fun
-  return fun if args.length is 0
-  return kit.spread(fun)
-
-kit.spreadApp = (args, fun) ->
-  fun = kit.spreadFun(args, fun)
-  return [kit.pure(),fun] if args.length is 0
-  return [args[0],fun] if args.length is 1
-  return [kit.arrM(args),fun]
+  return kit.fun([inp], [kit.varDecl(decls), kit.ret(kit.call(fun, args))])
 
 kit.halt = mkHalt = -> kit.call(kit.id("halt"),[])
 
@@ -128,9 +145,9 @@ kit.matchEta = (p,b) ->
   if c.type is "MemberExpression"
     return unless c.object.type is "Identifier" and
       (noThisNeeded[c.object.name] or c.object.name is config.packageVar)
-  else
-    return unless c.type is "Identifier"
-  a = x.arguments
+    c = c.property
+  return unless c.type is "Identifier"
+  a = x.arguments 
   return if p.length < a.length
   for j,s in a
     i = p[s]
@@ -142,12 +159,13 @@ kit.matchEta = (p,b) ->
 matchSingleCallBlock = (x) ->
   return unless x.length is 1
   x = x[0]
-  return unless x.type is "ReturnStatement"
-  x = x.argument
+  x = if x.type is "ReturnStatement" then x.argument
+  else
+    if x.type is "ExpressionStatement" then x.expression else null
   return unless x?
   return unless x.type is "CallExpression"
   return x
-   
+
 kit.fun = mkFun = (params, stmt) ->
   params = params.concat()
   stmt = mkBlock stmt
@@ -165,6 +183,8 @@ kit.mem = (p...) ->
   for i in p[1..]
     assert.ok(i.type?)
     res = {type:"MemberExpression",object:res,property:i}
+    unless i.type is "Identifier"
+      res.computed = true
   res
 
 kit.not = (argument) ->
@@ -174,20 +194,12 @@ kit.eq = (left, right) ->
 
 kit.arrM = (args) -> kit.call(kit.packId("arr"), [kit.arr(args)])
 
-kit.mbind = (from, fun) ->
-  assert.ok(Array.isArray(from))
-  [from,fun] = kit.spreadApp(from, fun)
-  assert.ok(fun?)
-  kit.call(kit.mem(from,kit.id("mbind")),[fun])
 kit.catch = (from, arg, to) ->
   args = []
   args.push arg if arg?
   return kit.call(kit.mem(from,kit.id "mhandle"),[mkFun(args, to)])
 kit.finally = (from, to) ->
   return kit.call(kit.mem(from,kit.id "mfinally"), [mkFun [], to])
-kit.mapply = (from, fun) ->
-  [from,fun] = kit.spreadApp(from, fun)
-  kit.call(kit.mem(from,kit.id("mapply")),[fun])
 
 kit.pure = (v...) ->
   args = v

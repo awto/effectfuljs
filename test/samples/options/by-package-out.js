@@ -7,9 +7,10 @@ function a() {
         return M.arr([
             CC.pushSubCont(k, false),
             CC.pushSubCont(k, true)
-        ]).mapply(M.spread(function (b1, b) {
+        ]).mapply(function (a) {
+            var b1 = a[0], b = a[1];
             return (b1 + b ? 3 : 4) + 2;
-        }));
+        });
     };
 }
 var run = function () {
@@ -20,9 +21,10 @@ var run = function () {
                     return M.arr([
                         CC.pushSubCont(k, false),
                         CC.pushSubCont(k, true)
-                    ]).mapply(M.spread(function (b1, b) {
+                    ]).mapply(function (a) {
+                        var b1 = a[0], b = a[1];
                         return b1 + b;
-                    }));
+                    });
                 }).mapply(function (b) {
                     return b ? 3 : 4;
                 });

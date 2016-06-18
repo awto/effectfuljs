@@ -1,6 +1,7 @@
 config = require "./config"
 kit = require "./kit"
 {defaultVisitor} = require "./visitor"
+assert = require "assert"
 
 current = null
 
@@ -142,6 +143,38 @@ class Scope
     @eff = node.eff
     @commitIds()
     kit.block res
+  mkSpreadFun: (args, fun,opts) ->
+    return fun if args.length is 0
+    if fun.$dm$argNum? and fun.$dm$argNum > 1 or
+      fun.params? and fun.params.length > 1
+        if opts.useSpread is true
+          return kit.spread(fun)
+        params = []
+        @argName ?= @uniqId("a")
+        if fun.params
+          params.push(fun.params...)
+          fun.params.length = 1
+          fun.params[0] = @argName
+        else if opts.useSpread isnt "never"
+          return kit.spread(fun)
+        if fun.$dm$argNum? and fun.$dm$argNum > params.length
+          for i in [fun.$dm$argNum..params.length]
+            params.push(@uniqId("a"))
+        return kit.destructArr(@argName,params,fun)
+    return fun
+  mkSpreadApp: (args, fun, opts) ->
+    fun = @mkSpreadFun(args, fun, opts)
+    return [kit.pure(),fun] if args.length is 0
+    return [args[0],fun] if args.length is 1
+    return [kit.arrM(args),fun]
+  mkApply: (from, fun, opts) ->
+    [from,fun] = @mkSpreadApp(from, fun, opts)
+    kit.call(kit.mem(from,kit.id("mapply")),[fun])
+  mkBind: (from, fun, opts) ->
+    assert.ok(Array.isArray(from))
+    [from,fun] = @mkSpreadApp(from, fun, opts)
+    assert.ok(fun?)
+    kit.call(kit.mem(from,kit.id("mbind")),[fun])
   @id: (n) -> ctx().id(n)
 
 ctx = -> current

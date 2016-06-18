@@ -5,7 +5,7 @@ function a() {
         _k1++;
         return M.coerce(function () {
             return M(eff(i)).mbind(function () {
-                var _k = k;
+                var _k = _k1;
                 i++;
                 _k++;
                 j = i;

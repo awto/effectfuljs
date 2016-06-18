@@ -7,7 +7,8 @@
     ];
     j = 0, len = ref.length;
     return M.block(function (brk) {
-        return M.repeat(M.spread(function (i, j) {
+        return M.repeat(function (a) {
+            var i = a[0], j = a[1];
             return M.block(function (cont) {
                 if (j < len) {
                     i = ref[j];
@@ -27,7 +28,7 @@
                     _j
                 ];
             });
-        }), [
+        }, [
             i,
             j
         ]);
@@ -84,19 +85,22 @@ function a1() {
         var _i;
         _i = 0;
         j = 10;
-        return M.forPar(M.spread(function (i, j) {
+        return M.forPar(function (a) {
+            var i = a[0], j = a[1];
             return i < 3;
-        }), M.spread(function (i, j) {
+        }, function (a) {
+            var i = a[0], j = a[1];
             if (i === 2)
                 console.log(i, j);
             return eff(i, j);
-        }), M.spread(function (i, j) {
+        }, function (a) {
+            var i = a[0], j = a[1];
             i++, j += 2;
             return [
                 i,
                 j
             ];
-        }), [
+        }, [
             _i,
             j
         ]);

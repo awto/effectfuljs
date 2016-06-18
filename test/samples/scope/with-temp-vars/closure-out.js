@@ -31,8 +31,8 @@ function a1() {
             _i,
             _j
         ]);
-    }).mbind(M.spread(function (i, j) {
-        var _k;
+    }).mbind(function (a) {
+        var i = a[0], j = a[1], _k;
         _k = function (i) {
             var j;
             return M(eff(i, j)).mbind(function () {
@@ -47,14 +47,16 @@ function a1() {
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i++, j++)).mconst([
             i,
             j
         ]);
-    })).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function b() {
     var i, j;
@@ -96,17 +98,20 @@ function b1() {
             _i,
             _j
         ]);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(k(i)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i++, j++)).mconst([
             i,
             j
         ]);
-    })).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }

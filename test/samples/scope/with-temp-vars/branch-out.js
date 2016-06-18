@@ -48,9 +48,10 @@ function a3() {
                 i,
                 j
             ]);
-    }().mapply(M.spread(function (i, j) {
+    }().mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a3a() {
     var i, j;
@@ -65,9 +66,10 @@ function a3a() {
                 i,
                 j
             ]);
-    }().mapply(M.spread(function (i, j) {
+    }().mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a3b() {
     var i, j;
@@ -95,9 +97,10 @@ function a3c() {
                 j
             ];
         }
-    }()).mapply(M.spread(function (i, j) {
+    }()).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a4() {
     var i, j;
@@ -113,9 +116,10 @@ function a4() {
                 _i,
                 _j
             ]);
-    }).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a4a() {
     var i, j;
@@ -145,9 +149,10 @@ function a4b() {
                 _j
             ];
         }
-    }).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a5() {
     var i, j;
@@ -163,20 +168,21 @@ function a5() {
                 _i,
                 _j
             ]);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
         return M(eff(i, j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(eff));
+    }).mbind(M.spread(eff));
 }
 function a6() {
     var i, j;
     return M(eff(i)).mbind(function () {
         var _i1 = i;
         return M(eff(_i1++)).mbind(function (b) {
-            var _i = i, _j = j;
+            var _i = _i1, _j = j;
             if (b)
                 return M(efft(_i += 1)).mconst([
                     _i,
@@ -188,13 +194,14 @@ function a6() {
                     _j
                 ]);
         });
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
         return M(eff(i, j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(eff));
+    }).mbind(M.spread(eff));
 }
 function a7() {
     var i, j;
@@ -204,25 +211,26 @@ function a7() {
             var _j = j;
             if (b)
                 return M(eff(_j++)).mbind(function () {
-                    var _i = i;
+                    var _i = _i1;
                     return M(efft(_i += 1)).mconst([
                         _i,
-                        j
+                        _j
                     ]);
                 });
             else
                 return M(effe(_j += 2)).mconst([
-                    i,
+                    _i1,
                     _j
                 ]);
         });
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
         return M(eff(i, j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(eff));
+    }).mbind(M.spread(eff));
 }
 function drawM() {
     var start;
@@ -234,10 +242,10 @@ function drawM() {
             _start = b;
             console.log('s', _start);
             return M(function () {
-                if (!start)
+                if (!_start)
                     return root(def);
             }()).mapply(function () {
-                return start;
+                return _start;
             });
         }).mbind(function (start) {
             return M(event('mouseup')).mapply(function (b1) {
@@ -248,13 +256,13 @@ function drawM() {
                     start
                 ];
             });
-        }).mbind(M.spread(function (end, start) {
-            var _c;
+        }).mbind(function (a) {
+            var end = a[0], start = a[1], _c;
             console.log('e', end);
             _c = '.box';
             return M(function () {
                 if (!end) {
-                    c = '.draw';
+                    _c = '.draw';
                     return M(event('mousemove')).mapply(function (b2) {
                         var _end1 = end;
                         _end1 = b2;
@@ -269,13 +277,14 @@ function drawM() {
                     start
                 ];
             });
-        })).mbind(M.spread(function (end, start) {
+        }).mbind(function (a) {
+            var end = a[0], start = a[1];
             console.log('s:', start);
             console.log('e:', end);
             return root({
                 s: start,
                 e: end
             });
-        }));
+        });
     });
 }

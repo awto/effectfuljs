@@ -300,8 +300,7 @@ class Builder
 # represents JS list of statements without effects
 class BlockPure extends Builder
   constructor: (@block) -> super()
-  mkMap: (args, fun) ->
-    kit.mapply(args, fun)
+  mkMap: (args, fun) -> ctx().mkApply(args, fun, @opts)
   pureBlock: -> @block
   toPrefix: -> @
   toBlockBuilder: (eff) ->
@@ -355,7 +354,7 @@ class Eff extends Builder
   constructor: -> super()
   eff: true
   mkMap: (args, fun) ->
-    kit.withName("bind",@opts,kit.mbind(args, fun))
+    kit.withName("bind",@opts,ctx().mkBind(args, fun, @opts))
   append: (other) ->
     envBefore(@env,other.env)
     if other.prepend?

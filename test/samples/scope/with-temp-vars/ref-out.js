@@ -6,17 +6,20 @@ function a() {
             _k,
             _l
         ]);
-    }).mbind(M.spread(function (k, l) {
+    }).mbind(function (a) {
+        var k = a[0], l = a[1];
         return M(eff(i, j, k, l)).mconst([
             k,
             l
         ]);
-    })).mbind(M.spread(function (k, l) {
+    }).mbind(function (a) {
+        var k = a[0], l = a[1];
         return M(eff(i++, j++, k++, l++)).mconst([
             k,
             l
         ]);
-    })).mbind(M.spread(function (k, l) {
+    }).mbind(function (a) {
+        var k = a[0], l = a[1];
         return eff(i, j, k, l);
-    }));
+    });
 }

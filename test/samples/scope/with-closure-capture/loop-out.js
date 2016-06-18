@@ -6,7 +6,8 @@ function a() {
         return function (i) {
             i = 0;
             return M.block(function (brk) {
-                return M.repeat(M.spread(function (i, j) {
+                return M.repeat(function (a) {
+                    var i = a[0], j = a[1];
                     return function () {
                         if (i < 10)
                             return M(eff(i)).mbind(function () {
@@ -29,7 +30,7 @@ function a() {
                             ];
                         }(i);
                     });
-                }), [
+                }, [
                     i,
                     j
                 ]);
@@ -45,7 +46,8 @@ function a1() {
         return function (i) {
             i = 0;
             return M.block(function (brk) {
-                return M.repeat(M.spread(function (i, j) {
+                return M.repeat(function (a) {
+                    var i = a[0], j = a[1];
                     return function () {
                         if (i < 10)
                             return M(eff(i)).mbind(function () {
@@ -65,7 +67,7 @@ function a1() {
                             ];
                         }(i);
                     });
-                }), [
+                }, [
                     i,
                     j
                 ]);
@@ -81,7 +83,8 @@ function b() {
         return function (i) {
             i = 0;
             return M.block(function (brk) {
-                return M.repeat(M.spread(function (i, j) {
+                return M.repeat(function (a) {
+                    var i = a[0], j = a[1];
                     return function () {
                         if (i < 10)
                             return M(eff(i)).mbind(function () {
@@ -113,7 +116,7 @@ function b() {
                             ];
                         }(i);
                     });
-                }), [
+                }, [
                     i,
                     j
                 ]);

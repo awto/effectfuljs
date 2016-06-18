@@ -170,7 +170,8 @@ function c2() {
                                 j
                             ]);
                         }(i, j);
-                    }).mbind(M.spread(function (i, j) {
+                    }).mbind(function (a) {
+                        var i = a[0], j = a[1];
                         return M.block(function (lab2) {
                             i += 3;
                             return M(eff(i)).mbind(function () {
@@ -209,14 +210,16 @@ function c2() {
                                 j
                             ];
                         });
-                    })).mbind(M.spread(function (i, j) {
+                    }).mbind(function (a) {
+                        var i = a[0], j = a[1];
                         return root(i += 5);
-                    }));
+                    });
                 });
             }(i);
-        }).mbind(M.spread(function (i, j) {
+        }).mbind(function (a) {
+            var i = a[0], j = a[1];
             return M(eff(i, j)).mconst(i);
-        })).mbind(function (i) {
+        }).mbind(function (i) {
             return eff(i += 7);
         });
     });

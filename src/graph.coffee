@@ -314,7 +314,7 @@ class PlaceholderNode extends PureExprNode
     super()
   setExpr: (expr) ->
     return super(expr) unless @arg
-    super(kit.mapply([expr],kit.fun([], [kit.ret @arg])))
+    super(ctx().mkApply([expr],kit.fun([], [kit.ret @arg]),@opts))
   setBlock: (n, b, s) ->
     vn = s.vn
     @depBlock = n
@@ -516,7 +516,7 @@ class BreakNode extends JumpNode
     if @val
       vexpr = @val.getBuilder().coerceObj().toExpr() if @val?
       expr = if @val.eff
-        kit.mbind([vexpr],lab)
+        ctx().mkBind([vexpr],lab,@opts)
       else
         kit.call(lab,[vexpr])
     else
@@ -644,7 +644,7 @@ getBuilderFun = (node) ->
   b = b.capture().toBlockBuilder()
   thread[i] = true for i of b.env when i.thread
   vars = (i for i of thread).sort().map(Scope.id)
-  fun = kit.spreadFun(vars,kit.fun(vars, b.block))
+  fun = ctx().mkSpreadFun(vars,kit.fun(vars, b.block), b.opts)
   return [fun,vars,b,thread]
 
 # represents M.repeat
@@ -752,10 +752,10 @@ class LoopNode extends ControlNode
     return if @exits.length
     [update, updVars, b, thread] = getBuilderFun(@update)
     tb = @test.getBuilder().toBlockBuilder().capture()
-    test = kit.spreadFun(updVars, kit.fun(updVars, tb.block))
+    test = ctx().mkSpreadFun(updVars, kit.fun(updVars, tb.block), @opts)
     bb = @inner.getBuilder()
     bb = bb.capture().toBlockBuilder()
-    body = kit.spreadFun(updVars, kit.fun(updVars, bb.block))
+    body = ctx().mkSpreadFun(updVars, kit.fun(updVars, bb.block), @opts)
     v.mod = false for i, v of b.env when v.mod
     updVars = [kit.arr(updVars)] if updVars.length > 1
     return builder.exprEff(

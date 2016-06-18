@@ -20,9 +20,10 @@ function aij() {
                 j
             ]);
         }(i, j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i, j)).mconst(j);
-    })).mbind(eff);
+    }).mbind(eff);
 }
 function aij1() {
     var i, j, y;
@@ -40,9 +41,10 @@ function aij1() {
                 j
             ]);
         }(j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i, j)).mconst(j);
-    })).mbind(eff);
+    }).mbind(eff);
 }
 function aij2() {
     var i, j, y;
@@ -60,9 +62,10 @@ function aij2() {
                 j
             ]);
         }(j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i, j)).mconst(j);
-    })).mbind(eff);
+    }).mbind(eff);
 }
 function ar() {
     var i, j;
@@ -88,29 +91,33 @@ function ar() {
                 j
             ]);
         }(j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(3)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         i++;
         return M(eff(j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(3)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         j = 1;
         return M(eff(i)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(eff));
+    }).mbind(M.spread(eff));
 }
 function a() {
     var i, j;
@@ -136,31 +143,36 @@ function a() {
                 j
             ]);
         }(j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(3)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         i++;
         return M(eff(j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(3)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         j = 1;
         return M(eff(i)).mconst(j);
-    })).mbind(eff);
+    }).mbind(eff);
 }
 function al() {
     var i, j;

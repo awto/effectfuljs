@@ -7,7 +7,8 @@
     ];
     j = 0, len = ref.length;
     return M.block(function (brk) {
-        return M.repeat(M.spread(function (i, j) {
+        return M.repeat(function (a) {
+            var i = a[0], j = a[1];
             return function () {
                 if (j < len) {
                     i = ref[j];
@@ -27,7 +28,7 @@
                     _j
                 ];
             });
-        }), [
+        }, [
             i,
             j
         ]);

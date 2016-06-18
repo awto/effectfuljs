@@ -7,9 +7,10 @@ function a$def() {
             return M.arr([
                 eff(2),
                 eff(3)
-            ]).mapply(M.spread(function (b1, b) {
+            ]).mapply(function (a) {
+                var b1 = a[0], b = a[1];
                 console.log('2', b1, b);
-            }));
+            });
     });
 }
 function a$def() {
@@ -21,8 +22,9 @@ function a$def() {
             return M.arr([
                 eff(2),
                 eff(3)
-            ]).mapply(M.spread(function (b1, b) {
+            ]).mapply(function (a) {
+                var b1 = a[0], b = a[1];
                 console.log('2', b1, b);
-            }));
+            });
     });
 }

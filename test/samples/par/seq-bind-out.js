@@ -2,9 +2,10 @@ function a$def() {
     return M.arr([
         eff(1),
         eff(2)
-    ]).mapply(M.spread(function (b1, b) {
+    ]).mapply(function (a) {
+        var b1 = a[0], b = a[1];
         b1 + b;
-    }));
+    });
 }
 function a$seq() {
     return M(eff(1)).mbind(function (b1) {

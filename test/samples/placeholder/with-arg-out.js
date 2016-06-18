@@ -24,8 +24,9 @@ function b() {
         n.mapply(function () {
             return 1;
         }).eff(4)
-    ]).mbind(M.spread(function (b2, b1) {
+    ]).mbind(function (a) {
+        var b2 = a[0], b1 = a[1];
         console.log(b2 + b1);
         return eff(5);
-    }));
+    });
 }

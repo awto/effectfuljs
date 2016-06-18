@@ -53,15 +53,15 @@ function a(f) {
         var _i2 = i;
         _i2++;
         return M(eff(f)).mbind(function (b) {
-            var _i1 = i;
+            var _i1 = _i2;
             with (b) {
                 console.log(z, _i1);
                 z++;
                 _i1++;
                 return M(eff(z, _i1)).mbind(function () {
-                    return eff(z, i);
+                    return eff(z, _i1);
                 }).mbind(function () {
-                    var _i = i;
+                    var _i = _i1;
                     z++;
                     _i++;
                     return M(eff(z, _i)).mconst(_i);

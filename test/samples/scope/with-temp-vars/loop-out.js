@@ -6,7 +6,8 @@ function a() {
         var _i1 = i;
         _i1 = 0;
         return M.block(function (brk) {
-            return M.repeat(M.spread(function (i, j) {
+            return M.repeat(function (a) {
+                var i = a[0], j = a[1];
                 return function () {
                     if (i < 10)
                         return M(eff(i)).mbind(function () {
@@ -27,8 +28,8 @@ function a() {
                         j
                     ];
                 });
-            }), [
-                i,
+            }, [
+                _i1,
                 j
             ]);
         });
@@ -42,7 +43,8 @@ function a1() {
         var _i1 = i;
         _i1 = 0;
         return M.block(function (brk) {
-            return M.repeat(M.spread(function (i, j) {
+            return M.repeat(function (a) {
+                var i = a[0], j = a[1];
                 return function () {
                     if (i < 10)
                         return M(eff(i)).mbind(function () {
@@ -60,8 +62,8 @@ function a1() {
                         j
                     ];
                 });
-            }), [
-                i,
+            }, [
+                _i1,
                 j
             ]);
         });
@@ -75,19 +77,20 @@ function b() {
         var _i1 = i;
         _i1 = 0;
         return M.block(function (brk) {
-            return M.repeat(M.spread(function (i, j) {
+            return M.repeat(function (a) {
+                var i = a[0], j = a[1];
                 return function () {
                     if (i < 10)
                         return M(eff(i)).mbind(function () {
                             var _j = j;
                             return M(function () {
-                                if (j++)
+                                if (_j++)
                                     return brk([
                                         i,
-                                        j
+                                        _j
                                     ]);
                             }()).mapply(function () {
-                                return j;
+                                return _j;
                             });
                         }).mbind(function (j) {
                             return M(eff(j)).mconst(j);
@@ -95,7 +98,7 @@ function b() {
                     else
                         return brk([
                             i,
-                            j
+                            _j
                         ]);
                 }().mapply(function (j) {
                     var _i = i;
@@ -105,8 +108,8 @@ function b() {
                         j
                     ];
                 });
-            }), [
-                i,
+            }, [
+                _i1,
                 j
             ]);
         });

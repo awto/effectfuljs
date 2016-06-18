@@ -5,8 +5,8 @@ function a(){
 }
 
 function a1(){
-  var b1;
-  b1 = eff(1);
+  var a;
+  a = eff(1);
   eff("a");
   eff("b");
 }
@@ -19,10 +19,10 @@ function b(){
 
 
 function b1(){
-  var b1, b2;
-  b1 = eff(1), b2 = eff(2);
-  eff(b1);
-  eff(b2);
+  var a, c;
+  a = eff(1), c = eff(2);
+  eff(a);
+  eff(c);
 }
 
 function c(){

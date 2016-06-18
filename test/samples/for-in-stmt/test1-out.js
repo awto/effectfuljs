@@ -112,7 +112,7 @@ function g() {
                         _iter = _iter();
                         return _iter;
                     });
-                }, iter);
+                }, _iter1);
             });
         });
     }).mbind(function () {
@@ -128,7 +128,8 @@ function h() {
         var _iter3, _j = j;
         _iter3 = M.forInIterator(obj);
         return M.block(function (labBrk) {
-            return M.repeat(M.spread(function (iter, iter1, j) {
+            return M.repeat(function (a) {
+                var iter = a[0], iter1 = a[1], j = a[2];
                 return M.block(function (labCont) {
                     if (iter) {
                         j = iter.value;
@@ -176,7 +177,7 @@ function h() {
                                             _iter = _iter();
                                             return _iter;
                                         });
-                                    }, iter1);
+                                    }, _iter1);
                                 });
                             });
                         }).mbind(function (iter1) {
@@ -187,19 +188,19 @@ function h() {
                         });
                     } else
                         return labBrk();
-                }).mapply(M.spread(function (iter1, j) {
-                    var _iter2 = iter;
+                }).mapply(function (a) {
+                    var iter1 = a[0], j = a[1], _iter2 = iter;
                     _iter2 = _iter2();
                     return [
                         _iter2,
                         iter1,
                         j
                     ];
-                }));
-            }), [
-                iter,
+                });
+            }, [
+                _iter3,
                 iter1,
-                j
+                _j
             ]);
         });
     }).mbind(function () {

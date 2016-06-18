@@ -585,6 +585,10 @@ Here is the set of possible options:
                value is true.
  * `keepForOf` - for pure functions don't translate `for-of` statements 
  * `mopt` - translates `yield` statement to `mopt`, default is true
+ * `useSpread` - should `M.spread` function is used for destructing array's 
+                 argument or not, if used it produces cleaner but slower code,
+                 possible values are: "never" - never used, true - always used, 
+                 and default false - not used only in function expressions
 
 ## Directives
 

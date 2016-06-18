@@ -47,11 +47,11 @@ function e() {
     return M.arr([
         n.eff(3),
         n.eff(4)
-    ]).mbind(M.spread(function (b1, b) {
-        var _k;
+    ]).mbind(function (a) {
+        var b1 = a[0], b = a[1], _k;
         _k = b1 + b;
         return eff(5);
-    }));
+    });
 }
 function f() {
     var n1 = M.reify(function () {
@@ -93,18 +93,18 @@ function g1() {
         _j1++;
         var n = M.reify(function () {
             var n1 = M.reify(function () {
-                return M(eff(i, j)).mbind(function () {
+                return M(eff(i, _j1)).mbind(function () {
                     i++;
-                    return eff2(i, j);
+                    return eff2(i, _j1);
                 });
             });
-            return M(n1.eff3(i, j)).mbind(function () {
+            return M(n1.eff3(i, _j1)).mbind(function () {
                 i++;
-                return eff4(i, j);
+                return eff4(i, _j1);
             });
         });
         return M(n.eff5(i, _j1)).mbind(function () {
-            var _j = j;
+            var _j = _j1;
             _j++;
             return M(eff(i, _j)).mconst(_j);
         });

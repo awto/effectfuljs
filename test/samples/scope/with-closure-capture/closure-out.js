@@ -35,7 +35,8 @@ function a1() {
                 j
             ]);
         }(i, j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return function (k) {
             k = function (i) {
                 var j;
@@ -53,14 +54,16 @@ function a1() {
                 j
             ]);
         }(k);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i++, j++)).mconst([
             i,
             j
         ]);
-    })).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function b() {
     var i, j;
@@ -106,17 +109,20 @@ function b1() {
                 j
             ]);
         }(i, j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(k(i)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         return M(eff(i++, j++)).mconst([
             i,
             j
         ]);
-    })).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }

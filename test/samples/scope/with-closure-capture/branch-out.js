@@ -51,9 +51,10 @@ function a3() {
                 i,
                 j
             ]);
-    }().mapply(M.spread(function (i, j) {
+    }().mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a3a() {
     var i, j;
@@ -68,9 +69,10 @@ function a3a() {
                 i,
                 j
             ]);
-    }().mapply(M.spread(function (i, j) {
+    }().mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a3b() {
     var i, j;
@@ -98,9 +100,10 @@ function a3c() {
                 j
             ];
         }
-    }()).mapply(M.spread(function (i, j) {
+    }()).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a4() {
     var i, j;
@@ -117,9 +120,10 @@ function a4() {
                     j
                 ]);
         }(i, j);
-    }).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a4a() {
     var i, j;
@@ -151,9 +155,10 @@ function a4b() {
                 ];
             }
         }(i, j);
-    }).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function a5() {
     var i, j;
@@ -170,13 +175,14 @@ function a5() {
                     j
                 ]);
         }(i, j);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
         return M(eff(i, j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(eff));
+    }).mbind(M.spread(eff));
 }
 function a6() {
     var i, j;
@@ -197,13 +203,14 @@ function a6() {
                 }(i, j);
             });
         }(i);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
         return M(eff(i, j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(eff));
+    }).mbind(M.spread(eff));
 }
 function a7() {
     var i, j;
@@ -228,13 +235,14 @@ function a7() {
                 }(j);
             });
         }(i);
-    }).mbind(M.spread(function (i, j) {
+    }).mbind(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
         return M(eff(i, j)).mconst([
             i,
             j
         ]);
-    })).mbind(M.spread(eff));
+    }).mbind(M.spread(eff));
 }
 function drawM() {
     var start;
@@ -262,7 +270,8 @@ function drawM() {
                     ];
                 }(end);
             });
-        }).mbind(M.spread(function (end, start) {
+        }).mbind(function (a) {
+            var end = a[0], start = a[1];
             return function (c) {
                 console.log('e', end);
                 c = '.box';
@@ -285,13 +294,14 @@ function drawM() {
                     ];
                 });
             }(c);
-        })).mbind(M.spread(function (end, start) {
+        }).mbind(function (a) {
+            var end = a[0], start = a[1];
             console.log('s:', start);
             console.log('e:', end);
             return root({
                 s: start,
                 e: end
             });
-        }));
+        });
     });
 }

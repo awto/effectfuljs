@@ -270,10 +270,11 @@ function a32a() {
     return M.arr([
         eff(i),
         eff(2)
-    ]).mapply(M.spread(function (b1, b) {
+    ]).mapply(function (a) {
+        var b1 = a[0], b = a[1];
         console.log(b1 + b);
         console.log(i);
-    }));
+    });
 }
 function a32() {
     var i;
@@ -349,9 +350,10 @@ function a36() {
         return function (i) {
             return M(b.eff(i++)).munshiftTo([i]);
         }(i);
-    }).mbind(M.spread(function (b1, i) {
+    }).mbind(function (a) {
+        var b1 = a[0], i = a[1];
         return M(b1.eff(i++)).mconst(i);
-    })).mbind(eff);
+    }).mbind(eff);
 }
 function a37() {
     var i, j;
@@ -378,9 +380,10 @@ function a39() {
                 j
             ]);
         }(i, j);
-    }).mapply(M.spread(function (i, j) {
+    }).mapply(function (a) {
+        var i = a[0], j = a[1];
         console.log(i, j);
-    }));
+    });
 }
 function aij() {
     var i, j, y;
