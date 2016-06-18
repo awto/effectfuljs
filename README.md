@@ -615,3 +615,5 @@ Copyright © 2016 Vitaliy Akimov
 Distributed under the terms of the The MIT License (MIT).
 
 
+- - -
+[![Gitter](https://badges.gitter.im/awto/mfjs-compiler.svg)](https://gitter.im/awto/mfjs-compiler?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
