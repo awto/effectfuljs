@@ -1,5 +1,7 @@
 # JavaScript embedded effects compiler
 
+[![Join the chat at https://gitter.im/awto/mfjs-compiler](https://badges.gitter.im/awto/mfjs-compiler.svg)](https://gitter.im/awto/mfjs-compiler?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is  a JavaScript to JavaScript transpiler. It offers extending JavaScript
 language with various effects by means of runtime libraries, without even using
 compiler plugins.
