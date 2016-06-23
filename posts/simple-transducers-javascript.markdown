@@ -1,5 +1,6 @@
 ---
 title: JavaScript simple transducers
+date: 2016-06-23
 ---
 # Simpler transducers
 
@@ -41,7 +42,7 @@ whatever, input -> whatever
 
 There is an earlier paper with the example of transducers transforming producers
 instead of consumers:
-(Lazy v. Yield: Incremental, Linear Pretty-printing)[http://okmij.org/ftp/continuations/PPYield/yield-pp.pdf]
+[Lazy v. Yield: Incremental, Linear Pretty-printing](http://okmij.org/ftp/continuations/PPYield/yield-pp.pdf)
  in Haskell. And data types there are:
 
 ```haskell
@@ -117,4 +118,5 @@ callback, but not `yield`. This complicates things a lot. However, there is a
 simple solution for this, namely using
 [mfjs compiler](https://github.com/awto/mfjs-compiler)
 with asynchronous functions, and simple, readable `for-of` loops.
+
 
