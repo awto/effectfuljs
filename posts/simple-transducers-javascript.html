@@ -25,18 +25,19 @@
     </script>
   </head>
   <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+    <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="../">MF.js</a>
         </div>
-        <ul class="nav navbar-nav nav-pills pull-right">
+        <ul class="nav navbar-nav">
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
           <li><a href="../archive.html">Blog</a></li>
         </ul>
       </div>
     </nav>
-    <div class="container">
-      <div class="container">
       <div class="container-fluid">
  <h1 id="simpler-transducers">Simpler transducers</h1>
 <p>It is, of course, good design practice to split computation into several separate stages. The smaller the stage, the easier it is to reason, develop and maintain. For example we split some computation into 3 stages in functions f, g, k with resulting one is <code>input =&gt; f(g(k(input)))</code> or using Ramda <code>R.comp(f,g,k)</code>. The problem with this approach is intermediate data passed between functions, and each sub-stage should finish its computation completely before passing the result to next stage. The data size they operate with may be large or even infinite if it is some server requests stream. In a case of unlimited data <code>k</code> will never return control. As it is often occurring task, there are many solutions, like nodejs streams with their <code>.pipe()</code> operation adding stream transformer to the chain. Transducers described in this post may be seen as a simpler solution to the problem.</p>
@@ -111,7 +112,6 @@ whatever, input <span class="kw">-&gt;</span> whatever
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 </div>
 
-      </div>
       <hr />
       <footer class="footer">
         <p>© 2016 <a href="mailto:vitaliy.akimov@gmail.com">Vitaliy Akimov</a></p>
