@@ -15,7 +15,6 @@ describe('yop', function () {
         if (done.async)
             done = done.async();
         M.run(QM, function () {
-            var result;
             return M(addLater(1, 2)).mapply(function (b) {
                 var _result;
                 _result = b;
@@ -59,7 +58,6 @@ describe('yop', function () {
         if (done.async)
             done = done.async();
         M.run(QM, function () {
-            var result;
             return M(1 + 2).mapply(function (b) {
                 var _result;
                 _result = b;

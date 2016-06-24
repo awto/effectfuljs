@@ -17,6 +17,7 @@ run = (s,opts) ->
     opts.transform ?= {}
     opts.transform.start = "defaultFull"
     opts.transform.packageVar = "M"
+    opts.mangle = false
   res = compiler.compile s, opts
   console.log res if opts.verbose
   if opts.verbose

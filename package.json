@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "escodegen": "^1.8.0",
+    "esmangle": "^1.0.1",
     "esprima": "^2.7.2",
     "esquery": "^0.4.0",
     "estraverse": "^4.2.0",

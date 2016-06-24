@@ -11,7 +11,7 @@ There are such libraries for:
  * [Logical programming](https://github.com/awto/mfjs-logic)
  * [Multi-prompt delimited continuations](https://github.com/awto/mfjs-cc)
 
-These are small libraries, some of them are just tiny wrappers of well known
+Theare are typically small, some of them are just tiny wrappers of well known
 interfaces, such as Promises and Rx Observables.
 
 The compiler converts ES5 to ES5 without any syntax extensions. So it may be
@@ -21,7 +21,6 @@ TypeScript, Babel etc.
 It stratifies input JavaScript code into two levels, namely object and meta
 level. Their separation may be either explicit or implicit. 
 
-One of the main transpilers goals is generating human readable code, so
 Generators syntax can be used for explicit level separation. This
 way following code:
 
@@ -49,59 +48,57 @@ function() {
 
 The output will be the same.
 
-More examples of input/output of the tool may be found in
+There are more examples of input/output in the
 [test folder](https://github.com/awto/mfjs-compiler/tree/master/test/samples).
 
 The `mapply` function there is abstract. For example its concrete implementation
-for promises is their `then` function. There are a dozen of such function
+for promises is their `then` function. There is a dozen of such functions
 required to be implemented in concrete effects implementation library.
-Default implementations of most of them may be automatically derived from
-a few base ones. They are higher order abstract functions calls. The interface
-is based on Monads interfaces hierarchy from Haskell (Functor, Applicative,
-Alternative, Monad).
+There is a library with default implementations of most of them using small
+basis. The interface builds on Monads interfaces hierarchy from Haskell
+(Functor, Applicative, Alternative, Monad).
 
-It is arguable if explicit or implicit level separation is better. This likely
-depend on what kind effect is used. Succinct and more readable code is good,
+It is arguable if explicit or implicit levels separation is better. This likely
+depend on what kind effect is used. The succinct and more readable code is good,
 but if effects are heavy making them explicit may be better. So mfjs
 compiler supports both options.
 
 I will abuse term *pure* for some JS code or values. This doesn't
 mean the code is really pure of course. This is original JavaScript and it
 is absolutely not a problem to use the side effects already embedded
-in JavaScript. Including IO, references, exceptions etc. 
+in JavaScript. Including IO, references, exceptions, etc. 
 
-Besides two basic explicit and implicit modes there are means to selectively
-treat some parts of code to be either effectful or pure.
+Besides two primary explicit and implicit modes, there are means to
+treat some parts of the code selectively to be either effectful or pure.
 
 ## Background
 
 There are quite a few JavaScript transpilers adding some concrete new effects
-into JavaScript language. This tool adds abstract side effects into language,
-so any concrete effects may be loaded in runtime as implementation of that
-abstract interface.
+into JavaScript language. This tool embeds abstract side effects into language.
+Any concrete effect is a runtime library implementing that abstract interface.
 
-One of examples is recent ES standard updates with generators and `async/await`.
-It is a new concrete side effects embedded into language. Adding same coroutines
+One of the examples is recent ES standard updates with generators and `async/await`.
+It is a new concrete side effect embedded into language. Adding same coroutines
 effects with mfjs doesn't require standard, syntax change and new compilers.
 
 Human readability for generated code aim is shared with
 [kneden](https://github.com/marten-de-vries/kneden) transpiler, and turning
 `async/await` into promises expressions. The same may be achieved using mfjs
 with a tiny adapter from promises interface into mfjs. There is one implemented
-in [@mfjs/promise](https://github.com/awto/mfjs-promise). This means mfjs approach
+in [@mfjs/promise](https://github.com/awto/mfjs-promise), so mfjs approach
 does require runtime library loading, while kneden team highlights no runtime
 library dependency as an advantage. There is a plan to implement combinators
 inlining in mfjs, so generated code for promises library will be very similar.
-Also mfjs is more complete than kneden(at the time of writing this). It at least
+Also, mfjs is more complete than kneden(at the time of writing this). It at least
 can handle `breaks/return/continue` from `try/catch/finally`.
 
 There are other less known JS extensions may be implemented as library using mfjs
-compiler. These are [webppl](https://github.com/probmods/webppl) for probalistic
+compiler. These are [webppl](https://github.com/probmods/webppl) for probabilistic
 programming, [flapjax](http://www.flapjax-lang.org/) language for reactive
 programming.
 
 A few other JS libraries abstract generators interface to any monad, for example
-[burrido](https://github.com/pelotom/burrido). This works pretty well if effects
+[burrido](https://github.com/pelotom/burrido). It works pretty well if effects
 don't require re-executing of some control paths several times. Which is the
 case for reactive, logical programming and continuations. Here is a problem
 description for rx monad
@@ -113,14 +110,14 @@ In other languages the most famous examples of similar tools are Haskell
 do-notation and C# LINQ. They implement explicit separation of meta and
 object levels. They have different syntaxes. In JS burrido does the same.
 The effectful level expressions are generators expressions, with
-interface adapted to arbitrary monad, while pure code parts uses plain JS
+interface adapted to arbitrary monad, while pure code parts use plain JS
 syntax.
 
-In single level syntax the level separation is implicit, and both use the
-same syntax. First mention of this I know is embedding monads using delimited
+In single level syntax the layers separation is implicit, and both use the
+same language. The first mention of this I know is embedding monads using delimited
 control by Andrzej Filinski in
 [Representing monad](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.43.8213&rep=rep1&type=pdf)
-paper from 1994. There is more recent implementation of same idea for Java in
+paper from 1994. There is a more recent implementation of the same idea for Java in
 [quasar framework](http://docs.paralleluniverse.co/quasar/) described in
 [this post](https://www.infoq.com/articles/Dont-graft-Monads-onto-Imperative-Languages).
 Continuations based implementation doesn't allow detecting and automatically
@@ -142,7 +139,7 @@ and saving results to another folder or file.
 
 The remained options are used to augment default configuration object, and
 it is constructed using [optimist](https://www.npmjs.com/package/optimist)
-command line encoding. For example namespace for core and translation profile
+command line encoding. For example, namespace for core and translation profile
 may be specified via command line too:
 
     $ mfjsc input.js --output dist --transform.packageVar=M --transform.start=defaultFull
@@ -162,7 +159,7 @@ Or with options:
 
 The hook is implemented in `@mfjs/compiler/nastyRegister`. It overrides all
 currently registered extensions and post-process their output with the
-transpiler. It is bad idea to use it in production.
+transpiler. It is a bad idea to use it in production.
 
 For example, for mocha
 
@@ -181,37 +178,34 @@ files in the project. The translation is activated when it encounters CommonJS
 require for core library module. By default it is `@mfjs/core` but may be
 configured. The require call expression must be assigned to some namespace
 variable and that namespace name is used to detect translation directives
-further in the code. I will use name M for core namespace in the doc but
-it may be any other.
+further in the code. I will use name M for core namespace in the doc.
 
 In default mode (after require) it still doesn't translate anything. To
 start actual translation specify how eager you want it to be with `M.profile`
-directive receiving string with name of the mode. For example "defaultFull"
+directive receiving a string with the name of the mode. For example "defaultFull"
 mode may be used to treat all function calls as effectful in all function
 definition except the current one.
 
-In short the tool converts effectful monadic values in code into its inner
+In short, the tool converts effectful monadic values in code into its inner
 pure value. For example for promises it converts Promise object into the value
 it is going to be resolved to (or already resolved). In generated code this is
 converted to appropriate `then` usages. The backward translation is also
-needed. In the promises example the code may need access to original promise
-object, for example to wait a few promises in parallel.
+needed. In the promises example the code may require access to original promise
+object, for example to wait for a few promises in parallel.
 
 ### From pure to effectul
 
- * `M.reify` - expects function expression, the function is immediately
-    executed and returned value isn't translated to pure value
-    and so may be passed to a function expecting effectful value.
+ * `M.reify` - expects function expression, executes it immediately but doesn't
+    translate value to pure one.
  * `M.p` - is the same as `M.reify` but its argument is not a function
    but just some value the compiler will treat as already pure.
  * `M.$` is similar to `M.reify` with argument function containing all the
-   statements in the current block (delimited with curly braces) before
-   statement with `M.$` as argument. It may be also used as a function. In
-   this case expression in the argument will be returned as result of reified
+   statements in the current block (delimited by curly braces) before
+   statement with `M.$` as an argument. If used as function,
+   this case expression in the argument will be returned as a result of reified
    monadic value.
 
-For example if implementation library has some `sum` function it may be
-called like:
+For example if implementation library has some `sum` function:
 
 ```javascript
     const k = getValue()
@@ -221,7 +215,7 @@ called like:
 ### From effectful to pure
 
 The general backward translation from effectful value to pure value can be
-performed using `M` directive, that will translate monadic value into pure
+performed using `M` directive. That will translate monadic value into pure
 even in "minimal" profile. In "full" profile all functions call will be
 immediately reflected into pure value.
 
@@ -230,22 +224,20 @@ immediately reflected into pure value.
 
 Since JavaScript is dynamically typed language we cannot know in compile type
 if the function will indeed return monadic value or it may return any pure
-value or no value at all. For this to work the library must keep checking type
+value or no value at all. For this to work the library must keep checking the type
 of the value and construct monadic value (with M.pure function) if it is not
-already monadic.
-
-This of course adds additional overhead, so there is an option to disable
-coercions. In this case generated code will always return effectful values from
-effectful functions, and will not add runtime checks. This requires stronger
-discipline for functions not not translated with the compiler using some strong
+already monadic. This of course adds additional overhead, so there is an option to
+disable coercions. In this case generated code will always return effectful values from
+effectful functions, and will not add runtime checks. This, of course, requires stronger
+discipline for functions not translated with the compiler using some strong
 code style conventions or probably some future type checker. If accidently not
-effectful functions is called it will crash.
+effectful functions are called it will crash.
 
 There is also exceptions coercion. If it is enabled (disabled by default) all
-function invocation will be wrapped into `try..catch` block and in case of
+function invocation will be wrapped into `try..catch` block and in the case of
 exception its value is translated into `M.raise`.
 
-The coercion level is defined using coerce option possible values: "none",
+The coercion level is defined using coerce option with possible values: "none",
 "all" or "value".
 
 ### Variables scope
@@ -255,53 +247,51 @@ typical example is logical programming monad, reactive programming and
 continuations.
 
 Programmers would expect variables values to revert their values
-on backtracking in typical logical programming language. The compiler tries to
-capture some local variables values for this to work. Non local variables are
-treated as global references (the references related effects are embedded into
-JavaScript). If you apply mutable operator to local variable it will also be
+on backtracking in a typical logical programming language. The compiler tries to
+capture some local variables values for this to work. Not local variables are
+global references (the embedded into JavaScript references effects).
+If you apply some mutable operator to a local variable it will also be
 visible on backtracking. This is a good reason to move to immutable data
 structures though.
 
 To avoid local variables capturing use `M.ref` directive
 specifying variables as arguments. If the code will be used only for monads
-where variable capturing is not needed (like Promise) to avoid capturing
-overhead set option `varCapt` to false.
+where variable capturing is not needed (like Promise) it may be disabled to avoid
+overhead, by setting option `varCapt` to false.
 
 ### Applicative vs Monad interface
 
 There is interfaces hierarchy Functor <- Applicative <- Monad. Functor allows
-only changing inner value of effectful value, Applicative allows combining
-several effectful values into one, and Monad is the more generic one allows
+only changing its inner value of effectful value. Applicative allows combining
+several effectful values into one, and Monad is the most generic one allows
 changing structure of effectful value depending on inner value. In mfjs the
 main corresponding functions for the interfaces are `mapply`, `M.arr`,
 `mbind` respectively. 
 
-Looking on differences between `mapply` and `mbind`, the first one always
+Looking at differences between `mapply` and `mbind`, the first one always
 returns pure value while the second (with enabled coercion) may either return
-pure or effectful value. And in fact if coercions is enabled if `mbind` returns
-pure value it is semantically absolutely equivalent to `mapply`. So one may
+pure or effectful value. And in fact if coercions is active if `mbind` returns
+pure value it is semantically equivalent to `mapply`. So one may
 wonder why `mapply` is needed at all. Monad generalizes Applicative interface,
 so if something has Monad interface it is automatically Functor and Applicative.
-But monadic expression is not suitable for static analysis, since parts of it
-depend on inner value, and the inner value is not known until some future point
-in runtime. 
+But monadic expressions are not suitable for static analysis.
 
 For example, for parser combinators monad this means Monad-based one allows
-introducing context dependencies (where depending on some already parsed part
-you may return grammar for the next part), while Applicative combinators don't
-offer such context dependency but they allow building much more efficient parsers
-because it may analyze grammars during parser construction (calculate FOLLOW,
+introducing context dependencies. Depending on some already parsed part
+it may return grammar for the next part. While Applicative combinators don't
+offer such context dependency but they allow building much more efficient parsers.
+It may analyze grammars during parser construction (calculate FOLLOW,
 FIRST sets etc). That is impossible for Monad parser because parts of its grammar
 will be known only during parsing.
 
 Applicative interface allows implicit program parallelization like in
 [haxl](https://github.com/facebook/Haxl).
 
-For some functional reactive libraries which build data-flow graph, monadish
+For some functional reactive libraries which build a data-flow graph, the monadish
 application means graph rebuilding (switching). The same applicative version
 will have that graph always static. So for example `if-then-else`, if this is
-implemented as Monad the 2 branches graph will be always rebuilt on new value
-of condition, and there will be only one branch branch constructed. While for
+implemented as Monad the two branches graph will always be rebuilt on new value
+of condition, and there will be only one branch constructed. While for
 Applicative-based one both branches will be always built and only signal
 propagation will continue to some single branch depending on input value. This
 may be more efficient for libraries where graph construction is expensive,
@@ -316,10 +306,10 @@ practice to have such operation in a single expression anyway. But you may
 still disable this by setting option `expr: "seq"`.
 
 The compiler will translate for-loop into `M.forPar` if its tests and update
-expressions are pure, tests and body doesn’t change any variable (assignment
+expressions are pure, tests and body don’t change any variable (assignment
 is allowed). Some monad implementation may run each iteration in parallel.
 
-In the future versions the compiler will try to to translate more code
+In the future versions the compiler will try to translate more code
 patterns into Applicative form.
 
 ### Alternatives
@@ -327,7 +317,7 @@ patterns into Applicative form.
 Many monads may support multiply inner values in single monadic value.
 These are reactive programming, logical programming monads etc.
 
-If monad support this you may use either methods from the interface directly
+If monad supports this you may use either method from the interface directly
 or directives (`M.answer` or `M.yield`), `yield` expression
 (if not in "regenerator" profile). All three are
 aliases and have the same encoding. It acts similar to return statement but
@@ -345,8 +335,8 @@ There is a global configuration object and it is possible to augment it either
 from command line,  browserify transform arguments, gulp/grunt options, or
 directly from some loaded module if `M.require` is used. The tool also looks
 for a file `mfjs-config.json` in folder there input file located and in its
-ancestors folders using only the first closest found. It is parsed and merged
-into configuration object too.
+ancestors folders using only the first closest found. The compiler parses it
+and merges into configuration object too.
 
 Top level fields of the configuration object:
 
@@ -361,7 +351,7 @@ Top level fields of the configuration object:
      * `start` - initial state name, by default it is a state where it doesn't
                touch anything
      * `verbose` - debug output
-     * `policyTrace` - outpus details about how options for specific AST node
+     * `policyTrace` - outputs details about how options for specific AST node
                      were chosen
      * `naming` - for `block`, `scope`, `M`, `repeat`, `forPar`
        adds additional autogenerated unique constant argument, it may be used
@@ -371,10 +361,10 @@ Top level fields of the configuration object:
      * `states` - rules description for deriving translation options for each
                 AST nodes
 
-To set some options in other module you may use `M.require`. During compilation
+To set some options in another module you may use `M.require`. During compilation
 the module is loaded with `M.compileTime === true`. The tool expects it exports
 object with `_compile` method and it is called with `this` bound to compilers
-`Scope` object and an variable name the require call is assigned to as argument.
+`Scope` object and a variable name the require call is assigned to as argument.
 The `M.require` call is replaced with `require` call in resulting code. The `Scope`
 object has  `profile` and `option` methods similar to corresponding directives.
 
@@ -463,7 +453,7 @@ iterators because they are mutable, while for some monads execution control may
 backtrack to some already passed position. In fact if ES allowed such iterators
 cloning this compiler wouldn't be needed.
 
-The iterator is a function object, with `value` field for current value. 
+An iterator is a function object, with `value` field for current value. 
 
  * `M.iterator` - takes ES iterable object returns mfjs compatible iterator, it
     is just interface adapter, but works like ES one, taking next iterator
@@ -477,15 +467,15 @@ The iterator is a function object, with `value` field for current value.
 
 Because of coercions it is pretty ok to transform just everything with "full"
 profile but overhead of some heavy monads is quite sensible. There are means
-to apply transformation option to a some parts of code. There are predefined
+to apply transformation option to some parts of code. There are predefined
 profiles mentioned before but there is also flexible tuning utility. You may
 specify some very custom project policy based on some code conventions in your
 project. 
 
 The policy tool is based on extended but still very low level finite state
 machine. It is very simple and flexible but some policies definition may be big
-because it is too low level. There are plans to implement some more higher
-level system however that is pretty good idea to restrict from creating complex
+because it is too low level. There are plans to implement some higher
+level system however that is good idea to restrict from creating complex
 policies, that may lead to incomprehensible code.
 
 States and transitions are defined in `transform.states` map in configuration.
@@ -494,10 +484,10 @@ The default one is defined in `config.js`.
 ### M.profile
 
 The directive simply moves the policy machine into specified state. Its scope
-is a block delimited with curly brackets. On current block exit old state will
+is a block delimited by curly brackets. On current block exit old state will
 be returned. There are a few predefined states. 
 
- * "defaultMinimal" - in next function definitions doesn’t translate anything
+ * "defaultMinimal" - in following function definitions doesn’t translate anything
     except it is specified as exception in configuration (for example
     `M` function).
  * "defaultFull" - in next function definitions  treats as effectful all
@@ -535,12 +525,12 @@ because of likely near future changes.
 
 To match declaration or a function call by name use `matchDeclName` or
 `matchCallName` selectors. As configuration they use `match` and `cases`
-fields. The first assigns some key to some name pattern and the second
-matches key to options to next level. The pattern is an object with prefix,
+fields. The first assigns some key to some naming pattern and the second
+matches key to options to next level. A pattern is an object with prefix,
 postfix, name, package and qname fields. They are also objects with fields
 corresponding to name’s prefix, postfix, full name, package name (the first
 name of qualified names) and qname (fully qualified name) respectively, and
-values of the fields is the key to be looked in `cases` for further
+values of the fields are the key beeing looked in `cases` for further
 instructions.
 
 There are `sub` and `next` fields to specify state to transit to if the node
@@ -581,20 +571,20 @@ Here is the set of possible options:
  * `varCapt` - doesn't do variable capturing if false, if true it will capture
                variable values using new temporal variables, and if it is
                string "closure" will use closures for this. Capturing with
-               closures generates cleaner code, but much slower. Default
+               closures generates cleaner code, but much slower. The default
                value is true.
  * `keepForOf` - for pure functions don't translate `for-of` statements 
  * `mopt` - translates `yield` statement to `mopt`, default is true
  * `useSpread` - should `M.spread` function is used for destructing array's 
-                 argument or not, if used it produces cleaner but slower code,
+                 argument or not if used it produces cleaner but slower code,
                  possible values are: "never" - never used, true - always used, 
                  and default false - not used only in function expressions
 
 ## Directives
 
-The toolset doesn't interoduce any syntax extension, however it uses a set of
+The toolset doesn't introduce any syntax extension, it uses a set of
 predefined function as directives to provide some translation options. They
-are executed in compile time. Here is the list of currently used ones:
+are executed at compile time. Here is the list of currently used ones:
 
  * `M/M.reflect` - converts from effectful expression to pure
  * `M.p` - converts from pure expression to effectful
@@ -612,7 +602,7 @@ are executed in compile time. Here is the list of currently used ones:
 
 Copyright © 2016 Vitaliy Akimov
 
-Distributed under the terms of the The MIT License (MIT).
+Distributed under the terms of The MIT License (MIT).
 
 
 - - -
