@@ -11,6 +11,10 @@ There are such libraries for:
  * [Logical programming](https://github.com/awto/mfjs-logic)
  * [Multi-prompt delimited continuations](https://github.com/awto/mfjs-cc)
 
+Not yet implemented:
+ * probabilistic programming
+ * parallel and distributed programming
+
 Theare are typically small, some of them are just tiny wrappers of well known
 interfaces, such as Promises and Rx Observables.
 
@@ -261,7 +265,7 @@ overhead, by setting option `varCapt` to false.
 
 ### Applicative vs Monad interface
 
-There is interfaces hierarchy Functor <- Applicative <- Monad. Functor allows
+There is interfaces hierarchy __Functor__ <- __Applicative__ <- ___Monad__. Functor allows
 only changing its inner value of effectful value. Applicative allows combining
 several effectful values into one, and Monad is the most generic one allows
 changing structure of effectful value depending on inner value. In mfjs the
@@ -308,6 +312,30 @@ still disable this by setting option `expr: "seq"`.
 The compiler will translate for-loop into `M.forPar` if its tests and update
 expressions are pure, tests and body don’t change any variable (assignment
 is allowed). Some monad implementation may run each iteration in parallel.
+
+Another option is to translate a sequence of statements into parallel blocks.
+It will use `M.par` function in generated code. It takes an array of monadic
+values and by default returns another monadic value representing a sequence of
+computations. A concrete monad's implementation is free to override it to
+something more efficient. The compiler may optionally try to reorder
+computations to get more such parallel blocks. 
+
+The translation is similar to applicative _do_ notation for Haskell described
+in the paper:
+[Desugaring Haskell’s do-notation Into Applicative Operations](
+http://research.microsoft.com/en-us/um/people/simonpj/papers/list-comp/applicativedo.pdf).
+To  enable it in some block use `parBlock` option with
+following possible values:
+
+  * `all` - grouping all statements in `par` block, regardless its
+  possible dependencies
+  * `byUsage` - groups statements into single `par` block if they
+  don't have shared variable.
+  * `byLhsUsage` - same like `byUsage` but will avoid grouping if
+  some variable is updated before used.
+  * `reorderByUsage` - like `byUsage` but reorders statement to get
+  bigger parallel blocks
+  * `reorderByLhsUsage` - like `byUsage` but reorders statements too
 
 In the future versions the compiler will try to translate more code
 patterns into Applicative form.
@@ -579,6 +607,9 @@ Here is the set of possible options:
                  argument or not if used it produces cleaner but slower code,
                  possible values are: "never" - never used, true - always used, 
                  and default false - not used only in function expressions
+ * `parBlock` - will try to derive _Applicative_ combinators instead of _Monadic_
+       for blocks of statements, more details are in
+       [Applicative vs Monad](#applicative-vs-monad-interface) 
 
 ## Directives
 

@@ -71,4 +71,24 @@ function c() {
   }
   eff('a');
 };
-
+function d() {
+  var result = 0, i;
+  for (i = 0; i < 10; i++) {
+    result = eff(result,i);
+  }
+  eff(result);
+}
+function e() {
+  var result = 0, i;
+  for (i = 0; i < 10; i++) {
+    result = eff(i);
+  }
+  eff();
+}
+function f() {
+  var result = 0, i;
+  for (i = 0; i < 10; i++) {
+    result = eff(i);
+  }
+  eff(result);
+}

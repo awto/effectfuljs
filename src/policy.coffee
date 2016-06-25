@@ -28,6 +28,22 @@ hierIs("FunctionExpression","Function")
 hierIs("FunctionDeclaration","Function")
 hierIs("AssignmentExpression",":assignment")
 
+checkId = (m, p) ->
+  n = p[0]
+  if p.length is 1
+    if n?
+      return true if m.libVar and n is config.packageVar
+    return false if m.libVar and p.length is 2 and n is config.packageName
+  if p.length > 0
+    n = p[p.length - 1]
+    return false unless n?
+    return true if m.package? and m.package[p[0]]
+    return true if m.name? and m.name[n]
+    return true if m.postfix?  and m.postfix[n[n.length - 1]]
+    return true if m.prefix? and m.prefix[n[0]]
+    return true if m.qname? and m.qname[p.join(".")]
+  return false
+
 root.selector =
   property: (name, next) ->
     p = name.split(".")
@@ -49,49 +65,27 @@ root.selector =
   matchDeclName: (s,x,tpref) ->
     m = @match
     n = kit.getId(s.id)
-    r = do ->
-      if s.id?
-        if n?
-          return true if m.name? and m.name[n]
-          return true if m.qname? and m.qname[n]
-          return true if m.postfix? and m.postfix[n[n.length - 1]]
-          return true if m.prefix? and m.prefix[n[0]]
-      if s.type is "FunctionExpression" and x.name?
-        p = kit.getMembersPathIds(x.name)
-        if p.length
-          n = p[p.length - 1]
-          if n?
-            return true if m.name? and m.name[n]
-            return true if m.postfix? and m.postfix[n[n.length - 1]]
-            return true if m.prefix? and m.prefix[n[0]]
-            return true if m.package? and p[0]? and m.package[p[0]]
-            return true if m.qname? and m.qname[p.join(".")]
-      return false
+    r = checkId m, [n]
+    if not r and s.type is "FunctionExpression" and x.name?
+      r = checkId m, kit.getMembersPathIds(x.name)
     if tpref?
       console.log("#{tpref}: match decl #{n}: #{r}")
-    return unless r?
+    return @cases[r]
+  matchIdStmt: (s, p, tpref) ->
+    return unless s.expression.type is "Identifier" or
+      s.expression.type is "MemberExpression"
+    p = kit.getMembersPathIds(s.expression)
+    m = @match
+    r = checkId m, p
+    if tpref?
+      console.log("#{tpref}: match id stmt #{p.join('.')}: #{r}")
     return @cases[r]
   matchCallName: (s, p, tpref) ->
     p = kit.getMembersPathIds(s.callee)
     m = @match
-    r = do ->
-      n = p[0]
-      if p.length is 1
-        if n?
-          return true if m.libVar and n is config.packageVar
-      return false if m.libVar and p.length is 2 and n is config.packageName
-      if p.length > 0
-        n = p[p.length - 1]
-        return false unless n?
-        return true if m.package? and m.package[p[0]]
-        return true if m.name? and m.name[n]
-        return true if m.postfix?  and m.postfix[n[n.length - 1]]
-        return true if m.prefix? and m.prefix[n[0]]
-        return true if m.qname? and m.qname[p.join(".")]
-      return false
+    r = checkId m, p
     if tpref?
       console.log("#{tpref}: match call #{p.join('.')}: #{r}")
-    return unless r?
     return @cases[r]
 
 rebuildDT = (c) ->
@@ -123,7 +117,7 @@ options =
   coerce: true
   expr: true
   bindAssoc: true
-  block: true
+  parBlock: true
   loop: true
   subScope: true
   keepScope: true
@@ -213,7 +207,7 @@ class Policy
     @libVar = false
     index = @index
     @index = 0
-    res = fun()
+    res = fun(s)
     @index = index+1
     @name = oldName
     @op = oldOp

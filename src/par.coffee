@@ -29,7 +29,7 @@ class ParBlockNode extends graph.BlockNode
             pure.push(b.toBlock()...)
         cur = cur.append(
           builder.purePrefix(builder.pure(pure),
-            builder.exprEff(kit.seq(eff...))))
+            builder.exprEff(kit.par(eff...))))
       else
         last = builder.empty()
         for j in i
@@ -38,7 +38,7 @@ class ParBlockNode extends graph.BlockNode
             eff.push((last = b).toExpr())
           else
             last.append(b)
-        cur = cur.append(builder.exprEff(kit.seq(eff...)))
+        cur = cur.append(builder.exprEff(kit.par(eff...)))
     cur
 
 graph.regNodeType "parBlockNode", ParBlockNode
@@ -46,8 +46,7 @@ graph.regNodeType "parBlockNode", ParBlockNode
 Scope::seqBlockNode = Scope::blockNode
 
 Scope::blockNode =  ->
-  b = @policy.opts.block
-  p = b.par if b?
+  p = @policy.opts.parBlock
   p = "byUsage" if p is true
   alg = blockSortAlgs[p]
   return @seqBlockNode() unless alg?
@@ -88,12 +87,14 @@ mkGroup = (reorder,order) ->
     res
 
 usedOnLeftOrder = (a,b) ->
-  {uses} = a.vdeps
-  for i of b.vdeps.mods
+  {uses} = b.vdeps
+  for i of a.vdeps.mods
     return true if uses[i]
   return false
 usedOrder = (a,b) ->
   {uses,mods} = a.vdeps
+  for i of b.vdeps.uses
+    return true if uses[i] or mods[i]
   for i of b.vdeps.mods
     return true if uses[i] or mods[i]
   return false

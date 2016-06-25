@@ -1,4 +1,4 @@
-// *- SKIP
+// *- NOSKIP
 function a$default() {
     var a, b, c, d, e;
     a = eff1(1);
@@ -9,7 +9,7 @@ function a$default() {
     console.log(a + c);
 }
 
-M.option({block:{par:"all"}});
+M.option({parBlock:"all"});
 
 function a$par$all() {
     var a, b, c, d, e;
@@ -20,7 +20,7 @@ function a$par$all() {
     e = eff5(5);
     console.log(a + c);
 }
-M.option({block:{par:"reorderByLhsUsage"}});
+M.option({parBlock:"reorderByLhsUsage"});
 
 function a$par$r$lhs$usage() {
     var a, b, c, d, e;
@@ -32,7 +32,7 @@ function a$par$r$lhs$usage() {
     console.log(a + c);
 }
 
-M.option({block:{par:"reorderByUsage"}});
+M.option({parBlock:"reorderByUsage"});
 
 function a$par$r$usage() {
     var a, b, c, d, e;
@@ -44,7 +44,7 @@ function a$par$r$usage() {
     console.log(a + c);
 }
 
-M.option({block:{par:"byLhsUsage"}});
+M.option({parBlock:"byLhsUsage"});
 
 function a$par$lhs$usage() {
     var a, b, c, d, e;
@@ -56,7 +56,7 @@ function a$par$lhs$usage() {
     console.log(a + c);
 }
 
-M.option({block:{par:"byUsage"}});
+M.option({parBlock:"byUsage"});
 
 function a$par$usage() {
     var a, b, c, d, e;

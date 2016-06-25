@@ -73,13 +73,13 @@ class Scope
   stmt: (s, lab) ->
     r = @visitor[s.type]
     return @visitor.defaultStmt(s).setOrig(s) unless r?
-    @policy.item s, =>
+    @policy.item s, (s) =>
       r.call(@visitor,s,lab).setOrig(s)
   # converts expression with
   expr: (e) ->
     h = @visitor[e.type]
     return @pureExprNode(e) unless h?
-    @policy.item e, => h.call(@visitor,e)
+    @policy.item e, (e) => h.call(@visitor,e)
   # converts list of statements
   stmts: (body) ->
     b = @blockNode()

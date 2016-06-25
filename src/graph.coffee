@@ -739,17 +739,20 @@ regNodeType "controlNode", ControlNode
 # helper for different loop generation strategies
 class LoopNode extends ControlNode
   constructor: -> super()
-  simpleLoop: ->
+  parLoop: ->
     return unless @pre
     return if @opts.loop is "seq"
     @cont.trimExits()
     return if @cont.exits.length
     return if @update? and @update.eff
-    return if @test.eff or @test.vdeps.upd
+    return if @test.eff or @test.vdeps.mod
+    debugger
     return if @inner.vdeps.upd
     return for i,v of @inner.unwindBy when v.dst isnt @ and v.dst isnt @cont
     @trimExits(@inner.parent)
     return if @exits.length
+    for i of @inner.vdeps.sets
+      return if @vdeps.after[i]
     [update, updVars, b, thread] = getBuilderFun(@update)
     tb = @test.getBuilder().toBlockBuilder().capture()
     test = ctx().mkSpreadFun(updVars, kit.fun(updVars, tb.block), @opts)
@@ -763,7 +766,7 @@ class LoopNode extends ControlNode
         kit.call(kit.packId("forPar"),[test,body,update,updVars...]))
       ).morph(b).mergeEnv(@vdeps).noCapture()
   _getBuilder: ->
-    res = @simpleLoop()
+    res = @parLoop()
     return res if res?
     super()
 

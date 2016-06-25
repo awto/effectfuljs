@@ -1,3 +1,5 @@
+// *- SKIP
+
 function a$def() {
     if (eff(true)) {
         console.log("1")

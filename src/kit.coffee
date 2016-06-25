@@ -265,9 +265,9 @@ kit.seqExpr = (expressions...) ->
   return expressions[0] if expressions.length is 1
   {type: "SequenceExpression", expressions}
 
-kit.seq = (exprs...) ->
+kit.par = (exprs...) ->
   return exprs[0] if exprs.length is 1
-  kit.call(packId("seq"), exprs)
+  kit.call(packId("par"), exprs)
 
 kit.getMembersPath = (e) ->
   res = []

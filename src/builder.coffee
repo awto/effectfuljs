@@ -35,10 +35,13 @@ class VarUsage
       if @sets[i]
         @sets[i] = false
         @upds[i] = true
+        @upd = true
+    return
   # marks variable with the `name` as used on RHS
   addAssign: (name) ->
     if @uses[name]
-     @upds[name] = true
+      @upds[name] = true
+      @upd = true
     else
       @sets[name] = true
     @mods[name] = true
@@ -57,19 +60,21 @@ class VarUsage
   # aggregates used and modified variables
   addInner: (d) ->
     @mod = true if d.mod
-    @upd = true if d.upd
     unless @_skipMods
       @mods[i] = true for i,v of d.mods when v
     @uses[i] = true for i,v of d.uses when v
+    for i,v of d.sets when v and not @upds[i]
+      @sets[i] = true
     return
   # transfer all information from child node
   # before that child node is embedded into the parent
   addInnerDeep: (d) ->
     @addInner(d)
     @mod = true if d.mod
-    @upd = true if d.upd
-    @upds[i] = true for i,v of d.upds when v
     @uses[i] = true for i,v of d.uses when v
+    for i,v of d.upds when v and not @sets[i]
+      @upds[i] = true
+      @upd = true
     return
   threadOutMap: (res) ->
     res ?= {}
