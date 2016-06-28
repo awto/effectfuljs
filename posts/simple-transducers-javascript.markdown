@@ -25,7 +25,8 @@ to _consumer_. Producer and consumer may do many things, read/write network
 data, file, DB, or just in-memory array.
 
 The term transducers became popular after introducing them in Clojure in this
-blog post TODO and ported to JavaScript by a few libraries including Ramda.
+[blog post](http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming)
+and ported to JavaScript by a few libraries including Ramda.
 Clojure style transducers are different to the ones described in this post.
 They transform consumers, which are called reducers in Clojure. Unlike these
 transducers which transform producers. This distinction makes them much simpler
@@ -119,4 +120,7 @@ simple solution for this, namely using
 [mfjs compiler](https://github.com/awto/mfjs-compiler)
 with asynchronous functions, and simple, readable `for-of` loops.
 
+
+UPD: another option is to use not fully finished yet
+[Async Generator Functions](https://github.com/tc39/proposal-async-iteration)
 
