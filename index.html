@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="description" content="Home" />
 
-    <title>JavaScript embedded effects compiler - Home</title>
+    <title>mfjs - Home</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="./css/default.css" />
@@ -42,9 +42,24 @@
   <div class="container">
     <h1>Embedding Effects in JavaScript</h1>
     <p>
-      New arbitrary side effects embedded directly into JavaScript
-      using Monad interface. The effects are loaded as runtime
-      libraries, only one compiler is required for anything.
+      <strong>JavaScript</strong> language keeps extending with new side effects.
+      The recent ones are <strong>Generators</strong> and <strong>Async</strong>
+      functions. But there is a problem.
+      It is impossible to add another useful side effect. Even a simple combination
+      of <strong>Generators</strong> and <strong>Async</strong> isn't
+      yet in the language.
+      <br /><br />
+      This transpiler offers unlimited <strong>JavaScript</strong> extensions with
+      new <strong>Monad</strong> interface compatible side effects loaded
+      as a runtime library, not even as compiler plugin. There are a few
+      <strong>Monads</strong> already implemented and usable for many practical
+      applications.
+      <br /><br />
+      Generated code is human readable and may executable for most of
+      <strong>JavaScript</strong> engines including browsers. The tool
+      translates ES5 to ES5 so it may also translate the output of other
+      compilers targeting <strong>JavaScript</strong> such as Babel,
+      CoffeeScript, TypeScript, etc.
     </p>
     <p>
       <a class="btn btn-primary btn-lg" href="https://github.com/awto/mfjs-compiler" role="button">
@@ -57,26 +72,36 @@
   <div class="row">
     <div class="col-md-6">
       <h2>Asynchronous programming</h2>
-      <p>An adapter over promises interface for direct style asynchronous programming</p>
+      <p>
+        An adapter over <strong>Promises</strong> interface for direct style
+        asynchronous programming. It may be a replacement for <strong>Async</strong>
+        functions from ES7, but optionally offering implicit syntax.</p>
       <a class="btn btn-default" href="https://github.com/awto/mfjs-promise" role="button">View details »</a>
     </div>
     <div class="col-md-6">
       <h2>Reactive programming</h2>
-      <p>Tiny Rx Observable adapter for turning JavaScipt into reactive programming language</p>
+      <p>A tiny <strong>Rx Observable</strong> adapter for turning JavaScipt into
+        <strong>reactive</strong> programming language</p>
       <a class="btn btn-default" href="https://github.com/awto/mfjs-rx" role="button">View details »</a>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
       <h2>Delimited continuations</h2>
-      <p>Multi-prompt delimited continuations in JavaScript</p>
-      <a class="btn btn-default" href="https://github.com/awto/mfjs-cc" role="button">View details »</a>
+      <p>Multi-prompt delimited continuations in JavaScript.
+        A generalization of <strong>Generator</strong> functions
+        with optional implicit syntax, ability to resume computation from
+        a single point more than a few times.
+        It is a mother of all <strong>Monads</strong>. Any other side
+        effect may be implemented using this one.</p>
+      <a class="btn btn-default" b href="https://github.com/awto/mfjs-cc" role="button">View details »</a>
     </div>
     <div class="col-md-6">
       <h2>Logic programming</h2>
-      <p>Using JavaScript as logical programming language, like Prolog</p>
+      <p>Using JavaScript as logical programming language, like <strong>Prolog</strong>.</p>
       <a class="btn btn-default" href="https://github.com/awto/mfjs-logic" role="button">View details »</a>
     </div>
+    
   </div>
 </div>
 
