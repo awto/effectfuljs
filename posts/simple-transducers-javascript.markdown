@@ -124,3 +124,6 @@ with asynchronous functions, and simple, readable `for-of` loops.
 UPD: another option is to use not fully finished yet
 [Async Generator Functions](https://github.com/tc39/proposal-async-iteration)
 
+UPD: there is [imlazy](https://github.com/benji6/imlazy) library implementing
+this kind of transducers.
+
