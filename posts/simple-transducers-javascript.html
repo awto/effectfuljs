@@ -85,6 +85,7 @@ whatever, input <span class="kw">-&gt;</span> whatever
 <span class="op">}</span></code></pre></div>
 <p>Hierarchical data may be handled as well; an example is <a href="https://github.com/awto/estree-transducers">estree-transducers</a> project for JavaScript syntax transformation.</p>
 <p>But everything is not this simple if there is an asynchronous code at some stage. Likely this is required in Producer because IO in JavaScript is typically asynchronous. It is possible to call <code>next</code> of an iterator in an asynchronous callback, but not <code>yield</code>. This complicates things a lot. However, there is a simple solution for this, namely using <a href="https://github.com/awto/mfjs-compiler">mfjs compiler</a> with asynchronous functions, and simple, readable <code>for-of</code> loops.</p>
+<p>UPD: another option is to use not fully finished yet <a href="https://github.com/tc39/proposal-async-iteration">Async Generator Functions</a></p>
 
  <small>Posted on June 23, 2016</small>
 
