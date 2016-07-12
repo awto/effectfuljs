@@ -177,43 +177,51 @@ function e() {
     var result, i;
     result = 0;
     i = 0;
-    return M.forPar(function (i) {
-        return i < 10;
-    }, function (i) {
-        return M(eff(i)).mapply(function (b) {
-            var _result;
-            _result = b;
-        });
-    }, function (i) {
-        i++;
-        return i;
-    }, i).mbind(eff);
+    return M.block(function (brk) {
+        return M.repeat(function (i) {
+            return function () {
+                if (i < 10)
+                    return M(eff(i)).mapply(function (b) {
+                        var _result;
+                        _result = b;
+                    });
+                else
+                    return brk();
+            }().mapply(function () {
+                var _i = i;
+                _i++;
+                return _i;
+            });
+        }, i);
+    }).mbind(eff);
 }
 function f() {
     var result, i;
     result = 0;
     i = 0;
-    return M.repeat(function (a) {
-        var i = a[0], result = a[1];
-        return M(function () {
-            if (i < 10)
-                return M(eff(i)).mapply(function (b) {
-                    var _result;
-                    _result = b;
-                    return _result;
-                });
-            else
-                return result;
-        }()).mapply(function (result) {
-            var _i = i;
-            _i++;
-            return [
-                _i,
-                result
-            ];
-        });
-    }, [
-        i,
-        result
-    ]).mbind(eff);
+    return M.block(function (brk) {
+        return M.repeat(function (a) {
+            var i = a[0], result = a[1];
+            return function () {
+                if (i < 10)
+                    return M(eff(i)).mapply(function (b) {
+                        var _result;
+                        _result = b;
+                        return _result;
+                    });
+                else
+                    return brk(result);
+            }().mapply(function (result) {
+                var _i = i;
+                _i++;
+                return [
+                    _i,
+                    result
+                ];
+            });
+        }, [
+            i,
+            result
+        ]);
+    }).mbind(eff);
 }

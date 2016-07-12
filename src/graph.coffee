@@ -746,8 +746,7 @@ class LoopNode extends ControlNode
     return if @cont.exits.length
     return if @update? and @update.eff
     return if @test.eff or @test.vdeps.mod
-    debugger
-    return if @inner.vdeps.upd
+    return if @inner.vdeps.mod
     return for i,v of @inner.unwindBy when v.dst isnt @ and v.dst isnt @cont
     @trimExits(@inner.parent)
     return if @exits.length

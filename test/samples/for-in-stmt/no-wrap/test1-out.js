@@ -2,51 +2,76 @@ function a() {
     var i;
     var iter;
     return eff(2).mbind(function (b) {
-        var _iter;
-        _iter = M.forInIterator(b);
-        return M.forPar(function (iter) {
-            return iter;
-        }, function (iter) {
-            i = iter.value;
-            return eff(i);
-        }, function (iter) {
-            iter = iter();
-            return iter;
-        }, _iter);
+        var _iter1;
+        _iter1 = M.forInIterator(b);
+        return M.block(function (brk) {
+            return M.repeat(function (iter) {
+                return function () {
+                    if (iter) {
+                        i = iter.value;
+                        return eff(i);
+                    } else
+                        return brk();
+                }().mapply(function () {
+                    var _iter = iter;
+                    _iter = _iter();
+                    return _iter;
+                });
+            }, _iter1);
+        });
     });
 }
 function b() {
     var i;
     var iter;
     return eff(2).mbind(function (b) {
-        var _iter;
-        _iter = M.forInIterator(b);
-        return M.forPar(function (iter) {
-            return iter;
-        }, function (iter) {
-            i = iter.value;
-            return eff(i).mconst(i);
-        }, function (iter) {
-            iter = iter();
-            return iter;
-        }, _iter);
+        var _i = i, _iter1;
+        _iter1 = M.forInIterator(b);
+        return M.block(function (brk) {
+            return M.repeat(function (a) {
+                var i = a[0], iter = a[1];
+                return function () {
+                    if (iter) {
+                        i = iter.value;
+                        return eff(i).mconst(i);
+                    } else
+                        return brk();
+                }().mapply(function (i) {
+                    var _iter = iter;
+                    _iter = _iter();
+                    return [
+                        i,
+                        _iter
+                    ];
+                });
+            }, [
+                _i,
+                _iter1
+            ]);
+        });
     });
 }
 function c() {
     var i = init();
     var iter;
     return eff(2).mbind(function (b) {
-        var _iter;
-        _iter = M.forInIterator(b);
-        return M.forPar(function (iter) {
-            return iter;
-        }, function (iter) {
-            i = iter.value;
-            return eff(i);
-        }, function (iter) {
-            iter = iter();
-            return iter;
-        }, _iter);
+        var _iter1;
+        _iter1 = M.forInIterator(b);
+        return M.block(function (brk) {
+            return M.repeat(function (iter) {
+                return function () {
+                    if (iter) {
+                        i = iter.value;
+                        return eff(i);
+                    } else
+                        return brk();
+                }().mapply(function () {
+                    var _iter = iter;
+                    _iter = _iter();
+                    return _iter;
+                });
+            }, _iter1);
+        });
     });
 }
 function d() {
@@ -65,15 +90,21 @@ function e() {
     var i;
     var iter;
     iter = M.forInIterator(obj);
-    return M.forPar(function (iter) {
-        return iter;
-    }, function (iter) {
-        i = iter.value;
-        return eff(i);
-    }, function (iter) {
-        iter = iter();
-        return iter;
-    }, iter);
+    return M.block(function (brk) {
+        return M.repeat(function (iter) {
+            return function () {
+                if (iter) {
+                    i = iter.value;
+                    return eff(i);
+                } else
+                    return brk();
+            }().mapply(function () {
+                var _iter = iter;
+                _iter = _iter();
+                return _iter;
+            });
+        }, iter);
+    });
 }
 function f() {
     var i;

@@ -6,13 +6,26 @@
         3
     ];
     j = 0, len = ref.length;
-    return M.forPar(function (j) {
-        return j < len;
-    }, function (j) {
-        i = ref[j];
-        return M(eff(i)).mconst(i);
-    }, function (j) {
-        j++;
-        return j;
-    }, j);
+    return M.block(function (brk) {
+        return M.repeat(function (a) {
+            var i = a[0], j = a[1];
+            return function () {
+                if (j < len) {
+                    i = ref[j];
+                    return M(eff(i)).mconst(i);
+                } else
+                    return brk();
+            }().mapply(function (i) {
+                var _j = j;
+                _j++;
+                return [
+                    i,
+                    _j
+                ];
+            });
+        }, [
+            i,
+            j
+        ]);
+    });
 });

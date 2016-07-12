@@ -12,15 +12,21 @@
             return function () {
                 if (i < len) {
                     j = 0, len = ref.length;
-                    return M.forPar(function (j) {
-                        return j < len;
-                    }, function (j) {
-                        d = ref[j];
-                        return eff(i);
-                    }, function (j) {
-                        j++;
-                        return j;
-                    }, j).mbind(function (j) {
+                    return M.block(function (brk1) {
+                        return M.repeat(function (j) {
+                            return M(function () {
+                                if (j < len) {
+                                    d = ref[j];
+                                    return eff(i);
+                                } else
+                                    return brk1(j);
+                            }()).mapply(function () {
+                                var _j = j;
+                                _j++;
+                                return _j;
+                            });
+                        }, j);
+                    }).mbind(function (j) {
                         return M(eff(2)).mconst([
                             j,
                             len

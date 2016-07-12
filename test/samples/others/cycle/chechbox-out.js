@@ -36,8 +36,9 @@ function modelM(action$) {
     });
     n.scan(function (acc, key) {
         index = acc.indexOf(key);
-        if (index === -1)
+        if (index === -1) {
             return acc.concat(key).sort();
+        }
         newAcc = acc.slice();
         newAcc.splice(index, 1);
         return newAcc;

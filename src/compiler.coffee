@@ -98,7 +98,7 @@ root.compile = compile = (str, opts, fn) ->
   opts = convOptions opts, fn
   ast = esprima.parse str, opts.parser
   nast = transform(ast,opts)
-  unless opts.mangle is false
+  if opts.mangle is true
     nast = root.mangle(nast)
   escodegen.generate nast, opts.printer
 
