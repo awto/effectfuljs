@@ -41,7 +41,7 @@ will be translated into:
 ```javascript
 function() {
   return getX().mapply(function (b) { console.log("x:", b); });
-}cd ..
+}
 ```
 
 Or with implicit mode input code may be even more succinct:
@@ -189,13 +189,6 @@ object, for example to wait for a few promises in parallel.
 
  * `M.reify` - expects function expression, executes it immediately but doesn't
     translate value to pure one.
-
-For example if implementation library has some `sum` function:
-
-```javascript
-    const k = getValue()
-    const s = M.$(k).sum()
-```
 
 ### From effectful to pure
 
@@ -461,10 +454,8 @@ predefined function as directives to provide some translation options. They
 are executed at compile time. Here is the list of currently used ones:
 
  * `M/M.reflect` - converts from effectful expression to pure
- * `M.p` - converts from pure expression to effectful
  * `M.reify` - same as `M.p` but receives function expression which is to be
     called immediately
- * `M.$` - placeholder position 
  * `M.option` - changes current options object
  * `M.profile` - changes current state
 
