@@ -1,10 +1,6 @@
+// *- when it is the last statement
 (function () {
-    return M.block(function (lab) {
-        return M(eff(2)).mbind(function (b) {
-            if (b)
-                return lab();
-            else
-                return eff(3);
-        });
-    });
+  return M.block(lab => M(eff(2)).mbind(a => {
+    if (a) return lab();else return eff(3);
+  }));
 });

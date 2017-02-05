@@ -1,14 +1,5 @@
 function a() {
-    return M.scope(function (root) {
-        return M.coerce(function () {
-            return M(eff('in body')).mbind(function (b) {
-                if (b)
-                    return root();
-            });
-        }).mfinally(function () {
-            return eff('in `finally`');
-        }).mbind(function () {
-            return eff('after `finally`');
-        });
-    });
+  return M.scope(ret => M(eff('in body')).mbind(b => {
+    if (b) return ret();
+  }).mfinally(() => eff('in `finally`')).mbind(() => eff('after `finally`')));
 }

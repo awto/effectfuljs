@@ -1,10 +1,5 @@
 function a() {
-    return M.scope(function (root) {
-        return M(eff(1)).mbind(function (b) {
-            if (b)
-                return M(eff(2)).mbind(root);
-            else
-                return M(eff(3)).mbind(root);
-        });
-    });
+  return M.scope(ret => M(eff(1)).mbind(b => {
+    if (b) return M(eff(2)).mbind(c => ret(c));else return M(eff(3)).mbind(d => ret(d));
+  }));
 }

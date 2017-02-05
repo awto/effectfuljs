@@ -45,11 +45,9 @@ function a11() {
 function a12() {
     eff(2) && 1 + 1;
 }
-
 function a13() {
     eff(1) ? eff(2) : eff(3);
 }
-
 function a14() {
     eff(1) ? 2 : eff(3);
 }
@@ -87,4 +85,3 @@ function b() {
     1 ? eff(2) : eff(3);
     eff(1) ? 2 : 3;
 }
-

@@ -1,44 +1,40 @@
-M.option({coerce:"none"});
+M.option({coerce:false});
 
 function a() {
   for(var i in eff(2)) {
       eff(i);
   }
-};
+}
 
 function b() {
   var i;
   for(i in eff(2)) {
       eff(i);
   }
-};
+}
 
 function c() {
   //TODO: maybe init() may have effects
-  for(var i = init() in eff(2)) {
+  for(var i in eff(2)) {
       eff(i);
   }
-};
-
+}
 function d() {
   for(var i in eff(2)) {
       console.log(i);
   }
-};
-
-
+}
 function e() {
   for(var i in obj) {
       eff(i);
   }
-};
+}
 
 function f() {
   for(var i in obj) {
       console.log(i);
   }
-};
-
+}
 function g() {
   eff("a");
   for(var i in eff(2)) {
@@ -49,8 +45,7 @@ function g() {
       eff("c");
   }
   eff("z");
-};
-
+}
 
 function h() {
   eff("a");
@@ -74,5 +69,4 @@ function h() {
       effB(j);
   }
   eff("z");
-};
-
+}

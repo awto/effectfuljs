@@ -1,3 +1,4 @@
+// *- SKIP
 M.option({coerce:"none",
           compile:false,
           compileM:{

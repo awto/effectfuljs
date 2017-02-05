@@ -14,6 +14,8 @@ There are such libraries for:
 Not yet implemented:
  * probabilistic programming
  * parallel and distributed programming
+ * persistent continuations
+ * adaptive computations
 
 Theare are typically small, some of them are just tiny wrappers of well known
 interfaces, such as Promises and Rx Observables.
@@ -39,7 +41,7 @@ will be translated into:
 ```javascript
 function() {
   return getX().mapply(function (b) { console.log("x:", b); });
-}
+}cd ..
 ```
 
 Or with implicit mode input code may be even more succinct:
@@ -135,45 +137,31 @@ for example flapjax and webppl.
 
 ### Command line tool
 
-In the current version it is very simple, offering only running transform
-and saving results to another folder or file.
+The current version is a library on top of
+[estransducers](https://github.com/awto/estransducers) JS transformation
+framework. You won't typically use it directly unless you develop own effects
+library. There is a babel preset for default translations
+[@mfjs/babel-presetp-env](https://github.com/awto/mfjs-babel-preset-env), or some effects
+library may provide similar preset. 
 
-    $ npm install @mfjs/compiler
-    $ mfjsc input.js --output dist
+The preset is an extension of [babel-preset-env](https://github.com/babel/babel-preset-env)
+and accepts the same arguments
+with additional `mfjs` object specifying options for mfjs framework.
 
-The remained options are used to augment default configuration object, and
-it is constructed using [optimist](https://www.npmjs.com/package/optimist)
-command line encoding. For example, namespace for core and translation profile
-may be specified via command line too:
+First install it:
 
-    $ mfjsc input.js --output dist --transform.packageVar=M --transform.start=defaultFull
+```sh
+$ npm install --save-dev babel-preset-env @mfjs/babel-preset-env
+```
 
-It will use stdin/stdout if no input/output files are specified.
+Next compile your sources with whatever babel tool you prefer using `@mfjs/env`
+preset instead of babel `env`, for example in `.babelrc`:
 
-### Browserify transform
-
-    $ npm install @mfjs/compiler
-    $ browserify -t @dmjs/compiler/monadify input.js -o index.js
-
-Or with options:
-
-    $ browserify -t [@dmjs/compiler/monadify --transform.packageVar=M --transform.start=defaultFull] input.js -o index.js
-
-### Hook for require in node.js
-
-The hook is implemented in `@mfjs/compiler/nastyRegister`. It overrides all
-currently registered extensions and post-process their output with the
-transpiler. It is a bad idea to use it in production.
-
-For example, for mocha
-
-    $ mocha --compilers js:@mfjs/compiler/nastyRegister
-
-### Other options
-
- * [gulp plugin](https://github.com/awto/mfjs-gulp)
- * [grunt plugin](https://github.com/awto/mfjs-grunt)
-
+```json
+{
+  "presets": ["@mfjs/env"]
+}
+```
 
 ## Code transformation
 
@@ -201,13 +189,6 @@ object, for example to wait for a few promises in parallel.
 
  * `M.reify` - expects function expression, executes it immediately but doesn't
     translate value to pure one.
- * `M.p` - is the same as `M.reify` but its argument is not a function
-   but just some value the compiler will treat as already pure.
- * `M.$` is similar to `M.reify` with argument function containing all the
-   statements in the current block (delimited by curly braces) before
-   statement with `M.$` as an argument. If used as function,
-   this case expression in the argument will be returned as a result of reified
-   monadic value.
 
 For example if implementation library has some `sum` function:
 
@@ -359,122 +340,69 @@ including `M.yield`.
 
 ## Configuration
 
-There is a global configuration object and it is possible to augment it either
-from command line,  browserify transform arguments, gulp/grunt options, or
-directly from some loaded module if `M.require` is used. The tool also looks
-for a file `mfjs-config.json` in folder there input file located and in its
-ancestors folders using only the first closest found. The compiler parses it
-and merges into configuration object too.
+Top level fields of the options object:
 
-Top level fields of the configuration object:
-
- * `parser` - directly passed to esprima parser options
- * `printer` - directly passed to escodegen printer options
- * `transform` - options for transformation, described in this section
-     * `packageVar` - name of namespace variable used for importing core library
-                    using CommonJS require, it may be specified if no require
-                    is used
-     * `packageName` - name of core library package used to detect CommonJS
+  * `ns` - name of namespace variable used for importing core library
+          using ES6 modules or CommonJS require, it may be specified
+          explicitly if no imports is used
+  * `packageName` - name of core library package used to detect CommonJS
                      require call to guess `packageVar` in sources
-     * `start` - initial state name, by default it is a state where it doesn't
-               touch anything
-     * `verbose` - debug output
-     * `policyTrace` - outputs details about how options for specific AST node
-                     were chosen
-     * `naming` - for `block`, `scope`, `M`, `repeat`, `forPar`
-       adds additional autogenerated unique constant argument, it may be used
-       for memoization for example, its value may be either `true` or an object
-       with names of combinators it is applicable, and optional `prefix` field
-       for the auto-generated constant prefix
-     * `states` - rules description for deriving translation options for each
-                AST nodes
-
-To set some options in another module you may use `M.require`. During compilation
-the module is loaded with `M.compileTime === true`. The tool expects it exports
-object with `_compile` method and it is called with `this` bound to compilers
-`Scope` object and a variable name the require call is assigned to as argument.
-The `M.require` call is replaced with `require` call in resulting code. The `Scope`
-object has  `profile` and `option` methods similar to corresponding directives.
-
-
-```javascript
-var M = require("@dmjs/core");
-if (M.compileTime) {
-  module.exports = {
-     _compile: function(v) {
-        var p = {};
-        p[v] = true;
-        this.profile("defaultMinimal");
-        this.option({minimal:{CallExpression:{match:{name:p}}}});
-     }
-  }
-}
-
-```
-
-And in some other file:
-
-```javascript
-
-var P = M.require("lib");
-// here translation is in defaultMinimal state and effectful
-// values may be marked with P function call
-
-```
+                     (default is `@mfjs/core`)
+  * `profile` - initial mode name name, `disabled` by default
+  * `verbose` - debug output
 
 ## Interface
 
 There is a reference implementation library
 [@mfjs/core](https://github.com/awto/mfjs-core)
 with documentation for each function, but it is not required to use that
-library. 
+library. It is default but other libraries may provide other encodings.
 
 The generated code expects monadic value to have following methods:
 
- * `mbind` - takes function argument and applies it to inner value of `this`
-             returning coerced monadic result (Haskell’s `>>=` function from
-             Monad class) 
- * `mapply`  - takes function argument and applies it to inner value of `this`
-               replacing that inner value with result without changing monadic
-               value structure (Haskell `fmap` function from Functor class)
- * `mopt` - adds `undefined` to set of answers of `this`
- * `mfinally` - takes a function and executes after control exits `this` block
- * `mhandle` - takes a function and executes it if `this` throws exception
- * `mconst` - a helper for variables threading,
-              same as `v => this.mapply(() => v)`
- * `munshiftTo` - a helper for variables threading, same as
-                  `arr => this.mapply(v => arr.unshift(v), v)`
+ * `mbind`
+      - takes function argument and applies it to inner value of `this`
+      returning coerced monadic result (Haskell’s `>>=` function from
+      Monad class) 
+ * `mapply`  - takes function
+      argument and applies it to inner value of `this`
+      replacing that inner value with result without changing monadic
+      value structure (Haskell `fmap` function from Functor class)
+ * `mfinally` - takes a
+       function and executes after control exits `this` block
+ * `mhandle`
+   - takes a function and executes it if `this` throws exception
 
 And the imported core library should have following free functions:
 
- * `M` - coerces value, if returns argument as-is if it is already monadic or
-         `M.pure(v)` otherwise.
- * `M.pure` - returns monadic value with inner value from argument and with no
-              effects
- * `M.raise` - returns monadic value representing exception throw
- * `M.coerce` - wraps function in argument in `try-catch` block and converts
-                thrown exceptions into `M.raise`
- * `M.empty ` - monadic value with no answers
- * `M.repeat` - takes a function and initial arguments for it, apply that
-                function infinitely, threading output arguments to input of
-                next function invocation
- * `M.forPar` - takes test function, iteration body function, update function,
-                with first iteration arguments, test and update functions are
-                pure, all receives current iteration arguments, update
-                function returns iteration arguments for next iteration. 
- * `M.block` - takes a function and executes it giving another function as
-               argument for exiting the block, it is used for `break`,
-               `continue`, `yield` encodings
- * `M.scope` - same as `M.block` but for the whole function, for `return`
-               encoding
+ * `M` - coerces value, if returns argument as-is
+        if it is already monadic or `M.pure(v)` otherwise.
+ * `M.pure` - returns monadic value with inner value from
+       argument and with no effects
+ * `M.raise` - returns monadic value representing
+       exception throw
+ * `M.repeat` - takes a function and initial
+       arguments for it, apply that function infinitely, threading
+       output arguments to input of next function invocation
+ * `M.block` - takes a function and
+      executes it giving another function as
+      argument for exiting the block, it is used for `break`, `continue`, `yield` encodings
+ * `M.scope` - same as `M.block` but for the whole function, for `return` statement encoding
+ * `M.generator` - same as `M.scope` but may be injected for generator functions if
+                  enabled. Its callback function has 3 arguments, for `return`,
+                  `yield` and `yield*` resp.
  * `M.arr` - takes array of monadic value and returns monadic value of array of
              inner values corresponding to input array, this is from Haskell’s
              Applicative interface, but adapted for more convenient usage in
              JavaScript
- * `M.spread` - it simply converts function receiving several arguments to
-                function receiving array of arguments, it will be replaced with
-                modern ES function spreads after the tool will start
-                generating it
+
+If state is enabled:
+
+ * `M.set`
+ * `M.modify`
+ * `M.get`
+
+TODO: more details
 
 The compiler requires specific iterator interface. It is not compatible with ES
 iterators because they are mutable, while for some monads execution control may
@@ -487,8 +415,6 @@ An iterator is a function object, with `value` field for current value.
     is just interface adapter, but works like ES one, taking next iterator
     invalidates previous ones, returned iterator already points to first element
     or null if input collection is empty
- * `M.iteratorBuf` - same as `M.iterator` but it will keep all passed values
-    so all iterators are valid
  * `M.forInIterator` - returns mfjs compatible iterator for `for-in` statement
 
 ## Selective transform
@@ -500,20 +426,10 @@ profiles mentioned before but there is also flexible tuning utility. You may
 specify some very custom project policy based on some code conventions in your
 project. 
 
-The policy tool is based on extended but still very low level finite state
-machine. It is very simple and flexible but some policies definition may be big
-because it is too low level. There are plans to implement some higher
-level system however that is good idea to restrict from creating complex
-policies, that may lead to incomprehensible code.
-
-States and transitions are defined in `transform.states` map in configuration.
-The default one is defined in `config.js`.
-
 ### M.profile
 
-The directive simply moves the policy machine into specified state. Its scope
-is a block delimited by curly brackets. On current block exit old state will
-be returned. There are a few predefined states. 
+The directive performs some named action to change internal state of transformations.
+There are a few predefined states. 
 
  * "defaultMinimal" - in following function definitions doesn’t translate anything
     except it is specified as exception in configuration (for example
@@ -523,93 +439,20 @@ be returned. There are a few predefined states.
     there window, process, and console functions are exceptions)
  * "full" - same as "defaultFull" but starts immediately
  * "minimal" - same as "defaultMinimal" but starts immediately
- * "regenerator" - very similar to minimal mode but uses generators syntax
+ * "generatorsDo" - very similar to minimal mode but uses generators syntax
    extensions, it will compile without coercions all `function*`, and in them
    treat `yield` expression as `M.refect` and `yield*` as `M` in minimal mode. 
+ * "generators" - will convert generator functions to use `M.generator` as its scope 
+
+The scope of these predefined profiles is a block in curly brackets.
 
 ### M.option
 
-The function augments the policy state machine definition. It simply merges the
-object from argument into `transform.states` and recalculates caches. So the
-function allows creating new states and changing options and matcher in current
-state (for example to add more exception to "full" and "minimal" policies). Its
-scope is function definition scope. When translation exits function definition
+The function simply merges the object from argument into current option object.
+Its scope is a block in curly bracket by default. When translation exits the block
 where `M.option` was called it will revert states object to the one used before
-entering function.
-
-During transformation of each AST node it is matched using custom predicate
-specific for current state. If it is matched it further may instruct the
-system to move to some other state or just return some set of options used
-to guide transformation process.
-
-The transition system is encoded as a plain JS object. Each field is either
-option value or some key used to specify more exact match. On the first level
-map keys are [ESTree](https://github.com/estree/estree/blob/master/spec.md)
-node type name and default options for all node. On the second level for each
-node type arbitrary predicate may be used (names specified in `select` field).
-It may be registered by adding a function to `require('@mfjs/compiler/policy').selector`
-map. However in the present version it is better to use only predefined ones
-because of likely near future changes.
-
-To match declaration or a function call by name use `matchDeclName` or
-`matchCallName` selectors. As configuration they use `match` and `cases`
-fields. The first assigns some key to some naming pattern and the second
-matches key to options to next level. A pattern is an object with prefix,
-postfix, name, package and qname fields. They are also objects with fields
-corresponding to name’s prefix, postfix, full name, package name (the first
-name of qualified names) and qname (fully qualified name) respectively, and
-values of the fields are the key beeing looked in `cases` for further
-instructions.
-
-There are `sub` and `next` fields to specify state to transit to if the node
-is matched. The state will be reverted after the node is handled if it is `sub`
-transition or kept until next jump or function definition exit if it is `next`.
-
-
-For example, here we augment `minimal` mode to translate from monadic to pure
-function calls where function name ends with M letter.
-
-```javascript
-M.option({minimal:{CallExpression:{match:{postfix:{M:true}}}}});
-```
-
-More details in upcoming reference. 
-
-Here is the set of possible options:
-
- * `bind` - the main option, it specifies if the current node is to be treated
-   as effectful or not, i.e. if compiler needs to inject code translating
-   effectful value to pure one for it
- * `compile` - compiles transforms function definition
- * `coerce` - `enum {none, value, all}` specify compilers needs to add coercion
-    where needed
- * `expr` - if it is equal to `seq` expression will follow JS rules for order
-    of execution of sub expression
- * `bindAssoc` - if value is "right" it will prefer right associative binds
-   generation. If monad definition satisfies monad’s laws the generated code
-   should have the same semantics as default left associative, but code may
-   be cleaner because some variable threading may be avoided.
- * `loop` - if its value is "seq" the compiler will not generate `M.forPar`
-    loops
- * `subScope` - if true it will detect JS trick for variables scopes
-   (i.e. `(function() { /*...*/)()`) and treat it as scope not as function
-   declaration (default is true).
- * `keepScope` - if it is true the compiler doesn’t remove useless M.scope
-    calls
- * `varCapt` - doesn't do variable capturing if false, if true it will capture
-               variable values using new temporal variables, and if it is
-               string "closure" will use closures for this. Capturing with
-               closures generates cleaner code, but much slower. The default
-               value is true.
- * `keepForOf` - for pure functions don't translate `for-of` statements 
- * `mopt` - translates `yield` statement to `mopt`, default is true
- * `useSpread` - should `M.spread` function is used for destructing array's 
-                 argument or not if used it produces cleaner but slower code,
-                 possible values are: "never" - never used, true - always used, 
-                 and default false - not used only in function expressions
- * `parBlock` - will try to derive _Applicative_ combinators instead of _Monadic_
-       for blocks of statements, more details are in
-       [Applicative vs Monad](#applicative-vs-monad-interface) 
+entering function. The interpretation of the fields' value in the object depends on
+exact passes implementation.
 
 ## Directives
 
@@ -622,19 +465,14 @@ are executed at compile time. Here is the list of currently used ones:
  * `M.reify` - same as `M.p` but receives function expression which is to be
     called immediately
  * `M.$` - placeholder position 
- * `M.option` - changes state transition definitions
+ * `M.option` - changes current options object
  * `M.profile` - changes current state
- * `M.ref` - treats variables in arguments as references and don't capture them
- * `M.require` - replacement for CommonJS require allowing to do some compile
-    time actions defined in external module
- * `M.answer/M.yield` - may be used as replacement of `yield` expression
 
 ## LICENSE
 
-Copyright © 2016 Vitaliy Akimov
+Copyright © 2016-2017 Vitaliy Akimov
 
 Distributed under the terms of The MIT License (MIT).
-
 
 - - -
 [![Gitter](https://badges.gitter.im/awto/mfjs-compiler.svg)](https://gitter.im/awto/mfjs-compiler?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)

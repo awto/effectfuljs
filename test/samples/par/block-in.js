@@ -1,4 +1,3 @@
-// *- NOSKIP
 function a$default() {
     var a, b, c, d, e;
     a = eff1(1);

@@ -1,67 +1,45 @@
-function a() {
-    return M.scope(function (root) {
-        return root(1).mopt().mbind(function () {
-            return eff(2);
-        });
-    });
+function* a() {
+  yield 1;
+  eff(2);
 }
-function b() {
-    return M.scope(function (root) {
-        return M(eff(1)).mbind(function () {
-            return root(2);
-        }).mopt().mbind(function () {
-            return eff(3);
-        });
-    });
+
+function* b() {
+  eff(1);
+  yield 2;
+  eff(3);
 }
+
 function b1() {
-    return M.scope(function (root) {
-        return M(eff(1)).mbind(function () {
-            return root(2);
-        }).mopt().mbind(function () {
-            return eff(3);
-        });
-    });
+  eff(1);
+  M.yield(2);
+  eff(3);
 }
-function c() {
-    var i;
-    return M.scope(function (root) {
-        return function () {
-            i = 0;
-            return M(eff(1)).mbind(function () {
-                var _i = i;
-                _i++;
-                return M(eff(_i)).mconst(_i);
-            }).mbind(root);
-        }().mopt().mbind(function () {
-            var _i1 = i;
-            _i1++;
-            return eff(_i1);
-        });
-    });
+
+function* c() {
+  var i;
+  i = 0;
+  eff(1);
+  i++;
+  eff(i);
+  yield i;
+  i++;
+  eff(i);
 }
+
 function d() {
-    return M.scope(function (root) {
-        return root(1).mopt().mbind(function () {
-            return root(2);
-        }).mopt().mbind(function () {
-            return root(3);
-        }).mopt();
-    });
+  M.yield(1);
+  M.yield(2);
+  M.yield(3);
 }
+
 function e() {
-    return M.scope(function (root) {
-        return root(1).mopt().mbind(function () {
-            return root(2);
-        }).mopt().mbind(function () {
-            return root(3);
-        }).mopt();
-    });
+  M['yield'](1);
+  M['yield'](2);
+  M['yield'](3);
 }
+
 function f() {
-    return M.scope(function (root) {
-        return root(1).mopt().mbind(root).mopt().mbind(function () {
-            return root(3);
-        }).mopt();
-    });
+  M.answer(1);
+  M.answer();
+  M.answer(3);
 }

@@ -1,4 +1,4 @@
-M.option({varCapt:"closure"});
+// *- SKIP
 
 function ar() {
   var i, j;

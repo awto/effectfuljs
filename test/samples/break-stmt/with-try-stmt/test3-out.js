@@ -1,11 +1,3 @@
 (function () {
-    return M.block(function (lab) {
-        return M.coerce(function () {
-            return M(eff(2)).mbind(lab);
-        }).mhandle(function (e) {
-            return eff(3);
-        });
-    }).mbind(function () {
-        return eff(4);
-    });
+  return M.block(lab => M(eff(2)).mbind(() => lab()).mhandle(e => eff(3))).mbind(() => eff(4));
 });

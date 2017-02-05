@@ -1,7 +1,4 @@
+// *- when it is the last statement
 (function () {
-    return M.block(function (lab) {
-        return M.coerce(lab).mhandle(function (e) {
-            return eff(3);
-        });
-    });
+  return M.block(lab => lab().mhandle(e => eff(3)));
 });

@@ -122,4 +122,3 @@ function b() {
   i = M(i.next());
   i = M(i.next());
 }
-

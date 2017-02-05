@@ -5,7 +5,7 @@ function a() {
         eff("in `finally`");
     }
     eff("after `finally`");
-};
+}
 
 function b() {
     try {
@@ -16,7 +16,7 @@ function b() {
         eff("in `finally`");
     }
     eff("after `finally`");
-};
+}
 
 function c() {
     try {
@@ -25,7 +25,8 @@ function c() {
         console.log("in `finally`");
     }
     eff("after `finally`");
-};
+}
+
 function d() {
     try {
         console.log("in body");
@@ -33,7 +34,8 @@ function d() {
         eff("in `finally`");
     }
     eff("after `finally`");
-};
+}
+
 function e() {
     console.log("before");
     eff("before");
@@ -51,8 +53,7 @@ function e() {
     }
     console.log("after `finally`");
     eff("after `finally`");
-};
-
+}
 
 function f() {
     try {
@@ -63,8 +64,7 @@ function f() {
         console.log("in `finally`");
     }
     eff("after `finally`");
-};
-
+}
 
 function g() {
     try {
@@ -75,4 +75,4 @@ function g() {
         console.log("in `finally`");
     }
     eff("after `finally`");
-};
+}

@@ -1,4 +1,4 @@
-M.profile("regenerator");
+M.profile("generatorsDo");
 function* a() {
 }
 

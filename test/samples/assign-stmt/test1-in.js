@@ -10,21 +10,17 @@ function a1(){
   eff("a");
   eff("b");
 }
-
 function b(){
   var b1 = eff(1), b2 = eff(2);
   eff(b1);
   eff(b2);
 }
-
-
 function b1(){
   var a, c;
   a = eff(1), c = eff(2);
   eff(a);
   eff(c);
 }
-
 function c(){
     var a = eff(1), b = 2, c = eff(3);
     eff("a");
@@ -35,11 +31,9 @@ function c(){
     eff(9);
     eff(10);
 }
-
 function d() {
   eff1("a").some = eff(2);
   eff("b").some+=eff(3);
   eff("c").some++;
   some['d']--;
 }
-

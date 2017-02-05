@@ -1,35 +1,57 @@
-// *- SKIP
-M.profile("compileGenerators");
+// *- DEFAULT
+import * as G from "@mfjs/core";
 
-function *a() {
-    eff(1);
-    eff(2);
-};
-
-function b() {
-    eff(1);
-    eff(2);
-}
-
-M.profile("generators");
+G.profile("generators");
+G.profile("defaultMinimal");
 
 function *v() {
-    console.log(yield* z);
+  for(var i of [1,2,3])
+    yield i
+  console.log(yield* z);
 }
 
 function *c() {
     yield* z;
-};
+}
 
 function *d() {
-    yield* z;
-    yield* x;
-};
+  yield z;
+  yield* x;
+  return y;
+}
 
 function *e() {
-    eff(1);
-    eff(2);
-    console.log((yield* eff(3)) + eff(3));
-    yield* eff(eff(4));
-};
+  yield z;
+  if (yield* x)
+    return y;
+  yield* a;
+}
 
+function *f() {
+  yield eff(1);
+  yield eff(2);
+  console.log((yield* eff(3)) + (yield eff(3)));
+  yield* eff(eff(4));
+  return 10;
+}
+
+G.profile("generatorsDo");
+
+function *v1() {
+  console.log(yield z);
+}
+
+function *c1() {
+    yield z;
+}
+
+function *d1() {
+    yield z;
+    yield x;
+}
+function *e1() {
+    yield eff(1);
+    yield eff(2);
+    console.log((yield eff(3)) + eff(3));
+    yield eff(yield eff(4));
+}

@@ -9,5 +9,5 @@ function a() {
     }
     console.log("out");
     eff("out",e);
-};
+}
 

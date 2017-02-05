@@ -1,4 +1,4 @@
-M.option({varCapt:"closure", bindAssoc:"left"});
+// *- SKIP
 
 function ai() {
     var i;

@@ -5,45 +5,50 @@
   "main": "compiler.js",
   "scripts": {
     "test": "mocha",
-    "build": "coffee -co . src/",
+    "build": "babel src --out-dir .",
     "prepublish": "npm run build"
   },
-  "bin": {
-    "mfjsc": "./bin/mfjsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/awto/mfjs-compiler.git"
-  },
+  "repository": "https://github.com/awto/mfjs-compiler.git",
   "keywords": [
     "promise",
     "async",
     "monad",
-    "linq"
+    "linq",
+    "mfjs"
   ],
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "coffee-script": "^1.10.0",
+    "babel-cli": "^6.22.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-check-es2015-constants": "^6.22.0",
+    "babel-plugin-transform-es2015-block-scoped-functions": "^6.22.0",
+    "babel-plugin-transform-es2015-block-scoping": "^6.22.0",
+    "babel-plugin-transform-es2015-computed-properties": "^6.22.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.22.0",
+    "babel-plugin-transform-es2015-duplicate-keys": "^6.22.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.22.0",
+    "babel-plugin-transform-es2015-parameters": "^6.22.0",
+    "babel-plugin-transform-es2015-spread": "^6.22.0",
+    "babel-register": "^6.18.0",
     "expect.js": "^0.3.1",
     "markdox": "^0.1.10",
-    "mocha": "^2.4.5",
-    "rimraf": "^2.5.2"
+    "mocha": "^3.2.0"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "escodegen": "^1.8.0",
-    "esmangle": "^1.0.1",
-    "esprima": "^2.7.2",
-    "esquery": "^0.4.0",
-    "estraverse": "^4.2.0",
-    "esutils": "^2.0.2",
+    "babel-generator": "^6.22.0",
+    "babel-types": "^6.22.0",
+    "babylon": "^6.15.0",
+    "estransducers": "^1.2.1",
     "findup": "^0.1.5",
-    "mkdirp": "^0.5.1",
-    "optimist": "^0.6.1",
-    "resolve": "^1.1.7",
-    "through2": "^2.0.1"
+    "ramda": "^0.21.0",
+    "resolve": "^1.2.0"
+  },
+  "browser": {
+    "resolve": false,
+    "findup": false
   }
 }

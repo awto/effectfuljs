@@ -6,5 +6,5 @@ function a() {
         eff("in `finally`");
     }
     eff("after `finally`");
-};
+}
 

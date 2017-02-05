@@ -1,5 +1,3 @@
-M.option({varCapt:"closure"});
-
 function a1() {
   var i;
   eff1(i++);
@@ -207,7 +205,7 @@ function a39() {
     eff(i++,j++);
     eff(i++,j++);
     console.log(i,j);
-};
+}
 function aij() {
     var i, j, y;
     i++;

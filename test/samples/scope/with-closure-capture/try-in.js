@@ -1,5 +1,3 @@
-M.option({varCapt:"closure"});
-
 function a() {
     var i, j, k;
     eff(k);

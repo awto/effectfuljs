@@ -1,78 +1,74 @@
 function a(z) {
-    return M.block(function (l) {
-        return M(function () {
-            if (z === 1)
-                return M(eff(1)).mbind(l);
-        }()).mbind(function () {
-            return eff(2);
-        });
-    }).mbind(function () {
-        return eff(3);
-    });
+  return M((() => {
+    switch (z) {
+      case 1:
+        return eff(1);
+
+      default:
+        return eff(2);
+    }
+  })()).mbind(() => eff(3));
 }
+
 function a(z) {
-    return M.block(function (l) {
-        return M(function () {
-            if (z === 1)
-                return M(eff(1)).mbind(l);
-        }()).mbind(function () {
-            if (z === 2) {
-                console.log('1');
-                return l();
-            }
-        }).mapply(function () {
-            console.log('2');
-        });
-    }).mbind(function () {
-        return eff(3);
-    });
+  return M((() => {
+    switch (z) {
+      case 1:
+        return eff(1);
+
+      case 2:
+        {
+          console.log('1');
+          return M.pure();
+        }
+
+      default:
+        {
+          console.log('2');
+          return M.pure();
+        }
+    }
+  })()).mbind(() => eff(3));
 }
+
 function c(z) {
-    return M.block(function (lab) {
-        return M.block(function (l) {
-            return M(function () {
-                if (z === 1)
-                    return M(eff(1)).mbind(l);
-            }()).mbind(function () {
-                if (z === 2)
-                    return M(eff(2)).mbind(lab);
-            }).mbind(function () {
-                if (z === 3)
-                    console.log('z');
-                return eff(3);
-            });
-        }).mbind(function () {
-            return eff(4);
-        });
-    }).mbind(function () {
-        return eff(5);
-    });
+  return M.block(lab => M((() => {
+    switch (z) {
+      case 1:
+        return eff(1);
+
+      case 2:
+        return M(eff(2)).mbind(() => lab());
+
+      case 3:
+        {
+          console.log('z');
+          return eff(3);
+        }
+
+      default:
+        return eff(3);
+    }
+  })()).mbind(() => eff(4))).mbind(() => eff(5));
 }
+
 function d(z) {
-    return M.block(function (lab1) {
-        return M.block(function (lab2) {
-            return M.block(function (l) {
-                return M(function () {
-                    if (z === 1)
-                        return M(eff(1)).mbind(l);
-                }()).mbind(function () {
-                    if (z === 2)
-                        return M(eff(2)).mbind(lab1);
-                }).mbind(function () {
-                    if (z === 3) {
-                        console.log('z');
-                        return lab2();
-                    }
-                }).mbind(function () {
-                    return eff(3);
-                });
-            }).mbind(function () {
-                return eff(4);
-            }).mbind(lab1);
-        }).mbind(function () {
-            return eff(5);
-        });
-    }).mbind(function () {
-        return eff(6);
-    });
+  return M.block(lab1 => M.block(lab2 => M((() => {
+    switch (z) {
+      case 1:
+        return eff(1);
+
+      case 2:
+        return M(eff(2)).mbind(() => lab1());
+
+      case 3:
+        {
+          console.log('z');
+          return lab2();
+        }
+
+      default:
+        return eff(3);
+    }
+  })()).mbind(() => eff(4)).mbind(() => lab1())).mbind(() => eff(5))).mbind(() => eff(6));
 }

@@ -3,4 +3,4 @@ function a() {
         return eff(2);
     else
         return eff(3);
-};
+}

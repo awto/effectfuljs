@@ -4,7 +4,7 @@ function a() {
         return eff(1);
     else
         return eff(2);
-};
+}
 function b() {
     if (true)
         return eff(1);
@@ -32,3 +32,17 @@ function d() {
     eff(4);
 }
 
+function e() {
+  if (eff(1))
+    return 1;
+  else
+    return 2;
+  eff(2)
+}
+
+function f() {
+  if (eff(1))
+    return 1;
+  else
+    return 2;
+}

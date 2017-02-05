@@ -13,7 +13,6 @@
   }
   console.log("ai");
 });
-
 (function() {
   console.log("bi");
   lab: for(var i = 0; i < 3; i++) {
@@ -29,7 +28,6 @@
   }
   console.log("ai");
 });
-
 function a() {
   eff('b');
   for(var i = 0; i < 3; i++) {
@@ -48,8 +46,7 @@ function a1() {
     eff(i,j);
   }
   effRes(i,j);
-};
-
+}
 function b() {
   eff('b');
   for(;;) {
@@ -58,8 +55,7 @@ function b() {
     eff(i);
   }
   eff('a');
-};
-
+}
 function c() {
   eff('b');
   for(;;) {
@@ -70,7 +66,7 @@ function c() {
     eff(i);
   }
   eff('a');
-};
+}
 function d() {
   var result = 0, i;
   for (i = 0; i < 10; i++) {

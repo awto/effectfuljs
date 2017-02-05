@@ -1,219 +1,155 @@
 function ai() {
-    var i;
+  var i;
+  return M.get().mbind(({
+    i
+  }) => {
     i += 1;
-    return M(eff1(i)).mbind(function () {
-        return function (i) {
-            i += 2;
-            return eff2(i);
-        }(i);
+    return M(eff1(i)).mbind(() => {
+      var i1 = i;
+      i1 += 2;
+      return eff2(i1);
     });
+  });
 }
+
 function aij() {
-    var i, j, y;
+  var i, j, y;
+  return M.get().mbind(({
+    i
+  }) => {
     i++;
-    return M(eff(i)).mbind(function () {
-        return function (i, j) {
-            j = 2;
-            i++;
-            return M(eff(j)).mconst([
-                i,
-                j
-            ]);
-        }(i, j);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(i, j)).mconst(j);
-    }).mbind(eff);
+    return M(eff(i)).mbind(() => {
+      var i1 = i;
+      j = 2;
+      i1++;
+      return M(eff(j)).mbind(() => eff(i1, j)).mbind(() => eff(j));
+    });
+  });
 }
+
 function aij1() {
-    var i, j, y;
-    return M(eff(1)).mbind(function () {
-        return function (i) {
-            i += j;
-            return M(eff(i)).mconst(i);
-        }(i);
-    }).mbind(function (i) {
-        return function (j) {
-            j = 2;
-            i++;
-            return M(eff(j)).mconst([
-                i,
-                j
-            ]);
-        }(j);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(i, j)).mconst(j);
-    }).mbind(eff);
+  var i, j, y;
+  return M(eff(1)).mbind(() => M.get().mbind(({
+    i,
+    j
+  }) => {
+    i += j;
+    return M(eff(i)).mbind(() => {
+      var i1 = i;
+      j = 2;
+      i1++;
+      return M(eff(j)).mbind(() => eff(i1, j)).mbind(() => eff(j));
+    });
+  }));
 }
+
 function aij2() {
-    var i, j, y;
-    return M(eff(1)).mbind(function () {
-        return function (i) {
-            i += 2;
-            return M(eff(i)).mconst(i);
-        }(i);
-    }).mbind(function (i) {
-        return function (j) {
-            j = 2;
-            i++;
-            return M(eff(j)).mconst([
-                i,
-                j
-            ]);
-        }(j);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(i, j)).mconst(j);
-    }).mbind(eff);
-}
-function ar() {
-    var i, j;
-    i++;
-    return M(eff(i)).mbind(function () {
-        return eff(i);
-    }).mbind(function () {
-        return function (i) {
-            i++;
-            return M(eff(i)).mconst(i);
-        }(i);
-    }).mbind(function (i) {
-        return M(eff(i)).mconst(i);
-    }).mbind(function (i) {
-        i++;
-        return M(eff(i)).mconst(i);
-    }).mbind(function (i) {
-        return function (j) {
-            j = 2;
-            i += 1;
-            return M(eff(i)).mconst([
-                i,
-                j
-            ]);
-        }(j);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(3)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        i++;
-        return M(eff(j)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(3)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        j = 1;
-        return M(eff(i)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(M.spread(eff));
-}
-function a() {
-    var i, j;
-    i++;
-    return M(eff(i)).mbind(function () {
-        return eff(i);
-    }).mbind(function () {
-        return function (i) {
-            i++;
-            return M(eff(i)).mconst(i);
-        }(i);
-    }).mbind(function (i) {
-        return M(eff(i)).mconst(i);
-    }).mbind(function (i) {
-        i++;
-        return M(eff(i)).mconst(i);
-    }).mbind(function (i) {
-        return function (j) {
-            j = 2;
-            i += 1;
-            return M(eff(i)).mconst([
-                i,
-                j
-            ]);
-        }(j);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(i)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(3)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        i++;
-        return M(eff(j)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        return M(eff(3)).mconst([
-            i,
-            j
-        ]);
-    }).mbind(function (a) {
-        var i = a[0], j = a[1];
-        j = 1;
-        return M(eff(i)).mconst(j);
-    }).mbind(eff);
-}
-function al() {
-    var i, j;
+  var i, j, y;
+  return M(eff(1)).mbind(() => M.get().mbind(({
+    i
+  }) => {
     i += 2;
-    return M(eff1(i)).mbind(function () {
-        return eff1(i);
-    }).mbind(function () {
-        return function (i) {
-            i++;
-            return M(eff2(i)).mconst(i);
-        }(i);
-    }).mbind(function (i) {
-        return M(eff2(i)).mconst(i);
-    }).mbind(function (i) {
-        i += 3;
-        return M(eff3(i)).mconst(i);
-    }).mbind(function (i) {
-        return M(eff4(i)).mconst(i);
-    }).mbind(function (i) {
-        i++;
-        return eff5(i);
+    return M(eff(i)).mbind(() => {
+      var i1 = i;
+      j = 2;
+      i1++;
+      return M(eff(j)).mbind(() => eff(i1, j)).mbind(() => eff(j));
     });
+  }));
 }
-function b() {
-    var i;
-    i = new Something();
-    return M(i.next()).mbind(function (b) {
-        return function (i) {
-            i = b;
-            return M(i.next()).mapply(function (b1) {
-                return function (i) {
-                    i = b1;
-                    return i;
-                }(i);
+
+function ar() {
+  var i, j;
+  return M.get().mbind(({
+    i
+  }) => {
+    i++;
+    return M(eff(i)).mbind(() => eff(i)).mbind(() => {
+      var i1 = i;
+      i1++;
+      return M(eff(i1)).mbind(() => eff(i1)).mbind(() => {
+        var i2 = i1;
+        i2++;
+        return M(eff(i2)).mbind(() => {
+          var i3 = i2;
+          j = 2;
+          i3 += 1;
+          return M(eff(i3)).mbind(() => eff(3)).mbind(() => {
+            var i4 = i3;
+            i4++;
+            return M(eff(j)).mbind(() => eff(3)).mbind(() => {
+              j = 1;
+              return M(eff(i4)).mbind(() => eff(i4, j));
             });
-        }(i);
-    }).mbind(function (i) {
-        return M(i.next()).mapply(function (b2) {
-            return function (i) {
-                i = b2;
-            }(i);
+          });
         });
+      });
     });
+  });
+}
+
+function a() {
+  var i, j;
+  return M.get().mbind(({
+    i
+  }) => {
+    i++;
+    return M(eff(i)).mbind(() => eff(i)).mbind(() => {
+      var i1 = i;
+      i1++;
+      return M(eff(i1)).mbind(() => eff(i1)).mbind(() => {
+        var i2 = i1;
+        i2++;
+        return M(eff(i2)).mbind(() => {
+          var i3 = i2;
+          j = 2;
+          i3 += 1;
+          return M(eff(i3)).mbind(() => eff(i3)).mbind(() => eff(3)).mbind(() => {
+            var i4 = i3;
+            i4++;
+            return M(eff(j)).mbind(() => eff(3)).mbind(() => {
+              j = 1;
+              return M(eff(i4)).mbind(() => eff(j));
+            });
+          });
+        });
+      });
+    });
+  });
+}
+
+function al() {
+  var i, j;
+  return M.get().mbind(({
+    i
+  }) => {
+    i += 2;
+    return M(eff1(i)).mbind(() => eff1(i)).mbind(() => {
+      var i1 = i;
+      i1++;
+      return M(eff2(i1)).mbind(() => eff2(i1)).mbind(() => {
+        var i2 = i1;
+        i2 += 3;
+        return M(eff3(i2)).mbind(() => eff4(i2)).mbind(() => {
+          var i3 = i2;
+          i3++;
+          return eff5(i3);
+        });
+      });
+    });
+  });
+}
+
+function b() {
+  var i;
+  i = new Something();
+  return M(i.next()).mbind(a => {
+    i = a;
+    return i.next();
+  }).mbind(c => {
+    i = c;
+    return i.next();
+  }).mapply(d => {
+    i = d;
+  });
 }

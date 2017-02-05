@@ -1,3 +1,6 @@
+// *- SKIP
+// M.profile("generatorsDo")
+
 function* a() {
   yield 1;
   eff(2);

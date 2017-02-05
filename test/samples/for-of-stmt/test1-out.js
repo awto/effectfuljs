@@ -1,122 +1,132 @@
 function a() {
-    var i;
-    var iter;
-    iter = M.iteratorBuf(some);
-    return M.block(function (brk) {
-        return M.repeat(function (iter) {
-            return M(function () {
-                if (iter) {
-                    i = iter.value;
-                    return eff(1);
-                } else
-                    return brk();
-            }()).mapply(function () {
-                var _iter = iter;
-                _iter = _iter();
-                return _iter;
-            });
-        }, iter);
-    }).mbind(function () {
-        return eff(2);
-    });
+  var loop;
+  var i;
+  loop = M.iterator(some);
+  return M.block(label => M.set({
+    loop: loop
+  }).mbind(() => M.repeat(() => M.get().mbind(({
+    loop
+  }) => {
+    var b = loop();
+    var c = loop = b;
+
+    if (c) {
+      i = loop.value;
+      return M.set({
+        loop: loop
+      }).mbind(() => eff(1));
+    } else return M.set({
+      loop: loop
+    }).mbind(() => label());
+  })))).mbind(() => eff(2));
 }
+
 function b() {
-    var i;
-    var iter;
-    return M(eff('d')).mbind(function (b) {
-        var _iter1;
-        _iter1 = M.iteratorBuf(b);
-        return M.block(function (brk) {
-            return M.repeat(function (iter) {
-                return M(function () {
-                    if (iter) {
-                        i = iter.value;
-                        return eff(i);
-                    } else
-                        return brk();
-                }()).mapply(function () {
-                    var _iter = iter;
-                    _iter = _iter();
-                    return _iter;
-                });
-            }, _iter1);
-        });
-    }).mbind(function () {
-        return eff(i);
-    });
+  var loop;
+  var i;
+  return M(eff('d')).mbind(a => {
+    var c = M.iterator(a);
+    loop = c;
+    return M.block(label => M.set({
+      loop: loop
+    }).mbind(() => M.repeat(() => M.get().mbind(({
+      loop
+    }) => {
+      var d = loop();
+      var e = loop = d;
+
+      if (e) {
+        i = loop.value;
+        return M.set({
+          i: i,
+          loop: loop
+        }).mbind(() => eff(i));
+      } else return M.set({
+        loop: loop
+      }).mbind(() => label());
+    }))));
+  }).mbind(() => M.get()).mbind(({
+    i
+  }) => eff(i));
 }
+
 function c() {
-    var i;
-    var iter;
-    var j;
-    var iter1;
-    iter = M.iteratorBuf(some);
-    return M.block(function (brk) {
-        return M.repeat(function (a) {
-            var iter = a[0], iter1 = a[1];
-            return function () {
-                if (iter) {
-                    i = iter.value;
-                    iter1 = M.iteratorBuf(other);
-                    return M.block(function (brk1) {
-                        return M.repeat(function (iter1) {
-                            return M(function () {
-                                if (iter1) {
-                                    j = iter1.value;
-                                    return eff(i, j);
-                                } else
-                                    return brk1(iter1);
-                            }()).mapply(function () {
-                                var _iter = iter1;
-                                _iter = _iter();
-                                return _iter;
-                            });
-                        }, iter1);
-                    });
-                } else
-                    return brk();
-            }().mapply(function (iter1) {
-                var _iter1 = iter;
-                _iter1 = _iter1();
-                return [
-                    _iter1,
-                    iter1
-                ];
-            });
-        }, [
-            iter,
-            iter1
-        ]);
-    }).mbind(function () {
-        return eff(i, j);
-    });
+  var loop;
+  var i;
+  var loop1;
+  var j;
+  loop = M.iterator(some);
+  return M.block(label => M.set({
+    loop: loop
+  }).mbind(() => M.repeat(() => M.get().mbind(({
+    loop
+  }) => {
+    var a = loop();
+    var b = loop = a;
+
+    if (b) {
+      i = loop.value;
+      loop1 = M.iterator(other);
+      return M.block(label1 => M.set({
+        i: i,
+        loop: loop,
+        loop1: loop1
+      }).mbind(() => M.repeat(() => M.get().mbind(({
+        loop1
+      }) => {
+        var d = loop1();
+        var e = loop1 = d;
+
+        if (e) {
+          j = loop1.value;
+          return M.modify(s => ({
+            i: s.i,
+            j: j,
+            loop: s.loop,
+            loop1: loop1
+          })).mbind(() => eff(i, j));
+        } else return M.modify(s => ({
+          i: s.i,
+          loop: s.loop,
+          loop1: loop1
+        })).mbind(() => label1());
+      }))));
+    } else return M.set({
+      loop: loop
+    }).mbind(() => label());
+  })))).mbind(() => M.get()).mbind(({
+    i,
+    j
+  }) => eff(i, j));
 }
+
 function d() {
-    var i;
-    var iter;
-    iter = M.iterator(some);
-    return M.block(function (brk) {
-        return M.repeat(function () {
-            return M(function () {
-                if (iter) {
-                    i = iter.value;
-                    return eff(1);
-                } else
-                    return brk();
-            }()).mapply(function () {
-                iter = iter();
-            });
-        });
-    }).mbind(function () {
-        return eff(2);
-    });
+  var loop;
+  var i;
+  loop = M.iterator(some);
+  return M.block(label => M.set({
+    loop: loop
+  }).mbind(() => M.repeat(() => M.get().mbind(({
+    loop
+  }) => {
+    var a = loop();
+    var b = loop = a;
+
+    if (b) {
+      i = loop.value;
+      return M.set({
+        loop: loop
+      }).mbind(() => eff(1));
+    } else return M.set({
+      loop: loop
+    }).mbind(() => label());
+  })))).mbind(() => eff(2));
 }
+
 function p() {
-    var i;
-    var iter;
-    for (var iter1 = M.iterator(some); iter1; iter1 = iter1()) {
-        i = iter1.value;
-        console.log(1);
-    }
-    console.log(2);
+  for (var i of some) {
+    console.log(1);
+  }
+
+  console.log(2);
 }

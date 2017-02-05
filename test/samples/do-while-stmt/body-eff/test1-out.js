@@ -1,19 +1,7 @@
 (function () {
-    return M.block(function (brk) {
-        return M.repeat(function () {
-            return M.block(function (cont) {
-                return M(eff(2)).mbind(function (b) {
-                    if (b)
-                        return cont();
-                }).mbind(function () {
-                    return eff(3);
-                }).mbind(function () {
-                    return M(eff(1)).mbind(function (b1) {
-                        if (!b1)
-                            return brk();
-                    });
-                });
-            });
-        });
-    });
+  return M.block(label => M.repeat(() => M.block($continue => M(eff(2)).mbind(a => {
+    if (a) return $continue();
+  }).mbind(() => eff(3)).mbind(() => eff(1)).mbind(b => {
+    if (!b) return label();
+  }))));
 });

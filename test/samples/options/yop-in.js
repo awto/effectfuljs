@@ -1,6 +1,7 @@
 'use strict';
 /// derived from https://github.com/willconant/yield-on-promise
 // *- DEFAULT
+// *- SKIP
 
 M = require("./mfjscore");
 M.profile("minimal");

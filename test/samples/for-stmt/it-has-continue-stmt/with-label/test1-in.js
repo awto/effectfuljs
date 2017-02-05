@@ -28,7 +28,6 @@
         }
     }
 });
-
 (function () {
     var i, j, len, ref;
     ref = [1, 2, 3];
@@ -44,7 +43,6 @@
     }
     eff(j);
 });
-
 (function () {
     var i, j, len, ref;
     ref = [1, 2, 3];
@@ -55,4 +53,15 @@
         if (t2)
             continue;
     }
+});
+
+(function () {
+  var j,len;
+  for(j = 0;true;j--) {
+    eff(j);
+    j++;
+    if (t2)
+      break;
+  }
+  eff(j);
 });

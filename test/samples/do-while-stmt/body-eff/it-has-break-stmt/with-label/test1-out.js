@@ -1,51 +1,15 @@
 (function () {
-    return M(eff(0)).mbind(function () {
-        return M.block(function (labBrk) {
-            return M.repeat(function () {
-                return M.block(function (labCont) {
-                    return M(eff(1)).mbind(function () {
-                        return M.block(function (brk) {
-                            return M.repeat(function () {
-                                return M.block(function (cont) {
-                                    return M(eff(2)).mbind(function () {
-                                        return M(eff(3)).mbind(function (b) {
-                                            if (b)
-                                                return M(eff(4)).mbind(brk);
-                                        });
-                                    }).mbind(function () {
-                                        return M(eff(3)).mbind(function (b1) {
-                                            if (b1)
-                                                return M(eff(4)).mbind(cont);
-                                        });
-                                    }).mbind(function () {
-                                        return M(eff(5)).mbind(function (b2) {
-                                            if (b2)
-                                                return M(eff(6)).mbind(labCont);
-                                        });
-                                    }).mbind(function () {
-                                        return M(eff(7)).mbind(function (b3) {
-                                            if (b3)
-                                                return M(eff(8)).mbind(labBrk);
-                                        });
-                                    }).mbind(function () {
-                                        return M(eff(9)).mbind(function (b4) {
-                                            if (!b4)
-                                                return brk();
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    }).mbind(function () {
-                        return eff(10);
-                    }).mbind(function () {
-                        if (!true)
-                            return labBrk();
-                    });
-                });
-            });
-        });
-    }).mbind(function () {
-        return eff(11);
-    });
+  return M(eff(0)).mbind(() => M.block(lab => M.repeat(() => M.block(lab$continue => M(eff(1)).mbind(() => M.block(label => M.repeat(() => M.block($continue => M(eff(2)).mbind(() => eff(3)).mbind(a => {
+    if (a) return M(eff(4)).mbind(() => label());
+  }).mbind(() => eff(3)).mbind(b => {
+    if (b) return M(eff(4)).mbind(() => $continue());
+  }).mbind(() => eff(5)).mbind(c => {
+    if (c) return M(eff(6)).mbind(() => lab$continue());
+  }).mbind(() => eff(7)).mbind(d => {
+    if (d) return M(eff(8)).mbind(() => lab());
+  }).mbind(() => eff(9)).mbind(e => {
+    if (!e) return label();
+  }))))).mbind(() => eff(10)).mbind(() => {
+    if (!true) return lab();
+  }))))).mbind(() => eff(11));
 });

@@ -1,40 +1,23 @@
 (function () {
-    var i, j, len, ref;
-    ref = [
-        1,
-        2,
-        3
-    ];
-    j = 0, len = ref.length;
-    return M.block(function (brk) {
-        return M.repeat(function (a) {
-            var i = a[0], j = a[1];
-            return function () {
-                if (j < len) {
-                    i = ref[j];
-                    return M(eff(i)).mbind(function (b) {
-                        if (b)
-                            return brk();
-                    }).mapply(function () {
-                        return i;
-                    });
-                } else
-                    return brk();
-            }().mapply(function (i) {
-                var _j = j;
-                _j++;
-                return [
-                    i,
-                    _j
-                ];
-            });
-        }, [
-            i,
-            j
-        ]);
-    }).mbind(function () {
-        return eff(2);
-    }).mbind(function () {
-        return eff(3);
-    });
+  var i, j, len, ref;
+  ref = [1, 2, 3];
+  j = 0, len = ref.length;
+  return M.block(label => M.set({
+    j: j
+  }).mbind(() => M.repeat(() => M.get().mbind(({
+    j
+  }) => {
+    if (j < len) {
+      i = ref[j];
+      return M(eff(i)).mbind(a => {
+        if (a) return label();
+      }).mbind(() => {
+        var j1 = j;
+        j1++;
+        return M.set({
+          j: j1
+        });
+      });
+    } else return label();
+  })))).mbind(() => eff(2)).mbind(() => eff(3));
 });

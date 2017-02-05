@@ -1,3 +1,4 @@
+// *- SKIP
 M.option({expr:"par"});
 
 function a1() {

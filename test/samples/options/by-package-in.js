@@ -1,3 +1,4 @@
+// *- SKIP
 M = require("../../src/lib");
 M.option({minimal:{CallExpression:{match:{package:{CC:true}}}}});
 M.profile("defaultMinimal");

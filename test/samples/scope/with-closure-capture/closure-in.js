@@ -1,5 +1,3 @@
-M.option({varCapt:"closure"});
-
 function a() {
     var i, j;
     eff(i,j);
@@ -13,7 +11,8 @@ function a() {
     k();
     eff(i++,j++);
     console.log(i,j);
-};
+}
+
 function a1() {
     var i, j;
     eff(i,j);
@@ -27,7 +26,7 @@ function a1() {
     k();
     eff(i++,j++);
     console.log(i,j);
-};
+}
 
 function b() {
     var i, j;
@@ -43,7 +42,7 @@ function b() {
     k();
     eff(i++,j++);
     console.log(i,j);
-};
+}
 
 function b1() {
     var i, j;
@@ -59,6 +58,6 @@ function b1() {
     k(i);
     eff(i++,j++);
     console.log(i,j);
-};
+}
 
 

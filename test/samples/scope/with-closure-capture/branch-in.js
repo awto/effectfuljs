@@ -1,5 +1,3 @@
-M.option({varCapt:"closure"});
-
 function a1() {
     var i, j;
     if (true) {

@@ -1,4 +1,4 @@
-M.option({coerce:"none"});
+M.option({coerce:false});
 
 function a1() {
     eff(1) || eff(2);
@@ -85,5 +85,3 @@ function b() {
     1 ? eff(2) : eff(3);
     eff(1) ? 2 : 3;
 }
-
-

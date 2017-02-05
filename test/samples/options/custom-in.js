@@ -1,3 +1,4 @@
+// *- SKIP
 module.exports = function(M,it) {
   M.option({
     test:{

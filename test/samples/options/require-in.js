@@ -1,5 +1,6 @@
 // *- QSKIP
 // *- M.require function
+// *- SKIP
 
 function a() {
   eff(1);

@@ -5,7 +5,6 @@ function ai() {
     i+=2;
     eff2(i);
 }
-
 function aij() {
   var i, j, y;
   i++;
@@ -16,7 +15,6 @@ function aij() {
   eff(i,j);
   eff(j);
 }
-
 function aij1() {
   var i, j, y;
   eff(1);
@@ -28,7 +26,6 @@ function aij1() {
   eff(i,j);
   eff(j);
 }
-
 function aij2() {
   var i, j, y;
   eff(1);
@@ -40,7 +37,6 @@ function aij2() {
   eff(i,j);
   eff(j);
 }
-
 function ar() {
   var i, j;
   i++;
@@ -100,7 +96,6 @@ function al() {
   i++;
   eff5(i);
 }
-
 function b() {
   var i = new Something();
   i = M(i.next());

@@ -1,4 +1,4 @@
-
+// *- SKIP
 function a() {
     var k = eff(1);
     M.$(k).eff(2);

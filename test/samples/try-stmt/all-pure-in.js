@@ -6,7 +6,7 @@ function a() {
         console.log("exception", e)
     }
     console.log("out");
-};
+}
 
 function b() {
     console.log("in");
@@ -18,7 +18,7 @@ function b() {
         console.log("fin");
     }
     console.log("out");
-};
+}
 
 
 function c() {
@@ -29,4 +29,4 @@ function c() {
         console.log("fin");
     }
     console.log("out");
-};
+}

@@ -1,78 +1,81 @@
 function ar() {
-    var i, j;
+  var i, j;
+  return M.get().mbind(({
+    i
+  }) => {
     i += 1;
-    return M(eff1(i)).mbind(function () {
-        i += 2;
-        return eff2(i);
-    }).mbind(function () {
-        i += 3;
-        return M(effl1(i)).mbind(function () {
-            return effl2(i);
-        });
+    return M(eff1(i)).mbind(() => {
+      var i1 = i;
+      i1 += 2;
+      return M(eff2(i1)).mbind(() => {
+        var i2 = i1;
+        i2 += 3;
+        return M(effl1(i2)).mbind(() => effl2(i2));
+      });
     });
+  });
 }
+
 function ar() {
-    var i, j;
+  var i, j;
+  return M.get().mbind(({
+    i
+  }) => {
     i++;
-    return M(effr1(i)).mbind(function () {
-        return effr2(i);
-    }).mbind(function () {
-        i++;
-        return effr3(i);
-    }).mbind(function () {
-        i++;
-        return M(effl1(i)).mbind(function () {
-            i++;
-            return M(effl2(i)).mbind(function () {
-                j = 2;
-                i += 1;
-                return M(effl3(i)).mbind(function () {
-                    return M(effr4(3)).mbind(function () {
-                        i++;
-                        return effr5(j);
-                    }).mbind(function () {
-                        return effr6(3);
-                    }).mbind(function () {
-                        j = 1;
-                        return effr7(i);
-                    }).mbind(function () {
-                        return effr8(i, j);
-                    });
-                });
+    return M(effr1(i)).mbind(() => effr2(i)).mbind(() => {
+      var i1 = i;
+      i1++;
+      return M(effr3(i1)).mbind(() => {
+        var i2 = i1;
+        i2++;
+        return M(effl1(i2)).mbind(() => {
+          var i3 = i2;
+          i3++;
+          return M(effl2(i3)).mbind(() => {
+            var i4 = i3;
+            j = 2;
+            i4 += 1;
+            return M(effl3(i4)).mbind(() => effr4(3)).mbind(() => {
+              var i5 = i4;
+              i5++;
+              return M(effr5(j)).mbind(() => effr6(3)).mbind(() => {
+                j = 1;
+                return M(effr7(i5)).mbind(() => effr8(i5, j));
+              });
             });
+          });
         });
+      });
     });
+  });
 }
+
 function a() {
-    var i, j;
+  var i, j;
+  return M.get().mbind(({
+    i
+  }) => {
     i++;
-    return M(effl1(i)).mbind(function () {
-        return effl2(i);
-    }).mbind(function () {
-        i++;
-        return M(effr1(i)).mbind(function () {
-            return M(effr2(i)).mbind(function () {
-                i++;
-                return M(effr3(i)).mbind(function () {
-                    j = 2;
-                    i += 1;
-                    return M(effr4(i)).mbind(function () {
-                        return M(effr5(i)).mbind(function () {
-                            return M(effr6(3)).mbind(function () {
-                                i++;
-                                return M(effl3(j)).mbind(function () {
-                                    return effl4(3);
-                                }).mbind(function () {
-                                    j = 1;
-                                    return effl5(i);
-                                }).mbind(function () {
-                                    return effl6(j);
-                                });
-                            });
-                        });
-                    });
-                });
+    return M(effl1(i)).mbind(() => effl2(i)).mbind(() => {
+      var i1 = i;
+      i1++;
+      return M(effr1(i1)).mbind(() => effr2(i1)).mbind(() => {
+        var i2 = i1;
+        i2++;
+        return M(effr3(i2)).mbind(() => {
+          var i3 = i2;
+          j = 2;
+          i3 += 1;
+          return M(effr4(i3)).mbind(() => effr5(i3)).mbind(() => effr6(3)).mbind(() => {
+            var i4 = i3;
+            i4++;
+            return M(effl3(j)).mbind(() => effl4(3)).mbind(() => {
+              j = 1;
+              return M(effl5(i4)).mbind(() => effl6(j));
             });
+          });
         });
+      });
     });
+  });
 }

@@ -1,3 +1,4 @@
+// *- SKIP
 M.option({naming:true});
 function a() {
   eff(1);

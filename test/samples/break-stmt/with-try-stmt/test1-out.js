@@ -1,18 +1,5 @@
 (function () {
-    return M.block(function (lab) {
-        return M.coerce(function () {
-            return M(eff(1)).mbind(function (b) {
-                if (b)
-                    return M(eff('before break')).mbind(lab);
-            }).mbind(function () {
-                return eff(2);
-            });
-        }).mhandle(function (e) {
-            return eff(3);
-        }).mbind(function () {
-            return eff(4);
-        });
-    }).mbind(function () {
-        return eff(5);
-    });
+  return M.block(lab => M(eff(1)).mbind(a => {
+    if (a) return M(eff('before break')).mbind(() => lab());
+  }).mbind(() => eff(2)).mhandle(e => eff(3)).mbind(() => eff(4))).mbind(() => eff(5));
 });

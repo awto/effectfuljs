@@ -1,4 +1,4 @@
-
+// *- SKIP
 M.profile("minimal")
 
 function a() {

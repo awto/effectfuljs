@@ -1,5 +1,3 @@
-M.option({varCapt:"closure"});
-
 function ai() {
     var i;
     i+=1;

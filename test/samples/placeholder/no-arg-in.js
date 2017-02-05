@@ -1,3 +1,4 @@
+// *- SKIP
 function a() {
     M.$.eff(1);
 }
