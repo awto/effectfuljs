@@ -1,6 +1,6 @@
 {
   "name": "@effectfuljs/compiler",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Embedding effects in JavaScript using Monads",
   "main": "compiler.js",
   "scripts": {
