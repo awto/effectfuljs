@@ -1,0 +1,8 @@
+{
+  "inject": true,
+  "require": "@effectfuljs/generators",
+  "profile": null,
+  "ns": null
+}
+
+
