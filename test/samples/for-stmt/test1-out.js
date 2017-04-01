@@ -2,21 +2,24 @@
   var i, j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
-  return M.block(label => M.set({
-    j: j
-  }).mbind(() => M.repeat(() => M.get().mbind(({
+  return M.block(label => M.modify(s => ({
+    j,
+    len: s.len,
+    ref: s.ref
+  })).mseq(M.repeat(() => M.get().mbind(({
     j
   }) => {
+    let i;
     if (j < len) return M.block($continue => {
       i = ref[j];
       return M(eff(i)).mbind(a => {
         if (a) return $continue();
       });
     }).mbind(() => {
-      var j1 = j;
-      j1++;
+      let _j = j;
+      _j++;
       return M.set({
-        j: j1
+        j: _j
       });
     });else return label();
   }))));
@@ -53,19 +56,20 @@
 function a() {
   var i;
   return M(eff('b')).mbind(() => {
+    let i;
     i = 0;
     return M.block(label => M.set({
-      i: i
-    }).mbind(() => M.repeat(() => M.get().mbind(({
+      i
+    }).mseq(M.repeat(() => M.get().mbind(({
       i
     }) => {
       if (i < 3) {
         if (i === 2) console.log(i);
         return M(eff(i)).mbind(() => {
-          var i1 = i;
-          i1++;
+          let _i = i;
+          _i++;
           return M.set({
-            i: i1
+            i: _i
           });
         });
       } else return label();
@@ -78,24 +82,25 @@ function a() {
 function a1() {
   var i, j;
   return M(eff('b')).mbind(() => {
+    let i, j;
     i = 0;
     j = 10;
     return M.block(label => M.set({
-      i: i,
-      j: j
-    }).mbind(() => M.repeat(() => M.get().mbind(({
+      i,
+      j
+    }).mseq(M.repeat(() => M.get().mbind(({
       i,
       j
     }) => {
       if (i < 3) {
         if (i === 2) console.log(i, j);
         return M(eff(i, j)).mbind(() => {
-          var i1 = i;
-          var j1 = j;
-          i1++, j1 += 2;
+          let _i = i,
+              _j = j;
+          _i++, _j += 2;
           return M.set({
-            i: i1,
-            j: j1
+            i: _i,
+            j: _j
           });
         });
       } else return label();
@@ -125,19 +130,20 @@ function d() {
   result = 0;
   i = 0;
   return M.block(label => M.set({
-    i: i,
-    result: result
-  }).mbind(() => M.repeat(() => M.get().mbind(({
+    result,
+    i
+  }).mseq(M.repeat(() => M.get().mbind(({
     i,
     result
   }) => {
     if (i < 10) return M(eff(result, i)).mbind(a => {
-      var i1 = i;
+      let result,
+          _i = i;
       result = a;
-      i1++;
+      _i++;
       return M.set({
-        i: i1,
-        result: result
+        result,
+        i: _i
       });
     });else return label();
   })))).mbind(() => M.get()).mbind(({
@@ -150,16 +156,17 @@ function e() {
   result = 0;
   i = 0;
   return M.block(label => M.set({
-    i: i
-  }).mbind(() => M.repeat(() => M.get().mbind(({
+    i
+  }).mseq(M.repeat(() => M.get().mbind(({
     i
   }) => {
     if (i < 10) return M(eff(i)).mbind(a => {
-      var i1 = i;
+      let result,
+          _i = i;
       result = a;
-      i1++;
+      _i++;
       return M.set({
-        i: i1
+        i: _i
       });
     });else return label();
   })))).mbind(() => eff());
@@ -170,18 +177,19 @@ function f() {
   result = 0;
   i = 0;
   return M.block(label => M.set({
-    i: i,
-    result: result
-  }).mbind(() => M.repeat(() => M.get().mbind(({
+    result,
+    i
+  }).mseq(M.repeat(() => M.get().mbind(({
     i
   }) => {
     if (i < 10) return M(eff(i)).mbind(a => {
-      var i1 = i;
+      let result,
+          _i = i;
       result = a;
-      i1++;
+      _i++;
       return M.set({
-        i: i1,
-        result: result
+        result,
+        i: _i
       });
     });else return label();
   })))).mbind(() => M.get()).mbind(({

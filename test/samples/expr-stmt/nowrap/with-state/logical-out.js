@@ -1,17 +1,17 @@
 function t1() {
   var i;
   i = 0;
-  var a = i++;
-  return eff(a).mbind(b => b ? eff1(i) : eff2(i)).mbind(() => eff(i));
+  const a = i++;
+  return eff(a).mbind(a => a ? eff1(i) : eff2(i)).mbind(() => eff(i));
 }
 
 function t2() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return eff(a).mbind(b => b ? eff1(i1) : eff2(i1)).mbind(() => eff(i1));
+    let _i = i;
+    const a = _i++;
+    return eff(a).mbind(a => a ? eff1(_i) : eff2(_i)).mbind(() => eff(_i));
   });
 }
 
@@ -19,107 +19,95 @@ function t2a() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return a ? M.set({
-      i: i1
-    }).mbind(() => eff1(i1)) : M.set({
-      i: i1
-    }).mbind(() => eff2(i1));
-  }).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+    let _i = i;
+    const a = _i++;
+    return (a ? eff1(_i) : eff2(_i)).mbind(() => eff(_i));
+  });
 }
 
 function t2b() {
   var i;
   i = 0;
   return M.set({
-    i: i
-  }).mbind(() => eff(i)).mbind(() => {
-    var i1 = i;
-    return i1 ? (() => {
-      var a = i1++;
-      return M.set({
-        i: i1
-      }).mbind(() => eff1(a));
-    })() : eff2(i1);
-  }).mbind(() => M.get()).mbind(({
     i
-  }) => eff(i));
+  }).mseq(eff(i)).mbind(() => {
+    let _i = i;
+    return (_i ? (() => {
+      const a = _i++;
+      return M.set({
+        i: _i
+      }).mseq(eff1(a));
+    })() : M.set({
+      i: _i
+    }).mseq(eff2(_i))).mbind(() => eff(_i));
+  });
 }
 
 function t2c() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return a ? (() => {
-      var b = i1++;
+    let _i = i;
+    const a = _i++;
+    return (a ? (() => {
+      const a = _i++;
       return M.set({
-        i: i1
-      }).mbind(() => eff1(b));
+        i: _i
+      }).mseq(eff1(a));
     })() : M.set({
-      i: i1
-    }).mbind(() => eff2(i1));
-  }).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+      i: _i
+    }).mseq(eff2(_i))).mbind(() => eff(_i));
+  });
 }
 
 function t2e() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return a ? (() => {
-      var b = i1++;
+    let _i = i;
+    const a = _i++;
+    return (a ? (() => {
+      const a = _i++;
       return M.set({
-        i: i1
-      }).mbind(() => eff1(b));
+        i: _i
+      }).mseq(eff1(a));
     })() : (() => {
-      var c = console.log(i1);
+      let a = console.log(_i);
       return M.set({
-        i: i1
+        i: _i
       }).mapply(() => {
-        return c;
+        return a;
       });
-    })();
-  }).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+    })()).mbind(() => eff(_i));
+  });
 }
 
 function t2f() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return a ? (() => {
-      var b = console.log(i1++);
+    let _i = i;
+    const a = _i++;
+    return (a ? (() => {
+      let a = console.log(_i++);
       return M.set({
-        i: i1
+        i: _i
       }).mapply(() => {
-        return b;
+        return a;
       });
     })() : M.set({
-      i: i1
-    }).mbind(() => eff(i1));
-  }).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+      i: _i
+    }).mseq(eff(_i))).mbind(() => eff(_i));
+  });
 }
 
 function t2g() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    i1++ ? console.log(i1++) : console.log(i1);
-    return eff(i1);
+    let _i = i;
+    _i++ ? console.log(_i++) : console.log(_i);
+    return eff(_i);
   });
 }
 
@@ -127,15 +115,15 @@ function t2h() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return eff(a).mbind(b => {
-      var i2 = i1;
-      var c = i2++;
-      var d = console.log(c);
-      var e = console.log(i2);
-      b ? d : e;
-      return eff(i2);
+    let _i = i;
+    const a = _i++;
+    return eff(a).mbind(a => {
+      let i = _i;
+      const b = i++;
+      const c = console.log(b);
+      const d = console.log(i);
+      a ? c : d;
+      return eff(i);
     });
   });
 }
@@ -145,28 +133,29 @@ function t3() {
   i = 0;
   j = 0;
   return eff(i, j).mbind(() => {
-    var i1 = i;
-    var j1 = j;
-    var a = i1++;
-    var b = j1++;
-    return M.set({
-      i: i1
-    }).mbind(() => eff(a, b)).mbind(c => {
-      var i2 = i1;
-      var j2 = j1;
-      return c ? (() => {
-        var d = i2++;
+    let _i = i,
+        _j = j;
+    const a = _i++;
+    const b = _j++;
+    return M.modify(s => ({
+      i: _i,
+      j: s.j
+    })).mseq(eff(a, b)).mbind(a => {
+      let i = _i,
+          j = _j;
+      return (a ? (() => {
+        const a = i++;
         return M.set({
-          i: i2
-        }).mbind(() => eff2(d, j2));
+          i
+        }).mseq(eff2(a, j));
       })() : (() => {
-        var e = j2++;
-        return eff2(i2, e);
-      })();
+        const a = j++;
+        return M.set({
+          i
+        }).mseq(eff2(i, a));
+      })()).mbind(() => eff(i));
     });
-  }).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+  });
 }
 
 function t4() {
@@ -175,53 +164,51 @@ function t4() {
   j = 0;
   k = 0;
   return eff(i, j, k).mbind(() => {
-    var i1 = i;
-    var j1 = j;
-    var a = i1++;
-    var b = j1++;
-    return M.set({
-      i: i1,
-      j: j1
-    }).mbind(() => eff(a, b, k)).mbind(c => {
-      var i2 = i1;
-      var k1 = k;
-      var j2 = j1;
-      return c ? (() => {
-        var d = i2++;
-        var e = k1++;
-        return M.modify(s => ({
-          i: i2,
-          j: s.j2
-        })).mbind(() => eff2(d, j2, e));
+    let _i = i,
+        _j = j;
+    const a = _i++;
+    const b = _j++;
+    return M.modify(s => ({
+      i: _i,
+      j: _j,
+      k: s.k
+    })).mseq(eff(a, b, k)).mbind(a => {
+      let i = _i,
+          j = _j,
+          _k = k;
+      return (a ? (() => {
+        const a = i++;
+        const b = _k++;
+        return M.set({
+          i,
+          j
+        }).mseq(eff2(a, j, b));
       })() : (() => {
-        var f = j2++;
-        var g = k1++;
-        return M.modify(s => ({
-          i: s.i2,
-          j: j2
-        })).mbind(() => eff2(i2, f, g));
-      })();
+        const a = j++;
+        const b = _k++;
+        return M.set({
+          i,
+          j
+        }).mseq(eff2(i, a, b));
+      })()).mbind(() => eff(i, j));
     });
-  }).mbind(() => M.get()).mbind(({
-    i,
-    j
-  }) => eff(i, j));
+  });
 }
 
 function t5() {
   var i;
   i = 0;
-  var a = i++;
-  return eff(a).mbind(b => b ? eff1(i) : M.pure(b)).mbind(() => eff(i));
+  const a = i++;
+  return eff(a).mbind(a => a ? eff1(i) : M.pure(a)).mbind(() => eff(i));
 }
 
 function t6() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return eff(a).mbind(b => b ? eff1(i1) : M.pure(b)).mbind(() => eff(i1));
+    let _i = i;
+    const a = _i++;
+    return eff(a).mbind(a => a ? eff1(_i) : M.pure(a)).mbind(() => eff(_i));
   });
 }
 
@@ -229,67 +216,85 @@ function t7() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
+    let _i = i;
+    const a = _i++;
     return M.set({
-      i: i1
-    }).mbind(() => eff(a)).mbind(b => {
-      var i2 = i1;
-      return b ? (() => {
-        var c = i2++;
+      i: _i
+    }).mseq(eff(a)).mbind(a => {
+      let i = _i;
+      return (a ? (() => {
+        const a = i++;
         return M.set({
-          i: i2
-        }).mbind(() => eff1(c));
-      })() : M.pure(b);
+          i
+        }).mseq(eff1(a));
+      })() : (() => {
+        let b = a;
+        return M.set({
+          i
+        }).mapply(() => {
+          return b;
+        });
+      })()).mbind(() => eff(i));
     });
-  }).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+  });
 }
 
 function t8() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
+    let _i = i;
+    const a = _i++;
     return M.set({
-      i: i1
-    }).mbind(() => eff(a)).mbind(b => {
-      var i2 = i1;
-      return b ? (() => {
-        var c = i2++;
+      i: _i
+    }).mseq(eff(a)).mbind(a => {
+      let i = _i;
+      return (a ? (() => {
+        const a = i++;
         return M.set({
-          i: i2
-        }).mbind(() => eff1(c));
-      })() : M.pure(b);
+          i
+        }).mseq(eff1(a));
+      })() : (() => {
+        let b = a;
+        return M.set({
+          i
+        }).mapply(() => {
+          return b;
+        });
+      })()).mbind(a => {
+        let _i = i;
+        return (a ? (() => {
+          const a = _i++;
+          return M.set({
+            i: _i
+          }).mseq(eff(a));
+        })() : (() => {
+          let b = a;
+          return M.set({
+            i: _i
+          }).mapply(() => {
+            return b;
+          });
+        })()).mbind(() => eff(_i));
+      });
     });
-  }).mbind(d => M.get()).mbind(({
-    i
-  }) => d ? (() => {
-    var e = i++;
-    return M.set({
-      i: i
-    }).mbind(() => eff(e));
-  })() : M.pure(d)).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+  });
 }
 
 function t9() {
   var i;
   i = 0;
-  var a = i++;
-  return eff(a).mbind(b => b ? M.pure(b) : eff1(i)).mbind(() => eff(i));
+  const a = i++;
+  return eff(a).mbind(a => a ? M.pure(a) : eff1(i)).mbind(() => eff(i));
 }
 
 function t10() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
-    return eff(a).mbind(b => b ? M.pure(b) : eff1(i1)).mbind(() => eff(i1));
+    let _i = i;
+    const a = _i++;
+    return eff(a).mbind(a => a ? M.pure(a) : eff1(_i)).mbind(() => eff(_i));
   });
 }
 
@@ -297,51 +302,69 @@ function t11() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
+    let _i = i;
+    const a = _i++;
     return M.set({
-      i: i1
-    }).mbind(() => eff(a)).mbind(b => {
-      var i2 = i1;
-      return b ? M.pure(b) : (() => {
-        var c = i2++;
+      i: _i
+    }).mseq(eff(a)).mbind(a => {
+      let i = _i;
+      return (a ? (() => {
+        let b = a;
         return M.set({
-          i: i2
-        }).mbind(() => eff1(c));
-      })();
+          i
+        }).mapply(() => {
+          return b;
+        });
+      })() : (() => {
+        const a = i++;
+        return M.set({
+          i
+        }).mseq(eff1(a));
+      })()).mbind(() => eff(i));
     });
-  }).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+  });
 }
 
 function t12() {
   var i;
   i = 0;
   return eff(i).mbind(() => {
-    var i1 = i;
-    var a = i1++;
+    let _i = i;
+    const a = _i++;
     return M.set({
-      i: i1
-    }).mbind(() => eff(a)).mbind(b => {
-      var i2 = i1;
-      return b ? M.pure(b) : (() => {
-        var c = i2++;
+      i: _i
+    }).mseq(eff(a)).mbind(a => {
+      let i = _i;
+      return (a ? (() => {
+        let b = a;
         return M.set({
-          i: i2
-        }).mbind(() => eff1(c));
-      })();
+          i
+        }).mapply(() => {
+          return b;
+        });
+      })() : (() => {
+        const a = i++;
+        return M.set({
+          i
+        }).mseq(eff1(a));
+      })()).mbind(a => {
+        let _i = i;
+        return (a ? (() => {
+          let b = a;
+          return M.set({
+            i: _i
+          }).mapply(() => {
+            return b;
+          });
+        })() : (() => {
+          const a = _i++;
+          return M.set({
+            i: _i
+          }).mseq(eff(a));
+        })()).mbind(() => eff(_i));
+      });
     });
-  }).mbind(d => M.get()).mbind(({
-    i
-  }) => d ? M.pure(d) : (() => {
-    var e = i++;
-    return M.set({
-      i: i
-    }).mbind(() => eff(e));
-  })()).mbind(() => M.get()).mbind(({
-    i
-  }) => eff(i));
+  });
 }
 
 function t13() {
@@ -349,29 +372,37 @@ function t13() {
   i = 0;
   j = 0;
   return eff(i, j).mbind(() => {
-    var i1 = i;
-    var j1 = j;
-    var a = i1++;
-    var b = j1++;
-    return M.set({
-      i: i1
-    }).mbind(() => eff(a, b)).mbind(c => {
-      var i2 = i1;
-      return c ? (() => {
-        var d = i2++;
-        return M.set({
-          i: i2
-        }).mbind(() => eff2(d, j1));
-      })() : M.pure(c);
-    }).mbind(e => M.get().mbind(({
-      i
-    }) => {
-      var j2 = j1;
-      return (e ? (() => {
-        var f = j2++;
-        return eff3(i, f);
-      })() : M.pure(e)).mbind(() => eff(i));
-    }));
+    let _i = i,
+        _j = j;
+    const a = _i++;
+    const b = _j++;
+    return M.modify(s => ({
+      i: _i,
+      j: s.j
+    })).mseq(eff(a, b)).mbind(a => {
+      let i = _i;
+      return (a ? (() => {
+        const a = i++;
+        return M.modify(s => ({
+          i,
+          j: s.j
+        })).mseq(eff2(a, _j));
+      })() : (() => {
+        let b = a;
+        return M.modify(s => ({
+          i,
+          j: s.j
+        })).mapply(() => {
+          return b;
+        });
+      })()).mbind(a => {
+        let j = _j;
+        return a ? (() => {
+          const a = j++;
+          return eff3(i, a);
+        })() : M.pure(a);
+      }).mbind(() => eff(i));
+    });
   });
 }
 
@@ -380,37 +411,59 @@ function t14() {
   i = 0;
   j = 0;
   k = 0;
-  return M.set({
-    k: k
-  }).mbind(() => eff(i, j, k)).mbind(() => {
-    var i1 = i;
-    var j1 = j;
-    var a = i1++;
-    var b = j1++;
+  return M.modify(s => ({
+    i: s.i,
+    j: s.j,
+    k
+  })).mseq(eff(i, j, k)).mbind(() => {
+    let _i = i,
+        _j = j;
+    const a = _i++;
+    const b = _j++;
     return M.modify(s => ({
-      i: i1,
+      i: _i,
+      j: _j,
       k: s.k
-    })).mbind(() => eff(a, b, k)).mbind(c => {
-      var i2 = i1;
-      var k1 = k;
-      return c ? (() => {
-        var d = i2++;
-        var e = k1++;
-        return M.set({
-          i: i2,
-          k: k1
-        }).mbind(() => eff2(d, j1, e));
-      })() : M.pure(c);
-    }).mbind(f => M.get().mbind(({
-      k,
-      i
-    }) => {
-      var j2 = j1;
-      return (f ? (() => {
-        var g = j2++;
-        var h = k++;
-        return eff3(i, g, h);
-      })() : M.pure(f)).mbind(() => eff(i, j2));
-    }));
+    })).mseq(eff(a, b, k)).mbind(a => {
+      let i = _i,
+          _k = k;
+      return (a ? (() => {
+        const a = i++;
+        const b = _k++;
+        return M.modify(s => ({
+          i,
+          j: s.j,
+          k: _k
+        })).mseq(eff2(a, _j, b));
+      })() : (() => {
+        let b = a;
+        return M.modify(s => ({
+          i,
+          j: s.j,
+          k: _k
+        })).mapply(() => {
+          return b;
+        });
+      })()).mbind(a => {
+        let j = _j,
+            k = _k;
+        return (a ? (() => {
+          const a = j++;
+          const b = k++;
+          return M.modify(s => ({
+            i: s.i,
+            j
+          })).mseq(eff3(i, a, b));
+        })() : (() => {
+          let b = a;
+          return M.modify(s => ({
+            i: s.i,
+            j
+          })).mapply(() => {
+            return b;
+          });
+        })()).mbind(() => eff(i, j));
+      });
+    });
   });
 }

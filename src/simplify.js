@@ -30,3 +30,9 @@ export const iife = R.pipe(
   Kit.completeSubst)
 
 export default R.pipe(iife)
+
+// TODO:
+export function inlineBinds() {
+}
+
+

@@ -1,6 +1,6 @@
 function a() {
   return M.scope(ret => {
-    if (true) return eff(1).mbind(b => ret(b));else return ret(3);
+    if (true) return eff(1).mbind(a => ret(a));else return ret(3);
   });
 }
 
@@ -39,7 +39,7 @@ function e() {
 
 function f() {
   return M.scope(ret => eff('1').mbind(a => {
-    if (a) return eff('i').mbind(b => ret(b));else return M.pure();
+    if (a) return eff('i').mbind(a => ret(a));else return M.pure();
   }).mbind(() => eff('2')));
 }
 

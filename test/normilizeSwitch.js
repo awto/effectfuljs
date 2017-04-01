@@ -7,7 +7,6 @@ import * as assert from "assert"
 import {equal,print,transformExpr,runExpr} from "./kit/core"
 import * as Debug from "../src/debug"
 import * as Trace from "../src/kit/trace"
-import * as Uniq from "../src/uniq"
 import * as Block from "../src/block"
 import * as Prop from "../src/propagate"
 import * as Branch from "../src/branch"
@@ -24,7 +23,7 @@ describe('normilize `switch`', function() {
     context('with function definition', function() {
       it('should clone next branches', function() {
         equal(
-          run(function() {
+          run(`function() {
             var i
             switch(eff(1)) {
             case check(1):
@@ -39,8 +38,8 @@ describe('normilize `switch`', function() {
             default:
               effB(3)
             }
-          }),
-          print(function () /*BS|E*/{
+          }`),
+          print(`function () /*BS|E*/{
             var i;
             /*VD|S|E*/var a = /*CE|B*/eff(1);
             /*VD|S|E*/var b = /*CE|B*/check(1);
@@ -50,9 +49,9 @@ describe('normilize `switch`', function() {
               /*BS|E*/{
                 i++;
                 /*ES|S|E*/ /*CE|B*/effB(1);
-                var c = function () /*BS|E*/{
+                function c() /*BS|E*/{
                   /*ES|S|E*/ /*CE|B*/effC();
-                };
+                }
                 /*ES|S|E*/ /*CE|B*/effB(function d() /*BS|E*/{
                   /*ES|S|E*/ /*CE|B*/effD();
                 });
@@ -61,9 +60,9 @@ describe('normilize `switch`', function() {
               }
               /*SC|E*/case d:
               /*BS|E*/{
-                var c = function () {
+                function c() {
                   effC();
-                };
+                }
                 /*ES|S|E*/ /*CE|B*/effB(function d() {
                   effD();
                 });
@@ -75,12 +74,12 @@ describe('normilize `switch`', function() {
                 /*ES|S|E*/ /*CE|B*/effB(3);
               }
             }
-          }))
+          }`))
       })
     })
     it('should clone next branches', function() {
       equal(
-        run(function() {
+        run(`function() {
           var i
           switch(eff(1)) {
           case check(1):
@@ -94,8 +93,8 @@ describe('normilize `switch`', function() {
           default:
             effB(3)
           }
-        }),
-        print(function () /*BS|E*/{
+        }`),
+        print(`function () /*BS|E*/{
           var i;
           /*VD|S|E*/var a = /*CE|B*/eff(1);
           /*VD|S|E*/var b = /*CE|B*/check(1);
@@ -123,13 +122,13 @@ describe('normilize `switch`', function() {
               /*ES|S|E*/ /*CE|B*/effB(3);
             }
           }
-        }))
+        }`))
     })
   })
   context('without default option', function() {
     it('should create default option', function() {
       equal(
-        run(function() {
+        run(`function() {
           var i
           switch(eff(1)) {
           case check(1):
@@ -140,8 +139,8 @@ describe('normilize `switch`', function() {
             effB(2)
             break
           }
-        }),
-        print(function () /*BS|E*/{
+        }`),
+        print(`function () /*BS|E*/{
           var i;
           /*VD|S|E*/var a = /*CE|B*/eff(1);
           /*VD|S|E*/var b = /*CE|B*/check(1);
@@ -158,13 +157,13 @@ describe('normilize `switch`', function() {
             }
             default: {}
           }
-        }))
+        }`))
     })
   })
   context('with all branches exit', function() {
     it('should keep effectful statements inside branch', function() {
       equal(
-        run(function() {
+        run(`function() {
           var i
           switch(eff(1)) {
           case check(1):
@@ -177,8 +176,8 @@ describe('normilize `switch`', function() {
           default:
             effB(3)
           }
-        }),
-        print(function () /*BS|E*/{
+        }`),
+        print(`function () /*BS|E*/{
           var i;
           /*VD|S|E*/var a = /*CE|B*/eff(1);
           /*VD|S|E*/var b = /*CE|B*/check(1);
@@ -198,7 +197,7 @@ describe('normilize `switch`', function() {
               /*ES|S|E*/ /*CE|B*/effB(3);
             }
           }
-        }))
+        }`))
     })
   })
 })
@@ -209,7 +208,7 @@ describe('interpret `switch`', function() {
     context('with all branches exit', function() {
       it('should translate branches accordingly 1', function() {
         equal(
-          run(function() {
+          run(`function() {
             switch(eff(1)) {
             case check(1):
               effB(1)
@@ -220,8 +219,8 @@ describe('interpret `switch`', function() {
             default:
               effB(3)
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             return M(eff(1)).mbind(a => M(check(1)).mbind(b => M(check(2)).mbind(c => {
               switch (a) {
               case b: return effB(1);
@@ -229,12 +228,12 @@ describe('interpret `switch`', function() {
               default: return effB(3);
               }
             })));
-          }))
+          }`))
       })
       context('with labels', function() {
         it('should translate branches accordingly 2', function() {
           equal(
-            run(function() {
+            run(`function() {
               lab: switch(eff(1)) {
                 case 1:
                    effB(1)
@@ -245,7 +244,7 @@ describe('interpret `switch`', function() {
                 default:
                    effB(3)
               }
-            }),print(function () {
+            }`),print(`function () {
               return M(eff(1)).mbind(a => {
                 switch (a) {
                 case 1: return effB(1);
@@ -253,13 +252,13 @@ describe('interpret `switch`', function() {
                 default: return effB(3);
                 }
               });
-            }))
+            }`))
         })
       }),
       context('with joined branches', function() {
         it('should translate branches accordingly 3', function() {
           equal(
-            run(function() {
+            run(`function() {
               switch(eff(1)) {
                 case 1:
                    effB(1)
@@ -269,7 +268,7 @@ describe('interpret `switch`', function() {
                 default:
                    effB(3)
               }
-            }),print(function () {
+            }`),print(`function () {
               return M(eff(1)).mbind(a => {
                 switch (a) {
                 case 1: return M(effB(1)).mbind(() => effB(2));
@@ -277,13 +276,13 @@ describe('interpret `switch`', function() {
                 default: return effB(3);
                 }
               });
-            }))
+            }`))
         })
       }),
       context('with non-EOB exits', function() {
         it('should translate branches accordingly 4', function() {
           equal(
-            run(function() {
+            run(`function() {
               switch(eff(1)) {
               case 1:
                 if (effB(1))
@@ -297,32 +296,32 @@ describe('interpret `switch`', function() {
               default:
                 eff(4)
               }
-            }),print(function () {
+            }`),print(`function () {
               return M.block(label => M(eff(1)).mbind(a => {
                 switch (a) {
                 case 1:
-                  return M(effB(1)).mbind(b => {
-                    if (b)
+                  return M(effB(1)).mbind(a => {
+                    if (a)
                       return label();
-                  }).mbind(() => effB(2)).mbind(c => {
-                    if (c)
+                  }).mbind(() => effB(2)).mbind(a => {
+                    if (a)
                       return label();
                   }).mbind(() => effB(3));
                 case 2:
-                  return M(effB(2)).mbind(d => {
-                    if (d)
+                  return M(effB(2)).mbind(a => {
+                    if (a)
                       return label();
                   }).mbind(() => effB(3));
                 default: return eff(4);
                 }
               }));
-            }))
+            }`))
         })
       }),
       context('without default branch', function() {
         it('should translate branches accordingly 5', function() {
           equal(
-            run(function() {
+            run(`function() {
               switch(eff(1)) {
               case 1:
                 effB(1)
@@ -331,8 +330,8 @@ describe('interpret `switch`', function() {
                 effB(2)
                 break
               }
-            }),
-            print(function () {
+            }`),
+            print(`function () {
               return M(eff(1)).mbind(a => {
                 switch (a) {
                 case 1: return effB(1);
@@ -340,14 +339,14 @@ describe('interpret `switch`', function() {
                 default: return M.pure();
                 }
               });
-            }))
+            }`))
         })
       })
     })
     context('with mixed effect/pure branches', function() {
       it('should translate branches accordingly 6', function() {
         equal(
-          run(function() {
+          run(`function() {
             switch(eff()) {
             case check(1):
               effB(1)
@@ -368,8 +367,8 @@ describe('interpret `switch`', function() {
               effB(3)
               break
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             return M(eff()).mbind(a => M(check(1)).mbind(b => M(check(2)).mbind(
               c => M(check(3)).mbind(d => M(check(4)).mbind(e => M(check(8)).mbind(
                 f => {
@@ -408,13 +407,13 @@ describe('interpret `switch`', function() {
                     return M.pure();
                   }
                 }))))));
-          }))
+          }`))
       })
     })
     context('with state', function() {
       it('should translate branches accordingly 7', function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0
             eff();
             switch(eff(i+=1)) {
@@ -428,51 +427,42 @@ describe('interpret `switch`', function() {
                 console.log("hi",i)
               }
               eff(i)
-            }),
+            }`),
             print(`function () {
               var i;
               i = 0;
               return M(eff()).mbind(() => {
-                var i1 = i;
-                var a = i1 += 1;
-                return M(eff(a)).mbind(b => {
-                  var i2 = i1;
-                  var c = i2 += 2;
-                  return M(check(c)).mbind(d => {
-                    var i3 = i2;
-                    var e = i3 += 4;
-                    return M(check(e)).mbind(f => {
-                      var i4 = i3;
-                      var g = i4 += 6;
-                      return M.set({
-                        i: i4
-                      }).mbind(() => check(g)).mbind(h => {
-                        var i5 = i4;
-                        switch (b) {
+                let _i = i;
+                const a = _i += 1;
+                return M(eff(a)).mbind(a => {
+                  let i = _i;
+                  const b = i += 2;
+                  return M(check(b)).mbind(b => {
+                    let _i = i;
+                    const c = _i += 4;
+                    return M(check(c)).mbind(c => {
+                      let i = _i;
+                      const d = i += 6;
+                      return M.set({i}).mseq(check(d)).mbind(d => {
+                        let _i = i;
+                        switch (a) {
+                        case b:
+                          {
+                            const a = _i += 3;
+                            return M.set({i: _i}).mseq(effB(a));
+                          }
+                        case c:
+                          {
+                            const a = _i += 5;
+                            return M.set({i: _i}).mseq(effB(a));
+                          }
                         case d:
                           {
-                            var k = i5 += 3;
-                            return M.set({
-                              i: i5
-                            }).mbind(() => effB(k));
+                            console.log('hi', _i);
+                            return M.set({i: _i});
                           }
-                          
-                        case f:
-                          {
-                            var m = i5 += 5;
-                            return M.set({
-                              i: i5
-                            }).mbind(() => effB(m));
-                          }
-                          
-                        case h:
-                          {
-                            console.log('hi', i5);
-                            return M.pure();
-                          }
-                          
                         default:
-                            return M.pure();
+                          return M.set({i: _i});
                         }
                       });
                     });
@@ -483,7 +473,7 @@ describe('interpret `switch`', function() {
       })
       it('should translate branches accordingly 8', function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0
             eff();
             switch(eff(i+=1)) {
@@ -497,49 +487,42 @@ describe('interpret `switch`', function() {
                 console.log("hi",i)
               }
               eff(i)
-            }),
+            }`),
             print(`function () {
               var i;
               i = 0;
               return M(eff()).mbind(() => {
-                var i1 = i;
-                var a = i1 += 1;
-                return M.set({
-                  i: i1
-                }).mbind(() => eff(a)).mbind(b => {
-                  var i2 = i1;
-                  switch (b) {
-                  case 1:
-                    {
-                      var c = i2 += 3;
-                      return M.set({
-                        i: i2
-                      }).mbind(() => effB(c));
+                let _i = i;
+                const a = _i += 1;
+                return M.set({i: _i}).mseq(eff(a)).mbind(
+                  a => {
+                    let i = _i;
+                    switch (a) {
+                    case 1:
+                      {
+                        const a = i += 3;
+                        return M.set({i}).mseq(effB(a));
+                      }
+                    case 2:
+                      {
+                        const a = i += 5;
+                        return M.set({i}).mseq(effB(a));
+                      }
+                    case 3:
+                      {
+                        console.log('hi', i);
+                        return M.set({i});
+                      }
+                    default:
+                      return M.set({i});
                     }
-                  case 2:
-                    {
-                      var d = i2 += 5;
-                      return M.set({
-                        i: i2
-                      }).mbind(() => effB(d));
-                    }
-                  case 3:
-                    {
-                      console.log('hi', i2);
-                      return M.pure();
-                    }
-                  default:
-                      return M.pure();
-                  }
-                });
-              }).mbind(() => M.get()).mbind(({
-                i
-              }) => eff(i));
+                  });
+              }).mbind(() => M.get()).mbind(({i}) => eff(i));
             }`))
       })
       it('should translate branches accordingly 9', function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0
             eff();
             i+=1
@@ -554,30 +537,29 @@ describe('interpret `switch`', function() {
               console.log("hi",i)
             }
             eff(i)
-          }),
+          }`),
           print(`function () {
             var i;
             i = 0;
             return M(eff()).mbind(() => {
-              var i1 = i;
-              i1 += 1;
-              var a = i1 += 2;
+              let _i = i;
+              _i += 1;
+              const a = _i += 2;
               switch (a) {
               case 1:
                 {
-                  var b = i1 += 3;
-                  return M.set({i: i1}).mbind(() => effB(b));
+                  const a = _i += 3;
+                  return M.set({i: _i}).mseq(effB(a));
                 }
               case 2:
-                  return M.set({
-                    i: i1
-                  }).mbind(() => effB(i1));
+                return M.set({i: _i}).mseq(effB(_i));
               case 3:
                 {
-                  console.log('hi', i1);
-                  return M.set({i: i1});
+                  console.log('hi', _i);
+                  return M.set({i: _i});
                 }
-              default: return M.set({i: i1});
+              default:
+                return M.set({i: _i});
               }
             }).mbind(() => M.get()).mbind(({i}) => eff(i));
           }`))
@@ -589,7 +571,7 @@ describe('interpret `switch`', function() {
     context('with all branches exit', function() {
       it('should translate branches accordingly 10', function() {
         equal(
-          run(function() {
+          run(`function() {
             switch(eff(1)) {
             case check(1):
               effB(1)
@@ -600,7 +582,7 @@ describe('interpret `switch`', function() {
             default:
               effB(3)
             }
-          }),
+          }`),
           print(function () {
             return eff(1).mbind(a => check(1).mbind(b => check(2)
                                                     .mbind(c => {
@@ -618,7 +600,7 @@ describe('interpret `switch`', function() {
       context('without default branch', function() {
         it('should translate branches accordingly 11', function() {
           equal(
-            run(function() {
+            run(`function() {
               switch(eff(1)) {
               case 1:
                 effB(1)
@@ -627,8 +609,8 @@ describe('interpret `switch`', function() {
                 effB(2)
                 break
               }
-            }),
-            print(function () {
+            }`),
+            print(`function () {
               return eff(1).mbind(a => {
                 switch (a) {
                 case 1:
@@ -639,14 +621,14 @@ describe('interpret `switch`', function() {
                   return M.pure();
                 }
               });
-            }))
+            }`))
         })
       })
     })
     context('with state', function() {
       it('should translate branches accordingly 12', function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0
             eff();
             i+=1
@@ -661,32 +643,31 @@ describe('interpret `switch`', function() {
               console.log("hi",i)
             }
             eff(i)
-          }),
+          }`),
           print(`function () {
             var i;
             i = 0;
-            return eff().mbind(
-              () => {
-                var i1 = i;
-                i1 += 1;
-                var a = i1 += 2;
-                switch (a) {
-                case 1:
-                  {
-                    var b = i1 += 3;
-                    return M.set({i: i1}).mbind(() => effB(b));
-                  }
-                case 2:
-                    return M.set({i: i1}).mbind(() => effB(i1));
-                case 3:
-                  {
-                    console.log('hi', i1);
-                    return M.set({i: i1});
-                  }
-                default:
-                    return M.set({i: i1});
+            return eff().mbind(() => {
+              let _i = i;
+              _i += 1;
+              const a = _i += 2;
+              switch (a) {
+              case 1:
+                {
+                  const a = _i += 3;
+                  return M.set({i: _i}).mseq(effB(a));
                 }
-              }).mbind(() => M.get()).mbind(({i}) => eff(i));
+              case 2:
+                return M.set({i: _i}).mseq(effB(_i));
+              case 3:
+                {
+                  console.log('hi', _i);
+                  return M.set({i: _i});
+                }
+              default:
+                return M.set({i: _i});
+              }
+            }).mbind(() => M.get()).mbind(({i}) => eff(i));
           }`))
       })
     })

@@ -3,7 +3,6 @@ M.option({coerce:false});
 function a1() {
     eff(1) || eff(2);
 }
-
 function a2() {
     eff(1) && eff(2);
 }

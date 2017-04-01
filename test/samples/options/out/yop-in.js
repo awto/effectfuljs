@@ -1,7 +1,7 @@
 'use strict';
-M = require('@mfjs/core');
+M = require('@effectfuljs/core');
 Q = require('Q');
-QM = require('@mfjs/promise')(Q);
+QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
     it('should yield fiber until promise is resolved', function (done) {
         if (done.async)

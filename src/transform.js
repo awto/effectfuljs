@@ -1,10 +1,11 @@
 import * as R from "ramda"
+
 import * as T from "babel-types"
 import * as assert from "assert"
 import dump from "estransducers/dump"
 import * as trace from "estransducers/trace"
 import * as Kit from "./kit"
-import {Tag,produce,consume,enter,leave,tok} from "./kit"
+import {Tag,produce,consume,enter,leave,tok,varScope} from "./kit"
 import * as Loops from "./loops"
 import * as State from "./state"
 import * as Control from "./control"
@@ -19,6 +20,8 @@ import * as Policy from "./policy"
 import * as Debug from "./debug"
 import * as Placeholder from "./placeholder"
 import * as Gens from "./generators"
+import * as Rt from "./rt"
+import * as Ops from "./ops"
 import simplify from "./simplify"
 
 export const consumeScope = consume
@@ -27,175 +30,127 @@ export const preproc = R.pipe(
   Kit.prepare,
   Prop.prepare,
   Policy.prepare,
-  //  Placeholder.all,
-  Scope.assignSymbolsDecls
+  varScope.prepare
 )
 
 export const scopes = R.pipe(
   preproc,
   Scope.splitScopes)
 
+const restore = R.pipe(
+  Scope.restore,
+  varScope.resolve,
+  consume)
+
+const ifLassoc = Kit.enableIf(i => i.assoc === "l")
+const ifState = Kit.enableIf(i => i.state !== false)
+const ifClosure = Kit.enableIf(i => i.closure !== false)
+
+/**
+ * passes in required order depending on options specified
+ */
+export const all =
+  R.pipe(
+    Control.assignLabels,
+    Gens.prepare, Gens.remove,
+    //  Ops.injectOps,
+    Prop.propagateEff,
+    Kit.toArray,
+    Control.removeLabeldStatement,
+    Loops.toBlocks,
+    Branch.toBlocks,
+    Branch.switchRewrite,
+    Loops.forOfStmt,
+    Loops.doWhileStmt,
+    Prop.recalcEff,
+    Loops.normilizeFor,
+    Coerce.lift,
+    Branch.liftSwitchCoerce,
+    ifState(State.saveDecls),
+    Prop.recalcEff,
+    Control.injectBlock,
+    Loops.injectRepeat,
+    Prop.recalcEff,
+    Branch.prepareLogical,Prop.recalcEff,
+    Block.flatten,
+    Exceptions.inject,Prop.recalcEff,
+    Branch.liftCoerce,Prop.recalcEff,
+    Block.splitEffBlock,
+    ifState(State.prepare),
+    ifClosure(R.pipe(Block.calcVarDeps(false),
+                     ifState(State.closureReGroup,Block.groupDeps),
+                     Prop.recalcEff)),
+    Block.calcVarDeps(true),
+    Block.groupBindDeps,
+    Prop.recalcEff,
+    ifState(State.calcFrameStateVars),
+    Block.factorEffSeq,
+    Prop.recalcEff,
+    ifState(ifClosure(State.closure)),
+    Block.propagateBindVars,
+    ifState(State.inject),
+    Prop.recalcEff,
+    Block.lassoc,
+    Block.cleanPureFrames,
+    Block.propagateBindVars,
+    Block.cleanPureEff,
+    State.interpret,
+    Prop.recalcEff,
+    Control.interpret,
+    Loops.interpretRepeat,
+    Block.cleanupEffSeq,
+    Kit.enableIf(i => i.parLoops, Loops.interpretParLoop),
+    Block.interpretParEffSeq,
+    Block.interpretBinEffSeq,
+    Coerce.inject,
+    Coerce.liftFuncs,
+    Block.interpretPure,
+    Block.interpretApp,
+    Block.interpretBindFrame,
+    Coerce.interpret,
+    Block.interpretCasts,
+    Branch.clean,
+    ifState(State.restoreDecls),
+    simplify)
+
+export const defaultTransform = R.pipe(Policy.defaultPrepare,all)
+export const defaultGensTransform = R.pipe(Policy.generatorsPrepare, all)
+
 /**
  * entry point for the whole translator chain
  */
 export function run(s) {
-  for(const i of scopes(s)) {
-    const {value} = i[0]
-    const f = value.opts
-    if (f != null && f.transform != null) {
-      consume(f.transform(i))
-    } else
-      consume(i)
+  let inject = new Map()
+  let any = false
+  function* scopesRun() {
+    for(const i of scopes(s)) {
+      const {value} = i[0]
+      const f = value.opts
+      if (f != null && f.transform) {
+        if (f.inject && f.require && f.ns)
+          inject.set(f.ns,f.require)
+        any = true
+        yield Kit.toArray(f.transform(i))
+      } else
+        yield i
+    }
+  }
+  const res = [...scopesRun()]
+  if (any) {
+    const root = res[res.length-1]
+    if (inject.size) {
+      const namespaces = root[0].value.namespaces || new Map()
+      const toInject = []
+      for(const [ns,mod] of inject) {
+        const imported = namespaces.get(mod)
+        if (!imported || ns !== imported)
+          toInject.push([ns,mod])
+      }
+      res[res.length - 1] = Rt.inject(toInject,root)
+    }
+    restore(res)
   }
 }
-
-const noState = R.pipe(
-  Block.calcVarDeps(false),
-  Block.groupDeps,
-  Block.factorEffSeq,
-  Prop.recalcEff)
-
-const nonClosureState = R.pipe(
-  Block.calcVarDeps(false),
-  State.calcState,
-  State.resetFwdDepForNonBind,
-  Block.groupDeps,
-  State.removeUselessWrites,
-  State.injectLetWrites,
-  Block.setPatVarToArgs,
-  State.injectFrameReads,
-  Prop.recalcEff,
-  Block.cleanPureEff)
-
-export const closureState = R.pipe(
-  Block.calcVarDeps(false),
-  State.calcState,
-  State.calcClosOptDeps,
-  State.resetFwdDepForNonBind,
-  Block.groupDeps,
-  Prop.recalcEff,
-  Block.factorEffSeq,
-  Prop.recalcEff,
-  State.recalcState,
-  State.aggregate,
-  State.injectClosureReads,
-  State.removeUselessWrites,
-  State.aggregate,
-  State.injectLetWrites,
-  Block.setPatVarToArgs,
-  State.injectFrameReads,
-  Prop.recalcEff,
-  Block.cleanPureEff)
-
-/**
- * injects state operations and if possible tries to utilize closures
- */
-function state(s) {
-  const si = Kit.auto(s)
-  const {state,closure} = si.opts
-  const impl = state ?
-        closure === false ? nonClosureState : closureState
-        : noState
-  return impl(si)
-}
-
-export const group = R.pipe(
-  Block.calcVarDeps(true),
-  Block.groupBindDeps,
-  Prop.recalcEff,
-  Block.lassoc
-)
-
-export const prepare = R.pipe(
-  Control.assignLabels,
-  Gens.prepare,
-  Gens.remove,
-  Prop.propagateEff,
-  Scope.topCastToBody,
-  Array.from
-)
-
-export const normilize = R.pipe(
-  Control.removeLabeldStatement,
-  Loops.toBlocks,
-  Branch.toBlocks,
-  Branch.switchRewrite,
-  Loops.forOfStmt,
-  Loops.doWhileStmt,
-  Prop.recalcEff,
-  Loops.normilizeFor,
-  Coerce.lift,
-  Branch.liftSwitchCoerce,
-  Prop.recalcEff
-)
-
-export const inject = R.pipe(
-  Scope.recalcLocals,
-  Control.injectBlock,
-  Loops.injectRepeat,
-  State.prepare,
-  State.saveDecls,
-  Prop.recalcEff,
-  Branch.prepareLogical,
-  Prop.recalcEff,
-  Block.flatten,
-  Uniq.collect,
-  Exceptions.inject,
-  Prop.recalcEff,
-  Branch.liftCoerce,
-  Prop.recalcEff,
-  Block.splitEffBlock
-)
-
-/** 
- * full interpretation pass
- */
-export const interpret = (opts) => R.pipe(
-  Block.cleanPureFrames,
-  Block.propagateBindVars,
-  State.interpretStateOpts,
-  State.renameVarPass,
-  Prop.recalcEff,
-  opts.par ? Loops.interpretParLoop : i => i,
-  Control.interpret,
-  Loops.interpretRepeat,
-  Block.cleanupEffSeq,
-  opts.par ? Block.interpretParEffSeq : i => i,
-  Block.interpretBinEffSeq,
-  Coerce.inject,
-  Coerce.liftFuncs,
-  Block.interpretPure,
-  Block.interpretApp,
-  Block.interpretBindFrame,
-  Coerce.interpret,
-  Block.interpretCasts)
-
-export const finalize = R.pipe(
-  Branch.clean,
-  State.restoreDecls,
-  Uniq.subst,
-  simplify)
-
-/**
- * stack passes in required order depending on options specified
- */
-export const all = (opts = {coerce:true,state:"all"}) => R.pipe(
-  prepare,
-  normilize,
-  inject,
-  state,
-  group,
-  interpret(opts),
-  finalize
-)
-
-export const defaultTransform = R.pipe(
-  Policy.defaultPrepare,
-  all())
-
-export const defaultGensTransform = R.pipe(
-  Policy.defaultPrepare,
-  all())
 
 export function main(ast,opts = {}) {
   return Kit.optsScope(function main(f) {

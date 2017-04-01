@@ -1,24 +1,21 @@
 function a() {
   var i, j, k;
-  return M.get().mbind(({
-    k
-  }) => M(eff(k)).mbind(() => M.get()).mbind(({
-    i
-  }) => {
-    var k1 = k;
-    k1++;
+  return M(eff(k)).mbind(() => {
+    let k;
+    k++;
     return M(eff(i)).mbind(() => {
-      var i1 = i;
-      var k2 = k1;
-      i1++;
-      k2++;
-      j = i1;
+      let _k = k,
+          i,
+          j;
+      i++;
+      _k++;
+      j = i;
       return M.set({
-        i: i1,
-        j: j,
-        k: k2
-      }).mbind(() => eff(i1, j, k2)).mbind(() => eff(i1, j));
-    }).mhandle(e => M.get().mapply(({
+        i,
+        j,
+        k: _k
+      }).mseq(eff(i, j, _k)).mbind(() => eff(i, j));
+    }).mhandle(e => M.get().mbind(({
       i,
       j
     }) => {
@@ -27,45 +24,38 @@ function a() {
   }).mbind(() => M.get().mbind(({
     k
   }) => {
-    var b = k += 1;
-    return M(eff(b)).mapply(() => {
+    const a = k += 1;
+    return M(eff(a)).mapply(() => {
       console.log(k);
     });
-  })));
+  }));
 }
 
 function b() {
   var i, j, k;
-  return M.get().mbind(({
-    k
-  }) => M(eff(k)).mbind(() => M.get()).mbind(({
-    i
-  }) => {
-    var k1 = k;
-    k1++;
-    return M.set({
-      k: k1
-    }).mbind(() => eff(i)).mbind(() => {
-      var i1 = i;
-      i1++;
-      j = i1;
+  return M(eff(k)).mbind(() => {
+    let k;
+    k++;
+    return M(eff(i)).mbind(() => {
+      let i, j;
+      i++;
+      j = i;
       return M.modify(s => ({
-        i: i1,
-        j: j,
-        k: s.k1
-      })).mbind(() => eff(i1, j));
-    }).mhandle(e => M.get().mapply(({
+        i,
+        j,
+        k: s.k
+      })).mseq(eff(i, j));
+    }).mhandle(e => M.get().mbind(({
       i,
       j
     }) => {
       console.log(i, j, e);
-    }));
-  }).mbind(() => M.get().mbind(({
-    k
-  }) => {
-    var a = k += 1;
-    return M(eff(a)).mapply(() => {
-      console.log(k);
+    })).mbind(() => {
+      let _k = k;
+      const a = _k += 1;
+      return M(eff(a)).mapply(() => {
+        console.log(_k);
+      });
     });
-  })));
+  });
 }

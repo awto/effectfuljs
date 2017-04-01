@@ -2,40 +2,51 @@
   var i, j, d, len, ref;
   ref = [1, 2, 3];
   i = 0, len = ref.lenght;
-  return M.block(label => M.set({
-    i: i,
-    len: len
-  }).mbind(() => M.repeat(() => M.get().mbind(({
+  return M.block(label => M.modify(s => ({
+    i,
+    len,
+    ref: s.ref
+  })).mseq(M.repeat(() => M.get().mbind(({
     i,
     len
   }) => {
+    let j;
+
     if (i < len) {
       j = 0, len = ref.length;
-      return M.block(label1 => M.set({
-        j: j,
-        len: len
-      }).mbind(() => M.repeat(() => M.get().mbind(({
+      return M.block(label => M.modify(s => ({
+        i: s.i,
+        j,
+        len,
+        ref: s.ref
+      })).mseq(M.repeat(() => M.get().mbind(({
         j
       }) => {
+        let d;
+
         if (j < len) {
           d = ref[j];
           return M(eff(i)).mbind(() => {
-            var j1 = j;
-            j1++;
+            let _j = j;
+            _j++;
             return M.modify(s => ({
-              j: j1,
-              len: s.len
+              i: s.i,
+              j: _j
             }));
           });
-        } else return label1();
+        } else return label();
       })))).mbind(() => eff(2)).mbind(() => {
-        var i1 = i;
-        i1++;
+        let _i = i;
+        _i++;
         return M.modify(s => ({
-          i: i1,
-          len: s.len
+          i: _i,
+          j: s.j
         }));
       });
-    } else return label();
+    } else return M.modify(s => ({
+      i: s.i,
+      j,
+      len
+    })).mseq(label());
   })))).mbind(() => eff(3));
 });

@@ -55,7 +55,7 @@ function() {
 The output will be the same.
 
 There are more examples of input/output in the
-[test folder](https://github.com/awto/mfjs-compiler/tree/master/test/samples).
+[test folder](https://github.com/awto/effectfuljs/tree/master/test/samples).
 
 The `mapply` function there is abstract. For example its concrete implementation
 for promises is their `then` function. There is a dozen of such functions
@@ -66,7 +66,7 @@ basis. The interface builds on Monads interfaces hierarchy from Haskell
 
 It is arguable if explicit or implicit levels separation is better. This likely
 depend on what kind effect is used. The succinct and more readable code is good,
-but if effects are heavy making them explicit may be better. So mfjs
+but if effects are heavy making them explicit may be better. So effectfuljs
 compiler supports both options.
 
 I will abuse term *pure* for some JS code or values. This doesn't
@@ -85,20 +85,20 @@ Any concrete effect is a runtime library implementing that abstract interface.
 
 One of the examples is recent ES standard updates with generators and `async/await`.
 It is a new concrete side effect embedded into language. Adding same coroutines
-effects with mfjs doesn't require standard, syntax change and new compilers.
+effects with effectful-js doesn't require standard, syntax change and new compilers.
 
 Human readability for generated code aim is shared with
 [kneden](https://github.com/marten-de-vries/kneden) transpiler, and turning
-`async/await` into promises expressions. The same may be achieved using mfjs
-with a tiny adapter from promises interface into mfjs. There is one implemented
-in [@mfjs/promise](https://github.com/awto/mfjs-promise), so mfjs approach
+`async/await` into promises expressions. The same may be achieved using effectful-js
+with a tiny adapter from promises interface into effectfuljs. There is one implemented
+in [@mfjs/promise](https://github.com/awto/mfjs-promise), so effectfuljs approach
 does require runtime library loading, while kneden team highlights no runtime
 library dependency as an advantage. There is a plan to implement combinators
-inlining in mfjs, so generated code for promises library will be very similar.
-Also, mfjs is more complete than kneden(at the time of writing this). It at least
+inlining in effectfuljs, so generated code for promises library will be very similar.
+Also, effectfuljs is more complete than kneden(at the time of writing this). It at least
 can handle `breaks/return/continue` from `try/catch/finally`.
 
-There are other less known JS extensions may be implemented as library using mfjs
+There are other less known JS extensions may be implemented as library using effectfuljs
 compiler. These are [webppl](https://github.com/probmods/webppl) for probabilistic
 programming, [flapjax](http://www.flapjax-lang.org/) language for reactive
 programming.
@@ -110,7 +110,7 @@ case for reactive, logical programming and continuations. Here is a problem
 description for rx monad
 [with burrido](https://gist.github.com/awto/9f5337fcf205df335c92f93a859e2fdf)
 and this is the same
-[with mfjs](https://gist.github.com/awto/d71bc466884dc9a9a6a93026ce363d17).
+[with effectfuljs](https://gist.github.com/awto/d71bc466884dc9a9a6a93026ce363d17).
 
 In other languages the most famous examples of similar tools are Haskell
 do-notation and C# LINQ. They implement explicit separation of meta and
@@ -135,23 +135,21 @@ for example flapjax and webppl.
 
 ## Usage
 
-### Command line tool
-
 The current version is a library on top of
 [estransducers](https://github.com/awto/estransducers) JS transformation
 framework. You won't typically use it directly unless you develop own effects
 library. There is a babel preset for default translations
-[@mfjs/babel-presetp-env](https://github.com/awto/mfjs-babel-preset-env), or some effects
+[@effectfuljs/babel-presetp-env](https://github.com/awto/effectful-babel-preset-env), or some effects
 library may provide similar preset. 
 
 The preset is an extension of [babel-preset-env](https://github.com/babel/babel-preset-env)
 and accepts the same arguments
-with additional `mfjs` object specifying options for mfjs framework.
+with additional `effectfuljs` object specifying options for effectfuljs framework.
 
 First install it:
 
 ```sh
-$ npm install --save-dev babel-preset-env @mfjs/babel-preset-env
+$ npm install --save-dev babel-preset-env @effectfuljs/babel-preset-env
 ```
 
 Next compile your sources with whatever babel tool you prefer using `@mfjs/env`
@@ -159,7 +157,7 @@ preset instead of babel `env`, for example in `.babelrc`:
 
 ```json
 {
-  "presets": ["@mfjs/env"]
+  "presets": ["@effectfuljs/env"]
 }
 ```
 
@@ -179,7 +177,7 @@ mode may be used to treat all function calls as effectful in all function
 definition except the current one.
 
 In short, the tool converts effectful monadic values in code into its inner
-pure value. For example for promises it converts Promise object into the value
+pure value. For example for  promises it converts Promise object into the value
 it is going to be resolved to (or already resolved). In generated code this is
 converted to appropriate `then` usages. The backward translation is also
 needed. In the promises example the code may require access to original promise
@@ -242,7 +240,7 @@ overhead, by setting option `varCapt` to false.
 There is interfaces hierarchy __Functor__ <- __Applicative__ <- ___Monad__. Functor allows
 only changing its inner value of effectful value. Applicative allows combining
 several effectful values into one, and Monad is the most generic one allows
-changing structure of effectful value depending on inner value. In mfjs the
+changing structure of effectful value depending on inner value. In effectful the
 main corresponding functions for the interfaces are `mapply`, `M.arr`,
 `mbind` respectively. 
 
@@ -404,11 +402,11 @@ cloning this compiler wouldn't be needed.
 
 An iterator is a function object, with `value` field for current value. 
 
- * `M.iterator` - takes ES iterable object returns mfjs compatible iterator, it
+ * `M.iterator` - takes ES iterable object returns effectfuljs compatible iterator, it
     is just interface adapter, but works like ES one, taking next iterator
     invalidates previous ones, returned iterator already points to first element
     or null if input collection is empty
- * `M.forInIterator` - returns mfjs compatible iterator for `for-in` statement
+ * `M.forInIterator` - returns effectfuljs compatible iterator for `for-in` statement
 
 ## Selective transform
 
@@ -465,5 +463,3 @@ Copyright © 2016-2017 Vitaliy Akimov
 
 Distributed under the terms of The MIT License (MIT).
 
-- - -
-[![Gitter](https://badges.gitter.im/awto/mfjs-compiler.svg)](https://gitter.im/awto/mfjs-compiler?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)

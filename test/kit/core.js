@@ -30,14 +30,14 @@ export const runExpr = R.curry(function(opts, f) {
 export const run = R.curryN(2,Kit.optsScopeLift(function run(opts,f) {
   Kit.setOpts(Object.assign({},
                             defaultOpts,
-                            {require:"@mfjs/core",ns:"M",override:opts},
+                            {require:"@effectfuljs/core",ns:"M",override:opts},
                             opts))
   const ast = parse(f.toString(),opts.parser || {sourceType:"module"})
   const orig = R.pipe(produce,Array.from)(ast)
   Transform.run(orig)
   return prettyBlock(
     generate(ast,
-             {quotes:"single",retainFunctionParens:true},"")
+             {quotes:"single",retainFunctionParens:true,concise:true},"")
       .code,
     opts)
 }))
@@ -76,22 +76,23 @@ export const transformBlock = R.curryN(2,Kit.optsScopeLift(
   function(fun,src,opts) {
     Kit.setOpts(Object.assign({},
                               defaultOpts,
-                              {require:"@mfjs/core",ns:"M",override:opts},
+                              {require:"@effectfuljs/core",ns:"M",override:opts},
                               opts))
     const ast = parse(src.toString(),{sourceType:"module"})
     const s = R.pipe(produce,Array.from,Transform.scopes)(ast)
-    for (const i of s) {
-      fun(R.pipe(
+    const prep = R.pipe(
         Control.assignLabels,
         Prop.assignEff,
         Array.from,
         Prop.propagateEff,
-        Array.from
-      )(i))
-    }    
+        Array.from,
+        fun
+      )
+    for (const i of s)
+      prep(i)
     return prettyBlock(
       generate(ast,
-               {quotes:"single",retainFunctionParens:true},
+               {quotes:"single",retainFunctionParens:true,concise:true},
                "").code)
   }))
 

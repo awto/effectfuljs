@@ -1,6 +1,6 @@
 'use strict';
 // *- DEFAULT
-var M = require("./mfjscore");
+var M = require("./effectfuljscore");
 M.profile('defaultMinimal');
 M.option({minimal:{CallExpression:{match:{postfixes:{M:true}}}}});
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -11,7 +11,7 @@ var _cycleCore2 = _interopRequireDefault(_cycleCore);
 
 var _cycleDom = require('@cycle/dom');
 
-var RxM = require('@mfjs/rx')(require("rx"));
+var RxM = require('@effectfuljs/rx')(require("rx"));
 
 function main(sources) {
   function toggledM() {

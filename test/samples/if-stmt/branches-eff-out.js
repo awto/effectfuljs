@@ -1,13 +1,13 @@
 // *- when branches has effects and it is the last statement
 function a() {
   return M.scope(ret => {
-    if (true) return M(eff(1)).mbind(b => ret(b));else return M(eff(2)).mbind(c => ret(c));
+    if (true) return M(eff(1)).mbind(a => ret(a));else return M(eff(2)).mbind(a => ret(a));
   });
 }
 
 function b() {
   return M.scope(ret => M((() => {
-    if (true) return M(eff(1)).mbind(a => ret(a));else return M(eff(2)).mbind(c => ret(c));
+    if (true) return M(eff(1)).mbind(a => ret(a));else return M(eff(2)).mbind(a => ret(a));
   })()).mbind(() => eff(3)).mbind(() => eff(4)));
 }
 

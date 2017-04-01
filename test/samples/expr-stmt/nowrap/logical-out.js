@@ -7,15 +7,15 @@ function a2() {
 }
 
 function a3() {
-  return eff(1).mbind(a => a ? M.pure(a) : eff(2)).mbind(b => b ? M.pure(b) : eff(3));
+  return eff(1).mbind(a => a ? M.pure(a) : eff(2)).mbind(a => a ? M.pure(a) : eff(3));
 }
 
 function a4() {
-  return eff(1).mbind(a => a ? eff(2) : M.pure(a)).mbind(b => b ? eff(3) : M.pure(b));
+  return eff(1).mbind(a => a ? eff(2) : M.pure(a)).mbind(a => a ? eff(3) : M.pure(a));
 }
 
 function a5() {
-  var a = 1;
+  const a = 1;
   return a ? M.pure(a) : eff(2);
 }
 
@@ -26,7 +26,7 @@ function a6() {
 }
 
 function a7() {
-  var a = 1 + 1;
+  const a = 1 + 1;
   return a ? M.pure(a) : eff(2);
 }
 
@@ -37,7 +37,7 @@ function a8() {
 }
 
 function a9() {
-  var a = 1;
+  const a = 1;
   return a ? eff(2) : M.pure(a);
 }
 
@@ -48,7 +48,7 @@ function a10() {
 }
 
 function a11() {
-  var a = 1 + 1;
+  const a = 1 + 1;
   return a ? eff(2) : M.pure(a);
 }
 
@@ -81,25 +81,25 @@ function a17() {
 }
 
 function b() {
-  return eff(1).mbind(a => a ? M.pure(a) : eff(2)).mbind(() => eff(1)).mbind(c => c ? eff(2) : M.pure(c)).mbind(() => {
-    var d = 1;
-    return d ? M.pure(d) : eff(2);
-  }).mbind(() => eff(2)).mbind(e => {
-    e ? e : 1;
-    var f = 1 + 1;
-    return f ? M.pure(f) : eff(2);
-  }).mbind(() => eff(2)).mbind(g => {
-    g ? g : 1 + 1;
-    var h = 1;
-    return h ? eff(2) : M.pure(h);
-  }).mbind(() => eff(2)).mbind(k => {
-    k ? 1 : k;
-    var m = 1 + 1;
-    return m ? eff(2) : M.pure(m);
-  }).mbind(() => eff(2)).mbind(n => {
-    n ? 1 + 1 : n;
+  return eff(1).mbind(a => a ? M.pure(a) : eff(2)).mbind(() => eff(1)).mbind(a => a ? eff(2) : M.pure(a)).mbind(() => {
+    const a = 1;
+    return a ? M.pure(a) : eff(2);
+  }).mbind(() => eff(2)).mbind(a => {
+    a ? a : 1;
+    const b = 1 + 1;
+    return b ? M.pure(b) : eff(2);
+  }).mbind(() => eff(2)).mbind(a => {
+    a ? a : 1 + 1;
+    const b = 1;
+    return b ? eff(2) : M.pure(b);
+  }).mbind(() => eff(2)).mbind(a => {
+    a ? 1 : a;
+    const b = 1 + 1;
+    return b ? eff(2) : M.pure(b);
+  }).mbind(() => eff(2)).mbind(a => {
+    a ? 1 + 1 : a;
     return eff(1);
-  }).mbind(x => x ? eff(2) : eff(3)).mbind(() => eff(1)).mbind(y => y ? M.pure(2) : eff(3)).mbind(() => eff(1)).mbind(z => z ? eff(2) : M.pure(3)).mbind(() => 1 ? eff(2) : eff(3)).mbind(() => eff(1)).mapply(a1 => {
-    a1 ? 2 : 3;
+  }).mbind(a => a ? eff(2) : eff(3)).mbind(() => eff(1)).mbind(a => a ? M.pure(2) : eff(3)).mbind(() => eff(1)).mbind(a => a ? eff(2) : M.pure(3)).mbind(() => 1 ? eff(2) : eff(3)).mbind(() => eff(1)).mapply(a => {
+    a ? 2 : 3;
   });
 }

@@ -13,12 +13,10 @@ export default {
   require: null,
   ns: null,
   libs: {
-    "@mfjs/core": core,
-    "@mfjs/generators": generators
+    "@effectfuljs/core": core,
+    "@effectfuljs/generators": generators
   },
   profiles: {},
   parser: {},
   printer: {}
 }
-
-

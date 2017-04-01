@@ -1,15 +1,13 @@
 // *- when there is a mix of pure and effectful branches
 function a() {
   return M.scope(ret => {
-    if (true) return M(eff(1)).mbind(b => ret(b));else return ret(3);
+    if (true) return M(eff(1)).mbind(a => ret(a));else return ret(3);
   });
 }
 
 function b() {
   return M((() => {
-    if (true) return eff(1);else {
-      console.log(3);
-    }
+    if (true) return eff(1);else console.log(3);
   })()).mbind(() => eff(3)).mbind(() => eff(4));
 }
 
@@ -24,9 +22,7 @@ function c() {
 
 function d() {
   return M(eff('a')).mbind(() => {
-    if (true) return eff(1);else {
-      console.log(3);
-    }
+    if (true) return eff(1);else console.log(3);
   }).mbind(() => eff(3)).mbind(() => eff(4));
 }
 
@@ -38,7 +34,7 @@ function e() {
 
 function f() {
   return M.scope(ret => M(eff('1')).mbind(a => {
-    if (a) return M(eff('i')).mbind(b => ret(b));
+    if (a) return M(eff('i')).mbind(a => ret(a));
   }).mbind(() => eff('2')));
 }
 

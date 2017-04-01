@@ -22,32 +22,32 @@ describe('propagate effect for `for-of`', function() {
   context('with effect in body', function() {
     it('should be effectful', function() {
       equal(
-        run(function() {
+        run(`function() {
           for(const i of s) {
             eff(1);
           }
-        }),
-        print(function () /*BS|E*/{
-          /*FOS|E*/for (var i of s) /*BS|E*/{
+        }`),
+        print(`function () /*BS|E*/{
+          /*FOS|E*/for (const i of s) /*BS|E*/{
             /*ES|e*/ /*CE|B*/eff(1);
           }
-        }))
+        }`))
       })
   })
   context('with effect in `for` init', function() {
     context('with variable declarations', function() {
       it('should have shallow effect',function() {
         equal(
-          run(function() {
+          run(`function() {
             for(const i = init(1);t1;t2) {
               something;
             }
-          }),
-          print(function () /*BS|E*/{
-            /*FS|e*/for ( /*VD|E*/var /*VD|E*/i = /*CE|B*/init(1); t1; t2) {
+          }`),
+          print(`function () /*BS|E*/{
+            /*FS|e*/for ( /*VD|E*/const /*VD|E*/i = /*CE|B*/init(1); t1; t2) {
               something;
             }
-          }))
+          }`))
       })
     })
   }),
@@ -55,65 +55,65 @@ describe('propagate effect for `for-of`', function() {
     context('with `break`', function() {
       it('should not have effect',function() {
            equal(
-             run(function() {
+             run(`function() {
                eff(1)
                for(var i of e) {
                  2+2;
                  if (a)
                    break
                }
-             }),
-             print(function () /*BS|E*/{
+             }`),
+             print(`function () /*BS|E*/{
                /*ES|e*/ /*CE|B*/eff(1);
                for (var i of e) {
                  2 + 2;
                  if (a) break;
                }
-             }))
+             }`))
       })
     })
     context('with `continue`', function() {
       it('should not have effect',function() {
            equal(
-             run(function() {
+             run(`function() {
                eff(1)
                for(var i of e) {
                  2+2;
                  if (a)
                    continue
                }
-             }),
-             print(function () /*BS|E*/{
+             }`),
+             print(`function () /*BS|E*/{
                /*ES|e*/ /*CE|B*/eff(1);
                for (var i of e) {
                  2 + 2;
                  if (a) continue;
                }
-             }))
+             }`))
          })
     })
     context('with `break` to labels', function() {
       it ('should be effectful', function() {
         equal(
-          run(function() {
+          run(`function() {
             lab: lab2: lab3: {
               eff(1)
               if (a)
                 break lab
             }
-          }),
-          print(function () /*BS|E*/{
+          }`),
+          print(`function () /*BS|E*/{
             lab: lab2: lab3: /*BS|E*/{
               /*ES|e*/ /*CE|B*/eff(1);
               /*IS|E*/if (a) /*BS|E*/break lab;
             }
-          }))
+          }`))
       })
     })
     context('with `break` to effectful block', function() {
       it('should be effecful', function() {
         equal(
-          run(function() {
+          run(`function() {
             lab: {
               eff(1)
               for(var i of e) {
@@ -122,8 +122,8 @@ describe('propagate effect for `for-of`', function() {
                   break lab
               }
             }
-          }),
-          print(function () /*BS|E*/{
+          }`),
+          print(`function () /*BS|E*/{
             lab: /*BS|E*/{
               /*ES|e*/ /*CE|B*/eff(1);
               /*FOS|E*/for (var i of e) /*BS|E*/{
@@ -131,14 +131,14 @@ describe('propagate effect for `for-of`', function() {
                 /*IS|E*/if (a) /*BS|E*/break lab;
               }
             }
-          }))
+          }`))
       })
     })
     context('with `continue` to effectful block', function() {
       it('should be effecful',
          function() {
            equal(
-             run(function() {
+             run(`function() {
                lab: for(;;) {
                  eff(1)
                  for(var i of e) {
@@ -147,8 +147,8 @@ describe('propagate effect for `for-of`', function() {
                      continue lab
                  }
                }
-             }),
-             print(function () /*BS|E*/{
+             }`),
+             print(`function () /*BS|E*/{
                lab: /*FS|E*/for (;;) /*BS|E*/{
                  /*ES|e*/ /*CE|B*/eff(1);
                  /*FOS|E*/for (var i of e) /*BS|E*/{
@@ -156,34 +156,34 @@ describe('propagate effect for `for-of`', function() {
                    /*IS|E*/if (a) /*CS|E*/continue lab;
                  }
                }
-             }))
+             }`))
          })
     })
     context('with `return` in effectful function', function() {
       it('should be effecful',
          function() {
            equal(
-             run(function() {
+             run(`function() {
                eff(1)
                for(var i of e) {
                  2+2;
                  if (a)
                    return
                }
-             }),
-             print(/*FE|E*/ /*FE|E*/function () /*BS|E*/{
+             }`),
+             print(`function () /*BS|E*/{
                /*ES|e*/ /*CE|B*/eff(1);
                /*FOS|E*/for (var i of e) /*BS|E*/{
                  2 + 2;
                  /*IS|E*/if (a) /*RS|E*/return;
                }
-             }))
+             }`))
          })
     })
     context('with complex control deps', function() {
       it('should assign effects appropriately', function() {
         equal(
-          run(function() {
+          run(`function() {
             l1: for(var i of e) {
               2+2;
               l2: for(var j of f) {
@@ -202,8 +202,8 @@ describe('propagate effect for `for-of`', function() {
               }
               eff(z)
             }
-          }),
-          print(function () /*BS|E*/{
+          }`),
+          print(`function () /*BS|E*/{
             l1: /*FOS|E*/for (var i of e) /*BS|E*/{
               2 + 2;
               l2: /*FOS|E*/for (var j of f) /*BS|E*/{
@@ -219,23 +219,23 @@ describe('propagate effect for `for-of`', function() {
               }
               /*ES|e*/ /*CE|B*/eff(z);
             }
-          }))
+          }`))
       })
     })
     context('with effect on the right', function() {
       it('should be effectful',
          function() {
            equal(
-             run(function() {
+             run(`function() {
                for(var i of eff(1)) {
                  2+2;
                }
-             }),
-             print(function () /*BS|E*/{
+             }`),
+             print(`function () /*BS|E*/{
                /*FOS|e*/for (var i of /*CE|B*/eff(1)) {
                  2 + 2;
                }
-             }))
+             }`))
          })
     })
   })

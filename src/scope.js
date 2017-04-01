@@ -59,7 +59,6 @@ export function splitScopes(s) {
   const frames = []
   frames.push(Array.from(walk(s.take())))
   return frames
-  
   function* walk(p) {
     yield s.enter(Tag.top,p.type,p.value)
     for(const i of s.sub()) {
@@ -73,6 +72,36 @@ export function splitScopes(s) {
     }
     yield* s.leave()
   }
+}
+
+export function restore(scopes) {
+  const a = Kit.toArray(scopes)
+  const s = a.pop()
+  const m = new Map(a.map(i => {
+    const j = Kit.toArray(i)
+    return [j[0].value,j]
+  }))
+  function* walk(si,pos) {
+    const s = Kit.toArray(si)
+    yield Kit.setPos(s[0],pos)
+    assert.equal(s[0].pos, Tag.top)
+    assert.equal(s[s.length-1].pos, Tag.top)
+    assert.equal(s[s.length-1].value, s[0].value)
+    for(const i of s.slice(1,s.length-1)) {
+      if (i.value.func) {
+        const sub = m.get(i.value)
+        if (sub != null) {
+          if (i.enter) {
+            yield* walk(sub,i.pos)
+          }
+          continue
+        }
+      }
+      yield i
+    }
+    yield Kit.setPos(s[s.length-1],pos)
+  }
+  return walk(s,Tag.top)
 }
 
 function* combineScopes(s) {
@@ -105,4 +134,5 @@ function* combineScopes(s) {
 export function topCastToBody(s) {
   return s
 }
+
 

@@ -25,9 +25,10 @@ export const inject = R.pipe(
               if (j != null && j.pos === Tag.handler) {
                 const k = sl.peel()
                 assert.equal(k.type,Tag.CatchClause)
-                handlePat = k.value.node.param
-                if (sl.curLev().pos === Tag.param)
-                  Kit.skip(sl.one())
+                if (sl.curLev().pos === Tag.param) {
+                  handlePat = [...sl.one()]
+                  handlePat[0].pos = handlePat[handlePat.length-1].pos = Tag.push
+                }
                 handle = [...sl.one()]
                 assert.equal(handle[0].pos,Tag.body)
                 Kit.skip(sl.leave())
@@ -39,16 +40,22 @@ export const inject = R.pipe(
               yield sl.enter(i.pos,Block.letStmt,{pat:[],bind:true,eff:true})
               if (fin != null)
                 yield sl.enter(Tag.expression,Block.app,
-                               {node:{name:"mfinally",pat:[]}})
+                               {node:{name:"mfinally"}})
               if (handle != null)
                 yield sl.enter(Tag.expression,Block.app,
-                               {node:{name:"mhandle",pat:[handlePat]}})
+                               {node:{name:"mhandle"}})
               yield* buf
               if (handle != null) {
+                yield sl.enter(Tag.params,Tag.Array)
+                if (handlePat)
+                  yield* handlePat
+                yield* sl.leave()
                 yield* handle
                 yield* sl.leave()
               }
               if (fin != null) {
+                yield sl.enter(Tag.params,Tag.Array)
+                yield* sl.leave()
                 yield* fin
                 yield* sl.leave()
               }

@@ -12,6 +12,6 @@
 
 (function () {
   return M.scope(ret => M(eff(1)).mbind(() => eff(2)).mbind(a => {
-    if (a) return M(eff('a')).mbind(() => eff('b')).mbind(b => ret(b));
+    if (a) return M(eff('a')).mbind(() => eff('b')).mbind(a => ret(a));
   }).mbind(() => eff(4)).mbind(() => eff(5)));
 });

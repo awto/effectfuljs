@@ -2,29 +2,31 @@ function a() {
   var i, j;
   i = 0;
   j = 0;
-  var b = i++;
+  const a = i++;
   return M.set({
-    j: j
-  }).mbind(() => eff(b)).mbind(() => {
+    j
+  }).mseq(eff(a)).mbind(() => {
+    let i;
     i = 0;
     return M.block(label => M.modify(s => ({
-      i: i,
+      i,
       j: s.j
-    })).mbind(() => M.repeat(() => M.get().mbind(({
+    })).mseq(M.repeat(() => M.get().mbind(({
       i
     }) => {
       if (i < 10) return M(eff(i)).mbind(() => M.get()).mbind(({
         j
       }) => {
         j++;
-        return M.set({
-          j: j
-        }).mbind(() => eff(j));
-      }).mbind(() => {
-        var i1 = i;
-        ++i1;
         return M.modify(s => ({
-          i: i1,
+          i: s.i,
+          j
+        })).mseq(eff(j));
+      }).mbind(() => {
+        let _i = i;
+        ++_i;
+        return M.modify(s => ({
+          i: _i,
           j: s.j
         }));
       });else return label();
@@ -39,31 +41,29 @@ function a1() {
   var i, j;
   i = 0;
   j = 0;
-  var a = i++;
+  const a = i++;
   return M.set({
-    j: j
-  }).mbind(() => eff(a)).mbind(() => {
+    j
+  }).mseq(eff(a)).mbind(() => {
+    let i;
     i = 0;
     return M.block(label => M.modify(s => ({
-      i: i,
+      i,
       j: s.j
-    })).mbind(() => M.repeat(() => M.get().mbind(({
+    })).mseq(M.repeat(() => M.get().mbind(({
       i
     }) => {
       if (i < 10) return M(eff(i)).mbind(() => M.get()).mbind(({
         j
       }) => {
         j++;
-        return M.set({
-          j: j
-        }).mbind(() => eff(j));
+        return eff(j);
       }).mbind(() => {
-        var i1 = i;
-        ++i1;
-        return M.modify(s => ({
-          i: i1,
-          j: s.j
-        }));
+        let _i = i;
+        ++_i;
+        return M.set({
+          i: _i
+        });
       });else return label();
     }))));
   }).mbind(() => M.get()).mbind(({
@@ -75,33 +75,36 @@ function b() {
   var i, j;
   i = 0;
   j = 0;
-  var a = i++;
+  const a = i++;
   return M.set({
-    j: j
-  }).mbind(() => eff(a)).mbind(() => {
+    j
+  }).mseq(eff(a)).mbind(() => {
+    let i;
     i = 0;
     return M.block(label => M.modify(s => ({
-      i: i,
+      i,
       j: s.j
-    })).mbind(() => M.repeat(() => M.get().mbind(({
+    })).mseq(M.repeat(() => M.get().mbind(({
       i
     }) => {
       if (i < 10) return M(eff(i)).mbind(() => M.get()).mbind(({
         j
       }) => {
-        var c = j++;
-        if (c) return M.set({
-          j: j
-        }).mbind(() => label());else return M.set({
-          j: j
-        });
+        const a = j++;
+        if (a) return M.modify(s => ({
+          i: s.i,
+          j
+        })).mseq(label());else return M.modify(s => ({
+          i: s.i,
+          j
+        }));
       }).mbind(() => M.get()).mbind(({
         j
       }) => eff(j)).mbind(() => {
-        var i1 = i;
-        ++i1;
+        let _i = i;
+        ++_i;
         return M.modify(s => ({
-          i: i1,
+          i: _i,
           j: s.j
         }));
       });else return label();

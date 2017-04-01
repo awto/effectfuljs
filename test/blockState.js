@@ -14,64 +14,48 @@ import * as Trace from "../src/kit/trace"
 import * as Block from "../src/block"
 import * as Debug from "../src/debug"
 import * as State from "../src/state"
-import * as Uniq from "../src/uniq"
 import * as Scope from "../src/scope"
 import * as Branch from "../src/branch"
 import * as Coerce from "../src/coerce"
 import * as Policy from "../src/policy"
 
 const runImpl = (pass) => transformExpr(R.pipe(
-  Scope.topCastToBody,
-  State.prepare,
-  State.aggregate,
   Branch.toBlocks,
   recalcEff,
   Block.flatten,
   Block.splitEffBlock,
-  State.calcState,
-  State.removeUselessWrites,
+  State.prepare,
   Debug.mark,
-  Kit.adjustFieldType,
   consumeScope
 ))
 
 const runInterp = (opts = {}) =>
       (t) => transformExpr(R.pipe(
-        Scope.topCastToBody,
         Branch.toBlocks,
         recalcEff,
         Coerce.lift,
         State.saveDecls,
-        State.prepare,
         Block.flatten,
-        Uniq.collect,
         Array.from,
         Block.splitEffBlock,
         Block.calcVarDeps(false),
-        State.calcState,
-        opts.clos ? State.calcClosOptDeps : v => v,
-        State.resetFwdDepForNonBind,
-        Block.groupDeps,
+        State.prepare,
+        opts.clos ? State.closureReGroup : Block.groupDeps,
         recalcEff,
         Block.calcVarDeps(true),
         Block.groupBindDeps,
         recalcEff,
+        State.calcFrameStateVars,
         Block.factorEffSeq,
         recalcEff,
-        State.recalcState,
-        opts.clos ? State.injectClosureReads : v => v,
-        State.removeUselessWrites,
+        opts.clos ? State.closure : State.calcFrameHierPath,
         Block.propagateBindVars,
-        State.injectLetWrites,
-        Block.setPatVarToArgs,
-        State.injectFrameReads,
+        State.inject,
         recalcEff,
         Block.lassoc,
         Block.cleanPureFrames,
         Block.propagateBindVars,
-        Block.setPatVarToArgs,
-        State.interpretStateOpts,
-        State.renameVarPass,
+        State.interpret,
         recalcEff,
         Block.cleanupEffSeq,
         Block.interpretParEffSeq,
@@ -85,15 +69,15 @@ const runInterp = (opts = {}) =>
         Block.interpretCasts,
         State.restoreDecls,
         Branch.clean,
-        Uniq.subst,
+        Kit.scope.resolve,
         consumeScope
       ),t,{ns:"M",coerce:opts.coerce})
 
-describe('mark state operations', function() {
+describe.skip("mark state operations", function() {
   const run = runImpl(v => v)
-  it('should inject reads/writes accordingly', function() {
+  it("should inject reads/writes accordingly", function() {
     equal(
-      run(function() {
+      run(`function() {
         var i = 0
         eff(i);
         i++;
@@ -112,51 +96,51 @@ describe('mark state operations', function() {
         eff();
         i = 10;
         eff(i);
-      }),
-      print(function () /*BS|..|E*/{
-        /*BS|#|L[i]|E*/{
-          var /*VD|i:W*/i = 0;
-          /*ES|S|W[i]U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
+      }`),
+      print(`function () /*BS|..|E*/{
+        /*BS|#|r[i]|E*/{
+          /*VD|r[i]*/var /*VD|r[i]*/ /*I|r[i]+*/i = /*NL|w[i]r[i]*/0;
+          /*ES|S|w[i]W[i]r[i]|E*/ /*CE|r[i]|B*/ /*I|r[i]*/eff( /*I|r[i]-*/i);
         }
-        /*BS|#|R[i]L[i]U[i]|E*/{
-          /*UE|i:WR*/i++;
-          /*ES|S|W[i]U[i]|E*/ /*CE|B*/eff();
+        /*BS|#|w[i]R[i]r[i]|E*/{
+          /*ES|r[i]*/ /*UE|r[i]*/ /*I|r[i]+-*/i++;
+          /*ES|S|w[i]W[i]r[i]|E*/ /*CE|r[i]|B*/ /*I|r[i]*/eff();
         }
-        /*BS|#|R[i]U[i]|E*/{
-          /*ES|S|U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
+        /*BS|#|w[i]R[i]|E*/{
+          /*ES|S|E*/ /*CE|B*/ /*I|r[i]*/eff( /*I|-*/i);
         }
-        /*BS|#|L[i]U[i]|E*/{
-          /*AE|i:W*/i = /*I|i:R*/i + 1;
-          /*ES|S|W[i]U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
+        /*BS|#|w[i]r[i]|E*/{
+          /*ES|r[i]*/ /*AE|r[i]*/ /*I|r[i]+*/i = /*BE|w[i]r[i]*/ /*I|r[i]-*/i + /*NL|r[i]*/1;
+          /*ES|S|w[i]W[i]r[i]|E*/ /*CE|r[i]|B*/ /*I|r[i]*/eff( /*I|r[i]-*/i);
         }
-        /*BS|#|U[i]|E*/{
-          /*ES|S|U[i]|E*/ /*CE|B*/eff();
+        /*BS|#|w[i]r[i]|E*/{
+          /*ES|S|r[i]|E*/ /*CE|r[i]|B*/ /*I|r[i]*/eff();
         }
-        /*BS|#|R[i]L[i]U[i]|E*/{
-          ccc = /*I|i:R*/i;
-          /*AE|i:W*/i = 10;
-          /*ES|S|W[i]U[i]|E*/ /*CE|B*/eff();
+        /*BS|#|w[i]R[i]r[i]|E*/{
+          /*I|r[i]*/ccc = /*I|-*/i;
+          /*ES|r[i]*/ /*AE|r[i]*/ /*I|r[i]+*/i = /*NL|w[i]r[i]*/10;
+          /*ES|S|w[i]W[i]r[i]|E*/ /*CE|r[i]|B*/ /*I|r[i]*/eff();
         }
-        /*BS|#|R[i]L[i]U[i]|E*/{
-          ccc = /*I|i:R*/i;
-          /*AE|i:W*/i = 10;
-          /*ES|S|U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
+        /*BS|#|w[i]R[i]|E*/{
+          /*I|r[i]*/ccc = /*I|-*/i;
+          /*ES|r[i]*/ /*AE|r[i]*/ /*I|r[i]+*/i = /*NL|w[i]r[i]*/10;
+          /*ES|S|w[i]W[i]|E*/ /*CE|B*/ /*I|r[i]*/eff( /*I|-*/i);
         }
-        /*BS|#|L[i]U[i]|E*/{
-          /*AE|i:W*/i = 10;
-          /*ES|S|U[i]|E*/ /*CE|B*/eff();
+        /*BS|#|w[i]|E*/{
+          /*I|+*/i = /*NL|w[i]*/10;
+          /*ES|S|w[i]W[i]|E*/ /*CE|B*/eff();
         }
-        /*BS|#|L[i]U[i]|E*/{
-          /*AE|i:W*/i = 10;
-          /*ES|S|U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
+        /*BS|#|w[i]|E*/{
+          /*ES|r[i]*/ /*AE|r[i]*/ /*I|r[i]+*/i = /*NL|w[i]r[i]*/10;
+          /*ES|S|w[i]W[i]|E*/ /*CE|B*/ /*I|r[i]*/eff( /*I|-*/i);
         }
-      }))
+      }`))
   })
-  context('with `if` statement',function() {
-    context('with pure blocks', function() {
-      it('injects write', function() {
+  context("with `if` statement",function() {
+    context("with pure blocks", function() {
+      it("injects write", function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0, j = 1, k = 2
             eff(i)
             i++
@@ -171,8 +155,8 @@ describe('mark state operations', function() {
               k+=1
             }
             eff(i,k)
-          }),
-          print(function () /*BS|..|E*/{
+          }`),
+          print(`function () /*BS|..|E*/{
             /*BS|#|L[i,j,k]|E*/{
               var /*VD|i:W*/i = 0,
                   /*VD|j:W*/j = 1,
@@ -185,7 +169,7 @@ describe('mark state operations', function() {
               /*IS|E*/if ( /*I|j:R*/j) /*BS|..|E*/{
                 /*BS|#|U[i,j,k]|E*/{
                   /*AE|i:W*/i = 10;
-                  /*VD|S*/var a = /*UE|i:WR*/i++;
+                  /*VD|S*/const a = /*UE|i:WR*/i++;
                   /*ES|S|W[i,j]C[k]U[i,j,k]|E*/ /*CE|B*/eff(a);
                 }
                 /*BS|#|R[j]U[i,j,k]|E*/{
@@ -202,13 +186,13 @@ describe('mark state operations', function() {
             /*BS|#|R[i,k]U[i,j,k]|E*/{
               /*ES|S|U[i,j,k]|E*/ /*CE|B*/eff( /*I|i:R*/i, /*I|k:R*/k);
             }
-          }))
+          }`))
       })
     })
-    context('in the last statement', function() {
-      it('should not write anything in any branch', function() {
+    context("in the last statement", function() {
+      it("should not write anything in any branch", function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0
             eff(i)
             i++
@@ -219,8 +203,8 @@ describe('mark state operations', function() {
               i+=1
               eff(i)
             }
-          }),
-          print(function () /*BS|..|E*/{
+          }`),
+          print(`function () /*BS|..|E*/{
             /*BS|#|L[i]|E*/{
               var /*VD|i:W*/i = 0;
               /*ES|S|W[i]U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
@@ -241,12 +225,12 @@ describe('mark state operations', function() {
                 }
               }
             }
-          }))
+          }`))
       })
     })
-    it('should have write on each branch', function() {
+    it("should have write on each branch", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0
           eff(i)
           i++
@@ -258,8 +242,8 @@ describe('mark state operations', function() {
             eff(i)
           }
           eff(i)
-        }),
-        print(function () /*BS|..|E*/{
+        }`),
+        print(`function () /*BS|..|E*/{
           /*BS|#|L[i]|E*/{
             var /*VD|i:W*/i = 0;
             /*ES|S|W[i]U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
@@ -283,21 +267,21 @@ describe('mark state operations', function() {
           /*BS|#|R[i]U[i]|E*/{
             /*ES|S|U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
           }
-        }))
+        }`))
     })
   })
-  context('with `for` statement', function() {
-    context('in the last statement', function() {
-      it('should still have writes in the end of the body', function() {
+  context("with `for` statement", function() {
+    context("in the last statement", function() {
+      it("should still have writes in the end of the body", function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0;
             for(;;) {
               i++
               eff(i)
             }
-          }),
-          print(function () /*BS|..|E*/{
+          }`),
+          print(`function () /*BS|..|E*/{
             /*BS|#|L[i]|E*/{
               var /*VD|i:W*/i = 0;
               /*FS|E*/for (;;) /*BS|..|E*/{
@@ -307,20 +291,20 @@ describe('mark state operations', function() {
                 }
               }
             }
-          }))
+          }`))
       })
     })
-    it('should read initial value in body', function() {
+    it("should read initial value in body", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0;
           for(;;) {
             i++
             eff(i)
           }
           eff(i)
-        }),
-        print(function () /*BS|..|E*/{
+        }`),
+        print(`function () /*BS|..|E*/{
           /*BS|#|L[i]|E*/{
             var /*VD|i:W*/i = 0;
             /*FS|E*/for (;;) /*BS|..|E*/{
@@ -333,88 +317,82 @@ describe('mark state operations', function() {
           /*BS|#|R[i]U[i]|E*/{
             /*ES|S|U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
           }
-        }))
+        }`))
     })
     
   })
 })
 
-describe('interpret state operations', function() {
+describe("interpret state operations", function() {
   const run = runInterp()
-  it('should inject state reads/writes', function() {
+  it("should inject state reads/writes", function() {
     equal(
-      run(function() {
+      run(`function() {
           var j = 0
           eff(j)
           eff(j++);
           eff2(j);
           eff3(j++);
-      }),
+      }`),
       print(`function () {
         var j;
         j = 0;
-        return M.set({
-          j: j
-        }).mseq(eff(j)).mbind(() => M.get()).mbind(({
+        return M.set({j}).mseq(eff(j)).mbind(() => M.get()).mbind(({
           j
         }) => {
-          var a = j++;
-          return M.set({
-            j: j
-          }).mseq(eff(a));
+          const a = j++;
+          return M.set({j}).mseq(eff(a));
         }).mbind(() => M.get()).mbind(({
           j
         }) => eff2(j)).mbind(() => M.get()).mbind(({
           j
         }) => {
-          var b = j++;
-          return eff3(b);
+          const a = j++;
+          return eff3(a);
         });
       }`))
   })
-  context('with closures', function() {
+  context("with closures", function() {
     const run = runInterp({clos:true})
-    it('should keep state variable in closures 1', function() {
+    it("should keep state variable in closures 1", function() {
         equal(
-          run(function() {
+          run(`function() {
             var j = 0
             eff(j)
             eff(j++);
             eff2(j);
             eff3(j++);
-          }),
-          print(function() {
+          }`),
+          print(`function () {
             var j;
             j = 0;
             return eff(j).mbind(() => {
-              var j1 = j;
-              var a = j1++;
-              return eff(a).mbind(() => eff2(j1)).mbind(() => {
-                var j2 = j1;
-                var b = j2++;
-                return eff3(b);
+              let _j = j;
+              const a = _j++;
+              return eff(a).mbind(() => eff2(_j)).mbind(() => {
+                let j = _j;
+                const a = j++;
+                return eff3(a);
               });
             });
-          }))
+          }`))
     })
-    it('should keep state variable in closures 2', function() {
+    it("should keep state variable in closures 2", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i;
           eff1(i++);
-        }),
-        print(`function() {
+        }`),
+        print(`function () {
           var i;
-          return M.get().mbind(({i}) => {
-            var a = i++;
-            return eff1(a);
-          });
+          const a = i++;
+          return eff1(a);
         }`))
     })
-    context('with `if` statement', function() {
-      it('should treat state independently in branches 1', function() {
+    context("with `if` statement", function() {
+      it("should treat state independently in branches 1", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -424,10 +402,11 @@ describe('interpret state operations', function() {
             } else {
               eff3(i);
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
               return eff1(i).mbind(() => {
@@ -437,12 +416,12 @@ describe('interpret state operations', function() {
                   return eff3(i);
               });
             });
-          }))
+          }`))
       })
       
-      it('should treat state independently in branches 2', function() {
+      it("should treat state independently in branches 2", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -454,28 +433,29 @@ describe('interpret state operations', function() {
             } else {
               eff3(i);
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
               return eff1(i).mbind(() => {
                 if (t)
                   return eff2(i).mbind(() => {
-                    var i1 = i;
-                    i1++;
-                    return eff4(i1);
+                    let _i = i;
+                    _i++;
+                    return eff4(_i);
                   });
                 else
                   return eff3(i);
               });
             });
-          }))
+          }`))
       })
-      it('should treat state independently in branches 3', function() {
+      it("should treat state independently in branches 3", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -488,19 +468,20 @@ describe('interpret state operations', function() {
               eff3(i);
             }
             eff5(i);
-          }),
+          }`),
           print(`function () {
               var i;
               return eff0().mbind(() => {
+                let i;
                 i = 0;
                 i++;
-                return M.set({i: i})
+                return M.set({i})
                   .mseq(eff1(i)).mbind(() => {
                     if (t)
                       return eff2(i).mbind(() => {
-                        var i1 = i;
-                        i1++;
-                        return M.set({i: i1}).mseq(eff4(i1));
+                        let _i = i;
+                        _i++;
+                        return M.set({i: _i}).mseq(eff4(_i));
                       });
                     else
                       return eff3(i);
@@ -508,9 +489,9 @@ describe('interpret state operations', function() {
               }).mbind(() => M.get()).mbind(({i}) => eff5(i));
             }`))
       })
-      it('should treat state independently in branches 4', function() {
+      it("should treat state independently in branches 4", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -525,32 +506,33 @@ describe('interpret state operations', function() {
               eff6(i)
             }
             eff7(i);
-          }),
+          }`),
           print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
               return eff1(i).mbind(() => {
                 if (t)
                   return eff2(i).mbind(() => {
-                    var i1 = i;
-                    i1++;
-                    return M.set({i: i1}).mseq(eff4(i1));
+                    let _i = i;
+                    _i++;
+                    return M.set({i: _i}).mseq(eff4(_i));
                   });
                 else
                   return eff5(i).mbind(() => {
-                    var i2 = i;
-                    i2++;
-                    return M.set({i: i2}).mseq(eff6(i2));
+                    let _i = i;
+                    _i++;
+                    return M.set({i: _i}).mseq(eff6(_i));
                   });
               });
             }).mbind(() => M.get()).mbind(({i}) => eff7(i));
           }`))
       })
-      it('should treat state independently in branches 5', function() {
+      it("should treat state independently in branches 5", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -565,33 +547,34 @@ describe('interpret state operations', function() {
             eff5(i);
             i++
             eff6(i);
-          }),
+          }`),
           print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
-              return M.set({i: i}).mseq(eff1(i)).mbind(() => {
+              return M.set({i}).mseq(eff1(i)).mbind(() => {
                 if (t)
                   return eff2(i).mbind(() => {
-                    var i1 = i;
-                    i1++;
-                    return M.set({i: i1}).mseq(eff4(i1));
+                    let _i = i;
+                    _i++;
+                    return M.set({i: _i}).mseq(eff4(_i));
                   });
                 else
                   return eff3(i);
               });
             }).mbind(() => M.get().mbind(({i}) => 
               eff5(i).mbind(() => {
-                var i2 = i;
-                i2++;
-                return eff6(i2);
+                let _i = i;
+                _i++;
+                return eff6(_i);
               })));
           }`))
       })
-      it('should treat state independently in branches 6', function() {
+      it("should treat state independently in branches 6", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -606,32 +589,33 @@ describe('interpret state operations', function() {
             eff5(i);
             i++
             eff6(i);
-          }),
+          }`),
           print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
-              return M.set({i: i}).mseq(eff1(i)).mbind(() => {
+              return M.set({i}).mseq(eff1(i)).mbind(() => {
                 if (t)
                   return eff2(i).mbind(() => {
-                    var i1 = i;
-                    i1++;
-                    return M.set({i: i1}).mseq(eff4(i1));
+                    let _i = i;
+                    _i++;
+                    return M.set({i: _i}).mseq(eff4(_i));
                   });
                 else
                   return eff3();
               });
             }).mbind(() => M.get().mbind(({i}) => eff5(i).mbind(() => {
-              var i2 = i;
-              i2++;
-              return eff6(i2);
+              let _i = i;
+              _i++;
+              return eff6(_i);
             })));
           }`))
       })
-      it('should treat state independently in branches 7', function() {
+      it("should treat state independently in branches 7", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -646,38 +630,38 @@ describe('interpret state operations', function() {
             eff5(i);
             i++
             eff6(i);
-          }),
+          }`),
           print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
-              return M.set({i: i})
+              return M.set({i})
                 .mseq(eff1(i))
                 .mbind(() => {
                   if (t)
                     return eff2(i).mbind(() => {
-                      var i1 = i;
-                      i1++;
-                      return M.set({i: i1}).mseq(eff4(i1));
+                      let _i = i;
+                      _i++;
+                      return M.set({i: _i}).mseq(eff4(_i));
                     });
-                  else {
+                  else
                     t;
-                  }
                 });
             }).mbind(() =>
                      M.get()
                      .mbind(({i}) =>
                             eff5(i).mbind(() => {
-                              var i2 = i;
-                              i2++;
-                              return eff6(i2);
+                              let _i = i;
+                              _i++;
+                              return eff6(_i);
                             })));
           }`))
       })
-      it('should treat state independently in branches 8', function() {
+      it("should treat state independently in branches 8", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -692,33 +676,33 @@ describe('interpret state operations', function() {
             eff5(i);
             i++
             eff6(i);
-          }),
+          }`),
           print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
-              return M.set({i: i}).mseq(eff1(i)).mbind(() => {
+              return M.set({i}).mseq(eff1(i)).mbind(() => {
                 if (t)
                   return eff2(i).mbind(() => {
-                    var i1 = i;
-                    i1++;
-                    return M.set({i: i1}).mseq(eff4(i1));
+                    let _i = i;
+                    _i++;
+                    return M.set({i: _i}).mseq(eff4(_i));
                   });
-                else {
+                else
                   t + i;
-                }
               });
             }).mbind(() => M.get().mbind(({i}) => eff5(i).mbind(() => {
-              var i2 = i;
-              i2++;
-              return eff6(i2);
+              let _i = i;
+              _i++;
+              return eff6(_i);
             })));
           }`))
       })
-      it('should treat state independently in branches 9', function() {
+      it("should treat state independently in branches 9", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -732,32 +716,34 @@ describe('interpret state operations', function() {
               t;
             }
             eff5(i);
-          }),
+          }`),
+          // TODO: remove useless `set` in `then`
           print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
               return eff1(i).mbind(() => {
-                var i1 = i;
-                i1++;
+                let _i = i;
+                _i++;
                 if (t)
-                  return eff2(i1).mbind(() => {
-                    var i2 = i1;
-                    i2++;
-                    return M.set({i: i2}).mseq(eff4(i2));
+                  return M.set({i:_i}).mseq(eff2(_i)).mbind(() => {
+                    let i = _i;
+                    i++;
+                    return M.set({i}).mseq(eff4(i));
                   });
                 else {
                   t;
-                  return M.set({i: i1});
+                  return M.set({i: _i});
                 }
               });
             }).mbind(() => M.get()).mbind(({i}) => eff5(i));
           }`))
       })
-      it('should treat state independently in branches 10', function() {
+      it("should treat state independently in branches 10", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff0();
             var i = 0;
             i++;
@@ -771,40 +757,35 @@ describe('interpret state operations', function() {
               i++;
             }
             eff5(i);
-          }),
+          }`),
           print(`function () {
             var i;
             return eff0().mbind(() => {
+              let i;
               i = 0;
               i++;
               return eff1(i).mbind(() => {
-                var i1 = i;
-                i1++;
+                let _i = i;
+                _i++;
                 if (t)
-                  return eff2(i1).mbind(() => {
-                    var i2 = i1;
-                    i2++;
-                    return M.set({
-                      i: i2
-                    }).mseq(eff4(i2));
+                  return M.set({i: _i}).mseq(eff2(_i)).mbind(() => {
+                    let i = _i;
+                    i++;
+                    return M.set({i}).mseq(eff4(i));
                   });
                 else {
-                  i1++;
-                  return M.set({
-                    i: i1
-                  });
+                  _i++;
+                  return M.set({i:_i});
                 }
               });
-            }).mbind(() => M.get()).mbind(({
-              i
-            }) => eff5(i));
+            }).mbind(() => M.get()).mbind(({i}) => eff5(i));
           }`))
       })
       context("with coerce", function() {
         const run = runInterp({clos:true,coerce:true})
-        it('should treat state independently in branches 11', function() {
+        it("should treat state independently in branches 11", function() {
           equal(
-            run(function() {
+            run(`function() {
               eff0();
               var i = 0;
               i++;
@@ -818,24 +799,25 @@ describe('interpret state operations', function() {
                 i++;
               }
               eff5(i);
-            }),
+            }`),
             print(`function () {
               var i;
               return M(eff0()).mbind(() => {
+                let i;
                 i = 0;
                 i++;
                 return M(eff1(i)).mbind(() => {
-                  var i1 = i;
-                  i1++;
+                  let _i = i;
+                  _i++;
                   if (t)
-                    return M(eff2(i1)).mbind(() => {
-                      var i2 = i1;
-                      i2++;
-                      return M.set({i: i2}).mseq(eff4(i2));
+                    return M.set({i: _i}).mseq(eff2(_i)).mbind(() => {
+                      let i = _i;
+                      i++;
+                      return M.set({i}).mseq(eff4(i));
                     });
                   else {
-                    i1++;
-                    return M.set({i: i1});
+                    _i++;
+                    return M.set({i: _i});
                   }
                 });
               }).mbind(() => M.get()).mbind(({i}) => eff5(i));
@@ -844,9 +826,9 @@ describe('interpret state operations', function() {
       })
       context("disabled", function() {
         const run = runInterp({clos:true,coerce:false})
-        it('should treat state independently in branches 12', function() {
+        it("should treat state independently in branches 12", function() {
           equal(
-            run(function() {
+            run(`function() {
               eff0();
               var i = 0;
               i++;
@@ -860,33 +842,34 @@ describe('interpret state operations', function() {
                 i++;
               }
               eff5(i);
-            }),
+            }`),
             print(`function () {
               var i;
               return eff0().mbind(() => {
+                let i;
                 i = 0;
                 i++;
                 return eff1(i).mbind(() => {
-                  var i1 = i;
-                  i1++;
+                  let _i = i;
+                  _i++;
                   if (t)
-                    return eff2(i1).mbind(() => {
-                      var i2 = i1;
-                      i2++;
-                      return M.set({i: i2}).mseq(eff4(i2));
+                    return M.set({i: _i}).mseq(eff2(_i)).mbind(() => {
+                      let i = _i;
+                      i++;
+                      return M.set({i}).mseq(eff4(i));
                     });
                   else {
-                    i1++;
-                    return M.set({i: i1});
+                    _i++;
+                    return M.set({i: _i});
                   }
                 });
               }).mbind(() => M.get()).mbind(({i}) => eff5(i));
             }`))
         })
       })
-      it('should treat state independently in branches 13', function() {
+      it("should treat state independently in branches 13", function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0;
             if (t) {
               eff1(i)
@@ -895,55 +878,47 @@ describe('interpret state operations', function() {
             }
             eff2(i)
             eff3(i)
-          }),
+          }`),
           print(`function () {
             var i;
             return (() => {
               i = 0;
               if (t)
-                return M.set({i: i}).mseq(eff1(i));
+                return M.set({i}).mseq(eff1(i));
               else {
                 i++;
-                return M.set({
-                  i: i
-                });
+                return M.set({i});
               }
             })().mbind(() => M.get()
                        .mbind(({i}) => eff2(i).mbind(() => eff3(i))));
           }`))
-        it('should treat state independently in branches 14', function() {
+        it("should treat state independently in branches 14", function() {
           equal(
-            run(function() {
+            run(`function() {
               var i = 0
               eff(i)
               if(i++) { eff1(i); } else { eff2(i); }
               eff(i);
-            }),
-            print(function() {
+            }`),
+            print(`function() {
               var i;
               i = 0;
               return M(eff(i)).mbind(() => {
-                var i1 = i;
-                var a = i1++;
+                let _i = i;
+                const a = _i++;
                 if (a) {
-                  return M.set({
-                    i: i1
-                  }).mbind(() => eff1(i1));
+                  return M.set({i: i1}).mbind(() => eff1(i1));
                 } else {
-                  return M.set({
-                    i: i1
-                  }).mbind(() => eff2(i1));
+                  return M.set({i: i1}).mbind(() => eff2(i1));
                 }
-              }).mbind(() => M.get()).mbind(({
-                i
-              }) => eff(i));
-            }))
+              }).mbind(() => M.get()).mbind(({i}) => eff(i));
+            }`))
         })
       })
-      context('in the first effectful block', function() {
-        it('should should use original variable', function() {
+      context("in the first effectful block", function() {
+        it("should should use original variable", function() {
           equal(
-            run(function() {
+            run(`function() {
               var i = 0;
               i++;
               eff1(i);
@@ -952,8 +927,8 @@ describe('interpret state operations', function() {
               } else {
                 eff3(i);
               }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             var i;
             i = 0;
             i++;
@@ -963,14 +938,14 @@ describe('interpret state operations', function() {
               else
                 return eff3(i);
             });
-          }))
+          }`))
         })
       })
     })
-    context('with sub blocks', function() {
-      it('should insert reads/writes 1', function() {
+    context("with sub blocks", function() {
+      it("should insert reads/writes 1", function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0
             {
               i++;
@@ -983,7 +958,7 @@ describe('interpret state operations', function() {
             {
               eff2(i);
             }
-          }),
+          }`),
           print(`function () {
             var i;
             return (() => {
@@ -992,81 +967,81 @@ describe('interpret state operations', function() {
                 {
                   i++;
                 }
-                return M.set({i: i}).mseq(eff1(i));
+                return M.set({i}).mseq(eff1(i));
               }
             })().mbind(() => M.get().mbind(({i}) => eff(i).mbind(() => {
-              var i1 = i;
+              let _i = i;
               {
-                i1++;
+                _i++;
               }
-              return eff2(i1);
+              return eff2(_i);
             })));
           }`))
       })
     })
-    it('should utilize js scope if possible 1', function() {
+    it("should utilize js scope if possible 1", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0
           eff1(i);
           i++;
           eff2(i);
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           var i;
           i = 0;
           return eff1(i).mbind(() => {
-            var i1 = i;
-            i1++;
-            return eff2(i1);
+            let _i = i;
+            _i++;
+            return eff2(_i);
           });
-        }))
+        }`))
     })
     //TODO: mseq(M.get())
-    it('should utilize js scope if possible 2', function() {
+    it("should utilize js scope if possible 2", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0
           eff0(i++);
           eff1(i);
           i+=1;
           eff2(2);
           eff3(i+=2);
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           var i;
           i = 0;
-          var a = i++;
+          const a = i++;
           return eff0(a).mbind(() => eff1(i)).mbind(() => {
-            var i1 = i;
-            i1 += 1;
+            let _i = i;
+            _i += 1;
             return eff2(2).mbind(() => {
-              var i2 = i1;
-              var b = i2 += 2;
-              return eff3(b);
+              let i = _i;
+              const a = i += 2;
+              return eff3(a);
             });
           });
-        }))
+        }`))
     })
-    it('should utilize js scope if possible 3', function() {
+    it("should utilize js scope if possible 3", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0
           i++;
           eff1(i);
           eff2(i);
-        }),
+        }`),
         //TODO: i1 seems redundant 
-        print(function () {
+        print(`function () {
           var i;
           i = 0;
           i++;
           return eff1(i).mbind(() => eff2(i));
-        }))
+        }`))
     })    
-    it('should utilize js scope if possible 4', function() {
+    it("should utilize js scope if possible 4", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0
           eff0(i);
           i++;
@@ -1074,26 +1049,26 @@ describe('interpret state operations', function() {
           eff1(i);
           i++;
           eff1(i);
-        }),
+        }`),
         print(`function () {
           var i;
           i = 0;
           return eff0(i).mbind(() => {
-            var i1 = i;
-            i1++;
-            return eff1(i1)
-              .mbind(() => eff1(i1))
+            let _i = i;
+            _i++;
+            return eff1(_i)
+              .mbind(() => eff1(_i))
               .mbind(() => {
-                var i2 = i1;
-                i2++;
-                return eff1(i2);
+                let i = _i;
+                i++;
+                return eff1(i);
               });
           });
         }`))
     })
-    it('should utilize js scope if possible 5', function() {
+    it("should utilize js scope if possible 5", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0, j = 0
           eff0(i++,j++);
           eff1(i);
@@ -1101,27 +1076,27 @@ describe('interpret state operations', function() {
           eff2(2,j);
           eff3(i+=2,j);
           eff4(j);
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           var i, j;
           i = 0;
           j = 0;
-          var a = i++;
-          var b = j++;
+          const a = i++;
+          const b = j++;
           return eff0(a, b).mbind(() => eff1(i)).mbind(() => {
-            var i1 = i;
-            i1 += 1;
+            let _i = i;
+            _i += 1;
             return eff2(2, j).mbind(() => {
-              var i2 = i1;
-              var c = i2 += 2;
-              return eff3(c, j);
+              let i = _i;
+              const a = i += 2;
+              return eff3(a, j);
             });
           }).mbind(() => eff4(j));
-        }))
+        }`))
     })
-    it('should utilize js scope if possible 6', function() {
+    it("should utilize js scope if possible 6", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0, j = 0
           eff0(i,j);
           eff1(i++,j++);
@@ -1130,75 +1105,73 @@ describe('interpret state operations', function() {
           eff3(2,j);
           eff4(i+=2,j);
           eff5(j);
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           var i, j;
           i = 0;
           j = 0;
           return eff0(i, j).mbind(() => {
-            var i1 = i;
-            var j1 = j;
-            var a = i1++;
-            var b = j1++;
-            return eff1(a, b).mbind(() => eff2(i1)).mbind(() => {
-              var i2 = i1;
-              i2 += 1;
-              return eff3(2, j1).mbind(() => {
-                var i3 = i2;
-                var c = i3 += 2;
-                return eff4(c, j1);
+            let _i = i,
+                _j = j;
+            const a = _i++;
+            const b = _j++;
+            return eff1(a, b).mbind(() => eff2(_i)).mbind(() => {
+              let i = _i;
+              i += 1;
+              return eff3(2, _j).mbind(() => {
+                let _i = i;
+                const a = _i += 2;
+                return eff4(a, _j);
               });
-            }).mbind(() => eff5(j1));
-          });
-        }))
-    })
-    it('should utilize js scope if possible 7', function() {
-      equal(
-        run(function() {
-          var i = 0, j = 0
-          eff0(eff1(eff2(i++,eff3(eff4(i,j),j++),eff5(i)),i++),i);
-        }),
-        print(function () {
-          var i, j;
-          i = 0;
-          j = 0;
-          var a = i++;
-          return eff4(i, j)
-            .mbind(b => {
-              var j1 = j;
-              var c = j1++;
-              return eff3(b, c);
-            })
-            .mbind(d => eff5(i).mbind(e => eff2(a, d, e)))
-            .mbind(f => {
-              var i1 = i;
-              var g = i1++;
-              return eff1(f, g).mbind(h => eff0(h, i1));
-            });
-        }))
-    })
-    it('should inject scope/block calls 8', function() {
-      equal(
-        run(function() {
-          var i;
-          eff1(i++);
-          eff2(i++);
-        }),
-        print(`function () {
-          var i;
-          return M.get().mbind(({i}) => {
-            var a = i++;
-            return eff1(a).mbind(() => {
-              var i1 = i;
-              var b = i1++;
-              return eff2(b);
-            });
+            }).mbind(() => eff5(_j));
           });
         }`))
     })
-    it('should inject scope/block calls 9', function() {
+    it("should utilize js scope if possible 7", function() {
       equal(
-        run(function() {
+        run(`function() {
+          var i = 0, j = 0
+          eff0(eff1(eff2(i++,eff3(eff4(i,j),j++),eff5(i)),i++),i);
+        }`),
+        print(`function () {
+          var i, j;
+          i = 0;
+          j = 0;
+          const a = i++;
+          return eff4(i, j)
+            .mbind(a => {
+              let _j = j;
+              const b = _j++;
+              return eff3(a, b);
+            })
+            .mbind(b => eff5(i).mbind(c => eff2(a, b, c)))
+            .mbind(a => {
+              let _i = i;
+              const b = _i++;
+              return eff1(a, b).mbind(a => eff0(a, _i));
+            });
+        }`))
+    })
+    it("should inject scope/block calls 8", function() {
+      equal(
+        run(`function() {
+          var i;
+          eff1(i++);
+          eff2(i++);
+        }`),
+        print(`function () {
+          var i;
+          const a = i++;
+          return eff1(a).mbind(() => {
+            let _i = i;
+            const a = _i++;
+            return eff2(a);
+          });
+        }`))
+    })
+    it("should inject scope/block calls 9", function() {
+      equal(
+        run(`function() {
           var i;
           if (ee) {
             eff1(i++);
@@ -1207,68 +1180,66 @@ describe('interpret state operations', function() {
             eff1(i++);
             eff2(i++);
           }
-        }),
+        }`),
         print(`function () {
           var i;
-          return M.get().mbind(({i}) => {
-            if (ee) {
-              var a = i++;
-              return eff1(a).mbind(() => {
-                var i1 = i;
-                var b = i1++;
-                return eff2(b);
-              });
-            } else {
-              var c = i++;
-              return eff1(c).mbind(() => {
-                var i2 = i;
-                var d = i2++;
-                return eff2(d);
-              });
-            }
-          });
+          if (ee) {
+            const a = i++;
+            return eff1(a).mbind(() => {
+              let _i = i;
+              const a = _i++;
+              return eff2(a);
+            });
+          } else {
+            const a = i++;
+            return eff1(a).mbind(() => {
+              let _i = i;
+              const a = _i++;
+              return eff2(a);
+            });
+          }
         }`))
     })
-    it('should inject scope/block calls 10', function() {
+    it("should inject scope/block calls 10", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i;
           i = eff1(i++);
           eff2(i)
           i = eff3(i++);
           eff4(i)
-        }),
+        }`),
         print(`function () {
           var i;
-          return M.get().mbind(({i}) => {
-            var a = i++;
-            return eff1(a).mbind(b => {
-              i = b;
-              return eff2(i).mbind(() => {
-                var i1 = i;
-                var c = i1++;
-                return eff3(c);
-              });
-            }).mbind(d => {
-              i = d;
-              return eff4(i);
+          const a = i++;
+          return eff1(a).mbind(a => {
+            let i;
+            i = a;
+            return eff2(i).mbind(() => {
+              let _i = i;
+              const a = _i++;
+              return eff3(a);
             });
+          }).mbind(a => {
+            let i;
+            i = a;
+            return eff4(i);
           });
         }`))
     })
   })
-  it('should insert reads/writes accordingly 2', function() {
+  it("should insert reads/writes accordingly 2", function() {
     equal(
-      run(function() {
+      run(`function() {
         var i = 0
         eff1(i);
         i++;
         eff2(i);
-      }),
+      }`),
       print(`function () {
         var i;
         i = 0;
-        return M.set({i: i}).mseq(eff1(i)).mbind(() => M.get())
+        return M.set({i}).mseq(eff1(i)).mbind(() => M.get())
           .mbind(({i}) => {
             i++;
             return eff2(i);
@@ -1276,41 +1247,39 @@ describe('interpret state operations', function() {
       }`))
   })
   //TODO: mseq(M.get())
-  it('should insert reads/writes accordingly 3', function() {
+  it("should insert reads/writes accordingly 3", function() {
     equal(
-      run(function() {
+      run(`function() {
         var i = 0
         eff0(i++);
         eff1(i);
         i+=1;
         eff2(2);
         eff3(i+=2);
-      }),
+      }`),
       print(`function () {
         var i;
         i = 0;
-        var a = i++;
-        return M.set({i: i})
+        const a = i++;
+        return M.set({i})
           .mseq(eff0(a))
           .mbind(() => M.get())
           .mbind(({i}) => eff1(i))
           .mbind(() => M.get())
           .mbind(({i}) => {
             i += 1;
-            return M.set({
-              i: i
-            }).mseq(eff2(2));
+            return M.set({i}).mseq(eff2(2));
           })
           .mbind(() => M.get())
           .mbind(({i}) => {
-            var b = i += 2;
-            return eff3(b);
+            const a = i += 2;
+            return eff3(a);
           });
       }`))
   })
-  it('should insert reads/writes accordingly 3', function() {
+  it("should insert reads/writes accordingly 4", function() {
     equal(
-      run(function() {
+      run(`function() {
         var i = 0, j = 0
         eff0(i++,j++);
         eff1(i);
@@ -1318,17 +1287,14 @@ describe('interpret state operations', function() {
         eff2(2,j);
         eff3(i+=2,j);
         eff4(j);
-      }),
+      }`),
       print(`function () {
         var i, j;
         i = 0;
         j = 0;
-        var a = i++;
-        var b = j++;
-        return M.set({
-          i: i,
-          j: j
-        }).mseq(eff0(a, b)).mbind(() => M.get()).mbind(({
+        const a = i++;
+        const b = j++;
+        return M.set({i,j}).mseq(eff0(a, b)).mbind(() => M.get()).mbind(({
           i
         }) => eff1(i)).mbind(() => M.get()).mbind(({
           i,
@@ -1336,73 +1302,82 @@ describe('interpret state operations', function() {
         }) => {
           i += 1;
           return M.modify(s => ({
-            i: i,
+            i,
             j: s.j
           })).mseq(eff2(2, j));
         }).mbind(() => M.get()).mbind(({
           i,
           j
         }) => {
-          var c = i += 2;
-          return eff3(c, j);
+          const a = i += 2;
+          return eff3(a, j);
         }).mbind(() => M.get()).mbind(({
           j
         }) => eff4(j));
       }`))
   })
-  it('should insert reads/writes accordingly 4', function() {
+  it("should insert reads/writes accordingly 5", function() {
     equal(
-      run(function() {
+      run(`function() {
         var i = 0, j = 0
         eff0(eff1(eff2(i++,eff3(eff4(i,j),j++),eff5(i)),i++),i);
-      }),
-      print(`function () {
+      }`),
+      print(`function() {
         var i, j;
         i = 0;
         j = 0;
-        var a = i++;
-        return M.set({i: i, j: j}).mseq(eff4(i, j))
-          .mbind(b => M.get().mbind(({j}) => {
-            var c = j++;
-            return eff3(b, c);
-          })).mbind(d => M.get().mbind(
-            ({i}) => eff5(i).mbind(e => eff2(a, d, e)))).mbind(
-              f => M.get().mbind(({i}) => {
-                var g = i++;
-                return M.set({i: i}).mseq(eff1(f, g));
-              })).mbind(h => M.get().mbind(({i}) => eff0(h, i)));
+        const a = i++;
+        return M.set({i,j})
+          .mseq(eff4(i, j))
+          .mbind(a =>
+                 M.get().mbind(({j}) => {
+                   const b = j++;
+                   return eff3(a, b);
+                 }))
+          .mbind(b => M.get()
+                 .mbind(({i}) => eff5(i).mbind(c => eff2(a, b, c))))
+          .mbind(a =>
+                 M.get().mbind(({i}) => {
+                   const b = i++;
+                   return M.set({i}).mseq(eff1(a, b));
+                 }))
+          .mbind(a => M.get().mbind(({i}) => eff0(a, i)));
       }`))
   })
-  it('should insert reads/writes accordingly 5', function() {
+  it("should insert reads/writes accordingly 6", function() {
     equal(
-      run(function() {
+      run(`function() {
         var i;
         i = eff1(i++);
         eff2(i)
         i = eff3(i++);
         eff4(i)
-      }),
+      }`),
       print(`function () {
         var i;
-        return M.get().mbind(({i}) => {
-          var a = i++;
-          return eff1(a).mbind(b => {
-            i = b;
-            return M.set({i: i}).mseq(eff2(i));
-          }).mbind(() => M.get()).mbind(({i}) => {
-            var c = i++;
-            return eff3(c);
-          }).mbind(d => {
-            i = d;
+        const a = i++;
+        return eff1(a)
+          .mbind(
+            a => {
+              i = a;
+              return M.set({i}).mseq(eff2(i));
+            })
+          .mbind(() => M.get())
+          .mbind(
+            ({i}) => {
+              const a = i++;
+              return eff3(a);
+            })
+          .mbind(a => {
+            i = a;
             return eff4(i);
           });
-        });
       }`))
   })
-  context('with closures', function() {
-    it('should not read/write closure vars 1', function() {
+  context("with closures", function() {
+    it("should not read/write closure vars 1", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0, j = 0
           function b(i) {
             eff1(i,j)
@@ -1414,33 +1389,32 @@ describe('interpret state operations', function() {
           b(i)
           i--, j++
           eff4(i,j)
-        }),
+        }`),
         print(`function () {
-          var i, j;
           function b(i) {
-            return M.set({i: i})
-              .mseq(eff1(i, j))
+            return eff1(i, j)
               .mbind(() => M.get())
               .mbind(({i}) => {
                 i++, j++;
                 return eff2(i, j);
               });
           }
+          var i, j;
           i = 0;
           j = 0;
-          return M.set({i: i}).mseq(eff3(i, j))
+          return M.set({i}).mseq(eff3(i, j))
             .mbind(() => M.get()).mbind(({i}) => {
               i++, j--;
-              return M.set({i: i}).mseq(b(i));
+              return M.set({i}).mseq(b(i));
             }).mbind(() => M.get()).mbind(({i}) => {
               i--, j++;
               return eff4(i, j);
             });
         }`))
     })
-    it('should not read/write closure vars 2', function() {
+    it("should not read/write closure vars 2", function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0, j = 0
           eff1(i,j)
           i++, j++
@@ -1454,50 +1428,48 @@ describe('interpret state operations', function() {
           i++, j++
           eff5(i,j)
           eff6(i,j)
-        }),
+        }`),
         print(`function () {
           var i, j;
           i = 0;
           j = 0;
-          return M.set({i: i}).mseq(eff1(i, j)).mbind(() => M.get())
+          return M.set({i}).mseq(eff1(i, j)).mbind(() => M.get())
             .mbind(({i}) => {
             i++, j++;
-            return M.set({i: i}).mseq(function b(i, k) {
+            return M.set({i}).mseq(function b(i, k) {
               var z;
               z = 0;
-              return M.set({i: i,k: k,z: z}).mseq(eff2(i, j, k, z))
+              return M.modify(s => ({i: s.i,k: s.k, z})).mseq(eff2(i, j, k, z))
                 .mbind(() => M.get()).mbind(({i,k,z}) => {
                   i++, j++, k++, z++;
-                  return M.set({i: i,k: k,z: z}).mseq(eff3(i, j, k, z));
+                  return M.set({i,k,z}).mseq(eff3(i, j, k, z));
                 }).mbind(() => M.get()).mbind(({i,k,z}) => eff4(i, j, k, z));
             }(i, j));
           }).mbind(() => M.get()).mbind(({i}) => {
             i++, j++;
-            return M.set({
-              i: i
-            }).mseq(eff5(i, j));
+            return M.set({i}).mseq(eff5(i, j));
           }).mbind(() => M.get()).mbind(({i}) => eff6(i, j));
         }`))
     })
   })
 })
 
-describe('coerce', function() {
-  context('with coerce', function() {
+describe("coerce", function() {
+  context("enabled", function() {
     const run = runInterp({clos:true,coerce:true})
-    it('should insert coerce call 1', function() {
+    it("should insert coerce call 1", function() {
       equal(
-        run(function() {
+        run(`function() {
           eff(1)
           eff(2)
-        }),
-        print(function () {
-          return M(eff(1)).mbind(() => eff(2));}))
+        }`),
+        print(`function () {
+          return M(eff(1)).mbind(() => eff(2));}`))
     })
-    context('with `if` statement', function() {
-      it('should keep pure branch 1', function() {
+    context("with `if` statement", function() {
+      it("should keep pure branch 1", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff(1)
             if (eff(2)) {
               eff3()
@@ -1505,83 +1477,82 @@ describe('coerce', function() {
             } else {
               b
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             return M(eff(1)).mbind(() => eff(2)).mbind(a => {
               if (a)
                 return M(eff3()).mbind(() => eff4());
-              else {
+              else
                 b;
-              }
             });
-          }))
+          }`))
       })
-      it('should not add branch if it doesn`t exist', function() {
+      it("should not add branch if it doesn`t exist", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff(1)
             if (eff(2)) {
               eff3()
               eff4()
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             return M(eff(1)).mbind(() => eff(2)).mbind(a => {
               if (a)
                 return M(eff3()).mbind(() => eff4());
             });
-          }))
+          }`))
       })
     })
   })
-  context('without coerce', function() {
+  context("disabled", function() {
     const run = runInterp({clos:true,coerce:false})
-    it('should not insert even for pure function 1', function() {
+    it("should not insert even for pure function 1", function() {
       equal(
-        run(function() {
+        run(`function() {
           1+1;
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           1 + 1;
           return M.pure();
-        }))
+        }`))
     })
-    it('should not insert even for pure function 2', function() {
+    it("should not insert even for pure function 2", function() {
       equal(
-        run(function() {
+        run(`function() {
           if (true)
             1+1;
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           if (true) 1 + 1;
           return M.pure();
-        }))
+        }`))
     })
-    it('should not insert even for pure function 3', function() {
+    it("should not insert even for pure function 3", function() {
       equal(
-        run(function() {
+        run(`function() {
           if (true)
             return 2;
           return 3
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           if (true) return M.pure(2);
           return M.pure(3);
-        }))
+        }`))
     })
-    it('should not insert coerce call 1', function() {
+    it("should not insert coerce call 1", function() {
       equal(
-        run(function() {
+        run(`function() {
           eff(1)
           eff(2)
-        }),
-        print(function () {
-          return eff(1).mbind(() => eff(2));}))
+        }`),
+        print(`function () {
+          return eff(1).mbind(() => eff(2));}`))
     })
-    context('with `if` statement', function() {
-      it('should turn the pure branch into effectful', function() {
+    context("with `if` statement", function() {
+      it("should turn the pure branch into effectful", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff(1)
             if (eff(2)) {
               eff3()
@@ -1589,8 +1560,8 @@ describe('coerce', function() {
             } else {
               b
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             return eff(1).mbind(() => eff(2)).mbind(a => {
               if (a)
                 return eff3().mbind(() => eff4());
@@ -1599,33 +1570,33 @@ describe('coerce', function() {
                 return M.pure();
               }
             });
-          }))
+          }`))
       })
-      it('should insert effectful branch', function() {
+      it("should insert effectful branch", function() {
         equal(
-          run(function() {
+          run(`function() {
             eff(1)
             if (eff(2)) {
               eff3()
               eff4()
             }
-          }),
-          print(function () {
+          }`),
+          print(`function () {
             return eff(1).mbind(() => eff(2)).mbind(a => {
               if (a)
                 return eff3().mbind(() => eff4());
               else
                 return M.pure();
             });
-          }))
+          }`))
       })
     })
   })
   context("switching coerce", function() {
     const run = runInterp({clos:true,coerce:true})
-    it('should insert coerce depending on current option value', function() {
+    it("should insert coerce depending on current option value", function() {
       equal(
-        run(function() {
+        run(`function() {
           {
             eff1()
             if (a1) {
@@ -1652,8 +1623,8 @@ describe('coerce', function() {
               eff8()
             }
           }
-        }),
-        print(function () {
+        }`),
+        print(`function () {
           return M(eff1()).mbind(() => {
             if (a1)
               return eff2();
@@ -1671,12 +1642,7 @@ describe('coerce', function() {
             else
               return M.pure();
           }));
-        }))
+        }`))
     })
   })
 })
-
-//TODO: coerce for Exceptions
-//TODO: switch (add default branch)
-
-

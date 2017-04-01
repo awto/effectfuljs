@@ -1,7 +1,7 @@
 'use strict';
 
 // *- DEFAULT
-var M = require('./mfjscore');
+var M = require('./effectfuljscore');
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
@@ -15,15 +15,15 @@ var _cycleCore2 = _interopRequireDefault(_cycleCore);
 
 var _cycleDom = require('@cycle/dom');
 
-var RxM = require('@mfjs/rx')(require('rx'));
+var RxM = require('@effectfuljs/rx')(require('rx'));
 
 function main(sources) {
   function toggledM() {
     M.yield(false);
     // could be just `yield false` if corresponding babel transform is disabled
-    var a = sources.DOM.select('input');
-    return M(a.events('change')).mapply(b => {
-      return b.target.checked;
+    const a = sources.DOM.select('input');
+    return M(a.events('change')).mapply(a => {
+      return a.target.checked;
     });
   }
 
@@ -59,6 +59,7 @@ function modelM(action$) {
 function expandAsRenderingFrames(point$) {
   var point;
   return M(point$).mbind(a => {
+    let point;
     point = a;
     return M(Observable.interval(10)).mapply(() => {
       return M.$(point).take(100);

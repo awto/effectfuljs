@@ -1,7 +1,8 @@
 function a() {
   var b1;
-  return M(eff(1)).mbind(b => {
-    b1 = b;
+  return M(eff(1)).mbind(a => {
+    let b1;
+    b1 = a;
     return eff('a');
   }).mbind(() => eff('b'));
 }
@@ -9,6 +10,7 @@ function a() {
 function a1() {
   var a;
   return M(eff(1)).mbind(b => {
+    let a;
     a = b;
     return eff('a');
   }).mbind(() => eff('b'));
@@ -17,9 +19,11 @@ function a1() {
 function b() {
   var b1, b2;
   return M(eff(1)).mbind(a => {
+    let b1;
     b1 = a;
-    return M(eff(2)).mbind(c => {
-      b2 = c;
+    return M(eff(2)).mbind(a => {
+      let b2;
+      b2 = a;
       return M(eff(b1)).mbind(() => eff(b2));
     });
   });
@@ -28,43 +32,50 @@ function b() {
 function b1() {
   var a, c;
   return M(eff(1)).mbind(b => {
-    var d = a = b;
-    return M(eff(2)).mbind(e => {
-      var f = c = e;
-      d, f;
+    let a;
+    const d = a = b;
+    return M(eff(2)).mbind(b => {
+      let c;
+      const e = c = b;
+      d, e;
       return M(eff(a)).mbind(() => eff(c));
     });
   });
 }
 
 function c() {
-  var a, b, c;
-  var d, e, f, g, j;
-  var x, y, z;
-  return M(eff(1)).mbind(h => {
-    a = h;
+  var a, b, c, d, e, f, g, j, x, y, z;
+  return M(eff(1)).mbind(c => {
+    let a, b;
+    a = c;
     b = 2;
     return eff(3);
-  }).mbind(k => {
-    c = k;
+  }).mbind(a => {
+    let c;
+    c = a;
     return eff('a');
-  }).mbind(() => eff('b')).mbind(() => eff(4)).mbind(m => {
-    d = m;
+  }).mbind(() => eff('b')).mbind(() => eff(4)).mbind(a => {
+    let d, e;
+    d = a;
     e = 5;
     return eff(6);
-  }).mbind(n => {
-    f = n;
+  }).mbind(a => {
+    let f;
+    f = a;
     return eff(7);
-  }).mbind(a1 => {
-    g = a1;
+  }).mbind(a => {
+    let g, j;
+    g = a;
     j = 8;
     return eff('x');
-  }).mbind(b1 => {
-    x = b1;
+  }).mbind(a => {
+    let x, y;
+    x = a;
     y = 'y';
     return eff('z');
-  }).mbind(c1 => {
-    z = c1;
+  }).mbind(a => {
+    let z;
+    z = a;
     return eff(9);
   }).mbind(() => eff(10));
 }
@@ -73,11 +84,11 @@ function d() {
   return M(eff1('a')).mbind(a => M(eff(2)).mbind(b => {
     a.some = b;
     return eff('b');
-  })).mbind(c => M(eff(3)).mbind(e => {
-    c.some += e;
+  })).mbind(a => M(eff(3)).mbind(b => {
+    a.some += b;
     return eff('c');
-  })).mapply(f => {
-    f.some++;
+  })).mapply(a => {
+    a.some++;
     some['d']--;
   });
 }

@@ -10,6 +10,7 @@ function b() {
   M.reify(function () {
     var result;
     return M(addLater(1, 2)).mapply(a => {
+      let result;
       result = a;
 
       try {

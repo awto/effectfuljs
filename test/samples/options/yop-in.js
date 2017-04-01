@@ -3,10 +3,10 @@
 // *- DEFAULT
 // *- SKIP
 
-M = require("./mfjscore");
+M = require("./effectfuljscore");
 M.profile("minimal");
 Q = require("Q");
-QM = require("@mfjs/promise")(Q);
+QM = require("@effectfuljs/promise")(Q);
 
 describe('yop', function() {
     it('should yield fiber until promise is resolved', function(done) {

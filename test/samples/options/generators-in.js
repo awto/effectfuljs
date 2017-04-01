@@ -1,5 +1,5 @@
 // *- DEFAULT
-import * as G from "@mfjs/core";
+import * as G from "@effectfuljs/core";
 
 G.profile("generators");
 G.profile("defaultMinimal");

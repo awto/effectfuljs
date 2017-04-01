@@ -1,9 +1,8 @@
 import * as R from "ramda"
 import * as Kit from "./kit"
-import {Tag,produce,consume,symbol} from "estransducers"
+import {Tag,produce,consume,symbol,scope as vars} from "estransducers"
 import * as assert from "assert"
 import * as Block from "./block"
-import * as Uniq from "./uniq"
 import * as Debug from "./debug"
 
 export const assignLabels = R.pipe(
@@ -253,7 +252,6 @@ export const injectBlock = R.pipe(
 
 export const interpret = R.pipe(function* interpret(s) {
   const sl = Kit.auto(s)
-  const uniq = Uniq.store(sl)
   function* walk() {
     for(const i of sl.sub()) {
       switch(i.type) {
@@ -269,10 +267,10 @@ export const interpret = R.pipe(function* interpret(s) {
           let labs = i.value.ctrl.filter(v => v !== "#")
           if (labs.length === 0)
             labs = ["label"]
-          labs = labs.map(j => [j,uniq(j[0] === "#" ? j.slice(1) : j)])
+          labs = labs.map(j => [j,vars.newSym(j[0] === "#" ? j.slice(1) : j)])
           const lmap = i.value.node.lmap = new Map([["#",labs[0][1]],...labs])
           for(const j of labs)
-            yield sl.tok(Tag.push,Tag.Identifier,{node:j[1]})
+            yield sl.tok(Tag.push,Tag.Identifier,{sym: j[1]})
           yield* sl.leave()
           // TODO: probably it is always aready body
           yield sl.enter(Tag.body,Kit.Subst)
@@ -286,7 +284,7 @@ export const interpret = R.pipe(function* interpret(s) {
           yield sl.enter(i.pos, Block.effExpr)
           yield sl.enter(Tag.expression,Tag.CallExpression)
           yield sl.tok(Tag.callee,Tag.Identifier,
-                    {node:i.value.node.dst.lmap.get(i.value.jump)})
+                    {sym:i.value.node.dst.lmap.get(i.value.jump)})
           yield sl.enter(Tag.arguments,Tag.Array)
           yield* sl.sub()
           yield* lab()

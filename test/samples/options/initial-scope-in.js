@@ -6,7 +6,7 @@ function a() {
     $(eff(3));
     $(eff(4));
 }
-$ = require("./mfjscore");
+$ = require("./effectfuljscore");
 $.profile("defaultFull");
 
 function b() {

@@ -4,6 +4,8 @@ import {Tag,symbol,symInfo} from "./kit"
 import * as Match from "estransducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
+import * as Uniq from "./uniq"
+
 import * as assert from "assert"
 import * as Trace from "estransducers/trace"
 import * as Debug from "./debug"
@@ -16,18 +18,19 @@ export const config = symbol("config")
 export const configDiff = symbol("configDiff")
 export const ctImport = symbol("ctImport")
 
+//TODO: apply only to top scope
 export const imports =
   R.pipe(
     Match.inject([
       `>$$ = require($M)`,
-      `$$ = require($M)`,
+      `=$$ = require($M)`,
       `import $$ from "$M"`,
       `import * as $$ from "$M"`
     ]),
     function* importDetect(s) {
       s = Kit.auto(s)
       const pat = new RegExp(s.opts.importPattern ||
-                             /\@mfjs\/core|.*\/mfjs$|.*-mfjs$/gi)
+                             /\@effectfuljs\/core|.*\/mfjs$|.*-effectfuljs$/gi)
       for(const i of s) {
         if (i.enter
               && i.type === Match.Placeholder && i.value.match !== false)
@@ -36,7 +39,9 @@ export const imports =
           if (i.value.name === "M") {
             if (j.type === Tag.StringLiteral) {
               const name = j.value.node.value
-              if (!s.opts.libs[name] && !pat.test(name)) {
+              if (name == null || name !== s.opts.require
+                  && !s.opts.libs[name] && !pat.test(name))
+              {
                 i.value.v.match = false
               }
             } else {
@@ -54,6 +59,8 @@ export const imports =
     Match.commit,
     function* checkStaticImport(s) {
       s = Kit.auto(s)
+      const first = yield* s.till(i => i.pos === Tag.top)
+      const namespaces = first.value.namespaces = new Map()
       for(const i of s) {
         yield i
         if (i.enter) {
@@ -63,9 +70,14 @@ export const imports =
             yield* s.till(j => j.enter && j.type === Match.Placeholder)
             const module = s.cur().value.node.value
             yield* s.till(j => j.leave && j.type === Match.Root)
-            if (s.opts.libs[module])
-              yield s.tok(ctImport,{name:module,optional:true,ns:name})
-            for(const p of [`${module}-ct`,path.join(module,"ct")]) {
+            namespaces.set(module,name)
+            if (i.value.index < 2)
+              yield* s.till(j => j.leave && Kit.typeInfo(j).stmt)
+            if (s.opts.require === module || s.opts.libs[module])
+              yield s.tok(ctImport,{name:module,
+                                    optional:true,
+                                    ns:name})
+            for(const p of [`${module}-effectfuljs-ct`,path.join(module,"effectfuljs-ct")]) {
               yield s.tok(ctImport,{name:p,optional:true,ns:name})
             }
           }
@@ -77,12 +89,13 @@ export const imports =
 
 export function* ctImportPass(s) {
   s = Kit.auto(s)
+  let needInject = false
   for(const i of s) {
     if (i.enter && i.type === ctImport) {
       assert.ok(i.enter)
       let r = s.opts.libs[i.value.name]
       if (r == null) {
-        try {                  
+        try {
           const cp = resolve(i.value.name, {
             basedir: path.dirname(s.opts.file.filename)
           })
@@ -109,6 +122,7 @@ export const profile = symbol("profile")
 
 export const lookupProfiles = R.pipe(
   Match.inject(["*$M.profile($$)","*$M.option($$)"]),
+  Kit.toArray, //TODO: remove
   function* matchNs(s) {
     s = Kit.auto(s)
     for(const i of s) {
@@ -119,7 +133,7 @@ export const lookupProfiles = R.pipe(
             yield* s.till(j => j.type !== Match.Placeholder)
             const j = s.cur()
             if (j.type !== Tag.Identifier
-                && s.opts.ns === j.value.node.name)
+                || s.opts.ns !== j.value.node.name)
               i.value.v.match = false
           }
         }
@@ -580,4 +594,4 @@ export const defaultPrepare = R.pipe(
 export const generatorsPrepare = R.pipe(
   unwrapNs,
   assignThrowEff)
-  
+

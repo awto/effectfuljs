@@ -1,8 +1,7 @@
 import * as R from "ramda"
 import * as Kit from "./kit"
-import {Tag,symbol,symName,enter,leave,tok,symKind} from "./kit"
+import {Tag,symbol,symName,enter,leave,tok,symKind,scope} from "./kit"
 import * as assert from "assert"
-import * as Uniq from "./uniq"
 import * as Debug from "./debug"
 import * as Trace from "./kit/trace"
 import * as Prop from "./propagate"
@@ -13,21 +12,15 @@ export const frame = symbol("frame")
 export const chain = symbol("chain")
 export const bindPat = symbol("bindPat")
 /* bind expression with a single tail */
-export const bindExpr = symbol("bindExpr")
-export const binBindExpr = symbol("binBindExpr")
-export const bindCont = symbol("effCont")
 export const effExpr = symbol("effExpr")
-export const maybeEffExpr = symbol("maybeEffExpr")
-export const effStmt = symbol("effStmt")
 export const effBlock = symbol("effBlock")
 export const app = symbol("app")
 export const pure = symbol("pure")
 export const sharedRef = symbol("sharedRef")
 
 /**
- * Replaces binary nodes `ty` with its first component member function call 
+ * Replaces binary `app` nodes with its first component member function call 
  * with `name`, passing second component as a function to its argument
- * 
  */
 export const interpretApp = R.pipe(function (s) {
   const sl = Kit.auto(s)
@@ -47,13 +40,9 @@ export const interpretApp = R.pipe(function (s) {
                     {node:{name:i.value.node.name}})
           yield* sl.leave()
           yield sl.enter(Tag.arguments,Tag.Array)
-          const pat = i.value.node.pat
-          if (pat != null) {
-            const node = {}
-            yield sl.enter(Tag.push,Tag.ArrowFunctionExpression,{node})
-            yield sl.enter(Tag.params,Tag.Array)
-            yield* emitPats(pat)
-            yield* sl.leave()
+          if (sl.cur().pos === Tag.params) {
+            yield sl.enter(Tag.push,Tag.ArrowFunctionExpression)
+            yield* sl.one()
             yield sl.enter(Tag.body,Kit.Subst)
           } else {
             yield sl.enter(Tag.push,Kit.Subst)
@@ -68,25 +57,6 @@ export const interpretApp = R.pipe(function (s) {
   }
   return walk(sl)
 },Kit.completeSubst)
-
-export const cleanupEmptyFrames = R.pipe(
-  function checkEmpty(s) {
-    const sa = Kit.toArray(s)
-    const sl = Kit.auto(sa)
-    function walk() {
-      for(const i of sl.sub()) {
-        if (i.enter && i.type === frame) {
-          if (!i.value.hasStmts) {
-          }
-        }
-      }
-    }
-    return sa
-  },
-  function* removeEmpty(s) {
-    yield* s
-  }
-)
 
 function countEffSeqFramesImpl(s) {
   const sl = Kit.auto(s)
@@ -161,6 +131,9 @@ export const cleanupEffSeq = R.pipe(
   },
   Kit.completeSubst)
 
+/** 
+ * makes all chains explicitly left associative
+ */
 export const lassoc = R.pipe(
   countEffSeqFrames,
   function* bindExprs(s) {
@@ -185,6 +158,9 @@ export const lassoc = R.pipe(
     yield* walk(sl)
   })
 
+/** 
+ * makes all chains explicitly right associative
+ */
 export const rassoc = R.pipe(
   countEffSeqFrames,
   function* rassocBindExprs(s) {
@@ -212,29 +188,6 @@ export const rassoc = R.pipe(
     yield* walk(sl)
   }
 )
-
-function* emitPat(pat,pos) {
-  
-  if (pat.length === 1) {
-    yield* Kit.produce(pat[0],pos)
-  } else {
-    const apv = {}, epv = {}
-    yield enter(pos,Tag.ArrayPattern,apv)
-    yield enter(Tag.elements,Tag.Array,epv)
-    yield* emitPats(pat)
-    yield leave(Tag.elements,Tag.Array,epv)
-    yield leave(pos,Tag.ArrayPattern,apv)
-  }
-}
-
-function* emitPats(pat) {
-  if (!pat)
-    return
-  for(const i of pat) {
-    const prod = [...Kit.produce(i,Tag.push)]
-    yield* prod
-  }
-}
 
 export const interpretParEffSeq = R.pipe(
   function* interpretArrEffSeq(s) {
@@ -277,6 +230,7 @@ export const interpretParEffSeq = R.pipe(
   Array.from
 )
 
+// TODO: remove (replace ipat with something else)
 export function* setPatVarToArgs(s) {
   const sl = Kit.auto(s)
   function* walk(sw) {
@@ -312,10 +266,15 @@ export function* interpretBinEffSeq(s) {
       case chain:
         if (i.enter) {
           assert.equal(i.value.count,2)
-          const node = {name:"mbind",pat:sl.cur().value.pat || []}
+          const pat = sl.cur().value.pat
+          const node = {name:"mbind"}
           const lab = sl.label()
           yield sl.enter(i.pos,app,{node})
           yield* walk(sl.one())
+          yield sl.enter(Tag.params,Tag.Array)
+          if (pat != null)
+            yield* pat
+          yield* sl.leave()
           if (!sl.cur().value.eff)
             node.name = "mapply"
           yield* walk(sl.sub())
@@ -331,7 +290,6 @@ export function* interpretBinEffSeq(s) {
 }
 
 export const interpretBindFrame = R.pipe(
-  markFrameBindsKind,
   function interpretBindFrame(s) {
     const sl = Kit.auto(s)
     let en = false
@@ -340,7 +298,6 @@ export const interpretBindFrame = R.pipe(
         switch(i.type) {
         case letStmt:
           if (i.enter)  {
-            
             if (i.value.eff) {
               const j = sl.curLev()
               if (j != null)
@@ -349,36 +306,32 @@ export const interpretBindFrame = R.pipe(
               yield* walk()
               yield* sl.leave()
             } else {
+              const lab = sl.label()
               if (i.value.pat && i.value.pat.length) {
                 assert.equal(i.pos,Tag.push)
-                const lab = sl.label()
                 yield sl.enter(Tag.push,Tag.VariableDeclaration,
-                               {node:{kind:"var"}})
+                               {node:{kind:"const"}})
                 yield sl.enter(Tag.declarations,Tag.Array)
                 yield sl.enter(Tag.push,Tag.VariableDeclarator)
-                yield* emitPat(i.value.pat,Tag.id)
+                yield sl.enter(Tag.id,Kit.Subst)
+                yield* i.value.pat
+                yield* sl.leave()
                 yield sl.enter(Tag.init,Kit.Subst)
                 yield* walk()
-                yield* lab()
               } else {
-                yield sl.enter(i.pos,Kit.Subst)
+                yield sl.enter(i.pos,Tag.ExpressionStatement)
+                yield sl.enter(Tag.expression,Kit.Subst)
                 yield* walk()
-                yield* sl.leave()
               }
+              yield* lab()
             }
           }
           break
         case frame:
           if (i.enter) {
-            if (i.value.hasStmts) {
-              yield sl.enter(i.pos,effBlock)
-              yield* walk()
-              yield* sl.leave()
-            } else {
-              yield sl.enter(i.pos,Kit.Subst)
-              yield* walk()
-              yield* sl.leave()
-            }
+            yield sl.enter(i.pos,effBlock)
+            yield* walk()
+            yield* sl.leave()
           }
           break
         default:
@@ -388,7 +341,27 @@ export const interpretBindFrame = R.pipe(
     }
     return walk()
   },
-  Kit.completeSubst)
+  Kit.completeSubst,
+  function removeEmptyBlocks(si) {
+    const s = Kit.auto(si)
+    function* walk(sw) {
+      for(const i of sw) {
+        if (i.enter && i.type === effBlock && s.curLev() != null) {
+          const buf = [...walk(s.one())]
+          if (s.curLev() != null) {
+            yield i
+            yield* buf
+          } else {
+            buf[0].pos = buf[buf.length-1].pos = i.pos
+            yield* buf
+            s.close(i)
+          }
+        } else
+          yield i
+      }
+    }
+    return walk(s)
+  })
 
 export const interpretCasts = R.pipe(
   function* cleanEffExpr(s) {
@@ -396,7 +369,6 @@ export const interpretCasts = R.pipe(
     function* walk() {
       for(const i of sl.sub()) {
         switch(i.type) {
-        case maybeEffExpr:
         case effExpr:
           if (i.enter) {
             yield sl.enter(i.pos,Kit.Subst)
@@ -505,49 +477,9 @@ export const splitEffBlock = R.pipe(
   Prop.recalcEff
 )
 
-export function markFrameBindsKind(s) {
-  const sa = Kit.toArray(s)
-  const sl = Kit.auto(sa)
-  function walk(i) {
-    for(const j of sl.sub()) {
-      if (j.enter) {
-        switch(j.type) {
-        case frame:
-          j.value.bindsResult = j.value.hasStmts = false
-          if (!j.leave)
-            walk(j)
-          continue
-        case letStmt:
-          if (i) {
-            if (j.value.eff)
-              i.value.bindsResult = true
-            else
-              i.value.hasStmts = true
-          }
-          break
-        default:
-          if (i != null) {
-            if (j.value.stmt || j.value.expr)
-              i.value.hasStmts = true
-            else {
-              if (!j.leave)
-                walk(i)
-              continue
-            }
-          }
-        }
-        if (!j.leave)
-          walk()
-      }
-    }
-  }
-  walk()
-  return sa
-}
-
 export const factorEffSeq = R.pipe(
   countEffSeqFrames,
-  markFrameBindsKind,
+  saveFrameLet,
   function*(s) {
     const sl = Kit.auto(s)
     function* seq(i) {
@@ -556,12 +488,13 @@ export const factorEffSeq = R.pipe(
         if (j.enter) {
           switch(j.type) {
           case frame:
-            if (j.value.bindsResult /* && j.value.hasStmts*/) {
+            if (j.value.effLet != null) {
               for(const k of sl.sub()) {
                 assert.ok(k.enter)
                 if (k.type === letStmt && k.value.eff) {
                   const lab = sl.label()
-                  yield sl.enter(Tag.push,letStmt,{pat:[]}) //TODO: propagate to let
+                  j.value.effLet = null
+                  // yield sl.enter(Tag.push,letStmt,{pat:[]}) //TODO: propagate to let
                   yield sl.enter(Tag.push,chain)
                   yield sl.enter(Tag.push,frame)
                   yield sl.peel(k)
@@ -594,47 +527,72 @@ export const factorEffSeq = R.pipe(
       for(const i of sl.sub()) {
         yield i
         if (i.enter) {
-          if (i.type === chain) {
+          if (i.type === chain)
             yield* seq(i)
-          }
         }
       }
     }
     yield* walk()
   })
 
+/**
+ * calculates binds dependencies for a chain, so it can be arranged with 
+ * `groupDeps` to utilize closures
+ *
+ *       type DepsInfo = { fwd: Set<number>, x: number, 
+ *                         ref: Val, seq: DepsInfo[] }
+ *   
+ * for frames:
+ * 
+ *       type Val = Val & { deps: DepsInfo }
+ *     
+ * for chains:
+ * 
+ *       type Val = Val & { deps: DepsInfo[] }
+ *     
+ */
 export const calcVarDeps = R.curry(function calcVarDeps(eff,s) {
   const sa = Kit.toArray(s)
   const sl = Kit.auto(sa)
-  function seq(t) {
+  function seq() {
     const vars = new Map()
     const fs = []
     for(const i of sl.sub()) {      
-      if (i.enter && i.type === frame) {
-        const cx = i.value.deps = { f:i.value,
-                                    fwd:new Set(),
-                                    x:fs.length,
-                                    ref: i.value }
+      if (i.enter) {
+        const cx = i.value.fdeps = { f:i.value,
+                                     fwd:new Set(),
+                                     x:fs.length,
+                                     ref: i.value,
+                                     seq:fs
+                                   }
         fs.push(cx)
-        for(const j of sl.sub()) {
-          if (j.enter) {
-            switch(j.type) {
-            case bindPat:
-              const ref = j.value.ref
-              const v = vars.get(ref)
-              if (v != null && cx !== v)
-                v.fwd.add(cx.x)
+        switch(i.type) {
+        case frame:
+          for(const j of sl.sub()) {
+            if (j.enter) {
+              switch(j.type) {
+              case bindPat:
+                const ref = j.value.ref
+                const v = vars.get(ref)
+                if (v != null && cx !== v) {
+                  v.fwd.add(cx.x)
+                }
               break
-            case letStmt:
-              if (eff === (j.value.eff || false)) {
-                vars.set(j.value, cx)
+              case letStmt:
+                if (eff == null || eff === (j.value.eff || false)) {
+                  vars.set(j.value, cx)
+                }
+                break
+              case chain:
+                j.value.deps = seq()
+                break
               }
-              break
-            case chain:
-              j.value.deps = seq(j.value)
-              break
             }
           }
+          break
+        case chain:
+          i.value.deps = seq()
+          break
         }
       }
     }
@@ -643,21 +601,16 @@ export const calcVarDeps = R.curry(function calcVarDeps(eff,s) {
   function walk() {
     for(const i of sl.sub()) {
       if (i.enter && i.type === chain)
-        i.value.deps = seq(i)
+        i.value.deps = seq()
     }
   }
   walk()
   return sa
 })
 
-// - meaning only 5 should go must 3,4, but now obligations for them
-
-const EARLY_EFF_SEQ = false
-
 /**
- * in with effectful bind actually bound pattern variable
- * will be only in the next frame, so this pass shifts 
- * dependecies chain for this
+ * pattern variable of effectful bind is visible in the next frame, 
+ * so this pass does same as `groupDeps` but shifts dependecies chain 
  */
 export function* groupBindDeps(s) {
   const sl = Kit.auto(s)
@@ -665,9 +618,10 @@ export function* groupBindDeps(s) {
     const stack = []
     let num = 0
     for(const i of sl.sub()) {
-      if (i.type === frame) {
+      switch(i.type) {
+      case frame:
         assert.ok(i.enter)
-        const cx = deps[num++]
+        const cx = i.value.fdeps
         yield sl.peel(i)
         yield* walk()
         yield* sl.leave()
@@ -682,7 +636,13 @@ export function* groupBindDeps(s) {
             yield sl.enter(Tag.push, chain)
           }
         }
-      } else {
+        break
+      case chain:
+        yield i
+        if (i.enter && i.type === chain)
+          yield* seq(i.value.deps)
+        break
+      default:
         yield i
       }
     }
@@ -701,6 +661,11 @@ export function* groupBindDeps(s) {
   yield* walk()
 }
 
+/**
+ * assuming chain will be interpreted further in a left associative order,
+ * this pass emits additional chain to make right associative frame groups 
+ * if this is specified in `DepsInfo`
+ */
 export const groupDeps = R.pipe(
   function* groupDeps(s) {
     const sl = Kit.auto(s)
@@ -750,7 +715,11 @@ export const cleanStmtExpr = R.pipe(
   },
   Kit.completeSubst)
 
-
+/** 
+ * extracts all effectful expressions into separate statements in a block, 
+ * injects `letStmt` and `bindPat` to mark extracted expressions and its 
+ * original location
+ */
 export const flatten = R.pipe(
   Kit.removeNulls,
   function* flatten(s) {
@@ -784,10 +753,13 @@ export const flatten = R.pipe(
     }
     function* frameImpl(buf) {
       function* bind(i,pat,eff,like) {
-        i.value.bindPat = pat.node = yield* Uniq.id(like)
-        const value = pat.ref = Kit.tagValue(Tag.push,letStmt,{pat:[pat.node],eff})
+        pat.sym = i.value.bindPat = scope.newSym()
+        const value = pat.ref = Kit.tagValue(
+          Tag.push,
+          letStmt,
+          {pat:[sl.tok(Tag.push,Tag.Identifier,pat)],eff})
         yield sl.enter(Tag.push,letStmt,value)
-        yield sl.peel(i)
+        yield sl.peel(Kit.setPos(i,Tag.expression))
         yield* frameImpl(buf)
         yield* sl.leave()
         yield* sl.leave()
@@ -821,9 +793,8 @@ export const flatten = R.pipe(
           }
           if (i.value.bind || i.value.shared != null) {
             yield* inject(i)
-            if (i.value.shared != null) {
-              i.value.shared.node = i.value.bindPat
-            }
+            if (i.value.shared != null)
+              i.value.shared.sym = i.value.bindPat
             continue
           }
           switch(i.type) {
@@ -864,7 +835,7 @@ export const flatten = R.pipe(
     for(const i of s) {
       if (i.type === sharedRef) {
         if (i.enter) {
-          yield tok(i.pos,{node:i.value.ref.node})
+          yield tok(i.pos,Tag.Identifier,{sym:i.value.ref.sym})
         }
       } else
         yield i
@@ -899,12 +870,12 @@ export const flatten = R.pipe(
       for(const j of si.sub()) {
         assert.equal(j.type, Tag.VariableDeclarator)
         const buf = [j]
-        const id = Kit.result(si.peelTo(Tag.id),buf)
-        Kit.result(si.leave(),buf)
+        const id = [...si.peelTo(Tag.id),...si.sub(),...si.leave()]
+        buf.push(...id)
         const p = Kit.result(si.findPos(Tag.init),buf)
-        if (p != null && p.type === bindPat && p.value.ref.pat.length === 1) {
+        if (p != null && p.type === bindPat) {
           Kit.skip(Kit.tillLevel(exit,si))
-          p.value.ref.pat[0] = id.value.node
+          p.value.ref.pat = id
           continue
         }
         empty = false
@@ -1026,4 +997,37 @@ export const propagateBindVars = R.pipe(
     }
     yield* walk()
   },
-  Array.from)
+  Array.from,
+  setPatVarToArgs)
+
+/**
+ * for frames ending with effectful let adds its reference to `effLet` field
+ *
+ *     type Value = Value & { effLet?: Value }
+ * 
+ * for `Block.frame`
+ */
+export function saveFrameLet(si) {
+  const sa = Kit.toArray(si)
+  const s = Kit.auto(sa)
+  function walk(f) {
+    for(const i of s) {
+      if (i.enter) {
+        switch(i.type) {
+        case frame:
+          if (i.value.eff)
+            walk(i.value)
+          break
+        case letStmt:
+          if (i.value.eff) {
+            assert.ok(f)
+            f.effLet = i.value
+            f = null
+          }
+        }
+      }
+    }
+  }
+  walk()
+  return sa
+}

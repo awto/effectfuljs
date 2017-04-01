@@ -1,126 +1,96 @@
 function a() {
-  var loop;
   var i;
-  loop = M.iterator(some);
-  return M.block(label => M.set({
-    loop: loop
-  }).mbind(() => M.repeat(() => M.get().mbind(({
-    loop
-  }) => {
-    var b = loop();
-    var c = loop = b;
+  loop1 = M.iterator(some);
+  return M.block(label => M.repeat(() => {
+    let i;
+    const a = loop1();
+    const b = loop1 = a;
 
-    if (c) {
-      i = loop.value;
-      return M.set({
-        loop: loop
-      }).mbind(() => eff(1));
-    } else return M.set({
-      loop: loop
-    }).mbind(() => label());
-  })))).mbind(() => eff(2));
+    if (b) {
+      i = loop1.value;
+      return eff(1);
+    } else return label();
+  })).mbind(() => eff(2));
 }
 
 function b() {
-  var loop;
   var i;
   return M(eff('d')).mbind(a => {
-    var c = M.iterator(a);
-    loop = c;
-    return M.block(label => M.set({
-      loop: loop
-    }).mbind(() => M.repeat(() => M.get().mbind(({
-      loop
-    }) => {
-      var d = loop();
-      var e = loop = d;
+    const b = M.iterator(a);
+    loop3 = b;
+    return M.block(label => M.repeat(() => {
+      let i;
+      const a = loop3();
+      const b = loop3 = a;
 
-      if (e) {
-        i = loop.value;
+      if (b) {
+        i = loop3.value;
         return M.set({
-          i: i,
-          loop: loop
-        }).mbind(() => eff(i));
+          i
+        }).mseq(eff(i));
       } else return M.set({
-        loop: loop
-      }).mbind(() => label());
-    }))));
+        i
+      }).mseq(label());
+    }));
   }).mbind(() => M.get()).mbind(({
     i
   }) => eff(i));
 }
 
 function c() {
-  var loop;
-  var i;
-  var loop1;
-  var j;
-  loop = M.iterator(some);
-  return M.block(label => M.set({
-    loop: loop
-  }).mbind(() => M.repeat(() => M.get().mbind(({
-    loop
-  }) => {
-    var a = loop();
-    var b = loop = a;
+  var i, j;
+  loop2 = M.iterator(some);
+  return M.block(label => M.repeat(() => {
+    let i;
+    const a = loop2();
+    const b = loop2 = a;
 
     if (b) {
-      i = loop.value;
-      loop1 = M.iterator(other);
-      return M.block(label1 => M.set({
-        i: i,
-        loop: loop,
-        loop1: loop1
-      }).mbind(() => M.repeat(() => M.get().mbind(({
-        loop1
-      }) => {
-        var d = loop1();
-        var e = loop1 = d;
+      i = loop2.value;
+      _loop = M.iterator(other);
+      return M.block(label => M.set({
+        i
+      }).mseq(M.repeat(() => {
+        let j;
 
-        if (e) {
-          j = loop1.value;
+        const a = _loop();
+
+        const b = _loop = a;
+
+        if (b) {
+          j = _loop.value;
           return M.modify(s => ({
             i: s.i,
-            j: j,
-            loop: s.loop,
-            loop1: loop1
-          })).mbind(() => eff(i, j));
+            j
+          })).mseq(eff(i, j));
         } else return M.modify(s => ({
           i: s.i,
-          loop: s.loop,
-          loop1: loop1
-        })).mbind(() => label1());
-      }))));
-    } else return M.set({
-      loop: loop
-    }).mbind(() => label());
-  })))).mbind(() => M.get()).mbind(({
+          j
+        })).mseq(label());
+      })));
+    } else return M.modify(s => ({
+      i,
+      j: s.j
+    })).mseq(label());
+  })).mbind(() => M.get()).mbind(({
     i,
     j
   }) => eff(i, j));
 }
 
 function d() {
-  var loop;
   var i;
   loop = M.iterator(some);
-  return M.block(label => M.set({
-    loop: loop
-  }).mbind(() => M.repeat(() => M.get().mbind(({
-    loop
-  }) => {
-    var a = loop();
-    var b = loop = a;
+  return M.block(label => M.repeat(() => {
+    let i;
+    const a = loop();
+    const b = loop = a;
 
     if (b) {
       i = loop.value;
-      return M.set({
-        loop: loop
-      }).mbind(() => eff(1));
-    } else return M.set({
-      loop: loop
-    }).mbind(() => label());
-  })))).mbind(() => eff(2));
+      return eff(1);
+    } else return label();
+  })).mbind(() => eff(2));
 }
 
 function p() {

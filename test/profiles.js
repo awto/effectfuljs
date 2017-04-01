@@ -50,14 +50,18 @@ describe("full transform", function() {
         e2()
         M.profile("minimal");
         p1();
+        console.profile("minimal");
         p2();
+        console.profileEnd();
         M(e1());
         M(e(2));
       }),pretty(function () {
         console.log("hi")
         return M(e1()).mbind(() => e2()).mbind(() => {
           p1();
+          console.profile('minimal');
           p2();
+          console.profileEnd();
           return e1();
         }).mbind(() => e(2));
       }))

@@ -5,7 +5,7 @@ function a() {
     $(eff(3));
     $(eff(4));
 }
-$ = require('./mfjscore');
+$ = require('./effectfuljscore');
 function b() {
     return $(eff(1)).mbind(function () {
         return eff(2);

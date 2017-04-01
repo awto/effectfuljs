@@ -8,7 +8,6 @@ function a(z) {
     }
     eff(3);
 }
-
 function a(z) {
     switch (z) {
     case 1:

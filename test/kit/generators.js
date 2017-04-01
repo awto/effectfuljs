@@ -4,7 +4,7 @@ import * as kit from "./generators"
 import {run,pretty,prettyBlock,blockEqual} from "./core"
 import tags from "./tags"
 const defaults = require("../../src/config")
-defaults.libs["./mfjscore"] = defaults.libs["@mfjs/core"]
+defaults.libs["./effectfuljscore"] = defaults.libs["@effectfuljs/core"]
 
 function groupByPat(files, pats) {
   function walk(d, res) {
@@ -63,6 +63,8 @@ function addInfo(d, ctx) {
   d.$ctx = ctx
   const info = d.$info = []
   let minfo = null
+  if (d.$opts != null)
+    d.$opts = JSON.parse(d.$opts)
   for (const i of Object.getOwnPropertyNames(d)) {
     if (i[0] === "$")
       continue
@@ -118,7 +120,7 @@ function interpretInfo(d) {
         break
       default:
         if (options[s]) {
-          const opts = d.$opts != null ? d.$opts : d.$opts = {};
+          const opts = {}
           if (!((t != null) && t.length))
             t = true
           opts[s] = t
@@ -166,7 +168,7 @@ function mochaBddWalk(d, ittxt, opts, skip) {
         if (nopts.filename == null)
           nopts.filename = `${v.$basePath}-in.js`
         if (nopts.require == null)
-          nopts.require = "./mfjscore"
+          nopts.require = "./effectfuljscore"
         fn = skip ? () => it.skip(txt, () => {})
                   : () => it(txt, () => blockEqual(inp, exp, nopts))
       } else {
@@ -194,7 +196,7 @@ const fpats = {
   inp: /^(.+)-in.js$/i,
   exp: /^(.+)-out.js$/i,
   info: /^info.txt$|^(.+)-info.txt$/i,
-  $opts: /^(.+)-opts$/i,
+  $opts: /^(.+)\.opts$/i,
   $only: /^only$|^only.tmp$|^(.+)-only$|^(.+)-only.tmp$/i,
   $skip: /^skip$|^skip.tmp$|^(.+)-skip$|^(.+)-skip.tmp$/i,
   $noskip: /^noskip$|^noskip.tmp$|^(.+)-noskip$|^(.+)-noskip.tmp$/i,
@@ -237,7 +239,7 @@ export function qunit(files) {
           if (nopts.filename == null)
             nopts.filename = `${v.$basePath}-in.js`
           if (nopts.require == null) {
-            nopts.require = "./mfjscore"
+            nopts.require = "./effectfuljscore"
           }
           QUnit[fn](i, function(a) {
             const res = run(nopts,v.inp)

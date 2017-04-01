@@ -1,7 +1,7 @@
 'use strict';
-M = require('./mfjscore');
+M = require('./effectfuljscore');
 Q = require('Q');
-QM = require('@mfjs/promise')(Q);
+QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
     it('should yield fiber until promise is resolved', function (done) {
         function addLater(a, b) {

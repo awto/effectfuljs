@@ -2,18 +2,20 @@ import defaults from "./config"
 import generate from "babel-generator"
 import {parse} from "babylon"
 import {produce,consume,kit} from "estransducers"
+import * as Kit from "./kit"
 // import * as fs from "fs"
 import * as R from "ramda"
 import * as path from "path"
 import * as T from "./transform"
+import * as Policy from "./policy"
 import {sync as findup} from "findup"
 
-const CONFIG_NAME = "mfjs-config.json"
+const CONFIG_NAME = "effectfuljs-config.json"
 
-export const FILE_EXTENSIONS = {
-  ".mjs": { profile: "minimal" },
-  ".json": false
-}
+export const tok = Kit.tok, configDiff = Policy.configDiff,
+  profile = Policy.profile, defaultGensTransform = T.defaultGensTransform,
+  injectFuncOpts = T.injectFuncOpts, injectOpts = T.injectOpts
+
 function convOptions(v, fn) {
   var f
   if (v == null || v === true)

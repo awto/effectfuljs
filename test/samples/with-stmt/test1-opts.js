@@ -1,5 +1,0 @@
-{
-  "parser": {
-    "sourceType":script
-  }
-}

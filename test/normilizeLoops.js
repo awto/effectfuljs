@@ -9,8 +9,6 @@ import * as assert from "assert"
 import {equal,print,transformExpr} from "./kit/core"
 import {recalcEff} from "../src/propagate"
 import * as Debug from "../src/debug"
-import * as Uniq from "../src/uniq"
-import * as Block from "../src/block"
 import * as Branch from "../src/branch"
 import * as Ctrl from "../src/control"
 
@@ -33,11 +31,11 @@ describe('prepare loops pass', function() {
           for(var i of s)
             eff(1);
         }`),
-        print(function () /*BS|E*/{
+        print(`function () /*BS|E*/{
           /*FOS|E*/for (var i of s) /*BS|E*/{
             /*ES|e*/ /*CE|B*/eff(1);
           }
-        }))
+        }`))
     })
   })
   context('with no statements in body', function() {
@@ -47,11 +45,11 @@ describe('prepare loops pass', function() {
           run(`function() {
             for(var i = 0; i < 10; i = eff());
           }`),
-          print(function () /*BS|E*/{
+          print(`function () /*BS|E*/{
             /*FS|E*/for (var i = 0; i < 10; /*AE|E*/i = /*CE|B*/eff()) {
               ;
             }
-          }))
+          }`))
       })
     })
     context('with effect in init', function() {
@@ -74,11 +72,11 @@ describe('prepare loops pass', function() {
             eff(1);
           }
         }`),
-        print(function () /*BS|E*/{
+        print(`function () /*BS|E*/{
           /*FOS|E*/for (var i of s) /*BS|E*/{
             /*ES|e*/ /*CE|B*/eff(1);
           }
-        }))
+        }`))
     })
   })
 })
@@ -89,66 +87,66 @@ describe('normilize `for-of`', function() {
     context('with single statement in body', function() {
       it('should be `for` with the effect in body', function() {
         equal(
-          run(function() {
+          run(`function() {
             for(const i of s)
               eff(1);
-          }),
-          print(function () /*BS|E*/{
-            /*FS|E*/for (var loop = M.iterator(s); loop = loop();) /*BS|E*/{
-              var i = loop.value;
+          }`),
+          print(`function () /*BS|E*/{
+            /*FS|E*/for (let loop = M.iterator(s); loop = loop();) /*BS|E*/{
+              const i = loop.value;
               /*ES|e*/ /*CE|B*/eff(1);
             }
-          }))
+          }`))
       })
     })
     it('should be `for` with the effect in body', function() {
       equal(
-        run(function() {
+        run(`function() {
           for(const i of s) {
             eff(1);
           }
-        }),
-        print(function () /*BS|E*/{
-          /*FS|E*/for (var loop = M.iterator(s); loop = loop();) /*BS|E*/{
-            var i = loop.value;
+        }`),
+        print(`function () /*BS|E*/{
+          /*FS|E*/for (let loop = M.iterator(s); loop = loop();) /*BS|E*/{
+            const i = loop.value;
             /*ES|e*/ /*CE|B*/eff(1);
           }
-        }))
+        }`))
     })
   })
   context('with embedded `for-of`', function() {
     it('should be `for` with the effect in body', function() {
       equal(
-        run(function() {
+        run(`function() {
           for(const i of s)
             for(const j of t)
               eff(i,j);
-        }),
-        print(function () /*BS|E*/{
-          /*FS|E*/for (var loop = M.iterator(s); loop = loop();) /*BS|E*/{
-            var i = loop.value;
-            /*FS|E*/for (var loop1 = M.iterator(t); loop1 = loop1();) /*BS|E*/{
-              var j = loop1.value;
+        }`),
+        print(`function () /*BS|E*/{
+          /*FS|E*/for (let loop = M.iterator(s); loop = loop();) /*BS|E*/{
+            const i = loop.value;
+            /*FS|E*/for (let loop = M.iterator(t); loop = loop();) /*BS|E*/{
+              const j = loop.value;
               /*ES|e*/ /*CE|B*/eff(i, j);
             }
           }
-        }))
+        }`))
     })
   })
   context('with effect on the right but not in its body', function() {
     it('should extract the effect into former step and keep for-of',
        function() {
          equal(
-           run(function() {
+           run(`function() {
              for(const i of eff(1)) {
                2+2;
              }
-           }),
-           print(function () /*BS|E*/{
-             /*FOS|e*/for (var i of /*CE|B*/eff(1)) {
+           }`),
+           print(`function () /*BS|E*/{
+             /*FOS|e*/for (const i of /*CE|B*/eff(1)) {
                2 + 2;
              }
-           }))
+           }`))
        })
   })
 })
@@ -157,17 +155,17 @@ describe('normilize `for-in`', function() {
   const run = runImpl(Loops.forOfStmt)
   it('simple block', function() {
     equal(
-      run(function() {
+      run(`function() {
         for(const i in s) {
           eff(1);
         }
-      }),
-      print(function () /*BS|E*/{
-        /*FS|E*/for (var loop = M.forInIterator(s); loop = loop();) /*BS|E*/{
-          var i = loop.value;
+      }`),
+      print(`function () /*BS|E*/{
+        /*FS|E*/for (let loop = M.forInIterator(s); loop = loop();) /*BS|E*/{
+          const i = loop.value;
           /*ES|e*/ /*CE|B*/ eff(1);
         }
-      }))
+      }`))
   })
 })
 
@@ -175,39 +173,39 @@ describe('normilize `do-while`', function() {
   const run = runImpl(Loops.doWhileStmt)
   it('simple block', function() {
     equal(
-      run(function() {
+      run(`function() {
         do {
           eff(1);
         } while(check(1))
-      }),
-      print(function () /*BS|E*/{
+      }`),
+      print(`function () /*BS|E*/{
         /*FS|E*/for (;;) /*BS|E*/{
           /*ES|e*/ /*CE|B*/eff(1);
           /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
             /*BS|E*/break;
           }
         }
-      }))
+      }`))
   })
   it('simple statement', function() {
     equal(
-      run(function() {
+      run(`function() {
         do
           eff(1);
         while(check(1))
-      }),
-      print(function () /*BS|E*/{
+      }`),
+      print(`function () /*BS|E*/{
         /*FS|E*/for (;;) /*BS|E*/{
           /*ES|e*/ /*CE|B*/eff(1);
           /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
             /*BS|E*/break;
           }
         }
-      }))
+      }`))
   })
   it('embedded', function() {
     equal(
-      run(function() {
+      run(`function() {
         do
           do
             do {
@@ -218,8 +216,8 @@ describe('normilize `do-while`', function() {
             } while(check(2))
           while(check(3))
         while(check(4))
-      }),
-      print(function () /*BS|E*/{
+      }`),
+      print(`function () /*BS|E*/{
         /*FS|E*/for (;;) /*BS|E*/{
           /*FS|E*/for (;;) /*BS|E*/{
             /*FS|E*/for (;;) /*BS|E*/{
@@ -242,7 +240,7 @@ describe('normilize `do-while`', function() {
             /*BS|E*/break;
           }
         }
-      }))
+      }`))
   })
 })
 
@@ -251,27 +249,27 @@ describe('normilize `for`', function() {
   context('with non-block in body', function() {
     it('should keep effect in the body', function() {
       equal(
-        run(function() {
+        run(`function() {
           for(;;)
             eff(1);         
-        }),
-        print(function () /*BS|E*/{
+        }`),
+        print(`function () /*BS|E*/{
           /*FS|E*/for (;;) /*BS|E*/{
             /*ES|e*/ /*CE|B*/eff(1);
           }
-        }))
+        }`))
     })
   })
   context('with effects in init/update/test', function() {
     it('should keep effect in update/test', function() {
       equal(
-        run(function() {
+        run(`function() {
           for(let i = init();check() === true;upd()) {
             b;
           }
-        }),
-        print(function () /*BS|E*/{
-          /*VD|E*/var /*VD|E*/i = /*CE|B*/init();
+        }`),
+        print(`function () /*BS|E*/{
+          /*VD|E*/let /*VD|E*/i = /*CE|B*/init();
           /*FS|E*/for (;;) /*BS|E*/{
             /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
               b;
@@ -280,7 +278,7 @@ describe('normilize `for`', function() {
               /*BS|E*/break;
             }
           }
-        }))
+        }`))
     })
   })
   context('with `continue`', function() {
@@ -295,7 +293,7 @@ describe('normilize `for`', function() {
             }
           }
         }`),
-        print(function () /*BS|E*/{
+        print(`function () /*BS|E*/{
           /*VD|E*/var /*VD|E*/i = /*CE|B*/init();
           /*FS|E*/for (;;) /*BS|E*/{
             /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
@@ -311,7 +309,7 @@ describe('normilize `for`', function() {
               /*BS|E*/break;
             }
           }
-        }))
+        }`))
     })
   })
   context('without blocks', function() {
@@ -322,7 +320,7 @@ describe('normilize `for`', function() {
             iter();
           
         }`),
-        print(function () /*BS|E*/{
+        print(`function () /*BS|E*/{
           /*VD|E*/var /*VD|E*/i = /*CE|B*/init();
           /*FS|E*/for (;;) /*BS|E*/{
             /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
@@ -332,7 +330,7 @@ describe('normilize `for`', function() {
               /*BS|E*/break;
             }
           }
-        }))
+        }`))
     })
     context('with embedded loop', function() {
       it('should create block statements 2', function() {
@@ -342,7 +340,7 @@ describe('normilize `for`', function() {
               for(var j = initJ();checkJ() === true;updJ())
                 body();
           }`),
-          print(function () /*BS|E*/{
+          print(`function () /*BS|E*/{
             /*VD|E*/var /*VD|E*/i = /*CE|B*/init();
             /*FS|E*/for (;;) /*BS|E*/{
               /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
@@ -360,7 +358,7 @@ describe('normilize `for`', function() {
                 /*BS|E*/break;
               }
             }
-          }))
+          }`))
       })
     })
     context('with `continue`', function() {

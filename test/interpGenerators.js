@@ -21,29 +21,29 @@ import * as Gens from "../src/generators"
 
 describe('generators interpretation', function() {
   const run = runExpr({ns:"M",
-                       require:"@mfjs/generators"})
+                       require:"@effectfuljs/generators"})
   it('should inject `generator` function for scope 1', function() {
     equal(
-      run(function*() {
+      run(`function*() {
         yield 1;
         yield 2;
         yield* some();
         return (yield* some);
-      }),
-      print(function () {
+      }`),
+      print(`function () {
         return M.generator(
           (ret, yld, yldS) =>
             yld(1).mbind(
               () => yld(2)).mbind(
                 () => {
-                  var a = some();
+                  const a = some();
                   return yldS(a);
                 }).mbind(() => yldS(some)));
-      }))
+      }`))
   })
   context("with removed generators", function() {
     const run = runExpr({ns:"M",
-                         require:"@mfjs/generators",
+                         require:"@effectfuljs/generators",
                          generatorDo:true})
     it('should treat yield as bind points only', function() {
       equal(

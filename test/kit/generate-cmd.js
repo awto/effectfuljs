@@ -4,7 +4,7 @@ import * as kit from "./generators"
 import {run,pretty} from "./core"
 import * as dirs from "./dirs"
 const defaults = require("../../src/config")
-defaults.libs["./mfjscore"] = defaults.libs["@mfjs/core"]
+defaults.libs["./effectfuljscore"] = defaults.libs["@effectfuljs/core"]
 
 function generateOuts(files) {
   function walk(d) {
@@ -31,7 +31,7 @@ function generateOuts(files) {
       }
       nopts.filename = `${v.$basePath}-in.js`
       if (nopts.require == null)
-        nopts.require = "./mfjscore"
+        nopts.require = "./effectfuljscore"
       try {
         resCode = run(nopts,code)
       } catch (error) {

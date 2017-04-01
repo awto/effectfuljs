@@ -2,9 +2,8 @@ import * as R from "ramda"
 import * as Kit from "./kit"
 import * as Trace from "./trace"
 import {Tag,produce,consume,symbol,symName,symInfo,
-        dump as D,trace as T} from "estransducers"
+        dump as D,trace as T,scope} from "estransducers"
 import generate from "babel-generator"
-import * as Uniq from "./uniq"
 import * as SE from "./kit/stmtExpr"
 
 function isBindTok(v) {
@@ -104,66 +103,46 @@ function hls(t,e) {
   return D.setComment(e,t,"small")
 }
 
-export const markState = R.pipe(
-  function* markState(s) {
-    for(const i of s) {
-      const comment = []
-      if (i.enter) {
-        if (i.value.env) {
-          const env = i.value.env
-          let {lhs,rhs,tw,tr,br} = env
-          tw = tw || new Set()
-          tr = tr || new Set()
-          br = br || new Set()
-          const c = new Set([...tr,...tw,...br,...lhs,...rhs])
-          const r = []
-          for(const i of c) {
-            const m = []
-            if (lhs.has(i))
-              m.push("W")
-            else if (tw.has(i))
-              m.push("w")
-            if (rhs.has(i))
-              m.push("R")
-            else if (tr.has(i))
-              m.push("r")
-            if (br.has(i))
-              m.push(">")
-            let mr = m.join("")
-            if (mr.length)
-              r.push([i,":",mr].join(''))
-          }
-          if (r.length)
-            comment.push(r.join("|"))
-        }
-        if (i.value.node) {
-          if (i.value.node.read && i.value.node.read.size) 
-            comment.push(`R[${Array.from(i.value.node.read).join()}]`)
-          if (i.value.node.write && i.value.node.write.size)
-            comment.push(`W[${Array.from(i.value.node.write).join()}]`)
-          if (i.value.node.save && i.value.node.save.size)
-            comment.push(`s[${Array.from(i.value.node.save).join()}]`)
-          if (i.value.node.localWrites && i.value.node.localWrites.size)
-            comment.push(`L[${Array.from(i.value.node.localWrites).join()}]`)
-          if (i.value.node.copy && i.value.node.copy.size)
-            comment.push(`C[${Array.from(i.value.node.copy).join()}]`)      
-          if (i.value.node.update && i.value.node.update.size)
-            comment.push(`U[${Array.from(i.value.node.update).join()}]`)
-        }
-        yield comment.length ? hls(comment.join(''),i) : i
-      } else
-        yield i
-    }
+export function* markState(si) {
+  const s = Kit.auto(si)
+  const tostr = (s) => [...s].map(i => i.name).join()
+  for(const i of s) {
+    const comment = []
+    if (i.enter) {
+      const v = i.value
+      if (v.writeBefore && v.writeBefore.size)
+        comment.push(`w[${tostr(v.writeBefore)}]`)
+      if (v.read && v.read.size)
+        comment.push(`R[${tostr(v.read)}]`)
+      if (v.write && v.write.size)
+        comment.push(`W[${tostr(v.write)}]`)
+      if (v.copy && v.copy.size)
+        comment.push(`W[${tostr(v.copy)}]`)
+      if (v.save && v.save.size)
+        comment.push(`s[${tostr(v.save)}]`)
+      if (v.readAfter && v.readAfter.size)
+        comment.push(`r[${tostr(v.readAfter)}]`)
+      if (v.closCopy && v.closCopy.size)
+        comment.push(`C[${tostr(v.closCopy)}]`)
+      if (v.lhs)
+        comment.push("+")
+      if (v.rhs)
+        comment.push("-")
+      if (i.value.hierpath != null)
+        comment.push(i.value.hierpath.join("."))
+      yield comment.length ? hls(comment.join(''),i) : i
+    } else
+      yield i
   }
-)
+}
 
 export function* dumpDeps(s) {
   for(const i of s) {
-    yield i.enter && i.value.deps != null
+    yield i.enter && (i.value.deps != null || i.value.fdeps != null)
       ? hls("D:" +
-            (i.value.deps.length
+            (i.value.deps
              ? JSON.stringify(i.value.deps.map(v => [...v.fwd || []]))
-             : `${i.value.deps.x} -> ${JSON.stringify([...i.value.deps.fwd || []])}`
+             : `${i.value.fdeps.x} -> ${JSON.stringify([...i.value.fdeps.fwd || []])}`
             ),i)
     : i
   }
@@ -186,8 +165,10 @@ export const dumbBindStmt = R.pipe(
                     },eff:i.value.eff}),
               "S","font-size:xx-large;color:orange"))
             yield Kit.enter(Tag.declarations,Tag.Array)
-            const node = {id:varsPat(i.value.pat)}
-            yield Kit.enter(Tag.push,Tag.VariableDeclarator,{node})
+            yield Kit.enter(Tag.push,Tag.VariableDeclarator)
+            yield Kit.enter(Tag.id,Kit.Subst)
+            yield* i.value.pat
+            yield Kit.leave()
             yield Kit.enter(Tag.init,Kit.Subst)
           } else {
             yield D.copyComment(i,D.setComment(
@@ -201,7 +182,7 @@ export const dumbBindStmt = R.pipe(
         break
       case "bindPat":
         if (i.enter)
-          yield Kit.tok(i.pos,Tag.Identifier,{node:i.value.node})
+          yield Kit.tok(i.pos,Tag.Identifier,{sym:i.value.sym,node:i.value.node})
         break
       default:
         yield i
@@ -503,7 +484,8 @@ const dumpPrep = R.pipe(
   markBindEff,
   dumpEffBlock,
   dumpCasts,
-  Uniq.subst)
+  scope.resolve
+)
 
 export const mark = R.pipe(dumpPrep,D.fin)
 

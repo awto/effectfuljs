@@ -1,4 +1,4 @@
-var M = require("./mfjscore");
+var M = require("./effectfuljscore");
 if (M.compileTime)
   module.exports = {
     _compile: function(v) {

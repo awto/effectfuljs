@@ -4,7 +4,6 @@ import {Tag,symbol} from "estransducers"
 import * as T from "babel-types"
 import * as assert from "assert"
 import {openVarDecl,openBlock,peelBlockFrom} from "./kit/snippets"
-import * as Uniq from "./uniq"
 import * as Debug from "./debug"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
@@ -118,11 +117,10 @@ export const doWhileStmt = R.pipe(
 
 export function forOfStmt(s) {
   s = Kit.auto(s)
-  const uniq = Uniq.store(s)
   function* readLeft(iterVar) {
     function* val(pos) {
       yield s.enter(pos,Tag.MemberExpression)
-      yield s.tok(Tag.object,{node:iterVar})
+      yield s.tok(Tag.object,Tag.Identifier,iterVar)
       yield s.tok(Tag.property,{node:T.identifier("value")})
       yield* s.leave()
     }
@@ -148,6 +146,7 @@ export function forOfStmt(s) {
       yield* lab()
     }
   }
+  let loopnum = 0
   function* walk() {
     for(const i of s.sub()) {
       if (i.value.eff) {
@@ -156,10 +155,10 @@ export function forOfStmt(s) {
         case Tag.ForOfStatement:
           yield Kit.setType(i,Tag.ForStatement)
           if (i.enter) {
-            const iterVar = uniq("loop")
+            const iterVar = {sym:Kit.scope.newSym("loop")}
             const init = Array.from(readLeft(iterVar))
             const end = s.label()
-            yield* openVarDecl(iterVar,s)
+            yield* openVarDecl(iterVar,s,"let")
             yield s.enter(Tag.init,Tag.CallExpression)
             yield* Kit.packId(s,Tag.callee,
                               i.type === Tag.ForInStatement
@@ -174,9 +173,9 @@ export function forOfStmt(s) {
             }
             yield* end()
             yield s.enter(Tag.test,Tag.AssignmentExpression,{node:{operator:"="}})
-            yield s.tok(Tag.left,{node:iterVar})
+            yield s.tok(Tag.left,Tag.Identifier,iterVar)
             yield s.enter(Tag.right,Tag.CallExpression)
-            yield s.tok(Tag.callee,{node:iterVar})
+            yield s.tok(Tag.callee,Tag.Identifier,iterVar)
             yield s.tok(Tag.arguments,Tag.Array)
             yield* end()
             yield s.peel()

@@ -1,11 +1,46 @@
 import * as R from "ramda"
 import * as Kit from "./kit"
 import * as assert from "assert"
-import {Tag} from "estransducers"
+import {Tag,symbol} from "estransducers"
 import * as Debug from "./debug"
 import * as Block from "./block"
 import * as Prop from "./propagate"
 import {stmtExpr} from "./kit/stmtExpr"
+
+export const fork = symbol("branch.fork")
+export const thread = symbol("branch.thread")
+
+export function* mark(s) {
+  for(const i of s) {
+    if (i.enter) {
+      switch(i.pos) {
+      case Tag.consequent:
+      case Tag.alternate:
+        yield Kit.enter(i.pos,thread,i.value)
+      }
+      switch(i.type) {
+      case Tag.IfStatement:
+      case Tag.ConditionalExpression:
+      case Tag.SwitchStatement:
+        yield Kit.enter(i.pos,fork,i.value)
+      }
+    }
+    yield i
+    if (i.leave) {
+      switch(i.type) {
+      case Tag.IfStatement:
+      case Tag.ConditionalExpression:
+      case Tag.SwitchStatement:
+        yield Kit.leave(i.pos,fork,i.value)
+      }
+      switch(i.pos) {
+      case Tag.consequent:
+      case Tag.alternate:
+        yield Kit.leave(i.pos,thread,i.value)
+      }
+    }
+  }
+}
 
 export function* toBlocks(s) {
   const sl = Kit.auto(s)
