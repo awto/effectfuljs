@@ -79,7 +79,7 @@ A typical patter is:
 function* f(parameter, input) {
   // local variables storing transducer’s internal
   // state with initial state initialization
-  for(let I of input) {
+  for(const I of input) {
     // use current value i along with current state
     // and parameters to compute output value `o`
     yield o;
@@ -91,7 +91,7 @@ For example `map` function applying a function to each element is:
 
 ```javascript
 function* (fun, input) {
-   for(let I of input) {
+   for(const I of input) {
      yield fun(i);
    }
 }
@@ -101,7 +101,7 @@ Or filter, passing further only elements satisfying some predicate:
 
 ```javascript
 function* filter(pred, input) {
-  for(let I of input) {
+  for(const I of input) {
      if (pred(i))
         yield I;
   }
