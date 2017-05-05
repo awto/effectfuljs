@@ -117,7 +117,7 @@ stage.  Likely this is required in Producer because IO in JavaScript is typicall
 asynchronous. It is possible to call `next` of an iterator in an asynchronous
 callback, but not `yield`. This complicates things a lot. However, there is a
 simple solution for this, namely using
-[mfjs compiler](https://github.com/awto/mfjs-compiler)
+[Effectful.js compiler](https://github.com/awto/effectfuljs)
 with asynchronous functions, and simple, readable `for-of` loops.
 
 
