@@ -64,7 +64,7 @@ whatever, input <span class="kw">-&gt;</span> whatever
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span><span class="op">*</span> <span class="at">f</span>(parameter<span class="op">,</span> input) <span class="op">{</span>
   <span class="co">// local variables storing transducer’s internal</span>
   <span class="co">// state with initial state initialization</span>
-  <span class="cf">for</span>(<span class="kw">let</span> I of input) <span class="op">{</span>
+  <span class="cf">for</span>(<span class="kw">const</span> I of input) <span class="op">{</span>
     <span class="co">// use current value i along with current state</span>
     <span class="co">// and parameters to compute output value `o`</span>
     <span class="kw">yield</span> o<span class="op">;</span>
@@ -72,13 +72,13 @@ whatever, input <span class="kw">-&gt;</span> whatever
 <span class="op">}</span></code></pre></div>
 <p>For example <code>map</code> function applying a function to each element is:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span><span class="op">*</span> (fun<span class="op">,</span> input) <span class="op">{</span>
-   <span class="cf">for</span>(<span class="kw">let</span> I of input) <span class="op">{</span>
+   <span class="cf">for</span>(<span class="kw">const</span> I of input) <span class="op">{</span>
      <span class="kw">yield</span> <span class="at">fun</span>(i)<span class="op">;</span>
    <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
 <p>Or filter, passing further only elements satisfying some predicate:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span><span class="op">*</span> <span class="at">filter</span>(pred<span class="op">,</span> input) <span class="op">{</span>
-  <span class="cf">for</span>(<span class="kw">let</span> I of input) <span class="op">{</span>
+  <span class="cf">for</span>(<span class="kw">const</span> I of input) <span class="op">{</span>
      <span class="cf">if</span> (<span class="at">pred</span>(i))
         <span class="kw">yield</span> I<span class="op">;</span>
   <span class="op">}</span>
