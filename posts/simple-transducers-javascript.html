@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="description" content="JavaScript simple transducers" />
-
-    <title>mfjs - JavaScript simple transducers</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
+    
+    <title>Effectful.js - JavaScript simple transducers</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" integrity="sha384-L/tgI3wSsbb3f/nW9V6Yqlaw3Gj7mpE56LWrhew/c8MIhAYWZ/FNirA64AVkB5pI" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../css/default.css" />
     <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
     <script>
@@ -29,7 +29,7 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="../">MF.js</a>
+          <a class="navbar-brand" href="../">Effectful.js</a>
         </div>
         <ul class="nav navbar-nav">
         </ul>
@@ -64,7 +64,7 @@ whatever, input <span class="kw">-&gt;</span> whatever
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span><span class="op">*</span> <span class="at">f</span>(parameter<span class="op">,</span> input) <span class="op">{</span>
   <span class="co">// local variables storing transducer’s internal</span>
   <span class="co">// state with initial state initialization</span>
-  <span class="cf">for</span>(<span class="kw">const</span> I of input) <span class="op">{</span>
+  <span class="cf">for</span>(<span class="kw">let</span> I of input) <span class="op">{</span>
     <span class="co">// use current value i along with current state</span>
     <span class="co">// and parameters to compute output value `o`</span>
     <span class="kw">yield</span> o<span class="op">;</span>
@@ -72,19 +72,19 @@ whatever, input <span class="kw">-&gt;</span> whatever
 <span class="op">}</span></code></pre></div>
 <p>For example <code>map</code> function applying a function to each element is:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span><span class="op">*</span> (fun<span class="op">,</span> input) <span class="op">{</span>
-   <span class="cf">for</span>(<span class="kw">const</span> I of input) <span class="op">{</span>
+   <span class="cf">for</span>(<span class="kw">let</span> I of input) <span class="op">{</span>
      <span class="kw">yield</span> <span class="at">fun</span>(i)<span class="op">;</span>
    <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
 <p>Or filter, passing further only elements satisfying some predicate:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span><span class="op">*</span> <span class="at">filter</span>(pred<span class="op">,</span> input) <span class="op">{</span>
-  <span class="cf">for</span>(<span class="kw">const</span> I of input) <span class="op">{</span>
+  <span class="cf">for</span>(<span class="kw">let</span> I of input) <span class="op">{</span>
      <span class="cf">if</span> (<span class="at">pred</span>(i))
         <span class="kw">yield</span> I<span class="op">;</span>
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
 <p>Hierarchical data may be handled as well; an example is <a href="https://github.com/awto/estree-transducers">estree-transducers</a> project for JavaScript syntax transformation.</p>
-<p>But everything is not this simple if there is an asynchronous code at some stage. Likely this is required in Producer because IO in JavaScript is typically asynchronous. It is possible to call <code>next</code> of an iterator in an asynchronous callback, but not <code>yield</code>. This complicates things a lot. However, there is a simple solution for this, namely using <a href="https://github.com/awto/mfjs-compiler">mfjs compiler</a> with asynchronous functions, and simple, readable <code>for-of</code> loops.</p>
+<p>But everything is not this simple if there is an asynchronous code at some stage. Likely this is required in Producer because IO in JavaScript is typically asynchronous. It is possible to call <code>next</code> of an iterator in an asynchronous callback, but not <code>yield</code>. This complicates things a lot. However, there is a simple solution for this, namely using <a href="https://github.com/awto/effectfuljs">Effectful.js compiler</a> with asynchronous functions, and simple, readable <code>for-of</code> loops.</p>
 <p>UPD: another option is to use not fully finished yet <a href="https://github.com/tc39/proposal-async-iteration">Async Generator Functions</a></p>
 <p>UPD: there is <a href="https://github.com/benji6/imlazy">imlazy</a> library implementing this kind of transducers.</p>
 
@@ -116,7 +116,7 @@ whatever, input <span class="kw">-&gt;</span> whatever
 
       <hr />
       <footer class="footer">
-        <p>© 2016 <a href="mailto:vitaliy.akimov@gmail.com">Vitaliy Akimov</a></p>
+        <p>© 2016,2017 <a href="mailto:vitaliy.akimov@gmail.com">Vitaliy Akimov</a></p>
       </footer>
     </div>
   </body>

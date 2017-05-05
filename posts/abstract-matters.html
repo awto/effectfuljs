@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Why effects abstract interface matters" />
+    
+    <title>Effectful.js - Why effects abstract interface matters</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" integrity="sha384-L/tgI3wSsbb3f/nW9V6Yqlaw3Gj7mpE56LWrhew/c8MIhAYWZ/FNirA64AVkB5pI" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../css/default.css" />
+    <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-79647665-2', 'auto');
+  ga('send', 'pageview');
+
+    </script>
+  </head>
+  <body>
+    <div class="container">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../">Effectful.js</a>
+        </div>
+        <ul class="nav navbar-nav">
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="../archive.html">Blog</a></li>
+        </ul>
+      </div>
+    </nav>
+      <div class="container-fluid">
+ <h1 id="why-effects-abstract-interface-matters">Why effects abstract interface matters</h1>
+<p>JavaScript recently received three new effects systems. The are:</p>
+<ul>
+<li>generators</li>
+<li>await/async</li>
+<li>async generators</li>
+</ul>
+<p>The latest is a combination of the first two. If at some point JavaScript gets some other effect support in syntax it will have to have seven language extensions for each combination, and so on. This may be for example recently added in runtime Observable effects for reactive programming. It may get own syntax extension sooner or later. Or you may use effectful.js immediately without waiting.</p>
+<p>While at first, it seems like a problem of the language developers developing new syntax, in fact, it is a problem for developers using the language too.</p>
+<p>For example, many projects in their styling rules require use Array traversal functions (like map, forEach etc.) instead of <code>for</code> statements. And, say, we have a function duplicating elements implemented as a simple generator function:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span><span class="op">*</span> <span class="at">dup</span>(arr) <span class="op">{</span>
+  <span class="cf">for</span>(<span class="kw">const</span> i of arr) <span class="op">{</span>
+     <span class="kw">yield</span> i<span class="op">;</span>
+     <span class="kw">yield</span> i<span class="op">;</span>
+  <span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p>We cannot just copy-paste the body of the loop into, say, <code>forEach</code> body like this:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="va">arr</span>.<span class="at">forEach</span>(<span class="kw">function</span><span class="op">*</span> <span class="at">i</span>() <span class="op">{</span>
+         <span class="kw">yield</span> i<span class="op">;</span>
+         <span class="kw">yield</span> i<span class="op">;</span>
+    <span class="op">}</span>)</code></pre></div>
+<p>To make a fully general library we need four versions of forEach, and each other higher order function: map, filter, etc. Say, filter predicate may need to consult some remote service and so it should by async.</p>
+<p>It is even worse if the task like AST transforms with a significant number of nodes and Visitors written for traversal. To make a generic library there should be 4 version of visitor types again.</p>
+<p>In Haskell, effects have an abstract interface (Monad), and only one version of functions set is required (well, in fact, two for pure function and effectful).</p>
+<p>There are a few libraries in JavaScript implementing different concrete effects with some a common abstract interface. Like fantasy-land.</p>
+<p>The Monad interface came from math, namely category theory. Its sole purpose from the very beginning was an abstraction. Theorems proved using abstract monads interface may be immediately applied to likely also abstract but more concrete interface instances, like some structures from universal algebra or topology.</p>
+<p>Later the interface was utilized to describe and reason about programming languages with effects in domains theory. The Same purpose again, theorems proved with a single abstract interface may be applied to many programming languages and their full range of possible effects they support.</p>
+<p>And after, Monads reached programming languages themselves. Using <a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence">Curry–Howard correspondece</a>, where programming language types are theorems, and their proofs are programs, Monads are programming abstract language interfaces. So like in math, proved theorems with some general math structure may be applied to any concrete realization of that structure. In programming languages, a function using abstract type for arguments objects may be invoked with any specific implementation of that object. Well, at least if its design follows <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Liskov substitution principle</a>. Unfortunately violating it in JavaScript is easy.</p>
+<p>If there is a generic function like (map, forEach, filter) using Monad interface rather than some of its concrete implementation, it should work for any other effect.</p>
+<p>There are many different options in choosing names for interface functions, or a set of basis functions, or split it into a hierarchy somehow. There are a few libraries already defining the interface and providing a few of its implementations. Like fantasy-land.</p>
+<p>Effectful.js compiler uses own interface, but it may be easily adapted to any other either by implementing wrappers or inlining calls to other methods.</p>
+<p>Effectful.js doesn’t introduce any syntax extensions, but can overload JavaScript extensions, like generators or await/async syntax to generalize them.</p>
+
+ <small>Posted on May  5, 2017</small>
+
+ <div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//mfjs.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+      <hr />
+      <footer class="footer">
+        <p>© 2016,2017 <a href="mailto:vitaliy.akimov@gmail.com">Vitaliy Akimov</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
