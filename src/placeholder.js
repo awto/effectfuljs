@@ -17,6 +17,8 @@ import dump from "estransducers/dump"
 
 export const mark = symbol("placeholder.mark")
 
+export const reifyId = Kit.sysId("reify")
+
 export function inject(s) {
   s = Kit.auto(s)
   function check(i) {
@@ -113,7 +115,7 @@ export const split = R.pipe(
               yield s.enter(Tag.push,Tag.VariableDeclarator)
               yield s.tok(Tag.id,Tag.Identifier,{node:n})
               yield s.enter(Tag.init,Tag.CallExpression)
-              yield* Kit.packId(s,Tag.callee,"reify")
+              yield Kit.idTok(Tag.callee,reifyId)
               yield s.enter(Tag.arguments,Tag.Array)
               yield s.enter(Tag.push,Tag.ArrowFunctionExpression,{node:{params:[]}})
               yield s.enter(Tag.body,Tag.BlockStatement)

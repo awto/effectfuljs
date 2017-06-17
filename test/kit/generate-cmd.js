@@ -3,58 +3,90 @@ import * as path from "path"
 import * as kit from "./generators"
 import {run,pretty} from "./core"
 import * as dirs from "./dirs"
+import * as R from "ramda"
+// import {terminal} from "terminal-kit"
+var terminal = require( 'terminal-kit' ).terminal ;
+
 const defaults = require("../../src/config")
+const configs = require("./configs")
 defaults.libs["./effectfuljscore"] = defaults.libs["@effectfuljs/core"]
 
-function generateOuts(files) {
-  function walk(d) {
-    const results = [];
-    for (const i of Object.getOwnPropertyNames(d)) {
-      if (i[0] === "$")
+const root = path.join(__dirname, "..", "samples")
+
+const PBAR = true
+
+let s = [...R.pipe(
+  dirs.read,
+  kit.parse,
+  function*(s) {
+    for(const i of s) {
+      switch(i.type) {
+      case "exp":
         continue
-      const v = d[i]
-      if (v.$skip || v.qskip || (v.$opts != null) && v.$opts.qskip)
-        continue
-      if (v.$dirPath != null) {
-        walk(v)
-        continue
-      }
-      const code = v.inp
-      if (code == null)
-        continue
-      let resCode
-      const nopts = {profile:"full"}
-      if (v.$opts != null) {
-        for (const ix in v.$opts) {
-          nopts[ix] = v.$opts[ix]
+      case "inp":
+        for(const j in configs) {
+          yield {path:i.path.concat([j]),type:"exp",value:"/**/"}
         }
-      }
-      nopts.filename = `${v.$basePath}-in.js`
-      if (nopts.require == null)
-        nopts.require = "./effectfuljscore"
-      try {
-        resCode = run(nopts,code)
-      } catch (error) {
-        console.error(error)
-        continue
-      }
-      if (resCode !== v.exp) {
-        const resName = `${v.$basePath}-out.js`
-        console.log("writing", resName)
-        try {
-          results.push(fs.writeFileSync(resName, resCode))
-        } catch (error) {
-          results.push(console.log("coundn't write", resName, error))
-        }
-      } else {
-        results.push(void 0)
+      default:
+        yield i
       }
     }
-    return results
+  },
+  kit.prepare)(root)]
+fs.writeFileSync("./input.json",JSON.stringify(s,null,2))
+s = s.filter(i => i.value.inp && !i.value.skip && i.value.exp)
+const errors = []
+
+const progressBar = PBAR && terminal.progressBar({
+	title: 'Regenerating:' ,
+	eta: true,
+	percent: true,
+  syncMode: true,
+	items: s.length,
+  minRefreshTime: 0
+})
+let nn = 0
+
+for(const i of s) {
+  let item = i.path.join(">")
+  if (progressBar)
+    progressBar.startItem(item)
+  const dir = path.join(...i.path.slice(0,-2))
+  const n = i.path[i.path.length-1]
+  const name = i.path[i.path.length-2]
+  const nopts = i.value
+  nopts.filename = path.join(dir,`${name}-in.js`)
+  if (nopts.require == null)
+        nopts.require = "./effectfuljscore"
+  const resName = path.join(dir,`${name}-out-${n}.js`)
+  let resCode
+  try {
+    resCode = run(nopts,i.value.inp)
+  } catch (error) {
+    errors.push(Object.assign({resName,path:i.path},
+                              {message:error.message,stack:error.stack}))
+    resCode = `/* ${error.toString()} */`
   }
-  return walk(kit.prepareList(files))
+  try {
+    fs.writeFileSync(path.join(root,resName), resCode)
+  } catch (error) {
+    errors.push(Object.assign({resName,path:i.path,onWrite:true},error))
+  }
+  if (progressBar)
+    progressBar.itemDone(item)
 }
 
-const files = dirs.read(path.join(__dirname, "..", "samples"))
-
-generateOuts(files)
+if (PBAR) {
+  terminal('\nDONE ').bold(`${s.length - errors.length}`)(" cases")
+  if (errors.length) {
+    terminal(",").red(` with ${errors.length} errors \u2639 `)
+      .white(" (check err-log.json)")
+  }
+  else
+    terminal(",").green(" without errors!")
+  terminal("\n")
+}
+else
+  console.log("DONE",s.length, errors.length)
+if (errors.length)
+  fs.writeFileSync("./err-log.json",JSON.stringify(errors,null,2))

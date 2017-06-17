@@ -1,28 +1,44 @@
 import * as R from "ramda"
 import * as Kit from "./kit"
-import {Tag,symbol,symName,enter,leave,tok,symKind,scope} from "./kit"
+import {Tag,symbol} from "./kit"
 import * as assert from "assert"
 import * as Debug from "./debug"
 import * as Trace from "./kit/trace"
 import * as Prop from "./propagate"
 import {stmtExpr} from "./kit/stmtExpr"
 
+/** 
+  * saves result of operation with an effect 
+  * (JS or monadic) into a temporal variable 
+  */
 export const letStmt = symbol("letStmt")
+/** a block of code with at most 1 monadic effect */
 export const frame = symbol("frame")
+/** sequence of `frame`s */
 export const chain = symbol("chain")
+/** reference to `letStmt` */
 export const bindPat = symbol("bindPat")
-/* bind expression with a single tail */
+/** marks effectful expression, not requiring coercion */
 export const effExpr = symbol("effExpr")
+/** marks effectful block, not requiring coercion */
 export const effBlock = symbol("effBlock")
+/** a chain of applications to some library operation */
 export const app = symbol("app")
+/** marks an expression which shouldn't be bound */
 export const pure = symbol("pure")
+/** marks an expression to share in JS using some temporal variable */
 export const sharedRef = symbol("sharedRef")
+
+export const pureId = Kit.sysId("pure")
+export const bindId = Kit.sysId("bind")
+export const arrId = Kit.sysId("arr")
+export const mapId = Kit.sysId("map")
 
 /**
  * Replaces binary `app` nodes with its first component member function call 
  * with `name`, passing second component as a function to its argument
  */
-export const interpretApp = R.pipe(function (s) {
+export const interpretApp = R.pipe(function interpretApp(s) {
   const sl = Kit.auto(s)
   function* walk(sw) {
     for(const i of sw) {
@@ -31,23 +47,34 @@ export const interpretApp = R.pipe(function (s) {
           const lab = sl.label()
           yield sl.enter(i.pos,effExpr)
           yield sl.enter(Tag.expression,Tag.CallExpression)
-          yield sl.enter(Tag.callee,Tag.MemberExpression,{bind:true})
-          yield sl.enter(Tag.object,Kit.Subst)
-          const c = sl.cur()
-          yield* walk(sl.one())
-          yield* sl.leave()
-          yield tok(Tag.property,Tag.Identifier,
-                    {node:{name:i.value.node.name}})
-          yield* sl.leave()
-          yield sl.enter(Tag.arguments,Tag.Array)
-          if (sl.cur().pos === Tag.params) {
-            yield sl.enter(Tag.push,Tag.ArrowFunctionExpression)
-            yield* sl.one()
-            yield sl.enter(Tag.body,Kit.Subst)
-          } else {
+          const st = sl.opts.static
+          if (st) {
+            yield Kit.idTok(Tag.callee,i.value.sym)
+            yield sl.enter(Tag.arguments,Tag.Array)
             yield sl.enter(Tag.push,Kit.Subst)
+            yield* walk(sl.one())
+            yield* sl.leave()
+          } else {
+            yield sl.enter(Tag.callee,Tag.MemberExpression,{bind:true})
+            yield sl.enter(Tag.object,Kit.Subst)
+            yield* walk(sl.one())
+            yield* sl.leave()
+            yield sl.tok(Tag.property,Tag.Identifier,{sym:i.value.sym})
+            yield* sl.leave()
+            yield sl.enter(Tag.arguments,Tag.Array)
           }
-          yield* walk(sl.one())
+          const sub = sl.label()
+          for(let j; (j = sl.curLev()) != null;) { 
+            if (j.pos === Tag.params) {
+              yield sl.enter(Tag.push,Tag.ArrowFunctionExpression)
+              yield* sl.one()
+              yield sl.enter(Tag.body,Kit.Subst)
+            } else {
+              yield sl.enter(Tag.push,Kit.Subst)
+            }
+            yield* walk(sl.one())
+            yield* sub()
+          }
           yield* lab()
         }
       } else {
@@ -58,46 +85,56 @@ export const interpretApp = R.pipe(function (s) {
   return walk(sl)
 },Kit.completeSubst)
 
-function countEffSeqFramesImpl(s) {
-  const sl = Kit.auto(s)
-  function* walk(sw) {
-    for(const i of sw) {
-      yield i
-      if (i.enter && i.type === chain) {
-        let count = 0, j
-        while((j = sl.curLev()) != null) {
-          yield* walk(sl.one())
-          j.value.index = count++
-        }
-        i.value.count = count
+/** 
+ * for each `frame` adds its index in `chain` and for each `chain` 
+ * total number of frames 
+ */
+function* countEffSeqFramesImpl(s) {
+  const stack = []
+  let level = 0
+  for(const i of s) {
+    yield i
+    if (i.enter) {
+      const f = stack[stack.length-1]
+      if (f != null && f.l === level)
+        i.value.index = f.c++
+      level++
+      if (i.type === chain)
+        stack.push({l:level,c:0})
+    }
+    if (i.leave) {
+      level--
+      if (i.type === chain) {
+        const f = stack.pop()
+        i.value.count = f.c
       }
     }
   }
-  return walk(sl)
 }
 
+/** eager `countEffSeqFramesImpl` */
 const countEffSeqFrames = R.pipe(countEffSeqFramesImpl,Array.from)
 
-//TODO: use matcher
-function* markPureFrame(s) {
-  const sl = Kit.auto(s)
-  for(const i of sl) {
-    yield i
-    if (i.enter && i.type === frame) {
-      const j = sl.take()
-      yield j
-      if (j.type !== letStmt) {
-        continue
-      }
-      const k = sl.curLev()
-      i.value.pureFrame = k != null && k.type === pure
-    }
-    //TODO: check argument
-  }
-}
+/** removes useless pure frames */
 export const cleanPureFrames = R.pipe(
   countEffSeqFramesImpl,
-  markPureFrame,
+  //TODO: use matcher
+  function* markPureFrame(s) {
+    const sl = Kit.auto(s)
+    for(const i of sl) {
+    yield i
+      if (i.enter && i.type === frame) {
+        const j = sl.take()
+        yield j
+        if (j.type !== letStmt) {
+          continue
+        }
+        const k = sl.curLev()
+        i.value.pureFrame = k != null && k.type === pure
+      }
+      //TODO: check argument
+    }
+  },
   Array.from,
   function*(s) {
     const sl = Kit.auto(s)
@@ -111,6 +148,7 @@ export const cleanPureFrames = R.pipe(
     }
   })
 
+/** removes empty and single length chain tags */ 
 export const cleanupEffSeq = R.pipe(
   countEffSeqFrames,
   function* cleanupEffSeq(s) {
@@ -189,6 +227,7 @@ export const rassoc = R.pipe(
   }
 )
 
+/** converts chains marked with "pseq" kind to JS expressions */
 export const interpretParEffSeq = R.pipe(
   function* interpretArrEffSeq(s) {
     const sl = Kit.auto(s)
@@ -206,7 +245,7 @@ export const interpretParEffSeq = R.pipe(
             assert.ok(j.value.eff)
             yield* walk(sl.one())
             yield* sl.leave()
-            yield tok(Tag.property,Tag.Identifier,{node:{name:"mseq"}})
+            yield sl.tok(Tag.property,Tag.Identifier,{node:{name:"mseq"}})
             yield* sl.leave()
             yield sl.enter(Tag.arguments,Tag.Array)
             while(sl.curLev() != null) {
@@ -230,31 +269,7 @@ export const interpretParEffSeq = R.pipe(
   Array.from
 )
 
-// TODO: remove (replace ipat with something else)
-export function* setPatVarToArgs(s) {
-  const sl = Kit.auto(s)
-  function* walk(sw) {
-    for(const i of sw) {
-      yield i
-      if (i.enter) {
-        switch(i.type) {
-        case chain:
-          if (i.enter) {
-            let pat = null
-            while(sl.curLev() != null) {
-              const cur = sl.cur()
-              cur.value.ipat = pat
-              yield* walk(sl.one())
-              pat = cur.value.pat
-            }
-          }
-        }
-      }
-    }
-  }
-  yield* walk(sl)
-}
-
+/** converts chains to JS expressions */
 export function* interpretBinEffSeq(s) {
   const sl = Kit.auto(s)
   function* walk(sw) {
@@ -267,16 +282,17 @@ export function* interpretBinEffSeq(s) {
         if (i.enter) {
           assert.equal(i.value.count,2)
           const pat = sl.cur().value.pat
-          const node = {name:"mbind"}
+          const sym = bindId
           const lab = sl.label()
-          yield sl.enter(i.pos,app,{node})
+          const head = sl.enter(i.pos,app,{sym})
+          yield head
           yield* walk(sl.one())
           yield sl.enter(Tag.params,Tag.Array)
           if (pat != null)
             yield* pat
           yield* sl.leave()
           if (!sl.cur().value.eff)
-            node.name = "mapply"
+            head.sym = mapId
           yield* walk(sl.sub())
           yield* lab()
         }
@@ -289,80 +305,7 @@ export function* interpretBinEffSeq(s) {
   yield* walk(sl)
 }
 
-export const interpretBindFrame = R.pipe(
-  function interpretBindFrame(s) {
-    const sl = Kit.auto(s)
-    let en = false
-    function* walk() {
-      for(const i of sl.sub()) {
-        switch(i.type) {
-        case letStmt:
-          if (i.enter)  {
-            if (i.value.eff) {
-              const j = sl.curLev()
-              if (j != null)
-                j.value.result = true
-              yield sl.enter(i.pos,Kit.Subst)
-              yield* walk()
-              yield* sl.leave()
-            } else {
-              const lab = sl.label()
-              if (i.value.pat && i.value.pat.length) {
-                assert.equal(i.pos,Tag.push)
-                yield sl.enter(Tag.push,Tag.VariableDeclaration,
-                               {node:{kind:"const"}})
-                yield sl.enter(Tag.declarations,Tag.Array)
-                yield sl.enter(Tag.push,Tag.VariableDeclarator)
-                yield sl.enter(Tag.id,Kit.Subst)
-                yield* i.value.pat
-                yield* sl.leave()
-                yield sl.enter(Tag.init,Kit.Subst)
-                yield* walk()
-              } else {
-                yield sl.enter(i.pos,Tag.ExpressionStatement)
-                yield sl.enter(Tag.expression,Kit.Subst)
-                yield* walk()
-              }
-              yield* lab()
-            }
-          }
-          break
-        case frame:
-          if (i.enter) {
-            yield sl.enter(i.pos,effBlock)
-            yield* walk()
-            yield* sl.leave()
-          }
-          break
-        default:
-          yield i
-        }
-      }
-    }
-    return walk()
-  },
-  Kit.completeSubst,
-  function removeEmptyBlocks(si) {
-    const s = Kit.auto(si)
-    function* walk(sw) {
-      for(const i of sw) {
-        if (i.enter && i.type === effBlock && s.curLev() != null) {
-          const buf = [...walk(s.one())]
-          if (s.curLev() != null) {
-            yield i
-            yield* buf
-          } else {
-            buf[0].pos = buf[buf.length-1].pos = i.pos
-            yield* buf
-            s.close(i)
-          }
-        } else
-          yield i
-      }
-    }
-    return walk(s)
-  })
-
+/** corrects JS AST nodes types to match specification */
 export const interpretCasts = R.pipe(
   function* cleanEffExpr(s) {
     const sl = Kit.auto(s)
@@ -399,6 +342,7 @@ export const interpretCasts = R.pipe(
   Kit.adjustFieldType
 )
 
+/** splits JS into frames with at most 1 effectful expression (the last one) */
 export const splitEffBlock = R.pipe(
   function* splitEffBlock(s) {
     const sl = Kit.auto(s)
@@ -437,9 +381,9 @@ export const splitEffBlock = R.pipe(
     }
     function* walk() {
       for(const i of sl.sub()) {
-        if(i.enter && i.type === Tag.BlockStatement)
+        if(i.enter && i.value.eff && i.type === Tag.BlockStatement)
           yield* block(i)
-        else 
+        else
           yield i
       }
     }
@@ -477,6 +421,7 @@ export const splitEffBlock = R.pipe(
   Prop.recalcEff
 )
 
+/** in each chain shifts associativity to right for a first frame */
 export const factorEffSeq = R.pipe(
   countEffSeqFrames,
   saveFrameLet,
@@ -494,7 +439,6 @@ export const factorEffSeq = R.pipe(
                 if (k.type === letStmt && k.value.eff) {
                   const lab = sl.label()
                   j.value.effLet = null
-                  // yield sl.enter(Tag.push,letStmt,{pat:[]}) //TODO: propagate to let
                   yield sl.enter(Tag.push,chain)
                   yield sl.enter(Tag.push,frame)
                   yield sl.peel(k)
@@ -535,178 +479,7 @@ export const factorEffSeq = R.pipe(
     yield* walk()
   })
 
-/**
- * calculates binds dependencies for a chain, so it can be arranged with 
- * `groupDeps` to utilize closures
- *
- *       type DepsInfo = { fwd: Set<number>, x: number, 
- *                         ref: Val, seq: DepsInfo[] }
- *   
- * for frames:
- * 
- *       type Val = Val & { deps: DepsInfo }
- *     
- * for chains:
- * 
- *       type Val = Val & { deps: DepsInfo[] }
- *     
- */
-export const calcVarDeps = R.curry(function calcVarDeps(eff,s) {
-  const sa = Kit.toArray(s)
-  const sl = Kit.auto(sa)
-  function seq() {
-    const vars = new Map()
-    const fs = []
-    for(const i of sl.sub()) {      
-      if (i.enter) {
-        const cx = i.value.fdeps = { f:i.value,
-                                     fwd:new Set(),
-                                     x:fs.length,
-                                     ref: i.value,
-                                     seq:fs
-                                   }
-        fs.push(cx)
-        switch(i.type) {
-        case frame:
-          for(const j of sl.sub()) {
-            if (j.enter) {
-              switch(j.type) {
-              case bindPat:
-                const ref = j.value.ref
-                const v = vars.get(ref)
-                if (v != null && cx !== v) {
-                  v.fwd.add(cx.x)
-                }
-              break
-              case letStmt:
-                if (eff == null || eff === (j.value.eff || false)) {
-                  vars.set(j.value, cx)
-                }
-                break
-              case chain:
-                j.value.deps = seq()
-                break
-              }
-            }
-          }
-          break
-        case chain:
-          i.value.deps = seq()
-          break
-        }
-      }
-    }
-    return fs
-  }
-  function walk() {
-    for(const i of sl.sub()) {
-      if (i.enter && i.type === chain)
-        i.value.deps = seq()
-    }
-  }
-  walk()
-  return sa
-})
-
-/**
- * pattern variable of effectful bind is visible in the next frame, 
- * so this pass does same as `groupDeps` but shifts dependecies chain 
- */
-export function* groupBindDeps(s) {
-  const sl = Kit.auto(s)
-  function* seq(deps) {
-    const stack = []
-    let num = 0
-    for(const i of sl.sub()) {
-      switch(i.type) {
-      case frame:
-        assert.ok(i.enter)
-        const cx = i.value.fdeps
-        yield sl.peel(i)
-        yield* walk()
-        yield* sl.leave()
-        while(stack.length && cx.x >= stack[0]) {
-          stack.shift()
-          yield* sl.leave()
-        }
-        if (cx.fwd.size) {
-          const nxt = Math.max(...cx.fwd)
-          if (nxt > cx.x + 1) {
-            stack.unshift(nxt)
-            yield sl.enter(Tag.push, chain)
-          }
-        }
-        break
-      case chain:
-        yield i
-        if (i.enter && i.type === chain)
-          yield* seq(i.value.deps)
-        break
-      default:
-        yield i
-      }
-    }
-    while(stack.length) {
-      stack.shift()
-      yield* sl.leave()
-    }
-  }
-  function* walk() {
-    for(const i of sl.sub()) {
-      yield i
-      if (i.enter && i.type === chain)
-        yield* seq(i.value.deps)
-    }
-  }
-  yield* walk()
-}
-
-/**
- * assuming chain will be interpreted further in a left associative order,
- * this pass emits additional chain to make right associative frame groups 
- * if this is specified in `DepsInfo`
- */
-export const groupDeps = R.pipe(
-  function* groupDeps(s) {
-    const sl = Kit.auto(s)
-    function* seq(deps) {
-      const stack = []
-      let num = 0
-      for(const i of sl.sub()) {
-        if (i.type === frame) {
-          assert.ok(i.enter)
-          const x = num++
-          const cx = deps[x]
-          if (cx.fwd.size && x !== 0) {
-            const nxt = Math.max(...cx.fwd)
-            if (nxt > cx.x) {
-              stack.unshift(nxt)
-              yield sl.enter(Tag.push, chain)
-            }
-          }
-          yield sl.peel(i)
-          yield* walk()
-          yield* sl.leave()
-          while(stack.length && cx.x >= stack[0]) {
-            stack.shift()
-            yield* sl.leave()
-          }
-        } else
-          yield i
-      }
-      assert.equal(stack.length, 0)
-    }
-    function* walk() {
-      for(const i of sl.sub()) {
-        yield i
-        if (i.enter && i.type === chain)
-          yield* seq(i.value.deps)
-      }
-    }
-    yield* walk()
-  }
-)
-
+/** removes `stmtExpr` tag */
 export const cleanStmtExpr = R.pipe(
   function* cleanStmtExpr(s) {
     for(const i of s) {
@@ -715,214 +488,7 @@ export const cleanStmtExpr = R.pipe(
   },
   Kit.completeSubst)
 
-/** 
- * extracts all effectful expressions into separate statements in a block, 
- * injects `letStmt` and `bindPat` to mark extracted expressions and its 
- * original location
- */
-export const flatten = R.pipe(
-  Kit.removeNulls,
-  function* flatten(s) {
-    const sl = Kit.auto(s)
-    function* block(i) {
-      if (i.value.eff || i.value.shallowEff) {
-        if (i.type === Tag.BlockStatement) {
-          yield sl.peel(i)
-          yield* sl.peelTo(Tag.body)
-          for(const j of sl.sub()) {
-            assert.ok(j.enter
-                      && (j.value.stmt || symKind(j.type) === "ctrl")
-                      && j.pos === Tag.push)
-            yield* j.value.eff || j.value.shallowEff ? frame(j) : sl.copy(j)
-          }
-          yield* sl.leave()
-          yield* sl.leave()
-        } else if (i.pos === Tag.push) {
-          yield* frame(i)
-        } else {
-          yield sl.enter(i.pos,Tag.BlockStatement)
-          yield sl.enter(Tag.body,Tag.Array)
-          yield* frame(Kit.setPos(i,Tag.push))
-          yield* sl.leave()
-          yield* sl.leave()
-        }
-      } else {
-        yield i
-        yield* sl.sub()
-      }
-    }
-    function* frameImpl(buf) {
-      function* bind(i,pat,eff,like) {
-        pat.sym = i.value.bindPat = scope.newSym()
-        const value = pat.ref = Kit.tagValue(
-          Tag.push,
-          letStmt,
-          {pat:[sl.tok(Tag.push,Tag.Identifier,pat)],eff})
-        yield sl.enter(Tag.push,letStmt,value)
-        yield sl.peel(Kit.setPos(i,Tag.expression))
-        yield* frameImpl(buf)
-        yield* sl.leave()
-        yield* sl.leave()
-      }
-      function* inject(i) {
-        const pat = {node:null}
-        buf.push([...bind(i,pat,true)])
-        yield tok(i.pos,bindPat,pat)
-      }
-      for(const i of sl.sub()) {
-        if (i.enter) {
-          if (i.value.stmt) {
-            if (i.value.eff || i.value.shallowEff) {
-              yield* block(i)
-            } else {
-              if (i.type === Tag.BlockStatement) {
-                i.value.coerce = true
-                yield sl.peel(i)
-                yield* sl.sub()
-                yield* sl.leave()
-              } else {
-                const lab = sl.label()
-                yield sl.enter(i.pos,Tag.BlockStatement,{coerce:true})
-                yield sl.enter(Tag.body,Tag.Array)
-                yield sl.peel(Kit.setPos(i,Tag.push))
-                yield* sl.sub()
-                yield* lab()
-              }
-            }
-            continue
-          }
-          if (i.value.bind || i.value.shared != null) {
-            yield* inject(i)
-            if (i.value.shared != null)
-              i.value.shared.sym = i.value.bindPat
-            continue
-          }
-          switch(i.type) {
-          case Tag.UpdateExpression:
-          case Tag.AssignmentExpression:
-          case Tag.CallExpression:
-            yield* inject(i)
-            continue
-          }
-        }
-        yield i
-      }
-    }
-    function* frame(i) {
-      if (i.leave) {
-        yield i
-        return
-      }
-      i = sl.peel(i)
-      const buf = []
-      const res = [...frameImpl(buf)]
-      i.value.eff = null
-      yield* [].concat(...buf)
-      yield i
-      yield* res
-      yield* sl.leave()
-    }
-    yield sl.peel()
-    for(const i of sl.sub()) {
-      if (i.enter && i.value.stmt)
-        yield* block(i,Tag.BlockStatement,Tag.body)
-      else
-        yield i
-    }
-    yield* sl.leave()
-  },
-  function* setSharedRef(s) {
-    for(const i of s) {
-      if (i.type === sharedRef) {
-        if (i.enter) {
-          yield tok(i.pos,Tag.Identifier,{sym:i.value.ref.sym})
-        }
-      } else
-        yield i
-    }
-  },
-  function* removeEmptyBinds(s) {
-    const si = Kit.auto(s)
-    function* subexpr(i,pos) {
-      const exit = si.level-1
-      const buf = [i]
-      const p = Kit.result(si.findPos(pos),buf)
-      if (p != null) {
-        if (p.type === bindPat && p.value.ref.pat.length === 1) {
-          Kit.skip(Kit.tillLevel(exit,si))
-          p.value.ref.pat.length = 0
-          if (i.pos !== Tag.push)
-            yield tok(i.pos,Tag.Null)
-        return
-        }
-        yield* buf
-        yield p
-        yield* walk()
-      } else
-        yield i
-      yield* Kit.tillLevel(exit,si)
-    }
-    function* decls(i) {
-      let empty = true
-      yield si.peel(i)
-      yield* si.peelTo(Tag.declarations)
-      const exit = si.level
-      for(const j of si.sub()) {
-        assert.equal(j.type, Tag.VariableDeclarator)
-        const buf = [j]
-        const id = [...si.peelTo(Tag.id),...si.sub(),...si.leave()]
-        buf.push(...id)
-        const p = Kit.result(si.findPos(Tag.init),buf)
-        if (p != null && p.type === bindPat) {
-          Kit.skip(Kit.tillLevel(exit,si))
-          p.value.ref.pat = id
-          continue
-        }
-        empty = false
-        yield* buf
-        if (p != null)
-          yield p
-        yield* walk()
-        yield* Kit.tillLevel(exit,si)
-      }
-      yield* si.leave()
-      yield* si.leave()
-      return empty
-    }
-    function* walk() {
-      for(const i of si.sub()) {
-        switch(i.type) {
-        case Tag.ReturnStatement:
-          if (i.value.last) {
-            assert.ok(i.enter)
-            yield* subexpr(i,Tag.argument)
-          } else
-            yield i
-          break
-        case Tag.ExpressionStatement:
-          assert.ok(i.enter)
-          yield* subexpr(i,Tag.expression)
-          break
-        case Tag.VariableDeclaration:
-          assert.ok(i.enter)
-          const buf = []
-          if (!Kit.result(decls(i),buf)) {
-            yield* buf
-          } else {
-            if (i.pos !== Tag.push) 
-              yield tok(i.pos,Tag.Null)
-          }
-          break
-        default:
-          yield i
-        }
-      }
-    }
-    yield* walk()
-  },
-  Prop.recalcEff
-)
-
+/** removes `pure` tag if its content is in fact effectful */
 export function* cleanPureEff(s) {
   s = Kit.auto(s)
   for(const i of s) {
@@ -930,12 +496,10 @@ export function* cleanPureEff(s) {
       if (i.enter) {
         const j = s.curLev()
         if (j != null && j.value.eff) {
-          s.peel(i)
           yield s.peel(Kit.setPos(s.take(),i.pos))
           yield* s.sub()
           yield* s.leave()
-          const j = s.take()
-          assert.equal(i.value,j.value)
+          s.close(i)
           continue
         }
       }
@@ -944,6 +508,7 @@ export function* cleanPureEff(s) {
   }
 }
 
+/** converts `pure` tags into JS expressions */
 export const interpretPure = R.pipe(
   function*(s) {
     const sl = Kit.auto(s)
@@ -952,8 +517,8 @@ export const interpretPure = R.pipe(
         if (i.type === pure) {
           if (i.enter) {
             const lab = sl.label()
-            yield sl.enter(i.pos,Tag.CallExpression)
-            yield* Kit.packId(sl,Tag.callee,"pure")
+            yield sl.enter(i.pos,Tag.CallExpression,{result:true})
+            yield sl.tok(Tag.callee, Tag.Identifier, {sym: pureId})
             yield sl.enter(Tag.arguments,Tag.Array)
             yield sl.enter(Tag.push,Kit.Subst)
             yield* walk()
@@ -968,37 +533,6 @@ export const interpretPure = R.pipe(
   Kit.completeSubst,
   cleanStmtExpr
 )
-
-export const propagateBindVars = R.pipe(
-  function* propagateBindVars(s) {
-    const sl = Kit.auto(s)
-    function* walk() {
-      let res = null
-      for(const i of sl.sub()) {
-        yield i
-        if (i.enter) {
-          switch(i.type) {
-          case chain:
-          case frame:
-            res = i.value.pat = yield* walk()
-            break
-          default:
-            if (i.value.eff && i.value.pat && i.value.pat.length) {
-              res = i.value.pat
-            }
-            const ires = yield* walk()
-            if (ires && ires.length)
-              res = ires
-            break
-          }
-        }
-      }
-      return res
-    }
-    yield* walk()
-  },
-  Array.from,
-  setPatVarToArgs)
 
 /**
  * for frames ending with effectful let adds its reference to `effLet` field
@@ -1031,3 +565,17 @@ export function saveFrameLet(si) {
   walk()
   return sa
 }
+
+export function* interpretSyms(si) {
+  const s = Kit.auto(si)
+  for(const i of s) {
+    if (i.enter && i.type === Tag.Identifier
+        && i.pos !== Tag.property
+        && i.value.sym && i.value.sym.lib) {
+      yield* Kit.packId(s,i.pos,i.value.sym)
+      s.close(i)
+    } else
+      yield i
+  }
+}
+

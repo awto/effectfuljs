@@ -79,7 +79,7 @@ describe("var decls",function() {
           var a, b, f, c, e, _a, _b, _c, g;
           [a, b, ...f] = some;
           ({c,a: e} = /*CE|B*/eff(a, b, f));
-          /*FOS|E*/for ([_a, _b, _c, ...g] of /*CE|B*/eff(a, b, c, f, e))
+          /*FOS|E*/for ([_a, _b, _c, ...g] of /*CE|B*/eff(_a, _b, _c, f, e))
              /*ES|e*/ /*CE|B*/eff(_a, _b, _c, f, e, g);
         }`))
     })

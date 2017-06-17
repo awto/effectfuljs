@@ -5,15 +5,25 @@ import * as T from "babel-types"
 import * as assert from "assert"
 const {enter,leave,tok} = Kit
 import * as Block from "./block"
+import * as Bind from "./bind"
 import * as Branch from "./branch"
 import * as Loop  from "./loops"
 import * as Ctrl  from "./control"
 import * as Debug from "./debug"
 import * as Uniq from "./uniq"
 import * as trace from "estransducers/trace"
+import {ifNested} from "./options"
 
+/** effectful operation representing state write */
 export const writeState = symbol("writeState")
+
+/** effectful operation representing state read */
 export const readState = symbol("readState")
+
+export const getId = Kit.sysId("get")
+export const modifyId = Kit.sysId("modify")
+export const setId = Kit.sysId("set")
+
 
 /** 
  * moves all variable declarations in decls field of a root Val
@@ -35,6 +45,32 @@ export const saveDecls = R.pipe(
           case Tag.FunctionDeclaration:
             rawDecls.push(...sl.copy(Kit.setPos(i,Tag.push)))
             continue
+          case Tag.CatchClause:
+            if (i.value.eff && sl.cur().pos === Tag.param) {
+              const ids = []
+              for(const j of sl.one()) {
+                if (j.enter && j.type === Tag.Identifier && j.value.decl)
+                  varDecls.push(j.value.sym)
+                ids.push(j)
+              }
+              const sym = Kit.scope.newSym("ex")
+              const lab = sl.label()
+              yield sl.peel(i)
+              yield sl.tok(Tag.param, Tag.Identifier, {sym})
+              yield sl.peel()
+              yield* sl.peelTo(Tag.body)
+              const blab = sl.label()
+              yield sl.enter(Tag.push, Tag.ExpressionStatement)
+              yield sl.enter(Tag.expression, Tag.AssignmentExpression,
+                             {node:{operator:"="}})
+              yield* Kit.reposOne(ids, Tag.left)
+              yield sl.tok(Tag.right,Tag.Identifier,{sym})
+              yield* blab()
+              yield* walk()
+              yield* lab()
+              continue
+            }
+            break
           case Tag.VariableDeclaration:
             i.value.node.kind = "var"
             const declarators = []
@@ -64,7 +100,7 @@ export const saveDecls = R.pipe(
                         .filter(i => i.enter
                                 && i.type === Tag.Identifier
                                 && i.value.decl)
-                        .map(i => i.value))
+                        .map(i => i.value.sym))
                     break
                   }
                 }
@@ -129,25 +165,31 @@ export const saveDecls = R.pipe(
     yield* sl.leave()
   },Kit.removeNulls,Array.from)
 
+const emptySet = new Set()
+
 /** restores declaration removed `saveDecls` in the beginning of root's body */
 export function* restoreDecls(s) {
   const sl = Kit.auto(s)
   const top = sl.take()
+  const value = top.value
+  const decls = value.decls
+  const trackState = value.trackState || emptySet
   yield top
-  if (top.value.decls) {
+  if (decls) {
     for(const i of sl) {
       yield i
       if (i.enter && i.type === Tag.Array && i.pos === Tag.body) {
-        const {raw,vars} = top.value.decls
+        const {raw} = decls
         // TODO: abstract it from here (take it from scope not from stateVars)
         yield* raw
+        const vars = decls.vars.filter(i => !trackState.has(i))
         if (vars.length) {
           const lab = sl.label()
           yield sl.enter(Tag.push,Tag.VariableDeclaration,{node:{kind:"var"}})
           yield sl.enter(Tag.declarations,Tag.Array)
           for(const i of vars) {
             yield sl.enter(Tag.push,Tag.VariableDeclarator)
-            yield sl.tok(Tag.id,i)
+            yield sl.tok(Tag.id,Tag.Identifier,{sym:i})
             yield* sl.leave()
           }
           yield* lab()
@@ -171,33 +213,26 @@ export function* restoreDecls(s) {
 function resetIdOp(si) {
   const sa = Kit.toArray(si)
   const s = Kit.auto(sa)
+  const track = s.first.value.trackState = new Set()
   for(const i of Kit.resetFieldInfo(s)) {
-    if (i.enter && i.type === Tag.Identifier && i.value.sym != null) {
+    if (i.enter && i.type === Tag.Identifier
+        && i.value.sym != null) {
       const si = i.value.sym,
             refs = i.value.opts && i.value.opts.refs
       if (si.declScope != null
+          && s.opts.state === true
           && (si.refScopes == null || si.refScopes.size === 0)
           && (!refs || !refs.has(i.value.sym))) {
         const fi = i.value.fieldInfo
         i.value.lhs = fi.mod
         i.value.rhs = fi.expr
-      }
+        si.state = true
+        if (fi.mod)
+          track.add(i.value.sym)
+      } else
+        i.value.ref = true
     }
   }
-  return sa
-}
-
-// removes declarations already tracked by state ops
-export function removeTrackedDecls(si) {
-  const sa = Kit.toArray(si)
-  const tot = new Set()
-  // TODO: store before
-  for(const i of sa) {
-    if (i.enter && i.type === Tag.Identifier && (i.value.lhs || i.value.rhs))
-      tot.add(i.value.sym)
-  }
-  const {decls} = sa[0].value
-  decls.vars = decls.vars.filter(i => !tot.has(i.sym))
   return sa
 }
 
@@ -212,7 +247,7 @@ export function removeTrackedDecls(si) {
  */
 function calcVarsDataflow(si) {
   const sa = Kit.toArray(si)
-  const s = Kit.auto(Branch.mark(sa))
+  const s = Kit.auto(Branch.mark(reorderVarUsages(sa)))
   const loopids = []
   function walk(par,brLoc,looph) {
     const loc = new Map()
@@ -267,36 +302,34 @@ function calcVarsDataflow(si) {
   return setLoopBackwardLink(sa)
 }
 
-function setLoopHier(si) {
-  const sa = Kit.toArray(si)
-  const s = Kit.auto(calcFrameHierPath(sa))
-  function walk(cur) {
-    for(const i of s.sub()) {
-      if (i.enter) {
-        switch(i.type) {
-        case Loop.repeat:
-          walk(i.value.hierpath)
-          break
-        case Tag.Identifier:
-          if (i.value.sym != null && (i.value.lhs || i.value.rhs)) {
-            i.value.loophier = cur
-          }
-          break
-        }
-      }
-    }
-  }
-  walk([])
-  return sa
-}
-
 /** 
  * for last writes inside `repeat` adds destination to its first reads 
  * in a data flow graph 
  */
 function setLoopBackwardLink(si) {
   const sa = Kit.toArray(si)
-  const s = Kit.auto(setLoopHier(sa))
+  function setLoopHier() {
+    const s = Kit.auto(calcFrameHierPath(sa))
+    function walk(cur) {
+      for(const i of s.sub()) {
+        if (i.enter) {
+          switch(i.type) {
+          case Loop.repeat:
+            walk(i.value.hierpath)
+            break
+          case Tag.Identifier:
+            if (i.value.sym != null && (i.value.lhs || i.value.rhs)) {
+              i.value.loophier = cur
+            }
+            break
+          }
+        }
+      }
+    }
+    walk([])
+    return sa
+  }
+  const s = Kit.auto(setLoopHier())
   function walk(stack) {
     for(const i of s.sub()) {
       switch(i.type) {
@@ -367,26 +400,6 @@ function setLoopBackwardLink(si) {
   }
   return sa
 }
-/*
-
-TODO: this test
-
-function z() {
-  for(;;) {
-    r.i
-    for(;;) {
-      w.k
-      for(;;) {
-        r.k
-        r.j
-      }
-      for(;;) {
-        w.i, w.j, w.k
-      }
-    }
-  }
-}
-*/
 
 /** hierpath poset horizontal less equal operator */
 function hLE(p,c) {
@@ -499,6 +512,26 @@ export function calcFrameHierPath(si) {
   return sa
 }
 
+
+export function reorderVarUsages(si) {
+  const s = Kit.auto(si)
+  function* walk(sw) {
+    for(const i of sw) {
+      yield i
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.AssignmentExpression:
+        case Tag.VariableDeclarator:
+          const first = [...s.one()]
+          yield* walk(s.one())
+          yield* first
+        }
+      }
+    }
+  }
+  return walk(s)
+}
+
 /**
  * collects state variables accessed or changed in frame to stateVars, 
  * and extends each variable with a link to its parent frame:
@@ -510,12 +543,12 @@ export function calcFrameHierPath(si) {
  */
 export function calcFrameStateVars(si) {
   const sa = Kit.toArray(si)
-  const s = Kit.auto(sa)
+  const s = Kit.auto(reorderVarUsages(sa))
   let buf = []
   function walk(par,sw) {
     for(const i of s.sub()) {
       if (i.enter) {
-        switch(i.type) { // TODO: fork must be hanled as par
+        switch(i.type) {
         case Block.frame:
           if (buf !== null) {
             for(const j of buf)
@@ -542,7 +575,6 @@ export function calcFrameStateVars(si) {
               k.push(i.value)
             }
           }
-          // TODO: init parFrame for params insted
           if (par == null) {
             buf.push(i.value)
           } else
@@ -577,15 +609,6 @@ function calcStateCopies(si) {
             i.value.save.forEach(copy.delete,copy)
           }
           break
-          /*
-        case Loop.repeat:
-          if (i.value.cycleDeps) {
-            c.set(i.value,[...i.value.cycleDeps])
-            walk()
-            c.delete(i.value)
-          }
-          break
-          */
         case Tag.Identifier:
           if (i.value.sym != null && i.value.lhs && i.value.parFrame != null) {
             for(const j of i.value.vdf.o) {
@@ -601,7 +624,8 @@ function calcStateCopies(si) {
         case Block.letStmt:
           if (i.value.write && i.value.write.size) {
             const copy = i.value.copy = new Set([].concat(...c.values()))
-            i.value.write.forEach(copy.delete,copy)
+            for(const j of i.value.write.keys())
+              copy.delete(j)
           }
           break
         }
@@ -630,7 +654,7 @@ export function calcStateWrites(si) {
         case Branch.fork:
           for(const j of s.sub()) {
             if (j.enter && j.type === Branch.thread) {
-              const ncur = new Set(cur)
+              const ncur = new Map(cur)
               walk(ncur)
               assert.equal(ncur.size,0)
             }
@@ -641,22 +665,23 @@ export function calcStateWrites(si) {
           if (i.value.eff) {
             if (!i.leave)
               walk(cur)
-            i.value.write = new Set(cur)
+            i.value.write = new Map(cur)
             cur.clear()
           }
           break
         case Loop.repeat:
-          walk(new Set())
+          walk(new Map())
           break
         case Block.frame:
           if (i.value.stateVars == null)
             break
-          const save = new Set()
+          const save = new Map()
           up: for(const [sym,j] of i.value.stateVars.w) {
+            const src = j[0].closRename || sym
             for(const k of j) {
               for(const l of k.vdf.o) {
                 if (l.parFrame !== i.value) {
-                  cur.add(sym)
+                  cur.set(sym,src)
                   continue up
                 }
               }
@@ -666,7 +691,8 @@ export function calcStateWrites(si) {
           walk(cur)
           if (cur.size) {
             assert.ok(!i.value.eff)
-            cur.forEach(save.add,save)
+            for(const [j,v] of cur)
+              save.set(j,v)
             cur.clear()
           }
           if (save.size)
@@ -676,7 +702,7 @@ export function calcStateWrites(si) {
       }
     }
   }
-  walk(new Set())
+  walk(new Map())
   return sa
 }
 
@@ -763,42 +789,63 @@ function calcInitFrame(si) {
  */
 function calcClosureState(si) {
   const sa = Kit.toArray(calcFrameHierPath(si))
+  const byHierPath = ({hierpath:l},{hierpath:r}) => l > r ? 1 : l < r ? -1 : 0
   for(const {sym,srcs,bounds,reads,writes} of collectClosureVarDeps(sa)) {
     const fm = new Map([...srcs].map(i => [i.hierpath,i]))
-    const wps = [...bounds].map(i => i.hierpath).sort()
+    const bps = [...bounds].map(i => i.hierpath).sort()
     const all = [...srcs].map(i => i.hierpath).sort()
     const len = all.length
-    const dstFrames = new Set()
+    const dstFrames = new Map()
     const rdFrames = new Set()
     rd: for(const i of reads) {
       const ip = i.hierpath, ipl = ip.length
-      for(const cp of between(ip, wps, all)) {
+      for(const cp of between(ip, bps, all)) {
         if (hLE(cp, ip)) {
-          dstFrames.add(fm.get(ip))
+          dstFrames.set(fm.get(ip),fm.get(cp))
           continue rd
         }
       }
       rdFrames.add(ip)
     }
-    wr: for(const j of writes) {
+    for(const j of [...writes].sort(byHierPath)) {
       const ws = j.stateVars.w.get(sym)
+      const rs = j.stateVars.r.get(sym)
       if (ws != null) {
-        // checking if it is easy to delete write
         const closCopy = j.closCopy || (j.closCopy = new Map())
-        if (!j.rootFrame && !rdFrames.has(j.hierpath))
-          closCopy.set(sym,dstFrames.has(j))
-        for(const k of ws) {
-          for(const l of k.vdf.o) {
-            const pf = l.parFrame
-            if (pf !== j && !hLE(j.hierpath,pf.hierpath)
-                || l.vdf.i.size > 1)
-              continue wr
+        // checking if it is easy to delete write
+        const dsts = []
+        let src = null
+        if (!j.rootFrame && !rdFrames.has(j.hierpath)) {
+          const srcFrame = dstFrames.get(j)
+          if (srcFrame != null) {
+            const rs = srcFrame.stateVars.w.get(sym)
+                  || srcFrame.stateVars.r.get(sym)
+            if (rs && rs.length)
+              src = rs[0].closRename || rs[0].sym
           }
         }
-        j.stateVars.w.delete(sym)
+        const nsym = scope.newSym(sym.name)
+        wr: {
+          if (rs != null) {
+            for(const k of rs)
+              k.closRename = nsym
+          }
+          for(const k of ws) {
+            k.closRename = nsym
+            for(const l of k.vdf.o) {
+              const pf = l.parFrame
+              if (pf !== j && !hLE(j.hierpath,pf.hierpath)
+                  || l.vdf.i.size > 1)
+                break wr
+              l.closRename = nsym
+            }
+          }
+          j.stateVars.w.delete(sym)
+        }
+        closCopy.set(sym,{nsym,src})
       }
     }
-    for(const j of dstFrames) {
+    for(const j of dstFrames.keys()) {
       j.stateVars.r.delete(sym)
     }
   }
@@ -869,7 +916,7 @@ function collectClosureVarDeps(sl) {
 
 /**
  * calculates state dependencies amenable to handle with closures, to avoid
- * state operations, and re-arranges frames if possible
+ * state operations, needs `Block.groupDeps` to run after
  */
 export const closureReGroup = R.pipe(
   Block.saveFrameLet,
@@ -879,7 +926,7 @@ export const closureReGroup = R.pipe(
   function calcClosOptDeps(s) {
     //TODO: this may be lazy
     const sa = Kit.toArray(s)
-    for(const {srcs,bounds,reads} of collectClosureVarDeps(sa)) {
+    for(const {srcs,bounds,reads,sym} of collectClosureVarDeps(sa)) {
       const fm = new Map([...srcs].map(i => [i.hierpath,i]))
       const wps = [...bounds].map(i => i.hierpath).sort()
       const lets = new Set([...srcs].filter(i => i.effLet != null)
@@ -897,7 +944,7 @@ export const closureReGroup = R.pipe(
               break
             // if can be shifted
             if (lets.has(cp)) {
-              fm.get(cp).fdeps.fwd.add(il)
+              fm.get(cp).fdeps.fwd.set(il,[sym])
               break
             }
           }
@@ -905,8 +952,7 @@ export const closureReGroup = R.pipe(
       }
     }
     return sa
-  },
-  Block.groupDeps)
+  })
 
 /** injects state write operations(`writeState`) where needed */
 export function* injectLetWrites(s) {
@@ -1044,7 +1090,7 @@ export const interpret = R.pipe(
           yield sl.enter(i.pos,Block.letStmt,{pat:i.value.pat})
           yield sl.enter(Tag.expression,Block.effExpr)
           yield sl.enter(Tag.expression,Tag.CallExpression,{bind:true,eff:true})
-          yield* Kit.packId(sl,Tag.callee,"get")
+          yield Kit.idTok(Tag.callee,getId)
           yield sl.enter(Tag.arguments,Tag.Array)
           yield* lab()
         }
@@ -1055,9 +1101,9 @@ export const interpret = R.pipe(
           yield sl.enter(i.pos,Block.effExpr)
           yield sl.enter(i.pos,Tag.CallExpression,{bind:true,eff:true})
           const {write:w,copy:c} = i.value
-          const vars = [...w,...c].sort((a,b) => a.num - b.num)
+          const vars = [...w.keys(),...c].sort((a,b) => a.num - b.num)
           if (c.size) {
-            yield* Kit.packId(sl,Tag.callee,"modify")
+            yield Kit.idTok(Tag.callee,modifyId)
             yield sl.enter(Tag.arguments, Tag.Array)
             yield sl.enter(Tag.push,Tag.ArrowFunctionExpression,
                            {node:{
@@ -1067,7 +1113,7 @@ export const interpret = R.pipe(
                              : []}})
             yield sl.enter(Tag.body,Tag.ObjectExpression)
           } else {
-            yield* Kit.packId(sl,Tag.callee,"set")
+            yield Kit.idTok(Tag.callee,setId)
             yield sl.enter(Tag.arguments, Tag.Array)
             yield sl.enter(Tag.push,Tag.ObjectExpression)
           }
@@ -1076,13 +1122,14 @@ export const interpret = R.pipe(
             const node = {}
             yield sl.enter(Tag.push,Tag.ObjectProperty,{node})
             yield tok(Tag.key,Tag.Identifier,{node:{name:j.name}})
+            let ws = null
             if (c.has(j)) {
               yield sl.enter(Tag.value,Tag.MemberExpression)
               yield tok(Tag.object,Tag.Identifier,{node:{name:"s"}})
               yield tok(Tag.property,Tag.Identifier,{node:{name:j.name}})
               yield* sl.leave()
-            } else if (w.has(j)) {
-              yield tok(Tag.value,Tag.Identifier,{sym:j})
+            } else if ((ws = w.get(j)) != null) {
+              yield tok(Tag.value,Tag.Identifier,{sym:ws})
               node.shorthand = true
             } else {
               yield tok(Tag.value,Tag.NullLiteral)
@@ -1103,73 +1150,61 @@ export const interpret = R.pipe(
 export function interpretClosureReads(si) {
     const s = Kit.auto(si)
     let cnt = 0
-    function* walk(dict) {
+    function* walk() {
       for(const i of s.sub()) {
         if (i.enter) {
           switch(i.type) {
           case Block.frame:
             yield i
             const cc = i.value.closCopy
-            const sub = new Map(dict)
-            if (i.value.ipat) { // TODO: move patterns to stream
-              for(const j of i.value.ipat) {
-                if (j.enter && j.type === Tag.Identifier && j.value.decl) {
-                  sub.delete(j.value.sym)
-                }
-              }
-            }
             if (cc && cc.size) {
               const lab = s.label()
               yield s.enter(Tag.push,Tag.VariableDeclaration,
                             {node:{kind:"let"}})
               yield s.enter(Tag.declarations,Tag.Array)
-              for(const [j,c] of cc) {
+              for(const [j,{nsym,src}] of cc) {
                 yield s.enter(Tag.push,Tag.VariableDeclarator)
-                const cp = scope.newSym(j.name)
-                yield s.tok(Tag.id,Tag.Identifier,{sym:cp})
-                if (c)
-                  yield s.tok(Tag.init,Tag.Identifier,{sym:sub.get(j) || j})
-                sub.set(j,cp)
+                yield s.tok(Tag.id,Tag.Identifier,{sym:nsym})
+                if (src != null)
+                  yield s.tok(Tag.init,Tag.Identifier,{sym:src})
                 yield* s.leave()
               }
               yield* lab()
             }
-            yield* walk(sub)
+            yield* walk()
             continue
           case Tag.Identifier:
-            if (i.value.sym) {
-              if (i.value.decl) {
-                dict.delete(i.value.sym)
-              } else {
-                const d = dict.get(i.value.sym)
-                if (d != null)
-                  i.value.sym = d
-              }
-            }
+            if (i.value.closRename != null)
+              i.value.sym = i.value.closRename
             break
           }
         }
         yield i
       }
     }
-    return walk(new Map())
+    return walk()
   }
 
 /** to be called in the beginning of the transformation */
 export const prepare = R.pipe(
-  scope.assignSym,
   scope.calcRefScopes,
   resetIdOp,
-  calcVarsDataflow)
+  ifNested(calcVarsDataflow))
 
+/** calculates information for state optimization with closures */
 export const closure = R.pipe(
   calcClosureState)
 
-/** final stage, injects operations to be interpreted next */
-export const inject = R.pipe(
+/** calculates all state information */
+export const calc = R.pipe(
   calcStateWrites,
   calcStateReads,
-  calcStateCopies,
+  calcStateCopies)
+
+/** final stage, injects operations to be interpreted next */
+export const inject = R.pipe(
+  calc,
   injectLetWrites,
   injectFrameReads
 )
+

@@ -1,10 +1,8 @@
-import {tok} from "../kit"
-import {configDiff} from "../policy"
-import {defaultTransform,
-        defaultGensTransform,
-        injectFuncOpts,
-        injectOpts
-       } from "../transform"
+import * as Kit from "../kit"
+import * as Policy from "../policy"
+import * as Debug from "../debug"
+import {defaultTransform,defaultGensTransform} from "../transform"
+import * as R from "ramda"
 
 const fullOpts = {
   bindCalls: {
@@ -34,36 +32,53 @@ const minOpts = {
   transform: defaultTransform
 }
 
+const disabledOpts = {
+  transform: false
+}
+
+const postproc = R.pipe(
+  Policy.setFuncOpts(disabledOpts),
+  Policy.profiles,
+  Policy.setQNames)
 
 export default function* coreInit(ns) {
-  yield tok(configDiff,{
-    node: {
-      state:true,
-      closure:true,
-      coerce:true,
-      profiles: {
-        full:injectOpts(fullOpts),
-        defaultFull:injectFuncOpts(fullOpts),
-        minimal:injectOpts(minOpts),
-        defaultMinimal:injectFuncOpts(minOpts),
-        generators:injectFuncOpts({
-          bindCalls: {},
-          generator:true,
-          coerce:false,
-          transform:defaultGensTransform
-        }),
-        generatorsDo:injectFuncOpts({
-          bindCalls: {},
-          generator:true,
-          generatorDo:true,
-          coerce:false,
-          transform:defaultGensTransform
-        }),
-        noState:injectOpts({state:false}),
-        closureState:injectOpts({state:true,closure:true})
-      },
-      ns
-    }
-  })
+  return R.pipe(
+    function*(si) {
+      const s = Kit.auto(si)
+      yield Kit.tok(Policy.configDiff,{
+        node: {
+          profiles: {
+            disabled:Policy.injectFuncOpts(disabledOpts),
+            full:R.pipe(Policy.injectOpts(fullOpts),Policy.injectFuncOpts(fullOpts)),
+            defaultFull:Policy.injectFuncOpts(fullOpts),
+            minimal:R.pipe(Policy.injectOpts(minOpts),Policy.injectFuncOpts(minOpts)),
+            defaultMinimal:Policy.injectFuncOpts(minOpts),
+            generators:Policy.injectFuncOpts({
+              bindCalls: {},
+              generator:true,
+              coerce:false,
+              transform:defaultGensTransform
+            }),
+            generatorsDo:Policy.injectFuncOpts({
+              bindCalls: {},
+              generator:true,
+              generatorDo:true,
+              coerce:false,
+              transform:defaultGensTransform
+            })
+          },
+          ns
+        }
+      })
+      let {profile} = s.opts
+      if (profile != null) {
+        if (!Array.isArray(profile))
+          profile = [profile]
+        for(const i of profile)
+          yield Kit.tok(Policy.profile,{node:{name:i}})
+      }
+      yield* s
+    },
+    postproc)
 }
 

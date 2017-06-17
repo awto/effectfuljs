@@ -112,18 +112,16 @@ export function recalcEff(s) {
       const j = stack[0]
       if (j != null) {
         const f = j.value
-//        if (!j.eff && !j.shallowEff) {
-          if (v.eff || v.shallowEff) {
+        if (v.eff || v.shallowEff) {
             if (j.type === Tag.ForStatement
                 && (i.pos === Tag.update || i.pos === Tag.test)) {
               f.eff = true
             } else if (v.expr && f.stmt) {
-                f.shallowEff = true
+              f.shallowEff = true
             } else {
               f.eff = true
             }
           }
-//        }
       }
       if (i.value.ctrl)
         labs = Object.getPrototypeOf(labs)

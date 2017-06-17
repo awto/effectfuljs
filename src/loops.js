@@ -10,6 +10,11 @@ import * as Block from "./block"
 import * as Ctrl from "./control"
 import * as Trace from "estransducers/trace"
 
+export const repeatId = Kit.sysId("repeat")
+export const forParId = Kit.sysId("forPar")
+export const forInIteratorId = Kit.sysId("forInIterator")
+export const iteratorId = Kit.sysId("iterator")
+
 /**
  * convers all kind of loops into `for` loops
  */
@@ -127,6 +132,7 @@ export function forOfStmt(s) {
     const i = s.take()
     if (i.type === Tag.VariableDeclaration) {
       yield Kit.setPos(i,Tag.push)
+      i.value.stmt = true
       for(const j of s.sub()) {
         if (j.leave && j.type === Tag.VariableDeclarator)
           yield* val(Tag.init)
@@ -160,10 +166,10 @@ export function forOfStmt(s) {
             const end = s.label()
             yield* openVarDecl(iterVar,s,"let")
             yield s.enter(Tag.init,Tag.CallExpression)
-            yield* Kit.packId(s,Tag.callee,
+            yield Kit.idTok(Tag.callee,
                               i.type === Tag.ForInStatement
-                              ? "forInIterator"
-                              : "iterator")
+                              ? forInIteratorId
+                              : iteratorId)
             yield s.enter(Tag.arguments,Tag.Array)
             const j = s.take()
             yield Kit.setPos(j,Tag.push)
@@ -360,7 +366,7 @@ export const interpretRepeat = R.pipe(function* interpretRepeat(s) {
           const lab = sl.label()
           yield sl.enter(i.pos, Block.effExpr)
           yield sl.enter(Tag.expression, Tag.CallExpression)
-          yield* Kit.packId(sl, Tag.callee, "repeat")
+          yield Kit.idTok(Tag.callee, repeatId)
           yield sl.enter(Tag.arguments, Tag.Array)
           yield sl.enter(Tag.push, Tag.ArrowFunctionExpression,{node:{params:[]}})
           // TODO: it may be already body
@@ -515,7 +521,7 @@ export const interpretParLoop = R.pipe(
               j = sl.curLev()
             }
             yield sl.enter(i.pos,Tag.CallExpression)
-            yield* Kit.packId(sl,Tag.callee,"forPar")
+            yield Kit.idTok(Tag.callee,forParId)
             yield sl.enter(Tag.arguments, Tag.Array)
             const alab = sl.label()
             const uvtoks = []

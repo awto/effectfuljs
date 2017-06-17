@@ -4,7 +4,6 @@ const path = require("path")
 exports.read = function read(dir) {
   function walk(dir, res) {
     var files, s;
-    res.$dirPath = dir;
     try {
       files = fs.readdirSync(dir)
     } catch (error) {

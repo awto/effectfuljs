@@ -1,0 +1,10 @@
+function a() {
+  var i = 0;
+  i++;
+  eff1(i);
+  if (t) {
+    eff2(i);
+  } else {
+    eff3(i);
+  }
+}

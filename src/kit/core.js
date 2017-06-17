@@ -1,15 +1,18 @@
 import * as R from "ramda"
-import {Tag,produce as esproduce,symbol,toArray,
-        symName,symInfo,consume as esconsume} from "estransducers"
+import {Tag,produce as esproduce,symbol,toArray,isSymbol,
+        symName,symInfo,consume as esconsume,scope} from "estransducers"
 import * as EsKit from "estransducers/kit"
 import * as T from "babel-types"
 import * as assert from "assert"
+
+let curId = 0
 
 export function tagValue(pos, type, v) {
   if (v.tag != null)
     return v
   const info = symInfo(type)
   const res = {tag:true}
+  res.id = curId++
   res.stmt = info.stmt
   res.expr = info.expr
   res.func = info.func
@@ -28,7 +31,7 @@ function guessType(pos,type,value) {
   }
   if (type == null) {
     type = pos
-  } else if (typeof type !== "symbol" && value == null) {
+  } else if (!isSymbol(type) && value == null) {
     value = type
     type = null
   }
@@ -100,36 +103,28 @@ export function* completeAutoClose(s) {
 function debCheck(t) {
   if (t.value == null)
     debugger
-  if (t.pos == null || typeof t.pos !== "symbol")
+  if (t.pos == null || !isSymbol(t.pos))
     debugger
-  if (t.type == null || typeof t.type !== "symbol")
+  if (t.type == null || !isSymbol(t.type))
     debugger
   return t
 }
 
-function tok$(pos,type,value) {
+export function tok(pos,type,value) {
   [pos,type,value] = guessType(pos,type,value)
   value = tagValue(pos,type,value)
   return {enter:true,leave:true,type,pos,value}
 }
 
-export function tok(pos,type,value) {
-  return debCheck(tok$(pos,type,value))
-}
-
-function enter$() {
+export function enter() {
   let [pos,type,value] = guessType.apply(null, arguments)
   value = tagValue(pos,type,value)
   return {enter:true,leave:false,type,pos,value}
 }
 
-export function enter() {
-  return debCheck(enter$.apply(null,arguments))
-}
-
 export const Any = symbol("Any","ctrl")
 
-function leave$() {
+export function leave() {
   if (!arguments.length)
     return {enter:false,leave:true,type:Any,pos:Any,value:{}}
   const [pos,type,value] = arguments.length ?
@@ -186,10 +181,6 @@ export function setType(i,type) {
   */
 export function setPos(i,pos) {
   return {enter:i.enter,leave:i.leave,type:i.type,pos,value:i.value}
-}
-
-export function leave() {
-  return debCheck(leave$.apply(null,arguments))
 }
 
 export function* repeat(num, tok) {
@@ -293,37 +284,39 @@ export function* concatArraysPass(s) {
     yield buf
 }
 
-export function* packId(s,pos,id) {
-  if (id != null) {
-    const ns = s.opts.ns
+/** returns Symbol marked with lib=true field */
+export function sysId(name) {
+  const res = scope.newSym(name)
+  res.lib = true
+  return res
+}
+
+/** returns `tok` with type = Tag.Identifier at `pos` with `sym` */
+export function idTok(pos,sym) {
+  return tok(pos,Tag.Identifier,{sym})
+}
+
+export const coerceId = sysId("coerce")
+
+export function* packId(s,pos,sym) {
+  const ns = s.opts.ns
+  if (sym != null && sym !== coerceId) {
     if (ns == null) {
-      yield tok(pos,{node:T.identifier(id)})
+      yield tok(pos,{sym})
     } else {
       const e = enter(pos,Tag.MemberExpression,{})
       yield e
-      yield tok(Tag.object,{node:T.identifier(ns)})
-      yield tok(Tag.property,{node:T.identifier(id)})
+      yield tok(Tag.object,Tag.Identifier,{node:T.identifier(ns)})
+      yield tok(Tag.property,Tag.Identifier,{sym,node:{name:sym.name}})
       yield leave(pos,Tag.MemberExpression,e.value)
     }
   } else {
-    yield tok(pos,{node:T.identifier(s.opts.ns || "coerce")})
+    if (ns == null)
+      yield tok(pos,Tag.Identifier,{sym:coerceId})
+    else
+      yield tok(pos,Tag.Identifier,{node:{name:ns}})
   }
 }
-
-//TODO: special tag to be converted depending on options
-/*
-export function* packId(pos,id) {
-  if (id != null) {
-    const e = enter(pos,Tag.MemberExpression,{})
-    yield e
-    yield tok(Tag.object,{node:T.identifier("M")})
-    yield tok(Tag.property,{node:T.identifier(id)})
-    yield leave(pos,Tag.MemberExpression,e.value)
-  } else {
-    yield tok(pos,{node:T.identifier("M")})
-  }
-}
-*/
 
 export function lookahead(s) {
   if (s.lookahead != null)
@@ -438,21 +431,8 @@ export function* rsub(s) {
   }
 }
 
-/**
- * reverse array iterator
- */
-export function reverse(arr) {
-  arr = toArray(arr)
-  let i = arr.length
-  return {
-    [Symbol.iterator]() {
-      return {
-        next() {
-          return i === 0 ? {value:null,done:true} : {value:arr[--i],done:false}
-        }
-      }
-    }
-  }
+export function swapTok(i) {
+  return {enter:i.leave,leave:i.enter,type:i.type,pos:i.pos,value:i.value}
 }
 
 export function* swap(s) {
@@ -465,13 +445,6 @@ export function* swap(s) {
  */
 export function rfrom(s) {
   return Array.from(s).reverse()
-  //TODO: check which is faster
-  /*
-  const res = []
-  for(const i of s)
-    res.unshift(i)
-  return res
-  */
 }
 
 
@@ -520,7 +493,6 @@ export const prepare =
         let key = false
         switch(i.pos) {
         case Tag.label:
-        // case Tag.params:
           if (i.enter)
             skip(sub(si))
           continue

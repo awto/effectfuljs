@@ -141,8 +141,9 @@ export function* dumpDeps(s) {
     yield i.enter && (i.value.deps != null || i.value.fdeps != null)
       ? hls("D:" +
             (i.value.deps
-             ? JSON.stringify(i.value.deps.map(v => [...v.fwd || []]))
-             : `${i.value.fdeps.x} -> ${JSON.stringify([...i.value.fdeps.fwd || []])}`
+             ? JSON.stringify(i.value.deps.map(v => [...v.fwd.keys() || []]))
+             : `${i.value.fdeps.x} -> ${
+                  JSON.stringify([...i.value.fdeps.fwd.keys() || []])}`
             ),i)
     : i
   }
@@ -295,7 +296,9 @@ export const dumpEffBlock = R.pipe(
           break
         case "effExpr":
           if (i.enter) {
+            yield b.enter(i.pos,Kit.Subst)
             yield* walk()
+            yield* b.leave()
           }
           break
         case "chain":
@@ -434,7 +437,6 @@ function* dumpCasts(s) {
 
 const tracePrep = R.pipe(markState)
 
-
 export function* markBindEff(s) {
   for(const i of s) {
     if (i.enter) {
@@ -484,8 +486,7 @@ const dumpPrep = R.pipe(
   markBindEff,
   dumpEffBlock,
   dumpCasts,
-  scope.resolve
-)
+  scope.resolve)
 
 export const mark = R.pipe(dumpPrep,D.fin)
 

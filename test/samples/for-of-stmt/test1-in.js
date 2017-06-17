@@ -4,7 +4,6 @@ function a() {
   }
   eff(2);
 }
-
 function b() {
   for(var i of eff('d')) {
     eff(i);
@@ -20,8 +19,6 @@ function c() {
   }
   eff(i, j);
 }
-
-M.option({varCapt:false});
 
 function d() {
   for(var i of some) {

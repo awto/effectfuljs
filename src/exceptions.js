@@ -6,6 +6,10 @@ import {recalcEff} from "./propagate"
 import * as Block from "./block"
 import * as Debug from "./debug"
 
+export const handleId = Kit.sysId("handle")
+export const finallyId = Kit.sysId("finally")
+export const raiseId = Kit.sysId("throw")
+
 export const inject = R.pipe(
   function* inject(s) {
     const sl = Kit.auto(s)
@@ -29,21 +33,19 @@ export const inject = R.pipe(
                   handlePat = [...sl.one()]
                   handlePat[0].pos = handlePat[handlePat.length-1].pos = Tag.push
                 }
-                handle = [...sl.one()]
+                handle = [...walk(sl.one())]
                 assert.equal(handle[0].pos,Tag.body)
                 Kit.skip(sl.leave())
                 j = sl.curLev()
               }
               if (j != null && j.pos === Tag.finalizer) {
-                fin = [...sl.one()]
+                fin = [...walk(sl.one())]
               }
               yield sl.enter(i.pos,Block.letStmt,{pat:[],bind:true,eff:true})
               if (fin != null)
-                yield sl.enter(Tag.expression,Block.app,
-                               {node:{name:"mfinally"}})
+                yield sl.enter(Tag.expression,Block.app,{sym:finallyId})
               if (handle != null)
-                yield sl.enter(Tag.expression,Block.app,
-                               {node:{name:"mhandle"}})
+                yield sl.enter(Tag.expression,Block.app,{sym:handleId})
               yield* buf
               if (handle != null) {
                 yield sl.enter(Tag.params,Tag.Array)
@@ -67,7 +69,7 @@ export const inject = R.pipe(
               const lab = sl.label()
               yield sl.enter(i.pos,Block.letStmt,{pat:[],bind:true,eff:true})
               yield sl.enter(Tag.expression,Tag.CallExpression)
-              yield* Kit.packId(sl,Tag.callee,"raise")
+              yield Kit.idTok(Tag.callee,raiseId)
               yield sl.enter(Tag.arguments,Tag.Array)
               yield sl.enter(Tag.push,Kit.Subst)
               yield* walk(sl.sub())

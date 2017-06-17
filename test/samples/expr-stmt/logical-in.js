@@ -68,6 +68,10 @@ function a18() {
     eff(1) + eff(2) ? 2 : 3;
 }
 
+function a19() {
+  eff(eff(1) || (eff(2), eff(3)));
+}
+
 function b() {
     eff(1) || eff(2);
     eff(1) && eff(2);

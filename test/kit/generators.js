@@ -1,257 +1,316 @@
 import * as fs from "fs"
 import * as path from "path"
-import * as kit from "./generators"
-import {run,pretty,prettyBlock,blockEqual} from "./core"
+import {lookahead} from "estransducers/kit"
+import {isQUnit,run,pretty,prettyBlock,blockEqual} from "./core"
 import tags from "./tags"
+import * as R from "ramda"
+import * as assert from "assert"
 const defaults = require("../../src/config")
+const configs = require("./configs")
 defaults.libs["./effectfuljscore"] = defaults.libs["@effectfuljs/core"]
 
-function groupByPat(files, pats) {
-  function walk(d, res) {
-    for (const i in d) {
-      const v = d[i]
-      if (i[0] === "$") {
-        res[i] = v
-        continue
-      }
-      if (v.substr == null)
-        res[i] = walk(v, {})
-      let tag = null, base = null
-      for (const j in pats) {
-        const p = pats[j]
-        const m = p.exec(i)
-        if (m == null)
-          continue
-        for (const k of m.slice(1)) {
-          if (k == null)
-            continue
-          base = k
-          break
-        }
-        if (base == null) {
-          res[j] = v
-          break
-        }
-        if (p.ignoreCase)
-          base = base.toLowerCase()
-        tag = j
-        break
-      }
-      if (tag == null)
-        continue
-      const b = res[base] != null ? res[base] : res[base] = {
-        $basePath: path.join(d.$dirPath, base)
-      }
-      b[tag] = v
-    }
-    return res
-  }
-  return walk(files, {});
-}
-
-function getword(t) {
-  const m = /^\s*(\w+)\s*(.*)/.exec(t)
-  if ((m != null) && m.length === 3) {
-    return [m[1].toLowerCase(), m[2]]
-  }
-  return []
-}
-
-function addInfo(d, ctx) {
-  if (ctx == null)
-    ctx = []
-  d.$ctx = ctx
-  const info = d.$info = []
-  let minfo = null
-  if (d.$opts != null)
-    d.$opts = JSON.parse(d.$opts)
-  for (const i of Object.getOwnPropertyNames(d)) {
-    if (i[0] === "$")
-      continue
-    const v = d[i]
-    if (v.substr != null) {
-      const re = /\*-\s+(.+)\s+/g
-      while (true) {
-        const m = re.exec(v);
-        if (!((m != null) && m.length > 1))
-          break
-        info.push(m[1])
-      }
-      minfo = info;
-    } else {
-      addInfo(v, ctx.concat([i]))
-      minfo = v.$info
-    }
-    if (!(minfo.length || (fpats[i] != null)))
-      minfo.push.apply(minfo, tags(ctx, i))
-  }
-  return d
-}
-
-const options = {
-  mode: true,
-  "default": true
-}
-
-function interpretInfo(d) {
-  if (d.$info != null) {
-    for (let i of d.$info) {
-      let [s,t] = getword(i)
-      if (s === "qskip" && typeof window !== 'undefined') {
-        s = "skip";
-        d.$qskip = true;
-      }
-      if (s === "only" || s === "skip" || s === "noskip") {
-        d["$" + s] = true
-        i = t;
-        [s,t] = getword(i)
-        if (!((t != null) && t.length))
-          continue
-        
-      }
-      switch (s) {
-      case "should":
-        d.$it = i
-        break;
-      case "if":
-      case "when":
-      case "with":
-        d.$context = i
-        break
-      default:
-        if (options[s]) {
-          const opts = {}
-          if (!((t != null) && t.length))
-            t = true
-          opts[s] = t
-        } else {
-          d.$describe = i
-        }
-      }
-      if (d.inp != null) {
-        if (!d.exp) {
-          d.$skip = true
-        }
-      }
-    }
-  }
-  for (const i of Object.getOwnPropertyNames(d)) {
-    if (i[0] === "$")
-      continue
-    const v = d[i]
-    if (v.substr != null)
-      continue
-    interpretInfo(v)
-  }
-}
-
-function mochaBddWalk(d, ittxt, opts, skip) {
-  const lst = []
-  for (const i of Object.getOwnPropertyNames(d)) {
-    if (i[0] !== "$") {
-      const v = d[i]
-      if (v.$it != null)
-        ittxt = v.$it
-      const nopts = {profile:"full"}
-      Object.assign(nopts,opts,v.$opts)
-      let fn = null
-      skip = v.noskip == null
-        && (skip || v.$skip != null || v.qskip && typeof window !== 'undefined')
-      if (v.$dirPath != null) {
-        fn = mochaBddWalk(v, ittxt, nopts, skip)
-      } else if (v.inp != null) {
-        const txt = ittxt ||
-          `should have the same semantics in ${path.join.apply(path, v.$ctx)}`;
-        const inp = v.inp, exp = v.exp || ""
-        if (!exp.length)
-          skip = true
-        if (nopts.filename == null)
-          nopts.filename = `${v.$basePath}-in.js`
-        if (nopts.require == null)
-          nopts.require = "./effectfuljscore"
-        fn = skip ? () => it.skip(txt, () => {})
-                  : () => it(txt, () => blockEqual(inp, exp, nopts))
+/** moves file layout representation into a stream of tests */
+export function toStream(files) {
+  function* walk(root,obj) {
+    for (const i in obj) {
+      const v = obj[i], path = [...root,i]
+      if (v.substr != null) {
+        yield {type:"file", path, value: v}
       } else {
-        continue
+        // yield {type:"dir", id: x++, path}
+        yield* walk(path,v)
       }
-      if (v.$context)
-        fn = context.bind(null,v.$context,fn)
-      if (v.$describe) {
-        fn = describe.bind(null,v.$describe,fn)
-      }
-      lst.push(fn)
     }
   }
-  return () => lst.forEach(i => i())
-}
-
-export function prepareList(files) {
-  files = groupByPat(files, fpats)
-  addInfo(files)
-  interpretInfo(files)
-  return files
+  return walk([],files)
 }
 
 const fpats = {
   inp: /^(.+)-in.js$/i,
-  exp: /^(.+)-out.js$/i,
+  exp: /^(.+)-out-(.+).js$/i,
   info: /^info.txt$|^(.+)-info.txt$/i,
-  $opts: /^(.+)\.opts$/i,
-  $only: /^only$|^only.tmp$|^(.+)-only$|^(.+)-only.tmp$/i,
-  $skip: /^skip$|^skip.tmp$|^(.+)-skip$|^(.+)-skip.tmp$/i,
-  $noskip: /^noskip$|^noskip.tmp$|^(.+)-noskip$|^(.+)-noskip.tmp$/i,
-  $qskip: /^qskip$|^qskip.tmp$|^(.+)-qskip$|^(.+)-qskip.tmp$/i
+  opts: /^(.+)\.opts$/i,
+  skip: /^skip$|^skip.tmp$|^(.+)-skip$|^(.+)-skip.tmp$/i,
+  noskip: /^noskip$|^noskip.tmp$|^(.+)-noskip$|^(.+)-noskip.tmp$/i,
+  qskip: /^qskip$|^qskip.tmp$|^(.+)-qskip$|^(.+)-qskip.tmp$/i
 }
 
-export function mochaBdd(files) {
-  files = prepareList(files)
-  const f = mochaBddWalk(files)
-  return f()
-}
-
-export function qunit(files) {
-  files = prepareList(files)
-  function walk(d, skip, opts) {
-    for (const i of Object.getOwnPropertyNames(d)) {
-      if (i[0] !== "$") {
-        const v = d[i];
-        const nopts = Object.assign({profile:"full"},opts,v.$opts)
-        let nxtSkip = skip
-        if ((v.$skip != null) || (nopts.$qskip != null))
-          nxtSkip = true
-        if (v.$noskip != null)
-          nxtSkip = false
-        if (v.$dirPath) {
-          if (typeof QUnit !== "undefined" && QUnit !== null) {
-            QUnit.module(i, function() {
-              return walk(v, nxtSkip, nopts)
-            })
-          } else {
-            console.log(`QUnit.module('${v.$ctx}');`)
-            walk(v, nxtSkip, nopts)
-          }
-          continue
-        }
-        if (v.inp == null)
-          continue
-        if (typeof QUnit !== "undefined" && QUnit !== null) {
-          const fn = nxtSkip ? "skip" : v.$only ? "only" : "test"
-          if (nopts.filename == null)
-            nopts.filename = `${v.$basePath}-in.js`
-          if (nopts.require == null) {
-            nopts.require = "./effectfuljscore"
-          }
-          QUnit[fn](i, function(a) {
-            const res = run(nopts,v.inp)
-            if (v.exp != null)
-              a.equal(res, prettyBlock(v.exp), "should have the same semantics")
-            
-          })
-        } else {
-          console.log("QUnit.test", v.$ctx);
-        }
-      } 
+/** classify files by their pattern */
+export function* fileNamePatterns(s) {
+  for(const i of s) {
+    const n = i.path[i.path.length-1]
+    for (const j in fpats) {
+      const p = fpats[j]
+      const m = p.exec(n)
+      if (m == null)
+        continue
+      let t = m.slice(1).filter(i => i != null)
+      if (p.ignoreCase)
+        t = t.map(i => i.toLowerCase())
+      const res = {type:j,path:[...i.path.slice(0,-1)],value:i.value}
+      if (t.length > 0)
+        res.path.push(...t)
+      yield res
+      break
     }
   }
-  return walk(files)
 }
+
+/** extracts output configuration into opts for output files */
+export function* setOutpOpts(s) {
+  for(const i of s) {
+    const conf = configs[i.path[i.path.length-1]]
+    yield {path:i.path,
+           value:Object.assign({},conf,i.value)}
+  }
+}
+
+// todo couchdb like propagation of bdd descrs, opts, etc
+// reorder is simple after...
+
+/** converts skip/qskip/noskip into opts object */
+export function* parseOptsAlieas(s) {
+  for(const i of s) {
+    switch (i.type) {
+    case "opts":
+      yield { type: "opts", path: i.path, value: JSON.parse(i.value) }
+      break
+    case "qskip":
+      if (!isQUnit)
+        break
+    case "skip":
+      yield { type: "opts", path: i.path, value: { skip: true } }
+      break
+    case "noskip":
+      yield { type: "opts", path: i.path, value: { skip: false } }
+      break
+    default:
+      yield i
+    }
+  }
+}
+
+/** groups stream of tests back into a tree */
+export function group(s) {
+  const tree = {$:{}}
+  for(const i of s) {
+    if (!i.path.length)
+      continue
+    let p = tree
+    for(const j of i.path.slice(0,-1)) {
+      p = p[j] || (p[j] = {})
+    }
+    const j = i.path[i.path.length-1]
+    p = p[j] || (p[j] = {})
+    if (Array.isArray(i.value)) {
+      if (p.$ == null)
+        p.$ = []
+      assert.ok(Array.isArray(p.$))
+      p.$.push(...i.value)
+    } else {
+      if (p.$ == null)
+        p.$ = {}
+      assert.ok(!Array.isArray(p.$))
+      Object.assign(p.$, i.value)
+    }
+  }
+  return tree
+}
+
+/** collects and propagates each opts object into each leaf */
+export function propagateOpts(s) {
+  const tree = group(s)
+  function* walk(path,dir,value) {
+    yield {path,value}
+    for(const j in dir) {
+      if (j[0] !== "$") {
+        const jv = dir[j]
+        yield* walk(path.concat([j]),jv,
+                    Object.assign({profile:"full"},value,jv.$))
+      }
+    }
+  }
+  return walk([],tree,{})
+}
+
+/** moves type field in a stream into a field of value object */
+export function* typeToField(s) {
+  for(const i of s)
+    yield i.type === "opts" ? i : {path:i.path,value:{[i.type]:i.value}}
+}
+
+/** collects options specified in files content */
+export function* parseInlineComments(s) {
+  for(const i of s) {
+    const re = /\*-[ ]+(\w+)[ ]*(.*)$/gm
+    if (i.value.substr != null) {
+      while (true) {
+        const m = re.exec(i.value)
+        if (m == null)
+          break
+        const [type,value] = m.slice(1)
+        yield {type:type.toLowerCase(),path:i.path.concat(),value}
+      }
+    }
+    yield i
+  }
+}
+
+/** reorders path by moving its last element into a `pos` position */
+export const moveConfigPath = R.curry(function* moveConfigPath(pos,s) {
+  for(const i of s) {
+    if (i.value.exp != null) {
+      const path = [...i.path]
+      path.splice(pos,0,...path.splice(-1,1))
+      yield {path,value:i.value}
+    } else
+      yield i
+  }
+})
+
+/** crops path into `len` length */
+export const crop = R.curry(function* crop(len,s) {
+  const memo = new Map()
+  for(const i of s) {
+    const path = [...i.path]
+    const pn = path.join()
+    let t = memo.get(pn)
+    if (t == null)
+      memo.set(pn, t = {path,value:[]})
+    const rest = path.splice(len)
+    for(const j of i.value) {
+      if (j.exp != null) {
+        const name = [...rest]
+        if (j.name)
+          name.push(...j.name)
+        t.value.push(Object.assign({},j,{name}))
+      }
+    }
+  }
+  for(const j of memo.values()) {
+    if (j.value.length)
+      yield j
+  }
+})
+
+/** each value is converted into a single element array */
+export function* toArr(s) {
+  for(const i of s)
+    yield {path:i.path,value:[i.value]}
+}
+
+export const trace = R.curry(function trace(n,s) {
+  const a = [...s]
+  console.log(n,a)
+  return a
+})
+
+export const parse = R.pipe(
+  toStream,
+  fileNamePatterns,
+  parseInlineComments,
+  parseOptsAlieas)
+
+export const prepare = R.pipe(
+  typeToField,
+  propagateOpts,
+  setOutpOpts)
+  
+/** converts tests tree into a QUnit suite */
+function qunitTests(m) {
+  function check(a,i) {
+    return function assertion(j) {
+      const res = run(j,j.inp)
+      a.equal(res, prettyBlock(j.exp),j.name && j.name.join(" > ") || i)  
+    }
+  }
+  function* walk(s) {
+    for(const i in s) {
+      if (i[0] === "$")
+        continue
+      const sv = s[i]
+      const tests = sv.$ == null ? [] : sv.$.filter(i => i.exp != null)
+      if (!tests.length) {
+        const nxt = [...walk(sv)]
+        yield () => nxt.length
+          ? QUnit.module(i, () => nxt.forEach(i => i()))
+          : QUnit.skip(i, () => {})
+        continue
+      }
+      const otests = tests.filter(i => i.only)
+      if (otests.length) {
+        yield () => QUnit.only((a) => otests.forEach(check(a,i)))
+        continue
+      }
+      const atests = tests.filter(i => !i.skip)
+      if (!atests.length) {
+        yield () => QUnit.skip(i, () => {})
+        continue
+      }
+      yield () => QUnit.test(i, (a) => atests.forEach(check(a,i)))
+    }
+  }
+  for(const i of walk(m))
+    i()
+}
+
+export const qunit = R.pipe(
+  parse,
+  prepare,
+  toArr,
+  group,
+  qunitTests)
+
+export function mochaTests(m) {
+  function check(i) {
+    return function assertion(j) {
+      blockEqual(j.inp, j.exp, j)
+    }
+  }
+  function* walk(s) {
+    for(const i in s) {
+      if (i[0] === "$")
+        continue
+      const sv = s[i]
+      const tests = sv.$ == null ? [] : sv.$.filter(i => i.exp != null)
+      if (!tests.length) {
+        const nxt = [...walk(sv)]
+        yield nxt.length  
+          ? () => describe(i, () => nxt.forEach(i => i()))
+          : () => it.skip(i, () => {})
+        continue
+      }
+      const otests = tests.filter(i => i.only)
+      if (otests.length) {
+        yield () => it.only(() => otests.forEach(check(i)))
+        continue
+      }
+      const atests = tests.filter(i => !i.skip)
+      if (!atests.length) {
+        yield () => it.skip(i, () => {})
+        continue
+      }
+      yield () => it(i, () => {
+        atests.forEach(check(i))
+      })
+    }
+  }
+  for(const i of walk(m))
+    i()
+}
+
+export const mochaPrepare = R.pipe(
+  prepare,
+  // moveConfigPath(0),
+  // moveConfigPath(-1),
+  moveConfigPath(1),
+  toArr,
+  crop(2))
+
+export const mochaBdd = R.pipe(
+  parse,
+  // mochaPrepare,
+  prepare,
+  toArr,
+  group,
+  mochaTests)

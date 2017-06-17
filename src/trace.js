@@ -26,8 +26,12 @@ export function cg(ast, opts = {}) {
       console.error(e.stack)
   }
   if (res != null)
-    return res 
-  return "!!" + opts.compact ? JSON.stringify(ast) : JSON.stringify(ast,null,2)
+    return res
+  try {
+    return "!!" + opts.compact ? JSON.stringify(ast) : JSON.stringify(ast,null,2)
+  } catch(e) {
+    return "<circular>"
+  }
 }
 
 /**
@@ -76,12 +80,6 @@ export function* wrap(s) {
     let ty = symName(i.pos)
     if (i.type !== ty)
       ty += ":" + symName(i.type)
-    /*
-    if (ty.length < TYPE_SIZE) 
-      ty += (new Array(TYPE_SIZE - ty.length)).join(" ")
-    else if (ty.length >= TYPE_SIZE)
-      ty = ty.substr(0,TYPE_SIZE-1)
-      */
     if (i.enter)
       level++
     yield {enter:i.enter,

@@ -42,9 +42,13 @@ export const run = R.curryN(2,Kit.optsScopeLift(function run(opts,f) {
     opts)
 }))
 
-const isQUnit = typeof QUnit !== "undefined";
+export const isQUnit = typeof QUnit !== "undefined";
 
-const testDefaultOpts = {coerce:true,profile:"full"}
+const testDefaultOpts = {coerce:true,
+                         state:true,
+                         closure:true,
+                         profile:"full",
+                         assoc:"l"}
 
 export function exprEqual(l, r, opts = testDefaultOpts) {
   return blockEqual(`(${l});`, `(${r});`, opts)
@@ -73,7 +77,7 @@ export function blockSame(l, r) {
 }
 
 export const transformBlock = R.curryN(2,Kit.optsScopeLift(
-  function(fun,src,opts) {
+  function(fun,src,opts = testDefaultOpts) {
     Kit.setOpts(Object.assign({},
                               defaultOpts,
                               {require:"@effectfuljs/core",ns:"M",override:opts},
@@ -97,7 +101,7 @@ export const transformBlock = R.curryN(2,Kit.optsScopeLift(
   }))
 
 export const transformExpr
-  = R.curryN(2, (fun,src,opts) => transformBlock(fun,`(${src});`,opts))
+  = R.curryN(2, (fun,src,opts = testDefaultOpts) => transformBlock(fun,`(${src});`,opts))
 
 export function* prepareScopes(s) {
   for (const i of Transform.scopes(s)) {

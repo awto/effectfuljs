@@ -1,7 +1,4 @@
-// *- SKIP
-var Z = require("@effectfuljs/generators");
-
-function* a() {
+function* M() {
   yield 1
   yield 2
 }

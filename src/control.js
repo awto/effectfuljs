@@ -4,23 +4,31 @@ import {Tag,produce,consume,symbol,scope as vars} from "estransducers"
 import * as assert from "assert"
 import * as Block from "./block"
 import * as Debug from "./debug"
+import {ifLFlat} from "./options"
 
+export const blockId = Kit.sysId("block")
+export const scopeId = Kit.sysId("scope")
+
+/**
+ * calculates links between control blocks and jumps referencing them
+ */
 export const assignLabels = R.pipe(
-  function* markLastRet(s) {
-    s = Kit.auto(s)
-    yield s.take()
-    const b = yield* s.findPos(Tag.body)
-    yield b
-    if (b != null && b.type === Tag.BlockStatement) {
-      yield (yield* s.findPos(Tag.body))
-      const j = yield* s.sub()
-      if (j != null && j.type === Tag.ReturnStatement) {
-        j.value.last = true
+  ifLFlat(v => v, R.pipe(
+    function* markLastRet(s) {
+      s = Kit.auto(s)
+      yield s.take()
+      const b = yield* s.findPos(Tag.body)
+      yield b
+      if (b != null && b.type === Tag.BlockStatement) {
+        yield (yield* s.findPos(Tag.body))
+        const j = yield* s.sub()
+        if (j != null && j.type === Tag.ReturnStatement) {
+          j.value.last = true
+        }
       }
-    }
-    yield* s
-  },
-  Array.from,
+      yield* s
+    },
+    Array.from)),
   function* assignLabels(s) {
     let labels = []
     const sl = Kit.auto(s)
@@ -79,10 +87,16 @@ export const assignLabels = R.pipe(
     yield* walk(["#ret"],new Map([["#ret","#ret"]]))
     yield* sl.leave()
   })
-  
+
+/** wraps a control block, it can be referenced in `jump` tag */
 export const scope = symbol("scope","ctrl")
+/** 
+ * specify a jump to end or beginning of `scope`, 
+ * normilized to jumps end only
+ */
 export const jump = symbol("jump","ctrl")
 
+/** removes AST JS LabeledStatement nodes */
 export const removeLabeldStatement = R.pipe(
   function(s) {
     const sl = Kit.auto(s)
@@ -104,6 +118,10 @@ export const removeLabeldStatement = R.pipe(
   Kit.completeSubst)
 
 //TODO: to 2 steps, marking unwinde + refs to jumps separately
+/** 
+ * re-calculates JS control information in `cntRefs` and `brkRefs` 
+ * lists of `continue` and `break` statements for the block
+ */
 export function recalc(s) {
   const sa = Kit.toArray(s)
   const sl = Kit.auto(sa)
@@ -162,26 +180,10 @@ export function recalcUnwind(s) {
   return sa
 }
 
-export function* rmLastRet(s) {
-  s = Kit.auto(s)
-  for(const i of s) {
-    if (i.type === Tag.ReturnStatement) {
-      const j = s.curLev()
-      if (j != null && j.value.eff) {
-        s.peel(j)
-        yield s.enter(i.pos,Tag.ExpressionStatement,{eff:true})
-        yield s.enter(Kit.setPos(j,Tag.expression))
-        yield* s.sub()
-        yield* s.leave()
-        yield* s.leave()
-        Kit.skip(s.leave())
-        continue
-      }
-    }
-    yield i
-  }
-}
-
+/** 
+ * injects `scope` and `jump` tags where instead of labeled 
+ * staments `break` and `continue` 
+ */
 export const injectBlock = R.pipe(
   recalc,
   function* injectBlock(s) {
@@ -203,11 +205,14 @@ export const injectBlock = R.pipe(
           if (i.value.ctrlName != null
               || i.value.brkRefs && i.value.brkRefs.length)
           {
+            //TODO: simplify this
             yield sl.enter(i.pos,Tag.ExpressionStatement)
-            const node = {top,
-                          name:i.value.ctrlName || top && "scope" || "block"}
-            yield sl.enter(Tag.expression,scope,{node,ctrl:i.value.ctrl.sort(),
-                                                 expr:true,bind:true})
+            const node = {top}
+            yield sl.enter(Tag.expression,scope,
+                           {node,
+                            sym:i.value.ctrlName || top && scopeId || blockId,
+                            ctrl:i.value.ctrl.sort(),
+                            expr:true,bind:true})
             i.value.ctrl = null
             for(const j of i.value.brkRefs)
               j.dst = node
@@ -235,6 +240,7 @@ export const injectBlock = R.pipe(
             yield sl.enter(pos,jump,{
               bind: true,
               jump: i.value.jump,
+              exit: i.value.exit,
               node: { dst:i.value.dst }})
             yield sl.enter(Tag.push,Kit.Subst)
             yield* walk()
@@ -250,6 +256,7 @@ export const injectBlock = R.pipe(
   Kit.completeSubst
 )
 
+/** converts control tags into JS expressions */
 export const interpret = R.pipe(function* interpret(s) {
   const sl = Kit.auto(s)
   function* walk() {
@@ -260,7 +267,7 @@ export const interpret = R.pipe(function* interpret(s) {
           const lab = sl.label()
           yield sl.enter(i.pos, Block.effExpr)
           yield sl.enter(Tag.expression,Tag.CallExpression)
-          yield* Kit.packId(sl, Tag.callee, i.value.node.name)
+          yield Kit.idTok(Tag.callee, i.value.sym)
           yield sl.enter(Tag.arguments, Tag.Array)
           yield sl.enter(Tag.push,Tag.ArrowFunctionExpression)
           yield sl.enter(Tag.params,Tag.Array)

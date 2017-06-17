@@ -13,7 +13,6 @@ export const block = symbol("coerceBlock","ctrl")
  * if there is no coercing pure statement blocks must be turned into effectful
  */
 export const lift = R.pipe(
-//  Branch.liftCoerce,
   function lift(s) {
     const sl = Kit.auto(s)
     function* pure() {
@@ -42,12 +41,12 @@ export const lift = R.pipe(
                   assert.ok(j.type === Tag.BlockStatement)
                   alt = true
                 case Tag.consequent:
-                  yield* j.value.eff || sl.opts.coerce !== false
+                  yield* j.value.eff || sl.opts.coerce
                     ? walk() : convert()
                 }
               }
             }
-            if (!alt && sl.opts.coerce === false) {
+            if (!alt && !sl.opts.coerce) {
               const lab = sl.label()
               yield sl.enter(Tag.alternate,Tag.BlockStatement)
               yield sl.enter(Tag.body,Tag.Array)
@@ -64,7 +63,7 @@ export const lift = R.pipe(
                 case Tag.finalizer:
                 case Tag.body:
                   assert.equal(j.type,Tag.BlockStatement)
-                  yield* j.value.eff || sl.opts.coerce !== false
+                  yield* j.value.eff || sl.opts.coerce
                     ? walk() : convert()
                 }
               }
@@ -82,7 +81,7 @@ export const lift = R.pipe(
 export function* liftFuncs(s) {
   s = Kit.auto(s)
   if (s.first.value.topEff
-      || s.opts.coerce !== false
+      || s.opts.coerce
       || !s.first.value.func
      )
   {
@@ -124,7 +123,8 @@ export function inject(s) {
   function* walk(sw) {
     for(const i of sw) {
       yield i
-      if (i.enter && i.type === Block.app && sl.opts.coerce === true) {
+      if (i.enter && i.type === Block.app
+          && sl.opts.coerce === true && !sl.opts.static) {
         yield sl.enter(i.pos,expr)
         yield* walk(sl.one())
         yield* sl.leave()

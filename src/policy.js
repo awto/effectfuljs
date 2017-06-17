@@ -18,6 +18,67 @@ export const config = symbol("config")
 export const configDiff = symbol("configDiff")
 export const ctImport = symbol("ctImport")
 
+function pipe(fs) {
+  if (fs == null || fs.length === 0)
+    return null
+  return R.pipe(...fs)
+}
+
+/**
+ * composes function, removing duplicates
+ */
+export function postproc(f) {
+  return function postprocRun(s) {
+    let nxt = []
+    for(let p, cur = s, curf = f;
+        (curf = Kit.result(curf(cur),nxt)) != null;
+        cur = nxt, nxt = []
+       ) {}
+    return nxt
+  }
+}
+
+function resolveImport(name,opts,optional = false) {
+  let r = opts.libs[name]
+  if (r == null) {
+    try {
+      const cp = resolve(name, {
+        basedir: path.dirname(opts.file.filename)
+      })
+      r = require(cp)
+    } catch(e) {
+      if (optional) {
+        if (opts.resolveTrace)
+          console.log(`couldn't resolve ${name} (%{e.message}), ignoring`)
+      } else {
+        throw new SyntaxError(`couldn't resolve ${name} (${e.message})`)
+      }
+    }
+  }
+  return r
+}
+
+export const ctImportPass = postproc(function* ctImportPass(s) {
+  s = Kit.auto(s)
+  let needInject = false
+  const post = []
+  for(const i of s) {
+    if (i.type === ctImport) {
+      if (i.enter) {
+        const r = resolveImport(i.value.name,s.opts,i.value.optional)
+        if (r != null) {
+          const p = yield* r(i.value.ns || s.opts.ns,s.opts)
+          if (p != null) {
+            post.push(p)
+          }
+        }
+      }
+    } else
+      yield i
+  }
+  return post.length ? R.pipe(...post) : null
+})
+
 //TODO: apply only to top scope
 export const imports =
   R.pipe(
@@ -77,7 +138,8 @@ export const imports =
               yield s.tok(ctImport,{name:module,
                                     optional:true,
                                     ns:name})
-            for(const p of [`${module}-effectfuljs-ct`,path.join(module,"effectfuljs-ct")]) {
+            for(const p of [`${module}-effectfuljs-ct`,
+                            path.join(module,"effectfuljs-ct")]) {
               yield s.tok(ctImport,{name:p,optional:true,ns:name})
             }
           }
@@ -85,40 +147,37 @@ export const imports =
       }
     },
     Match.clean,
-    ctImportPass)
-
-export function* ctImportPass(s) {
-  s = Kit.auto(s)
-  let needInject = false
-  for(const i of s) {
-    if (i.enter && i.type === ctImport) {
-      assert.ok(i.enter)
-      let r = s.opts.libs[i.value.name]
-      if (r == null) {
-        try {
-          const cp = resolve(i.value.name, {
-            basedir: path.dirname(s.opts.file.filename)
-          })
-          r = require(cp)
-        } catch(e) {
-          if (i.value.optional) {
-            if (s.opts.resolveTrace)
-              s.warn(`couldn't resolve ${i.value.name} (%{e.message}), ignoring`)
-          } else {
-            throw s.error(`couldn't resolve ${i.value.name} (${e.message})`)
-          }
-        }
-      }
-      if (r != null) {
-        yield* r(i.value.ns,s.opts)
-      }
-      continue
-    }
-    yield i
-  }
-}
+    Array.from)
 
 export const profile = symbol("profile")
+
+/**
+ * applies config merge to parent's block if it has `parentBlock` scope
+ */
+export const configDiffPass = R.pipe(
+  propagateConfigDiff,
+  function* setOpts(s) {
+    s = Kit.auto(s)
+    let cur = s.opts
+    const stack = []
+    for(const i of s) {
+      if (i.value.optsDiff != null || i.value.optsAssign != null) {
+        if (i.enter) {
+          stack.push(cur)
+          cur = R.clone(cur)
+          if (i.value.optsDiff != null)
+            cur = merge(cur, i.value.optsDiff)
+          if (i.value.optsAssign != null)
+            cur = Object.assign(cur,i.value.optsAssign)
+        }
+        i.value.opts = cur
+        if (i.leave)
+          cur = stack.pop()
+      } else 
+        i.value.opts = cur
+      yield i
+    }
+  })
 
 export const lookupProfiles = R.pipe(
   Match.inject(["*$M.profile($$)","*$M.option($$)"]),
@@ -141,103 +200,109 @@ export const lookupProfiles = R.pipe(
     }
   },
   Match.commit,
-  function lookupProfiles(s) {
+  function* lookupProfiles(s) {
     s = Kit.auto(s)
-    function* walk() {
-      function getConst() {
-        const i = s.peel()
-        switch(i.type) {
-        case Tag.BooleanLiteral:
-        case Tag.NumericLiteral:
-        case Tag.StringLiteral:
-          Kit.skip(s.leave())
-          return i.value.node.value
-        case Tag.NullLiteral:
-          Kit.skip(s.leave())
-          return i.value.node.value
-        case Tag.RegExpLiteral:
-          Kit.skip(s.leave())
-          return new RegExp(i.value.node.pattern,i.value.node.flags)
-        case Tag.ObjectExpression:
-          const res = {}
-          Kit.skip(s.peelTo(Tag.properties))
-          for(const j of s.sub()) {
-            s.peel(j)
-            switch(j.type) {
-            case Tag.ObjectProperty:
-              const k = s.cur()
-              assert.equal(k.pos, Tag.key)
-              if (k.type !== Tag.Identifier)
-                throw s.error("not supported object key")
-              Kit.skip(s.copy())
-              res[k.value.node.name] = getConst()
-              break
-            default:
-              throw s.error("not supported object construct")
-            }
-            Kit.skip(s.leave())
+    function getConst() {
+      const i = s.peel()
+      switch(i.type) {
+      case Tag.BooleanLiteral:
+      case Tag.NumericLiteral:
+      case Tag.StringLiteral:
+        Kit.skip(s.leave())
+        return i.value.node.value
+      case Tag.NullLiteral:
+        Kit.skip(s.leave())
+        return i.value.node.value
+      case Tag.RegExpLiteral:
+        Kit.skip(s.leave())
+        return new RegExp(i.value.node.pattern,i.value.node.flags)
+      case Tag.ObjectExpression:
+        const res = {}
+        Kit.skip(s.peelTo(Tag.properties))
+        for(const j of s.sub()) {
+          s.peel(j)
+          switch(j.type) {
+          case Tag.ObjectProperty:
+            const k = s.cur()
+            assert.equal(k.pos, Tag.key)
+            if (k.type !== Tag.Identifier)
+              throw s.error("not supported object key")
+            Kit.skip(s.copy())
+            res[k.value.node.name] = getConst()
+            break
+          default:
+            throw s.error("not supported object construct")
           }
           Kit.skip(s.leave())
-          Kit.skip(s.leave())
-          return res
-        default:
-          throw s.error("not supported static expression")
         }
-      }
-      for(const i of s.sub()) {
-        switch(i.type) {
-        case Match.Root:
-          if (i.enter) {
-            if (i.value.index === 0) {
-              Kit.skip(s.till(j=>j.enter && j.type === Match.Placeholder))
-              const j = s.cur()
-              Kit.skip(s.till(j => j.enter && j.type === Match.Placeholder))
-              const k = s.cur()
-              if (k.type !== Tag.StringLiteral)
-                throw s.error("only string literals are supported")
-              Kit.skip(s.till(j=>j.leave && j.type === Match.Root))
-              const name = k.value.node.value
-              const value = {ns:j.value.node.name,node:{name}}
-              yield s.tok(profile,value)
-            } else {
-              Kit.skip(s.till(j=>j.enter && j.type === Match.Placeholder))
-              const j = s.cur()
-              Kit.skip(s.till(j => j.enter && j.type === Match.Placeholder))
-              yield s.tok(i.pos,configDiff,{node:getConst(),alg:"merge"})
-              Kit.skip(s.till(j => j.leave && j.type === Match.Root))
-            }
-          }
-          break
-        case Match.Placeholder:
-          continue
-        default:
-          yield i
-        }
+        Kit.skip(s.leave())
+        Kit.skip(s.leave())
+        return res
+      default:
+        throw s.error("not supported static expression")
       }
     }
-    return walk()
+    let any = false
+    for(const i of s.sub()) {
+      switch(i.type) {
+      case Match.Root:
+        if (i.enter) {
+          if (i.value.index === 0) {
+            Kit.skip(s.till(j=>j.enter && j.type === Match.Placeholder))
+            const j = s.cur()
+            Kit.skip(s.till(j => j.enter && j.type === Match.Placeholder))
+            const k = s.cur()
+            if (k.type !== Tag.StringLiteral)
+              throw s.error("only string literals are supported")
+            Kit.skip(s.till(j=>j.leave && j.type === Match.Root))
+            const name = k.value.node.value
+            const value = {ns:j.value.node.name,node:{name}}
+            yield s.tok(profile,value)
+          } else {
+            Kit.skip(s.till(j=>j.enter && j.type === Match.Placeholder))
+            const j = s.cur()
+            Kit.skip(s.till(j => j.enter && j.type === Match.Placeholder))
+            yield s.tok(i.pos,configDiff,{node:getConst(),alg:"merge"})
+            any = true
+            Kit.skip(s.till(j => j.leave && j.type === Match.Root))
+          }
+        }
+        break
+      case Match.Placeholder:
+        continue
+      default:
+        yield i
+      }
+    }
   },
-  Match.clean
+  Match.clean,
+  configDiffPass
 )
 
-export function* applyProfiles(s) {
+export const applyProfiles = postproc(function* applyProfiles(s) {
   s = Kit.auto(s)
+  const post = []
   for(const i of s) {
     if (i.type === profile) {
       if (i.enter) {
-        const run = s.opts.profiles[i.value.node.name]
+        const run = i.value.run || s.opts.profiles[i.value.node.name]
         if (run == null) {
           throw s.error(`profile ${
              i.value.node.name} is not defined, available:[${
              Object.keys(s.opts.profiles)}]`)
         }
-        yield* run.call(i.value)
+        const p = yield* run.call(i.value)
+        if (p != null)
+          post.push(p)
       }
       continue
     }
     yield i
   }
-}
+  return pipe(post)
+})
+
+export const profiles = R.pipe(lookupProfiles,applyProfiles,configDiffPass)
 
 export const stack = symbol("stack") 
 
@@ -271,8 +336,11 @@ export const one = symbol("one")
  * handles `sub` tokens and `one` tokens
  */
 export function applySubAndOne(s) {
-  function* walk(s) {
-    s = Kit.auto(s)
+  function* walk(si) {
+    const sa = Kit.toArray(si)
+    if (!sa.length)
+      return
+    s = Kit.auto(sa)
     for(const i of s) {
       if (i.enter) {
         switch(i.type) {
@@ -290,6 +358,41 @@ export function applySubAndOne(s) {
     }
   }
   return walk(s)
+}
+
+/** 
+ * moves content of to specified destination 
+ * now only function scope works
+ */
+export const hoist = symbol("hoist")
+
+/** 
+ * interpret hoist tokens
+ * TODO: move to estransducers
+ */
+export function applyHoist(si) {
+  const s = Kit.auto(si)
+  function* scope() {
+    const buf = []
+    const nxt = [...walk(buf)]
+    yield* buf
+    yield* nxt
+  }
+  function* walk(funScope) {
+    for(const i of s.sub()) {
+      if (i.type === hoist) {
+        if (i.enter) {
+          const buf = [...walk(funScope)]
+          funScope.push(...buf)
+        }
+      } else if (i.enter && i.value.func) {
+        yield i
+        yield* scope()
+      } else
+        yield i
+    }
+  }
+  return scope()
 }
 
 /**
@@ -497,64 +600,60 @@ export function* propagateConfigDiff(s) {
   }
 }
 
-/**
- * applies config merge to parent's block if it has `parentBlock` scope
- */
-export const configDiffPass = R.pipe(
-  propagateConfigDiff,
-  function* setOpts(s) {
-    s = Kit.auto(s)
-    let cur = s.opts
-    const stack = []
-    for(const i of s) {
-      if (i.value.optsDiff != null || i.value.optsAssign != null) {
-        if (i.enter) {
-          stack.push(cur)
-          cur = R.clone(cur)
-          if (i.value.optsDiff != null)
-            cur = merge(cur, i.value.optsDiff)
-          if (i.value.optsAssign != null)
-            cur = Object.assign(cur,i.value.optsAssign)
-        }
-        i.value.opts = cur
-        if (i.leave)
-          cur = stack.pop()
-      } else 
-        i.value.opts = cur
-      yield i
+/*
+const emitInitOptions = postproc(function* emitInitOptions(s) {
+  s = Kit.auto(s)
+  let post = null
+  if (s.opts.require != null) {
+    yield s.tok(ctImport,{name:s.opts.require,optional:false,ns:s.opts.ns})
+    const r = resolveImport(s.opts.require,s.opts)
+    if (r != null) {
+      post = yield* r(s.opts.ns,s.opts)
     }
-  })
-
+  }
+  yield* s
+  return post
+})
+*/
 
 function* emitInitOptions(s) {
   s = Kit.auto(s)
-  if (s.opts.require != null)
+  if (s.opts.require != null
+      && !s.first.value.namespaces.has(s.opts.require)) {
     yield s.tok(ctImport,{name:s.opts.require,optional:false,ns:s.opts.ns})
-  let profiles = s.opts.profile
+  }
+  yield* s
+}
+
+export function* emitInitProfiles(s) {
+  s = Kit.auto(s)
+  yield* s.till(i => i.type === Tag.Array && i.pos === Tag.program)
+  let {profiles} = s.opts
   if (profiles != null) {
-    yield* s.till(i => i.type === Tag.Array && i.pos === Tag.body)
     if (!Array.isArray(profiles))
       profiles = [profiles]
     for(const name of profiles) {
       yield s.tok(Tag.push,profile,{node:{name}})
     }
+    if (s.opts.override)
+      yield s.tok(Tag.push,configDiff,{alg:"merge",node:s.opts.override})
   }
-  if (s.opts.override)
-    yield s.tok(Tag.push,configDiff,{alg:"merge",node:s.opts.override})
   yield* s
 }
 
-export const prepare = R.pipe(
-  emitInitOptions,
-  configDiffPass,
-  imports,
-  configDiffPass,
-  lookupProfiles,
-  applyProfiles,
-  applySubAndOne,
-  configDiffPass,
-  setQNames,
-  Array.from)
+export const prepare = R.pipe(imports,emitInitOptions,ctImportPass)
+
+
+//export const prepare = R.pipe(
+//  emitInitOptions,
+//  configDiffPass,
+//  imports,
+//  configDiffPass,
+//  lookupProfiles,
+//  applyProfiles,
+//  configDiffPass,
+//  setQNames,
+//  Array.from)
 
 const unwrapNs = R.pipe(
   function unwrapNs(s) {
@@ -595,3 +694,36 @@ export const generatorsPrepare = R.pipe(
   unwrapNs,
   assignThrowEff)
 
+
+export const setFuncOpts = function setFuncOpts(opts) {
+  const generator = opts.generator
+  return function* setFuncOpts(s) {
+    for(const i of s) {
+      if (i.enter && i.value.func &&
+          (generator == null || generator === !!i.value.node.generator))
+        i.value.optsAssign = Object.assign(i.value.optsAssign || {},opts)
+      yield i
+    }
+  }
+}
+
+export const injectOpts = (opts) => 
+  function* injectOpts(s) {
+    yield Kit.tok(configDiff,{node:opts,alg:"assign"})
+  }
+
+/** sets options to each sub-function */
+export const injectFuncOpts = (opts, withSelf = false) => {
+  const run = setFuncOpts(opts)
+  return function* injectFuncOpts(s) {
+    if (withSelf) {
+      const value = {dst:"func"}
+      yield Kit.enter(hoist,value)
+      yield Kit.tok(one, {run})
+      yield Kit.leave(hoist,value)
+      return R.pipe(applyHoist,applySubAndOne)
+    }
+    yield Kit.tok(sub, {run})
+    return applySubAndOne
+  }
+}

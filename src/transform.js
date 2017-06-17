@@ -1,5 +1,4 @@
 import * as R from "ramda"
-
 import * as T from "babel-types"
 import * as assert from "assert"
 import dump from "estransducers/dump"
@@ -11,6 +10,7 @@ import * as State from "./state"
 import * as Control from "./control"
 import * as Scope from "./scope"
 import * as Block from "./block"
+import * as Bind from "./bind"
 import * as Prop from "./propagate"
 import * as Uniq from "./uniq"
 import * as Branch from "./branch"
@@ -22,7 +22,9 @@ import * as Placeholder from "./placeholder"
 import * as Gens from "./generators"
 import * as Rt from "./rt"
 import * as Ops from "./ops"
+import * as Flat from "./flat"
 import simplify from "./simplify"
+import {ifNested, ifLeft,ifLFlat,ifState,ifClosure,onChainType} from "./options"
 
 export const consumeScope = consume
 
@@ -42,9 +44,10 @@ const restore = R.pipe(
   varScope.resolve,
   consume)
 
-const ifLassoc = Kit.enableIf(i => i.assoc === "l")
-const ifState = Kit.enableIf(i => i.state !== false)
-const ifClosure = Kit.enableIf(i => i.closure !== false)
+const ifEff = R.curry(function (others, si) {
+  const s = Kit.auto(si)
+  return s.first.value.topEff ? others(s) : s
+})
 
 /**
  * passes in required order depending on options specified
@@ -56,62 +59,90 @@ export const all =
     //  Ops.injectOps,
     Prop.propagateEff,
     Kit.toArray,
-    Control.removeLabeldStatement,
-    Loops.toBlocks,
-    Branch.toBlocks,
-    Branch.switchRewrite,
-    Loops.forOfStmt,
-    Loops.doWhileStmt,
-    Prop.recalcEff,
-    Loops.normilizeFor,
-    Coerce.lift,
-    Branch.liftSwitchCoerce,
-    ifState(State.saveDecls),
-    Prop.recalcEff,
-    Control.injectBlock,
-    Loops.injectRepeat,
-    Prop.recalcEff,
-    Branch.prepareLogical,Prop.recalcEff,
-    Block.flatten,
-    Exceptions.inject,Prop.recalcEff,
-    Branch.liftCoerce,Prop.recalcEff,
-    Block.splitEffBlock,
-    ifState(State.prepare),
-    ifClosure(R.pipe(Block.calcVarDeps(false),
-                     ifState(State.closureReGroup,Block.groupDeps),
-                     Prop.recalcEff)),
-    Block.calcVarDeps(true),
-    Block.groupBindDeps,
-    Prop.recalcEff,
-    ifState(State.calcFrameStateVars),
-    Block.factorEffSeq,
-    Prop.recalcEff,
-    ifState(ifClosure(State.closure)),
-    Block.propagateBindVars,
-    ifState(State.inject),
-    Prop.recalcEff,
-    Block.lassoc,
-    Block.cleanPureFrames,
-    Block.propagateBindVars,
-    Block.cleanPureEff,
-    State.interpret,
-    Prop.recalcEff,
-    Control.interpret,
-    Loops.interpretRepeat,
-    Block.cleanupEffSeq,
-    Kit.enableIf(i => i.parLoops, Loops.interpretParLoop),
-    Block.interpretParEffSeq,
-    Block.interpretBinEffSeq,
-    Coerce.inject,
-    Coerce.liftFuncs,
-    Block.interpretPure,
-    Block.interpretApp,
-    Block.interpretBindFrame,
-    Coerce.interpret,
-    Block.interpretCasts,
-    Branch.clean,
-    ifState(State.restoreDecls),
-    simplify)
+    ifEff(R.pipe(
+      Control.removeLabeldStatement,
+      Loops.toBlocks,
+      Branch.toBlocks,
+      ifNested(R.pipe(Branch.switchRewrite)),
+      Loops.forOfStmt,
+      Loops.doWhileStmt,
+      Prop.recalcEff,
+      Loops.normilizeFor,
+      Coerce.lift,
+      Branch.liftSwitchCoerce,
+      State.saveDecls,
+      Prop.recalcEff,
+      Control.injectBlock,
+      Loops.injectRepeat,
+      Prop.recalcEff,
+      Branch.prepareLogical,Prop.recalcEff,
+      Bind.flatten,
+      Exceptions.inject,Prop.recalcEff,
+      // Branch.liftCoerce,Prop.recalcEff,
+      Block.splitEffBlock,
+      State.prepare,
+      onChainType({
+        left: R.pipe(
+          ifClosure(R.pipe(Bind.calcVarDeps(null),
+                           ifState(State.closureReGroup),
+                           Bind.groupDeps,
+                           Prop.recalcEff
+                        ),
+                    R.pipe(Bind.calcVarDeps(null),
+                           Bind.threadDeps,
+                           Bind.injectThreadMaps
+                          )),
+          ifState(State.calcFrameStateVars),
+          Block.factorEffSeq,
+          Prop.recalcEff,
+          ifState(ifClosure(State.closure)),
+          Bind.propagateBindVars,
+          ifState(State.inject),
+          Prop.recalcEff,
+          Block.lassoc,
+          Block.cleanPureFrames,
+          Bind.propagateBindVars),
+        right: R.pipe(
+          // TODO: join rassoc with factor
+          Block.rassoc,
+          Block.factorEffSeq,
+          Prop.recalcEff,
+          ifState(State.calcFrameStateVars),
+          ifState(ifClosure(State.closure)),
+          Bind.propagateBindVars,
+          ifState(R.pipe(State.inject,Block.lassoc)),
+          Prop.recalcEff,
+          Block.cleanPureFrames,
+          Bind.propagateBindVars),
+        lflat: R.pipe(
+          Bind.calcVarDeps(null),
+          Bind.threadDeps,
+          Control.recalc,
+          Flat.convert
+        )
+      }),
+      Block.cleanPureEff,
+      ifLFlat(Flat.interpret,
+              R.pipe(
+                State.interpret,
+                Prop.recalcEff,
+                Control.interpret,
+                Loops.interpretRepeat,
+                Block.cleanupEffSeq,
+                Kit.enableIf(i => i.parLoops, Loops.interpretParLoop),
+                Block.interpretParEffSeq,
+                Block.interpretBinEffSeq,
+                Coerce.inject,
+                Coerce.liftFuncs,
+                Block.interpretPure,
+                Bind.interpret)),
+      Block.interpretApp,
+      Coerce.interpret,
+      Block.interpretCasts,
+      Block.interpretSyms,
+      Branch.clean,
+      State.restoreDecls,
+      simplify)))
 
 export const defaultTransform = R.pipe(Policy.defaultPrepare,all)
 export const defaultGensTransform = R.pipe(Policy.generatorsPrepare, all)
@@ -188,33 +219,4 @@ export function applyPass(ast,pass,opts = {}) {
   })
 }
 
-export const injectOpts = (opts) => 
-  function* injectOpts(s) {
-    yield Kit.tok(Policy.configDiff,{node:opts,alg:"assign"})
-  }
-
-/** sets options to each sub-function */
-export const injectFuncOpts = (opts) => {
-  const generator = !!opts.generator
-  return function* injectFuncOpts(s) {
-    yield Kit.tok(Policy.sub, {
-      *run(inner) {
-        for(const i of inner) {
-          if (i.enter && i.value.func && generator === !!i.value.node.generator) {
-            i.value.optsAssign = Object.assign(i.value.optsAssign || {},opts)
-          }
-          yield i
-        }
-      }
-    })
-  }
-}
-
-export const profileDef = (name) => injectOpts({mode:name})
-export const genProfileDef = (name) => injectOpts({gmode:name})
-
-export const delayedProfileDef = (name) => injectFuncOpts({mode:name})
-export const delayedGenProfileDef = (name) => injectFuncOpts({gmode:name})
-
 export default main
-

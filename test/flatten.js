@@ -14,11 +14,12 @@ import * as Debug from "../src/debug"
 import * as Dump from "../src/dump"
 import * as Uniq from "../src/uniq"
 import * as Block from "../src/block"
+import * as Bind from "../src/bind"
 import * as Trace from "estransducers/trace"
 
 const run = transformExpr(R.pipe(
   Branch.prepareLogical,
-  Block.flatten,
+  Bind.flatten,
   Prop.recalcEff,
   Debug.mark,
   consumeScope))
@@ -48,11 +49,11 @@ describe('flatten expressions', function() {
           }),
           print(function () /*BS|E*/{
             i += 2;
-            /*VD|S*/var a = ++i;
-            /*VD|S|E*/var b = /*CE|B*/eff2(a);
+            /*VD|S*/var b = ++i;
+            /*VD|S|E*/var a = /*CE|B*/eff2(b);
             /*VD|S*/var c = i++;
             /*VD|S|E*/var d = /*CE|B*/eff3(i);
-            /*ES|S|E*/ /*CE|B*/eff1(b, c, d);
+            /*ES|S|E*/ /*CE|B*/eff1(a, c, d);
           }))
       })
     })
@@ -64,10 +65,11 @@ describe('flatten expressions', function() {
           var a = eff(1) || eff(2);
         }),
         print(function () /*BS|E*/{
-          /*VD|S|E*/var b = /*CE|B*/eff(1);
-          /*VD|S|E*/var a = /*LE|B*/b || /*stmtExpr|E*/(() => /*BS|E*/{
+          /*VD|S|E*/var c = /*CE|B*/eff(1);
+          /*VD|S|E*/var b = /*LE|B*/c || /*stmtExpr|E*/(() => /*BS|E*/{
             /*ES|S|E*/ /*CE|B*/eff(2);
           })();
+          var a = b;
         }))
     })
   })
@@ -84,7 +86,7 @@ describe('flatten expressions', function() {
       }))
   })
   context('with sequence operator', function() {
-    it('should thread effects accordingly', function() {
+    it('should remove the sequence operator', function() {
       equal(
         run(function() {
           var i = 0;
@@ -93,13 +95,12 @@ describe('flatten expressions', function() {
         //TODO: clean the sequence
         print(function () /*BS|E*/{
           var i = 0;
-          /*VD|S|E*/var a = /*CE|B*/eff(i);
-          /*VD|S*/var b = i++;
-          /*VD|S*/var c = i--;
-          /*VD|S|E*/var d = /*CE|B*/eff(c);
-          /*VD|S*/var e = i += 2;
-          /*VD|S|E*/var f = /*CE|B*/eff(e);
-          a, b, d, f;
+          /*ES|S|E*/ /*CE|B*/eff(i);
+          /*ES|S*/i++;
+          /*VD|S*/var a = i--;
+          /*ES|S|E*/ /*CE|B*/eff(a);
+          /*VD|S*/var b = i += 2;
+          /*ES|S|E*/ /*CE|B*/eff(b);
         }))
     })
   })
@@ -189,8 +190,8 @@ describe('flatten `for`', function() {
           }
         }`),
         print((function () /*BS|E*/{
-          /*VD|S|E*/var i = /*CE|B*/init();
-          for (;;) {
+          /*VD|S|E*/var a = /*CE|B*/init();
+          for (var i = a;;) {
             b;
           }
         })))

@@ -11,6 +11,7 @@ import {recalcEff} from "../src/propagate"
 import * as Debug from "../src/debug"
 import * as Branch from "../src/branch"
 import * as Ctrl from "../src/control"
+import * as Block from "../src/block"
 
 const runImpl = (pass) => transformExpr(R.pipe(
   Ctrl.removeLabeldStatement,
@@ -18,6 +19,7 @@ const runImpl = (pass) => transformExpr(R.pipe(
   Branch.toBlocks,
   pass,
   recalcEff,
+  Block.interpretSyms,
   Branch.clean,
   Debug.mark,
   consumeScope))

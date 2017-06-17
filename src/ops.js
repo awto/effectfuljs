@@ -15,84 +15,88 @@ export const op = symbol("op")
 const opNamesMap = new Map()
 const opNamesReserved = new Set()
 
+const assignmentOps = {
+  "="   : Kit.sysId("assignOp"),
+  "+="  : Kit.sysId("plusAssignOp"),
+  "-="  : Kit.sysId("minusAssignOp"),
+  "*="  : Kit.sysId("multAssignOp"),
+  "/="  : Kit.sysId("divAssignOp"),
+  "%="  : Kit.sysId("modAssignOp"),
+  "<<=" : Kit.sysId("lshiftAssignOp"),
+  ">>=" : Kit.sysId("rshiftAssignOp"),
+  ">>>=": Kit.sysId("rushiftAssignOp"),
+  "|="  : Kit.sysId("bwOrAssignOp"),
+  "^="  : Kit.sysId("bwXorAssignOp"),
+  "&="  : Kit.sysId("bwAndAssignOp")
+}
+
+const binaryOps = {
+  "-"     : Kit.sysId("unaryMinusOp"),
+  "+"     : Kit.sysId("unaryPlusOp"),
+  "!"     : Kit.sysId("notOp"),
+  "~"     : Kit.sysId("invertOp"),
+  "typeof": Kit.sysId("typeofOp"),
+  "void"  : Kit.sysId("voidOp"),
+  "delete": Kit.sysId("deleteOp")
+}
+
+const unaryOps = {
+  "=="        : Kit.sysId("eqOp"),
+  "!="        : Kit.sysId("neqOp"),
+  "==="       : Kit.sysId("strictEqOp"),
+  "!=="       : Kit.sysId("strictNeqOp"),
+  "<"         : Kit.sysId("lsOp"),
+  "<="        : Kit.sysId("leOp"),
+  ">"         : Kit.sysId("mrOp"),
+  ">="        : Kit.sysId("meOp"),
+  "<<"        : Kit.sysId("lshiftOp"),
+  ">>"        : Kit.sysId("rshiftOp"),
+  ">>>"       : Kit.sysId("urshiftEqOp"),
+  "+"         : Kit.sysId("plusOp"),
+  "-"         : Kit.sysId("minusOp"),
+  "*"         : Kit.sysId("multOp"),
+  "/"         : Kit.sysId("divOp"),
+  "%"         : Kit.sysId("ModOp"),
+  "|"         : Kit.sysId("bwOrOp"),
+  "^"         : Kit.sysId("bwXorOp"),
+  "&"         : Kit.sysId("bwAndOp"),
+  "in"        : Kit.sysId("inOp"),
+  "instanceof": Kit.sysId("instanceOfOp")
+}
+
+const updateOps = {
+  "++": Kit.sysId("incrOp"),
+  "--": Kit.sysId("decrOp")
+}
+
+const prefixUpdateOps = {
+  "++": Kit.sysId("prefixIncrOp"),
+  "--": Kit.sysId("prefixDecrOp")
+}
+
+const logicalOps = {
+  "||": Kit.sysId("orOp"),
+  "&&": Kit.sysId("andOp")
+}
+
 function getOpName(i) {
   switch(i.type) {
   case Tag.AssignmentExpression:
-    switch(i.value.node.operator) {
-    case "="   : return "assignOp"
-    case "+="  : return "plusAssignOp"
-    case "-="  : return "minusAssignOp"
-    case "*="  : return "multAssignOp"
-    case "/="  : return "divAssignOp"
-    case "%="  : return "modAssignOp"
-    case "<<=" : return "lshiftAssignOp"
-    case ">>=" : return "rshiftAssignOp"
-    case ">>>=": return "rushiftAssignOp"
-    case "|="  : return "bwOrAssignOp"
-    case "^="  : return "bwXorAssignOp"
-    case "&="  : return "bwAndAssignOp"
-    default:
-      throw new Error(`Unknown assignment operator ${i.value.node.operator}`)
-    }
+    return assignmentOps[i.value.node.operator]
   case Tag.BinaryExpression:
-    switch(i.value.node.operator) {
-    case "-"     : return "unaryMinusOp"
-    case "+"     : return "unaryPlusOp"
-    case "!"     : return "notOp"
-    case "~"     : return "invertOp"
-    case "typeof": return "typeofOp"
-    case "void"  : return "voidOp"
-    case "delete": return "deleteOp"
-    default:
-      throw new Error(`Unknown binary operator ${i.value.node.operator}`)
-    }
+    return binaryOps[i.value.node.operator]
   case Tag.UnaryExpression:
-    switch(i.value.node.operator) {
-    case "=="        : return "eqOp"
-    case "!="        : return "neqOp"
-    case "==="       : return "strictEqOp"
-    case "!=="       : return "strictNeqOp"
-    case "<"         : return "lsOp"
-    case "<="        : return "leOp"
-    case ">"         : return "mrOp"
-    case ">="        : return "meOp"
-    case "<<"        : return "lshiftOp"
-    case ">>"        : return "rshiftOp"
-    case ">>>"       : return "urshiftEqOp"
-    case "+"         : return "plusOp"
-    case "-"         : return "minusOp"
-    case "*"         : return "multOp"
-    case "/"         : return "divOp"
-    case "%"         : return "ModOp"
-    case "|"         : return "bwOrOp"
-    case "^"         : return "bwXorOp"
-    case "&"         : return "bwAndOp"
-    case "in"        : return "inOp"
-    case "instanceof": return "instanceOfOp"
-    default:
-      throw new Error(`Unknown binary operator ${i.value.node.operator}`)
-    }
+    return unaryOps[i.value.node.operator]
   case Tag.UpdateExpression:
-    let name = null
-    switch(i.value.node.operator) {
-    case "++": name = "Incr"; break
-    case "--":  name = "Decr"; break
-    default:
-      throw new Error(`Unknown update operator ${i.value.node.operator}`)
-    }
-    return i.value.node.prefix ? `pref${name}Op` : `${name.toLowerCase()}Op`
+    return (i.value.node.prefix ? prefixUpdateOps : updateOps)
+      [i.value.node.operator]
   case Tag.LogicalExpression:
-    switch(i.value.node.operator) {
-    case "||": return "orOp"
-    case "&&": return "andOp"
-    default:
-      throw new Error(`Unknown logical operator ${i.value.node.operator}`)
-    }
+    return logicalOps[i.value.node.operator]
   }
   let res = opNamesMap.get(i.type)
   if (res != null)
     return res
-  res = symName(i.type).match(/[A-Z]/g).join("")
+  res = Kit.sysId(Kit.symName(i.type).match(/[A-Z]/g).join(""))
   assert.ok(!opNamesReserved.has(res))
   opNamesMap.set(i.type,res)
   return res
@@ -121,7 +125,7 @@ export function injectOps(si) {
           s.peel(i)
           yield s.enter(i.pos,op,{node: {src:i.value,type:i.type},
                                   bind: true,
-                                  name: v || getOpName(i)})
+                                  sym: v || getOpName(i)})
           yield* walk()
           yield* s.leave()
           Kit.skip(s.leave())
@@ -144,7 +148,7 @@ export const interpretOps = R.pipe(function interpretOpts(si) {
         const lab = s.label()
         yield s.enter(i.pos,Block.effExpr)
         yield s.enter(i.pos,Tag.CallExpression)
-        yield* Kit.packId(s,Tag.callee,i.value.name)
+        yield Kit.idTok(Tag.callee,i.value.sym)
         yield s.enter(Tag.arguments,Tag.Array)
         yield s.enter(Tag.push,Kit.Subst)
         yield* walk()
@@ -152,6 +156,7 @@ export const interpretOps = R.pipe(function interpretOpts(si) {
       }
     }
   }
+  return walk()
 })
 
 

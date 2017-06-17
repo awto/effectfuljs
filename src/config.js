@@ -6,10 +6,10 @@ export default {
   gmode: false,
   mode: false,
   state: false,
-  closure: true,
+  closure: false,
   generator: false,
   generatorDo: false,
-  coerce: true,
+  coerce: false,
   require: null,
   ns: null,
   libs: {

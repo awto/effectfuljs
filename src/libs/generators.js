@@ -1,22 +1,16 @@
-import {tok} from "../kit"
-import {configDiff,profile} from "../policy"
-import {defaultGensTransform,injectFuncOpts,injectOpts} from "../transform"
+import * as Policy from "../policy"
+import * as T from "../transform"
+import * as R from "ramda"
 
 export default function* generatorsInit(ns) {
-  yield tok(configDiff,{
-    node: {
-      profiles: {
-        disabled:injectFuncOpts({generator:true,transform:false}),
-        enabled:injectFuncOpts({generator:true,
-                                closure:true,
-                                coerce:false,
-                                state:false,
-                                transform:defaultGensTransform,
-                                ns
-                               })
-      }
-    }
-  })
-  yield tok(profile,{node:{name:"enabled"}})
+  return R.pipe(
+    Policy.setFuncOpts({generator:true,
+                        closure:true,
+                        coerce:false,
+                        state:false,
+                        transform:T.defaultGensTransform,
+                        ns
+                       }),
+    Policy.configDiffPass)
 }
 

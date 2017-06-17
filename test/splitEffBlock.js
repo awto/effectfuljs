@@ -11,6 +11,7 @@ import * as Block from "../src/block"
 import * as Debug from "../src/debug"
 import * as Scope from "../src/scope"
 import * as Branch from "../src/branch"
+import * as Bind from "../src/bind"
 
 const runImpl = (pass) =>
       transformExpr(R.pipe(
@@ -18,12 +19,12 @@ const runImpl = (pass) =>
         Branch.toBlocks,
         recalcEff,
         Array.from,
-        Block.flatten,
+        Bind.flatten,
         recalcEff,
         Block.splitEffBlock,
         pass,
         Array.from,
-        Block.propagateBindVars,
+        Bind.propagateBindVars,
         Debug.mark,
         Kit.consume))
 

@@ -1,7 +1,7 @@
 import * as R from "ramda"
 import * as Kit from "./kit"
 import * as assert from "assert"
-import {Tag,symbol} from "estransducers"
+import {Tag,symbol,symInfo} from "./kit"
 import * as Debug from "./debug"
 import * as Block from "./block"
 import * as Prop from "./propagate"
@@ -42,47 +42,38 @@ export function* mark(s) {
   }
 }
 
-export function* toBlocks(s) {
-  const sl = Kit.auto(s)
-  function* walk(enabled) {
-    let res = true
-    for(const i of sl.sub()) {
+export function toBlocks(si) {
+  const s = Kit.auto(si)
+  function* walk() {
+    for(const i of s.sub()) {
       if (i.enter) {
-        let pos = i.pos
-        let lab
-        let e = false
-        if (i.type === Tag.SwitchCase && i.value.node === null)
-          res = false
-        if (enabled && i.value.stmt) {
-          if (i.pos === Tag.alternate)
-            res = false
-          switch(i.pos) {
-          case Tag.consequent:
-          case Tag.alternate:
-            lab = sl.label()
+        switch(i.type) {
+        case Tag.ConditionalExpression:
+          yield i
+          yield* walk()
+          continue
+        }
+        switch(i.pos) {
+        case Tag.consequent:
+        case Tag.alternate:
+          const lab = s.label()
+          if (i.type === Tag.Array) {
+            // switch/case
+            yield i
+            yield s.enter(Tag.push,Tag.BlockStatement)
+            yield s.enter(Tag.body,Tag.Array)
+            yield* walk()
+          } else if (symInfo(i.type).expr) {
+            yield i
+            continue
+          } else {
             if (i.type !== Tag.BlockStatement) {
-              yield sl.enter(pos,Tag.BlockStatement)
-              yield sl.enter(Tag.body,Tag.Array)
-              pos = Tag.push
-            }
-          }
-        }
-        if (i.value.eff || i.value.shallowEff) {
-          switch(i.type) {
-          case Tag.SwitchStatement:
-          case Tag.IfStatement:
-            lab = sl.label()
-            e = true
-          }
-        }
-        if (lab != null) {
-          yield sl.peel(Kit.setPos(i,pos))
-          if (yield* walk(e)) {
-            switch(i.type) {
-            case Tag.IfStatement:
-              yield sl.enter(Tag.alternate,Tag.BlockStatement)
-              yield sl.enter(Tag.body,Tag.Array)
-            }
+              yield s.enter(i.pos,Tag.BlockStatement)
+              yield s.enter(Tag.body,Tag.Array)
+              yield s.peel(Kit.setPos(i,Tag.push))
+            } else
+              yield i
+            yield* walk()
           }
           yield* lab()
           continue
@@ -90,9 +81,8 @@ export function* toBlocks(s) {
       }
       yield i
     }
-    return res
   }
-  yield* walk()
+  return walk()
 }
 
 export function* clean(s) {
@@ -126,45 +116,37 @@ export function* clean(s) {
 
   if the expression requires coercion lifting
 */
-const logicalToConditional = R.pipe(
-  function logicalToConditional(s) {
-    s = Kit.auto(s)
-    function* walk(sw) {
-      for(const i of sw) {
-        if (i.enter && s.opts.coerce === false
-            && i.value.eff && i.type === Tag.LogicalExpression)
-        {
-          const l = s.cur().value
-          const ref = l.shared = {}
-          s.peel(i)
-          const lab = s.label()
-          const j = s.enter(i.pos,Tag.ConditionalExpression,
-                            {eff:true,bind:i.value.bind})
-          j.value.shared = i.value.shared
-          yield j
-          yield s.enter(Tag.test,Kit.Subst)
-          yield* walk(s.one())
-          yield* s.leave()
-          if (i.value.node.operator === "&&") {
-            yield s.enter(Tag.consequent,Kit.Subst)
-            yield* walk(s.one())
-            yield* s.leave()
-            yield s.tok(Tag.alternate,Block.sharedRef,{ref})
-          } else {
-            yield s.tok(Tag.consequent,Block.sharedRef,{ref})
-            yield s.enter(Tag.alternate,Kit.Subst)
-            yield* walk(s.one())
-          }
-          yield* lab()
-          Kit.skip(s.leave())
-        } else 
-          yield i
-      }
+function logicalToConditional(s) {
+  s = Kit.auto(s)
+  function* walk(sw) {
+    for(const i of sw) {
+      if (i.enter && s.opts.coerce === false
+          && i.value.eff && i.type === Tag.LogicalExpression)
+      {
+        const l = s.cur().value
+        const ref = l.shared = {}
+        s.peel(i)
+        const lab = s.label()
+        const j = s.enter(i.pos,Tag.ConditionalExpression,
+                          {eff:true,bind:i.value.bind})
+        j.value.shared = i.value.shared
+        yield j
+        yield* Kit.reposOne(walk(s.one()), Tag.test)
+        if (i.value.node.operator === "&&") {
+          yield* Kit.reposOne(walk(s.one()), Tag.consequent)
+          yield s.tok(Tag.alternate,Block.sharedRef,{ref})
+        } else {
+          yield s.tok(Tag.consequent,Block.sharedRef,{ref})
+          yield* Kit.reposOne(walk(s.one()), Tag.alternate)
+        }
+        yield* lab()
+        Kit.skip(s.leave())
+      } else 
+        yield i
     }
-    return walk(s)
-  },
-  Kit.completeSubst
-)
+  }
+  return walk(s)
+}
 
 export const liftCoerce = R.pipe(
   function liftCoerce(s) {
@@ -354,8 +336,9 @@ export const switchRewrite = R.pipe(
   }
 )
   
-  /**
- * rewrites `switch` statements to a normal form suitable for further transforms
+/**
+ * rewrites `switch` statements to a normal form where all branches execution 
+ * control doesn't overlap
  *
  * must receive reverse order iterator
  */
