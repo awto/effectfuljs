@@ -309,8 +309,6 @@ export const mochaPrepare = R.pipe(
 
 export const mochaBdd = R.pipe(
   parse,
-  // mochaPrepare,
-  prepare,
-  toArr,
+  mochaPrepare,
   group,
   mochaTests)
