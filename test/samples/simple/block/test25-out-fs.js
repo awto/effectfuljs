@@ -1,4 +1,5 @@
 function a() {
+  var i;
   if (ee) return _1(i);else {
     return M.jM1(eff1(i++), _3, i);
   }

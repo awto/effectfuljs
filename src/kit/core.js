@@ -298,26 +298,6 @@ export function idTok(pos,sym) {
 
 export const coerceId = sysId("coerce")
 
-export function* packId(s,pos,sym) {
-  const ns = s.opts.ns
-  if (sym != null && sym !== coerceId) {
-    if (ns == null) {
-      yield tok(pos,{sym})
-    } else {
-      const e = enter(pos,Tag.MemberExpression,{})
-      yield e
-      yield tok(Tag.object,Tag.Identifier,{node:T.identifier(ns)})
-      yield tok(Tag.property,Tag.Identifier,{sym,node:{name:sym.name}})
-      yield leave(pos,Tag.MemberExpression,e.value)
-    }
-  } else {
-    if (ns == null)
-      yield tok(pos,Tag.Identifier,{sym:coerceId})
-    else
-      yield tok(pos,Tag.Identifier,{node:{name:ns}})
-  }
-}
-
 export function lookahead(s) {
   if (s.lookahead != null)
     return s

@@ -6,7 +6,7 @@
     try {
       return M.jME(eff(2), _3, _2);
     } catch (e) {
-      return _2();
+      return _2(e);
     }
   }
 

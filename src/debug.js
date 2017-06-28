@@ -74,7 +74,7 @@ export const trace = R.curry((prefix,s) => {
                         || isBindTok(v)),
         traceHighlight,Trace.prefix(prefix)
       )),
-    D.cleanComments,
+    T.cleanComments,
     T.verify,
     Array.from)(s)
 })
@@ -84,7 +84,7 @@ export const traceC = R.curry((prefix,s) => {
   return R.pipe(
     tracePrep,
     Trace.of(Trace.prefix(prefix)),
-    D.cleanComments,
+    T.cleanComments,
     T.verify)(s)
 })
 

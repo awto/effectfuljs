@@ -8,7 +8,7 @@ function a() {
       console.log('1');
       return M.jME(eff(1), _3, _2);
     } catch (e) {
-      return _2();
+      return _2(e);
     }
   }
 

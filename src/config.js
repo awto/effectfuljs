@@ -6,15 +6,14 @@ export default {
   gmode: false,
   mode: false,
   state: false,
-  closure: false,
   generator: false,
   generatorDo: false,
   coerce: false,
   require: null,
   ns: null,
   libs: {
-    "@effectfuljs/core": core,
-    "@effectfuljs/generators": generators
+    "@effectful/core": core,
+    "@effectful/generators": generators
   },
   profiles: {},
   parser: {},

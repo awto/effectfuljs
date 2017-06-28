@@ -164,8 +164,7 @@ function d() {
     return M.jMB(eff(result, i), _3);
   }
 
-  function _3(a) {
-    result = a;
+  function _3(result) {
     i++;
     return M.jR(_1);
   }
@@ -187,8 +186,7 @@ function e() {
     return M.jMB(eff(i), _3);
   }
 
-  function _3(a) {
-    result = a;
+  function _3(result) {
     i++;
     return M.jR(_1);
   }
@@ -210,8 +208,7 @@ function f() {
     return M.jMB(eff(i), _3);
   }
 
-  function _3(a) {
-    result = a;
+  function _3(result) {
     i++;
     return M.jR(_1);
   }

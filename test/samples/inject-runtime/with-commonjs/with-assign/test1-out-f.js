@@ -1,5 +1,5 @@
 var Z;
-Z = require('@effectfuljs/generators');
+Z = require('@effectful/generators');
 
 function a() {
   return Z.pure(1);

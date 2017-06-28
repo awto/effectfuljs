@@ -18,7 +18,7 @@ function b() {
     try {
       return M.jME(eff('in body'), _2, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -76,7 +76,7 @@ function e() {
       console.log('in body');
       return M.jME(eff('in body'), _2, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -119,7 +119,7 @@ function f() {
     try {
       return M.jME(eff('in body'), _2, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -150,7 +150,7 @@ function g() {
     try {
       return M.jME(eff('in body'), _2, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 

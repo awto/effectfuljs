@@ -1,17 +1,18 @@
 function a() {
+  var loop;
   loop = M.iterator(some);
-  return _1();
+  return _1(loop);
 
-  function _1() {
-    if (loop = loop()) return _2();else {
+  function _1(loop) {
+    if (loop = loop()) return _2(loop);else {
       return eff(2);
     }
   }
 
-  function _2() {
+  function _2(loop) {
     var i;
     i = loop.value;
-    return M.jMR(eff(1), _1);
+    return M.jM1R(eff(1), _1, loop);
   }
 }
 
@@ -19,65 +20,69 @@ function b() {
   return M.jMB(eff('d'), _1);
 
   function _1(a) {
-    _loop = M.iterator(a);
-    return _2(undefined);
+    var loop;
+    loop = M.iterator(a);
+    return _2(undefined, loop);
   }
 
-  function _2(i) {
-    if (_loop = _loop()) return _3();else {
+  function _2(i, loop) {
+    if (loop = loop()) return _3(loop);else {
       return eff(i);
     }
   }
 
-  function _3() {
+  function _3(loop) {
     var i;
-    i = _loop.value;
-    return M.jM1R(eff(i), _2, i);
+    i = loop.value;
+    return M.jM2R(eff(i), _2, i, loop);
   }
 }
 
 function c() {
-  loop1 = M.iterator(some);
-  return _1();
+  var loop;
+  loop = M.iterator(some);
+  return _1(undefined, undefined, loop);
 
-  function _1(i, j) {
-    if (loop1 = loop1()) return _2(j);else {
+  function _1(i, j, loop) {
+    if (loop = loop()) return _2(j, loop);else {
       return eff(i, j);
     }
   }
 
-  function _2(j) {
-    var i;
-    i = loop1.value;
-    loop2 = M.iterator(other);
-    return _3(i, j);
+  function _2(j, loop) {
+    var i, _loop;
+
+    i = loop.value;
+    _loop = M.iterator(other);
+    return _3(i, j, loop, _loop);
   }
 
-  function _3(i, j) {
-    if (loop2 = loop2()) return _4(i);else return _1(i, j);
+  function _3(i, j, loop, _loop) {
+    if (_loop = _loop()) return _4(i, loop, _loop);else return _1(i, j, loop);
   }
 
-  function _4(i) {
+  function _4(i, loop, _loop) {
     var j;
-    j = loop2.value;
-    return M.jM2R(eff(i, j), _3, i, j);
+    j = _loop.value;
+    return M.jM4R(eff(i, j), _3, i, j, loop, _loop);
   }
 }
 
 function d() {
-  loop3 = M.iterator(some);
-  return _1();
+  var loop;
+  loop = M.iterator(some);
+  return _1(loop);
 
-  function _1() {
-    if (loop3 = loop3()) return _2();else {
+  function _1(loop) {
+    if (loop = loop()) return _2(loop);else {
       return eff(2);
     }
   }
 
-  function _2() {
+  function _2(loop) {
     var i;
-    i = loop3.value;
-    return M.jMR(eff(1), _1);
+    i = loop.value;
+    return M.jM1R(eff(1), _1, loop);
   }
 }
 

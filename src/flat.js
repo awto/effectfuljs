@@ -715,12 +715,8 @@ export const convert = R.pipe(
               yield s.tok(Tag.param,Tag.Identifier,{sym})
               yield s.enter(Tag.body,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
-              const catchJump = s.tok(Tag.push,Ctrl.jump,catchCont)
-              const jump = catchJump.value
-              const frameArgs = jump.frameArgs
-                    || (jump.frameArgs = new Map())
-              frameArgs.set(jump.exceptSym, sym)
-              yield catchJump
+              yield s.enter(Tag.push,Ctrl.jump,catchCont)
+              yield s.tok(Tag.push, Tag.Identifier, {sym})
               yield* lab()
             }
             yield s.close(i)
@@ -867,8 +863,8 @@ export const interpret = R.pipe(
           case Block.frame:
             const fn = num++
             i.value.declSym.orig = `_${fn}`
+            const flab = s.label()
             if (fn !== 0) {
-              const flab = s.label()
               const {catchCont} = i.value
               const pat = i.value.pat
               const thread = i.value.threadParams
@@ -911,24 +907,35 @@ export const interpret = R.pipe(
               yield* paramLab()
               yield s.enter(Tag.body,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
-              const locals = i.value.frameLocals
-              if (locals != null && locals.size) {
+            }
+            const locals = i.value.frameLocals
+            if (locals != null && locals.size) {
+              const vars = []
+              if (fn === 0) {
+                // the symbols may be already declared as params
+                const decls = s.first.value.savedDecls
+                for(const j of locals) {
+                  if (decls.has(j))
+                    vars.push(j)
+                }
+              } else
+                vars.push(...locals)
+              if (vars.length) {
+                vars.sort((a,b) => a.num - b.num)
                 const lab = s.label()
                 yield s.enter(Tag.push,Tag.VariableDeclaration,
                               {node:{kind:"var"}})
                 yield s.enter(Tag.declarations,Tag.Array)
-                for(const sym of [...locals].sort((a,b) => a.num - b.num)) {
+                for(const sym of vars) {
                   yield s.enter(Tag.push,Tag.VariableDeclarator)
                   yield s.tok(Tag.id,Tag.Identifier,{sym})
                   yield* s.leave()
                 }
                 yield* lab()
               }
-              yield* walk()
-              yield* flab()
-            } else {
-              yield* walk()
             }
+            yield* walk()
+            yield* flab()
             s.close(i)
             continue
           }
@@ -1053,45 +1060,6 @@ export const interpret = R.pipe(
     }
     return walk()
   })
-
-/** 
- * same as `State.calcFrameStateVars` but much simpler because 
- * of flat frames structure 
- */
-function calcFrameStateVars(s) {
-  let sw = null
-  for(const i of s) {
-    switch(i.type) {
-    case Block.frame:
-      sw = i.value.stateVars = {r:new Map(),w:new Map()}
-      break
-    case Block.bindPat:
-      assert.ok(sw)
-      let k = sw.r.get(i.value.sym)
-      if (k == null)
-        sw.r.set(i.value.sym,k = [])
-      k.push(i.value)
-      break
-    case Tag.Identifier:
-      const {sym} = i.value
-      if (sw != null && sym != null) {
-        if (i.value.rhs && !sw.w.has(sym)) {
-          let k = sw.r.get(sym)
-          if (k == null)
-            sw.r.set(sym,k = [])
-          k.push(i.value)
-        }
-        if (i.value.lhs) {
-          let k = sw.w.get(sym)
-          if (k == null)
-            sw.w.set(sym,k = [])
-          k.push(i.value)
-        }
-      }
-      break
-    }
-  }
-}
 
 /** 
  * calculates parameters for each frame definition
@@ -1381,15 +1349,8 @@ function calcCfg(sa) {
  *  - `frameDecls: Set<Symbol>`: symbol declared in this frame
  */
 function calcVarDeps(si) {
-  const sa = Kit.toArray(si)
+  const sa = Kit.toArray(State.calcFrameStateVars(si))
   const opts = sa[0].value.opts
-  const fi = [...Kit.filter(
-    i => i.enter
-      && (i.type === Tag.Identifier && i.value.sym != null
-          || i.type === Block.bindPat
-          || i.type === Block.frame),
-    State.reorderVarUsages(sa))]
-  calcFrameStateVars(fi)
   const cfg = calcCfg(sa)
   resolveFrameParams(cfg)
   propagateArgs(cfg)

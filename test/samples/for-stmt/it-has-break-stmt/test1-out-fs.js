@@ -1,4 +1,5 @@
 (function () {
+  var j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
   return _1(j, len, ref);

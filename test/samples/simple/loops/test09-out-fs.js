@@ -10,6 +10,8 @@ function a() {
   }
 
   function _3(b) {
+    var a;
+
     if (b === true) {
       if (a) return _4();else return _5();
     } else return M.pure();

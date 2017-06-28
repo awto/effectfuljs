@@ -155,7 +155,7 @@ export const interpret = R.pipe(function interpret(s) {
             const lab = sl.label()
             yield sl.enter(i.pos,Block.effExpr)
             yield sl.enter(Tag.expression,Tag.CallExpression)
-            yield* Kit.packId(sl,Tag.callee)
+            yield sl.tok(Tag.callee,Tag.Identifier,{sym:Kit.coerce})
             yield sl.enter(Tag.arguments,Tag.Array)
             // TODO: it is likely already push
             yield sl.enter(Tag.push,Kit.Subst)

@@ -1,4 +1,5 @@
 (function () {
+  var j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
   return _1(j, len, ref);
@@ -150,64 +151,67 @@ function c() {
 }
 
 function d() {
+  var result, i;
   result = 0;
-  _i = 0;
-  return _1(result, _i);
+  i = 0;
+  return _1(result, i);
 
-  function _1(result, _i) {
-    if (_i < 10) return _2(result, _i);else {
+  function _1(result, i) {
+    if (i < 10) return _2(result, i);else {
       return eff(result);
     }
   }
 
-  function _2(result, _i) {
-    return M.jMB1(eff(result, _i), _3, _i);
+  function _2(result, i) {
+    return M.jMB1(eff(result, i), _3, i);
   }
 
-  function _3(result, _i) {
-    _i++;
-    return M.jNR(_1, result, _i);
+  function _3(result, i) {
+    i++;
+    return M.jNR(_1, result, i);
   }
 }
 
 function e() {
-  _result = 0;
-  i1 = 0;
-  return _1(i1);
+  var result, i;
+  result = 0;
+  i = 0;
+  return _1(i);
 
-  function _1(i1) {
-    if (i1 < 10) return _2(i1);else {
+  function _1(i) {
+    if (i < 10) return _2(i);else {
       return eff();
     }
   }
 
-  function _2(i1) {
-    return M.jMB1(eff(i1), _3, i1);
+  function _2(i) {
+    return M.jMB1(eff(i), _3, i);
   }
 
-  function _3(_result, i1) {
-    i1++;
-    return M.jNR(_1, i1);
+  function _3(result, i) {
+    i++;
+    return M.jNR(_1, i);
   }
 }
 
 function f() {
-  result1 = 0;
-  i2 = 0;
-  return _1(result1, i2);
+  var result, i;
+  result = 0;
+  i = 0;
+  return _1(result, i);
 
-  function _1(result1, i2) {
-    if (i2 < 10) return _2(i2);else {
-      return eff(result1);
+  function _1(result, i) {
+    if (i < 10) return _2(i);else {
+      return eff(result);
     }
   }
 
-  function _2(i2) {
-    return M.jMB1(eff(i2), _3, i2);
+  function _2(i) {
+    return M.jMB1(eff(i), _3, i);
   }
 
-  function _3(result1, i2) {
-    i2++;
-    return M.jNR(_1, result1, i2);
+  function _3(result, i) {
+    i++;
+    return M.jNR(_1, result, i);
   }
 }

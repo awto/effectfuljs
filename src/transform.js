@@ -30,23 +30,24 @@ export const consumeScope = consume
 
 export const preproc = R.pipe(
   Kit.prepare,
+  Kit.scope.prepare,
   Prop.prepare,
   Policy.prepare,
-  varScope.prepare
-)
+  State.prepare)
 
 export const scopes = R.pipe(
   preproc,
   Scope.splitScopes)
 
-const restore = R.pipe(
-  Scope.restore,
+const finalize = R.pipe(
+  State.locals,
+  Block.interpretLibSyms,
   varScope.resolve,
   consume)
 
-const ifEff = R.curry(function (others, si) {
+const ifEff = R.curry(function ifEff(others, si) {
   const s = Kit.auto(si)
-  return s.first.value.topEff ? others(s) : s
+  return (s.first.value.topEff ? others(s) : s)
 })
 
 /**
@@ -54,20 +55,27 @@ const ifEff = R.curry(function (others, si) {
  */
 export const all =
   R.pipe(
-    Control.assignLabels,
-    Gens.prepare, Gens.remove,
-    //  Ops.injectOps,
-    Prop.propagateEff,
+    Kit.map(R.pipe(
+      Control.assignLabels,
+      Gens.prepare, Gens.remove,
+      Prop.propagateEff,
+      Kit.toArray
+    )),
     Kit.toArray,
-    ifEff(R.pipe(
+    Kit.map(ifEff(R.pipe(
       Control.removeLabeldStatement,
       Loops.toBlocks,
       Branch.toBlocks,
-      ifNested(R.pipe(Branch.switchRewrite)),
       Loops.forOfStmt,
       Loops.doWhileStmt,
       Prop.recalcEff,
       Loops.normilizeFor,
+      Loops.blockScope,
+      Scope.splitScopes
+    ))),
+    function* concat(s) {
+      for(const i of s) { yield [].concat(...i) } },
+    Kit.map(ifEff(R.pipe(
       Coerce.lift,
       Branch.liftSwitchCoerce,
       State.saveDecls,
@@ -78,74 +86,25 @@ export const all =
       Branch.prepareLogical,Prop.recalcEff,
       Bind.flatten,
       Exceptions.inject,Prop.recalcEff,
-      // Branch.liftCoerce,Prop.recalcEff,
       Block.splitEffBlock,
-      State.prepare,
-      onChainType({
-        left: R.pipe(
-          ifClosure(R.pipe(Bind.calcVarDeps(null),
-                           ifState(State.closureReGroup),
-                           Bind.groupDeps,
-                           Prop.recalcEff
-                        ),
-                    R.pipe(Bind.calcVarDeps(null),
-                           Bind.threadDeps,
-                           Bind.injectThreadMaps
-                          )),
-          ifState(State.calcFrameStateVars),
-          Block.factorEffSeq,
-          Prop.recalcEff,
-          ifState(ifClosure(State.closure)),
-          Bind.propagateBindVars,
-          ifState(State.inject),
-          Prop.recalcEff,
-          Block.lassoc,
-          Block.cleanPureFrames,
-          Bind.propagateBindVars),
-        right: R.pipe(
-          // TODO: join rassoc with factor
-          Block.rassoc,
-          Block.factorEffSeq,
-          Prop.recalcEff,
-          ifState(State.calcFrameStateVars),
-          ifState(ifClosure(State.closure)),
-          Bind.propagateBindVars,
-          ifState(R.pipe(State.inject,Block.lassoc)),
-          Prop.recalcEff,
-          Block.cleanPureFrames,
-          Bind.propagateBindVars),
-        lflat: R.pipe(
-          Bind.calcVarDeps(null),
-          Bind.threadDeps,
-          Control.recalc,
-          Flat.convert
-        )
-      }),
+      Bind.calcVarDeps(null),
+      Bind.threadDeps,
+      Control.recalc,
+      Flat.convert
+    ))),
+    Kit.map(R.pipe(ifEff(R.pipe(
       Block.cleanPureEff,
-      ifLFlat(Flat.interpret,
-              R.pipe(
-                State.interpret,
-                Prop.recalcEff,
-                Control.interpret,
-                Loops.interpretRepeat,
-                Block.cleanupEffSeq,
-                Kit.enableIf(i => i.parLoops, Loops.interpretParLoop),
-                Block.interpretParEffSeq,
-                Block.interpretBinEffSeq,
-                Coerce.inject,
-                Coerce.liftFuncs,
-                Block.interpretPure,
-                Bind.interpret)),
+      Flat.interpret,
       Block.interpretApp,
       Coerce.interpret,
       Block.interpretCasts,
-      Block.interpretSyms,
       Branch.clean,
       State.restoreDecls,
-      simplify)))
+      simplify,
+      Kit.toArray)))))
 
-export const defaultTransform = R.pipe(Policy.defaultPrepare,all)
-export const defaultGensTransform = R.pipe(Policy.generatorsPrepare, all)
+export const defaultTransform = R.pipe(Kit.map(Policy.defaultPrepare),all)
+export const defaultGensTransform = R.pipe(Kit.map(Policy.generatorsPrepare), all)
 
 /**
  * entry point for the whole translator chain
@@ -153,34 +112,40 @@ export const defaultGensTransform = R.pipe(Policy.generatorsPrepare, all)
 export function run(s) {
   let inject = new Map()
   let any = false
-  function* scopesRun() {
-    for(const i of scopes(s)) {
-      const {value} = i[0]
-      const f = value.opts
-      if (f != null && f.transform) {
-        if (f.inject && f.require && f.ns)
-          inject.set(f.ns,f.require)
-        any = true
-        yield Kit.toArray(f.transform(i))
-      } else
-        yield i
-    }
+  const transformMap = new Map()
+  const result = []
+  const inp = [...scopes(s)]
+  let scopeNum = 0
+  for(const i of inp) {
+    const {value} = i[0]
+    value.scopeNum = scopeNum++
+    const f = value.opts
+    if (f != null && f.transform) {
+      if (f.inject && f.require && f.ns)
+        inject.set(f.$ns,f.require)
+      any = true
+      Kit.mapPush(transformMap, f.transform, i)
+    } else
+      result.push(i)
   }
-  const res = [...scopesRun()]
-  if (any) {
-    const root = res[res.length-1]
-    if (inject.size) {
-      const namespaces = root[0].value.namespaces || new Map()
-      const toInject = []
-      for(const [ns,mod] of inject) {
-        const imported = namespaces.get(mod)
-        if (!imported || ns !== imported)
-          toInject.push([ns,mod])
-      }
-      res[res.length - 1] = Rt.inject(toInject,root)
-    }
-    restore(res)
+  if (!transformMap.size)
+    return;
+  for(const [t,i] of transformMap) {
+    result.push(...t(i))
   }
+  result.sort(([a],[b]) => a.value.scopeNum - b.value.scopeNum)
+  let res = [...Scope.restore(result)]
+  if (inject.size) {
+    const namespaces = res[0].value.namespaces || new Map()
+    const toInject = []
+    for(const [ns,mod] of inject) {
+      const imported = namespaces.get(mod)
+      if (!imported || ns !== imported)
+        toInject.push([ns,mod])
+    }
+    res = Rt.inject(toInject,res)
+  }
+  finalize(res)
 }
 
 export function main(ast,opts = {}) {

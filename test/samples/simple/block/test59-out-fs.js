@@ -1,4 +1,5 @@
 function a() {
+  var i;
   i = 0;
   return M.jMB(read1(), _1);
 

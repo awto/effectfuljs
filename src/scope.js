@@ -54,26 +54,35 @@ export function recalcLocals(sl) {
   }
 }
 
-export function splitScopes(s) {
-  s = Kit.auto(s)
+/** 
+ * takes a stream of tokens and split it into an array of streams
+ * with each element representing a function from the original stream
+ */
+export function splitScopes(si) {
+  const s = Kit.auto(si)
   const frames = []
-  frames.push(Array.from(walk(s.take())))
+  frames.push([...walk(s.take())])
   return frames
+  
   function* walk(p) {
     yield s.enter(Tag.top,p.type,p.value)
     for(const i of s.sub()) {
-      if (i.value.func) {
-        if (i.enter) {
-          frames.push(Array.from(walk(i)))
-          yield s.tok(i.pos,i.type,i.value)
-        }
-      } else
-        yield i
+      if (i.enter && !i.leave && s.curLev() != null && i.value.func) {
+        frames.push([...walk(i)])
+        yield s.tok(i.pos,i.type,i.value)
+        continue
+      }
+      yield i
     }
     yield* s.leave()
+    s.close(p)
   }
 }
 
+/** 
+ * converts list of token streams into a single stream with all scopes 
+ * unfolded in original positions
+ */
 export function restore(scopes) {
   const a = Kit.toArray(scopes)
   const s = a.pop()
@@ -104,35 +113,12 @@ export function restore(scopes) {
   return walk(s,Tag.top)
 }
 
-function* combineScopes(s) {
-  const d = new Map()
-  s = Kit.auto(s)
-  for(const i of s) {
-    if (i.value.typeInfo.func) {
-      if (i.enter) {
-        if (i.type === Tag.top) {
-          d.set(i.value,Array.from(s.sub()))
-        } else {
-          const n = d.get(i.value)
-          if (n == null) {
-            d.delete(i.value)
-            yield s.enter(i.pos,i.type,i.value)
-            yield* n
-            yield* s.leave()
-          } else {
-            yield* s.copy(i)
-          }
-        }
-      }
-    } else {
-      yield i
-    }
-  }
-}
-
-//TODO: arrow functions bodies to block
-export function topCastToBody(s) {
-  return s
-}
+/** runs `pass` for each function in `s` */
+export const subScopes = R.curry(function(pass, s) {
+  const res = []
+  for(const i of splitScopes(s))
+    res.push([...pass(i)])
+  return restore(res)
+})
 
 

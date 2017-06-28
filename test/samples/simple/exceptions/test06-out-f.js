@@ -6,7 +6,7 @@ function a() {
     try {
       return M.jME(eff(1), M.pure, _2);
     } catch (e) {
-      return _2();
+      return _2(e);
     }
   }
 

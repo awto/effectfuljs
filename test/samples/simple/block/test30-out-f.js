@@ -1,4 +1,6 @@
 function a() {
+  var i, j;
+
   function b(i) {
     return M.jM(eff1(i, j), _1);
 
@@ -8,7 +10,6 @@ function a() {
     }
   }
 
-  var i, j;
   i = 0;
   j = 0;
   return M.jM(eff3(i, j), _1);

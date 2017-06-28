@@ -2,8 +2,7 @@ function a() {
   var i, j;
   return M.jMB(init(), _1);
 
-  function _1(a) {
-    i = a;
+  function _1(i) {
     return _2();
   }
 
@@ -17,8 +16,7 @@ function a() {
     } else return M.pure();
   }
 
-  function _4(a) {
-    j = a;
+  function _4(j) {
     return _5();
   }
 

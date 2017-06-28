@@ -2,6 +2,7 @@ function a() {
   return M.jM(eff1(1), _1);
 
   function _1() {
+    var a;
     a;
     if (test) return _2();else {
       return M.jM(eff(5), _4);

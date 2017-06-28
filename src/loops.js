@@ -122,10 +122,10 @@ export const doWhileStmt = R.pipe(
 
 export function forOfStmt(s) {
   s = Kit.auto(s)
-  function* readLeft(iterVar) {
+  function* readLeft(sym) {
     function* val(pos) {
       yield s.enter(pos,Tag.MemberExpression)
-      yield s.tok(Tag.object,Tag.Identifier,iterVar)
+      yield s.tok(Tag.object,Tag.Identifier,{sym,lhs:false,rhs:true})
       yield s.tok(Tag.property,{node:T.identifier("value")})
       yield* s.leave()
     }
@@ -161,8 +161,12 @@ export function forOfStmt(s) {
         case Tag.ForOfStatement:
           yield Kit.setType(i,Tag.ForStatement)
           if (i.enter) {
-            const iterVar = {sym:Kit.scope.newSym("loop")}
-            const init = Array.from(readLeft(iterVar))
+            const sym = Kit.scope.newSym("loop")
+            sym.declBlock = sym.declLoop = i.value
+            sym.declScope = s.first.value
+            sym.byVal = s.opts.state
+            const iterVar = {sym,lhs:true,decl:true}
+            const init = Array.from(readLeft(sym))
             const end = s.label()
             yield* openVarDecl(iterVar,s,"let")
             yield s.enter(Tag.init,Tag.CallExpression)
@@ -179,9 +183,9 @@ export function forOfStmt(s) {
             }
             yield* end()
             yield s.enter(Tag.test,Tag.AssignmentExpression,{node:{operator:"="}})
-            yield s.tok(Tag.left,Tag.Identifier,iterVar)
+            yield s.tok(Tag.left,Tag.Identifier,{sym,lhs:true,rhs:false})
             yield s.enter(Tag.right,Tag.CallExpression)
-            yield s.tok(Tag.callee,Tag.Identifier,iterVar)
+            yield s.tok(Tag.callee,Tag.Identifier,{sym,lhs:false,rhs:true})
             yield s.tok(Tag.arguments,Tag.Array)
             yield* end()
             yield s.peel()
@@ -592,3 +596,39 @@ export const interpretParLoop = R.pipe(
   },
   Kit.completeSubst)
 
+export function blockScope(si) {
+  const s = Kit.auto(si)
+  function* walk() {
+    for(const i of s.sub()) {
+      yield i
+      if (i.enter && i.type === Tag.ForStatement
+          && i.value.eff && i.value.captureRefs) {
+        const argCapt = [...i.value.captureRefs]
+              .filter(s => s.declBlock === s.declLoop)
+              .sort((a,b) => a.num - b.num)
+        const lab = s.label()
+        yield* s.peelTo(Tag.body)
+        yield s.peel()
+        yield s.enter(Tag.push, Tag.CallExpression)
+        const clab = s.label()
+        const func = s.enter(Tag.callee, Tag.ArrowFunctionExpression,
+                             {isLocal: true})
+        yield func
+        func.value.localFuncRef = func.value
+        yield s.enter(Tag.params, Tag.Array)
+        for (const {sym} of argCapt)
+          yield s.tok(Tag.push,Tag.Identifier,{sym})
+        yield* s.leave()
+        yield s.enter(Tag.body,Tag.BlockStatement)
+        yield s.enter(Tag.body,Tag.Array)
+        yield* walk()
+        yield* clab()
+        yield s.enter(Tag.arguments,Tag.Array)
+        for(const sym of argCapt)
+          yield s.tok(Tag.push, Tag.Identifier, {sym})
+        yield* lab()
+      }
+    }
+  }
+  return walk()
+}

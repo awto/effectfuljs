@@ -7,7 +7,7 @@ import * as R from "ramda"
 import * as assert from "assert"
 const defaults = require("../../src/config")
 const configs = require("./configs")
-defaults.libs["./effectfuljscore"] = defaults.libs["@effectfuljs/core"]
+defaults.libs["./effectfuljscore"] = defaults.libs["@effectful/core"]
 
 /** moves file layout representation into a stream of tests */
 export function toStream(files) {

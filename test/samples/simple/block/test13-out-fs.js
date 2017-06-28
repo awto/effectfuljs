@@ -1,4 +1,5 @@
 function a() {
+  var i;
   i = 0;
   if (t) return _1(i);else {
     i++;

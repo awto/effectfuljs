@@ -32,10 +32,10 @@ describe('flatten expressions', function() {
           eff(1) || (eff(2) + eff3());
         }),
         print(function () /*BS|E*/{
-          /*VD|S|E*/var a = /*CE|B*/eff(1);
+          /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
           /*ES|S|E*/ /*LE|B*/a || /*stmtExpr|E*/(() => /*BS|E*/{
-            /*VD|S|E*/var b = /*CE|B*/eff(2);
-            /*VD|S|E*/var c = /*CE|B*/eff3();
+            /*VD|S|E*/var b = /*CE|B*/ /*I|-*/eff(2);
+            /*VD|S|E*/var c = /*CE|B*/ /*I|-*/eff3();
             return b + c;
           })();
         }))
@@ -48,12 +48,12 @@ describe('flatten expressions', function() {
             eff1(eff2(++i),i++,eff3(i));
           }),
           print(function () /*BS|E*/{
-            i += 2;
-            /*VD|S*/var b = ++i;
-            /*VD|S|E*/var a = /*CE|B*/eff2(b);
-            /*VD|S*/var c = i++;
-            /*VD|S|E*/var d = /*CE|B*/eff3(i);
-            /*ES|S|E*/ /*CE|B*/eff1(a, c, d);
+            /*I|+-*/i += 2;
+            /*VD|S*/var b = ++ /*I|+-*/i;
+            /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff2(b);
+            /*VD|S*/var c = /*I|+-*/i++;
+            /*VD|S|E*/var d = /*CE|B*/ /*I|-*/eff3( /*I|-*/i);
+            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff1(a, c, d);
           }))
       })
     })
@@ -65,11 +65,13 @@ describe('flatten expressions', function() {
           var a = eff(1) || eff(2);
         }),
         print(function () /*BS|E*/{
-          /*VD|S|E*/var c = /*CE|B*/eff(1);
+          /*VD|S|E*/var c = /*CE|B*/ /*I|-*/eff(1);
+          
           /*VD|S|E*/var b = /*LE|B*/c || /*stmtExpr|E*/(() => /*BS|E*/{
-            /*ES|S|E*/ /*CE|B*/eff(2);
+            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(2);
           })();
-          var a = b;
+          
+          var /*I|+*/a = b;
         }))
     })
   })
@@ -79,9 +81,9 @@ describe('flatten expressions', function() {
         eff(1) || eff(2);
       }),
       print(function () /*BS|E*/{
-        /*VD|S|E*/var a = /*CE|B*/eff(1);
+        /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
         /*ES|S|E*/ /*LE|B*/a || /*stmtExpr|E*/(() => /*BS|E*/{
-          /*ES|S|E*/ /*CE|B*/eff(2);
+          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(2);
         })();
       }))
   })
@@ -93,15 +95,15 @@ describe('flatten expressions', function() {
           eff(i), i++, eff(i--), eff(i+=2);
         }),
         //TODO: clean the sequence
-        print(function () /*BS|E*/{
-          var i = 0;
-          /*ES|S|E*/ /*CE|B*/eff(i);
-          /*ES|S*/i++;
-          /*VD|S*/var a = i--;
-          /*ES|S|E*/ /*CE|B*/eff(a);
-          /*VD|S*/var b = i += 2;
-          /*ES|S|E*/ /*CE|B*/eff(b);
-        }))
+        print(`function () /*BS|E*/{
+          var /*I|+*/i = 0;
+          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff( /*I|-*/i);
+          /*ES|S*/ /*I|+-*/i++;
+          /*VD|S*/var a = /*I|+-*/i--;
+          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(a);
+          /*VD|S*/var b = /*I|+-*/i += 2;
+          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(b);
+        }`))
     })
   })
   context('with `if` statement', function() {
@@ -118,12 +120,13 @@ describe('flatten expressions', function() {
             }
           }),
           print(function () /*BS|E*/{
-            var i = 0;
-            /*IS|E*/if (i) /*BS|E*/{
-              /*ES|S|E*/ /*CE|B*/eff(i);
+            var /*I|+*/i = 0;
+            
+            /*IS|E*/if ( /*I|-*/i) /*BS|E*/{
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/eff( /*I|-*/i);
             } else {
-              i += 2;
-              e;
+              /*I|+-*/i += 2;
+              /*I|-*/e;
             }
           }))
       })
@@ -141,8 +144,8 @@ describe('flatten `for-of`', function() {
           }
         }`),
         print(function () /*BS|E*/{
-          /*FOS|E*/for (var i of s) /*BS|E*/{
-            /*ES|S|E*/ /*CE|B*/eff(1);
+          /*FOS|E*/for (var /*I|+*/i of /*I|-*/s) /*BS|E*/{
+            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(1);
           }
         }))
       })
@@ -157,8 +160,9 @@ describe('flatten `for-of`', function() {
              }
            }),
            print(function () /*BS|E*/{
-             /*VD|S|E*/var a = /*CE|B*/eff(1);
-             for (var i of a) {
+             /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
+             
+             for (var /*I|+*/i of a) {
                2 + 2;
              }
            }))
@@ -176,7 +180,7 @@ describe('flatten `for`', function() {
         }),
         print(function () /*BS|E*/{
           /*FS|E*/for (;;) /*BS|E*/{
-            /*ES|S|E*/ /*CE|B*/eff(1);
+            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(1);
           }
         }))
     })
@@ -189,12 +193,13 @@ describe('flatten `for`', function() {
             b;
           }
         }`),
-        print((function () /*BS|E*/{
-          /*VD|S|E*/var a = /*CE|B*/init();
-          for (var i = a;;) {
-            b;
+        print(function () /*BS|E*/{
+          /*VD|S|E*/var a = /*CE|B*/ /*I|-*/init();
+          
+          for (var /*I|+*/i = a;;) {
+            /*I|-*/b;
           }
-        })))
+        }))
     })
   })
 })

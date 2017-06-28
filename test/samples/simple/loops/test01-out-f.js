@@ -7,8 +7,7 @@ function a() {
     return M.jMB(eff2(), _2);
   }
 
-  function _2(a) {
-    i = a;
+  function _2(i) {
     return _3();
   }
 
@@ -22,8 +21,7 @@ function a() {
     return M.jMB(eff3(i), _5);
   }
 
-  function _5(a) {
-    j = a;
+  function _5(j) {
     return M.jM(eff4(j++), _6);
   }
 

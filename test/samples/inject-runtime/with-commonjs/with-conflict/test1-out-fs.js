@@ -1,9 +1,9 @@
-import * as _M from '@effectfuljs/generators';
+import * as _M from '@effectful/generators';
 
 function M() {
-  return M.pure(1);
+  return _M.pure(1);
 
   function _1() {
-    return M.pure(2);
+    return _M.pure(2);
   }
 }

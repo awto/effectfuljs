@@ -6,7 +6,7 @@
     try {
       return M.jMBE(eff(1), _2, _4);
     } catch (e) {
-      return _4();
+      return _4(e);
     }
   }
 
@@ -16,7 +16,7 @@
         return M.jME(eff(2), _5, _4);
       }
     } catch (e) {
-      return _4();
+      return _4(e);
     }
   }
 
@@ -24,7 +24,7 @@
     try {
       return M.jME(eff('before break'), _6, _4);
     } catch (e) {
-      return _4();
+      return _4(e);
     }
   }
 

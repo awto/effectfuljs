@@ -9,7 +9,7 @@ var terminal = require( 'terminal-kit' ).terminal ;
 
 const defaults = require("../../src/config")
 const configs = require("./configs")
-defaults.libs["./effectfuljscore"] = defaults.libs["@effectfuljs/core"]
+defaults.libs["./effectfuljscore"] = defaults.libs["@effectful/core"]
 
 const root = path.join(__dirname, "..", "samples")
 

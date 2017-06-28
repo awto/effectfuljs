@@ -13,3 +13,5 @@ tmp-*
 *.map
 .DS_Store
 .tern-port
+input.json
+err-log.json

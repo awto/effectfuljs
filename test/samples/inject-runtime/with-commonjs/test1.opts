@@ -1,6 +1,7 @@
 {
   "inject": true,
-  "require": "@effectfuljs/generators",
+  "require": "@effectful/generators",
+  "modules": "commonjs",
   "profile": null
 }
 

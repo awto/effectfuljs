@@ -6,8 +6,7 @@ function a() {
     return M.jMB(eff2(), _2);
   }
 
-  function _2(a) {
-    i = a;
+  function _2(i) {
     return _3();
   }
 

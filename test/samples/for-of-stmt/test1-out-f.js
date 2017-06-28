@@ -1,5 +1,5 @@
 function a() {
-  var i;
+  var i, loop;
   loop = M.iterator(some);
   return _1();
 
@@ -16,66 +16,67 @@ function a() {
 }
 
 function b() {
-  var i;
+  var i, loop;
   return M.jMB(eff('d'), _1);
 
   function _1(a) {
-    _loop = M.iterator(a);
+    loop = M.iterator(a);
     return _2();
   }
 
   function _2() {
-    if (_loop = _loop()) return _3();else {
+    if (loop = loop()) return _3();else {
       return eff(i);
     }
   }
 
   function _3() {
-    i = _loop.value;
+    i = loop.value;
     return M.jMR(eff(i), _2);
   }
 }
 
 function c() {
-  var i, j;
-  loop1 = M.iterator(some);
+  var i, j, loop, _loop;
+
+  loop = M.iterator(some);
   return _1();
 
   function _1() {
-    if (loop1 = loop1()) return _2();else {
+    if (loop = loop()) return _2();else {
       return eff(i, j);
     }
   }
 
   function _2() {
-    i = loop1.value;
-    loop2 = M.iterator(other);
+    i = loop.value;
+    _loop = M.iterator(other);
     return _3();
   }
 
   function _3() {
-    if (loop2 = loop2()) return _4();else return _1();
+    if (_loop = _loop()) return _4();else return _1();
   }
 
   function _4() {
-    j = loop2.value;
+    j = _loop.value;
     return M.jMR(eff(i, j), _3);
   }
 }
 
 function d() {
-  var i;
-  loop3 = M.iterator(some);
+  var i, loop;
+  loop = M.iterator(some);
   return _1();
 
   function _1() {
-    if (loop3 = loop3()) return _2();else {
+    if (loop = loop()) return _2();else {
       return eff(2);
     }
   }
 
   function _2() {
-    i = loop3.value;
+    i = loop.value;
     return M.jMR(eff(1), _1);
   }
 }

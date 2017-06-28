@@ -13,11 +13,11 @@ import * as Dump from "../src/dump"
 import * as State from "../src/state"
 import * as Block from "../src/block"
 
-const run = transformExpr(R.pipe(
+const run = (src) => transformExpr(R.pipe(
   State.saveDecls,
   State.restoreDecls,
   Debug.mark,
-  consumeScope))
+  consumeScope),src,{state:false})
 
 describe("var decls",function() {
   it("should be moved to start of the function", function() {
@@ -36,12 +36,12 @@ describe("var decls",function() {
       }`),
       print(`function () /*BS|E*/{
         var i, j, k, t;
-        i = 0;
-        /*ES|e*/ /*CE|B*/eff(1);
-        j = 0;
-        /*ES|e*/ /*CE|B*/eff(2);
-        /*IS|E*/if (j) {} else /*ES|e*/ /*CE|B*/eff(3);
-        /*ES|e*/ /*CE|B*/eff(4);
+        /*I|+*/i = 0;
+        /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+        /*I|+*/j = 0;
+        /*ES|e*/ /*CE|B*/ /*I|-*/eff(2);
+        /*IS|E*/if ( /*I|-*/j) {} else /*ES|e*/ /*CE|B*/ /*I|-*/eff(3);        
+        /*ES|e*/ /*CE|B*/ /*I|-*/eff(4);
       }`))
   })
   context('in for init', function() {
@@ -57,12 +57,12 @@ describe("var decls",function() {
         }`),
         print(`function () /*BS|E*/{
           var i, j, k;
-          i = 0;
-          /*ES|e*/ /*CE|B*/eff(1);
-          /*FS|E*/for (j = 0; j < 10; j++)
-            /*ES|e*/ /*CE|B*/eff(2);
-          /*FS|E*/for (; k < 10; k++)
-            /*ES|e*/ /*CE|B*/eff(3);
+          /*I|+*/i = 0;
+          /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+          /*FS|E*/for ( /*I|+*/j = 0; /*I|-*/j < 10; /*I|+-*/j++)
+          /*ES|e*/ /*CE|B*/ /*I|-*/eff(2);
+          /*FS|E*/for (; /*I|-*/k < 10; /*I|+-*/k++) /*ES|e*/ /*CE|B*/
+          /*I|-*/eff(3);
         }`))
     })
   })
@@ -77,10 +77,17 @@ describe("var decls",function() {
         }`),
         print(`function () /*BS|E*/{
           var a, b, f, c, e, _a, _b, _c, g;
-          [a, b, ...f] = some;
-          ({c,a: e} = /*CE|B*/eff(a, b, f));
-          /*FOS|E*/for ([_a, _b, _c, ...g] of /*CE|B*/eff(_a, _b, _c, f, e))
-             /*ES|e*/ /*CE|B*/eff(_a, _b, _c, f, e, g);
+          [/*I|+*/a, /*I|+*/b, ... /*I|+*/f] = /*I|-*/some;
+          ({
+            c,
+            a: /*I|+*/e
+          } = /*CE|B*/ /*I|-*/eff( /*I|-*/a, /*I|-*/b, /*I|-*/f));
+          
+          /*FOS|E*/for (
+            [/*I|+*/_a, /*I|+*/_b, /*I|+*/_c, ... /*I|+*/g] of
+            /*CE|B*/ /*I|-*/eff( /*I|-*/_a, /*I|-*/_b, /*I|-*/_c, /*I|-*/f, /*I|-*/e))
+          /*ES|e*/ /*CE|B*/ /*I|-*/eff( /*I|-*/_a, /*I|-*/_b, /*I|-*/_c,
+            /*I|-*/f, /*I|-*/e, /*I|-*/g);
         }`))
     })
   })

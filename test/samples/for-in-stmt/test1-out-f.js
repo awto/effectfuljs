@@ -1,5 +1,5 @@
 function a() {
-  var i;
+  var i, loop;
   return M.jMB(eff(2), _1);
 
   function _1(a) {
@@ -18,39 +18,39 @@ function a() {
 }
 
 function b() {
-  var i;
+  var i, loop;
   return M.jMB(eff(2), _1);
 
   function _1(a) {
-    _loop = M.forInIterator(a);
+    loop = M.forInIterator(a);
     return _2();
   }
 
   function _2() {
-    if (_loop = _loop()) return _3();else return M.pure();
+    if (loop = loop()) return _3();else return M.pure();
   }
 
   function _3() {
-    i = _loop.value;
+    i = loop.value;
     return M.jMR(eff(i), _2);
   }
 }
 
 function c() {
-  var i;
+  var i, loop;
   return M.jMB(eff(2), _1);
 
   function _1(a) {
-    loop1 = M.forInIterator(a);
+    loop = M.forInIterator(a);
     return _2();
   }
 
   function _2() {
-    if (loop1 = loop1()) return _3();else return M.pure();
+    if (loop = loop()) return _3();else return M.pure();
   }
 
   function _3() {
-    i = loop1.value;
+    i = loop.value;
     return M.jMR(eff(i), _2);
   }
 }
@@ -69,16 +69,16 @@ function d() {
 }
 
 function e() {
-  var i;
-  loop2 = M.forInIterator(obj);
+  var i, loop;
+  loop = M.forInIterator(obj);
   return _1();
 
   function _1() {
-    if (loop2 = loop2()) return _2();else return M.pure();
+    if (loop = loop()) return _2();else return M.pure();
   }
 
   function _2() {
-    i = loop2.value;
+    i = loop.value;
     return M.jMR(eff(i), _1);
   }
 }
@@ -90,7 +90,7 @@ function f() {
 }
 
 function g() {
-  var i;
+  var i, loop;
   return M.jM(eff('a'), _1);
 
   function _1() {
@@ -98,13 +98,13 @@ function g() {
   }
 
   function _2(a) {
-    loop3 = M.forInIterator(a);
+    loop = M.forInIterator(a);
     return _3();
   }
 
   function _3() {
-    if (loop3 = loop3()) {
-      i = loop3.value;
+    if (loop = loop()) {
+      i = loop.value;
       return M.jMB(eff(i), _4);
     } else return _6();
   }
@@ -127,17 +127,18 @@ function g() {
 }
 
 function h() {
-  var j, i;
+  var j, i, loop, _loop;
+
   return M.jM(eff('a'), _1);
 
   function _1() {
-    loop4 = M.forInIterator(obj);
+    loop = M.forInIterator(obj);
     return _2();
   }
 
   function _2() {
-    if (loop4 = loop4()) {
-      j = loop4.value;
+    if (loop = loop()) {
+      j = loop.value;
       console.log('j');
       return M.jM(effA(j), _3);
     } else return _12();
@@ -148,13 +149,13 @@ function h() {
   }
 
   function _4(a) {
-    loop5 = M.forInIterator(a);
+    _loop = M.forInIterator(a);
     return _5();
   }
 
   function _5() {
-    if (loop5 = loop5()) {
-      i = loop5.value;
+    if (_loop = _loop()) {
+      i = _loop.value;
       console.log('b');
       return M.jM(eff('b'), _6);
     } else return _11();

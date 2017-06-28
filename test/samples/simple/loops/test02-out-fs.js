@@ -1,6 +1,5 @@
 // *- should inject forPar
 function a() {
-  var k;
   return M.jM(eff1(), _1);
 
   function _1() {

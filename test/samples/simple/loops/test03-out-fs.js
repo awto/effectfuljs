@@ -1,4 +1,5 @@
 function a() {
+  var k;
   k = 0;
   return M.jM1(eff1(), _1, k);
 

@@ -1,4 +1,5 @@
 function a() {
+  var i, j;
   i = 0;
   j = 0;
   const a = i++;

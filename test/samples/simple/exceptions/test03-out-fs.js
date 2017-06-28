@@ -1,13 +1,12 @@
 function a() {
-  var error;
   return _1();
 
   function _1() {
     try {
       console.log('1');
-      return M.jM1E(eff(1), _3, undefined, _2);
+      return M.jME(eff(1), _3, _2);
     } catch (e) {
-      return _2();
+      return _2(e);
     }
   }
 

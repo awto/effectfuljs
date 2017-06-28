@@ -1,4 +1,4 @@
-import * as Z from '@effectfuljs/generators';
+import * as Z from '@effectful/generators';
 
 function a() {
   return Z.pure(1);

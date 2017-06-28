@@ -6,11 +6,9 @@ QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
   return M.jM(it('should yield fiber until promise is resolved', function (done) {
     function addLater(a, b) {
-      var deferred;
       return M.jMB(Q.defer(), _1);
 
-      function _1(c) {
-        deferred = c;
+      function _1(deferred) {
         process.nextTick(function () {
           return deferred.resolve(a + b);
         });
@@ -18,20 +16,18 @@ describe('yop', function () {
       }
     }
 
-    if (done.async) return _1();else return _3();
+    if (done.async) return _1(done);else return _3();
 
-    function _1() {
+    function _1(done) {
       return M.jMB(done.async(), _2);
     }
 
-    function _2(a) {
-      done = a;
+    function _2(done) {
       return _3();
     }
 
     function _3() {
       return M.run(QM, function () {
-        var result;
         return M.jMB(addLater(1, 2), _1);
 
         function _1(a) {
@@ -43,19 +39,21 @@ describe('yop', function () {
               try {
                 return M.jME(a.to.equal(3), _2, _3);
               } catch (e) {
-                return _3();
+                return _3(e, undefined);
               }
             }
 
             function _2() {
+              var done;
+
               try {
                 return M.jME(done(), M.pure, _3);
               } catch (e) {
-                return _3();
+                return _3(e, done);
               }
             }
 
-            function _3(ex) {
+            function _3(ex, done) {
               var err;
               err = ex;
               return done(err);
@@ -69,11 +67,9 @@ describe('yop', function () {
   function _1() {
     return M.jM(it('should throw reasons from rejected promises into fiber', function (done) {
       function throwErrorLater() {
-        var deferred;
         return M.jMB(Q.defer(), _1);
 
-        function _1(a) {
-          deferred = a;
+        function _1(deferred) {
           process.nextTick(function () {
             return deferred.reject(new Error('promise rejected'));
           });
@@ -81,14 +77,13 @@ describe('yop', function () {
         }
       }
 
-      if (done.async) return _1();else return _3();
+      if (done.async) return _1(done);else return _3();
 
-      function _1() {
+      function _1(done) {
         return M.jMB(done.async(), _2);
       }
 
-      function _2(a) {
-        done = a;
+      function _2(done) {
         return _3();
       }
 
@@ -102,10 +97,12 @@ describe('yop', function () {
                 return _1();
 
                 function _1() {
+                  var err;
+
                   try {
                     return M.jMBE(expect(err.message), _2, _4);
                   } catch (e) {
-                    return _4();
+                    return _4(e, undefined);
                   }
                 }
 
@@ -113,25 +110,28 @@ describe('yop', function () {
                   try {
                     return M.jME(a.to.equal('promise rejected'), _3, _4);
                   } catch (e) {
-                    return _4();
+                    return _4(e, undefined);
                   }
                 }
 
                 function _3() {
+                  var done;
+
                   try {
                     return M.jME(done(), _5, _4);
                   } catch (e) {
-                    return _4();
+                    return _4(e, done);
                   }
                 }
 
-                function _4(ex) {
+                function _4(ex, done) {
                   var expectErr;
                   expectErr = ex;
                   return M.jM(done(expectErr), _5);
                 }
 
                 function _5() {
+                  var $dm$root;
                   return $dm$root.brk();
                 }
               }), _2);
@@ -150,44 +150,44 @@ describe('yop', function () {
 
   function _2() {
     return it('should work just fine with passed a value instead of a promise', function (done) {
-      if (done.async) return _1();else return _3();
+      if (done.async) return _1(done);else return _3();
 
-      function _1() {
+      function _1(done) {
         return M.jMB(done.async(), _2);
       }
 
-      function _2(a) {
-        done = a;
+      function _2(done) {
         return _3();
       }
 
       function _3() {
         return M.run(QM, function () {
-          var result;
           return M.jMB(1 + 2, _1);
 
           function _1(a) {
             return a.mapply(function ($dm$b) {
-              result = $dm$b;
-              return M.jMB(expect(result), _1);
+              _result = $dm$b;
+              return M.jMB(expect(_result), _1);
 
               function _1(a) {
                 try {
                   return M.jME(a.to.equal(3), _2, _3);
                 } catch (e) {
-                  return _3();
+                  return _3(e, undefined);
                 }
               }
 
               function _2() {
+                var done;
+
                 try {
                   return M.jME(done(), M.pure, _3);
                 } catch (e) {
-                  return _3();
+                  return _3(e, done);
                 }
               }
 
-              function _3(ex) {
+              function _3(ex, done) {
                 var err;
                 err = ex;
                 return done(err);

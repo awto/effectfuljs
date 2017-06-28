@@ -41,7 +41,7 @@ const postproc = R.pipe(
   Policy.profiles,
   Policy.setQNames)
 
-export default function* coreInit(ns) {
+export default function* coreInit($ns) {
   return R.pipe(
     function*(si) {
       const s = Kit.auto(si)
@@ -67,7 +67,7 @@ export default function* coreInit(ns) {
               transform:defaultGensTransform
             })
           },
-          ns
+          $ns
         }
       })
       let {profile} = s.opts

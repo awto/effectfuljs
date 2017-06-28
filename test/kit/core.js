@@ -30,7 +30,7 @@ export const runExpr = R.curry(function(opts, f) {
 export const run = R.curryN(2,Kit.optsScopeLift(function run(opts,f) {
   Kit.setOpts(Object.assign({},
                             defaultOpts,
-                            {require:"@effectfuljs/core",ns:"M",override:opts},
+                            {require:"@effectful/core",ns:"M",override:opts},
                             opts))
   const ast = parse(f.toString(),opts.parser || {sourceType:"module"})
   const orig = R.pipe(produce,Array.from)(ast)
@@ -80,7 +80,7 @@ export const transformBlock = R.curryN(2,Kit.optsScopeLift(
   function(fun,src,opts = testDefaultOpts) {
     Kit.setOpts(Object.assign({},
                               defaultOpts,
-                              {require:"@effectfuljs/core",ns:"M",override:opts},
+                              {require:"@effectful/core",ns:"M",override:opts},
                               opts))
     const ast = parse(src.toString(),{sourceType:"module"})
     const s = R.pipe(produce,Array.from,Transform.scopes)(ast)

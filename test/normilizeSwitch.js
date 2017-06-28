@@ -22,7 +22,7 @@ const run = transformExpr(R.pipe(
 describe('normilize `switch`', function() {
   context('with some branches continue', function() {
     context('with function definition', function() {
-      it('should clone next branches', function() {
+      it('should clone next branches 1', function() {
         equal(
           run(`function() {
             var i
@@ -41,44 +41,50 @@ describe('normilize `switch`', function() {
             }
           }`),
           print(`function () /*BS|E*/{
-            var i;
-            /*VD|S|E*/var a = /*CE|B*/eff(1);
-            /*VD|S|E*/var b = /*CE|B*/check(1);
-            /*VD|S|E*/var c = /*CE|B*/check(2);
+            var /*I|+*/i;
+            /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
+            /*VD|S|E*/var b = /*CE|B*/ /*I|-*/check(1);
+            /*VD|S|E*/var c = /*CE|B*/ /*I|-*/check(2);
+            
             /*SS|E*/switch (a) {
               /*SC|E*/case b:
               /*BS|E*/{
-                i++;
-                /*ES|S|E*/ /*CE|B*/effB(1);
-                function c() /*BS|E*/{
-                  /*ES|S|E*/ /*CE|B*/effC();
+                /*I|+-*/i++;
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(1);
+                
+                function /*I|+*/c() /*BS|E*/{
+                  /*ES|S|E*/ /*CE|B*/ /*I|-*/effC();
                 }
-                /*ES|S|E*/ /*CE|B*/effB(function d() /*BS|E*/{
-                  /*ES|S|E*/ /*CE|B*/effD();
+                
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(function /*I|+*/d() /*BS|E*/{
+          /*ES|S|E*/ /*CE|B*/ /*I|-*/effD();
                 });
-                /*ES|S|E*/ /*CE|B*/effB(2);
-                /*ES|S|E*/ /*CE|B*/effB(3);
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(2);
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
               }
+              
               /*SC|E*/case c:
               /*BS|E*/{
                 function c() {
                   effC();
                 }
-                /*ES|S|E*/ /*CE|B*/effB(function d() {
+                
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(function d() {
                   effD();
                 });
-                /*ES|S|E*/ /*CE|B*/effB(2);
-                /*ES|S|E*/ /*CE|B*/effB(3);
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(2);
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
               }
+              
               /*SC|E*/default:
               /*BS|E*/{
-                /*ES|S|E*/ /*CE|B*/effB(3);
+                /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
               }
             }
           }`))
       })
     })
-    it('should clone next branches', function() {
+    it('should clone next branches 2', function() {
       equal(
         run(`function() {
           var i
@@ -96,31 +102,35 @@ describe('normilize `switch`', function() {
           }
         }`),
         print(`function () /*BS|E*/{
-          var i;
-          /*VD|S|E*/var a = /*CE|B*/eff(1);
-          /*VD|S|E*/var b = /*CE|B*/check(1);
-          /*VD|S|E*/var c = /*CE|B*/check(2);
-          /*VD|S|E*/var d = /*CE|B*/check(3);
+          var /*I|+*/i;
+          /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
+          /*VD|S|E*/var b = /*CE|B*/ /*I|-*/check(1);
+          /*VD|S|E*/var c = /*CE|B*/ /*I|-*/check(2);
+          /*VD|S|E*/var d = /*CE|B*/ /*I|-*/check(3);
+          
           /*SS|E*/switch (a) {
             /*SC|E*/case b:
             /*BS|E*/{
-              i++;
-              /*ES|S|E*/ /*CE|B*/effB(1);
-              /*ES|S|E*/ /*CE|B*/effB(2);
-              /*ES|S|E*/ /*CE|B*/effB(3);
+              /*I|+-*/i++;
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(1);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(2);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
             }
+            
             /*SC|E*/case c:
             /*BS|E*/{
-              /*ES|S|E*/ /*CE|B*/effB(2);
-              /*ES|S|E*/ /*CE|B*/effB(3);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(2);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
             }
+            
             /*SC|E*/case d:
             /*BS|E*/{
-              /*ES|S|E*/ /*CE|B*/effB(3);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
             }
+            
             /*SC|E*/default:
             /*BS|E*/{
-              /*ES|S|E*/ /*CE|B*/effB(3);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
             }
           }
         }`))
@@ -141,24 +151,28 @@ describe('normilize `switch`', function() {
             break
           }
         }`),
-        print(`function () /*BS|E*/{
-          var i;
-          /*VD|S|E*/var a = /*CE|B*/eff(1);
-          /*VD|S|E*/var b = /*CE|B*/check(1);
-          /*VD|S|E*/var c = /*CE|B*/check(2);
+        print(function () /*BS|E*/{
+          var /*I|+*/i;
+          /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
+          /*VD|S|E*/var b = /*CE|B*/ /*I|-*/check(1);
+          /*VD|S|E*/var c = /*CE|B*/ /*I|-*/check(2);
+          
           /*SS|E*/switch (a) {
             /*SC|E*/case b:
             /*BS|E*/{
-              i++;
-              /*ES|S|E*/ /*CE|B*/effB(1);
+              /*I|+-*/i++;
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(1);
             }
+            
             /*SC|E*/case c:
             /*BS|E*/{
-              /*ES|S|E*/ /*CE|B*/effB(2);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(2);
             }
-            default: {}
+            
+            default:
+            {}
           }
-        }`))
+        }))
     })
   })
   context('with all branches exit', function() {
@@ -178,27 +192,30 @@ describe('normilize `switch`', function() {
             effB(3)
           }
         }`),
-        print(`function () /*BS|E*/{
-          var i;
-          /*VD|S|E*/var a = /*CE|B*/eff(1);
-          /*VD|S|E*/var b = /*CE|B*/check(1);
-          /*VD|S|E*/var c = /*CE|B*/check(2);
+        print(function () /*BS|E*/{
+          var /*I|+*/i;
+          /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
+          /*VD|S|E*/var b = /*CE|B*/ /*I|-*/check(1);
+          /*VD|S|E*/var c = /*CE|B*/ /*I|-*/check(2);
+
           /*SS|E*/switch (a) {
             /*SC|E*/case b:
             /*BS|E*/{
-              i++;
-              /*ES|S|E*/ /*CE|B*/effB(1);
+              /*I|+-*/i++;
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(1);
             }
+            
             /*SC|E*/case c:
             /*BS|E*/{
-              /*ES|S|E*/ /*CE|B*/effB(2);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(2);
             }
+            
             /*SC|E*/default:
             /*BS|E*/{
-              /*ES|S|E*/ /*CE|B*/effB(3);
+              /*ES|S|E*/ /*CE|B*/ /*I|-*/effB(3);
             }
           }
-        }`))
+        }))
     })
   })
 })

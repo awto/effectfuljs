@@ -9,8 +9,7 @@ describe('yop', function () {
       var deferred;
       return M.jMB(Q.defer(), _1);
 
-      function _1(c) {
-        deferred = c;
+      function _1(deferred) {
         process.nextTick(function () {
           return deferred.resolve(a + b);
         });
@@ -24,8 +23,7 @@ describe('yop', function () {
       return M.jMB(done.async(), _2);
     }
 
-    function _2(a) {
-      done = a;
+    function _2(done) {
       return _3();
     }
 
@@ -44,7 +42,7 @@ describe('yop', function () {
               try {
                 return M.jME(a.to.equal(3), _2, _3);
               } catch (e) {
-                return _3();
+                return _3(e);
               }
             }
 
@@ -52,7 +50,7 @@ describe('yop', function () {
               try {
                 return M.jME(done(), M.pure, _3);
               } catch (e) {
-                return _3();
+                return _3(e);
               }
             }
 
@@ -72,8 +70,7 @@ describe('yop', function () {
         var deferred;
         return M.jMB(Q.defer(), _1);
 
-        function _1(a) {
-          deferred = a;
+        function _1(deferred) {
           process.nextTick(function () {
             return deferred.reject(new Error('promise rejected'));
           });
@@ -87,8 +84,7 @@ describe('yop', function () {
         return M.jMB(done.async(), _2);
       }
 
-      function _2(a) {
-        done = a;
+      function _2(done) {
         return _3();
       }
 
@@ -106,7 +102,7 @@ describe('yop', function () {
                   try {
                     return M.jMBE(expect(err.message), _2, _4);
                   } catch (e) {
-                    return _4();
+                    return _4(e);
                   }
                 }
 
@@ -114,7 +110,7 @@ describe('yop', function () {
                   try {
                     return M.jME(a.to.equal('promise rejected'), _3, _4);
                   } catch (e) {
-                    return _4();
+                    return _4(e);
                   }
                 }
 
@@ -122,7 +118,7 @@ describe('yop', function () {
                   try {
                     return M.jME(done(), _5, _4);
                   } catch (e) {
-                    return _4();
+                    return _4(e);
                   }
                 }
 
@@ -156,8 +152,7 @@ describe('yop', function () {
         return M.jMB(done.async(), _2);
       }
 
-      function _2(a) {
-        done = a;
+      function _2(done) {
         return _3();
       }
 
@@ -176,7 +171,7 @@ describe('yop', function () {
                 try {
                   return M.jME(a.to.equal(3), _2, _3);
                 } catch (e) {
-                  return _3();
+                  return _3(e);
                 }
               }
 
@@ -184,7 +179,7 @@ describe('yop', function () {
                 try {
                   return M.jME(done(), M.pure, _3);
                 } catch (e) {
-                  return _3();
+                  return _3(e);
                 }
               }
 

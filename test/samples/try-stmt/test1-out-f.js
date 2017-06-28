@@ -26,7 +26,7 @@ function a02() {
       console.log('inner');
       return _4();
     } catch (e) {
-      return _2();
+      return _2(e);
     }
   }
 
@@ -59,7 +59,7 @@ function a03() {
     try {
       return M.jME(eff('inner', i++, j), _2, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -68,7 +68,7 @@ function a03() {
       console.log('inner');
       return _5();
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -342,8 +342,7 @@ function a09() {
     return M.jMB(eff(3), _3);
   }
 
-  function _3(b) {
-    a = b;
+  function _3(a) {
     if (a === 1) return _17(_20, undefined);else {
       if (a === 2) return _4();else {
         return M.jM(eff(5), _8);
@@ -371,8 +370,7 @@ function a09() {
     return M.jMB(eff(6), _9);
   }
 
-  function _9(b) {
-    _a = b;
+  function _9(_a) {
     if (_a === 1) return _14(_11);else {
       if (_a === 2) return _12();else {
         return M.jM1(eff(7), _14, _16);
@@ -437,8 +435,7 @@ function a10() {
     return M.jMB(eff(6), _3);
   }
 
-  function _3(b) {
-    a = b;
+  function _3(a) {
     if (a) return _6();else return _7(_5);
   }
 
@@ -575,8 +572,7 @@ function a14() {
     return M.jMB1(eff(1), _2, r);
   }
 
-  function _2(b, r) {
-    a = b;
+  function _2(a, r) {
     if (a === 1) return _10(_4, r);else {
       if (a === 2) return _10(_1, r);else {
         if (a === 3) return _5();else {
@@ -652,9 +648,7 @@ function a15() {
     return M.jMB(eff(1), _2);
   }
 
-  function _2(b) {
-    _a = b;
-
+  function _2(_a) {
     if (_a === 1) {
       if (a) {
         return eff(8);
@@ -688,9 +682,7 @@ function a16() {
     return M.jMB(eff(1), _3);
   }
 
-  function _3(b) {
-    _a = b;
-
+  function _3(_a) {
     if (_a === 1) {
       if (a) {
         return eff(8);
@@ -709,9 +701,7 @@ function a17() {
     return M.jMB(eff(1), _2);
   }
 
-  function _2(c) {
-    a = c;
-
+  function _2(a) {
     if (a === 1) {
       if (b) {
         return eff(8);
@@ -730,8 +720,7 @@ function a18() {
     return M.jMB(eff(1), _2);
   }
 
-  function _2(b) {
-    a = b;
+  function _2(a) {
     if (a === 1) return _3(_5);else {
       return M.jM1R(eff(2), _3, _1);
     }
@@ -1014,7 +1003,7 @@ function a31() {
       console.log('hi');
       return M.jME(eff(1), _2, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -1022,7 +1011,7 @@ function a31() {
     try {
       return M.jME(eff(2), _4, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -1046,7 +1035,7 @@ function a32(a1, a2) {
       console.log('hi');
       return M.jME(eff(1), _2, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -1054,7 +1043,7 @@ function a32(a1, a2) {
     try {
       return M.jME(eff(2), _5, _3);
     } catch (e) {
-      return _3();
+      return _3(e);
     }
   }
 
@@ -1064,7 +1053,7 @@ function a32(a1, a2) {
       console.log(e);
       return M.jME(eff(3), _5, _4);
     } catch (e) {
-      return _4();
+      return _4(e);
     }
   }
 
@@ -1087,7 +1076,7 @@ function a33() {
       console.log('hi');
       return M.jME(eff(1), _2, _4);
     } catch (e) {
-      return _4();
+      return _4(e);
     }
   }
 
@@ -1095,7 +1084,7 @@ function a33() {
     try {
       return M.jME(eff(2), _3, _4);
     } catch (e) {
-      return _4();
+      return _4(e);
     }
   }
 
@@ -1127,7 +1116,7 @@ function a34() {
       console.log('hi');
       return M.jME(eff(1), _3, _2);
     } catch (e) {
-      return _2();
+      return _2(e);
     }
   }
 
@@ -1143,7 +1132,7 @@ function a34() {
     try {
       return M.jME(eff(2), cb, _7);
     } catch (e) {
-      return _7();
+      return _7(e);
     }
   }
 
@@ -1151,7 +1140,7 @@ function a34() {
     try {
       return M.jME(eff(3), _6, _7);
     } catch (e) {
-      return _7();
+      return _7(e);
     }
   }
 
@@ -1182,7 +1171,7 @@ function a35() {
       console.log('hi');
       return M.jME(eff('try>try>body'), _3, _2);
     } catch (e) {
-      return _2();
+      return _2(e);
     }
   }
 
@@ -1198,7 +1187,7 @@ function a35() {
     try {
       return M.jME(eff('try>try>finally'), cb, _6);
     } catch (e) {
-      return _6();
+      return _6(e);
     }
   }
 
@@ -1206,7 +1195,7 @@ function a35() {
     try {
       return M.jME(eff('try>body'), _7, _6);
     } catch (e) {
-      return _6();
+      return _6(e);
     }
   }
 
