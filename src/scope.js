@@ -90,9 +90,12 @@ export function restore(scopes) {
     const j = Kit.toArray(i)
     return [j[0].value,j]
   }))
-  function* walk(si,pos) {
+  function* walk(si,pos,type) {
     const s = Kit.toArray(si)
-    yield Kit.setPos(s[0],pos)
+    let first = Kit.setPos(s[0],pos)
+    if (type != null)
+      first = Kit.setType(first,type)
+    yield first
     assert.equal(s[0].pos, Tag.top)
     assert.equal(s[s.length-1].pos, Tag.top)
     assert.equal(s[s.length-1].value, s[0].value)
@@ -101,7 +104,7 @@ export function restore(scopes) {
         const sub = m.get(i.value)
         if (sub != null) {
           if (i.enter) {
-            yield* walk(sub,i.pos)
+            yield* walk(sub,i.pos,i.type)
           }
           continue
         }

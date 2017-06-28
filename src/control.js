@@ -4,7 +4,6 @@ import {Tag,produce,consume,symbol,scope as vars} from "estransducers"
 import * as assert from "assert"
 import * as Block from "./block"
 import * as Debug from "./debug"
-import {ifLFlat} from "./options"
 
 export const blockId = Kit.sysId("block")
 export const scopeId = Kit.sysId("scope")
@@ -13,22 +12,6 @@ export const scopeId = Kit.sysId("scope")
  * calculates links between control blocks and jumps referencing them
  */
 export const assignLabels = R.pipe(
-  ifLFlat(v => v, R.pipe(
-    function* markLastRet(s) {
-      s = Kit.auto(s)
-      yield s.take()
-      const b = yield* s.findPos(Tag.body)
-      yield b
-      if (b != null && b.type === Tag.BlockStatement) {
-        yield (yield* s.findPos(Tag.body))
-        const j = yield* s.sub()
-        if (j != null && j.type === Tag.ReturnStatement) {
-          j.value.last = true
-        }
-      }
-      yield* s
-    },
-    Array.from)),
   function* assignLabels(s) {
     let labels = []
     const sl = Kit.auto(s)

@@ -13,8 +13,8 @@ function* permut(c) {
 function* opts() {
   const minorOpts = [
     [["",{}],["s",{state: true}]]]
-  yield* permut([[["f",{chain:"leftFlat",static:true}]],
-                 // [["t",{topLevel:true}],["",{}]]
+  yield* permut([[["f",{static:true}]],
+                 [["t",{topLevel:true}],["",{}]]
                 ]
                 .concat(minorOpts))
 }

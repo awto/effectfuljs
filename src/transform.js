@@ -23,8 +23,9 @@ import * as Gens from "./generators"
 import * as Rt from "./rt"
 import * as Ops from "./ops"
 import * as Flat from "./flat"
+import * as Closure from "./closure"
 import simplify from "./simplify"
-import {ifNested, ifLeft,ifLFlat,ifState,ifClosure,onChainType} from "./options"
+import {ifTopLevel} from "./options"
 
 export const consumeScope = consume
 
@@ -42,6 +43,7 @@ export const scopes = R.pipe(
 const finalize = R.pipe(
   State.locals,
   Block.interpretLibSyms,
+  Closure.depsToTop,
   varScope.resolve,
   consume)
 
@@ -78,7 +80,9 @@ export const all =
     Kit.map(ifEff(R.pipe(
       Coerce.lift,
       Branch.liftSwitchCoerce,
+      ifTopLevel(Closure.declToExpr),
       State.saveDecls,
+      ifTopLevel(Closure.accessors),
       Prop.recalcEff,
       Control.injectBlock,
       Loops.injectRepeat,
@@ -99,6 +103,7 @@ export const all =
       Coerce.interpret,
       Block.interpretCasts,
       Branch.clean,
+      ifTopLevel(Closure.declObjects),
       State.restoreDecls,
       simplify,
       Kit.toArray)))))

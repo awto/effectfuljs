@@ -6,7 +6,6 @@ import * as Block from "./block"
 import * as Ctrl from "./control"
 import * as Loop from "./loops"
 import * as Bind from "./bind"
-import {ifState} from "./options"
 import * as State from "./state"
 import * as Debug from "./debug"
 import * as Except from "./exceptions"
@@ -863,6 +862,7 @@ export const interpret = R.pipe(
           case Block.frame:
             const fn = num++
             i.value.declSym.orig = `_${fn}`
+            i.value.frameStep = s.first.value
             const flab = s.label()
             if (fn !== 0) {
               const {catchCont} = i.value
@@ -870,7 +870,7 @@ export const interpret = R.pipe(
               const thread = i.value.threadParams
               if (i.value.optPatSym) {
                 i.value.optPatSym.orig = `_${fn}A`
-                yield s.enter(Tag.push,Tag.FunctionDeclaration)
+                yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
                 yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.declSym})
                 const paramsLab = s.label()
                 yield s.enter(Tag.params,Tag.Array)
@@ -886,7 +886,7 @@ export const interpret = R.pipe(
                 yield* paramsLab()
                 yield* s.leave()
               }
-              yield s.enter(Tag.push,Tag.FunctionDeclaration)
+              yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
               yield s.tok(Tag.id,Tag.Identifier,
                           {sym:i.value.optPatSym || i.value.declSym})
               const paramLab = s.label()
@@ -1118,9 +1118,10 @@ function resolveFrameParams(cfg) {
  *
  *     (cfg: FrameVal[]) => {} 
  */
-function resolveFrameArgs(cfg) {
+function resolveFrameArgs(cfg,root) {
   for(const i of cfg) {
-    if (!i.frameParams.size && !i.frameLocals.size && !i.framePat.size
+    if (!root.captSym && !i.frameParams.size && !i.frameLocals.size
+        && !i.framePat.size
         && i.exits.every(i => !i.frameArgs || !i.frameArgs.size)) {
       if (i.frameParamsClos.size > 1) {
         const sym = Kit.scope.newSym("s")
@@ -1132,6 +1133,8 @@ function resolveFrameArgs(cfg) {
         continue
     }
     i.threadParams = [...i.frameParamsClos].sort((a, b) => a.num - b.num)
+    if (root.captSym)
+      i.threadParams.unshift(root.captSym)
     const visible = [...i.frameParamsClos,
                      ...i.frameLocals || emptyArr,
                      ...i.framePat || emptyArr].map(i => [i,i])
@@ -1149,6 +1152,8 @@ function resolveFrameArgs(cfg) {
         args.push([k,argsMap.get(k) || Kit.scope.undefinedSym])
       }
       j.threadArgs = args.sort(([a],[b]) => a.num - b.num)
+      if (root.captSym)
+        j.threadArgs.unshift([root.captSym,root.captSym])
     }
   }
 }
@@ -1354,7 +1359,7 @@ function calcVarDeps(si) {
   const cfg = calcCfg(sa)
   resolveFrameParams(cfg)
   propagateArgs(cfg)
-  resolveFrameArgs(cfg)
+  resolveFrameArgs(cfg,sa[0].value)
   if (opts.packArgs !== "apply")
     calcOptPat(cfg, opts.unpackMax || defaultUnpackMax)
   return sa

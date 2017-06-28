@@ -12,8 +12,6 @@ import * as Ctrl  from "./control"
 import * as Debug from "./debug"
 import * as Uniq from "./uniq"
 import * as trace from "estransducers/trace"
-import {ifNested} from "./options"
-
 
 /** 
  * moves all variable declarations in decls field of a root Val
@@ -88,8 +86,10 @@ export const saveDecls = R.pipe(
                     id = [...sl.copy(k)]
                     asgn.push(...id)
                     for(const j of id) {
-                      if (j.enter && j.type === Tag.Identifier && j.value.decl)
+                      if (j.enter && j.type === Tag.Identifier && j.value.decl) {
                         decls.set(j.value.sym, null)
+                        j.value.decl = false
+                      }
                     }
                     break
                   }
