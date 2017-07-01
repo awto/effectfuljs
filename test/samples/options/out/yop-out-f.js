@@ -9,7 +9,8 @@ describe('yop', function () {
       var deferred;
       return M.jMB(Q.defer(), _1);
 
-      function _1(deferred) {
+      function _1(c) {
+        deferred = c;
         process.nextTick(function () {
           return deferred.resolve(a + b);
         });
@@ -23,7 +24,8 @@ describe('yop', function () {
       return M.jMB(done.async(), _2);
     }
 
-    function _2(done) {
+    function _2(a) {
+      done = a;
       return _3();
     }
 
@@ -70,7 +72,8 @@ describe('yop', function () {
         var deferred;
         return M.jMB(Q.defer(), _1);
 
-        function _1(deferred) {
+        function _1(a) {
+          deferred = a;
           process.nextTick(function () {
             return deferred.reject(new Error('promise rejected'));
           });
@@ -84,7 +87,8 @@ describe('yop', function () {
         return M.jMB(done.async(), _2);
       }
 
-      function _2(done) {
+      function _2(a) {
+        done = a;
         return _3();
       }
 
@@ -152,7 +156,8 @@ describe('yop', function () {
         return M.jMB(done.async(), _2);
       }
 
-      function _2(done) {
+      function _2(a) {
+        done = a;
         return _3();
       }
 

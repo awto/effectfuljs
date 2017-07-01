@@ -1,4 +1,5 @@
 (function () {
+  var e;
   return _1();
 
   function _1() {
@@ -36,7 +37,6 @@
   }
 
   function _5(ex) {
-    var e;
     e = ex;
     return M.jM(eff(5), _6);
   }

@@ -1,4 +1,5 @@
 function a() {
+  var e;
   return _1();
 
   function _1() {
@@ -14,7 +15,6 @@ function a() {
   }
 
   function _3(ex) {
-    var e;
     e = ex;
     console.log(e);
     return _4();

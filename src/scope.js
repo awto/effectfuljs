@@ -83,13 +83,18 @@ export function splitScopes(si) {
  * converts list of token streams into a single stream with all scopes 
  * unfolded in original positions
  */
-export function restore(scopes) {
-  const a = Kit.toArray(scopes)
-  const s = a.pop()
-  const m = new Map(a.map(i => {
-    const j = Kit.toArray(i)
-    return [j[0].value,j]
-  }))
+export function restore(root,scopes) {
+  let start
+  const m = new Map()
+  for(const i of scopes) {
+    const value = i[0].value
+    if (value === root)
+      start = i
+    else
+      m.set(value,i)
+  }
+  assert.ok(start)
+  return walk(start,Tag.top)
   function* walk(si,pos,type) {
     const s = Kit.toArray(si)
     let first = Kit.setPos(s[0],pos)
@@ -113,7 +118,6 @@ export function restore(scopes) {
     }
     yield Kit.setPos(s[s.length-1],pos)
   }
-  return walk(s,Tag.top)
 }
 
 /** runs `pass` for each function in `s` */

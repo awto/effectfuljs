@@ -1,51 +1,52 @@
-function a_1(ref_) {
+function a_1(a_v) {
   var a;
-  const a = ref_.i += 1;
-  return M.jMB1(eff(a), a_2, ref_);
+  const a = a_v.i += 1;
+  return M.jMB1(eff(a), a_2, a_v);
 }
 
-function a_2(a, ref_) {
+function a_2(a, a_v) {
   var b;
-  const b = ref_.i += 2;
-  return M.jMB2(check(b), a_3, ref_, a);
+  const b = a_v.i += 2;
+  return M.jMB2(check(b), a_3, a_v, a);
 }
 
-function a_3(b, ref_, a) {
+function a_3(b, a_v, a) {
   var c;
-  const c = ref_.i += 4;
-  return M.jMB3(check(c), a_4, ref_, a, b);
+  const c = a_v.i += 4;
+  return M.jMB3(check(c), a_4, a_v, a, b);
 }
 
-function a_4(c, ref_, a, b) {
+function a_4(c, a_v, a, b) {
   var d;
-  const d = ref_.i += 6;
-  return M.jMB4(check(d), a_5, ref_, a, b, c);
+  const d = a_v.i += 6;
+  return M.jMB4(check(d), a_5, a_v, a, b, c);
 }
 
-function a_5(d, ref_, a, b, c) {
+function a_5(d, a_v, a, b, c) {
   switch (a) {
     case b:
-      return M.jM1(effB(ref_.i += 3), a_6, ref_);
+      return M.jM1(effB(a_v.i += 3), a_6, a_v);
 
     case c:
-      return M.jM1(effB(ref_.i += 5), a_6, ref_);
+      return M.jM1(effB(a_v.i += 5), a_6, a_v);
 
     case d:
       {
-        console.log('hi', ref_.i);
+        console.log('hi', a_v.i);
       }
   }
 }
 
-function a_6(ref_) {
-  return eff(ref_.i);
+function a_6(a_v) {
+  return eff(a_v.i);
 }
 
 // *- with state
 function a() {
-  var ref_ = {
+  var a_v;
+  a_v = {
     i: undefined
   };
-  ref_.i = 0;
-  return M.jM1(eff(), a_1, ref_);
+  a_v.i = 0;
+  return M.jM1(eff(), a_1, a_v);
 }

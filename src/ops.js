@@ -92,6 +92,10 @@ function getOpName(i) {
       [i.value.node.operator]
   case Tag.LogicalExpression:
     return logicalOps[i.value.node.operator]
+  case Tag.YieldExpression:
+    if (i.value.node.deleate)
+      return "yldStar"
+    return "yld"
   }
   let res = opNamesMap.get(i.type)
   if (res != null)

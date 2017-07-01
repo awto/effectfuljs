@@ -27,13 +27,20 @@ function a() {
 
 function b() {
   M.reify(function () {
-    var result = M(addLater(1, 2));
+    var result;
+    return M.jMB(addLater(1, 2), _1);
 
-    try {
-      expect(result).to.equal(3);
-      done();
-    } catch (err) {
-      done(err);
+    function _1(a) {
+      result = a;
+
+      try {
+        expect(result).to.equal(3);
+        done();
+      } catch (err) {
+        done(err);
+      }
+
+      return M.pure();
     }
   }).done();
 

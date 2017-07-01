@@ -1,5 +1,4 @@
-function a_1() {
-  var a;
+function a_1(a) {
   a;
   return M.jMB(test(1), a_2);
 }
@@ -25,5 +24,5 @@ function a_5() {
 }
 
 function a() {
-  return M.jM(eff1(1), a_1);
+  return M.jM1(eff1(1), a_1, a);
 }

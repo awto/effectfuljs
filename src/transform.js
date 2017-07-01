@@ -72,21 +72,20 @@ export const all =
       Loops.doWhileStmt,
       Prop.recalcEff,
       Loops.normilizeFor,
-      Loops.blockScope,
-      Scope.splitScopes
-    ))),
-    function* concat(s) {
-      for(const i of s) { yield [].concat(...i) } },
-    Kit.map(ifEff(R.pipe(
       Coerce.lift,
       Branch.liftSwitchCoerce,
       ifTopLevel(Closure.declToExpr),
       State.saveDecls,
-      ifTopLevel(Closure.accessors),
       Prop.recalcEff,
       Control.injectBlock,
       Loops.injectRepeat,
       Prop.recalcEff,
+      ifTopLevel(Closure.calcStateRefs),
+      Kit.toArray
+    ))),
+    Kit.toArray,
+    Kit.map(ifEff(R.pipe(
+      ifTopLevel(Closure.injectStateRefs),
       Branch.prepareLogical,Prop.recalcEff,
       Bind.flatten,
       Exceptions.inject,Prop.recalcEff,
@@ -96,19 +95,19 @@ export const all =
       Control.recalc,
       Flat.convert
     ))),
-    Kit.map(R.pipe(ifEff(R.pipe(
+    Kit.map(ifEff(R.pipe(
       Block.cleanPureEff,
       Flat.interpret,
       Block.interpretApp,
       Coerce.interpret,
       Block.interpretCasts,
       Branch.clean,
-      ifTopLevel(Closure.declObjects),
       State.restoreDecls,
-      simplify,
-      Kit.toArray)))))
+      simplify))))
 
-export const defaultTransform = R.pipe(Kit.map(Policy.defaultPrepare),all)
+export const defaultTransform = R.pipe(
+  Kit.map(Policy.defaultPrepare),
+  all)
 export const defaultGensTransform = R.pipe(Kit.map(Policy.generatorsPrepare), all)
 
 /**
@@ -121,6 +120,7 @@ export function run(s) {
   const result = []
   const inp = [...scopes(s)]
   let scopeNum = 0
+  const root = inp[inp.length-1][0].value
   for(const i of inp) {
     const {value} = i[0]
     value.scopeNum = scopeNum++
@@ -136,10 +136,11 @@ export function run(s) {
   if (!transformMap.size)
     return;
   for(const [t,i] of transformMap) {
-    result.push(...t(i))
+    const v = Kit.toArray(t(i))
+    for(const j of v)
+      result.push(Kit.toArray(j))
   }
-  result.sort(([a],[b]) => a.value.scopeNum - b.value.scopeNum)
-  let res = [...Scope.restore(result)]
+  let res = [...Scope.restore(root,result)]
   if (inject.size) {
     const namespaces = res[0].value.namespaces || new Map()
     const toInject = []

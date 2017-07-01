@@ -4,6 +4,7 @@ import {Tag,trace,dump} from "./kit"
 import * as assert from "assert"
 import * as State from "./state"
 import * as Block from "./block"
+import * as Loop from "./loops"
 
 function typeDeclToExpr(e) {
   switch(e) {
@@ -61,90 +62,6 @@ export function* declToExpr(si) {
   yield* lab()
 }
 
-/**
- * for each by reference symbol creates a field in state object 
- * and replaces all references to the object member access
- */
-export function* accessors(si) {
-  const s = Kit.auto(si)
-  const capt = new Set()
-  const root = s.first.value
-  const deps = root.closDeps = new Set()
-  for(const i of s) {
-    if (i.enter && i.type === Tag.Identifier
-        && i.value.sym && !i.value.decl
-        && i.value.sym.declScope && !i.value.sym.byVal) {
-      const {sym} = i.value
-      yield s.enter(i.pos,Tag.MemberExpression)
-      const scope = sym.declScope
-      if (!root.captSym)
-        root.captSym = Kit.scope.newSym("ref_")
-      if (scope === root) {
-        yield s.tok(Tag.object,Tag.Identifier,{sym:root.captSym})
-      } else {
-        yield s.enter(Tag.object,Tag.MemberExpression)
-        yield s.tok(Tag.object,Tag.Identifier,{sym:root.captSym})
-        yield s.tok(Tag.property,Tag.Identifier,
-                    {sym:scope.captSym
-                     || (scope.captSym = Kit.scope.newSym("ref_"))})
-        deps.add(scope.captSym)
-        yield* s.leave()
-      }
-      yield s.tok(Tag.property,Tag.Identifier,{sym:i.value.sym})
-      yield* s.leave()
-      s.close(i)
-      continue
-    }
-    yield i
-  }
-}
-
-/** emplaces declarations for variable capturing objects */
-export function* declObjects(si) {
-  const s = Kit.auto(si)
-  const root = s.first.value
-  const vars = []
-  for(const i of root.savedDecls) {
-    if (!i[0].byVal) {
-      vars.push(i)
-      root.savedDecls.delete(i[0])
-    }
-  }
-  if (root.closDeps) {
-    for(const i of root.closDeps)
-      vars.push([i,[s.tok(Tag.value,Tag.Identifier,{sym:i})]])
-  }
-  if (!vars.length) {
-    yield* s
-    return
-  }
-  const lab = s.label()
-  yield s.peel()
-  yield* s.peelTo(Tag.body)
-  yield* s.peelTo(Tag.body)
-  const blab = s.label()
-  yield s.enter(Tag.push,Tag.VariableDeclaration,
-                {node:{kind:"var"}})
-  yield s.enter(Tag.declarations,Tag.Array)
-  yield s.enter(Tag.push,Tag.VariableDeclarator)
-  yield s.tok(Tag.id, Tag.Identifier, {sym:root.captSym})
-  yield s.enter(Tag.init, Tag.ObjectExpression)
-  yield s.enter(Tag.properties, Tag.Array)
-  vars.sort((a,b) => a[0].num - b[0].num)
-  for(let [f,v] of vars) {
-    if (!v)
-      v = [s.tok(Tag.value,Tag.Identifier,{sym:Kit.scope.undefinedSym})]
-    const shorthand = v[0].type === Tag.Identifier && v[0].sym === f
-    yield s.enter(Tag.push, Tag.ObjectProperty, {node:{shorthand}})
-    yield s.tok(Tag.key, Tag.Identifier, {sym:f})
-    yield* Kit.reposOne(v, Tag.value)
-    yield* s.leave()
-  }
-  yield* blab()
-  yield* s.sub()
-  yield* lab()
-}
-
 /** moves frame steps to top level of JS module */
 export function* depsToTop(si) {
   const s = Kit.auto(si)
@@ -161,7 +78,7 @@ export function* depsToTop(si) {
         const ds = i.value.declSym
         if (par.funcId)
           ds.orig = ds.name = par.funcId.name + ds.orig
-        top.push([i,...s.sub(),s.close(i)])
+        top.push([i,...collect(),s.close(i)])
       } else
         yield i
     }
@@ -173,4 +90,113 @@ export function* depsToTop(si) {
   yield* inp
   yield* s
 }
+
+
+/** calculates variables to be inject into an object to pass by reference */
+export function calcStateRefs(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  const scopes = new Set()
+  if (root.scopeDecls) {
+    const vars = [...root.scopeDecls].filter(i => !i.byVal)
+    if (vars.length) {
+      for(const i of root.scopeDecls) {
+        if (i.byVal || !i.hasRefs)
+          continue
+        root.savedDecls.delete(i)
+        const scope = i.declLoop || i.declScope;
+        (scope.refVars || (scope.refVars = [])).push(i)
+        scopes.add(scope)
+        let stateRefSym = scope.stateRefSym
+        if (!stateRefSym) {
+          stateRefSym = scope.stateRefSym
+            = Kit.scope.newSym(
+              `${root.funcId ? root.funcId.orig : ""}_v`)
+          stateRefSym.byVal = true
+          stateRefSym.declScope = root
+          stateRefSym.declLoop = i.declLoop
+        }
+        i.stateRefSym = stateRefSym
+      }
+    }
+  }
+  for(const i of scopes) {
+    const names = new Set()
+    for(const sym of i.refVars) {
+      let name = sym.orig
+      for(let cnt = 0;names.has(name);cnt++,name = `${sym.orig}${cnt}`){}
+      names.add(name)
+      sym.fieldName = name
+    }
+  }
+  return s
+}
+
+/** emplaces object definitions to store reference variables */
+export function* injectStateRefs(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  function* walk(scope) {
+    if (scope.stateRefSym) {
+      const lab = s.label()
+      yield s.enter(Tag.push, Tag.ExpressionStatement)
+      yield s.enter(Tag.expression, Tag.AssignmentExpression,
+                    {node:{operator:"="}})
+      if (scope.savedDecls)
+        scope.savedDecls.set(scope.stateRefSym,null)
+      yield s.tok(Tag.left, Tag.Identifier,
+                  {sym:scope.stateRefSym,lhs:true,rhs:false,decl:false})
+      yield s.enter(Tag.right, Tag.ObjectExpression)
+      yield s.enter(Tag.properties, Tag.Array)
+      const names = new Set()
+      for(const sym of scope.refVars) {
+        yield s.enter(Tag.push, Tag.ObjectProperty,
+                      {node:{shorthand:sym.param != null}})
+        assert.ok(sym.fieldName)
+        yield s.tok(Tag.key,Tag.Identifier,{node:{name:sym.fieldName}})
+        yield s.tok(Tag.value,Tag.Identifier,
+                    {sym:sym.param ? sym : Kit.scope.undefinedSym})
+        yield* s.leave()
+      }
+      yield* lab()
+    }
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.Identifier:
+          const {sym} = i.value
+          if (!i.value.decl && sym && sym.stateRefSym) {
+            root.scopeCapt.add(sym.stateRefSym)
+            yield s.enter(i.pos, Tag.MemberExpression)
+            yield s.tok(Tag.object, Tag.Identifier,
+                        {sym:sym.stateRefSym,lhs:false,rhs:true,decl:false})
+            assert.ok(sym.fieldName)
+            yield s.tok(Tag.property, Tag.Identifier,{node:{name:sym.fieldName}})
+            yield* s.leave()
+            s.close(i)
+            continue
+          }
+          break
+        case Loop.repeat:
+          if (scope.refVars && scope.refVars.length) {
+            const lab = s.label()
+            yield s.peel(i)
+            yield* s.peelTo(Tag.body)
+            yield* s.peelTo(Tag.body)
+            yield* walk(i.value)
+            yield* lab()
+            continue
+          }
+          break
+        }
+      }
+      yield i
+    }
+  }
+  yield* s.till(i => i.enter && i.pos == Tag.body && i.type === Tag.Array)
+  yield* walk(root)
+  yield* s
+}
+
+
 

@@ -745,7 +745,8 @@ const optimizeBindAssign = R.pipe(
     function* getLeft() {
       let res = false
       for(const i of s.one()) {
-        if (i.enter && i.type === Tag.Identifier && i.value.ref)
+        if (i.enter && i.type === Tag.Identifier &&
+            (!i.value.sym || !i.value.sym.byVal))
           res = true
         yield i
       }
@@ -1176,7 +1177,7 @@ function calcOptPat(cfg, unpackMax) {
  * all control flow ancestors chain
  * 
  */
-function propagateArgs(cfg) {
+function propagateArgs(cfg,root) {
   // propagating writes in fact rarely needed, only if there are some
   // uninitialized variables
   const dyn = []
@@ -1190,7 +1191,7 @@ function propagateArgs(cfg) {
     const res = new Set()
     if (frame.framePat)
       frame.framePat.forEach(res.add,res)
-    if (frame.enters != null) {
+    if (frame.enters != null && frame.enters.length) {
       for(const i of frame.enters) {
         if (i.frameArgs) {
           for(const j of i.frameArgs.keys())
@@ -1200,6 +1201,15 @@ function propagateArgs(cfg) {
         if (src.frameLocals)
           src.frameLocals.forEach(res.add,res)
         calcAvail(src,seen).forEach(res.add,res)
+      }
+    } else {
+      if (root.paraSyms != null) {
+        for(const i of root.paramSyms)
+          res.add(i)
+      }
+      if (root.scopeCapt != null) {
+        for(const i of root.scopeCapt)
+          res.add(i)
       }
     }
     return res
@@ -1355,11 +1365,12 @@ function calcCfg(sa) {
  */
 function calcVarDeps(si) {
   const sa = Kit.toArray(State.calcFrameStateVars(si))
-  const opts = sa[0].value.opts
+  const root = sa[0].value
+  const opts = root.opts
   const cfg = calcCfg(sa)
   resolveFrameParams(cfg)
-  propagateArgs(cfg)
-  resolveFrameArgs(cfg,sa[0].value)
+  propagateArgs(cfg,root)
+  resolveFrameArgs(cfg,root)
   if (opts.packArgs !== "apply")
     calcOptPat(cfg, opts.unpackMax || defaultUnpackMax)
   return sa

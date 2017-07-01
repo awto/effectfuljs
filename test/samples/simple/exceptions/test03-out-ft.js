@@ -1,28 +1,44 @@
-function a_1(ref_) {
-  try {
-    console.log('1');
-    return M.jM1E(eff(1), a_3, ref_, a_2);
-  } catch (e) {
-    return a_2(e, ref_);
-  }
-}
-
-function a_2(ex, ref_) {
-  ref_._error = ex;
-  ref_.e = ref_._error;
+function a_1(ex, a_v) {
+  a_v.error1 = ex;
+  a_v.e = a_v.error1;
   console.log('2');
-  return a_3(ref_);
+  return a_2(a_v);
 }
 
-function a_3(ref_) {
-  return eff(ref_.e);
+function a_2(a_v) {
+  return eff(a_v.e);
+}
+
+function _a_1(ex, a_v) {
+  a_v.error1 = ex;
+  a_v.e = a_v.error1;
+  console.log('2');
+  a_v.error1 = null;
+  return _a_2(a_v);
+}
+
+function _a_2(a_v) {
+  return eff(a_v.e);
 }
 
 function a() {
-  var ref_ = {
+  var a_v;
+  a_v = {
     e: undefined,
     error: undefined,
-    _error: undefined
+    error1: undefined
   };
-  return a_1(ref_);
+  console.log('1');
+  return M.jM1(eff(1), a_2, a_v);
+}
+
+function _a() {
+  var a_v;
+  a_v = {
+    e: undefined,
+    error: undefined,
+    error1: undefined
+  };
+  console.log('1');
+  return M.jM1(eff(1), _a_2, a_v);
 }

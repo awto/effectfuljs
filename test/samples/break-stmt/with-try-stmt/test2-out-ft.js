@@ -1,8 +1,14 @@
+function _1(ex, _v) {
+  _v.e = ex;
+  return eff(3);
+}
+
 // *- when it is the last statement
 (function () {
-  var ref_ = {
+  var _v;
+
+  _v = {
     e: undefined
   };
-  ref_.e = ex;
-  return eff(3);
+  return M.pure();
 });

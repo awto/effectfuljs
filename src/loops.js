@@ -161,10 +161,13 @@ export function forOfStmt(s) {
         case Tag.ForOfStatement:
           yield Kit.setType(i,Tag.ForStatement)
           if (i.enter) {
+            // TODO: extract into a function or even a pass
             const sym = Kit.scope.newSym("loop")
             sym.declBlock = sym.declLoop = i.value
             sym.declScope = s.first.value
             sym.byVal = s.opts.state
+            sym.hasRefs = true
+            s.first.value.scopeDecls.add(sym)
             const iterVar = {sym,lhs:true,decl:true}
             const init = Array.from(readLeft(sym))
             const end = s.label()
@@ -350,7 +353,7 @@ export function* injectRepeat(s) {
         if (i.enter) {
           const lab = sl.label()
           yield sl.enter(i.pos,Block.letStmt,{pat:[]})
-          yield sl.enter(Tag.expression,repeat)
+          yield sl.enter(Tag.expression,repeat,i.value)
           yield* walk()
           yield* lab()
         }
@@ -608,11 +611,12 @@ export function blockScope(si) {
               .sort((a,b) => a.num - b.num)
         const lab = s.label()
         yield* s.peelTo(Tag.body)
-        yield s.peel()
-        yield s.enter(Tag.push, Tag.CallExpression)
+        yield* s.peelTo(Tag.body)
+        yield s.enter(Tag.push, Tag.ExpressionStatement)
+        yield s.enter(Tag.expression, Tag.CallExpression)
         const clab = s.label()
         const func = s.enter(Tag.callee, Tag.ArrowFunctionExpression,
-                             {isLocal: true})
+                             {isLocal: true, topEff: true})
         yield func
         func.value.localFuncRef = func.value
         yield s.enter(Tag.params, Tag.Array)

@@ -1,66 +1,67 @@
-function a_1(a, ref_) {
-  return M.jM1(eff1(a, ref_.i++), a_2, ref_);
+function a_1(a, a_v) {
+  return M.jM1(eff1(a, a_v.i++), a_2, a_v);
 }
 
-function a_2(ref_) {
-  return M.jM1(eff3(ref_.i++), a_3, ref_);
+function a_2(a_v) {
+  return M.jM1(eff3(a_v.i++), a_3, a_v);
 }
 
-function a_3(ref_) {
-  return M.jM1(eff4(ref_.i++), a_4, ref_);
+function a_3(a_v) {
+  return M.jM1(eff4(a_v.i++), a_4, a_v);
 }
 
-function a_4(ref_) {
-  return M.jM1(eff5(ref_.i++), a_5, ref_);
+function a_4(a_v) {
+  return M.jM1(eff5(a_v.i++), a_5, a_v);
 }
 
-function a_5(ref_) {
+function a_5(a_v) {
   var a;
-  const a = ref_.i++;
-  return M.jMB1(eff6(a), a_6, ref_);
+  const a = a_v.i++;
+  return M.jMB1(eff6(a), a_6, a_v);
 }
 
-function a_6(a, ref_) {
-  if (a) return a_7(ref_);else {
-    return M.jMB1(eff7(ref_.i), a_8, ref_);
+function a_6(a, a_v) {
+  if (a) return a_7(a_v);else {
+    return M.jMB1(eff7(a_v.i), a_8, a_v);
   }
 }
 
-function a_7(ref_) {
-  return M.jM1(eff7(ref_.i++), a_12, ref_);
+function a_7(a_v) {
+  return M.jM1(eff7(a_v.i++), a_12, a_v);
 }
 
-function a_8(a, ref_) {
-  if (a) return a_9(ref_);else {
+function a_8(a, a_v) {
+  if (a) return a_9(a_v);else {
     return M.pure(10);
   }
 }
 
-function a_9(ref_) {
-  ref_.i++;
-  return a_11(ref_);
+function a_9(a_v) {
+  a_v.i++;
+  return a_11(a_v);
 }
 
-function a_10(ref_) {
-  return M.jM1(eff7(ref_.i++), a_11, ref_);
+function a_10(a_v) {
+  return M.jM1(eff7(a_v.i++), a_11, a_v);
 }
 
-function a_11(ref_) {
-  return M.jM1(eff8(ref_.i++), a_12, ref_);
+function a_11(a_v) {
+  return M.jM1(eff8(a_v.i++), a_12, a_v);
 }
 
-function a_12(ref_) {
-  return M.jM1(eff9(ref_.i++), a_13, ref_);
+function a_12(a_v) {
+  return M.jM1(eff9(a_v.i++), a_13, a_v);
 }
 
-function a_13(ref_) {
-  return eff10(ref_.i++);
+function a_13(a_v) {
+  return eff10(a_v.i++);
 }
 
 function a() {
-  var ref_ = {
+  var a_v;
+  a_v = {
     i: undefined
   };
-  const a = ref_.i = 0;
-  return M.jMB1(eff2(a), a_1, ref_);
+  const a = a_v.i = 0;
+  return M.jMB1(eff2(a), a_1, a_v);
 }

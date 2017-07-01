@@ -1,10 +1,10 @@
 function a01() {
+  var e;
   console.log('in');
   console.log('inner');
   return M.jM(eff('inner'), _2);
 
   function _1(ex) {
-    var e;
     e = ex;
     console.log('exception', e);
     return M.jM(eff('exception', e), _2);
@@ -17,6 +17,7 @@ function a01() {
 }
 
 function a02() {
+  var e;
   console.log('in');
   return M.jM(eff('inner'), _1);
 
@@ -30,12 +31,11 @@ function a02() {
   }
 
   function _2(ex) {
-    var e;
     e = ex;
-    return M.jM1(eff('exception', e), _3, e);
+    return M.jM(eff('exception', e), _3);
   }
 
-  function _3(e) {
+  function _3() {
     console.log('exception', e);
     return _4();
   }
@@ -51,6 +51,7 @@ function a02() {
 }
 
 function a03() {
+  var e;
   var i, j;
   console.log('in', i++, j += 2);
   return M.jM2(eff(i++, j), _1, i, j);
@@ -73,13 +74,13 @@ function a03() {
   }
 
   function _3(_ex, i, j) {
-    var ex, e;
+    var ex;
     e = _ex;
     ex = e;
-    return M.jM3(eff('exception', e, j++), _4, i, ex, e);
+    return M.jM2(eff('exception', e, j++), _4, i, ex);
   }
 
-  function _4(i, ex, e) {
+  function _4(i, ex) {
     console.log('exception', e);
     return _5(i, ex);
   }
@@ -331,6 +332,8 @@ function a08() {
 }
 
 function a09() {
+  var a, _a;
+
   return M.jM(eff(1), _1);
 
   function _1() {
@@ -341,7 +344,8 @@ function a09() {
     return M.jMB(eff(3), _3);
   }
 
-  function _3(a) {
+  function _3(b) {
+    a = b;
     if (a === 1) return _17(_20, undefined);else {
       if (a === 2) return _4();else {
         return M.jM(eff(5), _8);
@@ -369,9 +373,10 @@ function a09() {
     return M.jMB(eff(6), _9);
   }
 
-  function _9(a) {
-    if (a === 1) return _14(_11);else {
-      if (a === 2) return _12();else {
+  function _9(b) {
+    _a = b;
+    if (_a === 1) return _14(_11);else {
+      if (_a === 2) return _12();else {
         return M.jM1(eff(7), _14, _16);
       }
     }
@@ -423,6 +428,7 @@ function a09() {
 }
 
 function a10() {
+  var a;
   return M.jM(eff(2), _1);
 
   function _1() {
@@ -433,7 +439,8 @@ function a10() {
     return M.jMB(eff(6), _3);
   }
 
-  function _3(a) {
+  function _3(b) {
+    a = b;
     if (a) return _6();else return _7(_5);
   }
 
@@ -563,13 +570,15 @@ function a13() {
 }
 
 function a14() {
+  var a;
   return _1();
 
   function _1(r) {
     return M.jMB1(eff(1), _2, r);
   }
 
-  function _2(a, r) {
+  function _2(b, r) {
+    a = b;
     if (a === 1) return _10(_4, r);else {
       if (a === 2) return _10(_1, r);else {
         if (a === 3) return _5();else {
@@ -637,13 +646,17 @@ function a14() {
 }
 
 function a15() {
+  var _a;
+
   return _1();
 
   function _1() {
     return M.jMB(eff(1), _2);
   }
 
-  function _2(_a) {
+  function _2(b) {
+    _a = b;
+
     if (_a === 1) {
       if (a) {
         return eff(8);
@@ -664,6 +677,8 @@ function a15a() {
 }
 
 function a16() {
+  var _a;
+
   return M.jM(eff(0), _1);
 
   function _1() {
@@ -675,7 +690,9 @@ function a16() {
     return M.jMB(eff(1), _3);
   }
 
-  function _3(_a) {
+  function _3(b) {
+    _a = b;
+
     if (_a === 1) {
       if (a) {
         return eff(8);
@@ -687,13 +704,16 @@ function a16() {
 }
 
 function a17() {
+  var a;
   return _1();
 
   function _1() {
     return M.jMB(eff(1), _2);
   }
 
-  function _2(a) {
+  function _2(c) {
+    a = c;
+
     if (a === 1) {
       if (b) {
         return eff(8);
@@ -705,13 +725,15 @@ function a17() {
 }
 
 function a18() {
+  var a;
   return _1();
 
   function _1() {
     return M.jMB(eff(1), _2);
   }
 
-  function _2(a) {
+  function _2(b) {
+    a = b;
     if (a === 1) return _3(_5);else {
       return M.jM1R(eff(2), _3, _1);
     }
@@ -963,7 +985,6 @@ function a30(a1, a2) {
   }
 
   function _3(cb) {
-    var a2;
     if (a2) return _4(_5);else {
       return M.jM1(eff(4), _4, cb);
     }
@@ -987,6 +1008,7 @@ function a30(a1, a2) {
 }
 
 function a31() {
+  var e;
   return _1();
 
   function _1() {
@@ -1007,7 +1029,6 @@ function a31() {
   }
 
   function _3(ex) {
-    var e;
     e = ex;
     console.log(e);
     return M.jM(eff(3), _4);
@@ -1019,6 +1040,7 @@ function a31() {
 }
 
 function a32(a1, a2) {
+  var e, ee;
   return _1();
 
   function _1() {
@@ -1039,8 +1061,6 @@ function a32(a1, a2) {
   }
 
   function _3(ex) {
-    var e;
-
     try {
       e = ex;
       console.log(e);
@@ -1051,7 +1071,6 @@ function a32(a1, a2) {
   }
 
   function _4(ex) {
-    var ee;
     ee = ex;
     return M.jM(eff(4), _5);
   }
@@ -1062,6 +1081,7 @@ function a32(a1, a2) {
 }
 
 function a33() {
+  var e;
   return _1();
 
   function _1() {
@@ -1086,7 +1106,6 @@ function a33() {
   }
 
   function _4(ex) {
-    var e;
     e = ex;
     console.log(e);
     return M.jM1(eff(3), _5, _6);
@@ -1102,6 +1121,7 @@ function a33() {
 }
 
 function a34() {
+  var e;
   return _1();
 
   function _1() {
@@ -1142,7 +1162,6 @@ function a34() {
   }
 
   function _7(ex) {
-    var e;
     e = ex;
     return M.jM1(eff(e), _8, _9);
   }
@@ -1157,6 +1176,7 @@ function a34() {
 }
 
 function a35() {
+  var e;
   return _1();
 
   function _1() {
@@ -1193,7 +1213,6 @@ function a35() {
   }
 
   function _6(ex) {
-    var e;
     e = ex;
     console.log(e);
     return M.jM(eff('try>catch'), _7);
@@ -1228,7 +1247,6 @@ function a37(a1, a2) {
   }
 
   function _3(cb) {
-    var a2;
     if (a2) return _4(_5);else {
       return M.jM1(eff('l1>try-body>l2>try-finally>try-body'), _4, cb);
     }

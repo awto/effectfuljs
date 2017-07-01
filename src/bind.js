@@ -428,6 +428,10 @@ export const flatten = R.pipe(
                 yield sl.peel(i)
                 yield* sl.sub()
                 yield* sl.leave()
+              } else if (i.pos === Tag.push) {
+                yield sl.peel(i)
+                yield* sl.sub()
+                yield* sl.leave()
               } else {
                 const lab = sl.label()
                 yield sl.enter(i.pos,Tag.BlockStatement,{coerce:true})

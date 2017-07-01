@@ -1,7 +1,8 @@
 function a() {
-  var ref_ = {
+  var a_v;
+  a_v = {
     i: undefined
   };
-  ref_.i = 0;
+  a_v.i = 0;
   return eff(1);
 }

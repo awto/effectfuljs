@@ -225,8 +225,7 @@ export const injectBlock = R.pipe(
               jump: i.value.jump,
               exit: i.value.exit,
               node: { dst:i.value.dst }})
-            yield sl.enter(Tag.push,Kit.Subst)
-            yield* walk()
+            yield* Kit.reposOne(walk(), Tag.push)
             yield* lab()
           }
           continue
@@ -235,57 +234,6 @@ export const injectBlock = R.pipe(
       }
     }
     yield* walk()
-  },
-  Kit.completeSubst
-)
-
-/** converts control tags into JS expressions */
-export const interpret = R.pipe(function* interpret(s) {
-  const sl = Kit.auto(s)
-  function* walk() {
-    for(const i of sl.sub()) {
-      switch(i.type) {
-      case scope:
-        if (i.enter) {
-          const lab = sl.label()
-          yield sl.enter(i.pos, Block.effExpr)
-          yield sl.enter(Tag.expression,Tag.CallExpression)
-          yield Kit.idTok(Tag.callee, i.value.sym)
-          yield sl.enter(Tag.arguments, Tag.Array)
-          yield sl.enter(Tag.push,Tag.ArrowFunctionExpression)
-          yield sl.enter(Tag.params,Tag.Array)
-          let labs = i.value.ctrl.filter(v => v !== "#")
-          if (labs.length === 0)
-            labs = ["label"]
-          labs = labs.map(j => [j,vars.newSym(j[0] === "#" ? j.slice(1) : j)])
-          const lmap = i.value.node.lmap = new Map([["#",labs[0][1]],...labs])
-          for(const j of labs)
-            yield sl.tok(Tag.push,Tag.Identifier,{sym: j[1]})
-          yield* sl.leave()
-          // TODO: probably it is always aready body
-          yield sl.enter(Tag.body,Kit.Subst)
-          yield* walk()
-          yield* lab()
-        }
-        break
-      case jump:
-        if (i.enter) {
-          const lab = sl.label()
-          yield sl.enter(i.pos, Block.effExpr)
-          yield sl.enter(Tag.expression,Tag.CallExpression)
-          yield sl.tok(Tag.callee,Tag.Identifier,
-                    {sym:i.value.node.dst.lmap.get(i.value.jump)})
-          yield sl.enter(Tag.arguments,Tag.Array)
-          yield* sl.sub()
-          yield* lab()
-        }
-        break
-      default:
-        yield i
-      }
-    }
   }
-  yield* walk()
-},Kit.completeSubst)
-
+)
 

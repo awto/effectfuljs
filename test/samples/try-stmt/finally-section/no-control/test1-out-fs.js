@@ -11,6 +11,7 @@ function a() {
 }
 
 function b() {
+  var e;
   return _1();
 
   function _1() {
@@ -26,7 +27,6 @@ function b() {
   }
 
   function _3(ex) {
-    var e;
     e = ex;
     return M.jM1(eff('in `catch`', e), _4, _5);
   }
@@ -67,6 +67,7 @@ function d() {
 }
 
 function e() {
+  var e;
   console.log('before');
   return M.jM(eff('before'), _1);
 
@@ -84,13 +85,12 @@ function e() {
   }
 
   function _3(ex) {
-    var e;
     e = ex;
     console.log('catch', e);
-    return M.jM1(eff('catch', e), _4, e);
+    return M.jM(eff('catch', e), _4);
   }
 
-  function _4(e) {
+  function _4() {
     console.log('catch', e);
     return _5(_7);
   }
@@ -112,6 +112,7 @@ function e() {
 }
 
 function f() {
+  var e;
   return _1();
 
   function _1() {
@@ -127,7 +128,6 @@ function f() {
   }
 
   function _3(ex) {
-    var e;
     e = ex;
     return M.jM1(eff('in `catch`'), _4, _5);
   }
@@ -143,6 +143,7 @@ function f() {
 }
 
 function g() {
+  var e;
   return _1();
 
   function _1() {
@@ -158,7 +159,6 @@ function g() {
   }
 
   function _3(ex) {
-    var e;
     e = ex;
     console.log('in `catch`');
     return _4(_5);

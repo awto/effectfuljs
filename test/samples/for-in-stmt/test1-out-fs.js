@@ -1,4 +1,5 @@
 function a() {
+  var i;
   return M.jMB(eff(2), _1);
 
   function _1(a) {
@@ -12,13 +13,13 @@ function a() {
   }
 
   function _3(loop) {
-    var i;
     i = loop.value;
     return M.jM1R(eff(i), _2, loop);
   }
 }
 
 function b() {
+  var i;
   return M.jMB(eff(2), _1);
 
   function _1(a) {
@@ -32,13 +33,13 @@ function b() {
   }
 
   function _3(loop) {
-    var i;
     i = loop.value;
     return M.jM1R(eff(i), _2, loop);
   }
 }
 
 function c() {
+  var i;
   return M.jMB(eff(2), _1);
 
   function _1(a) {
@@ -52,18 +53,16 @@ function c() {
   }
 
   function _3(loop) {
-    var i;
     i = loop.value;
     return M.jM1R(eff(i), _2, loop);
   }
 }
 
 function d() {
+  var i;
   return M.jMB(eff(2), _1);
 
   function _1(a) {
-    var i;
-
     for (i in a) {
       console.log(i);
     }
@@ -73,6 +72,7 @@ function d() {
 }
 
 function e() {
+  var i;
   var loop;
   loop = M.forInIterator(obj);
   return _1(loop);
@@ -82,7 +82,6 @@ function e() {
   }
 
   function _2(loop) {
-    var i;
     i = loop.value;
     return M.jM1R(eff(i), _1, loop);
   }
@@ -95,6 +94,7 @@ function f() {
 }
 
 function g() {
+  var i;
   return M.jM(eff('a'), _1);
 
   function _1() {
@@ -108,15 +108,13 @@ function g() {
   }
 
   function _3(loop) {
-    var i;
-
     if (loop = loop()) {
       i = loop.value;
-      return M.jMB2(eff(i), _4, i, loop);
+      return M.jMB1(eff(i), _4, loop);
     } else return _6();
   }
 
-  function _4(a, i, loop) {
+  function _4(a, loop) {
     if (a) return _3(loop);else {
       return M.jMB1(effB(i), _5, loop);
     }
@@ -134,6 +132,7 @@ function g() {
 }
 
 function h() {
+  var j, i;
   return M.jM(eff('a'), _1);
 
   function _1() {
@@ -143,65 +142,61 @@ function h() {
   }
 
   function _2(loop) {
-    var j;
-
     if (loop = loop()) {
       j = loop.value;
       console.log('j');
-      return M.jM2(effA(j), _3, j, loop);
+      return M.jM1(effA(j), _3, loop);
     } else return _12();
   }
 
-  function _3(j, loop) {
-    return M.jMB2(eff(j), _4, j, loop);
+  function _3(loop) {
+    return M.jMB1(eff(j), _4, loop);
   }
 
-  function _4(a, j, loop) {
+  function _4(a, loop) {
     var _loop;
 
     _loop = M.forInIterator(a);
-    return _5(j, loop, _loop);
+    return _5(loop, _loop);
   }
 
-  function _5(j, loop, _loop) {
-    var i;
-
+  function _5(loop, _loop) {
     if (_loop = _loop()) {
       i = _loop.value;
       console.log('b');
-      return M.jM4(eff('b'), _6, j, i, loop, _loop);
-    } else return _11(j, loop);
+      return M.jM2(eff('b'), _6, loop, _loop);
+    } else return _11(loop);
   }
 
-  function _6(j, i, loop, _loop) {
-    return M.jMB4(eff(i + j), _7, j, i, loop, _loop);
+  function _6(loop, _loop) {
+    return M.jMB2(eff(i + j), _7, loop, _loop);
   }
 
-  function _7(a, j, i, loop, _loop) {
+  function _7(a, loop, _loop) {
     if (a) return _2(loop);else {
-      return M.jMB4(effB(i + j), _8, j, i, loop, _loop);
+      return M.jMB2(effB(i + j), _8, loop, _loop);
     }
   }
 
-  function _8(a, j, i, loop, _loop) {
+  function _8(a, loop, _loop) {
     if (a) return _12();else {
-      return M.jMB4(eff(i), _9, j, i, loop, _loop);
+      return M.jMB2(eff(i), _9, loop, _loop);
     }
   }
 
-  function _9(a, j, i, loop, _loop) {
-    if (a) return _5(j, loop, _loop);else {
-      return M.jMB3(effB(i), _10, j, loop, _loop);
+  function _9(a, loop, _loop) {
+    if (a) return _5(loop, _loop);else {
+      return M.jMB2(effB(i), _10, loop, _loop);
     }
   }
 
-  function _10(a, j, loop, _loop) {
-    if (a) return _11(j, loop);else {
-      return M.jM3R(eff('c'), _5, j, loop, _loop);
+  function _10(a, loop, _loop) {
+    if (a) return _11(loop);else {
+      return M.jM2R(eff('c'), _5, loop, _loop);
     }
   }
 
-  function _11(j, loop) {
+  function _11(loop) {
     return M.jM1R(effB(j), _2, loop);
   }
 

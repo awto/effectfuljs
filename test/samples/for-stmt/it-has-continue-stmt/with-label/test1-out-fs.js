@@ -155,6 +155,7 @@
 });
 
 (function () {
+  var len;
   var j;
   j = 0;
   return _1(j);

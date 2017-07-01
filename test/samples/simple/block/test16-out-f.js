@@ -1,9 +1,7 @@
 function a() {
   var i;
   i = 0;
-  {
-    i++;
-  }
+  i++;
   return M.jM(eff1(i), _1);
 
   function _1() {

@@ -1,15 +1,16 @@
-function a_1(a, ref_) {
-  ref_.i = a;
-  return M.jM1(eff(ref_.i), a_2, ref_);
+function a_1(a, a_v) {
+  a_v.i = a;
+  return M.jM1(eff(a_v.i), a_2, a_v);
 }
 
-function a_2(ref_) {
-  return write(ref_.i);
+function a_2(a_v) {
+  return write(a_v.i);
 }
 
 function a() {
-  var ref_ = {
+  var a_v;
+  a_v = {
     i: undefined
   };
-  return M.jMB1(read1(), a_1, ref_);
+  return M.jMB1(read1(), a_1, a_v);
 }

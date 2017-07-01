@@ -1,35 +1,37 @@
-function _1(ref_) {
-  if (ref_.j < ref_.len) return _2(ref_);else return _4(ref_);
+function _1(_v) {
+  if (_v.j < _v.len) return _2(_v);else return _4();
 }
 
-function _2(ref_) {
-  ref_.i = ref_.ref[ref_.j];
-  return M.jMB1(eff(ref_.i), _3, ref_);
+function _2(_v) {
+  _v.i = _v.ref[_v.j];
+  return M.jMB1(eff(_v.i), _3, _v);
 }
 
-function _3(a, ref_) {
-  if (a) return _4(ref_);else {
-    ref_.j++;
-    return M.jNR(_1, ref_);
+function _3(a, _v) {
+  if (a) return _4();else {
+    _v.j++;
+    return M.jNR(_1, _v);
   }
 }
 
-function _4(ref_) {
-  return M.jM1(eff(2), _5, ref_);
+function _4() {
+  return M.jM(eff(2), _5);
 }
 
-function _5(ref_) {
+function _5() {
   return eff(3);
 }
 
 (function () {
-  var ref_ = {
+  var _v;
+
+  _v = {
     i: undefined,
     j: undefined,
     len: undefined,
     ref: undefined
   };
-  ref_.ref = [1, 2, 3];
-  ref_.j = 0, ref_.len = ref_.ref.length;
-  return _1(ref_);
+  _v.ref = [1, 2, 3];
+  _v.j = 0, _v.len = _v.ref.length;
+  return _1(_v);
 });

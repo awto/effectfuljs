@@ -198,7 +198,66 @@ export function* restoreDecls(s) {
   }
 }
 
+/** calculates for each Identifier lhs/rhs fields */
+export function calcRefKind(si) {
+  const s = Kit.auto(si)
+  function* walk(declLhs) {
+    for(const i of s.sub()) {
+      yield i
+      if (i.enter) {
+        switch(i.type) {
+          /*
+        case Tag.VariableDeclarator:
+          const decls = []
+          for(const j of s.one()) {
+            yield j
+            if (j.enter && j.type === Tag.Identifier
+                && j.value.decl) {
+              j.lhs = true
+              j.rhs = false
+            }
+          }
+          if (s.cur().pos === Tag.init) {
+            for(const j of decls) {
+              j.lhs = true
+              j.rhs = false
+            }              
+          }
+          break
+          */
+        case Tag.AssignmentExpression:
+          for(const j of s.one()) {
+            yield j
+            if (j.enter && j.type === Tag.Identifier && j.value.sym) {
+              j.value.lhs = true
+              j.value.rhs = i.value.node.operator !== "="
+            }
+          }
+          break
+        case Tag.UpdateExpression:
+          const j = s.cur()
+          if (j.type === Tag.Identifier) {
+            j.value.lhs = true
+            j.value.rhs = true
+            yield* s.one()
+          }
+          break
+        case Tag.Identifier:
+          if (i.value.sym) {
+            i.value.lhs = i.value.decl
+            i.value.rhs = !i.value.decl
+          }
+          break
+        }
+      }
+    }
+  }
+  return walk()
+}
+
+/** identifier is passed threaded between effectful frames as their args */
 export const byVal = symbol("state.byVal")
+/** identifier is passed as field of an object */
 export const byRef = symbol("state.byRef")
 
 /** 
@@ -216,20 +275,20 @@ export const byRef = symbol("state.byRef")
  *                                    scopeDecls: Set<Sym>,
  *                                    isLocal?: boolean
  *                                    }
- *     type IdValue = IdValue & { lhs?: boolean, rhs?: boolean, localFuncRef?: FuncValue }
+ *     type IdValue = IdValue & { localFuncRef?: FuncValue }
  *     type LoopValue = LoopValue & { captureRefs: Set<Sym> }
  */
 export function calcRefScopes(si) {
-  const sa = Kit.toArray(Kit.resetFieldInfo(si))
+  const sa = Kit.toArray(calcRefKind(si))
   const s = Kit.auto(reorderVarUsages(sa))
   const funcs = []
-  const ids = []
   const allDecls = []
   function scope(root) {
-    const symUsages = root.symUsages = new Map()
-    const decls = root.scopeDecls = new Set()
+    const symUsages = root.symUsages || (root.symUsages = new Map())
+    const decls = root.scopeDecls = new Set(root.paramSyms)
     const capt = root.scopeCapt = new Set()
     const captMod = root.scopeCaptMod = new Set()
+    const deps = root.scopeDeps = new Set()
     for(const i of s.sub()) {
       if (i.enter) {
         switch(i.type) {
@@ -240,6 +299,7 @@ export function calcRefScopes(si) {
                 if (i.type !== Tag.Identifier || i.value.sym)
                   throw s.error("expected list of declared identifiers")
                 i.value.sym.byVal = i.type === byVal
+                i.value.sym.byValStrict = true
               }
           }
           break
@@ -254,23 +314,31 @@ export function calcRefScopes(si) {
         case Tag.Identifier:
           const si = i.value.sym
           if (si != null) {
-            ids.push(i.value)
-            const fi = i.value.fieldInfo
-            const lhs = i.value.lhs = fi.mod || i.pos === Tag.id
-            i.value.rhs = fi.expr
+            const {lhs,rhs} = i.value
+            const symRoot = si.declScope
+            if (!symRoot)
+              break
             if (i.value.decl) {
-              assert.ok(si.declScope === root)
+              assert.ok(symRoot === root)
               decls.add(si)
+              si.topLevel = s.opts.topLevel
               allDecls.push(i.value)
               if (si.byVal == null)
                 si.byVal = s.opts.state
-            } else if (si.declScope !== root) {
-              (si.refScopes || (si.refScopes = new Set())).add(root)               
-              capt.add(si)
-              if (lhs)
-                captMod.add(si)
+            } else {
+              if (si.declScope !== root) {
+                (si.refScopes || (si.refScopes = new Set())).add(root)
+                if (si.declScope)
+                  deps.add(si.declScope)
+                capt.add(si)
+                if (lhs) {
+                  (si.modScopes || (si.modScopes = new Set())).add(root)
+                  captMod.add(si)
+                }
+              }
             }
-            Kit.mapPush(symUsages,si,i)
+            if (lhs || rhs)
+              Kit.mapPush(symUsages,si,i)
           }
         }
       }
@@ -281,8 +349,12 @@ export function calcRefScopes(si) {
     const si = i.sym
     const root = si.declScope
     const usages = root.symUsages.get(si)
-    if (!usages)
+    si.hasRefs = usages && usages.length > 0
+      || si.refScopes && si.refScopes.length
+    if (!usages) {
+      si.singleAssign = true
       continue
+    }
     let singleAssign
     let func
     for(const j of usages) {
@@ -298,6 +370,7 @@ export function calcRefScopes(si) {
           break
         }
       }
+      // somehow the program reads variable before it is assigned first
       if (jv.rhs && singleAssign == null) {
         singleAssign = false
         break
@@ -315,8 +388,8 @@ export function calcRefScopes(si) {
         }
       }
     }
+    si.singleAssign = singleAssign
     if (singleAssign !== false) {
-      si.singleAssign = true
       if (func != null) {
         func.refSym = si
         si.funcRef = func        
@@ -328,9 +401,7 @@ export function calcRefScopes(si) {
     if (si == null || !si.singleAssign && si.refScopes)
       continue
     const root = si.declScope
-    const usages = root.symUsages.get(i)
-    if (usages == null)
-      continue
+    const usages = root.symUsages.get(si)
     for(const j of usages) {
       if (j.value.rhs && j.pos !== Tag.callee)
         continue locloop
@@ -342,9 +413,8 @@ export function calcRefScopes(si) {
   }
   for(const i of allDecls) {
     const si = i.sym
-    if (si.byVal && si.refScopes && [...si.refScopes].find(j => !j.isLocal)) {
-      if (i.opts.closureState === "ref")
-        si.byVal = false
+    if (si.byVal && si.modScopes && [...si.modScopes].find(j => !j.isLocal)) {
+      si.byVal = false
       if (!si.byVal) {
         if (si.declLoop != null) {
           const capt = si.declLoop.captureRefs
@@ -353,6 +423,8 @@ export function calcRefScopes(si) {
         } 
       }
     }
+    if (si.byVal && si.singleAssign && !si.topLevel)
+      si.byVal = false
   }
   return sa
 }
@@ -457,6 +529,7 @@ export const locals = R.pipe(localFuncDecls, localCalls)
  * calculates states reads and writes 
  */
 export function calcFrameStateVars(si) {
+  // const sa = Kit.toArray(recalcRefScopes(si))
   const sa = Kit.toArray(si)
   let sw = null
   for(const i of reorderVarUsages(sa)) {

@@ -1,23 +1,24 @@
-function a_1(a, ref_) {
-  ref_.i = a;
-  return M.jM1(eff2(ref_.i), a_2, ref_);
+function a_1(a, a_v) {
+  a_v.i = a;
+  return M.jM1(eff2(a_v.i), a_2, a_v);
 }
 
-function a_2(ref_) {
+function a_2(a_v) {
   var a;
-  const a = ref_.i++;
-  return M.jMB1(eff3(a), a_3, ref_);
+  const a = a_v.i++;
+  return M.jMB1(eff3(a), a_3, a_v);
 }
 
-function a_3(a, ref_) {
-  ref_.i = a;
-  return eff4(ref_.i);
+function a_3(a, a_v) {
+  a_v.i = a;
+  return eff4(a_v.i);
 }
 
 function a() {
-  var ref_ = {
+  var a_v;
+  a_v = {
     i: undefined
   };
-  const a = ref_.i++;
-  return M.jMB1(eff1(a), a_1, ref_);
+  const a = a_v.i++;
+  return M.jMB1(eff1(a), a_1, a_v);
 }

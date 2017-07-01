@@ -11,8 +11,9 @@ function a_2(b, a) {
 }
 
 function a_3(a, loop) {
+  var p;
   if (loop = loop()) return a_4(a, loop);else {
-    return eff(6, a);
+    return eff(8, a, p);
   }
 }
 
@@ -22,27 +23,35 @@ function a_4(a, loop) {
   return M.jM3(eff(3, a, a), a_5, a, i, loop);
 }
 
+function b_1(p, a, i, j, k) {
+  var _k;
+
+  _k = 10;
+  j++;
+  a++;
+  i++;
+  _k++, p++;
+  return M.jM4(eff(5, a, i, _k, p), b_2, p, a, i, k);
+}
+
+function b_2(p, a, i, k) {
+  return eff(6, a, i, k, p);
+}
+
 function a_5(a, i, loop) {
   var j, k;
   j = i + 1;
   k = i + 1;
   i++;
-
-  (function b() {
-    return M.jM2(eff(4, a, j), _1, a, j);
-
-    function _1(a, j) {
-      var i;
-      j++;
-      a++;
-      i++;
-      return eff(4, a, i);
-    }
-  });
-
-  return M.jM2R(eff(5, a, i, j), a_3, a, loop);
+  return M.jM4(eff(function b(a, j, p, i, k) {
+    return M.jM5(eff(4, a, j, k++, p), b_1, p, a, i, j, k);
+  }), a_6, a, i, j, loop);
 }
 
-function a() {
+function a_6(a, i, j, loop) {
+  return M.jM2R(eff(7, a, i, j), a_3, a, loop);
+}
+
+function a(p) {
   return M.jM(eff(1), a_1);
 }

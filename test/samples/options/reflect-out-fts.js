@@ -10,14 +10,27 @@ function a_3() {
   return M.jM(M.reflect(monadish + 2), a_4);
 }
 
+function _1() {
+  return eff(2);
+}
+
 function a_4() {
   console.log(M.reify(function () {
     return M.jM(eff(1), _1);
-
-    function _1() {
-      return eff(2);
-    }
   }));
+  return M.pure();
+}
+
+function __1(result) {
+  var err;
+
+  try {
+    expect(result).to.equal(3);
+    done();
+  } catch (err) {
+    done(err);
+  }
+
   return M.pure();
 }
 
@@ -27,14 +40,7 @@ function a() {
 
 function b() {
   M.reify(function () {
-    var result = M(addLater(1, 2));
-
-    try {
-      expect(result).to.equal(3);
-      done();
-    } catch (err) {
-      done(err);
-    }
+    return M.jMB(addLater(1, 2), __1);
   }).done();
 
   function addLater(a, b) {

@@ -1,4 +1,5 @@
 function a() {
+  var e;
   return _1();
 
   function _1() {
@@ -10,13 +11,12 @@ function a() {
   }
 
   function _2(ex) {
-    var e;
     e = ex;
     console.log(e, 1);
-    return M.jM1(eff(2), _3, e);
+    return M.jM(eff(2), _3);
   }
 
-  function _3(e) {
+  function _3() {
     console.log(e, 2);
     return M.pure();
   }

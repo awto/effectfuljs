@@ -1,3 +1,11 @@
+function aS_1(b1) {
+  return M.jM(eff('a'), aS_2);
+}
+
+function aS_2() {
+  return eff('b');
+}
+
 function a_1(b1) {
   return M.jM(eff('a'), a_2);
 }
@@ -14,6 +22,18 @@ function a1_2() {
   return eff('b');
 }
 
+function bS_1(b1) {
+  return M.jMB1(eff(2), bS_2, b1);
+}
+
+function bS_2(b2, b1) {
+  return M.jM1(eff(b1), bS_3, b2);
+}
+
+function bS_3(b2) {
+  return eff(b2);
+}
+
 function b_1(b1) {
   return M.jMB1(eff(2), b_2, b1);
 }
@@ -23,7 +43,13 @@ function b_2(b2, b1) {
 }
 
 function b_3(b2) {
-  return eff(b2);
+  return M.jM(eff(b2), b_4);
+}
+
+function b_4() {
+  var b1, b2;
+  b1 = b2 = 100;
+  return M.pure();
 }
 
 function b1_1(a) {
@@ -83,6 +109,8 @@ function c_9(z) {
 }
 
 function c_10() {
+  var a, b, c, d, e, f, g, j, x, y, z;
+  a = b = c = d = e = f = g = j = x = y = z = 1000;
   return eff(10);
 }
 
@@ -110,12 +138,56 @@ function d_5(a) {
   return M.pure();
 }
 
+function e1_1(cc) {
+  return M.jMB(eff(2, cc), e1_2);
+}
+
+function e1_2(cc) {
+  return eff(2, cc);
+}
+
+function e2_1(cc) {
+  return M.jMB(eff(2, cc), e2_2);
+}
+
+function e2_2(cc) {
+  return M.jM1(eff(2, cc), e2_3, cc);
+}
+
+function e2_3(cc) {
+  var _cc;
+
+  return M.jMB1(eff(3, _cc), e2_4, cc);
+}
+
+function e2_4(_cc, cc) {
+  return M.jMB1(eff(4, _cc), e2_5, cc);
+}
+
+function e2_5(_cc, cc) {
+  return M.jM1(eff(5, _cc), e2_6, cc);
+}
+
+function e2_6(cc) {
+  return eff(6, cc);
+}
+
+function aS() {
+  return M.jMB(eff(1), aS_1);
+}
+
 function a() {
+  var b1;
+  b1 = 0;
   return M.jMB(eff(1), a_1);
 }
 
 function a1() {
   return M.jMB(eff(1), a1_1);
+}
+
+function bS() {
+  return M.jMB(eff(1), bS_1);
 }
 
 function b() {
@@ -132,4 +204,14 @@ function c() {
 
 function d() {
   return M.jMB(eff1('a'), d_1);
+}
+
+function e1() {
+  var cc;
+  return M.jMB(eff(1, cc), e1_1);
+}
+
+function e2() {
+  var cc;
+  return M.jMB(eff(1, cc), e2_1);
 }

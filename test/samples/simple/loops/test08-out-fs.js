@@ -1,7 +1,9 @@
 function a() {
+  var i;
   return M.jMB(init(), _1);
 
-  function _1(i) {
+  function _1(a) {
+    i = a;
     return _2();
   }
 

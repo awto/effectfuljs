@@ -1,223 +1,223 @@
 'use strict';
 
-function addLater_1(a, ref_2) {
-  ref_2.deferred = a;
+function addLater_1(a, addLater_v) {
+  addLater_v.deferred = a;
   process.nextTick(function () {
-    var ref_1 = {
-      ref_2: ref_2
-    };
-    return ref_1.ref_2.deferred.resolve(ref_1.ref_2.a + ref_1.ref_2.b);
+    return addLater_v.deferred.resolve(addLater_v.a + addLater_v.b);
   });
-  return M.pure(ref_2.deferred.promise);
+  return M.pure(addLater_v.deferred.promise);
 }
 
-function _1(ref_3) {
-  return M.jMB1(ref_3.done.async(), _2, ref_3);
+function _11(_v1) {
+  return M.jMB1(_v1.done.async(), __2, _v1);
 }
 
-function _2(a, ref_3) {
-  ref_3.done = a;
-  return _3(ref_3);
+function __2(a, _v1) {
+  _v1.done = a;
+  return __3();
 }
 
-function _3(ref_3) {
+function _1(a, _v, _v1) {
+  try {
+    return M.jM2E(a.to.equal(3), _2, _v, _v1, _3);
+  } catch (e) {
+    return _3(e, _v, _v1);
+  }
+}
+
+function _2(_v, _v1) {
+  try {
+    return M.jME(_v1.done(), M.pure, _3);
+  } catch (e) {
+    return _3(e, _v, _v1);
+  }
+}
+
+function _3(ex, _v, _v1) {
+  _v.err = ex;
+  return _v1.done(_v.err);
+}
+
+function __1(a) {
+  return a.mapply(function ($dm$b) {
+    var _v;
+
+    _v = {
+      $dm$b,
+      err: undefined
+    };
+    __v.result = _v.$dm$b;
+    return M.jMB2(expect(__v.result), _1, _v, _v1);
+  });
+}
+
+function __3() {
   return M.run(QM, function () {
-    var ref_2 = {
-      result: undefined,
-      ref_3: ref_3
+    var __v;
+
+    __v = {
+      result: undefined
     };
-    return M.jMB1(ref_2.ref_3.addLater(1, 2), _1, ref_2);
-
-    function _1(a, ref_2) {
-      return a.mapply(function ($dm$b) {
-        var ref_1 = {
-          err: undefined,
-          ref_2: ref_2,
-          ref_3: ref_3
-        };
-        ref_1.ref_2.result = ref_1.$dm$b;
-        return M.jMB1(expect(ref_1.ref_2.result), _1, ref_1);
-
-        function _1(a, ref_1) {
-          try {
-            return M.jM1E(a.to.equal(3), _2, ref_1, _3);
-          } catch (e) {
-            return _3(e, ref_1);
-          }
-        }
-
-        function _2(ref_1) {
-          try {
-            return M.jME(ref_1.ref_3.done(), M.pure, _3);
-          } catch (e) {
-            return _3(e, ref_1);
-          }
-        }
-
-        function _3(ex, ref_1) {
-          ref_1.err = ex;
-          return ref_1.ref_3.done(ref_1.err);
-        }
-      });
-    }
+    return M.jMB(_v1.addLater(1, 2), __1);
   });
 }
 
-function __1() {
+function throwErrorLater_1(a, throwErrorLater_v) {
+  throwErrorLater_v.deferred = a;
+  process.nextTick(function () {
+    return throwErrorLater_v.deferred.reject(new Error('promise rejected'));
+  });
+  return M.pure(throwErrorLater_v.deferred.promise);
+}
+
+function _14(_v3) {
+  return M.jMB1(_v3.done.async(), _23, _v3);
+}
+
+function _23(a, _v3) {
+  _v3.done = a;
+  return _32();
+}
+
+function _12(a, _v, _v2, _v3) {
+  try {
+    return M.jM3E(a.to.equal('promise rejected'), _21, _v, _v2, _v3, _31);
+  } catch (e) {
+    return _31(e, _v, _v2, _v3);
+  }
+}
+
+function _21(_v, _v2, _v3) {
+  try {
+    return M.jM1E(_v3.done(), _4, _v2, _31);
+  } catch (e) {
+    return _31(e, _v, _v2, _v3);
+  }
+}
+
+function _31(ex, _v, _v2, _v3) {
+  _v.expectErr = ex;
+  return M.jM1(_v3.done(_v.expectErr), _4, _v2);
+}
+
+function _4(_v2) {
+  return _v2.$dm$root.brk();
+}
+
+function _13(a) {
+  return M.jMB(a.mhandle(function (err) {
+    var _v;
+
+    _v = {
+      err,
+      expectErr: undefined
+    };
+    return M.jMB3(expect(_v.err.message), _12, _v, _v2, _v3);
+  }), _22);
+}
+
+function _22(a) {
+  return a.mapply(function () {
+    return _v3.done(new Error('yop should have thrown reason from rejected promise'));
+  });
+}
+
+function _32() {
+  return M.run(QM, function () {
+    return M.scope(function ($dm$root) {
+      var _v2;
+
+      _v2 = {
+        $dm$root
+      };
+      return M.jMB(_v3.throwErrorLater(), _13);
+    });
+  });
+}
+
+function _18() {
   return M.jM(it('should throw reasons from rejected promises into fiber', function (done) {
-    var ref_2 = {
+    var _v3;
+
+    _v3 = {
+      done,
       throwErrorLater: undefined
     };
 
-    ref_2.throwErrorLater = function throwErrorLater() {
-      var ref_2 = {
-        _deferred: undefined
+    _v3.throwErrorLater = function throwErrorLater() {
+      var throwErrorLater_v;
+      throwErrorLater_v = {
+        deferred: undefined
       };
-      return M.jMB1(Q.defer(), _1, ref_2);
-
-      function _1(a, ref_2) {
-        ref_2._deferred = a;
-        process.nextTick(function () {
-          var ref_1 = {
-            ref_2: ref_2
-          };
-          return ref_1.ref_2._deferred.reject(new Error('promise rejected'));
-        });
-        return M.pure(ref_2._deferred.promise);
-      }
+      return M.jMB1(Q.defer(), throwErrorLater_1, throwErrorLater_v);
     };
 
-    if (ref_2.done.async) return _1(ref_2);else return _3(ref_2);
-
-    function _1(ref_2) {
-      return M.jMB1(ref_2.done.async(), _2, ref_2);
-    }
-
-    function _2(a, ref_2) {
-      ref_2.done = a;
-      return _3(ref_2);
-    }
-
-    function _3(ref_2) {
-      return M.run(QM, function () {
-        return M.scope(function ($dm$root) {
-          var ref_3 = {
-            ref_2: ref_2
-          };
-          return M.jMB1(ref_3.ref_2.throwErrorLater(), _1, ref_3);
-
-          function _1(a, ref_3) {
-            return M.jMB1(a.mhandle(function (err) {
-              var ref_1 = {
-                expectErr: undefined,
-                ref_2: ref_2,
-                ref_3: ref_3
-              };
-              return _1(ref_1);
-
-              function _1(ref_1) {
-                try {
-                  return M.jMB1E(expect(ref_1.err.message), _2, ref_1, _4);
-                } catch (e) {
-                  return _4(e, ref_1);
-                }
-              }
-
-              function _2(a, ref_1) {
-                try {
-                  return M.jM1E(a.to.equal('promise rejected'), _3, ref_1, _4);
-                } catch (e) {
-                  return _4(e, ref_1);
-                }
-              }
-
-              function _3(ref_1) {
-                try {
-                  return M.jM1E(ref_1.ref_2.done(), _5, ref_1, _4);
-                } catch (e) {
-                  return _4(e, ref_1);
-                }
-              }
-
-              function _4(ex, ref_1) {
-                ref_1.expectErr = ex;
-                return M.jM1(ref_1.ref_2.done(ref_1.expectErr), _5, ref_1);
-              }
-
-              function _5(ref_1) {
-                return ref_1.ref_3.$dm$root.brk();
-              }
-            }), _2, ref_3);
-          }
-
-          function _2(a, ref_3) {
-            return a.mapply(function () {
-              var ref_1 = {
-                ref_2: ref_2
-              };
-              return ref_1.ref_2.done(new Error('yop should have thrown reason from rejected promise'));
-            });
-          }
-        });
-      });
-    }
-  }), __2);
+    if (_v3.done.async) return _14(_v3);else return _32();
+  }), _26);
 }
 
-function __2() {
+function _17(_v5) {
+  return M.jMB1(_v5.done.async(), _25, _v5);
+}
+
+function _25(a, _v5) {
+  _v5.done = a;
+  return _34();
+}
+
+function _15(a, _v, _v5) {
+  try {
+    return M.jM2E(a.to.equal(3), _24, _v, _v5, _33);
+  } catch (e) {
+    return _33(e, _v, _v5);
+  }
+}
+
+function _24(_v, _v5) {
+  try {
+    return M.jME(_v5.done(), M.pure, _33);
+  } catch (e) {
+    return _33(e, _v, _v5);
+  }
+}
+
+function _33(ex, _v, _v5) {
+  _v.err = ex;
+  return _v5.done(_v.err);
+}
+
+function _16(a) {
+  return a.mapply(function ($dm$b) {
+    var _v;
+
+    _v = {
+      $dm$b,
+      err: undefined
+    };
+    _v4.result = _v.$dm$b;
+    return M.jMB2(expect(_v4.result), _15, _v, _v5);
+  });
+}
+
+function _34() {
+  return M.run(QM, function () {
+    var _v4;
+
+    _v4 = {
+      result: undefined
+    };
+    return M.jMB(1 + 2, _16);
+  });
+}
+
+function _26() {
   return it('should work just fine with passed a value instead of a promise', function (done) {
-    if (ref_3.done.async) return _1(ref_3);else return _3(ref_3);
+    var _v5;
 
-    function _1(ref_3) {
-      return M.jMB1(ref_3.done.async(), _2, ref_3);
-    }
-
-    function _2(a, ref_3) {
-      ref_3.done = a;
-      return _3(ref_3);
-    }
-
-    function _3(ref_3) {
-      return M.run(QM, function () {
-        var ref_2 = {
-          _result: undefined
-        };
-        return M.jMB1(1 + 2, _1, ref_2);
-
-        function _1(a, ref_2) {
-          return a.mapply(function ($dm$b) {
-            var ref_1 = {
-              _err: undefined,
-              ref_2: ref_2,
-              ref_3: ref_3
-            };
-            ref_1.ref_2._result = ref_1.$dm$b;
-            return M.jMB1(expect(ref_1.ref_2._result), _1, ref_1);
-
-            function _1(a, ref_1) {
-              try {
-                return M.jM1E(a.to.equal(3), _2, ref_1, _3);
-              } catch (e) {
-                return _3(e, ref_1);
-              }
-            }
-
-            function _2(ref_1) {
-              try {
-                return M.jME(ref_1.ref_3.done(), M.pure, _3);
-              } catch (e) {
-                return _3(e, ref_1);
-              }
-            }
-
-            function _3(ex, ref_1) {
-              ref_1._err = ex;
-              return ref_1.ref_3.done(ref_1._err);
-            }
-          });
-        }
-      });
-    }
+    _v5 = {
+      done
+    };
+    if (_v5.done.async) return _17(_v5);else return _34();
   });
 }
 
@@ -226,17 +226,23 @@ Q = require('Q');
 QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
   return M.jM(it('should yield fiber until promise is resolved', function (done) {
-    var ref_3 = {
+    var _v1;
+
+    _v1 = {
+      done,
       addLater: undefined
     };
 
-    ref_3.addLater = function addLater(a, b) {
-      var ref_2 = {
+    _v1.addLater = function addLater(a, b) {
+      var addLater_v;
+      addLater_v = {
+        a,
+        b,
         deferred: undefined
       };
-      return M.jMB1(Q.defer(), addLater_1, ref_2);
+      return M.jMB1(Q.defer(), addLater_1, addLater_v);
     };
 
-    if (ref_3.done.async) return _1(ref_3);else return _3(ref_3);
-  }), __1);
+    if (_v1.done.async) return _11(_v1);else return __3();
+  }), _18);
 });

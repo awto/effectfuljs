@@ -1,25 +1,26 @@
 function a() {
-  function b(i) {
-    return M.jM2(eff1(i, j), _1, j, i);
+  var j;
 
-    function _1(j, i) {
+  function b(i) {
+    return M.jM1(eff1(i, j), _1, i);
+
+    function _1(i) {
       i++, j++;
       return eff2(i, j);
     }
   }
 
-  var i, j;
+  var i;
   i = 0;
   j = 0;
-  return M.jM2(eff3(i, j), _1, i, j);
+  return M.jM1(eff3(i, j), _1, i);
 
-  function _1(i, j) {
-    var b;
+  function _1(i) {
     i++, j--;
-    return M.jM2(b(i), _2, i, j);
+    return M.jM1(b(i), _2, i);
   }
 
-  function _2(i, j) {
+  function _2(i) {
     i--, j++;
     return eff4(i, j);
   }

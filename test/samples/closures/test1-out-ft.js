@@ -1,33 +1,34 @@
-function b_1(ref_1) {
-  return eff(3, ref_1.ref_2.i);
+function b_1(a_v) {
+  return eff(3, a_v.i);
 }
 
-function a_1(ref_2) {
-  ref_2.k++;
-  return M.jM1(eff(4, ref_2.i, ref_2.k), a_2, ref_2);
+function a_1(a_v) {
+  a_v.k++;
+  return M.jM1(eff(4, a_v.i, a_v.k), a_2, a_v);
 }
 
-function a_2(ref_2) {
-  return eff(5, ref_2.i, ref_2.k);
+function a_2(a_v) {
+  return eff(5, a_v.i, a_v.k);
 }
 
 function a() {
-  var ref_2 = {
+  var a_v;
+  a_v = {
     i: undefined,
     k: undefined,
     b: undefined
   };
 
-  ref_2.b = function b() {
-    var ref_1 = {
-      j: undefined,
-      ref_2: ref_2
+  a_v.b = function b() {
+    var b_v;
+    b_v = {
+      j: undefined
     };
-    ref_1.j = ref_1.ref_2.i;
-    return M.jM1(eff(2, ref_1.j), b_1, ref_1);
+    b_v.j = a_v.i;
+    return M.jM1(eff(2, b_v.j), b_1, a_v);
   };
 
-  ref_2.i = 0;
-  ref_2.k = 0;
-  return M.jM1(eff(1, ref_2.i, ref_2.k), a_1, ref_2);
+  a_v.i = 0;
+  a_v.k = 0;
+  return M.jM1(eff(1, a_v.i, a_v.k), a_1, a_v);
 }

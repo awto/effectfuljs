@@ -23,3 +23,30 @@ function a() {
     return eff(e);
   }
 }
+
+function _a() {
+  var e, error, _error;
+
+  return _1();
+
+  function _1() {
+    try {
+      console.log('1');
+      return M.jME(eff(1), _3, _2);
+    } catch (e) {
+      return _2(e);
+    }
+  }
+
+  function _2(ex) {
+    _error = ex;
+    e = _error;
+    console.log('2');
+    _error = null;
+    return _3();
+  }
+
+  function _3() {
+    return eff(e);
+  }
+}

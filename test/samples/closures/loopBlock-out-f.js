@@ -1,4 +1,4 @@
-function a() {
+function a(p) {
   var a, i, j, k, loop;
   return M.jM(eff(1), _1);
 
@@ -14,7 +14,7 @@ function a() {
 
   function _3() {
     if (loop = loop()) return _4();else {
-      return eff(6, a);
+      return eff(8, a, p);
     }
   }
 
@@ -27,18 +27,27 @@ function a() {
     j = i + 1;
     k = i + 1;
     i++;
+    return M.jM(eff(function b(k) {
+      var _k;
 
-    (function b() {
-      return M.jM(eff(4, a, j), _1);
+      return M.jM(eff(4, a, j, k++, p), _1);
 
       function _1() {
+        _k = 10;
         j++;
         a++;
         i++;
-        return eff(4, a, i);
+        _k++, p++;
+        return M.jM(eff(5, a, i, _k, p), _2);
       }
-    });
 
-    return M.jMR(eff(5, a, i, j), _3);
+      function _2() {
+        return eff(6, a, i, k, p);
+      }
+    }), _6);
+  }
+
+  function _6() {
+    return M.jMR(eff(7, a, i, j), _3);
   }
 }

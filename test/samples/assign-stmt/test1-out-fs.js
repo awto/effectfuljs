@@ -1,4 +1,20 @@
+function aS() {
+  var b1;
+  return M.jMB(eff(1), _1);
+
+  function _1(a) {
+    b1 = a;
+    return M.jM(eff('a'), _2);
+  }
+
+  function _2() {
+    return eff('b');
+  }
+}
+
 function a() {
+  var b1;
+  b1 = 0;
   return M.jMB(eff(1), _1);
 
   function _1(b1) {
@@ -22,6 +38,25 @@ function a1() {
   }
 }
 
+function bS() {
+  var b1, b2;
+  return M.jMB(eff(1), _1);
+
+  function _1(a) {
+    b1 = a;
+    return M.jMB(eff(2), _2);
+  }
+
+  function _2(a) {
+    b2 = a;
+    return M.jM(eff(b1), _3);
+  }
+
+  function _3() {
+    return eff(b2);
+  }
+}
+
 function b() {
   return M.jMB(eff(1), _1);
 
@@ -34,7 +69,13 @@ function b() {
   }
 
   function _3(b2) {
-    return eff(b2);
+    return M.jM(eff(b2), _4);
+  }
+
+  function _4() {
+    var b1, b2;
+    b1 = b2 = 100;
+    return M.pure();
   }
 }
 
@@ -102,6 +143,8 @@ function c() {
   }
 
   function _10() {
+    var a, b, c, d, e, f, g, j, x, y, z;
+    a = b = c = d = e = f = g = j = x = y = z = 1000;
     return eff(10);
   }
 }
@@ -131,5 +174,49 @@ function d() {
     a.some++;
     some['d']--;
     return M.pure();
+  }
+}
+
+function e1() {
+  var cc;
+  return M.jMB(eff(1, cc), _1);
+
+  function _1(cc) {
+    return M.jMB(eff(2, cc), _2);
+  }
+
+  function _2(cc) {
+    return eff(2, cc);
+  }
+}
+
+function e2() {
+  var cc;
+  return M.jMB(eff(1, cc), _1);
+
+  function _1(cc) {
+    return M.jMB(eff(2, cc), _2);
+  }
+
+  function _2(cc) {
+    return M.jM1(eff(2, cc), _3, cc);
+  }
+
+  function _3(cc) {
+    var _cc;
+
+    return M.jMB1(eff(3, _cc), _4, cc);
+  }
+
+  function _4(_cc, cc) {
+    return M.jMB1(eff(4, _cc), _5, cc);
+  }
+
+  function _5(_cc, cc) {
+    return M.jM1(eff(5, _cc), _6, cc);
+  }
+
+  function _6(cc) {
+    return eff(6, cc);
   }
 }

@@ -28,24 +28,24 @@ describe('yop', function () {
 
     function _3() {
       return M.run(QM, function () {
+        var result;
         return M.jMB(addLater(1, 2), _1);
 
         function _1(a) {
           return a.mapply(function ($dm$b) {
+            var err;
             result = $dm$b;
-            return M.jMB(expect(result), _1);
+            return M.jMB1(expect(result), _1, done);
 
-            function _1(a) {
+            function _1(a, done) {
               try {
-                return M.jME(a.to.equal(3), _2, _3);
+                return M.jM1E(a.to.equal(3), _2, done, _3);
               } catch (e) {
-                return _3(e, undefined);
+                return _3(e, done);
               }
             }
 
-            function _2() {
-              var done;
-
+            function _2(done) {
               try {
                 return M.jME(done(), M.pure, _3);
               } catch (e) {
@@ -54,7 +54,6 @@ describe('yop', function () {
             }
 
             function _3(ex, done) {
-              var err;
               err = ex;
               return done(err);
             }
@@ -94,29 +93,26 @@ describe('yop', function () {
 
             function _1(a) {
               return M.jMB(a.mhandle(function (err) {
-                return _1();
+                var expectErr;
+                return _1(done);
 
-                function _1() {
-                  var err;
-
+                function _1(done) {
                   try {
-                    return M.jMBE(expect(err.message), _2, _4);
+                    return M.jMB1E(expect(err.message), _2, done, _4);
                   } catch (e) {
-                    return _4(e, undefined);
+                    return _4(e, done);
                   }
                 }
 
-                function _2(a) {
+                function _2(a, done) {
                   try {
-                    return M.jME(a.to.equal('promise rejected'), _3, _4);
+                    return M.jM1E(a.to.equal('promise rejected'), _3, done, _4);
                   } catch (e) {
-                    return _4(e, undefined);
+                    return _4(e, done);
                   }
                 }
 
-                function _3() {
-                  var done;
-
+                function _3(done) {
                   try {
                     return M.jME(done(), _5, _4);
                   } catch (e) {
@@ -125,13 +121,11 @@ describe('yop', function () {
                 }
 
                 function _4(ex, done) {
-                  var expectErr;
                   expectErr = ex;
                   return M.jM(done(expectErr), _5);
                 }
 
                 function _5() {
-                  var $dm$root;
                   return $dm$root.brk();
                 }
               }), _2);
@@ -162,24 +156,24 @@ describe('yop', function () {
 
       function _3() {
         return M.run(QM, function () {
+          var result;
           return M.jMB(1 + 2, _1);
 
           function _1(a) {
             return a.mapply(function ($dm$b) {
-              _result = $dm$b;
-              return M.jMB(expect(_result), _1);
+              var err;
+              result = $dm$b;
+              return M.jMB1(expect(result), _1, done);
 
-              function _1(a) {
+              function _1(a, done) {
                 try {
-                  return M.jME(a.to.equal(3), _2, _3);
+                  return M.jM1E(a.to.equal(3), _2, done, _3);
                 } catch (e) {
-                  return _3(e, undefined);
+                  return _3(e, done);
                 }
               }
 
-              function _2() {
-                var done;
-
+              function _2(done) {
                 try {
                   return M.jME(done(), M.pure, _3);
                 } catch (e) {
@@ -188,7 +182,6 @@ describe('yop', function () {
               }
 
               function _3(ex, done) {
-                var err;
                 err = ex;
                 return done(err);
               }
