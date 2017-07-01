@@ -4,7 +4,7 @@ This is  a JavaScript to JavaScript transpiler. It offers extending JavaScript
 language with various effects by means of runtime libraries, without even using
 compiler plugins.
 
-There are such libraries for:
+There are such libraries for (not yet supporting the new interface):
 
  * [Asynchronous programming](https://github.com/awto/mfjs-promise)
  * [Reactive programming (with RxJS)](https://github.com/awto/mfjs-rx)
@@ -139,17 +139,17 @@ The current version is a library on top of
 [estransducers](https://github.com/awto/estransducers) JS transformation
 framework. You won't typically use it directly unless you develop own effects
 library. There is a babel preset for default translations
-[@effectfuljs/babel-presetp-env](https://github.com/awto/effectful-babel-preset-env), or some effects
+[@effectful/babel-presetp-env](https://github.com/awto/effectful-babel-preset-env), or some effects
 library may provide similar preset. 
 
 The preset is an extension of [babel-preset-env](https://github.com/babel/babel-preset-env)
 and accepts the same arguments
-with additional `effectfuljs` object specifying options for effectfuljs framework.
+with additional `effectful` object specifying options for effectful framework.
 
 First install it:
 
 ```sh
-$ npm install --save-dev babel-preset-env @effectfuljs/babel-preset-env
+$ npm install --save-dev babel-preset-env @effectful/babel-preset-env
 ```
 
 Next compile your sources with whatever babel tool you prefer using `@mfjs/env`
@@ -157,7 +157,7 @@ preset instead of babel `env`, for example in `.babelrc`:
 
 ```json
 {
-  "presets": ["@effectfuljs/env"]
+  "presets": ["@effectful/env"]
 }
 ```
 
@@ -328,85 +328,6 @@ No answer result is `M.empty` function call. Yield will discharge no answer
 values in the current block (between {}). So execution will be not performed in
 single block between something executing `M.empty` and up till next and
 including `M.yield`.
-
-## Configuration
-
-Top level fields of the options object:
-
-  * `ns` - name of namespace variable used for importing core library
-          using ES6 modules or CommonJS require, it may be specified
-          explicitly if no imports is used
-  * `packageName` - name of core library package used to detect CommonJS
-                     require call to guess `packageVar` in sources
-                     (default is `@mfjs/core`)
-  * `profile` - initial mode name name, `disabled` by default
-  * `verbose` - debug output
-
-## Interface
-
-There is a reference implementation library
-[@mfjs/core](https://github.com/awto/mfjs-core)
-with documentation for each function, but it is not required to use that
-library. It is default but other libraries may provide other encodings.
-
-The generated code expects monadic value to have following methods:
-
- * `mbind`
-      - takes function argument and applies it to inner value of `this`
-      returning coerced monadic result (Haskell’s `>>=` function from
-      Monad class) 
- * `mapply`  - takes function
-      argument and applies it to inner value of `this`
-      replacing that inner value with result without changing monadic
-      value structure (Haskell `fmap` function from Functor class)
- * `mfinally` - takes a
-       function and executes after control exits `this` block
- * `mhandle`
-   - takes a function and executes it if `this` throws exception
-
-And the imported core library should have following free functions:
-
- * `M` - coerces value, if returns argument as-is
-        if it is already monadic or `M.pure(v)` otherwise.
- * `M.pure` - returns monadic value with inner value from
-       argument and with no effects
- * `M.raise` - returns monadic value representing
-       exception throw
- * `M.repeat` - takes a function and initial
-       arguments for it, apply that function infinitely, threading
-       output arguments to input of next function invocation
- * `M.block` - takes a function and
-      executes it giving another function as
-      argument for exiting the block, it is used for `break`, `continue`, `yield` encodings
- * `M.scope` - same as `M.block` but for the whole function, for `return` statement encoding
- * `M.generator` - same as `M.scope` but may be injected for generator functions if
-                  enabled. Its callback function has 3 arguments, for `return`,
-                  `yield` and `yield*` resp.
- * `M.arr` - takes array of monadic value and returns monadic value of array of
-             inner values corresponding to input array, this is from Haskell’s
-             Applicative interface, but adapted for more convenient usage in
-             JavaScript
-
-If state is enabled:
-
- * `M.set`
- * `M.modify`
- * `M.get`
-
-TODO: more details
-
-The compiler requires specific iterator interface. It is not compatible with ES
-iterators because they are mutable, while for some monads execution control may
-backtrack to some already passed position. In fact if ES allowed such iterators
-cloning this compiler wouldn't be needed.
-
-An iterator is a function object, with `value` field for current value. 
-
- * `M.iterator` - takes ES iterable object returns effectfuljs compatible iterator, it
-    is just interface adapter, but works like ES one, taking next iterator
-    invalidates previous ones, returned iterator already points to first element
-    or null if input collection is empty
- * `M.forInIterator` - returns effectfuljs compatible iterator for `for-in` statement
 
 ## Selective transform
 
