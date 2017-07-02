@@ -71,6 +71,14 @@ export function* depsToTop(si) {
     return
   }
   yield* s.till(i => i.pos === Tag.body && i.type === Tag.Array)
+  while(s.cur().type === Tag.ImportDeclaration)
+    yield* s.one()
+  const inp = [...collect()]
+  for(const i of top) {
+    yield* i
+  }
+  yield* inp
+  yield* s
   function* collect() {
     for(const i of s.sub()) {
       if (i.enter && i.type === Tag.FunctionDeclaration && i.value.frameStep) {
@@ -83,12 +91,6 @@ export function* depsToTop(si) {
         yield i
     }
   }
-  const inp = [...collect()]
-  for(const i of top) {
-    yield* i
-  }
-  yield* inp
-  yield* s
 }
 
 

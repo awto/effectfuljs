@@ -126,7 +126,7 @@ export function run(s) {
     value.scopeNum = scopeNum++
     const f = value.opts
     if (f != null && f.transform) {
-      if (f.inject && f.require && f.ns)
+      if (f.inject && f.require)
         inject.set(f.$ns,f.require)
       any = true
       Kit.mapPush(transformMap, f.transform, i)

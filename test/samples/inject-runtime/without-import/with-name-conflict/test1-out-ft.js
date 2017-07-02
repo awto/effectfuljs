@@ -1,9 +1,11 @@
 import * as _M from '@effectful/generators';
 
-function M_1() {
+function a_1() {
   return _M.pure(2);
 }
 
-function M() {
+var M = 10;
+
+function a() {
   return _M.pure(1);
 }

@@ -1,4 +1,3 @@
-// *- SKIP
 var M = 10;
 function* a() {
   yield 1
