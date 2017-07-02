@@ -21,7 +21,7 @@ function convOptions(v, fn) {
   if (v == null || v === true)
     v = {}
   else {
-    v = {override:v,require:v.require,profile:v.profile}
+    v = Object.assign({},v,{override:v})
   }
   if (v.substr != null)
     v = {profile: v}
