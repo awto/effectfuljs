@@ -5,6 +5,7 @@ import * as Match from "estransducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
 import * as Uniq from "./uniq"
+import {ifJsExceptions} from "./options"
 
 import * as assert from "assert"
 import * as Trace from "estransducers/trace"
@@ -555,34 +556,6 @@ export function* assignBindCalls(s) {
     yield i
   }
 }
-/*
-export const tagBlockScope = R.curry(
-  function tagBlockScope(type,s) {
-    s = Kit.auto(s)
-    function* walk(cur) {
-      let changed = false
-      for(const i of s.sub()) {
-        yield i
-        if (i.enter) {
-          switch(i.type) {
-          case Tag.BlockStatement:
-            yield* s.peelTo(Tag.body)
-            if ((yield* walk(cur)) && cur != null)
-              yield s.tok(Tag.push,type,cur)
-            yield* s.leave()
-            break
-          case type:
-            cur = i.value
-            changed = true
-            break
-          }
-        }
-      }
-      return changed
-    }
-    return walk()
-  })
-*/
 
 /** object merging algorithm for options merge */ 
 function merge(a,b) {
@@ -687,54 +660,50 @@ export function* emitInitProfiles(s) {
 export const prepare = R.pipe(imports,emitInitOptions,ctImportPass)
 
 /** for `ns` function application marks inner expression to be effectful */
-const unwrapNs = R.pipe(
-  function unwrapNs(s) {
-    s = Kit.auto(s)
-    function* walk() {
-      for(const i of s.sub()) {
-        if (i.enter && i.type === Tag.CallExpression) {
-          const j = s.cur()
-          if (j.type === Tag.Identifier && j.value.sym === s.opts.$ns) {
-            const def = s.opts.bindCalls
-            if (def != null && def.ns) {
-              const lab = s.label()
-              s.peel(i)
-              Kit.skip(s.peelTo(Tag.arguments))
-              yield s.enter(i.pos,Kit.Subst)
-              s.cur().value.bind = true
-              yield* walk()
-              yield* s.leave()
-              Kit.skip(lab())
-              continue
-            }
+function unwrapNs(si) {
+  const s = Kit.auto(si)
+  function* walk() {
+    for(const i of s.sub()) {
+      if (i.enter && i.type === Tag.CallExpression) {
+        const j = s.cur()
+        if (j.type === Tag.Identifier && j.value.sym === s.opts.$ns) {
+          const def = s.opts.bindCalls
+          if (def != null && def.ns) {
+            const lab = s.label()
+            s.peel(i)
+            Kit.skip(s.peelTo(Tag.arguments))
+            s.cur().value.bind = true
+            yield* Kit.reposOne(walk(),i.pos)
+            Kit.skip(lab())
+            continue
           }
         }
-        yield i
       }
+      yield i
     }
-    return walk()
-  },
-  Kit.completeSubst
-)
+  }
+  return walk()
+}
 
 /** default policy for not-generator functions */
 export const defaultPrepare = R.pipe(
   unwrapNs,
   assignBindCalls,
-  assignThrowEff)
+  ifJsExceptions(s => s, assignThrowEff))
 
 /** default policy for generator functions */
 export const generatorsPrepare = R.pipe(
-  unwrapNs,
-  assignThrowEff)
+  ifJsExceptions(s => s, assignThrowEff))
 
 /** sets options `opts` to each function root tag */
 export const setFuncOpts = function setFuncOpts(opts) {
   const generator = opts.generator
+  const async = opts.async
   return function* setFuncOpts(s) {
     for(const i of s) {
-      if (i.enter && i.value.func &&
-          (generator == null || generator === !!i.value.node.generator))
+      if (i.enter && i.value.func
+          && (generator == null || generator === !!i.value.node.generator)
+          && (async == null || async === !!i.value.node.async))
         i.value.optsAssign = Object.assign(i.value.optsAssign || {},opts)
       yield i
     }
@@ -766,3 +735,5 @@ export const injectFuncOpts = (opts, withSelf = false) => {
     return applySubAndOne
   }
 }
+
+

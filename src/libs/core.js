@@ -36,12 +36,42 @@ const disabledOpts = {
   transform: false
 }
 
+const generatorOps = {
+  YieldExpression: true
+}
+
 const postproc = R.pipe(
   Policy.setFuncOpts(disabledOpts),
   Policy.profiles,
   Policy.setQNames)
 
 export default function* coreInit($ns) {
+  const generators = Policy.injectFuncOpts({
+    generator:true,
+    async:false,
+    bindCalls: {},
+    esRebind:true,
+    coerce:false,
+    ops: generatorOps,
+    transform:defaultGensTransform
+  })
+  const asyncAwaitDo = Policy.injectFuncOpts({
+    generator:false,
+    async:true,
+    bindCalls: {},
+    esRebind:true,
+    coerce:false,
+    transform:defaultGensTransform
+  })
+  const asyncGeneratorsDo = Policy.injectFuncOpts({
+    generator:true,
+    async:true,
+    bindCalls: {},
+    esRebind:true,
+    pureForOf:true,
+    ops: generatorOps,
+    transform:defaultGensTransform
+  })
   return R.pipe(
     function*(si) {
       const s = Kit.auto(si)
@@ -53,12 +83,8 @@ export default function* coreInit($ns) {
             defaultFull:Policy.injectFuncOpts(fullOpts),
             minimal:R.pipe(Policy.injectOpts(minOpts),Policy.injectFuncOpts(minOpts)),
             defaultMinimal:Policy.injectFuncOpts(minOpts),
-            generators:Policy.injectFuncOpts({
-              bindCalls: {},
-              generator:true,
-              coerce:false,
-              transform:defaultGensTransform
-            }),
+            generators,asyncAwaitDo,asyncGeneratorsDo,
+            es:Kit.concat(generators,asyncAwaitDo,asyncGeneratorsDo),
             generatorsDo:Policy.injectFuncOpts({
               bindCalls: {},
               generator:true,

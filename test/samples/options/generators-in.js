@@ -1,8 +1,5 @@
 // *- DEFAULT
-import * as G from "@effectfuljs/core";
-
-G.profile("generators");
-G.profile("defaultMinimal");
+import * as G from "@effectful/es";
 
 function *v() {
   for(var i of [1,2,3])
@@ -10,6 +7,7 @@ function *v() {
   console.log(yield* z);
 }
 
+/*
 function *c() {
     yield* z;
 }
@@ -35,8 +33,6 @@ function *f() {
   return 10;
 }
 
-G.profile("generatorsDo");
-
 function *v1() {
   console.log(yield z);
 }
@@ -55,3 +51,4 @@ function *e1() {
     console.log((yield eff(3)) + eff(3));
     yield eff(yield eff(4));
 }
+*/

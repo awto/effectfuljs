@@ -1,5 +1,5 @@
 import core from "./libs/core"
-import generators from "./libs/generators"
+import es from "./libs/es"
 
 export default {
   verbose: false,
@@ -13,7 +13,8 @@ export default {
   ns: null,
   libs: {
     "@effectful/core": core,
-    "@effectful/generators": generators
+    "@effectful/es": es,
+    "@effectful/generators": es
   },
   profiles: {},
   parser: {},

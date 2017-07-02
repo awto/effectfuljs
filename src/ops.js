@@ -106,7 +106,7 @@ function getOpName(i) {
   return res
 }
 
-export function injectOps(si) {
+export function inject(si) {
   const nset = new Map()
   const s = Kit.auto(si)
   function setEnv(ops) {
@@ -141,10 +141,12 @@ export function injectOps(si) {
   }
   if (s.opts.ops != null)
     setEnv(s.opts.ops)
+  if (!nset.size)
+    return s
   return walk()
 }
 
-export const interpretOps = R.pipe(function interpretOpts(si) {
+export const interpret = R.pipe(function interpretOpts(si) {
   const s = Kit.auto(si)
   function* walk() {
     for(const i of s.sub()) {

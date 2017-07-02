@@ -25,7 +25,7 @@ import * as Ops from "./ops"
 import * as Flat from "./flat"
 import * as Closure from "./closure"
 import simplify from "./simplify"
-import {ifTopLevel} from "./options"
+import {ifEsRebind,ifTopLevel} from "./options"
 
 export const consumeScope = consume
 
@@ -59,7 +59,9 @@ export const all =
   R.pipe(
     Kit.map(R.pipe(
       Control.assignLabels,
-      Gens.prepare, Gens.remove,
+      Gens.spawnNotation,
+      // Ops.inject,
+      ifEsRebind(Gens.prepare),
       Prop.propagateEff,
       Kit.toArray
     )),
@@ -97,6 +99,7 @@ export const all =
     ))),
     Kit.map(ifEff(R.pipe(
       Block.cleanPureEff,
+      // Ops.interpret,
       Flat.interpret,
       Block.interpretApp,
       Coerce.interpret,
