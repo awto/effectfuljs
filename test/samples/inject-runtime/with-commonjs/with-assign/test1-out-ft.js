@@ -1,10 +1,14 @@
 function a_1() {
-  return Z.pure(2);
+  return Z.yldM(1, a_2);
+}
+
+function a_2() {
+  return Z.yldM(2, Z.pure);
 }
 
 var Z;
 Z = require('@effectful/generators');
 
 function a() {
-  return Z.pure(1);
+  return Z.scope(a_1);
 }

@@ -1,5 +1,5 @@
 import * as R from "ramda"
-import {Tag,symbol} from "./kit"
+import {Tag,symbol,trace,dump} from "./kit"
 import * as Kit from "./kit"
 import * as T from "babel-types"
 import * as Block from "./block"
@@ -93,9 +93,9 @@ function getOpName(i) {
   case Tag.LogicalExpression:
     return logicalOps[i.value.node.operator]
   case Tag.YieldExpression:
-    if (i.value.node.deleate)
-      return "yldStar"
-    return "yld"
+    if (i.value.node.delegate)
+      return Kit.sysId("yldStar")
+    return Kit.sysId("yld")
   }
   let res = opNamesMap.get(i.type)
   if (res != null)
@@ -115,7 +115,7 @@ export function inject(si) {
       if (v === false)
         nset.delete(Tag[j])
       else
-        nset.set(j,v === true ? false : v)
+        nset.set(Tag[j],v === true ? false : Kit.sysId(v))
     }
   }
   function* walk() {
@@ -126,13 +126,12 @@ export function inject(si) {
           setEnv(ops)
         const v = nset.get(i.type)
         if (v != null) {
-          s.peel(i)
           yield s.enter(i.pos,op,{node: {src:i.value,type:i.type},
-                                  bind: true,
+                                  bind: true, expr: true,
                                   sym: v || getOpName(i)})
           yield* walk()
           yield* s.leave()
-          Kit.skip(s.leave())
+          s.close(i)
           continue
         }
       }
@@ -146,23 +145,53 @@ export function inject(si) {
   return walk()
 }
 
-export const interpret = R.pipe(function interpretOpts(si) {
+export function interpret(si) {
   const s = Kit.auto(si)
   function* walk() {
     for(const i of s.sub()) {
       if (i.enter && i.type === op) {
         const lab = s.label()
         yield s.enter(i.pos,Block.effExpr)
-        yield s.enter(i.pos,Tag.CallExpression)
-        yield Kit.idTok(Tag.callee,i.value.sym)
+        yield s.enter(Tag.expression,Tag.CallExpression)
+        yield s.tok(Tag.callee,Tag.Identifier,{sym:i.value.sym})
         yield s.enter(Tag.arguments,Tag.Array)
-        yield s.enter(Tag.push,Kit.Subst)
-        yield* walk()
+        yield* Kit.reposOne(walk(), Tag.push)
         yield* lab()
+        s.close(i)
+        continue
       }
+      yield i
     }
   }
   return walk()
-})
+}
 
 
+/** 
+ * combines opts with bind into a single call for optimization purposes 
+ * e.g.
+ *  
+ *    bind(yield a, cont) ==> bindYield(a, cont)
+ */
+export function* combine(si) {
+  const s = Kit.auto(si)
+  if (!s.opts.combineOps) {
+    yield* s
+    return
+  }
+  for(const i of s) {
+    yield i
+    if (i.enter && i.type === Block.letStmt && i.value.eff) {
+      const j = s.curLev()
+      if (j && j.type === op) {
+        i.value.bindName = j.value.sym.orig
+        s.take()
+        if (!j.leave) {
+          yield* s.sub()
+          s.close(j)
+        }
+        continue
+      } 
+    }
+  }
+}

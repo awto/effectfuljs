@@ -569,7 +569,7 @@ function merge(a,b) {
     for(const i in b) {
       if (i[0] === "$")
         a[i] = b[i]
-      if (i in a) {
+      else if (i in a) {
         a[i] = merge(a[i], b[i])
       } else
         a[i] = b[i]
@@ -723,7 +723,7 @@ export const injectOpts = (opts) =>
 /** sets options to each sub-function */
 export const injectFuncOpts = (opts, withSelf = false) => {
   const run = setFuncOpts(opts)
-  return function* injectFuncOpts(s) {
+  return function* injectFuncOpts() {
     if (withSelf) {
       const value = {dst:"func"}
       yield Kit.enter(hoist,value)

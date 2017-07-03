@@ -19,11 +19,11 @@ export function* inject(mods,si) {
   switch(s.opts.modules) {
   case "commonjs":
     for (const [ns,mod] of mods)
-      yield* s.toks(Tag.push,`var $S = require("${mod}")`,ns)
+      yield* s.toks(Tag.push,`var $I = require("${mod}")`,ns)
     break
   default:
     for (const [ns,mod] of mods)
-      yield* s.toks(Tag.push,`import * as $S from "${mod}"`,ns)
+      yield* s.toks(Tag.push,`import * as $I from "${mod}"`,ns)
   }
   yield* s
 }

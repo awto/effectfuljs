@@ -12,6 +12,7 @@ import * as Except from "./exceptions"
 import {stmtExpr} from "./kit/stmtExpr"
 
 const defaultUnpackMax = 5
+const scopeId = Kit.sysId("scope")
 
 /** adds flatten related comments */
 function* deb_Mark(s) {
@@ -80,16 +81,6 @@ const deb_Dump = R.curry((name, s) => dump.output(name,deb_Mark(s)))
 
 const emptySet = new Set()
 const emptyArr = []
-
-const jumpSyms = new Map()
-
-/** returns library symbol for effectful operation's name */
-function getJumpSym(name) {
-  let res = jumpSyms.get(name)
-  if (res == null)
-    jumpSyms.set(name, res = Kit.sysId(name,true))
-  return res
-}
 
 /** 
  * convers to a flat stracture (without nested frames) 
@@ -501,7 +492,8 @@ export const convert = R.pipe(
               // j != null may be only if it is ReturnStmt
               // it should stay if it returns some pure expression
               // if the return has effectful argument it is a bind pattern
-              const result = i.value.result  = j != null && j.type !== Block.bindPat
+              const result = i.value.result  = j != null
+                    && j.type !== Block.bindPat
               if (maybeSingle && !result)
                 singleJumps.push({frame:value,jump:i.value})
             case Block.letStmt:
@@ -581,14 +573,13 @@ export const convert = R.pipe(
     const s = Kit.auto(si)
     for(const i of s) {
       if (i.enter && i.type === Block.frame) {
-        if (s.opts.prefixFrame) {
+        if (s.opts.scopePrefix) {
           const lab = s.label()
-          const frame = s.enter(Tag.push, Block.frame)
-          const jump = s.enter(Tag.push, Block.letStmt,
-                               {goto: i.value, ref: frame.value})
-          yield frame
-          yield jump
-          yield s.tok(Tag.expression, Block.pure)
+          yield s.enter(Tag.push, Block.frame, {declSym:scopeId})
+          yield s.enter(Tag.push, Tag.CallExpression, {result:true})
+          yield s.tok(Tag.callee,Tag.Identifier,{sym:scopeId})
+          yield s.enter(Tag.arguments,Tag.Array)
+          yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.declSym})
           yield* lab()
         } else if (i.value.catchCont != null
                    || i.value.enters && i.value.enters.length) {
@@ -862,7 +853,8 @@ export const interpret = R.pipe(
             continue
           case Block.frame:
             const fn = num++
-            i.value.declSym.orig = `_${fn}`
+            if (fn !== 0)
+              i.value.declSym.orig = `_${fn}`
             i.value.frameStep = s.first.value
             const flab = s.label()
             if (fn !== 0) {
@@ -990,13 +982,13 @@ export const interpret = R.pipe(
             const lab = s.label()
             if (gotoDests.length) {
               const {threadArgs,rec} = i.value
-              let name = "j"
+              let name = i.value.bindName || "j"
               if (threadArgs && threadArgs.length)
                 name += "N"
               if (rec)
                 name += "R"
               if (rec) {
-                yield s.enter(i.pos,Block.app,{sym:getJumpSym(name)})
+                yield s.enter(i.pos,Block.app,{sym:Kit.sysId(name)})
                 yield s.tok(Tag.push,Tag.Identifier,{sym:goto.declSym})
               } else {
                 yield s.enter(i.pos,Tag.CallExpression,{result:true})
@@ -1022,11 +1014,13 @@ export const interpret = R.pipe(
               const lab = s.label()
               const {goto,gotoDests,ref} = i.value
               const {catchCont} = ref
-              if (!gotoDests.length && catchCont == null) {
+              if (!gotoDests.length && catchCont == null
+                  && i.value.bindName == null) {
                 yield s.enter(i.pos,Block.effExpr)
                 yield* walk()
               } else {
-                let name = "jM"
+                let name = i.value.bindName || "j"
+                name+="M"
                 const {threadArgs,pat,rec} = i.value
                 const {catchCont} = ref
                 if (pat && pat.length)
@@ -1041,7 +1035,7 @@ export const interpret = R.pipe(
                   name += "R"
                 if (catchCont != null)
                   name += "E"
-                yield s.enter(i.pos,Block.app,{sym:getJumpSym(name)})
+                yield s.enter(i.pos,Block.app,{sym:Kit.sysId(name)})
                 yield* walk()
                 yield s.tok(Tag.push,Tag.Identifier,
                             {sym:goto ? goto.declSym : Block.pureId})

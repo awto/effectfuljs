@@ -1,56 +1,170 @@
 // *- DEFAULT
-import * as G from '@effectfuljs/core';
-G.profile('generators');
-G.profile('defaultMinimal');
+import * as G from '@effectful/es';
 
-function* v() {
-  for (var i of [1, 2, 3]) yield i;
+function v() {
+  var i;
+  return G.scope(_1);
 
-  console.log((yield* z));
+  function _1() {
+    var loop;
+    loop = G.iterator([1, 2, 3]);
+    return _2(loop);
+  }
+
+  function _2(loop) {
+    if (loop = loop()) return _3(loop);else {
+      return G.yldStarMB(z, _4);
+    }
+  }
+
+  function _3(loop) {
+    i = loop.value;
+    return G.yldM1R(i, _2, loop);
+  }
+
+  function _4(a) {
+    console.log(a);
+    return G.pure();
+  }
 }
 
-function* c() {
-  yield* z;
+function c() {
+  return G.scope(_1);
+
+  function _1() {
+    return G.yldStarM(z, G.pure);
+  }
 }
 
-function* d() {
-  yield z;
-  yield* x;
-  return y;
+function d() {
+  return G.scope(_1);
+
+  function _1() {
+    return G.yldM(z, _2);
+  }
+
+  function _2() {
+    return G.yldStarM(x, _3);
+  }
+
+  function _3() {
+    return G.pure(y);
+  }
 }
 
-function* e() {
-  yield z;
-  if (yield* x) return y;
-  yield* a;
+function e() {
+  return G.scope(_1);
+
+  function _1() {
+    return G.yldM(z, _2);
+  }
+
+  function _2() {
+    return G.yldStarMB(x, _3);
+  }
+
+  function _3(a) {
+    if (a) {
+      return G.pure(y);
+    }
+  }
+
+  function _4() {
+    return G.yldStarM(a, G.pure);
+  }
 }
 
-function* f() {
-  yield eff(1);
-  yield eff(2);
-  console.log((yield* eff(3)) + (yield eff(3)));
-  yield* eff(eff(4));
-  return 10;
+function f() {
+  return G.scope(_1);
+
+  function _1() {
+    return G.yldM(eff(1), _2);
+  }
+
+  function _2() {
+    return G.yldM(eff(2), _3);
+  }
+
+  function _3() {
+    var a;
+    const a = eff(3);
+    return G.yldStarMB(a, _4);
+  }
+
+  function _4(a) {
+    var b;
+    const b = eff(3);
+    return G.yldMB1(b, _5, a);
+  }
+
+  function _5(b, a) {
+    console.log(a + b);
+    return G.yldStarM(eff(eff(4)), _6);
+  }
+
+  function _6() {
+    return G.pure(10);
+  }
 }
 
-G.profile('generatorsDo');
+function v1() {
+  return G.scope(_1);
 
-function* v1() {
-  console.log((yield z));
+  function _1() {
+    return G.yldMB(z, _2);
+  }
+
+  function _2(a) {
+    console.log(a);
+    return G.pure();
+  }
 }
 
-function* c1() {
-  yield z;
+function c1() {
+  return G.scope(_1);
+
+  function _1() {
+    return G.yldM(z, G.pure);
+  }
 }
 
-function* d1() {
-  yield z;
-  yield x;
+function d1() {
+  return G.scope(_1);
+
+  function _1() {
+    return G.yldM(z, _2);
+  }
+
+  function _2() {
+    return G.yldM(x, G.pure);
+  }
 }
 
-function* e1() {
-  yield eff(1);
-  yield eff(2);
-  console.log((yield eff(3)) + eff(3));
-  yield eff((yield eff(4)));
+function e1() {
+  return G.scope(_1);
+
+  function _1() {
+    return G.yldM(eff(1), _2);
+  }
+
+  function _2() {
+    return G.yldM(eff(2), _3);
+  }
+
+  function _3() {
+    var a;
+    const a = eff(3);
+    return G.yldMB(a, _4);
+  }
+
+  function _4(a) {
+    var b;
+    console.log(a + eff(3));
+    const b = eff(4);
+    return G.yldMB(b, _5);
+  }
+
+  function _5(a) {
+    return G.yldM(eff(a), G.pure);
+  }
 }

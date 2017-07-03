@@ -59,8 +59,7 @@ export const all =
   R.pipe(
     Kit.map(R.pipe(
       Control.assignLabels,
-      Gens.spawnNotation,
-      // Ops.inject,
+      Ops.inject,
       ifEsRebind(Gens.prepare),
       Prop.propagateEff,
       Kit.toArray
@@ -95,11 +94,12 @@ export const all =
       Bind.calcVarDeps(null),
       Bind.threadDeps,
       Control.recalc,
-      Flat.convert
+      Flat.convert,
+      Ops.combine
     ))),
     Kit.map(ifEff(R.pipe(
       Block.cleanPureEff,
-      // Ops.interpret,
+      Ops.interpret,
       Flat.interpret,
       Block.interpretApp,
       Coerce.interpret,
@@ -111,7 +111,9 @@ export const all =
 export const defaultTransform = R.pipe(
   Kit.map(Policy.defaultPrepare),
   all)
-export const defaultGensTransform = R.pipe(Kit.map(Policy.generatorsPrepare), all)
+export const defaultGensTransform = R.pipe(
+  Kit.map(Policy.generatorsPrepare),
+  all)
 
 /**
  * entry point for the whole translator chain

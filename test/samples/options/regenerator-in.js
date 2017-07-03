@@ -1,3 +1,5 @@
+// *- SKIP
+
 M.profile("generatorsDo");
 function* a() {
 }

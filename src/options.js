@@ -5,4 +5,3 @@ export const ifState = enableIf(i => i.state === true)
 export const ifJsExceptions = enableIf(i => i.jsExceptions === true)
 export const ifEsRebind = enableIf(i => i.esRebind === true)
 
-

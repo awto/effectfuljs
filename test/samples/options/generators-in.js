@@ -7,7 +7,6 @@ function *v() {
   console.log(yield* z);
 }
 
-/*
 function *c() {
     yield* z;
 }
@@ -45,10 +44,10 @@ function *d1() {
     yield z;
     yield x;
 }
+
 function *e1() {
     yield eff(1);
     yield eff(2);
     console.log((yield eff(3)) + eff(3));
     yield eff(yield eff(4));
 }
-*/

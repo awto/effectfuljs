@@ -284,9 +284,14 @@ export function* concatArraysPass(s) {
     yield buf
 }
 
+const sysSyms = new Map()
+
 /** returns Symbol marked with lib=true field */
 export function sysId(name) {
-  const res = scope.newSym(name)
+  let res = sysSyms.get(name)
+  if (res != null)
+    return res
+  sysSyms.set(name, res = scope.newSym(name,true))
   res.lib = true
   return res
 }

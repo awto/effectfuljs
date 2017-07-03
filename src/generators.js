@@ -7,6 +7,8 @@ import * as Debug from "./debug"
 
 export function assignEff(si) {
   const s = Kit.auto(si)
+  s.first.value.node.generator = false
+  s.first.value.node.async = false
   function* walk() {
     for(const i of s.sub()) {
       if (i.enter) {
@@ -16,6 +18,7 @@ export function assignEff(si) {
           yield* Kit.reposOne(walk(), i.pos)
           s.close(i)
           i.value.bind = true
+          continue
         }
       }
       yield i

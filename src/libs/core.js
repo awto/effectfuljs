@@ -51,7 +51,6 @@ export default function* coreInit($ns) {
     async:false,
     bindCalls: {},
     esRebind:true,
-    coerce:false,
     ops: generatorOps,
     transform:defaultGensTransform
   })
@@ -60,7 +59,6 @@ export default function* coreInit($ns) {
     async:true,
     bindCalls: {},
     esRebind:true,
-    coerce:false,
     transform:defaultGensTransform
   })
   const asyncGeneratorsDo = Policy.injectFuncOpts({
@@ -79,19 +77,18 @@ export default function* coreInit($ns) {
         node: {
           profiles: {
             disabled:Policy.injectFuncOpts(disabledOpts),
-            full:R.pipe(Policy.injectOpts(fullOpts),Policy.injectFuncOpts(fullOpts)),
+            full:R.pipe(Policy.injectOpts(fullOpts),
+                        Policy.injectFuncOpts(fullOpts)),
             defaultFull:Policy.injectFuncOpts(fullOpts),
-            minimal:R.pipe(Policy.injectOpts(minOpts),Policy.injectFuncOpts(minOpts)),
+            minimal:R.pipe(Policy.injectOpts(minOpts),
+                           Policy.injectFuncOpts(minOpts)),
             defaultMinimal:Policy.injectFuncOpts(minOpts),
             generators,asyncAwaitDo,asyncGeneratorsDo,
-            es:Kit.concat(generators,asyncAwaitDo,asyncGeneratorsDo),
-            generatorsDo:Policy.injectFuncOpts({
-              bindCalls: {},
-              generator:true,
-              generatorDo:true,
-              coerce:false,
-              transform:defaultGensTransform
-            })
+            es:function* () {
+              yield* generators()
+              yield* asyncGeneratorsDo()
+              yield* asyncAwaitDo()
+            }
           },
           $ns
         }

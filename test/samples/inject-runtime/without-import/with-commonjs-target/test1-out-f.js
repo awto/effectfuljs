@@ -1,9 +1,13 @@
 var M = require('@effectful/generators');
 
 function a() {
-  return M.pure(1);
+  return M.scope(_1);
 
   function _1() {
-    return M.pure(2);
+    return M.yldM(1, _2);
+  }
+
+  function _2() {
+    return M.yldM(2, M.pure);
   }
 }
