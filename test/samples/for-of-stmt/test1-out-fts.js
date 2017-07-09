@@ -7,7 +7,7 @@ function a_1(loop) {
 function a_2(loop) {
   var i;
   i = loop.value;
-  return M.jM1R(eff(1), a_1, loop);
+  return M.jRM1(eff(1), a_1, loop);
 }
 
 function b_1(a) {
@@ -25,7 +25,7 @@ function b_2(i, loop) {
 function b_3(loop) {
   var i;
   i = loop.value;
-  return M.jM2R(eff(i), b_2, i, loop);
+  return M.jRM2(eff(i), b_2, i, loop);
 }
 
 function c_1(i, j, loop) {
@@ -49,7 +49,7 @@ function c_3(i, j, loop, _loop) {
 function c_4(i, loop, _loop) {
   var j;
   j = _loop.value;
-  return M.jM4R(eff(i, j), c_3, i, j, loop, _loop);
+  return M.jRM4(eff(i, j), c_3, i, j, loop, _loop);
 }
 
 function d_1(loop) {
@@ -61,7 +61,7 @@ function d_1(loop) {
 function d_2(loop) {
   var i;
   i = loop.value;
-  return M.jM1R(eff(1), d_1, loop);
+  return M.jRM1(eff(1), d_1, loop);
 }
 
 function a() {

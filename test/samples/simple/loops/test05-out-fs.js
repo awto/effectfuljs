@@ -24,6 +24,6 @@ function a() {
   }
 
   function _6() {
-    return M.jMR(eff4(), _2);
+    return M.jRM(eff4(), _2);
   }
 }

@@ -25,13 +25,13 @@ function a_5(a_v, _a_v) {
 function a_6(a, a_v, _a_v) {
   if (a === true) {
     if (a_v.i === _a_v.j) {
-      return M.jM2R(updJ(), a_5, a_v, _a_v);
+      return M.jRM2(updJ(), a_5, a_v, _a_v);
     } else return a_7(a_v, _a_v);
   } else return a_7(a_v, _a_v);
 }
 
 function a_7(a_v, _a_v) {
-  return M.jM2R(upd(), a_2, a_v, _a_v);
+  return M.jRM2(upd(), a_2, a_v, _a_v);
 }
 
 function a() {

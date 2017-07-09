@@ -118,7 +118,7 @@ function b() {
       console.log(i);
     }
 
-    return M.jMR(eff(i), _1);
+    return M.jRM(eff(i), _1);
   }
 
   function _2() {
@@ -135,7 +135,7 @@ function c() {
     }
 
     if (i === 3) return _2();else {
-      return M.jMR(eff(i), _1);
+      return M.jRM(eff(i), _1);
     }
   }
 
@@ -167,7 +167,7 @@ function d() {
   function _3(a) {
     result = a;
     i++;
-    return M.jR(_1);
+    return M.jR0(_1);
   }
 }
 
@@ -190,7 +190,7 @@ function e() {
   function _3(a) {
     result = a;
     i++;
-    return M.jR(_1);
+    return M.jR0(_1);
   }
 }
 
@@ -213,6 +213,6 @@ function f() {
   function _3(a) {
     result = a;
     i++;
-    return M.jR(_1);
+    return M.jR0(_1);
   }
 }

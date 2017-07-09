@@ -16,8 +16,16 @@ export function pretty(f) {
 
 export const print = pretty
 
+const defaultParseOpts = {
+  sourceType: "module",
+  plugins: ["asyncGenerators",
+            "doExpressions",
+            "decorators",
+            "functionBind"]
+}
+
 export function prettyBlock(f,opts = {}) {
-  const ast = parse(f.toString(),opts.parser || {sourceType:"module"})
+  const ast = parse(f.toString(), opts.parser || defaultParseOpts)
   const orig = R.pipe(produce,Kit.strip)(ast)
   consume(orig)
   return generate(ast,{quotes:"single",retainFunctionParens:true},"").code
@@ -32,7 +40,7 @@ export const run = R.curryN(2,Kit.optsScopeLift(function run(opts,f) {
                             defaultOpts,
                             {require:"@effectful/core",ns:"M",override:opts},
                             opts))
-  const ast = parse(f.toString(),opts.parser || {sourceType:"module"})
+  const ast = parse(f.toString(),opts.parser || defaultParseOpts)
   const orig = R.pipe(produce,Array.from)(ast)
   Transform.run(orig)
   return prettyBlock(
@@ -82,7 +90,7 @@ export const transformBlock = R.curryN(2,Kit.optsScopeLift(
                               defaultOpts,
                               {require:"@effectful/core",ns:"M",override:opts},
                               opts))
-    const ast = parse(src.toString(),{sourceType:"module"})
+    const ast = parse(src.toString(),defaultParseOpts)
     const s = R.pipe(produce,Array.from,Transform.scopes)(ast)
     const prep = R.pipe(
         Control.assignLabels,

@@ -69,28 +69,23 @@ export function interpretPureLet(si) {
     for(const i of s.sub()) {
       if (i.enter && i.type === Block.letStmt && !i.value.eff) {
         const lab = s.label()
+        let pos = i.pos
         if (i.value.pat && i.value.pat.length) {
           assert.equal(i.pos,Tag.push)
-          yield s.enter(Tag.push,Tag.VariableDeclaration,
-                         {node:{kind:"const"}})
-          yield s.enter(Tag.declarations,Tag.Array)
-          yield s.enter(Tag.push,Tag.VariableDeclarator)
-          yield s.enter(Tag.id,Kit.Subst)
-          yield* i.value.pat
-          yield* s.leave()
-          yield s.enter(Tag.init,Kit.Subst)
-          yield* walk()
-        } else {
-          yield s.enter(i.pos,Kit.Subst)
-          yield* walk()
+          yield s.enter(Tag.push,Tag.ExpressionStatement)
+          yield s.enter(Tag.expression,Tag.AssignmentExpression,
+                        {node:{operator:"="}})
+          yield* Kit.reposOneArr(i.value.pat,Tag.left)
+          pos = Tag.right
         }
+        yield* Kit.reposOne(walk(),pos)
         yield* lab()
         s.close(i)
       } else
         yield i
     }
   }
-  return Kit.completeSubst(walk())
+  return walk()
 }
 
 export const interpret = R.pipe(

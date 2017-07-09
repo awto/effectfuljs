@@ -63,8 +63,8 @@ export function* propagateEff(s) {
             throw new Error(`no such label ${v.jump}`)
           if (l.block.eff)
             propagate(stack)
-          else
-            l.buf.push(stack.concat())
+            else
+              l.buf.push(stack.concat())
         }
       }
     }
@@ -72,10 +72,10 @@ export function* propagateEff(s) {
     if (i.leave) {
       if (i.value.boundary) {
         stack.shift()
-        if (i.value.ctrl)
-          labs = Object.getPrototypeOf(labs)
         if (i.value.bind)
           i.value.eff = true
+        if (i.value.ctrl)
+          labs = Object.getPrototypeOf(labs)
         if (i.value.shallowEff || i.value.eff) {
           propagate(stack)
         }

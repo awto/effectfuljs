@@ -9,7 +9,7 @@ function a_2(a_v) {
 
 function a_3(a_v) {
   a_v.i = a_v.loop.value;
-  return M.jM1R(eff(a_v.i), a_2, a_v);
+  return M.jRM1(eff(a_v.i), a_2, a_v);
 }
 
 function b_1(a, b_v, _b_v) {
@@ -28,7 +28,7 @@ function b_2(b_v) {
 
 function b_3(b_v, _b_v) {
   b_v.i = _b_v.loop.value;
-  return M.jM1R(eff(b_v.i), b_2, b_v);
+  return M.jRM1(eff(b_v.i), b_2, b_v);
 }
 
 function c_1(a, c_v) {
@@ -42,7 +42,7 @@ function c_2(c_v) {
 
 function c_3(c_v) {
   c_v.i = c_v.loop.value;
-  return M.jM1R(eff(c_v.i), c_2, c_v);
+  return M.jRM1(eff(c_v.i), c_2, c_v);
 }
 
 function d_1(a, d_v) {
@@ -59,7 +59,7 @@ function e_1(e_v) {
 
 function e_2(e_v) {
   e_v.i = e_v.loop.value;
-  return M.jM1R(eff(e_v.i), e_1, e_v);
+  return M.jRM1(eff(e_v.i), e_1, e_v);
 }
 
 function g_1(g_v) {
@@ -86,7 +86,7 @@ function g_4(a, g_v) {
 
 function g_5(a, g_v) {
   if (a) return g_6();else {
-    return M.jM1R(eff('c'), g_3, g_v);
+    return M.jRM1(eff('c'), g_3, g_v);
   }
 }
 
@@ -160,12 +160,12 @@ function h_9(a, h_v, _h_v) {
 
 function h_10(a, h_v, _h_v) {
   if (a) return h_11(h_v, _h_v);else {
-    return M.jM1R(eff('c'), h_5, h_v);
+    return M.jRM1(eff('c'), h_5, h_v);
   }
 }
 
 function h_11(h_v, _h_v) {
-  return M.jM2R(effB(h_v.j), h_2, h_v, _h_v);
+  return M.jRM2(effB(h_v.j), h_2, h_v, _h_v);
 }
 
 function h_12() {

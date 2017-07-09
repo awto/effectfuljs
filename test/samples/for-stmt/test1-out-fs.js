@@ -19,7 +19,7 @@
 
   function _3(j, len, ref) {
     j++;
-    return M.jNR(_1, j, len, ref);
+    return M.jR3(_1, j, len, ref);
   }
 });
 
@@ -76,7 +76,7 @@ function a() {
 
   function _4(i) {
     i++;
-    return M.jNR(_2, i);
+    return M.jR1(_2, i);
   }
 }
 
@@ -108,7 +108,7 @@ function a1() {
 
   function _4(i, j) {
     i++, j += 2;
-    return M.jNR(_2, i, j);
+    return M.jR2(_2, i, j);
   }
 }
 
@@ -120,7 +120,7 @@ function b() {
       console.log(i);
     }
 
-    return M.jMR(eff(i), _1);
+    return M.jRM(eff(i), _1);
   }
 
   function _2() {
@@ -137,7 +137,7 @@ function c() {
     }
 
     if (i === 3) return _2();else {
-      return M.jMR(eff(i), _1);
+      return M.jRM(eff(i), _1);
     }
   }
 
@@ -168,7 +168,7 @@ function d() {
 
   function _3(result, i) {
     i++;
-    return M.jNR(_1, result, i);
+    return M.jR2(_1, result, i);
   }
 }
 
@@ -190,7 +190,7 @@ function e() {
 
   function _3(result, i) {
     i++;
-    return M.jNR(_1, i);
+    return M.jR1(_1, i);
   }
 }
 
@@ -212,6 +212,6 @@ function f() {
 
   function _3(result, i) {
     i++;
-    return M.jNR(_1, result, i);
+    return M.jR2(_1, result, i);
   }
 }

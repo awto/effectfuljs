@@ -5,7 +5,7 @@ import * as Match from "estransducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
 import * as Uniq from "./uniq"
-import {ifJsExceptions} from "./options"
+import {ifJsExceptions,ifDirectives} from "./options"
 
 import * as assert from "assert"
 import * as Trace from "estransducers/trace"
@@ -333,7 +333,7 @@ export const applyProfiles = postproc(function* applyProfiles(s) {
 /** handles profile tokens */
 export const profiles = R.pipe(
   configDiffPass,
-  lookupProfiles,
+  ifDirectives(lookupProfiles),
   applyProfiles,
   configDiffPass)
 
@@ -657,10 +657,13 @@ export function* emitInitProfiles(s) {
 }
 
 /** combines a few preparation passes */
-export const prepare = R.pipe(imports,emitInitOptions,ctImportPass)
+export const prepare = R.pipe(
+  ifDirectives(imports),
+  emitInitOptions,
+  ctImportPass)
 
 /** for `ns` function application marks inner expression to be effectful */
-function unwrapNs(si) {
+export function unwrapNs(si) {
   const s = Kit.auto(si)
   function* walk() {
     for(const i of s.sub()) {
@@ -684,16 +687,6 @@ function unwrapNs(si) {
   }
   return walk()
 }
-
-/** default policy for not-generator functions */
-export const defaultPrepare = R.pipe(
-  unwrapNs,
-  assignBindCalls,
-  ifJsExceptions(s => s, assignThrowEff))
-
-/** default policy for generator functions */
-export const generatorsPrepare = R.pipe(
-  ifJsExceptions(s => s, assignThrowEff))
 
 /** sets options `opts` to each function root tag */
 export const setFuncOpts = function setFuncOpts(opts) {

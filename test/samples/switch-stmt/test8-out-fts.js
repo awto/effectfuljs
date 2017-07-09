@@ -1,24 +1,24 @@
 function a_1(i) {
   var a;
-  const a = i += 1;
+  a = i += 1;
   return M.jMB1(eff(a), a_2, i);
 }
 
 function a_2(a, i) {
   var b;
-  const b = i += 2;
+  b = i += 2;
   return M.jMB2(check(b), a_3, i, a);
 }
 
 function a_3(b, i, a) {
   var c;
-  const c = i += 4;
+  c = i += 4;
   return M.jMB3(check(c), a_4, i, a, b);
 }
 
 function a_4(c, i, a, b) {
   var d;
-  const d = i += 6;
+  d = i += 6;
   return M.jMB4(check(d), a_5, i, a, b, c);
 }
 

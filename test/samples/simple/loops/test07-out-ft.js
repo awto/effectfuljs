@@ -8,13 +8,13 @@ function a_2(a_v) {
 }
 
 function a_3(a_v) {
-  return M.jM1R(eff4(a_v.k, a_v.j), a_3, a_v);
+  return M.jRM1(eff4(a_v.k, a_v.j), a_3, a_v);
 }
 
 function a_4() {
   var a_v;
   a_v.i = 20, a_v.j = 30, a_v.k = 40;
-  return M.jMR(eff5(), a_4);
+  return M.jRM(eff5(), a_4);
 }
 
 function a() {

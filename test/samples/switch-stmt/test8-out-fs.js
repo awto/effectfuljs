@@ -6,25 +6,25 @@ function a() {
 
   function _1(i) {
     var a;
-    const a = i += 1;
+    a = i += 1;
     return M.jMB1(eff(a), _2, i);
   }
 
   function _2(a, i) {
     var b;
-    const b = i += 2;
+    b = i += 2;
     return M.jMB2(check(b), _3, i, a);
   }
 
   function _3(b, i, a) {
     var c;
-    const c = i += 4;
+    c = i += 4;
     return M.jMB3(check(c), _4, i, a, b);
   }
 
   function _4(c, i, a, b) {
     var d;
-    const d = i += 6;
+    d = i += 6;
     return M.jMB4(check(d), _5, i, a, b, c);
   }
 

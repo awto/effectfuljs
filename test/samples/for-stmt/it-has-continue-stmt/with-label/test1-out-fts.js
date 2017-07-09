@@ -25,12 +25,12 @@ function _4(a, i, j, len, ref) {
 
 function _5(i, j, len, ref) {
   j++;
-  return M.jNR(_3, i, j, len, ref);
+  return M.jR4(_3, i, j, len, ref);
 }
 
 function _6(i, ref) {
   i++;
-  return M.jNR(_1, i, ref);
+  return M.jR2(_1, i, ref);
 }
 
 function __1(i, ref) {
@@ -64,12 +64,12 @@ function __5(a, i, j, len, ref) {
 
 function __6(i, j, len, ref) {
   j++;
-  return M.jNR(__3, i, j, len, ref);
+  return M.jR4(__3, i, j, len, ref);
 }
 
 function _7(i, ref) {
   i++;
-  return M.jNR(__1, i, ref);
+  return M.jR2(__1, i, ref);
 }
 
 function _11(i, j, ref) {
@@ -99,13 +99,13 @@ function _51(i, j, len, ref) {
   j++;
   if (t2) return _61(i, j, ref);else {
     j++;
-    return M.jNR(_31, i, j, len, ref);
+    return M.jR4(_31, i, j, len, ref);
   }
 }
 
 function _61(i, j, ref) {
   i++;
-  return M.jNR(_11, i, j, ref);
+  return M.jR3(_11, i, j, ref);
 }
 
 function _12(j, len, ref) {
@@ -123,7 +123,7 @@ function _22(j, len, ref) {
 
 function _32(j, len, ref) {
   j++;
-  return M.jNR(_12, j, len, ref);
+  return M.jR3(_12, j, len, ref);
 }
 
 function _13(j) {
@@ -138,7 +138,7 @@ function _33(j) {
   j++;
   if (t2) return _42(j);else {
     j--;
-    return M.jNR(_13, j);
+    return M.jR1(_13, j);
   }
 }
 

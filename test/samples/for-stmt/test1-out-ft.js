@@ -11,7 +11,7 @@ function _2(a, _v) {
 
 function _3(_v) {
   _v.j++;
-  return M.jNR(_1, _v);
+  return M.jR1(_1, _v);
 }
 
 function a_1(a_v) {
@@ -35,7 +35,7 @@ function a_3(a_v) {
 
 function a_4(a_v) {
   a_v.i++;
-  return M.jNR(a_2, a_v);
+  return M.jR1(a_2, a_v);
 }
 
 function a1_1(a1_v) {
@@ -60,7 +60,7 @@ function a1_3(a1_v) {
 
 function a1_4(a1_v) {
   a1_v.i++, a1_v.j += 2;
-  return M.jNR(a1_2, a1_v);
+  return M.jR1(a1_2, a1_v);
 }
 
 function b_1() {
@@ -68,7 +68,7 @@ function b_1() {
     console.log(i);
   }
 
-  return M.jMR(eff(i), b_1);
+  return M.jRM(eff(i), b_1);
 }
 
 function b_2() {
@@ -81,7 +81,7 @@ function c_1() {
   }
 
   if (i === 3) return c_2();else {
-    return M.jMR(eff(i), c_1);
+    return M.jRM(eff(i), c_1);
   }
 }
 
@@ -106,7 +106,7 @@ function d_2(d_v) {
 function d_3(a, d_v) {
   d_v.result = a;
   d_v.i++;
-  return M.jNR(d_1, d_v);
+  return M.jR1(d_1, d_v);
 }
 
 function e_1(e_v) {
@@ -122,7 +122,7 @@ function e_2(e_v) {
 function e_3(a, e_v) {
   e_v.result = a;
   e_v.i++;
-  return M.jNR(e_1, e_v);
+  return M.jR1(e_1, e_v);
 }
 
 function f_1(f_v) {
@@ -138,7 +138,7 @@ function f_2(f_v) {
 function f_3(a, f_v) {
   f_v.result = a;
   f_v.i++;
-  return M.jNR(f_1, f_v);
+  return M.jR1(f_1, f_v);
 }
 
 (function () {

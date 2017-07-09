@@ -26,6 +26,6 @@ function a() {
   }
 
   function _6() {
-    return M.jMR(upd(), _2);
+    return M.jRM(upd(), _2);
   }
 }

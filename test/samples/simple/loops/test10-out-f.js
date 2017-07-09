@@ -29,12 +29,12 @@ function a() {
   function _6(a) {
     if (a === true) {
       if (i === j) {
-        return M.jMR(updJ(), _5);
+        return M.jRM(updJ(), _5);
       } else return _7();
     } else return _7();
   }
 
   function _7() {
-    return M.jMR(upd(), _2);
+    return M.jRM(upd(), _2);
   }
 }

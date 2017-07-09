@@ -1,6 +1,6 @@
 function a() {
-  var i;
-  const a = i = 0;
+  var i, a;
+  a = i = 0;
   return M.jMB1(eff2(a), _1, i);
 
   function _1(a, i) {
@@ -21,7 +21,7 @@ function a() {
 
   function _5(i) {
     var a;
-    const a = i++;
+    a = i++;
     return M.jMB1(eff6(a), _6, i);
   }
 

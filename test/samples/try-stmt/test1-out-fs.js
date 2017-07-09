@@ -629,7 +629,7 @@ function a14() {
   }
 
   function _12(r) {
-    return M.jM1R(eff(5), _1, r);
+    return M.jRM1(eff(5), _1, r);
   }
 
   function _13(cb, r) {
@@ -665,7 +665,7 @@ function a15() {
         return _1();
       }
     } else {
-      return M.jMR(eff(2), _1);
+      return M.jRM(eff(2), _1);
     }
   }
 }
@@ -698,7 +698,7 @@ function a16() {
         return eff(8);
       } else return _1();
     } else {
-      return M.jMR(eff(2), _2);
+      return M.jRM(eff(2), _2);
     }
   }
 }
@@ -719,7 +719,7 @@ function a17() {
         return eff(8);
       } else return _1();
     } else {
-      return M.jMR(eff(2), _1);
+      return M.jRM(eff(2), _1);
     }
   }
 }
@@ -735,7 +735,7 @@ function a18() {
   function _2(b) {
     a = b;
     if (a === 1) return _3(_5);else {
-      return M.jM1R(eff(2), _3, _1);
+      return M.jRM1(eff(2), _3, _1);
     }
   }
 
@@ -762,7 +762,7 @@ function a19() {
   }
 
   function _2() {
-    return M.jM1R(eff(2), _3, _1);
+    return M.jRM1(eff(2), _3, _1);
   }
 
   function _3(cb) {
@@ -774,7 +774,7 @@ function a20() {
   return _1();
 
   function _1() {
-    return M.jM1R(eff(2), _2, _1);
+    return M.jRM1(eff(2), _2, _1);
   }
 
   function _2(cb) {
@@ -786,7 +786,7 @@ function a21() {
   return _1();
 
   function _1() {
-    return M.jM1R(eff(2), _2, _1);
+    return M.jRM1(eff(2), _2, _1);
   }
 
   function _2(cb) {
@@ -808,7 +808,7 @@ function a22() {
   return _1();
 
   function _1() {
-    return M.jM1R(eff(2), _2, _1);
+    return M.jRM1(eff(2), _2, _1);
   }
 
   function _2(cb) {
@@ -821,7 +821,7 @@ function a23() {
 
   function _1() {
     if (a1) return _3(_2);else {
-      return M.jM1R(eff(2), _3, _1);
+      return M.jRM1(eff(2), _3, _1);
     }
   }
 
@@ -847,7 +847,7 @@ function a24() {
 
   function _1() {
     if (a1) return _2(_3);else {
-      return M.jM1R(eff(2), _2, _1);
+      return M.jRM1(eff(2), _2, _1);
     }
   }
 
@@ -862,7 +862,7 @@ function a24() {
 
 function a25() {
   if (a1) return _1();else {
-    return M.jMR(eff(2), _1);
+    return M.jRM(eff(2), _1);
   }
 
   function _1() {
@@ -872,7 +872,7 @@ function a25() {
 
 function a26() {
   if (a1) return _1();else {
-    return M.jMR(eff(2), _1);
+    return M.jRM(eff(2), _1);
   }
 
   function _1() {
@@ -885,7 +885,7 @@ function a27() {
 
   function _1() {
     if (a1) return _4(_2);else {
-      return M.jM1R(eff(2), _4, _3);
+      return M.jRM1(eff(2), _4, _3);
     }
   }
 

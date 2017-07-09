@@ -31,12 +31,12 @@
 
   function _5(i, j, len, ref) {
     j++;
-    return M.jNR(_3, i, j, len, ref);
+    return M.jR4(_3, i, j, len, ref);
   }
 
   function _6(i, ref) {
     i++;
-    return M.jNR(_1, i, ref);
+    return M.jR2(_1, i, ref);
   }
 });
 
@@ -77,12 +77,12 @@
 
   function _6(i, j, len, ref) {
     j++;
-    return M.jNR(_3, i, j, len, ref);
+    return M.jR4(_3, i, j, len, ref);
   }
 
   function _7(i, ref) {
     i++;
-    return M.jNR(_1, i, ref);
+    return M.jR2(_1, i, ref);
   }
 });
 
@@ -119,13 +119,13 @@
     j++;
     if (t2) return _6(i, j, ref);else {
       j++;
-      return M.jNR(_3, i, j, len, ref);
+      return M.jR4(_3, i, j, len, ref);
     }
   }
 
   function _6(i, j, ref) {
     i++;
-    return M.jNR(_1, i, j, ref);
+    return M.jR3(_1, i, j, ref);
   }
 });
 
@@ -150,7 +150,7 @@
 
   function _3(j, len, ref) {
     j++;
-    return M.jNR(_1, j, len, ref);
+    return M.jR3(_1, j, len, ref);
   }
 });
 
@@ -172,7 +172,7 @@
     j++;
     if (t2) return _4(j);else {
       j--;
-      return M.jNR(_1, j);
+      return M.jR1(_1, j);
     }
   }
 

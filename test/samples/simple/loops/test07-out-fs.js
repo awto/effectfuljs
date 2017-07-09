@@ -16,12 +16,12 @@ function a() {
   }
 
   function _3(j, k) {
-    return M.jM2R(eff4(k, j), _3, j, k);
+    return M.jRM2(eff4(k, j), _3, j, k);
   }
 
   function _4() {
     var i, j, k;
     i = 20, j = 30, k = 40;
-    return M.jMR(eff5(), _4);
+    return M.jRM(eff5(), _4);
   }
 }

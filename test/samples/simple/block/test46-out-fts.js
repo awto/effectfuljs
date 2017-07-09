@@ -16,7 +16,7 @@ function a_4(i) {
 
 function a_5(i) {
   var a;
-  const a = i++;
+  a = i++;
   return M.jMB1(eff6(a), a_6, i);
 }
 
@@ -59,7 +59,7 @@ function a_13(i) {
 }
 
 function a() {
-  var i;
-  const a = i = 0;
+  var i, a;
+  a = i = 0;
   return M.jMB1(eff2(a), a_1, i);
 }

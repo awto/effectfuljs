@@ -26,7 +26,7 @@ function a_6(k, i, j) {
 
 function a_7(i, j) {
   i++, j--;
-  return M.jNR(a_4, i, j);
+  return M.jR2(a_4, i, j);
 }
 
 // *- should inject forPar

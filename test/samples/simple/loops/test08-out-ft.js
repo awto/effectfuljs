@@ -22,7 +22,7 @@ function a_5() {
 }
 
 function a_6() {
-  return M.jMR(upd(), a_2);
+  return M.jRM(upd(), a_2);
 }
 
 function a() {

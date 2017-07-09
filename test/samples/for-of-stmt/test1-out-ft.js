@@ -6,7 +6,7 @@ function a_1(a_v) {
 
 function a_2(a_v) {
   a_v.i = a_v.loop.value;
-  return M.jM1R(eff(1), a_1, a_v);
+  return M.jRM1(eff(1), a_1, a_v);
 }
 
 function b_1(a, b_v) {
@@ -22,7 +22,7 @@ function b_2(b_v) {
 
 function b_3(b_v) {
   b_v.i = b_v.loop.value;
-  return M.jM1R(eff(b_v.i), b_2, b_v);
+  return M.jRM1(eff(b_v.i), b_2, b_v);
 }
 
 function c_1(c_v, _c_v) {
@@ -43,7 +43,7 @@ function c_3(c_v, _c_v) {
 
 function c_4(c_v, _c_v) {
   _c_v.j = _c_v.loop.value;
-  return M.jM2R(eff(c_v.i, _c_v.j), c_3, c_v, _c_v);
+  return M.jRM2(eff(c_v.i, _c_v.j), c_3, c_v, _c_v);
 }
 
 function d_1(d_v) {
@@ -54,7 +54,7 @@ function d_1(d_v) {
 
 function d_2(d_v) {
   d_v.i = d_v.loop.value;
-  return M.jM1R(eff(1), d_1, d_v);
+  return M.jRM1(eff(1), d_1, d_v);
 }
 
 function a() {

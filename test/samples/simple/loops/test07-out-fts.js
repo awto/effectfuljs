@@ -9,13 +9,13 @@ function a_2(j) {
 }
 
 function a_3(j, k) {
-  return M.jM2R(eff4(k, j), a_3, j, k);
+  return M.jRM2(eff4(k, j), a_3, j, k);
 }
 
 function a_4() {
   var i, j, k;
   i = 20, j = 30, k = 40;
-  return M.jMR(eff5(), a_4);
+  return M.jRM(eff5(), a_4);
 }
 
 function a() {

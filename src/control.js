@@ -39,6 +39,7 @@ export const assignLabels = R.pipe(
           case Tag.ForStatement:
           case Tag.SwitchStatement:
           case Tag.ForInStatement:
+          case Tag.ForAwaitStatement:
           case Tag.ForOfStatement:
             const lmap = new Map(map)
             const lname = labs.length === 0 ? "#" : labs[0]

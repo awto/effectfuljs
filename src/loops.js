@@ -14,6 +14,7 @@ export const repeatId = Kit.sysId("repeat")
 export const forParId = Kit.sysId("forPar")
 export const forInIteratorId = Kit.sysId("forInIterator")
 export const iteratorId = Kit.sysId("iterator")
+export const effIteratorId = Kit.sysId("iteratorM")
 
 /**
  * convers all kind of loops into `for` loops
@@ -35,6 +36,7 @@ export const toBlocks = R.pipe(
           case Tag.ForStatement:
           case Tag.ForInStatement:
           case Tag.ForOfStatement:
+          case Tag.ForAwaitStatement:
           case Tag.DoWhileStatement:
           case Tag.WhileStatement:
             const lab = s.label()
@@ -64,6 +66,7 @@ export const toBlocks = R.pipe(
           case Tag.ForStatement:
           case Tag.ForInStatement:
           case Tag.ForOfStatement:
+          case Tag.ForAwaitStatement:
           case Tag.DoWhileStatement:
           case Tag.WhileStatement:
             const p = yield* s.findPos(Tag.body)
@@ -110,7 +113,7 @@ export const doWhileStmt = R.pipe(
           yield s.enter(Tag.consequent, Tag.BlockStatement)
           yield s.enter(Tag.body,Tag.Array)
           yield s.tok(Tag.push,Tag.BreakStatement,{jump:i.value.ctrl[0],
-                                                   eff:i.value.eff})
+                                                   eff:true,bind:true})
           yield* lab()
         } else
           yield i
@@ -158,10 +161,10 @@ export function forOfStmt(s) {
       if (i.value.eff) {
         switch(i.type) {
         case Tag.ForInStatement:
+        case Tag.ForAwaitStatement:
         case Tag.ForOfStatement:
           yield Kit.setType(i,Tag.ForStatement)
           if (i.enter) {
-            // TODO: extract into a function or even a pass
             const sym = Kit.scope.newSym("loop")
             sym.declBlock = sym.declLoop = i.value
             sym.declScope = s.first.value
@@ -173,10 +176,14 @@ export function forOfStmt(s) {
             const end = s.label()
             yield* openVarDecl(iterVar,s,"let")
             yield s.enter(Tag.init,Tag.CallExpression)
+            const bind = i.type !== Tag.ForInStatement
+              && (i.type === Tag.ForAwaitStatement
+                  || i.value.node.async
+                  || s.opts.pureForOf === false)
             yield Kit.idTok(Tag.callee,
-                              i.type === Tag.ForInStatement
-                              ? forInIteratorId
-                              : iteratorId)
+                            i.type === Tag.ForInStatement ? forInIteratorId
+                            : bind ? effIteratorId
+                            : iteratorId)
             yield s.enter(Tag.arguments,Tag.Array)
             const j = s.take()
             yield Kit.setPos(j,Tag.push)
@@ -187,7 +194,7 @@ export function forOfStmt(s) {
             yield* end()
             yield s.enter(Tag.test,Tag.AssignmentExpression,{node:{operator:"="}})
             yield s.tok(Tag.left,Tag.Identifier,{sym,lhs:true,rhs:false})
-            yield s.enter(Tag.right,Tag.CallExpression)
+            yield s.enter(Tag.right,Tag.CallExpression,{bind,eff:bind})
             yield s.tok(Tag.callee,Tag.Identifier,{sym,lhs:false,rhs:true})
             yield s.tok(Tag.arguments,Tag.Array)
             yield* end()
@@ -243,7 +250,7 @@ export const normilizeFor = R.pipe(
               const name = cntLab(i.value.jump)
               yield sl.tok(i.pos,Tag.BreakStatement,
                            {node:{label:{type:"Identifier",name}},
-                            eff:true,jump:name})
+                            eff:true,bind:true,jump:name})
             }
             continue
           }
@@ -317,7 +324,7 @@ export const normilizeFor = R.pipe(
                   yield sl.enter(Tag.alternate,Tag.BlockStatement)
                   yield sl.enter(Tag.body,Tag.Array)
                   yield sl.tok(Tag.push,Tag.BreakStatement,
-                               {eff:true,jump:i.value.ctrl[0]})
+                               {eff:true,bind:true,jump:i.value.ctrl[0]})
                 }
                 yield* blab()
                 break

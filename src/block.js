@@ -29,6 +29,7 @@ export const pure = symbol("pure")
 /** marks an expression to share in JS using some temporal variable */
 export const sharedRef = symbol("sharedRef")
 
+export const pureUndefId = Kit.sysId("pureUndef")
 export const pureId = Kit.sysId("pure")
 export const bindId = Kit.sysId("bind")
 export const arrId = Kit.sysId("arr")
@@ -38,7 +39,7 @@ export const mapId = Kit.sysId("map")
  * Replaces binary `app` nodes with its first component member function call 
  * with `name`, passing second component as a function to its argument
  */
-export const interpretApp = R.pipe(function interpretApp(s) {
+export function interpretApp(s) {
   const sl = Kit.auto(s)
   function* walk(sw) {
     for(const i of sw) {
@@ -49,30 +50,33 @@ export const interpretApp = R.pipe(function interpretApp(s) {
           yield sl.enter(Tag.expression,Tag.CallExpression)
           const st = sl.opts.static
           if (st) {
-            yield Kit.idTok(Tag.callee,i.value.sym)
+            if (i.value.obj) {
+              yield sl.enter(Tag.callee, Tag.MemberExpression)
+              yield sl.tok(Tag.object,Tag.Identifier,{sym:i.value.obj})
+              yield sl.tok(Tag.property,Tag.Identifier,{sym:i.value.sym})
+              yield* sl.leave()
+            } else
+              yield sl.tok(Tag.callee,Tag.Identifier,{sym:i.value.sym})
             yield sl.enter(Tag.arguments,Tag.Array)
-            yield sl.enter(Tag.push,Kit.Subst)
-            yield* walk(sl.one())
-            yield* sl.leave()
+            yield* Kit.reposOne(walk(sl.one()), Tag.push)
           } else {
             yield sl.enter(Tag.callee,Tag.MemberExpression,{bind:true})
-            yield sl.enter(Tag.object,Kit.Subst)
-            yield* walk(sl.one())
-            yield* sl.leave()
+            yield* Kit.reposOne(walk(sl.one()), Tag.object)
             yield sl.tok(Tag.property,Tag.Identifier,{sym:i.value.sym})
             yield* sl.leave()
             yield sl.enter(Tag.arguments,Tag.Array)
           }
           const sub = sl.label()
           for(let j; (j = sl.curLev()) != null;) { 
+            let pos
             if (j.pos === Tag.params) {
               yield sl.enter(Tag.push,Tag.ArrowFunctionExpression)
               yield* sl.one()
-              yield sl.enter(Tag.body,Kit.Subst)
+              pos = Tag.body
             } else {
-              yield sl.enter(Tag.push,Kit.Subst)
+              pos = Tag.push
             }
-            yield* walk(sl.one())
+            yield* Kit.repos(walk(sl.one()),pos)
             yield* sub()
           }
           yield* lab()
@@ -83,8 +87,7 @@ export const interpretApp = R.pipe(function interpretApp(s) {
     }
   }
   return walk(sl)
-},Kit.completeSubst)
-
+}
 /** 
  * for each `frame` adds its index in `chain` and for each `chain` 
  * total number of frames 
@@ -520,8 +523,7 @@ export const interpretPure = R.pipe(
             yield sl.enter(i.pos,Tag.CallExpression,{result:true})
             yield sl.tok(Tag.callee, Tag.Identifier, {sym: pureId})
             yield sl.enter(Tag.arguments,Tag.Array)
-            yield sl.enter(Tag.push,Kit.Subst)
-            yield* walk()
+            yield* Kit.reposOne(walk(),Tag.push)
             yield* lab()
           }
         } else
@@ -530,7 +532,6 @@ export const interpretPure = R.pipe(
     }
     yield* walk()
   },
-  Kit.completeSubst,
   cleanStmtExpr
 )
 
@@ -573,7 +574,7 @@ export function* interpretLibSyms(si) {
         && i.pos !== Tag.property
         && i.value.sym && i.value.sym.lib) {
       const sym = i.value.sym
-      const ns = s.opts.$ns
+      const ns = i.value.ns || s.opts.$ns
       if (sym != null && sym !== Kit.coerceId) {
         if (ns == null) {
           yield s.tok(i.pos,{sym})

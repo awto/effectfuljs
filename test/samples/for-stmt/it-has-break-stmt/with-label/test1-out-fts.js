@@ -30,7 +30,7 @@ function _6(a, i, j, len, ref) {
 function _7(a, i, j, len, ref) {
   if (a) return _11();else {
     j++;
-    return M.jNR(_4, i, j, len, ref);
+    return M.jR4(_4, i, j, len, ref);
   }
 }
 
@@ -44,7 +44,7 @@ function _9(i, ref) {
 
 function _10(i, ref) {
   i++;
-  return M.jNR(_1, i, ref);
+  return M.jR2(_1, i, ref);
 }
 
 function _11() {

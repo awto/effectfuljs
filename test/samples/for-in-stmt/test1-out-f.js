@@ -13,7 +13,7 @@ function a() {
 
   function _3() {
     i = loop.value;
-    return M.jMR(eff(i), _2);
+    return M.jRM(eff(i), _2);
   }
 }
 
@@ -32,7 +32,7 @@ function b() {
 
   function _3() {
     i = loop.value;
-    return M.jMR(eff(i), _2);
+    return M.jRM(eff(i), _2);
   }
 }
 
@@ -51,7 +51,7 @@ function c() {
 
   function _3() {
     i = loop.value;
-    return M.jMR(eff(i), _2);
+    return M.jRM(eff(i), _2);
   }
 }
 
@@ -79,7 +79,7 @@ function e() {
 
   function _2() {
     i = loop.value;
-    return M.jMR(eff(i), _1);
+    return M.jRM(eff(i), _1);
   }
 }
 
@@ -117,7 +117,7 @@ function g() {
 
   function _5(a) {
     if (a) return _6();else {
-      return M.jMR(eff('c'), _3);
+      return M.jRM(eff('c'), _3);
     }
   }
 
@@ -185,12 +185,12 @@ function h() {
 
   function _10(a) {
     if (a) return _11();else {
-      return M.jMR(eff('c'), _5);
+      return M.jRM(eff('c'), _5);
     }
   }
 
   function _11() {
-    return M.jMR(effB(j), _2);
+    return M.jRM(effB(j), _2);
   }
 
   function _12() {

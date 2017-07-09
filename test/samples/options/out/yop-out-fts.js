@@ -70,9 +70,7 @@ function _23(_done) {
   return _32();
 }
 
-function _12(_done, $dm$root) {
-  var err;
-
+function _12(_done, $dm$root, err) {
   try {
     return M.jMB2E(expect(err.message), _21, _done, $dm$root, _4);
   } catch (e) {
@@ -108,7 +106,7 @@ function _5($dm$root) {
 
 function _13(a) {
   return M.jMB(a.mhandle(function (err) {
-    return _12(_done, $dm$root);
+    return _12(_done, $dm$root, err);
   }), _22);
 }
 

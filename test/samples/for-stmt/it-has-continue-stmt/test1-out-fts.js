@@ -29,12 +29,12 @@ function _5(a, i, j, len, ref) {
 
 function _6(i, j, len, ref) {
   j++;
-  return M.jNR(_3, i, j, len, ref);
+  return M.jR4(_3, i, j, len, ref);
 }
 
 function _7(i, ref) {
   i++;
-  return M.jNR(_1, i, ref);
+  return M.jR2(_1, i, ref);
 }
 
 (function () {

@@ -11,7 +11,7 @@ function a() {
 
   function _2() {
     i = loop.value;
-    return M.jMR(eff(1), _1);
+    return M.jRM(eff(1), _1);
   }
 }
 
@@ -32,7 +32,7 @@ function b() {
 
   function _3() {
     i = loop.value;
-    return M.jMR(eff(i), _2);
+    return M.jRM(eff(i), _2);
   }
 }
 
@@ -60,7 +60,7 @@ function c() {
 
   function _4() {
     j = _loop.value;
-    return M.jMR(eff(i, j), _3);
+    return M.jRM(eff(i, j), _3);
   }
 }
 
@@ -77,7 +77,7 @@ function d() {
 
   function _2() {
     i = loop.value;
-    return M.jMR(eff(1), _1);
+    return M.jRM(eff(1), _1);
   }
 }
 

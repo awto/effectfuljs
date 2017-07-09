@@ -61,7 +61,7 @@ function pad(s) {
   return sps + s + sps
 }
 
-export const trace = R.curry((prefix,s) => {
+export const traceOld = R.curry((prefix,s) => {
   console.log(`%c${pad(prefix)}%c`,
               `background:#2B81AF;color:#fff;font-size:xx-large;
               text-shadow:rgba(0, 0, 0, 0.5) 2px 2px 1px`,
@@ -77,15 +77,6 @@ export const trace = R.curry((prefix,s) => {
     T.cleanComments,
     T.verify,
     Array.from)(s)
-})
-
-export const traceC = R.curry((prefix,s) => {
-  console.log(`${prefix}:`)
-  return R.pipe(
-    tracePrep,
-    Trace.of(Trace.prefix(prefix)),
-    T.cleanComments,
-    T.verify)(s)
 })
 
 function varsPat(vars) {
@@ -490,9 +481,76 @@ const dumpPrep = R.pipe(
 
 export const mark = R.pipe(dumpPrep,D.fin)
 
-export const dump = R.curry(function dumpConsole(tag,s) {
+export const dumpOld = R.curry(function dumpConsole(tag,s) {
   s = Kit.toArray(s)
   D.toConsole(tag,dumpPrep(removeSubScopes(Kit.clone(s))))
   return s
 })
+
+/** adds flatten related comments */
+function* deb_Mark(s) {
+  for(let i of trace.cleanComments(s)) {
+    const comment = []
+    if (i.enter) {
+      const v = i.value
+      let hndl = v.catchCont ?
+          `|Catch{${v.catchCont.exceptSym.id}<-${v.catchCont.goto.declSym.id}}`
+          : ""
+      const pat = v.pat != null && v.pat.length
+            ? `|Pat{${dump.toStr(v.pat)}}`
+            : ""
+      let except = v.exceptSym ? `|ExSym{${v.exceptSym.id}}` : ""
+      if (v.declSym != null) {
+        let fin = v.finallyCont && v.finallyCont.length
+            ? `|Finally{${v.finallyCont.map(i => i.declSym.id).join()}}`
+            : ""
+        const avail = v.frameAvail || emptySet
+        const locals = v.frameLocals || emptySet
+        const params = v.frameParams || emptySet
+        const clos = v.frameParamsClos || emptySet
+        const fpat = v.framePat || emptySet
+        const all = new Set([...avail, ...locals, ...clos, ...params, ...fpat])
+        const paramStr = all.size
+              ? `|Params{${[...all].map(i => i.id + ":"
+                     + (avail.has(i) ? "A" : "")
+                     + (locals.has(i) ? "L" : "")
+                     + (params.has(i) ? "P" : (clos.has(i) ? "p" : ""))
+                     + (fpat.has(i) ? "B" : ":"))
+                 .join()}}` : ""
+        i = dump.setComment(
+          i,`label{${v.declSym.id}}${pat}${paramStr}${except}${hndl}${fin}`,"hl")
+      }
+      if (i.type === Block.letStmt || i.type === Ctrl.jump) {
+        let fin = v.preCompose && v.preCompose.length
+          ? `|Pre{${v.preCompose.map(
+               i => i.declSym.id+"->"+i.contArg.declSym.id).join()}}`
+          : ""
+        const args = v.frameArgs
+              ? `|Args{${[...v.frameArgs]
+                .map(([k,v]) => `${k.id}=${v.id}`).join()}}`
+              : ""
+        const thread = v.threadArgs ?
+              `|Thread{${v.threadArgs.map(
+                i => i[0].id + "<-" + i[1].id).join()
+               }}` : ""
+        
+        let dst = v.goto ? v.goto.declSym.id : "EXIT"
+        if (v.goto && v.goto.instances) {
+          const inst = [...v.goto.instances].map(i => i.declSym.id).join()
+          dst = `|${dst}<${inst}>`
+        }
+        let name = v.result ? "ret" : "goto"
+        i = dump.setComment(
+          i,`${name}[${dst}${pat}${args}${thread}${except}${hndl}${fin}]`,"hl")
+      }
+    }
+    yield i
+  }
+}
+
+export const traceAll = R.curry((name, s) => trace.all(name,deb_Mark(s)))
+export const trace = R.curry((name, s) => trace.lazy(name,deb_Mark(s)))
+export const dump = R.curry((name, s) => dump.output(name,deb_Mark(s)))
+
+
 

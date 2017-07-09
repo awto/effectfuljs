@@ -532,15 +532,28 @@ export function calcFrameStateVars(si) {
   // const sa = Kit.toArray(recalcRefScopes(si))
   const sa = Kit.toArray(si)
   let sw = null
+  function pat(p) {
+    for(const j of p) {
+      if (j.enter && j.type === Tag.Identifier && j.value.sym)
+        sw.w.add(j.value.sym)
+    }
+  }
   for(const i of reorderVarUsages(sa)) {
     if (i.enter) {
       switch(i.type) {
       case Block.frame:
         sw = i.value.stateVars = {r:new Set(),w:new Set()}
+        if (i.value.pat)
+          pat(i.value.pat)
         continue
+      case Block.letStmt:
+        if (!i.value.eff && i.value.pat)
+          pat(i.value.pat)
+        break
       case Block.bindPat:
         assert.ok(sw)
-        sw.r.add(i.value.sym) 
+        if (!sw.w.has(i.value.sym))
+            sw.r.add(i.value.sym)
         break
       case Tag.Identifier:
         const {sym} = i.value

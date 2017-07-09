@@ -23,13 +23,13 @@ function a_5(i, j) {
 function a_6(a, i, j) {
   if (a === true) {
     if (i === j) {
-      return M.jM2R(updJ(), a_5, i, j);
+      return M.jRM2(updJ(), a_5, i, j);
     } else return a_7(i);
   } else return a_7(i);
 }
 
 function a_7(i) {
-  return M.jM1R(upd(), a_2, i);
+  return M.jRM1(upd(), a_2, i);
 }
 
 function a() {

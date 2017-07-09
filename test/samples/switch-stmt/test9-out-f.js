@@ -6,7 +6,7 @@ function a() {
 
   function _1() {
     var a;
-    const a = i += 1;
+    a = i += 1;
     return M.jMB(eff(a), _2);
   }
 

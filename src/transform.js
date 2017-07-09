@@ -25,7 +25,7 @@ import * as Ops from "./ops"
 import * as Flat from "./flat"
 import * as Closure from "./closure"
 import simplify from "./simplify"
-import {ifEsRebind,ifTopLevel} from "./options"
+import {ifEsRebind,ifTopLevel,ifJsExceptions,ifGenerators} from "./options"
 
 export const consumeScope = consume
 
@@ -58,9 +58,14 @@ const ifEff = R.curry(function ifEff(others, si) {
 export const all =
   R.pipe(
     Kit.map(R.pipe(
+      ifEsRebind(
+        Gens.prepare,
+        R.pipe(
+          Policy.unwrapNs,
+          Policy.assignBindCalls)),
+      ifJsExceptions(s => s, Policy.assignThrowEff),
       Control.assignLabels,
       Ops.inject,
-      ifEsRebind(Gens.prepare),
       Prop.propagateEff,
       Kit.toArray
     )),
@@ -95,9 +100,8 @@ export const all =
       Bind.threadDeps,
       Control.recalc,
       Flat.convert,
-      Ops.combine
-    ))),
-    Kit.map(ifEff(R.pipe(
+      Ops.combine,
+      ifEsRebind(Gens.clean),
       Block.cleanPureEff,
       Ops.interpret,
       Flat.interpret,
@@ -108,12 +112,8 @@ export const all =
       State.restoreDecls,
       simplify))))
 
-export const defaultTransform = R.pipe(
-  Kit.map(Policy.defaultPrepare),
-  all)
-export const defaultGensTransform = R.pipe(
-  Kit.map(Policy.generatorsPrepare),
-  all)
+export const defaultTransform = all
+export const defaultGensTransform = all
 
 /**
  * entry point for the whole translator chain

@@ -15,11 +15,11 @@ function a() {
   }
 
   function _3() {
-    return M.jMR(eff4(k, j), _3);
+    return M.jRM(eff4(k, j), _3);
   }
 
   function _4() {
     i = 20, j = 30, k = 40;
-    return M.jMR(eff5(), _4);
+    return M.jRM(eff5(), _4);
   }
 }

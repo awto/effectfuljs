@@ -1,28 +1,28 @@
 function a() {
   var i, j;
+  var a;
   i = 0;
   j = 0;
-  const a = i++;
-  return M.jMB(eff4(i, j), _1);
+  a = i++;
+  return M.jMB1(eff4(i, j), _1, a);
 
-  function _1(a) {
-    var b;
-    const b = j++;
-    return M.jMB(eff3(a, b), _2);
+  function _1(b, a) {
+    var c;
+    c = j++;
+    return M.jMB1(eff3(b, c), _2, a);
   }
 
-  function _2(b) {
-    return M.jMB1(eff5(i), _3, b);
+  function _2(b, a) {
+    return M.jMB2(eff5(i), _3, a, b);
   }
 
-  function _3(c, b) {
-    var a;
+  function _3(c, a, b) {
     return M.jMB(eff2(a, b, c), _4);
   }
 
   function _4(a) {
     var b;
-    const b = i++;
+    b = i++;
     return M.jMB(eff1(a, b), _5);
   }
 
