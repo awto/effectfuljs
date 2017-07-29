@@ -7,62 +7,6 @@ import * as Trace from "./kit/trace"
 import * as Block from "./block"
 import * as Prop from "./propagate"
 
-// TODO: remove (replace ipat with something else)
-function* setPatVarToArgs(s) {
-  const sl = Kit.auto(s)
-  function* walk(sw) {
-    for(const i of sw) {
-      yield i
-      if (i.enter) {
-        switch(i.type) {
-        case Block.chain:
-          if (i.enter) {
-            let pat = null
-            while(sl.curLev() != null) {
-              const cur = sl.cur()
-              cur.value.ipat = pat
-              yield* walk(sl.one())
-              pat = cur.value.pat
-            }
-          }
-        }
-      }
-    }
-  }
-  yield* walk(sl)
-}
-
-export const propagateBindVars = R.pipe(
-  function* propagateBindVars(s) {
-    const sl = Kit.auto(s)
-    function* walk() {
-      let res = null
-      for(const i of sl.sub()) {
-        yield i
-        if (i.enter) {
-          switch(i.type) {
-          case Block.chain:
-          case Block.frame:
-            res = i.value.pat = yield* walk()
-            break
-          default:
-            if (i.value.eff && i.value.pat && i.value.pat.length) {
-              res = i.value.pat
-            }
-            const ires = yield* walk()
-            if (ires && ires.length)
-              res = ires
-            break
-          }
-        }
-      }
-      return res
-    }
-    yield* walk()
-  },
-  Array.from,
-  setPatVarToArgs)
-
 export function interpretPureLet(si) {
   const s = Kit.auto(si)
   function* walk() {
@@ -70,12 +14,12 @@ export function interpretPureLet(si) {
       if (i.enter && i.type === Block.letStmt && !i.value.eff) {
         const lab = s.label()
         let pos = i.pos
-        if (i.value.pat && i.value.pat.length) {
+        if (i.value.sym) {
           assert.equal(i.pos,Tag.push)
           yield s.enter(Tag.push,Tag.ExpressionStatement)
           yield s.enter(Tag.expression,Tag.AssignmentExpression,
                         {node:{operator:"="}})
-          yield* Kit.reposOneArr(i.value.pat,Tag.left)
+          yield s.tok(Tag.left,Tag.Identifier, {sym:i.value.sym})
           pos = Tag.right
         }
         yield* Kit.reposOne(walk(),pos)
@@ -88,275 +32,15 @@ export function interpretPureLet(si) {
   return walk()
 }
 
-export const interpret = R.pipe(
-  interpretPureLet,
-  function interpretBindFrame(s) {
-    const sl = Kit.auto(s)
-    let en = false
-    function* walk() {
-      for(const i of sl.sub()) {
-        switch(i.type) {
-        case Block.letStmt:
-          if (i.enter)  {
-            if (i.value.eff) {
-              const j = sl.curLev()
-              if (j != null)
-                j.value.result = true
-              yield sl.enter(i.pos,Kit.Subst)
-              yield* walk()
-              yield* sl.leave()
-            }
-          }
-          break
-        case Block.frame:
-          if (i.enter) {
-            yield sl.enter(i.pos,Block.effBlock)
-            yield* walk()
-            yield* sl.leave()
-          }
-          break
-        default:
-          yield i
-        }
-      }
-    }
-    return Kit.completeSubst(walk())
-  },
-  function removeEmptyBlocks(si) {
-    const s = Kit.auto(si)
-    function* walk(sw) {
-      for(const i of sw) {
-        if (i.enter && i.type === Block.effBlock && s.curLev() != null) {
-          const buf = [...walk(s.one())]
-          if (s.curLev() != null) {
-            yield i
-            yield* buf
-          } else {
-            buf[0].pos = buf[buf.length-1].pos = i.pos
-            yield* buf
-            s.close(i)
-          }
-        } else
-          yield i
-      }
-    }
-    return walk(s)
-  })
-
-
-
-/**
- * calculates binds dependencies for a chain, so it can be arranged with 
- * `groupDeps` to utilize closures
- *
- *       type DepsInfo = { fwd: Map<number,Sym[]>, 
- *                         x: number, 
- *                         ref: Val, seq: DepsInfo[] }
- *   
- * for frames:
- * 
- *       type Val = Val & { deps: DepsInfo }
- *     
- * for chains:
- * 
- *       type Val = Val & { deps: DepsInfo[] }
- *     
- */
-export const calcVarDeps = R.curry(function calcVarDeps(eff,s) {
-  const sa = Kit.toArray(s)
-  const sl = Kit.auto(sa)
-  function seq() {
-    const vars = new Map()
-    const fs = []
-    for(const i of sl.sub()) {      
-      if (i.enter) {
-        const cx = i.value.fdeps = { f:i.value,
-                                     fwd:new Map(),
-                                     x:fs.length,
-                                     ref: i.value,
-                                     seq:fs
-                                   }
-        fs.push(cx)
-        switch(i.type) {
-        case Block.frame:
-          for(const j of sl.sub()) {
-            if (j.enter) {
-              switch(j.type) {
-              case Block.bindPat:
-                const ref = j.value.ref
-                const v = vars.get(ref)
-                if (v != null) {
-                  v.u.push(cx.x)
-                }
-              break
-              case Block.letStmt:
-                if (eff == null || eff === (j.value.eff || false)) {
-                  // for effectful bind only next frame receives its bound name
-                  vars.set(j.value,{x:i.value.eff?cx.x+1:cx.x,u:[]})
-                }
-                break
-              case Block.chain:
-                j.value.deps = seq()
-                break
-              }
-            }
-          }
-          break
-        case Block.chain:
-          i.value.deps = seq()
-          break
-        }
-      }
-    }
-    for(const [v,{x,u}] of vars) {
-      const cx = fs[x]
-      if (cx == null)
-        continue
-      for(const i of u) {
-        if (i === x)
-          continue
-        let w = cx.fwd.get(i)
-        if (w == null)
-          cx.fwd.set(i,w = [])
-        w.push(v.pat)
-      }
-    }
-    return fs
-  }
-  function walk() {
-    for(const i of sl.sub()) {
-      if (i.enter && i.type === Block.chain)
-        i.value.deps = seq()
-    }
-  }
-  walk()
-  return sa
-})
-
-
-/**
- * assuming chain will be interpreted further in a left associative order,
- * this pass emits additional chain to make right associative frame groups 
- * if this is specified in `DepsInfo`
- */
-export const groupDeps = R.pipe(
-  function* groupDeps(s) {
-    const sl = Kit.auto(s)
-    function* seq(deps) {
-      const stack = []
-      let num = 0
-      for(const i of sl.sub()) {
-        if (i.type === Block.frame) {
-          assert.ok(i.enter)
-          const x = num++
-          const cx = deps[x]
-          if (cx.fwd.size && x !== 0) {
-            const nxt = Math.max(...cx.fwd.keys())
-            if (nxt > cx.x) {
-              stack.unshift(nxt)
-              yield sl.enter(Tag.push, Block.chain)
-            }
-          }
-          yield sl.peel(i)
-          yield* walk()
-          yield* sl.leave()
-          while(stack.length && cx.x >= stack[0]) {
-            stack.shift()
-            yield* sl.leave()
-          }
-        } else
-          yield i
-      }
-      assert.equal(stack.length, 0)
-    }
-    function* walk() {
-      for(const i of sl.sub()) {
-        yield i
-        if (i.enter && i.type === Block.chain)
-          yield* seq(i.value.deps)
-      }
-    }
-    yield* walk()
-  }
-)
-
-export const mconst = symbol("mconst")
-export const munshiftTo = symbol("unshiftTo")
-
-export function threadDeps(si) {
-  const s = Kit.auto(si)
-  function* walk(par) {
-    for(const i of s.sub()) {
-      yield i
-      if (i.enter) {
-        switch(i.type) {
-        case Block.chain:
-          let cur = []
-          for(const j of s.sub()) {
-            yield j
-            if (j.enter) {
-              const {fdeps} = j.value
-              for(const [x,vs] of fdeps.fwd) {
-                for(const pat of vs) {
-                  cur.push({x,pat})                  
-                }
-              }
-              cur = cur.filter(({x}) => x > fdeps.x)
-              yield* walk(cur)
-            }
-          }
-          break
-        case Block.letStmt:
-          if (i.value.eff && par != null)
-            i.value.threadPat = par.map(i => i.pat)
-          break
-        }
-      }
-    }
-  }
-  return walk([])
+export function tempVarSym(top, pat, byVal = true) {
+  const sym = Kit.scope.newSym(pat)
+  top.scopeDecls.add(sym)
+  sym.track = sym.state = true
+  sym.byVal = byVal
+  sym.declScope = top
+  setSymInterpr(sym)
+  return sym
 }
-
-export function injectThreadMaps(si) {
-  const s = Kit.auto(si)
-  function* walk() {
-    for(const i of s.sub()) {
-      yield i
-      if (i.enter && i.type === Block.letStmt
-          && i.value.threadPat && i.value.threadPat.length) {
-        const pat = i.value.pat
-        i.value.pat = [...function*() {
-          const lab = s.label()
-          yield s.enter(Tag.push,Tag.ArrayPattern)
-          yield s.enter(Tag.elements,Tag.Array)
-          yield* pat
-          for(const j of i.value.threadPat)
-            yield* j
-          yield* lab()
-        }()]
-        yield s.enter(Tag.expression,Block.chain,{kind:"pseq",eff:true})
-        const lab = s.label()
-        yield s.enter(Tag.push,Block.frame,{eff:true})
-        yield s.enter(Tag.push,Block.letStmt,{pat,eff:true})
-        yield* walk()
-        yield* lab()
-        yield s.enter(Tag.push,Block.frame,{eff:false})
-        yield s.enter(Tag.push,Block.letStmt,{eff:false})
-        yield s.enter(Tag.expression,Tag.ArrayExpression)
-        yield s.enter(Tag.elements,Tag.Array)
-        yield* pat
-        for(const j of i.value.threadPat) 
-          yield* j
-        yield* walk()
-        yield* lab()
-        yield* s.leave()
-        i.value.threadPat = null        
-      }
-    }
-  }
-  return walk()
-}
-
 
 /** 
  * extracts all effectful expressions into separate statements in a block, 
@@ -396,11 +80,11 @@ export const flatten = R.pipe(
     }
     function* frameImpl(buf) {
       function* bind(i,pat,eff) {
-        pat.sym = i.value.bindPat = Kit.scope.newSym()
+        const sym = pat.sym = i.value.bindSym = tempVarSym(sl.first.value)
         const value = pat.ref = Kit.tagValue(
           Tag.push,
           Block.letStmt,
-          {pat:[sl.tok(Tag.push,Tag.Identifier,pat)],eff})
+          {sym,eff})
         yield sl.enter(Tag.push,Block.letStmt,value)
         yield sl.peel(Kit.setPos(i,Tag.expression))
         yield* frameImpl(buf)
@@ -441,7 +125,7 @@ export const flatten = R.pipe(
           if (i.value.bind || i.value.shared != null) {
             yield* inject(i)
             if (i.value.shared != null)
-              i.value.shared.sym = i.value.bindPat
+              i.value.shared.sym = i.value.bindSym
             continue
           }
           switch(i.type) {
@@ -456,7 +140,7 @@ export const flatten = R.pipe(
             assert.equal(exprs.type, Tag.Array)
             for(const j of sl.sub()) {
               if (last != null && last.length)
-                last[0].value.ref.pat.length = 0
+                last[0].value.ref.sym = null
               last = [...inject(j)]
             }
             yield* Kit.reposOne(last,i.pos)
@@ -508,9 +192,9 @@ export const flatten = R.pipe(
       const buf = [i]
       const p = Kit.result(si.findPos(pos),buf)
       if (p != null) {
-        if (p.type === Block.bindPat && p.value.ref.pat.length === 1) {
+        if (p.type === Block.bindPat) {
           Kit.skip(Kit.tillLevel(exit,si))
-          p.value.ref.pat.length = 0
+          p.value.ref.sym = null
           if (i.pos !== Tag.push)
             yield si.tok(i.pos,Tag.Null)
         return
@@ -546,6 +230,39 @@ export const flatten = R.pipe(
   Prop.recalcEff
 )
 
+/** as Sym::interp value means the var is a field of threaded context object */
+export const ctxField = {$:"xf", frameLocal:true}
+/**
+ * as Sym::interp value means the var is field of a local variable,  
+ * representing captured vars 
+ */
+export const objField = {$:"of", frameLocal:true}
+/** as Sym::interp value means the var is threaded as parameter to frames */
+export const paramThread = {$:"t", frameLocal:false}
+
+/** assigns interpr field to a symbol depending on current options */
+export function setSymInterpr(si) {
+  function calc() {
+    const opts = si.declScope.opts
+    const topLevel = opts.topLevel
+    const ctx = opts.contextState
+    const capt = si.refScopes
+    const transform = si.declScope.opts.transform
+    if (si.global || !si.track)
+      return undefined
+    if (!transform)
+      return topLevel && capt ? objField : undefined
+    if (ctx)
+      return capt ? objField : ctxField
+    if (si.byVal)
+      return paramThread
+    if (topLevel)
+      return objField
+    return undefined
+  }
+  si.interpr = calc()
+}
+
 /** removes redundant temp variables for JS effects binds */
 export function optimizePureLets(si) {
   let curBind = null
@@ -558,11 +275,6 @@ export function optimizePureLets(si) {
         if(i.enter) {
           switch(i.type) {
           case Block.letStmt:
-            i.value.sym = i.value.pat
-              && i.value.pat.length
-              && i.value.pat[0].type === Tag.Identifier
-              && i.value.pat[0].value.sym
-              || null
           case Block.bindPat:
             cur.push(i)
             break

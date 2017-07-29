@@ -34,8 +34,8 @@ describe('prepare loops pass', function() {
             eff(1);
         }`),
         print(`function () /*BS|E*/{
-          /*FOS|E*/for (var /*I|+*/i of /*I|-*/s) /*BS|E*/{
-            /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+          /*FOS|E*/for (var i of s) /*BS|E*/{
+            /*ES|e*/ /*CE|B*/ eff(1);
           }
         }`))
     })
@@ -48,9 +48,8 @@ describe('prepare loops pass', function() {
             for(var i = 0; i < 10; i = eff());
           }`),
           print(`function () /*BS|E*/{
-            /*FS|E*/for (var /*I|+*/i = 0; /*I|-*/i < 10;
-                         /*AE|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/eff()) {
-              ;
+            /*FS|E*/for (var i = 0;i < 10;
+                         /*AE|E*/i = /*CE|B*/eff()) {
             }
           }`))
       })
@@ -62,8 +61,8 @@ describe('prepare loops pass', function() {
             for(var i = eff(); i < 10; upd);
           }`),
           print(`function () /*BS|E*/{
-            /*FS|e*/for ( /*VD|E*/var /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/eff();
-              /*I|-*/i < 10; /*I|-*/upd);
+            /*FS|e*/for ( /*VD|E*/var /*VD|E*/i = /*CE|B*/eff();
+              i < 10; upd) {}
           }`))
       })
     })
@@ -77,8 +76,8 @@ describe('prepare loops pass', function() {
           }
         }`),
         print(`function () /*BS|E*/{
-          /*FOS|E*/for (var /*I|+*/i of /*I|-*/s) /*BS|E*/{
-            /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+          /*FOS|E*/for (var i of s) /*BS|E*/{
+            /*ES|e*/ /*CE|B*/eff(1);
           }
         }`))
     })
@@ -96,10 +95,9 @@ describe('normilize `for-of`', function() {
               eff(1);
           }`),
           print(`function () /*BS|E*/{
-            /*FS|E*/for (let /*I|+*/loop = M.iterator( /*I|-*/s); 
-                         /*I|+*/loop = /*CE|P*/ /*I|-*/loop();) /*BS|E*/{
-              const /*I|+*/i = /*I|-*/loop.value;
-              /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+            /*FS|E*/for (var loop = M.iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+              const i = loop.value;
+              /*ES|e*/ /*CE|B*/eff(1);
             }
           }`))
       })
@@ -112,10 +110,9 @@ describe('normilize `for-of`', function() {
           }
         }`),
         print(`function () /*BS|E*/{
-          /*FS|E*/for (let /*I|+*/loop = M.iterator( /*I|-*/s);
-                       /*I|+*/loop = /*CE|P*/ /*I|-*/loop();) /*BS|E*/{
-            const /*I|+*/i = /*I|-*/loop.value;
-            /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+          /*FS|E*/for (var loop = M.iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+            const i = loop.value;
+            /*ES|e*/ /*CE|B*/eff(1);
           }
         }`))
     })
@@ -129,16 +126,13 @@ describe('normilize `for-of`', function() {
               eff(i,j);
         }`),
         print(`function () /*BS|E*/{
-          /*FS|E*/for (let /*I|+*/loop = M.iterator( /*I|-*/s);
-                       /*I|+*/loop = /*CE|P*/ /*I|-*/loop();) /*BS|E*/{
-                         const /*I|+*/i = /*I|-*/loop.value;
-                         
-                         /*FS|E*/for (let /*I|+*/loop = M.iterator( /*I|-*/t);
-                                      /*I|+*/loop = /*CE|P*/ /*I|-*/loop();) /*BS|E*/{
-                                        const /*I|+*/j = /*I|-*/loop.value;
-                                        /*ES|e*/ /*CE|B*/ /*I|-*/eff( /*I|-*/i, /*I|-*/j);
-                                      }
-                       }
+          /*FS|E*/for (var loop = M.iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+            const i = loop.value;  
+            /*FS|E*/for (var _loop = M.iterator(t); !(_loop = /*CE|P*/_loop.step()).done;) /*BS|E*/{
+              const j = _loop.value;
+              /*ES|e*/ /*CE|B*/eff(i, j);
+            }
+          }
         }`))
     })
   })
@@ -152,7 +146,7 @@ describe('normilize `for-of`', function() {
              }
            }`),
            print(`function () /*BS|E*/{
-             /*FOS|e*/for (const /*I|+*/i of /*CE|B*/ /*I|-*/eff(1)) {
+             /*FOS|e*/for (const i of /*CE|B*/ eff(1)) {
                2 + 2;
              }
            }`))
@@ -170,11 +164,10 @@ describe('normilize `for-in`', function() {
         }
       }`),
       print(`function () /*BS|E*/{
-        /*FS|E*/for (let /*I|+*/loop = M.forInIterator( /*I|-*/s);
-                     /*I|+*/loop = /*CE|P*/ /*I|-*/loop();) /*BS|E*/{
-                       const /*I|+*/i = /*I|-*/loop.value;
-                       /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
-                     }
+        /*FS|E*/for (var loop = M.forInIterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+          const i = loop.value;
+          /*ES|e*/ /*CE|B*/eff(1);
+        }
       }`))
   })
 })
@@ -190,9 +183,9 @@ describe('normilize `do-while`', function() {
       }`),
       print(`function () /*BS|E*/{
         /*FS|E*/for (;;) /*BS|E*/{
-          /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+          /*ES|e*/ /*CE|B*/eff(1);
           
-          /*IS|E*/if ( /*UE|E*/! /*CE|B*/ /*I|-*/check(1)) /*BS|E*/{
+          /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
             /*BS|B*/break;
           }
         }
@@ -207,9 +200,9 @@ describe('normilize `do-while`', function() {
       }`),
       print(`function () /*BS|E*/{
         /*FS|E*/for (;;) /*BS|E*/{
-          /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+          /*ES|e*/ /*CE|B*/eff(1);
           
-          /*IS|E*/if ( /*UE|E*/! /*CE|B*/ /*I|-*/check(1)) /*BS|E*/{
+          /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
             /*BS|B*/break;
           }
         }
@@ -233,27 +226,27 @@ describe('normilize `do-while`', function() {
         /*FS|E*/for (;;) /*BS|E*/{
           /*FS|E*/for (;;) /*BS|E*/{
             /*FS|E*/for (;;) /*BS|E*/{
-              /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+              /*ES|e*/ /*CE|B*/eff(1);
 
               /*FS|E*/for (;;) /*BS|E*/{
-                /*ES|e*/ /*CE|B*/ /*I|-*/eff(2);
+                /*ES|e*/ /*CE|B*/eff(2);
                 
-                /*IS|E*/if ( /*UE|E*/! /*CE|B*/ /*I|-*/check(1)) /*BS|E*/{
+                /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
                   /*BS|B*/break;
                 }
               }
               
-              /*IS|E*/if ( /*UE|E*/! /*CE|B*/ /*I|-*/check(2)) /*BS|E*/{
+              /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(2)) /*BS|E*/{
                 /*BS|B*/break;
               }
             }
             
-            /*IS|E*/if ( /*UE|E*/! /*CE|B*/ /*I|-*/check(3)) /*BS|E*/{
+            /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(3)) /*BS|E*/{
               /*BS|B*/break;
             }
           }
           
-          /*IS|E*/if ( /*UE|E*/! /*CE|B*/ /*I|-*/check(4)) /*BS|E*/{
+          /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(4)) /*BS|E*/{
             /*BS|B*/break;
           }
         }
@@ -272,7 +265,7 @@ describe('normilize `for`', function() {
         }`),
         print(`function () /*BS|E*/{
           /*FS|E*/for (;;) /*BS|E*/{
-            /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+            /*ES|e*/ /*CE|B*/eff(1);
           }
         }`))
     })
@@ -286,12 +279,12 @@ describe('normilize `for`', function() {
           }
         }`),
         print(`function () /*BS|E*/{
-          /*VD|E*/let /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/init();
+          /*VD|E*/let /*VD|E*/i = /*CE|B*/init();
           
           /*FS|E*/for (;;) /*BS|E*/{
-            /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/check() === true) /*BS|E*/{
-              /*I|-*/b;
-              /*ES|e*/ /*CE|B*/ /*I|-*/upd();
+            /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
+              b;
+              /*ES|e*/ /*CE|B*/upd();
             } else /*BS|E*/{
               /*BS|B*/break;
             }
@@ -312,20 +305,20 @@ describe('normilize `for`', function() {
           }
         }`),
         print(`function () /*BS|E*/{
-          /*VD|E*/var /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/init();
+          /*VD|E*/var /*VD|E*/i = /*CE|B*/init();
           
           /*FS|E*/for (;;) /*BS|E*/{
-            /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/check() === true) /*BS|E*/{
+            /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
               $continue: /*BS|E*/{
-                /*ES|e*/ /*CE|B*/ /*I|-*/b1();
+                /*ES|e*/ /*CE|B*/b1();
                 
-                /*IS|E*/if ( /*I|-*/v) /*BS|E*/{
-                  /*ES|e*/ /*CE|B*/ /*I|-*/e();
+                /*IS|E*/if (v) /*BS|E*/{
+                  /*ES|e*/ /*CE|B*/e();
                   /*BS|B*/break $continue;
                 }
               }
               
-              /*ES|e*/ /*CE|B*/ /*I|-*/upd();
+              /*ES|e*/ /*CE|B*/upd();
             } else /*BS|E*/{
               /*BS|B*/break;
             }
@@ -342,12 +335,12 @@ describe('normilize `for`', function() {
           
         }`),
         print(`function () /*BS|E*/{
-          /*VD|E*/var /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/init();
+          /*VD|E*/var /*VD|E*/i = /*CE|B*/init();
           
           /*FS|E*/for (;;) /*BS|E*/{
-            /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/check() === true) /*BS|E*/{
-              /*ES|e*/ /*CE|B*/ /*I|-*/iter();
-              /*ES|e*/ /*CE|B*/ /*I|-*/upd();
+            /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
+              /*ES|e*/ /*CE|B*/iter();
+              /*ES|e*/ /*CE|B*/upd();
             } else /*BS|E*/{
               /*BS|B*/break;
             }
@@ -363,22 +356,22 @@ describe('normilize `for`', function() {
                 body();
           }`),
           print(`function () /*BS|E*/{
-            /*VD|E*/var /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/init();
+            /*VD|E*/var /*VD|E*/i = /*CE|B*/init();
             
             /*FS|E*/for (;;) /*BS|E*/{
-              /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/check() === true) /*BS|E*/{
-                /*VD|E*/var /*VD|E*/ /*I|+*/j = /*CE|B*/ /*I|-*/initJ();
+              /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
+                /*VD|E*/var /*VD|E*/j = /*CE|B*/initJ();
                 
                 /*FS|E*/for (;;) /*BS|E*/{
-                  /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/checkJ() === true) /*BS|E*/{
-                    /*ES|e*/ /*CE|B*/ /*I|-*/body();
-                    /*ES|e*/ /*CE|B*/ /*I|-*/updJ();
+                  /*IS|E*/if ( /*BE|E*/ /*CE|B*/checkJ() === true) /*BS|E*/{
+                    /*ES|e*/ /*CE|B*/body();
+                    /*ES|e*/ /*CE|B*/updJ();
                   } else /*BS|E*/{
                     /*BS|B*/break;
                   }
                 }
                 
-                /*ES|e*/ /*CE|B*/ /*I|-*/upd();
+                /*ES|e*/ /*CE|B*/upd();
               } else /*BS|E*/{
                 /*BS|B*/break;
               }
@@ -394,19 +387,19 @@ describe('normilize `for`', function() {
               if (a) eff(1); else continue;
           }`),
           print(`function () /*BS|E*/{
-            /*VD|E*/let /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/init();
+            /*VD|E*/let /*VD|E*/i = /*CE|B*/init();
             
             /*FS|E*/for (;;) /*BS|E*/{
-              /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/check() === true) /*BS|E*/{
+              /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
                 $continue: /*BS|E*/{
-                  /*IS|E*/if ( /*I|-*/a) /*BS|E*/{
-                    /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+                  /*IS|E*/if (a) /*BS|E*/{
+                    /*ES|e*/ /*CE|B*/eff(1);
                   } else /*BS|E*/{
                     /*BS|B*/break $continue;
                   }
                 }
                 
-                /*ES|e*/ /*CE|B*/ /*I|-*/upd();
+                /*ES|e*/ /*CE|B*/upd();
               } else /*BS|E*/{
                 /*BS|B*/break;
               }
@@ -422,31 +415,31 @@ describe('normilize `for`', function() {
                   if (i === j) continue; else continue loo;
             }`),
             print(`function () /*BS|E*/{
-              /*VD|E*/let /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/init();
+              /*VD|E*/let /*VD|E*/i = /*CE|B*/init();
               
               loo: /*FS|E*/for (;;) /*BS|E*/{
-                /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/check() === true) /*BS|E*/{
+                /*IS|E*/if ( /*BE|E*/ /*CE|B*/check() === true) /*BS|E*/{
                   loo$continue: /*BS|E*/{
-                    /*VD|E*/let /*VD|E*/ /*I|+*/j = /*CE|B*/ /*I|-*/initJ();
+                    /*VD|E*/let /*VD|E*/j = /*CE|B*/initJ();
                     
                     /*FS|E*/for (;;) /*BS|E*/{
-                      /*IS|E*/if ( /*BE|E*/ /*CE|B*/ /*I|-*/checkJ() === true) /*BS|E*/{
+                      /*IS|E*/if ( /*BE|E*/ /*CE|B*/checkJ() === true) /*BS|E*/{
                         $continue: /*BS|E*/{
-                          /*IS|E*/if ( /*I|-*/i === /*I|-*/j) /*BS|E*/{
+                          /*IS|E*/if (i === j) /*BS|E*/{
                             /*BS|B*/break $continue;
                           } else /*BS|E*/{
                             /*BS|B*/break loo$continue;
                           }
                         }
                         
-                        /*ES|e*/ /*CE|B*/ /*I|-*/updJ();
+                        /*ES|e*/ /*CE|B*/updJ();
                       } else /*BS|E*/{
                         /*BS|B*/break;
                       }
                     }
                   }
                   
-                  /*ES|e*/ /*CE|B*/ /*I|-*/upd();
+                  /*ES|e*/ /*CE|B*/upd();
                 } else /*BS|E*/{
                   /*BS|B*/break;
                 }
@@ -455,5 +448,51 @@ describe('normilize `for`', function() {
         })
       })
     })
+  })
+})
+
+
+describe('normilize `for`', function() {
+  const run = transformExpr(R.pipe(Loops.looseForOf,
+                                   Kit.scope.resolve,
+                                   consumeScope))
+  it('should convert `for-of` to loose iterators `for`', function() {
+    equal(
+      run(`function() {
+          for(const i of a)
+            eff(i);
+          for(const i of a) {
+            eff(i);         
+          }
+          for(i of a);
+          for(i.a of a)
+            eff(1);         
+          for(i of a) {
+            eff(1);         
+          }
+        }`),
+      print(`function () {
+        for (var loop = iterator(a); !(loop = loop.step()).done;) {
+          const i = loop.value;
+          eff(i);
+        }
+
+        for (var _loop = iterator(a); !(_loop = _loop.step()).done;) {
+          const i = _loop.value;
+          eff(i);
+        }
+        
+        for (var loop1 = iterator(a); !(loop1 = loop1.step()).done;) {}
+        
+        for (var loop2 = iterator(a); !(loop2 = loop2.step()).done;) {
+          i.a = loop2.value;
+          eff(1);
+        }
+        
+        for (var loop3 = iterator(a); !(loop3 = loop3.step()).done;) {
+          i = loop3.value;
+          eff(1);
+        }
+      }`))
   })
 })

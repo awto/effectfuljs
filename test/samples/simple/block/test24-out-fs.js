@@ -1,8 +1,11 @@
 function a() {
-  var i;
-  return M.jM1(eff1(i++), _1, i);
+  var i, a;
+  a = i++;
+  return M.jM(eff1(a), _1, i);
 
   function _1(i) {
-    return eff2(i++);
+    var a;
+    a = i++;
+    return eff2(a);
   }
 }

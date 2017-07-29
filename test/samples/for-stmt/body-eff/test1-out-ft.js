@@ -4,18 +4,16 @@ function _1(_v) {
 
 function _2(_v) {
   _v.i = _v.ref[_v.j];
-  return M.jM1(eff(_v.i), _3, _v);
+  return M.jM(eff(_v.i), _3, _v);
 }
 
 function _3(_v) {
   _v.j++;
-  return M.jR1(_1, _v);
+  return M.jR(_1, _v);
 }
 
 (function () {
-  var _v;
-
-  _v = {
+  var _v = {
     i: undefined,
     j: undefined,
     len: undefined,

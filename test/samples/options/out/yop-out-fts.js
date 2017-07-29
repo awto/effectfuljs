@@ -1,25 +1,26 @@
 'use strict';
 
-function addLater_1(deferred) {
+function addLater_1(deferred, a, b) {
+  var deferred;
   process.nextTick(function () {
     return deferred.resolve(a + b);
   });
   return M.pure(deferred.promise);
 }
 
-function _11(done) {
-  return M.jMB(done.async(), __2);
+function _11(done, addLater) {
+  return M.jMB(done.async(), __2, addLater);
 }
 
-function __2(done) {
-  return __3();
+function __2(done, addLater) {
+  return __3(addLater);
 }
 
 function _1(a, done) {
   try {
-    return M.jM1E(a.to.equal(3), _2, done, _3);
+    return M.jME(a.to.equal(3), _2, done, _3);
   } catch (e) {
-    return _3(e, done);
+    return _3(done);
   }
 }
 
@@ -27,166 +28,171 @@ function _2(done) {
   try {
     return M.jME(done(), M.pure, _3);
   } catch (e) {
-    return _3(e, done);
+    return _3(done);
   }
 }
 
-function _3(ex, done) {
+function _3(done) {
   var err;
   err = ex;
   return done(err);
 }
 
-function __1(a) {
+function __1(a, _v) {
+  var done;
   return a.mapply(function ($dm$b) {
+    var _v;
+
     _v.result = $dm$b;
-    return M.jMB1(expect(_v.result), _1, done);
+    return M.jMB(expect(_v.result), _1, done);
   });
 }
 
-function __3() {
+function __3(addLater) {
   return M.run(QM, function () {
-    var _v;
-
-    _v = {
+    var _v = {
       result: undefined
     };
-    return M.jMB(addLater(1, 2), __1);
+    return M.jMB(addLater(1, 2), __1, _v);
   });
 }
 
 function throwErrorLater_1(deferred) {
+  var deferred;
   process.nextTick(function () {
     return deferred.reject(new Error('promise rejected'));
   });
   return M.pure(deferred.promise);
 }
 
-function _14(_done) {
-  return M.jMB(_done.async(), _23);
+function _14(done) {
+  return M.jMB(done.async(), _23);
 }
 
-function _23(_done) {
+function _23(done) {
   return _32();
 }
 
-function _12(_done, $dm$root, err) {
+function _12(done, $dm$root, err) {
   try {
-    return M.jMB2E(expect(err.message), _21, _done, $dm$root, _4);
+    return M.jMBE(expect(err.message), _21, done, $dm$root, _4);
   } catch (e) {
-    return _4(e, _done, $dm$root);
+    return _4(done, $dm$root);
   }
 }
 
-function _21(a, _done, $dm$root) {
+function _21(a, done, $dm$root) {
   try {
-    return M.jM2E(a.to.equal('promise rejected'), _31, _done, $dm$root, _4);
+    return M.jME(a.to.equal('promise rejected'), _31, done, $dm$root, _4);
   } catch (e) {
-    return _4(e, _done, $dm$root);
+    return _4(done, $dm$root);
   }
 }
 
-function _31(_done, $dm$root) {
+function _31(done, $dm$root) {
   try {
-    return M.jM1E(_done(), _5, $dm$root, _4);
+    return M.jME(done(), _5, $dm$root, _4);
   } catch (e) {
-    return _4(e, _done, $dm$root);
+    return _4(done, $dm$root);
   }
 }
 
-function _4(ex, _done, $dm$root) {
+function _4(done, $dm$root) {
   var expectErr;
-  expectErr = ex;
-  return M.jM1(_done(expectErr), _5, $dm$root);
+  expectErr = _ex;
+  return M.jM(done(expectErr), _5, $dm$root);
 }
 
 function _5($dm$root) {
   return $dm$root.brk();
 }
 
-function _13(a) {
+function _13(a, $dm$root) {
+  var done;
   return M.jMB(a.mhandle(function (err) {
-    return _12(_done, $dm$root, err);
-  }), _22);
+    return _12(done, $dm$root, err);
+  }), _22, done);
 }
 
-function _22(a) {
+function _22(a, done) {
   return a.mapply(function () {
-    return _done(new Error('yop should have thrown reason from rejected promise'));
+    return done(new Error('yop should have thrown reason from rejected promise'));
   });
 }
 
 function _32() {
   return M.run(QM, function () {
+    var throwErrorLater;
     return M.scope(function ($dm$root) {
-      return M.jMB(throwErrorLater(), _13);
+      return M.jMB(throwErrorLater(), _13, $dm$root);
     });
   });
 }
 
 function _18() {
-  return M.jM(it('should throw reasons from rejected promises into fiber', function (_done) {
+  return M.jM(it('should throw reasons from rejected promises into fiber', function (done) {
     var throwErrorLater;
 
     throwErrorLater = function throwErrorLater() {
       return M.jMB(Q.defer(), throwErrorLater_1);
     };
 
-    if (_done.async) return _14(_done);else return _32();
+    if (done.async) return _14(done);else return _32();
   }), _26);
 }
 
-function _17(done1) {
-  return M.jMB(done1.async(), _25);
+function _17(done) {
+  return M.jMB(done.async(), _25);
 }
 
-function _25(done1) {
+function _25(done) {
   return _34();
 }
 
-function _15(a, done1) {
+function _15(a, done) {
   try {
-    return M.jM1E(a.to.equal(3), _24, done1, _33);
+    return M.jME(a.to.equal(3), _24, done, _33);
   } catch (e) {
-    return _33(e, done1);
+    return _33(done);
   }
 }
 
-function _24(done1) {
+function _24(done) {
   try {
-    return M.jME(done1(), M.pure, _33);
+    return M.jME(done(), M.pure, _33);
   } catch (e) {
-    return _33(e, done1);
+    return _33(done);
   }
 }
 
-function _33(ex, done1) {
+function _33(done) {
   var err;
-  err = ex;
-  return done1(err);
+  err = ex1;
+  return done(err);
 }
 
-function _16(a) {
+function _16(a, _v) {
+  var done;
   return a.mapply(function ($dm$b) {
-    __v.result = $dm$b;
-    return M.jMB1(expect(__v.result), _15, done1);
+    var _v;
+
+    _v.result = $dm$b;
+    return M.jMB(expect(_v.result), _15, done);
   });
 }
 
 function _34() {
   return M.run(QM, function () {
-    var __v;
-
-    __v = {
+    var _v = {
       result: undefined
     };
-    return M.jMB(1 + 2, _16);
+    return M.jMB(1 + 2, _16, _v);
   });
 }
 
 function _26() {
-  return it('should work just fine with passed a value instead of a promise', function (done1) {
-    if (done1.async) return _17(done1);else return _34();
+  return it('should work just fine with passed a value instead of a promise', function (done) {
+    if (done.async) return _17(done);else return _34();
   });
 }
 
@@ -198,9 +204,9 @@ describe('yop', function () {
     var addLater;
 
     addLater = function addLater(a, b) {
-      return M.jMB(Q.defer(), addLater_1);
+      return M.jMB(Q.defer(), addLater_1, a, b);
     };
 
-    if (done.async) return _11(done);else return __3();
+    if (done.async) return _11(done, addLater);else return __3(addLater);
   }), _18);
 });

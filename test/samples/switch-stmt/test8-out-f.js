@@ -13,30 +13,34 @@ function a() {
   function _2(a) {
     var b;
     b = i += 2;
-    return M.jMB1(check(b), _3, a);
+    return M.jMB(check(b), _3, a);
   }
 
   function _3(b, a) {
     var c;
     c = i += 4;
-    return M.jMB2(check(c), _4, a, b);
+    return M.jMB(check(c), _4, a, b);
   }
 
-  function _4(c, a, b) {
-    var d;
-    d = i += 6;
-    return M.jMB3(check(d), _5, a, b, c);
+  function _4(d, a, b) {
+    var c;
+    c = i += 6;
+    return M.jMB(check(c), _5, a, b, d);
   }
 
-  function _5(d, a, b, c) {
+  function _5(f, a, b, d) {
+    var c, e;
+
     switch (a) {
       case b:
-        return M.jM(effB(i += 3), _6);
-
-      case c:
-        return M.jM(effB(i += 5), _6);
+        c = i += 3;
+        return M.jM(effB(c), _6);
 
       case d:
+        e = i += 5;
+        return M.jM(effB(e), _6);
+
+      case f:
         {
           console.log('hi', i);
         }

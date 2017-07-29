@@ -23,8 +23,7 @@ function d_2() {
 }
 
 function a(z) {
-  var a_v;
-  a_v = {
+  var a_v = {
     z
   };
 
@@ -38,8 +37,7 @@ function a(z) {
 }
 
 function _a(z) {
-  var a_v;
-  a_v = {
+  var a_v = {
     z
   };
 
@@ -59,8 +57,7 @@ function _a(z) {
 }
 
 function c(z) {
-  var c_v;
-  c_v = {
+  var c_v = {
     z
   };
 
@@ -82,8 +79,7 @@ function c(z) {
 }
 
 function d(z) {
-  var d_v;
-  d_v = {
+  var d_v = {
     z
   };
 

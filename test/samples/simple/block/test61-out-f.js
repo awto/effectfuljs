@@ -4,12 +4,16 @@ function a() {
   return M.jM(eff1(i), _1);
 
   function _1() {
-    return M.jM(eff2(i++), _2);
+    var a;
+    a = i++;
+    return M.jM(eff2(a), _2);
   }
 
   function _2() {
+    var a;
     if (i) return _3();else {
-      return M.jM(eff3(i++), _4);
+      a = i++;
+      return M.jM(eff3(a), _4);
     }
   }
 
@@ -19,6 +23,8 @@ function a() {
   }
 
   function _4() {
-    return eff4(i++);
+    var a;
+    a = i++;
+    return eff4(a);
   }
 }

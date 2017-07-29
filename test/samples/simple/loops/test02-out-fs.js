@@ -8,7 +8,7 @@ function a() {
   }
 
   function _2(i) {
-    return M.jMB1(eff3(), _3, i);
+    return M.jMB(eff3(), _3, i);
   }
 
   function _3(j, i) {
@@ -22,15 +22,17 @@ function a() {
   }
 
   function _5(i, j) {
-    return M.jMB2(eff3(i), _6, i, j);
+    return M.jMB(eff3(i), _6, i, j);
   }
 
   function _6(k, i, j) {
-    return M.jM2(eff4(k++), _7, i, j);
+    var a;
+    a = k++;
+    return M.jM(eff4(a), _7, i, j);
   }
 
   function _7(i, j) {
     i++, j--;
-    return M.jR2(_4, i, j);
+    return M.jR(_4, i, j);
   }
 }

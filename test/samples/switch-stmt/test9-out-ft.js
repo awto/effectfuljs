@@ -1,16 +1,20 @@
 function a_1(a_v) {
   var a;
   a = a_v.i += 1;
-  return M.jMB1(eff(a), a_2, a_v);
+  return M.jMB(eff(a), a_2, a_v);
 }
 
 function a_2(a, a_v) {
+  var b, c;
+
   switch (a) {
     case 1:
-      return M.jM1(effB(a_v.i += 3), a_3, a_v);
+      b = a_v.i += 3;
+      return M.jM(effB(b), a_3, a_v);
 
     case 2:
-      return M.jM1(effB(a_v.i += 5), a_3, a_v);
+      c = a_v.i += 5;
+      return M.jM(effB(c), a_3, a_v);
 
     case 3:
       {
@@ -25,10 +29,9 @@ function a_3(a_v) {
 
 // *- with state
 function a() {
-  var a_v;
-  a_v = {
+  var a_v = {
     i: undefined
   };
   a_v.i = 0;
-  return M.jM1(eff(), a_1, a_v);
+  return M.jM(eff(), a_1, a_v);
 }

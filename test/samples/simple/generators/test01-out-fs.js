@@ -1,161 +1,107 @@
-function a() {
-  return M.jMB(M.yld(1), _1);
+function d(i) {
+  var j, a;
+  j = 0;
+  a = i++;
+  return M.jM(M.yld(a), _1, i, j);
 
-  function _1(a) {
-    return M.jM(M.yld(a), _2);
+  function _1(i, j) {
+    var a;
+    a = j++;
+    return M.jM(M.yld(a), _2, i, j);
+  }
+
+  function _2(i, j) {
+    var a, b;
+    b = i += 2;
+    a = some(b, j);
+    return M.jMB(M.yldStar(a + j), _3, i, j);
+  }
+
+  function _3(a, i, j) {
+    return M.jMB(M.yld(a), _4, i, j);
+  }
+
+  function _4(a, i, j) {
+    if (a) return _5(i);else {
+      if (j) return _6(i);else {
+        return M.yld(2);
+      }
+    }
+  }
+
+  function _5(i) {
+    var a;
+    a = i += 3;
+    return M.yldStar(a);
+  }
+
+  function _6(i) {
+    return M.pure(i);
+  }
+}
+
+function a4() {
+  var e;
+  return M.jM(M.yld(1), _1);
+
+  function _1() {
+    try {
+      return M.jME(M.yld(2), _2, _3);
+    } catch (e) {
+      return _3();
+    }
   }
 
   function _2() {
+    try {
+      return M.jME(M.yld(3), _5, _7, _3);
+    } catch (e) {
+      return _3();
+    }
+  }
+
+  function _3() {
+    e = ex;
+    return M.jM(M.yld('excep'), _4);
+  }
+
+  function _4() {
+    return M.jM(M.yld(e), _5, _7);
+  }
+
+  function _5(cb) {
+    return M.jM(M.yld('f'), _6, cb);
+  }
+
+  function _6(cb) {
+    return M.jM(M.yld('e'), cb);
+  }
+
+  function _7() {
     var a;
-    a = some();
-    return M.jMB(M.yldStar(a), _3);
+    a = a2();
+    return M.jMB(M.yldStar(a), _8);
   }
 
-  function _3(a) {
-    return M.jMB(M.yld(a), _4);
-  }
-
-  function _4(a) {
-    if (a) return _5();else return M.pure();
-  }
-
-  function _5() {
-    return M.yldStar(some);
-  }
-
-  function _6() {
-    return M.yld(2);
+  function _8(a) {
+    return M.yld(a);
   }
 }
 
-function b() {
-  return M.yldMB(1, _1);
+function a5() {
+  var i, loop;
+  loop = M.iterator(a4());
+  return _1(loop);
 
-  function _1(a) {
-    return M.yldM(a, _2);
+  function _1(loop) {
+    var a, b;
+    b = loop.step();
+    a = loop = b;
+    if (!a.done) return _2(loop);else return M.pure();
   }
 
-  function _2() {
-    var a;
-    a = some();
-    return M.yldStarMB(a, _3);
-  }
-
-  function _3(a) {
-    return M.yldMB(a, _4);
-  }
-
-  function _4(a) {
-    if (a) return _5();else return M.pure();
-  }
-
-  function _5() {
-    return M.yldStarMB(some, M.pure);
-  }
-
-  function _6() {
-    return M.yldM(2, M.pure);
-  }
-}
-
-function c() {
-  return M.scope(_1);
-
-  function _1(ctx) {
-    return M.yldMB(ctx, 1, _2);
-  }
-
-  function _2(ctx, a) {
-    return M.yldM(ctx, a, _3);
-  }
-
-  function _3(ctx) {
-    var a;
-    a = some();
-    return M.yldStarMB(ctx, a, _4);
-  }
-
-  function _4(ctx, a) {
-    return M.yldMB(ctx, a, _5);
-  }
-
-  function _5(ctx, a) {
-    if (a) return _6(ctx);else return M.pure(ctx);
-  }
-
-  function _6(ctx) {
-    return M.yldStarMB(ctx, some, M.pure);
-  }
-
-  function _7(ctx) {
-    return M.yldM(ctx, 2, M.pure);
-  }
-}
-
-function d() {
-  return M.scope(_1);
-
-  function _1(ctx) {
-    return M.yldMB(ctx, 1, _2);
-  }
-
-  function _2(ctx, a) {
-    return M.yldM(ctx, a, _3);
-  }
-
-  function _3(ctx) {
-    var a;
-    a = some();
-    return M.yldStarMB(ctx, a, _4);
-  }
-
-  function _4(ctx, a) {
-    return M.yldMB(ctx, a, _5);
-  }
-
-  function _5(ctx, a) {
-    if (a) return _6(ctx);else return M.pure(ctx);
-  }
-
-  function _6(ctx) {
-    return M.yldStarMB(ctx, some, M.pure);
-  }
-
-  function _7(ctx) {
-    return M.yldM(ctx, 2, M.pure);
-  }
-}
-
-function _d() {
-  return M.scope(_1);
-
-  function _1(ctx) {
-    return ctx.yldMB(1, _2);
-  }
-
-  function _2(ctx, a) {
-    return ctx.yldM(a, _3);
-  }
-
-  function _3(ctx) {
-    var a;
-    a = some();
-    return ctx.yldStarMB(a, _4);
-  }
-
-  function _4(ctx, a) {
-    return ctx.yldMB(a, _5);
-  }
-
-  function _5(ctx, a) {
-    if (a) return _6(ctx);else return ctx.pure();
-  }
-
-  function _6(ctx) {
-    return ctx.yldStarMB(some, ctx.pure);
-  }
-
-  function _7(ctx) {
-    return ctx.yldM(2, ctx.pure);
+  function _2(loop) {
+    i = loop.value;
+    return M.jRM(M.yld(i), _1, loop);
   }
 }

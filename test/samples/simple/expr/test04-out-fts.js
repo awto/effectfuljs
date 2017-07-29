@@ -1,5 +1,5 @@
 function e_1(a) {
-  return M.jMB1(eff(2), e_2, a);
+  return M.jMB(eff(2), e_2, a);
 }
 
 function e_2(b, a) {

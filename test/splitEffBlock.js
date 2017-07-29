@@ -23,7 +23,7 @@ const runImpl = (pass) =>
         Block.splitEffBlock,
         pass,
         Array.from,
-        Bind.propagateBindVars,
+        // Bind.propagateBindVars,
         Debug.mark,
         Kit.consume))
 
@@ -39,12 +39,12 @@ describe('split block', function() {
       }),
       print(function () /*BS|..|E*/{
         /*BS|#|E*/{
-          var /*I|+*/i = 0;
-          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(1);
+          var i = 0;
+          /*ES|S|E*/ /*CE|B*/eff(1);
         }
         /*BS|#|E*/{
-          /*I|+-*/i++;
-          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(2);
+          i++;
+          /*ES|S|E*/ /*CE|B*/eff(2);
         }
       }))
   })
@@ -56,8 +56,8 @@ describe('split block', function() {
       }),
       print(function () /*BS|..|E*/{
         /*BS|#|E*/{
-          var /*I|+*/i = 0;
-          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(1);
+          var i = 0;
+          /*ES|S|E*/ /*CE|B*/eff(1);
         }
       }))
   })
@@ -68,7 +68,7 @@ describe('split block', function() {
       }),
       print(function () /*BS|..|E*/{
         /*BS|#|E*/{
-          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(1);
+          /*ES|S|E*/ /*CE|B*/eff(1);
         }
       }))
   })
@@ -81,16 +81,16 @@ describe('split block', function() {
           i = eff(2);
         }),
         print(function () /*BS|..|E*/{
-          /*BS|#1|E*/{
-            var /*I|+*/i;
-            /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(1);
+          /*BS|#|E*/{
+            var i;
+            /*VD|S|E*/var a = /*CE|B*/ eff(1);
           }
-          /*BS|#1|E*/{
-            /*ES|S*/ /*I|+*/i = a;
-            /*VD|S|E*/var b = /*CE|B*/ /*I|-*/eff(2);
+          /*BS|#|E*/{
+            /*ES|S*/ i = a;
+            /*VD|S|E*/var b = /*CE|B*/ eff(2);
           }
           /*BS|#*/{
-            /*ES|S*/ /*I|+*/i = b;
+            /*ES|S*/ i = b;
           }
         }))
     })
@@ -102,11 +102,11 @@ describe('split block', function() {
           eff1(eff2(1));
         }),
         print(function () /*BS|..|E*/{
-          /*BS|#1|E*/{
-            /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff2(1);
+          /*BS|#|E*/{
+            /*VD|S|E*/var a = /*CE|B*/ eff2(1);
           }
           /*BS|#|E*/{
-            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff1(a);
+            /*ES|S|E*/ /*CE|B*/ eff1(a);
           }
         }))
     })
@@ -127,29 +127,29 @@ describe('split block', function() {
         }`),
         print(function () /*BS|..|E*/{
           /*BS|#|E*/{
-            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff1(1);
+            /*ES|S|E*/ /*CE|B*/ eff1(1);
           }
-          /*BS|#1|E*/{
-            /*VD|S|E*/var a = /*CE|B*/ /*I|-*/eff(2);
+          /*BS|#|E*/{
+            /*VD|S|E*/var a = /*CE|B*/ eff(2);
           }
           /*BS|#|E*/{
             /*IS|E*/if (a) /*BS|..|E*/{
               /*BS|#|E*/{
-                /*I|-*/b;
-                /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(3);
+                b;
+                /*ES|S|E*/ /*CE|B*/ eff(3);
               }
               /*BS|#|E*/{
-                /*I|-*/c;
-                /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(4);
+                c;
+                /*ES|S|E*/ /*CE|B*/ eff(4);
               }
             } else /*BS|..|E*/{
               /*BS|#|E*/{
-                /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(5);
+                /*ES|S|E*/ /*CE|B*/ eff(5);
               }
             }
           }
           /*BS|#|E*/{
-            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(6);
+            /*ES|S|E*/ /*CE|B*/ eff(6);
           }
         }))
     })
@@ -169,28 +169,28 @@ describe('split block', function() {
         }`),
         print(function () /*BS|..|E*/{
           /*BS|#|E*/{
-            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff1(1);
+            /*ES|S|E*/ /*CE|B*/eff1(1);
           }
           /*BS|#|E*/{
-            /*I|-*/a;
+            a;
             
-            /*IS|E*/if ( /*I|-*/test) /*BS|..|E*/{
+            /*IS|E*/if (test) /*BS|..|E*/{
               /*BS|#|E*/{
-                /*I|-*/b;
-                /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(3);
+                b;
+                /*ES|S|E*/ /*CE|B*/eff(3);
               }
               /*BS|#|E*/{
-                /*I|-*/c;
-          /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(4);
+                c;
+          /*ES|S|E*/ /*CE|B*/eff(4);
               }
             } else /*BS|..|E*/{
               /*BS|#|E*/{
-                /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(5);
+                /*ES|S|E*/ /*CE|B*/eff(5);
               }
             }
           }
           /*BS|#|E*/{
-            /*ES|S|E*/ /*CE|B*/ /*I|-*/eff(6);
+            /*ES|S|E*/ /*CE|B*/eff(6);
           }
         }))
     })

@@ -1,161 +1,108 @@
-function a_1(a) {
-  return M.jM(M.yld(a), a_2);
-}
-
-function a_2() {
+function d_1(i, j) {
   var a;
-  a = some();
-  return M.jMB(M.yldStar(a), a_3);
+  a = j++;
+  return M.jM(M.yld(a), d_2, i, j);
 }
 
-function a_3(a) {
-  return M.jMB(M.yld(a), a_4);
+function d_2(i, j) {
+  var a, b;
+  b = i += 2;
+  a = some(b, j);
+  return M.jMB(M.yldStar(a + j), d_3, i, j);
 }
 
-function a_4(a) {
-  if (a) return a_5();else return M.pure();
+function d_3(a, i, j) {
+  return M.jMB(M.yld(a), d_4, i, j);
 }
 
-function a_5() {
-  return M.yldStar(some);
+function d_4(a, i, j) {
+  if (a) return d_5(i);else {
+    if (j) return d_6(i);else {
+      return M.yld(2);
+    }
+  }
 }
 
-function a_6() {
-  return M.yld(2);
-}
-
-function b_1(a) {
-  return M.yldM(a, b_2);
-}
-
-function b_2() {
+function d_5(i) {
   var a;
-  a = some();
-  return M.yldStarMB(a, b_3);
+  a = i += 3;
+  return M.yldStar(a);
 }
 
-function b_3(a) {
-  return M.yldMB(a, b_4);
+function d_6(i) {
+  return M.pure(i);
 }
 
-function b_4(a) {
-  if (a) return b_5();else return M.pure();
+function a4_1() {
+  try {
+    return M.jME(M.yld(2), a4_2, a4_3);
+  } catch (e) {
+    return a4_3();
+  }
 }
 
-function b_5() {
-  return M.yldStarMB(some, M.pure);
+function a4_2() {
+  try {
+    return M.jME(M.yld(3), a4_5, a4_7, a4_3);
+  } catch (e) {
+    return a4_3();
+  }
 }
 
-function b_6() {
-  return M.yldM(2, M.pure);
+function a4_3() {
+  var e;
+  e = ex;
+  return M.jM(M.yld('excep'), a4_4, e);
 }
 
-function c_1(ctx) {
-  return M.yldMB(ctx, 1, c_2);
+function a4_4(e) {
+  return M.jM(M.yld(e), a4_5, a4_7);
 }
 
-function c_2(ctx, a) {
-  return M.yldM(ctx, a, c_3);
+function a4_5(cb) {
+  return M.jM(M.yld('f'), a4_6, cb);
 }
 
-function c_3(ctx) {
+function a4_6(cb) {
+  return M.jM(M.yld('e'), cb);
+}
+
+function a4_7() {
   var a;
-  a = some();
-  return M.yldStarMB(ctx, a, c_4);
+  a = a2();
+  return M.jMB(M.yldStar(a), a4_8);
 }
 
-function c_4(ctx, a) {
-  return M.yldMB(ctx, a, c_5);
+function a4_8(a) {
+  return M.yld(a);
 }
 
-function c_5(ctx, a) {
-  if (a) return c_6(ctx);else return M.pure(ctx);
+function a5_1(loop) {
+  var a, b;
+  b = loop.step();
+  a = loop = b;
+  if (!a.done) return a5_2(loop);else return M.pure();
 }
 
-function c_6(ctx) {
-  return M.yldStarMB(ctx, some, M.pure);
+function a5_2(loop) {
+  var i;
+  i = loop.value;
+  return M.jRM(M.yld(i), a5_1, loop);
 }
 
-function c_7(ctx) {
-  return M.yldM(ctx, 2, M.pure);
+function d(i) {
+  var j, a;
+  j = 0;
+  a = i++;
+  return M.jM(M.yld(a), d_1, i, j);
 }
 
-function d_1(ctx) {
-  return M.yldMB(ctx, 1, d_2);
+function a4() {
+  return M.jM(M.yld(1), a4_1);
 }
 
-function d_2(ctx, a) {
-  return M.yldM(ctx, a, d_3);
-}
-
-function d_3(ctx) {
-  var a;
-  a = some();
-  return M.yldStarMB(ctx, a, d_4);
-}
-
-function d_4(ctx, a) {
-  return M.yldMB(ctx, a, d_5);
-}
-
-function d_5(ctx, a) {
-  if (a) return d_6(ctx);else return M.pure(ctx);
-}
-
-function d_6(ctx) {
-  return M.yldStarMB(ctx, some, M.pure);
-}
-
-function d_7(ctx) {
-  return M.yldM(ctx, 2, M.pure);
-}
-
-function _d_1(ctx) {
-  return ctx.yldMB(1, _d_2);
-}
-
-function _d_2(ctx, a) {
-  return ctx.yldM(a, _d_3);
-}
-
-function _d_3(ctx) {
-  var a;
-  a = some();
-  return ctx.yldStarMB(a, _d_4);
-}
-
-function _d_4(ctx, a) {
-  return ctx.yldMB(a, _d_5);
-}
-
-function _d_5(ctx, a) {
-  if (a) return _d_6(ctx);else return ctx.pure();
-}
-
-function _d_6(ctx) {
-  return ctx.yldStarMB(some, ctx.pure);
-}
-
-function _d_7(ctx) {
-  return ctx.yldM(2, ctx.pure);
-}
-
-function a() {
-  return M.jMB(M.yld(1), a_1);
-}
-
-function b() {
-  return M.yldMB(1, b_1);
-}
-
-function c() {
-  return M.scope(c_1);
-}
-
-function d() {
-  return M.scope(d_1);
-}
-
-function _d() {
-  return M.scope(_d_1);
+function a5() {
+  var loop;
+  loop = M.iterator(a4());
+  return a5_1(loop);
 }

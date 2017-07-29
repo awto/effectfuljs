@@ -1,10 +1,10 @@
 function a() {
   var k;
   k = 0;
-  return M.jM1(eff1(), _1, k);
+  return M.jM(eff1(), _1, k);
 
   function _1(k) {
-    return M.jMB1(eff2(), _2, k);
+    return M.jMB(eff2(), _2, k);
   }
 
   function _2(i, k) {
@@ -19,20 +19,22 @@ function a() {
 
   function _4(k, i) {
     k++;
-    return M.jMB2(eff3(i), _5, k, i);
+    return M.jMB(eff3(i), _5, k, i);
   }
 
   function _5(j, k, i) {
-    return M.jMB3(eff4(i), _6, k, i, j);
+    return M.jMB(eff4(i), _6, k, i, j);
   }
 
   function _6(l, k, i, j) {
+    var a;
     l++;
-    return M.jM3(eff5(j++, k, l), _7, k, i, j);
+    a = j++;
+    return M.jM(eff5(a, k, l), _7, k, i, j);
   }
 
   function _7(k, i, j) {
     i++;
-    return M.jR3(_3, k, i, j);
+    return M.jR(_3, k, i, j);
   }
 }

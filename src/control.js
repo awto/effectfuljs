@@ -81,25 +81,20 @@ export const scope = symbol("scope","ctrl")
 export const jump = symbol("jump","ctrl")
 
 /** removes AST JS LabeledStatement nodes */
-export const removeLabeldStatement = R.pipe(
-  function(s) {
-    const sl = Kit.auto(s)
-    function* walk() {
-      for(const i of sl.sub()) {
-        if (i.value.eff && i.type === Tag.LabeledStatement) {
-          if (i.enter) {
-            yield sl.enter(i.pos,Kit.Subst)
-            yield* walk()
-            yield* sl.leave()
-          }
-          continue
-        }
-        yield i
+export function removeLabeldStatement(s) {
+  const sl = Kit.auto(s)
+  function* walk() {
+    for(const i of sl.sub()) {
+      if (i.value.eff && i.type === Tag.LabeledStatement) {
+        if (i.enter)
+          yield* Kit.reposOne(walk(),i.pos)
+        continue
       }
+      yield i
     }
-    return walk()
-  },
-  Kit.completeSubst)
+  }
+  return walk()
+}
 
 //TODO: to 2 steps, marking unwinde + refs to jumps separately
 /** 
@@ -141,26 +136,6 @@ export function recalc(s) {
     }
   }
   walk({})
-  return sa
-}
-
-export function recalcUnwind(s) {
-  const sa = Kit.toArray(s)
-  const stack = []
-  for(const i of sa) {
-    const v = i.value
-    if (v.jumpRef != null) {
-      for(const j of stack) {
-        if (j === v.jumpRef)
-          break
-        j.unwind = true
-      }
-    }
-    if (i.enter && !i.leave)
-      stack.unshift(v)
-    else if (i.leave)
-      stack.shift()
-  }
   return sa
 }
 

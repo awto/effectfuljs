@@ -6,7 +6,7 @@
     try {
       return M.jME(eff(2), _2, _5);
     } catch (e) {
-      return _5(e);
+      return _5();
     }
   }
 
@@ -14,7 +14,7 @@
     try {
       return M.jMBE(eff(3), _3, _5);
     } catch (e) {
-      return _5(e);
+      return _5();
     }
   }
 
@@ -24,7 +24,7 @@
         return M.jME(M.throw(new Error('error')), _4, _5);
       }
     } catch (e) {
-      return _5(e);
+      return _5();
     }
   }
 
@@ -32,11 +32,11 @@
     try {
       return M.jME(eff(4), _6, _5);
     } catch (e) {
-      return _5(e);
+      return _5();
     }
   }
 
-  function _5(ex) {
+  function _5() {
     e = ex;
     return M.jM(eff(5), _6);
   }

@@ -1,11 +1,14 @@
 function a_1(a_v) {
-  return eff2(a_v.i++);
+  var a;
+  a = a_v.i++;
+  return eff2(a);
 }
 
 function a() {
-  var a_v;
-  a_v = {
+  var a_v = {
     i: undefined
-  };
-  return M.jM1(eff1(a_v.i++), a_1, a_v);
+  },
+      a;
+  a = a_v.i++;
+  return M.jM(eff1(a), a_1, a_v);
 }

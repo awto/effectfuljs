@@ -1,18 +1,25 @@
 function a() {
-  var i;
+  var i, a;
   if (ee) return _1();else {
-    return M.jM(eff1(i++), _3);
+    a = i++;
+    return M.jM(eff1(a), _3);
   }
 
   function _1() {
-    return M.jM(eff1(i++), _2);
+    var a;
+    a = i++;
+    return M.jM(eff1(a), _2);
   }
 
   function _2() {
-    return eff2(i++);
+    var a;
+    a = i++;
+    return eff2(a);
   }
 
   function _3() {
-    return eff2(i++);
+    var a;
+    a = i++;
+    return eff2(a);
   }
 }

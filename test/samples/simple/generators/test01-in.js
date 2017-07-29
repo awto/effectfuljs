@@ -1,68 +1,32 @@
 M.profile("generators")
 
-function* a() {
-  yield (yield 1);
-  if (yield (yield* some())) {
-    return (yield* some);
-  } else {
-    return
+function* d(i) {
+  var j = 0;
+  yield (yield i++,j++);
+  if (yield (yield* some(i+=2,j) + j)) {
+    return (yield* i+=3);
+  } else if (j) {
+    return i
   }
   yield 2;
 }
 
-M.option({combineOps:true,
-          scopePrefix:false,
-          scopeContext:false})
-
-function* b() {
-  yield (yield 1);
-  if (yield (yield* some())) {
-    return (yield* some);
-  } else {
-    return
+function* a4() {
+  yield 1
+  try {
+    yield 2
+    yield 3
+  } catch(e) {
+    yield "excep"
+    yield e
+  } finally {
+    yield "f"
+    yield "e"
   }
-  yield 2;
+  yield (yield* a2())
+}  
+
+function* a5() {
+  for(const i of a4())
+    yield i
 }
-
-M.option({combineOps:false,
-          scopePrefix:true,
-          scopeContext:true})
-
-function* c() {
-  yield (yield 1);
-  if (yield (yield* some())) {
-    return (yield* some);
-  } else {
-    return
-  }
-  yield 2;
-}
-
-M.option({combineOps:true,
-          scopePrefix:true,
-          scopeContext:false})
-
-function* d() {
-  yield (yield 1);
-  if (yield (yield* some())) {
-    return (yield* some);
-  } else {
-    return
-  }
-  yield 2;
-}
-
-M.option({combineOps:true,
-          scopePrefix:true,
-          contextMethodOps:true})
-
-function* d() {
-  yield (yield 1);
-  if (yield (yield* some())) {
-    return (yield* some);
-  } else {
-    return
-  }
-  yield 2;
-}
-

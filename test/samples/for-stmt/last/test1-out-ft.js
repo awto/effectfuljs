@@ -4,20 +4,18 @@ function _1(_v) {
 
 function _2(_v) {
   _v.i = _v.ref[_v.j];
-  return M.jMB1(eff(_v.i), _3, _v);
+  return M.jMB(eff(_v.i), _3, _v);
 }
 
 function _3(a, _v) {
   if (a) return M.pure();else {
     _v.j++;
-    return M.jR1(_1, _v);
+    return M.jR(_1, _v);
   }
 }
 
 (function () {
-  var _v;
-
-  _v = {
+  var _v = {
     i: undefined,
     j: undefined,
     len: undefined,

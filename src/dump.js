@@ -24,20 +24,6 @@ export function* markNodeType(s) {
   }
 }
 
-export function* markBindEff(s) {
-  for(const i of s) {
-    if (i.enter) {
-      if (i.value.bind)
-        withComment(i,"B","color:red;font-style:italic;")
-      else if (i.value.eff)
-        withComment(i,"E","color:red;font-style:italic;")
-      else if (i.value.shallowEff)
-        withComment(i,"e","color:red;font-style:italic;")
-    }
-    yield i
-  }
-}
-
 export const color = isNode
   ? s => s
   : function* color(s) {
@@ -126,14 +112,6 @@ export function toStr(s) {
   const fin = dumpFin(s)
   consume(Kit.finalize(fin))
   return generate(fin[0].value.node).code
-}
-
-export function withComment(i, txt, style) {
-  assert.ok(i.enter)
-  if (i.value.comments == null)
-    i.value.comments = []
-  i.value.comments.push({txt,style})
-  return i
 }
 
 export function copyComment(f,t) {

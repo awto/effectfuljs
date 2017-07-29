@@ -1,6 +1,6 @@
 function a_1(a, a_v) {
   a_v.i = a;
-  return M.jM1(eff(a_v.i), a_2, a_v);
+  return M.jM(eff(a_v.i), a_2, a_v);
 }
 
 function a_2(a_v) {
@@ -8,9 +8,8 @@ function a_2(a_v) {
 }
 
 function a() {
-  var a_v;
-  a_v = {
+  var a_v = {
     i: undefined
   };
-  return M.jMB1(read1(), a_1, a_v);
+  return M.jMB(read1(), a_1, a_v);
 }

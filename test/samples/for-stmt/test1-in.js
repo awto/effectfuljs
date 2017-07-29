@@ -7,27 +7,35 @@
   }
 });
 (function() {
-  console.log("bi");
+  eff("bi");
   for(var i = 0; i < 3; i++) {
-    console.log("bi:",i);
+    eff("bi:",i);
   }
-  console.log("ai");
+  eff("ai");
 });
 (function() {
-  console.log("bi");
+  eff("bi");
+  for(let i = 0; i < 3; i++) {
+    eff("bi:",i);
+  }
+  eff("ai");
+});
+(function() {
+  eff("bi");
   lab: for(var i = 0; i < 3; i++) {
-    console.log("bj:"+i);
+    eff("bj:"+i);
     for(var j = 0; j < 40; j+=10) {
       if (j === 10)
         continue lab;
         if (j === 30)
           break lab;
-        console.log(i + j);
+        eff(i + j);
     }
-    console.log("aj:"+i);
+    eff("aj:"+i);
   }
-  console.log("ai");
+  eff("ai");
 });
+
 function a() {
   eff('b');
   for(var i = 0; i < 3; i++) {
@@ -87,4 +95,33 @@ function f() {
     result = eff(i);
   }
   eff(result);
+}
+
+function c1() {
+  let result = [];
+  for(let i = 0; i < 10;) {
+    result[i] = function cc() {
+      eff(result += i++)
+    }
+  }
+  eff(result)
+}
+
+function c2() {
+  let result = [];
+  for(let i = 0; i < 10;) {
+    result[i] = eff(function cc() {
+      eff(result += i++)
+    })
+  }
+  eff(result)
+}
+function c2() {
+  let result = [];
+  for(let i = 0; i < 10;) {
+    result[i] = eff(function cc(j) {
+      eff(result += i+= j)
+    }(i++))
+  }
+  eff(result)
 }

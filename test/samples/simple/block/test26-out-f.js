@@ -1,6 +1,5 @@
 function a() {
-  var i;
-  var a;
+  var i, a;
   a = i++;
   return M.jMB(eff1(a), _1);
 

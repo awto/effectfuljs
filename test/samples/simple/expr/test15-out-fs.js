@@ -6,7 +6,7 @@ function a() {
   }
 
   function _2(a) {
-    return M.jMB1(effc(3), _3, a);
+    return M.jMB(effc(3), _3, a);
   }
 
   function _3(b, a) {

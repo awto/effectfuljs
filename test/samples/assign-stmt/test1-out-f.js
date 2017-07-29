@@ -164,7 +164,7 @@ function d() {
   return M.jMB(eff1('a'), _1);
 
   function _1(a) {
-    return M.jMB1(eff(2), _2, a);
+    return M.jMB(eff(2), _2, a);
   }
 
   function _2(b, a) {
@@ -173,7 +173,7 @@ function d() {
   }
 
   function _3(a) {
-    return M.jMB1(eff(3), _4, a);
+    return M.jMB(eff(3), _4, a);
   }
 
   function _4(b, a) {
@@ -215,24 +215,24 @@ function e2() {
 
   function _2(a) {
     cc = a;
-    return M.jM(eff(2, cc), _3);
+    return M.jM(eff(3, cc), _3);
   }
 
   function _3() {
-    return M.jMB(eff(3, _cc), _4);
+    return M.jMB(eff(4, _cc), _4);
   }
 
   function _4(a) {
     _cc = a;
-    return M.jMB(eff(4, _cc), _5);
+    return M.jMB(eff(5, _cc), _5);
   }
 
   function _5(a) {
     _cc = a;
-    return M.jM(eff(5, _cc), _6);
+    return M.jM(eff(6, _cc), _6);
   }
 
   function _6() {
-    return eff(6, cc);
+    return eff(7, cc);
   }
 }

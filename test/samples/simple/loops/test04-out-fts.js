@@ -3,7 +3,7 @@ function a_1() {
 }
 
 function a_2(i) {
-  return a_3(i);
+  return a_3();
 }
 
 function a_3(i) {
@@ -14,16 +14,18 @@ function a_3(i) {
 
 function a_4(i) {
   var j;
-  return M.jM2(eff3(i, j), a_5, j, i);
+  return M.jM(eff3(i, j), a_5, j, i);
 }
 
 function a_5(j, i) {
-  return M.jM1(eff4(j++), a_6, i);
+  var a;
+  a = j++;
+  return M.jM(eff4(a), a_6, i);
 }
 
 function a_6(i) {
   i++;
-  return M.jR1(a_3, i);
+  return M.jR(a_3, i);
 }
 
 function a() {

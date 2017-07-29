@@ -4,7 +4,7 @@ function a() {
   try {
     console.log('inner');
   } catch (e) {
-    console.log('exception', e);
+    console.log('exception', a_v.e);
   }
 
   console.log('out');
@@ -16,7 +16,7 @@ function b() {
   try {
     console.log('inner');
   } catch (e) {
-    console.log('exception', e);
+    console.log('exception', b_v.e);
   } finally {
     console.log('fin');
   }

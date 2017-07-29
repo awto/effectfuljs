@@ -8,27 +8,23 @@ function a_2() {
 
 function b_1() {
   try {
-    return M.jME(eff('in body'), b_2, b_3);
+    return M.jME(eff('in body'), b_3, b_4, b_2);
   } catch (e) {
-    return b_3(e);
+    return b_2();
   }
 }
 
 function b_2() {
-  return b_4(b_5);
-}
-
-function b_3(ex) {
   var e;
   e = ex;
-  return M.jM1(eff('in `catch`', e), b_4, b_5);
+  return M.jM(eff('in `catch`', e), b_3, b_4);
 }
 
-function b_4(cb) {
+function b_3(cb) {
   return M.jM(eff('in `finally`'), cb);
 }
 
-function b_5() {
+function b_4() {
   return eff('after `finally`');
 }
 
@@ -52,100 +48,87 @@ function d_2() {
 function e_1() {
   try {
     console.log('in body');
-    return M.jME(eff('in body'), e_2, e_3);
+    return M.jME(eff('in body'), e_4, e_6, e_2);
   } catch (e) {
-    return e_3(e);
+    return e_2();
   }
 }
 
 function e_2() {
-  return e_5(e_7);
-}
-
-function e_3(ex) {
   var e;
-  e = ex;
+  e = _ex;
   console.log('catch', e);
-  return M.jM1(eff('catch', e), e_4, e);
+  return M.jM(eff('catch', e), e_3, e);
 }
 
-function e_4(e) {
+function e_3(e) {
   console.log('catch', e);
-  return e_5(e_7);
+  return e_4(e_6);
+}
+
+function e_4(cb) {
+  console.log('in finally');
+  return M.jM(eff('in `finally`'), e_5, cb);
 }
 
 function e_5(cb) {
-  console.log('in finally');
-  return M.jM1(eff('in `finally`'), e_6, cb);
-}
-
-function e_6(cb) {
   console.log('in finally 2');
   return cb();
 }
 
-function e_7() {
+function e_6() {
   console.log('after `finally`');
   return eff('after `finally`');
 }
 
 function f_1() {
   try {
-    return M.jME(eff('in body'), f_2, f_3);
+    return M.jME(eff('in body'), f_3, f_4, f_2);
   } catch (e) {
-    return f_3(e);
+    return f_2();
   }
 }
 
 function f_2() {
-  return f_4(f_5);
-}
-
-function f_3(ex) {
   var e;
-  e = ex;
-  return M.jM1(eff('in `catch`'), f_4, f_5);
+  e = ex1;
+  return M.jM(eff('in `catch`'), f_3, f_4);
 }
 
-function f_4(cb) {
+function f_3(cb) {
   console.log('in `finally`');
   return cb();
 }
 
-function f_5() {
+function f_4() {
   return eff('after `finally`');
 }
 
 function g_1() {
   try {
-    return M.jME(eff('in body'), g_2, g_3);
+    return M.jME(eff('in body'), g_3, g_4, g_2);
   } catch (e) {
-    return g_3(e);
+    return g_2();
   }
 }
 
 function g_2() {
-  return g_4(g_5);
-}
-
-function g_3(ex) {
   var e;
-  e = ex;
   console.log('in `catch`');
-  return g_4(g_5);
+  return g_3(g_4);
 }
 
-function g_4(cb) {
+function g_3(cb) {
   console.log('in `finally`');
   return cb();
 }
 
-function g_5() {
+function g_4() {
   return eff('after `finally`');
 }
 
 function a() {
-  return M.jM1(eff('in body'), a_1, a_2);
+  return M.jM(eff('in body'), a_1, a_2);
 }
 
 function b() {
@@ -153,7 +136,7 @@ function b() {
 }
 
 function c() {
-  return M.jM1(eff('in body'), c_1, c_2);
+  return M.jM(eff('in body'), c_1, c_2);
 }
 
 function d() {

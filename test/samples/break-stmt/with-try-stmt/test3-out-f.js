@@ -6,11 +6,11 @@
     try {
       return M.jME(eff(2), _3, _2);
     } catch (e) {
-      return _2(e);
+      return _2();
     }
   }
 
-  function _2(ex) {
+  function _2() {
     e = ex;
     return M.jM(eff(3), _3);
   }

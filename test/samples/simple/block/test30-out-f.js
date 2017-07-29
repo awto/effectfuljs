@@ -1,14 +1,14 @@
 function a() {
-  var i, j;
+  var i, j, b;
 
-  function b(i) {
+  b = function b(i) {
     return M.jM(eff1(i, j), _1);
 
     function _1() {
       i++, j++;
       return eff2(i, j);
     }
-  }
+  };
 
   i = 0;
   j = 0;

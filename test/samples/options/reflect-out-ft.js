@@ -39,21 +39,26 @@ function a() {
 }
 
 function b() {
-  M.reify(function () {
-    var _v;
-
-    _v = {
-      result: undefined,
-      err: undefined
-    };
-    return M.jMB1(addLater(1, 2), __1, _v);
-  }).done();
+  var b_v = {
+    addLater: undefined
+  };
 
   function addLater(a, b) {
-    var deferred = Q.defer();
+    addLater_v.deferred = Q.defer();
     process.nextTick(function () {
-      deferred.resolve(a + b);
+      var _addLater_v = addLater_v;
+
+      _addLater_v.deferred.resolve(_addLater_v.a + _addLater_v.b);
     });
-    return deferred.promise;
+    return addLater_v.deferred.promise;
   }
+
+  M.reify(function () {
+    var _v = {
+      result: undefined,
+      err: undefined
+    },
+        b_v;
+    return M.jMB(b_v.addLater(1, 2), __1, _v);
+  }).done();
 }

@@ -24,7 +24,7 @@ function bS(){
   eff(b2);
 }
 
-function b(){
+function b() {
   var b1 = eff(1), b2 = eff(2);
   eff(b1);
   eff(b2);
@@ -56,22 +56,19 @@ function d() {
   eff("c").some++;
   some['d']--;
 }
-
 function e1() {
   var cc = eff(1,cc);
   cc = eff(2,cc);
   eff(2,cc)
 }
-
 function e2() {
   var cc = eff(1,cc);
   cc = eff(2,cc);
-  eff(2,cc)
+  eff(3,cc)
   {
-    const cc = eff(3,cc);
-    cc = eff(4,cc)
-    eff(5, cc)
+    const cc = eff(4,cc);
+    cc = eff(5,cc)
+    eff(6,cc)
   }
-  eff(6,cc)
+  eff(7,cc)
 }
-

@@ -22,7 +22,9 @@ function a() {
   }
 
   function _5() {
-    return M.jM(eff4(j++), _6);
+    var a;
+    a = j++;
+    return M.jM(eff4(a), _6);
   }
 
   function _6() {

@@ -1,4 +1,5 @@
 function a() {
-  var i;
-  return eff1(i++);
+  var i, a;
+  a = i++;
+  return eff1(a);
 }

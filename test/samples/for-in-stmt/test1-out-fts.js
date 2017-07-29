@@ -1,49 +1,61 @@
-function a_1(a) {
-  var loop;
-  loop = M.forInIterator(a);
+function a_1(b) {
+  var loop, a;
+  a = M.forInIterator(b);
+  loop = a;
   return a_2(loop);
 }
 
 function a_2(loop) {
-  if (loop = loop()) return a_3(loop);else return M.pure();
+  var a, b;
+  b = loop.step();
+  a = loop = b;
+  if (!a.done) return a_3(loop);else return M.pure();
 }
 
 function a_3(loop) {
   var i;
   i = loop.value;
-  return M.jRM1(eff(i), a_2, loop);
+  return M.jRM(eff(i), a_2, loop);
 }
 
-function b_1(a) {
-  var loop;
-  loop = M.forInIterator(a);
+function b_1(b) {
+  var loop, a;
+  a = M.forInIterator(b);
+  loop = a;
   return b_2(loop);
 }
 
 function b_2(loop) {
-  if (loop = loop()) return b_3(loop);else return M.pure();
+  var a, b;
+  b = loop.step();
+  a = loop = b;
+  if (!a.done) return b_3(loop);else return M.pure();
 }
 
 function b_3(loop) {
   var i;
   i = loop.value;
-  return M.jRM1(eff(i), b_2, loop);
+  return M.jRM(eff(i), b_2, loop);
 }
 
-function c_1(a) {
-  var loop;
-  loop = M.forInIterator(a);
+function c_1(b) {
+  var loop, a;
+  a = M.forInIterator(b);
+  loop = a;
   return c_2(loop);
 }
 
 function c_2(loop) {
-  if (loop = loop()) return c_3(loop);else return M.pure();
+  var a, b;
+  b = loop.step();
+  a = loop = b;
+  if (!a.done) return c_3(loop);else return M.pure();
 }
 
 function c_3(loop) {
   var i;
   i = loop.value;
-  return M.jRM1(eff(i), c_2, loop);
+  return M.jRM(eff(i), c_2, loop);
 }
 
 function d_1(a) {
@@ -57,43 +69,49 @@ function d_1(a) {
 }
 
 function e_1(loop) {
-  if (loop = loop()) return e_2(loop);else return M.pure();
+  var a, b;
+  b = loop.step();
+  a = loop = b;
+  if (!a.done) return e_2(loop);else return M.pure();
 }
 
 function e_2(loop) {
   var i;
   i = loop.value;
-  return M.jRM1(eff(i), e_1, loop);
+  return M.jRM(eff(i), e_1, loop);
 }
 
 function g_1() {
   return M.jMB(eff(2), g_2);
 }
 
-function g_2(a) {
-  var loop;
-  loop = M.forInIterator(a);
+function g_2(b) {
+  var loop, a;
+  a = M.forInIterator(b);
+  loop = a;
   return g_3(loop);
 }
 
 function g_3(loop) {
-  var i;
+  var i, a, b;
+  b = loop.step();
+  a = loop = b;
 
-  if (loop = loop()) {
+  if (!a.done) {
     i = loop.value;
-    return M.jMB2(eff(i), g_4, i, loop);
+    return M.jMB(eff(i), g_4, i, loop);
   } else return g_6();
 }
 
 function g_4(a, i, loop) {
   if (a) return g_3(loop);else {
-    return M.jMB1(effB(i), g_5, loop);
+    return M.jMB(effB(i), g_5, loop);
   }
 }
 
 function g_5(a, loop) {
   if (a) return g_6();else {
-    return M.jRM1(eff('c'), g_3, loop);
+    return M.jRM(eff('c'), g_3, loop);
   }
 }
 
@@ -108,66 +126,71 @@ function h_1() {
 }
 
 function h_2(loop) {
-  var j;
+  var j, a, b;
+  b = loop.step();
+  a = loop = b;
 
-  if (loop = loop()) {
+  if (!a.done) {
     j = loop.value;
     console.log('j');
-    return M.jM2(effA(j), h_3, j, loop);
+    return M.jM(effA(j), h_3, j, loop);
   } else return h_12();
 }
 
 function h_3(j, loop) {
-  return M.jMB2(eff(j), h_4, j, loop);
+  return M.jMB(eff(j), h_4, j, loop);
 }
 
-function h_4(a, j, loop) {
-  var _loop;
+function h_4(b, j, loop) {
+  var _loop, a;
 
-  _loop = M.forInIterator(a);
+  a = M.forInIterator(b);
+  _loop = a;
   return h_5(j, loop, _loop);
 }
 
 function h_5(j, loop, _loop) {
-  var i;
+  var i, a, b;
+  b = _loop.step();
+  a = _loop = b;
 
-  if (_loop = _loop()) {
+  if (!a.done) {
     i = _loop.value;
     console.log('b');
-    return M.jM4(eff('b'), h_6, j, i, loop, _loop);
+    return M.jM(eff('b'), h_6, j, i, loop, _loop);
   } else return h_11(j, loop);
 }
 
 function h_6(j, i, loop, _loop) {
-  return M.jMB4(eff(i + j), h_7, j, i, loop, _loop);
+  return M.jMB(eff(i + j), h_7, j, i, loop, _loop);
 }
 
 function h_7(a, j, i, loop, _loop) {
   if (a) return h_2(loop);else {
-    return M.jMB4(effB(i + j), h_8, j, i, loop, _loop);
+    return M.jMB(effB(i + j), h_8, j, i, loop, _loop);
   }
 }
 
 function h_8(a, j, i, loop, _loop) {
   if (a) return h_12();else {
-    return M.jMB4(eff(i), h_9, j, i, loop, _loop);
+    return M.jMB(eff(i), h_9, j, i, loop, _loop);
   }
 }
 
 function h_9(a, j, i, loop, _loop) {
   if (a) return h_5(j, loop, _loop);else {
-    return M.jMB3(effB(i), h_10, j, loop, _loop);
+    return M.jMB(effB(i), h_10, j, loop, _loop);
   }
 }
 
 function h_10(a, j, loop, _loop) {
   if (a) return h_11(j, loop);else {
-    return M.jRM3(eff('c'), h_5, j, loop, _loop);
+    return M.jRM(eff('c'), h_5, j, loop, _loop);
   }
 }
 
 function h_11(j, loop) {
-  return M.jRM1(effB(j), h_2, loop);
+  return M.jRM(effB(j), h_2, loop);
 }
 
 function h_12() {
@@ -197,7 +220,9 @@ function e() {
 }
 
 function f() {
-  for (var i in obj) {
+  var i;
+
+  for (i in obj) {
     console.log(i);
   }
 }

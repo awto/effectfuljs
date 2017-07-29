@@ -5,7 +5,7 @@ function a() {
     var i;
     i = 0;
     i++;
-    return M.jM1(eff1(i), _2, i);
+    return M.jM(eff1(i), _2, i);
   }
 
   function _2(i) {

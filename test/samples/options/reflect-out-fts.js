@@ -39,15 +39,16 @@ function a() {
 }
 
 function b() {
-  M.reify(function () {
-    return M.jMB(addLater(1, 2), __1);
-  }).done();
-
   function addLater(a, b) {
-    var deferred = Q.defer();
+    var deferred;
+    deferred = Q.defer();
     process.nextTick(function () {
       deferred.resolve(a + b);
     });
     return deferred.promise;
   }
+
+  M.reify(function () {
+    return M.jMB(addLater(1, 2), __1);
+  }).done();
 }

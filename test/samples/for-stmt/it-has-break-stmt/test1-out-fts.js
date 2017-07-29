@@ -5,13 +5,13 @@ function _1(j, len, ref) {
 function _2(j, len, ref) {
   var i;
   i = ref[j];
-  return M.jMB3(eff(i), _3, j, len, ref);
+  return M.jMB(eff(i), _3, j, len, ref);
 }
 
 function _3(a, j, len, ref) {
   if (a) return _4();else {
     j++;
-    return M.jR3(_1, j, len, ref);
+    return M.jR(_1, j, len, ref);
   }
 }
 

@@ -6,5 +6,5 @@ function a_1(i) {
 function a() {
   var i;
   i = 0;
-  return M.jM1(eff(1), a_1, i);
+  return M.jM(eff(1), a_1, i);
 }

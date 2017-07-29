@@ -1,7 +1,7 @@
 function a() {
-  var i, k;
+  var i, k, b;
 
-  function b() {
+  b = function b() {
     var j;
     j = i;
     return M.jM(eff(2, j), _1);
@@ -9,7 +9,7 @@ function a() {
     function _1() {
       return eff(3, i);
     }
-  }
+  };
 
   i = 0;
   k = 0;

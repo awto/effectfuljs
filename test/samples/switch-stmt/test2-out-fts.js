@@ -1,9 +1,9 @@
 function a_1(a) {
-  return M.jMB1(check(1), a_2, a);
+  return M.jMB(check(1), a_2, a);
 }
 
 function a_2(b, a) {
-  return M.jMB2(check(2), a_3, a, b);
+  return M.jMB(check(2), a_3, a, b);
 }
 
 function a_3(c, a, b) {

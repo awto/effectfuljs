@@ -1,33 +1,36 @@
-function b_1(j, i, k, z) {
-  i++, j++, k++, z++;
-  return M.jM4(eff3(i, j, k, z), b_2, j, i, k, z);
+function b_1(i, k, z, a_v) {
+  i++, a_v.j++, k++, z++;
+  return M.jM(eff3(i, a_v.j, k, z), b_2, i, k, z, a_v);
 }
 
-function b_2(j, i, k, z) {
-  return eff4(i, j, k, z);
+function b_2(i, k, z, a_v) {
+  return eff4(i, a_v.j, k, z);
 }
 
-function a_1(i, j) {
-  i++, j++;
-  return M.jM2(function b(j, i, k) {
-    var z;
+function a_1(i, a_v) {
+  i++, a_v.j++;
+  return M.jM(function b(i, k) {
+    var z, a_v;
     z = 0;
-    return M.jM4(eff2(i, j, k, z), b_1, j, i, k, z);
-  }(j, i, j), a_2, i, j);
+    return M.jM(eff2(i, a_v.j, k, z), b_1, i, k, z, a_v);
+  }(i, a_v.j), a_2, i, a_v);
 }
 
-function a_2(i, j) {
-  i++, j++;
-  return M.jM2(eff5(i, j), a_3, i, j);
+function a_2(i, a_v) {
+  i++, a_v.j++;
+  return M.jM(eff5(i, a_v.j), a_3, i, a_v);
 }
 
-function a_3(i, j) {
-  return eff6(i, j);
+function a_3(i, a_v) {
+  return eff6(i, a_v.j);
 }
 
 function a() {
-  var i, j;
+  var i,
+      a_v = {
+    j: undefined
+  };
   i = 0;
-  j = 0;
-  return M.jM2(eff1(i, j), a_1, i, j);
+  a_v.j = 0;
+  return M.jM(eff1(i, a_v.j), a_1, i, a_v);
 }

@@ -23,8 +23,10 @@ function a() {
   }
 
   function _5(a) {
+    var b;
     j = a;
-    return M.jM(eff4(j++), _6);
+    b = j++;
+    return M.jM(eff4(b), _6);
   }
 
   function _6() {

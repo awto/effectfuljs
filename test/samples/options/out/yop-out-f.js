@@ -5,7 +5,9 @@ Q = require('Q');
 QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
   return M.jM(it('should yield fiber until promise is resolved', function (done) {
-    function addLater(a, b) {
+    var addLater;
+
+    addLater = function addLater(a, b) {
       var deferred;
       return M.jMB(Q.defer(), _1);
 
@@ -16,7 +18,7 @@ describe('yop', function () {
         });
         return M.pure(deferred.promise);
       }
-    }
+    };
 
     if (done.async) return _1();else return _3();
 
@@ -44,7 +46,7 @@ describe('yop', function () {
               try {
                 return M.jME(a.to.equal(3), _2, _3);
               } catch (e) {
-                return _3(e);
+                return _3();
               }
             }
 
@@ -52,11 +54,11 @@ describe('yop', function () {
               try {
                 return M.jME(done(), M.pure, _3);
               } catch (e) {
-                return _3(e);
+                return _3();
               }
             }
 
-            function _3(ex) {
+            function _3() {
               err = ex;
               return done(err);
             }
@@ -68,7 +70,9 @@ describe('yop', function () {
 
   function _1() {
     return M.jM(it('should throw reasons from rejected promises into fiber', function (done) {
-      function throwErrorLater() {
+      var throwErrorLater;
+
+      throwErrorLater = function throwErrorLater() {
         var deferred;
         return M.jMB(Q.defer(), _1);
 
@@ -79,7 +83,7 @@ describe('yop', function () {
           });
           return M.pure(deferred.promise);
         }
-      }
+      };
 
       if (done.async) return _1();else return _3();
 
@@ -106,7 +110,7 @@ describe('yop', function () {
                   try {
                     return M.jMBE(expect(err.message), _2, _4);
                   } catch (e) {
-                    return _4(e);
+                    return _4();
                   }
                 }
 
@@ -114,7 +118,7 @@ describe('yop', function () {
                   try {
                     return M.jME(a.to.equal('promise rejected'), _3, _4);
                   } catch (e) {
-                    return _4(e);
+                    return _4();
                   }
                 }
 
@@ -122,12 +126,12 @@ describe('yop', function () {
                   try {
                     return M.jME(done(), _5, _4);
                   } catch (e) {
-                    return _4(e);
+                    return _4();
                   }
                 }
 
-                function _4(ex) {
-                  expectErr = ex;
+                function _4() {
+                  expectErr = _ex;
                   return M.jM(done(expectErr), _5);
                 }
 
@@ -176,7 +180,7 @@ describe('yop', function () {
                 try {
                   return M.jME(a.to.equal(3), _2, _3);
                 } catch (e) {
-                  return _3(e);
+                  return _3();
                 }
               }
 
@@ -184,12 +188,12 @@ describe('yop', function () {
                 try {
                   return M.jME(done(), M.pure, _3);
                 } catch (e) {
-                  return _3(e);
+                  return _3();
                 }
               }
 
-              function _3(ex) {
-                err = ex;
+              function _3() {
+                err = ex1;
                 return done(err);
               }
             });

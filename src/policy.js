@@ -559,9 +559,9 @@ export function* assignBindCalls(s) {
 
 /** object merging algorithm for options merge */ 
 function merge(a,b) {
-  if (!a)
+  if (a === undefined)
     return b
-  if (!b)
+  if (b === undefined)
     return a
   if (Array.isArray(a))
     return a.concat(b)
@@ -729,4 +729,14 @@ export const injectFuncOpts = (opts, withSelf = false) => {
   }
 }
 
+export const stage = R.curry(function(name, si) {
+  const [h,s] = Kit.la(Kit.stage(name,si))
+  const stages = h.value.opts.stages
+  if (stages) {
+    const hook = stages[name]
+    if (hook != null)
+      return hook(s)
+  }
+  return s
+})
 

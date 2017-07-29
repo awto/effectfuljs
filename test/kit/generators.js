@@ -65,9 +65,6 @@ export function* setOutpOpts(s) {
   }
 }
 
-// todo couchdb like propagation of bdd descrs, opts, etc
-// reorder is simple after...
-
 /** converts skip/qskip/noskip into opts object */
 export function* parseOptsAlieas(s) {
   for(const i of s) {

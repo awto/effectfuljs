@@ -11,12 +11,16 @@ function a() {
   }
 
   function _2(a) {
+    var b, c;
+
     switch (a) {
       case 1:
-        return M.jM(effB(i += 3), _3);
+        b = i += 3;
+        return M.jM(effB(b), _3);
 
       case 2:
-        return M.jM(effB(i += 5), _3);
+        c = i += 5;
+        return M.jM(effB(c), _3);
 
       case 3:
         {

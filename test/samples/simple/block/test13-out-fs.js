@@ -7,11 +7,11 @@ function a() {
   }
 
   function _1(i) {
-    return M.jM1(eff1(i), _2, i);
+    return M.jM(eff1(i), _2, i);
   }
 
   function _2(i) {
-    return M.jM1(eff2(i), _3, i);
+    return M.jM(eff2(i), _3, i);
   }
 
   function _3(i) {

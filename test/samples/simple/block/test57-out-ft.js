@@ -3,8 +3,7 @@ function a_1(a) {
 }
 
 function a() {
-  var a_v;
-  a_v = {
+  var a_v = {
     i: undefined
   };
   a_v.i = 0;

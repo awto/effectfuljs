@@ -9,7 +9,7 @@
   }
 
   function _2(i, ref) {
-    return M.jM2(eff(i), _3, i, ref);
+    return M.jM(eff(i), _3, i, ref);
   }
 
   function _3(i, ref) {
@@ -24,33 +24,33 @@
 
   function _5(i, j, len, ref) {
     d = ref[j];
-    return M.jMB4(eff(d), _6, i, j, len, ref);
+    return M.jMB(eff(d), _6, i, j, len, ref);
   }
 
   function _6(a, i, j, len, ref) {
     if (a) return _8(i, ref);else {
-      return M.jMB4(eff(2), _7, i, j, len, ref);
+      return M.jMB(eff(2), _7, i, j, len, ref);
     }
   }
 
   function _7(a, i, j, len, ref) {
     if (a) return _11();else {
       j++;
-      return M.jR4(_4, i, j, len, ref);
+      return M.jR(_4, i, j, len, ref);
     }
   }
 
   function _8(i, ref) {
-    return M.jM2(eff(3), _9, i, ref);
+    return M.jM(eff(3), _9, i, ref);
   }
 
   function _9(i, ref) {
-    return M.jM2(eff(4), _10, i, ref);
+    return M.jM(eff(4), _10, i, ref);
   }
 
   function _10(i, ref) {
     i++;
-    return M.jR2(_1, i, ref);
+    return M.jR(_1, i, ref);
   }
 
   function _11() {

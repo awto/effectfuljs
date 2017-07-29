@@ -1,5 +1,5 @@
 function a_1(a_v) {
-  return M.jMB1(eff2(), a_2, a_v);
+  return M.jMB(eff2(), a_2, a_v);
 }
 
 function a_2(a, a_v) {
@@ -14,17 +14,19 @@ function a_3(a_v) {
 }
 
 function a_4(a_v) {
-  return M.jMB1(eff3(a_v.i), a_5, a_v);
+  return M.jMB(eff3(a_v.i), a_5, a_v);
 }
 
 function a_5(a, a_v) {
+  var b;
   a_v.j = a;
-  return M.jM1(eff4(a_v.j++), a_6, a_v);
+  b = a_v.j++;
+  return M.jM(eff4(b), a_6, a_v);
 }
 
 function a_6(a_v) {
   a_v.i++;
-  return M.jR1(a_3, a_v);
+  return M.jR(a_3, a_v);
 }
 
 function a_7(a) {
@@ -34,5 +36,9 @@ function a_7(a) {
 
 // *- should inject forPar
 function a() {
-  return M.jM1(eff1(), a_1, a_v);
+  var a_v = {
+    i: undefined,
+    j: undefined
+  };
+  return M.jM(eff1(), a_1, a_v);
 }

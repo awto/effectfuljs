@@ -18,7 +18,7 @@ export function tagValue(pos, type, v) {
   res.func = info.func
   res.coerce = info.coerce
   res.boundary =
-    (res.stmt && !(type === Tag.VariableDeclaration && pos === Tag.init))
+    (res.stmt && !(type === Tag.VariableDeclaration && pos === Tag.init) || type === Tag.CatchClause)
   Object.assign(res,v)
   return res
 }

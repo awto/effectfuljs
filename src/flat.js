@@ -1,22 +1,33 @@
 import * as R from "ramda"
 import * as Kit from "./kit"
-import {Tag,trace,dump} from "./kit"
+import {Tag} from "./kit"
 import * as assert from "assert"
 import * as Block from "./block"
 import * as Ctrl from "./control"
 import * as Loop from "./loops"
 import * as Bind from "./bind"
 import * as State from "./state"
-import {traceAll as deb_TraceAll,
-        trace as deb_Trace,
-        dump as deb_Dump} from "./debug"
+import * as Opts from "./options"
 import * as Except from "./exceptions"
+import * as Policy from "./policy"
 import {stmtExpr} from "./kit/stmtExpr"
 
 const defaultUnpackMax = 5
+const undefinedSym = Kit.scope.undefinedSym
+
+function byNum(a, b) {
+  return a.num - b.num
+}
+
+function byNumFst(a, b) {
+  return a[0].num - b[0].num
+}
 
 const emptySet = new Set()
 const emptyArr = []
+
+// in frameArgs binds jump inner content
+const argSym = Kit.scope.newSym("arg")
 
 /** 
  * convers to a flat stracture (without nested frames) 
@@ -37,6 +48,8 @@ export const convert = R.pipe(
   // removes redundant lets to simplify next step
   function cleanLets(si) {
     const s = Kit.auto(si)
+    if (s.opts.scopeContext)
+      s.first.value.contextSym = Kit.scope.newSym("ctx")
     function* walk() {
       let res = false
       for(const i of s.sub()) {
@@ -89,6 +102,7 @@ export const convert = R.pipe(
   Block.saveFrameLet,
   function* convert(si) {
     const s = Kit.auto(si)
+    const root = s.first.value
     const frames = []
     let finContNum = 0
     function setGoto(jumps, value) {
@@ -186,8 +200,7 @@ export const convert = R.pipe(
                 // may be lost during subst, they same like catchCont, or finCont
                 // maybe better keep a dictionary rather than dir link?
                 handle.finContId = finContNum++
-                const contSym = Kit.scope.newSym("cb")
-                contSym.state = true
+                const contSym = Bind.tempVarSym(s.first.value,"cb")
                 const instances = new Set()
                 const finJump = {
                   declSym: contSym,
@@ -254,6 +267,7 @@ export const convert = R.pipe(
             const ncur = yield* walk(s.sub(),cur)
             if (frames.length > fl) {
               const k = frames[fl][0].value
+              k.savedDecls = i.value.savedDecls
               for(const l of ncur)
                 if (l.goto == null) {
                   l.goto = k
@@ -515,7 +529,8 @@ export const convert = R.pipe(
                                 {declSym:Kit.scope.newSym("_")})
           yield frame
           yield s.tok(Tag.push, Ctrl.jump,
-                      {goto: i.value, ref: frame.value, bindName:"scope"})
+                      {goto: i.value, ref: frame.value,
+                       bindName:"scope", init:true})
           yield* lab()
         } else if (i.value.catchCont != null
                    || i.value.enters && i.value.enters.length) {
@@ -538,82 +553,60 @@ export const convert = R.pipe(
   // emits auxiliary frames if there are jumps through several finally blocks
   function* composeFinallyBlocks(si) {
     const s = Kit.auto(si)
-    const finConts = []
-    const emitSteps = []
-    const doneFinSteps = new Map()
-    // composes a few finally blocks into a single function
-    function getFinStep(steps,cont,resSym) {
-      if (steps.length === 0) {
-        // lifted result
-        if (resSym != null) {
-          const lab = s.label()
-          const f = s.enter(Tag.push,Block.frame,
-                            {declSym:Kit.scope.newSym("r_"),
-                             frameParams: new Set([resSym])})
-          const res = f.value
-          emitSteps.unshift([...function*(){
-            yield f
-            yield s.enter(Tag.push,Tag.CallExpression,{result:true})
-            yield s.tok(Tag.callee,Tag.Identifier,{sym:Block.pureId})
-            yield s.enter(Tag.arguments,Tag.Array)
-            yield s.tok(Tag.push, Tag.Identifier, {sym:resSym})
-            yield* lab()
-          }()])
-          return res
-        }
-        return cont
-      }
-      const id = steps.map(i => i.finContId)
-            .concat([cont ? cont.id : resSym ? "@" : "#"]).join()
-      let res = doneFinSteps.get(id)
-      if (res != null)
-        return res
-      const nxt = getFinStep(steps.slice(1),cont,resSym)
-      const arg = steps[0].contArg
-      const jump = s.tok(Tag.push, Ctrl.jump, {
-        goto: steps[0],
-        ref: res,
-        frameArgs: new Map([[arg.declSym,nxt ? nxt.declSym : Block.pureId]])
-      })
-      if (nxt)
-        arg.instances.add(nxt)
-      const f = s.enter(Tag.push,Block.frame,
-                        {declSym:Kit.scope.newSym("f_")})
-      res = f.value
-      doneFinSteps.set(id,res)
-      emitSteps.push([f,jump,...s.leave()])
-      return res
+    let resFrame, resSym, resJumps = []
+    for(let i; (i = s.cur()) && i.type !== Block.frame;)
+      yield s.take()
+    yield* walk()
+    if (resFrame) {
+      const lab = s.label()
+      const f = s.enter(Tag.push,Block.frame,{declSym:resFrame})
+      yield f
+      for(const i of resJumps)
+        i.instances.add(f.value)
+      yield s.enter(Tag.push,Tag.CallExpression,{result:true})
+      yield s.tok(Tag.callee,Tag.Identifier,{sym:Block.pureId})
+      yield s.enter(Tag.arguments,Tag.Array)
+      yield s.tok(Tag.push, Tag.Identifier,{lhs:false,rhs:true,sym:resSym})
+      yield* lab()
     }
-    // emits composed finally blocks into the main chain
-    function* commitFinSteps() {
-      for(const i of emitSteps)
-        yield* i
-      emitSteps.length = 0
-    }
+    yield* s
     // if jumps is to be precomposed generates frames for this
     function preComposeFrame(jump) {
-      const resSym = !jump.goto && jump.result && new Kit.scope.newSym("r")
-            || null
-      const res = getFinStep(jump.preCompose || emptyArr,jump.goto, resSym)
-      if (resSym != null && res.resultSym == null) {
-        res.pat = [s.tok(Tag.push,Tag.Identifier,{sym:resSym})]
-        res.resultSym = resSym
-      }
-      return jump.goto = res
-    }
-    // optimized version of preComposeFrame where 1 step may be omitted 
-    function preComposeFrameOpt(jump) {
-      const finsteps = jump.preCompose
-      if (finsteps && finsteps.length) {
-        if (jump.result)
-          return preComposeFrame(jump)
-        const nxt = getFinStep(finsteps.slice(1), jump.goto)
-        const head = finsteps[0]
-        if (nxt)
-          head.contArg.instances.add(nxt)
+      const chain = jump.preCompose || emptyArr, len = chain.length
+      if (len) {
+        const [h, ...t] = jump.preCompose || emptyArr
         const args = jump.frameArgs || (jump.frameArgs = new Map())
-        args.set(head.contArg.declSym, nxt ? nxt.declSym : Block.pureId)
-        jump.goto = head
+        for(let i = 0;;) {
+          const step = chain[i++]
+          const cont = step.contArg
+          const arg = cont.declSym
+          if (i < len) {
+            const next = chain[i]
+            args.set(arg,next.declSym)
+            cont.instances.add(next)
+          } else {
+            if (jump.goto) {
+              args.set(arg,jump.goto.declSym)
+              cont.instances.add(jump.goto)
+            } else {
+              if (jump.result) {
+                // lifted result
+                if (resSym == null) {
+                  resSym = Bind.tempVarSym(s.first.value,"r")
+                  resFrame = Kit.scope.newSym("r_")
+                }
+                jump.sym = resSym
+                args.set(resSym,argSym)
+                args.set(arg,resFrame)
+                resJumps.push(cont)
+              } else {
+                args.set(arg,Block.pureId)
+              } 
+            }
+            break
+          }
+        }
+        jump.goto = h
       }
     }
     function* walk() {
@@ -646,69 +639,54 @@ export const convert = R.pipe(
               yield* lab()
             }
             yield s.close(i)
-            yield* commitFinSteps()
             continue
           case Ctrl.jump:
-            preComposeFrameOpt(i.value, true)
-            break
           case Block.letStmt:
-            if (i.value.ref.catchCont)
-              preComposeFrame(i.value)
-            else
-              preComposeFrameOpt(i.value)
+            preComposeFrame(i.value)
             break
           }
         }
         yield i
       }
     }
-    yield* walk()
   })
+
+Bind.paramThread.optBindAssign = true
+Bind.ctxField.optBindAssign = true
+Bind.objField.optBindAssign = false
 
 /** moves bind patterns into frame's function declaration arguments */
 const optimizeBindAssign = R.pipe(
   function optimizeBindAssign(si) {
     const s = Kit.auto(si)
-    function* getLeft() {
-      let res = false
-      for(const i of s.one()) {
-        if (i.enter && i.type === Tag.Identifier &&
-            (!i.value.sym || !i.value.sym.byVal))
-          res = true
-        yield i
-      }
-      return res
-    }
     function* walk() {
       for(const i of s.sub()) {
         if (i.type === Tag.AssignmentExpression
             && i.value.node.operator === "="
             && s.cur().type === Tag.Identifier
            ) {
-          const left = []
           // reference variables cannot go to patterns
-          if (Kit.result(getLeft(), left)) {
+          const sym = s.cur().value.sym
+          if (sym && sym.interpr && sym.interpr.optBindAssign) {
+            const left = Kit.toArray(s.one())
+            const j = s.cur()
+            if (j.type === Block.bindPat) {
+              const jump = j.value.ref
+              if (jump.eff) {
+                jump.goto.patSym = jump.sym = sym
+                Kit.skip(s.one())
+                s.close(i)
+                if (i.pos !== Tag.expression)
+                  yield* Kit.reposOne(Kit.clone(left),i.pos)
+                continue
+              }
+            }
             yield i
-            yield *left;
+            yield* left
+            yield* walk()
+            yield s.close(i)
             continue
           }
-          const j = s.cur()
-          if (j.type === Block.bindPat) {
-            const f = j.value.ref
-            if (f.eff) {
-              f.pat = Kit.reposOneArr(left,Tag.push)
-              Kit.skip(s.one())
-              s.close(i)
-              if (i.pos !== Tag.expression)
-                yield* Kit.reposOne(Kit.clone(left),i.pos)
-              continue
-            }
-          }
-          yield i
-          yield* left
-          yield* walk()
-          yield s.close(i)
-          continue
         }
         yield i
       }
@@ -729,426 +707,433 @@ const optimizeBindAssign = R.pipe(
 /** flat structure related optimizations */
 export const optimize = R.pipe(
   Array.from,
-  Bind.optimizePureLets,
-  Array.from,
+  //  Bind.optimizePureLets,
+  //   Array.from,
   optimizeBindAssign,
   Kit.cleanEmptyExprs)
 
+export const newContextSym = Kit.sysId("context")
 
-/** conferts flat structure to JS expressions */
-export const interpret = R.pipe(
-  optimize,
-  calcVarDeps,
-  Bind.interpretPureLet,
-  Block.interpretPure,
-  function interpretBlocks(si) {
-    const s = Kit.auto(si)
-    const unpackMax = s.opts.unpackMax || defaultUnpackMax
-    
-    function* args(thread) {
+/** generates context reads and writes */
+export function* copyCtxVars(si) {
+  const s = Kit.auto(si)
+  const frame = yield* s.till(i => i.enter && i.type === Block.frame)
+  const root = s.first.value
+  const ctxSym = root.contextSym
+  const decls = root.savedDecls || (root.savedDecls = new Map())
+  decls.set(ctxSym, {raw:null,init:[
+    s.enter(Tag.init, Tag.CallExpression),
+    s.tok(Tag.callee, Tag.Identifier, {sym:newContextSym}),
+    s.tok(Tag.arguments, Tag.Array),
+    ...s.leave()]})
+  yield* frameContent(frame.value)
+  for(const i of s) {
+    yield i
+    if (i.enter && i.type === Block.frame)
+      yield* frameContent(i.value)
+  }
+  function* memExpr(pos, sym) {
+    const lab = s.label()
+    yield s.enter(pos, Tag.MemberExpression)
+    yield s.tok(Tag.object, Tag.Identifier, {sym:ctxSym})
+    assert.ok(sym.fieldName)
+    yield s.tok(Tag.property, Tag.Identifier, {node:{name:sym.fieldName}})
+    yield* lab()
+  }
+  function* ctxAssign(sym) {
+    yield s.enter(Tag.push, Tag.AssignmentExpression, {node:{operator:"="}})
+    yield* memExpr(Tag.left,sym)
+  }
+  function* frameContent(frame) {
+    const decls = frame.savedDecls || (frame.savedDecls = new Map())
+    const sw = frame.stateVars
+    function addSym(i,init) {
+      if (frame.patSym !== i && (!frame.first || i.param !== root))
+        decls.set(i,{raw:null,init})
+    }
+    if (sw) {
+      const pat = frame.framePat
+      for(const i of sw.w)
+        if (i.interpr === Bind.ctxField)
+          addSym(i)
+      for(const i of sw.r)
+        if (i.interpr === Bind.ctxField)
+          addSym(i,Kit.toArray(memExpr(Tag.init, i)))
+    }
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(i.type) {
+        case Block.letStmt:
+          if (!i.value.eff)
+            break
+        case Ctrl.jump:
+          if (!i.value.gotoDests.length)
+            break
+          const {r,w} = frame.stateVars
+          const nextList = []
+          for(const j of i.value.gotoDests)
+            nextList.push(...j.frameParamsClos)
+          const next = new Set(nextList)
+          const tv = new Set([...r, ...w])
+          const reset = []
+          const del = new Set()
+          for(const sym of w) {
+            if (sym.interpr === Bind.ctxField) {
+              if (next.has(sym)) {
+                reset.push(sym)
+              } else if (r.has(sym))
+                del.add(sym)
+            }
+          }
+          for(const sym of r) {
+            if (sym.interpr === Bind.ctxField && !next.has(sym))
+              del.add(sym)
+          }
+          const args = i.value.frameArgs
+          const assign = []
+          if (args)
+            for(const i of args)
+              if (i[1] !== argSym && i[0].interpr === Bind.ctxField)
+                assign.push(i)
+          const patSym = i.type === Ctrl.jump && i.value.sym
+                && i.value.sym.interpr === Bind.ctxField
+                && i.value.sym
+          assign.sort(byNumFst)
+          const delVars = [...del].sort(byNum)
+          reset.sort(byNum)
+          if (reset.length || delVars.length || assign.length || patSym) {
+            const lab = s.label()
+            yield s.enter(i.pos, Tag.SequenceExpression, {result:true})
+            yield s.enter(Tag.expressions, Tag.Array)
+            const slab = s.label()
+            for(const j of delVars) {
+              yield* ctxAssign(j)
+              yield s.tok(Tag.right,Tag.Identifier,{sym:undefinedSym})
+              yield* slab()
+            }
+            for(const j of reset) {
+              yield* ctxAssign(j)
+              yield s.tok(Tag.right, Tag.Identifier, {sym:j})
+              yield* slab()
+            }
+            for(const [sym,init] of assign) {
+              yield* ctxAssign(sym)
+              yield s.tok(Tag.right, Tag.Identifier, {sym:init})
+              yield* slab()
+            }
+            const inner = Kit.toArray(s.sub())
+            if (patSym) {
+              yield* ctxAssign(patSym)
+              if (inner && inner.length)
+                yield* Kit.reposOneArr(inner, Tag.right)
+              else
+                yield s.tok(Tag.right,Tag.Identifier,{sym:undefinedSym})
+              yield* slab()
+            }
+            yield s.peel(Kit.setPos(i, Tag.push))
+            if (!patSym && inner && inner.length)
+              yield* Kit.reposOneArr(inner, Tag.push)
+            yield* lab()
+            continue
+          }
+        }
+      }
+      yield i
+    }
+  }
+}
+
+export function interpretFrames(si) {
+  const s = Kit.auto(si)
+  const unpackMax = s.opts.unpackMax || defaultUnpackMax
+  const root = s.first.value
+  function* args(thread) {
+    if (thread)
       for(const j of thread)
         yield s.tok(Tag.push,Tag.Identifier,{sym:j})
-    }
-    function* arrUnpack(thread) {
-      yield s.enter(Tag.push,Tag.ArrayPattern)
-      yield s.enter(Tag.elements,Tag.Array)
-      yield* args(thread)
-      yield* s.leave()
-      yield* s.leave()
-    }
-    function* objUnpack(thread) {
-      yield s.enter(Tag.push,Tag.ObjectPattern)
-      yield s.enter(Tag.properties,Tag.Array)
-      for(const j of thread) {
-        yield s.enter(Tag.push,Tag.ObjectProperty,{node:{shorthand:true}})
-        yield s.tok(Tag.key,Tag.Identifier,{sym:j})
-        yield s.tok(Tag.value,Tag.Identifier,{sym:j})
-        yield* s.leave()
-      }
-      yield* s.leave()
+  }
+  function* arrUnpack(thread) {
+    yield s.enter(Tag.push,Tag.ArrayPattern)
+    yield s.enter(Tag.elements,Tag.Array)
+    yield* args(thread)
+    yield* s.leave()
+    yield* s.leave()
+  }
+  function* objUnpack(thread) {
+    yield s.enter(Tag.push,Tag.ObjectPattern)
+    yield s.enter(Tag.properties,Tag.Array)
+    for(const j of thread) {
+      yield s.enter(Tag.push,Tag.ObjectProperty,{node:{shorthand:true}})
+      yield s.tok(Tag.key,Tag.Identifier,{sym:j})
+      yield s.tok(Tag.value,Tag.Identifier,{sym:j})
       yield* s.leave()
     }
-    let paramUnpack
-    switch(s.opts.packArgs) {
-    case "apply"  : paramUnpack = args; break
-    case "object" : paramUnpack = objUnpack; break
-    default       : paramUnpack = arrUnpack
+    yield* s.leave()
+    yield* s.leave()
+  }
+  let paramUnpack
+  switch(s.opts.packArgs) {
+  case "apply"  : paramUnpack = args; break
+  case "object" : paramUnpack = objUnpack; break
+  default       : paramUnpack = arrUnpack
+  }
+  let paramPrefix = function*(){}
+  let obj
+  if (s.opts.scopeContext) {
+    const sym = s.first.value.contextSym
+    if (s.opts.contextMethodOps)
+      obj = sym
+    paramPrefix = function*() {
+      yield s.tok(Tag.push, Tag.Identifier, {sym})
     }
-    let paramPrefix = function*(){}
-    let obj
-    if (s.opts.scopeContext) {
-      const sym = s.first.value.contextSym = Kit.scope.newSym("ctx")
-      if (s.opts.contextMethodOps)
-        obj = sym
-      paramPrefix = function*() {
-        yield s.tok(Tag.push, Tag.Identifier, {sym})
-      }
-    }
-    let num = 0
-    function* walk() {
-      for(const i of s.sub()) {
-        if (i.enter) {
-          switch(i.type) {
-          case Block.chain:
-            yield s.enter(i.pos,Tag.BlockStatement)
-            yield s.enter(Tag.body,Tag.Array)
-            yield* walk()
-            yield* s.leave()
-            yield* s.leave()
-            s.close(i)
-            continue
-          case Block.bindPat:
-            yield s.tok(i.pos,Tag.Identifier,i.value)
-            s.close(i)
-            continue
-          case Tag.Identifier:
-            if (obj && i.value.sym && i.value.sym.lib && num !== 1)
-              i.value.ns = obj
-            break
-          case Block.frame:
-            const fn = num++
-            if (fn !== 0)
-              i.value.declSym.orig = `_${fn}`
-            i.value.frameStep = s.first.value
-            const flab = s.label()
-            if (fn !== 0) {
-              const {catchCont} = i.value
-              const pat = i.value.pat
-              const thread = i.value.threadParams
-              if (i.value.optPatSym) {
-                i.value.optPatSym.orig = `_${fn}A`
-                yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
-                yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.declSym})
-                const paramsLab = s.label()
-                yield s.enter(Tag.params,Tag.Array)
-                yield* paramPrefix(i.value)
-                yield* paramUnpack(thread)
-                yield* paramsLab()
-                yield s.enter(Tag.body,Tag.BlockStatement)
-                yield s.enter(Tag.body,Tag.Array)
-                yield s.enter(Tag.push,Tag.ReturnStatement)
-                yield s.enter(Tag.argument,Tag.CallExpression)
-                yield s.tok(Tag.callee,Tag.Identifier,{sym:i.value.optPatSym})
-                yield s.enter(Tag.arguments, Tag.Array)
-                yield* args()
-                yield* paramsLab()
-                yield* s.leave()
-              }
+  }
+  let num = 0
+  function* walk() {
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(i.type) {
+        case Block.chain:
+          yield s.enter(i.pos,Tag.BlockStatement)
+          yield s.enter(Tag.body,Tag.Array)
+          yield* walk()
+          yield* s.leave()
+          yield* s.leave()
+          s.close(i)
+          continue
+        case Block.bindPat:
+          yield s.tok(i.pos,Tag.Identifier,i.value)
+          s.close(i)
+          continue
+        case Tag.Identifier:
+          if (obj && i.value.sym && i.value.sym.lib && num !== 1)
+            i.value.ns = obj
+          break
+        case Block.frame:
+          const fn = num++
+          if (fn !== 0)
+            i.value.declSym.orig = `_${fn}`
+          i.value.frameStep = s.first.value
+          const flab = s.label()
+          if (fn !== 0) {
+            const {catchCont} = i.value
+            const patSym = i.value.patSym
+            const thread = i.value.threadParams
+            i.value.func = true
+            if (i.value.optPatSym) {
+              i.value.optPatSym.orig = `_${fn}A`
               yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
-              yield s.tok(Tag.id,Tag.Identifier,
-                          {sym:i.value.optPatSym || i.value.declSym})
-              const paramLab = s.label()
+              yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.declSym})
+              const paramsLab = s.label()
               yield s.enter(Tag.params,Tag.Array)
               yield* paramPrefix(i.value)
-              if (pat && pat.length)
-                yield *pat           
-              if (thread && thread.length) {
-                if (thread.length <= unpackMax) {
-                  yield* args(thread)
-                } else {
-                  if (i.value.optPat) { 
-                    for(const j of thread)
-                      yield s.tok(Tag.push,Tag.Identifier,{sym:j})
-                  } else {
-                    yield* paramUnpack(thread)
-                  }
-                }
-              }
-              yield* paramLab()
+              yield* paramUnpack(thread)
+              yield* paramsLab()
               yield s.enter(Tag.body,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
+              yield s.enter(Tag.push,Tag.ReturnStatement)
+              yield s.enter(Tag.argument,Tag.CallExpression)
+              yield s.tok(Tag.callee,Tag.Identifier,{sym:i.value.optPatSym})
+              yield s.enter(Tag.arguments, Tag.Array)
+              yield* args(thread)
+              yield* paramsLab()
+              yield* s.leave()
             }
-            const locals = i.value.frameLocals
-            if (locals != null && locals.size) {
-              const vars = []
-              if (fn === 0) {
-                for(const j of locals) {
-                  if (!j.param)
-                    vars.push(j)
+            yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
+            yield s.tok(Tag.id,Tag.Identifier,
+                        {sym:i.value.optPatSym || i.value.declSym})
+            const paramLab = s.label()
+            yield s.enter(Tag.params,Tag.Array)
+            yield* paramPrefix(i.value)
+            if (patSym)
+              yield s.tok(Tag.push,Tag.Identifier,{sym:patSym})
+            if (thread && thread.length) {
+              if (thread.length <= unpackMax) {
+                yield* args(thread)
+              } else {
+                if (i.value.optPat) { 
+                  for(const j of thread)
+                    yield s.tok(Tag.push,Tag.Identifier,{sym:j})
+                } else {
+                  yield* paramUnpack(thread)
                 }
-              } else
-                vars.push(...locals)
-              if (vars.length) {
-                vars.sort((a,b) => a.num - b.num)
-                const lab = s.label()
-                yield s.enter(Tag.push,Tag.VariableDeclaration,
-                              {node:{kind:"var"}})
-                yield s.enter(Tag.declarations,Tag.Array)
-                for(const sym of vars) {
-                  yield s.enter(Tag.push,Tag.VariableDeclarator)
-                  yield s.tok(Tag.id,Tag.Identifier,{sym})
-                  yield* s.leave()
-                }
-                yield* lab()
               }
             }
-            yield* walk()
-            yield* flab()
-            s.close(i)
-            continue
+            yield* paramLab()
+            yield s.enter(Tag.body,Tag.BlockStatement)
+            yield s.enter(Tag.body,Tag.Array)
+          } else {
+            // first frame is erased, so copying its vars here
+            if (i.value.savedDecls) {
+              const {savedDecls} = root
+              for(const [j,v] of i.value.savedDecls)
+                if (!savedDecls.has(j))
+                  savedDecls.set(j,v)
+            }
           }
+          yield* walk()
+          yield* flab()
+          s.close(i)
+          continue
         }
-        yield i
+      }
+      yield i
+    }
+  }
+  return walk()
+}
+
+export function interpretJumps(si) {
+  const s = Kit.auto(si)
+  const packAsObj = s.opts.packArgs === "object"
+  const unpackMax = s.opts.unpackMax || defaultUnpackMax
+  const ctxSym = s.first.value.contextSym
+  function* argPack(arr,optPat,inner) {
+    function* arg(i,pos) {
+      if (i === argSym)
+        yield* Kit.reposOneArr(inner, Tag.push)
+      else
+        yield s.tok(Tag.push,Tag.Identifier,{sym:i})
+    }
+    if (arr && arr.length) {
+      if (arr.length <= unpackMax) {
+        for(const j of arr)
+          yield* arg(j[1],Tag.push)
+      } else {
+        const lab = s.label()
+        if (!optPat) {
+          if (packAsObj) {
+            yield s.enter(Tag.push, Tag.ObjectExpression)
+            yield s.enter(Tag.properties, Tag.Array)
+            for(const j of arr) {
+              yield s.enter(Tag.push, Tag.ObjectProperty,
+                            {node:{shorthand:true}})
+              yield s.tok(Tag.key,Tag.Identifier,{sym:j[0]})
+              yield* arg(j[1],Tag.value)
+              yield* s.leave()
+            }
+            yield* lab()
+            return
+          }
+          yield s.enter(Tag.push, Tag.ArrayExpression)
+          yield s.enter(Tag.elements, Tag.Array)
+        }
+        for(const j of arr)
+          yield* arg(j[1],Tag.push)
+        yield* lab()
       }
     }
-    return walk()
-  },
-  Array.from,
-  function interpretJumps(si) {
-    const s = Kit.auto(si)
-    const packAsObj = s.opts.packArgs === "object"
-    const unpackMax = s.opts.unpackMax || defaultUnpackMax
-    const ctxSym = s.first.value.contextSym
-    function* argPack(arr,optPat) {
-      if (arr && arr.length) {
-        if (arr.length <= unpackMax) {
-          for(const i of arr)
-            yield s.tok(Tag.push,Tag.Identifier,{sym:i[1]})
-        } else {
+  }
+  function* walk() {
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(i.type) {
+        case Ctrl.jump:
+          const {goto,gotoDests,ref} = i.value
           const lab = s.label()
-          if (!optPat) {
-            if (packAsObj) {
-              yield s.enter(Tag.push, Tag.ObjectExpression)
-              yield s.enter(Tag.properties, Tag.Array)
-              for(const j of arr) {
-                yield s.enter(Tag.push, Tag.ObjectProperty,
-                              {node:{shorthand:true}})
-                yield s.tok(Tag.key,Tag.Identifier,{sym:j[0]})
-                yield s.tok(Tag.value,Tag.Identifier,{sym:j[1]})
-                yield* s.leave()
-              }
-              yield* lab()
-              return
+          const {threadArgs,rec} = i.value
+          const scopeOp = i.value.init
+          const obj = (!scopeOp || s.opts.contextState)
+                && s.opts.contextMethodOps && ctxSym
+          const pos = i.pos
+          if (gotoDests.length) {
+            let name = i.value.bindName || "j"
+            if (threadArgs && threadArgs.length && s.opts.argNumName) {
+              if (threadArgs.length > unpackMax)
+                name += "N"
+              else
+                name += threadArgs.length
             }
-            yield s.enter(Tag.push, Tag.ArrayExpression)
-            yield s.enter(Tag.elements, Tag.Array)
+            if (i.value.bindName) {
+              yield s.enter(pos,Block.app,{sym:Kit.sysId(name),obj})
+              yield s.tok(Tag.push,Tag.Identifier,{sym:goto.declSym})
+              if (ctxSym && !scopeOp && !obj)
+                yield s.tok(Tag.push,Tag.Identifier,{sym:ctxSym})
+            } else {
+              yield s.enter(pos,Tag.CallExpression,{result:true})
+              yield s.tok(Tag.callee,Tag.Identifier,
+                          {sym:goto.optPatSym || goto.declSym})
+              yield s.enter(Tag.arguments,Tag.Array)
+              if (ctxSym && !scopeOp)
+                yield s.tok(Tag.push,Tag.Identifier,{sym:ctxSym})
+            }
+            let inner
+            if (!i.leave)
+              inner = Kit.toArray(s.sub())
+            yield* argPack(threadArgs, goto.optPat, inner)
+          } else {
+            yield s.enter(pos, Tag.CallExpression, {result:true})
+            yield s.tok(Tag.callee, Tag.Identifier, {sym:Block.pureId,ns:obj})
+            yield s.enter(Tag.arguments, Tag.Array)
+            const bind = s.curLev() != null
+            if (ctxSym && !scopeOp && !obj)
+              yield s.tok(Tag.push,Tag.Identifier,{sym:ctxSym})
+            let inner
+            if (!i.leave)
+              yield* s.sub()
+            if (threadArgs)
+              yield* argPack(threadArgs)
           }
-          for(const j of arr)
-            yield s.tok(Tag.push,Tag.Identifier,{sym:j[1]})
           yield* lab()
-        }
-      }
-    }
-    function* walk() {
-      for(const i of s.sub()) {
-        if (i.enter) {
-          switch(i.type) {
-          case Ctrl.jump:
-            const {goto,gotoDests,ref} = i.value
+          s.close(i)
+          continue
+        case Block.letStmt:
+          if (i.value.eff) {
             const lab = s.label()
-            const {threadArgs,rec} = i.value
-            const scopeOp = i.value.bindName === "scope"
-            const obj = ctxSym && !scopeOp && s.opts.contextMethodOps && ctxSym
-            if (gotoDests.length) {
+            const {goto,gotoDests,ref} = i.value
+            const {catchCont} = ref
+            const pos = i.pos
+            if (!gotoDests.length && catchCont == null
+                && i.value.bindName == null) {
+              yield s.enter(pos,Block.effExpr)
+              yield* walk()
+            } else {
               let name = i.value.bindName || "j"
-              if (threadArgs) {
+              const obj = ctxSym && s.opts.contextMethodOps && ctxSym
+              name+="M"
+              const {threadArgs,sym:patSym,rec} = i.value
+              const {catchCont} = ref
+              if (patSym)
+                name += "B"
+              if (threadArgs && threadArgs.length && s.opts.argNumName) {
                 if (threadArgs.length > unpackMax)
                   name += "N"
                 else
                   name += threadArgs.length
               }
-              if (i.value.bindName) {
-                yield s.enter(i.pos,Block.app,{sym:Kit.sysId(name),obj})
-                yield s.tok(Tag.push,Tag.Identifier,{sym:goto.declSym})
-                if (ctxSym && !scopeOp && !obj)
-                  yield s.tok(Tag.push,Tag.Identifier,{sym:ctxSym})
-              } else {
-                yield s.enter(i.pos,Tag.CallExpression,{result:true})
-                yield s.tok(Tag.callee,Tag.Identifier,
-                            {sym:goto.optPatSym || goto.declSym})
-                yield s.enter(Tag.arguments,Tag.Array)
-                if (ctxSym && !scopeOp)
-                  yield s.tok(Tag.push,Tag.Identifier,{sym:ctxSym})
-              }
-              if (!i.leave)
-                yield* s.sub()
-              yield* argPack(threadArgs, goto.optPat)
-            } else {
-              yield s.enter(i.pos, Tag.CallExpression, {result:true})
-              yield s.tok(Tag.callee, Tag.Identifier, {sym:Block.pureId,ns:obj})
-              yield s.enter(Tag.arguments, Tag.Array)
-              const bind = s.curLev() != null
-              if (ctxSym && !scopeOp && !obj)
-                yield s.tok(Tag.push,Tag.Identifier,{sym:ctxSym})
-              if (!i.leave)
-                yield* s.sub()
-              if (threadArgs)
-                yield* argPack(threadArgs)
+              if (rec)
+                name += "R"
+              if (catchCont != null)
+                name += "E"
+              yield s.enter(pos,Block.app,{sym:Kit.sysId(name),obj})
+              if (ctxSym && !obj)
+                yield s.tok(Tag.push, Tag.Identifier, {sym:ctxSym})
+              yield* walk()
+              yield s.tok(Tag.push,Tag.Identifier,
+                          {sym:goto ? goto.declSym : Block.pureId,
+                           ns:!goto && obj})
+              yield* argPack(threadArgs)
+              if (catchCont != null)
+                yield s.tok(Tag.push,Tag.Identifier,
+                            {sym:catchCont.goto.declSym})
             }
             yield* lab()
             s.close(i)
-            continue
-          case Block.letStmt:
-            if (i.value.eff) {
-              const lab = s.label()
-              const {goto,gotoDests,ref} = i.value
-              const {catchCont} = ref
-              if (!gotoDests.length && catchCont == null
-                  && i.value.bindName == null) {
-                yield s.enter(i.pos,Block.effExpr)
-                yield* walk()
-              } else {
-                let name = i.value.bindName || "j"
-                const obj = ctxSym && s.opts.contextMethodOps && ctxSym
-                name+="M"
-                const {threadArgs,pat,rec} = i.value
-                const {catchCont} = ref
-                if (pat && pat.length)
-                  name += "B"
-                if (threadArgs && threadArgs.length) {
-                  if (threadArgs.length > unpackMax)
-                    name += "N"
-                  else
-                    name += threadArgs.length
-                }
-                if (rec)
-                  name += "R"
-                if (catchCont != null)
-                  name += "E"
-                yield s.enter(i.pos,Block.app,{sym:Kit.sysId(name),obj})
-                if (ctxSym && !obj)
-                  yield s.tok(Tag.push, Tag.Identifier, {sym:ctxSym})
-                yield* walk()
-                yield s.tok(Tag.push,Tag.Identifier,
-                            {sym:goto ? goto.declSym : Block.pureId,
-                             ns:!goto && obj})
-                yield* argPack(threadArgs)
-                if (catchCont != null)
-                  yield s.tok(Tag.push,Tag.Identifier,
-                              {sym:catchCont.goto.declSym})
-              }
-              yield* lab()
-              s.close(i)
-            }
-            continue
           }
-        }
-        yield i
-      }
-    }
-    return walk()
-  })
-
-/** 
- * calculates parameters for each frame definition
- */
-function resolveFrameParams(cfg) {
-  for(const i of cfg) {
-    const locals = i.frameLocals = new Set()
-    const params = i.frameParams
-          || (i.frameParams = new Set())
-    const decls = i.frameDecls
-    const src = i.srcLet
-      
-    const pat = i.pat = i.pat || src && src.pat
-    const framePat = i.framePat = new Set(
-      pat && pat
-        .filter(i => i.enter && i.type === Tag.Identifier && i.value.sym)
-        .map(i => i.value.sym))
-    if (i.exceptSym) {
-      assert.ok(!framePat.size)
-      assert.ok(!(i.pat && i.pat.length))
-      i.pat = [Kit.tok(Tag.push,Tag.Identifier,{sym:i.exceptSym})]
-      i.framePat.add(i.exceptSym)
-    }
-    const sw = i.stateVars
-    const exits = i.exits
-    for(const {goto, frameArgs} of exits) {
-      if (goto && goto.dynamicJump && goto.instances.size)
-        params.add(goto.declSym)
-      if (frameArgs)
-        for(const j of frameArgs.values()) {
-          if (j.state)
-            params.add(j)
-        }
-    }
-    if (decls != null)
-      decls.forEach(params.delete, params)
-    if (sw != null) {
-      for(const i of sw.r.keys())
-        params.add(i)
-      if (exits != null) {
-        for(const j of sw.w.keys()) {
-          if (!sw.r.has(j) && !framePat.has(j) && !params.has(j))
-            locals.add(j)
+          continue
         }
       }
+      yield i
     }
   }
+  return walk()
 }
 
-function* setContextArgs(si) {
-  const s = Kit.auto(si)
-  if (!s.opts.scopeContext || !s.opts.scopePrefix) {
-    yield* s
-    return
-  }
-  const ctx = Kit.scope.newSym("ctx")
-  for (const i of s) {
-    if (i.enter) {
-      switch(i.type) {
-      case Block.frame:
-        const threadParams = i.value.threadParams || (i.value.threadParams = [])
-        threadParams.unshift(ctx)
-        break
-      case Block.letStmt:
-      case Ctrl.jump:
-        if (i.value.bindName === "scope")
-          break
-        const threadArgs = i.value.threadArgs || (i.value.threadArgs = [])
-        threadArgs.unshift([ctx,ctx])
-        break
-      }
-    }
-    yield i
-  }
-}
-
-/** 
- * calculates what should be passed to binds on each `goto` and what should
- * be received in each frame's arguments
- *
- *     type FrameVal = FrameVal & { threadParams: Sym[] }
- *     type JumpVal = JumpVal & { threadArgs: Sym[][] }
- *
- *     (cfg: FrameVal[]) => {} 
- */
-function resolveFrameArgs(cfg,root) {
+/** calculates `patSym` field */
+function calcPatSym(cfg) {
   for(const i of cfg) {
-    if (!root.captSym && !i.frameParams.size && !i.frameLocals.size
-        && !i.framePat.size
-        && i.exits.every(i => !i.frameArgs || !i.frameArgs.size)) {
-      if (i.frameParamsClos.size > 1) {
-        const sym = Kit.scope.newSym("s")
-        i.threadParams = [sym]
-        for(const j of i.exits)
-          j.threadArgs = [[sym,sym]]
-      }
-      if (!i.frameParamsClos.size)
-        continue
-    }
-    i.threadParams = [...i.frameParamsClos].sort((a, b) => a.num - b.num)
-    if (root.captSym)
-      i.threadParams.unshift(root.captSym)
-    const visible = [...i.frameParamsClos,
-                     ...i.frameLocals || emptyArr,
-                     ...i.framePat || emptyArr].map(i => [i,i])
-    for(const j of i.exits) {
-      const [dst] = j.gotoDests
-      if (dst == null) {
-        j.threadArgs = []
-        continue
-      }
-      let params = dst.frameParamsClos || emptyArr
-      const argsMap = new Map([...visible,
-                               ...(j.frameArgs ? j.frameArgs : emptyArr)])
-      const args = []
-      for(const k of params) {
-        args.push([k,argsMap.get(k) || Kit.scope.undefinedSym])
-      }
-      j.threadArgs = args.sort(([a],[b]) => a.num - b.num)
-      if (root.captSym)
-        j.threadArgs.unshift([root.captSym,root.captSym])
+    const {enters} = i
+    if (enters && enters.length === 1) {
+      i.patSym = enters[0].sym
     }
   }
 }
@@ -1158,134 +1143,13 @@ function resolveFrameArgs(cfg,root) {
  */
 function calcOptPat(cfg, unpackMax) {
   for(const i of cfg) {
-    i.optPat = !i.pat && i.threadParams
-      && i.threadParams.length > unpackMax
+    i.optPat = !i.patSym && i.threadParams
+      && unpackMax && i.threadParams.length > unpackMax
       && i.enters.some(i => !i.bindJump && !i.bindName)
     if (i.optPat)
       i.optPatSym = i.enters.some(i => i.bindJump) && Kit.scope.newSym("_")
   }
 }
-
-/** 
- * propagates informations about variable required to be read to 
- * all control flow ancestors chain
- * 
- */
-function propagateArgs(cfg,root) {
-  // propagating writes in fact rarely needed, only if there are some
-  // uninitialized variables
-  const dyn = []
-  // checks what symbols may be assinged till the frame
-  function calcAvail(frame,seen) {
-    if (frame.frameAvail != null)
-      return frame.frameAvail
-    if (seen.has(frame))
-      return emptySet
-    seen.add(frame)
-    const res = new Set()
-    if (frame.framePat)
-      frame.framePat.forEach(res.add,res)
-    if (frame.enters != null && frame.enters.length) {
-      for(const i of frame.enters) {
-        if (i.frameArgs) {
-          for(const j of i.frameArgs.keys())
-            res.add(j)
-        }
-        const src = i.ref
-        if (src.frameLocals)
-          src.frameLocals.forEach(res.add,res)
-        calcAvail(src,seen).forEach(res.add,res)
-      }
-    } else {
-      if (root.paramSyms != null) {
-        for(const i of root.paramSyms)
-          res.add(i)
-      }
-      if (root.scopeCapt != null) {
-        for(const i of root.scopeCapt)
-          res.add(i)
-      }
-    }
-    return res
-  }
-  function allReads(frame,seen) {
-    if (frame.frameParamsClos != null)
-      return new Set(frame.frameParamsClos)
-    if (seen.has(frame))
-      return emptySet
-    seen.add(frame)
-    const res = new Set(frame.frameParams)
-    if (frame.exits != null) {
-      for (const i of frame.exits) {
-        const assigned = i.frameArgs && [...i.frameArgs.keys()] || emptyArr
-        for(const j of i.gotoDests) {
-          const cur = allReads(j,seen)
-          assigned.forEach(cur.delete,cur)
-          cur.forEach(res.add,res)
-        }
-      }
-    }
-    const locals = frame.frameLocals
-    if (locals != null)
-      locals.forEach(res.delete,res)
-    const pat = frame.framePat
-    if (pat != null)
-      pat.forEach(res.delete,res)
-    const avail = frame.frameAvail
-    if (avail != null)
-      for(const i of res)
-        if (!avail.has(i))
-          res.delete(i)
-    return res
-  }
-  // preparing transitive closure of each jump argument
-  for (const i of cfg) {
-    const assigned = i.frameAvail = calcAvail(i,new Set())
-    const params = i.frameParams
-    const locals = i.frameLocals
-    for (const j of i.exits) {
-      if (j.gotoDests.length > 1)
-        dyn.push(j.gotoDests)
-    }
-    for (const j of params) {
-      if (!assigned.has(j)) {
-        params.delete(j)
-        locals.add(j)
-      }
-    }
-  }
-  // propagating transitive closure of each frame's parameters
-  // each frame needs to receive all vars it needs plus all the
-  // frames which could be next in control flow
-  for (const i of Kit.reverse(cfg)) {
-    i.frameParamsClos = allReads(i, new Set())
-  }
-  // unifying instances of dynamic jump, so all destinations frames
-  // should have same number of parameters
-  for(let i, store = new Map(); (i = dyn.pop()) != null;) {
-    const params = new Set()
-    for(const j of i)
-      j.frameParamsClos.forEach(params.add,params)
-    const redo = new Set()
-    for(const j of i) {
-      const dummy = new Set(params)
-      const fparams = j.frameParamsClos
-      fparams.forEach(dummy.delete,dummy)
-      let si = store.get(j)
-      store.set(j,si = new Set())
-      if (dummy.size) {
-        dummy.forEach(fparams.add,fparams)
-        // avoiding duplicate decls
-        const {frameLocals:fl} = j
-        if (fl != null)
-          dummy.forEach(fl.delete,fl)
-        dyn.push(...si)
-      }
-      si.add(i)
-    }
-  }
-}
-
 
 /**  
  * calculates control flow graph for each jump 
@@ -1358,13 +1222,26 @@ function calcCfg(sa) {
  *  - `frameDecls: Set<Symbol>`: symbol declared in this frame
  */
 function calcVarDeps(si) {
-  const sa = Kit.toArray(State.calcFrameStateVars(si))
+  const sa = Kit.toArray(si)
   const root = sa[0].value
   const opts = root.opts
   const cfg = calcCfg(sa)
-  resolveFrameParams(cfg)
-  propagateArgs(cfg,root)
-  resolveFrameArgs(cfg,root)
+  calcPatSym(cfg)
+  State.calcFlatCfg(cfg,sa)
   calcOptPat(cfg, opts.unpackMax || defaultUnpackMax)
   return sa
 }
+
+
+/** conferts flat structure to JS expressions */
+export const interpret = R.pipe(
+  optimize,
+  calcVarDeps,
+  Bind.interpretPureLet,
+  Block.interpretPure,
+  Opts.ifContextState(copyCtxVars),
+  Policy.stage("interpretFrames"),
+  interpretFrames,
+  Array.from,
+  interpretJumps)
+

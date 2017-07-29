@@ -5,7 +5,7 @@ function a() {
     var i;
     i = 0;
     i++;
-    return M.jM1(eff1(i), _2, i);
+    return M.jM(eff1(i), _2, i);
   }
 
   function _2(i) {
@@ -16,16 +16,16 @@ function a() {
   }
 
   function _3(i) {
-    return M.jM1(eff2(i), _4, i);
+    return M.jM(eff2(i), _4, i);
   }
 
   function _4(i) {
     i++;
-    return M.jM1(eff4(i), _5, i);
+    return M.jM(eff4(i), _5, i);
   }
 
   function _5(i) {
-    return M.jM1(eff5(i), _6, i);
+    return M.jM(eff5(i), _6, i);
   }
 
   function _6(i) {

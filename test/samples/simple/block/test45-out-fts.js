@@ -3,7 +3,9 @@ function a_1(i) {
 }
 
 function a_2(i) {
-  return M.jM1(eff7(i++), a_3, i);
+  var a;
+  a = i++;
+  return M.jM(eff7(a), a_3, i);
 }
 
 function a_3(i) {
@@ -11,7 +13,8 @@ function a_3(i) {
 }
 
 function a() {
-  var i;
+  var i, a;
   i = 0;
-  return M.jM1(eff5(i++), a_1, i);
+  a = i++;
+  return M.jM(eff5(a), a_1, i);
 }

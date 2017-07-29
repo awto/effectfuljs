@@ -67,7 +67,6 @@ export const traceOld = R.curry((prefix,s) => {
               text-shadow:rgba(0, 0, 0, 0.5) 2px 2px 1px`,
               "")
   return R.pipe(
-    tracePrep,
     Trace.of(
       R.pipe(
         Trace.highlight(v => v.type === Kit.Subst
@@ -86,45 +85,12 @@ function varsPat(vars) {
   return {type:"ArrayPattern", elements: vars}
 }
 
-function hl(t,e) {
-  return D.setComment(e,t,"large")
+function hl(t,e,style) {
+  return D.setComment(e,t,style || "large")
 }
 
-function hls(t,e) {
-  return D.setComment(e,t,"small")
-}
-
-export function* markState(si) {
-  const s = Kit.auto(si)
-  const tostr = (s) => [...s].map(i => i.name).join()
-  for(const i of s) {
-    const comment = []
-    if (i.enter) {
-      const v = i.value
-      if (v.writeBefore && v.writeBefore.size)
-        comment.push(`w[${tostr(v.writeBefore)}]`)
-      if (v.read && v.read.size)
-        comment.push(`R[${tostr(v.read)}]`)
-      if (v.write && v.write.size)
-        comment.push(`W[${tostr(v.write)}]`)
-      if (v.copy && v.copy.size)
-        comment.push(`W[${tostr(v.copy)}]`)
-      if (v.save && v.save.size)
-        comment.push(`s[${tostr(v.save)}]`)
-      if (v.readAfter && v.readAfter.size)
-        comment.push(`r[${tostr(v.readAfter)}]`)
-      if (v.closCopy && v.closCopy.size)
-        comment.push(`C[${tostr(v.closCopy)}]`)
-      if (v.lhs)
-        comment.push("+")
-      if (v.rhs)
-        comment.push("-")
-      if (i.value.hierpath != null)
-        comment.push(i.value.hierpath.join("."))
-      yield comment.length ? hls(comment.join(''),i) : i
-    } else
-      yield i
-  }
+function hls(t,e,n) {
+  return D.setComment(e,t,`small${n || ""}`)
 }
 
 export function* dumpDeps(s) {
@@ -145,7 +111,7 @@ export const dumbBindStmt = R.pipe(
     for(const i of s) {
       switch(symName(i.type)) {
       case "letStmt":
-        const hasBind = i.value.pat.length !== 0
+        const hasBind = i.value.sym != null
         if (i.enter) {
           let s = null
           if (hasBind) {
@@ -158,9 +124,7 @@ export const dumbBindStmt = R.pipe(
               "S","font-size:xx-large;color:orange"))
             yield Kit.enter(Tag.declarations,Tag.Array)
             yield Kit.enter(Tag.push,Tag.VariableDeclarator)
-            yield Kit.enter(Tag.id,Kit.Subst)
-            yield* i.value.pat
-            yield Kit.leave()
+            yield Kit.tok(Tag.id,Tag.Identifier,{sym:i.value.sym})
             yield Kit.enter(Tag.init,Kit.Subst)
           } else {
             yield D.copyComment(i,D.setComment(
@@ -322,7 +286,7 @@ export const dumpEffBlock = R.pipe(
         case "frame":
           if (i.enter) {
             const lab = b.label()
-            let txt =`#${i.value.pat && i.value.pat.length || ''}`
+            let txt =`#${i.value.patSym && i.value.patSym.id || ''}`
             if (i.value.bindsResult)
               txt += '_'
             if (i.value.hasStmts)
@@ -426,19 +390,17 @@ function* dumpCasts(s) {
   yield* walk()
 }
 
-const tracePrep = R.pipe(markState)
-
 export function* markBindEff(s) {
-  for(const i of s) {
+  for(let i of s) {
     if (i.enter) {
       if (i.value.bind)
-        D.setComment(i,"B","color:red;font-style:italic;")
+        i = hls("B",i,"H")
       else if (i.value.bind === false)
-        D.setComment(i,"P","color:red;font-style:italic;")
+        i = hls("P",i,"H")
       else if (i.value.eff)
-        D.setComment(i,"E","color:red;font-style:italic;")
+        i = hls("E",i,"H")
       else if (i.value.shallowEff)
-        D.setComment(i,"e","color:red;font-style:italic;")
+        i = hls("e",i,"H")
     }
     yield i
   }
@@ -471,7 +433,6 @@ function* removeSubScopes(s) {
 
 const dumpPrep = R.pipe(
   addLabels,
-  markState,
   dumpDeps,
   dumbBindStmt,
   markBindEff,
@@ -479,7 +440,9 @@ const dumpPrep = R.pipe(
   dumpCasts,
   scope.resolve)
 
-export const mark = R.pipe(dumpPrep,D.fin)
+const markOld = R.pipe(dumpPrep,D.fin)
+// TODO: remove from tests
+export { markOld as mark }
 
 export const dumpOld = R.curry(function dumpConsole(tag,s) {
   s = Kit.toArray(s)
@@ -487,40 +450,65 @@ export const dumpOld = R.curry(function dumpConsole(tag,s) {
   return s
 })
 
+const emptySet = new Set()
+
+const mark = R.pipe(
+  T.cleanComments,
+  addLabels,
+  markBindEff,
+  markFrameSyms)
+
 /** adds flatten related comments */
-function* deb_Mark(s) {
-  for(let i of trace.cleanComments(s)) {
+function* markFrameSyms(s) {
+  function id(i) {
+    if (!i)
+      return ""
+    let res = i.id
+    if (i.interpr)
+      res += `#${i.interpr.$}`
+    return res
+  }
+  for(let i of s) {
     const comment = []
     if (i.enter) {
       const v = i.value
       let hndl = v.catchCont ?
-          `|Catch{${v.catchCont.exceptSym.id}<-${v.catchCont.goto.declSym.id}}`
+          `|Catch{${id(v.catchCont.exceptSym)}<-${
+             id(v.catchCont.goto.declSym)}}`
           : ""
-      const pat = v.pat != null && v.pat.length
-            ? `|Pat{${dump.toStr(v.pat)}}`
-            : ""
-      let except = v.exceptSym ? `|ExSym{${v.exceptSym.id}}` : ""
+      let except = v.exceptSym ? `|ExSym{${id(v.exceptSym)}}` : ""
       if (v.declSym != null) {
         let fin = v.finallyCont && v.finallyCont.length
-            ? `|Finally{${v.finallyCont.map(i => i.declSym.id).join()}}`
+            ? `|Finally{${v.finallyCont.map(i => id(i.declSym)).join()}}`
             : ""
         const avail = v.frameAvail || emptySet
         const locals = v.frameLocals || emptySet
         const params = v.frameParams || emptySet
         const clos = v.frameParamsClos || emptySet
-        const fpat = v.framePat || emptySet
-        const all = new Set([...avail, ...locals, ...clos, ...params, ...fpat])
+        const thread = v.threadParams ? new Set(v.threadParams) : emptySet
+        const w = v.stateVars ? v.stateVars.w : emptySet
+        const r = v.stateVars ? v.stateVars.r : emptySet
+        const all = new Set([...avail, ...locals, ...clos,
+                             ...params, ...thread, ...w, ...r])
+        if (v.patSym)
+          all.add(v.patSym)
+        if (v.sym)
+          all.add(v.sym)
         const paramStr = all.size
-              ? `|Params{${[...all].map(i => i.id + ":"
+              ? `|Params{${[...all].map(i => id(i) + ":"
                      + (avail.has(i) ? "A" : "")
                      + (locals.has(i) ? "L" : "")
                      + (params.has(i) ? "P" : (clos.has(i) ? "p" : ""))
-                     + (fpat.has(i) ? "B" : ":"))
+                     + (thread.has(i) ? "T" : "")
+                     + (r.has(i) ? "R" : "")
+                     + (w.has(i) ? "W" : "")
+                     + (i === v.sym ? "S" : "")
+                     + (i === v.patSym ? "B" : ":"))
                  .join()}}` : ""
-        i = dump.setComment(
-          i,`label{${v.declSym.id}}${pat}${paramStr}${except}${hndl}${fin}`,"hl")
+        i = D.setComment(
+          i,`label{${v.declSym.id}}${paramStr}${except}${hndl}${fin}`,"hl")
       }
-      if (i.type === Block.letStmt || i.type === Ctrl.jump) {
+      if (symName(i.type) === "letStmt" || symName(i.type) === "jump") {
         let fin = v.preCompose && v.preCompose.length
           ? `|Pre{${v.preCompose.map(
                i => i.declSym.id+"->"+i.contArg.declSym.id).join()}}`
@@ -531,7 +519,7 @@ function* deb_Mark(s) {
               : ""
         const thread = v.threadArgs ?
               `|Thread{${v.threadArgs.map(
-                i => i[0].id + "<-" + i[1].id).join()
+                i => id(i[0]) + "<-" + id(i[1])).join()
                }}` : ""
         
         let dst = v.goto ? v.goto.declSym.id : "EXIT"
@@ -540,17 +528,15 @@ function* deb_Mark(s) {
           dst = `|${dst}<${inst}>`
         }
         let name = v.result ? "ret" : "goto"
-        i = dump.setComment(
-          i,`${name}[${dst}${pat}${args}${thread}${except}${hndl}${fin}]`,"hl")
+        i = D.setComment(
+          i,`${name}[${dst}${args}${thread}${except}${hndl}${fin}]`,"hl")
       }
     }
     yield i
   }
 }
 
-export const traceAll = R.curry((name, s) => trace.all(name,deb_Mark(s)))
-export const trace = R.curry((name, s) => trace.lazy(name,deb_Mark(s)))
-export const dump = R.curry((name, s) => dump.output(name,deb_Mark(s)))
-
-
+export const traceAll = R.curry((name, s) => T.all(name,mark(s)))
+export const trace = R.curry((name, s) => T.lazy(name,mark(s)))
+export const dump = R.curry((name, s) => D.output(name,mark(s)))
 

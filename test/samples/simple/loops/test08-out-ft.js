@@ -26,5 +26,8 @@ function a_6() {
 }
 
 function a() {
-  return M.jMB1(init(), a_1, a_v);
+  var a_v = {
+    i: undefined
+  };
+  return M.jMB(init(), a_1, a_v);
 }

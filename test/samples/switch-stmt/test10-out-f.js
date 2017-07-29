@@ -4,11 +4,14 @@ function a() {
   return M.jM(eff(), _1);
 
   function _1() {
+    var a, b;
     i += 1;
+    a = i += 2;
 
-    switch (i += 2) {
+    switch (a) {
       case 1:
-        return M.jM(effB(i += 3), _2);
+        b = i += 3;
+        return M.jM(effB(b), _2);
 
       case 2:
         return M.jM(effB(i), _2);

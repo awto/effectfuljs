@@ -1,7 +1,7 @@
 function _1(_v) {
   if (_v.j < _v.len) {
     _v.i = _v.ref[_v.j];
-    return M.jMB1(eff(_v.i), _2, _v);
+    return M.jMB(eff(_v.i), _2, _v);
   } else return M.pure();
 }
 
@@ -11,7 +11,91 @@ function _2(a, _v) {
 
 function _3(_v) {
   _v.j++;
-  return M.jR1(_1, _v);
+  return M.jR(_1, _v);
+}
+
+function __1(_v) {
+  _v.i = 0;
+  return __2(_v);
+}
+
+function __2(_v) {
+  if (_v.i < 3) return __3(_v);else {
+    return eff('ai');
+  }
+}
+
+function __3(_v) {
+  return M.jM(eff('bi:', _v.i), _4, _v);
+}
+
+function _4(_v) {
+  _v.i++;
+  return M.jR(__2, _v);
+}
+
+function _11(_v) {
+  _v.i = 0;
+  return _21(_v);
+}
+
+function _21(_v) {
+  if (_v.i < 3) return _31(_v);else {
+    return eff('ai');
+  }
+}
+
+function _31(_v) {
+  return M.jM(eff('bi:', _v.i), __4, _v);
+}
+
+function __4(_v) {
+  _v.i++;
+  return M.jR(_21, _v);
+}
+
+function _12(_v) {
+  _v.i = 0;
+  return _22(_v);
+}
+
+function _22(_v) {
+  if (_v.i < 3) {
+    return M.jM(eff('bj:' + _v.i), _32, _v);
+  } else return _8();
+}
+
+function _32(_v) {
+  _v.j = 0;
+  return _41(_v);
+}
+
+function _41(_v) {
+  if (_v.j < 40) return _5(_v);else {
+    return M.jM(eff('aj:' + _v.i), _7, _v);
+  }
+}
+
+function _5(_v) {
+  if (_v.j === 10) return _7(_v);else {
+    if (_v.j === 30) return _8();else {
+      return M.jM(eff(_v.i + _v.j), _6, _v);
+    }
+  }
+}
+
+function _6(_v) {
+  _v.j += 10;
+  return M.jR(_41, _v);
+}
+
+function _7(_v) {
+  _v.i++;
+  return M.jR(_22, _v);
+}
+
+function _8() {
+  return eff('ai');
 }
 
 function a_1(a_v) {
@@ -30,12 +114,12 @@ function a_3(a_v) {
     console.log(a_v.i);
   }
 
-  return M.jM1(eff(a_v.i), a_4, a_v);
+  return M.jM(eff(a_v.i), a_4, a_v);
 }
 
 function a_4(a_v) {
   a_v.i++;
-  return M.jR1(a_2, a_v);
+  return M.jR(a_2, a_v);
 }
 
 function a1_1(a1_v) {
@@ -55,12 +139,12 @@ function a1_3(a1_v) {
     console.log(a1_v.i, a1_v.j);
   }
 
-  return M.jM1(eff(a1_v.i, a1_v.j), a1_4, a1_v);
+  return M.jM(eff(a1_v.i, a1_v.j), a1_4, a1_v);
 }
 
 function a1_4(a1_v) {
   a1_v.i++, a1_v.j += 2;
-  return M.jR1(a1_2, a1_v);
+  return M.jR(a1_2, a1_v);
 }
 
 function b_1() {
@@ -100,13 +184,13 @@ function d_1(d_v) {
 }
 
 function d_2(d_v) {
-  return M.jMB1(eff(d_v.result, d_v.i), d_3, d_v);
+  return M.jMB(eff(d_v.result, d_v.i), d_3, d_v);
 }
 
 function d_3(a, d_v) {
   d_v.result = a;
   d_v.i++;
-  return M.jR1(d_1, d_v);
+  return M.jR(d_1, d_v);
 }
 
 function e_1(e_v) {
@@ -116,13 +200,13 @@ function e_1(e_v) {
 }
 
 function e_2(e_v) {
-  return M.jMB1(eff(e_v.i), e_3, e_v);
+  return M.jMB(eff(e_v.i), e_3, e_v);
 }
 
 function e_3(a, e_v) {
   e_v.result = a;
   e_v.i++;
-  return M.jR1(e_1, e_v);
+  return M.jR(e_1, e_v);
 }
 
 function f_1(f_v) {
@@ -132,19 +216,74 @@ function f_1(f_v) {
 }
 
 function f_2(f_v) {
-  return M.jMB1(eff(f_v.i), f_3, f_v);
+  return M.jMB(eff(f_v.i), f_3, f_v);
 }
 
 function f_3(a, f_v) {
   f_v.result = a;
   f_v.i++;
-  return M.jR1(f_1, f_v);
+  return M.jR(f_1, f_v);
+}
+
+function c2_1(c2_v) {
+  if (c2_v.i < 10) return c2_2(c2_v);else {
+    return eff(c2_v.result);
+  }
+}
+
+function c2_2(c2_v) {
+  return M.jMB(eff(function cc() {
+    var cc_v = {
+      cc: undefined
+    },
+        c2_v,
+        a,
+        b;
+    b = c2_v.i++;
+    a = c2_v.result += b;
+    return eff(a);
+  }), c2_3, c2_v);
+}
+
+function c2_3(a, c2_v) {
+  c2_v.result[c2_v.i] = a;
+  return M.jR(c2_1, c2_v);
+}
+
+function _c2_1(c2_v) {
+  if (c2_v.i < 10) return _c2_2(c2_v);else {
+    return eff(c2_v.result);
+  }
+}
+
+function _c2_2(c2_v) {
+  var cc_v, a;
+  a = c2_v.i++;
+  return M.jMB(function cc(j) {
+    var cc_v = {
+      j,
+      cc: undefined
+    },
+        c2_v,
+        a,
+        b;
+    b = c2_v.i += cc_v.j;
+    a = c2_v.result += b;
+    return eff(a);
+  }(a), _c2_3, c2_v);
+}
+
+function _c2_3(a, c2_v) {
+  return M.jMB(eff(a), c2_4, c2_v);
+}
+
+function c2_4(a, c2_v) {
+  c2_v.result[c2_v.i] = a;
+  return M.jR(_c2_1, c2_v);
 }
 
 (function () {
-  var _v;
-
-  _v = {
+  var _v = {
     i: undefined,
     j: undefined,
     len: undefined,
@@ -156,41 +295,42 @@ function f_3(a, f_v) {
 });
 
 (function () {
-  console.log('bi');
-
-  for (var i = 0; i < 3; i++) {
-    console.log('bi:', i);
-  }
-
-  console.log('ai');
+  var _v = {
+    i: undefined
+  };
+  return M.jM(eff('bi'), __1, _v);
 });
 
 (function () {
-  console.log('bi');
+  var _v = {
+    i: undefined
+  };
+  return M.jM(eff('bi'), _11, _v);
+});
 
-  lab: for (var i = 0; i < 3; i++) {
-    console.log('bj:' + i);
-
-    for (var j = 0; j < 40; j += 10) {
-      if (j === 10) continue lab;
-      if (j === 30) break lab;
-      console.log(i + j);
-    }
-
-    console.log('aj:' + i);
-  }
-
-  console.log('ai');
+(function () {
+  var _v = {
+    i: undefined,
+    j: undefined
+  };
+  return M.jM(eff('bi'), _12, _v);
 });
 
 function a() {
-  return M.jM1(eff('b'), a_1, a_v);
+  var a_v = {
+    i: undefined
+  };
+  return M.jM(eff('b'), a_1, a_v);
 }
 
 ;
 
 function a1() {
-  return M.jM1(eff('b'), a1_1, a1_v);
+  var a1_v = {
+    i: undefined,
+    j: undefined
+  };
+  return M.jM(eff('b'), a1_1, a1_v);
 }
 
 function b() {
@@ -202,8 +342,7 @@ function c() {
 }
 
 function d() {
-  var d_v;
-  d_v = {
+  var d_v = {
     result: undefined,
     i: undefined
   };
@@ -213,8 +352,7 @@ function d() {
 }
 
 function e() {
-  var e_v;
-  e_v = {
+  var e_v = {
     result: undefined,
     i: undefined
   };
@@ -224,12 +362,55 @@ function e() {
 }
 
 function f() {
-  var f_v;
-  f_v = {
+  var f_v = {
     result: undefined,
     i: undefined
   };
   f_v.result = 0;
   f_v.i = 0;
   return f_1(f_v);
+}
+
+function c1() {
+  var c1_v = {
+    result: undefined,
+    i: undefined
+  };
+  c1_v.result = [];
+
+  for (c1_v.i = 0; c1_v.i < 10;) {
+    c1_v.result[c1_v.i] = function cc() {
+      var cc_v = {
+        cc: undefined
+      },
+          c1_v,
+          a,
+          b;
+      b = c1_v.i++;
+      a = c1_v.result += b;
+      return eff(a);
+    };
+  }
+
+  return eff(c1_v.result);
+}
+
+function c2() {
+  var c2_v = {
+    result: undefined,
+    i: undefined
+  };
+  c2_v.result = [];
+  c2_v.i = 0;
+  return c2_1(c2_v);
+}
+
+function _c2() {
+  var c2_v = {
+    result: undefined,
+    i: undefined
+  };
+  c2_v.result = [];
+  c2_v.i = 0;
+  return _c2_1(c2_v);
 }

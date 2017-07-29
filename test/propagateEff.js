@@ -28,8 +28,8 @@ describe('propagate effect for `for-of`', function() {
           }
         }`),
         print(`function () /*BS|E*/{
-          /*FOS|E*/for (const /*I|+*/i of /*I|-*/s) /*BS|E*/{
-            /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+          /*FOS|E*/for (const i of s) /*BS|E*/{
+            /*ES|e*/ /*CE|B*/eff(1);
           }
         }`))
     })
@@ -44,9 +44,9 @@ describe('propagate effect for `for-of`', function() {
             }
           }`),
           print(`function () /*BS|E*/{
-            /*FS|e*/for ( /*VD|E*/const /*VD|E*/ /*I|+*/i = /*CE|B*/ /*I|-*/init(1);
-              /*I|-*/t1; /*I|-*/t2) {
-              /*I|-*/something;
+            /*FS|e*/for ( /*VD|E*/const /*VD|E*/i = /*CE|B*/init(1);
+              t1; t2) {
+              something;
             }
           }`))
       })
@@ -65,11 +65,11 @@ describe('propagate effect for `for-of`', function() {
                }
              }`),
              print(`function () /*BS|E*/{
-               /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+               /*ES|e*/ /*CE|B*/ eff(1);
                
-               for (var /*I|+*/i of /*I|-*/e) {
+               for (var i of e) {
                  2 + 2;
-                 if ( /*I|-*/a) break;
+                 if (a) break;
                }
              }`))
       })
@@ -86,10 +86,10 @@ describe('propagate effect for `for-of`', function() {
                }
              }`),
              print(`function () /*BS|E*/{
-               /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
-               for (var /*I|+*/i of /*I|-*/e) {
+               /*ES|e*/ /*CE|B*/ eff(1);
+               for (var i of e) {
                  2 + 2;
-                 if ( /*I|-*/a) continue;
+                 if (a) continue;
                }
              }`))
          })
@@ -106,8 +106,8 @@ describe('propagate effect for `for-of`', function() {
           }`),
           print(`function () /*BS|E*/{
             lab: lab2: lab3: /*BS|E*/{
-              /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
-              /*IS|E*/if ( /*I|-*/a) /*BS|E*/break lab;
+              /*ES|e*/ /*CE|B*/eff(1);
+              /*IS|E*/if (a) /*BS|E*/break lab;
             }
           }`))
       })
@@ -127,11 +127,11 @@ describe('propagate effect for `for-of`', function() {
           }`),
           print(`function () /*BS|E*/{
             lab: /*BS|E*/{
-              /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+              /*ES|e*/ /*CE|B*/eff(1);
               
-              /*FOS|E*/for (var /*I|+*/i of /*I|-*/e) /*BS|E*/{
+              /*FOS|E*/for (var i of e) /*BS|E*/{
                 2 + 2;
-                /*IS|E*/if ( /*I|-*/a) /*BS|E*/break lab;
+                /*IS|E*/if (a) /*BS|E*/break lab;
               }
             }
           }`))
@@ -153,11 +153,11 @@ describe('propagate effect for `for-of`', function() {
              }`),
              print(`function () /*BS|E*/{
                lab: /*FS|E*/for (;;) /*BS|E*/{
-                 /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+                 /*ES|e*/ /*CE|B*/eff(1);
                  
-                 /*FOS|E*/for (var /*I|+*/i of /*I|-*/e) /*BS|E*/{
+                 /*FOS|E*/for (var i of e) /*BS|E*/{
                    2 + 2;
-                   /*IS|E*/if ( /*I|-*/a) /*CS|E*/continue lab;
+                   /*IS|E*/if (a) /*CS|E*/continue lab;
                  }
                }
              }`))
@@ -176,11 +176,11 @@ describe('propagate effect for `for-of`', function() {
                }
              }`),
              print(`function () /*BS|E*/{
-               /*ES|e*/ /*CE|B*/ /*I|-*/eff(1);
+               /*ES|e*/ /*CE|B*/eff(1);
                
-               /*FOS|E*/for (var /*I|+*/i of /*I|-*/e) /*BS|E*/{
+               /*FOS|E*/for (var i of e) /*BS|E*/{
                  2 + 2;
-                 /*IS|E*/if ( /*I|-*/a) /*RS|E*/return;
+                 /*IS|E*/if (a) /*RS|E*/return;
                }
              }`))
          })
@@ -209,25 +209,25 @@ describe('propagate effect for `for-of`', function() {
             }
           }`),
           print(`function () /*BS|E*/{
-            l1: /*FOS|E*/for (var /*I|+*/i of /*I|-*/e) /*BS|E*/{
+            l1: /*FOS|E*/for (var i of e) /*BS|E*/{
               2 + 2;
               
-              l2: /*FOS|E*/for (var /*I|+*/j of /*I|-*/f) /*BS|E*/{
+              l2: /*FOS|E*/for (var j of f) /*BS|E*/{
                 3 + 3;
                 
-                for (var /*I|+*/k of /*I|-*/j) {
+                for (var k of j) {
                   4 + 4;
-                  if ( /*I|-*/a) break;
+                  if (a) break;
                 }
                 
-                /*FOS|E*/for (var /*I|+*/l of /*I|-*/k) /*BS|E*/{
-                  /*IS|E*/if ( /*I|-*/b) /*BS|E*/break l2;
+                /*FOS|E*/for (var l of k) /*BS|E*/{
+                  /*IS|E*/if (b) /*BS|E*/break l2;
                 }
                 
-                /*IS|E*/if ( /*I|-*/c) /*BS|E*/break l1;
+                /*IS|E*/if (c) /*BS|E*/break l1;
               }
               
-              /*ES|e*/ /*CE|B*/ /*I|-*/eff( /*I|-*/z);
+              /*ES|e*/ /*CE|B*/eff(z);
             }
           }`))
       })
@@ -242,7 +242,7 @@ describe('propagate effect for `for-of`', function() {
                }
              }`),
              print(function () /*BS|E*/{
-               /*FOS|e*/for (var /*I|+*/i of /*CE|B*/ /*I|-*/eff(1)) {
+               /*FOS|e*/for (var i of /*CE|B*/ eff(1)) {
                  2 + 2;
                }
              }))

@@ -1,6 +1,5 @@
 function a() {
-  var error, _error;
-
+  var error;
   return _1();
 
   function _1() {
@@ -8,13 +7,12 @@ function a() {
       console.log('1');
       return M.jME(eff(1), _3, _2);
     } catch (e) {
-      return _2(e);
+      return _2();
     }
   }
 
-  function _2(ex) {
+  function _2() {
     var e;
-    _error = ex;
     e = _error;
     console.log('2');
     return _3(e);
@@ -34,13 +32,12 @@ function _a() {
       console.log('1');
       return M.jME(eff(1), _3, _2);
     } catch (e) {
-      return _2(e);
+      return _2();
     }
   }
 
-  function _2(ex) {
+  function _2() {
     var e, error;
-    error = ex;
     e = error;
     console.log('2');
     error = null;

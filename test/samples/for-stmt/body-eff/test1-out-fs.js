@@ -11,11 +11,11 @@
   function _2(j, len, ref) {
     var i;
     i = ref[j];
-    return M.jM3(eff(i), _3, j, len, ref);
+    return M.jM(eff(i), _3, j, len, ref);
   }
 
   function _3(j, len, ref) {
     j++;
-    return M.jR3(_1, j, len, ref);
+    return M.jR(_1, j, len, ref);
   }
 });

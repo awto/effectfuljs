@@ -8,7 +8,7 @@ import * as Debug from "./debug"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
 import * as Ctrl from "./control"
-import * as Trace from "estransducers/trace"
+import * as Bind from "./bind"
 
 export const repeatId = Kit.sysId("repeat")
 export const forParId = Kit.sysId("forPar")
@@ -31,7 +31,7 @@ export const toBlocks = R.pipe(
     s = Kit.auto(s)
     function* walk() {
       for(const i of s.sub()) {
-        if (i.enter && i.value.eff) {
+        if (i.enter) {
           switch(i.type) {
           case Tag.ForStatement:
           case Tag.ForInStatement:
@@ -40,7 +40,7 @@ export const toBlocks = R.pipe(
           case Tag.DoWhileStatement:
           case Tag.WhileStatement:
             const lab = s.label()
-            if (i.pos !== Tag.push) {
+            if (i.pos !== Tag.push && i.value.eff) {
               yield s.enter(i.pos,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
               yield s.peel(Kit.setPos(i,Tag.push))
@@ -61,7 +61,7 @@ export const toBlocks = R.pipe(
     function* walk() {
       for(const i of s.sub()) {
         yield i
-        if (i.enter && i.value.eff) {
+        if (i.enter) {
           switch(i.type) {
           case Tag.ForStatement:
           case Tag.ForInStatement:
@@ -79,8 +79,12 @@ export const toBlocks = R.pipe(
               const lab = s.label()
               yield s.enter(Tag.body,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
-              yield s.peel(Kit.setPos(p,Tag.push))
-              yield* walk()
+              if (p.type === Tag.EmptyStatement) {
+                Kit.skip(s.copy(p))
+              } else {
+                yield s.peel(Kit.setPos(p,Tag.push))
+                yield* walk()
+              }
               yield* lab()
             } else
               yield p
@@ -123,8 +127,9 @@ export const doWhileStmt = R.pipe(
   },
   Kit.completeSubst)
 
-export function forOfStmt(s) {
+function forOfStmtImpl(loose, s) {
   s = Kit.auto(s)
+  const all = loose || s.opts.loose
   function* readLeft(sym) {
     function* val(pos) {
       yield s.enter(pos,Tag.MemberExpression)
@@ -146,7 +151,7 @@ export function forOfStmt(s) {
       const lab = s.label()
       yield s.enter(Tag.push,Tag.ExpressionStatement)
       yield s.enter(Tag.expression,Tag.AssignmentExpression,{node:{operator:"="}})
-      yield Kit.enter(i) // ??
+      yield Kit.enter(i)
       if (!i.leave) {
         yield* s.sub()
         yield s.take()
@@ -156,30 +161,30 @@ export function forOfStmt(s) {
     }
   }
   let loopnum = 0
-  function* walk() {
-    for(const i of s.sub()) {
-      if (i.value.eff) {
+  function* walk(sw) {
+    for(const i of sw) {
+      if (all || i.value.eff) {
         switch(i.type) {
         case Tag.ForInStatement:
+          if (loose)
+            break
         case Tag.ForAwaitStatement:
         case Tag.ForOfStatement:
           yield Kit.setType(i,Tag.ForStatement)
           if (i.enter) {
-            const sym = Kit.scope.newSym("loop")
+            const sym = Bind.tempVarSym(s.first.value,"loop")
             sym.declBlock = sym.declLoop = i.value
-            sym.declScope = s.first.value
-            sym.byVal = s.opts.state
             sym.hasRefs = true
-            s.first.value.scopeDecls.add(sym)
             const iterVar = {sym,lhs:true,decl:true}
-            const init = Array.from(readLeft(sym))
+            const init = Kit.toArray(readLeft(sym))
             const end = s.label()
-            yield* openVarDecl(iterVar,s,"let")
+            yield* openVarDecl(iterVar,s,"var")
             yield s.enter(Tag.init,Tag.CallExpression)
-            const bind = i.type !== Tag.ForInStatement
-              && (i.type === Tag.ForAwaitStatement
-                  || i.value.node.async
-                  || s.opts.pureForOf === false)
+            const bind = !loose
+                  && i.type !== Tag.ForInStatement
+                  && (i.type === Tag.ForAwaitStatement
+                      || i.value.node.async
+                      || s.opts.pureForOf === false)
             yield Kit.idTok(Tag.callee,
                             i.type === Tag.ForInStatement ? forInIteratorId
                             : bind ? effIteratorId
@@ -192,17 +197,37 @@ export function forOfStmt(s) {
               yield Kit.setPos(s.take(),Tag.push)
             }
             yield* end()
-            yield s.enter(Tag.test,Tag.AssignmentExpression,{node:{operator:"="}})
+            yield s.enter(Tag.test,Tag.UnaryExpression,{node:{operator:"!"}})
+            yield s.enter(Tag.argument,Tag.MemberExpression)
+            yield s.enter(Tag.object,Tag.AssignmentExpression,{node:{operator:"="}})
             yield s.tok(Tag.left,Tag.Identifier,{sym,lhs:true,rhs:false})
             yield s.enter(Tag.right,Tag.CallExpression,{bind,eff:bind})
-            yield s.tok(Tag.callee,Tag.Identifier,{sym,lhs:false,rhs:true})
+            yield s.enter(Tag.callee,Tag.MemberExpression)
+            yield s.tok(Tag.object,Tag.Identifier,{sym,lhs:false,rhs:true})
+            yield s.tok(Tag.property,Tag.Identifier,{node:{name:"step"}})
+            yield* s.leave()
             yield s.tok(Tag.arguments,Tag.Array)
+            yield* s.leave()
+            yield* s.leave()
+            yield s.tok(Tag.property, Tag.Identifier, {node:{name:"done"}})
             yield* end()
-            yield s.peel()
-            yield* s.peelTo(Tag.body)
-            //yield* peelBlockFrom(s)
-            yield* init
-            yield* walk()
+            const body = s.curLev()
+            assert.equal(body.pos, Tag.body)
+            if (body.type === Tag.BlockStatement) {
+              yield s.peel()
+              yield* s.peelTo(Tag.body)
+              yield* init
+              yield* walk(s.sub())
+            } else {
+              yield s.enter(Tag.body, Tag.BlockStatement)
+              yield s.enter(Tag.body, Tag.Array)
+              if (body.type === Tag.EmptyStatement)
+                Kit.skip(s.one())
+              else {
+                yield* init
+                yield* Kit.reposOne(walk(s.one()), Tag.push)
+              }
+            }
             yield* end()
           }
           continue
@@ -211,8 +236,12 @@ export function forOfStmt(s) {
       yield i
     }
   }
-  return walk()
+  return walk(s)
 }
+
+
+export const forOfStmt = (s) => forOfStmtImpl(false,s)
+export const looseForOf = (s) => forOfStmtImpl(true,s)
 
 /**
  * transforms `for(init; test; upd) body` into for(;;) {...}
@@ -273,7 +302,7 @@ export const normilizeFor = R.pipe(
           } else {
             assert.ok(i.enter)
             assert.equal(i.pos,Tag.push)
-            let upd = null, test = null, hasBody = false
+            let upd = null, test = null, hasBody = false, locals
             for(const j of sl.sub()) {
               assert.ok(j.enter)
               switch(j.pos) {
@@ -286,6 +315,29 @@ export const normilizeFor = R.pipe(
                 else {
                   j.value.stmt = true
                   yield sl.peel(Kit.setPos(j,Tag.push))
+                  if (j.value.node.kind !== "var") {
+                    locals = []
+                    for(const k of sl.sub()) {
+                      if (k.enter && k.type === Tag.Identifier && k.value.decl) {
+                        const sym = k.value.sym
+                        if (sym.closCapt && sym.byVal) {
+                          const copy = Kit.scope.cloneSym(sym)
+                          k.value.sym = copy
+                          copy.byVal = true
+                          copy.track = sym.track
+                          copy.state = sym.state
+                          copy.declScope.scopeDecls.add(copy)
+                          k.value.node.name = undefined
+                          copy.captLoop = copy.declLoop
+                          Bind.setSymInterpr(copy)
+                          locals.push({sym,copy})
+                        }
+                      }
+                      yield k
+                    }
+                    yield* sl.leave()
+                    break
+                  }
                 }
                 yield* sl.sub()
                 yield* ilab()
@@ -306,6 +358,22 @@ export const normilizeFor = R.pipe(
                 i.value.node.init = i.value.node.test = i.value.node.update = null
                 yield sl.peel(j)
                 yield* sl.peelTo(Tag.body)
+                const llab = sl.label()
+                if (locals && locals.length) {
+                  const lab = sl.label()
+                  yield sl.enter(Tag.push,Tag.VariableDeclaration,
+                                {node:{kind:"let"}})
+                  yield sl.enter(Tag.declarations,Tag.Array)
+                  for(const {sym,copy} of locals) {
+                    yield sl.enter(Tag.push,Tag.VariableDeclarator)
+                    yield sl.tok(Tag.id,Tag.Identifier,
+                                {decl:true,lhs:true,rhs:false,sym})
+                    yield sl.tok(Tag.init,Tag.Identifier,
+                                {decl:false,lhs:false,rhs:true,sym:copy})
+                    yield* sl.leave()
+                  }
+                  yield* lab()
+                }
                 if (test != null) {
                   yield sl.enter(Tag.push,Tag.IfStatement)
                   yield* test
@@ -325,6 +393,21 @@ export const normilizeFor = R.pipe(
                   yield sl.enter(Tag.body,Tag.Array)
                   yield sl.tok(Tag.push,Tag.BreakStatement,
                                {eff:true,bind:true,jump:i.value.ctrl[0]})
+                }
+                if (locals) {
+                  yield* llab()
+                  for(const {sym,copy} of locals) {
+                    yield sl.enter(Tag.push, Tag.ExpressionStatement)
+                    yield sl.enter(Tag.expression, Tag.AssignmentExpression,
+                                   {node:{operator:"="}})
+                    yield sl.tok(Tag.left,Tag.Identifier,
+                                 {decl:false,lhs:true,rhs:false,sym:copy})
+                    yield sl.tok(Tag.right,Tag.Identifier,
+                                 {decl:false,lhs:true,rhs:false,sym})
+                    yield* sl.leave()
+                    yield* sl.leave()
+                  }
+                  locals = undefined
                 }
                 yield* blab()
                 break
@@ -371,7 +454,7 @@ export function* injectRepeat(s) {
   yield* walk()
 }
 
-export const interpretRepeat = R.pipe(function* interpretRepeat(s) {
+export function interpretRepeat(s) {
   const sl = Kit.auto(s)
   function* walk() {
     for(const i of sl.sub()) {
@@ -384,8 +467,7 @@ export const interpretRepeat = R.pipe(function* interpretRepeat(s) {
           yield sl.enter(Tag.arguments, Tag.Array)
           yield sl.enter(Tag.push, Tag.ArrowFunctionExpression,{node:{params:[]}})
           // TODO: it may be already body
-          yield sl.enter(Tag.body, Kit.Subst)
-          yield* walk()
+          yield* Kit.reposOne(walk(), Tag.body)
           yield* lab()
         }
         continue
@@ -393,253 +475,6 @@ export const interpretRepeat = R.pipe(function* interpretRepeat(s) {
       yield i
     }
   }
-  yield* walk()
-}, Kit.completeSubst)
-
-const forPar = symbol("forPar","ctrl")
-
-export const injectParLoop = R.pipe(
-  function checkParLoop(s) {
-    function tw(v) {
-      return v == null || v.env == null ||
-        v.env.tw == null || v.env.tw.size === 0
-        ? null :  v.env.tw
-    }
-    const sa = Kit.toArray(s)
-    const sl = Kit.auto(sa)
-    function walk() {
-      L1: for(const i of sl.sub()) {
-        if (i.enter && i.value.eff && !i.value.unwind) {
-          switch(i.type) {
-          case Tag.ForStatement:
-            let j = sl.curLev()
-            let uvars
-            if (j != null && j.pos === Tag.init) {
-              Kit.skip(sl.one())
-              j = sl.curLev()
-            }
-            if (j != null && j.pos === Tag.test) {
-              Kit.skip(sl.one())
-              if (j.value.eff || tw(j.value)) {
-                j.value.parEnabled = false
-                continue
-              }
-              j = sl.curLev()
-            }
-            if (j != null && j.pos === Tag.update) {
-              Kit.skip(sl.one())
-              if (j.value.eff) {
-                j.value.parEnabled = false
-                continue
-              }
-              uvars = tw(j.value)
-              j = sl.curLev()
-            }
-            if (j != null && j.pos === Tag.body) {
-              const bw = tw(j.value)
-              if (bw) {
-                const af = i.value.env.br
-                const tr = i.value.env.tr
-                for(const k of bw) {
-                  if (af.has(k) || tr.has(k)) {
-                    j.value.parEnabled = false
-                    continue L1
-                  }
-                }
-              }
-            }
-            i.value.parEnabled = true
-            i.value.uvars = uvars
-          }
-        }
-      }
-    }
-    walk()
-    return sa
-  },
-  function* injectParLoop(s) {
-    const sl = Kit.auto(s)
-    function* walk() {
-      for(const i of sl.sub()) {
-        if (i.type === Tag.ForStatement && i.value.parEnabled) {          
-          if (i.enter) {
-            const lab = sl.label(), uvars = i.value.uvars
-            yield sl.enter(i.pos,Tag.ExpressionStatement,{eff:true})
-            let pos = Tag.expression
-            const uvarl = [...uvars].sort()
-            if (uvarl.length) {
-              yield sl.enter(pos,Tag.AssignmentExpression,
-                             {node:{operator:"="}})
-              pos = Tag.right
-              if (uvarl.length === 1)
-                yield sl.tok(Tag.left,Tag.Identifier,{node:{name:uvarl[0]}})
-              else {
-                yield sl.enter(Tag.left,Tag.ArrayPattern)
-                yield sl.enter(Tag.elements,Tag.Array)
-                for(const j of uvarl)
-                  yield sl.tok(Tag.push,Tag.Identifier,{node:{name:j}})
-                yield* sl.leave()
-                yield* sl.leave()
-              }
-            }
-            yield sl.enter(pos,forPar,
-                           {expr:true,bind:true,eff:true,
-                            node:{uvars:i.value.uvars}
-                           })
-            for(let j;(j = sl.curLev()) != null;) {
-              switch(j.pos) {
-              case Tag.update:
-                yield sl.tok(Tag.update,Tag.Node,
-                             {node:Kit.consume(sl.one()).update})
-                break
-              case Tag.body:
-                yield* walk()
-                break
-              default:
-                yield* sl.one()
-              }
-            }
-            yield* walk()
-            yield* lab()
-          }
-          continue
-        }
-        yield i
-      }
-    }
-    yield* walk()
-  }
-)
-
-
-export const interpretParLoop = R.pipe(
-  function* interpretParLoop(s) {
-    const sa = Kit.toArray(s)
-    const sl = Kit.auto(sa)
-    function* walk() {
-      for(const i of sl.sub()) {
-        if (i.type === forPar) {
-          if (i.enter) {
-            const uvars = [...i.value.node.uvars]
-            const lab = sl.label()
-            uvars.sort()
-            let j = sl.curLev()
-            if (j != null && j.pos === Tag.init) {
-              if (j.type === Block.bindPat)
-                Kit.skip(sl.one())
-              else {
-                yield sl.enter(Tag.push,Kit.Subst)
-                yield* sl.one()
-                yield* lab()
-              }
-              j = sl.curLev()
-            }
-            yield sl.enter(i.pos,Tag.CallExpression)
-            yield Kit.idTok(Tag.callee,forParId)
-            yield sl.enter(Tag.arguments, Tag.Array)
-            const alab = sl.label()
-            const uvtoks = []
-            for(const k of uvars)
-              uvtoks.push(sl.tok(Tag.push,Tag.Identifier,{node:{name:k}}))
-            const plab = sl.label()
-            const uvpat = [sl.enter(Tag.params, Tag.Array)]
-            if (uvars.length === 1) {
-              uvpat.push(...uvtoks)
-            } else {
-              uvpat.push(
-                sl.enter(Tag.push,Tag.ArrayPattern),
-                sl.enter(Tag.elements,Tag.Array),
-                ...uvtoks)
-            }
-            uvpat.push(...plab())
-            if (uvars.length !== 1) {
-              yield sl.enter(Tag.push,Tag.ArrayExpression)
-              yield sl.enter(Tag.elements,Tag.Array)
-            }
-            yield* uvtoks
-            yield* alab()
-            yield sl.enter(Tag.push, Tag.ArrowFunctionExpression,
-                           {node:{expression:true}})
-            if (j != null && j.pos === Tag.test) {
-              yield* uvpat
-              yield sl.enter(Tag.body,Kit.Subst)
-              yield* sl.one()
-              j = sl.curLev()
-            } else {
-              yield sl.tok(Tag.params, Tag.Array)
-              yield sl.tok(Tag.body,Tag.BooleanLiteral,{node:{value:true}})
-            }
-            yield* alab()
-            yield sl.enter(Tag.push, Tag.ArrowFunctionExpression,
-                           {node:{expression:true}})
-            if (j != null && j.pos === Tag.update) {
-              yield* uvpat
-              yield sl.enter(Tag.body,Tag.SequenceExpression)
-              yield sl.enter(Tag.expressions,Tag.Array)
-              yield sl.enter(Tag.push,Kit.Subst)
-              yield* sl.one()
-              yield* sl.leave()
-              if (uvars.length !== 1) {
-                yield sl.enter(Tag.push,Tag.ArrayExpression)
-                yield sl.enter(Tag.elements,Tag.Array)
-              }
-              yield* uvtoks
-            } else {
-              yield sl.tok(Tag.params, Tag.Array)
-              yield sl.tok(Tag.body,Tag.NullLiteral)
-            }
-            yield* alab()
-            const node = {}
-            yield sl.enter(Tag.push, Tag.ArrowFunctionExpression,{node})
-            yield* uvpat
-            // TODO: it may be already body
-            yield sl.enter(Tag.body,Kit.Subst)
-            yield* walk()
-            yield* lab()
-          }
-          continue
-        }
-        yield i
-      }
-    }
-    yield* walk()
-  },
-  Kit.completeSubst)
-
-export function blockScope(si) {
-  const s = Kit.auto(si)
-  function* walk() {
-    for(const i of s.sub()) {
-      yield i
-      if (i.enter && i.type === Tag.ForStatement
-          && i.value.eff && i.value.captureRefs) {
-        const argCapt = [...i.value.captureRefs]
-              .filter(s => s.declBlock === s.declLoop)
-              .sort((a,b) => a.num - b.num)
-        const lab = s.label()
-        yield* s.peelTo(Tag.body)
-        yield* s.peelTo(Tag.body)
-        yield s.enter(Tag.push, Tag.ExpressionStatement)
-        yield s.enter(Tag.expression, Tag.CallExpression)
-        const clab = s.label()
-        const func = s.enter(Tag.callee, Tag.ArrowFunctionExpression,
-                             {isLocal: true, topEff: true})
-        yield func
-        func.value.localFuncRef = func.value
-        yield s.enter(Tag.params, Tag.Array)
-        for (const {sym} of argCapt)
-          yield s.tok(Tag.push,Tag.Identifier,{sym})
-        yield* s.leave()
-        yield s.enter(Tag.body,Tag.BlockStatement)
-        yield s.enter(Tag.body,Tag.Array)
-        yield* walk()
-        yield* clab()
-        yield s.enter(Tag.arguments,Tag.Array)
-        for(const sym of argCapt)
-          yield s.tok(Tag.push, Tag.Identifier, {sym})
-        yield* lab()
-      }
-    }
-  }
   return walk()
 }
+

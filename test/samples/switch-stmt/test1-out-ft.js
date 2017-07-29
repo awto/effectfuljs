@@ -1,9 +1,9 @@
 function a_1(a) {
-  return M.jMB1(effC(1), a_2, a);
+  return M.jMB(effC(1), a_2, a);
 }
 
 function a_2(b, a) {
-  return M.jMB2(effC(2), a_3, a, b);
+  return M.jMB(effC(2), a_3, a, b);
 }
 
 function a_3(c, a, b) {

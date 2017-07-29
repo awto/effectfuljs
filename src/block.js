@@ -230,48 +230,6 @@ export const rassoc = R.pipe(
   }
 )
 
-/** converts chains marked with "pseq" kind to JS expressions */
-export const interpretParEffSeq = R.pipe(
-  function* interpretArrEffSeq(s) {
-    const sl = Kit.auto(s)
-    function* walk(sw) {
-      for(const i of sw) {
-        if (i.type === chain && i.value.kind === "pseq") {
-          if (i.enter) {
-            const pat = []
-            const lab = sl.label()
-            yield sl.enter(i.pos,effExpr,{pat})
-            yield sl.enter(Tag.expression,Tag.CallExpression)
-            yield sl.enter(Tag.callee,Tag.MemberExpression)
-            yield sl.enter(Tag.object,Kit.Subst)
-            let j = sl.cur()
-            assert.ok(j.value.eff)
-            yield* walk(sl.one())
-            yield* sl.leave()
-            yield sl.tok(Tag.property,Tag.Identifier,{node:{name:"mseq"}})
-            yield* sl.leave()
-            yield sl.enter(Tag.arguments,Tag.Array)
-            while(sl.curLev() != null) {
-              j = sl.cur()
-              assert.ok(j.value.eff)
-              yield sl.enter(Tag.push,Kit.Subst)
-              yield* walk(sl.one())
-              yield* sl.leave()
-            }
-            if (j.value.pat && j.value.pat.length)
-              pat.push(...j.value.pat)
-            yield* lab()
-          }
-        } else
-          yield i
-      }
-    }
-    yield* walk(sl)
-  },
-  Kit.completeSubst,
-  Array.from
-)
-
 /** converts chains to JS expressions */
 export function* interpretBinEffSeq(s) {
   const sl = Kit.auto(s)
@@ -284,15 +242,15 @@ export function* interpretBinEffSeq(s) {
       case chain:
         if (i.enter) {
           assert.equal(i.value.count,2)
-          const pat = sl.cur().value.pat
+          const patSym = sl.cur().value.sym
           const sym = bindId
           const lab = sl.label()
           const head = sl.enter(i.pos,app,{sym})
           yield head
           yield* walk(sl.one())
           yield sl.enter(Tag.params,Tag.Array)
-          if (pat != null)
-            yield* pat
+          if (patSym != null)
+            yield s.tok(Tag.push,Tag.Identifier,{sym:patSym})
           yield* sl.leave()
           if (!sl.cur().value.eff)
             head.sym = mapId

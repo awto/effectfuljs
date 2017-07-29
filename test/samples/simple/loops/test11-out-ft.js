@@ -1,9 +1,8 @@
 function a() {
-  var i, j, len, ref1;
-  ref1 = [1, 2, 3];
+  a_v.ref1 = [1, 2, 3];
 
-  for (j = 0, len = ref1.length; j < len; j++) {
-    i = ref1[j];
-    console.log(i);
+  for (a_v.j = 0, a_v.len = a_v.ref1.length; a_v.j < a_v.len; a_v.j++) {
+    a_v.i = a_v.ref1[a_v.j];
+    console.log(a_v.i);
   }
 }

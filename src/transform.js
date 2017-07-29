@@ -1,8 +1,6 @@
 import * as R from "ramda"
 import * as T from "babel-types"
 import * as assert from "assert"
-import dump from "estransducers/dump"
-import * as trace from "estransducers/trace"
 import * as Kit from "./kit"
 import {Tag,produce,consume,enter,leave,tok,varScope} from "./kit"
 import * as Loops from "./loops"
@@ -17,7 +15,6 @@ import * as Branch from "./branch"
 import * as Exceptions from "./exceptions"
 import * as Coerce from "./coerce"
 import * as Policy from "./policy"
-import * as Debug from "./debug"
 import * as Placeholder from "./placeholder"
 import * as Gens from "./generators"
 import * as Rt from "./rt"
@@ -25,7 +22,8 @@ import * as Ops from "./ops"
 import * as Flat from "./flat"
 import * as Closure from "./closure"
 import simplify from "./simplify"
-import {ifEsRebind,ifTopLevel,ifJsExceptions,ifGenerators} from "./options"
+import {ifLoose,ifEsRebind,ifTopLevel,
+        ifJsExceptions,ifGenerators} from "./options"
 
 export const consumeScope = consume
 
@@ -47,30 +45,43 @@ const finalize = R.pipe(
   varScope.resolve,
   consume)
 
-const ifEff = R.curry(function ifEff(others, si) {
+/* default transform for all functions if loose mode is set */
+export const loose = R.pipe(Loops.looseForOf)
+
+const ifEff = R.curry(function ifEff(others, alt, si) {
   const s = Kit.auto(si)
-  return (s.first.value.topEff ? others(s) : s)
+  return (s.first.value.topEff ? others(s) : alt(s))
 })
+
+export const normilizeOnly = R.pipe(
+  ifTopLevel(R.pipe(
+    State.saveDecls,
+    Loops.toBlocks,
+    Closure.injectStateRefs
+  )),
+  ifLoose(loose),
+  Branch.clean,
+  State.restoreDecls,
+  simplify)
 
 /**
  * passes in required order depending on options specified
  */
 export const all =
   R.pipe(
-    Kit.map(R.pipe(
-      ifEsRebind(
-        Gens.prepare,
-        R.pipe(
-          Policy.unwrapNs,
-          Policy.assignBindCalls)),
-      ifJsExceptions(s => s, Policy.assignThrowEff),
-      Control.assignLabels,
-      Ops.inject,
-      Prop.propagateEff,
-      Kit.toArray
-    )),
-    Kit.toArray,
-    Kit.map(ifEff(R.pipe(
+    Policy.stage("match"),
+    ifEsRebind(
+      Gens.prepare,
+      R.pipe(
+        Policy.unwrapNs,
+        Policy.assignBindCalls)),
+    ifJsExceptions(s => s, Policy.assignThrowEff),
+    Policy.stage("propagate"),
+    Control.assignLabels,
+    Ops.inject,
+    Prop.propagateEff,
+    Policy.stage("normilize"),
+    ifEff(R.pipe(
       Control.removeLabeldStatement,
       Loops.toBlocks,
       Branch.toBlocks,
@@ -78,39 +89,36 @@ export const all =
       Loops.doWhileStmt,
       Prop.recalcEff,
       Loops.normilizeFor,
+      Closure.declToExpr,
+      State.saveDecls,
+      Closure.injectStateRefs,
       Coerce.lift,
       Branch.liftSwitchCoerce,
-      ifTopLevel(Closure.declToExpr),
-      State.saveDecls,
       Prop.recalcEff,
       Control.injectBlock,
       Loops.injectRepeat,
       Prop.recalcEff,
-      ifTopLevel(Closure.calcStateRefs),
-      Kit.toArray
-    ))),
-    Kit.toArray,
-    Kit.map(ifEff(R.pipe(
-      ifTopLevel(Closure.injectStateRefs),
+      Policy.stage("orginize"),
       Branch.prepareLogical,Prop.recalcEff,
       Bind.flatten,
+      Policy.stage("inject"),
       Exceptions.inject,Prop.recalcEff,
       Block.splitEffBlock,
-      Bind.calcVarDeps(null),
-      Bind.threadDeps,
       Control.recalc,
       Flat.convert,
       Ops.combine,
       ifEsRebind(Gens.clean),
       Block.cleanPureEff,
+      Policy.stage("interpret"),
       Ops.interpret,
       Flat.interpret,
       Block.interpretApp,
       Coerce.interpret,
       Block.interpretCasts,
       Branch.clean,
-      State.restoreDecls,
-      simplify))))
+      State.restoreDecls
+    ),normilizeOnly),
+    simplify)
 
 export const defaultTransform = all
 export const defaultGensTransform = all
@@ -122,11 +130,11 @@ export function run(s) {
   let inject = new Map()
   let any = false
   const transformMap = new Map()
-  const result = []
   const inp = [...scopes(s)]
   let scopeNum = 0
-  const root = inp[inp.length-1][0].value
-  for(const i of inp) {
+  const len = inp.length
+  for(let x = 0; x < len; ++x) {
+    const i = inp[x]
     const {value} = i[0]
     value.scopeNum = scopeNum++
     const f = value.opts
@@ -134,18 +142,31 @@ export function run(s) {
       if (f.inject && f.require)
         inject.set(f.$ns,f.require)
       any = true
-      Kit.mapPush(transformMap, f.transform, i)
-    } else
-      result.push(i)
+    }
+    if (f.transform)
+      Kit.mapPush(transformMap, f.transform, x)
   }
   if (!transformMap.size)
     return;
-  for(const [t,i] of transformMap) {
-    const v = Kit.toArray(t(i))
-    for(const j of v)
-      result.push(Kit.toArray(j))
+  const root = inp[inp.length-1][0].value
+  if (root.opts.topLevel) {
+    for(let x = 0; x < len; ++x) {
+      const i = inp[x]
+      const capt = Closure.calcStateRefs(i)
+      if (!i[0].value.opts.transform) {
+        if (capt) {
+          Kit.mapPush(transformMap, normilizeOnly, x)
+        } else if (i[0].value.opts.loose) {
+          Kit.mapPush(transformMap, loose, x)
+        }
+      }
+    }
   }
-  let res = [...Scope.restore(root,result)]
+  for(const [t,xs] of transformMap) {
+    for(const x of xs)
+      inp[x] = Kit.toArray(t(inp[x]))
+  }
+  let res = [...Scope.restore(root,inp)]
   if (inject.size) {
     const namespaces = res[0].value.namespaces || new Map()
     const toInject = []

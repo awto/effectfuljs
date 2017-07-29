@@ -1,14 +1,17 @@
 function a() {
-  var i;
+  var i, a;
   i = 0;
-  return M.jM(eff5(i++), _1);
+  a = i++;
+  return M.jM(eff5(a), _1);
 
   function _1() {
     if (ee) return _2();else return _3();
   }
 
   function _2() {
-    return M.jM(eff7(i++), _3);
+    var a;
+    a = i++;
+    return M.jM(eff7(a), _3);
   }
 
   function _3() {

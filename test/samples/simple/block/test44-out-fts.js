@@ -1,4 +1,4 @@
-function a_1(a) {
+function a_1() {
   if (a) return a_2();else {
     return eff6();
   }
@@ -9,5 +9,5 @@ function a_2() {
 }
 
 function a() {
-  return M.jM1(eff1(), a_1, a);
+  return M.jM(eff1(), a_1);
 }

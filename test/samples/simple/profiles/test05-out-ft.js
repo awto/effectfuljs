@@ -19,8 +19,7 @@ function a_3() {
 }
 
 function a() {
-  var a_v;
-  a_v = {
+  var a_v = {
     a: undefined,
     b: undefined
   };

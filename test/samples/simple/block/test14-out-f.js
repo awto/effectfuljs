@@ -4,7 +4,9 @@ function a() {
   return M.jM(eff(i), _1);
 
   function _1() {
-    if (i++) return _2();else {
+    var a;
+    a = i++;
+    if (a) return _2();else {
       return M.jM(eff2(i), _3);
     }
   }

@@ -10,6 +10,7 @@ export default function* generatorsInit($ns) {
     Policy.setFuncOpts({generator:true,
                         async:false,
                         esRebind:true,
+                        static:true,
                         transform:T.defaultGensTransform,
                         coerce:true,
                         ops,
@@ -20,6 +21,7 @@ export default function* generatorsInit($ns) {
     Policy.setFuncOpts({generator:false,
                         async:true,
                         esRebind:true,
+                        static:true,
                         transform:T.defaultGensTransform,
                         scopePrefix:true,
                         $ns
@@ -28,6 +30,7 @@ export default function* generatorsInit($ns) {
                         async:true,
                         esRebind:true,
                         pureForOf:true,
+                        static:true,
                         transform:T.defaultGensTransform,
                         ops,
                         scopePrefix:true,

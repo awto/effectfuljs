@@ -12,14 +12,17 @@ function v(j) {
   }
 
   function _2(loop) {
-    if (loop = loop()) return _3(loop);else {
+    var a, b;
+    b = loop.step();
+    a = loop = b;
+    if (!a.done) return _3(loop);else {
       return G.yldStarMB(z, _4);
     }
   }
 
   function _3(loop) {
     i = loop.value;
-    return G.yldM1(i + j, _2, loop);
+    return G.yldM(i + j, _2, loop);
   }
 
   function _4(a) {
@@ -78,11 +81,15 @@ function f() {
   return G.scope(_1);
 
   function _1() {
-    return G.yldM(eff(1), _2);
+    var a;
+    a = eff(1);
+    return G.yldM(a, _2);
   }
 
   function _2() {
-    return G.yldM(eff(2), _3);
+    var a;
+    a = eff(2);
+    return G.yldM(a, _3);
   }
 
   function _3() {
@@ -94,12 +101,15 @@ function f() {
   function _4(a) {
     var b;
     b = eff(3);
-    return G.yldMB1(b, _5, a);
+    return G.yldMB(b, _5, a);
   }
 
   function _5(b, a) {
+    var c, d;
     console.log(a + b);
-    return G.yldStarM(eff(eff(4)), _6);
+    d = eff(4);
+    c = eff(d);
+    return G.yldStarM(c, _6);
   }
 
   function _6() {
@@ -144,11 +154,15 @@ function e1() {
   return G.scope(_1);
 
   function _1() {
-    return G.yldM(eff(1), _2);
+    var a;
+    a = eff(1);
+    return G.yldM(a, _2);
   }
 
   function _2() {
-    return G.yldM(eff(2), _3);
+    var a;
+    a = eff(2);
+    return G.yldM(a, _3);
   }
 
   function _3() {
@@ -158,27 +172,34 @@ function e1() {
   }
 
   function _4(a) {
-    var b;
-    console.log(a + eff(3));
-    b = eff(4);
-    return G.yldMB(b, _5);
+    var b, c;
+    b = eff(3);
+    console.log(a + b);
+    c = eff(4);
+    return G.yldMB(c, _5);
   }
 
-  function _5(a) {
-    return G.yldM(eff(a), G.pure);
+  function _5(b) {
+    var a;
+    a = eff(b);
+    return G.yldM(a, G.pure);
   }
 }
 
 function aw1(i) {
-  return G.scope1(_1, i);
+  return G.scope(_1, i);
 
   function _1(i) {
-    return G.jM1(eff(i), _2, i);
+    var a;
+    a = eff(i);
+    return G.jM(a, _2, i);
   }
 
   function _2(i) {
+    var a;
     i++;
-    return eff(i);
+    a = eff(i);
+    return a;
   }
 }
 
@@ -193,17 +214,18 @@ function ag1(i) {
   }
 
   function _2(loop) {
-    return G.jMB(loop(), _3);
+    return G.jMB(loop.step(), _3);
   }
 
   function _3(loop) {
-    if (loop) return _4(loop);else return G.pure();
+    var a;
+    if (!a.done) return _4(loop);else return G.pure();
   }
 
   function _4(loop) {
     j = loop.value;
     p('H', i, j);
-    return G.jR1(_2, loop);
+    return G.jR(_2, loop);
   }
 }
 
@@ -218,39 +240,40 @@ function ag2(i) {
   }
 
   function _2(loop) {
-    return G.jMB(loop(), _3);
+    return G.jMB(loop.step(), _3);
   }
 
   function _3(loop) {
-    if (loop) return _4(loop);else return G.pure();
+    var a;
+    if (!a.done) return _4(loop);else return G.pure();
   }
 
   function _4(loop) {
     j = loop.value;
-    return G.jMB1(somethingElse, _5, loop);
+    return G.jMB(somethingElse, _5, loop);
   }
 
   function _5(i, loop) {
-    return G.jR1(_2, loop);
+    return G.jR(_2, loop);
   }
 }
 
 function ag3(i) {
   var j;
-  return G.scope1(_1, i);
+  return G.scope(_1, i);
 
   function _1(i) {
-    return G.yldM1(i, _2, i);
+    return G.yldM(i, _2, i);
   }
 
   function _2(i) {
     var a;
     a = eff(i);
-    return G.jMB1(a, _3, i);
+    return G.jMB(a, _3, i);
   }
 
   function _3(a, i) {
-    return G.yldM1(a, _4, i);
+    return G.yldM(a, _4, i);
   }
 
   function _4(i) {
@@ -260,44 +283,45 @@ function ag3(i) {
   }
 
   function _5(i, loop) {
-    return G.jMB1(loop(), _6, i);
+    return G.jMB(loop.step(), _6, i);
   }
 
   function _6(loop, i) {
-    if (loop) return _7(i, loop);else {
+    var a;
+    if (!a.done) return _7(i, loop);else {
       return G.pure(i);
     }
   }
 
   function _7(i, loop) {
     j = loop.value;
-    return G.yldM2(i + j, _8, i, loop);
+    return G.yldM(i + j, _8, i, loop);
   }
 
   function _8(i, loop) {
     var a;
     a = eff(j);
-    return G.jMB2(a, _9, i, loop);
+    return G.jMB(a, _9, i, loop);
   }
 
   function _9(b, i, loop) {
     var a;
     a = eff(i - b);
-    return G.jMB1(a, _10, loop);
+    return G.jMB(a, _10, loop);
   }
 
   function _10(a, loop) {
-    return G.yldMB1(a, _11, loop);
+    return G.yldMB(a, _11, loop);
   }
 
   function _11(i, loop) {
     var a;
     a = eff(2, j);
-    return G.yldStarMB1(a, _12, loop);
+    return G.yldStarMB(a, _12, loop);
   }
 
   function _12(i, loop) {
-    return G.jR2(_5, i, loop);
+    return G.jR(_5, i, loop);
   }
 }
 
@@ -310,8 +334,10 @@ function ag4() {
     return G.yldMB(a, _2);
   }
 
-  function _2(a) {
-    return eff1(a);
+  function _2(b) {
+    var a;
+    a = eff1(b);
+    return a;
   }
 }
 
@@ -347,60 +373,62 @@ function ag7(i) {
   return G.scope(_1);
 
   function _1() {
-    return G.yldM(eff1(i), _2);
+    var a;
+    a = eff1(i);
+    return G.yldM(a, _2);
   }
 
   function _2() {
     var b, a;
     b = eff(2, i);
     a = eff3();
-    return G.jMB1(a, _3, b);
+    return G.jMB(a, _3, b);
   }
 
   function _3(c, b) {
     var a;
     a = eff4();
-    return G.yldMB2(a, _4, b, c);
+    return G.yldMB(a, _4, b, c);
   }
 
   function _4(d, b, c) {
     var a;
     a = eff5();
-    return G.jMB3(a, _5, b, c, d);
+    return G.jMB(a, _5, b, c, d);
   }
 
   function _5(a, b, c, d) {
-    return G.jMB3(a, _6, b, c, d);
+    return G.jMB(a, _6, b, c, d);
   }
 
   function _6(e, b, c, d) {
     var a;
     a = eff6();
-    return G.jMB4(a, _7, b, c, d, e);
+    return G.jMB(a, _7, b, c, d, e);
   }
 
   function _7(a, b, c, d, e) {
-    return G.yldMB4(a, _8, b, c, d, e);
+    return G.yldMB(a, _8, b, c, d, e);
   }
 
   function _8(f, b, c, d, e) {
     var a;
     a = eff7();
-    return G.yldMB5(a, _9, b, c, d, e, f);
+    return G.yldMB(a, _9, b, c, d, e, f);
   }
 
   function _9(a, b, c, d, e, f) {
-    return G.yldMB5(a, _10, b, c, d, e, f);
+    return G.yldMB(a, _10, b, c, d, e, f);
   }
 
   function _10(g, b, c, d, e, f) {
     var a;
     a = eff8();
-    return G.yldMBN(a, _11, [b, c, d, e, f, g]);
+    return G.yldMB(a, _11, [b, c, d, e, f, g]);
   }
 
   function _11(a, [b, c, d, e, f, g]) {
-    return G.jMBN(a, _12, [b, c, d, e, f, g]);
+    return G.jMB(a, _12, [b, c, d, e, f, g]);
   }
 
   function _12(h, [b, c, d, e, f, g]) {

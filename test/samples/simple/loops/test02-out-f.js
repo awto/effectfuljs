@@ -29,8 +29,10 @@ function a() {
   }
 
   function _6(a) {
+    var b;
     _k = a;
-    return M.jM(eff4(_k++), _7);
+    b = _k++;
+    return M.jM(eff4(b), _7);
   }
 
   function _7() {

@@ -7,18 +7,20 @@ function a2_1(a) {
 }
 
 function a3_1(a) {
-  return a ? a3_2(a) : M.jM(eff(2), a3_2);
+  return a ? a3_2() : M.jM(eff(2), a3_2);
 }
 
-function a3_2(a) {
+function a3_2() {
+  var a;
   return a ? M.pure(a) : eff(3);
 }
 
 function a4_1(a) {
-  return a ? M.jM(eff(2), a4_2) : a4_2(a);
+  return a ? M.jM(eff(2), a4_2) : a4_2();
 }
 
-function a4_2(a) {
+function a4_2() {
+  var a;
   return a ? eff(3) : M.pure(a);
 }
 
@@ -60,7 +62,7 @@ function a17_1(a) {
 }
 
 function a18_1(a) {
-  return M.jMB1(eff(2), a18_2, a);
+  return M.jMB(eff(2), a18_2, a);
 }
 
 function a18_2(b, a) {
@@ -69,19 +71,20 @@ function a18_2(b, a) {
 }
 
 function a19_1(a) {
-  return a ? a19_3(a) : M.jM(eff(2), a19_2);
+  return a ? a19_3() : M.jM(eff(2), a19_2);
 }
 
 function a19_2() {
   return M.jM(eff(3), a19_3);
 }
 
-function a19_3(a) {
+function a19_3() {
+  var a;
   return eff(a);
 }
 
 function b_1(a) {
-  return a ? b_2(a) : M.jM(eff(2), b_2);
+  return a ? b_2() : M.jM(eff(2), b_2);
 }
 
 function b_2() {
@@ -89,11 +92,13 @@ function b_2() {
 }
 
 function b_3(a) {
-  return a ? M.jM(eff(2), b_4) : b_4(a);
+  return a ? M.jM(eff(2), b_4) : b_4();
 }
 
 function b_4() {
-  return 1 ? b_5(f) : M.jM(eff(2), b_5);
+  var a;
+  a = 1;
+  return a ? b_5() : M.jM(eff(2), b_5);
 }
 
 function b_5() {
@@ -101,8 +106,10 @@ function b_5() {
 }
 
 function b_6(a) {
+  var b;
   a ? a : 1;
-  return 1 + 1 ? b_7(g) : M.jM(eff(2), b_7);
+  b = 1 + 1;
+  return b ? b_7() : M.jM(eff(2), b_7);
 }
 
 function b_7() {
@@ -110,8 +117,10 @@ function b_7() {
 }
 
 function b_8(a) {
+  var b;
   a ? a : 1 + 1;
-  return 1 ? M.jM(eff(2), b_9) : b_9(h);
+  b = 1;
+  return b ? M.jM(eff(2), b_9) : b_9();
 }
 
 function b_9() {
@@ -119,8 +128,10 @@ function b_9() {
 }
 
 function b_10(a) {
+  var b;
   a ? 1 : a;
-  return 1 + 1 ? M.jM(eff(2), b_11) : b_11(k);
+  b = 1 + 1;
+  return b ? M.jM(eff(2), b_11) : b_11();
 }
 
 function b_11() {
@@ -141,7 +152,7 @@ function b_14() {
 }
 
 function b_15(a) {
-  return a ? b_16(2) : M.jM(eff(3), b_16);
+  return a ? b_16() : M.jM(eff(3), b_16);
 }
 
 function b_16() {
@@ -149,7 +160,7 @@ function b_16() {
 }
 
 function b_17(a) {
-  return a ? M.jM(eff(2), b_18) : b_18(3);
+  return a ? M.jM(eff(2), b_18) : b_18();
 }
 
 function b_18() {
@@ -182,7 +193,9 @@ function a4() {
 }
 
 function a5() {
-  return 1 ? M.pure(a) : eff(2);
+  var a;
+  a = 1;
+  return a ? M.pure(a) : eff(2);
 }
 
 function a6() {
@@ -190,7 +203,9 @@ function a6() {
 }
 
 function a7() {
-  return 1 + 1 ? M.pure(c) : eff(2);
+  var a;
+  a = 1 + 1;
+  return a ? M.pure(a) : eff(2);
 }
 
 function a8() {
@@ -198,7 +213,9 @@ function a8() {
 }
 
 function a9() {
-  return 1 ? eff(2) : M.pure(d);
+  var a;
+  a = 1;
+  return a ? eff(2) : M.pure(a);
 }
 
 function a10() {
@@ -206,7 +223,9 @@ function a10() {
 }
 
 function a11() {
-  return 1 + 1 ? eff(2) : M.pure(e);
+  var a;
+  a = 1 + 1;
+  return a ? eff(2) : M.pure(a);
 }
 
 function a12() {

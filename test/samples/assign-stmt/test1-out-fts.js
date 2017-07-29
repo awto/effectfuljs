@@ -23,11 +23,11 @@ function a1_2() {
 }
 
 function bS_1(b1) {
-  return M.jMB1(eff(2), bS_2, b1);
+  return M.jMB(eff(2), bS_2, b1);
 }
 
 function bS_2(b2, b1) {
-  return M.jM1(eff(b1), bS_3, b2);
+  return M.jM(eff(b1), bS_3, b2);
 }
 
 function bS_3(b2) {
@@ -35,11 +35,11 @@ function bS_3(b2) {
 }
 
 function b_1(b1) {
-  return M.jMB1(eff(2), b_2, b1);
+  return M.jMB(eff(2), b_2, b1);
 }
 
 function b_2(b2, b1) {
-  return M.jM1(eff(b1), b_3, b2);
+  return M.jM(eff(b1), b_3, b2);
 }
 
 function b_3(b2) {
@@ -53,11 +53,11 @@ function b_4() {
 }
 
 function b1_1(a) {
-  return M.jMB1(eff(2), b1_2, a);
+  return M.jMB(eff(2), b1_2, a);
 }
 
 function b1_2(c, a) {
-  return M.jM1(eff(a), b1_3, c);
+  return M.jM(eff(a), b1_3, c);
 }
 
 function b1_3(c) {
@@ -115,7 +115,7 @@ function c_10() {
 }
 
 function d_1(a) {
-  return M.jMB1(eff(2), d_2, a);
+  return M.jMB(eff(2), d_2, a);
 }
 
 function d_2(b, a) {
@@ -124,7 +124,7 @@ function d_2(b, a) {
 }
 
 function d_3(a) {
-  return M.jMB1(eff(3), d_4, a);
+  return M.jMB(eff(3), d_4, a);
 }
 
 function d_4(b, a) {
@@ -151,25 +151,25 @@ function e2_1(cc) {
 }
 
 function e2_2(cc) {
-  return M.jM1(eff(2, cc), e2_3, cc);
+  return M.jM(eff(3, cc), e2_3);
 }
 
 function e2_3(cc) {
   var _cc;
 
-  return M.jMB1(eff(3, _cc), e2_4, cc);
+  return M.jMB(eff(4, _cc), e2_4, cc);
 }
 
 function e2_4(_cc, cc) {
-  return M.jMB1(eff(4, _cc), e2_5, cc);
+  return M.jMB(eff(5, _cc), e2_5, cc);
 }
 
 function e2_5(_cc, cc) {
-  return M.jM1(eff(5, _cc), e2_6, cc);
+  return M.jM(eff(6, _cc), e2_6, cc);
 }
 
 function e2_6(cc) {
-  return eff(6, cc);
+  return eff(7, cc);
 }
 
 function aS() {

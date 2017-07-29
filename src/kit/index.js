@@ -6,7 +6,8 @@ const {toArray,result,tillLevel,till,clone,withOpts,
        adjustFieldType,adjustFieldTypeSimple,select,
        cons,la,enableIf,output,repos,reposOne,reposOneArr,
        reverse,pack,unpack,packed,flatMap,map,forEach,filter,
-       cleanEmptyExprs,mapAdd,mapPush,group,groupUniq,concat
+       cleanEmptyExprs,mapAdd,mapPush,group,groupUniq,concat,
+       stage,curryN,curry,pipe
       } = kit
 export {toArray,result,tillLevel,till,clone,withOpts,
         toks,skip,setType,setPos,Subst,completeSubst,
@@ -16,7 +17,8 @@ export {toArray,result,tillLevel,till,clone,withOpts,
         scope as varScope,select,cons,la,enableIf,output,
         repos,reposOneArr,reposOne,reverse,pack,unpack,
         packed,flatMap,map,forEach,filter,cleanEmptyExprs,
-        mapAdd,mapPush,group,groupUniq,concat
+        mapAdd,mapPush,group,groupUniq,concat,stage,
+        curryN,curry,pipe
        }
 export {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
         typeInfo,resetFieldInfo}

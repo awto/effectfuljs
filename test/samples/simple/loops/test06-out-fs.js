@@ -6,11 +6,11 @@ function a() {
   }
 
   function _2(i) {
-    return _3(i);
+    return _3();
   }
 
   function _3(i) {
-    return M.jMB1(eff(3), _4, i);
+    return M.jMB(eff(3), _4, i);
   }
 
   function _4(a, i) {
@@ -20,11 +20,11 @@ function a() {
   }
 
   function _5(i) {
-    return M.jM1(eff5(i), _6, i);
+    return M.jM(eff5(i), _6, i);
   }
 
   function _6(i) {
-    return M.jM1(eff6(i), _7, i);
+    return M.jM(eff6(i), _7, i);
   }
 
   function _7(i) {
@@ -32,6 +32,6 @@ function a() {
   }
 
   function _8(i) {
-    return M.jR1(_3, i);
+    return M.jR(_3);
   }
 }

@@ -3,23 +3,23 @@ function a() {
   return M.jMB(eff(), _1);
 
   function _1(a) {
-    return M.jMB1(check(1), _2, a);
+    return M.jMB(check(1), _2, a);
   }
 
   function _2(b, a) {
-    return M.jMB2(check(2), _3, a, b);
+    return M.jMB(check(2), _3, a, b);
   }
 
   function _3(c, a, b) {
-    return M.jMB3(check(3), _4, a, b, c);
+    return M.jMB(check(3), _4, a, b, c);
   }
 
   function _4(d, a, b, c) {
-    return M.jMB4(check(4), _5, a, b, c, d);
+    return M.jMB(check(4), _5, a, b, c, d);
   }
 
   function _5(e, a, b, c, d) {
-    return M.jMB5(check(8), _6, a, b, c, d, e);
+    return M.jMB(check(8), _6, a, b, c, d, e);
   }
 
   function _6(f, a, b, c, d, e) {

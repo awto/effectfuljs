@@ -4,7 +4,9 @@ function a() {
   return M.jM(eff(j), _1);
 
   function _1() {
-    return M.jM(eff(j++), _2);
+    var a;
+    a = j++;
+    return M.jM(eff(a), _2);
   }
 
   function _2() {
@@ -12,6 +14,8 @@ function a() {
   }
 
   function _3() {
-    return eff3(j++);
+    var a;
+    a = j++;
+    return eff3(a);
   }
 }

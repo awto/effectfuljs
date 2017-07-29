@@ -3,7 +3,7 @@ function _1(_v) {
 }
 
 function _2(_v) {
-  return M.jM1(eff(_v.i), _3, _v);
+  return M.jM(eff(_v.i), _3, _v);
 }
 
 function _3(_v) {
@@ -17,31 +17,29 @@ function _4(_v) {
 
 function _5(_v) {
   d = _v.ref[_v.j];
-  return M.jMB1(eff(d), _6, _v);
+  return M.jMB(eff(d), _6, _v);
 }
 
 function _6(a, _v) {
   if (a) return _8(_v);else {
-    return M.jMB1(eff(2), _7, _v);
+    return M.jMB(eff(2), _7, _v);
   }
 }
 
 function _7(a, _v) {
   if (a) return M.pure();else {
     _v.j++;
-    return M.jR1(_4, _v);
+    return M.jR(_4, _v);
   }
 }
 
 function _8(_v) {
   _v.i++;
-  return M.jR1(_1, _v);
+  return M.jR(_1, _v);
 }
 
 (function () {
-  var _v;
-
-  _v = {
+  var _v = {
     i: undefined,
     j: undefined,
     len: undefined,

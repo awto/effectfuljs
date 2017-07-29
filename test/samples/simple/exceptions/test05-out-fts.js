@@ -1,23 +1,18 @@
 function a_1() {
   try {
-    return M.jME(eff(1), a_2, a_3);
+    return M.jME(eff(1), a_3, M.pure, a_2);
   } catch (e) {
-    return a_3(e);
+    return a_2();
   }
 }
 
 function a_2() {
-  return a_4();
-}
-
-function a_3(ex) {
   var e;
-  e = ex;
   console.log(e);
-  return a_4();
+  return a_3(M.pure);
 }
 
-function a_4() {
+function a_3(cb) {
   console.log('fin');
   return M.pure();
 }

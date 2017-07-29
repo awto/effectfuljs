@@ -1,26 +1,26 @@
 function a_1(a_v) {
   a_v.i += 2;
-  return M.jM1(effM(), a_2, a_v);
+  return M.jM(effM(), a_2, a_v);
 }
 
 function a_2(a_v) {
-  return M.jM1(effN(), a_3, a_v);
+  return M.jM(effN(), a_3, a_v);
 }
 
 function a_3(a_v) {
   var a;
   a = ++a_v.i;
-  return M.jMB1(effI1(a), a_4, a_v);
+  return M.jMB(effI1(a), a_4, a_v);
 }
 
 function a_4(a, a_v) {
-  return M.jMB1(eff2(a), a_5, a_v);
+  return M.jMB(eff2(a), a_5, a_v);
 }
 
 function a_5(a, a_v) {
   var b;
   b = a_v.i++;
-  return M.jMB2(eff3(a_v.i), a_6, a, b);
+  return M.jMB(eff3(a_v.i), a_6, a, b);
 }
 
 function a_6(c, a, b) {
@@ -44,7 +44,7 @@ function a_10() {
 }
 
 function a_11(a) {
-  return M.jMB1(effJ(), a_12, a);
+  return M.jMB(effJ(), a_12, a);
 }
 
 function a_12(b, a) {
@@ -56,10 +56,9 @@ function a_13() {
 }
 
 function a() {
-  var a_v;
-  a_v = {
+  var a_v = {
     i: undefined
   };
   a_v.i = 0;
-  return M.jM1(eff0(), a_1, a_v);
+  return M.jM(eff0(), a_1, a_v);
 }
