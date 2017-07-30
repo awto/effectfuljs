@@ -48,7 +48,7 @@ function a_1(ctx) {
   var f2,
       f3,
       a_v = ctx._a_v,
-      _top_v = ctx._top_v;
+      top_v = ctx._top_v;
 
   f2 = function f2() {
     var ctx = M.context();
@@ -62,13 +62,13 @@ function a_1(ctx) {
     _top_v.a6 += 4;
   };
 
-  _top_v.a1 += 2;
-  return ctx._f2 = f2, ctx._f3 = f3, ctx.yldMB(_top_v.a1, a_2);
+  top_v.a1 += 2;
+  return ctx._f2 = f2, ctx._f3 = f3, ctx.yldMB(top_v.a1, a_2);
 }
 
 function a_2(ctx, a) {
-  var _top_v = ctx._top_v;
-  return ctx._top_v = undefined, ctx._3 = a, ctx.yldMB(_top_v.a2, a_3);
+  var top_v = ctx._top_v;
+  return ctx._top_v = undefined, ctx._3 = a, ctx.yldMB(top_v.a2, a_3);
 }
 
 function a_3(ctx, b) {

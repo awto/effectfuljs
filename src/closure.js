@@ -134,24 +134,42 @@ export function calcStateRefs(si) {
   return normilize
 }
 
+const emptyMap = new Map()
+
+/** 
+ * calculates symbol to be used to reference closure captured variables
+ * from other scopes
+ *
+ * \todo this extra assignment is needed just to make a symbol
+ * to be local to the next function, i.e. internal representation
+ * problem, could be some virtual assignment or scope related info
+ * stored in scope, not in symbol
+ */
+function calcClosSymDeps(scope) {
+  if (scope.closObjDeps)
+    return
+  const deps = new Set()
+    for(const i of scope.scopeCapt)
+      if (i.closRefSym)
+        deps.add(i.closRefSym)
+  const subst = scope.closObjDeps = new Map()
+  for(const sym of deps)
+      subst.set(sym,Bind.tempVarSym(scope,sym.orig,sym.byVal))
+  if (scope.parScope)
+    calcClosSymDeps(scope.parScope)
+}
+
 /** emplaces object definitions to store reference variables */
 export function* injectStateRefs(si) {
   const s = Kit.auto(si)
   const root = s.first.value
   const {closRefSym} = root
-  const deps = new Set()
-  for(const i of root.scopeCapt)
-    if (i.closRefSym)
-      deps.add(i.closRefSym)
-  const subst = new Map()
   const decls = root.savedDecls || (root.savedDecls = new Map())
-  for(const sym of deps) {
-    // TODO: this extra assignment is needed just to make a symbol
-    // to be local to the next function, i.e. internal symbol representation
-    // limitation, could be some virtual assignment or scope related info
-    // stored in scope, not in symbol
-    const copy = Bind.tempVarSym(root,sym.orig,sym.byVal)
-    subst.set(sym,copy)
+  calcClosSymDeps(root)
+  const subst = root.closObjDeps
+  const parSubst = root.parScope && root.parScope.closObjDeps || emptyMap
+  for(const [orig,copy] of subst) {
+    const sym = parSubst.get(orig) || orig
     decls.set(copy, {raw:null, init:[s.tok(Tag.init,Tag.Identifier,{sym})]})
   }
   function* walk(scope) {

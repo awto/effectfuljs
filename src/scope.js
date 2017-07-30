@@ -68,6 +68,7 @@ export function splitScopes(si) {
     for(const i of s.sub()) {
       if (i.enter && !i.leave && s.curLev() != null && i.value.func) {
         frames.push([...walk(i)])
+        i.value.parScope = p.value
         yield s.tok(i.pos,i.type,i.value)
         continue
       }
