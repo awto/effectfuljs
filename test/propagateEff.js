@@ -1,5 +1,4 @@
-import * as R from "ramda"
-import * as Kit from "../src/kit/core"
+import * as Kit from "../src/kit"
 import {prepareScopes,consumeScope} from "../src/transform"
 import {Tag,produce,consume} from "estransducers"
 import generate from "babel-generator"
@@ -12,7 +11,7 @@ import * as Block from "../src/block"
 import * as Ctrl from "../src/control"
 
 const run = transformExpr(
-    R.pipe(
+    Kit.pipe(
       Ctrl.removeLabeldStatement,
       Debug.mark,
       consumeScope

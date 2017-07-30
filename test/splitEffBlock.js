@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "../src/kit"
 import {Tag,produce,consume} from "estransducers"
 import generate from "babel-generator"
@@ -14,7 +13,7 @@ import * as Branch from "../src/branch"
 import * as Bind from "../src/bind"
 
 const runImpl = (pass) =>
-      transformExpr(R.pipe(
+      transformExpr(Kit.pipe(
         Branch.toBlocks,
         recalcEff,
         Array.from,

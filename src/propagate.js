@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag} from "estransducers"
 import * as assert from "assert"
@@ -184,8 +183,7 @@ function* prepForStmtVarDecl(s) {
   }
 }
 
-export const prepare = R.pipe(
+export const prepare = Kit.pipe(
   prepForStmtVarDecl,
-  Array.from
-)
+  Array.from)
 

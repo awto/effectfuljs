@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import * as assert from "assert"
 import {Tag,symbol} from "estransducers"
@@ -12,7 +11,7 @@ export const block = symbol("coerceBlock","ctrl")
 /**
  * if there is no coercing pure statement blocks must be turned into effectful
  */
-export const lift = R.pipe(
+export const lift = Kit.pipe(
   function lift(s) {
     const sl = Kit.auto(s)
     function* pure() {
@@ -135,7 +134,7 @@ export function inject(s) {
   return walk(sl)
 }
 
-export const interpret = R.pipe(function interpret(s) {
+export const interpret = Kit.pipe(function interpret(s) {
   const sl = Kit.auto(s)
   function* walk() {
     for(const i of sl.sub()) {

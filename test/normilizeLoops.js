@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "../src/kit"
 import {prepareScopes,consumeScope} from "../src/transform"
 import {Tag,produce,consume} from "estransducers"
@@ -13,7 +12,7 @@ import * as Branch from "../src/branch"
 import * as Ctrl from "../src/control"
 import * as Block from "../src/block"
 
-const runImpl = (pass) => transformExpr(R.pipe(
+const runImpl = (pass) => transformExpr(Kit.pipe(
   Ctrl.removeLabeldStatement,
   Loops.toBlocks,
   Branch.toBlocks,
@@ -453,7 +452,7 @@ describe('normilize `for`', function() {
 
 
 describe('normilize `for`', function() {
-  const run = transformExpr(R.pipe(Loops.looseForOf,
+  const run = transformExpr(Kit.pipe(Loops.looseForOf,
                                    Kit.scope.resolve,
                                    consumeScope))
   it('should convert `for-of` to loose iterators `for`', function() {

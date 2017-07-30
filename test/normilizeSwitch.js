@@ -1,5 +1,4 @@
-import * as R from "ramda"
-import * as Kit from "../src/kit/core"
+import * as Kit from "../src/kit"
 import {Tag,produce,consume} from "estransducers"
 import generate from "babel-generator"
 import {parse} from "babylon"
@@ -12,7 +11,7 @@ import * as Prop from "../src/propagate"
 import * as Branch from "../src/branch"
 import * as Bind from "../src/bind"
 
-const run = transformExpr(R.pipe(
+const run = transformExpr(Kit.pipe(
   Branch.switchRewrite,
   Prop.recalcEff,
   Bind.flatten,

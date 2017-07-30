@@ -1,9 +1,6 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,symbol} from "./kit"
 import * as assert from "assert"
-import * as Debug from "./debug"
-import * as Trace from "./kit/trace"
 import * as Prop from "./propagate"
 import {stmtExpr} from "./kit/stmtExpr"
 
@@ -116,10 +113,10 @@ function* countEffSeqFramesImpl(s) {
 }
 
 /** eager `countEffSeqFramesImpl` */
-const countEffSeqFrames = R.pipe(countEffSeqFramesImpl,Array.from)
+const countEffSeqFrames = Kit.pipe(countEffSeqFramesImpl,Array.from)
 
 /** removes useless pure frames */
-export const cleanPureFrames = R.pipe(
+export const cleanPureFrames = Kit.pipe(
   countEffSeqFramesImpl,
   //TODO: use matcher
   function* markPureFrame(s) {
@@ -152,7 +149,7 @@ export const cleanPureFrames = R.pipe(
   })
 
 /** removes empty and single length chain tags */ 
-export const cleanupEffSeq = R.pipe(
+export const cleanupEffSeq = Kit.pipe(
   countEffSeqFrames,
   function* cleanupEffSeq(s) {
     const sl = Kit.auto(s)
@@ -175,7 +172,7 @@ export const cleanupEffSeq = R.pipe(
 /** 
  * makes all chains explicitly left associative
  */
-export const lassoc = R.pipe(
+export const lassoc = Kit.pipe(
   countEffSeqFrames,
   function* bindExprs(s) {
     const sl = Kit.auto(s)
@@ -202,7 +199,7 @@ export const lassoc = R.pipe(
 /** 
  * makes all chains explicitly right associative
  */
-export const rassoc = R.pipe(
+export const rassoc = Kit.pipe(
   countEffSeqFrames,
   function* rassocBindExprs(s) {
     const sl = Kit.auto(s)
@@ -267,7 +264,7 @@ export function* interpretBinEffSeq(s) {
 }
 
 /** corrects JS AST nodes types to match specification */
-export const interpretCasts = R.pipe(
+export const interpretCasts = Kit.pipe(
   function* cleanEffExpr(s) {
     const sl = Kit.auto(s)
     function* walk() {
@@ -304,7 +301,7 @@ export const interpretCasts = R.pipe(
 )
 
 /** splits JS into frames with at most 1 effectful expression (the last one) */
-export const splitEffBlock = R.pipe(
+export const splitEffBlock = Kit.pipe(
   function* splitEffBlock(s) {
     const sl = Kit.auto(s)
     function* block(i) {
@@ -383,7 +380,7 @@ export const splitEffBlock = R.pipe(
 )
 
 /** in each chain shifts associativity to right for a first frame */
-export const factorEffSeq = R.pipe(
+export const factorEffSeq = Kit.pipe(
   countEffSeqFrames,
   saveFrameLet,
   function*(s) {
@@ -441,7 +438,7 @@ export const factorEffSeq = R.pipe(
   })
 
 /** removes `stmtExpr` tag */
-export const cleanStmtExpr = R.pipe(
+export const cleanStmtExpr = Kit.pipe(
   function* cleanStmtExpr(s) {
     for(const i of s) {
       yield i.type === stmtExpr ? Kit.setType(i,Kit.Subst) : i
@@ -470,7 +467,7 @@ export function* cleanPureEff(s) {
 }
 
 /** converts `pure` tags into JS expressions */
-export const interpretPure = R.pipe(
+export const interpretPure = Kit.pipe(
   function*(s) {
     const sl = Kit.auto(s)
     function* walk() {

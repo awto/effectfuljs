@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import * as assert from "assert"
 import {Tag,symbol,symInfo} from "./kit"
@@ -148,7 +147,7 @@ function logicalToConditional(s) {
   return walk(s)
 }
 
-export const liftCoerce = R.pipe(
+export const liftCoerce = Kit.pipe(
   function liftCoerce(s) {
     s = Kit.auto(s)
     function* walk(sw) {
@@ -205,7 +204,7 @@ export function liftSwitchCoerce(s) {
 /**
  * setting boundary properties for logical expression so effect cannot escape
  */
-export const prepareLogical = R.pipe(
+export const prepareLogical = Kit.pipe(
   logicalToConditional,
   Kit.toArray,
   function calcNeedLift(sa) {
@@ -261,7 +260,7 @@ export const prepareLogical = R.pipe(
     return walk()
   })
 
-export const switchRewrite = R.pipe(
+export const switchRewrite = Kit.pipe(
   function switchRewrite(s) {
     s = Kit.auto(s)
     function* walk() {
@@ -392,7 +391,7 @@ function switchRewriteImpl(s) {
 }
 
 
-export const switchRewriteOld = R.pipe(
+export const switchRewriteOld = Kit.pipe(
   Kit.reverse,
   switchRewriteImpl,
   Kit.reverse,

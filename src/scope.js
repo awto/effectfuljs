@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import {Tag,symInfo,enter,leave,tok} from "./kit"
 import * as Kit from "./kit"
 import * as assert from "assert"
@@ -121,7 +120,7 @@ export function restore(root,scopes) {
 }
 
 /** runs `pass` for each function in `s` */
-export const subScopes = R.curry(function(pass, s) {
+export const subScopes = Kit.curry(function(pass, s) {
   const res = []
   for(const i of splitScopes(s))
     res.push([...pass(i)])

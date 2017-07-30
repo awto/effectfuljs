@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import * as assert from "assert"
 import {Tag} from "estransducers"
@@ -10,7 +9,7 @@ export const handleId = Kit.sysId("handle")
 export const finallyId = Kit.sysId("finally")
 export const raiseId = Kit.sysId("throw")
 
-export const inject = R.pipe(
+export const inject = Kit.pipe(
   function* inject(s) {
     const sl = Kit.auto(s)
     function* walk(sw) {

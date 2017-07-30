@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "../src/kit"
 import {consumeScope,
         debDumbBindStmt,
@@ -20,7 +19,7 @@ import * as Branch from "../src/branch"
 import * as Coerce from "../src/coerce"
 import * as Policy from "../src/policy"
 
-const runImpl = (pass) => transformExpr(R.pipe(
+const runImpl = (pass) => transformExpr(Kit.pipe(
   Branch.toBlocks,
   recalcEff,
   Bind.flatten,
@@ -31,7 +30,7 @@ const runImpl = (pass) => transformExpr(R.pipe(
 ))
 
 const runInterp = (opts = {}) =>
-      (t) => transformExpr(R.pipe(
+      (t) => transformExpr(Kit.pipe(
         Branch.toBlocks,
         recalcEff,
         Coerce.lift,

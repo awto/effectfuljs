@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as T from "babel-types"
 import * as assert from "assert"
 import * as Kit from "./kit"
@@ -10,7 +9,6 @@ import * as Scope from "./scope"
 import * as Block from "./block"
 import * as Bind from "./bind"
 import * as Prop from "./propagate"
-import * as Uniq from "./uniq"
 import * as Branch from "./branch"
 import * as Exceptions from "./exceptions"
 import * as Coerce from "./coerce"
@@ -27,18 +25,18 @@ import {ifLoose,ifEsRebind,ifTopLevel,
 
 export const consumeScope = consume
 
-export const preproc = R.pipe(
+export const preproc = Kit.pipe(
   Kit.prepare,
   Kit.scope.prepare,
   Prop.prepare,
   Policy.prepare,
   State.prepare)
 
-export const scopes = R.pipe(
+export const scopes = Kit.pipe(
   preproc,
   Scope.splitScopes)
 
-const finalize = R.pipe(
+const finalize = Kit.pipe(
   State.locals,
   Block.interpretLibSyms,
   Closure.depsToTop,
@@ -46,15 +44,15 @@ const finalize = R.pipe(
   consume)
 
 /* default transform for all functions if loose mode is set */
-export const loose = R.pipe(Loops.looseForOf)
+export const loose = Kit.pipe(Loops.looseForOf)
 
-const ifEff = R.curry(function ifEff(others, alt, si) {
+const ifEff = Kit.curry(function ifEff(others, alt, si) {
   const s = Kit.auto(si)
   return (s.first.value.topEff ? others(s) : alt(s))
 })
 
-export const normilizeOnly = R.pipe(
-  ifTopLevel(R.pipe(
+export const normilizeOnly = Kit.pipe(
+  ifTopLevel(Kit.pipe(
     State.saveDecls,
     Loops.toBlocks,
     Closure.injectStateRefs
@@ -68,11 +66,11 @@ export const normilizeOnly = R.pipe(
  * passes in required order depending on options specified
  */
 export const all =
-  R.pipe(
+  Kit.pipe(
     Policy.stage("match"),
     ifEsRebind(
       Gens.prepare,
-      R.pipe(
+      Kit.pipe(
         Policy.unwrapNs,
         Policy.assignBindCalls)),
     ifJsExceptions(s => s, Policy.assignThrowEff),
@@ -81,7 +79,7 @@ export const all =
     Ops.inject,
     Prop.propagateEff,
     Policy.stage("normilize"),
-    ifEff(R.pipe(
+    ifEff(Kit.pipe(
       Control.removeLabeldStatement,
       Loops.toBlocks,
       Branch.toBlocks,

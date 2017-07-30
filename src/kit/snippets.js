@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import {Tag} from "estransducers"
 import {tok,Subst} from "./core"
 

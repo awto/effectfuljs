@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag} from "./kit"
 import * as assert from "assert"
@@ -44,7 +43,7 @@ const argSym = Kit.scope.newSym("arg")
  *               goto?: FrameVal
  *               }
  */
-export const convert = R.pipe(
+export const convert = Kit.pipe(
   // removes redundant lets to simplify next step
   function cleanLets(si) {
     const s = Kit.auto(si)
@@ -656,7 +655,7 @@ Bind.ctxField.optBindAssign = true
 Bind.objField.optBindAssign = false
 
 /** moves bind patterns into frame's function declaration arguments */
-const optimizeBindAssign = R.pipe(
+const optimizeBindAssign = Kit.pipe(
   function optimizeBindAssign(si) {
     const s = Kit.auto(si)
     function* walk() {
@@ -705,7 +704,7 @@ const optimizeBindAssign = R.pipe(
   })
 
 /** flat structure related optimizations */
-export const optimize = R.pipe(
+export const optimize = Kit.pipe(
   Array.from,
   //  Bind.optimizePureLets,
   //   Array.from,
@@ -1234,7 +1233,7 @@ function calcVarDeps(si) {
 
 
 /** conferts flat structure to JS expressions */
-export const interpret = R.pipe(
+export const interpret = Kit.pipe(
   optimize,
   calcVarDeps,
   Bind.interpretPureLet,

@@ -1,7 +1,7 @@
-import * as R from "ramda"
 import generate from "babel-generator"
 import * as T from "babel-types"
 import {symName} from "estransducers"
+import * as Kit from "./"
 
 const MAX_TRACE_CODE_LEN = 100
 const TYPE_SIZE = 20
@@ -106,7 +106,7 @@ export function* wrap(s) {
 /**
   * adds `prefix` string to beginning of each line 
   */
-export const prefix = R.curry(function* prefix(prefix,s) {
+export const prefix = Kit.curry(function* prefix(prefix,s) {
   prefix+=": "
   for(const i of s) {
     if (!i.prefix)
@@ -189,7 +189,7 @@ export function* complete(s) {
   }
 }
 
-const defaults = R.pipe(colors, propagateCollapsed, group, complete)
+const defaults = Kit.pipe(colors, propagateCollapsed, group, complete)
 
 /**
   * if specified in options it disables groupings and colorings
@@ -203,22 +203,22 @@ function impl(opts) {
   const proc = opts.substr != null
         ? prefix(opts) 
         : Array.isArray(opts)
-        ? R.pipe(...opts.map(v => v.substr ? prefix(v) : v))
+        ? Kit.pipe(...opts.map(v => v.substr ? prefix(v) : v))
         : opts.apply != null 
         ? opts
         : v => v
-  return R.pipe(wrap,proc,defs)
+  return Kit.pipe(wrap,proc,defs)
 }
 
 /**
   * outputs stream into console, optionally adding colors and groupings  
   */
-export const of = R.curry((opts, s) => impl(opts)(s))
+export const of = Kit.curry((opts, s) => impl(opts)(s))
 
 /**
   * eager version of `of`
   */
-export const all = R.curry((opts,s) => R.pipe(impl(opts),Array.from)(s))
+export const all = Kit.curry((opts,s) => Kit.pipe(impl(opts),Array.from)(s))
 
 export default of
 
@@ -249,7 +249,7 @@ export function* propagateCollapsed(s) {
     yield i
 }
 
-export const highlight = R.curry(function* highlight(pred, s) {
+export const highlight = Kit.curry(function* highlight(pred, s) {
   for(const i of s) {
     if (i.enter) {
       if (pred(i.pack)) {

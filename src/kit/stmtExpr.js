@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./"
 import * as assert from "assert"
 import {Tag,symbol} from "estransducers"

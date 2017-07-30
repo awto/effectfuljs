@@ -3,17 +3,11 @@
  *
  * TODO: now doens't work if interleaved with variable declarations
  */
-
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,symbol,symName,enter,leave,tok,symKind} from "./kit"
 import * as assert from "assert"
-import * as Uniq from "./uniq"
-import * as Debug from "./debug"
 import {stmtExpr} from "./kit/stmtExpr"
 import * as Prop from "./propagate"
-import * as Trace from "estransducers/trace"
-import dump from "estransducers/dump"
 
 export const mark = symbol("placeholder.mark")
 
@@ -55,7 +49,7 @@ export function inject(s) {
   return walk()
 }
 
-export const split = R.pipe(
+export const split = Kit.pipe(
   function placeholderSplitMark(si) {
     const sa = Kit.toArray(si)
     const s = Kit.auto(sa)
@@ -181,6 +175,6 @@ export const split = R.pipe(
   }
 )
 
-export const all = R.pipe(inject,split,Uniq.subst)
+export const all = Kit.pipe(inject,split)
 
 

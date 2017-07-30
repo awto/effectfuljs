@@ -1,16 +1,11 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,symbol,symInfo} from "./kit"
 import * as Match from "estransducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
-import * as Uniq from "./uniq"
 import {ifJsExceptions,ifDirectives} from "./options"
 
 import * as assert from "assert"
-import * as Trace from "estransducers/trace"
-import * as Debug from "./debug"
-import dump from "estransducers/dump"
 
 /** token type for signaling config object changes */
 export const config = symbol("config")
@@ -18,13 +13,6 @@ export const config = symbol("config")
 export const configDiff = symbol("configDiff")
 /** token for marking compile time handles applications */
 export const ctImport = symbol("ctImport")
-
-/** `R.pipe` working for 0 arguments */
-function pipe(fs) {
-  if (fs == null || fs.length === 0)
-    return null
-  return R.pipe(...fs)
-}
 
 /** composes function, removing duplicates */
 export function postproc(f) {
@@ -78,7 +66,7 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
     } else
       yield i
   }
-  return post.length ? R.pipe(...post) : null
+  return Kit.pipe(...post)
 })
 
 /** 
@@ -104,7 +92,7 @@ function* replaceGlobalNsName(si) {
  * if they are available  
  */
 export const imports =
-  R.pipe(
+  Kit.pipe(
     Match.inject([
       `>$$ = require($M)`,
       `=$$ = require($M)`,
@@ -178,7 +166,7 @@ export const profile = symbol("profile")
 /**
  * applies config merge to parent's block if it has `parentBlock` scope
  */
-export const configDiffPass = R.pipe(
+export const configDiffPass = Kit.pipe(
   propagateConfigDiff,
   function* setOpts(s) {
     s = Kit.auto(s)
@@ -204,7 +192,7 @@ export const configDiffPass = R.pipe(
   })
 
 /** marks profile change calls in the code */
-export const lookupProfiles = R.pipe(
+export const lookupProfiles = Kit.pipe(
   replaceGlobalNsName,
   Match.inject(["*$M.profile($$)","*$M.option($$)"]),
   Kit.toArray, //TODO: remove
@@ -327,11 +315,11 @@ export const applyProfiles = postproc(function* applyProfiles(s) {
     }
     yield i
   }
-  return pipe(post)
+  return Kit.pipe(...post)
 })
 
 /** handles profile tokens */
-export const profiles = R.pipe(
+export const profiles = Kit.pipe(
   configDiffPass,
   ifDirectives(lookupProfiles),
   applyProfiles,
@@ -340,7 +328,7 @@ export const profiles = R.pipe(
 /*
 export const stack = symbol("stack") 
 
-export const placeholder = R.curry(function* placeholder(name, s) {
+export const placeholder = Kit.curry(function* placeholder(name, s) {
   const sl = Kit.auto(s)
   function* walk() {
     for(const i of sl.sub()) {
@@ -657,7 +645,7 @@ export function* emitInitProfiles(s) {
 }
 
 /** combines a few preparation passes */
-export const prepare = R.pipe(
+export const prepare = Kit.pipe(
   ifDirectives(imports),
   emitInitOptions,
   ctImportPass)
@@ -722,14 +710,14 @@ export const injectFuncOpts = (opts, withSelf = false) => {
       yield Kit.enter(hoist,value)
       yield Kit.tok(one, {run})
       yield Kit.leave(hoist,value)
-      return R.pipe(applyHoist,applySubAndOne)
+      return Kit.pipe(applyHoist,applySubAndOne)
     }
     yield Kit.tok(sub, {run})
     return applySubAndOne
   }
 }
 
-export const stage = R.curry(function(name, si) {
+export const stage = Kit.curry(function(name, si) {
   const [h,s] = Kit.la(Kit.stage(name,si))
   const stages = h.value.opts.stages
   if (stages) {

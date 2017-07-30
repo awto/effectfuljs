@@ -1,6 +1,5 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
-import * as Trace from "./trace"
+import * as Trace from "./kit/trace"
 import {Tag,produce,consume,symbol,symName,symInfo,
         dump as D,trace as T,scope} from "estransducers"
 import generate from "babel-generator"
@@ -61,14 +60,14 @@ function pad(s) {
   return sps + s + sps
 }
 
-export const traceOld = R.curry((prefix,s) => {
+export const traceOld = Kit.curry((prefix,s) => {
   console.log(`%c${pad(prefix)}%c`,
               `background:#2B81AF;color:#fff;font-size:xx-large;
               text-shadow:rgba(0, 0, 0, 0.5) 2px 2px 1px`,
               "")
-  return R.pipe(
+  return Kit.pipe(
     Trace.of(
-      R.pipe(
+      Kit.pipe(
         Trace.highlight(v => v.type === Kit.Subst
                         || isBindTok(v)),
         traceHighlight,Trace.prefix(prefix)
@@ -106,7 +105,7 @@ export function* dumpDeps(s) {
   }
 }
 
-export const dumbBindStmt = R.pipe(
+export const dumbBindStmt = Kit.pipe(
   function* debDumbBindStmt(s) {
     for(const i of s) {
       switch(symName(i.type)) {
@@ -189,7 +188,7 @@ export function* addLabels(s) {
   yield* walk({})
 }
 
-export const dumpEffBlock = R.pipe(
+export const dumpEffBlock = Kit.pipe(
   function* dumpEffBlock(s) {
     const b = Kit.auto(s)
     function* walk() {
@@ -431,7 +430,7 @@ function* removeSubScopes(s) {
   }
 }
 
-const dumpPrep = R.pipe(
+const dumpPrep = Kit.pipe(
   addLabels,
   dumpDeps,
   dumbBindStmt,
@@ -440,11 +439,11 @@ const dumpPrep = R.pipe(
   dumpCasts,
   scope.resolve)
 
-const markOld = R.pipe(dumpPrep,D.fin)
+const markOld = Kit.pipe(dumpPrep,D.fin)
 // TODO: remove from tests
 export { markOld as mark }
 
-export const dumpOld = R.curry(function dumpConsole(tag,s) {
+export const dumpOld = Kit.curry(function dumpConsole(tag,s) {
   s = Kit.toArray(s)
   D.toConsole(tag,dumpPrep(removeSubScopes(Kit.clone(s))))
   return s
@@ -452,7 +451,7 @@ export const dumpOld = R.curry(function dumpConsole(tag,s) {
 
 const emptySet = new Set()
 
-const mark = R.pipe(
+const mark = Kit.pipe(
   T.cleanComments,
   addLabels,
   markBindEff,
@@ -536,7 +535,7 @@ function* markFrameSyms(s) {
   }
 }
 
-export const traceAll = R.curry((name, s) => T.all(name,mark(s)))
-export const trace = R.curry((name, s) => T.lazy(name,mark(s)))
-export const dump = R.curry((name, s) => D.output(name,mark(s)))
+export const traceAll = Kit.curry((name, s) => T.all(name,mark(s)))
+export const trace = Kit.curry((name, s) => T.lazy(name,mark(s)))
+export const dump = Kit.curry((name, s) => D.output(name,mark(s)))
 

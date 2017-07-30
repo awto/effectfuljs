@@ -1,12 +1,12 @@
 import * as Policy from "../policy"
 import * as T from "../transform"
-import * as R from "ramda"
+import * as Kit from "../kit"
 
 export default function* generatorsInit($ns) {
   const ops = {
     YieldExpression: true
   }
-  return R.pipe(
+  return Kit.pipe(
     Policy.setFuncOpts({generator:true,
                         async:false,
                         esRebind:true,

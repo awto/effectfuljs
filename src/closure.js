@@ -1,6 +1,5 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
-import {Tag,trace,dump} from "./kit"
+import {Tag} from "./kit"
 import * as assert from "assert"
 import * as State from "./state"
 import * as Block from "./block"

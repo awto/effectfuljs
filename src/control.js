@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,produce,consume,symbol,scope as vars} from "estransducers"
 import * as assert from "assert"
@@ -11,7 +10,7 @@ export const scopeId = Kit.sysId("scope")
 /**
  * calculates links between control blocks and jumps referencing them
  */
-export const assignLabels = R.pipe(
+export const assignLabels = Kit.pipe(
   function* assignLabels(s) {
     let labels = []
     const sl = Kit.auto(s)
@@ -143,7 +142,7 @@ export function recalc(s) {
  * injects `scope` and `jump` tags where instead of labeled 
  * staments `break` and `continue` 
  */
-export const injectBlock = R.pipe(
+export const injectBlock = Kit.pipe(
   recalc,
   function* injectBlock(s) {
     const sl = Kit.auto(s)

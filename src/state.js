@@ -1,22 +1,21 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,produce,consume,symbol,scope} from "estransducers"
 import * as T from "babel-types"
-import * as assert from "assert"
 const {enter,leave,tok} = Kit
 import * as Block from "./block"
 import * as Bind from "./bind"
 import * as Branch from "./branch"
 import * as Loop  from "./loops"
 import * as Ctrl  from "./control"
-import * as Uniq from "./uniq"
+
+import * as assert from "assert"
 
 /** 
  * moves all variable declarations in decls field of a root Val
  *
  *      type Val = Val & { decls: Token[] }
  */
-export const saveDecls = R.pipe(
+export const saveDecls = Kit.pipe(
   function* saveDecls(s) {
     const sl = Kit.auto(s)
     const top = sl.peel()
@@ -520,7 +519,7 @@ function* localFuncDecls(si) {
 }
 
 /** adds captured variables parameters/arguments of functions and calls */
-export const locals = R.pipe(localFuncDecls, localCalls)
+export const locals = Kit.pipe(localFuncDecls, localCalls)
 
 /** 
  * calculates states reads and writes 

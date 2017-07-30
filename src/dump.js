@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,produce,consume,symName} from "./kit"
 import * as Trace from "./kit/trace"
@@ -92,15 +91,15 @@ function* setComments(s) {
   }
 }
 
-export const dumpFin = R.pipe(cleanNonEs,setComments,Array.from)
+export const dumpFin = Kit.pipe(cleanNonEs,setComments,Array.from)
 
-export const toConsole = R.curry(function toConsole(tag,s) {
+export const toConsole = Kit.curry(function toConsole(tag,s) {
   if (isNode)
     console.log(`dump ${tag}`)
   else
     console.group(`dump %c${tag}`,"color:orange;font-size:large")
-  const col = R.pipe(cleanNonEs,color,Array.from)(s)
-  const fin = R.pipe(setComments,Kit.finalize,Array.from)(col)
+  const col = Kit.pipe(cleanNonEs,color,Array.from)(s)
+  const fin = Kit.pipe(setComments,Kit.finalize,Array.from)(col)
   const args = Array.from(getArgs(col))
   consume(fin)
   console.log(generate(fin[0].value.node).code,...args)

@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import {Tag,produce as esproduce,symbol,toArray,isSymbol,
         symName,symInfo,consume as esconsume,scope} from "estransducers"
 import * as EsKit from "estransducers/kit"
@@ -236,7 +235,7 @@ export function* completeSubst(s) {
   yield* walk()
 }
 
-export const complete = R.pipe(completeAny,resetLevel)
+export const complete = EsKit.pipe(completeAny,resetLevel)
 
 export const Subst = symbol("Subst","ctrl")
 
@@ -254,12 +253,12 @@ export function* bracket(i, pos, tok, value) {
   yield leave(pos, tok, value)
 }
 
-export const map = R.curry(function* map(f, s) {
+export const map = EsKit.curry(function* map(f, s) {
   for(const i of s) 
     yield f(i)
 })
 
-export const filter = R.curry(function* filter(pred, s) {
+export const filter = EsKit.curry(function* filter(pred, s) {
   for(const i of s) 
     if (pred(i))
       yield i
@@ -469,7 +468,7 @@ export function skip(s) {
 }
 
 export const prepare =
-  R.pipe(
+  EsKit.pipe(
     resetLevel,
     function* prepare(s) {
       const stack = []
@@ -542,7 +541,7 @@ export function* copyOneWithPos(s,pos) {
   }
 }
 
-export const peel = R.curry(function* peel(step, s) {
+export const peel = EsKit.curry(function* peel(step, s) {
   const i = s.take()
   yield enter(i)
   yield* step(s)
@@ -555,7 +554,7 @@ export const peel = R.curry(function* peel(step, s) {
 /**
  * removes nodes with specified type without content 
  */
-export const rmEmpty = R.curry(function* rmEmpty(ty,s) {
+export const rmEmpty = EsKit.curry(function* rmEmpty(ty,s) {
   const sl = lookahead(s)
   for(const i of sl) {
     if (i.type === ty && i.enter) {
@@ -621,5 +620,4 @@ export function auto(s) {
     return new AutoClassArr(s)
   return new AutoClass(s)
 }
-
 

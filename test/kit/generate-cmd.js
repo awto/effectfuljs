@@ -3,9 +3,8 @@ import * as path from "path"
 import * as kit from "./generators"
 import {run,pretty} from "./core"
 import * as dirs from "./dirs"
-import * as R from "ramda"
-// import {terminal} from "terminal-kit"
-var terminal = require( 'terminal-kit' ).terminal ;
+import * as Kit from "estransducers/kit"
+var terminal = require( 'terminal-kit' ).terminal
 
 const defaults = require("../../src/config")
 const configs = require("./configs")
@@ -15,7 +14,7 @@ const root = path.join(__dirname, "..", "samples")
 
 const PBAR = true
 
-let s = [...R.pipe(
+let s = [...Kit.pipe(
   dirs.read,
   kit.parse,
   function*(s) {

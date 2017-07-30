@@ -1,5 +1,4 @@
-import * as R from "ramda"
-import * as Kit from "../src/kit/core"
+import * as Kit from "../src/kit"
 import {flatten,prepareScopes,consumeScope} from "../src/transform"
 import {Tag,produce,consume} from "estransducers"
 import generate from "babel-generator"
@@ -13,7 +12,7 @@ import * as Dump from "../src/dump"
 import * as State from "../src/state"
 import * as Block from "../src/block"
 
-const run = (src) => transformExpr(R.pipe(
+const run = (src) => transformExpr(Kit.pipe(
   State.saveDecls,
   State.restoreDecls,
   Debug.mark,

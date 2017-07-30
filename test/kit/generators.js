@@ -1,9 +1,8 @@
 import * as fs from "fs"
 import * as path from "path"
-import {lookahead} from "estransducers/kit"
+import * as Kit from "estransducers/kit"
 import {isQUnit,run,pretty,prettyBlock,blockEqual} from "./core"
 import tags from "./tags"
-import * as R from "ramda"
 import * as assert from "assert"
 const defaults = require("../../src/config")
 const configs = require("./configs")
@@ -154,7 +153,7 @@ export function* parseInlineComments(s) {
 }
 
 /** reorders path by moving its last element into a `pos` position */
-export const moveConfigPath = R.curry(function* moveConfigPath(pos,s) {
+export const moveConfigPath = Kit.curry(function* moveConfigPath(pos,s) {
   for(const i of s) {
     if (i.value.exp != null) {
       const path = [...i.path]
@@ -166,7 +165,7 @@ export const moveConfigPath = R.curry(function* moveConfigPath(pos,s) {
 })
 
 /** crops path into `len` length */
-export const crop = R.curry(function* crop(len,s) {
+export const crop = Kit.curry(function* crop(len,s) {
   const memo = new Map()
   for(const i of s) {
     const path = [...i.path]
@@ -196,19 +195,19 @@ export function* toArr(s) {
     yield {path:i.path,value:[i.value]}
 }
 
-export const trace = R.curry(function trace(n,s) {
+export const trace = Kit.curry(function trace(n,s) {
   const a = [...s]
   console.log(n,a)
   return a
 })
 
-export const parse = R.pipe(
+export const parse = Kit.pipe(
   toStream,
   fileNamePatterns,
   parseInlineComments,
   parseOptsAlieas)
 
-export const prepare = R.pipe(
+export const prepare = Kit.pipe(
   typeToField,
   propagateOpts,
   setOutpOpts)
@@ -251,7 +250,7 @@ function qunitTests(m) {
     i()
 }
 
-export const qunit = R.pipe(
+export const qunit = Kit.pipe(
   parse,
   prepare,
   toArr,
@@ -296,7 +295,7 @@ export function mochaTests(m) {
     i()
 }
 
-export const mochaPrepare = R.pipe(
+export const mochaPrepare = Kit.pipe(
   prepare,
   // moveConfigPath(0),
   // moveConfigPath(-1),
@@ -304,7 +303,7 @@ export const mochaPrepare = R.pipe(
   toArr,
   crop(2))
 
-export const mochaBdd = R.pipe(
+export const mochaBdd = Kit.pipe(
   parse,
   mochaPrepare,
   group,

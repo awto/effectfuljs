@@ -1,11 +1,10 @@
 import * as Kit from "./kit"
 import {enter,leave,tok,symKind,Tag} from "./kit"
 import * as Match from "estransducers/match"
-import * as R from "ramda"
 import dump from "estransducers/dump"
 import * as Debug from "./debug"
 
-export const iife = R.pipe(
+export const iife = Kit.pipe(
   Match.run("=(() => { return $$; })()"),
   function(s) {
     s = Kit.auto(s)
@@ -29,7 +28,7 @@ export const iife = R.pipe(
   },
   Kit.completeSubst)
 
-export default R.pipe(iife)
+export default Kit.pipe(iife)
 
 // TODO:
 export function inlineBinds() {

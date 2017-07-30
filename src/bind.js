@@ -1,9 +1,6 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,symbol,tok} from "./kit"
 import * as assert from "assert"
-import * as Debug from "./debug"
-import * as Trace from "./kit/trace"
 import * as Block from "./block"
 import * as Prop from "./propagate"
 
@@ -47,7 +44,7 @@ export function tempVarSym(top, pat, byVal = true) {
  * injects `letStmt` and `bindPat` to mark extracted expressions and its 
  * original location
  */
-export const flatten = R.pipe(
+export const flatten = Kit.pipe(
   Kit.removeNulls,
   function* flatten(s) {
     const sl = Kit.auto(s)

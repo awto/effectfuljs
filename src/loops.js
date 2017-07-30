@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import * as Kit from "./kit"
 import {Tag,symbol} from "estransducers"
 import * as T from "babel-types"
@@ -26,7 +25,7 @@ export function* whileStmt(s) {
           : i
 }
 
-export const toBlocks = R.pipe(
+export const toBlocks = Kit.pipe(
   function toBlocksOuter(s) {
     s = Kit.auto(s)
     function* walk() {
@@ -95,7 +94,7 @@ export const toBlocks = R.pipe(
     return walk()
   })
 
-export const doWhileStmt = R.pipe(
+export const doWhileStmt = Kit.pipe(
   function doWhileStmt(s) {
     s = Kit.auto(s)
     function* walk() {
@@ -246,7 +245,7 @@ export const looseForOf = (s) => forOfStmtImpl(true,s)
 /**
  * transforms `for(init; test; upd) body` into for(;;) {...}
  */
-export const normilizeFor = R.pipe(
+export const normilizeFor = Kit.pipe(
   recalcEff,
   Ctrl.recalc,
   function removeContinue(s) {
