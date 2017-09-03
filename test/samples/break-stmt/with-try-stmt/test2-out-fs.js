@@ -2,5 +2,9 @@
 (function () {
   var e;
   e = ex;
-  return eff(3);
+  return M.j(eff(3), _);
+
+  function _() {
+    return M.pure();
+  }
 });

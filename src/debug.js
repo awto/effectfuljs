@@ -453,7 +453,7 @@ const emptySet = new Set()
 
 const mark = Kit.pipe(
   T.cleanComments,
-  addLabels,
+//  addLabels,
   markBindEff,
   markFrameSyms)
 
@@ -487,8 +487,10 @@ function* markFrameSyms(s) {
         const thread = v.threadParams ? new Set(v.threadParams) : emptySet
         const w = v.stateVars ? v.stateVars.w : emptySet
         const r = v.stateVars ? v.stateVars.r : emptySet
-        const all = new Set([...avail, ...locals, ...clos,
-                             ...params, ...thread, ...w, ...r])
+        const d = v.stateVars && v.stateVars.d || emptySet
+        const saved = v.savedDecls ? new Set(v.savedDecls.keys()) : emptySet
+        const all = new Set([...avail, ...locals, ...clos, ...saved,
+                             ...params, ...thread, ...w, ...r, ...d])
         if (v.patSym)
           all.add(v.patSym)
         if (v.sym)
@@ -501,6 +503,8 @@ function* markFrameSyms(s) {
                      + (thread.has(i) ? "T" : "")
                      + (r.has(i) ? "R" : "")
                      + (w.has(i) ? "W" : "")
+                     + (d.has(i) ? "d" : "")
+                     + (saved.has(i) ? "D" : "")
                      + (i === v.sym ? "S" : "")
                      + (i === v.patSym ? "B" : ":"))
                  .join()}}` : ""

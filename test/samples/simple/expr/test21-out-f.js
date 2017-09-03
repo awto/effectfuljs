@@ -1,11 +1,17 @@
 function a() {
-  return M.jM(eff(1), _1);
+  var _this = this;
 
-  function _1() {
-    return M.jM(this.eff(2), _2);
+  return M.j(eff(1), _1, _this);
+
+  function _1(_this) {
+    return M.j(_this.eff(2), _2, _this);
   }
 
-  function _2() {
-    return eff3(this);
+  function _2(_this) {
+    return M.j(eff3(_this), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 }

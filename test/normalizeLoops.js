@@ -11,6 +11,7 @@ import * as Debug from "../src/debug"
 import * as Branch from "../src/branch"
 import * as Ctrl from "../src/control"
 import * as Block from "../src/block"
+import * as Rt from "../src/rt"
 
 const runImpl = (pass) => transformExpr(Kit.pipe(
   Ctrl.removeLabeldStatement,
@@ -18,7 +19,7 @@ const runImpl = (pass) => transformExpr(Kit.pipe(
   Branch.toBlocks,
   pass,
   recalcEff,
-  Block.interpretLibSyms,
+  Rt.interpretLibSyms,
   Branch.clean,
   Debug.mark,
   consumeScope))
@@ -83,7 +84,7 @@ describe('prepare loops pass', function() {
   })
 })
 
-describe('normilize `for-of`', function() {
+describe('normlize `for-of`', function() {
   const run = runImpl(Loops.forOfStmt)
   context('with effect in its body', function() {
     context('with single statement in body', function() {
@@ -94,7 +95,7 @@ describe('normilize `for-of`', function() {
               eff(1);
           }`),
           print(`function () /*BS|E*/{
-            /*FS|E*/for (var loop = M.iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+            /*FS|E*/for (var loop = iterator(s); !(loop = /*CE|P*/loop.incr()).done;) /*BS|E*/{
               const i = loop.value;
               /*ES|e*/ /*CE|B*/eff(1);
             }
@@ -109,7 +110,7 @@ describe('normilize `for-of`', function() {
           }
         }`),
         print(`function () /*BS|E*/{
-          /*FS|E*/for (var loop = M.iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+          /*FS|E*/for (var loop = iterator(s); !(loop = /*CE|P*/loop.incr()).done;) /*BS|E*/{
             const i = loop.value;
             /*ES|e*/ /*CE|B*/eff(1);
           }
@@ -125,9 +126,9 @@ describe('normilize `for-of`', function() {
               eff(i,j);
         }`),
         print(`function () /*BS|E*/{
-          /*FS|E*/for (var loop = M.iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+          /*FS|E*/for (var loop = iterator(s); !(loop = /*CE|P*/loop.incr()).done;) /*BS|E*/{
             const i = loop.value;  
-            /*FS|E*/for (var _loop = M.iterator(t); !(_loop = /*CE|P*/_loop.step()).done;) /*BS|E*/{
+            /*FS|E*/for (var _loop = iterator(t); !(_loop = /*CE|P*/_loop.incr()).done;) /*BS|E*/{
               const j = _loop.value;
               /*ES|e*/ /*CE|B*/eff(i, j);
             }
@@ -153,7 +154,7 @@ describe('normilize `for-of`', function() {
   })
 })
 
-describe('normilize `for-in`', function() {
+describe('normalize `for-in`', function() {
   const run = runImpl(Loops.forOfStmt)
   it('simple block', function() {
     equal(
@@ -163,7 +164,7 @@ describe('normilize `for-in`', function() {
         }
       }`),
       print(`function () /*BS|E*/{
-        /*FS|E*/for (var loop = M.forInIterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+        /*FS|E*/for (var loop = forInIterator(s); !(loop = /*CE|P*/loop.incr()).done;) /*BS|E*/{
           const i = loop.value;
           /*ES|e*/ /*CE|B*/eff(1);
         }
@@ -171,7 +172,7 @@ describe('normilize `for-in`', function() {
   })
 })
 
-describe('normilize `do-while`', function() {
+describe('normalize `do-while`', function() {
   const run = runImpl(Loops.doWhileStmt)
   it('simple block', function() {
     equal(
@@ -253,8 +254,8 @@ describe('normilize `do-while`', function() {
   })
 })
 
-describe('normilize `for`', function() {
-  const run = runImpl(Loops.normilizeFor)
+describe('normalize `for`', function() {
+  const run = runImpl(Loops.normalizeFor)
   context('with non-block in body', function() {
     it('should keep effect in the body', function() {
       equal(
@@ -451,7 +452,7 @@ describe('normilize `for`', function() {
 })
 
 
-describe('normilize `for`', function() {
+describe('normalize `for`', function() {
   const run = transformExpr(Kit.pipe(Loops.looseForOf,
                                    Kit.scope.resolve,
                                    consumeScope))
@@ -471,24 +472,24 @@ describe('normilize `for`', function() {
           }
         }`),
       print(`function () {
-        for (var loop = iterator(a); !(loop = loop.step()).done;) {
+        for (var loop = iterator(a); !(loop = loop.incr()).done;) {
           const i = loop.value;
           eff(i);
         }
 
-        for (var _loop = iterator(a); !(_loop = _loop.step()).done;) {
+        for (var _loop = iterator(a); !(_loop = _loop.incr()).done;) {
           const i = _loop.value;
           eff(i);
         }
         
-        for (var loop1 = iterator(a); !(loop1 = loop1.step()).done;) {}
+        for (var loop1 = iterator(a); !(loop1 = loop1.incr()).done;) {}
         
-        for (var loop2 = iterator(a); !(loop2 = loop2.step()).done;) {
+        for (var loop2 = iterator(a); !(loop2 = loop2.incr()).done;) {
           i.a = loop2.value;
           eff(1);
         }
         
-        for (var loop3 = iterator(a); !(loop3 = loop3.step()).done;) {
+        for (var loop3 = iterator(a); !(loop3 = loop3.incr()).done;) {
           i = loop3.value;
           eff(1);
         }

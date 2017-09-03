@@ -1,7 +1,8 @@
 function a() {
-  return M.jMB(eff(1), _1);
+  return M.jB(eff(1), _);
 
-  function _1(a) {
-    return M.throw(a);
+  function _(a) {
+    throw a;
+    return M.pure();
   }
 }

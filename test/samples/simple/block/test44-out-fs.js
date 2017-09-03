@@ -1,13 +1,21 @@
 function a() {
-  return M.jM(eff1(), _1);
+  return M.j(eff1(), _1);
 
   function _1() {
     if (a) return _2();else {
-      return eff6();
+      return M.j(eff6(), _4);
     }
   }
 
   function _2() {
-    return eff5(5);
+    return M.jB(eff5(5), _3);
+  }
+
+  function _3(a) {
+    return M.pure(a);
+  }
+
+  function _4() {
+    return M.pure();
   }
 }

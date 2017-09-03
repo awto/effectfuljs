@@ -11,7 +11,6 @@ import * as Except from "./exceptions"
 import * as Policy from "./policy"
 import {stmtExpr} from "./kit/stmtExpr"
 
-const defaultUnpackMax = 5
 const undefinedSym = Kit.scope.undefinedSym
 
 function byNum(a, b) {
@@ -44,7 +43,12 @@ const argSym = Kit.scope.newSym("arg")
  *               }
  */
 export const convert = Kit.pipe(
-  // removes redundant lets to simplify next step
+  /**
+   * removes redundant lets to simplify next step
+   * this pass is actually workaround of not very nice output
+   * from the former passes, they were designed for now abandoned nested mode 
+   * TODO: make it redundant
+   */
   function cleanLets(si) {
     const s = Kit.auto(si)
     if (s.opts.scopeContext)
@@ -61,10 +65,15 @@ export const convert = Kit.pipe(
           case Tag.ReturnStatement:
             // remaining return statements are either last
             // in the functions or stmtExpr
-            yield s.enter(i.pos, Block.pure)
-            if (!i.leave)
-              yield* Kit.reposOne(s.sub(), Tag.push)
-            yield* s.leave()
+            if (!i.leave) {
+              if (i.value.eff)
+                yield* Kit.reposOne(s.sub(), i.pos)
+              else {
+                yield s.enter(i.pos, Block.pure)
+                yield* Kit.reposOne(s.sub(), Tag.push)
+                yield* s.leave()
+              }
+            }
             s.close(i)
             continue
           case Block.choice:
@@ -87,6 +96,14 @@ export const convert = Kit.pipe(
                 yield *inner
                 yield s.close(i)
               }
+              continue
+            } else if (i.value.result) {
+              // last not-eff letStmt must be turned into explicit return
+              yield s.enter(i.pos, Block.pure)
+              if (s.curLev())
+                yield* Kit.reposOne(s.sub(), Tag.push)
+              yield* s.leave()
+              s.close(i)
               continue
             }
             break
@@ -146,7 +163,7 @@ export const convert = Kit.pipe(
                 yield i
                 let last
                 cur = []
-                for(const j of s.sub()) {
+                for(const j of walk(s.sub(),[])) {
                   if (j.enter && j.type === Ctrl.jump && !j.value.goto)
                     cur.push(j.value)
                   yield last = j
@@ -180,13 +197,16 @@ export const convert = Kit.pipe(
               switch(i.value.sym) {
               case Except.handleId:
                 assert.equal(params[0].type, Tag.Identifier)
-                const exceptSym = handle.exceptSym = params[0].value.sym
+                const exceptSym = params[0].value.sym
+//                handle.frameParams = new Set([exceptSym])
+                handle.exceptSym = exceptSym
                 for(let j = fl; j < hl; j++) {
                   const f = frames[j][0]
-                  if (f.value.catchCont == null)
+                  if (f.value.catchCont == null) {
                     f.value.catchCont = {goto:handle,
                                          exceptSym,
                                          gotoDests:[handle]}
+                  }
                 }
                 cur = bodyJumps.concat(hjumps)
                 break
@@ -244,14 +264,16 @@ export const convert = Kit.pipe(
                 continue
               case Tag.ConditionalExpression:
                 if (i.value.eff) {
-                  yield i
-                  yield s.take()
+                  j.value.result = true
+                  yield Kit.setPos(s.take(),i.pos)
                   yield* s.one()
                   assert.ok(!cur.length)
                   cur.push(...(yield* walk(s.one(), [])))
                   cur.push(...(yield* walk(s.one(), [])))
-                  yield s.close(j)
-                  yield s.close(i)
+                  for(const k of cur)
+                    k.sym = i.value.sym
+                  yield Kit.setPos(s.close(j),i.pos)
+                  s.close(i)
                   continue
                 }
                 break
@@ -267,11 +289,12 @@ export const convert = Kit.pipe(
             if (frames.length > fl) {
               const k = frames[fl][0].value
               k.savedDecls = i.value.savedDecls
-              for(const l of ncur)
-                if (l.goto == null) {
-                  l.goto = k
-                  l.bindName = "jR"
-                }
+                for(const l of ncur)
+                  if (l.goto == null) {
+                    l.goto = k
+                    if (s.opts.markRec !== false)
+                      l.bindName = "jR"
+                  }
             }
             cur = []
             s.close(i)
@@ -398,7 +421,8 @@ export const convert = Kit.pipe(
           // the jump is to go through finally handles
           && !(i.enters[0].preCompose && i.enters[0].preCompose.length) 
           // no dynamic jumps to the frame
-          && !i.tryBody) {
+          && !i.tryBody && !i.catchCont
+         ) {
         inline.set(i,v)
         frames.delete(i)
       }
@@ -423,6 +447,8 @@ export const convert = Kit.pipe(
     }
     function* pack() {
       const s = Kit.auto(sa)
+      const root = s.first.value
+      // if context is added as a first argument the call cannot be eta-reduced
       function* frame(value) {
         value.enters = []
         const j = s.cur()
@@ -432,6 +458,10 @@ export const convert = Kit.pipe(
           jumps.push(catchCont)
           catchCont.preCompose = getPreCompose(value, catchCont.goto)
           catchCont.ref = value
+          catchCont.goto.exceptSym = catchCont.exceptSym
+          // makes a copy of exception's frame in case if it behind any finally
+          catchCont.goto.exceptFrameCopy = catchCont.goto.exceptFrameCopy
+            || catchCont.preCompose.length
         }
         for (const i of s.sub()) {
           if (i.enter) {
@@ -442,9 +472,12 @@ export const convert = Kit.pipe(
               // it should stay if it returns some pure expression
               // if the return has effectful argument it is a bind pattern
               const result = i.value.result  = j != null
-                    && j.type !== Block.bindPat
-              if (maybeSingle && !result)
+                    // && j.type !== Block.bindPat
+              const keepPure = result || !i.value.goto
+              if (maybeSingle && !keepPure)
                 singleJumps.push({frame:value,jump:i.value})
+              else if (!i.value.goto && !result)
+                root.emptyResFrame = value
             case Block.letStmt:
               jumps.push(i.value)
               i.value.ref = value
@@ -527,12 +560,11 @@ export const convert = Kit.pipe(
           const frame = s.enter(Tag.push, Block.frame,
                                 {declSym:Kit.scope.newSym("_")})
           yield frame
-          yield s.tok(Tag.push, Ctrl.jump,
-                      {goto: i.value, ref: frame.value,
-                       bindName:"scope", init:true})
+          yield s.tok(Tag.push, Block.letStmt,
+                      {goto: i.value, ref: frame.value, bindJump:true,
+                       eff:true,bindName:"scope",init:true})
           yield* lab()
-        } else if (i.value.catchCont != null
-                   || i.value.enters && i.value.enters.length) {
+        } else if (i.value.enters && i.value.enters.length) {
           const frame = s.enter(Tag.push, Block.frame,
                                 {declSym:Kit.scope.newSym("_")})
           const jump = s.tok(Tag.push, Ctrl.jump,
@@ -552,6 +584,7 @@ export const convert = Kit.pipe(
   // emits auxiliary frames if there are jumps through several finally blocks
   function* composeFinallyBlocks(si) {
     const s = Kit.auto(si)
+    const root = s.first.value
     let resFrame, resSym, resJumps = []
     for(let i; (i = s.cur()) && i.type !== Block.frame;)
       yield s.take()
@@ -559,17 +592,15 @@ export const convert = Kit.pipe(
     if (resFrame) {
       const lab = s.label()
       const f = s.enter(Tag.push,Block.frame,{declSym:resFrame})
-      yield f
       for(const i of resJumps)
         i.instances.add(f.value)
-      yield s.enter(Tag.push,Tag.CallExpression,{result:true})
-      yield s.tok(Tag.callee,Tag.Identifier,{sym:Block.pureId})
-      yield s.enter(Tag.arguments,Tag.Array)
-      yield s.tok(Tag.push, Tag.Identifier,{lhs:false,rhs:true,sym:resSym})
+      yield f
+      yield s.enter(Tag.push,Ctrl.jump,{result:true,ref:f,goto:null})
+      if (resSym)
+        yield s.tok(Tag.push, Tag.Identifier,{lhs:false,rhs:true,sym:resSym})
       yield* lab()
     }
     yield* s
-    // if jumps is to be precomposed generates frames for this
     function preComposeFrame(jump) {
       const chain = jump.preCompose || emptyArr, len = chain.length
       if (len) {
@@ -589,18 +620,22 @@ export const convert = Kit.pipe(
               cont.instances.add(jump.goto)
             } else {
               if (jump.result) {
-                // lifted result
-                if (resSym == null) {
-                  resSym = Bind.tempVarSym(s.first.value,"r")
-                  resFrame = Kit.scope.newSym("r_")
-                }
-                jump.sym = resSym
+                if (!resSym)
+                    resSym = Bind.tempVarSym(s.first.value,"r")
+                // jump.sym = resSym
                 args.set(resSym,argSym)
-                args.set(arg,resFrame)
-                resJumps.push(cont)
               } else {
-                args.set(arg,Block.pureId)
-              } 
+                // likely there is a frame to fit already
+                if (root.emptyResFrame) {
+                  args.set(arg,root.emptyResFrame.declSym)
+                  cont.instances.add(root.emptyResFrame)
+                  break
+                }
+              }
+              if (!resFrame)
+                resFrame = Kit.scope.newSym("r_")
+              args.set(arg,resFrame)
+              resJumps.push(cont)
             }
             break
           }
@@ -613,11 +648,50 @@ export const convert = Kit.pipe(
         if (i.enter) {
           switch(i.type) {
           case Block.frame:
+            let {catchCont} = i.value
+            if (catchCont != null && catchCont.goto.exceptFrameCopy) {
+              const contFrame = catchCont.goto
+              const sym = catchCont.exceptSym
+              if (sym) {
+                // turning catchCont into a usual frame
+                contFrame.exceptSym = null
+                contFrame.frameParams = new Set([sym])
+              }
+              const memo = catchCont.goto.preCompMemo
+                    || (catchCont.goto.preCompMemo = new Map())
+              const comp = catchCont.preCompose[0]
+              let wrap = memo.get(comp)
+              if (!wrap) {
+                // if catch is behind finally block - precomposing it
+                // two frame is needed to avoid exception parameter duplication
+                const copySym = Bind.tempVarSym(s.first.value,"ex")
+                const catchFrame = s.enter(Tag.push,Block.frame,
+                                               {declSym:Kit.scope.newSym("_c"),
+                                                exceptSym:copySym
+                                               })
+                yield catchFrame
+                const jump = s.tok(Tag.push, Ctrl.jump,
+                                   {goto:catchCont.goto,
+                                    ref:catchFrame.value,
+                                    preCompose:catchCont.preCompose,
+                                    frameArgs:new Map([[sym, copySym]])
+                                   })
+                yield jump
+                yield* s.leave()
+                wrap = catchFrame.value
+                memo.set(comp,wrap)
+                preComposeFrame(jump.value)
+              }
+              i.value.catchCont = {
+                goto:wrap,
+                exceptSym:wrap.exceptSym,
+                gotoDests:[wrap.ref]
+              }
+              catchCont = i.value.catchCont
+            }
             yield i
-            const {catchCont} = i.value
             const lab = s.label()
             if (catchCont != null) {
-              preComposeFrame(catchCont)
               if (s.opts.jsExceptions !== false) {
                 yield s.enter(Tag.push, Tag.TryStatement)
                 yield s.enter(Tag.block, Tag.BlockStatement)
@@ -629,12 +703,15 @@ export const convert = Kit.pipe(
               yield* s.leave()
               yield* s.leave()
               yield s.enter(Tag.handler, Tag.CatchClause)
-              const sym = Kit.scope.newSym("e")
+              const sym = catchCont.exceptSym
               yield s.tok(Tag.param,Tag.Identifier,{sym})
               yield s.enter(Tag.body,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
-              yield s.enter(Tag.push,Ctrl.jump,catchCont)
-              yield s.tok(Tag.push, Tag.Identifier, {sym})
+              yield s.enter(Tag.push,Ctrl.jump,{
+                goto:catchCont.goto,
+                ref:i.value,
+                exceptSym: catchCont.exceptSym
+              })
               yield* lab()
             }
             yield s.close(i)
@@ -711,8 +788,6 @@ export const optimize = Kit.pipe(
   optimizeBindAssign,
   Kit.cleanEmptyExprs)
 
-export const newContextSym = Kit.sysId("context")
-
 /** generates context reads and writes */
 export function* copyCtxVars(si) {
   const s = Kit.auto(si)
@@ -722,7 +797,8 @@ export function* copyCtxVars(si) {
   const decls = root.savedDecls || (root.savedDecls = new Map())
   decls.set(ctxSym, {raw:null,init:[
     s.enter(Tag.init, Tag.CallExpression),
-    s.tok(Tag.callee, Tag.Identifier, {sym:newContextSym}),
+    s.tok(Tag.callee, Tag.Identifier,
+          {sym:Kit.sysId(s.opts.scopeConstructor || "context")}),
     s.tok(Tag.arguments, Tag.Array),
     ...s.leave()]})
   yield* frameContent(frame.value)
@@ -747,13 +823,17 @@ export function* copyCtxVars(si) {
     const decls = frame.savedDecls || (frame.savedDecls = new Map())
     const sw = frame.stateVars
     function addSym(i,init) {
-      if (frame.patSym !== i && (!frame.first || i.param !== root))
+      if (frame.patSym !== i
+          && (!frame.first || i.param !== root)
+          && !(frame.stateVars.d && frame.stateVars.d.has(i))) {
         decls.set(i,{raw:null,init})
+      }
     }
     if (sw) {
       const pat = frame.framePat
+      const exceptSym = frame.exceptSym
       for(const i of sw.w)
-        if (i.interpr === Bind.ctxField)
+        if (i.interpr === Bind.ctxField && i !== exceptSym)
           addSym(i)
       for(const i of sw.r)
         if (i.interpr === Bind.ctxField)
@@ -792,15 +872,11 @@ export function* copyCtxVars(si) {
           const assign = []
           if (args)
             for(const i of args)
-              if (i[1] !== argSym && i[0].interpr === Bind.ctxField)
+              if (/*i[1] !== argSym &&*/ i[0].interpr === Bind.ctxField)
                 assign.push(i)
-          const patSym = i.type === Ctrl.jump && i.value.sym
-                && i.value.sym.interpr === Bind.ctxField
-                && i.value.sym
-          assign.sort(byNumFst)
           const delVars = [...del].sort(byNum)
           reset.sort(byNum)
-          if (reset.length || delVars.length || assign.length || patSym) {
+          if (reset.length || delVars.length || assign.length/* || patSym*/) {
             const lab = s.label()
             yield s.enter(i.pos, Tag.SequenceExpression, {result:true})
             yield s.enter(Tag.expressions, Tag.Array)
@@ -815,22 +891,18 @@ export function* copyCtxVars(si) {
               yield s.tok(Tag.right, Tag.Identifier, {sym:j})
               yield* slab()
             }
+            let inner = i.leave ? [] : Kit.toArray(s.sub())
             for(const [sym,init] of assign) {
               yield* ctxAssign(sym)
-              yield s.tok(Tag.right, Tag.Identifier, {sym:init})
-              yield* slab()
-            }
-            const inner = Kit.toArray(s.sub())
-            if (patSym) {
-              yield* ctxAssign(patSym)
-              if (inner && inner.length)
+              if (init === argSym) {
                 yield* Kit.reposOneArr(inner, Tag.right)
-              else
-                yield s.tok(Tag.right,Tag.Identifier,{sym:undefinedSym})
+                inner = null
+              } else 
+                yield s.tok(Tag.right, Tag.Identifier, {sym:init})
               yield* slab()
             }
             yield s.peel(Kit.setPos(i, Tag.push))
-            if (!patSym && inner && inner.length)
+            if (inner && inner.length)
               yield* Kit.reposOneArr(inner, Tag.push)
             yield* lab()
             continue
@@ -844,7 +916,7 @@ export function* copyCtxVars(si) {
 
 export function interpretFrames(si) {
   const s = Kit.auto(si)
-  const unpackMax = s.opts.unpackMax || defaultUnpackMax
+  const unpackMax = s.opts.unpackMax
   const root = s.first.value
   function* args(thread) {
     if (thread)
@@ -943,8 +1015,6 @@ export function interpretFrames(si) {
             const paramLab = s.label()
             yield s.enter(Tag.params,Tag.Array)
             yield* paramPrefix(i.value)
-            if (patSym)
-              yield s.tok(Tag.push,Tag.Identifier,{sym:patSym})
             if (thread && thread.length) {
               if (thread.length <= unpackMax) {
                 yield* args(thread)
@@ -984,16 +1054,20 @@ export function interpretFrames(si) {
 export function interpretJumps(si) {
   const s = Kit.auto(si)
   const packAsObj = s.opts.packArgs === "object"
-  const unpackMax = s.opts.unpackMax || defaultUnpackMax
+  const unpackMax = s.opts.unpackMax
+  const bindName = s.opts.bindName
   const ctxSym = s.first.value.contextSym
   function* argPack(arr,optPat,inner) {
     function* arg(i,pos) {
-      if (i === argSym)
+      if (i === argSym) {
         yield* Kit.reposOneArr(inner, Tag.push)
+      }
       else
         yield s.tok(Tag.push,Tag.Identifier,{sym:i})
     }
-    if (arr && arr.length) {
+    if (inner && inner.length && !arr.find(([i]) => i === argSym))
+      yield* Kit.reposOneArr(inner, Tag.push)
+    if (arr.length) {
       if (arr.length <= unpackMax) {
         for(const j of arr)
           yield* arg(j[1],Tag.push)
@@ -1029,20 +1103,21 @@ export function interpretJumps(si) {
         case Ctrl.jump:
           const {goto,gotoDests,ref} = i.value
           const lab = s.label()
-          const {threadArgs,rec} = i.value
+          const rec = i.value.rec
+          const threadArgs = i.value.threadArgs || emptyArr
           const scopeOp = i.value.init
           const obj = (!scopeOp || s.opts.contextState)
                 && s.opts.contextMethodOps && ctxSym
           const pos = i.pos
           if (gotoDests.length) {
-            let name = i.value.bindName || "j"
-            if (threadArgs && threadArgs.length && s.opts.argNumName) {
-              if (threadArgs.length > unpackMax)
-                name += "N"
-              else
-                name += threadArgs.length
-            }
             if (i.value.bindName) {
+              let name = i.value.bindName
+              if (threadArgs && threadArgs.length && s.opts.markArgNum) {
+                if (threadArgs.length > unpackMax)
+                  name += "N"
+                else
+                  name += threadArgs.length
+              }
               yield s.enter(pos,Block.app,{sym:Kit.sysId(name),obj})
               yield s.tok(Tag.push,Tag.Identifier,{sym:goto.declSym})
               if (ctxSym && !scopeOp && !obj)
@@ -1058,13 +1133,17 @@ export function interpretJumps(si) {
             let inner
             if (!i.leave)
               inner = Kit.toArray(s.sub())
+            if (s.opts.markBindValue === false
+                && gotoDests[0].patSym
+                && threadArgs.length)
+              yield s.tok(Tag.push,Tag.Identifier,{sym:undefinedSym})
             yield* argPack(threadArgs, goto.optPat, inner)
           } else {
             yield s.enter(pos, Tag.CallExpression, {result:true})
             yield s.tok(Tag.callee, Tag.Identifier, {sym:Block.pureId,ns:obj})
             yield s.enter(Tag.arguments, Tag.Array)
             const bind = s.curLev() != null
-            if (ctxSym && !scopeOp && !obj)
+            if (ctxSym && !scopeOp && !s.opts.contextThis)
               yield s.tok(Tag.push,Tag.Identifier,{sym:ctxSym})
             let inner
             if (!i.leave)
@@ -1084,36 +1163,38 @@ export function interpretJumps(si) {
             if (!gotoDests.length && catchCont == null
                 && i.value.bindName == null) {
               yield s.enter(pos,Block.effExpr)
-              yield* walk()
+              if (!i.leave)
+                yield* walk()
             } else {
-              let name = i.value.bindName || "j"
+              let name = i.value.bindName || bindName
               const obj = ctxSym && s.opts.contextMethodOps && ctxSym
-              name+="M"
-              const {threadArgs,sym:patSym,rec} = i.value
+              const {sym:patSym,rec} = i.value
+              const threadArgs = i.value.threadArgs || emptyArr
               const {catchCont} = ref
-              if (patSym)
+              if (patSym || s.opts.markBindValue === false)
                 name += "B"
-              if (threadArgs && threadArgs.length && s.opts.argNumName) {
+              if (threadArgs && threadArgs.length && s.opts.markArgNum) {
                 if (threadArgs.length > unpackMax)
                   name += "N"
                 else
                   name += threadArgs.length
               }
-              if (rec)
+              if (rec && s.opts.markRec !== false)
                 name += "R"
-              if (catchCont != null)
-                name += "E"
+              if (catchCont != null || s.opts.markCatchCont === false)
+                name += "H"
               yield s.enter(pos,Block.app,{sym:Kit.sysId(name),obj})
               if (ctxSym && !obj)
                 yield s.tok(Tag.push, Tag.Identifier, {sym:ctxSym})
-              yield* walk()
+              if (!i.leave)
+                yield* walk()
               yield s.tok(Tag.push,Tag.Identifier,
                           {sym:goto ? goto.declSym : Block.pureId,
                            ns:!goto && obj})
-              yield* argPack(threadArgs)
               if (catchCont != null)
                 yield s.tok(Tag.push,Tag.Identifier,
                             {sym:catchCont.goto.declSym})
+              yield* argPack(threadArgs)
             }
             yield* lab()
             s.close(i)
@@ -1130,9 +1211,24 @@ export function interpretJumps(si) {
 /** calculates `patSym` field */
 function calcPatSym(cfg) {
   for(const i of cfg) {
-    const {enters} = i
-    if (enters && enters.length === 1) {
-      i.patSym = enters[0].sym
+    if (!i.exceptSym) {
+      const {enters} = i
+      if (enters && enters.length > 0) {
+        i.patSym = enters[0].sym
+      }
+    }
+  }
+}
+
+/** if `markBindValue` is false adds dummy bind parameter to frames */
+function addDummyPatSym(cfg) {
+  for(const i of cfg) {
+    if (!i.patSym && !i.exceptSym) {
+      const {enters} = i
+      if (enters && enters.some(i => i.bindJump)) {
+        i.patSym = Kit.scope.newSym()
+        i.patSym.dummy = true
+      }
     }
   }
 }
@@ -1161,13 +1257,18 @@ function calcCfg(sa) {
   function setDests(f,j) {
     j.ref = f
     const dests = j.gotoDests = []
-    const goto = j.goto
+    const {goto,catchCont} = j
     if (goto) {
       if (goto.dynamicJump) {
         flattenInstances(goto,dests)
       } else
         dests.push(goto)
     }
+    /*
+    if (catchCont) {
+      dests.push(catchCont.goto)
+    }
+    */
     if (dests.length)
       f.exits.push(j)
   }
@@ -1188,14 +1289,18 @@ function calcCfg(sa) {
       frame.exits = []
       cfg.push(frame)
       frame.enters = []
-      if (frame.catchCont)
-        setDests(frame, frame.catchCont)
+      // if (frame.catchCont)
+      //  setDests(frame, frame.catchCont)
       for(const j of s.sub()) {
         if (j.enter) {
           switch(j.type) {
           case Block.letStmt:
             if (!j.value.eff)
               break
+            setDests(frame,j.value)
+            if (frame.catchCont)
+              j.value.gotoDests.push(frame.catchCont.goto)
+            break
           case Ctrl.jump:
             setDests(frame,j.value)
             break
@@ -1218,19 +1323,57 @@ function calcCfg(sa) {
  *  - `framePat: Set<Symbol>`: received from bound effectful value    
  *  - `frameAvail: Set<Symbol>`: value assigned in some former frame
  *  - `frameParamsClos: Set<Symbol>`: needed by the frame or some next frame
- *  - `frameDecls: Set<Symbol>`: symbol declared in this frame
  */
 function calcVarDeps(si) {
   const sa = Kit.toArray(si)
   const root = sa[0].value
   const opts = root.opts
   const cfg = calcCfg(sa)
+  cfg[0].first = true
+  const anyRemoved = false // removeNoEntersJumps(cfg)
   calcPatSym(cfg)
+  if (opts.markBindValue === false)
+    addDummyPatSym(cfg)
   State.calcFlatCfg(cfg,sa)
-  calcOptPat(cfg, opts.unpackMax || defaultUnpackMax)
-  return sa
+  calcOptPat(cfg, opts.unpackMax)
+  return anyRemoved ? cleanRemoved(sa) : sa
 }
 
+/** discharges frames without enters (sets `removed` property) */
+function removeNoEntersJumps(cfg) {
+  let any = false
+  function walk(f) {
+    if (!f.first && !f.enters.length && !f.removed) {
+      f.removed = true
+      any = true
+      for(const i of f.exits) {
+        for(const j of i.gotoDests) {
+          const x = j.enters.indexOf(i)
+          if(x >= 0) { // may be already removed on some other stack
+            j.enters.splice(x, 1)
+            if (!j.enters.length)
+              walk(j)
+          }
+        }
+      }
+    }
+  }
+  cfg.forEach(walk)
+  return any
+}
+
+/** remove frames marked with `removed` field */
+function* cleanRemoved(si) {
+  const s = Kit.auto(si)
+  for(const i of s) {
+    if (i.enter && i.type === Block.frame && i.value.removed) {
+      Kit.skip(s.sub())
+      s.close(i)
+      continue
+    }
+    yield i
+  }
+}
 
 /** conferts flat structure to JS expressions */
 export const interpret = Kit.pipe(
@@ -1241,6 +1384,6 @@ export const interpret = Kit.pipe(
   Opts.ifContextState(copyCtxVars),
   Policy.stage("interpretFrames"),
   interpretFrames,
-  Array.from,
+  Kit.toArray,
   interpretJumps)
 

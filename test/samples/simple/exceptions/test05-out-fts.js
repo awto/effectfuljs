@@ -1,22 +1,25 @@
-function a_1() {
+function a() {
+  var a_v = {
+    e: undefined
+  };
+
   try {
-    return M.jME(eff(1), a_3, M.pure, a_2);
+    return M.jH(eff(1), a_2, a_1, a_v, a_3);
   } catch (e) {
-    return a_2();
+    return a_1(e, a_v, undefined);
   }
 }
 
-function a_2() {
-  var e;
-  console.log(e);
-  return a_3(M.pure);
+function a_1(e, a_v, cb) {
+  console.log(a_v.e);
+  return a_2(a_v, a_3);
 }
 
-function a_3(cb) {
+function a_2(a_v, cb) {
   console.log('fin');
-  return M.pure();
+  return cb();
 }
 
-function a() {
-  return a_1();
+function a_3() {
+  return M.pure();
 }

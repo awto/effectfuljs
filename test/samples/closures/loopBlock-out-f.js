@@ -1,42 +1,14 @@
 function a(p) {
-  var a, i, j, k;
-  return M.jM(eff(1), _1);
-
-  function _1() {
-    a = 0;
-    return M.jMB(eff(2, a), _2);
-  }
-
-  function _2(b) {
-    var loop, a;
-    a = M.iterator(b);
-    loop = a;
-    return _3(loop);
-  }
-
-  function _3(loop) {
-    var b, c;
-    c = loop.step();
-    b = loop = c;
-    if (!b.done) return _4(loop);else {
-      return eff(8, a, p);
-    }
-  }
-
-  function _4(loop) {
-    i = loop.value;
-    return M.jM(eff(3, a, a), _5, loop);
-  }
-
-  function _5(loop) {
-    j = i + 1;
-    k = i + 1;
-    i++;
-    return M.jM(eff(function b(k) {
+  var a,
+      i,
+      b = i => {
+    var j,
+        k,
+        b = function b(k) {
       var _k, c;
 
       c = k++;
-      return M.jM(eff(4, a, j, c, p), _1);
+      return M.j(eff(4, a, j, c, p), _1);
 
       function _1() {
         _k = 10;
@@ -44,16 +16,65 @@ function a(p) {
         a++;
         i++;
         _k++, p++;
-        return M.jM(eff(5, a, i, _k, p), _2);
+        return M.j(eff(5, a, i, _k, p), _2);
       }
 
       function _2() {
-        return eff(6, a, i, k, p);
+        return M.j(eff(6, a, i, k, p), _3);
       }
-    }), _6, loop);
+
+      function _3() {
+        return M.pure();
+      }
+    };
+
+    return M.j(eff(3, a, a), _1);
+
+    function _1() {
+      j = i + 1;
+      k = i + 1;
+      i++;
+      return M.j(eff(b), _2);
+    }
+
+    function _2() {
+      return M.j(eff(7, a, i, j), _3);
+    }
+
+    function _3() {
+      return M.pure();
+    }
+  };
+
+  return M.j(eff(1), _1, b);
+
+  function _1(b) {
+    a = 0;
+    return M.jB(eff(2, a), _2, b);
   }
 
-  function _6(loop) {
-    return M.jRM(eff(7, a, i, j), _3, loop);
+  function _2(c, b) {
+    var loop, a;
+    a = M.iterator(c);
+    loop = a;
+    return _3(loop, b);
+  }
+
+  function _3(loop, b) {
+    var c, d;
+    d = loop.incr();
+    c = loop = d;
+    if (!c.done) return _4(loop, b);else {
+      return M.j(eff(8, a, p), _5);
+    }
+  }
+
+  function _4(loop, b) {
+    i = loop.value;
+    return M.jR(b(i), _3, loop, b);
+  }
+
+  function _5() {
+    return M.pure();
   }
 }

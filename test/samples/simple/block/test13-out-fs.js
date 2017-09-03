@@ -7,14 +7,18 @@ function a() {
   }
 
   function _1(i) {
-    return M.jM(eff1(i), _2, i);
+    return M.j(eff1(i), _2, i);
   }
 
   function _2(i) {
-    return M.jM(eff2(i), _3, i);
+    return M.j(eff2(i), _3, i);
   }
 
   function _3(i) {
-    return eff3(i);
+    return M.j(eff3(i), _4);
+  }
+
+  function _4() {
+    return M.pure();
   }
 }

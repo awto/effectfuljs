@@ -1,48 +1,50 @@
 function a() {
   var e, error;
-  return _1();
 
-  function _1() {
-    try {
-      console.log('1');
-      return M.jME(eff(1), _3, _2);
-    } catch (e) {
-      return _2();
-    }
+  try {
+    console.log('1');
+    return M.jH(eff(1), _2, _1);
+  } catch (error) {
+    return _1(error);
+  }
+
+  function _1(error) {
+    e = error;
+    console.log('2');
+    return _2();
   }
 
   function _2() {
-    e = _error;
-    console.log('2');
-    return _3();
+    return M.j(eff(e), _3);
   }
 
   function _3() {
-    return eff(e);
+    return M.pure();
   }
 }
 
 function _a() {
   var e, error;
-  return _1();
 
-  function _1() {
-    try {
-      console.log('1');
-      return M.jME(eff(1), _3, _2);
-    } catch (e) {
-      return _2();
-    }
+  try {
+    console.log('1');
+    return M.jH(eff(1), _2, _1);
+  } catch (error) {
+    return _1(error);
+  }
+
+  function _1(error) {
+    e = error;
+    console.log('2');
+    error = null;
+    return _2();
   }
 
   function _2() {
-    e = error1;
-    console.log('2');
-    error1 = null;
-    return _3();
+    return M.j(eff(e), _3);
   }
 
   function _3() {
-    return eff(e);
+    return M.pure();
   }
 }

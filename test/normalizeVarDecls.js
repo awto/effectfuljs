@@ -33,7 +33,7 @@ describe("var decls",function() {
         var t;
         eff(4);
       }`),
-      print(`function () /*BS|E*/{
+      print(`function () /*BS|B*/{
         var i, j, k, t;
         i = 0;
         /*ES|e*/ /*CE|B*/eff(1);
@@ -54,7 +54,7 @@ describe("var decls",function() {
           for(var k; k < 10; k++)
             eff(3);
         }`),
-        print(`function () /*BS|E*/{
+        print(`function () /*BS|B*/{
           var i, j, k;
           i = 0;
           /*ES|e*/ /*CE|B*/eff(1);
@@ -74,7 +74,7 @@ describe("var decls",function() {
           for(const [a,b,c,...g] of eff(a,b,c,f,e))
             eff(a,b,c,f,e,g);
         }`),
-        print(`function () /*BS|E*/{
+        print(`function () /*BS|B*/{
           var a, b, f, c, e, _a, _b, _c, g;
           [a, b, ...f] = some;
           ({

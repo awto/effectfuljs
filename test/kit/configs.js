@@ -14,7 +14,12 @@ function* opts() {
   const minorOpts = [
     [["",{}],["s",{state: true}]]]
   yield* permut([[["f",{static:true}]],
-                 [["t",{topLevel:true}],["",{}]]
+                 [["t",{topLevel:true
+                        //,
+                        //scopeContext:true,
+                        //scopePrefix:true,
+                        //contextMethodOps:true
+                       }],["",{}]]
                 ]
                 .concat(minorOpts))
 }

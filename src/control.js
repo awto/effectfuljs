@@ -138,6 +138,37 @@ export function recalc(s) {
   return sa
 }
 
+/**
+ * adds explicit return statement if the last one isn't return already 
+ * this is needed to avoid leaking of last effect result
+ */
+export function* injectExplicitRet(si) {
+  const s = Kit.auto(si)
+  if (s.first.type === Tag.File) {
+    yield* s
+    return
+  }
+  let stop
+  for(const i of s) {
+    yield i
+    if (i.pos === Tag.body && i.type === Tag.Array) {
+      stop = i.value
+      break
+    }
+  }
+  let last
+  for(const j of s) {
+    if (j.value === stop) {
+      if (!last || last.type !== Tag.ReturnStatement)
+        yield s.tok(Tag.push, Tag.ReturnStatement, {last:true})
+      else
+        last.value.last = true
+    }
+    yield j
+    last = j
+  }
+}
+
 /** 
  * injects `scope` and `jump` tags where instead of labeled 
  * staments `break` and `continue` 
@@ -186,7 +217,7 @@ export const injectBlock = Kit.pipe(
           yield* lab()
           continue
         }
-        if (i.value.jump != null && i.value.eff) {
+        if (i.value.jump != null && i.value.eff && !i.value.last) {
           if (i.enter) {
             const lab = sl.label()
             let pos = i.pos

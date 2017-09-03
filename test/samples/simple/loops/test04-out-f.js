@@ -1,9 +1,9 @@
 function a() {
   var j, i;
-  return M.jM(eff1(), _1);
+  return M.j(eff1(), _1);
 
   function _1() {
-    return M.jMB(eff2(), _2);
+    return M.jB(eff2(), _2);
   }
 
   function _2(a) {
@@ -13,22 +13,26 @@ function a() {
 
   function _3() {
     if (i < 10) return _4();else {
-      return eff7(i);
+      return M.j(eff7(i), _7);
     }
   }
 
   function _4() {
-    return M.jM(eff3(i, j), _5);
+    return M.j(eff3(i, j), _5);
   }
 
   function _5() {
     var a;
     a = j++;
-    return M.jM(eff4(a), _6);
+    return M.j(eff4(a), _6);
   }
 
   function _6() {
     i++;
     return M.jR(_3);
+  }
+
+  function _7() {
+    return M.pure();
   }
 }

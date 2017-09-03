@@ -6,8 +6,10 @@
 
   function _1(i, ref) {
     if (i < 3) {
-      return M.jM(eff(i), _2, i, ref);
-    } else return M.pure();
+      return M.j(eff(i), _2, i, ref);
+    } else {
+      return M.pure();
+    }
   }
 
   function _2(i, ref) {
@@ -19,13 +21,13 @@
   function _3(i, j, len, ref) {
     if (j < len) {
       d = ref[j];
-      return M.jMB(eff(d), _4, i, j, len, ref);
+      return M.jB(eff(d), _4, i, j, len, ref);
     } else return _7(i, ref);
   }
 
   function _4(a, i, j, len, ref) {
     if (a) return _6(i, j, len, ref);else {
-      return M.jMB(eff(2), _5, i, j, len, ref);
+      return M.jB(eff(2), _5, i, j, len, ref);
     }
   }
 

@@ -30,3 +30,23 @@ function* a5() {
   for(const i of a4())
     yield i
 }
+
+function* cfb1() {
+  for(let i = 0;;i++) {
+    try {
+      try { 
+        if (yield i === 3)
+          throw new Error(`AAAAAAAAA${i++}`)
+        yield `a${i}`
+      } finally {
+        yield `f1${i++}`
+      }
+      yield `b${i++}`
+    } catch(e) {
+      yield `e${i}`
+      yield e
+      return i
+    }
+  }
+}
+

@@ -14,6 +14,7 @@ export const block = symbol("coerceBlock","ctrl")
 export const lift = Kit.pipe(
   function lift(s) {
     const sl = Kit.auto(s)
+    const coerce = false // sl.opts.coerce
     function* pure() {
       yield sl.enter(Tag.push,Tag.ExpressionStatement)
       yield sl.tok(Tag.expression,Block.pure,{bind:true})
@@ -40,12 +41,12 @@ export const lift = Kit.pipe(
                   assert.ok(j.type === Tag.BlockStatement)
                   alt = true
                 case Tag.consequent:
-                  yield* j.value.eff || sl.opts.coerce
+                  yield* j.value.eff || coerce
                     ? walk() : convert()
                 }
               }
             }
-            if (!alt && !sl.opts.coerce) {
+            if (!alt && !coerce) {
               const lab = sl.label()
               yield sl.enter(Tag.alternate,Tag.BlockStatement)
               yield sl.enter(Tag.body,Tag.Array)
@@ -62,7 +63,7 @@ export const lift = Kit.pipe(
                 case Tag.finalizer:
                 case Tag.body:
                   assert.equal(j.type,Tag.BlockStatement)
-                  yield* j.value.eff || sl.opts.coerce
+                  yield* j.value.eff || coerce
                     ? walk() : convert()
                 }
               }
@@ -77,53 +78,14 @@ export const lift = Kit.pipe(
   recalcEff
 )
 
-export function* liftFuncs(s) {
-  s = Kit.auto(s)
-  if (s.first.value.topEff
-      || s.opts.coerce
-      || !s.first.value.func
-     )
-  {
-    yield* s
-    return
-  }
-  s.first.value.topEff = true
-  let hasLast = null
-  const lab = s.label()
-  for(const i of s) {
-    yield i
-    if (i.type === Tag.Array && i.pos === Tag.body)
-      break
-  }
-  for(const i of s.sub()) {
-    yield i
-    if (i.enter) {
-      switch(i.type) {
-      case Tag.ReturnStatement:
-        yield s.enter(Tag.argument,Block.pure)
-        yield* s.sub()
-        yield* s.leave()
-        hasLast = hasLast || i.value.last
-        break
-      }
-    }
-  }
-  if (!hasLast) {
-    yield s.enter(Tag.push,Tag.ReturnStatement)
-    yield s.tok(Tag.argument,Block.pure)
-    yield* s.leave()
-  }
-  yield* lab()
-  yield* s
-}
-
 export function inject(s) {
   const sl = Kit.auto(s)
+  const coerce = sl.opts.coerce
   function* walk(sw) {
     for(const i of sw) {
       yield i
       if (i.enter && i.type === Block.app
-          && sl.opts.coerce === true && !sl.opts.static) {
+          && coerce === true && !sl.opts.static) {
         yield sl.enter(i.pos,expr)
         yield* walk(sl.one())
         yield* sl.leave()

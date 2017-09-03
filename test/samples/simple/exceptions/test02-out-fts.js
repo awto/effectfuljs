@@ -1,11 +1,12 @@
+function a() {
+  return M.jB(eff(1), a_1);
+}
+
 function a_1(a) {
-  return M.jM(M.throw(a), a_2);
+  throw a;
+  return M.j(eff(2), a_2);
 }
 
 function a_2() {
-  return eff(2);
-}
-
-function a() {
-  return M.jMB(eff(1), a_1);
+  return M.pure();
 }

@@ -1,5 +1,11 @@
 function a() {
-  var i;
-  i = 0;
-  return eff(1);
+  var a_v = {
+    i: undefined
+  };
+  a_v.i = 0;
+  return M.j(eff(1), a_1);
+}
+
+function a_1() {
+  return M.pure();
 }

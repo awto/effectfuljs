@@ -1,31 +1,35 @@
+// *- without EOB exits
+function b() {
+  return M.jB(eff(1), b_1);
+}
+
 function b_1(a) {
   switch (a) {
     case 1:
-      return M.jMB(effB(1), b_2);
+      return M.jB(effB(1), b_2);
 
     case 2:
       return b_3();
 
     default:
-      return eff(4);
+      return M.j(eff(4), b_5);
   }
 }
 
 function b_2(a) {
-  if (a) return M.pure();else return b_3();
+  if (a) return b_5();else return b_3();
 }
 
 function b_3() {
-  return M.jMB(effB(2), b_4);
+  return M.jB(effB(2), b_4);
 }
 
 function b_4(a) {
-  if (a) return M.pure();else {
-    return effB(3);
+  if (a) return b_5();else {
+    return M.j(effB(3), b_5);
   }
 }
 
-// *- without EOB exits
-function b() {
-  return M.jMB(eff(1), b_1);
+function b_5() {
+  return M.pure();
 }

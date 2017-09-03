@@ -1,10 +1,10 @@
 // *- should inject forPar
 function a() {
   var i, j;
-  return M.jM(eff1(), _1);
+  return M.j(eff1(), _1);
 
   function _1() {
-    return M.jMB(eff2(), _2);
+    return M.jB(eff2(), _2);
   }
 
   function _2(a) {
@@ -14,19 +14,19 @@ function a() {
 
   function _3() {
     if (i < 10) return _4();else {
-      return M.jMB(eff7(i), _7);
+      return M.jB(eff7(i), _7);
     }
   }
 
   function _4() {
-    return M.jMB(eff3(i), _5);
+    return M.jB(eff3(i), _5);
   }
 
   function _5(a) {
     var b;
     j = a;
     b = j++;
-    return M.jM(eff4(b), _6);
+    return M.j(eff4(b), _6);
   }
 
   function _6() {

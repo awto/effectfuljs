@@ -1,27 +1,3 @@
-function a_1() {
-  return eff(3);
-}
-
-function _a_1() {
-  return eff(3);
-}
-
-function c_1() {
-  return M.jM(eff(4), c_2);
-}
-
-function c_2() {
-  return eff(5);
-}
-
-function d_1() {
-  return M.jM(eff(4), d_2);
-}
-
-function d_2() {
-  return eff(6);
-}
-
 function a(z) {
   var a_v = {
     z
@@ -29,10 +5,10 @@ function a(z) {
 
   switch (a_v.z) {
     case 1:
-      return M.jM(eff(1), a_1);
+      return M.j(eff(1), a_1);
 
     default:
-      return M.jM(eff(2), a_1);
+      return M.j(eff(2), a_1);
   }
 }
 
@@ -43,7 +19,7 @@ function _a(z) {
 
   switch (a_v.z) {
     case 1:
-      return M.jM(eff(1), _a_1);
+      return M.j(eff(1), _a_1);
 
     case 2:
       console.log('1');
@@ -63,10 +39,10 @@ function c(z) {
 
   switch (c_v.z) {
     case 1:
-      return M.jM(eff(1), c_1);
+      return M.j(eff(1), c_1);
 
     case 2:
-      return M.jM(eff(2), c_2);
+      return M.j(eff(2), c_2);
 
     case 3:
       {
@@ -74,7 +50,7 @@ function c(z) {
       }
 
     default:
-      return M.jM(eff(3), c_1);
+      return M.j(eff(3), c_1);
   }
 }
 
@@ -85,16 +61,56 @@ function d(z) {
 
   switch (d_v.z) {
     case 1:
-      return M.jM(eff(1), d_1);
+      return M.j(eff(1), d_1);
 
     case 2:
-      return M.jM(eff(2), d_2);
+      return M.j(eff(2), d_2);
 
     case 3:
       console.log('z');
-      return M.jM(eff(5), d_2);
+      return M.j(eff(5), d_2);
 
     default:
-      return M.jM(eff(3), d_1);
+      return M.j(eff(3), d_1);
   }
+}
+
+function a_1() {
+  return M.j(eff(3), a_2);
+}
+
+function a_2() {
+  return M.pure();
+}
+
+function _a_1() {
+  return M.j(eff(3), _a_2);
+}
+
+function _a_2() {
+  return M.pure();
+}
+
+function c_1() {
+  return M.j(eff(4), c_2);
+}
+
+function c_2() {
+  return M.j(eff(5), c_3);
+}
+
+function c_3() {
+  return M.pure();
+}
+
+function d_1() {
+  return M.j(eff(4), d_2);
+}
+
+function d_2() {
+  return M.j(eff(6), d_3);
+}
+
+function d_3() {
+  return M.pure();
 }

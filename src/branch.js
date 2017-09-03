@@ -49,7 +49,7 @@ export function toBlocks(si) {
         switch(i.type) {
         case Tag.ConditionalExpression:
           yield i
-          yield* walk()
+          yield* s.sub()
           continue
         }
         switch(i.pos) {
@@ -119,7 +119,7 @@ function logicalToConditional(s) {
   s = Kit.auto(s)
   function* walk(sw) {
     for(const i of sw) {
-      if (i.enter && s.opts.coerce === false
+      if (i.enter /* && s.opts.coerce === false */
           && i.value.eff && i.type === Tag.LogicalExpression)
       {
         const l = s.cur().value

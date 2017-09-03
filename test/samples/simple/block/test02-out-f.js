@@ -1,5 +1,9 @@
 function a() {
   var i, a;
   a = i++;
-  return eff1(a);
+  return M.j(eff1(a), _);
+
+  function _() {
+    return M.pure();
+  }
 }

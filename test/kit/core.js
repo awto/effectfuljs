@@ -37,7 +37,8 @@ export const runExpr = Kit.curry(function(opts, f) {
 export const run = Kit.curryN(2,Kit.optsScopeLift(function run(opts,f) {
   Kit.setOpts(Object.assign({},
                             defaultOpts,
-                            {require:"@effectful/core",ns:"M",override:opts},
+                            {preset:"@effectful/core",
+                             ns:"M",override:opts},
                             opts))
   const ast = parse(f.toString(),opts.parser || defaultParseOpts)
   const orig = Kit.pipe(produce,Array.from)(ast)
@@ -87,7 +88,9 @@ export const transformBlock = Kit.curryN(2,Kit.optsScopeLift(
   function(fun,src,opts = testDefaultOpts) {
     Kit.setOpts(Object.assign({},
                               defaultOpts,
-                              {require:"@effectful/core",ns:"M",override:opts},
+                              {preset:"@effectful/core",
+                               ns:"M",
+                               override:opts},
                               opts))
     const ast = parse(src.toString(),defaultParseOpts)
     const s = Kit.pipe(produce,Array.from,Transform.scopes)(ast)

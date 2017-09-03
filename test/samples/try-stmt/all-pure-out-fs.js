@@ -8,6 +8,7 @@ function a() {
   }
 
   console.log('out');
+  return;
 }
 
 function b() {
@@ -22,6 +23,7 @@ function b() {
   }
 
   console.log('out');
+  return;
 }
 
 function c() {
@@ -34,4 +36,5 @@ function c() {
   }
 
   console.log('out');
+  return;
 }

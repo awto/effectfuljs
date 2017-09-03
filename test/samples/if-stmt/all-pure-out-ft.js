@@ -11,4 +11,6 @@ function b() {
     console.log('c');
     console.log('d');
   }
+
+  return;
 }

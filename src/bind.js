@@ -154,7 +154,7 @@ export const flatten = Kit.pipe(
         yield i
         return
       }
-      i = sl.peel(i)
+      sl.peel(i)
       const buf = []
       const res = [...frameImpl(buf)]
       i.value.eff = null
@@ -182,9 +182,9 @@ export const flatten = Kit.pipe(
         yield i
     }
   },
-  function* removeEmptyBinds(s) {
+  function removeEmptyBinds(s) {
     const si = Kit.auto(s)
-    function* subexpr(i,pos) {
+    function* subexpr(i,pos,result) {
       const exit = si.level-1
       const buf = [i]
       const p = Kit.result(si.findPos(pos),buf)
@@ -192,9 +192,10 @@ export const flatten = Kit.pipe(
         if (p.type === Block.bindPat) {
           Kit.skip(Kit.tillLevel(exit,si))
           p.value.ref.sym = null
+          p.value.ref.result = result
           if (i.pos !== Tag.push)
-            yield si.tok(i.pos,Tag.Null)
-        return
+            yield si.tok(i.pos,Tag.Null)          
+          return
         }
         yield* buf
         yield p
@@ -209,20 +210,20 @@ export const flatten = Kit.pipe(
         case Tag.ReturnStatement:
           if (i.value.last) {
             assert.ok(i.enter)
-            yield* subexpr(i,Tag.argument)
+            yield* subexpr(i,Tag.argument,true)
           } else
             yield i
           break
         case Tag.ExpressionStatement:
           assert.ok(i.enter)
-          yield* subexpr(i,Tag.expression)
+          yield* subexpr(i,Tag.expression,false)
           break
         default:
           yield i
         }
       }
     }
-    yield* walk()
+    return walk()
   },
   Prop.recalcEff
 )
@@ -243,16 +244,20 @@ export function setSymInterpr(si) {
     const opts = si.declScope.opts
     const topLevel = opts.topLevel
     const ctx = opts.contextState
-    const capt = si.refScopes
+    const capt = si.closCapt
+    const byVal = si.byVal
     const transform = si.declScope.opts.transform
     if (si.global || !si.track)
       return undefined
     if (!transform)
       return topLevel && capt ? objField : undefined
-    if (ctx)
-      return capt ? objField : ctxField
-    if (si.byVal)
-      return paramThread
+    if (byVal)
+      return ctx ? ctxField : paramThread
+    if (ctx) {
+      if (capt)
+        return topLevel ? objField : undefined
+      return topLevel ? ctxField : undefined
+    }
     if (topLevel)
       return objField
     return undefined

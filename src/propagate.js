@@ -38,6 +38,7 @@ export function* propagateEff(s) {
     return eff
   }
   let top = si.peel()
+  const coerce = top.value.coerce || si.opts.coerce
   yield top
   for(const i of si.sub()) {
     if (i.enter) {
@@ -52,8 +53,12 @@ export function* propagateEff(s) {
         if (v.ctrl != null) {
           labs = Object.create(labs)
           info = []
-          for(const j of v.ctrl)
+          for(const j of v.ctrl) {
+            // TODO: another pass
+            if (j === "#ret" && !coerce)
+              i.value.bind = true
             labs[j] = {block:v,buf:info}
+          }
         }
         stack.unshift([v,info])
         if (v.jump) {
@@ -139,7 +144,6 @@ export function* assignEff(s) {
     yield i
   }
 }
-
 
 /** in some positions VariableDeclarations aren't really statements, 
  *  e.g. `for` statement init, so the pass marks them

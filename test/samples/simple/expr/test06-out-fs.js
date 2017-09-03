@@ -1,7 +1,7 @@
 function a() {
-  return M.jMB(eff(1), _1);
+  return M.jB(eff(1), _);
 
-  function _1(a) {
+  function _(a) {
     console.log(a, 2);
     return M.pure();
   }

@@ -15,5 +15,6 @@ export function validate(opts) {
       errors.push("`contextState` cannot be specified without `scopeContext`")
     if (!opts.contextState)
       errors.push("`contextMethodOps` cannot be specified without `scopeContext`")
+  
   return errors
 }

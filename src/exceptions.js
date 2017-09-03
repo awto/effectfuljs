@@ -7,7 +7,7 @@ import * as Debug from "./debug"
 
 export const handleId = Kit.sysId("handle")
 export const finallyId = Kit.sysId("finally")
-export const raiseId = Kit.sysId("throw")
+export const raiseId = Kit.sysId("raise")
 
 export const inject = Kit.pipe(
   function* inject(s) {
@@ -64,7 +64,7 @@ export const inject = Kit.pipe(
             }
             continue
           case Tag.ThrowStatement:
-            if (i.enter) {
+            if (i.enter && sl.opts.jsExceptions === true) {
               const lab = sl.label()
               yield sl.enter(i.pos,Block.letStmt,{pat:[],bind:true,eff:true})
               yield sl.enter(Tag.expression,Tag.CallExpression)
@@ -73,8 +73,10 @@ export const inject = Kit.pipe(
               yield sl.enter(Tag.push,Kit.Subst)
               yield* walk(sl.sub())
               yield* lab()
+              sl.close(i)
+              continue
             }
-            continue
+            break
           }
         }
         yield i

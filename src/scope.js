@@ -7,6 +7,93 @@ import {scope as EsScope} from "estransducers"
 
 export const assignSymbolsDecls = EsScope.assignSymbolsDecls
 
+
+/**
+ * unfortunately ObjectMethod type in babylon AST doesn't fit the split 
+ * pattern, as next passes want the key to remain in parent scope
+ * so this pass replaces them to `{Object|Class}Property` and `FunctionExpression`
+ * if on restore the value is still a FunctionExpression it can be converted
+ * back to {Object|Class}Property with `restoreMethods`
+ */
+function methodsHack(si) {
+  const s = Kit.auto(si)
+  function* walk(sw,cl) {
+    for(const i of sw) {
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.ClassDeclaration:
+        case Tag.ClassExpression:
+          yield i
+          yield* walk(s.sub(),i.value)
+          continue
+        case Tag.ClassMethod:
+          i.value.ref = cl
+        case Tag.ObjectMethod:
+          if (i.value.node.kind === "method") {
+            yield s.enter(i.pos,
+                          i.type === Tag.ObjectMethod
+                          ? Tag.ObjectProperty
+                          : Tag.ClassProperty,
+                          {origType:i.type,
+                           node:{computed:i.value.computed,
+                                 static:i.value.static}
+                          })
+            const k = s.cur()
+            yield* walk(s.one())
+            yield s.enter(Tag.value,Tag.FunctionExpression,i.value)
+            if (k.type === Tag.Identifier) {
+              i.value.funcId = Kit.scope.newSym(k.value.node.name)
+              i.value.origType = i.type
+              yield s.tok(Tag.id,Tag.Identifier,{node:{name:k.value.node.name}})
+            }
+            yield* walk(s.sub())
+            yield* s.leave()
+            yield* s.leave()
+            s.close(i)
+            continue
+          }
+        }
+      }
+      yield i
+    }
+  }
+  return walk(s)
+}
+
+/** 
+ * restorinng `ObjectMethod` from `ObjectProperty` saved before
+ * using `methodsHack` 
+ */
+function restoreMethods(si) {
+  const s = Kit.auto(si)
+  function* walk(sw) {
+    for(const i of sw) {
+      if (i.enter
+          && (i.type === Tag.ObjectProperty || i.type === Tag.ClassProperty)
+          && i.value.origType != null) {
+        const key = Kit.toArray(walk(s.one()))
+        if (s.cur().type === Tag.FunctionExpression) {
+          const f = s.take()
+          if (s.cur().pos === Tag.id)
+            Kit.skip(s.one())
+          yield s.enter(i.pos,i.value.origType,f.value)
+          yield* key
+          yield* walk(s.sub())
+          yield* s.leave()
+          s.close(f)
+          s.close(i)
+          continue
+        }
+        yield i
+        yield* key
+        continue
+      } else
+        yield i
+    }
+  }
+  return walk(s)
+}
+
 /** 
  * adds variables generated after assignSymbolDecls into ctx 
  */
@@ -58,11 +145,10 @@ export function recalcLocals(sl) {
  * with each element representing a function from the original stream
  */
 export function splitScopes(si) {
-  const s = Kit.auto(si)
+  const s = Kit.auto(methodsHack(si))
   const frames = []
   frames.push([...walk(s.take())])
   return frames
-  
   function* walk(p) {
     yield s.enter(Tag.top,p.type,p.value)
     for(const i of s.sub()) {
@@ -94,7 +180,7 @@ export function restore(root,scopes) {
       m.set(value,i)
   }
   assert.ok(start)
-  return walk(start,Tag.top)
+  return restoreMethods(walk(start,Tag.top))
   function* walk(si,pos,type) {
     const s = Kit.toArray(si)
     let first = Kit.setPos(s[0],pos)
@@ -127,5 +213,4 @@ export const subScopes = Kit.curry(function(pass, s) {
     res.push([...pass(i)])
   return restore(res)
 })
-
 

@@ -17,6 +17,7 @@ const fullOpts = {
     ns: true
   },
   generator:false,
+  coerce:true,
   transform: defaultTransform
 }
 
@@ -27,6 +28,7 @@ const minOpts = {
       reflect: true
     }
   },
+  coerce:true,
   generator:false,
   transform: defaultTransform
 }
@@ -36,7 +38,8 @@ const disabledOpts = {
 }
 
 const generatorOps = {
-  YieldExpression: true
+  YieldExpression: true,
+  AwaitExpression: true
 }
 
 const postproc = Kit.pipe(
@@ -44,21 +47,28 @@ const postproc = Kit.pipe(
   Policy.profiles,
   Policy.setQNames)
 
-export default function* coreInit($ns) {
+export default function* coreInit() {
   const generators = Policy.injectFuncOpts({
     generator:true,
     async:false,
-    bindCalls: {},
     esRebind:true,
-    ops: generatorOps,
-    transform:defaultGensTransform
+    static:true,
+    transform:defaultGensTransform,
+    ops:generatorOps,
+    coerce:false,
+    scopePrefix:true,
+    scopeConstructor:"generator"
   })
-  const asyncAwaitDo = Policy.injectFuncOpts({
+  const asyncDo = Policy.injectFuncOpts({
     generator:false,
     async:true,
     bindCalls: {},
     esRebind:true,
-    transform:defaultGensTransform
+    ops:generatorOps,
+    coerce:false,
+    transform:defaultGensTransform,
+    scopePrefix:true,
+    scopeConstructor:"async"
   })
   const asyncGeneratorsDo = Policy.injectFuncOpts({
     generator:true,
@@ -67,29 +77,33 @@ export default function* coreInit($ns) {
     esRebind:true,
     pureForOf:true,
     ops: generatorOps,
-    transform:defaultGensTransform
+    coerce:false,
+    transform:defaultGensTransform,
+    scopePrefix:true,
+    scopeConstructor:"asyncGenerator"
   })
+  const disabled = Policy.injectFuncOpts(disabledOpts)
   return Kit.pipe(
     function*(si) {
       const s = Kit.auto(si)
       yield Kit.tok(Policy.configDiff,{
         node: {
           profiles: {
-            disabled:Policy.injectFuncOpts(disabledOpts),
+            disabled,
             full:Kit.pipe(Policy.injectOpts(fullOpts),
                         Policy.injectFuncOpts(fullOpts)),
             defaultFull:Policy.injectFuncOpts(fullOpts),
             minimal:Kit.pipe(Policy.injectOpts(minOpts),
                            Policy.injectFuncOpts(minOpts)),
             defaultMinimal:Policy.injectFuncOpts(minOpts),
-            generators,asyncAwaitDo,asyncGeneratorsDo,
+            generators,asyncDo,asyncGeneratorsDo,
             es:function* () {
+              yield* disabled()
               yield* generators()
               yield* asyncGeneratorsDo()
-              yield* asyncAwaitDo()
+              yield* asyncDo()
             }
-          },
-          $ns
+          }
         }
       })
       let {profile} = s.opts

@@ -521,34 +521,3 @@ export function saveFrameLet(si) {
   walk()
   return sa
 }
-
-export function* interpretLibSyms(si) {
-  const s = Kit.auto(si)
-  for(const i of s) {
-    if (i.enter && i.type === Tag.Identifier
-        && i.pos !== Tag.property
-        && i.value.sym && i.value.sym.lib) {
-      const sym = i.value.sym
-      const ns = i.value.ns || s.opts.$ns
-      if (sym != null && sym !== Kit.coerceId) {
-        if (ns == null) {
-          yield s.tok(i.pos,{sym})
-        } else {
-          const e = s.enter(i.pos,Tag.MemberExpression,{})
-          yield e
-          yield s.tok(Tag.object,Tag.Identifier,{sym:ns})
-          yield s.tok(Tag.property,Tag.Identifier,{sym,node:{name:sym.name}})
-          yield* s.leave()
-        }
-      } else {
-        if (ns == null)
-          yield s.tok(i.pos,Tag.Identifier,{sym:Kit.coerceId})
-        else
-          yield s.tok(i.pos,Tag.Identifier,{sym:ns})
-      }
-      s.close(i)
-    } else
-      yield i
-  }
-}
-

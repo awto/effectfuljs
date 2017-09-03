@@ -1,16 +1,25 @@
+function a() {
+  var a_v = {
+    i: undefined
+  };
+  return M.jB(init(), a_1, a_v);
+}
+
 function a_1(a, a_v) {
   a_v.i = a;
   return a_2();
 }
 
 function a_2() {
-  return M.jMB(check(), a_3);
+  return M.jB(check(), a_3);
 }
 
 function a_3(a) {
   if (a === true) {
-    return M.jM(b1(), a_4);
-  } else return M.pure();
+    return M.j(b1(), a_4);
+  } else {
+    return M.pure();
+  }
 }
 
 function a_4() {
@@ -18,16 +27,9 @@ function a_4() {
 }
 
 function a_5() {
-  return M.jM(e(), a_6);
+  return M.j(e(), a_6);
 }
 
 function a_6() {
-  return M.jRM(upd(), a_2);
-}
-
-function a() {
-  var a_v = {
-    i: undefined
-  };
-  return M.jMB(init(), a_1, a_v);
+  return M.jR(upd(), a_2);
 }

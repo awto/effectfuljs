@@ -1,43 +1,48 @@
 function a() {
-  return M.jM(eff('in body'), _1, _2);
+  return M.j(eff('in body'), _1, _2);
 
   function _1(cb) {
-    return M.jM(eff('in `finally`'), cb);
+    return M.j(eff('in `finally`'), cb);
   }
 
   function _2() {
-    return eff('after `finally`');
+    return M.j(eff('after `finally`'), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 }
 
 function b() {
   var e;
-  return _1();
 
-  function _1() {
-    try {
-      return M.jME(eff('in body'), _3, _4, _2);
-    } catch (e) {
-      return _2();
-    }
+  try {
+    return M.jH(eff('in body'), _2, _1, _3);
+  } catch (ex) {
+    return _1(ex, undefined);
   }
 
-  function _2() {
+  function _1(ex, cb) {
     e = ex;
-    return M.jM(eff('in `catch`', e), _3, _4);
+    return M.j(eff('in `catch`', e), _2, _3);
   }
 
-  function _3(cb) {
-    return M.jM(eff('in `finally`'), cb);
+  function _2(cb) {
+    return M.j(eff('in `finally`'), cb);
+  }
+
+  function _3() {
+    return M.j(eff('after `finally`'), _4);
   }
 
   function _4() {
-    return eff('after `finally`');
+    return M.pure();
   }
 }
 
 function c() {
-  return M.jM(eff('in body'), _1, _2);
+  return M.j(eff('in body'), _1, _2);
 
   function _1(cb) {
     console.log('in `finally`');
@@ -45,7 +50,11 @@ function c() {
   }
 
   function _2() {
-    return eff('after `finally`');
+    return M.j(eff('after `finally`'), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 }
 
@@ -54,32 +63,36 @@ function d() {
   return _1(_2);
 
   function _1(cb) {
-    return M.jM(eff('in `finally`'), cb);
+    return M.j(eff('in `finally`'), cb);
   }
 
   function _2() {
-    return eff('after `finally`');
+    return M.j(eff('after `finally`'), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 }
 
 function e() {
   var e;
   console.log('before');
-  return M.jM(eff('before'), _1);
+  return M.j(eff('before'), _1);
 
   function _1() {
     try {
       console.log('in body');
-      return M.jME(eff('in body'), _4, _6, _2);
-    } catch (e) {
-      return _2();
+      return M.jH(eff('in body'), _4, _2, _6);
+    } catch (ex) {
+      return _2(ex, undefined);
     }
   }
 
-  function _2() {
-    e = _ex;
+  function _2(ex, cb) {
+    e = ex;
     console.log('catch', e);
-    return M.jM(eff('catch', e), _3);
+    return M.j(eff('catch', e), _3);
   }
 
   function _3() {
@@ -89,7 +102,7 @@ function e() {
 
   function _4(cb) {
     console.log('in finally');
-    return M.jM(eff('in `finally`'), _5, cb);
+    return M.j(eff('in `finally`'), _5, cb);
   }
 
   function _5(cb) {
@@ -99,59 +112,64 @@ function e() {
 
   function _6() {
     console.log('after `finally`');
-    return eff('after `finally`');
+    return M.j(eff('after `finally`'), _7);
+  }
+
+  function _7() {
+    return M.pure();
   }
 }
 
 function f() {
   var e;
-  return _1();
 
-  function _1() {
-    try {
-      return M.jME(eff('in body'), _3, _4, _2);
-    } catch (e) {
-      return _2();
-    }
+  try {
+    return M.jH(eff('in body'), _2, _1, _3);
+  } catch (ex) {
+    return _1(ex, undefined);
   }
 
-  function _2() {
-    e = ex1;
-    return M.jM(eff('in `catch`'), _3, _4);
+  function _1(ex, cb) {
+    e = ex;
+    return M.j(eff('in `catch`'), _2, _3);
   }
 
-  function _3(cb) {
+  function _2(cb) {
     console.log('in `finally`');
     return cb();
   }
 
+  function _3() {
+    return M.j(eff('after `finally`'), _4);
+  }
+
   function _4() {
-    return eff('after `finally`');
+    return M.pure();
   }
 }
 
 function g() {
-  return _1();
-
-  function _1() {
-    try {
-      return M.jME(eff('in body'), _3, _4, _2);
-    } catch (e) {
-      return _2();
-    }
+  try {
+    return M.jH(eff('in body'), _2, _1, _3);
+  } catch (e) {
+    return _1(e, undefined);
   }
 
-  function _2() {
+  function _1(e, cb) {
     console.log('in `catch`');
-    return _3(_4);
+    return _2(_3);
   }
 
-  function _3(cb) {
+  function _2(cb) {
     console.log('in `finally`');
     return cb();
   }
 
+  function _3() {
+    return M.j(eff('after `finally`'), _4);
+  }
+
   function _4() {
-    return eff('after `finally`');
+    return M.pure();
   }
 }

@@ -6,11 +6,11 @@ function a() {
 
 function b() {
   eff(1);
-  return M.jM(eff(2), _1);
+  return M.j(eff(2), _1);
 
   function _1() {
     eff(3);
-    return M.jM(eff(4), _2);
+    return M.j(eff(4), _2);
   }
 
   function _2() {

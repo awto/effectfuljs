@@ -6,8 +6,10 @@
 
   function _1(i, ref) {
     if (i < 3) {
-      return M.jM(eff(i), _2, i, ref);
-    } else return M.pure();
+      return M.j(eff(i), _2, i, ref);
+    } else {
+      return M.pure();
+    }
   }
 
   function _2(i, ref) {
@@ -19,7 +21,7 @@
   function _3(i, j, len, ref) {
     if (j < len) {
       d = ref[j];
-      return M.jMB(eff(d), _4, i, j, len, ref);
+      return M.jB(eff(d), _4, i, j, len, ref);
     } else return _6(i, ref);
   }
 
@@ -48,8 +50,10 @@
 
   function _1(i, ref) {
     if (i < 3) {
-      return M.jM(eff(i), _2, i, ref);
-    } else return M.pure();
+      return M.j(eff(i), _2, i, ref);
+    } else {
+      return M.pure();
+    }
   }
 
   function _2(i, ref) {
@@ -61,13 +65,13 @@
   function _3(i, j, len, ref) {
     if (j < len) {
       d = ref[j];
-      return M.jMB(eff(d), _4, i, j, len, ref);
+      return M.jB(eff(d), _4, i, j, len, ref);
     } else return _7(i, ref);
   }
 
   function _4(a, i, j, len, ref) {
     if (a) return _6(i, j, len, ref);else {
-      return M.jMB(eff(2), _5, i, j, len, ref);
+      return M.jB(eff(2), _5, i, j, len, ref);
     }
   }
 
@@ -94,9 +98,9 @@
 
   function _1(i, j, ref) {
     if (i < 3) {
-      return M.jM(eff(i), _2, i, ref);
+      return M.j(eff(i), _2, i, ref);
     } else {
-      return eff(j);
+      return M.j(eff(j), _7);
     }
   }
 
@@ -112,7 +116,7 @@
 
   function _4(i, j, len, ref) {
     d = ref[j];
-    return M.jM(eff(d), _5, i, j, len, ref);
+    return M.j(eff(d), _5, i, j, len, ref);
   }
 
   function _5(i, j, len, ref) {
@@ -127,6 +131,10 @@
     i++;
     return M.jR(_1, i, j, ref);
   }
+
+  function _7() {
+    return M.pure();
+  }
 });
 
 (function () {
@@ -138,8 +146,10 @@
   function _1(j, len, ref) {
     if (j < len) {
       d = ref[j];
-      return M.jM(eff(d), _2, j, len, ref);
-    } else return M.pure();
+      return M.j(eff(d), _2, j, len, ref);
+    } else {
+      return M.pure();
+    }
   }
 
   function _2(j, len, ref) {
@@ -164,7 +174,7 @@
   }
 
   function _2(j) {
-    return M.jM(eff(j), _3, j);
+    return M.j(eff(j), _3, j);
   }
 
   function _3(j) {
@@ -176,6 +186,10 @@
   }
 
   function _4(j) {
-    return eff(j);
+    return M.j(eff(j), _5);
+  }
+
+  function _5() {
+    return M.pure();
   }
 });

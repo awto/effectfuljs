@@ -6,8 +6,10 @@
 
   function _1() {
     if (i < 3) {
-      return M.jM(eff(i), _2);
-    } else return M.pure();
+      return M.j(eff(i), _2);
+    } else {
+      return M.pure();
+    }
   }
 
   function _2() {
@@ -18,13 +20,13 @@
   function _3() {
     if (j < len) {
       d = ref[j];
-      return M.jMB(eff(d), _4);
+      return M.jB(eff(d), _4);
     } else return _7();
   }
 
   function _4(a) {
     if (a) return _6();else {
-      return M.jMB(eff(2), _5);
+      return M.jB(eff(2), _5);
     }
   }
 

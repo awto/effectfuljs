@@ -1,15 +1,19 @@
+(function () {
+  return M.j(eff(1), _2);
+});
+
 function _1() {
-  return M.jM(eff(2), _2);
+  return M.j(eff(2), _2);
 }
 
 function _2() {
-  return M.jM(eff(3), _3);
+  return M.j(eff(3), _3);
 }
 
 function _3() {
-  return eff(4);
+  return M.j(eff(4), _4);
 }
 
-(function () {
-  return M.jM(eff(1), _2);
-});
+function _4() {
+  return M.pure();
+}

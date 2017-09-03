@@ -6,4 +6,6 @@ function a() {
     i = ref1[j];
     console.log(i);
   }
+
+  return;
 }

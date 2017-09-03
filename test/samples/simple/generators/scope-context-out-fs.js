@@ -1,28 +1,28 @@
 function d(i) {
-  return M.scope(_1, i);
+  return M.scope(ctx, _1, i);
 
   function _1(ctx, i) {
     var j, a;
     j = 0;
     a = i++;
-    return M.jM(ctx, M.yld(a), _2, i, j);
+    return M.j(ctx, M.yld(a), _2, i, j);
   }
 
   function _2(ctx, i, j) {
     var a;
     a = j++;
-    return M.jM(ctx, M.yld(a), _3, i, j);
+    return M.j(ctx, M.yld(a), _3, i, j);
   }
 
   function _3(ctx, i, j) {
     var a, b;
     b = i += 2;
     a = some(b, j);
-    return M.jMB(ctx, M.yldStar(a + j), _4, i);
+    return M.jB(ctx, M.yldStar(a + j), _4, i);
   }
 
   function _4(ctx, a, i) {
-    return M.jMB(ctx, M.yld(a), _5, i);
+    return M.jB(ctx, M.yld(a), _5, i);
   }
 
   function _5(ctx, a, i) {
@@ -34,93 +34,107 @@ function d(i) {
   function _6(ctx, i) {
     var a;
     a = i += 3;
-    return M.yldStar(a);
+    return M.jB(ctx, M.yldStar(a), _7);
   }
 
-  function _7(ctx) {
-    return M.yld(2);
+  function _7(ctx, a) {
+    return M.pure(ctx, a);
+  }
+
+  function _8(ctx) {
+    return M.j(ctx, M.yld(2), _9);
+  }
+
+  function _9(ctx) {
+    return M.pure(ctx);
   }
 }
 
 function a4() {
   var e;
-  return M.scope(_1);
+  return M.scope(_ctx, _1);
 
-  function _1(ctx) {
-    return M.jM(ctx, M.yld(1), _2);
+  function _1(_ctx) {
+    return M.j(_ctx, M.yld(1), _2);
   }
 
-  function _2(ctx) {
+  function _2(_ctx) {
     try {
-      return M.jME(ctx, M.yld(2), _3, _4);
-    } catch (e) {
-      return _4(ctx);
+      return M.jH(_ctx, M.yld(2), _3, _4, undefined);
+    } catch (ex) {
+      return _4(_ctx, ex, undefined);
     }
   }
 
-  function _3(ctx) {
+  function _3(_ctx, cb) {
     try {
-      return M.jME(ctx, M.yld(3), _6, _8, _4);
-    } catch (e) {
-      return _4(ctx);
+      return M.jH(_ctx, M.yld(3), _6, _4, _8);
+    } catch (ex) {
+      return _4(_ctx, ex, cb);
     }
   }
 
-  function _4(ctx) {
+  function _4(_ctx, ex, cb) {
     e = ex;
-    return M.jM(ctx, M.yld('excep'), _5);
+    return M.j(_ctx, M.yld('excep'), _5);
   }
 
-  function _5(ctx) {
-    return M.jM(ctx, M.yld(e), _6, _8);
+  function _5(_ctx) {
+    return M.j(_ctx, M.yld(e), _6, _8);
   }
 
-  function _6(ctx, cb) {
-    return M.jM(ctx, M.yld('f'), _7, cb);
+  function _6(_ctx, cb) {
+    return M.j(_ctx, M.yld('f'), _7, cb);
   }
 
-  function _7(ctx, cb) {
-    return M.jM(ctx, M.yld('e'), cb);
+  function _7(_ctx, cb) {
+    return M.j(_ctx, M.yld('e'), cb);
   }
 
-  function _8(ctx) {
+  function _8(_ctx) {
     var a;
     a = a2();
-    return M.jMB(ctx, M.yldStar(a), _9);
+    return M.jB(_ctx, M.yldStar(a), _9);
   }
 
-  function _9(ctx, b) {
+  function _9(_ctx, b) {
     var a;
     a = a3();
-    return M.jMB(ctx, M.yldStar(a), _10, b);
+    return M.jB(_ctx, M.yldStar(a), _10, b);
   }
 
-  function _10(ctx, c, b) {
+  function _10(_ctx, c, b) {
     var a;
     a = a1(b, c);
-    return M.yld(a);
+    return M.j(_ctx, M.yld(a), _11);
+  }
+
+  function _11(_ctx) {
+    return M.pure(_ctx);
   }
 }
 
 function a5() {
   var i;
-  return M.scope(_1);
+  return M.scope(ctx1, _1);
 
-  function _1(ctx) {
+  function _1(ctx1) {
     var loop;
     loop = M.iterator(a4());
-    return _2(ctx, loop);
+    return _2(ctx1, loop);
   }
 
-  function _2(ctx, loop) {
+  function _2(ctx1, loop) {
     var a, b;
-    b = loop.step();
+    b = loop.incr();
     a = loop = b;
-    if (!a.done) return _3(ctx, loop);else return M.pure(ctx);
+    if (!a.done) return _3(ctx1, loop);else {
+      return M.pure(ctx1);
+    }
   }
 
-  function _3(ctx, loop) {
+  function _3(ctx1, loop) {
     i = loop.value;
-    return M.jRM(ctx, M.yld(i), _2, loop);
+    return M.jR(ctx1, M.yld(i), _2, loop);
   }
 }

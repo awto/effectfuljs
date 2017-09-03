@@ -5,18 +5,22 @@
   return _1();
 
   function _1() {
-    if (j < len) return _2();else return M.pure();
+    if (j < len) return _2();else return _4();
   }
 
   function _2() {
     i = ref[j];
-    return M.jMB(eff(i), _3);
+    return M.jB(eff(i), _3);
   }
 
   function _3(a) {
-    if (a) return M.pure();else {
+    if (a) return _4();else {
       j++;
       return M.jR(_1);
     }
+  }
+
+  function _4() {
+    return M.pure();
   }
 });

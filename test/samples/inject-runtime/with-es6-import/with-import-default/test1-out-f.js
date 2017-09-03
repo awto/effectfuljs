@@ -4,10 +4,14 @@ function a() {
   return Z.scope(_1);
 
   function _1() {
-    return Z.yldM(1, _2);
+    return Z.yld(1, _2);
   }
 
   function _2() {
-    return Z.yldM(2, Z.pure);
+    return Z.yld(2, _3);
+  }
+
+  function _3() {
+    return Z.pure();
   }
 }

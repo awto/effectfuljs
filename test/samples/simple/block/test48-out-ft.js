@@ -3,5 +3,9 @@ function a() {
     i: undefined
   };
   a_v.i = 0;
-  return eff(1);
+  return M.j(eff(1), a_1);
+}
+
+function a_1() {
+  return M.pure();
 }

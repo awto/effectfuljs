@@ -1,17 +1,20 @@
-function a_1() {
+function a() {
+  var a_v = {
+    e: undefined
+  };
+
   try {
-    return M.jME(eff(1), M.pure, a_2);
+    return M.jH(eff(1), a_2, a_1, a_v);
   } catch (e) {
-    return a_2();
+    return a_1(e, a_v);
   }
 }
 
-function a_2() {
-  var e;
-  console.log(e);
-  return M.pure();
+function a_1(e, a_v) {
+  console.log(a_v.e);
+  return a_2(a_v);
 }
 
-function a() {
-  return a_1();
+function a_2(a_v) {
+  return M.pure();
 }

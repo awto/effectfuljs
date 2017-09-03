@@ -1,13 +1,17 @@
+function a() {
+  return M.j(eff(1), a_1, a_3);
+}
+
 function a_1(cb) {
   console.log(1);
-  return M.jM(eff(2), a_2, cb);
+  return M.j(eff(2), a_2, cb);
 }
 
 function a_2(cb) {
   console.log(2);
-  return M.pure();
+  return cb();
 }
 
-function a() {
-  return M.jM(eff(1), a_1, M.pure);
+function a_3() {
+  return M.pure();
 }

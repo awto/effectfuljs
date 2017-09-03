@@ -1,36 +1,45 @@
 function a() {
-  var a, b;
-
-  a = function a() {
+  var a = function a() {
     console.log('hi');
-    return M.jM(e1(), _1);
+    return M.j(e1(), _1);
 
     function _1() {
-      return e2();
+      return M.j(e2(), _2);
     }
-  };
 
-  b = function b() {
+    function _2() {
+      return M.pure();
+    }
+  },
+      b = function b() {
     p4();
     p5();
-    return M.jM(e1(), _1);
+    return M.j(e1(), _1);
 
     function _1() {
-      return e(2);
+      return M.j(e(2), _2);
+    }
+
+    function _2() {
+      return M.pure();
     }
   };
 
-  return M.jM(p1(), _1);
+  return M.j(p1(), _1);
 
   function _1() {
-    return M.jM(p2(), _2);
+    return M.j(p2(), _2);
   }
 
   function _2() {
-    return M.jM(p2(), _3);
+    return M.j(p2(), _3);
   }
 
   function _3() {
-    return p3();
+    return M.j(p3(), _4);
+  }
+
+  function _4() {
+    return M.pure();
   }
 }

@@ -1,7 +1,7 @@
 function a() {
   var i;
   i = 0;
-  return M.jM(eff(), _1, i);
+  return M.j(eff(), _1, i);
 
   function _1(i) {
     var a, b;
@@ -11,10 +11,10 @@ function a() {
     switch (a) {
       case 1:
         b = i += 3;
-        return M.jM(effB(b), _2, i);
+        return M.j(effB(b), _2, i);
 
       case 2:
-        return M.jM(effB(i), _2, i);
+        return M.j(effB(i), _2, i);
 
       case 3:
         {
@@ -24,6 +24,10 @@ function a() {
   }
 
   function _2(i) {
-    return eff(i);
+    return M.j(eff(i), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 }

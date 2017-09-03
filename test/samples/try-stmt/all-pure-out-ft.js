@@ -1,4 +1,7 @@
 function a() {
+  var a_v = {
+    e: undefined
+  };
   console.log('in');
 
   try {
@@ -8,9 +11,13 @@ function a() {
   }
 
   console.log('out');
+  return;
 }
 
 function b() {
+  var b_v = {
+    e: undefined
+  };
   console.log('in');
 
   try {
@@ -22,6 +29,7 @@ function b() {
   }
 
   console.log('out');
+  return;
 }
 
 function c() {
@@ -34,4 +42,5 @@ function c() {
   }
 
   console.log('out');
+  return;
 }

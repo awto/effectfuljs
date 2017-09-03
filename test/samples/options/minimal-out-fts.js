@@ -1,12 +1,3 @@
-function b_1() {
-  eff(3);
-  return M.jM(eff(4), b_2);
-}
-
-function b_2() {
-  return M.pure(5);
-}
-
 function a() {
   eff(1);
   eff(2);
@@ -15,5 +6,14 @@ function a() {
 
 function b() {
   eff(1);
-  return M.jM(eff(2), b_1);
+  return M.j(eff(2), b_1);
+}
+
+function b_1() {
+  eff(3);
+  return M.j(eff(4), b_2);
+}
+
+function b_2() {
+  return M.pure(5);
 }

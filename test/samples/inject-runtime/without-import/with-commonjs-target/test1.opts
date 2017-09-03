@@ -1,8 +1,8 @@
 {
-  "inject": true,
-  "require": "@effectful/generators",
+  "preset": "@effectful/generators",
+  "importRT": "@effectful/generators",
   "profile": null,
-  "modules": "commonjs"
+  "moduleKind": "commonjs"
 }
 
 

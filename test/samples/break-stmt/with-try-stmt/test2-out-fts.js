@@ -1,6 +1,12 @@
 // *- when it is the last statement
 (function () {
-  var e;
-  e = ex;
-  return eff(3);
+  var _v = {
+    e: undefined
+  };
+  _v.e = ex;
+  return M.j(eff(3), _);
 });
+
+function _() {
+  return M.pure();
+}

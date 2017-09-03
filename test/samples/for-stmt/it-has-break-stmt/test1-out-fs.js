@@ -11,7 +11,7 @@
   function _2(j, len, ref) {
     var i;
     i = ref[j];
-    return M.jMB(eff(i), _3, j, len, ref);
+    return M.jB(eff(i), _3, j, len, ref);
   }
 
   function _3(a, j, len, ref) {
@@ -22,10 +22,14 @@
   }
 
   function _4() {
-    return M.jM(eff(2), _5);
+    return M.j(eff(2), _5);
   }
 
   function _5() {
-    return eff(3);
+    return M.j(eff(3), _6);
+  }
+
+  function _6() {
+    return M.pure();
   }
 });

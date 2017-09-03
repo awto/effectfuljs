@@ -5,11 +5,11 @@
   return _1();
 
   function _1() {
-    if (i < 3) return _2();else return M.pure();
+    if (i < 3) return _2();else return _9();
   }
 
   function _2() {
-    return M.jM(eff(i), _3);
+    return M.j(eff(i), _3);
   }
 
   function _3() {
@@ -23,17 +23,17 @@
 
   function _5() {
     d = ref[j];
-    return M.jMB(eff(d), _6);
+    return M.jB(eff(d), _6);
   }
 
   function _6(a) {
     if (a) return _8();else {
-      return M.jMB(eff(2), _7);
+      return M.jB(eff(2), _7);
     }
   }
 
   function _7(a) {
-    if (a) return M.pure();else {
+    if (a) return _9();else {
       j++;
       return M.jR(_4);
     }
@@ -42,5 +42,9 @@
   function _8() {
     i++;
     return M.jR(_1);
+  }
+
+  function _9() {
+    return M.pure();
   }
 });

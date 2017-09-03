@@ -20,9 +20,9 @@ Not yet implemented:
 Theare are typically small, some of them are just tiny wrappers of well known
 interfaces, such as Promises and Rx Observables.
 
-The compiler converts ES5 to ES5 without any syntax extensions. So it may be
-applied to results of other compilers targeting JS such as CoffeeScript,
-TypeScript, Babel etc.
+The compiler converts ES8 to ES8 and doesn't need any syntax extensions. 
+So it may be applied to results of other compilers targeting JS such as 
+CoffeeScript, TypeScript, Babel etc.
 
 It stratifies input JavaScript code into two levels, namely object and meta
 level. Their separation may be either explicit or implicit. 
@@ -377,6 +377,19 @@ are executed at compile time. Here is the list of currently used ones:
     called immediately
  * `M.option` - changes current options object
  * `M.profile` - changes current state
+
+## Known major limitations
+
+ * ES6 supper just replaced with `Object.getPrototypeOf(this)` and `call` for static methods, 
+   this is enough for most applications, if it is not, transpile classes with babel 
+   before effectful pass. No plans to fix this for now.
+ * Closure captured variables are always handled by reference. Compiler tries to handle only
+   variables by value. All mutating operation like `Array::push` or object's 
+   field setting are still visible in other control threads. Closure capturing variables
+   semantically are nothing but object's field. So they are references now too.
+   But there are short term plans to track even mutating updates soon.
+ * setters/getters and constructors cannot be effectful now, may be changed in near future
+   after effectful's object referrences are implemented
 
 ## LICENSE
 

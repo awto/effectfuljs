@@ -94,6 +94,8 @@ function getOpName(i) {
     if (i.value.node.delegate)
       return Kit.sysId("yldStar")
     return Kit.sysId("yld")
+  case Tag.AwaitExpression:
+    return Kit.sysId("chain")
   }
   let res = opNamesMap.get(i.type)
   if (res != null)

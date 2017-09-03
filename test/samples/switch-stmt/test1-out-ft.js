@@ -1,15 +1,19 @@
+function a() {
+  return M.jB(eff(), a_1);
+}
+
 function a_1(a) {
-  return M.jMB(effC(1), a_2, a);
+  return M.jB(effC(1), a_2, a);
 }
 
 function a_2(b, a) {
-  return M.jMB(effC(2), a_3, a, b);
+  return M.jB(effC(2), a_3, a, b);
 }
 
 function a_3(c, a, b) {
   switch (a) {
     case b:
-      return M.jM(effR(1), a_4);
+      return M.j(effR(1), a_4);
 
     case c:
       return a_4();
@@ -20,13 +24,13 @@ function a_3(c, a, b) {
 }
 
 function a_4() {
-  return M.jM(effR(2), a_5);
+  return M.j(effR(2), a_5);
 }
 
 function a_5() {
-  return effR('default');
+  return M.j(effR('default'), a_6);
 }
 
-function a() {
-  return M.jMB(eff(), a_1);
+function a_6() {
+  return M.pure();
 }

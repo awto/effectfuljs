@@ -1,21 +1,21 @@
 function a() {
-  return _1();
-
-  function _1() {
-    try {
-      return M.jME(eff(1), _3, M.pure, _2);
-    } catch (e) {
-      return _2();
-    }
+  try {
+    return M.jH(eff(1), _2, _1, _3);
+  } catch (e) {
+    return _1(e, undefined);
   }
 
-  function _2() {
+  function _1(e, cb) {
     console.log(e);
-    return _3(M.pure);
+    return _2(_3);
   }
 
-  function _3(cb) {
+  function _2(cb) {
     console.log('fin');
+    return cb();
+  }
+
+  function _3() {
     return M.pure();
   }
 }

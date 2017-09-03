@@ -4,200 +4,268 @@ M = require('@effectfuljs/core');
 Q = require('Q');
 QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
-  return M.jM(it('should yield fiber until promise is resolved', function (done) {
-    var addLater;
+  var a = function (done) {
+    var addLater = function addLater(a, b) {
+      var deferred,
+          c = function () {
+        return M.j(deferred.resolve(a + b), _1);
 
-    addLater = function addLater(a, b) {
-      return M.jMB(Q.defer(), _1);
-
-      function _1(deferred) {
-        var deferred;
-        process.nextTick(function () {
-          return deferred.resolve(a + b);
-        });
-        return M.pure(deferred.promise);
-      }
-    };
-
-    if (done.async) return _1(done);else return _3();
-
-    function _1(done) {
-      return M.jMB(done.async(), _2);
-    }
-
-    function _2(done) {
-      return _3();
-    }
-
-    function _3() {
-      return M.run(QM, function () {
-        var result;
-        return M.jMB(addLater(1, 2), _1);
-
-        function _1(a) {
-          var done;
-          return a.mapply(function ($dm$b) {
-            var err;
-            result = $dm$b;
-            return M.jMB(expect(result), _1, done);
-
-            function _1(a, done) {
-              try {
-                return M.jME(a.to.equal(3), _2, done, _3);
-              } catch (e) {
-                return _3(done);
-              }
-            }
-
-            function _2(done) {
-              try {
-                return M.jME(done(), M.pure, _3);
-              } catch (e) {
-                return _3(done);
-              }
-            }
-
-            function _3(done) {
-              err = ex;
-              return done(err);
-            }
-          });
-        }
-      });
-    }
-  }), _1);
-
-  function _1() {
-    return M.jM(it('should throw reasons from rejected promises into fiber', function (done) {
-      var throwErrorLater;
-
-      throwErrorLater = function throwErrorLater() {
-        return M.jMB(Q.defer(), _1);
-
-        function _1(deferred) {
-          var deferred;
-          process.nextTick(function () {
-            return deferred.reject(new Error('promise rejected'));
-          });
-          return M.pure(deferred.promise);
+        function _1() {
+          return M.pure();
         }
       };
 
-      if (done.async) return _1(done);else return _3();
+      return M.jB(Q.defer(), _1, c);
 
-      function _1(done) {
-        return M.jMB(done.async(), _2);
+      function _1(a, c) {
+        deferred = a;
+        process.nextTick(c);
+        return M.pure(deferred.promise);
       }
+    },
+        a = function () {
+      var result,
+          a = function ($dm$b) {
+        var err;
+        result = $dm$b;
+        return _1();
 
-      function _2(done) {
-        return _3();
+        function _1() {
+          try {
+            return M.jBH(expect(result), _2, _4);
+          } catch (ex) {
+            return _4(ex);
+          }
+        }
+
+        function _2(a) {
+          try {
+            return M.jH(a.to.equal(3), _3, _4);
+          } catch (ex) {
+            return _4(ex);
+          }
+        }
+
+        function _3() {
+          try {
+            return M.jH(done(), _5, _4);
+          } catch (ex) {
+            return _4(ex);
+          }
+        }
+
+        function _4(ex) {
+          err = ex;
+          return M.j(done(err), _5);
+        }
+
+        function _5() {
+          return M.pure();
+        }
+      };
+
+      return M.jB(addLater(1, 2), _1, a);
+
+      function _1(b, a) {
+        return b.mapply(a);
       }
+    };
 
-      function _3() {
-        return M.run(QM, function () {
-          return M.scope(function ($dm$root) {
-            return M.jMB(throwErrorLater(), _1);
+    if (done.async) return _1(a);else return _3(a);
 
-            function _1(a) {
-              var done;
-              return M.jMB(a.mhandle(function (err) {
-                var expectErr;
-                return _1(done);
+    function _1(a) {
+      return M.jB(done.async(), _2, a);
+    }
 
-                function _1(done) {
-                  try {
-                    return M.jMBE(expect(err.message), _2, done, _4);
-                  } catch (e) {
-                    return _4(done);
-                  }
-                }
+    function _2(b, a) {
+      done = b;
+      return _3(a);
+    }
 
-                function _2(a, done) {
-                  try {
-                    return M.jME(a.to.equal('promise rejected'), _3, done, _4);
-                  } catch (e) {
-                    return _4(done);
-                  }
-                }
+    function _3(a) {
+      return M.j(M.run(QM, a), _4);
+    }
 
-                function _3(done) {
-                  try {
-                    return M.jME(done(), _5, _4);
-                  } catch (e) {
-                    return _4(done);
-                  }
-                }
+    function _4() {
+      return M.pure();
+    }
+  },
+      b = function (done) {
+    var throwErrorLater = function throwErrorLater() {
+      var deferred,
+          a = function () {
+        return M.j(deferred.reject(new Error('promise rejected')), _1);
 
-                function _4(done) {
-                  expectErr = _ex;
-                  return M.jM(done(expectErr), _5);
-                }
+        function _1() {
+          return M.pure();
+        }
+      };
 
-                function _5() {
-                  return $dm$root.brk();
-                }
-              }), _2, done);
-            }
+      return M.jB(Q.defer(), _1, a);
 
-            function _2(a, done) {
-              return a.mapply(function () {
-                return done(new Error('yop should have thrown reason from rejected promise'));
-              });
-            }
-          });
-        });
+      function _1(b, a) {
+        deferred = b;
+        process.nextTick(a);
+        return M.pure(deferred.promise);
       }
-    }), _2);
-  }
+    },
+        a = function () {
+      var a = function ($dm$root) {
+        var a = function (err) {
+          var expectErr;
 
-  function _2() {
-    return it('should work just fine with passed a value instead of a promise', function (done) {
-      if (done.async) return _1(done);else return _3();
-
-      function _1(done) {
-        return M.jMB(done.async(), _2);
-      }
-
-      function _2(done) {
-        return _3();
-      }
-
-      function _3() {
-        return M.run(QM, function () {
-          var result;
-          return M.jMB(1 + 2, _1);
+          try {
+            return M.jBH(expect(err.message), _1, _3);
+          } catch (ex) {
+            return _3(ex);
+          }
 
           function _1(a) {
-            var done;
-            return a.mapply(function ($dm$b) {
-              var err;
-              result = $dm$b;
-              return M.jMB(expect(result), _1, done);
-
-              function _1(a, done) {
-                try {
-                  return M.jME(a.to.equal(3), _2, done, _3);
-                } catch (e) {
-                  return _3(done);
-                }
-              }
-
-              function _2(done) {
-                try {
-                  return M.jME(done(), M.pure, _3);
-                } catch (e) {
-                  return _3(done);
-                }
-              }
-
-              function _3(done) {
-                err = ex1;
-                return done(err);
-              }
-            });
+            try {
+              return M.jH(a.to.equal('promise rejected'), _2, _3);
+            } catch (ex) {
+              return _3(ex);
+            }
           }
-        });
+
+          function _2() {
+            try {
+              return M.jH(done(), _4, _3);
+            } catch (ex) {
+              return _3(ex);
+            }
+          }
+
+          function _3(ex) {
+            expectErr = ex;
+            return M.j(done(expectErr), _4);
+          }
+
+          function _4() {
+            return $dm$root.brk();
+          }
+        },
+            b = function () {
+          return M.j(done(new Error('yop should have thrown reason from rejected promise')), _1);
+
+          function _1() {
+            return M.pure();
+          }
+        };
+
+        return M.jB(throwErrorLater(), _1, a, b);
+
+        function _1(c, a, b) {
+          return M.jB(c.mhandle(a), _2, b);
+        }
+
+        function _2(a, b) {
+          return a.mapply(b);
+        }
+      };
+
+      return M.scope(a);
+    };
+
+    if (done.async) return _1(a);else return _3(a);
+
+    function _1(a) {
+      return M.jB(done.async(), _2, a);
+    }
+
+    function _2(b, a) {
+      done = b;
+      return _3(a);
+    }
+
+    function _3(a) {
+      return M.j(M.run(QM, a), _4);
+    }
+
+    function _4() {
+      return M.pure();
+    }
+  },
+      c = function (done) {
+    var a = function () {
+      var result,
+          a = function ($dm$b) {
+        var err;
+        result = $dm$b;
+        return _1();
+
+        function _1() {
+          try {
+            return M.jBH(expect(result), _2, _4);
+          } catch (ex) {
+            return _4(ex);
+          }
+        }
+
+        function _2(a) {
+          try {
+            return M.jH(a.to.equal(3), _3, _4);
+          } catch (ex) {
+            return _4(ex);
+          }
+        }
+
+        function _3() {
+          try {
+            return M.jH(done(), _5, _4);
+          } catch (ex) {
+            return _4(ex);
+          }
+        }
+
+        function _4(ex) {
+          err = ex;
+          return M.j(done(err), _5);
+        }
+
+        function _5() {
+          return M.pure();
+        }
+      };
+
+      return M.jB(1 + 2, _1, a);
+
+      function _1(b, a) {
+        return b.mapply(a);
       }
-    });
+    };
+
+    if (done.async) return _1(a);else return _3(a);
+
+    function _1(a) {
+      return M.jB(done.async(), _2, a);
+    }
+
+    function _2(b, a) {
+      done = b;
+      return _3(a);
+    }
+
+    function _3(a) {
+      return M.j(M.run(QM, a), _4);
+    }
+
+    function _4() {
+      return M.pure();
+    }
+  };
+
+  return M.j(it('should yield fiber until promise is resolved', a), _1, b, c);
+
+  function _1(b, c) {
+    return M.j(it('should throw reasons from rejected promises into fiber', b), _2, c);
+  }
+
+  function _2(c) {
+    return M.j(it('should work just fine with passed a value instead of a promise', c), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 });

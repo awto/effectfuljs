@@ -4,6 +4,8 @@ function aS(){
   eff("b");
 }
 
+exports.a = a
+
 function a(){
   var b1 = 0
   b1 = eff(1);

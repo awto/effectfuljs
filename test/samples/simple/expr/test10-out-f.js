@@ -1,11 +1,15 @@
 function a() {
-  return M.jMB(eff(1), _1);
+  return M.jB(eff(1), _1);
 
   function _1(a) {
-    return M.jMB(eff(2), _2, a);
+    return M.jB(eff(2), _2, a);
   }
 
   function _2(b, a) {
-    return effC(a, b);
+    return M.j(effC(a, b), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 }

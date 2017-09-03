@@ -1,24 +1,28 @@
 function a() {
-  return M.jMB(eff(1), _1);
+  return M.jB(eff(1), _1);
 
   function _1(a) {
-    return M.jMB(check(1), _2, a);
+    return M.jB(check(1), _2, a);
   }
 
   function _2(b, a) {
-    return M.jMB(check(2), _3, a, b);
+    return M.jB(check(2), _3, a, b);
   }
 
   function _3(c, a, b) {
     switch (a) {
       case b:
-        return effB(1);
+        return M.j(effB(1), _4);
 
       case c:
-        return effB(2);
+        return M.j(effB(2), _4);
 
       default:
-        return effB(3);
+        return M.j(effB(3), _4);
     }
+  }
+
+  function _4() {
+    return M.pure();
   }
 }

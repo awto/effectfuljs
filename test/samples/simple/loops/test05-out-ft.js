@@ -1,29 +1,33 @@
+function a() {
+  return M.j(eff1(), a_1);
+}
+
 function a_1() {
-  return M.jM(eff2(), a_2);
+  return M.j(eff2(), a_2);
 }
 
 function a_2() {
-  return M.jMB(eff(3), a_3);
+  return M.jB(eff(3), a_3);
 }
 
 function a_3(a) {
   if (a) return a_4();else {
-    return eff7();
+    return M.j(eff7(), a_7);
   }
 }
 
 function a_4() {
-  return M.jM(eff5(), a_5);
+  return M.j(eff5(), a_5);
 }
 
 function a_5() {
-  return M.jM(eff6(), a_6);
+  return M.j(eff6(), a_6);
 }
 
 function a_6() {
-  return M.jRM(eff4(), a_2);
+  return M.jR(eff4(), a_2);
 }
 
-function a() {
-  return M.jM(eff1(), a_1);
+function a_7() {
+  return M.pure();
 }

@@ -1,8 +1,12 @@
-function a_1(cb) {
-  console.log('fin');
-  return M.pure();
+function a() {
+  return M.j(eff(1), a_1, a_2);
 }
 
-function a() {
-  return M.jM(eff(1), a_1, M.pure);
+function a_1(cb) {
+  console.log('fin');
+  return cb();
+}
+
+function a_2() {
+  return M.pure();
 }

@@ -10,7 +10,7 @@
 
   function _2() {
     i = ref[j];
-    return M.jMB(eff(i), _3);
+    return M.jB(eff(i), _3);
   }
 
   function _3(a) {
@@ -21,10 +21,14 @@
   }
 
   function _4() {
-    return M.jM(eff(2), _5);
+    return M.j(eff(2), _5);
   }
 
   function _5() {
-    return eff(3);
+    return M.j(eff(3), _6);
+  }
+
+  function _6() {
+    return M.pure();
   }
 });

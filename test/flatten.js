@@ -31,7 +31,9 @@ describe('flatten expressions', function() {
         }),
         print(function () /*BS|E*/{
           /*VD|S|E*/var a = /*CE|B*/eff(1);
-          /*ES|S|E*/ /*LE|B*/a || /*stmtExpr|E*/(() => /*BS|E*/{
+          /*ES|S|E*/ /*CE|B*/a ? /*stmtExpr*/(() => {
+            return a;
+          })() : /*stmtExpr|E*/(() => /*BS|E*/{
             /*VD|S|E*/var b = /*CE|B*/eff(2);
             /*VD|S|E*/var c = /*CE|B*/eff3();
             return b + c;
@@ -64,11 +66,11 @@ describe('flatten expressions', function() {
         }),
         print(function () /*BS|E*/{
           /*VD|S|E*/var c = /*CE|B*/eff(1);
-          
-          /*VD|S|E*/var b = /*LE|B*/c || /*stmtExpr|E*/(() => /*BS|E*/{
+          /*VD|S|E*/var b = /*CE|B*/c ? /*stmtExpr*/(() => {
+            return c;
+          })() : /*stmtExpr|E*/(() => /*BS|E*/{
             /*ES|S|E*/ /*CE|B*/eff(2);
           })();
-          
           var a = b;
         }))
     })
@@ -80,7 +82,9 @@ describe('flatten expressions', function() {
       }),
       print(function () /*BS|E*/{
         /*VD|S|E*/var a = /*CE|B*/eff(1);
-        /*ES|S|E*/ /*LE|B*/a || /*stmtExpr|E*/(() => /*BS|E*/{
+        /*ES|S|E*/ /*CE|B*/a ? /*stmtExpr*/(() => {
+          return a;
+        })() : /*stmtExpr|E*/(() => /*BS|E*/{
           /*ES|S|E*/ /*CE|B*/eff(2);
         })();
       }))

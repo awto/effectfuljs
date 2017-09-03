@@ -1,14 +1,18 @@
 function a() {
   var i;
   i = 0;
-  return M.jMB(read1(), _1);
+  return M.jB(read1(), _1);
 
   function _1(a) {
     i = a;
-    return M.jM(eff(i), _2);
+    return M.j(eff(i), _2);
   }
 
   function _2() {
-    return write(i);
+    return M.j(write(i), _3);
+  }
+
+  function _3() {
+    return M.pure();
   }
 }

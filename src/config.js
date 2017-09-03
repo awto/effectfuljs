@@ -9,8 +9,11 @@ export default {
   generator: false,
   generatorDo: false,
   coerce: false,
-  require: null,
+  preset: null,
+  moduleKind: "ES6",
   ns: null,
+  bindName:"j",
+  unpackMax:5,
   libs: {
     "@effectful/core": core,
     "@effectful/es": es,

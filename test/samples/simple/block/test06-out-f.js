@@ -1,34 +1,38 @@
 function a() {
   var i;
-  return M.jM(eff0(), _1);
+  return M.j(eff0(), _1);
 
   function _1() {
     i = 0;
     i++;
-    return M.jM(eff1(i), _2);
+    return M.j(eff1(i), _2);
   }
 
   function _2() {
     if (t) return _3();else {
-      return M.jM(eff3(i), _5);
+      return M.j(eff3(i), _5);
     }
   }
 
   function _3() {
-    return M.jM(eff2(i), _4);
+    return M.j(eff2(i), _4);
   }
 
   function _4() {
     i++;
-    return M.jM(eff4(i), _5);
+    return M.j(eff4(i), _5);
   }
 
   function _5() {
-    return M.jM(eff5(i), _6);
+    return M.j(eff5(i), _6);
   }
 
   function _6() {
     i++;
-    return eff6(i);
+    return M.j(eff6(i), _7);
+  }
+
+  function _7() {
+    return M.pure();
   }
 }
