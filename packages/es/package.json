@@ -1,0 +1,40 @@
+{
+  "name": "@effectful/es",
+  "version": "0.0.1",
+  "description": "Standard JavaScript effects using @effectful/js (abstract interface)",
+  "main": "preset.js",
+  "scripts": {
+    "test": "mocha",
+    "test-deps": "git submodule update --init --recursive --depth 1",
+    "build-test262": "node ./test/kit/test262 default",
+    "prepare-test": "npm run test-deps && npm run build-test262",
+    "link-test": "node ./test/kit/links =default =topLevel"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectful-js.git"
+  },
+  "keywords": [
+    "monad",
+    "effectful",
+    "generators",
+    "await",
+    "async"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awto/effectful-es/issues"
+  },
+  "homepage": "https://github.com/awto/effectful-es#readme",
+  "devDependencies": {
+    "@effectful/es-rt": "^0.0.1",
+    "glob": "^7.1.2",
+    "mocha": "^3.4.2",
+    "promise": "^8.0.1",
+    "test262-parser": "^2.0.7"
+  },
+  "dependencies": {
+    "@effectful/js": "^0.0.2"
+  }
+}

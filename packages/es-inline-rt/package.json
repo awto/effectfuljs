@@ -1,0 +1,30 @@
+{
+  "name": "@effectful/es-inline-rt",
+  "version": "0.0.1",
+  "description": "Runtime for @effectful/es-inline",
+  "main": "index.js",
+  "module": "main.js",
+  "scripts": {
+    "test": "npm run build && mocha",
+    "configure": "env-cmd ./.env babel ../es-rt/src --out-dir .",
+    "bundle": "rollup -c",
+    "watchBundle": "env-cmd ./.env rollup -c -w",
+    "watch": "env-cmd ./.env babel -w ../es-rt/src --out-dir .",
+    "build": "npm run configure && npm run bundle"
+  },
+  "keywords": [
+    "generators",
+    "await",
+    "async",
+    "monad",
+    "effectful"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "env-cmd": "^7.0.0",
+    "mocha": "^4.0.1",
+    "rollup": "^0.50.0"
+  }
+}

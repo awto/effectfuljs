@@ -1,0 +1,6 @@
+{
+  "passPerPreset": true,
+  "sourceType": "script",
+  "presets": [["../../preset",{topLevel:true}],"stage-3"]
+}
+
