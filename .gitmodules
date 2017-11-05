@@ -1,0 +1,8 @@
+[submodule "regenerator"]
+        shallow = true 
+        path = packages/es/test/deps/regenerator
+        url = https://github.com/facebook/regenerator.git
+[submodule "test262"]
+        shallow = true 
+        path = packages/es/test/deps/test262
+        url = https://github.com/tc39/test262

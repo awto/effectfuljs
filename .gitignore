@@ -1,13 +1,7 @@
 node_modules
 dist
 tmp-*
-*.js
 *.orig
-!src/**/*.js
-!test/**/*.js
-!samples/**/*.js
-!tests/**/*.js
-!bin.js
 *.log
 *~
 *.map

@@ -6,10 +6,10 @@ compiler plugins.
 
 There are such libraries for (not yet supporting the new interface):
 
- * [Asynchronous programming](https://github.com/awto/mfjs-promise)
- * [Reactive programming (with RxJS)](https://github.com/awto/mfjs-rx)
- * [Logical programming](https://github.com/awto/mfjs-logic)
- * [Multi-prompt delimited continuations](https://github.com/awto/mfjs-cc)
+ * Asynchronous programming SOON - [Old version](https://github.com/awto/mfjs-promise)
+ * Reactive programming (with RxJS) - [Old version](https://github.com/awto/mfjs-rx)
+ * Logical programming - SOON [Old version](https://github.com/awto/mfjs-logic)
+ * Multi-prompt delimited continuations - SOON [Old version](https://github.com/awto/mfjs-cc)
 
 Not yet implemented:
  * probabilistic programming
@@ -149,19 +149,24 @@ with additional `effectful` object specifying options for effectful framework.
 First install it:
 
 ```sh
-$ npm install --save-dev babel-preset-env @effectful/babel-preset-env
+$ npm install @effectful/es
 ```
 
-Next compile your sources with whatever babel tool you prefer using `@mfjs/env`
-preset instead of babel `env`, for example in `.babelrc`:
+Next compile your sources with babel using presets from:
 
 ```json
 {
-  "presets": ["@effectful/env"]
+  "presets": ["@effectful/es"]
 }
 ```
 
-## Code transformation
+## Two layers mode
+
+TODO
+
+## Single layer mode
+
+### Code transformation
 
 By default it doesn't touch any code, so it is safe to apply it to all JS
 files in the project. The translation is activated when it encounters CommonJS
@@ -235,7 +240,7 @@ specifying variables as arguments. If the code will be used only for monads
 where variable capturing is not needed (like Promise) it may be disabled to avoid
 overhead, by setting option `varCapt` to false.
 
-### Applicative vs Monad interface
+## Applicative vs Monad interface - SOON
 
 There is interfaces hierarchy __Functor__ <- __Applicative__ <- ___Monad__. Functor allows
 only changing its inner value of effectful value. Applicative allows combining
@@ -380,16 +385,19 @@ are executed at compile time. Here is the list of currently used ones:
 
 ## Known major limitations
 
- * ES6 supper just replaced with `Object.getPrototypeOf(this)` and `call` for static methods, 
-   this is enough for most applications, if it is not, transpile classes with babel 
+ * ES6 supper just replaced with `Object.getPrototypeOf(...)` and `call`, 
+   this is enough for most applications. If it is not, transpile classes with babel 
    before effectful pass. No plans to fix this for now.
- * Closure captured variables are always handled by reference. Compiler tries to handle only
+ * In parameter's threading mode closure captured variables are always handled by reference. 
+   Compiler tries to handle only
    variables by value. All mutating operation like `Array::push` or object's 
    field setting are still visible in other control threads. Closure capturing variables
    semantically are nothing but object's field. So they are references now too.
    But there are short term plans to track even mutating updates soon.
  * setters/getters and constructors cannot be effectful now, may be changed in near future
    after effectful's object referrences are implemented
+ * eval/Function construction from string doesn't work, no plans to implement it.
+ * works only for "strict mode"
 
 ## LICENSE
 

@@ -1,0 +1,6 @@
+*.js
+!src/**/*.js
+!test/**/*.js
+!samples/**/*.js
+!tests/**/*.js
+!bin.js

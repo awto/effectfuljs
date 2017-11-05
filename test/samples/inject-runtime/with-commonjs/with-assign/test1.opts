@@ -1,8 +1,0 @@
-{
-  "preset": "@effectful/generators",
-  "importRT": "@effectful/generators",
-  "moduleKind": "commonjs",
-  "profile": null
-}
-
-
