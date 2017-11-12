@@ -528,6 +528,8 @@ export function funcWraps(si) {
             yield s.peel(Kit.setPos(i,Tag.push))
             if (s.cur().pos !== Tag.id)
               yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.wrapId})
+            else
+              s.cur().value.sym = i.value.wrapId
             yield* walk(s.sub(),block)
             yield* lab()
             continue

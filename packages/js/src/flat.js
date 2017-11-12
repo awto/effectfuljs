@@ -991,7 +991,7 @@ export function interpretFrames(si) {
           if (fn !== 0) {
             i.value.declSym.orig = `_${fn}`
             if (byThis)
-              i.value.savedDecls.set(
+              (i.value.savedDecls || (i.value.savedDecls = new Map())).set(
                 ctxSym,
                 {raw:null,init:[s.tok(Tag.init,Tag.ThisExpression)]})
             const thread = i.value.threadParams

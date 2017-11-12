@@ -30,7 +30,7 @@ export const saveDecls = Kit.pipe(
           switch(i.type) {
           case Tag.ClassDeclaration:
             const id = sl.cur().value.sym
-            // decls.set(id, {raw:[...sl.copy(Kit.setPos(i,Tag.push))]})
+            debugger
             decls.set(
               id,{raw:null,
                   init:[...sl.copy(
@@ -38,12 +38,13 @@ export const saveDecls = Kit.pipe(
                       Kit.setPos(i,Tag.init),Tag.ClassExpression))]})
             continue
           case Tag.FunctionDeclaration:
-            // decls.set(i.value.funcId, {raw:[...sl.copy(Kit.setPos(i,Tag.push))]})
             decls.set(
               i.value.funcId,{raw:null,
-                  init:[...sl.copy(
-                    Kit.setType(
-                      Kit.setPos(i,Tag.init),Tag.FunctionExpression))]})
+                              init:[...sl.copy(
+                                Kit.setType(
+                                  Kit.setPos(i,Tag.init),Tag.FunctionExpression))]})
+            if (i.value.wrapId)
+              i.value.funcId = i.value.wrapId
             continue
           case Tag.TryStatement:
             if (!i.value.eff) {
