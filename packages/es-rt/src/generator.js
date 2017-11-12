@@ -4,27 +4,28 @@ import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
 
 export var generator
+var GeneratorConstructor
 
 function raiseImpl(e) { this.raise(e) }
 if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   generator = function generator(caller) {
-    var res = new LeanGenerator(),
+    var res = new GeneratorConstructor(),
         esProto = caller && caller.prototype instanceof Generator
         ? caller.prototype
         : Generator.prototype,
-        esIterator = res.esIterator = Object.create(esProto)
-    esIterator.state = res
+        unwrap = res.unwrap = Object.create(esProto)
+    unwrap.state = res
     return res
   }
 } else if (!process.env.EJS_NO_ES_ITERATORS) {
   generator = function generator() {
-    var res = new LeanGenerator()
+    var res = new GeneratorConstructor()
     res.unwrap = new Generator(res)
     return res
   }
 } else {
   generator = function generator() {
-    return new LeanGenerator()
+    return new GeneratorConstructor()
   }
 }
 
@@ -34,7 +35,7 @@ export function LeanGenerator() {
 }
 
 var LGp = LeanGenerator.prototype
-
+GeneratorConstructor = LeanGenerator
 
 if (!process.env.EJS_INLINE) {
   function nop() {
@@ -42,23 +43,24 @@ if (!process.env.EJS_INLINE) {
     return this
   }
 
-  function resume(v) {
+  function resume(a) {
     this.$handle = this.$subHandle
     this.$cont = this.$subCont
     this.$exit = this.$subExit
     this.$subCont = this.$subExit = this.$subHandle = null
-    if (process.env.EJS_DEFUNCT) {
-      this.step = step
-      return this.step(v)
-    } else {
-      return this.$cont(v)
+    if (process.env.EJS_DEFUNCT)
+      this._step = step
+    try {
+      return process.env.EJS_DEFUNCT ? this.$run(a) : this.$cont(a)
+    } catch(e) {
+      return this.handle(e)
     }
   }
 
   LGp.exit = function exit(value) {
     try {
       return process.env.EJS_DEFUNCT
-        ? this.$run(this.$exit,value)
+        ? (this.$cont = this.$exit, this.$run(value))
         : this.$exit(value)
     } catch(e) {
       return this.handle(e)
@@ -70,7 +72,7 @@ if (!process.env.EJS_INLINE) {
     ctx.$subHandle = handle
     ctx.$subExit = exit
     if (process.env.EJS_DEFUNCT) {
-      ctx.step = resume
+      ctx._step = resume
     } else {
       ctx.$cont = resume
     }
@@ -78,28 +80,18 @@ if (!process.env.EJS_INLINE) {
 
   function step(a) {
     try {
-      return process.env.EJS_DEFUNCT ? this.$run(this.$cont,a) : this.$cont(a)
+      return process.env.EJS_DEFUNCT ? this.$run(a) : this.$cont(a)
     } catch(e) {
       return this.handle(e)
     }
   }
-  LGp.step = step
-
-  if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
-    LGp._step = LGp.step
-    LGp.step = function step(a) {
-      if (this.$running) {
-        this.$running = false
-        return this.alreadyRunning()
-      }
-      try {
-        this.$running = true
-        return this._step(a)
-      } finally {
-        this.$running = false
-      }
+  if (process.env.EJS_DEFUNCT) {
+    LGp._step = step
+    LGp.step = function(a) {
+      return this._step(a)
     }
-  }
+  } else
+    LGp.step = step
   
   LGp.yld = function yld(value, cont, handle, exit) {
     this.value = value
@@ -109,18 +101,18 @@ if (!process.env.EJS_INLINE) {
   
   LGp.yldStar = function yldStar(iter, cont, handle, exit) {
     suspend(this, cont, handle, exit)
-    iter = this.delegate(iter)
-    return iter
+    return this.delegate(iter)
   }
   
   LGp.jump = function jump(cont, handle, exit) {
-    this.$cont = cont
-    this.$handle = handle
-    this.$exit = exit
-    return process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING
-      || process.env.EJS_INLINE
-      ? this.step()
-      : this._step()
+    try {
+      this.$cont = cont
+      this.$handle = handle
+      this.$exit = exit
+      return process.env.EJS_DEFUNCT ? this.$run() : this.$cont()
+    } catch(e) {
+      return this.handle(e)
+    }
   }
   
   LGp.scope = function scope(cont, handle, exit) {
@@ -151,7 +143,7 @@ if (!process.env.EJS_INLINE) {
       if (this.$exit) {
         this.pure = contExitSub
         return process.env.EJS_DEFUNCT
-          ? this.$run(this.$exit,value)
+          ? (this.$cont = this.$exit, this.$run(value))
           : this.$exit(value)
       }
     } catch(e) {
@@ -166,7 +158,7 @@ if (!process.env.EJS_INLINE) {
   }
 
   function terminatedHandle(e) { return this.raise(e) }
-  
+
   LGp.pure = function pure(value) {
     this.done = true
     this.value = value
@@ -182,7 +174,7 @@ if (!process.env.EJS_INLINE) {
 
   LGp.exit = function exit(value) {
     return process.env.EJS_DEFUNCT
-      ? this.$run(this.$exit,value)
+      ? (this.$cont = this.$exit, this.$run(value))
       : this.$exit(value) 
   }
   
@@ -191,7 +183,7 @@ if (!process.env.EJS_INLINE) {
       if (this.$exit) {
         this.pure = contExitSub
         return process.env.EJS_DEFUNCT
-          ? this.$run(this.$exit,value)
+          ? (this.$cont = this.$exit, this.$run(value))
           : this.$exit(value)
       }
     } catch(e) {
@@ -199,6 +191,16 @@ if (!process.env.EJS_INLINE) {
     }
     return this.$sub.exit(value)
   }
+
+  if (process.env.EJS_DEFUNCT) {
+    LGp.step = function(v) {
+      return this.$run(v)
+    }
+    LGp.exit = function(v) {
+      return this.$cont = this.$exit, this.$run(v)
+    }
+  }
+
 }
 
 var exitSub
@@ -215,8 +217,7 @@ export function makeDelegate(iterator) {
 }
 
 function contSub(v) {
-  return process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING
-    || process.env.EJS_INLINE ? this.$sub.step(v) : this.$sub._step(v)
+  return this.$sub.step(v)
 }
 
 function handleSub(v) {
@@ -237,32 +238,58 @@ LGp[Symbol.leanIterator] = function() { return this }
 if (!process.env.EJS_NO_ES_ITERATORS)
   LGp[Symbol.iterator] = function() { return this.unwrap }
 
-if (process.env.EJS_DEFUNCT) {
-  LGp.step = function(v) {
-    return this.$run(this.$cont,v)
-  }
-  LGp.exit = function(v) {
-    return this.$run(this.$exit,v)
-  }
-}
-
 LGp.handle = function(ex) {
   return process.env.EJS_DEFUNCT
-    ? this.$run(this.$handle,ex)
+    ? (this.$cont = this.$handle, this.$run(ex))
     : this.$handle(ex)
 }
 
 LGp.raise = function genRaise(ex) {
   this.$handle = raiseImpl
-  this.exit()
+  this.pure()
+  // this.exit()
   throw ex
 }
 
 if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
-  LGp.alreadyRunning = function alreadyRunning() {
-    throw new TypeError("Generator is already running")
+  LGp.alreadyRunning = process.env.EJS_DEFUNCT ? -1
+    : function alreadyRunning() {
+      throw new TypeError("Generator is already running")
+    }
+  if (!process.env.EJS_INLINE || process.env.EJS_DEFUNCT) {
+    function CheckRunningGenerator() {
+      this.done = false
+      this.value = void 0
+    }
+    var WLGp = CheckRunningGenerator.prototype = Object.create(LGp)
+    GeneratorConstructor = CheckRunningGenerator
+    WLGp.stepNoCheck = LGp.step
+    function contSubNoCheck(v) {
+      return this.$sub.stepNoCheck(v)
+    }
+    WLGp.delegate = function(i) {
+      var iter = iterator(i)
+      iter.$sub = this
+      iter.pure = contSubNoCheck
+      iter.raise = handleSub
+      iter.exit = exitSub
+      return iter.step()
+    }
+    WLGp.step = function(v) {
+      if (this.$running) {
+        this.$running = false
+        throw new TypeError("Generator is already running")
+      }
+      this.$running = true
+      try {
+        return this.stepNoCheck(v)
+      } finally {
+        this.$running = false
+      }
+    }
   }
 }
 
 LGp.delegate = makeDelegate(iterator)
+
 

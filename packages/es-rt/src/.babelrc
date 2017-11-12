@@ -1,14 +1,17 @@
 {
   "env": {
     "development": {
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "plugins": [
+        "transform-es2015-modules-commonjs",
+        "transform-inline-environment-variables",
+        "minify-constant-folding",
+        "minify-dead-code-elimination"]
     },
     "configure": {
       "plugins": [
         "transform-inline-environment-variables",
         "minify-constant-folding",
-        "minify-dead-code-elimination"
-      ]
+        "minify-dead-code-elimination"]
     }
   }
 }

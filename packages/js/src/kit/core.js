@@ -66,9 +66,8 @@ export function* removeNulls(s) {
   const stack = []
   for(const i of s) {
     if (i.type === Tag.Null) {
-      if (i.enter && i.pos != Tag.push && stack[0]) {
+      if (i.enter && i.pos != Tag.push && stack[0])
         stack[0][symName(i.pos)] = null
-      }
       continue
     }
     yield i
@@ -100,16 +99,6 @@ export function* completeAutoClose(s) {
       yield i
     }
   }
-}
-
-function debCheck(t) {
-  if (t.value == null)
-    debugger
-  if (t.pos == null || !isSymbol(t.pos))
-    debugger
-  if (t.type == null || !isSymbol(t.type))
-    debugger
-  return t
 }
 
 export function tok(pos,type,value) {

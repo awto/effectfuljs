@@ -5,9 +5,7 @@ Q = require('Q');
 QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
   return M.chain(it('should yield fiber until promise is resolved', function (done) {
-    var a;
-
-    function addLater(a, b) {
+    var addLater = function addLater(a, b) {
       var deferred;
       return M.chain(Q.defer(), _1, _2);
 
@@ -32,7 +30,8 @@ describe('yop', function () {
       function _2(e) {
         return M.raise(e);
       }
-    }
+    },
+        a;
 
     if (done.async) {
       a = done;
@@ -117,9 +116,7 @@ describe('yop', function () {
 
   function _1() {
     return M.chain(it('should throw reasons from rejected promises into fiber', function (done) {
-      var a;
-
-      function throwErrorLater() {
+      var throwErrorLater = function throwErrorLater() {
         var deferred;
         return M.chain(Q.defer(), _1, _2);
 
@@ -144,7 +141,8 @@ describe('yop', function () {
         function _2(e) {
           return M.raise(e);
         }
-      }
+      },
+          a;
 
       if (done.async) {
         a = done;

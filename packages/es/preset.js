@@ -1,19 +1,24 @@
-module.exports = require("@effectful/js")
-  .babelPreset({
-    preset:"@effectful/es",
-    directives:false,
-    importRT: "@effectful/es-rt",
+var opts = {
+  preset:"@effectful/es",
+  directives:false,
+  importRT:"@effectful/es-rt",
+  contextBy:"this",
+  all: {
     modules:"commonjs",
-    contextBy:"this",
-    scopeContext:true,
-    contextState:false,
     contextMethodOps:true,
-    jsExpceptions:true,
-    scopeContext:true,
-    scopePrefix:true,
-    contextState:false,
-    jsExpceptions:true,
     markRec:false,
-    state:false
+    storeErrorCont:"$handle",
+    storeResultCont:"$exit",
+    storeCont:"$cont"
+  }
+}
+
+if (process.env.EJS_DEFUNCT)
+  Object.assign(opts,{
+    all: Object.assign({},opts.all,{
+      defunct:true
+    })
   })
+
+module.exports = require("@effectful/js").babelPreset(opts)
 

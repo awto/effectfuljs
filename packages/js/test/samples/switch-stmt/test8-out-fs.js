@@ -11,13 +11,13 @@ function a() {
   }
 
   function _2(a, i) {
-    var b;
+    var pat, b;
     pat = a;
     b = i += 2;
-    return M.chain(check(b), _3, _7, i);
+    return M.chain(check(b), _3, _7, i, pat);
   }
 
-  function _3(a, i) {
+  function _3(a, i, pat) {
     var b, c;
 
     if (pat === a) {
@@ -25,11 +25,11 @@ function a() {
       return M.chain(effB(b), _6, _7);
     } else {
       c = i += 4;
-      return M.chain(check(c), _4, _7, i);
+      return M.chain(check(c), _4, _7, i, pat);
     }
   }
 
-  function _4(a, i) {
+  function _4(a, i, pat) {
     var b, c;
 
     if (pat === a) {
@@ -37,11 +37,11 @@ function a() {
       return M.chain(effB(b), _6, _7);
     } else {
       c = i += 6;
-      return M.chain(check(c), _5, _7, i);
+      return M.chain(check(c), _5, _7, i, pat);
     }
   }
 
-  function _5(a, i) {
+  function _5(a, i, pat) {
     if (pat === a) {
       console.log('hi', i);
     }

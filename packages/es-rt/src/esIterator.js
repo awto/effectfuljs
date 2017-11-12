@@ -45,7 +45,14 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   }
   
   Gp.next = function esFromLeanNext(v) {
-    var next = this.state = this.state.step(v)
+    var deb_Old = this.state
+    var deb_Old_step = this.state.step
+    this.deb_Old = deb_Old
+    this.deb_Old_step = deb_Old_step
+    var next = this.state.step(v)
+    if (!next)
+      debugger
+    this.state = next
     return {value:next.value,done:next.done}
   }
   

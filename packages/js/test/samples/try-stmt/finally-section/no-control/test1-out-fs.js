@@ -2,12 +2,11 @@ function a() {
   return M.jump(_1, _7);
 
   function _1() {
-    return M.chain(eff('in body'), _2, _5, _3, _5);
+    return M.chain(eff('in body'), _2, _5, _3);
   }
 
-  function _2(fc, fe, err) {
-    var fr;
-    return M.chain(eff('in `finally`'), fc, fe, fr, err);
+  function _2(fc, err) {
+    return M.chain(eff('in `finally`'), fc, err);
   }
 
   function _3() {
@@ -27,7 +26,7 @@ function a() {
   }
 
   function _7(a) {
-    return M.jump(_2, _5, _6, _5, a);
+    return M.jump(_2, _5, _6, a);
   }
 }
 
@@ -36,17 +35,16 @@ function b() {
   return M.jump(_1, _8);
 
   function _1() {
-    return M.chain(eff('in body'), _3, _6, _4, _6);
+    return M.chain(eff('in body'), _3, _6, _4);
   }
 
   function _2(ex) {
     e = ex;
-    return M.chain(eff('in `catch`', e), _3, _6, _4, _6);
+    return M.chain(eff('in `catch`', e), _3, _6, _4);
   }
 
-  function _3(fc, fe, err) {
-    var fr;
-    return M.chain(eff('in `finally`'), fc, fe, fr);
+  function _3(fc, err) {
+    return M.chain(eff('in `finally`'), fc);
   }
 
   function _4() {
@@ -70,7 +68,7 @@ function b() {
   }
 
   function _9(a) {
-    return M.jump(_3, _6, _7, _6, a);
+    return M.jump(_3, _6, _7, a);
   }
 }
 
@@ -78,13 +76,12 @@ function c() {
   return M.jump(_1, _7);
 
   function _1() {
-    return M.chain(eff('in body'), _2, _5, _3, _5);
+    return M.chain(eff('in body'), _2, _5, _3);
   }
 
-  function _2(fc, fe, err) {
-    var fr;
+  function _2(fc, err) {
     console.log('in `finally`');
-    return M.jump(fc, fe, fr, err);
+    return M.jump(fc, err);
   }
 
   function _3() {
@@ -104,7 +101,7 @@ function c() {
   }
 
   function _7(a) {
-    return M.jump(_2, _5, _6, _5, a);
+    return M.jump(_2, _5, _6, a);
   }
 }
 
@@ -113,12 +110,11 @@ function d() {
 
   function _1() {
     console.log('in body');
-    return M.jump(_2, _5, _3, _5);
+    return M.jump(_2, _5, _3);
   }
 
-  function _2(fc, fe, err) {
-    var fr;
-    return M.chain(eff('in `finally`'), fc, fe, fr, err);
+  function _2(fc, err) {
+    return M.chain(eff('in `finally`'), fc, err);
   }
 
   function _3() {
@@ -138,7 +134,7 @@ function d() {
   }
 
   function _7(a) {
-    return M.jump(_2, _5, _6, _5, a);
+    return M.jump(_2, _5, _6, a);
   }
 }
 
@@ -149,7 +145,7 @@ function e() {
 
   function _1() {
     console.log('in body');
-    return M.chain(eff('in body'), _4, _8, _6, _8);
+    return M.chain(eff('in body'), _4, _8, _6);
   }
 
   function _2(ex) {
@@ -160,18 +156,17 @@ function e() {
 
   function _3() {
     console.log('catch', e);
-    return M.jump(_4, _8, _6, _8);
+    return M.jump(_4, _8, _6);
   }
 
-  function _4(fc, fe, err) {
+  function _4(fc, err) {
     console.log('in finally');
-    return M.chain(eff('in `finally`'), _5, _8, fc, fe, err);
+    return M.chain(eff('in `finally`'), _5, _8, fc, err);
   }
 
-  function _5(fc, fe, err) {
-    var fr;
+  function _5(fc, err) {
     console.log('in finally 2');
-    return M.jump(fc, fe, fr);
+    return M.jump(fc);
   }
 
   function _6() {
@@ -196,7 +191,7 @@ function e() {
   }
 
   function _11(a) {
-    return M.jump(_4, _8, _9, _8, a);
+    return M.jump(_4, _8, _9, a);
   }
 }
 
@@ -205,18 +200,17 @@ function f() {
   return M.jump(_1, _8);
 
   function _1() {
-    return M.chain(eff('in body'), _3, _6, _4, _6);
+    return M.chain(eff('in body'), _3, _6, _4);
   }
 
   function _2(ex) {
     e = ex;
-    return M.chain(eff('in `catch`'), _3, _6, _4, _6);
+    return M.chain(eff('in `catch`'), _3, _6, _4);
   }
 
-  function _3(fc, fe, err) {
-    var fr;
+  function _3(fc, err) {
     console.log('in `finally`');
-    return M.jump(fc, fe, fr);
+    return M.jump(fc);
   }
 
   function _4() {
@@ -240,7 +234,7 @@ function f() {
   }
 
   function _9(a) {
-    return M.jump(_3, _6, _7, _6, a);
+    return M.jump(_3, _6, _7, a);
   }
 }
 
@@ -249,19 +243,18 @@ function g() {
   return M.jump(_1, _8);
 
   function _1() {
-    return M.chain(eff('in body'), _3, _6, _4, _6);
+    return M.chain(eff('in body'), _3, _6, _4);
   }
 
   function _2(ex) {
     e = ex;
     console.log('in `catch`');
-    return M.jump(_3, _6, _4, _6);
+    return M.jump(_3, _6, _4);
   }
 
-  function _3(fc, fe, err) {
-    var fr;
+  function _3(fc, err) {
     console.log('in `finally`');
-    return M.jump(fc, fe, fr);
+    return M.jump(fc);
   }
 
   function _4() {
@@ -285,6 +278,6 @@ function g() {
   }
 
   function _9(a) {
-    return M.jump(_3, _6, _7, _6, a);
+    return M.jump(_3, _6, _7, a);
   }
 }

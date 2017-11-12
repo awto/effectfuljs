@@ -103,42 +103,72 @@ export const presets =
       `import $$ from "$M"`,
       `import * as $$ from "$M"`
     ]),
-    function* importDetect(s) {
+    Kit.toArray,
+    function aliases(s) {
       s = Kit.auto(s)
-      const pat = new RegExp(s.opts.presetsPattern ||
-                             /\@effectful\/core|.*\/mfjs$|.*-effectful$/gi)
-      const first = s.first
-      const namespaces = first.value.namespaces = new Map()
-      let ns
-      for(const i of s) {
-        if (i.enter
-              && i.type === Match.Placeholder && i.value.match !== false)
-        {
-          const j = s.cur()
-          if (i.value.name === "M") {
-            if (j.type === Tag.StringLiteral) {
-              const name = j.value.node.value
-              if (name == null || name !== s.opts.preset
-                  && !s.opts.libs[name] && !pat.test(name))
-              {
-                i.value.v.match = false
-              }
-              if (ns) {
-                namespaces.set(name,ns)
-                ns = null
-              }
-            } else {
-              i.value.v.match = false
-            }
-          } else {
-            if (j.type !== Tag.Identifier) {
-              i.value.v.match = false
-              ns = null
-            } else
-              ns = j.value.sym
+      const aliases = s.opts.moduleAliases
+      if (!aliases)
+        return s
+      return walk()
+      function* walk() {
+        for(const i of s) {
+          yield i
+          if (i.enter && i.type === Match.Placeholder
+              && i.value.match !== false
+              && i.value.name === "M") {
+            const j = s.cur()
+            if (j.type !== Tag.StringLiteral)
+              continue
+            const alias = aliases[j.value.node.value]
+            if (!alias)
+              continue
+            yield s.tok(i.pos,Tag.StringLiteral,{node:{value:alias}})
+            Kit.skip(s.one())
           }
         }
-        yield i
+      }
+    },
+    function importDetect(s) {
+      s = Kit.auto(s)
+      const patStr = s.opts.presetsImportPattern
+      if (!patStr)
+        return s
+      return walk()
+      function* walk() {
+        const pat = patStr && patStr.substr && new RegExp(patStr)
+        const first = s.first
+        const namespaces = first.value.namespaces = new Map()
+        let ns
+        for(const i of s) {
+          if (i.enter
+              && i.type === Match.Placeholder && i.value.match !== false)
+          {
+            const j = s.cur()
+            if (i.value.name === "M") {
+              if (j.type === Tag.StringLiteral) {
+                const name = j.value.node.value
+                if (name == null || name !== s.opts.preset
+                    && !s.opts.libs[name] && !(pat && pat.test(name)))
+                {
+                  i.value.v.match = false
+                }
+                if (ns) {
+                  namespaces.set(name,ns)
+                  ns = null
+                }
+              } else {
+                i.value.v.match = false
+              }
+            } else {
+              if (j.type !== Tag.Identifier) {
+                i.value.v.match = false
+                ns = null
+              } else
+                ns = j.value.sym
+            }
+          }
+          yield i
+        }
       }
     },
     Match.commit,
@@ -572,7 +602,7 @@ function merge(a,b) {
     return a
   if (Array.isArray(a))
     return a.concat(b)
-  else if (typeof a === "object") {
+  else if (a && typeof a === "object") {
     for(const i in b) {
       if (i[0] === "$")
         a[i] = b[i]
@@ -643,8 +673,11 @@ function* emitInitOptions(s) {
   if (s.opts.importRT)
     $ns = root.namespaces && root.namespaces.get(s.opts.importRT)
   s.first.value.nsImported = !!$ns
-  if (!$ns)
+  if (!$ns) {
     $ns = Kit.scope.newSym(s.opts.ns || "M")
+    // suppressing scope warning
+    $ns.global = true
+  }
   s.first.value.$ns = $ns
   if (s.opts.preset != null) {
     if (Array.isArray(s.opts.preset)) {
@@ -676,7 +709,8 @@ export function* emitInitProfiles(s) {
 
 /** combines a few preparation passes */
 export const prepare = Kit.pipe(
-  ifDirectives(presets),
+  Kit.enableIf(i => i.opts.presetsImportPattern || i.opts.moduleAliases,
+               presets),
   emitInitOptions,
   ctImportPass,
   configDiffPass)

@@ -64,7 +64,7 @@ function a4() {
   }
 
   function _3() {
-    return M.yldStar(M.yld(3), _6, _11, _8, _11);
+    return M.yldStar(M.yld(3), _6, _11, _8);
   }
 
   function _4(ex) {
@@ -73,16 +73,15 @@ function a4() {
   }
 
   function _5() {
-    return M.yldStar(M.yld(e), _6, _11, _8, _11);
+    return M.yldStar(M.yld(e), _6, _11, _8);
   }
 
-  function _6(fc, fe, err) {
-    return M.yldStar(M.yld('f'), _7, _11, fc, fe, err);
+  function _6(fc, err) {
+    return M.yldStar(M.yld('f'), _7, _11, fc, err);
   }
 
-  function _7(fc, fe, err) {
-    var fr;
-    return M.yldStar(M.yld('e'), fc, fe, fr);
+  function _7(fc, err) {
+    return M.yldStar(M.yld('e'), fc);
   }
 
   function _8() {
@@ -112,7 +111,7 @@ function a4() {
   }
 
   function _14(a) {
-    return M.jump(_6, _11, _12, _11, a);
+    return M.jump(_6, _11, _12, a);
   }
 }
 
@@ -140,6 +139,7 @@ function a5() {
   }
 
   function _4(ex) {
+    var e;
     e = ex;
 
     if (loop.exit) {
@@ -168,25 +168,24 @@ function cfb1() {
     return M.jump(_2, _12, i);
   }
 
-  function _2(i) {
-    return M.yldStar(M.yld(i === 3), _3, _12, i);
+  function _2(i, err) {
+    return M.yldStar(M.yld(i === 3), _3, _12, i, err);
   }
 
-  function _3(a, i) {
+  function _3(a, i, err) {
     if (a) {
       throw new Error(`AAAAAAAAA${i++}`);
     }
 
-    return M.yldStar(M.yld(`a${i}`), _4, _11, i, _5, _11);
+    return M.yldStar(M.yld(`a${i}`), _4, _11, i, _5, err);
   }
 
-  function _4(i, fc, fe) {
-    var fr;
-    return M.yldStar(M.yld(`f1${i++}`), fc, fe, fr, i, err);
+  function _4(i, fc, err) {
+    return M.yldStar(M.yld(`f1${i++}`), fc, i, err, err);
   }
 
-  function _5(i) {
-    return M.yldStar(M.yld(`b${i++}`), _9, _10, i);
+  function _5(i, ex, err) {
+    return M.yldStar(M.yld(`b${i++}`), _9, _10, i, err);
   }
 
   function _6(i, ex) {
@@ -202,9 +201,9 @@ function cfb1() {
     return M.pure(i);
   }
 
-  function _9(i) {
+  function _9(i, err) {
     i++;
-    return M.repeat(_2, _12, i);
+    return M.repeat(_2, _12, i, err);
   }
 
   function _10(e) {
@@ -216,7 +215,7 @@ function cfb1() {
   }
 
   function _12(a) {
-    return M.jump(_4, _11, void 0, _6, _10);
+    return M.jump(_4, _11, void 0, _6, a);
   }
 }
 

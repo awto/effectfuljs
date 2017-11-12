@@ -266,10 +266,8 @@ function switches() {
   return switches.scope(_1, _62);
 
   function _1(switches) {
-    l1: {
-      switches._loop = switches.iteratorM(gen());
-      return switches.jump(_2, _62);
-    }
+    switches._loop = switches.iteratorM(gen());
+    return switches.jump(_2, _62);
   }
 
   function _2(switches) {
@@ -1101,8 +1099,7 @@ var b = new class {
 
   static m1() {
     var ctx = M.async();
-
-    class A {
+    ctx._A = class A {
       m2() {
         var ctx = M.async();
         return ctx.scope(_1, _3);
@@ -1120,8 +1117,7 @@ var b = new class {
         }
       }
 
-    }
-
+    };
     return ctx.scope(_1, _3);
 
     function _1(ctx) {

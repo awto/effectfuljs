@@ -1,5 +1,5 @@
 function aa() {
-  class A {
+  var A = class A {
     method() {
       return M.scope(_1, _2);
 
@@ -24,9 +24,8 @@ function aa() {
       }
     }
 
-  }
-
-  class B extends A {
+  },
+      B = class B extends A {
     method() {
       var _this = this;
 
@@ -34,7 +33,7 @@ function aa() {
 
       function _1(_this) {
         var a;
-        a = Object.getPrototypeOf(Object.getPrototypeOf(_this)).method.call(_this);
+        a = Object.getPrototypeOf(B.prototype).method.call(_this);
         return M.chain(M.chain(a), _2, _3);
       }
 
@@ -54,7 +53,7 @@ function aa() {
 
       function _1(_this) {
         var a;
-        a = Object.getPrototypeOf(_this).method.call(_this);
+        a = Object.getPrototypeOf(B.prototype).method.call(_this);
         return M.chain(M.chain(a), _2, _3);
       }
 
@@ -67,8 +66,7 @@ function aa() {
       }
     }
 
-  }
-
+  };
   return M.scope(_1, _2);
 
   function _1() {

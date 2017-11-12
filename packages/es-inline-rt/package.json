@@ -6,11 +6,14 @@
   "module": "main.js",
   "scripts": {
     "test": "npm run build && mocha",
-    "configure": "env-cmd ./.env babel ../es-rt/src --out-dir .",
-    "bundle": "rollup -c",
-    "watchBundle": "env-cmd ./.env rollup -c -w",
-    "watch": "env-cmd ./.env babel -w ../es-rt/src --out-dir .",
-    "build": "npm run configure && npm run bundle"
+    "test-opt": "cross-env env-cmd $EJS_ENV npm run test",
+    "configure": "env-cmd configure,default babel ../es-rt/src --out-dir .",
+    "configure-opt": "cross-env env-cmd $EJS_ENV babel src --out-dir .",
+    "watch-bundle": "env-cmd configure,default rollup -c -w",
+    "watch-bundle-opt": "cross-env env-cmd configure,$EJS_ENV rollup -c -w",
+    "build": "npm run configure && rollup -c",
+    "build-bundle-opt": "cross-env env-cmd configure,$EJS_ENV rollup -c",
+    "prepare": "npm run build"
   },
   "keywords": [
     "generators",
@@ -23,6 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
     "mocha": "^4.0.1",
     "rollup": "^0.50.0"

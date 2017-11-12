@@ -24,6 +24,8 @@ function methodsHack(si) {
         case Tag.ClassDeclaration:
         case Tag.ClassExpression:
           yield i
+          const j = s.cur()
+          i.value.classId = j.pos === Tag.id && j.value.sym
           yield* walk(s.sub(),i.value)
           continue
         case Tag.ClassMethod:
@@ -88,6 +90,10 @@ function restoreMethods(si) {
         yield i
         yield* key
         continue
+      } else if (i.enter && !i.leave && i.type === Tag.ClassExpression) {
+        yield i
+        if (i.value.classId && s.cur().pos !== Tag.id)
+          yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.classId})
       } else
         yield i
     }
@@ -552,6 +558,7 @@ export function funcWraps(si) {
 }
 
 
+
 /** 
  * if arrow function has expression, converts it into block statement 
  * with return to simplify next steps
@@ -577,4 +584,6 @@ export function arrowFunToBlock(si) {
     }
   }
 }
+
+
 

@@ -55,7 +55,7 @@ function a4() {
   }
 
   function _3() {
-    return M.yld(3, _6, _12, _8, _12);
+    return M.yld(3, _6, _12, _8);
   }
 
   function _4(ex) {
@@ -64,16 +64,15 @@ function a4() {
   }
 
   function _5() {
-    return M.yld(e, _6, _12, _8, _12);
+    return M.yld(e, _6, _12, _8);
   }
 
-  function _6(fc, fe, err) {
-    return M.yld('f', _7, _12, fc, fe, err);
+  function _6(fc, err) {
+    return M.yld('f', _7, _12, fc, err);
   }
 
-  function _7(fc, fe, err) {
-    var fr;
-    return M.yld('e', fc, fe, fr);
+  function _7(fc, err) {
+    return M.yld('e', fc);
   }
 
   function _8() {
@@ -111,7 +110,7 @@ function a4() {
   }
 
   function _15(a) {
-    return M.jump(_6, _12, _13, _12, a);
+    return M.jump(_6, _12, _13, a);
   }
 }
 
@@ -139,6 +138,7 @@ function a5() {
   }
 
   function _4(ex) {
+    var e;
     e = ex;
 
     if (loop.exit) {

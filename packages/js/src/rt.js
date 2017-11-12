@@ -12,7 +12,8 @@ export function collect(s) {
   const root = sa[0].value
   const rootNs = root.$ns
   const mods = root.injectRT || emptyMap
-  const ctxns = root.opts.contextMethodOps && root.contextSym
+  const ctxns = root.opts.transform
+        && root.opts.contextMethodOps && root.contextSym
   for(const i of sa) {
     if (i.enter && i.type === Tag.Identifier
         && i.value.sym && i.value.sym.lib) {

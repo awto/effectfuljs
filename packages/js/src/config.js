@@ -5,12 +5,6 @@ export default {
   // outputs some additional information during conversion
   verbose: false,
 
-  // handles local variables as threaded arguments, passed to operations
-  // and further back to next continuation, this makes their values isolated
-  // between different continuations
-  // it is ignored if contextState: true
-  state: false,
-
   // adds runtime checks in runtime if values to bind is effectful, and makes
   // it effectful if not
   coerce: false,
@@ -39,9 +33,6 @@ export default {
   // switch statements
   defunct: false,
 
-  // optimizes pure jump operations for defunt: true mode
-  tailJumps: true,
-
   // creates a context object for each effectul function's call
   scopeContext: false,
 
@@ -69,12 +60,6 @@ export default {
   // name of a function to call for each effectful function
   // it may change something in object's protocol for that function
   wrapFunction: null,
-
-  // context needs result continuation stored in it
-  storeResultCont: false,
-
-  // context needs error continuation stored in it
-  storeErrorCont: false,
 
   // how context is passed, the value is either:
   // * this - context is bound to this argument in each frame
@@ -126,7 +111,8 @@ export default {
   topLevel: false,
 
   // detects import matching the pattern to apply compile-time options
-  presetsImportPattern: null,
+  // true - means only pre-defined embedded libs are checked
+  presetsImportPattern: true,
 
   // injects runtime from provided module
   importRT: null,
@@ -137,19 +123,18 @@ export default {
   // name of global variable used as default control namespaces
   importGlobal: null,
 
-  // name of field in context to store control's continuation
-  contFieldName: "$cont",
+  // stores control flow continuation in the field's name of context object
+  storeCont: null,
 
-  // name of field in context to store function's exit continuation
-  resultContFieldName: "$exit",
+  // stores result continuation in the field's name of context object
+  storeResultCont: null,
 
-  // name of field to store exception's catch continuation
-  errorContFieldName: "$handle",
-
+  // stores error continuation in the field's name of context object
+  storeErrorCont: null,
 
   // some named templates for some operations (mostly for ES compatibility):
   inlineChainOp: null, // "promise" | null
-  inlineScopeOp: null, // "promise" | "iterator" | "asyncIterator" | null
+  inlineScopeOp: null, // "unwrap" | "call" | null
   inlineYieldOp: null, // "iterator" | null
   inlinePureOp:null,   // "noop" | "iterator" | "promise" | null
   inlineRaiseOP:null,  // "throw" | "promise" | null
@@ -167,6 +152,7 @@ export default {
   // inlines pure jumps between frames
   // possible values are:
   // * 'call' - replaces with simple function call
+  // * 'tail' - optimized for defunct:true (requires inlineContAssign)
   inlinePureJumps:null,
 
 
@@ -193,6 +179,7 @@ export default {
   inlineErrorContAssign: false,
   // assign contination to context field before any jumps
   inlineContAssign: false,
+  
   // resets normal continuation to type error to conform ES
   inlineReentryCheck: null,
   
@@ -201,7 +188,7 @@ export default {
   wrapAsyncIteratorValue: true,
 
   // if false it drops requirement `g[@@iterator]() === g` for generators
-  // but avoids allocating single object per generator (micro-optimization)
+  // but avoids allocating single object per generator
   wrapGeneratorResult: true,
 
   // default libraries
@@ -250,5 +237,16 @@ export default {
   // your don't use it, like the `@effectful/js`, all higher order functions
   // immediately execute their argument functions (like Array::map, filter) etc
   // so no needs to handle block scoping
-  loopBlockScoping: true
+  loopBlockScoping: true,
+  
+  // Handles local variables as threaded arguments, passed to operations
+  // and further back to next continuation, this makes their values isolated
+  // between different continuations
+  // WARNING: it doesn't handle closure captured vars,
+  // they are treated as references
+  // It is ignored if contextState: true
+  state: false,
+
+  // rewrites module's import
+  moduleAliases: null
 }

@@ -127,7 +127,7 @@ export function inject(si) {
         if (v != null) {
           const name = v || getOpName(i)
           yield s.enter(i.pos,op,{node:{src:i.value,type:i.type},
-                                  bind:true,expr:true,suspendig:true,
+                                  bind:true,expr:true,
                                   sym:v || getOpName(i)})
           yield* walk()
           yield* s.leave()

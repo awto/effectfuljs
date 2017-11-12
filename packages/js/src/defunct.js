@@ -1,6 +1,7 @@
 import * as Kit from "./kit"
 import {Tag} from "./kit"
 import * as Block from "./block"
+import * as Bind from "./bind"
 import * as Ctrl from "./control"
 import * as assert from "assert"
 import * as Except from "./exceptions"
@@ -10,19 +11,24 @@ export function* prepare(si) {
   const s = Kit.auto(si)
   const root = s.first.value
   const inline = s.opts.inlineJsExceptions
+  const contSym = root.contSym || s.opts.storeCont
+        && s.opts.contextMethodOps
+        && (root.contSym = Kit.sysId(s.opts.storeCont))
+  if (!contSym)
+    throw s.error("`defunct:true` requires stored control state")
+  if (!root.contextSym)
+    throw s.error("`defunct:true` requires context object")
   root.implFrame = Kit.enter(
     Tag.push,Block.frame,{
       declSym:Kit.scope.newSym("_"),
       patSym:root.commonPatSym = Kit.scope.newSym("p"),
       savedDecls:new Map(),
-      // not using threadParam to avoid many undefined in calls
-      ctrlParam: root.stateSym = Kit.scope.newSym("s"),
       threadParams:[],root
     })
   const errMap = inline && (root.errMap = new Map())
   const errFrame = root.errFrameRedir
   let num = 0
-  yield* s.till(i => i.type === Block.frame && i.leave)
+  const first = (yield* s.till(i => i.type === Block.frame && i.leave)).value
   for(const i of s) {
     if (i.enter && i.type === Block.frame) {
       i.value.stateId = i.value.declSym.numConst = num++
@@ -52,6 +58,12 @@ export function inlineExceptions(si) {
   const errMap = root.errMap
   if (!errMap.size && !s.opts.keepLastRaise)
     return s
+  if (s.opts.inlinePureJumps !== "tail")
+    throw s.error(
+      "inlineJsExceptions && defunct requires inlinePureJumps:'tail'")
+  const {contSym,commonPatSym} = root
+  assert.ok(contSym && commonPatSym)
+  const fieldSym = Kit.sysId(s.opts.contFieldName)
   const implFrame = root.implFrame.value
   return walk()
   function* walk() {
@@ -73,7 +85,7 @@ export function inlineExceptions(si) {
     yield s.enter(Tag.body,Tag.Array)
     if (errMap.size) {
       yield s.enter(Tag.push,Tag.SwitchStatement)
-      yield s.tok(Tag.discriminant,Tag.Identifier,{sym:implFrame.ctrlParam})
+      yield s.tok(Tag.discriminant,Tag.Identifier,{sym:contSym})
       yield s.enter(Tag.cases,Tag.Array)
       const clab = s.label()
       for(const [goto,i] of errMap) {
@@ -84,11 +96,9 @@ export function inlineExceptions(si) {
                       {node:{value:j.stateId}})
           yield s.enter(Tag.consequent,Tag.Array)
           if (j === last) {
-            yield s.enter(Tag.push,Ctrl.jump,{
-              ref:implFrame,
-              goto:implFrame,gotoDests:[implFrame],
-              ctrlArg:goto.declSym})
-            yield s.tok(Tag.push,Tag.Identifier,{sym:ex})
+            yield* s.toks(Tag.push,"$I = $I, $I = $I",
+                          commonPatSym,ex,contSym,goto.declSym)
+            yield s.tok(Tag.push,Tag.ContinueStatement)
           }
           yield* clab()
         }
@@ -109,20 +119,28 @@ export function inlineExceptions(si) {
 export function* frames(si) {
   const s = Kit.auto(si)
   const root = s.first.value
-  const f = yield* s.till(i => i.type === Block.frame)
-  yield* s.sub()
-  yield s.close(f)
+  const {contextSym,contSym,errFrameRedir} = root
+  const inlineJumps = s.opts.inlinePureJumps === "tail"
+  assert.ok(contextSym)
+  assert.ok(contSym)
   const decls = root.implFrame.value.savedDecls = new Map()
   const impl = root.implFrame.value
+  const f = yield* s.till(i => i.type === Block.frame)
+  // TODO: it top level this must be set in prototype
+  yield* s.toks(Tag.push,`$I.$run = $I`,contextSym,impl.declSym)
+  yield* s.sub()
+  yield s.close(f)
   yield root.implFrame
-  const stateSym = root.stateSym
   const lab = s.label()
   yield s.enter(Tag.push,Tag.SwitchStatement)
-  yield s.tok(Tag.discriminant,Tag.Identifier,{sym:stateSym})
+  yield s.tok(Tag.discriminant,Tag.Identifier,{sym:contSym})
   yield s.enter(Tag.cases,Tag.Array)
   const clab = s.label()
+  let hasJumps = false
   for(const i of s.sub()) {
     if (i.enter && i.type === Block.frame) {
+      if (i.value.catchContRedir !== errFrameRedir)
+        hasJumps = true
       if (i.value.threadParams.length)
         throw new SyntaxError("not implemented: defunct with threaded params")
       yield s.enter(Tag.push, Tag.SwitchCase,i.value)
@@ -136,13 +154,17 @@ export function* frames(si) {
           decls.set(sym,{raw:null})
         }
       }
-      for(const j of s.sub()) {
-        if (j.enter && j.type === Ctrl.jump && j.value.goto) {
-          j.value.ctrlArg = j.value.goto.declSym
-          j.value.goto = impl
+      if (inlineJumps) {
+        for(const j of s.sub()) {
+          if (j.enter && j.type === Ctrl.jump && j.value.goto) {
+            j.value.ctrlArg = j.value.goto.declSym
+            j.value.goto = impl
+            hasJumps = true
+          }
+          yield j
         }
-        yield j
-      }
+      } else
+        yield* s.sub()
       yield* clab()
       s.close(i)
     } else
@@ -150,6 +172,7 @@ export function* frames(si) {
   }
   yield* lab()
   yield Kit.leave(root.implFrame)
+  impl.hasJumps = hasJumps
   yield* s
 }
 
@@ -171,25 +194,29 @@ export function* substSymConsts(si) {
 export function tailJumps(si) {
   const s = Kit.auto(si)
   const root = s.first.value
-  if (!s.opts.tailJumps || !s.opts.defunct)
+  if (s.opts.inlinePureJumps !== "tail")
     return s
+  if (!s.opts.defunct) 
+    throw s.error("`inlinePureJumps:'tail'` requires `defunct:true`")
+  if (!s.opts.inlineContAssign)
+    throw s.error("`inlinePureJumps:'tail'` requires `inlineContAssign:true`")
   return walk()
   //TODO: make a marking pass
   function* walk() {
-    yield* s.till(i => i.enter && i.type === Block.frame)
-    yield* s.till(i => i.enter && i.type === Block.frame)
+    const implFrame = root.implFrame.value
+    for(const i of s.sub()) {
+      yield i
+      if (i.enter && i.value === implFrame)
+        break
+    }
     const lab = s.label()
-    yield s.enter(Tag.push,Tag.ForStatement)
-    yield s.enter(Tag.body,Tag.BlockStatement)
-    yield s.enter(Tag.body,Tag.Array)
+    if (implFrame.hasJumps) {
+      yield s.enter(Tag.push,Tag.ForStatement)
+      yield s.enter(Tag.body,Tag.BlockStatement)
+      yield s.enter(Tag.body,Tag.Array)
+    }
     for(const i of s.sub()) {
       if (i.enter && i.type === Ctrl.jump && !i.value.bindName) {
-        yield s.enter(Tag.push,Tag.AssignmentExpression,
-                      {node:{operator:"="}})
-        yield s.tok(Tag.left,Tag.Identifier,{sym:root.stateSym})
-        yield s.tok(Tag.right,Tag.Identifier,
-                    {sym:i.value.ctrlArg})
-        yield* s.leave()
         if (s.curLev()) {
           yield s.enter(Tag.push,Tag.AssignmentExpression,
                         {node:{operator:"="}})
@@ -209,6 +236,7 @@ export function tailJumps(si) {
 
 export const convert = Kit.pipe(
   frames,
+  Kit.toArray,
   inlineExceptions,
   tailJumps)
 

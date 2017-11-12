@@ -145,6 +145,7 @@ function forOfBlockScope() {
       }
 
       function _4(ex) {
+        var e;
         e = ex;
 
         if (loop.exit) {
@@ -165,6 +166,7 @@ function forOfBlockScope() {
   }
 
   function _4(ex) {
+    var e;
     e = ex;
 
     if (loop7.exit) {
@@ -227,6 +229,7 @@ function forOfBlockScope() {
   }
 
   function _7(ex) {
+    var e;
     e = ex;
 
     if (loop8.exit) {
@@ -308,6 +311,7 @@ function forOfBlockScope() {
       }
 
       function _5(ex) {
+        var e;
         e = ex;
 
         if (_loop.exit) {
@@ -328,6 +332,7 @@ function forOfBlockScope() {
   }
 
   function _10(ex) {
+    var e;
     e = ex;
 
     if (loop9.exit) {
@@ -378,6 +383,7 @@ function forOfBlockScope() {
   }
 
   function _13(ex) {
+    var e;
     e = ex;
 
     if (loop10.exit) {
@@ -434,6 +440,7 @@ function forOfBlockScope() {
   }
 
   function _16(ex) {
+    var e;
     e = ex;
 
     if (loop11.exit) {
@@ -514,6 +521,7 @@ function forOfBlockScope() {
   }
 
   function _20(ex) {
+    var e;
     e = ex;
 
     if (loop12.exit) {
@@ -708,6 +716,7 @@ function forOfBlockScope() {
       }
 
       function _6(ex) {
+        var e;
         e = ex;
 
         if (loop1.exit) {
@@ -741,6 +750,7 @@ function forOfBlockScope() {
   }
 
   function _25(ex) {
+    var e;
     e = ex;
 
     if (loop13.exit) {
@@ -867,6 +877,7 @@ function forOfBlockScope() {
       }
 
       function _5(ex) {
+        var e;
         e = ex;
 
         if (loop2.exit) {
@@ -900,6 +911,7 @@ function forOfBlockScope() {
   }
 
   function _30(ex) {
+    var e;
     e = ex;
 
     if (loop14.exit) {
@@ -1034,6 +1046,7 @@ function forOfBlockScope() {
       }
 
       function _6(ex) {
+        var e;
         e = ex;
 
         if (loop3.exit) {
@@ -1067,6 +1080,7 @@ function forOfBlockScope() {
   }
 
   function _36(ex) {
+    var e;
     e = ex;
 
     if (loop15.exit) {
@@ -1201,6 +1215,7 @@ function forOfBlockScope() {
       }
 
       function _6(ex) {
+        var e;
         e = ex;
 
         if (loop4.exit) {
@@ -1234,6 +1249,7 @@ function forOfBlockScope() {
   }
 
   function _42(ex) {
+    var e;
     e = ex;
 
     if (loop16.exit) {
@@ -1356,6 +1372,7 @@ function forOfBlockScope() {
           }
 
           function _5(ex) {
+            var e;
             e = ex;
 
             if (loop5.exit) {
@@ -1395,6 +1412,7 @@ function forOfBlockScope() {
       }
 
       function _6(ex) {
+        var e;
         e = ex;
 
         if (loop6.exit) {
@@ -1430,6 +1448,7 @@ function forOfBlockScope() {
   }
 
   function _47(ex) {
+    var e;
     e = ex;
 
     if (loop17.exit) {

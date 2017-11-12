@@ -20,17 +20,12 @@ export default function* generatorsInit(opts) {
        scopePrefix:true,
        scopeConstructor:"generator",
        static:true,
-       coerce:false,
        combineOps:true,
        ops,
        scopePostfix:true,
-       pureForOf:true,
-       keepErrorCont:true,
-       storeErrorCont:true,
-       keepResultCont:true,
-       storeResultCont:true,
        wrapFunction: "generatorFunction"
-      },opts.all,opts.generators)),
+      },
+      opts.all,opts.generators)),
     Policy.setFuncOpts(Object.assign(
       {generator:false,
        async:true,
@@ -40,11 +35,8 @@ export default function* generatorsInit(opts) {
        scopePrefix:true,
        scopeConstructor:"async",
        static:true,
-       coerce:false,
        combineOps:true,
        ops,
-       scopePostfix:false,
-       pureForOf:true,
        wrapFunction: "asyncFunction"
       },opts.all,opts.async)),
     Policy.setFuncOpts(Object.assign(
@@ -56,15 +48,9 @@ export default function* generatorsInit(opts) {
        scopePrefix:true,
        scopeConstructor:"asyncGenerator",
        static:true,
-       coerce:false,
        combineOps:true,
        ops,
        scopePostfix:true,
-       pureForOf:true,
-       storeErrorCont:true,
-       keepErrorCont:true,
-       storeResultCont:true,
-       keepResultCont:true,
        wrapFunction: "asyncGeneratorFunction"
       },opts.all,opts.asyncGenerators)),
     Policy.configDiffPass)

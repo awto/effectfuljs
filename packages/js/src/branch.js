@@ -98,7 +98,8 @@ export function normilizeSwitch(si) {
           yield s.enter(Tag.push,Tag.ExpressionStatement)
           yield s.enter(Tag.expression,Tag.AssignmentExpression,
                         {node:{operator:"="}})
-          yield s.tok(Tag.left,Tag.Identifier,{sym})
+          yield s.tok(Tag.left,Tag.Identifier,
+                      {sym,lhs:true,rhs:false,decl:false})
           yield* Kit.reposOne(s.one(),Tag.right)
           yield* ilab()
           for(const j of s.sub()) {
@@ -107,7 +108,8 @@ export function normilizeSwitch(si) {
                 yield s.enter(Tag.push, Tag.IfStatement)
                 yield s.enter(Tag.test,Tag.BinaryExpression,
                               {node:{operator:"==="}})
-                yield s.tok(Tag.left,Tag.Identifier,{sym})
+                yield s.tok(Tag.left,Tag.Identifier,
+                            {sym,lhs:false,rhs:true,decl:false})
                 yield* Kit.reposOne(s.one(),Tag.right)
                 yield* s.leave()
                 yield s.enter(Tag.consequent,Tag.BlockStatement)

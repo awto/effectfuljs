@@ -1,6 +1,7 @@
 import * as Kit from "./kit"
 import {Tag} from "./kit"
 import * as Block from "./block"
+import * as Bind from "./bind"
 import * as Ctrl from "./control"
 import * as assert from "assert"
 import * as Except from "./exceptions"
@@ -8,35 +9,53 @@ import * as Except from "./exceptions"
 const alreadyRunningSym = Kit.sysId("alreadyRunning")
 
 /** 
- * sets continuation fields in context before any jump to other frame
- * handles `inlineResultContAssign` and `inlineErrorContAssign` option
+ * inline assignments to function's global continuations's fields at each step
  */
 export function storeContinuations(si) {
   const s = Kit.auto(si)
-  const res = s.opts.inlineResultContAssign
-        && (s.opts.resultContFieldName || "$exit")
-  const err = s.opts.inlineErrorContAssign
-        && (s.opts.errorContFieldName || "$handle")
-  const cont = s.opts.inlineReentryCheck
-        && (s.opts.contFieldName || "$cont")
-  if (!err && !res)
-    return s
-  const {contextSym} = s.first.value
-  if (!contextSym)
+  const root = s.first.value
+  const {contextSym} = root
+  const contextStore = contextSym && s.opts.contextMethodOps
+  function makeSym(name,pat) {
+    if (!name)
+      throw s.error(
+        "inlining continuation assignment requires store<...>Cont property")
+    if (name && contextStore)
+      return Kit.sysId(name)
+    const res = Bind.tempVarSym(root,pat)
+    res.fieldName = `$${pat}`
+    return res
+  }
+  const res = root.resContSym = s.opts.inlineResultContAssign
+        && makeSym(s.opts.storeResultCont,"rc")
+  const err = root.errContSym = s.opts.inlineErrorContAssign
+        && makeSym(s.opts.storeErrorCont,"ec")
+  const cont = root.contSym = s.opts.inlineContAssign
+        && makeSym(s.opts.storeCont,"sc")
+  const reentry = s.opts.inlineReentryCheck && cont
+  if (reentry && s.opts.defunct)
     throw s.error(
-      "not implemented: storing continuations without scope's context")
+      "`defunct:true` is not compatible with `inlineReentryCheck:true`")
+  if (!err && !res && !cont)
+    return s
   return walk()
+  function* assign(l,r) {
+    yield s.enter(Tag.push,Tag.AssignmentExpression,{node:{operator:"="}})
+    yield s.tok(Tag.left,Tag.Identifier,{sym:l,lhs:true,rhs:false,decl:false})
+    yield s.tok(Tag.right,Tag.Identifier,{sym:r,lhs:false,rhs:true,decl:false})
+    yield* s.leave()
+  }
   function* walk() {
     for(const i of s) {
       yield i
       if (i.enter && i.type === Block.frame) {
-        const frame = i.value
+        const f = i.value
         let assignResult = false, assignError = false, assignCont = false
-        const rframe = frame.resultContRedir
-        const eframe = frame.catchContRedir
-        if (frame.enters && frame.enters.size) {
+        const rframe = f.resultContRedir
+        const eframe = f.catchContRedir
+        if (f.enters && f.enters.size) {
           if (rframe && res) {
-            for(const j of frame.enters) {
+            for(const j of f.enters) {
               if (j.ref.resultContRedir !== rframe) {
                 assignResult = true
                 break
@@ -44,17 +63,9 @@ export function storeContinuations(si) {
             }
           }
           if (eframe && err) {
-            for(const j of frame.enters) {
+            for(const j of f.enters) {
               if (eframe && err && j.ref.catchContRedir !== eframe) {
                 assignError = true
-                break
-              }
-            }
-          }
-          if (cont) {
-            for(const j of frame.enters) {
-              if (j.bindJump) {
-                assignCont = true
                 break
               }
             }
@@ -63,14 +74,30 @@ export function storeContinuations(si) {
           assignResult = true
           assignError = true
         }
-        if (rframe && !rframe.removed && assignResult)
-          yield* s.toks(Tag.push,`$I.${res} = $I`,contextSym,rframe.declSym)
-        if (eframe && !eframe.removed && assignError)
-          yield* s.toks(Tag.push,`$I.${err} = $I`,contextSym,eframe.declSym)
-        if (cont && assignCont) {
-          yield* s.toks(Tag.push,`$I.${cont} = $I`,contextSym,alreadyRunningSym)
+        if (res && rframe && !rframe.removed && assignResult)
+          yield* assign(res,rframe.declSym)
+        if (err && eframe && !eframe.removed && assignError)
+          yield* assign(err,eframe.declSym)
+        const c = s.cur()
+        if (reentry && !f.first && c.type !== Ctrl.jump
+            && !(c.type !== Ctrl.letStmt && c.value.eff)
+            && c.type !== Block.app) {
+          yield* assign(reentry,alreadyRunningSym)
         }
-        yield* s.sub()
+        for(const j of s.sub()) {
+          if (j.enter) {
+            switch(j.type) {
+            case Block.letStmt:
+              if (!j.value.eff)
+                break
+            case Ctrl.jump:
+              const {goto} = j.value
+              if (cont && (f.first || goto !== f || reentry))
+                yield* assign(cont,goto.declSym)
+            }
+          }
+          yield j
+        }
       }
     }
   }
@@ -101,34 +128,34 @@ function* assignValue(s,contextSym) {
  */
 function generatorsYield(si) {
   const s = Kit.auto(si)
-  if (s.opts.inlineYieldOp !== "iterator")
+  const inlineYield = s.opts.inlineYieldOp === "iterator"
+  const inlineScope = s.opts.inlineScopeOp === "unwrap"
+  if (!inlineYield && !inlineScope)
     return s
-  let inlineScope = s.opts.inlineScopeOp
-  if (s.opts.inlineScopeOp !== "iterator")
-    inlineScope = "esIterator"
   const {contextSym} = s.first.value
   const root = s.first.value
   if (!contextSym)
     throw s.error(
-      "inliningYield: 'generator' can be used only with scope context")
+      "inlineYieldOp: 'iterator' can be used only with scope context")
+  if (!s.opts.inlineContAssign)
+    throw s.error("inlineYieldOp: 'iterator' requires inlineContAssign: true")
   const field = s.opts.contFieldName
   const wrapGenerator = s.opts.wrapGeneratorResult
   return walk()
-  function* setCont(value) {
-    yield* s.toks(Tag.push,`$I.${field} = $I`,contextSym,value.goto.declSym)
-  }
   function* walk() {
     for(const i of s) {
       if (i.enter && i.type === Block.letStmt && i.value.eff) {
         switch(i.value.bindName) {
         case "yld":
-          yield* setCont(i.value)
+          if (!inlineYield)
+            break
           yield* assignValue(s,contextSym)
           yield s.tok(Tag.push,Tag.Identifier,{result:true,sym:contextSym})
           s.close(i)
           continue
         case "yldStar":
-          yield* setCont(i.value)
+          if (!inlineYield)
+            break
           yield s.enter(Tag.push,Tag.CallExpression,{result:true})
           yield s.tok(Tag.callee,Tag.Identifier,{sym:delegateSym})
           yield s.enter(Tag.arguments,Tag.Array)
@@ -140,11 +167,6 @@ function generatorsYield(si) {
         case "scope":
           if (!inlineScope)
             break
-          yield* setCont(i.value)
-          if (s.opts.defunct) {
-            yield* s.toks(Tag.push,`$I.$run = $I`,
-                          contextSym,root.implFrame.value.declSym)
-          }
           if (wrapGenerator) {
             yield s.enter(Tag.push,Tag.MemberExpression,{result:true})
             yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
@@ -168,7 +190,6 @@ export function promises(si) {
   const s = Kit.auto(si)
   if (s.opts.inlineChainOp !== "promise")
     return s
-  const inlineScope = s.opts.inlineScopeOp === "promise"
   const root = s.first.value
   const {errFrameRedir,resFrameRedir} = root
   return walk()
@@ -176,8 +197,7 @@ export function promises(si) {
     for(const i of s) {
       if (i.enter && i.type === Block.letStmt
           && i.value.goto
-          && (i.value.bindName === "chain"
-              || inlineScope && i.value.bindName === "scope")) {
+          && i.value.bindName === "chain") {
         if (i.value.threadArgs && i.value.threadArgs.length)
           throw s.error("`inlineChainOp: promise` with threaded arguments")
         if (s.opts.contextBy !== "reference")
@@ -185,7 +205,6 @@ export function promises(si) {
             "`inlineChainOp: promise` without `contextBy: reference`")
         const lab = s.label()
         const errCnt = i.value.ref.catchContRedir
-        debugger
         const needThen = i.value.goto !== resFrameRedir
               || (errCnt && errCnt !== errFrameRedir)
         if (needThen) {
@@ -221,7 +240,6 @@ export function promises(si) {
   }
 }
 
-
 /** 
  * handles `inlinePureJumps` option (inlines pure jumps between frames)
  * possible values:
@@ -229,10 +247,26 @@ export function promises(si) {
  */
 export function jumpOps(si) {
   const s = Kit.auto(si)
-  if (!s.opts.inlinePureJumps
-      || s.opts.defunct && s.opts.tailJumps)
+  const inlineJumps = s.opts.inlinePureJumps === "call"
+  const inlineScope = s.opts.inlineScopeOp === "call"
+  if (s.opts.inlinePureJumps && !inlineJumps && s.opts.inlinePureJumps
+      && s.opts.inlinePureJumps !== "tail") {
+    throw s.error(
+      `unsupported value ${s.opts.inlinePureJumps} for inlinePureJumps`)
+  }
+  if (!inlineJumps && !inlineScope)
     return s
+  if (inlineScope && !s.opts.defunct)
+    throw s.error(`'inlineScope' requires 'defunct'`)
+  const root = s.first.value
+  const {contextSym} = root
+  if (!contextSym)
+    throw s.error(`'inlinePureJumps: "call"' requires context object`)
   const jumpId = Kit.sysId(s.opts.pureBindName)
+  const scopeId = Kit.sysId("scope")
+  const inlineCont = s.opts.inlineContAssign && root.contSym
+  const refCtx = s.opts.contextBy === "reference"
+  const paramCtx = s.opts.contextBy === "parameter"
   return Kit.toArray(walk())
   function* walk() {
     for(const i of s) {
@@ -244,7 +278,17 @@ export function jumpOps(si) {
           if (j.enter) {
             switch(j.type) {
             case Block.app:
-              if (j.value.sym === jumpId) {
+              if (j.value.sym === jumpId && inlineJumps
+                  || j.value.sym === scopeId && inlineScope) {
+                if (!inlineCont
+                    && !j.value.hasCont
+                    && !j.value.hasErrorCont
+                    && !j.value.hasResultCont) {
+                  Kit.skip(s.copy(j))
+                  yield s.tok(Tag.push,Tag.Identifier,
+                              {result:true,sym:contextSym})
+                  continue
+                }
                 const tail = !catchClause
                 if (tail)
                   cnt++
@@ -252,10 +296,17 @@ export function jumpOps(si) {
                 yield s.enter(j.pos,Tag.CallExpression,
                               {result:true,tail})
                 let bind = j.value.hasBindVal ? [...s.one()] : []
-                yield* Kit.reposOne(s.one(),Tag.callee)
+                if (refCtx && j.value.sym === scopeId) {
+                  yield s.tok(Tag.callee,Tag.Identifier,
+                              {sym:root.implFrame.value.declSym})
+                } else if (inlineCont) {
+                  yield s.tok(Tag.callee,Tag.Identifier,
+                              {sym:root.contSym})
+                } else
+                  yield* Kit.reposOne(s.one(),Tag.callee)
                 yield s.enter(Tag.arguments,Tag.Array)
-                if (j.value.ctrlArg)
-                  yield s.enter(Tag.push,Tag.Identifier,{sym:j.value.ctrlArg})
+                if (paramCtx)
+                  yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym})
                 yield* bind
                 if (j.value.hasErrorCont)
                   Kit.skip(s.one())
@@ -346,109 +397,6 @@ export function jsExceptions(si) {
           yield s.tok(Tag.push,Tag.Identifier,{sym})
         }
         yield* lab()
-      }
-    }
-  }
-}
-
-/** moves tail calls to the end of the frame, out of surrounding try/catch  */
-function reorderTailCalls(si) {
-  const s = Kit.auto(si)
-  if (!s.opts.inlineJsExceptions)
-    return s
-  const root = s.first.value
-  const {tailJumps} = s.opts
-  if (tailJumps)
-    return s
-  const thisCtx = root.opts.contextByThis
-  return walk()
-  function* walk() {
-    for(const i of s) {
-      yield i
-      if (i.enter && i.type === Block.frame && i.value.hasTryWrap) {
-        const num = i.value.tailCallsNum
-        if (num) {
-          const decls = i.value.first ? root.savedDecls
-                : (i.value.savedDecls || (i.value.savedDecls = new Map()))
-          const args = []
-          const fnSym = num > 1 && !thisCtx && Kit.scope.newSym("fn")
-          if (fnSym)
-            decls.set(fnSym,{raw:null})
-          let jump = null
-          const lab = s.label()
-          yield s.enter(Tag.push,Tag.LabeledStatement)
-          yield s.tok(Tag.label,Tag.Identifier,{node:{name:"exit"}})
-          yield s.enter(Tag.body,Tag.BlockStatement)
-          yield s.enter(Tag.body,Tag.Array)
-          for(const j of s.sub()) {
-            if (j.enter && j.type === Tag.CallExpression && j.value.tail) {
-              switch(j.type) {
-              case Tag.CallExpression:
-                if (j.value.tail) {
-                  if (num === 1) {
-                    jump = Kit.toArray(s.copy(j))
-                  } else {
-                    if (fnSym) {
-                      yield s.enter(Tag.push,Tag.AssignmentExpression,
-                                    {node:{operator:"="}})
-                      yield s.tok(Tag.left,Tag.Identifier,{sym:fnSym})
-                      yield* Kit.reposOne(s.one(),Tag.right)
-                      yield* s.leave()
-                    }
-                    const a = s.take()
-                    assert.ok(a.pos === Tag.arguments)
-                    let argnum = 0
-                    const ilab = s.label()
-                    for(const k of s.sub()) {
-                      yield s.enter(Tag.push,Tag.AssignmentExpression,
-                                    {node:{operator:"="}})
-                      const arg = args[argnum] || (args[argnum] = Kit.scope.newSym())
-                      argnum++
-                      yield s.tok(Tag.left,Tag.Identifier,{sym:arg})
-                      yield s.peel(Kit.setPos(k,Tag.right))
-                      yield* s.sub()
-                      yield* ilab()
-                    }
-                    s.close(a)              
-                    s.close(j)
-                  }
-                  yield s.enter(Tag.push,Tag.BreakStatement)
-                  yield s.tok(Tag.label,Tag.Identifier,{node:{name:"exit"}})
-                  yield* s.leave()
-                  continue 
-                }
-                break
-              case Tag.CatchClause:
-                yield j
-                yield* s.sub()
-                break
-              }
-            }
-            yield j
-          }
-          yield* lab()
-          if (jump) {
-            yield* jump
-            continue
-          }
-          yield s.enter(Tag.push,Tag.CallExpression,{result:true})
-          if (thisCtx) {
-            yield s.enter(Tag.callee,Tag.MemberExpression)
-            yield s.tok(Tag.object,Tag.ThisExpression)
-            yield s.tok(Tag.property,Tag.Identifier,
-                        {node:{name:s.opts.contFieldName}})
-            yield* s.leave()
-          } else
-            yield s.tok(Tag.callee,Tag.Identifier,{sym:fnSym})
-          yield s.enter(Tag.arguments,Tag.Array)
-          for(const j of args) {
-            decls.set(j,{raw:null})
-            yield s.tok(Tag.push,Tag.Identifier,{sym:j})
-          }
-          yield* lab()
-          continue
-        }
-        yield* s.sub()
       }
     }
   }
@@ -645,9 +593,7 @@ export function coerce(si) {
 }
 
 /** runs after `Flat.interpretJumps` */
-export const control = Kit.pipe(jumpOps,
-                                reorderTailCalls,
-                                storeContinuations)
+export const control = jumpOps
 
 /** runs before `Flat.interpretApp` */
 export const ops = Kit.pipe(pureOp,raiseOp)

@@ -1,6 +1,6 @@
 function a() {
   var a = M.context();
-  return M.jump(a_1, a_6);
+  return M.scope(a_1, a_6);
 }
 
 function a_1(a) {

@@ -3,19 +3,18 @@ function a() {
   return M.jump(_1, _7);
 
   function _1() {
-    return M.chain(eff(1), _3, _5, _4, _5);
+    return M.chain(eff(1), _3, _5, _4);
   }
 
   function _2(ex) {
     e = ex;
     console.log(e);
-    return M.jump(_3, _5, _4, _5);
+    return M.jump(_3, _5, _4);
   }
 
-  function _3(fc, fe, err) {
-    var fr;
+  function _3(fc, err) {
     console.log('fin');
-    return M.jump(fc, fe, fr, err);
+    return M.jump(fc, err);
   }
 
   function _4() {
@@ -35,6 +34,6 @@ function a() {
   }
 
   function _8(a) {
-    return M.jump(_3, _5, _6, _5, a);
+    return M.jump(_3, _5, _6, a);
   }
 }

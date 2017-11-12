@@ -1,6 +1,6 @@
 (function () {
   var ctx = M.context();
-  return M.jump(f_1, f_9);
+  return M.scope(f_1, f_9);
 });
 
 function f_1(ctx) {

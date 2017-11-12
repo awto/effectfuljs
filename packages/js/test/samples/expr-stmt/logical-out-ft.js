@@ -1,149 +1,116 @@
 function a1() {
   var a1 = M.context();
-  return M.chain(eff(1), a1_1, _a1_3);
+  return M.scope(a1_1, _a1_4);
 }
 
 function a2() {
   var a2 = M.context();
-  return M.chain(eff(1), a2_1, a2_3);
+  return M.scope(a2_1, a2_4);
 }
 
 function a3() {
   var a3 = M.context();
-  return M.chain(eff(1), a3_1, a3_4);
+  return M.scope(a3_1, a3_5);
 }
 
 function a4() {
   var a4 = M.context();
-  return M.chain(eff(1), a4_1, a4_4);
+  return M.scope(a4_1, a4_5);
 }
 
 function a5() {
-  var a5 = M.context(),
-      a;
-  a = 1;
-
-  if (!a) {
-    return M.chain(eff(2), a5_1, a5_2);
-  } else {
-    return M.pure(a);
-  }
+  var a5 = M.context();
+  return M.scope(a5_1, a5_3);
 }
 
 function a6() {
   var a6 = M.context();
-  return M.chain(eff(2), a6_1, a6_2);
+  return M.scope(a6_1, a6_3);
 }
 
 function a7() {
-  var a7 = M.context(),
-      a;
-  a = 1 + 1;
-
-  if (!a) {
-    return M.chain(eff(2), a7_1, a7_2);
-  } else {
-    return M.pure(a);
-  }
+  var a7 = M.context();
+  return M.scope(a7_1, a7_3);
 }
 
 function a8() {
   var a8 = M.context();
-  return M.chain(eff(2), a8_1, a8_2);
+  return M.scope(a8_1, a8_3);
 }
 
 function a9() {
-  var a9 = M.context(),
-      a;
-  a = 1;
-
-  if (a) {
-    return M.chain(eff(2), a9_1, a9_2);
-  } else {
-    return M.pure(a);
-  }
+  var a9 = M.context();
+  return M.scope(a9_1, a9_3);
 }
 
 function a10() {
   var a10 = M.context();
-  return M.chain(eff(2), a10_1, a10_2);
+  return M.scope(a10_1, a10_3);
 }
 
 function a11() {
-  var a11 = M.context(),
-      a;
-  a = 1 + 1;
-
-  if (a) {
-    return M.chain(eff(2), a11_1, a11_2);
-  } else {
-    return M.pure(a);
-  }
+  var a11 = M.context();
+  return M.scope(a11_1, a11_3);
 }
 
 function a12() {
   var a12 = M.context();
-  return M.chain(eff(2), a12_1, a12_2);
+  return M.scope(a12_1, a12_3);
 }
 
 function a13() {
   var a13 = M.context();
-  return M.chain(eff(1), a13_1, a13_3);
+  return M.scope(a13_1, a13_4);
 }
 
 function a14() {
   var a14 = M.context();
-  return M.chain(eff(1), _a14_1, a14_3);
+  return M.scope(_a14_1, a14_4);
 }
 
 function a14_1() {
   var a14_1 = M.context();
-  return M.chain(eff(1), a14_1_1, a14_1_3);
+  return M.scope(a14_1_1, a14_1_4);
 }
 
 function a15() {
   var a15 = M.context();
-  return M.chain(eff(1), a15_1, a15_3);
+  return M.scope(a15_1, a15_4);
 }
 
 function a16() {
   var a16 = M.context();
-
-  if (1) {
-    return M.chain(eff(2), a16_1, a16_2);
-  } else {
-    return M.chain(eff(3), a16_1, a16_2);
-  }
+  return M.scope(a16_1, a16_3);
 }
 
 function a17() {
   var a17 = M.context();
-  return M.chain(eff(1), a17_1, a17_2);
+  return M.scope(a17_1, a17_3);
 }
 
 function a18() {
   var a18 = M.context();
-  return M.chain(eff(1), _a18_1, a18_3);
+  return M.scope(_a18_1, a18_4);
 }
 
 function a18_1() {
   var a18_1 = M.context();
-  return M.chain(eff(1), a18_1_1, a18_1_3);
+  return M.scope(a18_1_1, a18_1_4);
 }
 
 function a19() {
   var a19 = M.context();
-  return M.chain(eff(1), _a19_1, a19_6);
+  return M.scope(_a19_1, a19_7);
 }
 
 function a19_1() {
   var a19_1 = M.context();
-  return M.chain(eff(1), a19_1_1, a19_1_6);
+  return M.scope(a19_1_1, a19_1_7);
 }
 
 function b() {
   var b = M.context();
-  return M.chain(eff(1), b_1, b_21);
+  return M.scope(b_1, b_22);
 }
 
 function a1() {
@@ -151,95 +118,126 @@ function a1() {
   return M.scope(_a1_1, a1_30);
 }
 
-function a1_1(a1, a) {
+function a1_1(a1) {
+  return M.chain(eff(1), a1_2, _a1_4);
+}
+
+function a1_2(a1, a) {
   if (!a) {
-    return M.chain(eff(2), _a1_2, _a1_3);
+    return M.chain(eff(2), _a1_3, _a1_4);
   } else {
     return M.pure(a);
   }
 }
 
-function _a1_2(a1) {
+function _a1_3(a1) {
   return M.pure();
 }
 
-function _a1_3(a1, e) {
+function _a1_4(a1, e) {
   return M.raise(e);
 }
 
-function a2_1(a2, a) {
+function a2_1(a2) {
+  return M.chain(eff(1), a2_2, a2_4);
+}
+
+function a2_2(a2, a) {
   if (a) {
-    return M.chain(eff(2), a2_2, a2_3);
+    return M.chain(eff(2), a2_3, a2_4);
   } else {
     return M.pure(a);
   }
 }
 
-function a2_2(a2) {
+function a2_3(a2) {
   return M.pure();
 }
 
-function a2_3(a2, e) {
+function a2_4(a2, e) {
   return M.raise(e);
 }
 
-function a3_1(a3, a) {
-  a3._ = a;
-  return M.chain(eff(2), a3_2, a3_4);
+function a3_1(a3) {
+  return M.chain(eff(1), a3_2, a3_5);
 }
 
-function a3_2(a3, b) {
+function a3_2(a3, a) {
+  a3._ = a;
+  return M.chain(eff(2), a3_3, a3_5);
+}
+
+function a3_3(a3, b) {
   var a;
   a = a3._ || b;
 
   if (!a) {
-    return M.chain(eff(3), a3_3, a3_4);
+    return M.chain(eff(3), a3_4, a3_5);
   } else {
     return M.pure(a);
   }
 }
 
-function a3_3(a3) {
+function a3_4(a3) {
   return M.pure();
 }
 
-function a3_4(a3, e) {
+function a3_5(a3, e) {
   return M.raise(e);
 }
 
-function a4_1(a4, a) {
-  a4._ = a;
-  return M.chain(eff(2), a4_2, a4_4);
+function a4_1(a4) {
+  return M.chain(eff(1), a4_2, a4_5);
 }
 
-function a4_2(a4, b) {
+function a4_2(a4, a) {
+  a4._ = a;
+  return M.chain(eff(2), a4_3, a4_5);
+}
+
+function a4_3(a4, b) {
   var a;
   a = a4._ && b;
 
   if (a) {
-    return M.chain(eff(3), a4_3, a4_4);
+    return M.chain(eff(3), a4_4, a4_5);
   } else {
     return M.pure(a);
   }
 }
 
-function a4_3(a4) {
+function a4_4(a4) {
   return M.pure();
 }
 
-function a4_4(a4, e) {
+function a4_5(a4, e) {
   return M.raise(e);
 }
 
 function a5_1(a5) {
+  var a;
+  a = 1;
+
+  if (!a) {
+    return M.chain(eff(2), a5_2, a5_3);
+  } else {
+    return M.pure(a);
+  }
+}
+
+function a5_2(a5) {
   return M.pure();
 }
 
-function a5_2(a5, e) {
+function a5_3(a5, e) {
   return M.raise(e);
 }
 
-function a6_1(a6, a) {
+function a6_1(a6) {
+  return M.chain(eff(2), a6_2, a6_3);
+}
+
+function a6_2(a6, a) {
   if (!a) {
     a = 1;
   }
@@ -247,19 +245,34 @@ function a6_1(a6, a) {
   return M.pure();
 }
 
-function a6_2(a6, e) {
+function a6_3(a6, e) {
   return M.raise(e);
 }
 
 function a7_1(a7) {
+  var a;
+  a = 1 + 1;
+
+  if (!a) {
+    return M.chain(eff(2), a7_2, a7_3);
+  } else {
+    return M.pure(a);
+  }
+}
+
+function a7_2(a7) {
   return M.pure();
 }
 
-function a7_2(a7, e) {
+function a7_3(a7, e) {
   return M.raise(e);
 }
 
-function a8_1(a8, a) {
+function a8_1(a8) {
+  return M.chain(eff(2), a8_2, a8_3);
+}
+
+function a8_2(a8, a) {
   if (!a) {
     a = 1 + 1;
   }
@@ -267,19 +280,34 @@ function a8_1(a8, a) {
   return M.pure();
 }
 
-function a8_2(a8, e) {
+function a8_3(a8, e) {
   return M.raise(e);
 }
 
 function a9_1(a9) {
+  var a;
+  a = 1;
+
+  if (a) {
+    return M.chain(eff(2), a9_2, a9_3);
+  } else {
+    return M.pure(a);
+  }
+}
+
+function a9_2(a9) {
   return M.pure();
 }
 
-function a9_2(a9, e) {
+function a9_3(a9, e) {
   return M.raise(e);
 }
 
-function a10_1(a10, a) {
+function a10_1(a10) {
+  return M.chain(eff(2), a10_2, a10_3);
+}
+
+function a10_2(a10, a) {
   if (a) {
     a = 1;
   }
@@ -287,19 +315,34 @@ function a10_1(a10, a) {
   return M.pure();
 }
 
-function a10_2(a10, e) {
+function a10_3(a10, e) {
   return M.raise(e);
 }
 
 function a11_1(a11) {
+  var a;
+  a = 1 + 1;
+
+  if (a) {
+    return M.chain(eff(2), a11_2, a11_3);
+  } else {
+    return M.pure(a);
+  }
+}
+
+function a11_2(a11) {
   return M.pure();
 }
 
-function a11_2(a11, e) {
+function a11_3(a11, e) {
   return M.raise(e);
 }
 
-function a12_1(a12, a) {
+function a12_1(a12) {
+  return M.chain(eff(2), a12_2, a12_3);
+}
+
+function a12_2(a12, a) {
   if (a) {
     a = 1 + 1;
   }
@@ -307,92 +350,120 @@ function a12_1(a12, a) {
   return M.pure();
 }
 
-function a12_2(a12, e) {
+function a12_3(a12, e) {
   return M.raise(e);
 }
 
-function a13_1(a13, a) {
+function a13_1(a13) {
+  return M.chain(eff(1), a13_2, a13_4);
+}
+
+function a13_2(a13, a) {
   if (a) {
-    return M.chain(eff(2), a13_2, a13_3);
+    return M.chain(eff(2), a13_3, a13_4);
   } else {
-    return M.chain(eff(3), a13_2, a13_3);
+    return M.chain(eff(3), a13_3, a13_4);
   }
 }
 
-function a13_2(a13) {
+function a13_3(a13) {
   return M.pure();
 }
 
-function a13_3(a13, e) {
+function a13_4(a13, e) {
   return M.raise(e);
 }
 
-function _a14_1(a14, a) {
+function _a14_1(a14) {
+  return M.chain(eff(1), a14_2, a14_4);
+}
+
+function a14_2(a14, a) {
   var b;
 
   if (a) {
     b = 2;
     return M.pure(b);
   } else {
-    return M.chain(eff(3), a14_2, a14_3);
+    return M.chain(eff(3), a14_3, a14_4);
   }
 }
 
-function a14_2(a14) {
+function a14_3(a14) {
   return M.pure();
 }
 
-function a14_3(a14, e) {
+function a14_4(a14, e) {
   return M.raise(e);
 }
 
-function a14_1_1(a14_1, a) {
+function a14_1_1(a14_1) {
+  return M.chain(eff(1), a14_1_2, a14_1_4);
+}
+
+function a14_1_2(a14_1, a) {
   var b;
 
   if (a) {
     b = 2;
-    return M.jump(b, a14_1_2, a14_1_3);
+    return M.jump(b, a14_1_3, a14_1_4);
   } else {
-    return M.chain(eff(3), a14_1_2, a14_1_3);
+    return M.chain(eff(3), a14_1_3, a14_1_4);
   }
 }
 
-function a14_1_2(a14_1, r) {
+function a14_1_3(a14_1, r) {
   return M.pure(r);
 }
 
-function a14_1_3(a14_1, e) {
+function a14_1_4(a14_1, e) {
   return M.raise(e);
 }
 
-function a15_1(a15, a) {
+function a15_1(a15) {
+  return M.chain(eff(1), a15_2, a15_4);
+}
+
+function a15_2(a15, a) {
   var b;
 
   if (a) {
-    return M.chain(eff(2), a15_2, a15_3);
+    return M.chain(eff(2), a15_3, a15_4);
   } else {
     b = 3;
     return M.pure(b);
   }
 }
 
-function a15_2(a15) {
+function a15_3(a15) {
   return M.pure();
 }
 
-function a15_3(a15, e) {
+function a15_4(a15, e) {
   return M.raise(e);
 }
 
 function a16_1(a16) {
+  if (1) {
+    return M.chain(eff(2), a16_2, a16_3);
+  } else {
+    return M.chain(eff(3), a16_2, a16_3);
+  }
+}
+
+function a16_2(a16) {
   return M.pure();
 }
 
-function a16_2(a16, e) {
+function a16_3(a16, e) {
   return M.raise(e);
 }
 
-function a17_1(a17, a) {
+function a17_1(a17) {
+  return M.chain(eff(1), a17_2, a17_3);
+}
+
+function a17_2(a17, a) {
   var b;
 
   if (a) {
@@ -405,16 +476,20 @@ function a17_1(a17, a) {
   return M.pure();
 }
 
-function a17_2(a17, e) {
+function a17_3(a17, e) {
   return M.raise(e);
 }
 
-function _a18_1(a18, a) {
-  a18._ = a;
-  return M.chain(eff(2), a18_2, a18_3);
+function _a18_1(a18) {
+  return M.chain(eff(1), a18_2, a18_4);
 }
 
 function a18_2(a18, a) {
+  a18._ = a;
+  return M.chain(eff(2), a18_3, a18_4);
+}
+
+function a18_3(a18, a) {
   if (a18._ + a) {
     2;
   } else {
@@ -424,16 +499,20 @@ function a18_2(a18, a) {
   return M.pure();
 }
 
-function a18_3(a18, e) {
+function a18_4(a18, e) {
   return M.raise(e);
 }
 
-function a18_1_1(a18_1, a) {
-  a18_1._ = a;
-  return M.chain(eff(2), a18_1_2, a18_1_3);
+function a18_1_1(a18_1) {
+  return M.chain(eff(1), a18_1_2, a18_1_4);
 }
 
 function a18_1_2(a18_1, a) {
+  a18_1._ = a;
+  return M.chain(eff(2), a18_1_3, a18_1_4);
+}
+
+function a18_1_3(a18_1, a) {
   var b;
 
   if (a18_1._ + a) {
@@ -445,106 +524,118 @@ function a18_1_2(a18_1, a) {
   return M.pure(b);
 }
 
-function a18_1_3(a18_1, e) {
+function a18_1_4(a18_1, e) {
   return M.raise(e);
 }
 
-function _a19_1(a19, a) {
-  if (!a) {
-    return M.chain(eff(2), a19_2, a19_6);
-  } else {
-    return M.jump(a, a19_4, a19_6);
-  }
+function _a19_1(a19) {
+  return M.chain(eff(1), a19_2, a19_7);
 }
 
 function a19_2(a19, a) {
+  if (!a) {
+    return M.chain(eff(2), a19_3, a19_7);
+  } else {
+    return M.jump(a, a19_5, a19_7);
+  }
+}
+
+function a19_3(a19, a) {
   a19._ = a;
-  return M.chain(eff(3), a19_3, a19_6);
+  return M.chain(eff(3), a19_4, a19_7);
 }
 
-function a19_3(a19, b) {
+function a19_4(a19, b) {
   a = (a19._, b);
-  return M.jump(a19_4, a19_6);
+  return M.jump(a19_5, a19_7);
 }
 
-function a19_4(a19, a) {
-  return M.chain(eff(a), a19_5, a19_6);
+function a19_5(a19, a) {
+  return M.chain(eff(a), a19_6, a19_7);
 }
 
-function a19_5(a19) {
+function a19_6(a19) {
   return M.pure();
 }
 
-function a19_6(a19, e) {
+function a19_7(a19, e) {
   return M.raise(e);
 }
 
-function a19_1_1(a19_1, a) {
-  if (!a) {
-    return M.chain(eff(2), a19_1_2, a19_1_6);
-  } else {
-    return M.jump(a, a19_1_4, a19_1_6);
-  }
+function a19_1_1(a19_1) {
+  return M.chain(eff(1), a19_1_2, a19_1_7);
 }
 
 function a19_1_2(a19_1, a) {
-  a19_1._1 = a;
-  return M.chain(eff(3), a19_1_3, a19_1_6);
+  if (!a) {
+    return M.chain(eff(2), a19_1_3, a19_1_7);
+  } else {
+    return M.jump(a, a19_1_5, a19_1_7);
+  }
 }
 
 function a19_1_3(a19_1, a) {
+  a19_1._1 = a;
+  return M.chain(eff(3), a19_1_4, a19_1_7);
+}
+
+function a19_1_4(a19_1, a) {
   c = (a19_1._1, a);
-  return M.jump(a19_1_4, a19_1_6);
+  return M.jump(a19_1_5, a19_1_7);
 }
 
-function a19_1_4(a19_1, c) {
-  return M.chain(eff(c), a19_1_5, a19_1_6);
+function a19_1_5(a19_1, c) {
+  return M.chain(eff(c), a19_1_6, a19_1_7);
 }
 
-function a19_1_5(a19_1, r) {
+function a19_1_6(a19_1, r) {
   return M.pure(r);
 }
 
-function a19_1_6(a19_1, e) {
+function a19_1_7(a19_1, e) {
   return M.raise(e);
 }
 
-function b_1(b, a) {
+function b_1(b) {
+  return M.chain(eff(1), b_2, b_22);
+}
+
+function b_2(b, a) {
   if (!a) {
-    return M.chain(eff(2), b_2, b_21);
+    return M.chain(eff(2), b_3, b_22);
   } else {
-    return M.jump(a, b_2, b_21);
+    return M.jump(a, b_3, b_22);
   }
 }
 
-function b_2(b) {
-  return M.chain(eff(1), b_3, b_21);
+function b_3(b) {
+  return M.chain(eff(1), b_4, b_22);
 }
 
-function b_3(b, a) {
+function b_4(b, a) {
   if (a) {
-    return M.chain(eff(2), b_4, b_21);
+    return M.chain(eff(2), b_5, b_22);
   } else {
-    return M.jump(a, b_4, b_21);
-  }
-}
-
-function b_4(b) {
-  var a;
-  a = 1;
-
-  if (!a) {
-    return M.chain(eff(2), b_5, b_21);
-  } else {
-    return M.jump(a, b_5, b_21);
+    return M.jump(a, b_5, b_22);
   }
 }
 
 function b_5(b) {
-  return M.chain(eff(2), b_6, b_21);
+  var a;
+  a = 1;
+
+  if (!a) {
+    return M.chain(eff(2), b_6, b_22);
+  } else {
+    return M.jump(a, b_6, b_22);
+  }
 }
 
-function b_6(b, a) {
+function b_6(b) {
+  return M.chain(eff(2), b_7, b_22);
+}
+
+function b_7(b, a) {
   var c;
 
   if (!a) {
@@ -554,17 +645,17 @@ function b_6(b, a) {
   c = 1 + 1;
 
   if (!c) {
-    return M.chain(eff(2), b_7, b_21);
+    return M.chain(eff(2), b_8, b_22);
   } else {
-    return M.jump(c, b_7, b_21);
+    return M.jump(c, b_8, b_22);
   }
 }
 
-function b_7(b) {
-  return M.chain(eff(2), b_8, b_21);
+function b_8(b) {
+  return M.chain(eff(2), b_9, b_22);
 }
 
-function b_8(b, a) {
+function b_9(b, a) {
   var c;
 
   if (!a) {
@@ -574,17 +665,17 @@ function b_8(b, a) {
   c = 1;
 
   if (c) {
-    return M.chain(eff(2), b_9, b_21);
+    return M.chain(eff(2), b_10, b_22);
   } else {
-    return M.jump(c, b_9, b_21);
+    return M.jump(c, b_10, b_22);
   }
 }
 
-function b_9(b) {
-  return M.chain(eff(2), b_10, b_21);
+function b_10(b) {
+  return M.chain(eff(2), b_11, b_22);
 }
 
-function b_10(b, a) {
+function b_11(b, a) {
   var c;
 
   if (a) {
@@ -594,75 +685,75 @@ function b_10(b, a) {
   c = 1 + 1;
 
   if (c) {
-    return M.chain(eff(2), b_11, b_21);
+    return M.chain(eff(2), b_12, b_22);
   } else {
-    return M.jump(c, b_11, b_21);
+    return M.jump(c, b_12, b_22);
   }
 }
 
-function b_11(b) {
-  return M.chain(eff(2), b_12, b_21);
-}
-
-function b_12(b, a) {
-  if (a) {
-    a = 1 + 1;
-  }
-
-  return M.chain(eff(1), b_13, b_21);
+function b_12(b) {
+  return M.chain(eff(2), b_13, b_22);
 }
 
 function b_13(b, a) {
   if (a) {
-    return M.chain(eff(2), b_14, b_21);
+    a = 1 + 1;
+  }
+
+  return M.chain(eff(1), b_14, b_22);
+}
+
+function b_14(b, a) {
+  if (a) {
+    return M.chain(eff(2), b_15, b_22);
   } else {
-    return M.chain(eff(3), b_14, b_21);
+    return M.chain(eff(3), b_15, b_22);
   }
 }
 
-function b_14(b) {
-  return M.chain(eff(1), b_15, b_21);
+function b_15(b) {
+  return M.chain(eff(1), b_16, b_22);
 }
 
-function b_15(b, a) {
+function b_16(b, a) {
   var c;
 
   if (a) {
     c = 2;
-    return M.jump(c, b_16, b_21);
+    return M.jump(c, b_17, b_22);
   } else {
-    return M.chain(eff(3), b_16, b_21);
+    return M.chain(eff(3), b_17, b_22);
   }
 }
 
-function b_16(b) {
-  return M.chain(eff(1), b_17, b_21);
+function b_17(b) {
+  return M.chain(eff(1), b_18, b_22);
 }
 
-function b_17(b, a) {
+function b_18(b, a) {
   var c;
 
   if (a) {
-    return M.chain(eff(2), b_18, b_21);
+    return M.chain(eff(2), b_19, b_22);
   } else {
     c = 3;
-    return M.jump(c, b_18, b_21);
-  }
-}
-
-function b_18(b) {
-  if (1) {
-    return M.chain(eff(2), b_19, b_21);
-  } else {
-    return M.chain(eff(3), b_19, b_21);
+    return M.jump(c, b_19, b_22);
   }
 }
 
 function b_19(b) {
-  return M.chain(eff(1), b_20, b_21);
+  if (1) {
+    return M.chain(eff(2), b_20, b_22);
+  } else {
+    return M.chain(eff(3), b_20, b_22);
+  }
 }
 
-function b_20(b, a) {
+function b_20(b) {
+  return M.chain(eff(1), b_21, b_22);
+}
+
+function b_21(b, a) {
   var c;
 
   if (a) {
@@ -674,15 +765,15 @@ function b_20(b, a) {
   return M.pure(c);
 }
 
-function b_21(b, e) {
+function b_22(b, e) {
   return M.raise(e);
 }
 
 function _a1_1(a1) {
-  return M.yldStar(M.yld('a1'), a1_2, a1_30);
+  return M.yldStar(M.yld('a1'), _a1_2, a1_30);
 }
 
-function a1_2(a1, a) {
+function _a1_2(a1, a) {
   if (a) {
     return M.yldStar(M.yld('a2'), a1_3, a1_30);
   } else {

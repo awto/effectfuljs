@@ -1,0 +1,27 @@
+{
+  "env": {
+    "development": {
+      "plugins": ["add-module-exports",
+                  ["transform-es2015-modules-commonjs",
+                   {"loose":true}]]
+    },
+    "production": {
+      "passPerPreset": true,
+      "presets": [
+        ["@effectful/es-loose",{"jsExceptions":false,
+                                "inlineJsExceptions":false,
+                                "inlineThrow":true,
+                                "topLevel":true,
+                                "moduleAliases":{
+                                  "estransducers":"estransducers/loose"
+                                }}],
+        {
+          "plugins": ["add-module-exports",
+                      ["transform-es2015-modules-commonjs",
+                       {"loose":true}]]
+        }
+      ]
+    }
+  }
+}
+

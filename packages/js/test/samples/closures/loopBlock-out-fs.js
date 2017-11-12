@@ -99,6 +99,7 @@ function a(p) {
   }
 
   function _5(ex) {
+    var e;
     e = ex;
 
     if (loop.exit) {

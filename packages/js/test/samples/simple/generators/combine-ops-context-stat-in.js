@@ -9,8 +9,7 @@ M.option({combineOps:true,
           markArgNum: false,
           markBindValue: false,
           markRec: false,
-          markCatchCont: false,
-          always: true})
+          markCatchCont: false})
 
 
 function* a() {

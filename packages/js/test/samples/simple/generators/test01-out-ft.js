@@ -122,7 +122,7 @@ function a4_2(a4) {
 }
 
 function a4_3(a4) {
-  a4._fc = a4_8, a4._fe = a4_11;
+  a4._fc = a4_8;
   return M.yldStar(M.yld(3), a4_6, a4_11);
 }
 
@@ -132,7 +132,7 @@ function a4_4(a4) {
 }
 
 function a4_5(a4) {
-  a4._fc = a4_8, a4._fe = a4_11;
+  a4._fc = a4_8;
   return M.yldStar(M.yld(a4._e), a4_6, a4_11);
 }
 
@@ -141,7 +141,7 @@ function a4_6(a4) {
 }
 
 function a4_7(a4) {
-  return M.yldStar(M.yld('e'), a4._fc, a4._fe, a4._fr);
+  return M.yldStar(M.yld('e'), a4._fc);
 }
 
 function a4_8(a4) {
@@ -172,7 +172,7 @@ function a4_13(a4, a) {
 }
 
 function a4_14(a4, a) {
-  a4._fc = a4_12, a4._fe = a4_11, a4._err1 = a;
+  a4._fc = a4_12, a4._err1 = a;
   return M.jump(a4_6, a4_11);
 }
 
@@ -227,13 +227,13 @@ function cfb1_3(cfb1, a) {
     throw new Error(`AAAAAAAAA${cfb1._i++}`);
   }
 
-  cfb1._fc = cfb1_5, cfb1._fe = cfb1_11;
+  cfb1._fc = cfb1_5;
   return M.yldStar(M.yld(`a${cfb1._i}`), cfb1_4, cfb1_11);
 }
 
 function cfb1_4(cfb1) {
   cfb1._ex = cfb1._err1;
-  return M.yldStar(M.yld(`f1${cfb1._i++}`), cfb1._fc, cfb1._fe, cfb1._fr);
+  return M.yldStar(M.yld(`f1${cfb1._i++}`), cfb1._fc);
 }
 
 function cfb1_5(cfb1) {
@@ -268,7 +268,7 @@ function cfb1_11(cfb1, a) {
 }
 
 function cfb1_12(cfb1, a) {
-  cfb1._fc = cfb1_6, cfb1._fe = cfb1_10, cfb1._err1 = a;
+  cfb1._fc = cfb1_6, cfb1._err1 = a;
   return M.jump(cfb1_4, cfb1_11);
 }
 

@@ -86,14 +86,15 @@ export function propagateEff(s) {
       }
       if (i.leave) {
         if (i.value.boundary) {
-          if (i.value.bind)
-            i.value.eff = true
-          if (!i.value.eff)
-            stack.shift()
-          if (i.value.shallowEff || i.value.eff)
+          if (i.value.bind) {
             propagate(stack)
-          if (i.value.eff)
             stack.shift()
+          } else if (i.value.shallowEff || i.value.eff) {
+            stack.shift()
+            propagate(stack)
+          } else {
+            stack.shift()
+          }
         }
       }
     }

@@ -1,7 +1,11 @@
 M.profile("disabled")
 M.profile("generators")
-M.option({defunct:true,state:false})
-  
+M.option({defunct:true,
+          state:false,
+          contextState:true,
+          inlineContAssign:true,
+          storeCont:"$cont"})
+
 function* a() {
   yield 1
   yield 2
@@ -41,7 +45,7 @@ async function af1() {
   return await c
 }
 
-M.option({defunct:true,state:false,tailCalls:false})
+M.option({tailCalls:false})
 
 function* b2() {
   yield 1

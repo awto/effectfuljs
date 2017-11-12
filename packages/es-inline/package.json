@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/awto/effectful-js#readme",
   "devDependencies": {
-    "@effectful/es-inline-rt": "^0.0.1",
+    "@effectful/es-inline-rt": "../es-inline-rt",
     "glob": "^7.1.2",
     "mocha": "^3.4.2",
     "promise": "^8.0.1",

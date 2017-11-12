@@ -168,7 +168,6 @@ function d2(i) {
 
 function a4() {
   var a4 = M.generator();
-  a4._f = ctx;
   return a4.scope(_1, _13);
 
   function _1(a4) {
@@ -180,7 +179,7 @@ function a4() {
   }
 
   function _3(a4) {
-    a4._fc = _9, a4._fe = _13;
+    a4._fc = _9;
     return a4.yld(3, _7, _13);
   }
 
@@ -195,10 +194,10 @@ function a4() {
 
   function _6(a4, a) {
     if (a) {
-      a4._fc = _12, a4._fe = _13, a4._r = 10;
+      a4._fc = _12, a4._r = 10;
       return a4.jump(_7, _13);
     } else {
-      a4._fc = _9, a4._fe = _13;
+      a4._fc = _9;
       return a4.jump(_7, _13);
     }
   }
@@ -208,7 +207,7 @@ function a4() {
   }
 
   function _8(a4) {
-    return a4.yld('e', a4._fc, a4._fe, a4._fr);
+    return a4.yld('e', a4._fc);
   }
 
   function _9(a4) {
@@ -249,14 +248,13 @@ function a4() {
   }
 
   function _16(a4, a) {
-    a4._fc = _14, a4._fe = _13, a4._err1 = a;
+    a4._fc = _14, a4._err1 = a;
     return a4.jump(_7, _13);
   }
 }
 
 function a5() {
   var a5 = M.generator();
-  a5._f = ctx;
   return a5.scope(_1, _5);
 
   function _1(a5) {
@@ -315,10 +313,10 @@ function a6() {
 
   function _4(a6, a) {
     if (a) {
-      a6._fc1 = _8, a6._fe1 = _9, a6._r = 10;
+      a6._fc1 = _8, a6._r = 10;
       return a6.jump(_5, _12);
     } else {
-      a6._fc1 = _7, a6._fe1 = _9;
+      a6._fc1 = _7;
       return a6.yld(4, _5, _12);
     }
   }
@@ -329,7 +327,7 @@ function a6() {
   }
 
   function _6(a6) {
-    return a6.yld('f2', a6._fc1, a6._fe1, a6._fr1);
+    return a6.yld('f2', a6._fc1);
   }
 
   function _7(a6) {
@@ -353,12 +351,12 @@ function a6() {
   }
 
   function _12(a6, a) {
-    a6._fc1 = _10, a6._fe1 = _9, a6._err1 = a;
+    a6._fc1 = _10, a6._err1 = a;
     return a6.jump(_6, _9);
   }
 
   function _13(a6, a) {
-    a6._fc1 = _11, a6._fe1 = _9, a6._err2 = a;
+    a6._fc1 = _11, a6._err2 = a;
     return a6.jump(_5, _12);
   }
 }
@@ -382,7 +380,6 @@ function a1() {
 
 function a2() {
   var a2 = M.generator();
-  a2._f = ctx;
   return a2.scope(_1, _6);
 
   function _1(a2) {
@@ -429,7 +426,6 @@ function a2() {
 
 function a3() {
   var a3 = M.generator();
-  a3._f = ctx;
   return a3.scope(_1, _5);
 
   function _1(a3) {
@@ -841,7 +837,7 @@ function finallyBlock1() {
 
   function _3(finallyBlock1, a) {
     if (a) {
-      finallyBlock1._fc = _6, finallyBlock1._fe = _7;
+      finallyBlock1._fc = _6;
       return finallyBlock1.jump(_4, _7);
     } else {
       return finallyBlock1.jump(_2, _9);
@@ -853,7 +849,7 @@ function finallyBlock1() {
   }
 
   function _5(finallyBlock1) {
-    return finallyBlock1.yld(finallyBlock1._i, finallyBlock1._fc, finallyBlock1._fe, finallyBlock1._fr);
+    return finallyBlock1.yld(finallyBlock1._i, finallyBlock1._fc);
   }
 
   function _6(finallyBlock1) {
@@ -869,7 +865,7 @@ function finallyBlock1() {
   }
 
   function _9(finallyBlock1, a) {
-    finallyBlock1._fc = _8, finallyBlock1._fe = _7, finallyBlock1._err1 = a;
+    finallyBlock1._fc = _8, finallyBlock1._err1 = a;
     return finallyBlock1.jump(_4, _7);
   }
 }
@@ -921,7 +917,7 @@ function cfb() {
       throw new Error(`AAAAAAAAA${cfb._i++}`);
     }
 
-    cfb._fc = _8, cfb._fe = _9;
+    cfb._fc = _8;
     return cfb.yld(`a${cfb._i++}`, _7, _9);
   }
 
@@ -935,12 +931,12 @@ function cfb() {
   }
 
   function _6(cfb) {
-    cfb._fc = _8, cfb._fe = _9, cfb._r = cfb._i++;
+    cfb._fc = _8, cfb._r = cfb._i++;
     return cfb.jump(_7, _9);
   }
 
   function _7(cfb) {
-    return cfb.yld(`f1${cfb._i++}`, cfb._fc, cfb._fe, cfb._fr);
+    return cfb.yld(`f1${cfb._i++}`, cfb._fc);
   }
 
   function _8(cfb) {
@@ -961,7 +957,7 @@ function cfb() {
   }
 
   function _12(cfb, a) {
-    cfb._fc = _10, cfb._fe = _9, cfb._err1 = a;
+    cfb._fc = _10, cfb._err1 = a;
     return cfb.jump(_7, _9);
   }
 }
@@ -985,13 +981,13 @@ function cfb1() {
 
   function _4(cfb1) {
     cfb1._e = cfb1._ex;
-    cfb1._fc = _6, cfb1._fe = _7, cfb1._r = cfb1._i++;
+    cfb1._fc = _6, cfb1._r = cfb1._i++;
     return cfb1.jump(_5, _7);
   }
 
   function _5(cfb1) {
     console.log(`f${cfb1._i}`);
-    return cfb1.jump(cfb1._fc, cfb1._fe, cfb1._fr);
+    return cfb1.jump(cfb1._fc);
   }
 
   function _6(cfb1) {
@@ -1012,7 +1008,7 @@ function cfb1() {
   }
 
   function _10(cfb1, a) {
-    cfb1._fc = _8, cfb1._fe = _7, cfb1._err1 = a;
+    cfb1._fc = _8, cfb1._err1 = a;
     return cfb1.jump(_5, _7);
   }
 }
@@ -1071,13 +1067,13 @@ function cfb2() {
   }
 
   function _4(cfb2) {
-    cfb2._fc = _8, cfb2._fe = _9;
+    cfb2._fc = _8;
     return cfb2.yld(`c:${cfb2._i++}`, _5, _10);
   }
 
   function _5(cfb2) {
     cfb2._ex = cfb2._err1;
-    return cfb2.yld(`f:${cfb2._i++}`, cfb2._fc, cfb2._fe, cfb2._fr);
+    return cfb2.yld(`f:${cfb2._i++}`, cfb2._fc);
   }
 
   function _6(cfb2) {
@@ -1103,7 +1099,7 @@ function cfb2() {
   }
 
   function _11(cfb2, a) {
-    cfb2._fc = _6, cfb2._fe = _9, cfb2._err1 = a;
+    cfb2._fc = _6, cfb2._err1 = a;
     return cfb2.jump(_5, _10);
   }
 }
@@ -1126,13 +1122,13 @@ function cfb3() {
       throw new Error(`AAAAAAAAA${cfb3._i++}`);
     }
 
-    cfb3._fc = _5, cfb3._fe = _11;
+    cfb3._fc = _5;
     return cfb3.yld(`a${cfb3._i}`, _4, _11);
   }
 
   function _4(cfb3) {
     cfb3._ex = cfb3._err1;
-    return cfb3.yld(`f1${cfb3._i++}`, cfb3._fc, cfb3._fe, cfb3._fr);
+    return cfb3.yld(`f1${cfb3._i++}`, cfb3._fc);
   }
 
   function _5(cfb3) {
@@ -1167,7 +1163,7 @@ function cfb3() {
   }
 
   function _12(cfb3, a) {
-    cfb3._fc = _6, cfb3._fe = _10, cfb3._err1 = a;
+    cfb3._fc = _6, cfb3._err1 = a;
     return cfb3.jump(_4, _11);
   }
 }
@@ -1209,13 +1205,13 @@ function cfb2() {
   }
 
   function _2(cfb2) {
-    cfb2._fc = _6, cfb2._fe = _7;
+    cfb2._fc = _6;
     return cfb2.yld(`c:${cfb2._i++}`, _3, _8);
   }
 
   function _3(cfb2) {
     cfb2._ex = cfb2._err1;
-    return cfb2.yld(`f:${cfb2._i++}`, cfb2._fc, cfb2._fe, cfb2._fr);
+    return cfb2.yld(`f:${cfb2._i++}`, cfb2._fc);
   }
 
   function _4(cfb2) {
@@ -1241,7 +1237,7 @@ function cfb2() {
   }
 
   function _9(cfb2, a) {
-    cfb2._fc = _4, cfb2._fe = _7, cfb2._err1 = a;
+    cfb2._fc = _4, cfb2._err1 = a;
     return cfb2.jump(_3, _8);
   }
 }
@@ -1251,7 +1247,7 @@ function cfb6() {
   return cfb6.scope(_1, _8);
 
   function _1(cfb6) {
-    cfb6._fc = _5, cfb6._fe = _6;
+    cfb6._fc = _5;
     return cfb6.yld(1, _4, _6);
   }
 
@@ -1261,12 +1257,12 @@ function cfb6() {
   }
 
   function _3(cfb6) {
-    cfb6._fc = _5, cfb6._fe = _6, cfb6._r = 3;
+    cfb6._fc = _5, cfb6._r = 3;
     return cfb6.jump(_4, _6);
   }
 
   function _4(cfb6) {
-    return cfb6.yld(4, cfb6._fc, cfb6._fe, cfb6._fr);
+    return cfb6.yld(4, cfb6._fc);
   }
 
   function _5(cfb6) {
@@ -1287,7 +1283,7 @@ function cfb6() {
   }
 
   function _9(cfb6, a) {
-    cfb6._fc = _7, cfb6._fe = _6, cfb6._err1 = a;
+    cfb6._fc = _7, cfb6._err1 = a;
     return cfb6.jump(_4, _6);
   }
 }
@@ -1309,7 +1305,7 @@ function fb4() {
 
   function _3(fb4, a) {
     if (a === 3) {
-      fb4._fc = _6, fb4._fe = _7, fb4._r = fb4._i;
+      fb4._fc = _6, fb4._r = fb4._i;
       return fb4.jump(_4, _7);
     } else {
       return fb4.jump(_2, _9);
@@ -1321,7 +1317,7 @@ function fb4() {
   }
 
   function _5(fb4) {
-    return fb4.yld(fb4._i, fb4._fc, fb4._fe, fb4._fr);
+    return fb4.yld(fb4._i, fb4._fc);
   }
 
   function _6(fb4) {
@@ -1337,7 +1333,7 @@ function fb4() {
   }
 
   function _9(fb4, a) {
-    fb4._fc = _8, fb4._fe = _7, fb4._err1 = a;
+    fb4._fc = _8, fb4._err1 = a;
     return fb4.jump(_4, _7);
   }
 }
@@ -1415,14 +1411,14 @@ function c1() {
   function a() {
     var a = M.generator();
 
-    function b() {
-      var b = M.generator();
-      b._f = ctx;
-      b._c1 = c1;
-      return b.scope(_1, _2);
+    a._b = function b() {
+      var _b = M.generator();
 
-      function _1(b) {
-        return b.pure(function c() {
+      _b._c1 = c1;
+      return _b.scope(_1, _2);
+
+      function _1(_b) {
+        return _b.pure(function c() {
           var _c = M.generator();
 
           _c._c1 = c1;
@@ -1439,10 +1435,10 @@ function c1() {
         });
       }
 
-      function _2(b, e) {
-        return b.raise(e);
+      function _2(_b, e) {
+        return _b.raise(e);
       }
-    }
+    };
 
     return a.scope(_1, _2);
 
@@ -1463,68 +1459,64 @@ function c2() {
   function inner() {
     var inner = M.generator();
 
-    function a() {
-      var a = M.generator();
-      a._c2 = c2;
-      return a.scope(_1, _3);
+    inner._a = function a() {
+      var _a = M.generator();
 
-      function _1(a) {
-        a._ = a._c2._i;
-        return a.yld(`a:${a._c2._i}`, _2, _3);
+      _a._c2 = c2;
+      return _a.scope(_1, _3);
+
+      function _1(_a) {
+        _a._ = _a._c2._i;
+        return _a.yld(`a:${_a._c2._i}`, _2, _3);
       }
 
-      function _2(a, c) {
-        var b;
-        b = a._c2._i = a._ + c;
-        return a.pure(b);
+      function _2(_a, b) {
+        var a;
+        a = _a._c2._i = _a._ + b;
+        return _a.pure(a);
       }
 
-      function _3(a, e) {
-        return a.raise(e);
+      function _3(_a, e) {
+        return _a.raise(e);
       }
-    }
+    };
 
     return inner.scope(_1, _8);
 
     function _1(inner) {
       inner._b = () => {
         var ctx = {},
-            c21 = c2;
+            _c2 = c2;
 
         function a() {
-          var _a = {},
-              _c2 = c2;
-          _c2._i += 2;
-          return _c2._i;
+          var c21 = c2;
+          c21._i += 2;
+          return c21._i;
         }
 
         {
-          var _a = {},
-              _c2 = c2;
+          var c21 = c2;
           let j = 10;
 
           function b() {
-            var b = {},
-                _c2 = c2;
+            var _c2 = c2;
             _c2._i += j;
           }
 
-          c21._i++;
+          _c2._i++;
           return function z() {
             var _z = M.generator();
 
-            function c() {
-              var c = {},
-                  _c2 = c2;
+            _z._c = function c() {
+              var _c2 = c2;
               return _c2._i += this.something;
-            }
+            };
 
             return _z.scope(_1, _6);
 
             function _1(_z) {
               _z._d = function z(j) {
-                var _z = {},
-                    _c2 = c2;
+                var _c2 = c2;
                 return _c2._i += j;
               };
 
@@ -1825,19 +1817,19 @@ function objMethodsClosure() {
             objMethod2(m) {
               var _ctx = M.generator();
 
-              _ctx._objMethod1 = ctx;
+              _ctx._f = ctx;
               _ctx._m = m;
               return _ctx.scope(_1, _5);
 
               function _1(_ctx) {
                 var a;
-                a = _ctx._objMethod1._j++;
+                a = _ctx._f._j++;
                 return _ctx.yld(a, _2, _5);
               }
 
               function _2(_ctx) {
                 var a;
-                a = _ctx._objMethod1._k++;
+                a = _ctx._f._k++;
                 return _ctx.yld(a, _3, _5);
               }
 
@@ -1877,7 +1869,6 @@ const objMThis = {
     var ctx = M.generator();
     ctx.__this = this;
     ctx.__args = arguments;
-    ctx._f = ctx;
     return ctx.scope(_1, _5);
 
     function _1(ctx) {
@@ -1954,7 +1945,7 @@ class SomeChild extends SomeClass {
 
     function _3(ctx) {
       var a;
-      a = Object.getPrototypeOf(Object.getPrototypeOf(ctx.__this))[ctx._i].call(ctx.__this, ctx._i);
+      a = Object.getPrototypeOf(SomeChild.prototype)[ctx._i].call(ctx.__this, ctx._i);
       return ctx.yldStar(a, _4, _5);
     }
 
@@ -1975,7 +1966,7 @@ class SomeChild extends SomeClass {
 
     function _1(ctx) {
       var a;
-      a = Object.getPrototypeOf(ctx.__this)[ctx._i].call(ctx.__this, ctx._i);
+      a = Object.getPrototypeOf(SomeChild.prototype)[ctx._i].call(ctx.__this, ctx._i);
       return ctx.yldStar(a, _2, _3);
     }
 
@@ -1992,11 +1983,9 @@ class SomeChild extends SomeClass {
 
 function clasClosure(A) {
   var clasClosure = M.generator();
-
-  class B extends clasClosure._A {
+  clasClosure._B = class B extends clasClosure._A {
     constructor() {
-      var ctx = {},
-          _clasClosure = clasClosure;
+      var _clasClosure = clasClosure;
       _clasClosure._cnt++;
     }
 
@@ -2017,12 +2006,10 @@ function clasClosure(A) {
       }
     }
 
-  }
-
-  class _B extends clasClosure._A {
+  };
+  clasClosure._B1 = class _B extends clasClosure._A {
     constructor() {
-      var ctx = {},
-          _clasClosure = clasClosure;
+      var _clasClosure = clasClosure;
       _clasClosure._cnt += 2;
     }
 
@@ -2046,8 +2033,7 @@ function clasClosure(A) {
       }
     }
 
-  }
-
+  };
   clasClosure._A = A;
   return clasClosure.scope(_1, _7);
 
@@ -2122,35 +2108,34 @@ function clasClosure(A) {
 function c2() {
   var c2 = M.generator();
 
-  function closure1_a() {
-    var closure1_a = M.generator();
-    closure1_a._c2 = c2;
-    return closure1_a.scope(_1, _3);
+  c2._closure1_a = function closure1_a() {
+    var _closure1_a = M.generator();
 
-    function _1(closure1_a) {
-      closure1_a._ = closure1_a._c2._i;
-      return closure1_a.yld(`a`, _2, _3);
+    _closure1_a._c2 = c2;
+    return _closure1_a.scope(_1, _3);
+
+    function _1(_closure1_a) {
+      _closure1_a._ = _closure1_a._c2._i;
+      return _closure1_a.yld(`a`, _2, _3);
     }
 
-    function _2(closure1_a, b) {
+    function _2(_closure1_a, b) {
       var a;
-      a = closure1_a._c2._i = closure1_a._ + b;
-      return closure1_a.pure(a);
+      a = _closure1_a._c2._i = _closure1_a._ + b;
+      return _closure1_a.pure(a);
     }
 
-    function _3(closure1_a, e) {
-      return closure1_a.raise(e);
+    function _3(_closure1_a, e) {
+      return _closure1_a.raise(e);
     }
-  }
+  };
 
-  function closure1_b() {
-    var closure1_b = {},
-        _c2 = c2;
+  c2._closure1_b = function closure1_b() {
+    var _c2 = c2;
     _c2._i++;
 
     function closure1_c() {
-      var closure1_c = {},
-          _c2 = c2;
+      var _c2 = c2;
       _c2._i += 2;
       return _c2._i;
     }
@@ -2160,7 +2145,7 @@ function c2() {
     }
 
     return closure1_c;
-  }
+  };
 
   return c2.scope(_1, _2);
 
@@ -2226,7 +2211,6 @@ function loopCapt2() {
     if (loopCapt2._i < 3) {
       return loopCapt2.yldStar((i => {
         var ctx = M.generator();
-        ctx._loopCapt2 = loopCapt2;
         ctx._i = i;
         return ctx.scope(_1, _3);
 
@@ -2295,7 +2279,6 @@ function loopCapt3() {
     if (loopCapt3._i < 3) {
       return loopCapt3.yldStar((i => {
         var ctx = M.generator();
-        ctx._loopCapt3 = loopCapt3;
         ctx._i = i;
         return ctx.scope(_1, _5);
 
@@ -2315,7 +2298,6 @@ function loopCapt3() {
             return ctx.yldStar((j => {
               var _ctx = M.generator();
 
-              _ctx._f = ctx;
               _ctx._j = j;
               return _ctx.scope(_1, _3);
 
@@ -2429,7 +2411,6 @@ function loopCapt4() {
 
 function forOfCapt1() {
   var forOfCapt1 = M.generator();
-  forOfCapt1._f = ctx;
   return forOfCapt1.scope(_1, _2);
 
   function _1(forOfCapt1) {
@@ -2469,7 +2450,6 @@ function forOfCapt1() {
 
 function forOfCapt2() {
   var forOfCapt2 = M.generator();
-  forOfCapt2._f = ctx;
   return forOfCapt2.scope(_1, _5);
 
   function _1(forOfCapt2) {
@@ -2489,7 +2469,6 @@ function forOfCapt2() {
   function _3(forOfCapt2) {
     return forOfCapt2.yldStar((i => {
       var ctx = M.generator();
-      ctx._forOfCapt2 = forOfCapt2;
       ctx._i = i;
       return ctx.scope(_1, _3);
 
@@ -2550,7 +2529,6 @@ function forOfCapt2() {
 
 function forOfCapt3() {
   var forOfCapt3 = M.generator();
-  forOfCapt3._f = ctx;
   return forOfCapt3.scope(_1, _2);
 
   function _1(forOfCapt3) {
@@ -2597,7 +2575,6 @@ function forOfCapt3() {
 
 function forOfCapt4() {
   var forOfCapt4 = M.generator();
-  forOfCapt4._f = ctx;
   return forOfCapt4.scope(_1, _5);
 
   function _1(forOfCapt4) {
@@ -2617,7 +2594,6 @@ function forOfCapt4() {
   function _3(forOfCapt4) {
     return forOfCapt4.yldStar((i => {
       var ctx = M.generator();
-      ctx._forOfCapt4 = forOfCapt4;
       ctx._i = i;
       return ctx.scope(_1, _5);
 
@@ -2639,7 +2615,6 @@ function forOfCapt4() {
         return ctx.yldStar((j => {
           var _ctx = M.generator();
 
-          _ctx._f = ctx;
           _ctx._j = j;
           return _ctx.scope(_1, _3);
 
@@ -2721,7 +2696,6 @@ function forOfCapt4() {
 
 function forOfCapt5() {
   var forOfCapt5 = M.generator();
-  forOfCapt5._f = ctx;
   return forOfCapt5.scope(_1, _5);
 
   function _1(forOfCapt5) {
@@ -2741,7 +2715,6 @@ function forOfCapt5() {
   function _3(forOfCapt5) {
     return forOfCapt5.yldStar((i => {
       var ctx = M.generator();
-      ctx._forOfCapt5 = forOfCapt5;
       ctx._i = i;
       return ctx.scope(_1, _3);
 
@@ -2809,7 +2782,6 @@ function forOfCapt5() {
 
 function forOfCapt6() {
   var forOfCapt6 = M.generator();
-  forOfCapt6._f = ctx;
   return forOfCapt6.scope(_1, _5);
 
   function _1(forOfCapt6) {
@@ -2829,7 +2801,6 @@ function forOfCapt6() {
   function _3(forOfCapt6) {
     return forOfCapt6.yldStar((i => {
       var ctx = M.generator();
-      ctx._forOfCapt6 = forOfCapt6;
       ctx._i = i;
       return ctx.scope(_1, _6);
 
@@ -3094,7 +3065,6 @@ function closure2() {
 
 function switches() {
   var switches = M.generator();
-  switches._f = ctx;
   return switches.scope(_1, _46);
 
   function _1(switches) {

@@ -1,5 +1,5 @@
 function a() {
-  var fc, fe, err;
+  var fc, err;
   return M.jump(_1, _8);
 
   function _1() {
@@ -8,16 +8,16 @@ function a() {
 
   function _2(a) {
     if (a) {
-      fc = _5, fe = _6;
+      fc = _5;
       return M.jump(_3, _6);
     } else {
-      fc = _4, fe = _6;
+      fc = _4;
       return M.jump(_3, _6);
     }
   }
 
   function _3() {
-    return M.chain(eff('in `finally`'), fc, fe, fr);
+    return M.chain(eff('in `finally`'), fc);
   }
 
   function _4() {
@@ -37,7 +37,7 @@ function a() {
   }
 
   function _8(a) {
-    fc = _7, fe = _6, err = a;
+    fc = _7, err = a;
     return M.jump(_3, _6);
   }
 }

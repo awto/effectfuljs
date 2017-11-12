@@ -79,15 +79,13 @@ var b = new class {
 
   static m1() {
     var ctx = M.async();
-
-    class A {
+    ctx._A = class A {
       m2() {
         var ctx = M.async();
         return ctx.scope(m2_1, m2_3);
       }
 
-    }
-
+    };
     return ctx.scope(m1_1, m1_3);
   }
 
@@ -336,10 +334,8 @@ function ag3_10(ag3, a) {
 }
 
 function switches_1(switches) {
-  l1: {
-    switches._loop = switches.iteratorM(gen());
-    return switches.jump(switches_2, switches_62);
-  }
+  switches._loop = switches.iteratorM(gen());
+  return switches.jump(switches_2, switches_62);
 }
 
 function switches_2(switches) {

@@ -9,6 +9,9 @@
     "prepare-test": "lerna run prepare-test && lerna run link-test"
   },
   "devDependencies": {
+    "assert": "^1.4.1",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-minify-constant-folding": "^0.2.0",
     "babel-plugin-minify-dead-code-elimination": "^0.2.0",

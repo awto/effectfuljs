@@ -47,9 +47,11 @@ if (!process.env.EJS_INLINE) {
     try {
       this.$handle = handle
       this.$cont = cont
-      return this.$cont()
+      return process.env.EJS_DEFUNCT ? this.$run() : this.$cont()
     } catch(e) {
-      return this.$handle(e)
+      return process.env.EJS_DEFUNCT
+        ? (this.$cont = this.$handle, this.$run(e))
+        : this.$handle(e)
     }
   }
   
@@ -60,21 +62,27 @@ if (!process.env.EJS_INLINE) {
           this.$handle = handle
           this.$cont = cont
           try {
-            return this.$cont(v)
+            return process.env.EJS_DEFUNCT ? this.$run(v) : this.$cont(v)
           } catch(e) {
-            return this.$handle(e)
+            return process.env.EJS_DEFUNCT
+              ? (this.$cont = this.$handle, this.$run(e))
+              : this.$handle(e)
           }
         },
-        e => this.$handle(e))
+        e => process.env.EJS_DEFUNCT
+          ? (this.$cont = this.$handle, this.$run(e))
+          : this.$handle(e))
   }
   
   Ap.jump = function jump(cont, handle) {
     this.$handle = handle
     this.$cont = cont
     try {
-      return this.$cont()
+      return process.env.EJS_DEFUNCT ? this.$run() : this.$cont()
     } catch(e) {
-      return this.$handle(e)
+      return process.env.EJS_DEFUNCT
+        ? (this.$cont = this.$handle, this.$run(e))
+        : this.$handle(e)
     }
   }
   
@@ -84,6 +92,16 @@ if (!process.env.EJS_INLINE) {
   
   Ap.raise = function raise(ex) {
     return Promise.reject(ex)
+  }
+} else if (process.env.EJS_DEFUNCT) {
+  function contNext(ctx) {
+    return function(v) { return ctx.$run(v) }
+  }
+  function contErr(ctx) {
+    return function(v) { return ctx.$cont = ctx.$handle, ctx.$run(v) }
+  }
+  Ap.chain = function chain(p) {
+    return Promise.resolve(p).then(contNext(this),contErr(this))
   }
 }
 

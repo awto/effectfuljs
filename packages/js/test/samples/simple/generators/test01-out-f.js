@@ -52,7 +52,7 @@ function d(i) {
 }
 
 function a4() {
-  var e, ex, fc, fe, err;
+  var e, ex, fc, err;
   return M.scope(_1, _11);
 
   function _1() {
@@ -64,7 +64,7 @@ function a4() {
   }
 
   function _3() {
-    fc = _8, fe = _11;
+    fc = _8;
     return M.yldStar(M.yld(3), _6, _11);
   }
 
@@ -74,7 +74,7 @@ function a4() {
   }
 
   function _5() {
-    fc = _8, fe = _11;
+    fc = _8;
     return M.yldStar(M.yld(e), _6, _11);
   }
 
@@ -83,7 +83,7 @@ function a4() {
   }
 
   function _7() {
-    return M.yldStar(M.yld('e'), fc, fe, fr);
+    return M.yldStar(M.yld('e'), fc);
   }
 
   function _8() {
@@ -114,7 +114,7 @@ function a4() {
   }
 
   function _14(a) {
-    fc = _12, fe = _11, err = a;
+    fc = _12, err = a;
     return M.jump(_6, _11);
   }
 }
@@ -162,7 +162,7 @@ function a5() {
 }
 
 function cfb1() {
-  var i, e, ex, fc, fe, r, err;
+  var i, e, ex, fc, r, err;
   return M.scope(_1, _10);
 
   function _1() {
@@ -179,13 +179,13 @@ function cfb1() {
       throw new Error(`AAAAAAAAA${i++}`);
     }
 
-    fc = _5, fe = _11;
+    fc = _5;
     return M.yldStar(M.yld(`a${i}`), _4, _11);
   }
 
   function _4() {
     ex = err;
-    return M.yldStar(M.yld(`f1${i++}`), fc, fe, fr);
+    return M.yldStar(M.yld(`f1${i++}`), fc);
   }
 
   function _5() {
@@ -220,7 +220,7 @@ function cfb1() {
   }
 
   function _12(a) {
-    fc = _6, fe = _10, err = a;
+    fc = _6, err = a;
     return M.jump(_4, _11);
   }
 }

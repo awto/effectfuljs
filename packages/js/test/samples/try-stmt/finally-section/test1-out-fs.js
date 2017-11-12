@@ -7,15 +7,14 @@ function a() {
 
   function _2(a) {
     if (a) {
-      return M.jump(_3, _6, _5, _6);
+      return M.jump(_3, _6, _5);
     } else {
-      return M.jump(_3, _6, _4, _6);
+      return M.jump(_3, _6, _4);
     }
   }
 
-  function _3(fc, fe, err) {
-    var fr;
-    return M.chain(eff('in `finally`'), fc, fe, fr, err);
+  function _3(fc, err) {
+    return M.chain(eff('in `finally`'), fc, err);
   }
 
   function _4() {
@@ -35,6 +34,6 @@ function a() {
   }
 
   function _8(a) {
-    return M.jump(_3, _6, _7, _6, a);
+    return M.jump(_3, _6, _7, a);
   }
 }

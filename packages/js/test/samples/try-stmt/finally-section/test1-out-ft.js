@@ -1,6 +1,6 @@
 function a() {
   var a = M.context();
-  return M.jump(a_1, a_8);
+  return M.scope(a_1, a_8);
 }
 
 function a_1(a) {
@@ -9,16 +9,16 @@ function a_1(a) {
 
 function a_2(a, b) {
   if (b) {
-    a._fc = a_5, a._fe = a_6;
+    a._fc = a_5;
     return M.jump(a_3, a_6);
   } else {
-    a._fc = a_4, a._fe = a_6;
+    a._fc = a_4;
     return M.jump(a_3, a_6);
   }
 }
 
 function a_3(a) {
-  return M.chain(eff('in `finally`'), a._fc, a._fe, a._fr);
+  return M.chain(eff('in `finally`'), a._fc);
 }
 
 function a_4(a) {
@@ -38,6 +38,6 @@ function a_7(a) {
 }
 
 function a_8(a, b) {
-  a._fc = a_7, a._fe = a_6, a._err1 = b;
+  a._fc = a_7, a._err1 = b;
   return M.jump(a_3, a_6);
 }

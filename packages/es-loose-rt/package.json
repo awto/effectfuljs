@@ -7,11 +7,9 @@
   "scripts": {
     "test": "npm run build && mocha",
     "configure": "env-cmd ./.env babel ../es-rt/src --out-dir .",
-    "lint": "eslint .",
-    "bundle": "rollup -c",
-    "watchBundle": "env-cmd ./.env rollup -c -w",
-    "watch": "env-cmd ./.env babel -w ../es-rt/src --out-dir .",
-    "build": "npm run configure && npm run bundle"
+    "watch-bundle": "env-cmd ./.env rollup -c -w",
+    "build": "npm run configure && rollup -c",
+    "prepare": "npm run build"
   },
   "keywords": [
     "generators",
@@ -24,8 +22,8 @@
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
-    "eslint": "^4.10.0",
     "mocha": "^4.0.1",
     "rollup": "^0.50.0"
   }

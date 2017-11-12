@@ -1,5 +1,5 @@
 function a() {
-  function a() {
+  var a = function a() {
     console.log('hi');
     return M.chain(e1(), _1, _3);
 
@@ -14,9 +14,8 @@ function a() {
     function _3(e) {
       return M.raise(e);
     }
-  }
-
-  function b() {
+  },
+      b = function b() {
     p4();
     p5();
     return M.chain(e1(), _1, _3);
@@ -32,7 +31,7 @@ function a() {
     function _3(e) {
       return M.raise(e);
     }
-  }
+  };
 
   return M.chain(p1(), _1, _5);
 

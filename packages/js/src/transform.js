@@ -43,15 +43,20 @@ export const preproc = Kit.pipe(
   State.prepare)
 
 /* default transform for all functions if loose mode is set */
-export const loose = ifLoose(Kit.pipe(Loops.looseForOf))
+export const loose = ifLoose(Kit.pipe(
+  Loops.looseForOf,
+  Rt.collect,
+  Kit.toArray,
+  Rt.interpretLibSyms,
+  Rt.inject))
 
 const finalize = Kit.pipe(
   Scope.funcWraps,
+  ifLoose(Loops.looseForOf),
   Rt.interpretLibSyms,
   Kit.toArray,
   Rt.inject,
   Closure.depsToTop,
-  ifLoose(loose),
   varScope.resolve,
   consume)
 
@@ -64,7 +69,6 @@ const ifTrack = (t,e) => function*(s) {
 export const normalizeOnlyStage0 =
   Kit.map(Kit.pipe(
     ifTopLevel(Kit.pipe(
-//      Closure.saveDecls,
       Loops.toBlocks,
       State.saveDecls,
       Kit.toArray
@@ -100,7 +104,6 @@ export const stage0 = Kit.pipe(
     Branch.toBlocks)),
   Loops.normalizeFor,
   Kit.map(Kit.pipe(
-//    Closure.saveDecls,
     State.saveDecls,
     Prop.recalcEff,
     Coerce.lift
@@ -119,11 +122,9 @@ export const stage0 = Kit.pipe(
   )),
   Flat.convert,
   Kit.map(Inline.jsExceptions))
-// TODO: reader monads
 
 const stage1 = Kit.pipe(
   Kit.map(Kit.pipe(
-    Closure.injectStateRefs,
     Block.cleanPureEff,
     Policy.stage("interpret"),
     Ops.interpret
@@ -139,7 +140,6 @@ const stage1 = Kit.pipe(
     State.restoreDecls,
     Closure.substContextIds,
     Block.ctxMethods,
-    Block.ctxToThis,
     Rt.collect,
     simplify,
     Kit.toArray
@@ -149,9 +149,9 @@ const stage1 = Kit.pipe(
  * entry point for the whole translator chain
  */
 export function run(s) {
-  //TODO: reader monad
   const transformMap = new Map()
-  const sa = Kit.toArray(preproc(s))
+  const deb_s = [...s]
+  const sa = Kit.toArray(preproc(deb_s))
   const inp = Kit.toArray(Scope.splitScopes(sa))
   let scopeNum = 0
   const len = inp.length
@@ -211,14 +211,13 @@ export function run(s) {
   }
   if (!transform.length) {
     // no transforms, but it may need to erase some directives
-    // TODO: sticker condition to avoid doing anything if not needed
     consume(varScope.resolve(ifLoose(loose)(sa)))
     return
   }
   const s0 = [...stage0(transform)]
   const n0 = [...normalizeOnlyStage0(normalize)]
-  const s1 = [...Closure.propagate(s0)]
-  const n1 = [...Closure.propagate(n0)]
+  const s1 = [...Closure.contextDecls(s0)]
+  const n1 = [...Closure.contextDecls(n0)]
   const res = [...others,...stage1(s1),...normalizeOnlyStage1(n1)]
   finalize([...Scope.restore(root,res)])
 }
@@ -229,29 +228,6 @@ export function main(ast,opts = {}) {
     run(Kit.produce(ast))
     return ast
   })
-}
-
-export function babelPreset(opts = {}) {
-  return {
-    plugins: [
-      function (t) {
-        return {
-          manipulateOptions(opts, parserOpts) {
-            parserOpts.plugins.push("asyncGenerators","functionSent")
-          },
-          visitor:{
-            Program(path,state) {
-              path.skip()
-              return Kit.optsScope(function babelPreset(f) {
-                Kit.setOpts(opts)
-                Kit.babelBridge(run,path,state)
-              })
-            }
-          }
-        }
-      }
-    ]
-  }
 }
 
 export function applyPass(ast,pass,opts = {}) {

@@ -1,7 +1,7 @@
 function a() {
-  var i, j, a;
-
-  function b(i) {
+  var i,
+      j,
+      b = function b(i) {
     var a;
     a = j;
     return M.chain(eff1(i, a), _1, _3, i);
@@ -20,7 +20,8 @@ function a() {
     function _3(e) {
       return M.raise(e);
     }
-  }
+  },
+      a;
 
   i = 0;
   j = 0;

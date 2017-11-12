@@ -197,12 +197,12 @@ function forOfStmtImpl(loose, s) {
     yield s.enter(Tag.handler,Tag.CatchClause)
     const sym = Bind.tempVarSym(root,"e")
     root.savedDecls.set(sym,{raw:null})
-    yield s.tok(Tag.param,Tag.Identifier,{sym})
+    yield s.tok(Tag.param,Tag.Identifier,{sym,lhs:true,rhs:false,decl:true})
     yield s.enter(Tag.body,Tag.BlockStatement)
     yield s.enter(Tag.body,Tag.Array)
     yield* exit(loop)
     yield s.enter(Tag.push,Tag.ThrowStatement,{eff:loop.eff})
-    yield s.tok(Tag.argument,Tag.Identifier,{sym})
+    yield s.tok(Tag.argument,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
     yield* lab()
   }
   // TODO: remove ForAwaitStatement in babel 7
@@ -284,7 +284,7 @@ function forOfStmtImpl(loose, s) {
           yield s.enter(Tag.arguments,Tag.Array)
           const j = s.take()
           yield Kit.setPos(j,Tag.push)
-          if (!i.leave) {
+          if (!j.leave) {
             yield* s.sub()
             yield Kit.setPos(s.take(),Tag.push)
           }
@@ -293,7 +293,8 @@ function forOfStmtImpl(loose, s) {
           yield s.enter(Tag.argument,Tag.MemberExpression)
           yield s.enter(Tag.object,Tag.AssignmentExpression,
                         {node:{operator:"="}})
-          yield s.tok(Tag.left,Tag.Identifier,{sym,lhs:true,rhs:false})
+          yield s.tok(Tag.left,Tag.Identifier,
+                      {sym,lhs:true,rhs:false,decl:false})
           yield s.enter(Tag.right,Tag.CallExpression,{bind,eff:bind})
           yield s.enter(Tag.callee,Tag.MemberExpression)
           yield s.tok(Tag.object,Tag.Identifier,{sym,lhs:false,rhs:true})
@@ -321,7 +322,7 @@ function forOfStmtImpl(loose, s) {
               Kit.skip(s.one())
             else {
               yield* init
-              yield* emitBody(s.one(),nblocks,loop)
+              yield* Kit.reposOne(emitBody(s.one(),nblocks,loop),Tag.push)
             }
           }
           yield* end()
@@ -652,7 +653,7 @@ export function blockScoping(sa) {
             const clab = s.label()
             const func = s.enter(Tag.callee,Tag.ArrowFunctionExpression,
                                  {node:{params:[]},
-                                  parentBlockScope:root,coerce:true,
+                                  coerce:true,
                                   topEff:i.value.eff,scopeDecls:new Set(),
                                   savedDecls:new Map()})
             yield func

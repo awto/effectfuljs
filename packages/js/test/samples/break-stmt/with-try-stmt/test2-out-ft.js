@@ -1,7 +1,7 @@
 // *- when it is the last statement
 (function () {
   var ctx = M.context();
-  return M.pure();
+  return M.scope(f_2, f_3);
 });
 
 function f_1(ctx) {

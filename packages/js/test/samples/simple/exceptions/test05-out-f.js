@@ -1,22 +1,22 @@
 function a() {
-  var e, ex, fc, fe, err;
+  var e, ex, fc, err;
   return M.jump(_1, _7);
 
   function _1() {
-    fc = _4, fe = _5;
+    fc = _4;
     return M.chain(eff(1), _3, _5);
   }
 
   function _2() {
     e = ex;
     console.log(e);
-    fc = _4, fe = _5;
+    fc = _4;
     return M.jump(_3, _5);
   }
 
   function _3() {
     console.log('fin');
-    return M.jump(fc, fe, fr);
+    return M.jump(fc);
   }
 
   function _4() {
@@ -37,7 +37,7 @@ function a() {
   }
 
   function _8(a) {
-    fc = _6, fe = _5, err = a;
+    fc = _6, err = a;
     return M.jump(_3, _5);
   }
 }

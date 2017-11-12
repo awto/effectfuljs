@@ -1,7 +1,6 @@
 function aa() {
   var aa = M.async();
-
-  class A {
+  aa._A = class A {
     method() {
       var ctx = M.async();
       return M.scope(method_1, _method_2);
@@ -12,23 +11,23 @@ function aa() {
       return M.scope(smethod_1, _smethod_2);
     }
 
-  }
-
-  class B extends aa._A {
+  };
+  aa._B = class B extends aa._A {
     method() {
       var ctx = M.async();
+      ctx._aa = aa;
       ctx.__this = this;
       return M.scope(_method_1, method_3);
     }
 
     static smethod() {
       var ctx = M.async();
+      ctx._aa = aa;
       ctx.__this = this;
       return M.scope(_smethod_1, smethod_3);
     }
 
-  }
-
+  };
   return M.scope(aa_1, aa_2);
 }
 
@@ -50,7 +49,7 @@ function _smethod_2(ctx, e) {
 
 function _method_1(ctx) {
   var a;
-  a = Object.getPrototypeOf(Object.getPrototypeOf(ctx.__this)).method.call(ctx.__this);
+  a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
   return M.chain(M.chain(a), method_2, method_3);
 }
 
@@ -64,7 +63,7 @@ function method_3(ctx, e) {
 
 function _smethod_1(ctx) {
   var a;
-  a = Object.getPrototypeOf(ctx.__this).method.call(ctx.__this);
+  a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
   return M.chain(M.chain(a), smethod_2, smethod_3);
 }
 

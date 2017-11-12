@@ -30,10 +30,20 @@ export const saveDecls = Kit.pipe(
           switch(i.type) {
           case Tag.ClassDeclaration:
             const id = sl.cur().value.sym
-            decls.set(id, {raw:[...sl.copy(Kit.setPos(i,Tag.push))]})
+            // decls.set(id, {raw:[...sl.copy(Kit.setPos(i,Tag.push))]})
+            decls.set(
+              id,{raw:null,
+                  init:[...sl.copy(
+                    Kit.setType(
+                      Kit.setPos(i,Tag.init),Tag.ClassExpression))]})
             continue
           case Tag.FunctionDeclaration:
-            decls.set(i.value.funcId, {raw:[...sl.copy(Kit.setPos(i,Tag.push))]})
+            // decls.set(i.value.funcId, {raw:[...sl.copy(Kit.setPos(i,Tag.push))]})
+            decls.set(
+              i.value.funcId,{raw:null,
+                  init:[...sl.copy(
+                    Kit.setType(
+                      Kit.setPos(i,Tag.init),Tag.FunctionExpression))]})
             continue
           case Tag.TryStatement:
             if (!i.value.eff) {
@@ -86,8 +96,6 @@ export const saveDecls = Kit.pipe(
             }
             break
           case Tag.VariableDeclaration:
-            // TODO: if block is not effectful and the var isn't captured somewhere
-            // compiler can avoid moving it
             const kind = i.value.node.kind
             i.value.node.kind = "var"
             const declarators = []
@@ -178,8 +186,45 @@ export const saveDecls = Kit.pipe(
 
 /** restores declaration removed `saveDecls` in the beginning of root's body */
 export function* restoreDecls(s) {
-  const sl = Kit.auto(s)
+  let sl = Kit.auto(s)
+  if (sl.first.type === Tag.ArrowFunctionExpression
+      && sl.first.value.node.expression) {
+    sl.first.value.node.expression = false
+    sl = Kit.auto(Kit.toArray(function*() {
+      let i
+      for(i of sl) {
+        if (i.pos === Tag.body)
+          break
+        yield i
+      }
+      const lab = sl.label()
+      yield sl.enter(Tag.body,Tag.BlockStatement,{decls:i.value.decls})
+      yield sl.enter(Tag.body,Tag.Array)
+      yield sl.enter(Tag.push,Tag.ReturnStatement)
+      yield sl.peel(Kit.setPos(i,Tag.argument))
+      yield* sl.sub()
+      yield* lab()
+      yield* sl
+    }()))
+  }
   const root = sl.first.value
+  const {ctxDeps,savedDecls:saved} = root
+  if (ctxDeps && ctxDeps.size) {
+    for(const [f,{copy,fld,ctx}] of ctxDeps) {
+     //  assert.ok(!fld || fld.fieldName)
+      saved.set(
+        copy,
+        {raw:null,
+         init:fld
+         ? fld.interpr === Bind.ctxField
+           ? [sl.enter(Tag.init,Tag.MemberExpression),
+              sl.tok(Tag.object,Tag.Identifier,{sym:ctx}),
+              sl.tok(Tag.property,Tag.Identifier,{node:{name:fld.fieldName}}),
+              ...sl.leave()]
+         : [sl.tok(Tag.init,Tag.Identifier,{sym:fld})]
+         : [sl.tok(Tag.init,Tag.Identifier,{sym:ctx})]})
+    }
+  }
   for(const i of sl) {
     yield i
     if (i.enter) {
@@ -278,14 +323,6 @@ function calcRefKind(si) {
           if (i.value.sym) {
             i.value.lhs = i.value.decl
             i.value.rhs = !i.value.decl
-            /* TODO: also consider left in For
-            if (i.pos === Tag.id) {
-              yield s.close(i)
-              let j = s.cur()
-              if (j.leave && j.type !== Tag.VariableDeclarator)
-                break
-            }
-            */
           }
           break
         }
@@ -355,7 +392,9 @@ function calcVarsHandling(si) {
  *     type ScopeVal = ScopeVal & { 
  *         scopeDecls: Set<Sym>, -- symbols declared in this scope
  *         -- captured by the scope but declared in some upper scope
- *         scopeCapt: Set<Sym>, 
+ *         scopeCapt: Set<Sym>,
+ *         -- scope objects (closure captured) to be used in this function
+ *         ctxDeps: Map<ScopeVal,{copy:Sym,src:ScopeVal?}>
  *         }
  *     type IdValue = IdValue & { localFuncRef?: FuncValue }
  *     type LoopValue = LoopValue & { captureRefs: Set<Sym> }
@@ -367,6 +406,7 @@ export function calcRefScopes(si) {
   const top = s.first.value
   top.global = true
   let allDecls = []
+  let supers = new Set()
   function collectScopes(root) {
     const decls = root.scopeDecls = new Set(root.paramSyms)
     root.contextSym = Kit.scope.newSym(
@@ -386,11 +426,15 @@ export function calcRefScopes(si) {
     for(const i of s.sub()) {
       if (i.enter) {
         switch(i.type) {
+        case Tag.Super:
+          supers.add(root)
+          break
         case Tag.FunctionDeclaration:
         case Tag.ArrowFunctionExpression:
         case Tag.FunctionExpression:
         case Tag.ObjectMethod:
         case Tag.ClassMethod:
+          i.value.parentScope = root
           collectScopes(i.value)
           break
         case Tag.Identifier:
@@ -405,13 +449,24 @@ export function calcRefScopes(si) {
               allDecls.push(i.value)
               si.singleAssign = si.singleAssign == null ? lhs : false
             } else {
-              // TODO: analyze CFG to get more instances
               i.value.ext = false
               if (lhs)
                 si.singleAssign = false
-              if (si.declScope !== root) {
+              const decl = si.declScope
+              if (decl !== root) {
                 (si.refScopes || (si.refScopes = new Set())).add(root)
                 capt.add(si)
+                // copy all vars into intermediate topLevels
+                /*
+                for(let j = root.parentScope;
+                    j && j !== decl;
+                    j = j.parentScope) {
+                   if (j.opts.transform && j.opts.topLevel) {
+                    j.scopeCapt.add(si)
+                    si.refScopes.add(j)
+                  }
+                }
+                */
                 i.value.ext = true
               }
             }
@@ -422,9 +477,9 @@ export function calcRefScopes(si) {
   }
   collectScopes(s.first.value)
   // propagating function needs transformation flag
-  up: for(const i of funcs) {
+  up: for (const i of funcs) {
     if (i.opts.transform && i.topEff) {
-      for(const j of i.scopeDecls) {
+      for (const j of i.scopeDecls) {
         j.track = true
         if (j.refScopes) {
           for(const k of j.refScopes) {
@@ -432,7 +487,7 @@ export function calcRefScopes(si) {
           }
         }
       }
-      for(const j of i.scopeCapt) {
+      for (const j of i.scopeCapt) {
         j.track = true
         j.declScope.track = true
         for(const k of j.refScopes)
@@ -446,7 +501,7 @@ export function calcRefScopes(si) {
   // start capturing other variables
   const loops = new Set()
   // collects loops for block scoping
-  for(const i of allDecls) {
+  for (const i of allDecls) {
     const si = i.sym
     if (si.singleAssign && !si.byValStrict)
       si.byVal = false
@@ -458,7 +513,7 @@ export function calcRefScopes(si) {
     }
   }
   if (loops.size && s.opts.loopBlockScoping) {
-    for(const i of allDecls)
+    for (const i of allDecls)
       i.sym.refScopes = null
     funcs = []
     sa = Kit.toArray(Kit.scope.reset(Loop.blockScoping(sa)))
@@ -466,27 +521,67 @@ export function calcRefScopes(si) {
     allDecls = []
     collectScopes(s.first.value)
   }
-  for(const i of funcs) {
+  for (const i of funcs) {
     const opts = i.opts || top.opts
-    if (opts.contextState && !i.ctxDeps)
-      i.ctxDeps = new Set()
-    if (opts.scopeContext && !i.ctxJumps)
-      i.ctxJumps = new Set()
+    if (opts.topLevel && !opts.contextState)
+      throw s.error("`topLevel:true` requires `contextState:true`",i)
+    if (opts.topLevel && opts.contextBy === "reference")
+      throw s.error(
+        "`topLevel:true` isn't compatible with `contextBy:'reference'`",i)
+    if (opts.contextState && !i.ctxDeps && !i.global)
+      i.ctxDeps = new Map()
     if (!i.funcId)
       i.funcId = Kit.scope.newSym("f")
   }
-  for(const i of allDecls) {
+  for (const i of allDecls) {
     const si = i.sym
     si.closCapt = si.track && !!si.refScopes
     if (si.closCapt)
       si.byVal = false
-    if (si.refScopes && si.track) {
-      for(const j of si.refScopes) {
-        if (j.ctxDeps)
-          j.ctxDeps.add(si.declScope)
+    const decl = si.declScope
+    if (si.refScopes && si.track && !decl.global && !si.global) {
+      for (const j of si.refScopes) {
+        if (j.ctxDeps) {
+          if (decl !== j && !j.ctxDeps.has(decl)) {
+            const fid = decl.funcId ? decl.funcId.name : "ctx"
+            for (let k = j.parentScope, f = j; k; k = k.parentScope) {
+              if (k === decl) {
+                f.ctxDeps.set(decl,{decl,fid,ctx:decl.contextSym})
+                break
+              }
+              if (k.opts.transform && k.opts.topLevel) {
+                f.ctxDeps.set(decl,{decl,
+                                    fid,
+                                    ctx:k.contextSym,
+                                    ref:k})
+                if (k.ctxDeps.has(decl))
+                  break
+                f = k
+              }
+            }
+          }
+        }
       }
     }
     Bind.setSymInterpr(si)
+  }
+  for(const i of supers) {
+    const ctxDeps = i.ctxDeps
+    if (ctxDeps) {
+      const p = i.parentScope
+      if (p && p.opts.transform && p.opts.topLevel && !ctxDeps.has(p)) {
+        const fid = p.funcId ? p.funcId.name : "ctx"
+        ctxDeps.set(p,{decl:p,fid,ctx:p.contextSym})
+      }
+    }
+  }
+  for (const i of funcs) {
+    if (i.ctxDeps) {
+      for(const j of i.ctxDeps.values()) {
+        j.copy = Bind.tempVarSym(i,j.fid)
+        j.fld = j.ref && j.ref.ctxDeps.get(j.decl).copy
+      }
+    }
   }
   return sa
 }
@@ -617,7 +712,6 @@ export function calcFrameStateVars(si) {
     if (init)
       first.w.add(sym)
   }
-  const ctxSubst = root.ctxSubst
   const s = Kit.auto(Branch.mark(reorderVarUsages(sa)))
   const functionSentSym = root.functionSentSym
   function walk(sw,fork) {
@@ -671,7 +765,6 @@ export function calcFrameStateVars(si) {
             sw.w.add(sym)
             // not each branch resets the symbol
             // so it needs to read it to pass further
-            // TODO: may be optimized (useless var read)
             if (num !== len)
               sw.r.add(sym)
           }
@@ -700,9 +793,10 @@ export function calcFrameStateVars(si) {
               sw.r.add(goto.resultContRedir.declSym)
           }
           if (frameArgs)
-            for(const j of frameArgs.values())
-              if (j.state && !sw.w.has(j))
+            for(const j of frameArgs.values()) {
+              if (j.interpr && !sw.w.has(j))
                 sw.r.add(j)
+            }
           if (functionSentSym
               && (i.value.bindName === "yld" || i.value.bindName === "scope")) {
             for(const j of i.value.gotoDests)
@@ -1045,9 +1139,6 @@ export function handleSpecVars(si) {
           if (i.value.sym === Kit.scope.argumentsSym)
             usesArgs = true
           break
-        case Tag.MemberExpression:
-          if (s.cur().type === Tag.Supper) {
-          }
         }
       }
     }
@@ -1105,11 +1196,16 @@ export function handleSpecVars(si) {
                       {sym:thisSym,lhs:false,rhs:true,decl:false})
           continue
         case Tag.Super:
+          if (!root.ref)
+            break
+          let classSym = root.ref.classId
+          if (!classSym)
+            classSym = root.ref.classId =Kit.scope.newSym("C")
           yield* s.toks(i.pos,
                         static_
-                        ? "=$1.getPrototypeOf($2)"
-                        : "=$1.getPrototypeOf($1.getPrototypeOf($2))",
-                        Kit.scope.ObjectSym,thisSym)
+                        ? "=$1.getPrototypeOf($2.prototype)"
+                        : "=$1.getPrototypeOf($2.prototype)",
+                        Kit.scope.ObjectSym,classSym)
           s.close(i)
           continue
         case Tag.Identifier:

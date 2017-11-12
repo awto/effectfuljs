@@ -11,17 +11,16 @@ function* permut(c) {
 }
 
 function* opts() {
-  const minorOpts = [
-    [["",{}],["s",{state: true}]]]
   yield* permut([[["f",{static:true}]],
-                 [["t",{topLevel:true
-                        //,
-                        //scopeContext:true,
-                        //scopePrefix:true,
+                 [["",{}],
+                  ["s",{state:true}],
+                  ["t",{topLevel:true,
+                        scopeContext:true,
+                        contextState:true,
+                        scopePrefix:true
                         //contextMethodOps:true
                        }],["",{}]]
-                ]
-                .concat(minorOpts))
+                ])
 }
 
 const configs = {}

@@ -218,13 +218,8 @@ export const injectBlock = Kit.pipe(
               if (i.enter) {
                 let pos = i.pos
                 const {ctrlNode} = i.value.block
-                // const ext = ctrlNode && ctrlNode.root !== root
-                //      ? ctrlNode.root : null
-                // if (ext && ctxDeps)
-                //  ctxDeps.add(ctrlNode.root)
                 const j = s.enter(pos,jump,{
-                  bind:true,/*ext,*/ctrlNode,
-                  // dstRoot: ctrlNode && ctrlNode.root,
+                  bind:true,ctrlNode,
                   result: i.type === Tag.ReturnStatement && s.curLev() != null
                 });
                 if (ctrlNode)
@@ -235,8 +230,6 @@ export const injectBlock = Kit.pipe(
                 s.close(i)
                 continue
               }
-            } else if (i.value.last && ctxDeps && root.parentBlockScope) {
-              ctxDeps.add(root.parentBlockScope)
             }
           }
         }

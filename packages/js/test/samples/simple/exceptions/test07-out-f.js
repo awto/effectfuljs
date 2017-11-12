@@ -1,9 +1,9 @@
 function a() {
-  var fc, fe, err;
+  var fc, err;
   return M.jump(_1, _7);
 
   function _1() {
-    fc = _4, fe = _5;
+    fc = _4;
     return M.chain(eff(1), _2, _5);
   }
 
@@ -14,7 +14,7 @@ function a() {
 
   function _3() {
     console.log(2);
-    return M.jump(fc, fe, fr);
+    return M.jump(fc);
   }
 
   function _4() {
@@ -30,7 +30,7 @@ function a() {
   }
 
   function _7(a) {
-    fc = _6, fe = _5, err = a;
+    fc = _6, err = a;
     return M.jump(_2, _5);
   }
 }

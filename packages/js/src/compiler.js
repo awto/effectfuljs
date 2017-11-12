@@ -49,7 +49,7 @@ export function transform(ast, opts) {
 export default transform
 
 export function babelPreset(copts) {
-  return function (b,ropts) {
+  const res = function (b,ropts) {
     const opts = convOptions(Object.assign({}, copts, ropts))
     return {
       plugins: [
@@ -72,4 +72,6 @@ export function babelPreset(copts) {
       ]
     }
   }
+  res.effectfulOpts = copts
+  return res
 }

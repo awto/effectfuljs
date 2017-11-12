@@ -17,6 +17,7 @@ function a() {
   }
 
   function _3(ex) {
+    var e;
     e = ex;
 
     if (loop.exit) {
@@ -64,6 +65,7 @@ function b() {
   }
 
   function _4(ex) {
+    var e;
     e = ex;
 
     if (loop.exit) {
@@ -121,6 +123,7 @@ function c() {
   }
 
   function _5(ex) {
+    var e;
     e = ex;
 
     if (_loop.exit) {
@@ -131,6 +134,7 @@ function c() {
   }
 
   function _6(ex) {
+    var e;
     e = ex;
 
     if (loop.exit) {
@@ -176,6 +180,7 @@ function d() {
   }
 
   function _3(ex) {
+    var e;
     e = ex;
 
     if (loop.exit) {

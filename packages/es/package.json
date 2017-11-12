@@ -5,10 +5,12 @@
   "main": "preset.js",
   "scripts": {
     "test": "mocha",
+    "test-opt": "cross-env env-cmd $EJS_ENV mocha",
     "test-deps": "git submodule update --init --recursive --depth 1",
     "build-test262": "node ./test/kit/test262 default",
     "prepare-test": "npm run test-deps && npm run build-test262",
-    "link-test": "node ./test/kit/links =default =topLevel"
+    "link-test": "node ./test/kit/links =default =topLevel",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -28,7 +30,10 @@
   },
   "homepage": "https://github.com/awto/effectful-es#readme",
   "devDependencies": {
-    "@effectful/es-rt": "^0.0.1",
+    "@effectful/es-rt": "../es-rt",
+    "cross-env": "^5.1.1",
+    "env-cmd": "^7.0.0",
+    "eslint": "^4.10.0",
     "glob": "^7.1.2",
     "mocha": "^3.4.2",
     "promise": "^8.0.1",

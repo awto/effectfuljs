@@ -3,8 +3,8 @@ import babel from "rollup-plugin-babel"
 const config = {
   input: "main.js",
   output: {
-    file: 'index.js',
-    format: 'cjs'
+    file: "index.js",
+    format: "cjs"
   }
 }
 

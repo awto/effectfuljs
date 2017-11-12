@@ -49,22 +49,19 @@ if (!process.env.EJS_INLINE) {
   LAGp.chain = Ap.chain
   LAGp.jump = LGp.jump
   LAGp.yld = LGp.yld
-  if (!process.env.EJS_INLINE) {
-    if (process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING)
-      LAGp.step = LGp.step
-    else
-      LAGp.step = LAGp._step = LGp._step
-  } else if (process.env.EJS_DEFUNCT) {
-    LAGp.step = LGp.step
-  }
-  LAGp.exit = LGp.exit
+  if (process.env.EJS_DEFUNCT)
+    LAGp._step = LGp._step
   if (process.env.EJS_LEAN_METHOD_ITERATORS) {
     LAGp.iterator = iterator
     LAGp.forInIterator = forInIterator
     LAGp.iteratorM = iteratorM
   }
+} else if (process.env.EJS_DEFUNCT) {
+  LAGp.chain = Async.prototype.chain
 }
 
+LAGp.step = LGp.step
+LAGp.exit = LGp.exit
 LAGp.handle = LGp.handle
 LAGp.pure = LGp.pure
 LAGp.raise = LGp.raise
