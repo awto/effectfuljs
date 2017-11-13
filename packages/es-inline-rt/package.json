@@ -7,9 +7,9 @@
   "scripts": {
     "test": "npm run build && mocha",
     "test-opt": "cross-env env-cmd $EJS_ENV npm run test",
-    "configure": "env-cmd configure,default babel ../es-rt/src --out-dir .",
+    "configure": "env-cmd configure,default,defunct babel ../es-rt/src --out-dir .",
     "configure-opt": "cross-env env-cmd $EJS_ENV babel src --out-dir .",
-    "watch-bundle": "env-cmd configure,default rollup -c -w",
+    "watch-bundle": "env-cmd configure,default,defunct rollup -c -w",
     "watch-bundle-opt": "cross-env env-cmd configure,$EJS_ENV rollup -c -w",
     "build": "npm run configure && rollup -c",
     "build-bundle-opt": "cross-env env-cmd configure,$EJS_ENV rollup -c",

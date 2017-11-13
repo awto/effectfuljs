@@ -17,7 +17,10 @@ function* opts() {
                   ["t",{topLevel:true,
                         scopeContext:true,
                         contextState:true,
-                        scopePrefix:true
+                        scopePrefix:true,
+                        all:{
+                          wrapFunction:null
+                        }
                         //contextMethodOps:true
                        }],["",{}]]
                 ])

@@ -6,7 +6,7 @@
     {
       "plugins":[
         ["transform-es2015-modules-commonjs",
-         {strict:false}]]
+         {strict:false,loose:true}]]
     }]
 }
 

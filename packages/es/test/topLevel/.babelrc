@@ -1,6 +1,14 @@
 {
   "passPerPreset": true,
   "sourceType": "script",
-  "presets": [["../../preset",{topLevel:true}],"stage-3"]
+  "presets": [["../../preset",{"topLevel":true,
+                               "contextState":true,
+                               "contextBy":"this",
+                               "all": {"wrapFunction":null}}],
+              {
+                "plugins":[
+                  ["transform-es2015-modules-commonjs",
+                   {strict:false,loose:true}]]
+              }]
 }
 

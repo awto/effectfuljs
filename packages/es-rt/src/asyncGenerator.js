@@ -15,7 +15,7 @@ export var asyncGenerator =
     var res = new LeanAsyncGenerator(),
         esProto = caller && caller.prototype instanceof AsyncGenerator
         ? caller.prototype
-        : LAGp,
+        : AsyncGenerator.prototype,
         unwrap = res.unwrap = Object.create(esProto)
     unwrap.state = process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR
       ? res

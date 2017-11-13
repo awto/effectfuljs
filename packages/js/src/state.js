@@ -458,7 +458,6 @@ export function calcRefScopes(si) {
                 (si.refScopes || (si.refScopes = new Set())).add(root)
                 capt.add(si)
                 // copy all vars into intermediate topLevels
-                /*
                 for(let j = root.parentScope;
                     j && j !== decl;
                     j = j.parentScope) {
@@ -467,7 +466,6 @@ export function calcRefScopes(si) {
                     si.refScopes.add(j)
                   }
                 }
-                */
                 i.value.ext = true
               }
             }

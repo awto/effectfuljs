@@ -249,8 +249,14 @@ export function funcWraps(si) {
     return sym
   }
   function check(i) {
-    return i.value.topEff && i.value.opts.transform
-      && i.value.opts.wrapFunction
+    if (i.value.topEff && i.value.opts.transform
+        && i.value.opts.wrapFunction) {
+      if (i.value.opts.topLevel)
+        throw s.error(
+          "NOT IMPLEMENTED: ES object model  with top level handlers",i.value)
+      return true
+    }
+    return false
   }
   function reorder(si) {
     const s = Kit.auto(Kit.toArray(si))

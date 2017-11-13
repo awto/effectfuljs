@@ -1,4 +1,4 @@
-var defunct = !!process.env.EJS_DEFUNCT
+var defunct = process.env.EJS_DEFUNCT !== "0"
 
 var opts = {
   preset:"@effectful/es",
@@ -66,4 +66,5 @@ var opts = {
     inlineRaiseOp:"promise"
   }
 }
+
 module.exports = require("@effectful/js").babelPreset(opts)

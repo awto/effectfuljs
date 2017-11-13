@@ -5,7 +5,7 @@
   "main": "preset.js",
   "scripts": {
     "test": "mocha",
-    "link-test": "node ../es/test/kit/links =default"
+    "link-test": "node ../es/test/kit/links =default =topLevel"
   },
   "repository": {
     "type": "git",

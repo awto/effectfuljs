@@ -1,9 +1,7 @@
 var _M = require('@effectful/generators');
 
-var M1 = _M.generatorFunction(M);
-
 function M() {
-  var M = _M.generator(M1);
+  var M = _M.generator();
 
   return _M.scope(M_1, M_4);
 }

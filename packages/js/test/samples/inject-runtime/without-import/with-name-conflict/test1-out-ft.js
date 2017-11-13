@@ -1,11 +1,8 @@
 import * as _M from '@effectful/generators';
-
-var _a = _M.generatorFunction(a);
-
 var M = 10;
 
 function a() {
-  var a = _M.generator(_a);
+  var a = _M.generator();
 
   return _M.scope(a_1, a_4);
 }

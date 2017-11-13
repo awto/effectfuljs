@@ -3,14 +3,12 @@ var opts = {
   directives:false,
   importRT:"@effectful/es-rt",
   contextBy:"this",
-  all: {
-    modules:"commonjs",
-    contextMethodOps:true,
-    markRec:false,
-    storeErrorCont:"$handle",
-    storeResultCont:"$exit",
-    storeCont:"$cont"
-  }
+  modules:"commonjs",
+  contextMethodOps:true,
+  markRec:false,
+  storeErrorCont:"$handle",
+  storeResultCont:"$exit",
+  storeCont:"$cont"
 }
 
 if (process.env.EJS_DEFUNCT)

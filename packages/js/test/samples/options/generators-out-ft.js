@@ -1,10 +1,8 @@
-var _c = M.generatorFunction(c);
-
 // *- DEFAULT
 import * as G from '@effectful/es';
 
 function c() {
-  var c = M.generator(_c);
+  var c = M.generator();
   return M.scope(c_1, c_3);
 }
 

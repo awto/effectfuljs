@@ -32,6 +32,8 @@ export function storeContinuations(si) {
         && makeSym(s.opts.storeErrorCont,"ec")
   const cont = root.contSym = s.opts.inlineContAssign
         && makeSym(s.opts.storeCont,"sc")
+  if (s.opts.defunct)
+    root.runSym = makeSym("$run","rn")
   const reentry = s.opts.inlineReentryCheck && cont
   if (reentry && s.opts.defunct)
     throw s.error(
@@ -257,14 +259,14 @@ export function jumpOps(si) {
   if (!inlineJumps && !inlineScope)
     return s
   if (inlineScope && !s.opts.defunct)
-    throw s.error(`'inlineScope' requires 'defunct'`)
+    throw s.error('`inlineScope:"call"` requires `defunct:true`')
   const root = s.first.value
   const {contextSym} = root
   if (!contextSym)
-    throw s.error(`'inlinePureJumps: "call"' requires context object`)
+    throw s.error('`inlinePureJumps: "call"` requires context object')
   const jumpId = Kit.sysId(s.opts.pureBindName)
   const scopeId = Kit.sysId("scope")
-  const inlineCont = s.opts.inlineContAssign && root.contSym
+  const inlineCont = root.runSym || s.opts.inlineContAssign && root.contSym
   const refCtx = s.opts.contextBy === "reference"
   const paramCtx = s.opts.contextBy === "parameter"
   return Kit.toArray(walk())
@@ -300,8 +302,7 @@ export function jumpOps(si) {
                   yield s.tok(Tag.callee,Tag.Identifier,
                               {sym:root.implFrame.value.declSym})
                 } else if (inlineCont) {
-                  yield s.tok(Tag.callee,Tag.Identifier,
-                              {sym:root.contSym})
+                  yield s.tok(Tag.callee,Tag.Identifier,{sym:inlineCont})
                 } else
                   yield* Kit.reposOne(s.one(),Tag.callee)
                 yield s.enter(Tag.arguments,Tag.Array)

@@ -595,7 +595,7 @@ export function* assignBindCalls(s) {
 }
 
 /** object merging algorithm for options merge */ 
-function merge(a,b) {
+export function merge(a,b) {
   if (a === undefined)
     return b
   if (b === undefined)
@@ -616,7 +616,7 @@ function merge(a,b) {
   return b
 }
 
-function clone(obj) {
+export function clone(obj) {
   return merge({}, obj)
 }
 

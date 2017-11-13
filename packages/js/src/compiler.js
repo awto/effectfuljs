@@ -50,7 +50,7 @@ export default transform
 
 export function babelPreset(copts) {
   const res = function (b,ropts) {
-    const opts = convOptions(Object.assign({}, copts, ropts))
+    const opts = convOptions(Policy.merge(Policy.clone(copts), ropts))
     return {
       plugins: [
         function (t) {

@@ -1,9 +1,7 @@
 var Z = require('@effectful/generators');
 
-var _a = Z.generatorFunction(a);
-
 function a() {
-  var a = Z.generator(_a);
+  var a = Z.generator();
   return Z.scope(a_1, a_4);
 }
 
