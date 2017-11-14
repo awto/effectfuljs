@@ -150,8 +150,7 @@ const stage1 = Kit.pipe(
  */
 export function run(s) {
   const transformMap = new Map()
-  const deb_s = [...s]
-  const sa = Kit.toArray(preproc(deb_s))
+  const sa = Kit.toArray(preproc(s))
   const inp = Kit.toArray(Scope.splitScopes(sa))
   let scopeNum = 0
   const len = inp.length

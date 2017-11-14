@@ -30,7 +30,6 @@ export const saveDecls = Kit.pipe(
           switch(i.type) {
           case Tag.ClassDeclaration:
             const id = sl.cur().value.sym
-            debugger
             decls.set(
               id,{raw:null,
                   init:[...sl.copy(
@@ -891,7 +890,7 @@ function localsDecls(cfg) {
       if (vars.length) {
         const m = i.savedDecls || (i.savedDecls = new Map())
         for(const j of vars)
-          if (j.interpr === Bind.paramThread && !m.has(j))
+          if (!j.interpr || j.interpr === Bind.paramThread && !m.has(j))
             m.set(j, {raw:null})
       }
     }

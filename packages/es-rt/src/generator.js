@@ -38,10 +38,10 @@ var LGp = LeanGenerator.prototype
 GeneratorConstructor = LeanGenerator
 
 if (!process.env.EJS_INLINE) {
-  function nop() {
-    this.value = void 0
-    return this
-  }
+function nop() {
+  this.value = void 0
+  return this
+}
 
   function resume(a) {
     this.$handle = this.$subHandle
@@ -209,6 +209,7 @@ export function makeDelegate(iterator) {
   return function delegate(i) {
     var iter = iterator(i)
     iter.$sub = this
+    iter.$subPure = iter.pure
     iter.pure = contSub
     iter.raise = handleSub
     iter.exit = exitSub
@@ -217,6 +218,7 @@ export function makeDelegate(iterator) {
 }
 
 function contSub(v) {
+  this.pure = this.$subPure
   return this.$sub.step(v)
 }
 
