@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-defunct-rt",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "description": "Runtime for @effectful/es-loose",
   "main": "index.js",
   "module": "main.js",

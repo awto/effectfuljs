@@ -1,6 +1,6 @@
 {
   "name": "@effectful/js",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Embedding effects in JavaScript using Monads",
   "main": "compiler.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@effectful/es-loose-rt": "^0.0.6",
+    "@effectful/es-loose-rt": "^0.0.7",
     "babel-generator": "^6.24.0",
     "babel-types": "^6.25.0",
     "babylon": "^6.17.4",
