@@ -104,12 +104,12 @@ function nop() {
     return this.delegate(iter)
   }
   
-  LGp.jump = function jump(cont, handle, exit) {
+  LGp.jump = function jump(value, cont, handle, exit) {
     try {
       this.$cont = cont
       this.$handle = handle
       this.$exit = exit
-      return process.env.EJS_DEFUNCT ? this.$run() : this.$cont()
+      return process.env.EJS_DEFUNCT ? this.$run(value) : this.$cont(value)
     } catch(e) {
       return this.handle(e)
     }

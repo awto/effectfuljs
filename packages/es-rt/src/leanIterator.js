@@ -18,7 +18,7 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   
   var LIp = LeanIterator.prototype = Object.create(LeanIteratorPrototype)
   
-  LeanIterator[Symbol.iterator] = function() { return this.iter }
+  LIp[Symbol.iterator] = function() { return this.iter }
   
   LIp.step = function step(v) {
     var next = this.iter.next(v)
