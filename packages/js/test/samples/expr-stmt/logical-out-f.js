@@ -414,7 +414,7 @@ function a18_1() {
 }
 
 function a19() {
-  var b;
+  var a;
   return M.chain(eff(1), _1, _6);
 
   function _1(a) {
@@ -425,18 +425,19 @@ function a19() {
     }
   }
 
-  function _2(a) {
-    b = a;
+  function _2(b) {
+    a = b;
     return M.chain(eff(3), _3, _6);
   }
 
   function _3(c) {
-    a = (b, c);
+    var b;
+    b = (a, c);
     return M.jump(_4, _6);
   }
 
-  function _4(a) {
-    return M.chain(eff(a), _5, _6);
+  function _4(b) {
+    return M.chain(eff(b), _5, _6);
   }
 
   function _5() {
@@ -465,13 +466,14 @@ function a19_1() {
     return M.chain(eff(3), _3, _6);
   }
 
-  function _3(b) {
-    c = (a, b);
+  function _3(c) {
+    var b;
+    b = (a, c);
     return M.jump(_4, _6);
   }
 
-  function _4(c) {
-    return M.chain(eff(c), _5, _6);
+  function _4(b) {
+    return M.chain(eff(b), _5, _6);
   }
 
   function _5(r) {

@@ -11,9 +11,13 @@
         ["@effectful/es-loose",{"jsExceptions":false,
                                 "inlineJsExceptions":false,
                                 "inlineThrow":true,
-                                "topLevel":true,
+                                "loose":true,
                                 "moduleAliases":{
-                                  "estransducers":"estransducers/loose"
+                                  "estransducers":"estransducers/loose",
+                                  "estransducers/kit":"estransducers/loose/kit",
+                                  "estransducers/rt":"estransducers/loose/rt",
+                                  "estransducers/dump":"estransducers/loose/dump",
+                                  "estransducers/match":"estransducers/loose/match"
                                 }}],
         {
           "plugins": ["add-module-exports",

@@ -1,7 +1,7 @@
 import * as assert from "assert"
 import generate from "babel-generator"
 import {parse} from "babylon"
-import {Tag,produce,consume} from "estransducers"
+import {Tag,consume} from "estransducers"
 import * as Trace from "estransducers/trace"
 import * as Kit from "../../src/kit"
 import * as Transform from "../../src/transform"
@@ -30,7 +30,7 @@ const defaultParseOpts = {
 
 export function prettyBlock(f,opts = {}) {
   const ast = parse(f.toString(), opts.parser || defaultParseOpts)
-  const orig = Kit.pipe(produce,Kit.strip)(ast)
+  const orig = Kit.pipe(Kit.produce,Kit.strip)(ast)
   consume(orig)
   return generate(ast,{quotes:"single",retainFunctionParens:true},"").code
 }
@@ -46,7 +46,7 @@ export const run = Kit.curryN(2,Kit.optsScopeLift(function run(opts,f) {
                              ns:"M",override:opts},
                             opts))
   const ast = parse(f.toString(),opts.parser || defaultParseOpts)
-  const orig = Kit.pipe(produce,Array.from)(ast)
+  const orig = Kit.pipe(Kit.produce,Array.from)(ast)
   Transform.run(orig)
   return prettyBlock(
     generate(ast,
@@ -97,7 +97,7 @@ export const transformBlock = Kit.curryN(2,Kit.optsScopeLift(
                                override:opts},
                               opts))
     const ast = parse(src.toString(),defaultParseOpts)
-    const s = Kit.pipe(produce,Array.from,scopes)(ast)
+    const s = Kit.pipe(Kit.produce,Array.from,scopes)(ast)
     for (const i of s)
       fun(i)
     return prettyBlock(

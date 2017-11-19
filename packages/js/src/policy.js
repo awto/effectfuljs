@@ -233,7 +233,7 @@ export const configDiffPass = Kit.pipe(
   })
 
 /** marks profile change calls in the code */
-export const lookupProfiles = Kit.pipe(
+export const directives = Kit.pipe(
   replaceGlobalNsName,
   Match.inject(["*$M.profile($$)","*$M.option($$)"]),
   Kit.toArray, //TODO: remove
@@ -335,9 +335,7 @@ export const lookupProfiles = Kit.pipe(
       }
     }
   },
-  Match.clean,
-  configDiffPass
-)
+  Match.clean)
 
 /** invokes profile handlers */
 export const applyProfiles = postproc(function* applyProfiles(s) {
@@ -362,31 +360,6 @@ export const applyProfiles = postproc(function* applyProfiles(s) {
   }
   return Kit.pipe(...post)
 })
-
-/** handles profile tokens */
-export const profiles = Kit.pipe(
-  configDiffPass,
-  ifDirectives(lookupProfiles),
-  applyProfiles,
-  configDiffPass)
-
-/*
-export const stack = symbol("stack") 
-
-export const placeholder = Kit.curry(function* placeholder(name, s) {
-  const sl = Kit.auto(s)
-  function* walk() {
-    for(const i of sl.sub()) {
-      if (i.type === stack && i.value.key === name) {
-        yield* i.value(walk(),i.value.node)
-        continue
-      }
-      yield i
-    }
-  }
-  yield* walk()
-})
-*/
 
 /**
  * injects resulting items of `i.value.node` generator, passing it
@@ -547,6 +520,7 @@ export function setQNames(si) {
 
 /** marks `throw` statement to be handled by monadic library rather than js */
 export function* assignThrowEff(s) {
+  
   for(const i of s) {
     if (i.enter && i.type === Tag.ThrowStatement
         && i.value.opts.transform
@@ -560,37 +534,42 @@ export function* assignThrowEff(s) {
  * marks call expressions to be effectful if they match some patter 
  * from `bindCalls` option 
  */
-export function* assignBindCalls(s) {
+export function assignBindCalls(s) {
   s = Kit.auto(s)
-  const {$ns} = s.first.value
-  for(const i of s) {
-    if (i.type === Tag.CallExpression && i.value.opts.transform
-        && i.value.bind == null) {
-      if (s.opts.bindCalls) {
-        const j = s.cur()
-        const q = i.value.qname
-        if (q != null) {
-          const prof = s.opts.bindCalls
-          if (prof != null) {
-            let v = null
-            if (v == null && prof.byQName != null)
-              v = prof.byQName[q.join(".")]
-            if (v == null && prof.byId != null)
-              v = prof.byId[q[q.length-1]]
-            if (v == null && prof.byNs != null && q.length > 1)
-              v = prof.byNs[q[0]]
-            if (v == null && prof.libNs && q.length === 2
-                && q[0] === $ns)
-              v = prof.libNs[q[1]]
-            if (v == null)
-              v = prof.all
-            if (v != null)
-              i.value.bind = v
+  if (!s.opts.bindCalls)
+    return s
+  return walk()
+  function* walk() {
+    const {$ns} = s.first.value
+    for(const i of s) {
+      if (i.type === Tag.CallExpression && i.value.opts.transform
+          && i.value.bind == null) {
+        if (s.opts.bindCalls) {
+          const j = s.cur()
+          const q = i.value.qname
+          if (q != null) {
+            const prof = s.opts.bindCalls
+            if (prof != null) {
+              let v = null
+              if (v == null && prof.byQName != null)
+                v = prof.byQName[q.join(".")]
+              if (v == null && prof.byId != null)
+                v = prof.byId[q[q.length-1]]
+              if (v == null && prof.byNs != null && q.length > 1)
+                v = prof.byNs[q[0]]
+              if (v == null && prof.libNs && q.length === 2
+                  && q[0] === $ns)
+                v = prof.libNs[q[1]]
+              if (v == null)
+                v = prof.all
+              if (v != null)
+                i.value.bind = v
+            }
           }
         }
       }
+      yield i
     }
-    yield i
   }
 }
 
@@ -663,61 +642,58 @@ export function* propagateConfigDiff(s) {
 }
 
 /** puts user config options into the stream */
-function* emitInitOptions(s) {
+function emitInitOptions(s) {
   s = Kit.auto(s)
-  function* preset(name) {
-    yield s.tok(ctImport,{name,optional:false})
-  }
-  let $ns
-  const root = s.first.value
-  if (s.opts.importRT)
-    $ns = root.namespaces && root.namespaces.get(s.opts.importRT)
-  s.first.value.nsImported = !!$ns
-  if (!$ns) {
-    $ns = Kit.scope.newSym(s.opts.ns || "M")
-    // suppressing scope warning
-    $ns.global = true
-  }
-  s.first.value.$ns = $ns
-  if (s.opts.preset != null) {
-    if (Array.isArray(s.opts.preset)) {
-      for(const i of s.opts.preset)
-        yield* preset(i)
-    } else {
-      yield* preset(s.opts.preset)
+  const res = collect()
+  if (s.opts.preset || s.opts.presetsImportPattern)
+    return ctImportPass(res)
+  return res
+  function* collect() {
+    function* preset(name) {
+      yield s.tok(ctImport,{name,optional:false})
     }
-  }
-  yield* s
-}
-
-/** puts profile initial profile definitions into the stream */
-export function* emitInitProfiles(s) {
-  s = Kit.auto(s)
-  yield* s.till(i => i.type === Tag.Array && i.pos === Tag.program)
-  let {profiles} = s.opts
-  if (profiles != null) {
-    if (!Array.isArray(profiles))
-      profiles = [profiles]
-    for(const name of profiles) {
-      yield s.tok(Tag.push,profile,{node:{name}})
+    let $ns
+    const root = s.first.value
+    if (s.opts.importRT)
+      $ns = root.namespaces && root.namespaces.get(s.opts.importRT)
+    s.first.value.nsImported = !!$ns
+    if (!$ns) {
+      $ns = Kit.scope.newSym(s.opts.ns || "M")
+      // suppressing scope warning
+      $ns.global = true
     }
-    if (s.opts.override)
-      yield s.tok(Tag.push,configDiff,{alg:"merge",node:s.opts.override})
+    s.first.value.$ns = $ns
+    if (s.opts.preset != null) {
+      if (Array.isArray(s.opts.preset)) {
+        for(const i of s.opts.preset)
+          yield* preset(i)
+      } else {
+        yield* preset(s.opts.preset)
+      }
+    }
+    yield* s
   }
-  yield* s
 }
 
 /** combines a few preparation passes */
 export const prepare = Kit.pipe(
-  Kit.enableIf(i => i.opts.presetsImportPattern || i.opts.moduleAliases,
+  Kit.enableIf(i => i.opts.presetsImportPattern
+               || i.opts.moduleAliases
+               || i.opts.reuseImports,
                presets),
   emitInitOptions,
-  ctImportPass,
-  configDiffPass)
+  ifDirectives(
+    Kit.pipe(
+      directives,
+      configDiffPass,
+      applyProfiles,
+      configDiffPass)))
 
 /** for `ns` function application marks inner expression to be effectful */
 export function unwrapNs(si) {
   const s = Kit.auto(si)
+  if (!s.opts.bindCalls)
+    return s
   const {$ns} = s.first.value
   function* walk() {
     for(const i of s.sub()) {

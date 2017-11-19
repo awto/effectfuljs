@@ -113,7 +113,7 @@ export default {
   // detects import matching the pattern to apply compile-time options
   // true - means only pre-defined embedded libs are checked
   presetsImportPattern: true,
-
+  
   // injects runtime from provided module
   importRT: null,
 
@@ -172,7 +172,7 @@ export default {
 
   // always calls `raise` operation at function's exit by exception
   keepLastRaise: true,
-
+  
   // inline assigning of error and result continuations into context
   // specifies name of a context's field to assign it to
   inlineResultContAssign: false,
@@ -207,18 +207,6 @@ export default {
   // babel-generator options (not used if executed using babel tools)
   printer: {},
 
-  // options overriding default preset options in every scope to transform
-  all: {},
-
-  // options to override default preset options in generator functions
-  generators: {},
-  
-  // options to override default preset options in async functions
-  async: {},
-
-  // options to override default preset options in async generator functions
-  asyncGenerator: {},
-
   // effectful operations to be called as method of
   // first argument effectful object, this is applied only of static: false
   methodOps: {
@@ -248,5 +236,27 @@ export default {
   state: false,
 
   // rewrites module's import
-  moduleAliases: null
+  moduleAliases: null,
+
+  // removes calls to `assert` functions
+  removeAsserts: false,
+
+  // using in-code directives to change translator settings
+  directives: true,
+
+  // check if there is an import already for `importRT` and use it
+  reuseImports: true,
+
+  // defines call expressions to treat as effectful
+  // {
+  //    byNs: {[name:string]:boolen},   // ns names i.e. console
+  //    libNs: {[name:string]:boolean}, // functions from the effectful library
+  //    all: boolean,                   // default to all calls
+  //    ns: boolean                     // effectful library ns
+  // }
+  // may be null to avoid perform the check
+  bindCalls: {},
+
+  // marks function nodes where transform is to be applied
+  transform: false
 }

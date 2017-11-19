@@ -27,7 +27,6 @@ import {ifLoose,ifEsRebind,ifTopLevel,
 export const consumeScope = consume
 
 export const preproc = Kit.pipe(
-  Kit.prepare,
   Kit.scope.prepare,
   Prop.prepare,
   Policy.prepare,
@@ -47,11 +46,13 @@ export const loose = ifLoose(Kit.pipe(
   Loops.looseForOf,
   Rt.collect,
   Kit.toArray,
+  simplify,
   Rt.interpretLibSyms,
   Rt.inject))
 
 const finalize = Kit.pipe(
   Scope.funcWraps,
+  simplify,
   ifLoose(Loops.looseForOf),
   Rt.interpretLibSyms,
   Kit.toArray,
@@ -79,7 +80,6 @@ export const normalizeOnlyStage1 =
     Branch.clean,
     State.restoreDecls,
     Closure.substContextIds,
-    simplify,
     Kit.toArray))
 
 /**
@@ -232,7 +232,7 @@ export function main(ast,opts = {}) {
 export function applyPass(ast,pass,opts = {}) {
   return Kit.optsScope(function applyPass(f) {
     Kit.setOpts(opts)
-    Kit.skip(pass(Kit.produce(ast)))
+    pass(Kit.produce(ast))
     return ast
   })
 }

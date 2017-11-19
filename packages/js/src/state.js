@@ -521,9 +521,9 @@ export function calcRefScopes(si) {
   }
   for (const i of funcs) {
     const opts = i.opts || top.opts
-    if (opts.topLevel && !opts.contextState)
+    if (opts.topLevel && !i.global && !opts.contextState)
       throw s.error("`topLevel:true` requires `contextState:true`",i)
-    if (opts.topLevel && opts.contextBy === "reference")
+    if (opts.topLevel && !i.global && opts.contextBy === "reference")
       throw s.error(
         "`topLevel:true` isn't compatible with `contextBy:'reference'`",i)
     if (opts.contextState && !i.ctxDeps && !i.global)

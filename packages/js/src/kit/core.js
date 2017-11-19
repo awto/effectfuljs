@@ -602,13 +602,5 @@ function ctor(pos,type,value) {
   return [pos,type,value]
 }
 
-class AutoClass extends EsKit.Stream({peel:true}) {}
-class AutoClassArr extends EsKit.Stream({peel:true,arr:true}) {}
-AutoClass.prototype.valCtor = AutoClassArr.prototype.valCtor = ctor
-
-export function auto(s) {
-  if (Array.isArray(s))
-    return new AutoClassArr(s)
-  return new AutoClass(s)
-}
-
+EsKit.Wrapper.prototype.valCtor = ctor
+export const auto = EsKit.auto

@@ -1127,6 +1127,8 @@ export function interpretJumps(si) {
               if (s.opts.markBindValue !== false)
                 name += "B"
               appVal.hasBindVal = true
+            } else if (i.type === Ctrl.jump && s.opts.markBindValue === false) {
+                appVal.hasBindVal = true
             }
             if (threadArgs && threadArgs.length) {
               if (s.opts.markArgNum !== false) {
@@ -1156,8 +1158,10 @@ export function interpretJumps(si) {
               appVal.hasCont = true
             yield s.enter(pos,Block.app,appVal)
             assert.ok(goto)
-            if (!i.leave)
+            if (s.curLev())
               yield* walk()
+            else if (appVal.hasBindVal)
+              yield s.tok(Tag.push,Tag.Identifier,{sym:Kit.scope.undefinedSym})
             if (passCont)
               yield s.tok(Tag.push,Tag.Identifier,{sym:goto.declSym})
             if (catchCont && passCatchCont)

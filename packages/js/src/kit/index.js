@@ -7,7 +7,7 @@ const {toArray,result,tillLevel,till,clone,withOpts,
        cons,la,enableIf,output,repos,reposOne,reposOneArr,
        reverse,pack,unpack,packed,flatMap,map,forEach,filter,
        cleanEmptyExprs,mapAdd,mapPush,group,groupUniq,concat,
-       stage,curryN,curry,pipe,time,timeEnd
+       stage,curryN,curry,pipe,time,timeEnd,prepend
       } = kit
 export {toArray,result,tillLevel,till,clone,withOpts,
         toks,skip,setType,setPos,Subst,completeSubst,
@@ -18,7 +18,7 @@ export {toArray,result,tillLevel,till,clone,withOpts,
         repos,reposOneArr,reposOne,reverse,pack,unpack,
         packed,flatMap,map,forEach,filter,cleanEmptyExprs,
         mapAdd,mapPush,group,groupUniq,concat,stage,
-        curryN,curry,pipe,time,timeEnd
+        curryN,curry,pipe,time,timeEnd,prepend
        }
 export {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
         typeInfo,resetFieldInfo}

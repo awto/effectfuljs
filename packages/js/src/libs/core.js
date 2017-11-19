@@ -16,6 +16,7 @@ const fullOpts = {
     ns: true
   },
   generator:false,
+  async:false,
   coerce:true,
   transform:true
 }
@@ -43,8 +44,9 @@ const generatorOps = {
 
 const postproc = Kit.pipe(
   Policy.setFuncOpts(disabledOpts),
-  Policy.profiles,
-  Policy.setQNames)
+  Policy.setQNames,
+  Policy.configDiffPass,
+  Policy.applyProfiles)
 
 export default function* coreInit() {
   const generators = Policy.injectFuncOpts({
@@ -109,6 +111,7 @@ export default function* coreInit() {
               yield* generators()
               yield* asyncGeneratorsDo()
               yield* asyncDo()
+              return Kit.pipe(Policy.applySubAndOne,Policy.configDiffPass)
             }
           }
         }

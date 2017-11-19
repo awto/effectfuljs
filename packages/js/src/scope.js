@@ -391,7 +391,7 @@ export function funcWraps(si) {
             }
             break
           case Tag.BlockStatement:
-            if (i.value.wraps.length) {
+            if (i.value.wraps && i.value.wraps.length) {
               const lab = s.label()
               yield s.peel(i)
               yield* s.peelTo(Tag.body)
@@ -495,7 +495,7 @@ export function funcWraps(si) {
           if (check(i) && i.value.funcId) {
             const lab = s.label()
             const wraps = [
-              s.enter(i.pos,Tag.VariableDeclaration,{node:{kind:"var"}}),
+              s.enter(Tag.push,Tag.VariableDeclaration,{node:{kind:"var"}}),
               s.enter(Tag.declarations,Tag.Array),
               s.enter(Tag.push,Tag.VariableDeclarator),
               s.tok(Tag.id,Tag.Identifier,{sym:i.value.wrapId}),
@@ -506,18 +506,18 @@ export function funcWraps(si) {
               s.enter(Tag.arguments,Tag.Array),
               s.tok(Tag.push,Tag.Identifier,{sym:i.value.funcId}),
               ...lab()]
-            if (i.pos !== Tag.push) {
+            if (i.pos === Tag.push || i.pos === Tag.declaration) {
+              yield s.peel(i)
+              yield* walk(s.sub())
+              yield* s.leave()
+              block.push(...wraps)
+            } else {
               yield s.enter(i.pos,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
               yield* wraps
               yield s.peel(i)
               yield* Kit.reposOne(walk(s.sub(),block),Tag.push)
               yield* s.leave()
-            } else {
-              yield s.peel(i)
-              yield* walk(s.sub())
-              yield* s.leave()
-              block.push(...wraps)
             }
             yield* lab()
             continue

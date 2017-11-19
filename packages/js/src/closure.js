@@ -21,21 +21,22 @@ function allUniqFields(syms,pref="") {
 }
 
 /** moves frame steps to top level of JS module */
-export function* depsToTop(si) {
+export function depsToTop(si) {
   const s = Kit.auto(si)
   const top = []
-  if (!s.opts.topLevel) {
+  if (!s.opts.topLevel)
+    return s
+  return walk()
+  function* walk() {
+    yield* s.till(i => i.pos === Tag.body && i.type === Tag.Array)
+    while(s.cur().type === Tag.ImportDeclaration)
+      yield* s.one()
+    yield* collect()
+    for(const i of top) {
+      yield* i
+    }
     yield* s
-    return
   }
-  yield* s.till(i => i.pos === Tag.body && i.type === Tag.Array)
-  while(s.cur().type === Tag.ImportDeclaration)
-    yield* s.one()
-  yield* collect()
-  for(const i of top) {
-    yield* i
-  }
-  yield* s
   function* collect() {
     for(const i of s.sub()) {
       if (i.enter && i.type === Tag.FunctionDeclaration && i.value.frameStep) {

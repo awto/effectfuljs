@@ -4,6 +4,7 @@ import * as Match from "estransducers/match"
 import dump from "estransducers/dump"
 import * as Debug from "./debug"
 
+/** removing useless IIFE */
 export const iife = Kit.pipe(
   Match.run("=(() => { return $$; })()"),
   function(s) {
@@ -13,11 +14,8 @@ export const iife = Kit.pipe(
         if (i.type === Match.Root) {
           if (i.enter) {
             for(const j of s.sub()) {
-              if (j.enter && j.type === Match.Placeholder) {
-                yield s.enter(i.pos,Kit.Subst)
-                yield* walk()
-                yield* s.leave()
-              }
+              if (j.enter && j.type === Match.Placeholder)
+                yield* Kit.reposeOn(walk(),i.pos)
             }
           }
         } else
@@ -25,13 +23,64 @@ export const iife = Kit.pipe(
       }
     }
     return walk()
-  },
-  Kit.completeSubst)
+  })
 
-export default Kit.pipe(iife)
 
-// TODO:
-export function inlineBinds() {
+/** removes asserts */
+export function asserts(si) {
+  const s = Kit.auto(si)
+  if (!s.opts.removeAsserts)
+    return s
+  return Kit.cleanEmptyExprs(calls(mark()))
+  function* mark() {
+    for(const i of s) {
+      if (i.enter && i.type === Tag.MemberExpression) {
+        const c = s.cur()
+        if (c.type === Tag.Identifier && c.value.node.name === "assert") {
+          yield s.tok(i.pos,Tag.Null)
+          Kit.skip(s.copy(i))
+          continue
+        }
+      }
+      yield i
+    }
+  }
+  function* calls(si) {
+    const s = Kit.auto(si)
+    for(const i of s) {
+      if (i.enter && i.type === Tag.CallExpression
+          && s.cur().type === Tag.Null) {
+        Kit.skip(s.copy(i))
+        yield s.tok(i.pos,Tag.Null)
+      } else
+        yield i
+    }
+  }
 }
+
+/** removing useless BlockStatements */
+export function* emptyBlocs(si) {
+  const s = Kit.auto(si)
+  up: for(const i of s) {
+    if (i.enter && i.type === Tag.BlockStatement && i.pos === Tag.push) {
+      const buf = [i]
+      for(const j of s.sub()) {
+        buf.push(j)
+        if (j.type === Tag.Array && j.pos === Tag.body) {
+          if (j.leave || s.cur().value === j.value) {
+            for(const j of s)
+              if (j.value === i.value)
+                continue up
+          }
+          break
+        }
+      }
+      yield* buf
+    } else
+      yield i
+  }
+}
+
+export default Kit.pipe(/*iife,*/emptyBlocs,asserts)
 
 

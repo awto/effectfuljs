@@ -217,12 +217,17 @@ export function tailJumps(si) {
     }
     for(const i of s.sub()) {
       if (i.enter && i.type === Ctrl.jump && !i.value.bindName) {
-        if (s.curLev()) {
-          yield s.enter(Tag.push,Tag.AssignmentExpression,
-                        {node:{operator:"="}})
-          yield s.tok(Tag.left,Tag.Identifier,{sym:root.commonPatSym})
-          yield* Kit.reposOne(s.sub(),Tag.right)
-          yield* s.leave()
+        const j = s.curLev()
+        if (j) {
+          if (j.type === Block.bindPat && i.value.sym === root.commonPatSym) {
+            Kit.skip(s.sub())
+          } else {
+            yield s.enter(Tag.push,Tag.AssignmentExpression,
+                          {node:{operator:"="}})
+            yield s.tok(Tag.left,Tag.Identifier,{sym:root.commonPatSym})
+            yield* Kit.reposOne(s.sub(),Tag.right)
+            yield* s.leave()
+          }
         }
         s.close(i)
         yield s.tok(Tag.push,Tag.ContinueStatement)
