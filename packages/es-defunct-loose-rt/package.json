@@ -1,7 +1,7 @@
 {
-  "name": "@effectful/es-inline-rt",
-  "version": "0.0.6",
-  "description": "Runtime for @effectful/es-loose",
+  "name": "@effectful/es-defunct-loose-rt",
+  "version": "0.0.1",
+  "description": "Runtime for @effectful/es",
   "main": "index.js",
   "module": "main.js",
   "scripts": {

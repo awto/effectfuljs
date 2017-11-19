@@ -62,9 +62,6 @@ const rebind = {
 }
 
 const inline = {
-  all: {
-    importRT:"@effectful/es-inline-rt"
-  },
   effectful: {
     contextBy:"reference",
     inlineJsExceptions:true,
@@ -137,7 +134,6 @@ const defunctInline = {
 
 const loose = {
   all: {
-    importRT:"@effectful/es-loose-rt",
     loose:true,
     finalizeForOf:false,
     removeAsserts:true
@@ -179,6 +175,17 @@ rebind.all.profiles = {
 }
 
 module.exports = function esProfile(opts) {
+  let importRT = opts.importRT
+  if (importRT == null) {
+    importRT = "@effectful/es-"
+    if (opts.defunct)
+      importRT += "defunct-"
+    if (opts.loose)
+      importRT += "loose-"
+    else if (opts.inline)
+      importRT += "inline-"
+    importRT += "rt"
+  }
   const pure = Object.assign({},config,rebind.all)
   const file = Object.assign({},config,rebind.all)
   const generators = Object.assign({},config,rebind.all,

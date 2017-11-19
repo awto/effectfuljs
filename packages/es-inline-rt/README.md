@@ -1,5 +1,6 @@
 # @effectful/es-inline-rt
 
-Runtime for @effecful/es-inline preset.
-
+Build of [@effectful/es-rt](https://github.com/awto/effectfuljs/tree/master/packages/es)
+for [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es) 
+with `{inline:true}`.
 
