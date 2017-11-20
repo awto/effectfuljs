@@ -1,6 +1,6 @@
 (function () {
   var ctx = M.context();
-  return M.scope(f_1, f_71);
+  return M.scope(f_1, f_7);
 });
 
 (function () {
@@ -19,34 +19,34 @@ function a() {
 }
 
 function f_1(ctx) {
-  return M.chain(eff(1), f_2, f_71);
+  return M.chain(eff(1), f_2, f_7);
 }
 
 function f_2(ctx) {
-  return M.chain(eff(2), f_3, f_71);
+  return M.chain(eff(2), f_3, f_7);
 }
 
 function f_3(ctx, a) {
   if (a) {
-    return M.jump(f_4, f_71);
+    return M.jump(f_4, f_7);
   } else {
-    return M.chain(eff(3), f_4, f_71);
+    return M.chain(eff(3), f_4, f_7);
   }
 }
 
 function f_4(ctx) {
-  return M.chain(eff(4), f_5, f_71);
+  return M.chain(eff(4), f_5, f_7);
 }
 
 function f_5(ctx) {
-  return M.chain(eff(5), f_61, f_71);
+  return M.chain(eff(5), f_6, f_7);
 }
 
-function f_61(ctx) {
+function f_6(ctx) {
   return M.pure();
 }
 
-function f_71(ctx, e) {
+function f_7(ctx, e) {
   return M.raise(e);
 }
 
@@ -99,18 +99,18 @@ function f_31(ctx, a) {
 }
 
 function f_41(ctx) {
-  return M.chain(eff('b'), f_7, f_8);
+  return M.chain(eff('b'), f_71, f_8);
 }
 
 function f_51(ctx) {
-  return M.chain(eff(5), f_6, f_8);
+  return M.chain(eff(5), f_61, f_8);
 }
 
-function f_6(ctx) {
+function f_61(ctx) {
   return M.pure(ctx._r);
 }
 
-function f_7(ctx, r) {
+function f_71(ctx, r) {
   return M.pure(r);
 }
 

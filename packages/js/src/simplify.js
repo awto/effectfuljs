@@ -26,6 +26,25 @@ export const iife = Kit.pipe(
   })
 
 
+/** 
+ * simply replaces all `const`/`let` with `var`
+ * loops block scoping is handled by `Loop.blockScoping`
+ * activated with `{loose:true, blockScoping: true}`
+ */
+export function blockScoping(si) {
+  const s = Kit.auto(si)
+  if (!s.opts.blockScoping)
+    return s
+  return walk()
+  function* walk() {
+    for(const i of s) {
+      if (i.enter && i.type === Tag.VariableDeclaration)
+        i.value.node.kind = "var"
+      yield i
+    }
+  }  
+}
+
 /** removes asserts */
 export function asserts(si) {
   const s = Kit.auto(si)
@@ -81,6 +100,6 @@ export function* emptyBlocs(si) {
   }
 }
 
-export default Kit.pipe(/*iife,*/emptyBlocs,asserts)
+export const main = Kit.pipe(/*iife,*/emptyBlocs,asserts)
 
 

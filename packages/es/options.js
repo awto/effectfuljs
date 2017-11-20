@@ -13,7 +13,6 @@ const ops = {
 const rebind = {
   all: {
     presetsImportPattern:false,
-    importRT:"@effectful/es-rt",
     directives:false,
     bindCalls: null
   },
@@ -118,6 +117,7 @@ const defunctInline = {
   effectful: {
     inlineScopeOp:"unwrap",
     inlineJsExceptions:true,
+    inlinePureJumps:"tail",
     storeCont:"$cont",
     storeErrorCont:"$handle",
     inlineReentryCheck:false,
@@ -135,14 +135,15 @@ const defunctInline = {
 const loose = {
   all: {
     loose:true,
+    leanForOf:true,
     finalizeForOf:false,
     removeAsserts:true
   },
   effectful: {
     wrapFunction:false,
     wrapAsyncIteratorValue:false,
-    inlineReentryCheck:false,
-    wrapGeneratorResult:false
+    // wrapGeneratorResult:false,
+    inlineReentryCheck:false
   }
 }
 
@@ -187,7 +188,7 @@ module.exports = function esProfile(opts) {
     importRT += "rt"
   }
   const pure = Object.assign({},config,rebind.all)
-  const file = Object.assign({},config,rebind.all)
+  const file = Object.assign({},config,{importRT},rebind.all)
   const generators = Object.assign({},config,rebind.all,
                                    rebind.effectful,rebind.generators)
   const async = Object.assign({},config,rebind.all,rebind.effectful,rebind.async)
@@ -227,7 +228,7 @@ module.exports = function esProfile(opts) {
                 {generator:false,async:false,transform:false})
   Object.assign(file,opts.all,opts.file,
                 {generator:false,async:false,transform:false})
-  Object.assign(generators,opts,opts.all,opts.effectful,opts.generators,
+  Object.assign(generators,opts.all,opts.effectful,opts.generators,
                 {generator:true,async:false,transform:true})
   Object.assign(async,opts.all,opts.effectful,opts.async,
                 {generator:false,async:true,transform:true})
@@ -264,17 +265,8 @@ module.exports = function esProfile(opts) {
             }
           }
         }
-        if (any)
-          T.run(sa)
-        else if (loose) {
-          const inject = root.injectRT = new Map()
-          if (opts.importRT && !root.nsImported)
-            inject.set(root.$ns,{module:opts.importRT,
-                                 content:opts.inlineRT,
-                                 ns:opts.importGlobal||opts.inlineRT?null:root.$ns,
-                                 usages: new Set()})
-          T.loose(sa)
-        }
+        if (any || loose)
+          T.run(Policy.propagateOpts(sa))
       }
     )
   }

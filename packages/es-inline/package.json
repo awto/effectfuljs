@@ -32,6 +32,7 @@
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
+    "@effectful/es": "^0.0.7",
     "@effectful/js": "^0.0.2"
   }
 }

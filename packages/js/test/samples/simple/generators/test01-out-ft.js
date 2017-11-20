@@ -27,7 +27,7 @@ function c() {
 const v = v => {
   var ctx = M.async();
   ctx._v = v;
-  return M.scope(f_1, f_31);
+  return M.scope(f_1, f_3);
 };
 
 const obj = {
@@ -38,7 +38,7 @@ const obj = {
   a2: function (a) {
     var ctx = M.async();
     ctx._a = a;
-    return M.scope(f_11, f_3);
+    return M.scope(f_11, f_31);
   },
 
   a3(a, b) {
@@ -285,14 +285,14 @@ function c_3(c, e) {
 }
 
 function f_1(ctx) {
-  return M.chain(M.chain(ctx._v), f_21, f_31);
+  return M.chain(M.chain(ctx._v), f_2, f_3);
 }
 
-function f_21(ctx, r) {
+function f_2(ctx, r) {
   return M.pure(r);
 }
 
-function f_31(ctx, e) {
+function f_3(ctx, e) {
   return M.raise(e);
 }
 
@@ -309,14 +309,14 @@ function _f_3(ctx, e) {
 }
 
 function f_11(ctx) {
-  return M.chain(M.chain(ctx._a), f_2, f_3);
+  return M.chain(M.chain(ctx._a), f_21, f_31);
 }
 
-function f_2(ctx) {
+function f_21(ctx) {
   return M.pure();
 }
 
-function f_3(ctx, e) {
+function f_31(ctx, e) {
   return M.raise(e);
 }
 

@@ -2,8 +2,6 @@ import core from "./libs/core"
 import es from "./libs/es"
 
 export default {
-  // outputs some additional information during conversion
-  verbose: false,
 
   // adds runtime checks in runtime if values to bind is effectful, and makes
   // it effectful if not
@@ -57,6 +55,10 @@ export default {
   // using pure lead iterator for for-of statement
   pureForOf: true,
 
+  // translates pure `for-of` into lean iterators traversal
+  // activated only with `loose:true`
+  leanForOf: true,
+
   // name of a function to call for each effectful function
   // it may change something in object's protocol for that function
   wrapFunction: null,
@@ -70,7 +72,7 @@ export default {
   // handles JavaScript exceptions, by adding corresponding try-catch
   // statements otherwise will replace `throw` with `M.raise` in effectful
   // functions and ignores anything thrown from JS
-  jsExpeptions: true,
+  jsExceptions: true,
 
   // stores all local variables in context objects
   contextState: false,
@@ -226,7 +228,10 @@ export default {
   // immediately execute their argument functions (like Array::map, filter) etc
   // so no needs to handle block scoping
   loopBlockScoping: true,
-  
+
+  // replaces `let`/`const` with `var`
+  blockScoping: false,
+
   // Handles local variables as threaded arguments, passed to operations
   // and further back to next continuation, this makes their values isolated
   // between different continuations
@@ -259,4 +264,5 @@ export default {
 
   // marks function nodes where transform is to be applied
   transform: false
+
 }

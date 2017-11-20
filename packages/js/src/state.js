@@ -492,6 +492,9 @@ export function calcRefScopes(si) {
           k.track = true
       }
       i.track = true
+    } else if (i.opts.blockScoping) {
+      for(const j of i.scopeCapt)
+        j.track = true
     }
   }
   // if loop's scope variable is captured somewhere else,
@@ -806,7 +809,7 @@ export function calcFrameStateVars(si) {
           if (i.value.sym.interpr && !sw.w.has(i.value.sym))
             sw.r.add(i.value.sym)
           break
-      case Tag.Identifier:
+        case Tag.Identifier:
           let {sym} = i.value
           if (sw != null && sym != null) {
             if (sym === functionSentSym) {
@@ -1223,15 +1226,15 @@ export function handleSpecVars(si) {
 }
 
 export function calcFlatCfg(cfg,sa) {
-  for(const i of sa) {
-    calcFrameStateVars(i)
-    const root = i[0].value
-    const ctxSyms = []
-    for(const i of root.scopeDecls)
-      if (i.interpr === Bind.ctxField)
-        ctxSyms.push(i)
-    allUniqFields(ctxSyms,"_")
-  }
+  const root = sa[0].value
+  // if (!root.opts.state && !root.opts.contextState && !root.functionSentSym)
+  //  return
+  calcFrameStateVars(sa)
+  const ctxSyms = []
+  for(const i of root.scopeDecls)
+    if (i.interpr === Bind.ctxField)
+      ctxSyms.push(i)
+  allUniqFields(ctxSyms,"_")
   resolveFrameParams(cfg)
   propagateArgs(cfg)
   resolveFrameArgs(cfg)

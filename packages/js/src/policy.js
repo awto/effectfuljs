@@ -69,6 +69,25 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
   return Kit.pipe(...post)
 })
 
+/** assigns opts field to each descendant value if there is no any */
+export function propagateOpts(si) {
+  const sa = Kit.toArray(si)
+  const s = Kit.auto(sa)
+  const stack = []
+  for(const i of s) {
+    if (i.enter && i.value.opts) {
+      stack.push(i.value.opts)
+    }
+    if (i.leave) {
+      if (i.value.opts)
+        stack.pop()
+      else
+        i.value.opts = stack[stack.length-1]
+    }
+  }
+  return sa
+}
+
 /** 
  * in case if ns is loaded using command line it replaces all corresponding
  * global variables with the name of ns

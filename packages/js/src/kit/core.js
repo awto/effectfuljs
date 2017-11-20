@@ -1,6 +1,6 @@
 import {Tag,produce as esproduce,symbol,toArray,isSymbol,
         symName,symInfo,consume as esconsume,scope} from "estransducers"
-import * as EsKit from "estransducers/kit"
+import {pipe,curry,Wrapper} from "estransducers/kit"
 import * as T from "babel-types"
 import * as assert from "assert"
 
@@ -227,7 +227,7 @@ export function* completeSubst(s) {
   yield* walk()
 }
 
-export const complete = EsKit.pipe(completeAny,resetLevel)
+export const complete = pipe(completeAny,resetLevel)
 
 export const Subst = symbol("Subst","ctrl")
 
@@ -245,12 +245,12 @@ export function* bracket(i, pos, tok, value) {
   yield leave(pos, tok, value)
 }
 
-export const map = EsKit.curry(function* map(f, s) {
+export const map = curry(function* map(f, s) {
   for(const i of s) 
     yield f(i)
 })
 
-export const filter = EsKit.curry(function* filter(pred, s) {
+export const filter = curry(function* filter(pred, s) {
   for(const i of s) 
     if (pred(i))
       yield i
@@ -459,7 +459,7 @@ export function skip(s) {
 }
 
 export const prepare =
-  EsKit.pipe(
+  pipe(
     resetLevel,
     function* prepare(s) {
       const stack = []
@@ -532,7 +532,7 @@ export function* copyOneWithPos(s,pos) {
   }
 }
 
-export const peel = EsKit.curry(function* peel(step, s) {
+export const peel = curry(function* peel(step, s) {
   const i = s.take()
   yield enter(i)
   yield* step(s)
@@ -545,7 +545,7 @@ export const peel = EsKit.curry(function* peel(step, s) {
 /**
  * removes nodes with specified type without content 
  */
-export const rmEmpty = EsKit.curry(function* rmEmpty(ty,s) {
+export const rmEmpty = curry(function* rmEmpty(ty,s) {
   const sl = lookahead(s)
   for(const i of sl) {
     if (i.type === ty && i.enter) {
@@ -602,5 +602,12 @@ function ctor(pos,type,value) {
   return [pos,type,value]
 }
 
-EsKit.Wrapper.prototype.valCtor = ctor
-export const auto = EsKit.auto
+function CtorWrap(i) {
+  Wrapper.call(this,i)
+}
+
+CtorWrap.prototype = new Wrapper()
+CtorWrap.prototype.valCtor = ctor
+export function auto(i) { 
+  return new CtorWrap(i)
+}

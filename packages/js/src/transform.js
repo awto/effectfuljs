@@ -20,7 +20,7 @@ import * as Ops from "./ops"
 import * as Flat from "./flat"
 import * as Closure from "./closure"
 import * as Inline from "./inline"
-import simplify from "./simplify"
+import * as Simplify from "./simplify"
 import {ifLoose,ifEsRebind,ifTopLevel,
         ifJsExceptions} from "./options"
 
@@ -46,13 +46,14 @@ export const loose = ifLoose(Kit.pipe(
   Loops.looseForOf,
   Rt.collect,
   Kit.toArray,
-  simplify,
+  Simplify.blockScoping,
+  Simplify.main,
   Rt.interpretLibSyms,
   Rt.inject))
 
 const finalize = Kit.pipe(
   Scope.funcWraps,
-  simplify,
+  Simplify.main,
   ifLoose(Loops.looseForOf),
   Rt.interpretLibSyms,
   Kit.toArray,
@@ -118,19 +119,16 @@ export const stage0 = Kit.pipe(
     Exceptions.inject,
     Prop.recalcEff,
     Block.splitEffBlock,
-    Ops.combine
-  )),
-  Flat.convert,
-  Kit.map(Inline.jsExceptions))
+    Ops.combine,
+    Flat.convert,
+    Inline.jsExceptions)))
 
 const stage1 = Kit.pipe(
   Kit.map(Kit.pipe(
     Block.cleanPureEff,
     Policy.stage("interpret"),
-    Ops.interpret
-  )),
-  Flat.interpret,
-  Kit.map(Kit.pipe(
+    Ops.interpret,
+    Flat.interpret,
     Inline.ops,
     Coerce.inject,
     Block.interpretApp,
@@ -141,7 +139,7 @@ const stage1 = Kit.pipe(
     Closure.substContextIds,
     Block.ctxMethods,
     Rt.collect,
-    simplify,
+    Simplify.main,
     Kit.toArray
   )))
 

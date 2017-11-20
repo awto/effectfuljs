@@ -1,13 +1,13 @@
 function a(z) {
   var a = M.context();
   a._z = z;
-  return M.scope(a_1, _a_4);
+  return M.scope(a_1, a_4);
 }
 
 function a(z) {
   var a = M.context();
   a._z = z;
-  return M.scope(_a_1, a_4);
+  return M.scope(_a_1, _a_4);
 }
 
 function c(z) {
@@ -25,41 +25,14 @@ function d(z) {
 function a_1(a) {
   switch (a._z) {
     case 1:
-      return M.chain(eff(1), a_2, _a_4);
+      return M.chain(eff(1), a_2, a_4);
 
     default:
-      return M.chain(eff(2), a_2, _a_4);
+      return M.chain(eff(2), a_2, a_4);
   }
 }
 
 function a_2(a) {
-  return M.chain(eff(3), _a_3, _a_4);
-}
-
-function _a_3(a) {
-  return M.pure();
-}
-
-function _a_4(a, e) {
-  return M.raise(e);
-}
-
-function _a_1(a) {
-  switch (a._z) {
-    case 1:
-      return M.chain(eff(1), _a_2, a_4);
-
-    case 2:
-      console.log('1');
-      return M.jump(_a_2, a_4);
-
-    default:
-      console.log('2');
-      return M.jump(_a_2, a_4);
-  }
-}
-
-function _a_2(a) {
   return M.chain(eff(3), a_3, a_4);
 }
 
@@ -68,6 +41,33 @@ function a_3(a) {
 }
 
 function a_4(a, e) {
+  return M.raise(e);
+}
+
+function _a_1(a) {
+  switch (a._z) {
+    case 1:
+      return M.chain(eff(1), _a_2, _a_4);
+
+    case 2:
+      console.log('1');
+      return M.jump(_a_2, _a_4);
+
+    default:
+      console.log('2');
+      return M.jump(_a_2, _a_4);
+  }
+}
+
+function _a_2(a) {
+  return M.chain(eff(3), _a_3, _a_4);
+}
+
+function _a_3(a) {
+  return M.pure();
+}
+
+function _a_4(a, e) {
   return M.raise(e);
 }
 

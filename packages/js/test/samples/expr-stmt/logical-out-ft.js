@@ -1,6 +1,6 @@
 function a1() {
   var a1 = M.context();
-  return M.scope(a1_1, _a1_4);
+  return M.scope(a1_1, a1_4);
 }
 
 function a2() {
@@ -119,22 +119,22 @@ function a1() {
 }
 
 function a1_1(a1) {
-  return M.chain(eff(1), a1_2, _a1_4);
+  return M.chain(eff(1), a1_2, a1_4);
 }
 
 function a1_2(a1, a) {
   if (!a) {
-    return M.chain(eff(2), _a1_3, _a1_4);
+    return M.chain(eff(2), a1_3, a1_4);
   } else {
     return M.pure(a);
   }
 }
 
-function _a1_3(a1) {
+function a1_3(a1) {
   return M.pure();
 }
 
-function _a1_4(a1, e) {
+function a1_4(a1, e) {
   return M.raise(e);
 }
 
@@ -777,17 +777,17 @@ function _a1_1(a1) {
 
 function _a1_2(a1, a) {
   if (a) {
-    return M.yldStar(M.yld('a2'), a1_3, a1_30);
+    return M.yldStar(M.yld('a2'), _a1_3, a1_30);
   } else {
-    return M.yldStar(M.yld('a3'), a1_3, a1_30);
+    return M.yldStar(M.yld('a3'), _a1_3, a1_30);
   }
 }
 
-function a1_3(a1) {
-  return M.yldStar(M.yld('b1'), a1_4, a1_30);
+function _a1_3(a1) {
+  return M.yldStar(M.yld('b1'), _a1_4, a1_30);
 }
 
-function a1_4(a1, a) {
+function _a1_4(a1, a) {
   var b;
 
   if (a % 2) {

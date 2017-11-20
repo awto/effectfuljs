@@ -65,7 +65,7 @@ export const convert = Kit.pipe(
    * this pass is actually workaround of not very nice output
    * from the former passes, they were designed for now abandoned nested mode 
    */
-  Kit.map(function convertPrepare(si) {
+  function convertPrepare(si) {
     const s = Kit.auto(si)
     const root = s.first.value
     function* walk() {
@@ -128,8 +128,8 @@ export const convert = Kit.pipe(
       return res
     }
     return walk()
-  }),
-  Kit.map(function* convert(si) {
+  },
+  function* convert(si) {
     const s = Kit.auto(si)
     const root = s.first.value
     const frames = []
@@ -314,54 +314,50 @@ export const convert = Kit.pipe(
         yield i
       }
     }
-  }),
-  Kit.map(Kit.toArray), Array.from,
+  },
+  Kit.toArray,
   // * removes useless frames:
   //   - frame with the only statement is a jump
   //   - inlines frames with only 1 jump into it
   // processing all frames at once to handle non-local jumps
   // this is a bit inefficient, maps will contain all items from the module
-  function postproc(scopes) {
-    function scope(sa) {
-      const s = Kit.auto(sa)
-      const root = s.first.value
-      const bindName = s.opts.bindName || "chain"
-      return walk()
-      function walk() {
-        for(const i of s.sub()) {
-          if (i.enter) {
-            switch(i.type) {
+  function postproc(sa) {
+    const s = Kit.auto(sa)
+    const root = s.first.value
+    const bindName = s.opts.bindName || "chain"
+    walk()
+    return sa
+    function walk() {
+      for(const i of s.sub()) {
+        if (i.enter) {
+          switch(i.type) {
             case Block.frame:
-              for(const j of s.sub()) {
-                if (j.enter) {
-                  switch(j.type) {
-                  case Block.bindPat:
+            for(const j of s.sub()) {
+              if (j.enter) {
+                switch(j.type) {
+                case Block.bindPat:
+                  break
+                case Block.letStmt:
+                  if (!j.value.eff)
                     break
-                  case Block.letStmt:
-                    if (!j.value.eff)
-                      break
-                    if (j.value.bindName == null)
-                      j.value.bindName = bindName
-                    j.value.suspending = j.value.bindName !== bindName
-                  case Ctrl.jump:
-                    const bindJump = j.type === Block.letStmt
-                    j.value.bindJump = bindJump
-                    j.value.ref = i.value
+                  if (j.value.bindName == null)
+                    j.value.bindName = bindName
+                  j.value.suspending = j.value.bindName !== bindName
+                case Ctrl.jump:
+                  const bindJump = j.type === Block.letStmt
+                  j.value.bindJump = bindJump
+                  j.value.ref = i.value
                   }
-                }
               }
             }
           }
         }
       }
     }
-    for(const i of scopes) 
-      scope(i)
-    return scopes
   },
   // wraps chain with extra frames for exiting the function,
   // normally or with exception
-  Kit.map(function* wrapChain(sa) {
+  function* wrapChain(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
     let first = sa.find(i => i.type === Block.frame)
@@ -436,7 +432,7 @@ export const convert = Kit.pipe(
     // needs to be in the end so `cleanup` pass can remove them if needed
     yield* resFrameCont
     yield* s
-  }),
+  },
   /** 
    * for each frame and jump adds 
    *   finally continuations:
@@ -444,8 +440,8 @@ export const convert = Kit.pipe(
    *   catch continuations for frames:
    *   - catchCont - {preCompose:FrameVal[],errSym:Sym,Goto:FrameVal} 
    */
-  Kit.reverse,Kit.map(Kit.toArray),
-  Kit.map(function preComposeTryCatch(si) {
+  Kit.toArray,
+  function preComposeTryCatch(si) {
     const s = Kit.auto(si)
     const root = s.first.value
     const {resFrame} = root
@@ -505,12 +501,11 @@ export const convert = Kit.pipe(
         yield i
       }
     }
-  }),
-  Kit.reverse,
-  Kit.map(Kit.toArray),
+  },
+  Kit.toArray,
   // for try-finally (without catch) statements generates a frame for throwing
   // catched exception again
-  Kit.map(function* addReThrowFrames(si) {
+  function* addReThrowFrames(si) {
     const s = Kit.auto(si)
     const root = s.first.value
     const termFrames = []
@@ -552,9 +547,9 @@ export const convert = Kit.pipe(
     }
     yield* termFrames
     yield* s
-  }),
+  },
   // emits auxiliary frames if there are jumps through several finally blocks
-  Kit.map(function* composeFinallyBlocks(si) {
+  function* composeFinallyBlocks(si) {
     const s = Kit.auto(si)
     const root = s.first.value
     const {resFrame,resSym,errFrameRedir} = root
@@ -707,11 +702,12 @@ export const convert = Kit.pipe(
         frame.resultContRedir = frame.resultCont.redir
       yield s.close(i)
     }
-  }),
-  Kit.map(Inline.throwStatements),
-  Kit.map(Kit.toArray),Array.from,
-  function optimize(scopes) {
-    const cfg = getCfgFolded(scopes)
+  },
+  Inline.throwStatements,
+  Kit.toArray,
+  function optimize(sa) {
+    const cfg = new Map()
+    sa = getCfgFolded(sa,cfg)
     instantiateJumps(cfg.keys())
     optUselessFrames(cfg)
     instantiateJumps(cfg.keys())
@@ -736,11 +732,9 @@ export const convert = Kit.pipe(
       if (i.catchCont)
         jumpArgs(i.catchCont,i.root.first)
     }
-    unfoldCfg(cfg,scopes)
-    return scopes
+    return unfoldCfg(cfg,sa)
   },
-  Kit.map(Kit.toArray),
-  Array.from)
+  Kit.toArray)
 
 /** generates local copies of variables used in each frame */
 function* copyFrameVars(si) {
@@ -773,7 +767,7 @@ function* copyFrameVars(si) {
     }
     const patSym = frame.errSym || frame.patSym
     let patCopy
-    if (patSym && isRef(patSym) && vars.has(patSym)) {
+    if (patSym && isRef(patSym) /*&& vars.has(patSym)*/ && patSym.extBind) {
       patCopy = commonPatSym || Kit.scope.newSym()
       yield s.enter(Tag.push,Tag.AssignmentExpression,{node:{operator:"="}})
       yield s.tok(Tag.left,Tag.Identifier,{sym:patSym})
@@ -1004,7 +998,7 @@ export function interpretFrames(si) {
             if (i.value.ctrlParam)
               yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.ctrlParam})
             const patSym = i.value.errSym || i.value.patSym
-            if (patSym && (thread.length || !patSym.dummy))
+            if (patSym && (thread && thread.length || !patSym.dummy))
               yield s.tok(Tag.push,Tag.Identifier,{sym:patSym})
             if (thread && thread.length)
               yield* thread.length <= unpackMax
@@ -1201,13 +1195,12 @@ function calcPatSym(cfg) {
  *  - `frameAvail: Set<Symbol>`: value assigned in some former frame
  *  - `frameParamsClos: Set<Symbol>`: needed by the frame or some next frame
  */
-function calcVarDeps(scopes) {
-  const frames = getCfg(scopes)
+function calcVarDeps(sa) {
+  const frames = getCfg(sa)
   calcPatSym(frames)
-  for(let i = 0, len = scopes.length; i < len; ++i)
-    scopes[i] = cfgPostProcess(scopes[i])
-  State.calcFlatCfg(frames,scopes)
-  return scopes
+  sa = cfgPostProcess(sa)
+  State.calcFlatCfg(frames,sa)
+  return sa
 }
 
 /** 
@@ -1816,46 +1809,40 @@ function applyInlines(si) {
  * returns optimized CFG and replaces frames in scopes to folded tokens
  * it is just applies `prepareCfg` to each item in `scopes` 
  */
-function getCfgFolded(scopes) {
-  const cfg = new Map()
-  for(let i = 0, len = scopes.length;i<len;++i)
-    scopes[i] = Kit.toArray(prepareCfg(scopes[i],cfg))
-  return cfg
+function getCfgFolded(sa,cfg) {
+  return Kit.toArray(prepareCfg(sa,cfg))
 }
 
 /** same as getCfgFolded but doesn't fold tokens */
-function getCfg(scopes) {
+function getCfg(sa) {
   const cfg = []
-  for(let i = 0, len = scopes.length;i<len;++i)
-    Kit.skip(prepareCfg(scopes[i],null,cfg))
+  Kit.skip(prepareCfg(sa,null,cfg))
   resetEnters(cfg)
   return cfg
 }
 
 /** reverse of `getCfgFolds` */
-function unfoldCfg(cfg,scopes) {
-  for(let i = 0, len = scopes.length;i<len;++i)
-    scopes[i] = Kit.toArray(applyInlines(restoreFromCfg(cfg,scopes[i])))
+function unfoldCfg(cfg,sa) {
+  return Kit.toArray(applyInlines(restoreFromCfg(cfg,sa)))
 }
 
 /** conferts flat structure to JS expressions */
 export const interpret = Kit.pipe(
-  Kit.map(Kit.toArray),Array.from,
+  Kit.toArray,
   calcVarDeps,
-  Kit.map(Kit.pipe(
-    Inline.storeContinuations,
-    ifDefunct(Defunct.prepare),
-    Gens.functionSentAssign,
-    Bind.interpretPureLet,
-    copyFrameVars,
-    Policy.stage("interpretFrames"),
-    Kit.toArray,
-    ifDefunct(Defunct.convert),
-    Inline.jumps,
-    interpretJumps,
-    Kit.toArray,
-    Inline.control,
-    interpretFrames,
-    Kit.toArray)),
-  Array.from,
-  Kit.map(ifDefunct(Defunct.substSymConsts)))
+  Inline.storeContinuations,
+  ifDefunct(Defunct.prepare),
+  Gens.functionSentAssign,
+  Bind.interpretPureLet,
+  copyFrameVars,
+  Policy.stage("interpretFrames"),
+  Kit.toArray,
+  ifDefunct(Defunct.convert),
+  Inline.jumps,
+  interpretJumps,
+  Kit.toArray,
+  Inline.control,
+  interpretFrames,
+  Kit.toArray,
+  ifDefunct(Defunct.substSymConsts))
+

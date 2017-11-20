@@ -61,7 +61,7 @@ function c() {
 class A {
   method() {
     var ctx = M.async();
-    return ctx.scope(method_1, method_31);
+    return ctx.scope(method_1, method_3);
   }
 
   static method() {
@@ -74,7 +74,7 @@ class A {
 var b = new class {
   method() {
     var ctx = M.async();
-    return ctx.scope(method_11, method_3);
+    return ctx.scope(method_11, method_31);
   }
 
   static m1() {
@@ -93,24 +93,24 @@ var b = new class {
 var c = new class C {
   [getName()]() {
     var ctx = M.async();
-    return ctx.scope(f_1, f_32);
+    return ctx.scope(f_1, f_3);
   }
 
   static [Symbol.iterator]() {
     var ctx = M.async();
-    return ctx.scope(_f_1, f_31);
+    return ctx.scope(_f_1, _f_3);
   }
 
 }()(i => {
   var ctx = M.async();
   ctx._i = i;
-  return ctx.scope(f_11, _f_3);
+  return ctx.scope(f_11, f_31);
 })(10);
 
 (function (i) {
   var ctx = M.async();
   ctx._i = i;
-  return ctx.scope(f_12, f_3);
+  return ctx.scope(f_12, f_32);
 })(10);
 
 (function zz(i) {
@@ -1093,14 +1093,14 @@ function c_17(c, a) {
 }
 
 function method_1(ctx) {
-  return ctx.chain(something, method_21, method_31);
+  return ctx.chain(something, method_2, method_3);
 }
 
-function method_21(ctx) {
+function method_2(ctx) {
   return ctx.pure();
 }
 
-function method_31(ctx, e) {
+function method_3(ctx, e) {
   return ctx.raise(e);
 }
 
@@ -1117,14 +1117,14 @@ function _method_3(ctx, e) {
 }
 
 function method_11(ctx) {
-  return ctx.chain(something, method_2, method_3);
+  return ctx.chain(something, method_21, method_31);
 }
 
-function method_2(ctx) {
+function method_21(ctx) {
   return ctx.pure();
 }
 
-function method_3(ctx, e) {
+function method_31(ctx, e) {
   return ctx.raise(e);
 }
 
@@ -1153,51 +1153,51 @@ function m1_3(ctx, e) {
 }
 
 function f_1(ctx) {
-  return ctx.chain(something, f_22, f_32);
+  return ctx.chain(something, f_2, f_3);
 }
 
-function f_22(ctx) {
+function f_2(ctx) {
   return ctx.pure();
 }
 
-function f_32(ctx, e) {
+function f_3(ctx, e) {
   return ctx.raise(e);
 }
 
 function _f_1(ctx) {
-  return ctx.chain(somethingElse, f_21, f_31);
+  return ctx.chain(somethingElse, _f_2, _f_3);
 }
 
-function f_21(ctx) {
+function _f_2(ctx) {
   return ctx.pure();
-}
-
-function f_31(ctx, e) {
-  return ctx.raise(e);
-}
-
-function f_11(ctx) {
-  return ctx.chain(ctx._i, _f_2, _f_3);
-}
-
-function _f_2(ctx, r) {
-  return ctx.pure(r);
 }
 
 function _f_3(ctx, e) {
   return ctx.raise(e);
 }
 
-function f_12(ctx) {
-  return ctx.chain(ctx._i, f_2, f_3);
+function f_11(ctx) {
+  return ctx.chain(ctx._i, f_21, f_31);
 }
 
-function f_2(ctx, a) {
+function f_21(ctx, r) {
+  return ctx.pure(r);
+}
+
+function f_31(ctx, e) {
+  return ctx.raise(e);
+}
+
+function f_12(ctx) {
+  return ctx.chain(ctx._i, f_22, f_32);
+}
+
+function f_22(ctx, a) {
   ctx._f = a;
   return ctx.pure();
 }
 
-function f_3(ctx, e) {
+function f_32(ctx, e) {
   return ctx.raise(e);
 }
 

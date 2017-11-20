@@ -174,6 +174,8 @@ function generatorsYield(si) {
             yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
             yield s.tok(Tag.property,Tag.Identifier,{node:{name:"unwrap"}})
             yield* s.leave()
+          } else {
+            yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
           }
           s.close(i)
           continue

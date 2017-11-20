@@ -129,7 +129,7 @@ export const doWhileStmt = Kit.pipe(
 function forOfStmtImpl(loose, s) {
   s = Kit.auto(s)
   const root = s.first.value
-  const all = loose || s.opts.loose
+  const all = (loose || s.opts.loose) && s.opts.leanForOf
   const finalizeForOf = s.opts.finalizeForOf !== false
   let emitBody = walk
   if (finalizeForOf && s.opts.jsExceptions !== false) {

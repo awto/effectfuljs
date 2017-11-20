@@ -17,7 +17,7 @@ function b() {
   M.reify(function () {
     var ctx = M.context();
     ctx._b = b;
-    return M.scope(_f_1, f_3);
+    return M.scope(_f_1, _f_3);
   }).done();
 }
 
@@ -42,10 +42,10 @@ function f_1(ctx) {
 }
 
 function f_2(ctx) {
-  return M.chain(eff(2), _f_3, f_4);
+  return M.chain(eff(2), f_3, f_4);
 }
 
-function _f_3(ctx) {
+function f_3(ctx) {
   return M.pure();
 }
 
@@ -70,7 +70,7 @@ function a_7(a, e) {
 }
 
 function _f_1(ctx) {
-  return M.chain(ctx._b._addLater(1, 2), _f_2, f_3);
+  return M.chain(ctx._b._addLater(1, 2), _f_2, _f_3);
 }
 
 function _f_2(ctx, a) {
@@ -86,6 +86,6 @@ function _f_2(ctx, a) {
   return M.pure();
 }
 
-function f_3(ctx, e) {
+function _f_3(ctx, e) {
   return M.raise(e);
 }

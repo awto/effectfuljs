@@ -1,11 +1,11 @@
 (function () {
   var ctx = M.context();
-  return M.scope(f_1, f_53);
+  return M.scope(f_1, f_5);
 });
 
 (function () {
   var ctx = M.context();
-  return M.scope(_f_1, f_61);
+  return M.scope(_f_1, f_6);
 });
 
 (function () {
@@ -52,7 +52,7 @@ function e() {
 
 function f() {
   var f = M.context();
-  return M.scope(f_13, _f_5);
+  return M.scope(f_13, f_53);
 }
 
 function c1() {
@@ -62,24 +62,24 @@ function c1() {
 
 function c2() {
   var c2 = M.context();
-  return M.scope(c2_1, _c2_4);
+  return M.scope(c2_1, c2_4);
 }
 
 function c2() {
   var c2 = M.context();
-  return M.scope(_c2_1, c2_4);
+  return M.scope(_c2_1, _c2_4);
 }
 
 function f_1(ctx) {
   ctx._ref = [1, 2, 3];
   ctx._j = 0, ctx._len = ctx._ref.length;
-  return M.jump(f_2, f_53);
+  return M.jump(f_2, f_5);
 }
 
 function f_2(ctx) {
   if (ctx._j < ctx._len) {
     ctx._i = ctx._ref[ctx._j];
-    return M.chain(eff(ctx._i), f_3, f_53);
+    return M.chain(eff(ctx._i), f_3, f_5);
   } else {
     return M.pure();
   }
@@ -87,48 +87,48 @@ function f_2(ctx) {
 
 function f_3(ctx, a) {
   if (a) {
-    return M.jump(f_4, f_53);
+    return M.jump(f_4, f_5);
   } else {
-    return M.jump(f_4, f_53);
+    return M.jump(f_4, f_5);
   }
 }
 
 function f_4(ctx) {
   ctx._j++;
-  return M.repeat(f_2, f_53);
+  return M.repeat(f_2, f_5);
 }
 
-function f_53(ctx, e) {
+function f_5(ctx, e) {
   return M.raise(e);
 }
 
 function _f_1(ctx) {
-  return M.chain(eff('bi'), _f_2, f_61);
+  return M.chain(eff('bi'), _f_2, f_6);
 }
 
 function _f_2(ctx) {
   ctx._i = 0;
-  return M.jump(_f_3, f_61);
+  return M.jump(_f_3, f_6);
 }
 
 function _f_3(ctx) {
   if (ctx._i < 3) {
-    return M.chain(eff('bi:', ctx._i), _f_4, f_61);
+    return M.chain(eff('bi:', ctx._i), _f_4, f_6);
   } else {
-    return M.chain(eff('ai'), f_52, f_61);
+    return M.chain(eff('ai'), _f_5, f_6);
   }
 }
 
 function _f_4(ctx) {
   ctx._i++;
-  return M.repeat(_f_3, f_61);
+  return M.repeat(_f_3, f_6);
 }
 
-function f_52(ctx) {
+function _f_5(ctx) {
   return M.pure();
 }
 
-function f_61(ctx, e) {
+function f_6(ctx, e) {
   return M.raise(e);
 }
 
@@ -181,10 +181,10 @@ function f_32(ctx) {
 
 function f_42(ctx) {
   ctx._j = 0;
-  return M.jump(f_5, f_10);
+  return M.jump(f_52, f_10);
 }
 
-function f_5(ctx) {
+function f_52(ctx) {
   if (ctx._j < 40) {
     if (ctx._j === 10) {
       return M.jump(f_7, f_10);
@@ -192,7 +192,7 @@ function f_5(ctx) {
       if (ctx._j === 30) {
         return M.jump(f_8, f_10);
       } else {
-        return M.chain(eff(ctx._i + ctx._j), f_6, f_10);
+        return M.chain(eff(ctx._i + ctx._j), f_61, f_10);
       }
     }
   } else {
@@ -200,9 +200,9 @@ function f_5(ctx) {
   }
 }
 
-function f_6(ctx) {
+function f_61(ctx) {
   ctx._j += 10;
-  return M.repeat(f_5, f_10);
+  return M.repeat(f_52, f_10);
 }
 
 function f_7(ctx) {
@@ -386,42 +386,42 @@ function e_5(e, _e) {
 function f_13(f) {
   f._result = 0;
   f._i = 0;
-  return M.jump(f_23, _f_5);
+  return M.jump(f_23, f_53);
 }
 
 function f_23(f) {
   if (f._i < 10) {
-    return M.chain(eff(f._i), f_33, _f_5);
+    return M.chain(eff(f._i), f_33, f_53);
   } else {
-    return M.chain(eff(f._result), f_44, _f_5);
+    return M.chain(eff(f._result), f_43, f_53);
   }
 }
 
 function f_33(f, a) {
   f._result = a;
   f._i++;
-  return M.repeat(f_23, _f_5);
+  return M.repeat(f_23, f_53);
 }
 
-function f_44(f) {
+function f_43(f) {
   return M.pure();
 }
 
-function _f_5(f, e) {
+function f_53(f, e) {
   return M.raise(e);
 }
 
 function cc_1(_cc) {
   var a;
   a = _cc._c1._result += _cc._f._i++;
-  return M.chain(eff(a), cc_21, cc_31);
+  return M.chain(eff(a), cc_2, cc_3);
 }
 
-function cc_21(_cc) {
+function cc_2(_cc) {
   return M.pure();
 }
 
-function cc_31(_cc, e) {
+function cc_3(_cc, e) {
   return M.raise(e);
 }
 
@@ -440,7 +440,7 @@ function c1_1(c1) {
 
         _cc._c1 = _c1;
         _cc._f = ctx;
-        return M.scope(cc_1, cc_31);
+        return M.scope(cc_1, cc_3);
       };
     })(c1._i);
   }
@@ -460,7 +460,7 @@ function c1_3(c1, e) {
 function c2_1(c2) {
   c2._result = [];
   c2._i = 0;
-  return M.jump(c2_2, _c2_4);
+  return M.jump(c2_2, c2_4);
 }
 
 function _cc_1(_cc) {
@@ -484,7 +484,7 @@ function f_14(ctx) {
     _cc._c2 = ctx._c2;
     _cc._f = ctx;
     return M.scope(_cc_1, _cc_3);
-  }), f_24, f_35);
+  }), f_24, f_34);
 }
 
 function f_24(ctx, a) {
@@ -492,7 +492,7 @@ function f_24(ctx, a) {
   return M.pure();
 }
 
-function f_35(ctx, e) {
+function f_34(ctx, e) {
   return M.raise(e);
 }
 
@@ -504,39 +504,39 @@ function c2_2(c2) {
       var ctx = M.context();
       ctx._c2 = c2;
       ctx._i = i;
-      return M.scope(f_14, f_35);
-    })(c2._i), c2_2, _c2_4);
+      return M.scope(f_14, f_34);
+    })(c2._i), c2_2, c2_4);
   } else {
     a = c2._result;
-    return M.chain(eff(a), _c2_3, _c2_4);
+    return M.chain(eff(a), c2_3, c2_4);
   }
 }
 
-function _c2_3(c2) {
+function c2_3(c2) {
   return M.pure();
 }
 
-function _c2_4(c2, e) {
+function c2_4(c2, e) {
   return M.raise(e);
 }
 
 function _c2_1(c2) {
   c2._result = [];
   c2._i = 0;
-  return M.jump(_c2_2, c2_4);
+  return M.jump(_c2_2, _c2_4);
 }
 
 function cc_11(_cc) {
   var a;
   a = _cc._c2._result += _cc._f._i += _cc._j;
-  return M.chain(eff(a), cc_2, cc_3);
+  return M.chain(eff(a), cc_21, cc_31);
 }
 
-function cc_2(_cc) {
+function cc_21(_cc) {
   return M.pure();
 }
 
-function cc_3(_cc, e) {
+function cc_31(_cc, e) {
   return M.raise(e);
 }
 
@@ -549,20 +549,20 @@ function f_15(ctx) {
     _cc._c2 = ctx._c2;
     _cc._f = ctx;
     _cc._j = j;
-    return M.scope(cc_11, cc_3);
-  }(a), f_25, f_43);
+    return M.scope(cc_11, cc_31);
+  }(a), f_25, f_44);
 }
 
 function f_25(ctx, a) {
-  return M.chain(eff(a), f_34, f_43);
+  return M.chain(eff(a), f_35, f_44);
 }
 
-function f_34(ctx, a) {
+function f_35(ctx, a) {
   ctx._c2._result[ctx._i] = a;
   return M.pure();
 }
 
-function f_43(ctx, e) {
+function f_44(ctx, e) {
   return M.raise(e);
 }
 
@@ -574,18 +574,18 @@ function _c2_2(c2) {
       var ctx = M.context();
       ctx._c2 = c2;
       ctx._i = i;
-      return M.scope(f_15, f_43);
-    })(c2._i), _c2_2, c2_4);
+      return M.scope(f_15, f_44);
+    })(c2._i), _c2_2, _c2_4);
   } else {
     a = c2._result;
-    return M.chain(eff(a), c2_3, c2_4);
+    return M.chain(eff(a), _c2_3, _c2_4);
   }
 }
 
-function c2_3(c2) {
+function _c2_3(c2) {
   return M.pure();
 }
 
-function c2_4(c2, e) {
+function _c2_4(c2, e) {
   return M.raise(e);
 }

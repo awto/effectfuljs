@@ -4,7 +4,7 @@ function a() {
   a._a = function a() {
     var _a = M.context();
 
-    return M.scope(a_1, _a_4);
+    return M.scope(a_1, a_4);
   };
 
   a._b = function b() {
@@ -18,18 +18,18 @@ function a() {
 
 function a_1(_a) {
   console.log('hi');
-  return M.chain(e1(), a_2, _a_4);
+  return M.chain(e1(), a_2, a_4);
 }
 
 function a_2(_a) {
-  return M.chain(e2(), _a_3, _a_4);
+  return M.chain(e2(), a_3, a_4);
 }
 
-function _a_3(_a) {
+function a_3(_a) {
   return M.pure();
 }
 
-function _a_4(_a, e) {
+function a_4(_a, e) {
   return M.raise(e);
 }
 
@@ -56,14 +56,14 @@ function _a_1(a) {
 }
 
 function _a_2(a) {
-  return M.chain(p2(), a_3, a_6);
+  return M.chain(p2(), _a_3, a_6);
 }
 
-function a_3(a) {
-  return M.chain(p2(), a_4, a_6);
+function _a_3(a) {
+  return M.chain(p2(), _a_4, a_6);
 }
 
-function a_4(a) {
+function _a_4(a) {
   return M.chain(p3(), a_5, a_6);
 }
 

@@ -3,12 +3,12 @@ function aa() {
   aa._A = class A {
     method() {
       var ctx = M.async();
-      return M.scope(method_1, _method_2);
+      return M.scope(method_1, method_2);
     }
 
     static smethod() {
       var ctx = M.async();
-      return M.scope(smethod_1, _smethod_2);
+      return M.scope(smethod_1, smethod_2);
     }
 
   };
@@ -35,7 +35,7 @@ function method_1(ctx) {
   return M.pure('from A');
 }
 
-function _method_2(ctx, e) {
+function method_2(ctx, e) {
   return M.raise(e);
 }
 
@@ -43,17 +43,17 @@ function smethod_1(ctx) {
   return M.pure('static from A');
 }
 
-function _smethod_2(ctx, e) {
+function smethod_2(ctx, e) {
   return M.raise(e);
 }
 
 function _method_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
-  return M.chain(M.chain(a), method_2, method_3);
+  return M.chain(M.chain(a), _method_2, method_3);
 }
 
-function method_2(ctx, a) {
+function _method_2(ctx, a) {
   return M.pure('from B ' + a);
 }
 
@@ -64,10 +64,10 @@ function method_3(ctx, e) {
 function _smethod_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
-  return M.chain(M.chain(a), smethod_2, smethod_3);
+  return M.chain(M.chain(a), _smethod_2, smethod_3);
 }
 
-function smethod_2(ctx, a) {
+function _smethod_2(ctx, a) {
   return M.pure('static from B ' + a);
 }
 
