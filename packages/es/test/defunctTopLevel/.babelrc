@@ -2,7 +2,7 @@
   "passPerPreset": true,
   "sourceType": "script",
   "presets": [["../../preset",{"topLevel":true,
-                               "defunct":false,
+                               "defunct":true,
                                "contextState":true,
                                "contextBy":"this",
                                "all": {"wrapFunction":null}}],
@@ -12,3 +12,4 @@
                    {strict:false,loose:true}]]
               }]
 }
+

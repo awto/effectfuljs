@@ -49,7 +49,8 @@ function guessType(pos,type,value) {
     value = {}
   }
   if (value.node == null) {
-    switch(type) {    case Tag.Array:
+    switch(type) {
+    case Tag.Array:
       value.node = []
       break
     case Tag.Null:
@@ -109,6 +110,7 @@ export function tok(pos,type,value) {
 
 export function enter() {
   let [pos,type,value] = guessType.apply(null, arguments)
+  assert.ok(pos && type && value)
   value = tagValue(pos,type,value)
   return {enter:true,leave:false,type,pos,value}
 }

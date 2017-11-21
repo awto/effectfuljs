@@ -14,6 +14,7 @@ describe("regenerator tests", function() {
   describe("with default options", function() {
     require("./default/links/regenerator")
   })
+  /*
   describe("with top level handlers", function() {
     global.skipTests = Object.assign({},top,{
       // not implemented arguments object aliasing
@@ -23,6 +24,20 @@ describe("regenerator tests", function() {
     })
     require("./topLevel/links/regenerator")
   })
-  
+  */
+  /*
+  describe("with single frame function",function() {
+    require("./defunct/links/regenerator")
+  })
+  describe("with top level single frame function",function() {
+    global.skipTests = Object.assign({},top,{
+      // not implemented arguments object aliasing
+      "should alias function parameters": true,
+      // preserved but moved out of function
+      "should be preserved in generated code": true
+    })
+    require("./defunctTopLevel/links/regenerator")
+  })
+  */
 })
 

@@ -168,7 +168,7 @@ export function run(s) {
   const transform = []
   const others = []
   for(const i of inp)
-    i[0].value.track = i[0].value.topEff
+    i[0].value.track = i[0].value.track || i[0].value.topEff
   // even pure functions must be converted if they have shared vars
   for(const i of inp) {
     const root = i[0].value

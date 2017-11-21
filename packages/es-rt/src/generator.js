@@ -38,10 +38,10 @@ var LGp = LeanGenerator.prototype
 GeneratorConstructor = LeanGenerator
 
 if (!process.env.EJS_INLINE) {
-function nop() {
-  this.value = void 0
-  return this
-}
+  function nop() {
+    this.value = void 0
+    return this
+  }
 
   function resume(a) {
     this.$handle = this.$subHandle

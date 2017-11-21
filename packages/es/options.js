@@ -14,7 +14,8 @@ const rebind = {
   all: {
     presetsImportPattern:false,
     directives:false,
-    bindCalls: null
+    bindCalls: null,
+    reuseImports:false
   },
   effectful: {
     scopeContext:true,
@@ -35,6 +36,7 @@ const rebind = {
     scopePrefix:true,
     coerce:false,
     ops,
+    contextBy: "this",
     contextMethodOpsSpec: {
       iterator: false,
       iteratorM: false,
@@ -45,7 +47,10 @@ const rebind = {
     bindName:"yldStar",
     scopeConstructor:"generator",
     scopePostfix:true,
-    wrapFunction: "generatorFunction"
+    wrapFunction: "generatorFunction",
+    storeResultCont:"$exit",
+    keepLastPure:true,
+    keepLastRaise:true
   },
   async: {
     bindName:"chain",
@@ -109,7 +114,8 @@ const inline = {
 
 const defunct = {
   effectful: {
-    defunct:true
+    defunct:true,
+    storeCont:"$cont"
   }
 }
 
@@ -124,8 +130,7 @@ const defunctInline = {
     inlineErrorContAssign:true,
     inlineContAssign:true,
     inlineChainOp:false,
-    scopePrefix:true,
-    inlineChainOp:false
+    scopePrefix:true
   },
   async: {
     inlineScopeOp:"call"
@@ -151,11 +156,14 @@ const topLevel = {
   file: {
     topLevel: true
   },
-  effectful: {
+  all: {
     topLevel:true,
     contextBy: "this",
     contextState:true,
     wrapFunction: false
+  },
+  effectful: {
+    inlineChainOp:false
   }
 }
 
@@ -166,16 +174,7 @@ const disabled = {
   asyncGenerators:{transform:false,loose:false,importRT:null}
 }
 
-rebind.all.profiles = {
-  disabled,
-  topLevel,
-  rebind,
-  defunct,
-  inline,
-  defunctInline
-}
-
-module.exports = function esProfile(opts) {
+module.exports = function esProfile(opts={}) {
   let importRT = opts.importRT
   if (importRT == null) {
     importRT = "@effectful/es-"
@@ -219,10 +218,11 @@ module.exports = function esProfile(opts) {
     Object.assign(asyncGenerators,loose.all,loose.effectful)
   }
   if (opts.topLevel) {
-    Object.assign(file,topLevel.file)
-    Object.assign(generators,topLevel.effectful)
-    Object.assign(async,topLevel.effectful)
-    Object.assign(asyncGenerators,topLevel.effectful)
+    Object.assign(file,topLevel.all,topLevel.file)
+    Object.assign(pure,topLevel.all)
+    Object.assign(generators,topLevel.all,topLevel.effectful)
+    Object.assign(async,topLevel.all,topLevel.effectful)
+    Object.assign(asyncGenerators,topLevel.all,topLevel.effectful)
   }
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})

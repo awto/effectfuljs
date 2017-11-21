@@ -695,14 +695,14 @@ function emitInitOptions(s) {
 }
 
 /** combines a few preparation passes */
-export const prepare = Kit.pipe(
-  Kit.enableIf(i => i.opts.presetsImportPattern
-               || i.opts.moduleAliases
-               || i.opts.reuseImports,
-               presets),
-  emitInitOptions,
-  ifDirectives(
-    Kit.pipe(
+export const prepare =
+  Kit.pipe(
+    Kit.enableIf(i => i.opts.presetsImportPattern
+                 || i.opts.moduleAliases
+                 || i.opts.reuseImports,
+                 presets),
+    emitInitOptions,
+    ifDirectives(Kit.pipe(
       directives,
       configDiffPass,
       applyProfiles,

@@ -16,7 +16,9 @@ const a = w => function mfs(s) {
             return M.scope(_1, _4);
 
             function _1() {
-              return M.yldStar(M.yld(m => id(k, v, w, m, ww, mm)), _2, _4);
+              return M.yldStar(M.yld(m => {
+                return id(k, v, w, m, ww, mm);
+              }), _2, _4);
             }
 
             function _2() {
