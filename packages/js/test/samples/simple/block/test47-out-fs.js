@@ -1,11 +1,11 @@
 function a() {
   var i;
   i = 0;
-  return M.chain(eff(1), _1, _3, i);
+  return M.chainBH(eff(1), _1, _3, i);
 
   function _1(i) {
     i++;
-    return M.chain(eff(2), _2, _3);
+    return M.chainBH(eff(2), _2, _3);
   }
 
   function _2() {

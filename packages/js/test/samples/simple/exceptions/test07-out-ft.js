@@ -1,21 +1,21 @@
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_7);
+  return M.scopeH(a_1, a_7);
 }
 
 function a_1(a) {
-  a._fc = a_4;
-  return M.chain(eff(1), a_2, a_5);
+  a._fc = a_4, a._fe = a_5;
+  return M.chainBH(eff(1), a_2, a_5);
 }
 
 function a_2(a) {
   console.log(1);
-  return M.chain(eff(2), a_3, a_5);
+  return M.chainBH(eff(2), a_3, a_5);
 }
 
 function a_3(a) {
   console.log(2);
-  return M.jump(a._fc);
+  return M.jumpH(a._fc, a._fe);
 }
 
 function a_4(a) {
@@ -31,6 +31,6 @@ function a_6(a) {
 }
 
 function a_7(a, b) {
-  a._fc = a_6, a._err1 = b;
-  return M.jump(a_2, a_5);
+  a._fc = a_6, a._fe = a_5, a._err1 = b;
+  return M.jumpH(a_2, a_5);
 }

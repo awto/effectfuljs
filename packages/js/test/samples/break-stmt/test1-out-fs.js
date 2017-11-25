@@ -1,24 +1,24 @@
 (function () {
-  return M.chain(eff(1), _1, _6);
+  return M.chainBH(eff(1), _1, _6);
 
   function _1() {
-    return M.chain(eff(2), _2, _6);
+    return M.chainBH(eff(2), _2, _6);
   }
 
   function _2(a) {
     if (a) {
-      return M.jump(_3, _6);
+      return M.jumpH(_3, _6);
     } else {
-      return M.chain(eff(3), _3, _6);
+      return M.chainBH(eff(3), _3, _6);
     }
   }
 
   function _3() {
-    return M.chain(eff(4), _4, _6);
+    return M.chainBH(eff(4), _4, _6);
   }
 
   function _4() {
-    return M.chain(eff(5), _5, _6);
+    return M.chainBH(eff(5), _5, _6);
   }
 
   function _5() {
@@ -31,26 +31,26 @@
 });
 
 (function () {
-  return M.chain(eff(1), _1, _6);
+  return M.chainBH(eff(1), _1, _6);
 
   function _1() {
-    return M.chain(eff(2), _2, _6);
+    return M.chainBH(eff(2), _2, _6);
   }
 
   function _2(a) {
     if (a) {
-      return M.chain(eff('a'), _3, _6);
+      return M.chainBH(eff('a'), _3, _6);
     } else {
-      return M.chain(eff(3), _3, _6);
+      return M.chainBH(eff(3), _3, _6);
     }
   }
 
   function _3() {
-    return M.chain(eff(4), _4, _6);
+    return M.chainBH(eff(4), _4, _6);
   }
 
   function _4() {
-    return M.chain(eff(5), _5, _6);
+    return M.chainBH(eff(5), _5, _6);
   }
 
   function _5() {
@@ -63,26 +63,26 @@
 });
 
 (function () {
-  return M.chain(eff(1), _1, _7);
+  return M.chainBH(eff(1), _1, _7);
 
   function _1() {
-    return M.chain(eff(2), _2, _7);
+    return M.chainBH(eff(2), _2, _7);
   }
 
   function _2(a) {
     if (a) {
-      return M.chain(eff('a'), _3, _7);
+      return M.chainBH(eff('a'), _3, _7);
     } else {
-      return M.chain(eff(4), _4, _7);
+      return M.chainBH(eff(4), _4, _7);
     }
   }
 
   function _3() {
-    return M.chain(eff('b'), _6, _7);
+    return M.chainBH(eff('b'), _6, _7);
   }
 
   function _4() {
-    return M.chain(eff(5), _5, _7);
+    return M.chainBH(eff(5), _5, _7);
   }
 
   function _5() {
@@ -103,7 +103,7 @@ function a() {
   var r;
 
   if (e) {
-    return M.chain(eff('b'), _1, _2);
+    return M.chainBH(eff('b'), _1, _2);
   } else {
     return M.pure(r);
   }

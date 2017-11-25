@@ -92,9 +92,9 @@ export default {
   // if more than `unpackMax` it is "N" character
   markArgNum: false,
 
-  // marks recursive call operations with "R" character (so its library can insert
-  // a tail call trampoline)
-  markRec: true,
+  // marks pure jumps back from inside loop block
+  // to insert some trampoline if needed
+  markRepeat: true,
 
   // marks operations containing error handling continuation with "H" character
   markErrorCont: true,
@@ -263,6 +263,8 @@ export default {
   bindCalls: {},
 
   // marks function nodes where transform is to be applied
-  transform: false
+  transform: false,
 
+  // target JS engine has tail calls
+  jsTailCalls: false
 }

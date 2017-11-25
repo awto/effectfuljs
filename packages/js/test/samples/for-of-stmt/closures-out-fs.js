@@ -1,7 +1,7 @@
 function forOfBlockScope() {
   var a, b, funs, i, j, _i, k, _k, k1, k2;
 
-  return M.scope(_1, _48);
+  return M.scopeH(_1, _48);
 
   function _1() {
     var _i, i1, loop7;
@@ -14,10 +14,10 @@ function forOfBlockScope() {
       (i => {
         let j = 0;
         funs.push(function iter() {
-          return M.scope(_1, _3);
+          return M.scopeH(_1, _3);
 
           function _1() {
-            return M.yldStar(M.yld(`fo1: ${i} ${j++}`), _2, _3);
+            return M.yldStarBH(M.yld(`fo1: ${i} ${j++}`), _2, _3);
           }
 
           function _2() {
@@ -34,10 +34,10 @@ function forOfBlockScope() {
     for (i of a) {
       j = 0;
       funs.push(function iter() {
-        return M.scope(_1, _3);
+        return M.scopeH(_1, _3);
 
         function _1() {
-          return M.yldStar(M.yld(`fo2: ${i} ${j++}`), _2, _3);
+          return M.yldStarBH(M.yld(`fo2: ${i} ${j++}`), _2, _3);
         }
 
         function _2() {
@@ -55,10 +55,10 @@ function forOfBlockScope() {
         for (let j of b) {
           (j => {
             funs.push(function iter() {
-              return M.scope(_1, _3);
+              return M.scopeH(_1, _3);
 
               function _1() {
-                return M.yldStar(M.yld(`fo3: ${i} ${j++}`), _2, _3);
+                return M.yldStarBH(M.yld(`fo3: ${i} ${j++}`), _2, _3);
               }
 
               function _2() {
@@ -75,7 +75,7 @@ function forOfBlockScope() {
     }
 
     loop7 = M.iterator(a);
-    return M.jump(_2, _48, loop7);
+    return M.jumpH(_2, _48, loop7);
   }
 
   function _2(loop7) {
@@ -83,21 +83,21 @@ function forOfBlockScope() {
 
     if (!(loop7 = loop7.step()).done) {
       i = loop7.value;
-      return M.jump(_3, _49, i, loop7);
+      return M.jumpRH(_3, _49, i, loop7);
     } else {
       loop8 = M.iterator(a);
-      return M.jump(_5, _48, loop8);
+      return M.jumpH(_5, _48, loop8);
     }
   }
 
   function _3(i, loop7) {
-    return M.repeat((i => {
-      return M.scope(_1, _5);
+    return M.yldStarBH((i => {
+      return M.scopeH(_1, _5);
 
       function _1() {
         var loop;
         loop = M.iterator(b);
-        return M.jump(_2, _5, loop);
+        return M.jumpH(_2, _5, loop);
       }
 
       function _2(loop) {
@@ -105,26 +105,26 @@ function forOfBlockScope() {
 
         if (!(loop = loop.step()).done) {
           j = loop.value;
-          return M.jump(_3, _6, j, loop);
+          return M.jumpRH(_3, _6, j, loop);
         } else {
           return M.pure();
         }
       }
 
       function _3(j, loop) {
-        return M.repeat((j => {
-          return M.scope(_1, _3);
+        return M.yldStarBH((j => {
+          return M.scopeH(_1, _3);
 
           function _1() {
-            return M.yldStar(M.yld(`fo4: ${j}`), _2, _3);
+            return M.yldStarBH(M.yld(`fo4: ${j}`), _2, _3);
           }
 
           function _2() {
             funs.push(function iter() {
-              return M.scope(_1, _3);
+              return M.scopeH(_1, _3);
 
               function _1() {
-                return M.yldStar(M.yld(`fo5: ${i} ${j++}`), _2, _3);
+                return M.yldStarBH(M.yld(`fo5: ${i} ${j++}`), _2, _3);
               }
 
               function _2() {
@@ -160,7 +160,7 @@ function forOfBlockScope() {
       }
 
       function _6(a) {
-        return M.jump(_4, _5, a);
+        return M.jumpH(_4, _5, a);
       }
     })(i), _2, _48, loop7);
   }
@@ -181,19 +181,19 @@ function forOfBlockScope() {
 
     if (!(loop8 = loop8.step()).done) {
       i = loop8.value;
-      return M.jump(_6, _50, i, loop8);
+      return M.jumpRH(_6, _50, i, loop8);
     } else {
       loop9 = M.iterator(a);
-      return M.jump(_8, _48, loop9);
+      return M.jumpH(_8, _48, loop9);
     }
   }
 
   function _6(i, loop8) {
-    return M.repeat((i => {
-      return M.scope(_1, _3);
+    return M.yldStarBH((i => {
+      return M.scopeH(_1, _3);
 
       function _1() {
-        return M.yldStar(M.yld(`fo6: ${i}`), _2, _3);
+        return M.yldStarBH(M.yld(`fo6: ${i}`), _2, _3);
       }
 
       function _2() {
@@ -202,10 +202,10 @@ function forOfBlockScope() {
         for (j of b) {
           (j => {
             funs.push(function iter() {
-              return M.scope(_1, _3);
+              return M.scopeH(_1, _3);
 
               function _1() {
-                return M.yldStar(M.yld(`fo7: ${i} ${j++}`), _2, _3);
+                return M.yldStarBH(M.yld(`fo7: ${i} ${j++}`), _2, _3);
               }
 
               function _2() {
@@ -244,26 +244,26 @@ function forOfBlockScope() {
 
     if (!(loop9 = loop9.step()).done) {
       i = loop9.value;
-      return M.jump(_9, _51, i, loop9);
+      return M.jumpRH(_9, _51, i, loop9);
     } else {
       loop10 = M.iterator(funs);
-      return M.jump(_11, _48, loop10);
+      return M.jumpH(_11, _48, loop10);
     }
   }
 
   function _9(i, loop9) {
-    return M.repeat((i => {
-      return M.scope(_1, _6);
+    return M.yldStarBH((i => {
+      return M.scopeH(_1, _6);
 
       function _1() {
-        return M.yldStar(M.yld(`fo8 ${i}`), _2, _6);
+        return M.yldStarBH(M.yld(`fo8 ${i}`), _2, _6);
       }
 
       function _2() {
         var _loop;
 
         _loop = M.iterator(b);
-        return M.jump(_3, _6, _loop);
+        return M.jumpH(_3, _6, _loop);
       }
 
       function _3(_loop) {
@@ -271,26 +271,26 @@ function forOfBlockScope() {
 
         if (!(_loop = _loop.step()).done) {
           j = _loop.value;
-          return M.jump(_4, _7, j, _loop);
+          return M.jumpRH(_4, _7, j, _loop);
         } else {
           return M.pure();
         }
       }
 
       function _4(j, _loop) {
-        return M.repeat((j => {
-          return M.scope(_1, _3);
+        return M.yldStarBH((j => {
+          return M.scopeH(_1, _3);
 
           function _1() {
-            return M.yldStar(M.yld(`fo9: ${i}`), _2, _3);
+            return M.yldStarBH(M.yld(`fo9: ${i}`), _2, _3);
           }
 
           function _2() {
             funs.push(function iter() {
-              return M.scope(_1, _3);
+              return M.scopeH(_1, _3);
 
               function _1() {
-                return M.yldStar(M.yld(`fo10: ${i} ${j++}`), _2, _3);
+                return M.yldStarBH(M.yld(`fo10: ${i} ${j++}`), _2, _3);
               }
 
               function _2() {
@@ -326,7 +326,7 @@ function forOfBlockScope() {
       }
 
       function _7(a) {
-        return M.jump(_5, _6, a);
+        return M.jumpH(_5, _6, a);
       }
     })(i), _8, _48, loop9);
   }
@@ -347,17 +347,17 @@ function forOfBlockScope() {
 
     if (!(loop10 = loop10.step()).done) {
       _i = loop10.value;
-      return M.jump(_12, _52, loop10);
+      return M.jumpRH(_12, _52, loop10);
     } else {
       funs.length = 0;
 
       for (i of a) {
         (i => {
           funs.push(function iter() {
-            return M.scope(_1, _3);
+            return M.scopeH(_1, _3);
 
             function _1() {
-              return M.yldStar(M.yld(`fo11: ${i}`), _2, _3);
+              return M.yldStarBH(M.yld(`fo11: ${i}`), _2, _3);
             }
 
             function _2() {
@@ -372,14 +372,14 @@ function forOfBlockScope() {
       }
 
       loop11 = M.iterator(a);
-      return M.jump(_14, _48, loop11);
+      return M.jumpH(_14, _48, loop11);
     }
   }
 
   function _12(loop10) {
     var a;
     a = _i();
-    return M.repeat(M.yldStar(a), _11, _48, loop10);
+    return M.yldStarBH(M.yldStar(a), _11, _48, loop10);
   }
 
   function _13(ex) {
@@ -398,28 +398,28 @@ function forOfBlockScope() {
 
     if (!(loop11 = loop11.step()).done) {
       i = loop11.value;
-      return M.jump(_15, _53, i, loop11);
+      return M.jumpRH(_15, _53, i, loop11);
     } else {
       k = 0;
       loop12 = M.iterator(a);
-      return M.jump(_17, _48, loop12);
+      return M.jumpH(_17, _48, loop12);
     }
   }
 
   function _15(i, loop11) {
-    return M.repeat((i => {
-      return M.scope(_1, _3);
+    return M.yldStarBH((i => {
+      return M.scopeH(_1, _3);
 
       function _1() {
-        return M.yldStar(M.yld(`fo12 ${i}`), _2, _3);
+        return M.yldStarBH(M.yld(`fo12 ${i}`), _2, _3);
       }
 
       function _2() {
         funs.push(function iter() {
-          return M.scope(_1, _3);
+          return M.scopeH(_1, _3);
 
           function _1() {
-            return M.yldStar(M.yld(`fo13 ${i}`), _2, _3);
+            return M.yldStarBH(M.yld(`fo13 ${i}`), _2, _3);
           }
 
           function _2() {
@@ -455,19 +455,19 @@ function forOfBlockScope() {
 
     if (!(loop12 = loop12.step()).done) {
       i = loop12.value;
-      return M.jump(_18, _54, i, loop12);
+      return M.jumpRH(_18, _54, i, loop12);
     } else {
-      return M.jump(_21, _48);
+      return M.jumpH(_21, _48);
     }
   }
 
   function _18(i, loop12) {
-    return M.yldStar((i => {
+    return M.yldStarBH((i => {
       var m;
-      return M.scope(_1, _3);
+      return M.scopeH(_1, _3);
 
       function _1() {
-        return M.yldStar(M.yld(`fo14 ${i} ${k} {m}`), _2, _3);
+        return M.yldStarBH(M.yld(`fo14 ${i} ${k} {m}`), _2, _3);
       }
 
       function _2() {
@@ -482,10 +482,10 @@ function forOfBlockScope() {
             return M.pure(1);
           } else {
             funs.push(function iter() {
-              return M.scope(_1, _3);
+              return M.scopeH(_1, _3);
 
               function _1() {
-                return M.yldStar(M.yld(`fo15 ${i} ${k} {m}`), _2, _3);
+                return M.yldStarBH(M.yld(`fo15 ${i} ${k} {m}`), _2, _3);
               }
 
               function _2() {
@@ -510,13 +510,13 @@ function forOfBlockScope() {
   function _19(a, loop12) {
     switch (a) {
       case 0:
-        return M.jump(_17, _48, loop12);
+        return M.jumpRH(_17, _48, loop12);
 
       case 1:
-        return M.jump(_21, _48);
+        return M.jumpH(_21, _48);
 
       default:
-        return M.jump(_17, _48, loop12);
+        return M.jumpRH(_17, _48, loop12);
     }
   }
 
@@ -549,11 +549,11 @@ function forOfBlockScope() {
             if (n === 3) return 2;
             if (n === 5) return 3;
             funs.push(function iter() {
-              return M.scope(_1, _3);
+              return M.scopeH(_1, _3);
 
               function _1() {
                 n++;
-                return M.yldStar(M.yld(`fo18: ${i} ${j} ${k} ${m} ${n}`), _2, _3);
+                return M.yldStarBH(M.yld(`fo18: ${i} ${j} ${k} ${m} ${n}`), _2, _3);
               }
 
               function _2() {
@@ -603,7 +603,7 @@ function forOfBlockScope() {
 
     k = 0;
     loop13 = M.iterator(a);
-    return M.jump(_22, _48, loop13);
+    return M.jumpH(_22, _48, loop13);
   }
 
   function _22(loop13) {
@@ -611,27 +611,27 @@ function forOfBlockScope() {
 
     if (!(loop13 = loop13.step()).done) {
       i = loop13.value;
-      return M.jump(_23, _55, i, loop13);
+      return M.jumpRH(_23, _55, i, loop13);
     } else {
-      return M.jump(_26, _48);
+      return M.jumpH(_26, _48);
     }
   }
 
   function _23(i, loop13) {
-    return M.yldStar((i => {
+    return M.yldStarBH((i => {
       var m;
-      return M.scope(_1, _7);
+      return M.scopeH(_1, _7);
 
       function _1() {
         m = 0;
         k++;
-        return M.yldStar(M.yld(`fo16: ${i} ${k} ${m}`), _2, _7);
+        return M.yldStarBH(M.yld(`fo16: ${i} ${k} ${m}`), _2, _7);
       }
 
       function _2() {
         var loop1;
         loop1 = M.iterator(b);
-        return M.jump(_3, _7, loop1);
+        return M.jumpH(_3, _7, loop1);
       }
 
       function _3(loop1) {
@@ -639,16 +639,16 @@ function forOfBlockScope() {
 
         if (!(loop1 = loop1.step()).done) {
           j = loop1.value;
-          return M.jump(_4, _8, j, loop1, r);
+          return M.jumpRH(_4, _8, j, loop1, r);
         } else {
           return M.pure(r);
         }
       }
 
       function _4(j, loop1, r) {
-        return M.yldStar((j => {
+        return M.yldStarBH((j => {
           var n;
-          return M.scope(_1, _2);
+          return M.scopeH(_1, _2);
 
           function _1() {
             var r;
@@ -668,11 +668,11 @@ function forOfBlockScope() {
                     return M.pure(3);
                   } else {
                     funs.push(function iter() {
-                      return M.scope(_1, _3);
+                      return M.scopeH(_1, _3);
 
                       function _1() {
                         n++;
-                        return M.yldStar(M.yld(`fo18: ${i} ${j} ${k} ${m} ${n}`), _2, _3);
+                        return M.yldStarBH(M.yld(`fo18: ${i} ${j} ${k} ${m} ${n}`), _2, _3);
                       }
 
                       function _2() {
@@ -705,13 +705,13 @@ function forOfBlockScope() {
             return M.pure(1);
 
           case 2:
-            return M.jump(_3, _7, loop1);
+            return M.jumpRH(_3, _7, loop1);
 
           case 3:
             return M.pure(r);
 
           default:
-            return M.jump(_3, _7, loop1);
+            return M.jumpRH(_3, _7, loop1);
         }
       }
 
@@ -731,7 +731,7 @@ function forOfBlockScope() {
       }
 
       function _8(a) {
-        return M.jump(_6, _7, a);
+        return M.jumpH(_6, _7, a);
       }
     })(i), _24, _55, loop13);
   }
@@ -739,13 +739,13 @@ function forOfBlockScope() {
   function _24(a, loop13) {
     switch (a) {
       case 0:
-        return M.jump(_22, _48, loop13);
+        return M.jumpRH(_22, _48, loop13);
 
       case 1:
-        return M.jump(_26, _48);
+        return M.jumpH(_26, _48);
 
       default:
-        return M.jump(_22, _48, loop13);
+        return M.jumpRH(_22, _48, loop13);
     }
   }
 
@@ -764,7 +764,7 @@ function forOfBlockScope() {
     var loop14;
     k = 0;
     loop14 = M.iterator(a);
-    return M.jump(_27, _48, loop14);
+    return M.jumpH(_27, _48, loop14);
   }
 
   function _27(loop14) {
@@ -772,23 +772,23 @@ function forOfBlockScope() {
 
     if (!(loop14 = loop14.step()).done) {
       i = loop14.value;
-      return M.jump(_28, _56, i, loop14);
+      return M.jumpRH(_28, _56, i, loop14);
     } else {
-      return M.jump(_31, _48);
+      return M.jumpH(_31, _48);
     }
   }
 
   function _28(i, loop14) {
-    return M.yldStar((i => {
+    return M.yldStarBH((i => {
       var m;
-      return M.scope(_1, _6);
+      return M.scopeH(_1, _6);
 
       function _1() {
         var loop2;
         m = 0;
         k++;
         loop2 = M.iterator(b);
-        return M.jump(_2, _6, loop2);
+        return M.jumpH(_2, _6, loop2);
       }
 
       function _2(loop2) {
@@ -796,21 +796,21 @@ function forOfBlockScope() {
 
         if (!(loop2 = loop2.step()).done) {
           j = loop2.value;
-          return M.jump(_3, _7, j, loop2, r);
+          return M.jumpRH(_3, _7, j, loop2, r);
         } else {
           return M.pure(r);
         }
       }
 
       function _3(j, loop2, r) {
-        return M.yldStar((j => {
+        return M.yldStarBH((j => {
           var n;
-          return M.scope(_1, _3);
+          return M.scopeH(_1, _3);
 
           function _1() {
             n = m;
             m++;
-            return M.yldStar(M.yld(`fo19 ${i} ${j} ${k} ${m} ${n}`), _2, _3);
+            return M.yldStarBH(M.yld(`fo19 ${i} ${j} ${k} ${m} ${n}`), _2, _3);
           }
 
           function _2() {
@@ -829,11 +829,11 @@ function forOfBlockScope() {
                     return M.pure(3);
                   } else {
                     funs.push(function iter() {
-                      return M.scope(_1, _3);
+                      return M.scopeH(_1, _3);
 
                       function _1() {
                         n++;
-                        return M.yldStar(M.yld(`fo20: ${i} ${j} ${k} ${m} ${n}`), _2, _3);
+                        return M.yldStarBH(M.yld(`fo20: ${i} ${j} ${k} ${m} ${n}`), _2, _3);
                       }
 
                       function _2() {
@@ -866,13 +866,13 @@ function forOfBlockScope() {
             return M.pure(1);
 
           case 2:
-            return M.jump(_2, _6, loop2);
+            return M.jumpRH(_2, _6, loop2);
 
           case 3:
             return M.pure(r);
 
           default:
-            return M.jump(_2, _6, loop2);
+            return M.jumpRH(_2, _6, loop2);
         }
       }
 
@@ -892,7 +892,7 @@ function forOfBlockScope() {
       }
 
       function _7(a) {
-        return M.jump(_5, _6, a);
+        return M.jumpH(_5, _6, a);
       }
     })(i), _29, _56, loop14);
   }
@@ -900,13 +900,13 @@ function forOfBlockScope() {
   function _29(a, loop14) {
     switch (a) {
       case 0:
-        return M.jump(_27, _48, loop14);
+        return M.jumpRH(_27, _48, loop14);
 
       case 1:
-        return M.jump(_31, _48);
+        return M.jumpH(_31, _48);
 
       default:
-        return M.jump(_27, _48, loop14);
+        return M.jumpRH(_27, _48, loop14);
     }
   }
 
@@ -923,13 +923,13 @@ function forOfBlockScope() {
 
   function _31() {
     _k = 0;
-    return M.yldStar(M.yld(`fo21: ${i} ${_k}`), _32, _48);
+    return M.yldStarBH(M.yld(`fo21: ${i} ${_k}`), _32, _48);
   }
 
   function _32() {
     var loop15;
     loop15 = M.iterator(a);
-    return M.jump(_33, _48, loop15);
+    return M.jumpH(_33, _48, loop15);
   }
 
   function _33(loop15) {
@@ -937,27 +937,27 @@ function forOfBlockScope() {
 
     if (!(loop15 = loop15.step()).done) {
       i = loop15.value;
-      return M.jump(_34, _57, i, loop15);
+      return M.jumpRH(_34, _57, i, loop15);
     } else {
-      return M.jump(_37, _48);
+      return M.jumpH(_37, _48);
     }
   }
 
   function _34(i, loop15) {
-    return M.yldStar((i => {
+    return M.yldStarBH((i => {
       var m;
-      return M.scope(_1, _7);
+      return M.scopeH(_1, _7);
 
       function _1() {
         m = 0;
         _k++;
-        return M.yldStar(M.yld(`fo22: ${i} ${_k} ${m}`), _2, _7);
+        return M.yldStarBH(M.yld(`fo22: ${i} ${_k} ${m}`), _2, _7);
       }
 
       function _2() {
         var loop3;
         loop3 = M.iterator(b);
-        return M.jump(_3, _7, loop3);
+        return M.jumpH(_3, _7, loop3);
       }
 
       function _3(loop3) {
@@ -965,21 +965,21 @@ function forOfBlockScope() {
 
         if (!(loop3 = loop3.step()).done) {
           j = loop3.value;
-          return M.jump(_4, _8, j, loop3, r);
+          return M.jumpRH(_4, _8, j, loop3, r);
         } else {
           return M.pure(r);
         }
       }
 
       function _4(j, loop3, r) {
-        return M.yldStar((j => {
+        return M.yldStarBH((j => {
           var n;
-          return M.scope(_1, _3);
+          return M.scopeH(_1, _3);
 
           function _1() {
             n = m;
             m++;
-            return M.yldStar(M.yld(`fo23 ${i} ${j} ${_k} ${m} ${n}`), _2, _3);
+            return M.yldStarBH(M.yld(`fo23 ${i} ${j} ${_k} ${m} ${n}`), _2, _3);
           }
 
           function _2() {
@@ -998,11 +998,11 @@ function forOfBlockScope() {
                     return M.pure(3);
                   } else {
                     funs.push(function iter() {
-                      return M.scope(_1, _3);
+                      return M.scopeH(_1, _3);
 
                       function _1() {
                         n++;
-                        return M.yldStar(M.yld(`fo24: ${i} ${j} ${_k} ${m} ${n}`), _2, _3);
+                        return M.yldStarBH(M.yld(`fo24: ${i} ${j} ${_k} ${m} ${n}`), _2, _3);
                       }
 
                       function _2() {
@@ -1035,13 +1035,13 @@ function forOfBlockScope() {
             return M.pure(1);
 
           case 2:
-            return M.jump(_3, _7, loop3);
+            return M.jumpRH(_3, _7, loop3);
 
           case 3:
             return M.pure(r);
 
           default:
-            return M.jump(_3, _7, loop3);
+            return M.jumpRH(_3, _7, loop3);
         }
       }
 
@@ -1061,7 +1061,7 @@ function forOfBlockScope() {
       }
 
       function _8(a) {
-        return M.jump(_6, _7, a);
+        return M.jumpH(_6, _7, a);
       }
     })(i), _35, _57, loop15);
   }
@@ -1069,13 +1069,13 @@ function forOfBlockScope() {
   function _35(a, loop15) {
     switch (a) {
       case 0:
-        return M.jump(_37, _48);
+        return M.jumpH(_37, _48);
 
       case 1:
-        return M.jump(_33, _48, loop15);
+        return M.jumpRH(_33, _48, loop15);
 
       default:
-        return M.jump(_33, _48, loop15);
+        return M.jumpRH(_33, _48, loop15);
     }
   }
 
@@ -1092,13 +1092,13 @@ function forOfBlockScope() {
 
   function _37() {
     k1 = 0;
-    return M.yldStar(M.yld(`fo25`), _38, _48);
+    return M.yldStarBH(M.yld(`fo25`), _38, _48);
   }
 
   function _38() {
     var loop16;
     loop16 = M.iterator(a);
-    return M.jump(_39, _48, loop16);
+    return M.jumpH(_39, _48, loop16);
   }
 
   function _39(loop16) {
@@ -1106,27 +1106,27 @@ function forOfBlockScope() {
 
     if (!(loop16 = loop16.step()).done) {
       i = loop16.value;
-      return M.jump(_40, _58, i, loop16);
+      return M.jumpRH(_40, _58, i, loop16);
     } else {
-      return M.jump(_43, _48);
+      return M.jumpH(_43, _48);
     }
   }
 
   function _40(i, loop16) {
-    return M.yldStar((i => {
+    return M.yldStarBH((i => {
       var m;
-      return M.scope(_1, _7);
+      return M.scopeH(_1, _7);
 
       function _1() {
         m = 0;
         k1++;
-        return M.yldStar(M.yld(`fo26: ${i} ${k1} ${m}`), _2, _7);
+        return M.yldStarBH(M.yld(`fo26: ${i} ${k1} ${m}`), _2, _7);
       }
 
       function _2() {
         var loop4;
         loop4 = M.iterator(b);
-        return M.jump(_3, _7, loop4);
+        return M.jumpH(_3, _7, loop4);
       }
 
       function _3(loop4) {
@@ -1134,21 +1134,21 @@ function forOfBlockScope() {
 
         if (!(loop4 = loop4.step()).done) {
           j = loop4.value;
-          return M.jump(_4, _8, j, loop4, r);
+          return M.jumpRH(_4, _8, j, loop4, r);
         } else {
           return M.pure(r);
         }
       }
 
       function _4(j, loop4, r) {
-        return M.yldStar((j => {
+        return M.yldStarBH((j => {
           var n;
-          return M.scope(_1, _3);
+          return M.scopeH(_1, _3);
 
           function _1() {
             n = m;
             m++;
-            return M.yldStar(M.yld(`fo27 ${i} ${j} ${k1} ${m} ${n}`), _2, _3);
+            return M.yldStarBH(M.yld(`fo27 ${i} ${j} ${k1} ${m} ${n}`), _2, _3);
           }
 
           function _2() {
@@ -1167,11 +1167,11 @@ function forOfBlockScope() {
                     return M.pure(3);
                   } else {
                     funs.push(function iter() {
-                      return M.scope(_1, _3);
+                      return M.scopeH(_1, _3);
 
                       function _1() {
                         n++;
-                        return M.yldStar(M.yld(`fo28: ${i} ${j} ${k1} ${m} ${n}`), _2, _3);
+                        return M.yldStarBH(M.yld(`fo28: ${i} ${j} ${k1} ${m} ${n}`), _2, _3);
                       }
 
                       function _2() {
@@ -1204,13 +1204,13 @@ function forOfBlockScope() {
             return M.pure(1);
 
           case 2:
-            return M.jump(_3, _7, loop4);
+            return M.jumpRH(_3, _7, loop4);
 
           case 3:
             return M.pure(r);
 
           default:
-            return M.jump(_3, _7, loop4);
+            return M.jumpRH(_3, _7, loop4);
         }
       }
 
@@ -1230,7 +1230,7 @@ function forOfBlockScope() {
       }
 
       function _8(a) {
-        return M.jump(_6, _7, a);
+        return M.jumpH(_6, _7, a);
       }
     })(i), _41, _58, loop16);
   }
@@ -1238,13 +1238,13 @@ function forOfBlockScope() {
   function _41(a, loop16) {
     switch (a) {
       case 0:
-        return M.jump(_43, _48);
+        return M.jumpH(_43, _48);
 
       case 1:
-        return M.jump(_39, _48, loop16);
+        return M.jumpRH(_39, _48, loop16);
 
       default:
-        return M.jump(_39, _48, loop16);
+        return M.jumpRH(_39, _48, loop16);
     }
   }
 
@@ -1263,7 +1263,7 @@ function forOfBlockScope() {
     var loop17;
     k2 = 0;
     loop17 = M.iterator(a);
-    return M.jump(_44, _48, loop17);
+    return M.jumpH(_44, _48, loop17);
   }
 
   function _44(loop17) {
@@ -1271,27 +1271,27 @@ function forOfBlockScope() {
 
     if (!(loop17 = loop17.step()).done) {
       i = loop17.value;
-      return M.jump(_45, _59, i, loop17);
+      return M.jumpRH(_45, _59, i, loop17);
     } else {
       return M.pure(r);
     }
   }
 
   function _45(i, loop17) {
-    return M.yldStar((i => {
+    return M.yldStarBH((i => {
       var m;
-      return M.scope(_1, _7);
+      return M.scopeH(_1, _7);
 
       function _1() {
         m = 0;
         k2++;
-        return M.yldStar(M.yld(`fo29: ${i} ${k2} ${m}`), _2, _7);
+        return M.yldStarBH(M.yld(`fo29: ${i} ${k2} ${m}`), _2, _7);
       }
 
       function _2() {
         var loop6;
         loop6 = M.iterator(b);
-        return M.jump(_3, _7, loop6);
+        return M.jumpH(_3, _7, loop6);
       }
 
       function _3(loop6) {
@@ -1299,22 +1299,22 @@ function forOfBlockScope() {
 
         if (!(loop6 = loop6.step()).done) {
           j = loop6.value;
-          return M.jump(_4, _8, j, loop6, r);
+          return M.jumpRH(_4, _8, j, loop6, r);
         } else {
           return M.pure(r);
         }
       }
 
       function _4(j, loop6, r) {
-        return M.yldStar((j => {
+        return M.yldStarBH((j => {
           var n, _i;
 
-          return M.scope(_1, _6);
+          return M.scopeH(_1, _6);
 
           function _1() {
             n = m;
             m++;
-            return M.yldStar(M.yld(`fo30 ${i} ${j} ${k2} ${m} ${n}`), _2, _6);
+            return M.yldStarBH(M.yld(`fo30 ${i} ${j} ${k2} ${m} ${n}`), _2, _6);
           }
 
           function _2() {
@@ -1325,7 +1325,7 @@ function forOfBlockScope() {
             } else {
               if (k2 === 5) {
                 loop5 = M.iterator(funs);
-                return M.jump(_3, _6, loop5);
+                return M.jumpH(_3, _6, loop5);
               } else {
                 if (n === 3) {
                   return M.pure(2);
@@ -1334,11 +1334,11 @@ function forOfBlockScope() {
                     return M.pure(3);
                   } else {
                     funs.push(function iter() {
-                      return M.scope(_1, _3);
+                      return M.scopeH(_1, _3);
 
                       function _1() {
                         n++;
-                        return M.yldStar(M.yld(`fo31: ${i} ${j} ${k2} ${m} ${n}`), _2, _3);
+                        return M.yldStarBH(M.yld(`fo31: ${i} ${j} ${k2} ${m} ${n}`), _2, _3);
                       }
 
                       function _2() {
@@ -1359,7 +1359,7 @@ function forOfBlockScope() {
           function _3(loop5) {
             if (!(loop5 = loop5.step()).done) {
               _i = loop5.value;
-              return M.jump(_4, _7, loop5);
+              return M.jumpRH(_4, _7, loop5);
             } else {
               return M.pure((br = `r: ${i} ${j} ${k2} ${m} ${n}`, 1));
             }
@@ -1368,7 +1368,7 @@ function forOfBlockScope() {
           function _4(loop5) {
             var a;
             a = _i();
-            return M.repeat(M.yldStar(a), _3, _6, loop5);
+            return M.yldStarBH(M.yldStar(a), _3, _6, loop5);
           }
 
           function _5(ex) {
@@ -1387,7 +1387,7 @@ function forOfBlockScope() {
           }
 
           function _7(a) {
-            return M.jump(_5, _6, a);
+            return M.jumpH(_5, _6, a);
           }
         })(j), _5, _8, loop6, r);
       }
@@ -1401,13 +1401,13 @@ function forOfBlockScope() {
             return M.pure(1);
 
           case 2:
-            return M.jump(_3, _7, loop6);
+            return M.jumpRH(_3, _7, loop6);
 
           case 3:
             return M.pure(r);
 
           default:
-            return M.jump(_3, _7, loop6);
+            return M.jumpRH(_3, _7, loop6);
         }
       }
 
@@ -1427,7 +1427,7 @@ function forOfBlockScope() {
       }
 
       function _8(a) {
-        return M.jump(_6, _7, a);
+        return M.jumpH(_6, _7, a);
       }
     })(i), _46, _59, loop17);
   }
@@ -1440,10 +1440,10 @@ function forOfBlockScope() {
         return M.pure(br);
 
       case 1:
-        return M.jump(_44, _48, loop17);
+        return M.jumpRH(_44, _48, loop17);
 
       default:
-        return M.jump(_44, _48, loop17);
+        return M.jumpRH(_44, _48, loop17);
     }
   }
 
@@ -1463,46 +1463,46 @@ function forOfBlockScope() {
   }
 
   function _49(a) {
-    return M.jump(_4, _48, a);
+    return M.jumpH(_4, _48, a);
   }
 
   function _50(a) {
-    return M.jump(_7, _48, a);
+    return M.jumpH(_7, _48, a);
   }
 
   function _51(a) {
-    return M.jump(_10, _48, a);
+    return M.jumpH(_10, _48, a);
   }
 
   function _52(a) {
-    return M.jump(_13, _48, a);
+    return M.jumpH(_13, _48, a);
   }
 
   function _53(a) {
-    return M.jump(_16, _48, a);
+    return M.jumpH(_16, _48, a);
   }
 
   function _54(a) {
-    return M.jump(_20, _48, a);
+    return M.jumpH(_20, _48, a);
   }
 
   function _55(a) {
-    return M.jump(_25, _48, a);
+    return M.jumpH(_25, _48, a);
   }
 
   function _56(a) {
-    return M.jump(_30, _48, a);
+    return M.jumpH(_30, _48, a);
   }
 
   function _57(a) {
-    return M.jump(_36, _48, a);
+    return M.jumpH(_36, _48, a);
   }
 
   function _58(a) {
-    return M.jump(_42, _48, a);
+    return M.jumpH(_42, _48, a);
   }
 
   function _59(a) {
-    return M.jump(_47, _48, a);
+    return M.jumpH(_47, _48, a);
   }
 }

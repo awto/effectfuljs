@@ -1,8 +1,8 @@
 function a() {
-  return M.chain(effb(2), _1, _3);
+  return M.chainBH(effb(2), _1, _3);
 
   function _1(a) {
-    return M.chain(eff(a), _2, _3);
+    return M.chainBH(eff(a), _2, _3);
   }
 
   function _2(a) {

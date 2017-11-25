@@ -2,14 +2,14 @@
   var j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
-  return M.jump(_1, _4, j, len, ref);
+  return M.jumpH(_1, _4, j, len, ref);
 
   function _1(j, len, ref) {
     var i;
 
     if (j < len) {
       i = ref[j];
-      return M.chain(eff(i), _2, _4, j, len, ref);
+      return M.chainBH(eff(i), _2, _4, j, len, ref);
     } else {
       return M.pure();
     }
@@ -17,15 +17,15 @@
 
   function _2(a, j, len, ref) {
     if (a) {
-      return M.jump(_3, _4, j, len, ref);
+      return M.jumpRH(_3, _4, j, len, ref);
     } else {
-      return M.jump(_3, _4, j, len, ref);
+      return M.jumpRH(_3, _4, j, len, ref);
     }
   }
 
   function _3(j, len, ref) {
     j++;
-    return M.repeat(_1, _4, j, len, ref);
+    return M.jumpRH(_1, _4, j, len, ref);
   }
 
   function _4(e) {
@@ -34,25 +34,25 @@
 });
 
 (function () {
-  return M.chain(eff('bi'), _1, _5);
+  return M.chainBH(eff('bi'), _1, _5);
 
   function _1() {
     var i;
     i = 0;
-    return M.jump(_2, _5, i);
+    return M.jumpH(_2, _5, i);
   }
 
   function _2(i) {
     if (i < 3) {
-      return M.chain(eff('bi:', i), _3, _5, i);
+      return M.chainBH(eff('bi:', i), _3, _5, i);
     } else {
-      return M.chain(eff('ai'), _4, _5);
+      return M.chainBH(eff('ai'), _4, _5);
     }
   }
 
   function _3(i) {
     i++;
-    return M.repeat(_2, _5, i);
+    return M.jumpRH(_2, _5, i);
   }
 
   function _4() {
@@ -65,25 +65,25 @@
 });
 
 (function () {
-  return M.chain(eff('bi'), _1, _5);
+  return M.chainBH(eff('bi'), _1, _5);
 
   function _1() {
     var i;
     i = 0;
-    return M.jump(_2, _5, i);
+    return M.jumpH(_2, _5, i);
   }
 
   function _2(i) {
     if (i < 3) {
-      return M.chain(eff('bi:', i), _3, _5, i);
+      return M.chainBH(eff('bi:', i), _3, _5, i);
     } else {
-      return M.chain(eff('ai'), _4, _5);
+      return M.chainBH(eff('ai'), _4, _5);
     }
   }
 
   function _3(i) {
     i++;
-    return M.repeat(_2, _5, i);
+    return M.jumpRH(_2, _5, i);
   }
 
   function _4() {
@@ -96,56 +96,56 @@
 });
 
 (function () {
-  return M.chain(eff('bi'), _1, _9);
+  return M.chainBH(eff('bi'), _1, _9);
 
   function _1() {
     var i;
     i = 0;
-    return M.jump(_2, _9, i);
+    return M.jumpH(_2, _9, i);
   }
 
   function _2(i) {
     if (i < 3) {
-      return M.chain(eff('bj:' + i), _3, _9, i);
+      return M.chainBH(eff('bj:' + i), _3, _9, i);
     } else {
-      return M.jump(_7, _9);
+      return M.jumpH(_7, _9);
     }
   }
 
   function _3(i) {
     var j;
     j = 0;
-    return M.jump(_4, _9, i, j);
+    return M.jumpRH(_4, _9, i, j);
   }
 
   function _4(i, j) {
     if (j < 40) {
       if (j === 10) {
-        return M.jump(_6, _9, i);
+        return M.jumpH(_6, _9, i);
       } else {
         if (j === 30) {
-          return M.jump(_7, _9);
+          return M.jumpH(_7, _9);
         } else {
-          return M.chain(eff(i + j), _5, _9, i, j);
+          return M.chainBH(eff(i + j), _5, _9, i, j);
         }
       }
     } else {
-      return M.chain(eff('aj:' + i), _6, _9, i);
+      return M.chainBH(eff('aj:' + i), _6, _9, i);
     }
   }
 
   function _5(i, j) {
     j += 10;
-    return M.repeat(_4, _9, i, j);
+    return M.jumpRH(_4, _9, i, j);
   }
 
   function _6(i) {
     i++;
-    return M.repeat(_2, _9, i);
+    return M.jumpRH(_2, _9, i);
   }
 
   function _7() {
-    return M.chain(eff('ai'), _8, _9);
+    return M.chainBH(eff('ai'), _8, _9);
   }
 
   function _8() {
@@ -158,12 +158,12 @@
 });
 
 function a() {
-  return M.chain(eff('b'), _1, _5);
+  return M.chainBH(eff('b'), _1, _5);
 
   function _1() {
     var i;
     i = 0;
-    return M.jump(_2, _5, i);
+    return M.jumpH(_2, _5, i);
   }
 
   function _2(i) {
@@ -172,15 +172,15 @@ function a() {
         console.log(i);
       }
 
-      return M.chain(eff(i), _3, _5, i);
+      return M.chainBH(eff(i), _3, _5, i);
     } else {
-      return M.chain(eff('a'), _4, _5);
+      return M.chainBH(eff('a'), _4, _5);
     }
   }
 
   function _3(i) {
     i++;
-    return M.repeat(_2, _5, i);
+    return M.jumpRH(_2, _5, i);
   }
 
   function _4() {
@@ -195,13 +195,13 @@ function a() {
 ;
 
 function a1() {
-  return M.chain(eff('b'), _1, _5);
+  return M.chainBH(eff('b'), _1, _5);
 
   function _1() {
     var i, j;
     i = 0;
     j = 10;
-    return M.jump(_2, _5, i, j);
+    return M.jumpH(_2, _5, i, j);
   }
 
   function _2(i, j) {
@@ -210,15 +210,15 @@ function a1() {
         console.log(i, j);
       }
 
-      return M.chain(eff(i, j), _3, _5, i, j);
+      return M.chainBH(eff(i, j), _3, _5, i, j);
     } else {
-      return M.chain(effRes(i, j), _4, _5);
+      return M.chainBH(effRes(i, j), _4, _5);
     }
   }
 
   function _3(i, j) {
     i++, j += 2;
-    return M.repeat(_2, _5, i, j);
+    return M.jumpRH(_2, _5, i, j);
   }
 
   function _4() {
@@ -231,14 +231,14 @@ function a1() {
 }
 
 function b() {
-  return M.chain(eff('b'), _1, _2);
+  return M.chainBH(eff('b'), _1, _2);
 
   function _1() {
     if (i === 2) {
       console.log(i);
     }
 
-    return M.repeat(eff(i), _1, _2);
+    return M.chainBH(eff(i), _1, _2);
   }
 
   function _2(e) {
@@ -247,7 +247,7 @@ function b() {
 }
 
 function c() {
-  return M.chain(eff('b'), _1, _2);
+  return M.chainBH(eff('b'), _1, _2);
 
   function _1() {
     if (i === 2) {
@@ -257,7 +257,7 @@ function c() {
     if (i === 3) {
       return M.pure(10);
     } else {
-      return M.repeat(eff(i), _1, _2);
+      return M.chainBH(eff(i), _1, _2);
     }
   }
 
@@ -270,13 +270,13 @@ function d() {
   var result, i;
   result = 0;
   i = 0;
-  return M.jump(_1, _4, result, i);
+  return M.jumpH(_1, _4, result, i);
 
   function _1(result, i) {
     if (i < 10) {
-      return M.chain(eff(result, i), _2, _4, i);
+      return M.chainBH(eff(result, i), _2, _4, i);
     } else {
-      return M.chain(eff(result), _3, _4);
+      return M.chainBH(eff(result), _3, _4);
     }
   }
 
@@ -284,7 +284,7 @@ function d() {
     var result;
     result = a;
     i++;
-    return M.repeat(_1, _4, result, i);
+    return M.jumpRH(_1, _4, result, i);
   }
 
   function _3() {
@@ -300,13 +300,13 @@ function e() {
   var result, i;
   result = 0;
   i = 0;
-  return M.jump(_1, _4, i);
+  return M.jumpH(_1, _4, i);
 
   function _1(i) {
     if (i < 10) {
-      return M.chain(eff(i), _2, _4, i);
+      return M.chainBH(eff(i), _2, _4, i);
     } else {
-      return M.chain(eff(), _3, _4);
+      return M.chainBH(eff(), _3, _4);
     }
   }
 
@@ -314,7 +314,7 @@ function e() {
     var result;
     result = a;
     i++;
-    return M.repeat(_1, _4, i);
+    return M.jumpRH(_1, _4, i);
   }
 
   function _3() {
@@ -330,13 +330,13 @@ function f() {
   var result, i;
   result = 0;
   i = 0;
-  return M.jump(_1, _4, result, i);
+  return M.jumpH(_1, _4, result, i);
 
   function _1(result, i) {
     if (i < 10) {
-      return M.chain(eff(i), _2, _4, i);
+      return M.chainBH(eff(i), _2, _4, i);
     } else {
-      return M.chain(eff(result), _3, _4);
+      return M.chainBH(eff(result), _3, _4);
     }
   }
 
@@ -344,7 +344,7 @@ function f() {
     var result;
     result = a;
     i++;
-    return M.repeat(_1, _4, result, i);
+    return M.jumpRH(_1, _4, result, i);
   }
 
   function _3() {
@@ -365,7 +365,7 @@ function c1() {
       result[i] = function cc() {
         var a;
         a = result += i++;
-        return M.chain(eff(a), _1, _2);
+        return M.chainBH(eff(a), _1, _2);
 
         function _1() {
           return M.pure();
@@ -379,7 +379,7 @@ function c1() {
   }
 
   a = result;
-  return M.chain(eff(a), _1, _2);
+  return M.chainBH(eff(a), _1, _2);
 
   function _1() {
     return M.pure();
@@ -394,17 +394,17 @@ function c2() {
   var result, i;
   result = [];
   i = 0;
-  return M.jump(_1, _3, i);
+  return M.jumpH(_1, _3, i);
 
   function _1(i) {
     var a;
 
     if (i < 10) {
-      return M.repeat((i => {
-        return M.chain(eff(function cc() {
+      return M.chainBH((i => {
+        return M.chainBH(eff(function cc() {
           var a;
           a = result += i++;
-          return M.chain(eff(a), _1, _2);
+          return M.chainBH(eff(a), _1, _2);
 
           function _1() {
             return M.pure();
@@ -426,7 +426,7 @@ function c2() {
       })(i), _1, _3, i);
     } else {
       a = result;
-      return M.chain(eff(a), _2, _3);
+      return M.chainBH(eff(a), _2, _3);
     }
   }
 
@@ -443,19 +443,19 @@ function c2() {
   var result, i;
   result = [];
   i = 0;
-  return M.jump(_1, _3, i);
+  return M.jumpH(_1, _3, i);
 
   function _1(i) {
     var a;
 
     if (i < 10) {
-      return M.repeat((i => {
+      return M.chainBH((i => {
         var a;
         a = i++;
-        return M.chain(function cc(j) {
+        return M.chainBH(function cc(j) {
           var a;
           a = result += i += j;
-          return M.chain(eff(a), _1, _2);
+          return M.chainBH(eff(a), _1, _2);
 
           function _1() {
             return M.pure();
@@ -467,7 +467,7 @@ function c2() {
         }(a), _1, _3);
 
         function _1(a) {
-          return M.chain(eff(a), _2, _3);
+          return M.chainBH(eff(a), _2, _3);
         }
 
         function _2(a) {
@@ -481,7 +481,7 @@ function c2() {
       })(i), _1, _3, i);
     } else {
       a = result;
-      return M.chain(eff(a), _2, _3);
+      return M.chainBH(eff(a), _2, _3);
     }
   }
 

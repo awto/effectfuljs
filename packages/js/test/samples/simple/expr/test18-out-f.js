@@ -1,6 +1,6 @@
 function a() {
   var r;
-  return M.chain(eff('1'), _1, _2);
+  return M.chainBH(eff('1'), _1, _2);
 
   function _1(a) {
     console.log(a, 3);

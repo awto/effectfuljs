@@ -1,23 +1,23 @@
 // *- with mixed effect/pure branches
 function a() {
-  return M.chain(eff(), _1, _9);
+  return M.chainBH(eff(), _1, _9);
 
   function _1(a) {
     var pat;
     pat = a;
-    return M.chain(check(1), _2, _9, pat);
+    return M.chainBH(check(1), _2, _9, pat);
   }
 
   function _2(a, pat) {
     if (pat === a) {
-      return M.chain(effB(1), _3, _9, pat);
+      return M.chainBH(effB(1), _3, _9, pat);
     } else {
-      return M.jump(_3, _9, pat);
+      return M.jumpH(_3, _9, pat);
     }
   }
 
   function _3(pat) {
-    return M.chain(check(2), _4, _9, pat);
+    return M.chainBH(check(2), _4, _9, pat);
   }
 
   function _4(a, pat) {
@@ -25,14 +25,14 @@ function a() {
       console.log(2);
     }
 
-    return M.chain(check(3), _5, _9, pat);
+    return M.chainBH(check(3), _5, _9, pat);
   }
 
   function _5(a, pat) {
     if (pat === a) {
-      return M.chain(effB(2), _8, _9);
+      return M.chainBH(effB(2), _8, _9);
     } else {
-      return M.chain(check(4), _6, _9, pat);
+      return M.chainBH(check(4), _6, _9, pat);
     }
   }
 
@@ -49,14 +49,14 @@ function a() {
         console.log(7);
         return M.pure();
       } else {
-        return M.chain(check(8), _7, _9, pat);
+        return M.chainBH(check(8), _7, _9, pat);
       }
     }
   }
 
   function _7(a, pat) {
     if (pat === a) {
-      return M.chain(effB(3), _8, _9);
+      return M.chainBH(effB(3), _8, _9);
     } else {
       return M.pure();
     }

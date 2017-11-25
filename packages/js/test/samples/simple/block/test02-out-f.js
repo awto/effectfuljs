@@ -1,7 +1,7 @@
 function a() {
   var i, a;
   a = i++;
-  return M.chain(eff1(a), _1, _2);
+  return M.chainBH(eff1(a), _1, _2);
 
   function _1() {
     return M.pure();

@@ -1,7 +1,7 @@
 // *- when branches are pure but its condition has effects
 // *- should bind statement's condition part using fmap
 function a() {
-  return M.chain(eff(1), _1, _2);
+  return M.chainBH(eff(1), _1, _2);
 
   function _1(a) {
     if (a) {

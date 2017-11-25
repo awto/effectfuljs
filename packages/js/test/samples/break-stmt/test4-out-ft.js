@@ -1,18 +1,18 @@
 (function () {
   var ctx = M.context();
-  return M.scope(f_1, f_5);
+  return M.scopeH(f_1, f_5);
 });
 
 function f_1(ctx) {
-  return M.chain(eff(1), f_2, f_5);
+  return M.chainBH(eff(1), f_2, f_5);
 }
 
 function f_2(ctx) {
-  return M.chain(eff(3), f_3, f_5);
+  return M.chainBH(eff(3), f_3, f_5);
 }
 
 function f_3(ctx) {
-  return M.chain(eff(4), f_4, f_5);
+  return M.chainBH(eff(4), f_4, f_5);
 }
 
 function f_4(ctx) {

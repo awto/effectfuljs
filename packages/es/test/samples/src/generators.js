@@ -240,7 +240,7 @@ exports.whileLoops = function*() {
   }
 }
 
-exports.for = function*() {
+exports.forStmt = function*() {
   for(let i = 0;i<3;i++) {
     yield i
   }
@@ -269,6 +269,17 @@ exports.for = function*() {
         break
       yield i + j
     }
+  }
+  for(let i = 0; i < 2000; i++) {
+    if (i < 2)
+      yield `a:${i}`
+    if (i > 1998)
+      yield `b:${i}`
+  }
+  for(let i = 0; i < 2000; i++) {
+    if (i < 1920)
+      continue
+    yield `c:${i}`
   }
 }
 
@@ -314,7 +325,7 @@ exports.closure1 = function*() {
 }
 
 
-exports.forOf = function*() {
+exports.forOfStmt = function*() {
   for(const i of [1,2,3])
     yield i
   for(const i of exports.simple5())
@@ -333,7 +344,7 @@ exports.forOf = function*() {
   }
 }
 
-exports.forIn = function*() {
+exports.forInStmt = function*() {
   for(const i in {a:1,b:2,c:3})
     yield i
 }

@@ -1,15 +1,15 @@
 function a() {
   var e;
-  return M.jump(_1, _6);
+  return M.jumpH(_1, _6);
 
   function _1() {
-    return M.chain(eff(1), _4, _5);
+    return M.chainBH(eff(1), _4, _5);
   }
 
   function _2(ex) {
     e = ex;
     console.log(e, 1);
-    return M.chain(eff(2), _3, _5);
+    return M.chainBH(eff(2), _3, _5);
   }
 
   function _3() {
@@ -26,6 +26,6 @@ function a() {
   }
 
   function _6(a) {
-    return M.jump(_2, _5, a);
+    return M.jumpH(_2, _5, a);
   }
 }

@@ -5,10 +5,12 @@ import * as Bind from "./bind"
 import * as Ctrl from "./control"
 import * as assert from "assert"
 import * as Except from "./exceptions"
+import * as Branch from "./branch"
+import * as Loop from "./loops"
 
 const alreadyRunningSym = Kit.sysId("alreadyRunning")
 
-/** 
+/**
  * inline assignments to function's global continuations's fields at each step
  */
 export function storeContinuations(si) {
@@ -267,6 +269,7 @@ export function jumpOps(si) {
   if (!contextSym)
     throw s.error('`inlinePureJumps: "call"` requires context object')
   const jumpId = Kit.sysId(s.opts.pureBindName)
+  const jumpRId = Kit.sysId(s.opts.pureBindName + "R")
   const scopeId = Kit.sysId("scope")
   const inlineCont = root.runSym || s.opts.inlineContAssign && root.contSym
   const refCtx = s.opts.contextBy === "reference"
@@ -318,6 +321,15 @@ export function jumpOps(si) {
                 yield* s.sub()
                 yield* lab()
                 s.close(j)
+                continue
+              }
+              if (j.value.sym === jumpRId && inlineJumps) {
+                if (j.value.hasBindVal)
+                  yield* assignValue(s,contextSym)
+                yield* s.toks(Tag.push,"$I.$tail = true",contextSym)
+                Kit.skip(s.sub())
+                s.close(j)
+                yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
                 continue
               }
               break

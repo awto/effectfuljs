@@ -37,6 +37,16 @@ export function LeanGenerator() {
 var LGp = LeanGenerator.prototype
 GeneratorConstructor = LeanGenerator
 
+if (!process.env.EJS_DEFUNCT) {
+  var trampoline = function trampoline(c,a) {
+    do {
+      c.$tail = false
+      c = c.$cont(a)
+    } while(c.$tail)
+    return c
+  }
+}
+
 if (!process.env.EJS_INLINE) {
   function nop() {
     this.value = void 0
@@ -49,7 +59,7 @@ if (!process.env.EJS_INLINE) {
     this.$exit = this.$subExit
     this.$subCont = this.$subExit = this.$subHandle = null
     if (process.env.EJS_DEFUNCT)
-      this._step = step
+      this.$step = step
     try {
       return process.env.EJS_DEFUNCT ? this.$run(a) : this.$cont(a)
     } catch(e) {
@@ -72,7 +82,7 @@ if (!process.env.EJS_INLINE) {
     ctx.$subHandle = handle
     ctx.$subExit = exit
     if (process.env.EJS_DEFUNCT) {
-      ctx._step = resume
+      ctx.$step = resume
     } else {
       ctx.$cont = resume
     }
@@ -86,9 +96,9 @@ if (!process.env.EJS_INLINE) {
     }
   }
   if (process.env.EJS_DEFUNCT) {
-    LGp._step = step
+    LGp.$step = step
     LGp.step = function(a) {
-      return this._step(a)
+      return this.$step(a)
     }
   } else
     LGp.step = step
@@ -199,8 +209,14 @@ if (!process.env.EJS_INLINE) {
     LGp.exit = function(v) {
       return this.$cont = this.$exit, this.$run(v)
     }
+  } else {
+    LGp.step = function(v) {
+      return this.$cont(v)
+    }
+    LGp.handle = function(v) {
+      return this.$handle(v)
+    }
   }
-
 }
 
 var exitSub
@@ -253,6 +269,55 @@ LGp.raise = function genRaise(ex) {
   throw ex
 }
 
+var Prototype = LGp
+
+if (!process.env.EJS_NO_TRAMPOLINE) {
+  function TrampolineGenerator() {
+    this.done = false
+    this.value = void 0
+  }
+  GeneratorConstructor = TrampolineGenerator
+  TrampolineGenerator.prototype = Prototype = Object.create(Prototype)
+  Prototype.oneStep = LGp.step
+  Prototype.oneHandle = LGp.handle
+  Prototype.oneExit = LGp.exit
+  Prototype.step = function(v) {
+    var t = this.oneStep(v)
+    while(t.$tail) {
+      t.$tail = false
+      t = t.oneStep(t.value)
+    }
+    return t
+  }
+  Prototype.handle = function(v) {
+    var t = this.oneHandle(v)
+    while(t.$tail) {
+      t.$tail = false
+      t = t.oneStep(t.value)
+    }
+    return t
+  }
+  Prototype.exit = function(v) {
+    var t = this.oneExit(v)
+    while(t.$tail) {
+      t.$tail = false
+      t = t.oneStep(t.value)
+    }
+    return t
+  }
+  if (!process.env.EJS_INLINE) {
+    Prototype.jumpR = function jumpR(value,cont,handle,exit) {
+      this.$cont = cont
+      this.$handle = handle
+      this.$exit = exit
+      this.$tail = true
+      return this
+    }
+    if (process.env.EJS_TRAMPOLINE_JUMPS)
+      Prototype.jump = Prototype.jumpR
+  }
+}
+
 if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
   LGp.alreadyRunning = process.env.EJS_DEFUNCT ? -1
     : function alreadyRunning() {
@@ -263,9 +328,9 @@ if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
       this.done = false
       this.value = void 0
     }
-    var WLGp = CheckRunningGenerator.prototype = Object.create(LGp)
+    var WLGp = CheckRunningGenerator.prototype = Object.create(Prototype)
     GeneratorConstructor = CheckRunningGenerator
-    WLGp.stepNoCheck = LGp.step
+    WLGp.stepNoCheck = Prototype.step
     function contSubNoCheck(v) {
       return this.$sub.stepNoCheck(v)
     }

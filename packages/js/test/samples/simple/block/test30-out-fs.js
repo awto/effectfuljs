@@ -4,13 +4,13 @@ function a() {
       b = function b(i) {
     var a;
     a = j;
-    return M.chain(eff1(i, a), _1, _3, i);
+    return M.chainBH(eff1(i, a), _1, _3, i);
 
     function _1(i) {
       var a;
       i++, j++;
       a = j;
-      return M.chain(eff2(i, a), _2, _3);
+      return M.chainBH(eff2(i, a), _2, _3);
     }
 
     function _2() {
@@ -26,18 +26,18 @@ function a() {
   i = 0;
   j = 0;
   a = j;
-  return M.chain(eff3(i, a), _1, _4, i);
+  return M.chainBH(eff3(i, a), _1, _4, i);
 
   function _1(i) {
     i++, j--;
-    return M.chain(b(i), _2, _4, i);
+    return M.chainBH(b(i), _2, _4, i);
   }
 
   function _2(i) {
     var a;
     i--, j++;
     a = j;
-    return M.chain(eff4(i, a), _3, _4);
+    return M.chainBH(eff4(i, a), _3, _4);
   }
 
   function _3() {

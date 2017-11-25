@@ -6,11 +6,11 @@ function a() {
 
 function b() {
   eff(1);
-  return M.chain(eff(2), _1, _3);
+  return M.chainBH(eff(2), _1, _3);
 
   function _1() {
     eff(3);
-    return M.chain(eff(4), _2, _3);
+    return M.chainBH(eff(4), _2, _3);
   }
 
   function _2() {

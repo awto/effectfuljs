@@ -1,18 +1,18 @@
 (function () {
   var e, ex;
-  return M.jump(_1, _6);
+  return M.jumpH(_1, _6);
 
   function _1() {
-    return M.chain(eff(2), _3, _5);
+    return M.chainBH(eff(2), _3, _5);
   }
 
   function _2() {
     e = ex;
-    return M.chain(eff(3), _3, _5);
+    return M.chainBH(eff(3), _3, _5);
   }
 
   function _3() {
-    return M.chain(eff(4), _4, _5);
+    return M.chainBH(eff(4), _4, _5);
   }
 
   function _4() {
@@ -25,6 +25,6 @@
 
   function _6(a) {
     ex = a;
-    return M.jump(_2, _5);
+    return M.jumpH(_2, _5);
   }
 });

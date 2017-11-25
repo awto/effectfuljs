@@ -5,7 +5,7 @@
 
   function _1(ex) {
     e = ex;
-    return M.chain(eff(3), _2, _3);
+    return M.chainBH(eff(3), _2, _3);
   }
 
   function _2() {
@@ -17,6 +17,6 @@
   }
 
   function _4(a) {
-    return M.jump(_1, _3, a);
+    return M.jumpH(_1, _3, a);
   }
 });

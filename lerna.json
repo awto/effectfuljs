@@ -3,5 +3,9 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.0.7"
+  "version": "0.0.7",
+  "npmClient": "yarn",
+  "npmClientArgs": [
+    "--no-lockfile"
+  ]
 }

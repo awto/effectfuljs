@@ -1,13 +1,13 @@
 function a() {
-  return M.jump(_1, _6);
+  return M.jumpH(_1, _6);
 
   function _1() {
-    return M.chain(eff(1), _2, _4, _3);
+    return M.chainBH(eff(1), _2, _4, _3, _4);
   }
 
-  function _2(fc, err) {
+  function _2(fc, fe, err) {
     console.log('fin');
-    return M.jump(fc, err);
+    return M.jumpH(fc, fe, err);
   }
 
   function _3() {
@@ -23,6 +23,6 @@ function a() {
   }
 
   function _6(a) {
-    return M.jump(_2, _4, _5, a);
+    return M.jumpH(_2, _4, _5, _4, a);
   }
 }

@@ -50,7 +50,7 @@ if (!process.env.EJS_INLINE) {
   LAGp.jump = LGp.jump
   LAGp.yld = LGp.yld
   if (process.env.EJS_DEFUNCT)
-    LAGp._step = LGp._step
+    LAGp.$step = LGp.$step
   if (process.env.EJS_LEAN_METHOD_ITERATORS) {
     LAGp.iterator = iterator
     LAGp.forInIterator = forInIterator

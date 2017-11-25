@@ -494,6 +494,8 @@ function* markFrameSyms(s) {
       }
       if (v.declSym != null) {
         let hndl = ""
+        if (v.repeat)
+          hndl += "|Repeat"
         if (v.catchCont) {
           if (v.catchCont.goto)
             hndl += `|Err{${
@@ -597,8 +599,6 @@ function* markFrameSyms(s) {
           name+=`.X-${v.ext.funcId.id}`
         if (v.contextSym)
           name+=`.S-${v.contextSym.id}`
-        if (v.rec)
-          name+=".REC"
         i = D.setComment(
           i,`${name}[${dst}${args}${thread}${fin}]`,"hl")
       }

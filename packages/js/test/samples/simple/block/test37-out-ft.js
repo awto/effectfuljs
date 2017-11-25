@@ -1,6 +1,6 @@
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_3);
+  return M.scopeH(a_1, a_3);
 }
 
 function a_1(a) {
@@ -8,7 +8,7 @@ function a_1(a) {
     1 + 1;
   }
 
-  return M.chain(M.pure(), a_2, a_3);
+  return M.chainBH(M.pure(), a_2, a_3);
 }
 
 function a_2(a, r) {

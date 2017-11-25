@@ -1,24 +1,24 @@
 function a() {
-  return M.chain(eff('a'), _1, _6);
+  return M.chainBH(eff('a'), _1, _6);
 
   function _1() {
-    return M.chain(M.reflect(monadish), _2, _6);
+    return M.chainBH(M.reflect(monadish), _2, _6);
   }
 
   function _2() {
-    return M.chain(eff(1), _3, _6);
+    return M.chainBH(eff(1), _3, _6);
   }
 
   function _3() {
-    return M.chain(M.reflect(monadish + 2), _4, _6);
+    return M.chainBH(M.reflect(monadish + 2), _4, _6);
   }
 
   function _4() {
-    return M.chain(M.reify(function () {
-      return M.chain(eff(1), _1, _3);
+    return M.chainBH(M.reify(function () {
+      return M.chainBH(eff(1), _1, _3);
 
       function _1() {
-        return M.chain(eff(2), _2, _3);
+        return M.chainBH(eff(2), _2, _3);
       }
 
       function _2() {
@@ -44,7 +44,7 @@ function a() {
 function b() {
   M.reify(function () {
     var result;
-    return M.chain(addLater(1, 2), _1, _2);
+    return M.chainBH(addLater(1, 2), _1, _2);
 
     function _1(a) {
       result = a;

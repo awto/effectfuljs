@@ -2,11 +2,11 @@
   "passPerPreset": true,
   "sourceType": "script",
   "presets": [
-    "../../preset",
+    ["../../preset",{"topLevel":false,"defunct":false}],
     {
       "plugins":[
         ["transform-es2015-modules-commonjs",
-         {strict:false,loose:true}]]
+         {"strict":false,"loose":true}]]
     }]
 }
 

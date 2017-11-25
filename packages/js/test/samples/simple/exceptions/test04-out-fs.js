@@ -1,9 +1,9 @@
 function a() {
   var e;
-  return M.jump(_1, _5);
+  return M.jumpH(_1, _5);
 
   function _1() {
-    return M.chain(eff(1), _3, _4);
+    return M.chainBH(eff(1), _3, _4);
   }
 
   function _2(ex) {
@@ -21,6 +21,6 @@ function a() {
   }
 
   function _5(a) {
-    return M.jump(_2, _4, a);
+    return M.jumpH(_2, _4, a);
   }
 }

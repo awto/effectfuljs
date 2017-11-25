@@ -1,11 +1,11 @@
 function a() {
   var error, _error;
 
-  return M.jump(_1, _6);
+  return M.jumpH(_1, _6);
 
   function _1() {
     console.log('1');
-    return M.chain(eff(1), _3, _5);
+    return M.chainBH(eff(1), _3, _5);
   }
 
   function _2(ex) {
@@ -13,11 +13,11 @@ function a() {
     _error = ex;
     e = _error;
     console.log('2');
-    return M.jump(_3, _5, e);
+    return M.jumpH(_3, _5, e);
   }
 
   function _3(e) {
-    return M.chain(eff(e), _4, _5);
+    return M.chainBH(eff(e), _4, _5);
   }
 
   function _4() {
@@ -29,17 +29,17 @@ function a() {
   }
 
   function _6(a) {
-    return M.jump(_2, _5, a);
+    return M.jumpH(_2, _5, a);
   }
 }
 
 function a() {
   var error;
-  return M.jump(_1, _6);
+  return M.jumpH(_1, _6);
 
   function _1() {
     console.log('1');
-    return M.chain(eff(1), _3, _5);
+    return M.chainBH(eff(1), _3, _5);
   }
 
   function _2(ex) {
@@ -48,11 +48,11 @@ function a() {
     e = error;
     console.log('2');
     error = null;
-    return M.jump(_3, _5, e);
+    return M.jumpH(_3, _5, e);
   }
 
   function _3(e) {
-    return M.chain(eff(e), _4, _5);
+    return M.chainBH(eff(e), _4, _5);
   }
 
   function _4() {
@@ -64,6 +64,6 @@ function a() {
   }
 
   function _6(a) {
-    return M.jump(_2, _5, a);
+    return M.jumpH(_2, _5, a);
   }
 }

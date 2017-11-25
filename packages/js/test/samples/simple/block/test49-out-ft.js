@@ -1,10 +1,10 @@
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_3);
+  return M.scopeH(a_1, a_3);
 }
 
 function a_1(a) {
-  return M.chain(eff(1), a_2, a_3);
+  return M.chainBH(eff(1), a_2, a_3);
 }
 
 function a_2(a) {

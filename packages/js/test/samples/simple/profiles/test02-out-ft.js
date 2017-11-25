@@ -1,14 +1,14 @@
 function e() {
   var e = M.context();
-  return M.scope(e_1, e_4);
+  return M.scopeH(e_1, e_4);
 }
 
 function e_1(e) {
-  return M.chain(eff1(), e_2, e_4);
+  return M.chainBH(eff1(), e_2, e_4);
 }
 
 function e_2(e) {
-  return M.chain(eff2(), e_3, e_4);
+  return M.chainBH(eff2(), e_3, e_4);
 }
 
 function e_3(e) {

@@ -29,8 +29,8 @@
   },
   "homepage": "https://github.com/awto/effectful-es#readme",
   "devDependencies": {
-    "@effectful/es-rt": "../es-rt",
     "@effectful/es-defunct-rt": "../es-defunct-rt",
+    "@effectful/es-rt": "../es-rt",
     "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
     "eslint": "^4.10.0",
@@ -40,6 +40,7 @@
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
-    "@effectful/js": "^0.0.2"
+    "@effectful/js": "^0.0.6",
+    "babel-types": "^6.26.0"
   }
 }

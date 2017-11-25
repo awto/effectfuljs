@@ -74,11 +74,11 @@ if (!process.env.EJS_INLINE) {
           : this.$handle(e))
   }
   
-  Ap.jump = function jump(cont, handle) {
+  Ap.jump = function jump(value, cont, handle) {
     this.$handle = handle
     this.$cont = cont
     try {
-      return process.env.EJS_DEFUNCT ? this.$run() : this.$cont()
+      return process.env.EJS_DEFUNCT ? this.$run(value) : this.$cont(value)
     } catch(e) {
       return process.env.EJS_DEFUNCT
         ? (this.$cont = this.$handle, this.$run(e))

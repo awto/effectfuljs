@@ -3,9 +3,7 @@
   "sourceType": "script",
   "presets": [["../../preset",{"topLevel":false,
                                "defunct":true,
-                               "contextState":true,
-                               "contextBy":"this",
-                               "all": {"wrapFunction":null}}],
+                               "all":{"removeAsserts":false}}],
               {
                 "plugins":[
                   ["transform-es2015-modules-commonjs",

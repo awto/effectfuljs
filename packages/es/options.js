@@ -20,12 +20,12 @@ const rebind = {
   effectful: {
     scopeContext:true,
     contextMethodOps:true,
+    markRepeat:false,
     markBindValue:false,
-    markRec:false,
     markCatchCont:false,
     markArgNum:false,
-    markErrorCont: true,
-    markResultCont: true,
+    markErrorCont: false,
+    markResultCont: false,
     scopeContext:true,
     scopePrefix:true,
     contextState:false,
@@ -46,6 +46,7 @@ const rebind = {
   generators: {
     bindName:"yldStar",
     scopeConstructor:"generator",
+    markRepeat:true,
     scopePostfix:true,
     wrapFunction: "generatorFunction",
     storeResultCont:"$exit",
@@ -78,9 +79,9 @@ const inline = {
     inlineResultContAssign:true,
     inlineErrorContAssign:true,
     inlineContAssign:true,
-    storeCont:"step",
+    storeCont:"$cont",
     storeResultCont:"$exit",
-    storeErrorCont:"handle",
+    storeErrorCont:"$handle",
     inlineReentryCheck:true,
     inlineYieldOp:"iterator"
   },
@@ -121,6 +122,7 @@ const defunct = {
 
 const defunctInline = {
   effectful: {
+    markRepeat:false,
     inlineScopeOp:"unwrap",
     inlineJsExceptions:true,
     inlinePureJumps:"tail",

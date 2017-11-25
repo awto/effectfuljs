@@ -1,14 +1,14 @@
 function a() {
   var _this = this;
 
-  return M.chain(eff(1), _1, _4);
+  return M.chainBH(eff(1), _1, _4);
 
   function _1() {
-    return M.chain(_this.eff(2), _2, _4);
+    return M.chainBH(_this.eff(2), _2, _4);
   }
 
   function _2() {
-    return M.chain(eff3(_this), _3, _4);
+    return M.chainBH(eff3(_this), _3, _4);
   }
 
   function _3() {

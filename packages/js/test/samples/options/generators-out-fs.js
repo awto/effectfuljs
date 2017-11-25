@@ -4,10 +4,10 @@ var _c = M.generatorFunction(c);
 import * as G from '@effectful/es';
 
 function c() {
-  return M.scope(_1, _3);
+  return M.scopeH(_1, _3);
 
   function _1() {
-    return M.yldStar(z, _2, _3);
+    return M.yldStarBH(z, _2, _3);
   }
 
   function _2() {

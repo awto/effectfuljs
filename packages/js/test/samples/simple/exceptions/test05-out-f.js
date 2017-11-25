@@ -1,22 +1,22 @@
 function a() {
-  var e, ex, fc, err;
-  return M.jump(_1, _7);
+  var e, ex, fc, fe, err;
+  return M.jumpH(_1, _7);
 
   function _1() {
-    fc = _4;
-    return M.chain(eff(1), _3, _5);
+    fc = _4, fe = _5;
+    return M.chainBH(eff(1), _3, _5);
   }
 
   function _2() {
     e = ex;
     console.log(e);
-    fc = _4;
-    return M.jump(_3, _5);
+    fc = _4, fe = _5;
+    return M.jumpH(_3, _5);
   }
 
   function _3() {
     console.log('fin');
-    return M.jump(fc);
+    return M.jumpH(fc, fe);
   }
 
   function _4() {
@@ -33,11 +33,11 @@ function a() {
 
   function _7(a) {
     ex = a;
-    return M.jump(_2, _8);
+    return M.jumpH(_2, _8);
   }
 
   function _8(a) {
-    fc = _6, err = a;
-    return M.jump(_3, _5);
+    fc = _6, fe = _5, err = a;
+    return M.jumpH(_3, _5);
   }
 }

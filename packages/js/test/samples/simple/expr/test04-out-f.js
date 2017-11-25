@@ -1,10 +1,10 @@
 function e() {
   var a;
-  return M.chain(eff(1), _1, _3);
+  return M.chainBH(eff(1), _1, _3);
 
   function _1(b) {
     a = b;
-    return M.chain(eff(2), _2, _3);
+    return M.chainBH(eff(2), _2, _3);
   }
 
   function _2(b) {

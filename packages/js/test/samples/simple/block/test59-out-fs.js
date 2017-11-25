@@ -1,16 +1,16 @@
 function a() {
   var i;
   i = 0;
-  return M.chain(read1(), _1, _4);
+  return M.chainBH(read1(), _1, _4);
 
   function _1(a) {
     var i;
     i = a;
-    return M.chain(eff(i), _2, _4, i);
+    return M.chainBH(eff(i), _2, _4, i);
   }
 
   function _2(i) {
-    return M.chain(write(i), _3, _4);
+    return M.chainBH(write(i), _3, _4);
   }
 
   function _3() {

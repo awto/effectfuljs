@@ -1,5 +1,5 @@
 function a() {
-  return M.chain(eff(3), _1, _2);
+  return M.chainBH(eff(3), _1, _2);
 
   function _1(b) {
     var a;

@@ -1,19 +1,19 @@
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_4);
+  return M.scopeH(a_1, a_4);
 }
 
 function a_1(a) {
   a._i = 0;
   a._i++;
-  return M.chain(eff1(a._i), a_2, a_4);
+  return M.chainBH(eff1(a._i), a_2, a_4);
 }
 
 function a_2(a) {
   if (t) {
-    return M.chain(eff2(a._i), a_3, a_4);
+    return M.chainBH(eff2(a._i), a_3, a_4);
   } else {
-    return M.chain(eff3(a._i), a_3, a_4);
+    return M.chainBH(eff3(a._i), a_3, a_4);
   }
 }
 

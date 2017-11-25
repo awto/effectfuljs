@@ -1,39 +1,39 @@
 // *- when branches has effects and it is the last statement
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_3);
+  return M.scopeH(a_1, a_3);
 }
 
 function b() {
   var b = M.context();
-  return M.scope(b_1, b_3);
+  return M.scopeH(b_1, b_3);
 }
 
 function c() {
   var c = M.context();
-  return M.scope(c_1, c_5);
+  return M.scopeH(c_1, c_5);
 }
 
 function d() {
   var d = M.context();
-  return M.scope(d_1, d_6);
+  return M.scopeH(d_1, d_6);
 }
 
 function e() {
   var e = M.context();
-  return M.scope(e_1, e_3);
+  return M.scopeH(e_1, e_3);
 }
 
 function f() {
   var f = M.context();
-  return M.scope(f_1, f_3);
+  return M.scopeH(f_1, f_3);
 }
 
 function a_1(a) {
   if (true) {
-    return M.chain(eff(1), a_2, a_3);
+    return M.chainBH(eff(1), a_2, a_3);
   } else {
-    return M.chain(eff(2), a_2, a_3);
+    return M.chainBH(eff(2), a_2, a_3);
   }
 }
 
@@ -47,9 +47,9 @@ function a_3(a, e) {
 
 function b_1(b) {
   if (true) {
-    return M.chain(eff(1), b_2, b_3);
+    return M.chainBH(eff(1), b_2, b_3);
   } else {
-    return M.chain(eff(2), b_2, b_3);
+    return M.chainBH(eff(2), b_2, b_3);
   }
 }
 
@@ -63,18 +63,18 @@ function b_3(b, e) {
 
 function c_1(c) {
   if (true) {
-    return M.chain(eff(1), c_2, c_5);
+    return M.chainBH(eff(1), c_2, c_5);
   } else {
-    return M.chain(eff(2), c_2, c_5);
+    return M.chainBH(eff(2), c_2, c_5);
   }
 }
 
 function c_2(c) {
-  return M.chain(eff(3), c_3, c_5);
+  return M.chainBH(eff(3), c_3, c_5);
 }
 
 function c_3(c) {
-  return M.chain(eff(4), c_4, c_5);
+  return M.chainBH(eff(4), c_4, c_5);
 }
 
 function c_4(c) {
@@ -86,23 +86,23 @@ function c_5(c, e) {
 }
 
 function d_1(d) {
-  return M.chain(eff('a'), d_2, d_6);
+  return M.chainBH(eff('a'), d_2, d_6);
 }
 
 function d_2(d) {
   if (true) {
-    return M.chain(eff(1), d_3, d_6);
+    return M.chainBH(eff(1), d_3, d_6);
   } else {
-    return M.chain(eff(2), d_3, d_6);
+    return M.chainBH(eff(2), d_3, d_6);
   }
 }
 
 function d_3(d) {
-  return M.chain(eff(3), d_4, d_6);
+  return M.chainBH(eff(3), d_4, d_6);
 }
 
 function d_4(d) {
-  return M.chain(eff(4), d_5, d_6);
+  return M.chainBH(eff(4), d_5, d_6);
 }
 
 function d_5(d) {
@@ -114,7 +114,7 @@ function d_6(d, e) {
 }
 
 function e_1(e) {
-  return M.chain(eff(1), e_2, e_3);
+  return M.chainBH(eff(1), e_2, e_3);
 }
 
 function e_2(e, a) {
@@ -130,7 +130,7 @@ function e_3(e, _e) {
 }
 
 function f_1(f) {
-  return M.chain(eff(1), f_2, f_3);
+  return M.chainBH(eff(1), f_2, f_3);
 }
 
 function f_2(f, a) {

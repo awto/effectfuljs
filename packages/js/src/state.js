@@ -228,7 +228,8 @@ export function* restoreDecls(s) {
   for(const i of sl) {
     yield i
     if (i.enter) {
-      if (i.value.savedDecls != null && i.value.savedDecls.size) {
+      if (i.value.savedDecls != null && i.value.savedDecls.size
+          && !i.leave && sl.curLev()) {
         for(const j of sl.sub()) {
           yield j
           if (j.enter && j.type === Tag.Array && j.pos === Tag.body) {

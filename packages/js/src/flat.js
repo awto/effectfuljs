@@ -131,6 +131,9 @@ export const convert = Kit.pipe(
   },
   function* convert(si) {
     const s = Kit.auto(si)
+    const needNextErrCont = !s.opts.inlineErrorContAssign
+    const needNextResCont = !s.opts.inlineResultContAssign
+          && s.opts.storeResultCont
     const root = s.first.value
     const frames = []
     let finContNum = 0
@@ -174,6 +177,7 @@ export const convert = Kit.pipe(
             continue
           case Block.frame:
             setGoto(cur,i.value)
+            i.value.repeat = []
             const declSym = i.value.declSym = Kit.scope.newSym("_")
             const inner = [i]
             frames.push(inner)
@@ -217,8 +221,10 @@ export const convert = Kit.pipe(
               case Except.finallyId:
                 const finJump = {
                   declSym:unboundTempVar(s.first.value,"fc"),
-                  // catchContRedir:{declSym:unboundTempVar(s.first.value,"fe")},
-                  // resultContRedir:{declSym:unboundTempVar(s.first.value,"fr")},
+                  catchContRedir:needNextErrCont
+                    && {declSym:unboundTempVar(s.first.value,"fe")},
+                  resultContRedir:needNextResCont
+                    && {declSym:unboundTempVar(s.first.value,"fr")},
                   dynamicJump:true,
                   instances:new Set(),
                   handle}
@@ -270,14 +276,16 @@ export const convert = Kit.pipe(
           case Loop.repeat:
             const fl = frames.length
             const ncur = yield* walk(s.sub(),cur)
-            if (frames.length > fl) {
+            const nfl = frames.length
+            if (nfl > fl) {
               const k = frames[fl][0].value
+              for(let l = fl; l < nfl; l++) {
+                const f = frames[l][0].value
+                f.repeat.unshift(i.value)
+              }
               for(const l of ncur)
-                if (l.goto == null) {
+                if (l.goto == null)
                   l.goto = k
-                  if (s.opts.markRec !== false)
-                    l.bindName = "repeat"
-                }
             }
             cur = []
             s.close(i)
@@ -705,7 +713,7 @@ export const convert = Kit.pipe(
   },
   Inline.throwStatements,
   Kit.toArray,
-  function optimize(sa) {
+  function cfgPostProc(sa) {
     const cfg = new Map()
     sa = getCfgFolded(sa,cfg)
     instantiateJumps(cfg.keys())
@@ -713,6 +721,16 @@ export const convert = Kit.pipe(
     instantiateJumps(cfg.keys())
     resetEnters(cfg.keys())
     optInlineFrames(cfg)
+    for(const i of cfg.keys()) {
+      if (i.repeat && i.repeat.length) {
+        for(const j of i.enters) {
+          if (!j.repeat || j.repeat.length < i.repeat.length) {
+            i.repeatStart = true
+            break
+          }
+        }
+      }
+    }
     function jumpArgs(j,first) {
       if (j.indirJumps) {
         const args = j.frameArgs || (j.frameArgs = new Map)
@@ -721,6 +739,16 @@ export const convert = Kit.pipe(
             continue
           args.set(cont.declSym,dest.declSym)
           cont.declSym.bound = true
+          if (cont.resultContRedir && dest.resultContRedir) {
+            args.set(cont.resultContRedir.declSym,
+                     dest.resultContRedir.declSym)
+            cont.resultContRedir.declSym.bound = true
+          }
+          if (cont.catchContRedir && dest.catchContRedir) {
+            args.set(cont.catchContRedir.declSym,
+                     dest.catchContRedir.declSym)
+            cont.catchContRedir.declSym.bound = true
+          }
         }
       }
     }
@@ -1088,9 +1116,17 @@ export function interpretJumps(si) {
           const frame = i.value.ref
           const pure = i.type === Ctrl.jump
           const insideCtx = !frame.first
-          const rec = i.value.rec
           const lab = s.label()
           const {goto,gotoDests,ref} = i.value
+          // TODO: detect rec jumps not only in the first frame
+          let rec
+          if (goto && frame.repeatStart && pure && s.opts.markRepeat) {
+            const gr = goto.repeat
+            const fr = frame.repeat
+            if (gr && gr.length >= fr.length
+                && gr[fr.length-1] === fr[fr.length-1])
+              rec = true
+          }
           const pos = i.pos
           const ctx = ctxSym
           const defaultName = pure ? pureBindName : bindName
@@ -1115,7 +1151,7 @@ export function interpretJumps(si) {
                   && !goto.resultContRedir.removed)
                 resCont = goto.resultContRedir.declSym
             }
-            const appVal = {sym:Kit.sysId(name),static:st,
+            const appVal = {fam:Kit.sysId(name),static:st,
                             insideCtx:!i.value.ref.first}
             if (s.curLev()) {
               if (s.opts.markBindValue !== false)
@@ -1134,9 +1170,8 @@ export function interpretJumps(si) {
               appVal.threadArgsNum = threadArgs.length
             }
             if (rec) {
-              if (s.opts.markRec !== false)
-                name += "R"
-              appVal.repeatJump = true
+              name += "R"
+              appVal.noInline = true
             }
             if (catchCont && passCatchCont) {
               if (s.opts.markErrorCont !== false)
@@ -1148,6 +1183,7 @@ export function interpretJumps(si) {
                 name += "F"
               appVal.hasResultCont = true
             }
+            appVal.sym = Kit.sysId(name)
             if (passCont)
               appVal.hasCont = true
             yield s.enter(pos,Block.app,appVal)
