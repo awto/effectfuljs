@@ -5,7 +5,7 @@
   "main": "preset.js",
   "scripts": {
     "test": "mocha",
-    "link-test": "node ../es/test/kit/links =default =defunct =defunctTopLevel"
+    "link-test": "node ../es/test/kit/links =default =defunct =defunctTopLevel =loose =looseDefunct =looseDefunctTop =looseTop =topLevel"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,8 @@
   "devDependencies": {
     "@effectful/es-inline-rt": "../es-inline-rt",
     "@effectful/es-defunct-inline-rt": "../es-defunct-inline-rt",
+    "@effectful/es-loose-rt": "../es-loose-rt",
+    "@effectful/es-defunct-loose-rt": "../es-defunct-loose-rt",
     "glob": "^7.1.2",
     "mocha": "^3.4.2",
     "promise": "^8.0.1",
