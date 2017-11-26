@@ -15,12 +15,12 @@ function fSent_2(fSent, a) {
 
 function fSent_3(fSent) {
   console.log(fSent._s, fSent._sent);
-  return M.yldStarBH(M.yld(void 0), fSent_4, fSent_6);
+  return M.yldStarBH(M.yld(), fSent_4, fSent_6);
 }
 
 function fSent_4(fSent, a) {
   console.log(a);
-  return M.yldStarBH(M.yld(void 0), fSent_5, fSent_6);
+  return M.yldStarBH(M.yld(), fSent_5, fSent_6);
 }
 
 function fSent_5(fSent, a) {

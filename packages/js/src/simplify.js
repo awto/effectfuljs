@@ -100,6 +100,38 @@ export function* emptyBlocs(si) {
   }
 }
 
-export const main = Kit.pipe(/*iife,*/emptyBlocs,asserts)
+/** removes last `undefined` arguments from calls */
+export function removeUndefinedArgs(si) {
+  const s = Kit.auto(si)
+  return walk()
+  function* walk() {
+    for(const i of s.sub()) {
+      yield i
+      if (i.enter && i.pos === Tag.arguments) {
+        const buf = []
+        for(const j of s.sub()) {
+          if (j.type === Tag.Identifier
+              && j.value.sym === Kit.scope.undefinedSym
+              && (!i.value.node || !i.value.node.loc)) {
+            buf.push(...s.copy(j))
+          } else {
+            yield* buf
+            buf.length = 0
+            yield j
+            if (!j.leave) {
+              yield* walk()
+              yield s.close(j)
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
+export const main = Kit.pipe(
+  // iife,
+  emptyBlocs,
+  asserts,
+  removeUndefinedArgs)
 
