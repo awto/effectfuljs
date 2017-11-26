@@ -96,7 +96,8 @@ export function storeContinuations(si) {
                 break
             case Ctrl.jump:
               const {goto} = j.value
-              if (cont && (f.first || goto !== f || reentry))
+              if (cont && (f.first || goto !== f || reentry)
+                  && !j.value.delegateCtx)
                 yield* assign(cont,goto.declSym)
             }
           }
@@ -153,8 +154,9 @@ function generatorsYield(si) {
         case "yld":
           if (!inlineYield)
             break
-          yield* assignValue(s,contextSym)
-          yield s.tok(Tag.push,Tag.Identifier,{result:true,sym:contextSym})
+          const ctx = i.value.delegateCtx || contextSym
+          yield* assignValue(s,ctx)
+          yield s.tok(Tag.push,Tag.Identifier,{result:true,sym:ctx})
           s.close(i)
           continue
         case "yldStar":
@@ -363,7 +365,7 @@ export function jsExceptions(si) {
   const skipFirst = s.opts.scopePrefix
   const {tailJumps} = s.opts
   let always = s.opts.inlineRaise !== "throw"
-  const {errFrameRedir} = root
+  const {errFrameRedir,resFrameRedir} = root
   return walk()
   function* walk() {
     if (skipFirst)
@@ -375,6 +377,8 @@ export function jsExceptions(si) {
         const {catchContRedir:goto} = i.value
         const node = {}
         if (!goto || i.value === errFrameRedir
+            || i.value === resFrameRedir
+            || i.value.last
             || !always && (errFrameRedir === goto
                            || i.value.singleJump))
             continue
@@ -603,6 +607,124 @@ export function coerce(si) {
         continue
       }
       yield i
+    }
+  }
+}
+
+export const delegateIteratorId = Kit.sysId("delegateIterator")
+
+/**
+ * injects interpretation `for-of` with `invertForOf:true` (CPS style)
+ */
+export function invertForOf(si) {
+  const sa = Kit.toArray(si)
+  const root = sa[0].value
+  if (!root.opts.invertForOf)
+    return sa
+  recover(sa)
+  return inject()
+  function recover() {
+    const s = Kit.auto(sa)
+    for(const i of s) {
+      if (i.enter && i.type === Tag.IfStatement) {
+        const j = s.cur()
+        const {forOfInfo} = j.value
+        if (!forOfInfo)
+          continue
+        i.value.forOfInfo = j.value.forOfInfo
+        Kit.skip(s.one())
+        Kit.skip(s.one())
+        assert.ok(s.cur().pos === Tag.alternate)
+        assert.ok(s.cur().type === Tag.BlockStatement)
+        let jump
+        for(const j of s.one())
+          if (j.enter && j.type === Ctrl.jump)
+            jump = j.value
+        assert.ok(jump)
+        jump.goto.catchContRedir.required = true
+        jump.goto.required = true
+        const frame = jump.ref
+        const patSym = forOfInfo.patSym = frame.patSym =
+              frame.patSym
+              || root.commonPatSym
+              || Kit.scope.newSym("i")
+        jump.ref.forOfInfo = forOfInfo
+        forOfInfo.exit = jump
+      }
+    }
+  }
+  function inject() {
+    const s = Kit.auto(sa)
+    const cont = s.opts.storeCont
+    if (s.opts.inlineYieldOp !== "iterator"
+        || !cont
+        || !s.opts.inlineContAssign)
+      throw s.error(
+        "not implemented: `invertForOf:true` without "+
+          "`{inlineYieldOp:'iterator',storeCont:'..',inlineContAssign:true}`")
+    return walk(s)
+    function* walk(sw) {
+      for(const i of sw) {
+        if (i.enter) {
+          switch(i.type) {
+          case Tag.MemberExpression:
+            if (!i.value.forOfInfo)
+              break
+            yield s.tok(i.pos,Tag.Identifier,{sym:i.value.forOfInfo.patSym})
+            Kit.skip(s.copy(i))
+            continue
+          case Block.letStmt:
+            if (!i.value.eff)
+              break
+            if (!i.value.goto.forOfInfo)
+              break
+            i.value.delegateCtx = i.value.goto.forOfInfo.sym
+            break
+          case Ctrl.jump:
+            if (!i.value.goto.forOfInfo)
+              break
+            const iterSym = i.value.delegateCtx = i.value.goto.forOfInfo.sym
+            yield s.enter(Tag.push,Tag.CallExpression,{result:true})
+            yield s.enter(Tag.callee,Tag.MemberExpression)
+            yield s.tok(Tag.object,Tag.Identifier,{sym:iterSym})
+            yield s.tok(Tag.property,Tag.Identifier,{node:{name:"step"}})
+            yield* s.leave()
+            yield* s.leave()
+            s.close(i)
+            continue
+          case Tag.IfStatement:
+            if (!i.value.forOfInfo)
+              break
+            Kit.skip(s.one())
+            yield* Kit.reposOne(walk(s.one()),i.pos)
+            Kit.skip(s.one())
+            s.close(i)
+            continue
+          case Tag.AssignmentExpression:
+            const j = s.cur()
+            if (j.type !== Tag.Identifier || !j.value.forOfInfo)
+              break
+            yield i
+            const {forOfInfo} = j.value
+            for(const k of s.sub()) {
+              if (k.enter && k.type === Tag.Identifier
+                  && k.value.sym === Loop.iteratorId) {
+                k.value.sym = delegateIteratorId
+              } else if (k.leave && k.type === Tag.Array && k.pos === Tag.arguments) {
+                yield s.tok(Tag.push,Tag.Identifier,{sym:forOfInfo.exit.ref.declSym})
+                yield s.tok(Tag.push,Tag.Identifier,
+                            {sym:forOfInfo.exit.ref.catchContRedir.declSym})
+                yield s.tok(Tag.push,Tag.Identifier,{sym:forOfInfo.exit.goto.declSym})
+              }
+              yield k
+            }
+            yield* s.sub()
+            yield s.close(i)
+            continue
+          }
+        }
+        yield i
+      }
     }
   }
 }

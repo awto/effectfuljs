@@ -2,8 +2,6 @@ import * as Kit from "./kit"
 import {Tag,symbol} from "estransducers"
 import * as T from "babel-types"
 import * as assert from "assert"
-import {openVarDecl} from "./kit/snippets"
-import * as Debug from "./debug"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
 import * as Ctrl from "./control"
@@ -130,15 +128,16 @@ function forOfStmtImpl(loose, s) {
   s = Kit.auto(s)
   const root = s.first.value
   const all = (loose || s.opts.loose) && s.opts.leanForOf
-  const finalizeForOf = s.opts.finalizeForOf !== false
+  const invertForOf = !loose && s.opts.invertForOf
+  const finalizeForOf = s.opts.finalizeForOf !== false && !invertForOf
   let emitBody = walk
   if (finalizeForOf && s.opts.jsExceptions !== false) {
     emitBody = bodyExcept
   }
   const exitName  = "exit" // bind ? "exitM" : "exit"
-  function* readLeft(sym) {
+  function* readLeft(sym,forOfInfo) {
     function* val(pos) {
-      yield s.enter(pos,Tag.MemberExpression)
+      yield s.enter(pos,Tag.MemberExpression,{forOfInfo})
       yield s.tok(Tag.object,Tag.Identifier,{sym,lhs:false,rhs:true})
       yield s.tok(Tag.property,{node:T.identifier("value")})
       yield* s.leave()
@@ -170,7 +169,7 @@ function forOfStmtImpl(loose, s) {
   function* exit(loop) {
     const lab = s.label()
     const bind = loop.bindIter
-    yield s.enter(Tag.push,Tag.IfStatement)
+    yield s.enter(Tag.push,Tag.IfStatement,{})
     yield s.enter(Tag.test,Tag.MemberExpression)
     yield s.tok(Tag.object,Tag.Identifier,{sym:loop.iterVar})
     yield s.tok(Tag.property,Tag.Identifier,{node:{name:exitName}})
@@ -264,13 +263,21 @@ function forOfStmtImpl(loose, s) {
         case Tag.ForOfStatement:
           const loop = i.value
           const sym = loop.iterVar = Bind.tempVarSym(s.first.value,"loop")
+          let forOfInfo
+          if (invertForOf && i.type === Tag.ForOfStatement)
+            forOfInfo = {sym,loop}
           sym.declBlock = sym.declLoop = loop
           sym.hasRefs = true
+          i.value.forOfInfo = forOfInfo
           yield s.peel(Kit.setType(i,Tag.ForStatement))
-          const iterVar = {sym,lhs:true,decl:true}
-          const init = Kit.toArray(readLeft(sym))
+          const iterVar = {sym,lhs:true,decl:true,forOfInfo}
+          const init = Kit.toArray(readLeft(sym,forOfInfo))
           const end = s.label()
-          yield* openVarDecl(iterVar,s,"var")
+          yield s.enter(Tag.init,Tag.VariableDeclaration,
+                        {node:{kind:"var"},forOfInfo})
+          yield s.enter(Tag.declarations,Tag.Array)
+          yield s.enter(Tag.push,Tag.VariableDeclarator)
+          yield s.tok(Tag.id,Tag.Identifier,iterVar)
           yield s.enter(Tag.init,Tag.CallExpression)
           const bind = loop.bindIter = !loose
             && i.type !== Tag.ForInStatement
@@ -289,7 +296,7 @@ function forOfStmtImpl(loose, s) {
             yield Kit.setPos(s.take(),Tag.push)
           }
           yield* end()
-          yield s.enter(Tag.test,Tag.UnaryExpression,{node:{operator:"!"}})
+          yield s.enter(Tag.test,Tag.UnaryExpression,{node:{operator:"!"},forOfInfo})
           yield s.enter(Tag.argument,Tag.MemberExpression)
           yield s.enter(Tag.object,Tag.AssignmentExpression,
                         {node:{operator:"="}})
@@ -474,7 +481,8 @@ export const normalizeFor = Kit.pipe(
                     yield sl.enter(Tag.alternate,Tag.BlockStatement)
                     yield sl.enter(Tag.body,Tag.Array)
                     const brk = sl.tok(Tag.push,Tag.BreakStatement,
-                                       {eff:true,bind:true,block:i.value});
+                                       {eff:true,bind:true,block:i.value,
+                                        forOfInfo:i.value.forOfInfo});
                     (i.value.brkRefs || (i.value.brkRefs = [])).push(brk)
                     yield brk
                   }

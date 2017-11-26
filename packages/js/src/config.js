@@ -266,5 +266,8 @@ export default {
   transform: false,
 
   // target JS engine has tail calls
-  jsTailCalls: false
+  jsTailCalls: false,
+
+  // encode effectful `for-of` loops using CPS
+  invertForOf: false
 }

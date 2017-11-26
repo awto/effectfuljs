@@ -1,4 +1,3 @@
-const Compiler = require("@effectful/js/compiler")
 const config = require("@effectful/js/config")
 const Policy = require("@effectful/js/policy")
 const T = require("@effectful/js/transform")

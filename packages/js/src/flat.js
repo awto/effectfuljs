@@ -170,14 +170,17 @@ export const convert = Kit.pipe(
               yield s.tok(Tag.push,Ctrl.jump,{goto})
               yield* lab()
               if (i.value.brkRefs)
-                for(const j of i.value.brkRefs)
+                for(const j of i.value.brkRefs) {
                   cur.push(j)
+                }
               s.close(i)
             }
             continue
           case Block.frame:
             setGoto(cur,i.value)
             i.value.repeat = []
+            i.value.noInline = false
+            i.value.noSingleEnterInline = false
             const declSym = i.value.declSym = Kit.scope.newSym("_")
             const inner = [i]
             frames.push(inner)
@@ -324,11 +327,7 @@ export const convert = Kit.pipe(
     }
   },
   Kit.toArray,
-  // * removes useless frames:
-  //   - frame with the only statement is a jump
-  //   - inlines frames with only 1 jump into it
-  // processing all frames at once to handle non-local jumps
-  // this is a bit inefficient, maps will contain all items from the module
+  // sets a few useful fields
   function postproc(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
@@ -354,8 +353,10 @@ export const convert = Kit.pipe(
                 case Ctrl.jump:
                   const bindJump = j.type === Block.letStmt
                   j.value.bindJump = bindJump
+                  if (j.value.ref && !!j.value.ref.forOfInfo && j.value.goto)
+                    j.value.goto.noSingleEnterInline = true
                   j.value.ref = i.value
-                  }
+                }
               }
             }
           }
@@ -382,7 +383,8 @@ export const convert = Kit.pipe(
       const sym = root.resSym = unboundTempVar(root,"r")
         // Bind.tempVarSym(root,"r")
       const f = s.enter(Tag.push, Block.frame,
-                        {declSym:Kit.scope.newSym("ret"),root,last:true})
+                        {declSym:Kit.scope.newSym("ret"),root,
+                         last:true})
       root.resFrame = f.value
       yield f
       yield s.enter(j.pos,Block.app,{sym:Block.pureId,
@@ -1666,11 +1668,12 @@ function* restoreFromCfg(cfg, si) {
 /** inlines frames with only 1 jump into it */
 function optInlineFrames(cfg) {
   for(const [i,toks] of cfg) {
-    if (i.noInline)
+    if (i.noInline || i.noSingleEnterInline)
       continue
     if (i.enters.size === 1) {
       const [enter] = i.enters
       if (!enter.result && !enter.bindJump
+          && !enter.noInline
           && !enter.goto.dynamicJump
           && !(enter.frameArgs && enter.frameArgs.size)
           && !(enter.indirJumps && enter.indirJumps.size)
@@ -1699,7 +1702,7 @@ function optUselessFrames(cfg) {
         break
       }
     }
-    const skipFirst = i.noInline = i.first || i.last
+    const skipFirst = i.noInline = i.noInline || i.first || i.last
   }
   function markReachable(frame) {
     if (!frame)
@@ -1864,6 +1867,7 @@ function unfoldCfg(cfg,sa) {
 
 /** conferts flat structure to JS expressions */
 export const interpret = Kit.pipe(
+  Inline.invertForOf,
   Kit.toArray,
   calcVarDeps,
   Inline.storeContinuations,
