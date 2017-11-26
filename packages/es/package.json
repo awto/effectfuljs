@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Standard JavaScript effects using @effectful/js (abstract interface)",
   "main": "preset.js",
   "scripts": {
