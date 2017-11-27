@@ -5,25 +5,35 @@
  * symbols, so no 2 implementation can exist in a single process
  */
 
-var Sym = process.env.EJS_LOCAL_SYMBOLS
-      ? { leanIterator: Symbol("Effectful.leanIterator"),
-          leanAsyncIterator: Symbol("Effectful.leanAsyncIterator") }
-      : { leanIterator: Symbol.for("Effectful.leanIterator"),
-          leanAsyncIterator: Symbol.for("Effectful.leanAsyncIterator") }
+export var iterator = process.env.EJS_LOCAL_SYMBOLS
+  ? Symbol("Effectful.iterator")
+  : Symbol.for("Effectful.iterator")
 
-Sym.iterator = Symbol.iterator
+export var asyncIterator = process.env.EJS_LOCAL_SYMBOLS
+  ? Symbol("Effectful.asyncIterator")
+  : Symbol.for("Effectful.asyncIterator")
 
 if (!process.env.EJS_NO_ES_ITERATORS && !Symbol.asyncIterator)
   Symbol.asyncIterator = Symbol.for("Symbol.asyncIterator")
+/*
 
-Sym.asyncIterator = Symbol.asyncIterator
+export var Sym = {iterator:iterator,
+                  asyncIterator:asyncIterator,
+                  esIterator:Symbol.iterator,
+                  esAsyncIterator: Symbol.asyncIterator}
+
 if (!process.env.EJS_NO_ES_OBJECT_MODEL)
   Sym.toString = Symbol.toString
+*/
 
 if (!process.env.EJS_LOCAL_SYMBOLS) {
-  Symbol.leanIterator = Sym.leanIterator
-  Symbol.leanAsyncIterator = Sym.leanAsyncIterator
+  Symbol.effectfulIterator = iterator
+  Symbol.effectfulAsyncIterator = asyncIterator
 }
 
-export {Sym as Symbol}
-
+export var delegateIterator
+if (process.env.EJS_DELEGATE_ITERATOR) {
+  delegateIterator = process.env.EJS_LOCAL_SYMBOLS
+    ? Symbol("Effectful.delegateIterator")
+    : Symbol.for("Effectful.delegateIterator")
+}

@@ -108,14 +108,6 @@ export function storeContinuations(si) {
   }
 }
 
-/** 
- * context shallow copy on frame's effectful exit 
- * TODO:
- */
-function copyConext(si) {
-  
-}
-
 const delegateSym = Kit.sysId("delegate")
 
 function* assignValue(s,contextSym) {
@@ -129,13 +121,17 @@ function* assignValue(s,contextSym) {
 
 /**
  * inlining yield/yield* expressions for generators implementation
- * handles `inlineYieldOp: "iterator"` options
+ * handles options:
+ *  - `inlineYieldOp: "iterator"`
+ *  - `inlineYieldStarOp: "iterator"`
+ *  - `inlineScopeOp`: "unwrap"`
  */
 function generatorsYield(si) {
   const s = Kit.auto(si)
   const inlineYield = s.opts.inlineYieldOp === "iterator"
+  const inlineYieldStar = s.opts.inlineYieldStarOp === "iterator"
   const inlineScope = s.opts.inlineScopeOp === "unwrap"
-  if (!inlineYield && !inlineScope)
+  if (!inlineYieldStar && !inlineYield && !inlineScope)
     return s
   const {contextSym} = s.first.value
   const root = s.first.value
@@ -160,7 +156,7 @@ function generatorsYield(si) {
           s.close(i)
           continue
         case "yldStar":
-          if (!inlineYield)
+          if (!inlineYieldStar)
             break
           yield s.enter(Tag.push,Tag.CallExpression,{result:true})
           yield s.tok(Tag.callee,Tag.Identifier,{sym:delegateSym})
@@ -252,20 +248,28 @@ export function promises(si) {
  * handles `inlinePureJumps` option (inlines pure jumps between frames)
  * possible values:
  *    - 'call' - replaces with simple function call
+ *    - 'tail' - moves the call to the end of frame
+ *    - 'exit' - doesn't call anything and leaves it to caller to re-call
  */
 export function jumpOps(si) {
   const s = Kit.auto(si)
   const inlineJumps = s.opts.inlinePureJumps === "call"
   const inlineScope = s.opts.inlineScopeOp === "call"
-  if (s.opts.inlinePureJumps && !inlineJumps && s.opts.inlinePureJumps
-      && s.opts.inlinePureJumps !== "tail") {
+  const jumpsExit = s.opts.inlinePureJumps === "exit"
+  if (s.opts.inlinePureJumps && !inlineJumps && !jumpsExit
+      && s.opts.inlinePureJumps && s.opts.inlinePureJumps !== "tail") {
     throw s.error(
       `unsupported value ${s.opts.inlinePureJumps} for inlinePureJumps`)
   }
-  if (!inlineJumps && !inlineScope)
+  if (!inlineJumps && !inlineScope && !jumpsExit)
     return s
   if (inlineScope && !s.opts.defunct)
-    throw s.error('`inlineScope:"call"` requires `defunct:true`')
+    throw s.error("`inlineScope:'call'` requires `defunct:true`")
+  if (jumpsExit) {
+    if (!s.opts.inlineContAssign)
+      throw s.error(
+        "`inlineJumps:'exit' works only with `{inlineContAssign:true}`")
+  }
   const root = s.first.value
   const {contextSym} = root
   if (!contextSym)
@@ -325,13 +329,15 @@ export function jumpOps(si) {
                 s.close(j)
                 continue
               }
-              if (j.value.sym === jumpRId && inlineJumps) {
+              if (j.value.sym === jumpRId && (inlineJumps || jumpsExit)
+                  || j.value.sym === jumpId && jumpsExit) {
+                const ctx = j.value.delegateCtx || contextSym
                 if (j.value.hasBindVal)
-                  yield* assignValue(s,contextSym)
-                yield* s.toks(Tag.push,"$I.$tail = true",contextSym)
+                  yield* assignValue(s,ctx)
+                yield* s.toks(Tag.push,"$I.$running = true",ctx)
                 Kit.skip(s.sub())
                 s.close(j)
-                yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
+                yield s.tok(Tag.push,Tag.Identifier,{sym:ctx,result:true})
                 continue
               }
               break
@@ -621,6 +627,7 @@ export function invertForOf(si) {
   const root = sa[0].value
   if (!root.opts.invertForOf)
     return sa
+  const jumpsExit = root.opts.inlinePureJumps === "exit"
   recover(sa)
   return inject()
   function recover() {
@@ -656,12 +663,14 @@ export function invertForOf(si) {
   function inject() {
     const s = Kit.auto(sa)
     const cont = s.opts.storeCont
-    if (s.opts.inlineYieldOp !== "iterator"
+    if (s.opts.inlineYieldOp
         || !cont
+        || s.opts.state
         || !s.opts.inlineContAssign)
       throw s.error(
         "not implemented: `invertForOf:true` without "+
-          "`{inlineYieldOp:'iterator',storeCont:'..',inlineContAssign:true}`")
+          "`{state:false,inlineYieldOp:false," +
+          "storeCont:'..',inlineContAssign:true}`")
     return walk(s)
     function* walk(sw) {
       for(const i of sw) {
@@ -684,6 +693,8 @@ export function invertForOf(si) {
             if (!i.value.goto.forOfInfo)
               break
             const iterSym = i.value.delegateCtx = i.value.goto.forOfInfo.sym
+            if (jumpsExit)
+              break
             yield s.enter(Tag.push,Tag.CallExpression,{result:true})
             yield s.enter(Tag.callee,Tag.MemberExpression)
             yield s.tok(Tag.object,Tag.Identifier,{sym:iterSym})
@@ -710,11 +721,18 @@ export function invertForOf(si) {
               if (k.enter && k.type === Tag.Identifier
                   && k.value.sym === Loop.iteratorId) {
                 k.value.sym = delegateIteratorId
-              } else if (k.leave && k.type === Tag.Array && k.pos === Tag.arguments) {
-                yield s.tok(Tag.push,Tag.Identifier,{sym:forOfInfo.exit.ref.declSym})
+              } else if (k.enter && k.type === Tag.Array
+                         && k.pos === Tag.arguments) {
+                yield k
+                while(s.curLev())
+                  yield* s.one()
+                yield s.tok(Tag.push,Tag.Identifier,
+                            {sym:forOfInfo.exit.ref.declSym})
                 yield s.tok(Tag.push,Tag.Identifier,
                             {sym:forOfInfo.exit.ref.catchContRedir.declSym})
-                yield s.tok(Tag.push,Tag.Identifier,{sym:forOfInfo.exit.goto.declSym})
+                yield s.tok(Tag.push,Tag.Identifier,
+                            {sym:forOfInfo.exit.goto.declSym})
+                continue
               }
               yield k
             }

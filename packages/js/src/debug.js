@@ -494,7 +494,7 @@ function* markFrameSyms(s) {
       }
       if (v.declSym != null) {
         let hndl = ""
-        if (v.repeat)
+        if (v.repeatStart)
           hndl += "|Repeat"
         if (v.catchCont) {
           if (v.catchCont.goto)

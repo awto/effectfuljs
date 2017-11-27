@@ -128,10 +128,10 @@ function forOfStmtImpl(loose, s) {
   s = Kit.auto(s)
   const root = s.first.value
   const all = (loose || s.opts.loose) && s.opts.leanForOf
-  const invertForOf = !loose && s.opts.invertForOf
-  const finalizeForOf = s.opts.finalizeForOf !== false && !invertForOf
+  const invert = !loose && s.opts.invertForOf
+  const finalize = s.opts.finalizeForOf !== false && !invert
   let emitBody = walk
-  if (finalizeForOf && s.opts.jsExceptions !== false) {
+  if (finalize && s.opts.jsExceptions !== false) {
     emitBody = bodyExcept
   }
   const exitName  = "exit" // bind ? "exitM" : "exit"
@@ -231,7 +231,7 @@ function forOfStmtImpl(loose, s) {
     }
     for(const i of sw) {
       if (i.enter && (all || i.value.eff)) {
-        const nblocks = finalizeForOf && i.value.ctrl ? [i.value,...blocks] : blocks
+        const nblocks = finalize && i.value.ctrl ? [i.value,...blocks] : blocks
         switch(i.type) {
         case Tag.ReturnStatement:
           if (!blocks.length)
@@ -264,7 +264,7 @@ function forOfStmtImpl(loose, s) {
           const loop = i.value
           const sym = loop.iterVar = Bind.tempVarSym(s.first.value,"loop")
           let forOfInfo
-          if (invertForOf && i.type === Tag.ForOfStatement)
+          if (invert && i.value.eff && i.type === Tag.ForOfStatement)
             forOfInfo = {sym,loop}
           sym.declBlock = sym.declLoop = loop
           sym.hasRefs = true
@@ -332,6 +332,9 @@ function forOfStmtImpl(loose, s) {
               yield* Kit.reposOne(emitBody(s.one(),nblocks,loop),Tag.push)
             }
           }
+          if (invert && i.value.eff) {
+            yield s.tok(Tag.push,Tag.ContinueStatement,{bind:true,block:i.value})
+          }
           yield* end()
           yield* s.leave()
           continue
@@ -372,7 +375,8 @@ export const normalizeFor = Kit.pipe(
                 const cntBlock = sl.enter(Tag.push,Tag.BlockStatement,
                                           {eff:true,
                                            ctrlEff:true,
-                                           ctrl:cntLab(i.value.ctrl)})
+                                           ctrl:cntLab(i.value.ctrl),
+                                           contLoop:i.value})
                 i.value.cntBlock = cntBlock.value
                 yield cntBlock
                 yield sl.enter(Tag.body,Tag.Array)

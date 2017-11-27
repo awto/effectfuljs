@@ -138,6 +138,7 @@ export default {
   inlineChainOp: null, // "promise" | null
   inlineScopeOp: null, // "unwrap" | "call" | null
   inlineYieldOp: null, // "iterator" | null
+  inlineYieldStarOp: null, // "iterator" | null
   inlinePureOp:null,   // "noop" | "iterator" | "promise" | null
   inlineRaiseOP:null,  // "throw" | "promise" | null
 
@@ -155,8 +156,8 @@ export default {
   // possible values are:
   // * 'call' - replaces with simple function call
   // * 'tail' - optimized for defunct:true (requires inlineContAssign)
-  inlinePureJumps:null,
-
+  // * 'exit' - same tail calls but managed on generator (requires inlineContAssign)
+  inlinePureJumps: null,
 
   // unsets variables if their values are not used after in control flow,
   // to avoid possible leaks if effectful computation is suspended for long

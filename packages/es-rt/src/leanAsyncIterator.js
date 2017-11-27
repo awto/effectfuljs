@@ -1,4 +1,4 @@
-import {Symbol} from "./symbol"
+import {asyncIterator as asyncIterSym} from "./symbol"
 import {iterator} from "./leanIterator"
 
 /** function returning lean async iterator for async iterable object */
@@ -9,7 +9,7 @@ export var LeanAsyncIteratorPrototype = {}
 /** constructor for a wrapper converting ES Async Iterator to Lean  */
 export var LeanAsyncIterator
 
-LeanAsyncIteratorPrototype[Symbol.leanAsyncIterator] = function () { return this }
+LeanAsyncIteratorPrototype[asyncIterSym] = function () { return this }
 
 export var UnwrapWrapper
 
@@ -65,7 +65,7 @@ if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {
 
 if (!process.env.EJS_NO_ES_ITERATORS) {
   LeanAsyncIterator = function LeanAsyncIterator(iter) {
-    this.iter = iter[Symbol.asyncIterator]()
+    this.iter = iter[asyncIterSym]()
     this.done = false
   }
 
@@ -119,8 +119,8 @@ if (!process.env.EJS_NO_ES_ITERATORS) {
   }
 
   iteratorM = function asyncIterator(cont) {
-    return cont[Symbol.leanAsyncIterator]
-      ? cont[Symbol.leanAsyncIterator]()
+    return cont[asyncIterSym]
+      ? cont[asyncIterSym]()
       : cont[Symbol.asyncIterator]
       ? new LeanAsyncIterator(cont)
       : iterator(cont)
@@ -128,9 +128,7 @@ if (!process.env.EJS_NO_ES_ITERATORS) {
   
 } else {
   iteratorM = function asyncIterator(cont) {
-    return cont[Symbol.leanAsyncIterator]
-      ? cont[Symbol.leanAsyncIterator]()
-      : iterator(cont)
+    return cont[asyncIterSym] ? cont[asyncIterSym]() : iterator(cont)
   }
 }
 

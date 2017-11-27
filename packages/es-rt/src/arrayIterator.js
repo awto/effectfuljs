@@ -2,7 +2,7 @@
  * lean iterator for JS array
  */
 import {LeanIteratorPrototype} from "./leanIterator"
-import {Symbol} from "./symbol"
+import {iterator as iterSym, delegateIterator as diSym} from "./symbol"
 
 function ArrayLeanIterator(arr) {
   this.arr = arr
@@ -12,48 +12,69 @@ function ArrayLeanIterator(arr) {
   this.$sub = void 0
 }
 
-ArrayLeanIterator.prototype = Object.create(LeanIteratorPrototype)
+var ALIp = ArrayLeanIterator.prototype = Object.create(LeanIteratorPrototype)
 
-ArrayLeanIterator.prototype.step = function step() {
-  if (this.x >= this.arr.length)
-    return this.pure()
-  this.value = this.arr[this.x++]
+if (process.env.EJS_DELEGATE_ITERATOR) {
+  ALIp[diSym] = function(yld,raise,pure) {
+    this.yld = yld
+    this.raise = raise
+    this.pure = pure
+    return this
+  }
+  ALIp.step = function step() {
+    return this.x >= this.arr.length
+      ? this.pure()
+      : this.yld(this.arr[this.x++])
+  }
+} else {
+  ALIp.step = function step() {
+    if (this.x >= this.arr.length)
+      return this.pure()
+    this.value = this.arr[this.x++]
+    return this
+  }
+}
+
+ALIp.yld = function(v) {
+  this.value = v
   return this
 }
 
-ArrayLeanIterator.prototype.raise = function pure(ex) {
+ALIp.raise = function pure(ex) {
   this.value = void 0
   this.done = true
   throw ex
 }
 
-ArrayLeanIterator.prototype.pure = function pure(value) {
+ALIp.pure = function pure(value) {
   this.value = value
   this.done = true
   return this
 }
 
-ArrayLeanIterator.prototype.exit = function exit() {
+ALIp.exit = function exit() {
   this.value = void 0
   this.done = true
   return this
 }
 
-ArrayLeanIterator.prototype.handle = function handle(e) {
+ALIp.handle = function handle(e) {
   return this.exit()
 }
 
-ArrayLeanIterator.prototype.next = function next() {
+ALIp.next = function next() {
   this.step()
   return this
 }
 
-ArrayLeanIterator.prototype.next = function next() {
+ALIp.next = function next() {
   this.step()
   return {value: this.value, done: this.done }
 }
 
-Array.prototype[Symbol.leanIterator] = function() {
+Array.prototype[iterSym] = function() {
   return new ArrayLeanIterator(this)
 }
 
+if (process.env.EJS_DELEGATE_ITERATOR)
+  Array.prototype[diSym] =  Array.prototype[iterSym]

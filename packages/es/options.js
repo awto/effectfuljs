@@ -38,6 +38,7 @@ const rebind = {
     contextBy: "this",
     contextMethodOpsSpec: {
       iterator: false,
+      delegateIterator: false,
       iteratorM: false,
       forInIterator: false
     }
@@ -82,7 +83,8 @@ const inline = {
     storeResultCont:"$exit",
     storeErrorCont:"$handle",
     inlineReentryCheck:true,
-    inlineYieldOp:"iterator"
+    inlineYieldOp:"iterator",
+    inlineYieldStarOp:"iterator"
   },
   async: {
     storeCont:false ,
@@ -108,6 +110,7 @@ const inline = {
     storeResultCont:"$exit",
     inlineReentryCheck:false,
     inlineYieldOp:"iterator",
+    inlineYieldStarOp:"iterator",
     inlineChainOp:"promise"
   }
 }

@@ -179,8 +179,10 @@ export const convert = Kit.pipe(
           case Block.frame:
             setGoto(cur,i.value)
             i.value.repeat = []
+            // the frame should be present in final output
             i.value.noInline = false
-            i.value.noSingleEnterInline = false
+            // only pure jumps to the frame are allowed
+            i.value.jumpsOnly = false
             const declSym = i.value.declSym = Kit.scope.newSym("_")
             const inner = [i]
             frames.push(inner)
@@ -331,6 +333,7 @@ export const convert = Kit.pipe(
   function postproc(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
+    const noLoopContOpt = s.opts.invertForOf
     const bindName = s.opts.bindName || "chain"
     walk()
     return sa
@@ -353,8 +356,14 @@ export const convert = Kit.pipe(
                 case Ctrl.jump:
                   const bindJump = j.type === Block.letStmt
                   j.value.bindJump = bindJump
-                  if (j.value.ref && !!j.value.ref.forOfInfo && j.value.goto)
+                  if (j.value.orig && !!j.value.orig.forOfInfo && j.value.goto)
                     j.value.goto.noSingleEnterInline = true
+                  if (noLoopContOpt && j.value.goto && j.value.orig
+                      && j.value.orig.block
+                      && j.value.orig.block.contLoop
+                      && j.value.orig.block.contLoop.forOfInfo) {
+                    j.value.goto.jumpsOnly = true
+                  }
                   j.value.ref = i.value
                 }
               }
@@ -716,10 +725,18 @@ export const convert = Kit.pipe(
   Inline.throwStatements,
   Kit.toArray,
   function cfgPostProc(sa) {
+    const root = sa[0].value
     const cfg = new Map()
     sa = getCfgFolded(sa,cfg)
     instantiateJumps(cfg.keys())
+    // some opts must be prevented for `invertForOf`
+    if (root.opts.invertForOf)
+      resetEnters(cfg.keys())
     optUselessFrames(cfg)
+    if (root.opts.invertForOf) {
+      for(const i of cfg.keys())
+        i.enters = new Set()
+    }
     instantiateJumps(cfg.keys())
     resetEnters(cfg.keys())
     optInlineFrames(cfg)
@@ -1119,7 +1136,7 @@ export function interpretJumps(si) {
           const pure = i.type === Ctrl.jump
           const insideCtx = !frame.first
           const lab = s.label()
-          const {goto,gotoDests,ref} = i.value
+          const {goto,gotoDests,ref,delegateCtx} = i.value
           // TODO: detect rec jumps not only in the first frame
           let rec
           if (goto && frame.repeatStart && pure && s.opts.markRepeat) {
@@ -1137,7 +1154,7 @@ export function interpretJumps(si) {
           assert.ok(gotoDests.length)
           if (!gotoDests.length && !requireFinalPure && name === defaultName) {
             yield pure
-              ? s.enter(pos,Block.app,{sym:Block.pureId,insideCtx})
+              ? s.enter(pos,Block.app,{sym:Block.pureId,insideCtx,delegateCtx})
               : s.enter(pos,Block.effExpr)
             if (!i.leave)
               yield* walk()
@@ -1154,7 +1171,7 @@ export function interpretJumps(si) {
                 resCont = goto.resultContRedir.declSym
             }
             const appVal = {fam:Kit.sysId(name),static:st,
-                            insideCtx:!i.value.ref.first}
+                            insideCtx:!i.value.ref.first,delegateCtx}
             if (s.curLev()) {
               if (s.opts.markBindValue !== false)
                 name += "B"
@@ -1584,7 +1601,7 @@ function* prepareCfg(si, collapsed, framesList) {
               break
           case Ctrl.jump:
             j.value.singleSymResult = null
-            j.value.singleJump = false
+            i.value.singleJump = false
             if (j.type === Ctrl.jump && start === j && j.value.goto
                 && !j.value.goto.dynamicJump) {
               const k = s.curLev()
@@ -1758,9 +1775,20 @@ function optUselessFrames(cfg) {
                && !(exit.indirJumps && exit.indirJumps.size)
                && !(exit.frameArgs && exit.frameArgs.size))
     {
-      i.substJump = exit.goto
-      i.removed = true
-      cfg.delete(i)
+      let skip = false
+      if (exit.goto && exit.goto.jumpsOnly) {
+        for(const j of i.enters) {
+          if (j.bindJump) {
+            skip = true
+            break
+          }
+        }
+      }
+      if (!skip) {
+        i.substJump = exit.goto
+        i.removed = true
+        cfg.delete(i)
+      }
     }
   }
   // applying the substitutes

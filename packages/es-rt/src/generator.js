@@ -1,4 +1,4 @@
-import {Symbol} from "./symbol"
+import {iterator as iterSym, delegateIterator as diSym} from "./symbol"
 import {Generator} from "./esIterator"
 import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
@@ -182,6 +182,11 @@ if (!process.env.EJS_INLINE) {
     return this
   }
 
+  LGp.yld = function yld(value) {
+    this.value = value
+    return this
+  }
+  
   LGp.exit = function exit(value) {
     return process.env.EJS_DEFUNCT
       ? (this.$cont = this.$exit, this.$run(value))
@@ -251,7 +256,15 @@ if (process.env.EJS_LEAN_METHOD_ITERATORS) {
   LGp.forInIterator = forInIterator
 }
 
-LGp[Symbol.leanIterator] = function() { return this }
+LGp[iterSym] = function() { return this }
+
+if (process.env.EJS_DELEGATE_ITERATOR)
+  LGp[diSym] = function(yld,raise,pure) {
+    this.yld = yld
+    this.raise = raise
+    this.pure = pure
+    return this
+  }
 
 if (!process.env.EJS_NO_ES_ITERATORS)
   LGp[Symbol.iterator] = function() { return this.unwrap }
@@ -269,7 +282,7 @@ LGp.raise = function genRaise(ex) {
   throw ex
 }
 
-var Prototype = LGp
+var TLGp = LGp
 
 if (!process.env.EJS_NO_TRAMPOLINE) {
   function TrampolineGenerator() {
@@ -277,44 +290,44 @@ if (!process.env.EJS_NO_TRAMPOLINE) {
     this.value = void 0
   }
   GeneratorConstructor = TrampolineGenerator
-  TrampolineGenerator.prototype = Prototype = Object.create(Prototype)
-  Prototype.oneStep = LGp.step
-  Prototype.oneHandle = LGp.handle
-  Prototype.oneExit = LGp.exit
-  Prototype.step = function(v) {
+  TrampolineGenerator.prototype = TLGp = Object.create(LGp)
+  TLGp.oneStep = LGp.step
+  TLGp.oneHandle = LGp.handle
+  TLGp.oneExit = LGp.exit
+  TLGp.step = function(v) {
     var t = this.oneStep(v)
-    while(t.$tail) {
-      t.$tail = false
+    while(t.$running) {
+      t.$running = false
       t = t.oneStep(t.value)
     }
     return t
   }
-  Prototype.handle = function(v) {
+  TLGp.handle = function(v) {
     var t = this.oneHandle(v)
-    while(t.$tail) {
-      t.$tail = false
+    while(t.$running) {
+      t.$running = false
       t = t.oneStep(t.value)
     }
     return t
   }
-  Prototype.exit = function(v) {
+  TLGp.exit = function(v) {
     var t = this.oneExit(v)
-    while(t.$tail) {
-      t.$tail = false
+    while(t.$running) {
+      t.$running = false
       t = t.oneStep(t.value)
     }
     return t
   }
   if (!process.env.EJS_INLINE) {
-    Prototype.jumpR = function jumpR(value,cont,handle,exit) {
+    TLGp.jumpR = function jumpR(value,cont,handle,exit) {
       this.$cont = cont
       this.$handle = handle
       this.$exit = exit
-      this.$tail = true
+      this.$running = true
       return this
     }
     if (process.env.EJS_TRAMPOLINE_JUMPS)
-      Prototype.jump = Prototype.jumpR
+      TLGp.jump = TLGp.jumpR
   }
 }
 
@@ -328,9 +341,9 @@ if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
       this.done = false
       this.value = void 0
     }
-    var WLGp = CheckRunningGenerator.prototype = Object.create(Prototype)
+    var WLGp = CheckRunningGenerator.prototype = Object.create(TLGp)
     GeneratorConstructor = CheckRunningGenerator
-    WLGp.stepNoCheck = Prototype.step
+    WLGp.stepNoCheck = TLGp.step
     function contSubNoCheck(v) {
       return this.$sub.stepNoCheck(v)
     }
@@ -359,4 +372,14 @@ if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
 
 LGp.delegate = makeDelegate(iterator)
 
+export var delegateIterator
+
+if (process.env.EJS_DELEGATE_ITERATOR) {
+  delegateIterator = function(iterable,step,err,res) {
+    if (iterable[diSym])
+      return iterable[diSym](step,err,res)
+    var inner = iterator(iterable)
+    return inner[diSym](step,err,res)
+  }
+}
 

@@ -1,9 +1,8 @@
-export {Symbol} from "./symbol"
 import "./arrayIterator"
 export {forInIterator} from "./forInIterator"
 export {iterator} from "./leanIterator"
 export {generatorFunction,esIterator} from "./esIterator"
-export {generator} from "./generator"
+export {generator,delegateIterator} from "./generator"
 export {asyncFunction,async} from "./async"
 export {iteratorM} from "./leanAsyncIterator"
 export {asyncGeneratorFunction,esAsyncIterator} from "./esAsyncIterator"
@@ -17,6 +16,7 @@ export var opts = {
   checkRunning: !process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING,
   unwrapAsync: !process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR,
   localSymbols: !!process.env.EJS_LOCAL_SYMBOLS,
-  defunct: !!process.env.EJS_DEFUNCT
+  defunct: !!process.env.EJS_DEFUNCT,
+  delegateIterator: !!process.env.EJS_DELEGATE_ITERATOR
 }
 

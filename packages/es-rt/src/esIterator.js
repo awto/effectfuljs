@@ -1,11 +1,11 @@
+import {iterator as iterSym} from "./symbol"
+
 export var IteratorPrototype = {}
 
 export var AsyncIteratorPrototype = {}
 
 if (!process.env.EJS_NO_ES_ITERATORS)
   IteratorPrototype[Symbol.iterator] = function () { return this }
-
-import {Symbol} from "./symbol"
 
 /** wraps lean iterator into ES iterator, the name is to conform ES standard */
 export var Generator
@@ -40,7 +40,7 @@ if (process.env.EJS_NO_ES_ITERATORS) {
     }
   }
   
-  Gp[Symbol.leanIterator] = function() {
+  Gp[iterSym] = function() {
     return this.state
   }
   
@@ -61,7 +61,7 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   }
 
   esIterator = function esIterator(lean) {
-    return lean[Symbol.iterator] ? lean : new Generator(lean)
+    return lean[iterSym] ? lean : new Generator(lean)
   }
 }
 

@@ -1,23 +1,24 @@
 M.profile("es")
 M.option({storeCont:"$cont",
           inlineContAssign:true,
+          state:false,
+          inlineYieldOp:false,
           invertForOf:true,
-          contextState:true,
-          inlineYieldOp:"iterator"})
+          contextState:true})
 
 function* a1() {
-  for(const i of b)
+  for(const i of b())
     yield i
 }
 
 function* a2() {
-  for(const i of b)
+  for(const i of b())
     yield i
   yield "f"
 }
 
 function* a3() {
-  for(const i of b) {
+  for(const i of b()) {
     yield i
     if (yield i++)
       continue
@@ -29,7 +30,7 @@ function* a3() {
 
 function* a4() {
   try {
-    for(const i of ba) {
+    for(const i of b()) {
       try {
         yield i
       } catch(e) {
@@ -43,5 +44,3 @@ function* a4() {
   }
   return r
 }
-
-

@@ -1,10 +1,8 @@
+import {asyncIterator as asyncIterSym} from "./symbol"
 export var AsyncIteratorPrototype = {}
 
 if (!process.env.EJS_NO_ES_ITERATORS)
   AsyncIteratorPrototype[Symbol.asyncIterator] = function () { return this }
-
-if (!Symbol.asyncIterator)
-  Symbol.asyncIterator = Symbol.for("asyncIterator")
 
 export var asyncGeneratorFunction
 
@@ -31,7 +29,7 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
 }
 
 if (!process.env.EJS_NO_ES_ITERATORS) {
-  AGp[Symbol.leanAsyncIterator] = function() { return this.state }
+  AGp[asyncIterSym] = function() { return this.state }
   AGp.await = function() {
     if (!this.queue.length) { 
       this.busy = null
@@ -88,7 +86,7 @@ if (!process.env.EJS_NO_ES_ITERATORS) {
 }
 
 export function esAsyncIterator(lean) {
-  return lean[Symbol.asyncIterator] ? lean : new AsyncGenerator(lean)
+  return lean[asyncIterSym] ? lean : new AsyncGenerator(lean)
 }
 
 

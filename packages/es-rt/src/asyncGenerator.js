@@ -1,4 +1,4 @@
-import {Symbol} from "./symbol"
+import {asyncIterator as asyncIterSym} from "./symbol"
 import {AsyncGenerator} from "./esAsyncIterator"
 import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
@@ -60,6 +60,7 @@ if (!process.env.EJS_INLINE) {
   LAGp.chain = Async.prototype.chain
 }
 
+LAGp[asyncIterSym] = LAGp[Symbol.asyncIterator] = function() { return this }
 LAGp.step = LGp.step
 LAGp.exit = LGp.exit
 LAGp.handle = LGp.handle

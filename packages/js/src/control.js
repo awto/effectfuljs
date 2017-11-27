@@ -221,8 +221,8 @@ export const injectBlock = Kit.pipe(
                 const j = s.enter(pos,jump,{
                   bind:true,ctrlNode,
                   result: i.type === Tag.ReturnStatement && s.curLev() != null,
-                  ref:i.value
-                });
+                  orig:i.value
+                })
                 if (ctrlNode)
                   (ctrlNode.brkRefs || (ctrlNode.brkRefs = [])).push(j.value)
                 yield j
