@@ -3,6 +3,7 @@ M.profile("generators")
 M.option({defunct:true,
           state:false,
           contextState:true,
+          markRepeat:false,
           inlineContAssign:true,
           storeCont:"$cont"})
 

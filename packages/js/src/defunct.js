@@ -18,6 +18,8 @@ export function* prepare(si) {
     throw s.error("`defunct:true` requires stored control state")
   if (!root.contextSym)
     throw s.error("`defunct:true` requires context object")
+  if (s.opts.markRepeat)
+    throw s.error("not implemented: `markRepeat:true` with `defunct:true`")
   root.implFrame = Kit.enter(
     Tag.push,Block.frame,{
       declSym:Kit.scope.newSym("_"),
@@ -169,6 +171,11 @@ export function* frames(si) {
       s.close(i)
     } else
       yield i
+  }
+  if (s.opts.defunctGuardInvalidState) {
+    yield s.enter(Tag.push, Tag.SwitchCase)
+    yield s.enter(Tag.consequent,Tag.Array)
+    yield* s.toks(Tag.push,"throw new Error(\"invalid state\")")
   }
   yield* lab()
   yield Kit.leave(root.implFrame)

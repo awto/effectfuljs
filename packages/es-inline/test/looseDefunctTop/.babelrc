@@ -1,11 +1,13 @@
 {
   "passPerPreset": true,
   "sourceType": "script",
-  "presets": [["../../preset",{"topLevel":true,
-                               "defunct":true,
-                               "loose":true,
-                               "all": {"wrapFunction":null,
-                                       "removeAsserts":false}}],
+  "presets": [["../../preset",
+               {"topLevel":true,
+                "defunct":true,
+                "loose":true,
+                "importRT":"@effectful/es-rt/opts/defunct-loose",
+                "all": {"wrapFunction":null,
+                        "removeAsserts":false}}],
               {
                 "plugins":[
                   ["transform-es2015-modules-commonjs",

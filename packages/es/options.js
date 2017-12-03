@@ -1,8 +1,9 @@
-const config = require("@effectful/js/config")
-const Policy = require("@effectful/js/policy")
-const T = require("@effectful/js/transform")
-const {Tag} = require("@effectful/js/kit")
-const Kit = require("@effectful/js/kit")
+const C = require("@effectful/js")
+const config = C.config
+const Policy = C.Policy
+const T = C.Transform
+const Tag = C.Tag
+const Kit = C.Kit
 
 const ops = {
   YieldExpression: true,
@@ -38,7 +39,6 @@ const rebind = {
     contextBy: "this",
     contextMethodOpsSpec: {
       iterator: false,
-      delegateIterator: false,
       iteratorM: false,
       forInIterator: false
     }
@@ -79,7 +79,7 @@ const inline = {
     inlineResultContAssign:true,
     inlineErrorContAssign:true,
     inlineContAssign:true,
-    storeCont:"$cont",
+    storeCont:"$step",
     storeResultCont:"$exit",
     storeErrorCont:"$handle",
     inlineReentryCheck:true,
@@ -117,8 +117,9 @@ const inline = {
 
 const defunct = {
   effectful: {
+    storeCont:"$step",
     defunct:true,
-    storeCont:"$cont"
+    markRepeat:false
   }
 }
 
@@ -128,7 +129,7 @@ const defunctInline = {
     inlineScopeOp:"unwrap",
     inlineJsExceptions:true,
     inlinePureJumps:"tail",
-    storeCont:"$cont",
+    storeCont:"$step",
     storeErrorCont:"$handle",
     inlineReentryCheck:false,
     inlineErrorContAssign:true,
@@ -151,7 +152,6 @@ const loose = {
   effectful: {
     wrapFunction:false,
     wrapAsyncIteratorValue:false,
-    // wrapGeneratorResult:false,
     inlineReentryCheck:false
   }
 }
@@ -180,10 +180,8 @@ const disabled = {
 
 module.exports = function esProfile(opts={}) {
   let importRT = opts.importRT
-  if (importRT == null) {
+  if (importRT == null && !opts.defunct) {
     importRT = "@effectful/es-"
-    if (opts.defunct)
-      importRT += "defunct-"
     if (opts.loose)
       importRT += "loose-"
     else if (opts.inline)

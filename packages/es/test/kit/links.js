@@ -32,6 +32,7 @@ function source(root,suite) {
 
 const clean = process.argv.indexOf("clean") !== -1
 
+exports.target = target
 function target(name) {
   // unfortunately on Windows hardlink for dirs is a problem
   // so the script links each file

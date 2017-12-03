@@ -1,7 +1,9 @@
 {
   "passPerPreset": true,
   "sourceType": "script",
-  "presets": [["../../preset",{"loose":true,"all":{"removeAsserts":false}}],
+  "presets": [["../../preset",
+               {"loose":true,"defunct":false,
+                "all":{"removeAsserts":false}}],
               {
                 "plugins":[
                   ["transform-es2015-modules-commonjs",

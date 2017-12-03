@@ -4,9 +4,9 @@ import * as Kit from "estransducers/kit"
 import {isQUnit,run,pretty,prettyBlock,blockEqual} from "./core"
 import tags from "./tags"
 import * as assert from "assert"
-const defaults = require("../../src/config")
-const configs = require("./configs")
-defaults.libs["./effectfuljscore"] = defaults.libs["@effectful/core"]
+import libs from "../../src/config"
+import configs from "./configs"
+libs["./effectfuljscore"] = libs["@effectful/core"]
 
 /** moves file layout representation into a stream of tests */
 export function toStream(files) {

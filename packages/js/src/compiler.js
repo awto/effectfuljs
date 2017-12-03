@@ -7,6 +7,10 @@ import * as path from "path"
 import * as T from "./transform"
 import * as Policy from "./policy"
 
+export const config = defaults
+export {Policy, T as Transform, Kit}
+export const Tag = Kit.Tag
+
 /** 
  * convers transform description into babel preset 
  * 

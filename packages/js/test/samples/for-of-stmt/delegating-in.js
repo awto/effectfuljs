@@ -1,10 +1,11 @@
 M.profile("es")
-M.option({storeCont:"$cont",
-          inlineContAssign:true,
+M.option({inlineContAssign:true,
           state:false,
           inlineYieldOp:false,
           invertForOf:true,
-          contextState:true})
+          contextState:true,
+          storeCont:true,
+          stateStorageField:"$"})
 
 function* a1() {
   for(const i of b())

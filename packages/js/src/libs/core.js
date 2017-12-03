@@ -48,7 +48,7 @@ const postproc = Kit.pipe(
   Policy.configDiffPass,
   Policy.applyProfiles)
 
-export default function* coreInit() {
+export default function* init() {
   const generators = Policy.injectFuncOpts({
     generator:true,
     async:false,

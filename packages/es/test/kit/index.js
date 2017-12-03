@@ -12,17 +12,20 @@ exports.eqlGens = function eqlGens(a, b) {
     [Symbol.iterator]() { return this; },
     next(v) {
       const res = a.next(v)
-      assert.deepEqual(res,b.next(v))
+      const exp = b.next(v)
+      assert.deepEqual(res,exp)
       return res
     },
     throw(v) {
       const res = a.throw(v)
-      assert.deepEqual(res,b.throw(v))
+      const exp = b.throw(v)
+      assert.deepEqual(res,exp)
       return res
     },
     return(v) {
       const res = a.return(v)
-      assert.deepEqual(res,b.return(v))
+      const exp = b.return(v)
+      assert.deepEqual(res,exp)
       return res
     }
   }

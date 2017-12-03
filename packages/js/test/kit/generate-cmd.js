@@ -5,10 +5,9 @@ import {run,pretty} from "./core"
 import * as dirs from "./dirs"
 import * as Kit from "estransducers/kit"
 var terminal = require( 'terminal-kit' ).terminal
-
-const defaults = require("../../src/config")
-const configs = require("./configs")
-defaults.libs["./effectfuljscore"] = defaults.libs["@effectful/core"]
+import libs from "../../src/config"
+import configs from "./configs"
+libs["./effectfuljscore"] = libs["@effectful/core"]
 
 const root = path.join(__dirname, "..", "samples")
 

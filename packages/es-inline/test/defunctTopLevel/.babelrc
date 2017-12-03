@@ -1,11 +1,13 @@
 {
   "passPerPreset": true,
   "sourceType": "script",
-  "presets": [["../../preset",{"topLevel":true,
-                               "defunct":true,
-                               "contextState":true,
-                               "contextBy":"this",
-                               "all": {"wrapFunction":null}}],
+  "presets": [["../../preset",
+               {"topLevel":true,
+                "defunct":true,
+                "contextState":true,
+                "contextBy":"this",
+                "importRT":"@effectful/es-rt/opts/defunct-inline",
+                "all": {"wrapFunction":null}}],
               {
                 "plugins":[
                   ["transform-es2015-modules-commonjs",

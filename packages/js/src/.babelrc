@@ -1,9 +1,8 @@
 {
   "env": {
     "development": {
-      "plugins": ["add-module-exports",
-                  ["transform-es2015-modules-commonjs",
-                   {"loose":true}]]
+      "plugins": [["transform-es2015-modules-commonjs",
+                   {"loose":true,"noInterop":true}]]
     },
     "production": {
       "passPerPreset": true,
@@ -20,9 +19,8 @@
                                   "estransducers/match":"estransducers/loose/match"
                                 }}],
         {
-          "plugins": ["add-module-exports",
-                      ["transform-es2015-modules-commonjs",
-                       {"loose":true}]]
+          "plugins": [["transform-es2015-modules-commonjs",
+                       {"loose":true,"noInterop":true}]]
         }
       ]
     }

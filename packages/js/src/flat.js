@@ -182,7 +182,7 @@ export const convert = Kit.pipe(
             // the frame should be present in final output
             i.value.noInline = false
             // only pure jumps to the frame are allowed
-            i.value.jumpsOnly = false
+            // i.value.jumpsOnly = false
             const declSym = i.value.declSym = Kit.scope.newSym("_")
             const inner = [i]
             frames.push(inner)
@@ -356,14 +356,11 @@ export const convert = Kit.pipe(
                 case Ctrl.jump:
                   const bindJump = j.type === Block.letStmt
                   j.value.bindJump = bindJump
-                  if (j.value.orig && !!j.value.orig.forOfInfo && j.value.goto)
-                    j.value.goto.noSingleEnterInline = true
-                  if (noLoopContOpt && j.value.goto && j.value.orig
-                      && j.value.orig.block
-                      && j.value.orig.block.contLoop
-                      && j.value.orig.block.contLoop.forOfInfo) {
-                    j.value.goto.jumpsOnly = true
-                  }
+                  // avoiding inlining of some frame after for-of
+                  if (j.value.goto)
+                    j.value.goto.noSingleEnterInline =
+                      noLoopContOpt && j.value.orig
+                      && !!j.value.orig.forOfInfo
                   j.value.ref = i.value
                 }
               }
@@ -729,23 +726,27 @@ export const convert = Kit.pipe(
     const cfg = new Map()
     sa = getCfgFolded(sa,cfg)
     instantiateJumps(cfg.keys())
-    // some opts must be prevented for `invertForOf`
-    if (root.opts.invertForOf)
-      resetEnters(cfg.keys())
     optUselessFrames(cfg)
-    if (root.opts.invertForOf) {
-      for(const i of cfg.keys())
-        i.enters = new Set()
-    }
     instantiateJumps(cfg.keys())
     resetEnters(cfg.keys())
     optInlineFrames(cfg)
+    const markRepeat = root.opts.markRepeat
     for(const i of cfg.keys()) {
       if (i.repeat && i.repeat.length) {
         for(const j of i.enters) {
           if (!j.repeat || j.repeat.length < i.repeat.length) {
             i.repeatStart = true
             break
+          }
+        }
+        if (markRepeat && i.repeatStart) {
+          for(const j of i.exits) {
+            if (j.goto) {
+              const gr = j.goto.repeat
+              const fr = i.repeat
+              j.rec = (gr && gr.length >= fr.length
+                       && gr[fr.length-1] === fr[fr.length-1])
+            }
           }
         }
       }
@@ -1082,6 +1083,7 @@ export function interpretJumps(si) {
   const passCont = !s.opts.inlineContAssign
   const passCatchCont = !s.opts.inlineErrorContAssign
   const passResultCont = !s.opts.inlineResultContAssign
+  const {markRepeat} = s.opts
   const {resFrameRedir} = root
   function* argPack(arr,inner) {
     function* arg(i,pos,last) {
@@ -1138,14 +1140,15 @@ export function interpretJumps(si) {
           const lab = s.label()
           const {goto,gotoDests,ref,delegateCtx} = i.value
           // TODO: detect rec jumps not only in the first frame
-          let rec
+          let rec = pure && markRepeat && i.value.rec
+          /*
           if (goto && frame.repeatStart && pure && s.opts.markRepeat) {
             const gr = goto.repeat
             const fr = frame.repeat
             if (gr && gr.length >= fr.length
                 && gr[fr.length-1] === fr[fr.length-1])
               rec = true
-          }
+          } */
           const pos = i.pos
           const ctx = ctxSym
           const defaultName = pure ? pureBindName : bindName
@@ -1171,7 +1174,8 @@ export function interpretJumps(si) {
                 resCont = goto.resultContRedir.declSym
             }
             const appVal = {fam:Kit.sysId(name),static:st,
-                            insideCtx:!i.value.ref.first,delegateCtx}
+                            insideCtx:!i.value.ref.first,delegateCtx,
+                            passCont,goto:goto && goto.declSym}
             if (s.curLev()) {
               if (s.opts.markBindValue !== false)
                 name += "B"
@@ -1776,6 +1780,7 @@ function optUselessFrames(cfg) {
                && !(exit.frameArgs && exit.frameArgs.size))
     {
       let skip = false
+      /*
       if (exit.goto && exit.goto.jumpsOnly) {
         for(const j of i.enters) {
           if (j.bindJump) {
@@ -1784,6 +1789,7 @@ function optUselessFrames(cfg) {
           }
         }
       }
+      */
       if (!skip) {
         i.substJump = exit.goto
         i.removed = true

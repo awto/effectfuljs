@@ -18,13 +18,19 @@ export function storeContinuations(si) {
   const root = s.first.value
   const {contextSym} = root
   const contextStore = contextSym && s.opts.contextMethodOps
+  const noPureJumpsStore = !s.opts.defunct && s.opts.contextBy === "reference"
+  const stateStorageField = s.opts.stateStorageField
   function makeSym(name,pat) {
     if (!name)
       throw s.error(
         "inlining continuation assignment requires store<...>Cont property")
-    if (name && contextStore)
-      return Kit.sysId(name)
+    if (name && contextStore) {
+      const res = Kit.sysId(name)
+      res.ctxField = stateStorageField
+      return res
+    }
     const res = Bind.tempVarSym(root,pat)
+    res.ctxField = stateStorageField
     res.fieldName = `$${pat}`
     return res
   }
@@ -95,8 +101,12 @@ export function storeContinuations(si) {
               if (!j.value.eff)
                 break
             case Ctrl.jump:
+              if (j.type === Ctrl.jump && !j.value.rec && noPureJumpsStore)
+                break
               const {goto} = j.value
-              if (cont && (f.first || goto !== f || reentry)
+              if (cont
+                  // TODO: for pure jumps somtimes the destination isn't saved
+                  /* && (f.first || goto !== f || reentry) */
                   && !j.value.delegateCtx)
                 yield* assign(cont,goto.declSym)
             }
@@ -108,12 +118,14 @@ export function storeContinuations(si) {
   }
 }
 
-const delegateSym = Kit.sysId("delegate")
+const delegateSym = Kit.sysId("delegateYld")
 
-function* assignValue(s,contextSym) {
+function* assignValue(s,contextSym,ctxField) {
   yield s.enter(Tag.push,Tag.AssignmentExpression,
                 {node:{operator:"="}})
-  yield* s.toks(Tag.left,`=$I.value`, contextSym)
+  yield* s.toks(Tag.left,
+                ctxField ? `=$I.${ctxField}.value` : "=$I.value",
+                contextSym)
   yield* s.curLev() ? Kit.reposOne(s.sub(),Tag.right)
     : Kit.scope.emitUndefined(Tag.right)
   yield* s.leave()
@@ -140,7 +152,7 @@ function generatorsYield(si) {
       "inlineYieldOp: 'iterator' can be used only with scope context")
   if (!s.opts.inlineContAssign)
     throw s.error("inlineYieldOp: 'iterator' requires inlineContAssign: true")
-  const field = s.opts.contFieldName
+  const ctxField = s.opts.stateStorageField
   const wrapGenerator = s.opts.wrapGeneratorResult
   return walk()
   function* walk() {
@@ -151,7 +163,7 @@ function generatorsYield(si) {
           if (!inlineYield)
             break
           const ctx = i.value.delegateCtx || contextSym
-          yield* assignValue(s,ctx)
+          yield* assignValue(s,ctx,ctxField)
           yield s.tok(Tag.push,Tag.Identifier,{result:true,sym:ctx})
           s.close(i)
           continue
@@ -270,6 +282,7 @@ export function jumpOps(si) {
       throw s.error(
         "`inlineJumps:'exit' works only with `{inlineContAssign:true}`")
   }
+  const {jsTailCalls} = s.opts
   const root = s.first.value
   const {contextSym} = root
   if (!contextSym)
@@ -280,6 +293,7 @@ export function jumpOps(si) {
   const inlineCont = root.runSym || s.opts.inlineContAssign && root.contSym
   const refCtx = s.opts.contextBy === "reference"
   const paramCtx = s.opts.contextBy === "parameter"
+  const ctxField = s.opts.stateStorageField
   return Kit.toArray(walk())
   function* walk() {
     for(const i of s) {
@@ -292,6 +306,7 @@ export function jumpOps(si) {
             switch(j.type) {
             case Block.app:
               if (j.value.sym === jumpId && inlineJumps
+                  || j.value.sym == jumpRId && inlineJumps && jsTailCalls
                   || j.value.sym === scopeId && inlineScope) {
                 if (!inlineCont
                     && !j.value.hasCont
@@ -312,10 +327,14 @@ export function jumpOps(si) {
                 if (refCtx && j.value.sym === scopeId) {
                   yield s.tok(Tag.callee,Tag.Identifier,
                               {sym:root.implFrame.value.declSym})
-                } else if (inlineCont) {
-                  yield s.tok(Tag.callee,Tag.Identifier,{sym:inlineCont})
-                } else
+                } else if (j.value.passCont) {
                   yield* Kit.reposOne(s.one(),Tag.callee)
+                } else if ((refCtx || paramCtx) && j.value.goto
+                           && !j.value.delegateCtx) {
+                  yield s.tok(Tag.callee,Tag.Identifier,{sym:j.value.goto})
+                } else {
+                  yield s.tok(Tag.callee,Tag.Identifier,{sym:inlineCont})
+                }
                 yield s.enter(Tag.arguments,Tag.Array)
                 if (paramCtx)
                   yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym})
@@ -333,8 +352,12 @@ export function jumpOps(si) {
                   || j.value.sym === jumpId && jumpsExit) {
                 const ctx = j.value.delegateCtx || contextSym
                 if (j.value.hasBindVal)
-                  yield* assignValue(s,ctx)
-                yield* s.toks(Tag.push,"$I.$running = true",ctx)
+                  yield* assignValue(s,ctx,ctxField)
+                yield* s.toks(Tag.push,
+                              ctxField
+                                ? `$I.${ctxField}.$running`
+                                : "$I.$running = true",
+                              ctx)
                 Kit.skip(s.sub())
                 s.close(j)
                 yield s.tok(Tag.push,Tag.Identifier,{sym:ctx,result:true})
@@ -446,7 +469,12 @@ export function pureOp(si) {
   const {contextSym} = s.first.value
   if (!contextSym && generators)
     throw s.error("not implemented inlinePure: 'iterator' without context")
-  const field = s.opts.contFieldName, exitField = s.opts.resultContFieldName
+  let field = s.opts.storeCont, exitField = s.opts.storeResultCont
+  const ctxField = s.opts.stateStorageField
+  if (ctxField) {
+    field = `${ctxField}.${field}`
+    exitField = `${ctxField}.${exitField}`
+  }
   return walk()
   function* val(pos) {
     const j = s.curLev()
@@ -478,7 +506,7 @@ export function pureOp(si) {
           yield* s.toks(Tag.push,
                         `$1.${field} = $1.${exitField}, $1.done = true`,
                         contextSym)
-          yield* assignValue(s,contextSym)
+          yield* assignValue(s,contextSym,ctxField)
           yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
         }
         s.close(i)
@@ -617,7 +645,7 @@ export function coerce(si) {
   }
 }
 
-export const delegateIteratorId = Kit.sysId("delegateIterator")
+export const delegateForId = Kit.sysId("delegateFor")
 
 /**
  * injects interpretation `for-of` with `invertForOf:true` (CPS style)
@@ -628,6 +656,7 @@ export function invertForOf(si) {
   if (!root.opts.invertForOf)
     return sa
   const jumpsExit = root.opts.inlinePureJumps === "exit"
+  const dirCall = root.opts.storeCont === "step"
   recover(sa)
   return inject()
   function recover() {
@@ -662,15 +691,24 @@ export function invertForOf(si) {
   }
   function inject() {
     const s = Kit.auto(sa)
+    const ctx = root.contextSym
     const cont = s.opts.storeCont
-    if (s.opts.inlineYieldOp
-        || !cont
-        || s.opts.state
-        || !s.opts.inlineContAssign)
-      throw s.error(
-        "not implemented: `invertForOf:true` without "+
-          "`{state:false,inlineYieldOp:false," +
-          "storeCont:'..',inlineContAssign:true}`")
+    if (s.opts.ctx)
+      throw s.error("not implemented: `invertForOf` without context object")
+    if (s.opts.inlineYieldOp)
+      throw s.error("not implemented: `invertForOf` with `inlineYieldOp`")
+    if (!cont)
+      throw s.error("not implemented: `invertForOf` without `storeCont`")
+    if (s.opts.state)
+      throw s.error("not implemented: `invertForOf` with `state`")
+    if (!s.opts.inlineContAssign)
+      throw s.error("not implemented: `invertForOf` with `inlineContAssign`")
+    if (s.opts.defunct)
+      throw s.error("not implemented: `invertForOf` with `defunct`")
+    const paramCtx = s.opts.contextBy === "parameter"
+    const thisCtx = s.opts.contextBy === "reference"
+    const ctxField = s.opts.stateStorageField
+    const {storeResultCont} = s.opts
     return walk(s)
     function* walk(sw) {
       for(const i of sw) {
@@ -685,24 +723,33 @@ export function invertForOf(si) {
           case Block.letStmt:
             if (!i.value.eff)
               break
+          case Ctrl.jump:
             if (!i.value.goto.forOfInfo)
               break
-            i.value.delegateCtx = i.value.goto.forOfInfo.sym
+            yield* s.toks(Tag.push,
+                          (ctxField
+                            ? `$I.${ctxField}.${cont} = $I.${cont}`
+                            : `$I.${cont} = $I.${cont}`),
+                          ctx,
+                          i.value.delegateCtx = i.value.goto.forOfInfo.sym)
             break
+            /*
           case Ctrl.jump:
             if (!i.value.goto.forOfInfo)
               break
             const iterSym = i.value.delegateCtx = i.value.goto.forOfInfo.sym
             if (jumpsExit)
               break
+            const lab = s.label()
             yield s.enter(Tag.push,Tag.CallExpression,{result:true})
             yield s.enter(Tag.callee,Tag.MemberExpression)
             yield s.tok(Tag.object,Tag.Identifier,{sym:iterSym})
-            yield s.tok(Tag.property,Tag.Identifier,{node:{name:"step"}})
+            yield s.tok(Tag.property,Tag.Identifier,{node:{name:cont}})
             yield* s.leave()
-            yield* s.leave()
+            yield s.enter(Tag.arguments,Tag.Array)
+            yield* lab()
             s.close(i)
-            continue
+            continue*/
           case Tag.IfStatement:
             if (!i.value.forOfInfo)
               break
@@ -720,7 +767,7 @@ export function invertForOf(si) {
             for(const k of s.sub()) {
               if (k.enter && k.type === Tag.Identifier
                   && k.value.sym === Loop.iteratorId) {
-                k.value.sym = delegateIteratorId
+                k.value.sym = delegateForId
               } else if (k.enter && k.type === Tag.Array
                          && k.pos === Tag.arguments) {
                 yield k
@@ -729,9 +776,10 @@ export function invertForOf(si) {
                 yield s.tok(Tag.push,Tag.Identifier,
                             {sym:forOfInfo.exit.ref.declSym})
                 yield s.tok(Tag.push,Tag.Identifier,
-                            {sym:forOfInfo.exit.ref.catchContRedir.declSym})
-                yield s.tok(Tag.push,Tag.Identifier,
                             {sym:forOfInfo.exit.goto.declSym})
+//                if (storeResultCont)
+//                  yield s.tok(Tag.push,Tag.Identifier,
+//                              {sym:forOfInfo.exit.ref.resultContRedir.declSym})
                 continue
               }
               yield k

@@ -50,7 +50,8 @@ export function interpretApp(s) {
           yield sl.enter(i.pos,effExpr)
           yield sl.enter(Tag.expression,Tag.CallExpression)
           if (i.value.static !== false) {
-            yield sl.tok(Tag.callee,Tag.Identifier,{sym:i.value.sym})
+            yield sl.tok(Tag.callee,Tag.Identifier,
+                         {sym:i.value.sym})
             yield sl.enter(Tag.arguments,Tag.Array)
             yield* Kit.reposOne(walk(sl.one()), Tag.push)
           } else {
@@ -401,13 +402,21 @@ export function ctxMethods(si) {
   return walk()
   function* walk() {
     for(const i of s) {
+      let sym
       if (i.enter && i.type === Tag.Identifier
-          && i.value.sym && i.value.sym.lib
-          && i.value.sym.name !== scopeConstructor
-          && contextMethodOpsSpec[i.value.sym.name] !== false
+          && (sym = i.value.sym) && sym.lib
+          && sym.name !== scopeConstructor
+          && contextMethodOpsSpec[sym.name] !== false
          ) {
         yield s.enter(i.pos, Tag.MemberExpression)
-        yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
+        if (sym.ctxField) {
+          yield s.enter(Tag.object,Tag.MemberExpression)
+          yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
+          yield s.tok(Tag.property,Tag.Identifier,{node:{name:sym.ctxField}})
+          yield* s.leave()
+        } else {
+          yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
+        }
         yield s.tok(Tag.property,Tag.Identifier,{node:{name:i.value.sym.name}})
         yield* s.leave()
         s.close(i)

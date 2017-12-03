@@ -1,4 +1,4 @@
-import {iterator as iterSym, delegateIterator as diSym} from "./symbol"
+import {iterator as iterSym} from "./symbol"
 
 export var LeanIteratorPrototype = {}
 
@@ -12,33 +12,47 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   }
 } else {
   function LeanIterator(iter) {
-    this.iter = iter[iterSym]()
+    this.iter = iter[Symbol.iterator]()
     this.done = false
+    if (process.env.EJS_CPS_YIELD_STAR)
+      this.$ = this
   }
-  
+
   var LIp = LeanIterator.prototype = Object.create(LeanIteratorPrototype)
-  
+
   LIp[Symbol.iterator] = function() { return this.iter }
-  
-  LIp.step = process.env.EJS_DELEGATE_ITERATOR
-    ? function step(v) {
-      var next = this.iter.next(v)
-      return next.done ? this.pure(next.value) : this.yld(next.value)
-    } : function step(v) {
-      var next = this.iter.next(v)
-      if (next.done)
-        return this.pure(next.value)
-      this.value = next.value
-      return this
+
+  LIp.step = function step(v) {
+    var next = this.iter.next(v)
+    if (next.done)
+      return this.pure(next.value)
+    this.value = next.value
+    return this
+  }
+
+  if (process.env.EJS_DELEGATE_FOR_OF) {
+    LIp.$delegateFor = function(dest,yld,step) {
+      var self = this
+      this.$.step = this.$.$step = function delegate(v) {
+        var next = self.iter.next(v)
+        if (next.done)
+          step(next.value)
+        else
+          yld(next.value)
+      }
     }
 
-  if (process.env.EJS_DELEGATE_ITERATOR) {
-    LIp[diSym] = function(yld,raise,pure) {
-      this.yld = yld
-      this.raise = raise
-      this.pure = pure
-      return this
+    LIp.$delegateYld = function(dest) {
+      var step = dest.$.$step, iter = this.iter
+      dest.$.$step = function delegateStep(v) {
+        var next = iter.next(v)
+        if (next.done) {
+          step()
+        } else
+          dest.yld(next.value)
+      }
     }
+    LIp.$step = LIp.step 
   }
 
   LIp.yld = function(v) {
@@ -89,7 +103,7 @@ if (process.env.EJS_NO_ES_ITERATORS) {
     }
     return next.done ? this.pure(next.value) : this.yld(next.value) 
   }
-   
+
   iterator = function iterator(cont) {
     return cont[iterSym] ? cont[iterSym]() : new LeanIterator(cont)
   }

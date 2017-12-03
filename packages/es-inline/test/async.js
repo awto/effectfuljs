@@ -12,5 +12,7 @@ describe("async/await with loose inlined operations", function() {
   run("with single frame function",require("./looseDefunct/links/async"))
   run("with top level single frame function",
       require("./looseDefunctTop/links/async"))
+  run("with inverted for-of",
+      require("./looseDelegate/links/async"))
 })
 

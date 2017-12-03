@@ -15,25 +15,8 @@ export var asyncIterator = process.env.EJS_LOCAL_SYMBOLS
 
 if (!process.env.EJS_NO_ES_ITERATORS && !Symbol.asyncIterator)
   Symbol.asyncIterator = Symbol.for("Symbol.asyncIterator")
-/*
-
-export var Sym = {iterator:iterator,
-                  asyncIterator:asyncIterator,
-                  esIterator:Symbol.iterator,
-                  esAsyncIterator: Symbol.asyncIterator}
-
-if (!process.env.EJS_NO_ES_OBJECT_MODEL)
-  Sym.toString = Symbol.toString
-*/
 
 if (!process.env.EJS_LOCAL_SYMBOLS) {
   Symbol.effectfulIterator = iterator
   Symbol.effectfulAsyncIterator = asyncIterator
-}
-
-export var delegateIterator
-if (process.env.EJS_DELEGATE_ITERATOR) {
-  delegateIterator = process.env.EJS_LOCAL_SYMBOLS
-    ? Symbol("Effectful.delegateIterator")
-    : Symbol.for("Effectful.delegateIterator")
 }

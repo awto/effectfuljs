@@ -881,3 +881,105 @@ exports.switches = function*() {
     }
   }
 }
+
+function* gen1() {
+  for(let i = 0; i < 3; i++)
+    yield "a:"+i
+  return 100
+}
+
+function* wrap1() {
+  yield "a-1"
+  yield (yield* gen1())
+  yield "a-2"
+  yield* Array.from(gen1())
+  yield "a-3"
+  yield* new Set(gen1())
+  yield "a-3"
+  return (yield* gen1()) * 10
+}
+
+function* wrap2() {
+  for(const i of wrap1()) {
+    yield "b:"+i
+    yield "b1:"+i
+  }
+  yield "ar"
+  let v
+  for(var i = wrap1()[Symbol.iterator]();!(v = i.next()).done;) {
+    yield "b2:" + v.value
+  }
+  yield "br:" + v.value
+}
+
+exports.transducers1 = function* transducers1() {
+  for(const i of wrap2()) {
+    yield "c:"+i
+  }
+  yield "EXIT"
+}
+
+function* gen2() {
+  yield 1
+  yield 2
+  yield* [3,4]
+  yield* new Set([5,6])
+  return 7
+}
+
+function* transpiler1() {
+  for(const i of [10,20,30]) {
+    yield i+100
+  }
+  for(const i of new Set([10,20,30])) {
+    yield i+200
+  }
+  for(const i of gen2()) {
+    yield i+300
+  }
+  yield* gen2()
+  return 100
+}
+
+function* transpiler2() {
+  for(const i of transpiler1()) {
+    yield i * 10
+    yield i * 20
+  }
+  yield (yield* transpiler1())
+  return 101
+}
+
+exports.transducers2 = function* transducers2() {
+  yield (yield* transpiler2())
+  yield* ["a","b","c"]
+  yield* new Set(["d","e","f"])
+  yield "Exit"
+}
+
+exports.delegateOfDelegate = function* delegateOfDelegate() {
+  function* s1() {
+    return (yield* gen2())
+  }
+  function* s2() {
+    for(const i of s1()) {
+      yield i
+    }
+  }
+  function* s3() {
+    yield* [10,20,30,40]
+    yield (yield* s1())
+    return (yield* s2())
+  }
+  function* s4() {
+    yield (yield* s3())
+    return(yield* s3())
+  }
+  yield(yield* s4())
+}
+
+exports.delegateOfDelegate2 = function* delegateOfDelegate2() {
+  for(const i of exports.delegateOfDelegate())
+    yield i
+}
+

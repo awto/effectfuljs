@@ -1,30 +1,27 @@
 function a1() {
   var a1 = M.generator();
   a1.$sc = _1;
-  return M.scopeH(_5);
+  return M.scopeH(_4);
 
   function _1(a1) {
-    a1._loop = M.delegateIterator(b(), _2, _5, _4);
-    return a1._loop.step();
+    a1._loop = M.delegateFor(b(), _2, _3);
+    a1.$.true = a1._loop.true;
+    return M.jumpH(_4);
   }
 
   function _2(a1, i) {
     {
       a1._i = i;
-      a1.$sc = _3;
-      return M.yldStarBH(M.yld(a1._i), _5);
+      a1.$.true = a1._loop.true;
+      return M.yldStarBH(M.yld(a1._i), _4);
     }
   }
 
   function _3(a1) {
-    return a1._loop.step();
-  }
-
-  function _4(a1) {
     return M.pure();
   }
 
-  function _5(a1, e) {
+  function _4(a1, e) {
     return M.raise(e);
   }
 }
@@ -32,35 +29,32 @@ function a1() {
 function a2() {
   var a2 = M.generator();
   a2.$sc = _1;
-  return M.scopeH(_6);
+  return M.scopeH(_5);
 
   function _1(a2) {
-    a2._loop = M.delegateIterator(b(), _2, _6, _4);
-    return a2._loop.step();
+    a2._loop = M.delegateFor(b(), _2, _3);
+    a2.$.true = a2._loop.true;
+    return M.jumpH(_5);
   }
 
   function _2(a2, i) {
     {
       a2._i = i;
-      a2.$sc = _3;
-      return M.yldStarBH(M.yld(a2._i), _6);
+      a2.$.true = a2._loop.true;
+      return M.yldStarBH(M.yld(a2._i), _5);
     }
   }
 
   function _3(a2) {
-    return a2._loop.step();
+    a2.$sc = _4;
+    return M.yldStarBH(M.yld('f'), _5);
   }
 
   function _4(a2) {
-    a2.$sc = _5;
-    return M.yldStarBH(M.yld('f'), _6);
-  }
-
-  function _5(a2) {
     return M.pure();
   }
 
-  function _6(a2, e) {
+  function _5(a2, e) {
     return M.raise(e);
   }
 }
@@ -71,8 +65,9 @@ function a3() {
   return M.scopeH(_8);
 
   function _1(a3) {
-    a3._loop = M.delegateIterator(b(), _2, _8, _6);
-    return a3._loop.step();
+    a3._loop = M.delegateFor(b(), _2, _6);
+    a3.$.true = a3._loop.true;
+    return M.jumpH(_8);
   }
 
   function _2(a3, i) {
@@ -94,7 +89,8 @@ function a3() {
     var b;
 
     if (a) {
-      return a3._loop.step();
+      a3.$.true = a3._loop.true;
+      return M.jumpRH(_8);
     } else {
       b = a3._i += 2;
       a3.$sc = _5;
@@ -107,7 +103,8 @@ function a3() {
       a3.$sc = _6;
       return M.jumpH(_8);
     } else {
-      return a3._loop.step();
+      a3.$.true = a3._loop.true;
+      return M.jumpRH(_8);
     }
   }
 
@@ -128,77 +125,74 @@ function a3() {
 function a4() {
   var a4 = M.generator();
   a4.$sc = _1;
-  return M.scopeH(_11);
+  return M.scopeH(_10);
 
   function _1(a4) {
-    a4._loop = M.delegateIterator(b(), _2, _11, _7);
-    return a4._loop.step();
+    a4._loop = M.delegateFor(b(), _2, _6);
+    a4.$.true = a4._loop.true;
+    return M.jumpH(_10);
   }
 
   function _2(a4, i) {
     {
       a4._i = i;
       a4.$sc = _3;
-      return M.jumpRH(_12);
+      return M.jumpRH(_11);
     }
   }
 
   function _3(a4) {
-    a4.$sc = _5;
-    return M.yldStarBH(M.yld(a4._i), _11);
+    a4.$.true = a4._loop.true;
+    return M.yldStarBH(M.yld(a4._i), _10);
   }
 
   function _4(a4) {
     var a;
     a4._e = a4._ex;
     a = a4._e.message;
-    a4.$sc = _5;
-    return M.yldStarBH(M.yld(a), _11);
+    a4.$.true = a4._loop.true;
+    return M.yldStarBH(M.yld(a), _10);
   }
 
   function _5(a4) {
-    return a4._loop.step();
+    a4._e1 = a4._ex1;
+    a4.$sc = _6;
+    a4._fc = _7, a4._fe = _8;
+    return M.yldStarBH(M.yld(a4._e1), _8);
   }
 
   function _6(a4) {
-    a4._e1 = a4._ex1;
-    a4.$sc = _7;
-    a4._fc = _8, a4._fe = _9;
-    return M.yldStarBH(M.yld(a4._e1), _9);
-  }
-
-  function _7(a4) {
     a4.$sc = a4._fc;
     return M.yldStarBH(M.yld('f'), a4._fe);
   }
 
-  function _8(a4) {
+  function _7(a4) {
     return M.pure(r);
   }
 
-  function _9(a4, e) {
+  function _8(a4, e) {
     return M.raise(e);
   }
 
-  function _10(a4) {
+  function _9(a4) {
     return M.raise(a4._err1);
   }
 
-  function _11(a4, a) {
-    a4.$sc = _6;
+  function _10(a4, a) {
+    a4.$sc = _5;
     a4._ex1 = a;
-    return M.jumpH(_13);
+    return M.jumpH(_12);
+  }
+
+  function _11(a4, a) {
+    a4.$sc = _4;
+    a4._ex = a;
+    return M.jumpH(_10);
   }
 
   function _12(a4, a) {
-    a4.$sc = _4;
-    a4._ex = a;
-    return M.jumpH(_11);
-  }
-
-  function _13(a4, a) {
-    a4.$sc = _7;
-    a4._fc = _10, a4._fe = _9, a4._err1 = a;
-    return M.jumpH(_9);
+    a4.$sc = _6;
+    a4._fc = _9, a4._fe = _8, a4._err1 = a;
+    return M.jumpH(_8);
   }
 }

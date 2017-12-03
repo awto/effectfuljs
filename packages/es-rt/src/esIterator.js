@@ -61,7 +61,7 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   }
 
   esIterator = function esIterator(lean) {
-    return lean[iterSym] ? lean : new Generator(lean)
+    return lean[Symbol.iterator] ? lean : new Generator(lean)
   }
 }
 

@@ -86,7 +86,9 @@ if (!process.env.EJS_NO_ES_ITERATORS) {
 }
 
 export function esAsyncIterator(lean) {
-  return lean[asyncIterSym] ? lean : new AsyncGenerator(lean)
+  return lean[Symbol.asyncIterator]
+    ? lean[Symbol.asyncIterator]()
+    : new AsyncGenerator(lean)
 }
 
 

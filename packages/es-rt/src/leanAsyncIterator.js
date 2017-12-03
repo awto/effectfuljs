@@ -65,7 +65,7 @@ if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {
 
 if (!process.env.EJS_NO_ES_ITERATORS) {
   LeanAsyncIterator = function LeanAsyncIterator(iter) {
-    this.iter = iter[asyncIterSym]()
+    this.iter = iter[Symbol.asyncIterator]()
     this.done = false
   }
 

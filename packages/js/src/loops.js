@@ -332,9 +332,11 @@ function forOfStmtImpl(loose, s) {
               yield* Kit.reposOne(emitBody(s.one(),nblocks,loop),Tag.push)
             }
           }
+          /*
           if (invert && i.value.eff) {
             yield s.tok(Tag.push,Tag.ContinueStatement,{bind:true,block:i.value})
           }
+          */
           yield* end()
           yield* s.leave()
           continue

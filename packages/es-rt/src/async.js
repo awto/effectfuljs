@@ -43,53 +43,53 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
 }
 
 if (!process.env.EJS_INLINE) {
-  Ap.scope = function scope(cont, handle) {
+  Ap.scope = function scope(step, handle) {
     try {
       this.$handle = handle
-      this.$cont = cont
-      return process.env.EJS_DEFUNCT ? this.$run() : this.$cont()
+      this.$step = step
+      return process.env.EJS_DEFUNCT ? this.$run() : this.$step()
     } catch(e) {
       return process.env.EJS_DEFUNCT
-        ? (this.$cont = this.$handle, this.$run(e))
+        ? (this.$step= this.$handle, this.$run(e))
         : this.$handle(e)
     }
   }
   
-  Ap.chain = function chain(p, cont, handle) {
+  Ap.chain = function chain(p, step, handle) {
     return Promise.resolve(p)
       .then(
         v => {
           this.$handle = handle
-          this.$cont = cont
+          this.$step = step
           try {
-            return process.env.EJS_DEFUNCT ? this.$run(v) : this.$cont(v)
+            return process.env.EJS_DEFUNCT ? this.$run(v) : this.$step(v)
           } catch(e) {
             return process.env.EJS_DEFUNCT
-              ? (this.$cont = this.$handle, this.$run(e))
+              ? (this.$step = this.$handle, this.$run(e))
               : this.$handle(e)
           }
         },
         e => process.env.EJS_DEFUNCT
-          ? (this.$cont = this.$handle, this.$run(e))
+          ? (this.$step = this.$handle, this.$run(e))
           : this.$handle(e))
   }
   
-  Ap.jump = function jump(value, cont, handle) {
+  Ap.jump = function jump(value, step, handle) {
     this.$handle = handle
-    this.$cont = cont
+    this.$step = step
     try {
-      return process.env.EJS_DEFUNCT ? this.$run(value) : this.$cont(value)
+      return process.env.EJS_DEFUNCT ? this.$run(value) : this.$step(value)
     } catch(e) {
       return process.env.EJS_DEFUNCT
-        ? (this.$cont = this.$handle, this.$run(e))
+        ? (this.$step = this.$handle, this.$run(e))
         : this.$handle(e)
     }
   }
-  
+
   Ap.pure = function pure(v) {
     return Promise.resolve(v)
   }
-  
+
   Ap.raise = function raise(ex) {
     return Promise.reject(ex)
   }
@@ -98,7 +98,7 @@ if (!process.env.EJS_INLINE) {
     return function(v) { return ctx.$run(v) }
   }
   function contErr(ctx) {
-    return function(v) { return ctx.$cont = ctx.$handle, ctx.$run(v) }
+    return function(v) { return ctx.$step = ctx.$handle, ctx.$run(v) }
   }
   Ap.chain = function chain(p) {
     return Promise.resolve(p).then(contNext(this),contErr(this))

@@ -1,7 +1,7 @@
 import * as Policy from "../policy"
 import * as Kit from "../kit"
 
-export default function* generatorsInit(opts) {
+export default function* init(opts) {
   const ops = {
     YieldExpression: true,
     AwaitExpression: true

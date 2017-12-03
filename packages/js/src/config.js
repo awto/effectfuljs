@@ -2,7 +2,6 @@ import core from "./libs/core"
 import es from "./libs/es"
 
 export default {
-
   // adds runtime checks in runtime if values to bind is effectful, and makes
   // it effectful if not
   coerce: false,
@@ -30,6 +29,9 @@ export default {
   // uses number representation for effectful frames, and emit dispatching
   // switch statements
   defunct: false,
+
+  // throws exception on invalid state, for debugging purposes
+  defunctGuardInvalidState: false,
 
   // creates a context object for each effectul function's call
   scopeContext: false,
@@ -270,5 +272,21 @@ export default {
   jsTailCalls: false,
 
   // encode effectful `for-of` loops using CPS
-  invertForOf: false
+  invertForOf: false,
+
+  // name of a context's field to store continuations and compuation values
+  // stored directly in context if not defined
+  stateStorageField: null,
+
+  // name of a context's field to store captured closures
+  // stored directly in context if not defined
+  // handled only with `contextState:true`
+  // NOT IMPLEMENTED
+  closureStorageField: null,
+  
+  // name of a context's field to store local variables
+  // stored directly in context if not defined
+  // handled only with `contextState:true`
+  // NOT IMPLEMENTED
+  varStorageField: null
 }

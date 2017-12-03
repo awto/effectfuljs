@@ -2,7 +2,7 @@
  * lean iterator for JS array
  */
 import {LeanIteratorPrototype} from "./leanIterator"
-import {iterator as iterSym, delegateIterator as diSym} from "./symbol"
+import {iterator as iterSym} from "./symbol"
 
 function ArrayLeanIterator(arr) {
   this.arr = arr
@@ -10,29 +10,39 @@ function ArrayLeanIterator(arr) {
   this.done = arr.length === 0
   this.value = void 0
   this.$sub = void 0
+  if (process.env.EJS_CPS_YIELD_STAR)
+    this.$ = this
 }
 
 var ALIp = ArrayLeanIterator.prototype = Object.create(LeanIteratorPrototype)
 
-if (process.env.EJS_DELEGATE_ITERATOR) {
-  ALIp[diSym] = function(yld,raise,pure) {
-    this.yld = yld
-    this.raise = raise
-    this.pure = pure
-    return this
+if (process.env.EJS_DELEGATE_FOR_OF) {
+  ALIp.$delegateFor = function(dest,yld,step) {
+    var self = this
+    this.$.step = this.$.$step = function delegateStep() {
+      if (self.x >= self.arr.length)
+        return step()
+      return yld(self.arr[self.x++])
+    }
   }
-  ALIp.step = function step() {
-    return this.x >= this.arr.length
-      ? this.pure()
-      : this.yld(this.arr[this.x++])
+  ALIp.$delegateYld = function(dest) {
+    var step = dest.$.$step, self = this
+    dest.$.$step = function delegateStep() {
+      if (self.x >= self.arr.length)
+        step()
+      else {
+        dest.yld(self.arr[self.x++])
+      }
+    }
   }
-} else {
-  ALIp.step = function step() {
-    if (this.x >= this.arr.length)
-      return this.pure()
-    this.value = this.arr[this.x++]
-    return this
-  }
+  ALIp.$step = ALIp.step
+}
+
+ALIp.step = function step() {
+  if (this.x >= this.arr.length)
+    return this.pure()
+  this.value = this.arr[this.x++]
+  return this
 }
 
 ALIp.yld = function(v) {
@@ -75,6 +85,3 @@ ALIp.next = function next() {
 Array.prototype[iterSym] = function() {
   return new ArrayLeanIterator(this)
 }
-
-if (process.env.EJS_DELEGATE_ITERATOR)
-  Array.prototype[diSym] =  Array.prototype[iterSym]
