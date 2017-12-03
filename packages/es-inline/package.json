@@ -5,7 +5,7 @@
   "main": "preset.js",
   "scripts": {
     "test": "mocha",
-    "link-test": "node ../es/test/kit/links =default =defunct =defunctTopLevel =loose =looseDefunct =looseDefunctTop =looseTop =topLevel"
+    "link-test": "node ./test/kit/makeLinks"
   },
   "repository": {
     "type": "git",
@@ -25,10 +25,9 @@
   },
   "homepage": "https://github.com/awto/effectful-js#readme",
   "devDependencies": {
-    "@effectful/es-defunct-inline-rt": "../es-defunct-inline-rt",
-    "@effectful/es-defunct-loose-rt": "../es-defunct-loose-rt",
     "@effectful/es-inline-rt": "../es-inline-rt",
     "@effectful/es-loose-rt": "../es-loose-rt",
+    "@effectful/es-rt": "../es-rt",
     "glob": "^7.1.2",
     "mocha": "^3.4.2",
     "promise": "^8.0.1",
