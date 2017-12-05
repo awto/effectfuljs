@@ -733,23 +733,6 @@ export function invertForOf(si) {
                           ctx,
                           i.value.delegateCtx = i.value.goto.forOfInfo.sym)
             break
-            /*
-          case Ctrl.jump:
-            if (!i.value.goto.forOfInfo)
-              break
-            const iterSym = i.value.delegateCtx = i.value.goto.forOfInfo.sym
-            if (jumpsExit)
-              break
-            const lab = s.label()
-            yield s.enter(Tag.push,Tag.CallExpression,{result:true})
-            yield s.enter(Tag.callee,Tag.MemberExpression)
-            yield s.tok(Tag.object,Tag.Identifier,{sym:iterSym})
-            yield s.tok(Tag.property,Tag.Identifier,{node:{name:cont}})
-            yield* s.leave()
-            yield s.enter(Tag.arguments,Tag.Array)
-            yield* lab()
-            s.close(i)
-            continue*/
           case Tag.IfStatement:
             if (!i.value.forOfInfo)
               break
@@ -777,9 +760,6 @@ export function invertForOf(si) {
                             {sym:forOfInfo.exit.ref.declSym})
                 yield s.tok(Tag.push,Tag.Identifier,
                             {sym:forOfInfo.exit.goto.declSym})
-//                if (storeResultCont)
-//                  yield s.tok(Tag.push,Tag.Identifier,
-//                              {sym:forOfInfo.exit.ref.resultContRedir.declSym})
                 continue
               }
               yield k

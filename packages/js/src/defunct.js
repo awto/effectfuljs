@@ -18,8 +18,6 @@ export function* prepare(si) {
     throw s.error("`defunct:true` requires stored control state")
   if (!root.contextSym)
     throw s.error("`defunct:true` requires context object")
-  if (s.opts.markRepeat)
-    throw s.error("not implemented: `markRepeat:true` with `defunct:true`")
   root.implFrame = Kit.enter(
     Tag.push,Block.frame,{
       declSym:Kit.scope.newSym("_"),

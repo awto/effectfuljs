@@ -36,7 +36,8 @@ const rebind = {
     scopePrefix:true,
     coerce:false,
     ops,
-    contextBy: "this",
+    contextBy:"this",
+    shortFrameNames:false,
     contextMethodOpsSpec: {
       iterator: false,
       iteratorM: false,
@@ -118,8 +119,7 @@ const inline = {
 const defunct = {
   effectful: {
     storeCont:"$step",
-    defunct:true,
-    markRepeat:false
+    defunct:true
   }
 }
 

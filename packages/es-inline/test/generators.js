@@ -16,7 +16,8 @@ describe("loose generators using context passing runtime", function() {
   global.skipTests = {
     // inverted for-of doesn't support calling
     // iterator methods from generator in for-of
-    "generatorsMethods":true
+    "generatorsMethods":true,
+    "loopsRepeatTailJump":true
   }
   run("with inverted for-of",
       require("./looseDelegate/links/generators"))

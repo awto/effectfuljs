@@ -6,15 +6,15 @@ import {forInIterator} from "./forInIterator"
 export var generator
 var GeneratorConstructor
 
-function raiseImpl(e) { this.raise(e) }
 if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
+  /** smart constructor for generators */
   generator = function generator(caller) {
     var res = new GeneratorConstructor(),
         esProto = caller && caller.prototype instanceof Generator
         ? caller.prototype
         : Generator.prototype,
         unwrap = res.unwrap = Object.create(esProto)
-    if (process.env.EJS_CPS_YIELD_STAR)
+    if (process.env.EJS_DELEGATE_FOR_OF)
       res.$ = res
     unwrap.state = res
     return res
@@ -22,7 +22,7 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
 } else if (!process.env.EJS_NO_ES_ITERATORS) {
   generator = function generator() {
     var res = new GeneratorConstructor()
-    if (process.env.EJS_CPS_YIELD_STAR)
+    if (process.env.EJS_DELEGATE_FOR_OF)
       res.$ = res
     res.unwrap = new Generator(res)
     return res
@@ -30,12 +30,13 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
 } else {
   generator = function generator() {
     var res = new GeneratorConstructor()
-    if (process.env.EJS_CPS_YIELD_STAR)
+    if (process.env.EJS_DELEGATE_FOR_OF)
       res.$ = res
     return res
   }
 }
 
+/** lean iterator implementation for generators */
 export function LeanGenerator() {
   this.done = false
   this.value = void 0
@@ -44,7 +45,7 @@ export function LeanGenerator() {
 var LGp = LeanGenerator.prototype
 GeneratorConstructor = LeanGenerator
 
-export var defaultStep
+/** passing default implementations to async generators */
 
 if (!process.env.EJS_DEFUNCT) {
   var trampoline = function trampoline(c,a) {
@@ -57,10 +58,6 @@ if (!process.env.EJS_DEFUNCT) {
 }
 
 if (!process.env.EJS_INLINE) {
-  function nop() {
-    this.value = void 0
-    return this
-  }
 
   function resume(a) {
     this.$handle = this.$subHandle
@@ -106,13 +103,13 @@ if (!process.env.EJS_INLINE) {
   }
   if (process.env.EJS_DEFUNCT) {
     LGp.runStep = step
-    defaultStep = LGp.step = function(a) {
+    LGp.step = function(a) {
       return this.runStep(a)
     }
   } else
-    defaultStep = LGp.step = step
+    LGp.step = step
   
-  defaultYld = LGp.yld = function yld(value, cont, handle, exit) {
+  LGp.yld = function yld(value, cont, handle, exit) {
     this.value = value
     suspend(this, cont, handle, exit)
     return this
@@ -146,13 +143,13 @@ if (!process.env.EJS_INLINE) {
     this.value = value
     if (process.env.EJS_DEFUNCT) {
       this.$step = this.$handle = this.$exit = void 0
-      this.step = nop
-      this.handle = raiseImpl
-      this.exit = nop
+      this.step = terminated
+      this.handle = terminatedHandle
+      this.exit = terminated
     } else {
-      this.$step = nop
-      this.$handle = raiseImpl
-      this.$exit = nop
+      this.$step = terminated
+      this.$handle = terminatedHandle
+      this.$exit = terminated
     }
     return this
   }
@@ -171,31 +168,9 @@ if (!process.env.EJS_INLINE) {
     return this.$sub.exit(value)
   }
 } else {  
-  function terminated() {
-    if (process.env.EJS_DEBUG_LOOSE) {
-      console.error("running terminate")
-      throw new Error("running terminated")
-    }
-    this.value = void 0
-    return this
-  }
-
-  function terminatedHandle(e) {
-    if (process.env.EJS_DEBUG_LOOSE) {
-      console.error("running terminate")
-      throw new Error("running terminated")
-    }
-    return this.raise(e)
-  }
-
   LGp.pure = function pure(value) {
-    if (process.env.EJS_CPS_YIELD_STAR) {
-      this.$.done = true
-      this.$.value = value
-    } else {
-      this.done = true
-      this.value = value
-    }
+    this.done = true
+    this.value = value
     this.step = terminated
     this.handle = terminatedHandle
     if (process.env.EJS_DEFUNCT) {
@@ -232,18 +207,12 @@ if (!process.env.EJS_INLINE) {
   }
 
   if (process.env.EJS_DEFUNCT) {
-    defaultStep = LGp.step = function(v) {
+    LGp.step = function(v) {
       return this.$run(v)
     }
-    LGp.exit = function(v) {
-      return this.$step = this.$exit, this.$run(v)
-    }
   } else {
-    defaultStep = LGp.step = function(v) {
+    LGp.step = function(v) {
       return this.$step(v)
-    }
-    LGp.handle = function(v) {
-      return this.$handle(v)
     }
   }
 }
@@ -261,6 +230,8 @@ export function makeDelegateYld(iterator) {
     return iter.step()
   }
 }
+
+LGp.delegateYld = makeDelegateYld(iterator)
 
 function contSub(v) {
   this.pure = this.$subPure
@@ -292,8 +263,11 @@ LGp.handle = function(ex) {
 }
 
 LGp.raise = function genRaise(ex) {
-  this.$handle = raiseImpl
-  this.pure()
+  this.$step = this.$handle = this.$exit = void 0
+  this.handle = terminatedHandle
+  this.exit = this.step = terminated
+  this.value = void 0
+  this.done = true
   throw ex
 }
 
@@ -388,7 +362,31 @@ if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
 }
 
 if (process.env.EJS_DELEGATE_FOR_OF) {
-  LGp.yld = function yld(value) {
+  function DelegatingLeanGenerator() {
+    this.done = false
+    this.value = void 0
+  }
+  GeneratorConstructor = DelegatingLeanGenerator
+  var DLGp = DelegatingLeanGenerator.prototype
+
+  DLGp.pure = function pure(value) {
+    this.$.done = true
+    this.$.value = value
+    this.$.$step = terminated
+    this.$.$handle = terminatedHandle
+    this.$.$exit = terminated
+    return this
+  }
+
+  DLGp.raise = function genRaise(ex) {
+    this.$.$handle = terminatedHandle
+    this.$.$step = this.$exit = terminated
+    this.$.done = true
+    this.$.value = void 0
+    throw ex
+  }
+  
+  DLGp.yld = function yld(value) {
     this.$.value = value
   }
   /**
@@ -396,40 +394,76 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
    * `raise` on exeption
    * all the callbacks must be context independent
    */
-  LGp.delegateFor = function(iterable,yld,raise,pure) {
+  DLGp.delegateFor = function(iterable,yld,raise,pure) {
     var iter = iterator(iterable)
     iter.$delegateFor(this,yld,raise,pure)
     return iter
   }
 
-  LGp.$delegateFor = function $delegateFor(dest,yld,step) {
+  DLGp.$delegateFor = function $delegateFor(dest,yld,step) {
     this.yld = yld
     this.pure = step
   }
   /** switches context temporarly to `iterable` until it exits */
-  LGp.delegateYld = function delegateYld(iterable) {
+  DLGp.delegateYld = function delegateYld(iterable) {
     var iter = iterator(iterable)
     iter.$delegateYld(this)
     this.$.$step()
   }
-  LGp.$delegateYld = function $delegateYld(dest) {
-    this.$ = dest.$
-    this.$subStep = dest.$.$step
-    this.pure = delegatePure
+
+  DLGp.$delegateYld = function $delegateYld(dest) {
+    var delegate = this
+    var self = this.$ = dest.$
+    var step = self.$step, handle = self.$handle, exit = self.$exit
+    this.pure = function delegatePure(v) {
+      self.$step = step
+      self.$handle = handle
+      self.$exit = exit
+      return self.cont(v)
+    }
+    this.raise = function delegateRaise(e) {
+      self.$step = step
+      self.$handle = handle
+      self.$exit = exit
+      return self.$handle(e)
+    }
     this.yld = dest.yld
-    dest.$.$step = this.$step
+    self.$step = this.$step
+    self.$handle = this.$handle
+    self.$exit = this.$exit
   }
-  function delegatePure(v) {
-    var self = this.$
-    self.$ = self
-    self.$step = this.$subStep
-    return self.step(v)
-  }
-  LGp.step = function step(v) {
+  
+  DLGp.cont = DLGp.step = function step(v) {
     this.$step(v)
     return this
   }
-} else
-  LGp.delegateYld = makeDelegateYld(iterator)
+  DLGp.runHandle = LGp.handle
+  DLGp.handle = function handle(v) {
+    this.$.runHandle(v)
+    return this
+  }
+  DLGp.exit = function exit(v) {
+    var self = this
+    this.cont =exit
+    this.$exit(v)
+    return this
+  }
+}
 
+function terminated() {
+  if (process.env.EJS_DEBUG_LOOSE) {
+    console.error("running terminate")
+    throw new Error("running terminated")
+  }
+  this.value = void 0
+  return this
+}
+
+function terminatedHandle(e) {
+  if (process.env.EJS_DEBUG_LOOSE) {
+    console.error("running terminate")
+    throw new Error("running terminated")
+  }
+  return this.raise(e)
+}
 

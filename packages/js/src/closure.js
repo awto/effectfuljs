@@ -40,10 +40,6 @@ export function depsToTop(si) {
   function* collect() {
     for(const i of s.sub()) {
       if (i.enter && i.type === Tag.FunctionDeclaration && i.value.frameStep) {
-        const par = i.value.frameStep
-        const ds = i.value.declSym
-        if (par.funcId)
-          ds.orig = ds.name = par.funcId.name + ds.orig
         top.push([i,...collect(),s.close(i)])
       } else
         yield i

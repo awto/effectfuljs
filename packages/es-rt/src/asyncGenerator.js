@@ -2,7 +2,7 @@ import {asyncIterator as asyncIterSym} from "./symbol"
 import {AsyncGenerator} from "./esAsyncIterator"
 import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
-import {LeanGenerator,makeDelegateYld,defaultStep} from "./generator"
+import {LeanGenerator,makeDelegateYld} from "./generator"
 import {iteratorM,UnwrapWrapper} from "./leanAsyncIterator"
 import {Async} from "./async"
 
@@ -64,8 +64,7 @@ LAGp[asyncIterSym] = LAGp[Symbol.asyncIterator] = function() { return this }
 if (process.env.EJS_DEFUNCT)
   LAGp.runStep = LGp.runStep
 
-LAGp.step = defaultStep
-
+LAGp.step = LGp.step
 LAGp.exit = LGp.exit
 LAGp.handle = LGp.handle
 LAGp.pure = LGp.pure

@@ -43,19 +43,19 @@ describe("regenerator with loose inlined operations", function() {
   describe("with single frame function",function() {
     require("./looseDefunct/links/regenerator")
   })
+  const looseSkip = Object.assign({},top,{
+    // not implemented arguments object aliasing
+    "should alias function parameters": true,
+    // preserved but moved out of function
+    "should be preserved in generated code": true
+  })
   describe("with top level single frame function",function() {
-    global.skipTests = Object.assign({},top,{
-      // not implemented arguments object aliasing
-      "should alias function parameters": true,
-      // preserved but moved out of function
-      "should be preserved in generated code": true
-    })
+    global.skipTests = looseSkip
     require("./looseDefunctTop/links/regenerator")
   })
-  /*
   describe("with inverted for-of", function() {
-    global.skipTests = Object.assign({},top,{
-    })
+    global.skipTests = top
     require("./looseDelegate/links/regenerator")
-  })*/
+  })
 })
+

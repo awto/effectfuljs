@@ -387,7 +387,6 @@ export const convert = Kit.pipe(
     const j = s.cur()
     function* ctrlFrames() {
       const sym = root.resSym = unboundTempVar(root,"r")
-        // Bind.tempVarSym(root,"r")
       const f = s.enter(Tag.push, Block.frame,
                         {declSym:Kit.scope.newSym("ret"),root,
                          last:true})
@@ -398,7 +397,7 @@ export const convert = Kit.pipe(
       yield s.tok(Tag.push,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
       yield* s.leave()
       yield* s.leave()
-      const psym = Kit.scope.newSym("r") // Bind.tempVarSym(root)
+      const psym = Kit.scope.newSym("r")
       const fr = s.enter(Tag.push, Block.frame,
                          {declSym:Kit.scope.newSym("retv"),
                           root,errSym:psym,last:true})
@@ -968,6 +967,8 @@ export function interpretFrames(si) {
   const s = Kit.auto(si)
   const unpackMax = s.opts.unpackMax
   const root = s.first.value
+  const rootName = (!s.opts.shortFrameNames || s.opts.topLevel)
+        && root.funcId && root.funcId.name || ""
   function* args(thread) {
     if (thread) {
       for(const j of thread)
@@ -1031,7 +1032,7 @@ export function interpretFrames(si) {
           i.value.frameStep = s.first.value
           const flab = s.label()
           if (fn !== 0) {
-            i.value.declSym.orig = `_${fn}`
+            i.value.declSym.orig = `${rootName}_${fn}`
             if (byThis)
               (i.value.savedDecls || (i.value.savedDecls = new Map())).set(
                 ctxSym,

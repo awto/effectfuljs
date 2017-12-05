@@ -14,7 +14,7 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   function LeanIterator(iter) {
     this.iter = iter[Symbol.iterator]()
     this.done = false
-    if (process.env.EJS_CPS_YIELD_STAR)
+    if (process.env.EJS_DELEGATE_FOR_OF)
       this.$ = this
   }
 
@@ -43,12 +43,54 @@ if (process.env.EJS_NO_ES_ITERATORS) {
     }
 
     LIp.$delegateYld = function(dest) {
-      var step = dest.$.$step, iter = this.iter
+      var step = dest.$.$step, handle = dest.$.$handle, iter = this.iter
       dest.$.$step = function delegateStep(v) {
         var next = iter.next(v)
-        if (next.done) {
-          step()
-        } else
+        if (next.done)
+          step(next.value)
+        else
+          dest.yld(next.value)
+      }
+      dest.$.$handle = function delegateHandle(e) {
+        var next
+        if (!iter.throw) {
+          if (iter.return) {
+            try {
+              iter.return()
+              } catch(e) {
+                handle(e)
+                return
+              }
+          }
+          handle(new TypeError("iterator does not have a throw method"))
+          return
+        }
+        try {
+          next = iter.throw(e)
+        } catch(e) {
+          handle(e)
+          return 
+        }
+        if (next.done)
+          step(next.value)
+        else
+          dest.yld(next.value)
+      }
+      dest.$.$exit = function delegateExit(value) {
+        if (!iter.return) {
+          step(value)
+          return 
+        }
+        try {
+          next = iter.return(value)
+        } catch (e) {
+          handle(e)
+          return
+        }
+        var next = iter.return(value)
+        if (next.done)
+          step(next.value)
+        else
           dest.yld(next.value)
       }
     }

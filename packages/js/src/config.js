@@ -288,5 +288,8 @@ export default {
   // stored directly in context if not defined
   // handled only with `contextState:true`
   // NOT IMPLEMENTED
-  varStorageField: null
+  varStorageField: null,
+
+  // don't use function name in frame's name (ignored in with topLevel)
+  shortFrameNames: true
 }

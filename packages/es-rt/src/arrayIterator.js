@@ -10,7 +10,7 @@ function ArrayLeanIterator(arr) {
   this.done = arr.length === 0
   this.value = void 0
   this.$sub = void 0
-  if (process.env.EJS_CPS_YIELD_STAR)
+  if (process.env.EJS_DELEGATE_FOR_OF)
     this.$ = this
 }
 

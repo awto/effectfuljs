@@ -270,14 +270,17 @@ exports.forStmt = function*() {
       yield i + j
     }
   }
-  for(let i = 0; i < 2000; i++) {
+}
+
+exports.loopsRepeatTailJump = function*() {
+  for(let i = 0; i < 200000; i++) {
     if (i < 2)
       yield `a:${i}`
-    if (i > 1998)
+    if (i > 199800)
       yield `b:${i}`
   }
-  for(let i = 0; i < 2000; i++) {
-    if (i < 1920)
+  for(let i = 0; i < 200000; i++) {
+    if (i < 192000)
       continue
     yield `c:${i}`
   }
@@ -957,7 +960,7 @@ exports.transducers2 = function* transducers2() {
   yield "Exit"
 }
 
-exports.delegateOfDelegate = function* delegateOfDelegate() {
+exports.delegateOfDelegate1 = function* delegateOfDelegate1() {
   function* s1() {
     return (yield* gen2())
   }
@@ -979,7 +982,7 @@ exports.delegateOfDelegate = function* delegateOfDelegate() {
 }
 
 exports.delegateOfDelegate2 = function* delegateOfDelegate2() {
-  for(const i of exports.delegateOfDelegate())
+  for(const i of exports.delegateOfDelegate1())
     yield i
 }
 
