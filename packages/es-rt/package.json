@@ -16,11 +16,12 @@
     "watch-bundle-opt": "cross-env env-cmd configure,opt,$EJS_ENV rollup -c -w",
     "build-bundle-opt": "cross-env env-cmd configure,opt,$EJS_ENV rollup -c",
     "build-top-opts": "npm run build-t && npm run build-tl && npm run build-ti",
-    "build-delegate-opts": "npm run build-dl",
+    "build-delegate-opts": "npm run build-dl && npm run build-d",
     "build-opts": "npm run build-top-opts && npm run build-delegate-opts",
     "build-t": "cross-env EJS_ENV=defunct npm run build-bundle-opt",
     "build-tl": "cross-env EJS_ENV=defunct,loose npm run build-bundle-opt",
     "build-ti": "cross-env EJS_ENV=defunct,inline npm run build-bundle-opt",
+    "build-d": "cross-env EJS_ENV=delegate,inline npm run build-bundle-opt",
     "build-dl": "cross-env EJS_ENV=notail,delegate,loose npm run build-bundle-opt",
     "prepare": "npm run build"
   },

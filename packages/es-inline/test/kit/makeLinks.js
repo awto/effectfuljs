@@ -2,6 +2,7 @@ var dirs = [
   "default",
   "defunct",
   "defunctTopLevel",
+  "delegate",
   "loose",
   "looseDelegate",
   "looseDefunct",
