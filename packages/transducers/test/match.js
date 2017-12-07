@@ -1,9 +1,9 @@
-import {produce,consume,Tag} from "../src"
+import {produce,consume,Tag} from ".."
 import {parse} from "babylon"
 import generate from "babel-generator"
-import * as Kit from "../src/kit"
-import * as Match from "../src/match"
-import * as Trace from "../src/trace"
+import * as Kit from "../kit"
+import * as Match from "../match"
+import * as Trace from "../trace"
 
 const gen = ast => generate(ast,{retainLines:false,concise:true,quotes:"'"}).code
 const pretty = Kit.pipe(v => v.toString(),parse,gen)

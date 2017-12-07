@@ -1,9 +1,9 @@
-import {produce,consume,Tag} from "../src"
+import {produce,consume,Tag} from ".."
 import {parse} from "babylon"
 import generate from "babel-generator"
 import * as T from "babel-types"
+import * as Kit from "../kit"
 
-import * as Kit from "../src/kit"
 const fs = require("fs")
 
 describe("lookahead iterator", function() {

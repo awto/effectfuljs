@@ -1,14 +1,14 @@
-import {produce,consume,Tag} from "../src"
+import {produce,consume,Tag} from ".."
 import {parse} from "babylon"
 import generate from "babel-generator"
-import * as Kit from "../src/kit"
-import eagerGenerators from "../src/samples/eagerGenerators"
-import joinMemExprs from "../src/samples/joinMemExprs"
-import looseForOf from "../src/samples/looseForOf"
-import instrumentation from "../src/samples/instrumentation"
-import closConv from "../src/samples/closConvPass"
-import * as RT from "../src/rt"
-import * as Trace from "../src/trace"
+import * as Kit from "../kit"
+import eagerGenerators from "../samples/eagerGenerators"
+import joinMemExprs from "../samples/joinMemExprs"
+import looseForOf from "../samples/looseForOf"
+import instrumentation from "../samples/instrumentation"
+import closConv from "../samples/closConvPass"
+import * as RT from "../rt"
+import * as Trace from "../trace"
 
 const gen = ast => generate(ast,{retainLines:false,concise:true},"").code
 const pretty = Kit.pipe(v => v.toString(),parse,gen)

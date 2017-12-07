@@ -1,4 +1,4 @@
-import { produce, consume } from "../src"
+import { produce, consume } from ".."
 
 describe('function declaration', function() {
   it('traverse', function() {

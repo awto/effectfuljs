@@ -1,0 +1,10 @@
+.git
+tmp-*
+*.orig
+*.log
+*~
+*.map
+.DS_Store
+.tern-port
+node_modules
+test

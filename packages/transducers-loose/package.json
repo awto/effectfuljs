@@ -1,0 +1,35 @@
+{
+  "name": "@effectful/transducers-loose",
+  "version": "0.0.0",
+  "description": "@effectful/transducers built with faster generators",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "prepare-test": "babel ../transducers/test --out-dir=test",
+    "build": "cross-env BABEL_ENV=loose babel ../transducers/src --out-dir=."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectfuljs.git"
+  },
+  "keywords": [
+    "generators",
+    "transducers",
+    "compiler",
+    "iterator",
+    "estree"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awto/effectfuljs/issues"
+  },
+  "homepage": "https://github.com/awto/effectfuljs#readme",
+  "dependencies": {
+    "@effectful/es-loose-rt": "^0.0.8"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "cross-env": "^5.1.1"
+  }
+}

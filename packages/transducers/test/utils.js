@@ -1,5 +1,5 @@
-import {produce,consume,Tag} from "../src"
-import * as Kit from "../src/kit"
+import {produce,consume,Tag} from ".."
+import * as Kit from "../kit"
 import {parse} from "babylon"
 import generate from "babel-generator"
 import * as T from "babel-types"
