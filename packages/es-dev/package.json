@@ -1,6 +1,6 @@
 {
   "name": "es-dev",
-  "version": "0.0.0",
+  "version": "0.0.9",
   "description": "breaking cyclic dependency in dev time",
   "main": "index.js",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
