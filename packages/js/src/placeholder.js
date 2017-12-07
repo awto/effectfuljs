@@ -6,7 +6,6 @@
 import * as Kit from "./kit"
 import {Tag,symbol,symName,enter,leave,tok,symKind} from "./kit"
 import * as assert from "assert"
-import {stmtExpr} from "./kit/stmtExpr"
 import * as Prop from "./propagate"
 
 export const mark = symbol("placeholder.mark")

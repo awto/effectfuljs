@@ -1,5 +1,5 @@
 import * as Kit from "./kit"
-import {Tag,produce,consume,symbol,scope} from "estransducers"
+import {Tag,produce,consume,symbol,scope} from "@effectful/transducers"
 import * as T from "babel-types"
 const {enter,leave,tok} = Kit
 import * as Block from "./block"

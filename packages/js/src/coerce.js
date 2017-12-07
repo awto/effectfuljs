@@ -1,6 +1,6 @@
 import * as Kit from "./kit"
 import * as assert from "assert"
-import {Tag,symbol} from "estransducers"
+import {Tag,symbol} from "./kit"
 import * as Block from "./block"
 import * as Branch from "./branch"
 import * as Ctrl from "./control"

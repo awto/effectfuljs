@@ -1,6 +1,6 @@
 import generate from "babel-generator"
 import * as T from "babel-types"
-import {symName} from "estransducers"
+import {symName} from "@effectful/transducers"
 import * as Kit from "./"
 
 const MAX_TRACE_CODE_LEN = 100

@@ -1,7 +1,6 @@
 import * as Kit from "./kit"
 import {enter,leave,tok,symKind,Tag} from "./kit"
-import * as Match from "estransducers/match"
-import dump from "estransducers/dump"
+import * as Match from "@effectful/transducers/match"
 import * as Debug from "./debug"
 
 /** removing useless IIFE */

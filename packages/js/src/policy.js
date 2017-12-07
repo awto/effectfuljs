@@ -1,6 +1,6 @@
 import * as Kit from "./kit"
 import {Tag,symbol,symInfo} from "./kit"
-import * as Match from "estransducers/match"
+import * as Match from "@effectful/transducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
 import {ifJsExceptions,ifDirectives} from "./options"
@@ -428,7 +428,7 @@ export const hoist = symbol("hoist")
 
 /** 
  * interpret hoist tokens
- * TODO: move to estransducers
+ * TODO: move to @effectful/transducers
  */
 export function applyHoist(si) {
   const s = Kit.auto(si)

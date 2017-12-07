@@ -1,6 +1,6 @@
 import * as Kit from "./kit"
 import * as assert from "assert"
-import {Tag} from "estransducers"
+import {Tag} from "./kit"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
 import * as Debug from "./debug"

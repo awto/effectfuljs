@@ -1,6 +1,7 @@
 import {Tag,produce as esproduce,symbol,toArray,isSymbol,
-        symName,symInfo,consume as esconsume,scope} from "estransducers"
-import {pipe,curry,Wrapper} from "estransducers/kit"
+        symName,symInfo,consume as esconsume,
+        scope} from "@effectful/transducers"
+import {pipe,curry,Wrapper} from "@effectful/transducers/kit"
 import * as T from "babel-types"
 import * as assert from "assert"
 

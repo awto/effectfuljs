@@ -1,7 +1,6 @@
 import defaults from "./config"
 import generate from "babel-generator"
 import {parse} from "babylon"
-import {produce,consume,kit} from "estransducers"
 import * as Kit from "./kit"
 import * as path from "path"
 import * as T from "./transform"

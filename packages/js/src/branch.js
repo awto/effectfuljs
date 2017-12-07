@@ -4,7 +4,6 @@ import {Tag,symbol,symInfo} from "./kit"
 import * as Block from "./block"
 import * as Bind from "./bind"
 import * as Prop from "./propagate"
-import {stmtExpr} from "./kit/stmtExpr"
 
 export const fork = symbol("branch.fork")
 export const thread = symbol("branch.thread")

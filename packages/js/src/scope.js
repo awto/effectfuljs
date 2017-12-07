@@ -3,7 +3,7 @@ import * as Kit from "./kit"
 import * as assert from "assert"
 import * as Debug from "./debug"
 import * as Block from "./block"
-import {scope as EsScope} from "estransducers"
+import {scope as EsScope} from "@effectful/transducers"
 
 export const assignSymbolsDecls = EsScope.assignSymbolsDecls
 

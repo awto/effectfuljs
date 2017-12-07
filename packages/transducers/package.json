@@ -1,0 +1,37 @@
+{
+  "name": "@effectful/transducers",
+  "version": "0.0.0",
+  "description": "JS syntax transformation framework for @effectful/js",
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awto/effectfuljs/issues"
+  },
+  "homepage": "https://github.com/awto/effectfuljs/tree/master/packages/es",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "babel src --out-dir=.",
+    "watch": "babel -w src --out-dir=.",
+    "prepare": "npm run build"
+  },
+  "repository": "git+https://github.com/awto/effectfuljs.git",
+  "keywords": [
+    "transducers",
+    "compiler",
+    "estree",
+    "iterator"
+  ],
+  "dependencies": {
+    "babel-generator": "^6.25.0",
+    "babel-types": "^6.25.0",
+    "babylon": "^6.17.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "cross-env": "^5.1.1",
+    "expect.js": "^0.3.1",
+    "mocha": "^3.4.2"
+  }
+}
