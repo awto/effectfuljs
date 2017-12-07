@@ -1,0 +1,40 @@
+{
+  "name": "@effectful/js-loose",
+  "version": "0.0.11",
+  "description": "@effectful/js built with faster generators",
+  "main": "compiler.js",
+  "scripts": {
+    "test": "mocha",
+    "prepare-test": "babel ../js/test --out-dir=test",
+    "build": "cross-env BABEL_ENV=loose babel ../js/src --out-dir=."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectfuljs.git"
+  },
+  "keywords": [
+    "promise",
+    "async",
+    "monad",
+    "linq",
+    "effectful"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awto/effectfuljs/issues"
+  },
+  "homepage": "https://github.com/awto/effectfuljs#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "cross-env": "^5.1.1"
+  },
+  "dependencies": {
+    "@effectful/es-loose-rt": "^0.0.11",
+    "@effectful/transducers-loose": "^0.0.11",
+    "resolve": "^1.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

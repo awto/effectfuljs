@@ -1,5 +1,5 @@
 import * as Kit from "./kit"
-import {Tag,symbol} from "estransducers"
+import {Tag,symbol} from "./kit"
 import * as T from "babel-types"
 import * as assert from "assert"
 import {recalcEff} from "./propagate"

@@ -1,5 +1,7 @@
 {
   "plugins": [["transform-es2015-modules-commonjs",
-               {"loose":true,"noInterop":true}]]
+               {"loose":true,"noInterop":true}],
+              "syntax-async-generators",
+              "syntax-function-sent"]
 }
 

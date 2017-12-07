@@ -74,8 +74,6 @@ export const convert = Kit.pipe(
         if (i.enter) {
           switch(i.type) {
           case Tag.ReturnStatement:
-            // remaining return statements are either last
-            // in the functions or stmtExpr
             const cur = s.curLev()
             if (cur) {
               if (cur.value.eff) {

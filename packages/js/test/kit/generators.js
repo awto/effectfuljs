@@ -1,10 +1,10 @@
 import * as fs from "fs"
 import * as path from "path"
-import * as Kit from "estransducers/kit"
+import * as Kit from "../../kit"
 import {isQUnit,run,pretty,prettyBlock,blockEqual} from "./core"
 import tags from "./tags"
 import * as assert from "assert"
-import libs from "../../src/config"
+import libs from "../../config"
 import configs from "./configs"
 libs["./effectfuljscore"] = libs["@effectful/core"]
 

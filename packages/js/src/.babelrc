@@ -4,20 +4,24 @@
       "plugins": [["transform-es2015-modules-commonjs",
                    {"loose":true,"noInterop":true}]]
     },
-    "production": {
+    "loose": {
       "passPerPreset": true,
       "presets": [
-        ["@effectful/es-loose",{"jsExceptions":false,
-                                "inlineJsExceptions":false,
-                                "inlineThrow":true,
-                                "loose":true,
-                                "moduleAliases":{
-                                  "estransducers":"estransducers/loose",
-                                  "estransducers/kit":"estransducers/loose/kit",
-                                  "estransducers/rt":"estransducers/loose/rt",
-                                  "estransducers/dump":"estransducers/loose/dump",
-                                  "estransducers/match":"estransducers/loose/match"
-                                }}],
+        ["es-dev",
+         {"loose":true,
+          "all": {
+            "jsExceptions":false,
+            "inlineJsExceptions":false,
+            "inlineThrow":true,
+            "moduleAliases":{
+              "@effectful/transducers":"@effectful/transducers-loose",
+              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
+              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
+              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
+              "@effectful/transducers/match":"@effectful/transducers-loose/match"
+            }
+          }
+         }],
         {
           "plugins": [["transform-es2015-modules-commonjs",
                        {"loose":true,"noInterop":true}]]

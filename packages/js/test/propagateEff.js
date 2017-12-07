@@ -1,14 +1,12 @@
-import * as Kit from "../src/kit"
-import {prepareScopes,consumeScope} from "../src/transform"
-import {Tag,produce,consume} from "estransducers"
+import * as Kit from "../kit"
+import {prepareScopes,consumeScope} from "../transform"
 import generate from "babel-generator"
 import {parse} from "babylon"
 import {equal,print,transformExpr} from "./kit/core"
-import * as Debug from "../src/debug"
-import * as Dump from "../src/dump"
-import * as Trace from "estransducers/trace"
-import * as Block from "../src/block"
-import * as Ctrl from "../src/control"
+import * as Debug from "../debug"
+import * as Dump from "../dump"
+import * as Block from "../block"
+import * as Ctrl from "../control"
 
 const run = transformExpr(
     Kit.pipe(

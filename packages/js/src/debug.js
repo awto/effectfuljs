@@ -1,9 +1,8 @@
 import * as Kit from "./kit"
 import * as Trace from "./kit/trace"
 import {Tag,produce,consume,symbol,symName,symInfo,
-        dump as D,trace as T,scope} from "estransducers"
+        dump as D,trace as T,scope} from "@effectful/transducers"
 import generate from "babel-generator"
-import * as SE from "./kit/stmtExpr"
 
 function isBindTok(v) {
   return isIf(v) || symInfo(v.type).kind === "ctrl"

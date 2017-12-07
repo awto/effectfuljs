@@ -3,9 +3,9 @@ import * as path from "path"
 import * as kit from "./generators"
 import {run,pretty} from "./core"
 import * as dirs from "./dirs"
-import * as Kit from "estransducers/kit"
+import * as Kit from "../../kit"
 var terminal = require( 'terminal-kit' ).terminal
-import libs from "../../src/config"
+import libs from "../../config"
 import configs from "./configs"
 libs["./effectfuljscore"] = libs["@effectful/core"]
 

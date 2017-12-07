@@ -19,12 +19,19 @@
     "babel-plugin-syntax-function-sent": "^6.13.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-plugin-transform-inline-environment-variables": "^0.2.0",
+    "babel-plugin-check-es2015-constants": "^6.22.0",
+    "babel-plugin-transform-es2015-block-scoped-functions": "^6.22.0",
+    "babel-plugin-transform-es2015-block-scoping": "^6.23.0",
+    "babel-plugin-transform-es2015-computed-properties": "^6.22.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-es2015-duplicate-keys": "^6.22.0",
+    "babel-plugin-transform-es2015-parameters": "^6.23.0",
+    "babel-plugin-transform-es2015-spread": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-3": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "cross-env": "^5.1.1",
     "expect.js": "^0.3.1",
     "lerna": "^2.4.0",
-    "rollup-plugin-babel": "^3.0.2"
+    "rollup-plugin-babel": "^3.0.2",
+    "terminal-kit": "^1.11.0"
   }
 }

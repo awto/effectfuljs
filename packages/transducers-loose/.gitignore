@@ -1,0 +1,12 @@
+node_modules
+tmp-*
+*.orig
+*.log
+*~
+*.map
+.DS_Store
+.tern-port
+/*.js
+/samples/*.js
+loose
+/test/*.js

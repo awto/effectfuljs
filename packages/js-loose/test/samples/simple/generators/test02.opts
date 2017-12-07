@@ -1,0 +1,6 @@
+{
+  "require": "@effectful/es",
+  "scopeContext":true,
+  "contextState":true,
+  "contextMethodOps":true
+}

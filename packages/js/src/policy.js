@@ -1,6 +1,6 @@
 import * as Kit from "./kit"
 import {Tag,symbol,symInfo} from "./kit"
-import * as Match from "estransducers/match"
+import * as Match from "@effectful/transducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
 import {ifJsExceptions,ifDirectives} from "./options"
@@ -110,6 +110,46 @@ function* replaceGlobalNsName(si) {
   }
 }
 
+
+function aliases(s) {
+  s = Kit.auto(s)
+  const aliases = s.opts.moduleAliases
+  if (!aliases)
+    return s
+  return walk(s)
+  function* subst(j) {
+    const alias = aliases[j.value.node.value]
+    if (!alias) {
+      yield* s.copy(j)
+      return
+    }
+    yield s.tok(j.pos,Tag.StringLiteral,{node:{value:alias}})
+    Kit.skip(s.copy(j))
+  }
+  function* walk(sw) {
+    for(const i of s) {
+      if (i.enter) { 
+        if (i.pos === Tag.source && i.type === Tag.StringLiteral) {
+          yield* subst(i)
+          continue
+        }
+        if (i.type === Tag.Identifier && i.pos === Tag.callee && i.value.sym
+                   && !i.value.sym.declScope && i.value.sym.name === "require") {
+          yield* s.copy(i)
+          yield s.peel()
+          const j = s.curLev()
+          if (j && j.type === Tag.StringLiteral)
+            yield* subst(s.take())
+          yield* s.sub()
+          yield* s.leave()
+          continue
+        }
+      }
+      yield i
+    }
+  }
+}
+
 /** 
  * checks imports in the input and apply compile time handlers 
  * if they are available  
@@ -123,30 +163,6 @@ export const presets =
       `import * as $$ from "$M"`
     ]),
     Kit.toArray,
-    function aliases(s) {
-      s = Kit.auto(s)
-      const aliases = s.opts.moduleAliases
-      if (!aliases)
-        return s
-      return walk()
-      function* walk() {
-        for(const i of s) {
-          yield i
-          if (i.enter && i.type === Match.Placeholder
-              && i.value.match !== false
-              && i.value.name === "M") {
-            const j = s.cur()
-            if (j.type !== Tag.StringLiteral)
-              continue
-            const alias = aliases[j.value.node.value]
-            if (!alias)
-              continue
-            yield s.tok(i.pos,Tag.StringLiteral,{node:{value:alias}})
-            Kit.skip(s.one())
-          }
-        }
-      }
-    },
     function importDetect(s) {
       s = Kit.auto(s)
       const patStr = s.opts.presetsImportPattern
@@ -428,7 +444,7 @@ export const hoist = symbol("hoist")
 
 /** 
  * interpret hoist tokens
- * TODO: move to estransducers
+ * TODO: move to @effectful/transducers
  */
 export function applyHoist(si) {
   const s = Kit.auto(si)
@@ -697,8 +713,8 @@ function emitInitOptions(s) {
 /** combines a few preparation passes */
 export const prepare =
   Kit.pipe(
+    aliases,
     Kit.enableIf(i => i.opts.presetsImportPattern
-                 || i.opts.moduleAliases
                  || i.opts.reuseImports,
                  presets),
     emitInitOptions,

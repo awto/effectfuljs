@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es",
-  "version": "0.0.8",
+  "version": "0.0.11",
   "description": "Standard JavaScript effects using @effectful/js (abstract interface)",
   "main": "preset.js",
   "scripts": {
@@ -41,5 +41,8 @@
   "dependencies": {
     "@effectful/js": "^0.0.6",
     "babel-types": "^6.26.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

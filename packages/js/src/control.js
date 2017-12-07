@@ -1,5 +1,5 @@
 import * as Kit from "./kit"
-import {Tag,produce,consume,symbol,scope as vars} from "estransducers"
+import {Tag,produce,consume,symbol,scope as vars} from "@effectful/transducers"
 import * as assert from "assert"
 import * as Block from "./block"
 import * as Debug from "./debug"

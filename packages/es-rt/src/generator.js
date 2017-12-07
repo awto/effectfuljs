@@ -435,17 +435,35 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
   
   DLGp.cont = DLGp.step = function step(v) {
     this.$step(v)
+    if (!process.env.EJS_TRAMPOLINE_JUMPS) {
+      while(this.$running) {
+        this.$running = false
+        this.$step(this.value)
+      }
+    }
     return this
   }
   DLGp.runHandle = LGp.handle
   DLGp.handle = function handle(v) {
-    this.$.runHandle(v)
+    this.runHandle(v)
+    if (!process.env.EJS_TRAMPOLINE_JUMPS) {
+      while(this.$running) {
+        this.$running = false
+        this.$step(this.value)
+      }
+    }
     return this
   }
   DLGp.exit = function exit(v) {
     var self = this
     this.cont =exit
     this.$exit(v)
+    if (!process.env.EJS_TRAMPOLINE_JUMPS) {
+      while(this.$running) {
+        this.$running = false
+        this.$step(this.value)
+      }
+    }
     return this
   }
 }

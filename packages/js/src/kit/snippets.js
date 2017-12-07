@@ -1,4 +1,4 @@
-import {Tag} from "estransducers"
+import {Tag} from "@effectful/transducers"
 import {tok,Subst} from "./core"
 
 

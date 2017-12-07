@@ -1,16 +1,14 @@
-import * as Kit from "../src/kit"
-import {Tag,produce,consume} from "estransducers"
+import * as Kit from "../kit"
 import generate from "babel-generator"
 import {parse} from "babylon"
 import * as assert from "assert"
 import {equal,print,transformExpr} from "./kit/core"
-import {recalcEff} from "../src/propagate"
-import * as Trace from "../src/kit/trace"
-import * as Block from "../src/block"
-import * as Debug from "../src/debug"
-import * as Scope from "../src/scope"
-import * as Branch from "../src/branch"
-import * as Bind from "../src/bind"
+import {recalcEff} from "../propagate"
+import * as Block from "../block"
+import * as Scope from "../scope"
+import * as Branch from "../branch"
+import * as Bind from "../bind"
+import * as Debug from "../debug"
 
 const runImpl = (pass) =>
       transformExpr(Kit.pipe(
