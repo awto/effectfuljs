@@ -39,7 +39,7 @@ export function inject(si) {
   const s = Kit.auto(si)
   const root = s.first.value
   const mods = root.injectRT
-  if (!mods.size)
+  if (!mods || !mods.size)
     return s
   const rt = root.rt = {importSyms:[],
                         importNs:[],

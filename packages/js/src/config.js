@@ -142,7 +142,7 @@ export default {
   inlineYieldOp: null, // "iterator" | null
   inlineYieldStarOp: null, // "iterator" | null
   inlinePureOp:null,   // "noop" | "iterator" | "promise" | null
-  inlineRaiseOP:null,  // "throw" | "promise" | null
+  inlineRaiseOp:null,  // "throw" | "promise" | null
 
   // creates a copy of context with each variable copied on each suspendable op
   // TODO: not yet implemented
@@ -291,5 +291,12 @@ export default {
   varStorageField: null,
 
   // don't use function name in frame's name (ignored in with topLevel)
-  shortFrameNames: true
+  shortFrameNames: true,
+
+  // dictionary of hooks to apply before named stage in transforms pipline
+  // the hook is a token stream transducer function
+  before: null,
+  
+  // dictionary of hooks to apply after named stage in transforms pipline
+  after: null
 }

@@ -146,10 +146,15 @@ const loose = {
   all: {
     loose:true,
     leanForOf:true,
-    finalizeForOf:false,
+    // finalizeForOf:false,
     removeAsserts:true
   },
   effectful: {
+    inlineYieldOp:false,
+    // invertForOf:true,
+    // markRepeat:false,
+    // contextBy:"reference",
+    // stateStorageField:"$",
     wrapFunction:false,
     wrapAsyncIteratorValue:false,
     inlineReentryCheck:false

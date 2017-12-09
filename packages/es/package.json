@@ -30,6 +30,7 @@
   "homepage": "https://github.com/awto/effectful-es#readme",
   "devDependencies": {
     "@effectful/es-rt": "../es-rt",
+    "benchmark": "^2.1.4",
     "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
     "eslint": "^4.10.0",

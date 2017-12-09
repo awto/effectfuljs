@@ -31,12 +31,12 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   }
 
   if (process.env.EJS_DELEGATE_FOR_OF) {
-    LIp.$delegateFor = function(dest,yld,step) {
+    LIp.$delegateFor = function(dest,yld,done) {
       var self = this
       this.$.step = this.$.$step = function delegate(v) {
         var next = self.iter.next(v)
         if (next.done)
-          step(next.value)
+          done(next.value)
         else
           yld(next.value)
       }

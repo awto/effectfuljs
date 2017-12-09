@@ -58,9 +58,7 @@ const finalize = Kit.pipe(
   Rt.interpretLibSyms,
   Kit.toArray,
   Rt.inject,
-  Closure.depsToTop,
-  varScope.resolve,
-  consume)
+  Closure.depsToTop)
 
 const ifEff = Kit.enableIf(i => i.topEff)
 const ifTrack = (t,e) => function*(s) {
@@ -143,10 +141,7 @@ const stage1 = Kit.pipe(
     Kit.toArray
   )))
 
-/**
- * entry point for the whole translator chain
- */
-export function run(s) {
+export function pass(s) {
   const transformMap = new Map()
   const sa = Kit.toArray(preproc(s))
   const inp = Kit.toArray(Scope.splitScopes(sa))
@@ -157,7 +152,7 @@ export function run(s) {
   const namespaces = root.namespaces
   const opts = root.opts
   if (!opts)
-    return
+    return null
   let any = false
   if (opts.importRT && !root.nsImported)
     inject.set(root.$ns,{module:opts.importRT,
@@ -208,15 +203,24 @@ export function run(s) {
   }
   if (!transform.length) {
     // no transforms, but it may need to erase some directives
-    consume(varScope.resolve(ifLoose(loose)(sa)))
-    return
+    return ifLoose(loose)(sa)
   }
   const s0 = [...stage0(transform)]
   const n0 = [...normalizeOnlyStage0(normalize)]
   const s1 = [...Closure.contextDecls(s0)]
   const n1 = [...Closure.contextDecls(n0)]
   const res = [...others,...stage1(s1),...normalizeOnlyStage1(n1)]
-  finalize([...Scope.restore(root,res)])
+  return finalize([...Scope.restore(root,res)])
+}
+
+/**
+ * entry point for the whole translator chain
+ */
+export function run(s) {
+  const res = pass(s)
+  if (!res)
+    return
+  consume(varScope.resolve(res))
 }
 
 export function main(ast,opts = {}) {

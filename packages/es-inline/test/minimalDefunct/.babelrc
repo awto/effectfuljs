@@ -1,0 +1,20 @@
+{
+  "passPerPreset": true,
+  "sourceType": "script",
+  "presets": [["../../preset",
+               {"topLevel":false,
+                "defunct":true,
+                "loose":true,
+                "importRT":"@effectful/es-rt/opts/defunct-loose",
+                "all":{
+                  "removeAsserts":false,
+                  "jsExceptions":false,
+                  "inlineJsExceptions":false,
+                  "inlineThrow":true
+                }}],
+              {
+                "plugins":[
+                  ["transform-es2015-modules-commonjs",
+                   {strict:false,loose:true}]]
+              }]
+}

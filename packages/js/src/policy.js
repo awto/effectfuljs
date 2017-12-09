@@ -810,12 +810,17 @@ export const injectFuncOpts = (opts, withSelf = false) => {
 }
 
 export const stage = Kit.curry(function(name, si) {
-  const [h,s] = Kit.la(Kit.stage(name,si))
-  const stages = h.value.opts.stages
-  if (stages) {
-    const hook = stages[name]
+  let s = Kit.auto(si)
+  const origStage = s.opts.stageName
+  if (origStage && s.opts.after) {
+    let hook = s.opts.afterStage[origStage]
+    if (hook)
+      s = Kit.auto(hook(s))
+  }
+  if (s.opts.before) {
+    const hook = s.opts.before[name]
     if (hook != null)
-      return hook(s)
+      s = hook(s)
   }
   return s
 })

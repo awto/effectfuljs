@@ -390,19 +390,19 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
     this.$.value = value
   }
   /**
-   * runs iterable calling `yld` for each outpit and `pure` for result,
-   * `raise` on exeption
-   * all the callbacks must be context independent
+   * runs iterable calling `yld` for each outpit and `done` for result
+   * all the callbacks must be not depend on `this`
    */
-  DLGp.delegateFor = function(iterable,yld,raise,pure) {
+  DLGp.delegateFor = function(iterable,yld,done) {
     var iter = iterator(iterable)
-    iter.$delegateFor(this,yld,raise,pure)
+    iter.$delegateFor(this,yld,done)
     return iter
   }
 
-  DLGp.$delegateFor = function $delegateFor(dest,yld,step) {
+  DLGp.$delegateFor = function $delegateFor(dest,yld,done) {
     this.yld = yld
-    this.pure = step
+    this.pure = done
+    // this.stepLoop = this.step
   }
   /** switches context temporarly to `iterable` until it exits */
   DLGp.delegateYld = function delegateYld(iterable) {
@@ -443,6 +443,7 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
     }
     return this
   }
+
   DLGp.runHandle = LGp.handle
   DLGp.handle = function handle(v) {
     this.runHandle(v)

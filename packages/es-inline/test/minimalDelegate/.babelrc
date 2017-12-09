@@ -1,0 +1,26 @@
+{
+  "passPerPreset": true,
+  "sourceType": "script",
+  "presets": [["../../preset",
+               {"topLevel":false,
+                "defunct":false,
+                "loose":true,
+                "importRT":"@effectful/es-rt/opts/loose-delegate",
+                "all":{"removeAsserts":false},
+                "generators":{
+                  "inlineYieldOp":false,
+                  "jsExceptions":false,
+                  "inlineJsExceptions":false,
+                  "inlineThrow":true,
+                  "invertForOf":true,
+                  "jsTailCalls":true,
+                  "markRepeat":false,
+                  "contextBy":"reference",
+                  "stateStorageField":"$"
+                }}],
+              {
+                "plugins":[
+                  ["transform-es2015-modules-commonjs",
+                   {strict:false,loose:true}]]
+              }]
+}

@@ -1181,9 +1181,44 @@ export function Wrapper(cont) {
   this._stack = []
   this._tstack = []
   this.level = 0
+  this.$ = this
 }
 
 const AFp = Wrapper.prototype
+
+AFp.$delegateFor = function(dest, loopYld, loopDone) {
+  const self = this
+  const stack = []
+  let yld = loopYld
+  let done = loopDone
+  let next = yld
+  let value = this._inner.value
+  this.exit =  function() {
+    if (stack.length) {
+      let f = stack.pop()
+      yld = f.yld
+      done = f.done
+    } else {
+      self.step = AFp.step
+      self.$delegateFor = AFp.$delegateFor
+    }
+  }
+  this.$delegateFor = function(dest, loopYld, loopDone) {
+    stack.push({yld,done})
+    yld = loopYld
+    done = loopDone
+    // push into stack
+  }
+  function doneImpl() {
+    next = done
+  }
+  function yldImpl(v) {
+    yld(value)
+    value = v
+  }
+  this.$.$step = this.$.step = this.inner.step
+  this._inner.$delegateFor(dest, yldImpl, doneImpl)
+}
 
 if (Symbol.effectfulIterator)
   AFp[Symbol.effectfulIterator] = function() { return this }
