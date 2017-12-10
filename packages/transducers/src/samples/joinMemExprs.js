@@ -3,7 +3,6 @@ import * as Kit from "../kit"
 import * as T from "babel-types"
 import * as assert from "assert"
 
-//TODO:
 function collectFuncDecls(s) {
   const sa = Kit.toArray(s)
   const sl = Kit.auto(sa)

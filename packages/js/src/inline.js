@@ -645,7 +645,7 @@ export function coerce(si) {
   }
 }
 
-export const delegateForId = Kit.sysId("delegateFor")
+export const delegateForId = Kit.sysId("forOf")
 
 /**
  * injects interpretation `for-of` with `invertForOf:true` (CPS style)
@@ -710,7 +710,7 @@ export function invertForOf(si) {
     const ctxField = s.opts.stateStorageField
     const {storeResultCont} = s.opts
     return walk(s)
-    function* walk(sw) {
+    function* walk(sw,par) {
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
@@ -737,7 +737,7 @@ export function invertForOf(si) {
             if (!i.value.forOfInfo)
               break
             Kit.skip(s.one())
-            yield* Kit.reposOne(walk(s.one()),i.pos)
+            yield* Kit.reposOne(walk(s.one(),i.value.forOfInfo),i.pos)
             Kit.skip(s.one())
             s.close(i)
             continue
@@ -758,8 +758,15 @@ export function invertForOf(si) {
                   yield* s.one()
                 yield s.tok(Tag.push,Tag.Identifier,
                             {sym:forOfInfo.exit.ref.declSym})
-                yield s.tok(Tag.push,Tag.Identifier,
-                            {sym:forOfInfo.exit.goto.declSym})
+                const exit = forOfInfo.exit.goto
+                if (exit.forOfInfo && exit.forOfInfo !== forOfInfo) {
+                  yield s.enter(Tag.push,Tag.MemberExpression)
+                  yield s.tok(Tag.object,Tag.Identifier,{sym:exit.forOfInfo.sym})
+                  yield s.tok(Tag.property,Tag.Identifier,{node:{name:cont}})
+                  yield* s.leave()
+                } else
+                  yield s.tok(Tag.push,Tag.Identifier,
+                              {sym:forOfInfo.exit.goto.declSym})
                 continue
               }
               yield k

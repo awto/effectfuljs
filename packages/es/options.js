@@ -150,11 +150,12 @@ const loose = {
     removeAsserts:true
   },
   effectful: {
-    inlineYieldOp:false,
+    // inlineYieldOp:false,
     // invertForOf:true,
     // markRepeat:false,
     // contextBy:"reference",
     // stateStorageField:"$",
+    
     wrapFunction:false,
     wrapAsyncIteratorValue:false,
     inlineReentryCheck:false

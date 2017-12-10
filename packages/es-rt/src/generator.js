@@ -369,6 +369,8 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
   GeneratorConstructor = DelegatingLeanGenerator
   var DLGp = DelegatingLeanGenerator.prototype
 
+  DLGp[iterSym] = function() { return this }
+  
   DLGp.pure = function pure(value) {
     this.$.done = true
     this.$.value = value
@@ -389,28 +391,54 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
   DLGp.yld = function yld(value) {
     this.$.value = value
   }
+  
   /**
    * runs iterable calling `yld` for each outpit and `done` for result
    * all the callbacks must be not depend on `this`
    */
-  DLGp.delegateFor = function(iterable,yld,done) {
+  DLGp.forOf = function(iterable,yld,done) {
     var iter = iterator(iterable)
-    iter.$delegateFor(this,yld,done)
-    return iter
+    if (iter.regForOf)
+      return iter.regForOf(this,yld,done)
+    // not efficient but working fall-back
+    return {
+      $step: function(v) {
+        iter = iter.step(v)
+        if (iter.done)
+          done(iter.value)
+        else
+          yld(iter.value)
+      }
+    }
   }
 
-  DLGp.$delegateFor = function $delegateFor(dest,yld,done) {
+  DLGp.regForOf = function regForOf(dest,yld,done) {
     this.yld = yld
     this.pure = done
+    return this
   }
+
   /** switches context temporarly to `iterable` until it exits */
   DLGp.delegateYld = function delegateYld(iterable) {
     var iter = iterator(iterable)
-    iter.$delegateYld(this)
-    this.$.$step()
+    if (iter.regYldStar) {
+      iter.regYldStar(this)
+      return
+    }
+    var dest = this
+    var step = this.$.$step
+    this.$.$step = delegateStep
+    delegateStep()
+    function delegateStep(v) {
+      iter = iter.step(v)
+      if (iter.done)
+        step(iter.value)
+      else
+        dest.yld(iter.value)
+    }
   }
 
-  DLGp.$delegateYld = function $delegateYld(dest) {
+  DLGp.regYldStar = function regYldStar(dest) {
     var delegate = this
     var self = this.$ = dest.$
     var step = self.$step, handle = self.$handle, exit = self.$exit
@@ -430,6 +458,7 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
     self.$step = this.$step
     self.$handle = this.$handle
     self.$exit = this.$exit
+    self.$step()
   }
   
   DLGp.cont = DLGp.step = function step(v) {

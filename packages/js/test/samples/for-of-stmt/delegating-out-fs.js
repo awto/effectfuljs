@@ -4,7 +4,7 @@ function a1() {
   return M.scopeH(_4);
 
   function _1(a1) {
-    a1._loop = M.delegateFor(b(), _2, _3);
+    a1._loop = M.forOf(b(), _2, _3);
     a1.$.true = a1._loop.true;
     return M.jumpH(_4);
   }
@@ -32,7 +32,7 @@ function a2() {
   return M.scopeH(_5);
 
   function _1(a2) {
-    a2._loop = M.delegateFor(b(), _2, _3);
+    a2._loop = M.forOf(b(), _2, _3);
     a2.$.true = a2._loop.true;
     return M.jumpH(_5);
   }
@@ -65,7 +65,7 @@ function a3() {
   return M.scopeH(_8);
 
   function _1(a3) {
-    a3._loop = M.delegateFor(b(), _2, _6);
+    a3._loop = M.forOf(b(), _2, _6);
     a3.$.true = a3._loop.true;
     return M.jumpH(_8);
   }
@@ -128,7 +128,7 @@ function a4() {
   return M.scopeH(_10);
 
   function _1(a4) {
-    a4._loop = M.delegateFor(b(), _2, _6);
+    a4._loop = M.forOf(b(), _2, _6);
     a4.$.true = a4._loop.true;
     return M.jumpH(_10);
   }

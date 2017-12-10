@@ -1,4 +1,5 @@
-import {iterator as iterSym} from "./symbol"
+import {iterator as iterSym,
+        invertedIterator as invertedIterSym} from "./symbol"
 
 export var LeanIteratorPrototype = {}
 
@@ -28,73 +29,6 @@ if (process.env.EJS_NO_ES_ITERATORS) {
       return this.pure(next.value)
     this.value = next.value
     return this
-  }
-
-  if (process.env.EJS_DELEGATE_FOR_OF) {
-    LIp.$delegateFor = function(dest,yld,done) {
-      var self = this
-      this.$.step = this.$.$step = function delegate(v) {
-        var next = self.iter.next(v)
-        if (next.done)
-          done(next.value)
-        else
-          yld(next.value)
-      }
-    }
-
-    LIp.$delegateYld = function(dest) {
-      var step = dest.$.$step, handle = dest.$.$handle, iter = this.iter
-      dest.$.$step = function delegateStep(v) {
-        var next = iter.next(v)
-        if (next.done)
-          step(next.value)
-        else
-          dest.yld(next.value)
-      }
-      dest.$.$handle = function delegateHandle(e) {
-        var next
-        if (!iter.throw) {
-          if (iter.return) {
-            try {
-              iter.return()
-              } catch(e) {
-                handle(e)
-                return
-              }
-          }
-          handle(new TypeError("iterator does not have a throw method"))
-          return
-        }
-        try {
-          next = iter.throw(e)
-        } catch(e) {
-          handle(e)
-          return 
-        }
-        if (next.done)
-          step(next.value)
-        else
-          dest.yld(next.value)
-      }
-      dest.$.$exit = function delegateExit(value) {
-        if (!iter.return) {
-          step(value)
-          return 
-        }
-        try {
-          next = iter.return(value)
-        } catch (e) {
-          handle(e)
-          return
-        }
-        var next = iter.return(value)
-        if (next.done)
-          step(next.value)
-        else
-          dest.yld(next.value)
-      }
-    }
-    LIp.$step = LIp.step 
   }
 
   LIp.yld = function(v) {
@@ -144,6 +78,75 @@ if (process.env.EJS_NO_ES_ITERATORS) {
       return this.raise(e)
     }
     return next.done ? this.pure(next.value) : this.yld(next.value) 
+  }
+
+  if (process.env.EJS_DELEGATE_FOR_OF) {
+    LIp.regForOf = function(dest,yld,done) {
+      var self = this
+      this.$.step = this.$.$step = function delegate(v) {
+        var next = self.iter.next(v)
+        if (next.done)
+          done(next.value)
+        else
+          yld(next.value)
+      }
+      return this
+    }
+    LIp.regYldStar = function(dest) {
+      var step = dest.$.$step, handle = dest.$.$handle, iter = this.iter
+      dest.$.$step = delegateStep
+      dest.$.$handle = function delegateHandle(e) {
+        var next
+        if (!iter.throw) {
+          if (iter.return) {
+            try {
+              iter.return()
+              } catch(e) {
+                handle(e)
+                return
+              }
+          }
+          handle(new TypeError("iterator does not have a throw method"))
+          return
+        }
+        try {
+          next = iter.throw(e)
+        } catch(e) {
+          handle(e)
+          return 
+        }
+        if (next.done)
+          step(next.value)
+        else
+          dest.yld(next.value)
+      }
+      dest.$.$exit = function delegateExit(value) {
+        if (!iter.return) {
+          step(value)
+          return 
+        }
+        try {
+          next = iter.return(value)
+        } catch (e) {
+          handle(e)
+          return
+        }
+        var next = iter.return(value)
+        if (next.done)
+          step(next.value)
+        else
+          dest.yld(next.value)
+      }
+      delegateStep()
+      function delegateStep(v) {
+        var next = iter.next(v)
+        if (next.done)
+          step(next.value)
+        else
+          dest.yld(next.value)
+      }      
+    }
+    LIp.$step = LIp.step 
   }
 
   iterator = function iterator(cont) {

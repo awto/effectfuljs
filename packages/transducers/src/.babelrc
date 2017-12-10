@@ -9,14 +9,9 @@
       "presets": [
         ["es-dev",{"loose":true,
                    "all": {
-                     "inlineYieldOp":false,
-                     "invertForOf":true,
                      "jsExceptions":false,
                      "inlineJsExceptions":false,
-                     "jsTailCalls":true,
-                     "markRepeat":false,
-                     "contextBy":"reference",
-                     "stateStorageField":"$"
+                     "inlineThrow":true
                    },
                   }],
         {
