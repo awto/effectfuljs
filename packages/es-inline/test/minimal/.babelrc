@@ -4,6 +4,7 @@
   "presets": [["../../preset",
                {"loose":true,"defunct":false,
                 "all":{
+                  "modules": "commonjs",
                   "removeAsserts":false,
                   "jsExceptions":false,
                   "inlineJsExceptions":false,

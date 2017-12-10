@@ -8,6 +8,7 @@
                 "importRT":"@effectful/es-rt/opts/loose-delegate",
                 "all":{"removeAsserts":false},
                 "generators":{
+                  "modules": "commonjs",
                   "inlineYieldOp":false,
                   "jsExceptions":false,
                   "inlineJsExceptions":false,

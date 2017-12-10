@@ -52,7 +52,7 @@ exports.simple8 = function*() {
     yield i
 }
 
-exports.delegate = function* delegate() {
+exports.delegateSimple = function* delegate() {
   yield* "abc"
   yield* [1,2,3,4]
 }

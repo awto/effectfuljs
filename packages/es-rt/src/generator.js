@@ -402,7 +402,6 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
   DLGp.$delegateFor = function $delegateFor(dest,yld,done) {
     this.yld = yld
     this.pure = done
-    // this.stepLoop = this.step
   }
   /** switches context temporarly to `iterable` until it exits */
   DLGp.delegateYld = function delegateYld(iterable) {
