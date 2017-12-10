@@ -150,15 +150,20 @@ const loose = {
     removeAsserts:true
   },
   effectful: {
-    // inlineYieldOp:false,
-    // invertForOf:true,
-    // markRepeat:false,
-    // contextBy:"reference",
-    // stateStorageField:"$",
-    
     wrapFunction:false,
     wrapAsyncIteratorValue:false,
     inlineReentryCheck:false
+  }
+}
+
+const invertForOf = {
+  generators: {
+    inlineYieldOp:false,
+    finalizeForOf:true,
+    invertForOf:true,
+    markRepeat:false,
+    contextBy:"reference",
+    stateStorageField:"$"
   }
 }
 
@@ -232,6 +237,8 @@ module.exports = function esProfile(opts={}) {
     Object.assign(async,topLevel.all,topLevel.effectful)
     Object.assign(asyncGenerators,topLevel.all,topLevel.effectful)
   }
+  if (opts.invertForOf)
+    Object.assign(generators,invertForOf.generators)
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})
   Object.assign(file,opts.all,opts.file,

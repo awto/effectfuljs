@@ -81,9 +81,9 @@ if (process.env.EJS_NO_ES_ITERATORS) {
   }
 
   if (process.env.EJS_DELEGATE_FOR_OF) {
-    LIp.regForOf = function(dest,yld,done) {
+    LIp.regForOf = function(yld,done) {
       var self = this
-      this.$.step = this.$.$step = function delegate(v) {
+      this.step = this.$step = function delegate(v) {
         var next = self.iter.next(v)
         if (next.done)
           done(next.value)

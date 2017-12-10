@@ -285,6 +285,8 @@ export function* completeSubst(s) {
 export function toArray(s) {
   if (Array.isArray(s))
     return s
+  if (s.toArray)
+    return s.toArray()
   const res = []
   result(s, res)
   return res
@@ -1186,12 +1188,23 @@ export function Wrapper(cont) {
 
 const AFp = Wrapper.prototype
 
-AFp.$delegateFor = function(dest, loopYld, loopDone) {
+AFp.toArray = function toArray() {
+  if (Array.isArray(this._inner))
+    return this._inner
+  const res = [this._inner.value]
+  result(this._inner, res)
+  return res  
+}
+
+// overriding default for optimization
+// sharing is handled by means of explicit stack
+AFp.regForOf = function(loopYld, loopDone) {
   const self = this
   const stack = []
   let yld = loopYld
   let done = loopDone
   let next = yld
+  let inner = this._inner
   let value = this._inner.value
   this.exit =  function() {
     if (stack.length) {
@@ -1199,25 +1212,63 @@ AFp.$delegateFor = function(dest, loopYld, loopDone) {
       yld = f.yld
       done = f.done
     } else {
-      self.step = AFp.step
-      self.$delegateFor = AFp.$delegateFor
+      yld = function(v) {
+        self.value = v
+      }
+      done = function(v) {
+        self.value = v
+        self.done = true
+      }
     }
   }
-  this.$delegateFor = function(dest, loopYld, loopDone) {
+  // inner loop with the same iterator
+  // e.g. one, sub
+  this.regForOf = function(loopYld, loopDone) {
     stack.push({yld,done})
     yld = loopYld
     done = loopDone
-    // push into stack
   }
-  function doneImpl() {
-    next = done
+  // called from forOf to jump to next iteration
+  this.$step = inner.$step
+  // may be called from somewhere else (maybe ::take)
+  this.step = function step() {
+    const oldYld = yld, oldDone = done
+    yld = function(v) {
+      self.value = v
+      yld = oldYld
+      done = oldDone
+    }
+    done = function(v) {
+      self.value = v
+      self.done = true
+    }
+  }
+  function doneImpl(v) {
+    yld(value)
+    this.$step = function() {
+      done(v)
+    }
+    this.step = function() {
+      this.done = true
+      this.value = v
+    }
   }
   function yldImpl(v) {
-    yld(value)
+    const t = value
     value = v
+    if (t.enter)
+      self.level++
+    if (t.leave)
+      self.level--
+    yld(t)
   }
-  this.$.$step = this.$.step = this.inner.step
-  this._inner.$delegateFor(dest, yldImpl, doneImpl)
+  this._inner.regForOf(yldImpl, doneImpl)
+  return this
+}
+
+// no more needs for levels etc, the rest is passed further as is
+AFp.regYldStar = function(dest) {
+  dest.delegateYld(this._inner)
 }
 
 if (Symbol.effectfulIterator)

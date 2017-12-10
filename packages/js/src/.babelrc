@@ -27,6 +27,39 @@
                        {"loose":true,"noInterop":true}]]
         }
       ]
+    },
+    "loose-for-ofs": {
+      "passPerPreset": true,
+      "presets": [
+        ["es-dev",
+         {"loose":true,
+          "invertForOf":true,
+          "all": {
+            "jsExceptions":false,
+            "inlineJsExceptions":false,
+            "inlineThrow":true,
+            "moduleAliases":{
+              "@effectful/transducers":"@effectful/transducers-loose",
+              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
+              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
+              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
+              "@effectful/transducers/match":"@effectful/transducers-loose/match"
+            }
+          },
+          "effectful": {
+            "inlineYieldOp":false,
+            "invertForOf":true,
+            "markRepeat":false,
+            "contextBy":"reference",
+            "stateStorageField":"$",
+            "finalizeForOf":true
+          }
+         }],
+        {
+          "plugins": [["transform-es2015-modules-commonjs",
+                       {"loose":true,"noInterop":true}]]
+        }
+      ]
     }
   }
 }

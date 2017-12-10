@@ -62,9 +62,9 @@ ALIp.next = function next() {
 }
 
 if (process.env.EJS_DELEGATE_FOR_OF) {
-  ALIp.regForOf = function(dest,yld,step) {
+  ALIp.regForOf = function(yld,step) {
     var self = this
-    this.$.step = this.$.$step = function delegateStep() {
+    this.step = this.$step = function delegateStep() {
       if (self.x >= self.arr.length)
         return step()
       return yld(self.arr[self.x++])

@@ -611,6 +611,9 @@ function CtorWrap(i) {
 
 CtorWrap.prototype = new Wrapper()
 CtorWrap.prototype.valCtor = ctor
-export function auto(i) { 
+
+export function auto(i) {
+  if (i.valCtor)
+    return i
   return new CtorWrap(i)
 }

@@ -399,7 +399,7 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
   DLGp.forOf = function(iterable,yld,done) {
     var iter = iterator(iterable)
     if (iter.regForOf)
-      return iter.regForOf(this,yld,done)
+      return iter.regForOf(yld,done)
     // not efficient but working fall-back
     return {
       $step: function(v) {
@@ -412,7 +412,7 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
     }
   }
 
-  DLGp.regForOf = function regForOf(dest,yld,done) {
+  DLGp.regForOf = function regForOf(yld,done) {
     this.yld = yld
     this.pure = done
     return this
