@@ -669,6 +669,8 @@ exports.forOfBlockScope = function* forOfBlockScope() {
       }
     }
   }
+  for(const i of funs)
+    yield* i()
 }
 
 exports.whileBlockScope = function* whileBlockScope() {

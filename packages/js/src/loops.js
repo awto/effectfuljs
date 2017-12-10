@@ -233,6 +233,18 @@ function forOfStmtImpl(loose, s) {
       if (i.enter && (all || i.value.eff)) {
         const nblocks = finalize && i.value.ctrl ? [i.value,...blocks] : blocks
         switch(i.type) {
+        case Tag.FunctionExpression:
+        case Tag.ArrowFunctionExpression:
+        case Tag.ClassExpression:
+        case Tag.ObjectExpression:
+        case Tag.ClassDeclaration:
+        case Tag.FunctionDeclaration:
+          yield i
+          if (!i.leave) {
+            yield* walk(s.sub(),[])
+            yield s.close(i)
+          }
+          continue
         case Tag.ReturnStatement:
           if (!blocks.length)
             break
