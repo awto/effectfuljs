@@ -1,0 +1,141 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.draggable {
+  position: absolute;
+  cursor: pointer;
+  box-shadow: 0px 1px 3px 0;
+  width: 150px;
+  height: 150px;
+  background: white;
+  color: #5af;
+  font-size: 28px;
+  text-align: center;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.palette > .draggable,
+.list > .draggable {
+  margin: 5px;
+}
+
+.list > .draggable {
+  top: auto !important;
+  left: auto !important;
+  position: relative;
+}
+
+.draggable,
+.draggable *,
+.target,
+.target * {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.draggable .id {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.target {
+  display: flex;
+  font-size: 28px;
+ justify-content: center;
+  align-items: center;
+}
+
+.target > i {
+  position: absolute;
+  z-index: -1;
+  align-self: center;
+}
+
+.draggable.inert {
+  background: gold;
+}
+
+#workbench {
+  display: grid;
+  position:fixed;
+  top:0px;
+  bottom:0px;
+  left:0px;
+  right:0px;
+  width: 100%;
+  height: 100%;
+  grid-template-areas: "palette palette" 
+                       "cart lists" 
+                       "trash lists";
+  grid-template-rows: auto 1fr 300px;
+  grid-template-columns: 2fr 1fr;
+}
+
+.lists > *,
+#workbench > * {
+  margin: 10px;
+}
+
+.target {
+  border-radius: 10px;
+  background-color: #f0f0f0a0;
+}
+
+.palette {
+  padding: 5px 0;
+  grid-area: palette;
+  display: flex;
+  align-items: center;
+}
+
+.cart {
+  grid-area: cart;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+  justify-content: center;
+  align-items: center;
+}
+
+.list1 {
+  grid-area: list1;
+}
+
+.list2 {
+  grid-area: list2;
+}
+
+.trash {
+  grid-area: trash;
+}
+
+.palette > .draggable {
+  position: relative;
+}
+
+.selection {
+  border: 2px solid darkblue;
+  background-color: #00f1;
+  position: absolute;
+}
+
+.selected {
+  outline: 4px dashed darkblue;
+}
+
+.lists {
+  grid-area: lists;
+  display: grid;
+  grid-template-areas: "list1" "list2";
+  grid-template-rows: 1fr 1fr;
+}
