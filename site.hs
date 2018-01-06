@@ -6,14 +6,15 @@ import           Hakyll
 
 --------------------------------------------------------------------------------
 main :: IO ()
-main = hakyll $ do
-    match "images/*" $ do
-        route   idRoute
-        compile copyFileCompiler
-
+main = do
+  hakyll $ do
     match "css/*" $ do
         route   idRoute
         compile compressCssCompiler
+
+    match "demo/decoupling/*" $ do
+        route   idRoute
+        compile copyFileCompiler
 
     match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
@@ -51,7 +52,6 @@ main = hakyll $ do
             >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
-
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
