@@ -1,7 +1,11 @@
 <ul>
-    $for(posts)$
-        <li>
-            <a href="$url$">$title$</a> - $date$
-        </li>
-    $endfor$
+  $for(posts)$
+  <li>
+    $if(exturl)$
+    <a href="$exturl$">$title$</a> - $date$
+    $else$
+    <a href="$url$">$title$</a> - $date$
+    $endif$
+  </li>
+  $endfor$
 </ul>

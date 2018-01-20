@@ -1,5 +1,5 @@
 ---
-title: Why effects abstract interface matters
+title: Why abstract effects interface matters
 date: 2017-05-05
 ---
 
