@@ -138,7 +138,7 @@ export default {
 
   // some named templates for some operations (mostly for ES compatibility):
   inlineChainOp: null, // "promise" | null
-  inlineScopeOp: null, // "unwrap" | "call" | null
+  inlineScopeOp: null, // "unwrap" | "call" | "context" | null
   inlineYieldOp: null, // "iterator" | null
   inlineYieldStarOp: null, // "iterator" | null
   inlinePureOp:null,   // "noop" | "iterator" | "promise" | null
@@ -298,5 +298,13 @@ export default {
   before: null,
   
   // dictionary of hooks to apply after named stage in transforms pipline
-  after: null
+  after: null,
+
+  // applies normalization steps even for pure code
+  // this may be needed for some extension
+  normPureDoWhile: false,
+  normPureWhile: false,
+  normPureForIn: false,
+  normPureBlocks: false
+
 }

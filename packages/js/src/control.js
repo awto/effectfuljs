@@ -89,19 +89,52 @@ export function assignLabels(s) {
 export const jump = symbol("jump","ctrl")
 
 /** removes AST JS LabeledStatement nodes */
-export function removeLabeldStatement(s) {
+export function removeLabeledStatement(s) {
   const sl = Kit.auto(s)
-  function* walk() {
+  function* walk(cur) {
     for(const i of sl.sub()) {
-      if (i.type === Tag.LabeledStatement && i.value.eff) {
-        if (i.enter)
-          yield* Kit.reposOne(walk(),i.pos)
-        continue
+      if (i.enter) {
+	if (i.type === Tag.LabeledStatement) {
+	  const c = sl.cur()
+	  if (c.pos === Tag.label)
+	    Kit.skip(sl.one())
+	  const labs = cur || []
+	  labs.push(i.value.node.label.name)
+          yield* Kit.reposOne(walk(labs), i.pos)
+	  sl.close(i)
+          continue
+	}
+	i.value.savedLabs = cur
+	cur = null
       }
       yield i
     }
   }
   return walk()
+}
+
+export function restoreLabeledStatements(s) {
+  s = Kit.auto(s)
+  return _restoreLabeledStatements()
+  function* _restoreLabeledStatements() {
+    for(const i of s.sub()) {
+      if (i.enter && i.value.stmt && !i.value.eff
+	  && i.value.savedLabs && i.value.savedLabs.length) {
+	const lab = s.label()
+	let pos = i.pos
+	for(const j of i.value.savedLabs) {
+	  yield s.enter(pos,Tag.LabeledStatement)
+	  yield s.tok(Tag.label,Tag.Identifier,{node:{name:j}})
+	  pos = Tag.body
+	}
+	yield s.peel(Kit.setPos(i,Tag.body))
+	yield* _restoreLabeledStatements()
+	yield* lab()
+	continue
+      }
+      yield i
+    }
+  }
 }
 
 /** 

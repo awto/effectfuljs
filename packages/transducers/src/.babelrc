@@ -25,10 +25,13 @@
       "presets": [
         ["es-dev",{"loose":true,
                    "invertForOf":true,
+		   "importRT":"@effectful/es-rt/opts/loose-delegate",
                    "all": {
                      "jsExceptions":false,
                      "inlineJsExceptions":false,
-                     "inlineThrow":true
+                     "jsTailCalls":true,
+                     "inlineThrow":true,
+                     "inlineScopeOp":"context"
                    }
                   }],
         {

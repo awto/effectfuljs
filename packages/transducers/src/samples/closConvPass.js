@@ -65,7 +65,6 @@ function calcClosCapt(si) {
   return sa;
 }
 
-const selfSym = Scope.newSym("self")
 const thisSym = Scope.newSym("this", true)
 const globals = Scope.newSym("g")
 
@@ -134,18 +133,23 @@ function* functToObj(si) {
   const hoisted = []
   const rtSym = new Scope.newSym("RT")
   const closureSym = s.first.value.closureSym
+  const dpref = s.opts.closDepPrefix || ""
+  const dpost = s.opts.closDepPostfix || ""
   function* walk(sw,root,blockHoisted) {
+    const selfSym = root.selfSym = Scope.newSym("self")
     function* func(i,pos) {
       const sym = i.value.closSym
-      yield* s.template(pos, "=new $I($_)", sym)
+      yield* s.template(pos, "=new $I($_)", {funcVal:i.value}, sym)
       for(const j of i.value.closDeps) {
         if (j === root)
           yield s.tok(Tag.push,Tag.Identifier,{sym:root.ctxSym})
         else
-          yield* s.toks(Tag.push,"=this.$I",j.closSym)
+          yield* s.toks(Tag.push,`=this.${dpref}$I${dpost}`,j.closSym)
       }
       yield* s.leave()
-      hoisted.push(Kit.toArray(obj(i.value,sym)))
+      const objArr = Kit.toArray(obj(i.value,sym))
+      objArr[0].value.closConstr = i.value
+      hoisted.push(objArr)
       s.close(i)
     }
     for(const i of sw) {
@@ -219,12 +223,14 @@ function* functToObj(si) {
   }
   function* obj(fun,sym) {
     const lab = s.label()
-    yield* s.template(Tag.push,"*function $1($_){$_} $2($1, $_)",sym,closureSym)
+    yield* s.template(Tag.push,"*function $1($_){$_} $2($1, $_)",
+                      sym,closureSym)
     for(const j of fun.closDeps)
       yield s.tok(Tag.push,Tag.Identifier,{sym:j.closSym})
     yield* s.refocus()
     for(const j of fun.closDeps)
-      yield* s.toks(Tag.push,"$1.$2 = $2",fun.ctxSym,j.closSym)
+      yield* s.toks(Tag.push,`$1.${dpref}${j.closSym.name}${dpost} = $2`,
+                    fun.ctxSym,j.closSym)
     yield* s.refocus()
     yield s.enter(Tag.push,Tag.FunctionExpression,fun)
     yield* walk(s.sub(),fun)
@@ -241,6 +247,10 @@ function* functToObj(si) {
 
 function substIds(si) {
   const s = Kit.auto(si)
+  const vpref = s.opts.closVarPrefix || ""
+  const vpost = s.opts.closVarPostfix || ""
+  const dpref = s.opts.closDepPrefix || ""
+  const dpost = s.opts.closDepPostfix || ""
   function* emitDecls({clDecls:decls,argumentsSym,ctxSym}) {
     const locs = []
     const params = []
@@ -274,7 +284,7 @@ function substIds(si) {
       yield s.enter(Tag.expression,Tag.SequenceExpression)
       yield s.enter(Tag.expressions, Tag.Array)
       for(const i of params)
-        yield* s.toks(Tag.push, "=$1.$2 = $2", ctxSym, i)
+        yield* s.toks(Tag.push, `=$1.${vpref}${i.name}${vpost} = $2`, ctxSym, i)
       yield* lab()
     }
   }
@@ -285,7 +295,7 @@ function substIds(si) {
         case Tag.FunctionExpression:
           yield i
           yield* s.till(i => i.pos === Tag.params)
-          yield s.tok(Tag.push,Tag.Identifier,{sym:selfSym})
+          yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.selfSym})
           yield* emitDecls(i.value)
           yield* walk(i.value)
           continue
@@ -300,10 +310,11 @@ function substIds(si) {
               i.value.sym = root.argumentsSym
             } else if (sym.refScopes) {
               if (root === sym.declScope)
-                yield* s.toks(i.pos,"=$I.$I",root.ctxSym,sym)
+                yield* s.toks(i.pos,`=$I.${vpref}${sym.name}${vpost}`,root.ctxSym)
               else
-                yield* s.toks(i.pos,"=$I.$I.$I",
-                              root.ctxSym,sym.declScope.closSym,sym)
+                yield* s.toks(i.pos,
+                              `=$I.${dpref}${sym.declScope.closSym.name}${dpost}.${vpref}${sym.name}${vpost}`,
+                              root.ctxSym)
               s.close(i)
               continue
             }

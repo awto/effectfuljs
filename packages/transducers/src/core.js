@@ -12,10 +12,12 @@ const symbols = NUM_SYMBOLS ? [] : new Map()
 //TODO: fields used only with a single type
 // const fieldTypes = new Map()
 
+let defaultSymbol
+
 export const symInfo = OBJ_SYMBOLS
   ? function symInfo(sym) { return sym }
-  : NUM_SYMBOLS ? function symInfo(sym) { return symbols[sym] }
-  : function symInfo(sym) { return symbols.get(sym) }
+  : NUM_SYMBOLS ? function symInfo(sym) { return symbols[sym] || defaultSymbol }
+  : function symInfo(sym) { return symbols.get(sym) || defaultSymbol }
 
 export const isSymbol
   = OBJ_SYMBOLS ? function(sym) { return sym && sym.kind != null }
@@ -431,33 +433,33 @@ export function tok(pos,type,value) {
   return {enter:true,leave:true,pos,type,value}
 }
 
-export function* produce(node,pos) {
-  function* walk(node,pos) {
+export function* produce(node,pos,value) {
+  function* _produce(node,pos,value) {
+    value.node = node
     if (Array.isArray(node)) {
-      const value = {node}
       yield enter(pos,Tag.Array,value)
       for(const i of node)
-        yield* walk(i,Tag.push)
+        yield* _produce(i,Tag.push,{})
       yield leave(pos,Tag.Array,value)
     } else if (isNode(node)) {
       const keys = VISITOR_KEYS[node.type]
       const ti = nodeInfo(node)
       const type = ti.sym
       if (keys.length) {
-        const value = {node}
         yield enter(pos,type,value)
         for(const i of keys) {
           const v = node[i]
-          if (v != null)
-            yield* walk(node[i],Tag[i] || i)
+          if (v != null) {
+            yield* _produce(node[i], Tag[i] || i, {})
+          }
         }
         yield leave(pos,type,value)
       } else {
-        yield tok(pos,type,{node})
+        yield tok(pos,type,value)
       }
     }
   }
-  yield* walk(node,pos || Tag.top)
+  yield* _produce(node, pos || Tag.top, value || {})
 }
 
 export function toArray(s) {
@@ -626,4 +628,5 @@ export function isSynthetic(node) {
   return !node || node.loc == null;
 }
 
+defaultSymbol = symbolDefFor("unkn","ctrl")
 

@@ -1,1 +1,2 @@
 /*.js
+!rollup.config.js

@@ -898,7 +898,8 @@ function a14() {
 }
 
 function a15() {
-  var a;
+  var _a;
+
   return M.jumpH(_1, _5);
 
   function _1() {
@@ -910,10 +911,10 @@ function a15() {
     return M.chainBH(eff(1), _3, _5);
   }
 
-  function _3(b) {
-    a = b;
+  function _3(a) {
+    _a = a;
 
-    if (a === 1) {
+    if (_a === 1) {
       if (a) {
         return M.chainBH(eff(8), _4, _5);
       } else {
@@ -950,7 +951,8 @@ function a15a() {
 }
 
 function a16() {
-  var a;
+  var _a;
+
   return M.chainBH(eff(0), _1, _5);
 
   function _1() {
@@ -962,10 +964,10 @@ function a16() {
     return M.chainBH(eff(1), _3, _5);
   }
 
-  function _3(b) {
-    a = b;
+  function _3(a) {
+    _a = a;
 
-    if (a === 1) {
+    if (_a === 1) {
       if (a) {
         return M.chainBH(eff(8), _4, _5);
       } else {

@@ -20,3 +20,11 @@ if (!process.env.EJS_LOCAL_SYMBOLS) {
   Symbol.effectfulIterator = iterator
   Symbol.effectfulAsyncIterator = asyncIterator
 }
+
+export var delegateIterator =
+  process.env.EJS_DELEGATE_FOR_OF ?
+  (process.env.EJS_LOCAL_SYMBOLS
+   ? Symbol("Effectful.delegateIterator")
+   :  Symbol.for("Effectful.delegateIterator"))
+  : iterator
+  

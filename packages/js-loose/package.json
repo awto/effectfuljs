@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "prepare-test": "babel ../js/test --out-dir=test",
-    "build": "cross-env BABEL_ENV=loose babel ../js/src --out-dir=."
+    "build-loose": "cross-env BABEL_ENV=loose babel ../js/src --out-dir=."
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,9 @@
     "url": "https://github.com/awto/effectfuljs/issues"
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
+  "browser": {
+    "resolve": false
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "cross-env": "^5.1.1"

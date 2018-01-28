@@ -118,40 +118,43 @@ function d() {
       case 0:
         d._loop = M.iterator(s);
         d.$sc = 1;
-        return M.jumpH(5);
+        return M.jumpH(7);
 
       case 1:
         if (!(d._loop = d._loop.step()).done) {
           d._i = d._loop.value;
           d.$sc = 2;
-          return M.jumpH(6);
+          return M.yldStarBH(M.yldStar([d._i]), 7);
         } else {
-          return M.pure();
+          d.$sc = 3;
+          d._fc = 4, d._fe = 5;
+          return M.jumpH(5);
         }
 
       case 2:
-        d.$sc = 3;
-        return M.yldStarBH(M.yldStar([d._i]), 6);
+        d.$sc = 1;
+        return M.yldStarBH(M.yld(d._i), 7);
 
       case 3:
-        d.$sc = 1;
-        return M.yldStarBH(M.yld(d._i), 5);
-
-      case 4:
-        d._e = d._ex;
-
         if (d._loop.exit) {
           d._loop.exit();
         }
 
-        throw d._e;
+        d.$sc = d._fc;
+        return M.jumpH(d._fe);
+
+      case 4:
+        return M.pure();
 
       case 5:
         return M.raise(p);
 
       case 6:
-        d.$sc = 4;
-        d._ex = p;
+        return M.raise(d._err1);
+
+      case 7:
+        d.$sc = 3;
+        d._fc = 6, d._fe = 5, d._err1 = p;
         return M.jumpH(5);
     }
   }

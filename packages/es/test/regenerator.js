@@ -1,4 +1,4 @@
-require("../../es/test/kit/skip")
+require("../../es/test/kit/skip")()
 global.skipTests = {}
 
 describe("regenerator with abstract interface", function() {

@@ -19,7 +19,8 @@ exports.simple4 = function*() {
   yield 3
 }
 
-exports.simple5 = function*() {
+exports.simple5 = simple5
+function* simple5() {
   yield 1
   yield 2
   yield 3
@@ -740,7 +741,7 @@ exports.generatorsMethods = function* generatorsMethods() {
   }
 }
 
-exports.switches = function*() {
+exports.switches = function* b() {
   function* gen() {
     for(let i = 0;;i++)
       yield i
@@ -988,3 +989,87 @@ exports.delegateOfDelegate2 = function* delegateOfDelegate2() {
     yield i
 }
 
+exports.simpleInvert0 = simpleInvert0
+function* simpleInvert0() {
+  yield* [1,2]
+  for(const i of [1,2]) {
+    yield `a:${i}`
+  }
+  for(const i of [1,2]) {
+    yield* ["A"+i,"B"+i]
+    yield* ["C"+i,"D"+i]
+  }
+  yield* new Set([1,2])
+  for(const i of new Set([1,2])) {
+    yield `E:${i}`
+  }
+  for(const i of new Set([1,2])) {
+    yield* new Set(["z"+i,"x"+i])
+    yield* new Set(["Z"+i,"X"+i])
+  }
+  for(const i of simple5()) {
+    yield i
+  }
+  yield* simple5()
+  for(const i of simple5()) {
+    yield* simple5()
+    yield* simple5()
+  }
+  for(const i of simple5()) {
+    for(const j of simple5()) {
+	yield `a:${i}-${j}`
+    }
+  }
+  for(const i of simple5()) {
+    for(const j of simple5()) {
+      for(const k of simple5()) {
+	yield `b:${i}-${j}-${k}`
+      }
+    }
+  }
+  for(const i of simple5()) {
+    for(const j of simple5()) {
+      for(const k of simple5()) {
+ 	yield `c:${i}-${j}-${k}`
+      }
+      yield `d:${i}-${j}`
+    }
+    yield `e:${i}`
+  }
+  for(const i of simple5()) {
+    yield `f:${i}`
+    for(const j of simple5()) {
+      yield `g:${i}-${j}`
+      for(const k of simple5()) {
+ 	yield `h:${i}-${j}-${k}`
+      }
+    }
+  }
+  for(const i of simple5()) {
+    yield* [i + 100]
+  }
+  for(const i of [1,2]) {
+    yield* simple5()
+  }
+}
+
+exports.simpleInvert1 = function* simpleInvert1() {
+  for(const i of simpleInvert0()) {
+    yield* ["X"+i]
+    yield* ["X"+i]
+  }
+  for(const i of [1,2]) {
+    yield* simpleInvert0()
+    yield* simpleInvert0()
+  }
+  for(const i of simpleInvert0()) {
+    for(const j of simpleInvert0()) {
+      yield `Y1:${i}-${j}`
+      yield `Z1:${i}-${j}`
+    }
+    for(const j of simpleInvert0()) {
+      yield `Y2:${i}-${j}`
+      yield `Z2:${i}-${j}`
+    }
+  }
+}

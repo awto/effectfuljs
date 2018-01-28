@@ -58,27 +58,33 @@ export function inject(si) {
 }
 
 
-export function* interpretLibSyms(si) {
+export function interpretLibSyms(si) {
   const s = Kit.auto(si)
+  if (s.opts.nsStatic)
+    return s
   const root = s.first.value
   const ns = root.$ns
-  for(const i of s) {
-    if (i.enter && i.type === Tag.Identifier
-        && i.pos !== Tag.property && !i.value.decl
-        && i.value.sym && i.value.sym.lib) {
-      const {sym} = i.value
-      if (sym.nsDefault) {
-        yield s.tok(i.pos,Tag.Identifier,{sym:ns})
-      } else if (ns) {
-        yield s.enter(i.pos,Tag.MemberExpression,{})
-        yield s.tok(Tag.object,Tag.Identifier,{sym:ns})
-        yield s.tok(Tag.property,Tag.Identifier,{sym,node:{name:sym.name}})
-        yield* s.leave()
-        s.close(i)
+  const nsStatic = s.opts.nsStatic
+  return _interpretLibSyms()
+  function* _interpretLibSyms() {
+    for(const i of s) {
+      if (i.enter && i.type === Tag.Identifier
+          && i.pos !== Tag.property && !i.value.decl
+          && i.value.sym && i.value.sym.lib) {
+        const {sym} = i.value
+        if (sym.nsDefault) {
+          yield s.tok(i.pos,Tag.Identifier,{sym:ns})
+        } else if (ns) {
+          yield s.enter(i.pos,Tag.MemberExpression,{})
+          yield s.tok(Tag.object,Tag.Identifier,{sym:ns})
+          yield s.tok(Tag.property,Tag.Identifier,{sym,node:{name:sym.name}})
+          yield* s.leave()
+          s.close(i)
+        } else
+          yield i
       } else
         yield i
-    } else
-      yield i
+    }
   }
 }
 

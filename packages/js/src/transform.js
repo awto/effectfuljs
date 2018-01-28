@@ -21,8 +21,7 @@ import * as Flat from "./flat"
 import * as Closure from "./closure"
 import * as Inline from "./inline"
 import * as Simplify from "./simplify"
-import {ifLoose,ifEsRebind,ifTopLevel,
-        ifJsExceptions} from "./options"
+import {ifLoose} from "./options"
 
 export const consumeScope = consume
 
@@ -43,11 +42,15 @@ export const preproc = Kit.pipe(
 
 /* default transform for all functions if loose mode is set */
 export const loose = ifLoose(Kit.pipe(
+  Policy.stage("prepareLoose"),
+  Control.removeLabeledStatement,
   Loops.looseForOf,
+  Control.restoreLabeledStatements,
   Rt.collect,
   Kit.toArray,
   Simplify.blockScoping,
   Simplify.main,
+  Policy.stage("finalize"),
   Rt.interpretLibSyms,
   Rt.inject))
 
@@ -55,6 +58,8 @@ const finalize = Kit.pipe(
   Scope.funcWraps,
   Simplify.main,
   ifLoose(Loops.looseForOf),
+  Control.restoreLabeledStatements,
+  Policy.stage("finalize"),
   Rt.interpretLibSyms,
   Kit.toArray,
   Rt.inject,
@@ -68,11 +73,11 @@ const ifTrack = (t,e) => function*(s) {
 
 export const normalizeOnlyStage0 =
   Kit.map(Kit.pipe(
-    ifTopLevel(Kit.pipe(
-      Loops.toBlocks,
-      State.saveDecls,
-      Kit.toArray
-    ))))
+    Control.removeLabeledStatement,
+    Loops.toBlocks,
+    State.saveDecls,
+    Kit.toArray
+  ))
 
 export const normalizeOnlyStage1 =
   Kit.map(Kit.pipe(
@@ -91,7 +96,7 @@ export const stage0 = Kit.pipe(
     Ops.inject,
     Policy.stage("normalize"),
     Kit.toArray,
-    Control.removeLabeldStatement,
+    Control.removeLabeledStatement,
     Loops.toBlocks,
     Loops.whileStmt,
     Loops.forOfStmt,
@@ -209,7 +214,10 @@ export function pass(s) {
   const n0 = [...normalizeOnlyStage0(normalize)]
   const s1 = [...Closure.contextDecls(s0)]
   const n1 = [...Closure.contextDecls(n0)]
-  const res = [...others,...stage1(s1),...normalizeOnlyStage1(n1)]
+  const res = [
+    ...others,
+    ...stage1(s1),
+    ...normalizeOnlyStage1(n1)]
   return finalize([...Scope.restore(root,res)])
 }
 

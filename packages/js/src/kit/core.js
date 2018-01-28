@@ -520,21 +520,6 @@ export function* findValue(pred,s) {
   return null
 }
 
-
-export function* copyOne(s) {
-  for(const i of s) {
-    yield i
-    break
-  }
-}
-
-export function* copyOneWithPos(s,pos) {
-  for(const i of s) {
-    yield setPos(i,pos)
-    break
-  }
-}
-
 export const peel = curry(function* peel(step, s) {
   const i = s.take()
   yield enter(i)

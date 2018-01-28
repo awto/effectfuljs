@@ -1,5 +1,4 @@
-require("../../es/test/kit/skip")
-global.skipTests = {}
+require("../../es/test/kit/skip")()
 
 describe("regenerator with inlined operations", function() {
   describe("with default options", function() {
@@ -26,7 +25,7 @@ describe("regenerator with inlined operations", function() {
   })
 })
 
-describe("regenerator with loose inlined operations", function() {
+global.describe("regenerator with loose inlined operations", function() {
   const top = global.skipTests = {
     // not supporting ES object model
     "@@iterator": true,
@@ -58,4 +57,3 @@ describe("regenerator with loose inlined operations", function() {
     require("./looseDelegate/links/regenerator")
   })
 })
-

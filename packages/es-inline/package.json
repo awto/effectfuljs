@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/awto/effectful-js#readme",
   "devDependencies": {
-    "@effectful/es-inline-rt": "../es-inline-rt",
-    "@effectful/es-loose-rt": "../es-loose-rt",
-    "@effectful/es-rt": "../es-rt",
+    "@effectful/es-inline-rt": "^0.1.0",
+    "@effectful/es-loose-rt": "^0.1.0",
+    "@effectful/es-rt": "^0.1.0",
     "glob": "^7.1.2",
     "mocha": "^3.4.2",
     "promise": "^8.0.1",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@effectful/es": "^0.1.0",
-    "@effectful/js": "^0.0.2"
+    "@effectful/js": "^0.1.0"
   },
   "publishConfig": {
     "access": "public"

@@ -128,37 +128,40 @@ function a4_15(a4, a) {
 
 function a5_1(a5) {
   a5._loop = M.iterator(a4());
-  return M.jumpH(a5_2, a5_5);
+  return M.jumpH(a5_2, a5_7);
 }
 
 function a5_2(a5) {
   if (!(a5._loop = a5._loop.step()).done) {
     a5._i = a5._loop.value;
-    return M.jumpRH(a5_3, a5_6);
+    return M.yldBH(a5._i, a5_2, a5_7);
   } else {
-    return M.pure();
+    a5._fc = a5_4, a5._fe = a5_5;
+    return M.jumpH(a5_3, a5_5);
   }
 }
 
 function a5_3(a5) {
-  return M.yldBH(a5._i, a5_2, a5_5);
-}
-
-function a5_4(a5) {
-  a5._e = a5._ex;
-
   if (a5._loop.exit) {
     a5._loop.exit();
   }
 
-  throw a5._e;
+  return M.jumpH(a5._fc, a5._fe);
+}
+
+function a5_4(a5) {
+  return M.pure();
 }
 
 function a5_5(a5, e) {
   return M.raise(e);
 }
 
-function a5_6(a5, a) {
-  a5._ex = a;
-  return M.jumpH(a5_4, a5_5);
+function a5_6(a5) {
+  return M.raise(a5._err1);
+}
+
+function a5_7(a5, a) {
+  a5._fc = a5_6, a5._fe = a5_5, a5._err1 = a;
+  return M.jumpH(a5_3, a5_5);
 }

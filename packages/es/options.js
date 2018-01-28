@@ -5,11 +5,6 @@ const T = C.Transform
 const Tag = C.Tag
 const Kit = C.Kit
 
-const ops = {
-  YieldExpression: true,
-  AwaitExpression: true
-}
-
 const rebind = {
   all: {
     presetsImportPattern:false,
@@ -35,7 +30,6 @@ const rebind = {
     combineOps:true,
     scopePrefix:true,
     coerce:false,
-    ops,
     contextBy:"this",
     shortFrameNames:false,
     contextMethodOpsSpec: {
@@ -52,18 +46,24 @@ const rebind = {
     wrapFunction: "generatorFunction",
     storeResultCont:"$exit",
     keepLastPure:true,
+    ops:{YieldExpression: true},
     keepLastRaise:true
   },
   async: {
     bindName:"chain",
     scopeConstructor:"async",
+    ops:{AwaitExpression: true},
     wrapFunction: "asyncFunction"
   },
   asyncGenerators: {
     bindName:"chain",
     scopeConstructor:"asyncGenerator",
     scopePostfix:true,
-    wrapFunction: "asyncGeneratorFunction"
+    wrapFunction: "asyncGeneratorFunction",
+    ops:{
+      YieldExpression: true,
+      AwaitExpression: true
+    }
   }
 }
 
@@ -159,11 +159,10 @@ const loose = {
 const invertForOf = {
   generators: {
     inlineYieldOp:false,
-    finalizeForOf:true,
     invertForOf:true,
-    markRepeat:false,
+    markRepeat:true,
     contextBy:"reference",
-    stateStorageField:"$"
+    finalizeForOf:true
   }
 }
 
@@ -221,7 +220,7 @@ module.exports = function esProfile(opts={}) {
       Object.assign(generators,defunctInline.effectful)
       Object.assign(async,defunctInline.effectful,defunctInline.async)
       Object.assign(asyncGenerators,defunctInline.effectful)
-      }
+    }
   }
   if (opts.loose) {
     Object.assign(pure,loose.all)
@@ -237,8 +236,9 @@ module.exports = function esProfile(opts={}) {
     Object.assign(async,topLevel.all,topLevel.effectful)
     Object.assign(asyncGenerators,topLevel.all,topLevel.effectful)
   }
-  if (opts.invertForOf)
+  if (opts.invertForOf) {
     Object.assign(generators,invertForOf.generators)
+  }
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})
   Object.assign(file,opts.all,opts.file,

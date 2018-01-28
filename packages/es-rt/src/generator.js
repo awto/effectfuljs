@@ -1,37 +1,34 @@
-import {iterator as iterSym} from "./symbol"
+import {iterator as iterSym, delegateIterator as delegateSym} from "./symbol"
 import {Generator} from "./esIterator"
-import {iterator} from "./leanIterator"
+import {iterator,delegate} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
 
+/** smart constructor for generators */
 export var generator
 var GeneratorConstructor
 
-if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
-  /** smart constructor for generators */
+if (process.env.EJS_DELEGATE_FOR_OF) {
+  generator = function generator(caller) {
+    return new GeneratorConstructor()
+  }
+} else if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   generator = function generator(caller) {
     var res = new GeneratorConstructor(),
         esProto = caller && caller.prototype instanceof Generator
         ? caller.prototype
         : Generator.prototype,
         unwrap = res.unwrap = Object.create(esProto)
-    if (process.env.EJS_DELEGATE_FOR_OF)
-      res.$ = res
-    unwrap.state = res
+    unwrap.$t = res
     return res
   }
-} else if (!process.env.EJS_NO_ES_ITERATORS) {
+} else if (process.env.EJS_NO_ES_ITERATORS) {
   generator = function generator() {
-    var res = new GeneratorConstructor()
-    if (process.env.EJS_DELEGATE_FOR_OF)
-      res.$ = res
-    res.unwrap = new Generator(res)
-    return res
+    return new GeneratorConstructor()
   }
 } else {
   generator = function generator() {
     var res = new GeneratorConstructor()
-    if (process.env.EJS_DELEGATE_FOR_OF)
-      res.$ = res
+    res.unwrap = new Generator(res)
     return res
   }
 }
@@ -117,7 +114,7 @@ if (!process.env.EJS_INLINE) {
   
   LGp.yldStar = function yldStar(iter, cont, handle, exit) {
     suspend(this, cont, handle, exit)
-    return this.delegateYld(iter)
+    return this.delegate(iter)
   }
   
   LGp.jump = function jump(value, step, handle, exit) {
@@ -153,20 +150,6 @@ if (!process.env.EJS_INLINE) {
     }
     return this
   }
-  
-  exitSub = function exitSub(value) {
-    try {
-      if (this.$exit) {
-        this.pure = contExitSub
-        return process.env.EJS_DEFUNCT
-          ? (this.$step = this.$exit, this.$run(value))
-          : this.$exit(value)
-      }
-    } catch(e) {
-      return this.handle(e)
-    }
-    return this.$sub.exit(value)
-  }
 } else {  
   LGp.pure = function pure(value) {
     this.done = true
@@ -187,23 +170,11 @@ if (!process.env.EJS_INLINE) {
   }
   
   LGp.exit = function exit(value) {
+    if (process.env.EJS_DELEGATE_FOR_OF)
+      this.$rstep = this.$r.exit
     return process.env.EJS_DEFUNCT
       ? (this.$step = this.$exit, this.$run(value))
-      : this.$exit(value) 
-  }
-  
-  exitSub = function exitSub(value) {
-    try {
-      if (this.$exit) {
-        this.pure = contExitSub
-        return process.env.EJS_DEFUNCT
-          ? (this.$step = this.$exit, this.$run(value))
-          : this.$exit(value)
-      }
-    } catch(e) {
-      return this.handle(e)
-    }
-    return this.$sub.exit(value)
+      : this.$exit(value)
   }
 
   if (process.env.EJS_DEFUNCT) {
@@ -217,10 +188,22 @@ if (!process.env.EJS_INLINE) {
   }
 }
 
-var exitSub
+function exitSub(value) {
+  try {
+    if (this.$exit) {
+      this.pure = contExitSub
+      return process.env.EJS_DEFUNCT
+        ? (this.$step = this.$exit, this.$run(value))
+        : this.$exit(value)
+    }
+  } catch(e) {
+    return this.handle(e)
+  }
+  return this.$sub.exit(value)
+}
 
-export function makeDelegateYld(iterator) {
-  return function delegateYld(i) {
+export function makeDelegate(iterator) {
+  return function delegate(i) {
     var iter = iterator(i)
     iter.$sub = this
     iter.$subPure = iter.pure
@@ -230,8 +213,6 @@ export function makeDelegateYld(iterator) {
     return iter.step()
   }
 }
-
-LGp.delegateYld = makeDelegateYld(iterator)
 
 function contSub(v) {
   this.pure = this.$subPure
@@ -253,8 +234,6 @@ if (process.env.EJS_LEAN_METHOD_ITERATORS) {
 
 LGp[iterSym] = function() { return this }
 
-if (!process.env.EJS_NO_ES_ITERATORS)
-  LGp[Symbol.iterator] = function() { return this.unwrap }
 
 LGp.handle = function(ex) {
   return process.env.EJS_DEFUNCT
@@ -273,7 +252,7 @@ LGp.raise = function genRaise(ex) {
 
 var TLGp = LGp
 
-if (!process.env.EJS_NO_TRAMPOLINE) {
+if (!process.env.EJS_NO_TRAMPOLINE && !process.env.EJS_DELEGATE_FOR_OF) {
   function TrampolineGenerator() {
     this.done = false
     this.value = void 0
@@ -322,6 +301,74 @@ if (!process.env.EJS_NO_TRAMPOLINE) {
   }
 }
 
+if (process.env.EJS_DELEGATE_FOR_OF) {  
+  LGp.delegate = delegate
+  LGp[delegateSym] = LGp.delegateTo = function(dst,y,r,rstep,istep) {
+    // if (process.env.EJS_DEBUG_LOOSE)
+    this[delegateSym] = doubleDelegate
+    this.$s = this
+    this.$i = this.$e = dst
+    this.$y = y
+    this.$r = r
+    this.$rstep = rstep
+    this.$istep = istep
+    this.unwrap = dst.unwrap
+    return this
+  }
+
+  function doubleDelegate() {
+    throw new TypeError(
+      "Not Implemented: taking iterator of deligated generator")
+  }
+
+  function wrapDelegate(dst,y,r,rstep,istep) {
+    return this.$dst[delegateSym](dst,y,r,rstep,istep)
+  }
+
+  function contIter() {
+    return this.$dst
+  }
+
+  function finished(value) {
+    this.value = value
+    return this
+  }
+
+  function defaultRes(value) {
+    this.value = value
+    this.done = true
+    this.$t = this
+    return this
+  }
+  
+  LGp[Symbol.iterator] = LGp[iterSym] = function() {
+    var res = this.$dst = new Generator(this)
+    this.delegateTo(res,res,res,defaultRes,finished)
+    this[Symbol.iterator] = this[iterSym] = contIter
+    this[delegateSym] = wrapDelegate
+    return res
+  }
+
+  LGp.next = function(v) {
+    return this[Symbol.iterator]().next(v)
+  }
+  
+  LGp.return = function(v) {
+    return this[Symbol.iterator]().return(v)
+  }
+
+  LGp.throw = function(v) {
+    return this[iterSym]().throw(v)
+  }
+
+} else {
+  if (!process.env.EJS_NO_ES_ITERATORS)
+    LGp[Symbol.iterator] = function() { return this.unwrap }
+  LGp.delegate = makeDelegate(iterator)
+}
+
+
+
 if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
   LGp.alreadyRunning = process.env.EJS_DEFUNCT ? -1
     : function alreadyRunning() {
@@ -338,7 +385,7 @@ if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
     function contSubNoCheck(v) {
       return this.$sub.stepNoCheck(v)
     }
-    WLGp.delegateYld = function(i) {
+    WLGp.delegate = function(i) {
       var iter = iterator(i)
       iter.$sub = this
       iter.pure = contSubNoCheck
@@ -358,142 +405,6 @@ if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
         this.$noenter = false
       }
     }
-  }
-}
-
-if (process.env.EJS_DELEGATE_FOR_OF) {
-  function DelegatingLeanGenerator() {
-    this.done = false
-    this.value = void 0
-  }
-  GeneratorConstructor = DelegatingLeanGenerator
-  var DLGp = DelegatingLeanGenerator.prototype
-
-  DLGp[iterSym] = function() { return this }
-  
-  DLGp.pure = function pure(value) {
-    this.$.done = true
-    this.$.value = value
-    this.$.$step = terminated
-    this.$.$handle = terminatedHandle
-    this.$.$exit = terminated
-    return this
-  }
-
-  DLGp.raise = function genRaise(ex) {
-    this.$.$handle = terminatedHandle
-    this.$.$step = this.$exit = terminated
-    this.$.done = true
-    this.$.value = void 0
-    throw ex
-  }
-  
-  DLGp.yld = function yld(value) {
-    this.$.value = value
-  }
-  
-  /**
-   * runs iterable calling `yld` for each outpit and `done` for result
-   * all the callbacks must be not depend on `this`
-   */
-  DLGp.forOf = function(iterable,yld,done) {
-    var iter = iterator(iterable)
-    if (iter.regForOf)
-      return iter.regForOf(yld,done)
-    // not efficient but working fall-back
-    return {
-      $step: function(v) {
-        iter = iter.step(v)
-        if (iter.done)
-          done(iter.value)
-        else
-          yld(iter.value)
-      }
-    }
-  }
-
-  DLGp.regForOf = function regForOf(yld,done) {
-    this.yld = yld
-    this.pure = done
-    return this
-  }
-
-  /** switches context temporarly to `iterable` until it exits */
-  DLGp.delegateYld = function delegateYld(iterable) {
-    var iter = iterator(iterable)
-    if (iter.regYldStar) {
-      iter.regYldStar(this)
-      return
-    }
-    var dest = this
-    var step = this.$.$step
-    this.$.$step = delegateStep
-    delegateStep()
-    function delegateStep(v) {
-      iter = iter.step(v)
-      if (iter.done)
-        step(iter.value)
-      else
-        dest.yld(iter.value)
-    }
-  }
-
-  DLGp.regYldStar = function regYldStar(dest) {
-    var delegate = this
-    var self = this.$ = dest.$
-    var step = self.$step, handle = self.$handle, exit = self.$exit
-    this.pure = function delegatePure(v) {
-      self.$step = step
-      self.$handle = handle
-      self.$exit = exit
-      return self.cont(v)
-    }
-    this.raise = function delegateRaise(e) {
-      self.$step = step
-      self.$handle = handle
-      self.$exit = exit
-      return self.$handle(e)
-    }
-    this.yld = dest.yld
-    self.$step = this.$step
-    self.$handle = this.$handle
-    self.$exit = this.$exit
-    self.$step()
-  }
-  
-  DLGp.cont = DLGp.step = function step(v) {
-    this.$step(v)
-    if (!process.env.EJS_TRAMPOLINE_JUMPS) {
-      while(this.$running) {
-        this.$running = false
-        this.$step(this.value)
-      }
-    }
-    return this
-  }
-
-  DLGp.runHandle = LGp.handle
-  DLGp.handle = function handle(v) {
-    this.runHandle(v)
-    if (!process.env.EJS_TRAMPOLINE_JUMPS) {
-      while(this.$running) {
-        this.$running = false
-        this.$step(this.value)
-      }
-    }
-    return this
-  }
-  DLGp.exit = function exit(v) {
-    var self = this
-    this.cont =exit
-    this.$exit(v)
-    if (!process.env.EJS_TRAMPOLINE_JUMPS) {
-      while(this.$running) {
-        this.$running = false
-        this.$step(this.value)
-      }
-    }
-    return this
   }
 }
 

@@ -1,4 +1,14 @@
-export * from "./core"
+import {
+  symInfo,isSymbol,typeInfo,symName,newSymbol,
+  symbol,enter,leave,tok,produce,toArray,Tag,
+  reproduce,consume,reproduceNodes,resetFieldInfo,
+  removeNulls,isSynthetic} from "./core"
+
+export {symInfo,isSymbol,typeInfo,symName,newSymbol,
+        symbol,enter,leave,tok,produce,toArray,Tag,
+        reproduce,consume,reproduceNodes,resetFieldInfo,
+        removeNulls,isSynthetic}
+
 import * as kit from "./kit"
 export { kit }
 import * as trace from "./trace"

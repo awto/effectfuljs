@@ -5,5 +5,8 @@
   "main": "index.js",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "test": "echo FINE"
+  },
   "private": true
 }

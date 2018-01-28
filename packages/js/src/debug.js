@@ -72,7 +72,7 @@ export const traceOld = Kit.curry((prefix,s) => {
         traceHighlight,Trace.prefix(prefix)
       )),
     T.cleanComments,
-    T.verify,
+    prefix[0] === "!" ? v => v : T.verify,
     Array.from)(s)
 })
 
@@ -608,5 +608,8 @@ function* markFrameSyms(s) {
 
 export const traceAll = Kit.curry((name, s) => T.all(name,mark(s)))
 export const trace = Kit.curry((name, s) => T.lazy(name,mark(s)))
-export const dump = Kit.curry((name, s) => D.output(name,mark(s)))
+export const dump =
+  Kit.curry((name, s) =>
+            D.output(name,name[0] === "-" ? T.cleanComments(s)
+                     : mark(s)))
 

@@ -128,7 +128,7 @@ export function inject(si) {
           const name = v || getOpName(i)
           yield s.enter(i.pos,op,{node:{src:i.value,type:i.type},
                                   bind:true,expr:true,
-                                  sym:v || getOpName(i)})
+                                  sym:name})
           yield* walk()
           yield* s.leave()
           s.close(i)
@@ -166,10 +166,10 @@ export function interpret(si) {
   return walk()
 }
 
-/** 
- * combines opts with bind into a single call for optimization purposes 
+/**
+ * combines opts with bind into a single call for optimization purposes
  * e.g.
- *  
+ *
  *    bind(yield a, cont) ==> bindYield(a, cont)
  */
 export function* combine(si) {
@@ -178,11 +178,15 @@ export function* combine(si) {
     yield* s
     return
   }
+  const defaultName = s.opts.bindName
+  const defaultSym = Kit.sysId(defaultName)
   for(const i of s) {
     yield i
     if (i.enter && i.type === Block.letStmt && i.value.eff) {
       const j = s.curLev()
       if (j && j.type === op) {
+        i.value.op = j.value
+        i.value.opSym = j.value.sym
         i.value.bindName = j.value.sym.orig
         s.take()
         if (!j.leave) {
@@ -190,7 +194,10 @@ export function* combine(si) {
           s.close(j)
         }
         continue
-      } 
+      }
+      i.value.op = null
+      i.value.opSym = defaultSym
+      i.value.bindName = defaultName
     }
   }
 }

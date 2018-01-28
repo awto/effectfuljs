@@ -1,12 +1,7 @@
 import {Tag,symInfo,enter,leave,tok} from "./kit"
 import * as Kit from "./kit"
 import * as assert from "assert"
-import * as Debug from "./debug"
 import * as Block from "./block"
-import {scope as EsScope} from "@effectful/transducers"
-
-export const assignSymbolsDecls = EsScope.assignSymbolsDecls
-
 
 /**
  * unfortunately ObjectMethod type in babylon AST doesn't fit the split 
@@ -17,7 +12,7 @@ export const assignSymbolsDecls = EsScope.assignSymbolsDecls
  */
 function methodsHack(si) {
   const s = Kit.auto(si)
-  function* walk(sw,cl) {
+  function* _methodsHack(sw,cl) {
     for(const i of sw) {
       if (i.enter) {
         switch(i.type) {
@@ -26,7 +21,7 @@ function methodsHack(si) {
           yield i
           const j = s.cur()
           i.value.classId = j.pos === Tag.id && j.value.sym
-          yield* walk(s.sub(),i.value)
+          yield* _methodsHack(s.sub(),i.value)
           continue
         case Tag.ClassMethod:
         case Tag.ClassPrivateMethod:
@@ -42,14 +37,14 @@ function methodsHack(si) {
                                  static:i.value.static}
                           })
             const k = s.cur()
-            yield* walk(s.one())
+            yield* _methodsHack(s.one())
             yield s.enter(Tag.value,Tag.FunctionExpression,i.value)
             if (k.type === Tag.Identifier) {
               i.value.funcId = Kit.scope.newSym(k.value.node.name)
               i.value.origType = i.type
               yield s.tok(Tag.id,Tag.Identifier,{node:{name:k.value.node.name}})
             }
-            yield* walk(s.sub())
+            yield* _methodsHack(s.sub())
             yield* s.leave()
             yield* s.leave()
             s.close(i)
@@ -60,7 +55,7 @@ function methodsHack(si) {
       yield i
     }
   }
-  return walk(s)
+  return _methodsHack(s)
 }
 
 /**
@@ -69,19 +64,19 @@ function methodsHack(si) {
  */
 function restoreMethods(si) {
   const s = Kit.auto(si)
-  function* walk(sw) {
+  function* _restoreMethods(sw) {
     for(const i of sw) {
       if (i.enter
           && (i.type === Tag.ObjectProperty || i.type === Tag.ClassProperty)
           && i.value.origType != null && i.value.origType !== i.type) {
-        const key = Kit.toArray(walk(s.one()))
+        const key = Kit.toArray(_restoreMethods(s.one()))
         if (s.cur().type === Tag.FunctionExpression) {
           const f = s.take()
           if (s.cur().pos === Tag.id)
             Kit.skip(s.one())
           yield s.enter(i.pos,i.value.origType,f.value)
           yield* key
-          yield* walk(s.sub())
+          yield* _restoreMethods(s.sub())
           yield* s.leave()
           s.close(f)
           s.close(i)
@@ -94,11 +89,17 @@ function restoreMethods(si) {
         yield i
         if (i.value.classId && s.cur().pos !== Tag.id)
           yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.classId})
+      } else if (i.enter && i.type === Tag.FunctionExpression
+		 && i.value.origType === Tag.FunctionDeclaration) {
+	yield i
+	Kit.skip(s.one())
+	yield s.tok(Tag.id, Tag.Identifier,
+		    {sym:Kit.scope.newSym(i.value.funcId.name),decl:true})
       } else
         yield i
     }
   }
-  return walk(s)
+  return _restoreMethods(s)
 }
 
 /** 
@@ -111,14 +112,14 @@ export function recalcLocals(sl) {
   const ctx = root.ctx
   const {locs,vars,refs} = ctx
   Kit.skip(s.untilPos(Tag.body))
-  walk(vars)
+  _recalcLocals(vars)
   return sa
-  function walk(vars,block) {
+  function _recalcLocals(vars,block) {
     for(const i of s.sub()) {
       if (i.enter) {
         switch(i.type) {
         case Tag.BlockStatement:
-          walk(i.value.blockVars = Object.create(vars),i.value)
+          _recalcLocals(i.value.blockVars = Object.create(vars),i.value)
           break
         case Tag.Identifier:
           const info = vars[i.value.node.name]
@@ -154,13 +155,13 @@ export function recalcLocals(sl) {
 export function splitScopes(si) {
   const s = Kit.auto(methodsHack(si))
   const frames = []
-  frames.push([...walk(s.take())])
+  frames.push([..._splitScopes(s.take())])
   return frames
-  function* walk(p) {
+  function* _splitScopes(p) {
     yield s.enter(Tag.top,p.type,p.value)
     for(const i of s.sub()) {
       if (i.enter && !i.leave && s.curLev() != null && i.value.func) {
-        frames.push([...walk(i)])
+        frames.push([..._splitScopes(i)])
         i.value.parScope = p.value
         if (!i.value.funcId)
           i.value.funcId = Kit.scope.newSym("fn")
@@ -193,8 +194,8 @@ export function restore(root,scopes) {
       m.set(value,i)
   }
   assert.ok(start)
-  return restoreMethods(walk(start,Tag.top))
-  function* walk(si,pos,type) {
+  return restoreMethods(_restore(start,Tag.top))
+  function* _restore(si,pos,type) {
     const s = Kit.toArray(si)
     const first = s[0]
     if (!type)
@@ -208,7 +209,7 @@ export function restore(root,scopes) {
         const sub = m.get(i.value)
         if (sub != null) {
           if (i.enter) {
-            yield* walk(sub,i.pos,i.type)
+            yield* _restore(sub,i.pos,i.type)
           }
           continue
         }
@@ -241,7 +242,7 @@ export function funcWraps(si) {
   const mods = root.injectRT || emptyMap
   const rootDefs = mods.get(ns)
   let any = false
-  return reorder(walk(s))
+  return reorder(_funcWraps(s))
   function sysId(name) {
     const sym = Kit.sysId(name)
     if (rootDefs)
@@ -261,8 +262,8 @@ export function funcWraps(si) {
   function reorder(si) {
     const s = Kit.auto(Kit.toArray(si))
     let nsFound = !root.nsImported
-    return walk(s)
-    function* walk(sw,subst,buf) {
+    return _reorder(s)
+    function* _reorder(sw,subst,buf) {
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
@@ -325,7 +326,7 @@ export function funcWraps(si) {
                   yield* s.leave()
                 }()])
               }
-              yield* walk(s.sub(),nsubst)
+              yield* _reorder(s.sub(),nsubst)
               yield* slab()
               if (decl) {
                 yield s.enter(Tag.push,Tag.ExpressionStatement)
@@ -381,10 +382,10 @@ export function funcWraps(si) {
               yield* s.peelTo(Tag.body)
               if (i.type === Tag.Program) {
                 while(s.curLev() && !nsFound) {
-                  yield* walk(s.one(),subst)
+                  yield* _reorder(s.one(),subst)
                 }
                 yield* i.value.wraps
-                yield* walk(s.sub(),subst)
+                yield* _reorder(s.sub(),subst)
               }
               yield* lab()
               continue
@@ -396,7 +397,7 @@ export function funcWraps(si) {
               yield s.peel(i)
               yield* s.peelTo(Tag.body)
               yield* i.value.wraps
-              yield* walk(s.sub(), subst)
+              yield* _reorder(s.sub(), subst)
               yield* lab()
               continue
             }
@@ -407,7 +408,7 @@ export function funcWraps(si) {
       }
     }
   }
-  function* walk(sw, block, classKeys, classMethods) {
+  function* _funcWraps(sw, block, classKeys, classMethods) {
     function tempVar(name, sym = Kit.scope.newSym(name)) {
       const lab = s.label()
       block.push(s.enter(Tag.push,Tag.VariableDeclaration,
@@ -424,7 +425,7 @@ export function funcWraps(si) {
         case Tag.Program:
         case Tag.BlockStatement:
           yield i
-          yield* walk(s.sub(), i.value.wraps = [])
+          yield* _funcWraps(s.sub(), i.value.wraps = [])
           continue
         case Tag.ObjectMethod:
           if (check(i)) {
@@ -439,7 +440,7 @@ export function funcWraps(si) {
             yield s.enter(Tag.arguments,Tag.Array)
             yield s.enter(Tag.push,Tag.FunctionExpression)
             yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.wrapId})
-            yield* walk(s.sub(),block)
+            yield* _funcWraps(s.sub(),block)
             yield* lab()
             continue
           }
@@ -449,7 +450,7 @@ export function funcWraps(si) {
         case Tag.ClassProperty:
         case Tag.ClassPrivateProperty:
           yield i
-          let key = Kit.toArray(walk(s.one(),block))
+          let key = Kit.toArray(_funcWraps(s.one(),block))
           yield* key
           let keySimple = false
           let computed = i.value.node.computed
@@ -467,7 +468,7 @@ export function funcWraps(si) {
           }
           if (!keySimple)
             classKeys.push(key)
-          yield* walk(s.sub(),block)
+          yield* _funcWraps(s.sub(),block)
           if (check(i) && i.value.node.kind === "method")
             classMethods.push({key,keySimple,static:i.value.node.static,
                                computed,name:i.value.opts.wrapFunction,
@@ -479,7 +480,7 @@ export function funcWraps(si) {
           yield i
           const keys = []
           const wraps = i.value.wraps = []
-          yield* walk(s.sub(),block,keys,wraps)
+          yield* _funcWraps(s.sub(),block,keys,wraps)
           if (!wraps.length)
             continue
           if (wraps.some(i => !i.keySimple)) {
@@ -508,7 +509,7 @@ export function funcWraps(si) {
               ...lab()]
             if (i.pos === Tag.push || i.pos === Tag.declaration) {
               yield s.peel(i)
-              yield* walk(s.sub())
+              yield* _funcWraps(s.sub())
               yield* s.leave()
               block.push(...wraps)
             } else {
@@ -516,7 +517,7 @@ export function funcWraps(si) {
               yield s.enter(Tag.body,Tag.Array)
               yield* wraps
               yield s.peel(i)
-              yield* Kit.reposOne(walk(s.sub(),block),Tag.push)
+              yield* Kit.reposOne(_funcWraps(s.sub(),block),Tag.push)
               yield* s.leave()
             }
             yield* lab()
@@ -536,7 +537,7 @@ export function funcWraps(si) {
               yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.wrapId})
             else
               s.cur().value.sym = i.value.wrapId
-            yield* walk(s.sub(),block)
+            yield* _funcWraps(s.sub(),block)
             yield* lab()
             continue
           }
@@ -553,7 +554,7 @@ export function funcWraps(si) {
                          sym:sysId(i.value.opts.wrapFunction)})
             yield s.enter(Tag.arguments,Tag.Array)
             yield s.peel(Kit.setPos(i,Tag.push))
-            yield* walk(s.sub(),block)
+            yield* _funcWraps(s.sub(),block)
             yield* lab()
             continue
           }
@@ -573,20 +574,20 @@ export function funcWraps(si) {
  */
 export function arrowFunToBlock(si) {
   const s = Kit.auto(si)
-  return walk(s)
-  function* walk(sw) {
+  return _arrowFunToBlock(s)
+  function* _arrowFunToBlock(sw) {
     for(const i of sw) {
       yield i
       if (i.enter && i.type === Tag.ArrowFunctionExpression
           && i.value.node.expression && i.value.opts.transform) {
         i.value.node.expression = false
         while(s.cur().pos !== Tag.body)
-          yield* walk(s.one())
+          yield* _arrowFunToBlock(s.one())
         const lab = s.label()
         yield s.enter(Tag.body,Tag.BlockStatement,{decls:s.cur().value.decls})
         yield s.enter(Tag.body,Tag.Array)
         yield s.enter(Tag.push,Tag.ReturnStatement)
-        yield* Kit.reposOne(walk(s.one()),Tag.argument)
+        yield* Kit.reposOne(_arrowFunToBlock(s.one()),Tag.argument)
         yield* lab()
       }
     }

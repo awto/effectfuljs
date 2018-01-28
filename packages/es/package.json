@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "test-opt": "cross-env env-cmd $EJS_ENV mocha",
-    "test-deps": "git submodule update --init --recursive --depth 1",
+    "test-deps": "git submodule update --remote --init --recursive --depth 1",
     "build-test262": "node ./test/kit/test262 default",
     "prepare-test": "npm run test-deps && npm run build-test262",
     "link-test": "node ./test/kit/makeLinks"
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/awto/effectful-es#readme",
   "devDependencies": {
-    "@effectful/es-rt": "../es-rt",
+    "@effectful/es-rt": "^0.1.0",
     "benchmark": "^2.1.4",
     "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
@@ -40,7 +40,7 @@
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
-    "@effectful/js": "^0.0.6",
+    "@effectful/js": "^0.1.0",
     "babel-types": "^6.26.0"
   },
   "publishConfig": {

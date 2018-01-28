@@ -34,9 +34,11 @@
         ["es-dev",
          {"loose":true,
           "invertForOf":true,
+	        "importRT":"@effectful/es-rt/opts/loose-delegate",
           "all": {
             "jsExceptions":false,
             "inlineJsExceptions":false,
+            "jsTailCalls":true,
             "inlineThrow":true,
             "moduleAliases":{
               "@effectful/transducers":"@effectful/transducers-loose",
@@ -47,12 +49,15 @@
             }
           },
           "effectful": {
+            "jsExceptions":false,
+            "inlineJsExceptions":false,
             "inlineYieldOp":false,
             "invertForOf":true,
-            "markRepeat":false,
+            "jsTailCalls":true,
+            "markRepeat":true,
             "contextBy":"reference",
-            "stateStorageField":"$",
-            "finalizeForOf":true
+            "inlineThrow":true,
+         	  "inlineScopeOp":"context"
           }
          }],
         {

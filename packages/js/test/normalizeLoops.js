@@ -13,7 +13,7 @@ import * as Block from "../block"
 import * as Rt from "../rt"
 
 const runImpl = (pass) => transformExpr(Kit.pipe(
-  Ctrl.removeLabeldStatement,
+  Ctrl.removeLabeledStatement,
   Loops.toBlocks,
   Branch.toBlocks,
   pass,
@@ -95,19 +95,18 @@ describe('normlize `for-of`', function() {
               eff(1);
           }`),
           print(`function () /*BS|B*/{
-            /*FS|E*/for (var loop = iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
-              const i = loop.value;
-              /*TS|E*/try /*BS|E*/{
-                /*ES|e*/ /*CE|B*/eff(1);
-              } catch (e) {
-                if (loop.exit) {
-                  /*CE|P*/loop.exit();
-                }
-                
-                throw e;
-              }
-            }
-          }`))
+            var loop = iterator(s);
+	    /*TS|E*/try /*BS|E*/{
+	      /*FS|E*/for (; !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+		const i = loop.value;
+		/*ES|e*/ /*CE|B*/eff(1);
+	      }
+	    } finally {
+	      if (loop.exit) {
+		/*CE|P*/loop.exit();
+	      }
+	    }
+	  }`))
       })
     })
     it('should be `for` with the effect in body 2', function() {
@@ -118,18 +117,18 @@ describe('normlize `for-of`', function() {
           }
         }`),
         print(`function () /*BS|B*/{
-          /*FS|E*/for (var loop = iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
-            const i = loop.value;
-            /*TS|E*/try /*BS|E*/{
-              /*ES|e*/ /*CE|B*/eff(1);
-            } catch (e) {
-              if (loop.exit) {
-                /*CE|P*/loop.exit();
-              }
-              throw e;
-            }
-          }
-        }`))
+          var loop = iterator(s);
+	  /*TS|E*/try /*BS|E*/{
+	    /*FS|E*/for (; !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+	      const i = loop.value;
+	      /*ES|e*/ /*CE|B*/eff(1);
+	    }
+	  } finally {
+	    if (loop.exit) {
+	      /*CE|P*/loop.exit();
+	    }
+	  }
+	}`))
     })
   })
   context('with embedded `for-of`', function() {
@@ -141,29 +140,28 @@ describe('normlize `for-of`', function() {
               eff(i,j);
         }`),
         print(`function () /*BS|B*/{
-          /*FS|E*/for (var loop = iterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
-            const i = loop.value;
-            /*TS|E*/try /*BS|E*/{
-              /*FS|E*/for (var _loop = iterator(t); !(_loop = /*CE|P*/_loop.step()).done;) /*BS|E*/{
-                const j = _loop.value;
-                /*TS|E*/try /*BS|E*/{
-                  /*ES|e*/ /*CE|B*/eff(i, j);
-                } catch (e) {
-                  if (_loop.exit) {
-                    /*CE|P*/_loop.exit();
-                  }
-                  throw e;
-                }
-              }
-            } catch (e) {
-              if (loop.exit) {
-                /*CE|P*/loop.exit();
-              }
-              
-              throw e;
-            }
-          }
-        }`))
+          var loop = iterator(s);
+	  /*TS|E*/try /*BS|E*/{
+	    /*FS|E*/for (; !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+	      const i = loop.value;
+              var _loop = iterator(t);
+	      /*TS|E*/try /*BS|E*/{
+		/*FS|E*/for (; !(_loop = /*CE|P*/_loop.step()).done;) /*BS|E*/{
+          const j = _loop.value;
+		  /*ES|e*/ /*CE|B*/eff(i, j);
+		}
+	      } finally {
+		if (_loop.exit) {
+		  /*CE|P*/_loop.exit();
+		}
+	      }
+	    }
+	  } finally {
+	    if (loop.exit) {
+	      /*CE|P*/loop.exit();
+	    }
+	  }
+	}`))
     })
   })
   context('with effect on the right but not in its body', function() {
@@ -194,7 +192,8 @@ describe('normalize `for-in`', function() {
         }
       }`),
       print(`function () /*BS|B*/{
-        /*FS|E*/for (var loop = forInIterator(s); !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
+        var loop = forInIterator(s);
+        /*FS|E*/for (; !(loop = /*CE|P*/loop.step()).done;) /*BS|E*/{
           const i = loop.value;
           /*ES|e*/ /*CE|B*/eff(1);
         }
@@ -511,51 +510,58 @@ describe('normalize `for`', function() {
           }
         }`),
       print(`function () {
-        for (var loop = iterator(a); !(loop = loop.step()).done;) {
-          const i = loop.value;
-          try {
-            eff(i);
-          } catch (e) {
-            if (loop.exit) {
-              loop.exit();
-            }   
-            throw e;
-          }
-        }
-        for (var _loop = iterator(a); !(_loop = _loop.step()).done;) {
-          const i = _loop.value;
-          try {
-            eff(i);
-          } catch (e) {
-            if (_loop.exit) {
-              _loop.exit();
-            }
-            throw e;
-          }
-        }
-        for (var loop1 = iterator(a); !(loop1 = loop1.step()).done;) {}
-        for (var loop2 = iterator(a); !(loop2 = loop2.step()).done;) {
-          i.a = loop2.value;
-          try {
-            eff(1);
-          } catch (e) {
-            if (loop2.exit) {
-              loop2.exit();
-            }
-            throw e;
-          }
-        }
-        for (var loop3 = iterator(a); !(loop3 = loop3.step()).done;) {
-          i = loop3.value;
-          try {
-            eff(1);
-          } catch (e) {
-            if (loop3.exit) {
-              loop3.exit();
-            }
-            throw e;
-          }
-        }
+        var loop = iterator(a);
+ 	try {
+	  for (; !(loop = loop.step()).done;) {
+	    const i = loop.value;
+	    eff(i);
+	  }
+	} finally {
+	  if (loop.exit) {
+	    loop.exit();
+	  }
+	}
+        var _loop = iterator(a);
+	try {
+	  for (; !(_loop = _loop.step()).done;) {
+	    const i = _loop.value;
+	    eff(i);
+	  }
+	} finally {
+	  if (_loop.exit) {
+	    _loop.exit();
+	  }
+	}
+        var loop1 = iterator(a);
+	try {
+	  for (; !(loop1 = loop1.step()).done;) {}
+	} finally {
+	  if (loop1.exit) {
+	    loop1.exit();
+	  }
+	}
+        var loop2 = iterator(a);
+	try {
+	  for (; !(loop2 = loop2.step()).done;) {
+	    i.a = loop2.value;
+	    eff(1);
+	  }
+	} finally {
+	  if (loop2.exit) {
+	    loop2.exit();
+	  }
+	}
+        var loop3 = iterator(a);
+	try {
+	  for (; !(loop3 = loop3.step()).done;) {
+	    i = loop3.value;
+	    eff(1);
+	  }
+	} finally {
+	  if (loop3.exit) {
+	    loop3.exit();
+	  }
+	}
       }`))
   })
 })

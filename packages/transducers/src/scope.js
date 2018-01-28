@@ -202,7 +202,7 @@ export function cloneSym(sym) {
  *                        & {root?:boolean}
  * 
  */
-export const assignSym = (report) => Kit.pipe(
+export const assignSym = Kit.pipe(
   resetFieldInfo,
   Kit.toArray,
   // collecting each declaration in each block before resolving
@@ -210,7 +210,9 @@ export const assignSym = (report) => Kit.pipe(
   function collectDecls(si) {
     const sa = Kit.toArray(si)
     const s = Kit.auto(sa)
-    function walk(func,block,funcSyms,funcVars,blockSyms,loop) {
+    const report = s.first.type === Tag.File && !s.first.value.scopeDone
+    s.first.value.scopeDone = true
+    function _collectDecls(func,block,funcSyms,funcVars,blockSyms,loop) {
       function checkScope(val,syms) {
         // checking the scope only the first time
         if (report) {
@@ -238,7 +240,7 @@ export const assignSym = (report) => Kit.pipe(
             // TODO: make it stronger
             if (k.pos === Tag.key) {
               if (s.curLev())
-                walk(func,block,funcSyms,funcVars,blockSyms,loop)
+                _collectDecls(func,block,funcSyms,funcVars,blockSyms,loop)
               continue
             }
             switch(k.type) {
@@ -253,7 +255,7 @@ export const assignSym = (report) => Kit.pipe(
               break
             case Tag.AssignmentPattern:
               pat(s.one(),param,params,unordered,nextSyms)
-              walk(func,block,funcSyms,funcVars,blockSyms,loop)
+              _collectDecls(func,block,funcSyms,funcVars,blockSyms,loop)
               break
             }
           }
@@ -301,12 +303,12 @@ export const assignSym = (report) => Kit.pipe(
                   && ini.type === Tag.VariableDeclaration
                   && ini.value.node.kind !== "var") {
                 s.take()
-                walk(func,i.value,funcSyms,funcVars,nextSyms,loop)
+                _collectDecls(func,i.value,funcSyms,funcVars,nextSyms,loop)
                 for(const j of nextSyms)
                   j.captLoop = i.value
                 s.close(ini)
               }
-              walk(func,i.value,funcSyms,funcVars,nextSyms,i.value)
+              _collectDecls(func,i.value,funcSyms,funcVars,nextSyms,i.value)
               checkScope(i.value,nextSyms)
             }
             break
@@ -315,16 +317,16 @@ export const assignSym = (report) => Kit.pipe(
           case Tag.ForOfStatement:
             {
               const nextSyms = []
-              walk(func,i.value,funcSyms,funcVars,nextSyms,i.value)
+              _collectDecls(func,i.value,funcSyms,funcVars,nextSyms,i.value)
               checkScope(i.value,nextSyms)
             }
             break
-          case Tag.Program:
-          case Tag.SwitchStatement:
           case Tag.BlockStatement:
+          case Tag.SwitchStatement:
             {
               const nextSyms = []
-              walk(func,i.value,funcSyms,funcVars || new Map(),nextSyms,loop)
+              _collectDecls(func,i.value,funcSyms,funcVars || new Map(),
+                            nextSyms,loop)
               checkScope(i.value,nextSyms)
             }
             break
@@ -344,7 +346,7 @@ export const assignSym = (report) => Kit.pipe(
               }
               if (block.type === Tag.BlockStatement)
                 s.take()
-              walk(i.value,block.value,nextSyms,new Map(),nextSyms)
+              _collectDecls(i.value,block.value,nextSyms,new Map(),nextSyms)
               i.value.body = block.value
               i.value.paramSyms = params
               checkScope(block.value,nextSyms)
@@ -358,7 +360,7 @@ export const assignSym = (report) => Kit.pipe(
             const k = s.take()
             assert.equal(k.pos, Tag.key)
             if (!k.leave) {
-              walk(func,block,funcSyms,funcVars,blockSyms,loop)
+              _collectDecls(func,block,funcSyms,funcVars,blockSyms,loop)
               s.close(k)
             }
           case Tag.File:
@@ -373,7 +375,7 @@ export const assignSym = (report) => Kit.pipe(
                 const fd = ti.funDecl
                 id(j,
                    fd && funcSyms != null
-                   ? s.opts.unsafe ? funcSyms : blockSyms
+                   ? func.sloppy ? funcSyms : blockSyms
                    : nextSyms,
                    fd)
                 assert.ok(j.value.sym)
@@ -389,8 +391,18 @@ export const assignSym = (report) => Kit.pipe(
                 j = s.peel()
               }
               assert.ok(j.pos === Tag.body || j.pos === Tag.program)
+              let sloppy = func && func.sloppy
+              const st = j.value.node.sourceType
+              if (st === "script")
+                sloppy = true
+              else if (st === "module")
+                sloppy = false
+              if (j.value.blockDirs
+                  && j.value.blockDirs.indexOf("use strict") !== -1)
+                sloppy = false
+              i.value.sloppy = sloppy
               j.value.root = true
-              walk(i.value,j.value,nextSyms,new Map(),nextSyms)
+              _collectDecls(i.value,j.value,nextSyms,new Map(),nextSyms)
               for(const k of params) {
                 k.declScope = i.value
                 k.declBlock = j.value
@@ -402,7 +414,8 @@ export const assignSym = (report) => Kit.pipe(
               }
                 funcId.func = i.value
               }
-              i.value.funcId = funcId
+              if (!i.value.funcId)
+                i.value.funcId = funcId
               i.value.paramSyms = params
               checkScope(j.value,nextSyms)
               Kit.skip(s.leave())
@@ -416,7 +429,7 @@ export const assignSym = (report) => Kit.pipe(
                 const k = s.curLev()
                 if(k && k.pos === Tag.id)
                   pat(s.one(),null,null,unordered,dstSyms)
-                walk(func,block,funcSyms,funcVars,blockSyms,loop)
+                _collectDecls(func,block,funcSyms,funcVars,blockSyms,loop)
               }
             }
             break
@@ -424,7 +437,7 @@ export const assignSym = (report) => Kit.pipe(
             if (s.cur().pos === Tag.param) {
               const nextSyms = []
               pat(s.one(),null,null,undefined,nextSyms)
-              walk(func,i.value,funcSyms,funcVars,nextSyms,loop)
+              _collectDecls(func,i.value,funcSyms,funcVars,nextSyms,loop)
               checkScope(i.value,nextSyms)
             }
             break
@@ -439,7 +452,7 @@ export const assignSym = (report) => Kit.pipe(
         }
       }
     }
-    walk(s.first.value.body)
+    _collectDecls(s.first.value.body)
     return sa
   },
   function assignSym(si) {
@@ -638,9 +651,10 @@ function solve(si) {
     for(const j of i.varRefs) {
       allIds.add(j)
       Kit.mapAdd(symsStore,j,i)
-      if ((j.hasDecl = decls.has(j))) {
-        Kit.mapPush(names,j.orig,j)
-      }
+      // if ((j.hasDecl = decls.has(j))) {
+      j.hasDecl = decls.has(j)
+      Kit.mapPush(names,j.orig,j)
+      // }
     }
     for(const [name,syms] of names) {
       if (syms.length > 1 || !name.length || reserved.has(name))
@@ -686,17 +700,19 @@ function solve(si) {
           let result = i.orig
           let nameScopes
           const symScopes = symsStore.get(i)
-          lookup: for(;;) {
-            result = namePos(name,pos++)
-            nameScopes = namesStore.get(result)
-            if (!nameScopes)
+	  if (i.hasDecl) {
+            lookup: for(;;) {
+              result = namePos(name,pos++)
+              nameScopes = namesStore.get(result)
+              if (!nameScopes)
+		break
+              for(const j of symScopes) {
+		if (nameScopes.has(j))
+                  continue lookup
+              }
               break
-            for(const j of symScopes) {
-              if (nameScopes.has(j))
-                continue lookup
             }
-            break
-          }
+	  }
           if (!nameScopes)
             namesStore.set(result, nameScopes = new Set())
           symScopes.forEach(nameScopes.add,nameScopes)
@@ -716,9 +732,9 @@ function solve(si) {
   return sa
 }
   
-export const prepare = assignSym(true)
+export const prepare = Kit.pipe(collectBlockDirectives,assignSym)
 
-export const reset = assignSym(false)
+export const reset = assignSym
 
 export const resolve = Kit.pipe(
   reset,
@@ -816,3 +832,28 @@ export const resolveTempVars = Kit.pipe(
     }
   })
 
+
+/** collects JS directives (strings in beginnigs of the block),
+ *  to block's blockDirs field 
+ */
+export function collectBlockDirectives(si) {
+  const sa = Kit.toArray(si)
+  const s = Kit.auto(sa)
+  _collectDirectives()
+  return sa
+  function _collectDirectives(dirs)  {
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.Program:
+        case Tag.BlockStatement:
+          _collectDirectives(i.value.blockDirs = [])
+          break
+        case Tag.DirectiveLiteral:
+          dirs.push(i.value.node.value)
+          break
+        }
+      }
+    }
+  }
+}

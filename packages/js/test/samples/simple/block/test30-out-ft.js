@@ -1,35 +1,34 @@
 function a() {
   var a = M.context();
 
-  a._b = function b(i) {
-    var _b = M.context();
-
-    _b._a = a;
-    _b._i = i;
+  a._b = function _b(i) {
+    var b = M.context();
+    b._a = a;
+    b._i = i;
     return M.scopeH(b_1, b_4);
   };
 
   return M.scopeH(a_1, a_5);
 }
 
-function b_1(_b) {
+function b_1(b) {
   var a;
-  a = _b._a._j;
-  return M.chainBH(eff1(_b._i, a), b_2, b_4);
+  a = b._a._j;
+  return M.chainBH(eff1(b._i, a), b_2, b_4);
 }
 
-function b_2(_b) {
+function b_2(b) {
   var a;
-  _b._i++, _b._a._j++;
-  a = _b._a._j;
-  return M.chainBH(eff2(_b._i, a), b_3, b_4);
+  b._i++, b._a._j++;
+  a = b._a._j;
+  return M.chainBH(eff2(b._i, a), b_3, b_4);
 }
 
-function b_3(_b) {
+function b_3(b) {
   return M.pure();
 }
 
-function b_4(_b, e) {
+function b_4(b, e) {
   return M.raise(e);
 }
 

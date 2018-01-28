@@ -17,15 +17,18 @@ export const effIteratorId = Kit.sysId("iteratorM")
  * convers all kind of loops into `for` loops
  */
 export function* whileStmt(s) {
-  for(const i of s)
-    yield i.type === Tag.WhileStatement && i.value.eff
-          ? Kit.setType(i,Tag.ForStatement)
-          : i
+  for(const i of s) {
+    yield i.type === Tag.WhileStatement && (i.value.eff
+                                            || i.value.opts.normPureWhile)
+      ? Kit.setType(i,Tag.ForStatement)
+      : i
+  }
 }
 
 export const toBlocks = Kit.pipe(
   function toBlocksOuter(s) {
     s = Kit.auto(s)
+    const {normPureBlocks} = s.opts
     function* walk() {
       for(const i of s.sub()) {
         if (i.enter) {
@@ -37,7 +40,7 @@ export const toBlocks = Kit.pipe(
           case Tag.DoWhileStatement:
           case Tag.WhileStatement:
             const lab = s.label()
-            if (i.pos !== Tag.push && i.value.eff) {
+            if (i.pos !== Tag.push && (i.value.eff || normPureBlocks)) {
               yield s.enter(i.pos,Tag.BlockStatement)
               yield s.enter(Tag.body,Tag.Array)
               yield s.peel(Kit.setPos(i,Tag.push))
@@ -95,9 +98,11 @@ export const toBlocks = Kit.pipe(
 export const doWhileStmt = Kit.pipe(
   function doWhileStmt(s) {
     s = Kit.auto(s)
+    const {normPureDoWhile} = s.opts
     function* walk() {
       for(const i of s.sub()) {
-        if (i.value.eff && i.type === Tag.DoWhileStatement) {
+        if ((normPureDoWhile || i.value.eff)
+            && i.type === Tag.DoWhileStatement) {
           const lab = s.label()
           yield s.peel(Kit.setType(i,Tag.ForStatement))
           i.value.node.test = null
@@ -127,14 +132,12 @@ export const doWhileStmt = Kit.pipe(
 function forOfStmtImpl(loose, s) {
   s = Kit.auto(s)
   const root = s.first.value
+  root.hasForOf = false
   const all = (loose || s.opts.loose) && s.opts.leanForOf
   const invert = !loose && s.opts.invertForOf
-  const finalize = s.opts.finalizeForOf !== false && !invert
-  let emitBody = walk
-  if (finalize && s.opts.jsExceptions !== false) {
-    emitBody = bodyExcept
-  }
+  const finalize = s.opts.finalizeForOf !== false || invert
   const exitName  = "exit" // bind ? "exitM" : "exit"
+  const {normPureForIn} = s.opts
   function* readLeft(sym,forOfInfo) {
     function* val(pos) {
       yield s.enter(pos,Tag.MemberExpression,{forOfInfo})
@@ -156,20 +159,16 @@ function forOfStmtImpl(loose, s) {
       const lab = s.label()
       yield s.enter(Tag.push,Tag.ExpressionStatement)
       yield s.enter(Tag.expression,Tag.AssignmentExpression,{node:{operator:"="}})
-      yield Kit.enter(i)
-      if (!i.leave) {
-        yield* s.sub()
-        yield s.take()
-      }
+      yield* s.copy(i)
       yield* val(Tag.right)
       yield* lab()
     }
   }
   let loopnum = 0
-  function* exit(loop) {
+  function* exit(loop,forOfExit) {
     const lab = s.label()
     const bind = loop.bindIter
-    yield s.enter(Tag.push,Tag.IfStatement,{})
+    yield s.enter(Tag.push,Tag.IfStatement,{forOfExit})
     yield s.enter(Tag.test,Tag.MemberExpression)
     yield s.tok(Tag.object,Tag.Identifier,{sym:loop.iterVar})
     yield s.tok(Tag.property,Tag.Identifier,{node:{name:exitName}})
@@ -185,53 +184,10 @@ function forOfStmtImpl(loose, s) {
     yield s.enter(Tag.arguments,Tag.Array)
     yield* lab()
   }
-  function* bodyExcept(sw,blocks,loop) {
-    const lab = s.label()
-    yield s.enter(Tag.push,Tag.TryStatement)
-    yield s.enter(Tag.block,Tag.BlockStatement)
-    yield s.enter(Tag.body,Tag.Array)
-    yield* Kit.reposOne(walk(sw,blocks),Tag.push)
-    yield* s.leave()
-    yield* s.leave()
-    yield s.enter(Tag.handler,Tag.CatchClause)
-    const sym = Bind.tempVarSym(root,"e")
-    root.savedDecls.set(sym,{raw:null})
-    yield s.tok(Tag.param,Tag.Identifier,{sym,lhs:true,rhs:false,decl:true})
-    yield s.enter(Tag.body,Tag.BlockStatement)
-    yield s.enter(Tag.body,Tag.Array)
-    yield* exit(loop)
-    yield s.enter(Tag.push,Tag.ThrowStatement,{eff:loop.eff})
-    yield s.tok(Tag.argument,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
-    yield* lab()
-  }
   // TODO: remove ForAwaitStatement in babel 7
-  function* walk(sw,blocks) {
-    function* unwind(i,span) {
-      span = span.filter(i =>
-                         i.origType === Tag.ForOfStatement
-                         || i.origType === Tag.ForAwaitStatement)
-      if (!span.length) {
-        yield s.peel(i)
-        yield* walk(s.sub(),blocks)
-        yield* s.leave()
-        return
-      }
-      const lab = s.label()
-      let pos = i.pos
-      if (i.pos !== Tag.push) {
-        yield s.enter(i.pos,Tag.BlockStatement)
-        yield s.enter(Tag.body,Tag.Array)
-        pos = Tag.push
-      }
-      for(const j of span)
-        yield* exit(j)
-      yield s.peel(Kit.setPos(i,pos))
-      yield* walk(s.sub(),blocks)
-      yield* lab()
-    }
+  function* walk(sw) {
     for(const i of sw) {
       if (i.enter && (all || i.value.eff)) {
-        const nblocks = finalize && i.value.ctrl ? [i.value,...blocks] : blocks
         switch(i.type) {
         case Tag.FunctionExpression:
         case Tag.ArrowFunctionExpression:
@@ -245,47 +201,32 @@ function forOfStmtImpl(loose, s) {
             yield s.close(i)
           }
           continue
-        case Tag.ReturnStatement:
-          if (!blocks.length)
-            break
-          yield* unwind(i,blocks)
-          continue
-        case Tag.ContinueStatement:
-          if (!blocks.length)
-            break
-          const cix = blocks.indexOf(i.value.block)
-          if (cix > 0) {
-            yield* unwind(i,blocks.slice(0,cix))
-            continue
-          }
-          break
-        case Tag.BreakStatement:
-          if (!blocks.length)
-            break
-          const bix = blocks.indexOf(i.value.block)
-          if (bix >= 0) {
-            yield* unwind(i,blocks.slice(0,bix+1))
-            continue
-          }
-          break
         case Tag.ForInStatement:
-          if (loose)
+          if (loose && !normPureForIn)
             break
         case Tag.ForAwaitStatement:
         case Tag.ForOfStatement:
           const loop = i.value
           const sym = loop.iterVar = Bind.tempVarSym(s.first.value,"loop")
           let forOfInfo
-          if (invert && i.value.eff && i.type === Tag.ForOfStatement)
+          if (invert && i.value.eff && i.type === Tag.ForOfStatement) {
             forOfInfo = {sym,loop}
+            root.hasForOf = true
+          }
           sym.declBlock = sym.declLoop = loop
           sym.hasRefs = true
           i.value.forOfInfo = forOfInfo
-          yield s.peel(Kit.setType(i,Tag.ForStatement))
+          const lab = s.label()
+          if (i.pos !== Tag.push) {
+            yield s.enter(i.pos,Tag.BlockStatement)
+            yield s.enter(Tag.body,Tag.Array)
+          }
+          let finlab
           const iterVar = {sym,lhs:true,decl:true,forOfInfo}
           const init = Kit.toArray(readLeft(sym,forOfInfo))
-          const end = s.label()
-          yield s.enter(Tag.init,Tag.VariableDeclaration,
+          let start = Kit.setType(i,Tag.ForStatement)
+          const slab = s.label()
+          yield s.enter(Tag.push,Tag.VariableDeclaration,
                         {node:{kind:"var"},forOfInfo})
           yield s.enter(Tag.declarations,Tag.Array)
           yield s.enter(Tag.push,Tag.VariableDeclarator)
@@ -307,7 +248,15 @@ function forOfStmtImpl(loose, s) {
             yield* s.sub()
             yield Kit.setPos(s.take(),Tag.push)
           }
-          yield* end()
+          yield* slab()
+          if (finalize && i.type !== Tag.ForInStatement) {
+            yield s.enter(Tag.push,Tag.TryStatement)
+            finlab = s.label()
+            yield s.enter(Tag.block,Tag.BlockStatement)
+            yield s.enter(Tag.body,Tag.Array)
+          }
+          yield s.peel(Kit.setPos(start,Tag.push))
+          const flab = s.label()
           yield s.enter(Tag.test,Tag.UnaryExpression,{node:{operator:"!"},forOfInfo})
           yield s.enter(Tag.argument,Tag.MemberExpression)
           yield s.enter(Tag.object,Tag.AssignmentExpression,
@@ -324,16 +273,14 @@ function forOfStmtImpl(loose, s) {
           yield* s.leave()
           yield* s.leave()
           yield s.tok(Tag.property, Tag.Identifier, {node:{name:"done"}})
-          yield* end()
+          yield* flab()
           const body = s.curLev()
           assert.equal(body.pos, Tag.body)
           if (body.type === Tag.BlockStatement) {
             yield s.peel()
             yield* s.peelTo(Tag.body)
             yield* init
-            yield* i.type === Tag.ForInStatement
-              ? walk(s.sub(),nblocks)
-              : emitBody(s.sub(),nblocks,loop)
+            yield* walk(s.sub())
           } else {
             yield s.enter(Tag.body, Tag.BlockStatement)
             yield s.enter(Tag.body, Tag.Array)
@@ -341,16 +288,16 @@ function forOfStmtImpl(loose, s) {
               Kit.skip(s.one())
             else {
               yield* init
-              yield* Kit.reposOne(emitBody(s.one(),nblocks,loop),Tag.push)
+              yield* Kit.reposOne(walk(s.one()),Tag.push)
             }
           }
-          /*
-          if (invert && i.value.eff) {
-            yield s.tok(Tag.push,Tag.ContinueStatement,{bind:true,block:i.value})
+          if (finlab) {
+            yield* finlab()
+            yield s.enter(Tag.finalizer,Tag.BlockStatement)
+            yield s.enter(Tag.body,Tag.Array)
+            yield* exit(loop,forOfInfo)
           }
-          */
-          yield* end()
-          yield* s.leave()
+          yield* lab()
           continue
         }
       }
@@ -649,6 +596,7 @@ export function blockScoping(sa) {
           continue
         case Tag.ForStatement:
         case Tag.ForOfStatement:
+        case Tag.ForAwaitStatement:
         case Tag.ForInStatement:
         case Tag.WhileStatement:
         case Tag.DoWhileStatement:
@@ -675,7 +623,17 @@ export function blockScoping(sa) {
             const sw = s.enter(Tag.push,blockScopeSwitch,
                                {enabled:false})
             yield sw
-            yield s.enter(Tag.expression,Tag.CallExpression,{bind:i.value.eff})
+            let pos = Tag.expression
+            const wrapYldStar = i.value.eff && s.opts.ops
+                  && s.opts.ops.YieldExpression
+            const tlab = s.label()
+            if (wrapYldStar) {
+              yield s.enter(pos,Tag.YieldExpression,
+                            {bind:true,node:{delegate:true}})
+              pos = Tag.argument
+            }
+            yield s.enter(pos,Tag.CallExpression,
+                          {bind:!wrapYldStar && i.value.eff})
             const clab = s.label()
             const func = s.enter(Tag.callee,Tag.ArrowFunctionExpression,
                                  {node:{params:[]},
@@ -708,8 +666,7 @@ export function blockScoping(sa) {
             for(const i of capt)
               yield s.tok(Tag.push, Tag.Identifier,
                           {sym:i[1],lhs:false,rhs:true,decl:false})
-            yield* s.leave()
-            yield* s.leave()
+            yield* tlab()
             let hasBrk = false
             if (nctrl.cnt) {
               sw.value.enabled = true

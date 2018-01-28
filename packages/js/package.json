@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "babel-register": "^6.26.0",
-    "es-dev": "../es-dev",
+    "es-dev": "^0.1.0",
     "mocha": "^4.0.1"
   },
   "engines": {

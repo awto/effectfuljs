@@ -132,44 +132,48 @@ function a5() {
   var i,
       a5 = M.generator(),
       loop,
-      e,
-      ex;
+      fc,
+      fe,
+      err;
   return M.scopeH(_1, _5);
 
   function _1(a5) {
     loop = M.iterator(a4());
-    return M.jumpH(_2, _5);
+    return M.jumpH(_2, _7);
   }
 
   function _2(a5) {
     if (!(loop = loop.step()).done) {
       i = loop.value;
-      return M.jumpRH(_3, _6);
+      return M.yldStarBH(M.yld(i), _2, _7);
     } else {
-      return M.pure();
+      fc = _4, fe = _5;
+      return M.jumpH(_3, _5);
     }
   }
 
   function _3(a5) {
-    return M.yldStarBH(M.yld(i), _2, _5);
-  }
-
-  function _4(a5) {
-    e = ex;
-
     if (loop.exit) {
       loop.exit();
     }
 
-    throw e;
+    return M.jumpH(fc, fe);
+  }
+
+  function _4(a5) {
+    return M.pure();
   }
 
   function _5(a5, e) {
     return M.raise(e);
   }
 
-  function _6(a5, a) {
-    ex = a;
-    return M.jumpH(_4, _5);
+  function _6(a5) {
+    return M.raise(err);
+  }
+
+  function _7(a5, a) {
+    fc = _6, fe = _5, err = a;
+    return M.jumpH(_3, _5);
   }
 }

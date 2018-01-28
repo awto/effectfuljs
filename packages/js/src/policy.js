@@ -695,6 +695,8 @@ function emitInitOptions(s) {
     if (!$ns) {
       $ns = Kit.scope.newSym(s.opts.ns || "M")
       // suppressing scope warning
+      if (!s.opts.importRT)
+	$ns.num = -1
       $ns.global = true
     }
     s.first.value.$ns = $ns

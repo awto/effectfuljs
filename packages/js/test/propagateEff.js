@@ -10,7 +10,7 @@ import * as Ctrl from "../control"
 
 const run = transformExpr(
     Kit.pipe(
-      Ctrl.removeLabeldStatement,
+      Ctrl.removeLabeledStatement,
       Debug.mark,
       consumeScope
     ))

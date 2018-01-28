@@ -1,5 +1,5 @@
 import * as assert from "assert"
-import {produce as produceImpl,consume,Tag,enter,resetFieldInfo,
+import {produce,consume,Tag,enter,resetFieldInfo,
         leave,tok,symbol,symInfo,typeInfo,removeNulls,isSymbol,
        } from "./core"
 import * as T from "babel-types"
@@ -9,10 +9,6 @@ const BROWSER_DEBUG = typeof window !== "undefined" && window.chrome
 let _opts = {}
 
 let leanWrap
-
-function produce(node,pos) {
-  return produceImpl(node,pos,_opts.ctor)
-}
 
 function LeanIterator(iter) {
   this.value = void 0
@@ -96,6 +92,9 @@ export function parse(jsCode) {
 export function* toks(pos,s,...syms) {
   if (Array.isArray(s))
     yield* clone(s)
+  let value
+  if (syms.length && syms[0].name == null)
+    value = syms.shift()
   if (s.substr != null) {
     let r = memo.get(s)
     if (r == null) {
@@ -142,7 +141,7 @@ export function* toks(pos,s,...syms) {
   function* replace(s) {
     if (!syms.length) {
       yield* s
-      return
+      return s
     }
     for(const i of s) {
       if (i.enter) {
@@ -168,12 +167,13 @@ export function* toks(pos,s,...syms) {
       }
       yield i
     }
+    return s
   }
   if (Array.isArray(s)) {
     for(const i of s)
-      yield* replace(clone(produce(i,pos)))
+      yield* replace(clone(produce(i,pos,value)))
   } else
-    yield* replace(clone(produce(s,pos)))
+    yield* replace(clone(produce(s,pos,value)))
 }
 
 /** runs iterable `s` and ignores its output, returns its result */
@@ -1039,18 +1039,18 @@ export function groupUniq/*::<K,V>*/(i/*:Iterable<[K,V]>*/)/*: Map<K,Set<V>>*/ {
 export const cleanEmptyExprs = pipe(
   function markLastSubExpr(si) {
     const s = auto(si)
-    function* walk() {
+    function* _markLastSubExp() {
       for(const i of s.sub()) {
         yield i
         if (i.type === Tag.SequenceExpression) {
-          const inner = [...walk()]
+          const inner = [..._markLastSubExp()]
           if (inner.length > 2)
             inner[inner.length - 2].value.last = true
           yield* inner
         }
       }
     }
-    return walk()
+    return _markLastSubExp()
   },
   function cleanEmptyExprs(si) {
     const s = auto(si)
@@ -1062,7 +1062,7 @@ export const cleanEmptyExprs = pipe(
         return true
       return false
     }
-    function* walk(sw,ignore) {
+    function* _cleanEmptyExprs(sw,ignore) {
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
@@ -1070,7 +1070,7 @@ export const cleanEmptyExprs = pipe(
             const j = s.take()
             const buf = []
             for(let nxt;(nxt = s.curLev()) != null;) {
-              const inner = [...walk(s.one(),!nxt.value.last || ignore)]
+              const inner = [..._cleanEmptyExprs(s.one(),!nxt.value.last || ignore)]
               if (nxt.value.last && !ignore || !canSkip(inner))
                 buf.push(inner)
             }
@@ -1091,7 +1091,7 @@ export const cleanEmptyExprs = pipe(
             }
             continue
           case Tag.ExpressionStatement:
-            const inner = [...walk(s.one(),true)]
+            const inner = [..._cleanEmptyExprs(s.one(),true)]
             if (canSkip(inner)) {
               if (i.pos !== Tag.push)
                 yield s.tok(i.pos,Tag.Null)
@@ -1108,7 +1108,7 @@ export const cleanEmptyExprs = pipe(
         yield i
       }
     }
-    return walk(s)
+    return _cleanEmptyExprs(s)
   },
   removeNulls)
 
@@ -1266,9 +1266,14 @@ AFp.regForOf = function(loopYld, loopDone) {
   return this
 }
 
+function* unbuf(iter) {
+  yield iter.value
+  yield* iter
+}
+
 // no more needs for levels etc, the rest is passed further as is
 AFp.regYldStar = function(dest) {
-  dest.delegateYld(this._inner)
+  return dest.delegateYld(unbuf(this._inner))
 }
 
 if (Symbol.effectfulIterator)
@@ -1531,6 +1536,8 @@ AFp.peelOpt = function() {
   return this.peel()
 }
 
+function* empty() {}
+
 /** 
  * returns an iterator, if next tag is opening the iterator will 
  * output all tokens until it is closed, or empty otherwise
@@ -1541,6 +1548,14 @@ AFp.one = function*() {
   }
   return null
 }
+/*
+= function() {
+  if (this._stack[0] !== vCloseTag) {
+    return one(this)
+  }
+  return empty()
+}
+*/
 
 /** 
  * returns an iterator to traverse all tokens until exiting from 

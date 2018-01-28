@@ -31,7 +31,7 @@
     "babel-cli": "^6.24.1",
     "babel-register": "^6.24.1",
     "cross-env": "^5.1.1",
-    "es-dev": "../es-dev",
+    "es-dev": "^0.1.0",
     "expect.js": "^0.3.1",
     "mocha": "^3.4.2"
   },

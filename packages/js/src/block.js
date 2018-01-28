@@ -208,6 +208,7 @@ export function* interpretBinEffSeq(s) {
 export const interpretCasts = Kit.pipe(
   function* cleanEffExpr(s) {
     const sl = Kit.auto(s)
+    const noResult = sl.opts.returnContext === false
     function* walk() {
       for(const i of sl.sub()) {
         switch(i.type) {
@@ -215,7 +216,7 @@ export const interpretCasts = Kit.pipe(
           if (i.enter) {
             yield sl.enter(i.pos,Kit.Subst)
             const j = sl.curLev()
-            if (j != null)
+            if (j != null && (!noResult || i.value.result))
               j.value.result = true
             yield* walk()
             yield* sl.leave()
@@ -339,12 +340,13 @@ export function* interpretPure(s) {
   const sl = Kit.auto(s)
   const root = sl.first.value
   const ctxSym = root.contextSym
+  const noResult = sl.opts.returnContext === false
   function* walk() {
     for(const i of sl.sub()) {
       if (i.type === pure) {
         if (i.enter) {
           const lab = sl.label()
-          yield sl.enter(i.pos,Tag.CallExpression,{result:true})
+          yield sl.enter(i.pos,Tag.CallExpression,{result:!noResult})
           yield sl.tok(Tag.callee, Tag.Identifier, {sym: pureId})
           yield sl.enter(Tag.arguments,Tag.Array)
           yield* Kit.reposOne(walk(),Tag.push)

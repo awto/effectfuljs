@@ -124,38 +124,39 @@ function a5() {
   function _1(a5) {
     var loop;
     loop = M.iterator(a4());
-    return M.jumpH(_2, _5, loop);
+    return M.jumpH(_2, _7, loop);
   }
 
   function _2(a5, loop) {
     if (!(loop = loop.step()).done) {
       i = loop.value;
-      return M.jumpRH(_3, _6, loop);
+      return M.yldStarBH(M.yld(i), _2, _7, loop);
     } else {
-      return M.pure();
+      return M.jumpH(_3, _5, _4, _5);
     }
   }
 
-  function _3(a5, loop) {
-    return M.yldStarBH(M.yld(i), _2, _5, loop);
-  }
-
-  function _4(a5, ex) {
-    var e;
-    e = ex;
-
+  function _3(a5, fc, fe, err) {
     if (loop.exit) {
       loop.exit();
     }
 
-    throw e;
+    return M.jumpH(fc, fe, err);
+  }
+
+  function _4(a5) {
+    return M.pure();
   }
 
   function _5(a5, e) {
     return M.raise(e);
   }
 
-  function _6(a5, a) {
-    return M.jumpH(_4, _5, a);
+  function _6(a5, err) {
+    return M.raise(err);
+  }
+
+  function _7(a5, a) {
+    return M.jumpH(_3, _5, _6, _5, a);
   }
 }

@@ -2,7 +2,7 @@ import {asyncIterator as asyncIterSym} from "./symbol"
 import {AsyncGenerator} from "./esAsyncIterator"
 import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
-import {LeanGenerator,makeDelegateYld} from "./generator"
+import {LeanGenerator,makeDelegate} from "./generator"
 import {iteratorM,UnwrapWrapper} from "./leanAsyncIterator"
 import {Async} from "./async"
 
@@ -70,6 +70,6 @@ LAGp.handle = LGp.handle
 LAGp.pure = LGp.pure
 LAGp.raise = LGp.raise
 
-LAGp.delegateYld = makeDelegateYld(iteratorM)
+LAGp.delegate = makeDelegate(iteratorM)
 
 

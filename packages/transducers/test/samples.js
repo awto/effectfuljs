@@ -438,12 +438,12 @@ describe("closure conversion", function() {
         apply = new _apply(g);
         function kk(ff, _gg) {
           this.ff = ff;
-          this._gg = _gg;
+          this.gg = _gg;
         }
         closure(kk, function kk(self) {
           var args = Array.from(arguments).slice(1),
               kk;
-          return this.ff.i + this._gg.j + args[1];
+          return this.ff.i + this.gg.j + args[1];
         });
         function _gg(ff) {
           this.ff = ff;
@@ -502,11 +502,11 @@ describe("closure conversion", function() {
         
         function _b(fn, _a) {
           this.fn = fn;
-          this._a = _a;
+          this.a = _a;
         }
         
         closure(_b, function b(self, k) {
-          this.fn.i += k + this._a.j;
+          this.fn.i += k + this.a.j;
           return this.fn.i;
         });
         

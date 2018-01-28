@@ -5,9 +5,9 @@ const assert = require("assert")
  * ensuring their results are deep equal 
  * it does nothing if generator throws
  */
-exports.eqlGens = function eqlGens(a, b) {
-  a = a[Symbol.iterator]()
-  b = b[Symbol.iterator]()
+exports.eqlGens = function eqlGens(ac, bc) {
+  var a = ac[Symbol.iterator]()
+  var b = bc[Symbol.iterator]()
   return {
     [Symbol.iterator]() { return this; },
     next(v) {

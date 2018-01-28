@@ -24,7 +24,7 @@ export const saveDecls = Kit.pipe(
     const sl = Kit.auto(s)
     const top = sl.peel()
     const decls = top.value.savedDecls || (top.value.savedDecls = new Map())
-    function* walk() {
+    function* _saveDecls(pureTry) {
       for(const i of sl.sub()) {
         if (i.enter) {
           switch(i.type) {
@@ -47,53 +47,51 @@ export const saveDecls = Kit.pipe(
             continue
           case Tag.TryStatement:
             if (!i.value.eff) {
-              yield i
-              for(const j of sl.sub()) {
-                yield j
-                if (j.enter && j.type === Tag.CatchClause) {
-                  if (sl.cur().pos === Tag.param) {
-                    for(const k of sl.one()) {
-                      yield k
-                      if (k.enter && k.type === Tag.Identifier
-                          && k.value.sym && k.value.decl) {
-                        k.value.sym.interpr = null
-                      }
-                    }
-                  }
-                }
-              }
+	      yield i
+	      yield* _saveDecls(true)
               continue
             }
             break
           case Tag.CatchClause:
-            if (sl.cur().pos === Tag.param) {
-              const ids = []
-              for(const j of sl.one()) {
-                if (j.enter && j.type === Tag.Identifier && j.value.decl) {
-                  decls.set(j.value.sym, {raw:null})
-                  j.value.lhs = true
-                  j.value.rhs = false
-                  j.value.decl = false
+	    if (sl.cur().pos === Tag.param) {
+	      if (pureTry) {
+		yield i
+                for(const k of sl.one()) {
+                  yield k
+                  if (k.enter && k.type === Tag.Identifier
+                      && k.value.sym && k.value.decl) {
+                    k.value.sym.interpr = null
+                  }
                 }
-                ids.push(j)
+	      } else {
+		const ids = []
+		for(const j of sl.one()) {
+                  if (j.enter && j.type === Tag.Identifier && j.value.decl) {
+                    decls.set(j.value.sym, {raw:null})
+                    j.value.lhs = true
+                    j.value.rhs = false
+                    j.value.decl = false
+                  }
+                  ids.push(j)
+		}
+		const sym = Bind.tempVarSym(top.value,"ex")
+		const lab = sl.label()
+		yield sl.peel(i)
+		yield sl.tok(Tag.param, Tag.Identifier, {sym})
+		yield sl.peel()
+		yield* sl.peelTo(Tag.body)
+		const blab = sl.label()
+		yield sl.enter(Tag.push, Tag.ExpressionStatement)
+		yield sl.enter(Tag.expression, Tag.AssignmentExpression,
+                               {node:{operator:"="}})
+		yield* Kit.reposOne(ids, Tag.left)
+		yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
+		yield* blab()
+		yield* _saveDecls()
+		yield* lab()
               }
-              const sym = Bind.tempVarSym(top.value,"ex")
-              const lab = sl.label()
-              yield sl.peel(i)
-              yield sl.tok(Tag.param, Tag.Identifier, {sym})
-              yield sl.peel()
-              yield* sl.peelTo(Tag.body)
-              const blab = sl.label()
-              yield sl.enter(Tag.push, Tag.ExpressionStatement)
-              yield sl.enter(Tag.expression, Tag.AssignmentExpression,
-                             {node:{operator:"="}})
-              yield* Kit.reposOne(ids, Tag.left)
-              yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
-              yield* blab()
-              yield* walk()
-              yield* lab()
-              continue
-            }
+	      continue
+	    }
             break
           case Tag.VariableDeclaration:
             const kind = i.value.node.kind
@@ -177,7 +175,7 @@ export const saveDecls = Kit.pipe(
       }
     }
     yield top
-    yield* walk()
+    yield* _saveDecls()
     yield* sl.leave()
   },
   Kit.removeNulls,
@@ -256,7 +254,7 @@ export function* restoreDecls(s) {
               yield sl.enter(Tag.declarations,Tag.Array)
               for(const {sym,init} of vars) {
                 yield sl.enter(Tag.push,Tag.VariableDeclarator)
-                yield sl.tok(Tag.id,Tag.Identifier,{sym})
+                yield sl.tok(Tag.id,Tag.Identifier,{sym,decl:true})
                 if (init)
                   yield* init
                 yield* sl.leave()
@@ -1241,4 +1239,5 @@ export function calcFlatCfg(cfg,sa) {
   resolveFrameArgs(cfg)
   localsDecls(cfg)
 }
+
 

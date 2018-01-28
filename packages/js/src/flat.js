@@ -35,6 +35,8 @@ const catchBlock = Kit.symbol("catch.block")
 // temporal marker delimiting handler block for both catch and finally
 const handleBlock = Kit.symbol("try.handle")
 
+const scopeSym = Kit.sysId("scope")
+
 function unboundTempVar(root,name) {
   const res = Bind.tempVarSym(root,name)
   res.bound = false
@@ -331,7 +333,7 @@ export const convert = Kit.pipe(
   function postproc(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
-    const noLoopContOpt = s.opts.invertForOf
+    const noLoopContOpt = s.opts.invertForOf && root.hasForOf
     const bindName = s.opts.bindName || "chain"
     walk()
     return sa
@@ -424,8 +426,8 @@ export const convert = Kit.pipe(
                              root,result:false})
       yield frame
       yield s.tok(Tag.push, Block.letStmt,
-                  {goto:first,ref:frame.value,bindJump:true,
-                   eff:true,bindName:"scope",init:true})
+                  {goto:first,ref:frame.value,eff:true,op:null,
+                   opSym:scopeSym,bindName:"scope",bindJump:true,init:true})
       yield* lab()
     } else if (first.enters && first.enters.size) {
       // the function starts from loop
@@ -812,7 +814,7 @@ function* copyFrameVars(si) {
     }
     const patSym = frame.errSym || frame.patSym
     let patCopy
-    if (patSym && isRef(patSym) /*&& vars.has(patSym)*/ && patSym.extBind) {
+    if (patSym && isRef(patSym) && patSym.extBind) {
       patCopy = commonPatSym || Kit.scope.newSym()
       yield s.enter(Tag.push,Tag.AssignmentExpression,{node:{operator:"="}})
       yield s.tok(Tag.left,Tag.Identifier,{sym:patSym})
@@ -1038,7 +1040,7 @@ export function interpretFrames(si) {
             const thread = i.value.threadParams
             i.value.func = true
             yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
-            yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.declSym})
+            yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.declSym,decl:true})
             const paramLab = s.label()
             yield s.enter(Tag.params,Tag.Array)
             yield* paramPrefix(i.value)
@@ -1138,16 +1140,7 @@ export function interpretJumps(si) {
           const insideCtx = !frame.first
           const lab = s.label()
           const {goto,gotoDests,ref,delegateCtx} = i.value
-          // TODO: detect rec jumps not only in the first frame
           let rec = pure && markRepeat && i.value.rec
-          /*
-          if (goto && frame.repeatStart && pure && s.opts.markRepeat) {
-            const gr = goto.repeat
-            const fr = frame.repeat
-            if (gr && gr.length >= fr.length
-                && gr[fr.length-1] === fr[fr.length-1])
-              rec = true
-          } */
           const pos = i.pos
           const ctx = ctxSym
           const defaultName = pure ? pureBindName : bindName
@@ -1900,13 +1893,16 @@ function unfoldCfg(cfg,sa) {
 
 /** conferts flat structure to JS expressions */
 export const interpret = Kit.pipe(
-  Inline.invertForOf,
+  Inline.prepareInvertForOf,
+  Inline.markSimpleRedir,
   Kit.toArray,
   calcVarDeps,
+  Inline.invertForOf,
   Inline.storeContinuations,
   ifDefunct(Defunct.prepare),
   Gens.functionSentAssign,
   Bind.interpretPureLet,
+  Inline.vars,
   copyFrameVars,
   Policy.stage("interpretFrames"),
   Kit.toArray,

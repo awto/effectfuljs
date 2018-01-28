@@ -1,4 +1,4 @@
-function M() {
+function _M() {
   return M.chainBH(eff(2), _1, _2);
 
   function _1() {

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "prepare-test": "babel ../transducers/test --out-dir=test",
-    "build": "cross-env BABEL_ENV=loose babel ../transducers/src --out-dir=."
+    "build-loose": "cross-env BABEL_ENV=loose babel ../transducers/src --out-dir=."
   },
   "repository": {
     "type": "git",

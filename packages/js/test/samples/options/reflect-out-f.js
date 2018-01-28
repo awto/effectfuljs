@@ -42,6 +42,14 @@ function a() {
 }
 
 function b() {
+  var addLater = function addLater(a, b) {
+    var deferred = Q.defer();
+    process.nextTick(function () {
+      deferred.resolve(a + b);
+    });
+    return deferred.promise;
+  };
+
   M.reify(function () {
     var result;
     return M.chainBH(addLater(1, 2), _1, _2);
@@ -63,12 +71,4 @@ function b() {
       return M.raise(e);
     }
   }).done();
-
-  function addLater(a, b) {
-    var deferred = Q.defer();
-    process.nextTick(function () {
-      deferred.resolve(a + b);
-    });
-    return deferred.promise;
-  }
 }
