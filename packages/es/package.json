@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Standard JavaScript effects using @effectful/js (abstract interface)",
   "main": "preset.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/es-rt": "^0.1.1",
+    "@effectful/es-rt": "^0.1.2",
     "benchmark": "^2.1.4",
     "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
