@@ -15,7 +15,7 @@
     "configure-opt": "cross-env env-cmd $EJS_ENV babel src --out-dir .",
     "lint": "eslint .",
     "watch-bundle": "env-cmd configure,default rollup -c -w",
-    "build": "npm run configure && rollup -c",
+    "build": "npm run configure && rollup -c && npm run build-opts",
     "prepare-test": "npm run build-opts",
     "watch-bundle-opt": "cross-env env-cmd configure,opt,$EJS_ENV rollup -c -w",
     "build-bundle-opt": "cross-env env-cmd configure,opt,$EJS_ENV rollup -c",
