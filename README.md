@@ -20,7 +20,7 @@ Not yet implemented:
 Theare are typically small, some of them are just tiny wrappers of well known
 interfaces, such as Promises and Rx Observables.
 
-The compiler converts ES8 to ES8 and doesn't need any syntax extensions. 
+The compiler converts ES2018 to ES2018 and doesn't need any syntax extensions. 
 So it may be applied to results of other compilers targeting JS such as 
 CoffeeScript, TypeScript, Babel etc.
 
@@ -183,7 +183,7 @@ for example flapjax and webppl.
 
 ## LICENSE
 
-Copyright © 2016-2017 Vitaliy Akimov
+Copyright © 2016-2018 Vitaliy Akimov
 
 Distributed under the terms of The MIT License (MIT).
 

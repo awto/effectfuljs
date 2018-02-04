@@ -116,7 +116,7 @@ function aliases(s) {
   const aliases = s.opts.moduleAliases
   if (!aliases)
     return s
-  return walk(s)
+  return _aliases(s)
   function* subst(j) {
     const alias = aliases[j.value.node.value]
     if (!alias) {
@@ -126,7 +126,7 @@ function aliases(s) {
     yield s.tok(j.pos,Tag.StringLiteral,{node:{value:alias}})
     Kit.skip(s.copy(j))
   }
-  function* walk(sw) {
+  function* _aliases(sw) {
     for(const i of s) {
       if (i.enter) { 
         if (i.pos === Tag.source && i.type === Tag.StringLiteral) {
@@ -168,8 +168,8 @@ export const presets =
       const patStr = s.opts.presetsImportPattern
       if (!patStr)
         return s
-      return walk()
-      function* walk() {
+      return _presets()
+      function* _presets() {
         const pat = patStr && patStr.substr && new RegExp(patStr)
         const first = s.first
         const namespaces = first.value.namespaces = new Map()
@@ -412,7 +412,7 @@ export const one = symbol("one")
  * handles `sub` tokens and `one` tokens
  */
 export function applySubAndOne(s) {
-  function* walk(si) {
+  function* _applySubAndOne(si) {
     const sa = Kit.toArray(si)
     if (!sa.length)
       return
@@ -422,18 +422,18 @@ export function applySubAndOne(s) {
         switch(i.type) {
         case sub:
           assert.ok(i.leave)
-          yield* walk(i.value.run(s.sub()))
+          yield* _applySubAndOne(i.value.run(s.sub()))
           continue
         case one:
           assert.ok(i.leave)
-          yield* walk(i.value.run(s.one()))
+          yield* _applySubAndOne(i.value.run(s.one()))
           continue
         }
       }
       yield i
     }
   }
-  return walk(s)
+  return _applySubAndOne(s)
 }
 
 /** 
@@ -450,15 +450,15 @@ export function applyHoist(si) {
   const s = Kit.auto(si)
   function* scope() {
     const buf = []
-    const nxt = [...walk(buf)]
+    const nxt = [..._applyHoist(buf)]
     yield* buf
     yield* nxt
   }
-  function* walk(funScope) {
+  function* _applyHoist(funScope) {
     for(const i of s.sub()) {
       if (i.type === hoist) {
         if (i.enter) {
-          const buf = [...walk(funScope)]
+          const buf = [..._applyHoist(funScope)]
           funScope.push(...buf)
         }
       } else if (i.enter && i.value.func) {
@@ -485,7 +485,7 @@ const MAX_PREPROCESS_COUNT = 10
  */
 export function preprocessPass(s) {
   let num = 0
-  function* walk(s) {
+  function* _preprocessPass(s) {
     if (++num > MAX_PREPROCESS_COUNT)
       throw new Error("too many transforms")
     s = Kit.share(s)
@@ -499,7 +499,7 @@ export function preprocessPass(s) {
     return null
   }
   for(let i = s, j = [], next;;i = next.node(j), j = []) {
-    next = Kit.result(walk(i), j)
+    next = Kit.result(_preprocessPass(i), j)
     if (next === null)
       return j
   }
@@ -525,10 +525,10 @@ export function setQNames(si) {
       break
     default:
       ids.push("*")
-      yield* walk(s.one())
+      yield* _setQNames(s.one())
     }
   }
-  function* walk(sw) {
+  function* _setQNames(sw) {
     for(const i of sw) {
       yield i
       if (i.enter) {
@@ -543,19 +543,18 @@ export function setQNames(si) {
           const j = s.curLev()
           if (j != null) {
             j.lqname = cqn
-            yield* walk(s.sub())
+            yield* _setQNames(s.sub())
           }
           break
         }
       }
     }
   }
-  return walk(s)
+  return _setQNames(s)
 }
 
 /** marks `throw` statement to be handled by monadic library rather than js */
 export function* assignThrowEff(s) {
-  
   for(const i of s) {
     if (i.enter && i.type === Tag.ThrowStatement
         && i.value.opts.transform
@@ -573,8 +572,8 @@ export function assignBindCalls(s) {
   s = Kit.auto(s)
   if (!s.opts.bindCalls)
     return s
-  return walk()
-  function* walk() {
+  return _assignBindCalls()
+  function* _assignBindCalls() {
     const {$ns} = s.first.value
     for(const i of s) {
       if (i.type === Tag.CallExpression && i.value.opts.transform
@@ -732,7 +731,7 @@ export function unwrapNs(si) {
   if (!s.opts.bindCalls)
     return s
   const {$ns} = s.first.value
-  function* walk() {
+  function* _unwrapNs() {
     for(const i of s.sub()) {
       if (i.enter) {
         if (i.type === Tag.CallExpression && s.opts.transform) {
@@ -744,7 +743,7 @@ export function unwrapNs(si) {
               s.peel(i)
               Kit.skip(s.peelTo(Tag.arguments))
               s.cur().value.bind = true
-              yield* Kit.reposOne(walk(),i.pos)
+              yield* Kit.reposOne(_unwrapNs(),i.pos)
               Kit.skip(lab())
               continue
             }
@@ -754,7 +753,7 @@ export function unwrapNs(si) {
       yield i
     }
   }
-  return walk()
+  return _unwrapNs()
 }
 
 /** sets options `opts` to each function root tag */

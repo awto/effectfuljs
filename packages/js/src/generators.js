@@ -38,7 +38,8 @@ export function prepare(si) {
           i.value.bind = true
           if (!s.curLev()) {
             yield s.peel(i)
-            yield s.tok(Tag.argument,Tag.Identifier,{sym:Kit.scope.undefinedSym})
+            yield s.tok(Tag.argument,Tag.Identifier,
+                        {sym:Kit.scope.undefinedSym})
             yield* s.leave()
             continue           
           }

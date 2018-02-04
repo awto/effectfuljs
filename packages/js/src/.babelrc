@@ -28,6 +28,33 @@
         }
       ]
     },
+    "loose-defunct-top": {
+      "passPerPreset": true,
+      "presets": [
+        ["es-dev",
+         {"loose":true,
+          "topLevel":true,
+          "defunct":true,
+          "importRT":"@effectful/es-rt/opts/defunct-loose",
+          "all": {
+            "jsExceptions":false,
+            "inlineJsExceptions":false,
+            "inlineThrow":true,
+            "moduleAliases":{
+              "@effectful/transducers":"@effectful/transducers-loose",
+              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
+              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
+              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
+              "@effectful/transducers/match":"@effectful/transducers-loose/match"
+            }
+          }
+         }],
+        {
+          "plugins": [["transform-es2015-modules-commonjs",
+                       {"loose":true,"noInterop":true}]]
+        }
+      ]
+    },
     "loose-for-ofs": {
       "passPerPreset": true,
       "presets": [

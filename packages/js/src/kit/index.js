@@ -26,10 +26,11 @@ import {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
         from "@effectful/transducers"
 export {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
         typeInfo,resetFieldInfo}
-// export {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
-//       typeInfo,resetFieldInfo}
-//       from "@effectful/transducers"
-export {packId,auto,autoBlock,autoBlockPass,rmEmpty,removeNulls,
+import {packId,auto,autoBlock,autoBlockPass,rmEmpty,removeNulls,
         enter,leave,tok,repeat,complete,Any,completeAny,finalize,
         strip,swap,swapTok,produce,consume,tagValue,idTok,
         lookahead,rsub,prepare,resetLevel,sysId,coerceId} from "./core"
+export {packId,auto,autoBlock,autoBlockPass,rmEmpty,removeNulls,
+        enter,leave,tok,repeat,complete,Any,completeAny,finalize,
+        strip,swap,swapTok,produce,consume,tagValue,idTok,
+        lookahead,rsub,prepare,resetLevel,sysId,coerceId}

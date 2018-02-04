@@ -196,7 +196,8 @@ function* functToObj(si) {
                 sym = id[0].value.sym
                 if (s.curLev() != null) {
                   yield* s.template(Tag.push,"=$I = $_",sym)
-                  yield* Kit.reposOne(walk(s.one(),root,blockHoisted), Tag.right)
+                  yield* Kit.reposOne(walk(s.one(),root,blockHoisted),
+                                      Tag.right)
                   yield* s.leave()
                 }
                 s.close(j)
@@ -225,14 +226,25 @@ function* functToObj(si) {
     const lab = s.label()
     yield* s.template(Tag.push,"*function $1($_){$_} $2($1, $_)",
                       sym,closureSym)
-    for(const j of fun.closDeps)
-      yield s.tok(Tag.push,Tag.Identifier,{sym:j.closSym})
+    const copies = []
+    for(const j of fun.closDeps) {
+      const sym = Scope.newSym(j.closSym.orig)
+      copies.push(sym)
+      sym.copyOf = j.closSym
+      yield s.tok(Tag.push,Tag.Identifier,{sym})
+//      yield s.tok(Tag.push,Tag.Identifier,{sym:j.closSym})
+    }
     yield* s.refocus()
     for(const j of fun.closDeps)
       yield* s.toks(Tag.push,`$1.${dpref}${j.closSym.name}${dpost} = $2`,
-                    fun.ctxSym,j.closSym)
+                    fun.ctxSym,copies.shift()
+                   )
     yield* s.refocus()
     yield s.enter(Tag.push,Tag.FunctionExpression,fun)
+    if (s.cur().pos === Tag.id)
+      Kit.skip(s.one())
+    if (fun.node)
+      fun.node.id = null
     yield* walk(s.sub(),fun)
     yield* lab()
   }
@@ -283,8 +295,10 @@ function substIds(si) {
       yield s.enter(Tag.push,Tag.ExpressionStatement)
       yield s.enter(Tag.expression,Tag.SequenceExpression)
       yield s.enter(Tag.expressions, Tag.Array)
-      for(const i of params)
-        yield* s.toks(Tag.push, `=$1.${vpref}${i.name}${vpost} = $2`, ctxSym, i)
+      for(const i of params) {
+        yield* s.toks(Tag.push, `=$1.${vpref}${i.name}${vpost} = $2`,
+                      {clParam:i}, ctxSym, i)
+      }
       yield* lab()
     }
   }
@@ -310,11 +324,14 @@ function substIds(si) {
               i.value.sym = root.argumentsSym
             } else if (sym.refScopes) {
               if (root === sym.declScope)
-                yield* s.toks(i.pos,`=$I.${vpref}${sym.name}${vpost}`,root.ctxSym)
+                yield* s.toks(i.pos,`=$I.${vpref}${sym.name}${vpost}`,
+                              {origSym:root.ctxSym},root.ctxSym)
               else
-                yield* s.toks(i.pos,
-                              `=$I.${dpref}${sym.declScope.closSym.name}${dpost}.${vpref}${sym.name}${vpost}`,
-                              root.ctxSym)
+                yield* s.toks(
+                  i.pos,
+                  `=$I.${dpref}${sym.declScope.closSym.name}${dpost}
+                      .${vpref}${sym.name}${vpost}`,
+                  root.ctxSym)
               s.close(i)
               continue
             }

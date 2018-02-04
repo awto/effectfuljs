@@ -4,6 +4,10 @@
   "description": "Runtime for @effectful/es",
   "main": "index.js",
   "module": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectfuljs.git"
+  },
   "scripts": {
     "test": "mocha",
     "test-opt": "cross-env env-cmd $EJS_ENV mocha",

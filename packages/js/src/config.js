@@ -79,6 +79,10 @@ export default {
   // stores all local variables in context objects
   contextState: false,
 
+  // variable names prefix/postfix for context store
+  closVarPrefix: "_",
+  closVarPostfix: "",
+
   // takes static operation from context object rather than namespace object
   contextMethodOps: false,
 

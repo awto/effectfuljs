@@ -432,15 +432,15 @@ describe("closure conversion", function() {
         function _apply(fn) {
           this.fn = fn;
         }
-        closure(_apply, function apply(self) {
+        closure(_apply, function(self) {
           return this.fn.ff.constr(10);
         });
         apply = new _apply(g);
-        function kk(ff, _gg) {
+        function kk(ff, gg) {
           this.ff = ff;
-          this.gg = _gg;
+          this.gg = gg;
         }
-        closure(kk, function kk(self) {
+        closure(kk, function(self) {
           var args = Array.from(arguments).slice(1),
               kk;
           return this.ff.i + this.gg.j + args[1];
@@ -448,7 +448,7 @@ describe("closure conversion", function() {
         function _gg(ff) {
           this.ff = ff;
         }
-        closure(_gg, function gg(self, k) {
+        closure(_gg, function(self, k) {
           var obj;
           obj = {
             kk: new kk(this.ff, this)
@@ -460,7 +460,7 @@ describe("closure conversion", function() {
           return obj;
         });
         function ff() {}
-        closure(ff, function ff(self) {
+        closure(ff, function(self) {
           var j, gg, temp;
           gg = new _gg(this);
           this.i = 0, j = 0;
@@ -500,12 +500,12 @@ describe("closure conversion", function() {
 
         var g = {};
         
-        function _b(fn, _a) {
+        function _b(fn, a) {
           this.fn = fn;
-          this.a = _a;
+          this.a = a;
         }
         
-        closure(_b, function b(self, k) {
+        closure(_b, function(self, k) {
           this.fn.i += k + this.a.j;
           return this.fn.i;
         });
@@ -514,7 +514,7 @@ describe("closure conversion", function() {
           this.fn = fn;
         }
         
-        closure(_a, function a(self, j) {
+        closure(_a, function(self, j) {
           var b;
           this.j = j;
           b = new _b(this.fn, this);
@@ -527,7 +527,7 @@ describe("closure conversion", function() {
         
         function fn() {}
         
-        closure(fn, function (self, a, b) {
+        closure(fn, function(self, a, b) {
           return a.num - b.num;
         });
         g.i = 0;

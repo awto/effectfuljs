@@ -19,7 +19,8 @@ export function newSym(name, strict = false, decl) {
            id: `${name}_${curSymId++}`,
            strict,
            decl,
-           num: symNum++}
+           num: symNum++,
+           type:null}
 }
 
 /** `sort` comparator */

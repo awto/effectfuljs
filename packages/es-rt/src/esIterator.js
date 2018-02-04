@@ -23,17 +23,17 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
   Generator = function Generator(u) {
     this.value = u.value
     this.done = u.done
-    this.$t = u
+    this.$running = false
     this.unwrap = this
+    this.$t = u
   }
 
   Gp = Generator.prototype = Object.create(IteratorPrototype)
 
-  Gp.$step = function(value) {
+  Gp.$step = Gp.$yld = function(value) {
     this.value = value
     return this
   }
-
   
   function trampoline(t) {
     if (!process.env.EJS_NO_TRAMPOLINE) {
@@ -87,8 +87,8 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
     return this
   }
 
-  Gp[delegateSym] = function(dst,y,r,rstep,istep) {
-    return new DelegateWrap(this,dst,y,r,rstep,istep)
+  Gp[delegateSym] = function(dst,y,r,rstep,iyld) {
+    return new DelegateWrap(this,dst,y,r,rstep,iyld)
   }
 
   Gp.next = function(value) {

@@ -47,7 +47,7 @@ export function interpretApp(s) {
       if (i.enter) {
         if (i.type === app) {
           const lab = sl.label()
-          yield sl.enter(i.pos,effExpr)
+          yield sl.enter(i.pos,effExpr,i.value)
           yield sl.enter(Tag.expression,Tag.CallExpression)
           if (i.value.static !== false) {
             yield sl.tok(Tag.callee,Tag.Identifier,

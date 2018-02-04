@@ -35,8 +35,9 @@ export function storeContinuations(si) {
   const root = s.first.value
   const {contextSym} = root
   const contextStore = contextSym && s.opts.contextMethodOps
+  const invertForOf = s.opts.invertForOf
   const noPureJumpsStore = !s.opts.defunct
-        && !s.opts.invertForOf
+        && !invertForOf
         && s.opts.contextBy === "reference"
   const stateStorageField = s.opts.stateStorageField
   function makeSym(name,pat) {
@@ -120,7 +121,8 @@ export function storeContinuations(si) {
           if (j.enter) {
             switch(j.type) {
             case Block.letStmt:
-              if (!j.value.eff)
+              if (!j.value.eff ||
+                  invertForOf && j.value.storeCont === false)
                 break
             case Ctrl.jump:
               if (noPureJumpsStore && j.type === Ctrl.jump
@@ -360,16 +362,14 @@ export function jumpOps(si) {
                               {sym:root.implFrame.value.declSym})
                 } else if (j.value.passCont) {
                   yield* Kit.reposOne(s.one(),Tag.callee)
-                } /* else if (thisCtx && cont) {
-                     yield* s.toks(Tag.callee,`=$I.${cont}`,contextSym)
-                     } */ else if ((refCtx || paramCtx) && j.value.goto
-                                   && !j.value.delegateCtx) {
-                       yield s.tok(Tag.callee,Tag.Identifier,{sym:j.value.goto})
-                     } else if (j.value.delegateCtx) {
-		                   yield* s.toks(Tag.callee,`=$I.$s.${cont}`,j.value.delegateCtx)
-                     } else {
-                       yield s.tok(Tag.callee,Tag.Identifier,{sym:inlineCont})
-                     }
+                } else if ((refCtx || paramCtx) && j.value.goto
+                           && !j.value.delegateCtx) {
+                  yield s.tok(Tag.callee,Tag.Identifier,{sym:j.value.goto})
+                } else if (j.value.delegateCtx) {
+		              yield* s.toks(Tag.callee,`=$I.$s.${cont}`,j.value.delegateCtx)
+                } else {
+                  yield s.tok(Tag.callee,Tag.Identifier,{sym:inlineCont})
+                }
                 yield s.enter(Tag.arguments,Tag.Array)
                 if (paramCtx)
                   yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym})
@@ -388,11 +388,15 @@ export function jumpOps(si) {
                 const ctx = j.value.delegateCtx || contextSym
                 if (j.value.hasBindVal)
                   yield* assignValue(s,ctx)
-                yield* s.toks(Tag.push,"$I.$running = true", ctx)
+                if (j.value.delegateCtx) {
+                  yield* s.toks(Tag.push,"=$1.$s.$running = true, $1.$s",{result:true},ctx)
+                } else {
+                  yield* s.toks(Tag.push,"$I.$running = true", ctx)
+                  if (!noResult)
+                    yield s.tok(Tag.push,Tag.Identifier,{sym:ctx,result:true})
+                }
                 Kit.skip(s.sub())
                 s.close(j)
-                if (!noResult)
-                  yield s.tok(Tag.push,Tag.Identifier,{sym:ctx,result:true})
                 continue
               }
               break
@@ -815,13 +819,18 @@ export function invertForOf(si) {
 			                    ctx,i.value.forOfInfo.sym)
             continue
           case Block.letStmt:
-            if (!i.value.eff || i.value.bindName === "yldStar")
+            if (!i.value.eff)
               break
+            if (i.value.bindName === "yldStar") {
+              i.value.storeCont = false
+              break
+            }
           case Ctrl.jump: {
             const {goto} = i.value
             const {forOfInfo} = goto
             if (!forOfInfo)
               break
+            i.value.storeCont = false
             i.value.delegateCtx = goto.forOfInfo.sym
 	          const exit = forOfInfo.exit.goto
 	          const up = exit.forOfInfo
@@ -830,7 +839,8 @@ export function invertForOf(si) {
 			                      `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
 			                      forOfInfo.sym, up.sym)
 	          }
-            yield* s.toks(Tag.push,`=$1.${cont} = $2`,
+            // TODO: if there are no inner loops this may be avoided
+            yield* s.toks(Tag.push,`=$1.$yld = $2`,
 			                    ctx, goto.declSym)
             break }
           case Tag.IfStatement:
@@ -875,15 +885,25 @@ export function invertForOf(si) {
             yield s.peel()
             yield* s.sub()
             yield s.tok(Tag.push,Tag.Identifier,{sym:ctx})
+            const ancestors = forOfInfo.body.repeat
+            let parent
+            for(let j = ancestors.length-2;j>=0;j--) {
+              const p = ancestors[j]
+              if (p.origLoop && p.origLoop.forOfInfo) {
+                parent = p.origLoop.forOfInfo
+                break
+              }
+            }
             if (up) {
               yield* s.toks(Tag.push, `=$I.$s`, up.sym)
               yield* s.toks(Tag.push, `=$I.$s.${cont}`, up.sym)
-              yield s.tok(Tag.push,Tag.Identifier,{sym:up.body.declSym})
             } else {
               yield s.tok(Tag.push, Tag.Identifier, {sym:ctx})
               yield s.tok(Tag.push, Tag.Identifier,
                           {sym:forOfInfo.fin.goto.declSym})
             }
+            if (parent)
+              yield s.tok(Tag.push,Tag.Identifier,{sym:parent.body.declSym})
             yield* s.leave()
             yield s.close(call)
             yield* s.sub()
@@ -961,12 +981,10 @@ function delegateOps(si) {
     return s
   const root = s.first.value
   const pure = mkSym("$res","$r")
-  if (!s.opts.storeCont)
-    throw s.error("not implemented: `invertForOf` without `storeCont`")
   if (!s.opts.storeErrorCont)
     throw s.error("not implemented: `invertForOf` without `storeErrorCont`")
   const raise = mkSym(s.opts.storeErrorCont,"$e")
-  const yld = mkSym(s.opts.storeCont,"$y")
+  const yld = mkSym("$yld","$y")
   const ctx = root.contextSym
   const cont = s.opts.storeCont
   return _delegateOps()
@@ -975,12 +993,12 @@ function delegateOps(si) {
       if (i.enter && i.type === Block.app) {
         switch(i.value.sym) {
         case Except.raiseId:
-	        yield* s.toks(Tag.push,`=$1.$i.$step = $1.$istep`,ctx)
+	        yield* s.toks(Tag.push,`=$1.$i.$yld = $1.$iyld`,ctx)
           i.value.sym = raise
 	        break
         case Block.pureId:
 	        yield* s.toks(Tag.push,
-			                  `=$1.$r.$res = $1.$rstep, $1.$i.$step = $1.$istep`,
+			                  `=$1.$r.$res = $1.$rstep, $1.$i.$yld = $1.$iyld`,
 			                  ctx)
           i.value.sym = pure
 	        break

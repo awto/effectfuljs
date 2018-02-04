@@ -9,17 +9,6 @@ import * as Ctrl from "./control"
 
 const emptyArr = []
 
-/** makes all `syms` to have uniq name among them only (with prefix `pref) */
-function allUniqFields(syms,pref="") {
-  const names = new Set()
-  for(const sym of syms) {
-    let name = `${pref}${sym.orig}`
-    for(let cnt = 0;names.has(name);cnt++,name = `${pref}${sym.orig}${cnt}`){}
-    names.add(name)
-    sym.fieldName = name
-  }
-}
-
 /** moves frame steps to top level of JS module */
 export function depsToTop(si) {
   const s = Kit.auto(si)
@@ -69,7 +58,7 @@ export const contextDecls = Kit.map(function contextDecls(si) {
                                  || root.opts.contextMethodOps)
      ) {
     contextSym.bound = true
-    allUniqFields(ctxSyms,"_")
+    State.allUniqFields(ctxSyms,s.opts.closVarPrefix,s.opts.closVarPostfix)
     saved.set(
       contextSym,
       {raw:null,

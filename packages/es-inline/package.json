@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/awto/effectful-js.git"
+    "url": "git+https://github.com/awto/effectfuljs.git"
   },
   "keywords": [
     "monad",
@@ -21,9 +21,9 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/awto/effectful-js/issues"
+    "url": "https://github.com/awto/effectfuljs/issues"
   },
-  "homepage": "https://github.com/awto/effectful-js#readme",
+  "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
     "@effectful/es-inline-rt": "^0.1.0",
     "@effectful/es-loose-rt": "^0.1.0",

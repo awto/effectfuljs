@@ -92,7 +92,8 @@ function restoreMethods(si) {
       } else if (i.enter && i.type === Tag.FunctionExpression
 		 && i.value.origType === Tag.FunctionDeclaration) {
 	yield i
-	Kit.skip(s.one())
+        if (s.cur().pos === Tag.id)
+	  Kit.skip(s.one())
 	yield s.tok(Tag.id, Tag.Identifier,
 		    {sym:Kit.scope.newSym(i.value.funcId.name),decl:true})
       } else

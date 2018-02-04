@@ -11,6 +11,10 @@
     "build": "npm run configure && rollup -c",
     "prepare": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectfuljs.git"
+  },
   "keywords": [
     "generators",
     "await",

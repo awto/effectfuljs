@@ -84,7 +84,7 @@ describe("empty expressions cleaner", function() {
         yield i
       }
     }
-    const res = toStr(Kit.cleanEmptyExprs(ignoreIds(produce(parse(prog)))))
+    const res = toStr(Kit.cleanEmptyExprs(Array.from((ignoreIds(produce(parse(prog)))))))
     expect(res).to.equal(pretty(`
       function a() {
         console.log(j,(k=10,j));

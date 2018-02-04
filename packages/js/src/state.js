@@ -265,6 +265,7 @@ export function* restoreDecls(s) {
               for(const sym of i.value.paramSyms) {
                 if (sym.interpr === Bind.ctxField) {
                   const copy = sym.decl.value.sym = Kit.scope.newSym(sym.orig)
+                  copy.type = sym.type
                   assigns.push(
                     {sym,init:[sl.tok(Tag.right,Tag.Identifier,
                                       {sym:copy,lhs:false,rhs:true,decl:false})]})
@@ -1106,12 +1107,17 @@ function propagateArgs(cfg) {
   }
 }
 
-/** makes all `syms` to have uniq name among them only (with prefix `pref) */
-export function allUniqFields(syms,pref="") {
+/** 
+ * makes all `syms` to have uniq name among them only 
+ * with prefix `pref` and postfix `postf`
+ */
+export function allUniqFields(syms,pref="",postf="") {
   const names = new Set()
   for(const sym of syms) {
-    let name = `${pref}${sym.orig}`
-    for(let cnt = 0;names.has(name);cnt++,name = `${pref}${sym.orig}${cnt}`){}
+    let name = `${pref}${sym.orig}${postf}`
+    for(let cnt = 0;
+        names.has(name);
+        cnt++,name = `${pref}${sym.orig}${cnt}${postf}`){}
     names.add(name)
     sym.fieldName = name
   }
@@ -1233,7 +1239,7 @@ export function calcFlatCfg(cfg,sa) {
   for(const i of root.scopeDecls)
     if (i.interpr === Bind.ctxField)
       ctxSyms.push(i)
-  allUniqFields(ctxSyms,"_")
+  allUniqFields(ctxSyms,root.opts.closVarPrefix,root.opts.closVarPostfix)
   resolveFrameParams(cfg)
   propagateArgs(cfg)
   resolveFrameArgs(cfg)

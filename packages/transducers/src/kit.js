@@ -1171,6 +1171,7 @@ export const timeEnd = curry(function*(name, s) {
  */
 export function Wrapper(cont) {
   this.value = void 0
+  this._cont = cont
   if (cont) {
     const iter = this._inner = (leanWrap(cont)).step()
     const i = iter.value
@@ -1183,121 +1184,49 @@ export function Wrapper(cont) {
   this._stack = []
   this._tstack = []
   this.level = 0
-  this.$ = this
 }
 
 const AFp = Wrapper.prototype
 
-AFp.toArray = function toArray() {
-  if (Array.isArray(this._inner))
-    return this._inner
-  const res = [this._inner.value]
-  result(this._inner, res)
-  return res  
-}
-
-// overriding default for optimization
-// sharing is handled by means of explicit stack
-AFp.regForOf = function(loopYld, loopDone) {
-  const self = this
-  const stack = []
-  let yld = loopYld
-  let done = loopDone
-  let next = yld
-  let inner = this._inner
-  let value = this._inner.value
-  this.exit =  function() {
-    if (stack.length) {
-      let f = stack.pop()
-      yld = f.yld
-      done = f.done
-    } else {
-      yld = function(v) {
-        self.value = v
-      }
-      done = function(v) {
-        self.value = v
-        self.done = true
-      }
-    }
-  }
-  // inner loop with the same iterator
-  // e.g. one, sub
-  this.regForOf = function(loopYld, loopDone) {
-    stack.push({yld,done})
-    yld = loopYld
-    done = loopDone
-  }
-  // called from forOf to jump to next iteration
-  this.$step = inner.$step
-  // may be called from somewhere else (maybe ::take)
-  this.step = function step() {
-    const oldYld = yld, oldDone = done
-    yld = function(v) {
-      self.value = v
-      yld = oldYld
-      done = oldDone
-    }
-    done = function(v) {
-      self.value = v
-      self.done = true
-    }
-  }
-  function doneImpl(v) {
-    yld(value)
-    this.$step = function() {
-      done(v)
-    }
-    this.step = function() {
-      this.done = true
-      this.value = v
-    }
-  }
-  function yldImpl(v) {
-    const t = value
-    value = v
-    if (t.enter)
-      self.level++
-    if (t.leave)
-      self.level--
-    yld(t)
-  }
-  this._inner.regForOf(yldImpl, doneImpl)
-  return this
-}
-
-function* unbuf(iter) {
-  yield iter.value
-  yield* iter
-}
-
-// no more needs for levels etc, the rest is passed further as is
-AFp.regYldStar = function(dest) {
-  return dest.delegateYld(unbuf(this._inner))
-}
-
-if (Symbol.effectfulIterator)
-  AFp[Symbol.effectfulIterator] = function() { return this }
-
-AFp[Symbol.iterator] = function() { return this }
-
-AFp.pure = function(v) {
-  this.value = v
-  this.done = true
-  return this
-}
+AFp.cur = function cur() { return this._inner.value }
 
 AFp.step = function() {
   if (this._inner.done)
     return this.pure()
   const t = this.value = this._inner.value
   if (t.value && t.value.opts)
-    this.opts = t.value.opts
+      this.opts = t.value.opts
   this._inner = this._inner.step()
   if (t.enter)
     this.level++
   if (t.leave)
     this.level--
+  return this
+}
+
+AFp[Symbol.iterator] = function() { return this }
+
+AFp.toArray = function toArray() {
+  if (Array.isArray(this._cont))
+    return this._cont
+  const res = [this.first]
+  result(this._inner, res)
+  return res  
+}
+
+if (Symbol.effectfulIterator) {
+  AFp[Symbol.effectfulIterator] = function() { return this }
+//  AFp.exit = function(v) {
+//    this.done = true
+//    this.value = v
+//    return this
+//  }
+//  AFp.handle = function(e) { throw e }
+}
+
+AFp.pure = function(v) {
+  this.value = v
+  this.done = true
   return this
 }
 
@@ -1314,8 +1243,6 @@ AFp.take = function() {
   this.step()
   return this.done ? void 0 : this.value
 }
-
-AFp.cur = function() { return this._inner.value }
 
 /** smart constructor for a token */
 AFp.valCtor = function(pos,type,value) {
@@ -1473,7 +1400,7 @@ function* sub(t) {
 
 /** gets next tag if it is in the current level or null otherwise */
 AFp.curLev = function() {
-  const v = this._inner.value
+  const v = this.cur()
   if (!v || !v.enter)
     return null
   return v
@@ -1548,14 +1475,6 @@ AFp.one = function*() {
   }
   return null
 }
-/*
-= function() {
-  if (this._stack[0] !== vCloseTag) {
-    return one(this)
-  }
-  return empty()
-}
-*/
 
 /** 
  * returns an iterator to traverse all tokens until exiting from 

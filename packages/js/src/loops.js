@@ -423,7 +423,7 @@ export const normalizeFor = Kit.pipe(
                   const blab = sl.label()
                   yield sl.enter(i.pos,Tag.BlockStatement,i.value)
                   yield sl.enter(Tag.body,Tag.Array)
-                  yield sl.enter(Tag.push,repeat,{stmt:true})
+                  yield sl.enter(Tag.push,repeat,{stmt:true,origLoop:i.value})
                   i.value.node.init = i.value.node.test = i.value.node.update = null
                   yield sl.peel(Kit.setPos(j,Tag.push))
                   yield* sl.peelTo(Tag.body)

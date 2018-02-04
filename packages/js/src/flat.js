@@ -1167,7 +1167,8 @@ export function interpretJumps(si) {
             }
             const appVal = {fam:Kit.sysId(name),static:st,
                             insideCtx:!i.value.ref.first,delegateCtx,
-                            passCont,goto:goto && goto.declSym}
+                            passCont,goto:goto && goto.declSym,
+                            result:name === "scope"}
             if (s.curLev()) {
               if (s.opts.markBindValue !== false)
                 name += "B"

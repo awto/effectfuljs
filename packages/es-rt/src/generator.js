@@ -234,7 +234,6 @@ if (process.env.EJS_LEAN_METHOD_ITERATORS) {
 
 LGp[iterSym] = function() { return this }
 
-
 LGp.handle = function(ex) {
   return process.env.EJS_DEFUNCT
     ? (this.$step = this.$handle, this.$run(ex))
@@ -254,6 +253,7 @@ var TLGp = LGp
 
 if (!process.env.EJS_NO_TRAMPOLINE && !process.env.EJS_DELEGATE_FOR_OF) {
   function TrampolineGenerator() {
+    this.$running = false
     this.done = false
     this.value = void 0
   }
@@ -303,16 +303,17 @@ if (!process.env.EJS_NO_TRAMPOLINE && !process.env.EJS_DELEGATE_FOR_OF) {
 
 if (process.env.EJS_DELEGATE_FOR_OF) {  
   LGp.delegate = delegate
-  LGp[delegateSym] = LGp.delegateTo = function(dst,y,r,rstep,istep) {
-    // if (process.env.EJS_DEBUG_LOOSE)
-    this[delegateSym] = doubleDelegate
+  LGp[delegateSym] = LGp.delegateTo = function(dst,y,r,rstep,iyld) {
+    if (process.env.EJS_DEBUG_LOOSE)
+      this[delegateSym] = doubleDelegate
     this.$s = this
     this.$i = this.$e = dst
     this.$y = y
     this.$r = r
     this.$rstep = rstep
-    this.$istep = istep
+    this.$iyld = iyld
     this.unwrap = dst.unwrap
+    this.$running = false
     return this
   }
 
@@ -321,8 +322,8 @@ if (process.env.EJS_DELEGATE_FOR_OF) {
       "Not Implemented: taking iterator of deligated generator")
   }
 
-  function wrapDelegate(dst,y,r,rstep,istep) {
-    return this.$dst[delegateSym](dst,y,r,rstep,istep)
+  function wrapDelegate(dst,y,r,rstep,iyld) {
+    return this.$dst[delegateSym](dst,y,r,rstep,iyld)
   }
 
   function contIter() {

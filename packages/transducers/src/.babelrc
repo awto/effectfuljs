@@ -20,6 +20,25 @@
         }
       ]
     },
+    "loose-defunct-top": {
+      "passPerPreset": true,
+      "presets": [
+        ["es-dev",{"loose":true,
+                   "defunct":true,
+                   "topLevel":true,
+                   "importRT":"@effectful/es-rt/opts/defunct-loose",
+                   "all": {
+                     "jsExceptions":false,
+                     "inlineJsExceptions":false,
+                     "inlineThrow":true
+                   },
+                  }],
+        {
+          "plugins": [["transform-es2015-modules-commonjs",
+                       {"loose":true,"noInterop":true}]]
+        }
+      ]
+    },
     "loose-for-ofs": {
       "passPerPreset": true,
       "presets": [
