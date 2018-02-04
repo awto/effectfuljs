@@ -199,7 +199,9 @@ module.exports = function esProfile(opts={}) {
     importRT += "rt"
   }
   const pure = Object.assign({},config,rebind.all)
-  const file = Object.assign({},config,{importRT},rebind.all)
+  const file = Object.assign({},config,
+                             {importRT,modules:opts.modules},
+                             rebind.all)
   const generators = Object.assign({},config,rebind.all,
                                    rebind.effectful,rebind.generators)
   const async = Object.assign({},config,rebind.all,rebind.effectful,rebind.async)
