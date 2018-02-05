@@ -13,6 +13,8 @@ default implementations for the meta-level can be overloaded.
 As a proof of concept, there are default implementations of corresponding ECMAScript
 standard effects.
 
+The project is a part of [EffectfulJS](https://github.com/awto/effectfuljs) tool chain.
+
 ## Usage
 
 ### Abstract interface
@@ -45,7 +47,7 @@ implementations libraries.
 
 ```json
 {
-  "presets": [["@effectful/es",{"importRT":"my-custom-effects"}]
+  "presets": [["@effectful/es",{"importRT":"my-custom-effects"}]]
 }
 ```
 
