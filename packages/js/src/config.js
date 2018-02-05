@@ -201,6 +201,7 @@ export default {
   wrapGeneratorResult: true,
 
   // default libraries
+  // the defaults here are only for testing purposes
   libs: {
     "@effectful/core": core,
     "@effectful/es": es,
