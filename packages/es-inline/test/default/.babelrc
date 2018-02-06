@@ -2,7 +2,8 @@
   "passPerPreset": true,
   "sourceType": "script",
   "presets": [
-    ["../../preset",{"defunct":false}],
+    ["../../preset",{"defunct":false,
+                     "importRT":"@effectful/es-rt/opts/inline"}],
     {
       "plugins":[
         ["transform-es2015-modules-commonjs",

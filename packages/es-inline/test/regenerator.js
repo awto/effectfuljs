@@ -25,7 +25,7 @@ describe("regenerator with inlined operations", function() {
   })
 })
 
-global.describe("regenerator with loose inlined operations", function() {
+describe("regenerator with loose inlined operations", function() {
   const top = global.skipTests = {
     // not supporting ES object model
     "@@iterator": true,
