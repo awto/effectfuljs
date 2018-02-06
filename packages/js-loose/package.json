@@ -1,6 +1,6 @@
 {
   "name": "@effectful/js-loose",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "@effectful/js built with faster generators",
   "main": "compiler.js",
   "scripts": {
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@effectful/es-loose-rt": "^0.1.1",
-    "@effectful/transducers-loose": "^0.1.3",
+    "@effectful/transducers-loose": "^0.1.4",
     "resolve": "^1.5.0"
   },
   "publishConfig": {

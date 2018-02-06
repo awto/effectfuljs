@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-inline",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Standard JavaScript effects using @effectful/js",
   "main": "preset.js",
   "scripts": {
@@ -25,17 +25,17 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/es-inline-rt": "^0.1.1",
+    "@effectful/es-inline-rt": "^0.1.4",
     "@effectful/es-loose-rt": "^0.1.1",
-    "@effectful/es-rt": "^0.1.3",
+    "@effectful/es-rt": "^0.1.4",
     "glob": "^7.1.2",
     "mocha": "^3.4.2",
     "promise": "^8.0.1",
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
-    "@effectful/es": "^0.1.3",
-    "@effectful/js": "^0.1.3"
+    "@effectful/es": "^0.1.4",
+    "@effectful/js": "^0.1.4"
   },
   "publishConfig": {
     "access": "public"
