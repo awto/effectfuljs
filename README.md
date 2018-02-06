@@ -25,8 +25,17 @@ The compiler converts ES2018 to ES2018 and doesn't need any syntax extensions.
 So it may be applied to results of other compilers targeting JS such as 
 CoffeeScript, TypeScript, Babel etc.
 
-It stratifies input JavaScript code into two levels, namely object and meta
-level. Their separation may be either explicit or implicit (two-level or
+It stratifies input JavaScript code into two levels. The first level (*pure*)
+contains JS constructs (expressions, statements) kept as is in generated code.
+The second level (*effectful*) contains effectful constructs. The compiler
+converts them into abstract function calls.
+
+I'm abusing term *pure* here. I don't mean the first level staments or expressions
+don't have side effects. This is plain, usual  JavaScript and it is absolutely
+not a problem to use the side effects already embedded in JavaScript.
+Namely IO, references, exceptions, control flow, etc. 
+
+Their separation may be either explicit or implicit (two-level or
 single-level syntax resp.). 
 
 Async functions or generators syntax can be used for explicit level separation.

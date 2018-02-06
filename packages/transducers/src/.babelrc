@@ -11,7 +11,8 @@
                    "all": {
                      "jsExceptions":false,
                      "inlineJsExceptions":false,
-                     "inlineThrow":true
+                     "inlineThrow":true,
+                     "loopBlockScoping":false
                    },
                   }],
         {
@@ -27,6 +28,7 @@
                    "defunct":true,
                    "topLevel":true,
                    "importRT":"@effectful/es-rt/opts/defunct-loose",
+                   "loopBlockScoping":false,
                    "all": {
                      "jsExceptions":false,
                      "inlineJsExceptions":false,
@@ -45,6 +47,7 @@
         ["es-dev",{"loose":true,
                    "invertForOf":true,
 		   "importRT":"@effectful/es-rt/opts/loose-delegate",
+                   "loopBlockScoping":false,
                    "all": {
                      "jsExceptions":false,
                      "inlineJsExceptions":false,

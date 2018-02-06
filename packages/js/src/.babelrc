@@ -13,6 +13,7 @@
             "jsExceptions":false,
             "inlineJsExceptions":false,
             "inlineThrow":true,
+            "loopBlockScoping":false,
             "moduleAliases":{
               "@effectful/transducers":"@effectful/transducers-loose",
               "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
@@ -36,6 +37,7 @@
           "topLevel":true,
           "defunct":true,
           "importRT":"@effectful/es-rt/opts/defunct-loose",
+          "loopBlockScoping":false,
           "all": {
             "jsExceptions":false,
             "inlineJsExceptions":false,
@@ -67,6 +69,7 @@
             "inlineJsExceptions":false,
             "jsTailCalls":true,
             "inlineThrow":true,
+            "loopBlockScoping":false,
             "moduleAliases":{
               "@effectful/transducers":"@effectful/transducers-loose",
               "@effectful/transducers/kit":"@effectful/transducers-loose/kit",

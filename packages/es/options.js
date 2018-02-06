@@ -190,11 +190,11 @@ const disabled = {
 
 module.exports = function esProfile(opts={}) {
   let importRT = opts.importRT
-  if (importRT == null && !opts.defunct) {
+  if (importRT == null) {
     importRT = "@effectful/es-"
-    if (opts.loose)
+    if (opts.loose && !opts.defunct)
       importRT += "loose-"
-    else if (opts.inline)
+    else if (opts.inline && opts.defunct)
       importRT += "inline-"
     importRT += "rt"
   }

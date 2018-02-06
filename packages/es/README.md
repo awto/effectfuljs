@@ -6,9 +6,9 @@ async generator functions syntax overloading.
 The project is a babel preset for integrating new custom computational effects
 into JavaScript.
 
-The first(object) level is the plain JavaScript, and the second(meta) level
-is async, generators and async generators function syntax. Using this presets
-default implementations for the meta-level can be overloaded.
+The first level is plain JavaScript constructs, and the second level
+is async, generators and async generators function syntax. By means of the presets
+default implementations for the effectful(second) level can be overloaded.
 
 As a proof of concept, there are default implementations of corresponding ECMAScript
 standard effects.
