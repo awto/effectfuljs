@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function fSent() {
   var s, sent;
   return M.scopeH(_1, _6);

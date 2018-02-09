@@ -19,30 +19,14 @@ export function* importSyms(si) {
     return
   }
   yield* Kit.fileBody(s)
-  const commonjs = s.opts.modules === "commonjs"
+  const commonjs = s.opts.modules === "commonjs" || s.opts.modules === "cjs"
+  const esDefault = s.opts.modules === "esDefault"
   for(const {syms,ns,module} of rt.importSyms) {
-    if (ns == null) {
-      const lab = s.label()
-      yield* s.template(Tag.push,
-                        commonjs
-                        ? `var $_ = require("${module}")`
-                        : `import $_ from "${module}"`)
-      yield s.enter(Tag.id, Tag.ObjectPattern)
-      yield s.enter(Tag.properties,Tag.Array)
-      for(const sym of syms) {
-        yield s.enter(Tag.push,Tag.ObjectProperty,{node:{shorthand:true}})
-        yield s.tok(Tag.key, Tag.Identifier, {node:{name:sym.orig}})
-        yield s.tok(Tag.value, Tag.Identifier, {decl:true,sym})
-        yield* s.leave()
-      }
-      yield* lab()
-    } else {
-      yield* s.toks(Tag.push,
-                    commonjs
-                    ? `var $I = require("${module}")`
-                    : `import * as $I from "${module}"`,
-                    ns)
-    }
+    yield* s.toks(Tag.push,
+                  commonjs ? `var $I = require("${module}")`
+                  : esDefault ? `import $I from "${module}"`
+                  : `import * as $I from "${module}"`,
+                  ns)
   }
   yield* s
 }

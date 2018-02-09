@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function _a() {
   var a1 = M.context();
   return M.scopeH(a_1, a_6);

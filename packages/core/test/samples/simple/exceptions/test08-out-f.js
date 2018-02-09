@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a() {
   var fc, fe, err;
   return M.jumpH(_1, _6);

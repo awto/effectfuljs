@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a() {
   var i;
   return M.chainBH(eff(2), _1, _3);

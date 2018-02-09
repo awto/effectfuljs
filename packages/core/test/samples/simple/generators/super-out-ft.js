@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function aa() {
   var aa = M.async();
   aa._A = class A {

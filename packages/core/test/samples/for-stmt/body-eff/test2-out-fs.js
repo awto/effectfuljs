@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 (function () {
   var i, len, ref;
   ref = [1, 2, 3];

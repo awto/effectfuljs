@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 (function () {
   var e;
   return M.jumpH(_1, _6);

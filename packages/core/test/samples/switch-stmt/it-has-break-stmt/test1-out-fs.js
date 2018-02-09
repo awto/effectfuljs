@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a(z) {
   switch (z) {
     case 1:

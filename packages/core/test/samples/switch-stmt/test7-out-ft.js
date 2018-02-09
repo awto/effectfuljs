@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- with mixed effect/pure branches
 function a() {
   var a = M.context();

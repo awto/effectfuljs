@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function forOfBlockScope() {
   var forOfBlockScope = M.generator();
   return M.scopeH(forOfBlockScope_1, forOfBlockScope_43);

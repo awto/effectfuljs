@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a1() {
   var a1 = M.generator();
   a1.$sc = _1;

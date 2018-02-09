@@ -1,5 +1,6 @@
 'use strict';
 
+import * as M from '@effectful/core';
 M = require('@effectfuljs/core');
 Q = require('Q');
 QM = require('@effectfuljs/promise')(Q);

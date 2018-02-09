@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- when branches has effects and it is the last statement
 function a() {
   if (true) {

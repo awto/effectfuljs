@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function aa() {
   var A = class A {
     method() {

@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- without default branch
 function a() {
   return M.chainBH(eff(1), _1, _3);

@@ -10,6 +10,8 @@ import * as Branch from "../../branch"
 import * as Prop from "../../propagate"
 import * as Block from "../../block"
 import * as Loops from "../../loops"
+import * as Rt from "../../rt"
+import * as Policy from "../../policy"
 import defaultOpts from "../../config"
 
 export function pretty(f) {
@@ -41,7 +43,7 @@ export const runExpr = Kit.curry(function(opts, f) {
 export const run = Kit.curryN(2,Kit.optsScopeLift(function run(opts,f) {
   Kit.setOpts(Object.assign({},
                             defaultOpts,
-                            {preset:"@effectful/core",
+                            {importRT:"@effectful/core",
                              ns:"M",override:opts},
                             opts))
   const ast = parse(f.toString(),opts.parser || defaultParseOpts)
@@ -109,6 +111,8 @@ export const transformExpr
   = Kit.curryN(2, (fun,src,opts = testDefaultOpts) => transformBlock(fun,`(${src});`,opts))
 
 const scopes = Kit.pipe(
+  Rt.collectImports,
+  Policy.propagateOpts,
   Transform.preproc,
   Scope.splitScopes,
   Kit.map(Kit.pipe(Branch.toBlocks,Prop.recalcEff,Kit.toArray)),

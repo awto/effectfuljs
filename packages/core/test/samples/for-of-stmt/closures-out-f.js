@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function forOfBlockScope() {
   var a, b, funs, i, j, _i, k, _k, k1, k2, i1, i2, _j, i3, j1, i4, j2, i5, j3, i6, i7, i8, i9, j4, i10, j5, i11, j6, i12, j7, i13, j8, i14, j9, br, loop, _loop, loop1, loop2, loop3, loop4, loop5, loop6, loop7, loop8, loop9, fc, fe, _fc, _fe, fc1, fe1, fc2, fe2, fc3, fe3, fc4, fe4, fc5, fe5, fc6, fe6, fc7, fe7, fc8, fe8, fc9, fe9, r, err, _err, err1, err2, err3, err4, err5, err6, err7, err8, err9;
 

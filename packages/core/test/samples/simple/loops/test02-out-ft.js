@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- should inject forPar
 function a() {
   var a = M.context();

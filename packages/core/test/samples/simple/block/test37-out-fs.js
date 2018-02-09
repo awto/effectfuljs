@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a() {
   if (true) {
     1 + 1;

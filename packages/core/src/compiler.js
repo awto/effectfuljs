@@ -5,9 +5,10 @@ import * as Kit from "./kit"
 import * as path from "path"
 import * as T from "./transform"
 import * as Policy from "./policy"
+import * as RT from "./policy"
 
 export const config = defaults
-export {Policy, T as Transform, Kit}
+export {Policy, T as Transform, Kit, RT}
 export const Tag = Kit.Tag
 
 /** 

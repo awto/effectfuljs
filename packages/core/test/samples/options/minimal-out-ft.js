@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a() {
   eff(1);
   eff(2);

@@ -6,8 +6,8 @@ export default {
   // it effectful if not
   coerce: false,
 
-  // default preset name
-  preset: null,
+  // default profile name
+  profile: null,
 
   // "es" | "commonjs"
   modules: "es",
@@ -207,6 +207,7 @@ export default {
   // the defaults here are only for testing purposes
   libs: {
     "@effectful/core": core,
+    "@effectful/js": core,
     "@effectful/es": es,
     "@effectful/generators": es
   },
@@ -259,9 +260,6 @@ export default {
 
   // using in-code directives to change translator settings
   directives: true,
-
-  // check if there is an import already for `importRT` and use it
-  reuseImports: true,
 
   // defines call expressions to treat as effectful
   // {

@@ -30,19 +30,15 @@ export const preproc = Kit.pipe(
   Prop.prepare,
   Policy.prepare,
   Policy.stage("prepare"),
-  Kit.enableIf(
-    i => i.$ns,
-    Kit.pipe(
-      Gens.prepare,
-      Scope.arrowFunToBlock,
-      Policy.unwrapNs,
-      Policy.assignBindCalls,
-      Policy.assignThrowEff,
-      Policy.stage("propagate"),
-      Control.assignLabels,
-      Prop.propagateEff,
-      State.prepare
-    )))
+  Gens.prepare,
+  Scope.arrowFunToBlock,
+  Policy.unwrapNs,
+  Policy.assignBindCalls,
+  Policy.assignThrowEff,
+  Policy.stage("propagate"),
+  Control.assignLabels,
+  Prop.propagateEff,
+  State.prepare)
 
 /* default transform for all functions if loose mode is set */
 export const loose = ifLoose(Kit.pipe(
@@ -50,7 +46,7 @@ export const loose = ifLoose(Kit.pipe(
   Control.removeLabeledStatement,
   Loops.looseForOf,
   Control.restoreLabeledStatements,
-  Rt.collect,
+  Rt.collectUsages,
   Kit.toArray,
   Simplify.blockScoping,
   Simplify.main,
@@ -145,23 +141,30 @@ const stage1 = Kit.pipe(
     State.restoreDecls,
     Closure.substContextIds,
     Block.ctxMethods,
-    Rt.collect,
+    Rt.collectUsages,
     Simplify.main,
     Kit.toArray
   )))
 
 export function pass(s) {
-  const transformMap = new Map()
-  const sa = Kit.toArray(preproc(s))
+  let sa = Kit.toArray(Rt.collectImports(s))
+  const root = sa[0].value
+  let opts = Kit.globalOpts()
+  if (opts.detectRT) {
+    if (!root.imports.has(opts.detectRT))
+      return null
+    opts.importRT = opts.detectRT
+  }
+  sa = Kit.toArray(preproc(sa))
   if (!sa[0].value.$ns)
     return
+  const transformMap = new Map()
   const inp = Kit.toArray(Scope.splitScopes(sa))
   let scopeNum = 0
   const len = inp.length
-  const root = inp[inp.length-1][0].value
   const inject = root.injectRT = new Map()
   const namespaces = root.namespaces
-  const opts = root.opts
+  opts = root.opts
   if (!opts)
     return null
   let any = false

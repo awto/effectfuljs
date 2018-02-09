@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a01() {
   var e, ex;
   console.log('in');

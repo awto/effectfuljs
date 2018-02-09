@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- should inject forPar
 function a() {
   return M.chainBH(eff1(), _1, _8);

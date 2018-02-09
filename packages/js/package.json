@@ -1,0 +1,24 @@
+{
+  "name": "@effectful/js",
+  "version": "1.0.0",
+  "description": "Single level computation effects syntax",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'todo'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectfuljs.git"
+  },
+  "keywords": [
+    "monad",
+    "effectful",
+    "linq"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awto/effectfuljs/issues"
+  },
+  "homepage": "https://github.com/awto/effectfuljs#readme"
+}

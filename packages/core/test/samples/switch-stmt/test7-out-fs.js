@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- with mixed effect/pure branches
 function a() {
   return M.chainBH(eff(), _1, _9);

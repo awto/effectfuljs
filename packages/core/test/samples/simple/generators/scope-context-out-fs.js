@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function d(i) {
   var d = M.generator();
   return M.scopeH(_1, _7, i);

@@ -262,36 +262,34 @@ module.exports = function esProfile(opts={}) {
   return {
     syntaxPlugins:["asyncGenerators","functionSent"],
     options: file,
-    main: Kit.pipe(
-      function(si) {
-        const sa = Kit.toArray(si)
-        const root = sa[0].value
-        let any
-        for(const i of sa) {
-          if (i.enter) {
-            switch(i.type) {
-            case Tag.File:
-              i.value.opts = file
-              break
-            case Tag.ClassMethod:
-            case Tag.ObjectMethod:
-            case Tag.ArrowFunctionExpression:
-            case Tag.FunctionExpression:
-            case Tag.FunctionDeclaration:
-              const {node} = i.value
-              if (node.generator || node.async)
-                any = true
-              i.value.opts = node.generator
-                ? (node.async ? asyncGenerators : generators)
-                : (node.async ? async : pure)
-              break
-            }
+    main(si) {
+      const sa = Kit.toArray(si)
+      const root = sa[0].value
+      let any
+      for(const i of sa) {
+        if (i.enter) {
+          switch(i.type) {
+          case Tag.File:
+            i.value.opts = file
+            break
+          case Tag.ClassMethod:
+          case Tag.ObjectMethod:
+          case Tag.ArrowFunctionExpression:
+          case Tag.FunctionExpression:
+          case Tag.FunctionDeclaration:
+            const {node} = i.value
+            if (node.generator || node.async)
+              any = true
+            i.value.opts = node.generator
+              ? (node.async ? asyncGenerators : generators)
+            : (node.async ? async : pure)
+            break
           }
         }
-        if (any || loose)
-          T.run(Policy.propagateOpts(sa))
       }
-    )
+      if (any || loose)
+        T.run(Policy.propagateOpts(sa))
+    }
   }
 }
 

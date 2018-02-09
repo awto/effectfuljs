@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- without EOB exits
 function b() {
   var b = M.context();

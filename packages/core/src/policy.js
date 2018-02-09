@@ -3,7 +3,6 @@ import {Tag,symbol,symInfo} from "./kit"
 import * as Match from "@effectful/transducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
-import {ifJsExceptions,ifDirectives} from "./options"
 
 import * as assert from "assert"
 
@@ -73,7 +72,7 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
 export function propagateOpts(si) {
   const sa = Kit.toArray(si)
   const s = Kit.auto(sa)
-  const stack = []
+  const stack = [s.opts]
   for(const i of s) {
     if (i.enter && i.value.opts) {
       stack.push(i.value.opts)
@@ -110,7 +109,7 @@ function* replaceGlobalNsName(si) {
   }
 }
 
-
+/** handles config `aliases` field */
 function aliases(s) {
   s = Kit.auto(s)
   const aliases = s.opts.moduleAliases
@@ -154,90 +153,64 @@ function aliases(s) {
  * checks imports in the input and apply compile time handlers 
  * if they are available  
  */
-export const presets =
-  Kit.pipe(
-    Match.inject([
-      `>$$ = require($M)`,
-      `=$$ = require($M)`,
-      `import $$ from "$M"`,
-      `import * as $$ from "$M"`
-    ]),
-    Kit.toArray,
-    function importDetect(s) {
-      s = Kit.auto(s)
-      const patStr = s.opts.presetsImportPattern
-      const detect = s.opts.detectRT
-      if (!patStr && !detect)
-        return s
-      return _presets()
-      function* _presets() {
-        const pat = patStr && patStr.substr && new RegExp(patStr)
-        const first = s.first
-        const namespaces = first.value.namespaces = new Map()
-        let ns
-        for(const i of s) {
-          if (i.enter
-              && i.type === Match.Placeholder && i.value.match !== false)
-          {
-            const j = s.cur()
-            if (i.value.name === "M") {
-              if (j.type === Tag.StringLiteral) {
-                const name = j.value.node.value
-                if (name == null || name !== s.opts.preset
-                    && detect !== name
-                    && !s.opts.libs[name] && !(pat && pat.test(name)))
-                {
-                  i.value.v.match = false
-                }
-                if (ns) {
-                  namespaces.set(name,ns)
-                  ns = null
-                }
-              } else {
-                i.value.v.match = false
-              }
-            } else {
-              if (j.type !== Tag.Identifier) {
-                i.value.v.match = false
-                ns = null
-              } else
-                ns = j.value.sym
-            }
-          }
-          yield i
-        }
-      }
-    },
-    Match.commit,
-    function* checkStaticImport(s) {
-      s = Kit.auto(s)
-      const detect = s.opts.detectRT
-      yield* s.till(i => i.pos === Tag.top)
-      for(const i of s) {
-        yield i
-        if (i.enter) {
-          if (i.type === Match.Root) {
-            yield* s.till(j => j.enter && j.type === Match.Placeholder) 
-            const name = s.cur().value.sym
-            yield* s.till(j => j.enter && j.type === Match.Placeholder)
-            const module = s.cur().value.node.value
-            yield* s.till(j => j.leave && j.type === Match.Root)
-            if (i.value.index < 2)
-              yield* s.till(j => j.leave && Kit.typeInfo(j).stmt)
-            if (detect === module || s.opts.libs[module])
-              yield s.tok(ctImport,{name:module,
-                                    optional:true,
-                                    $ns:name})
-            for(const p of [`${module}-effectful-ct`,
-                            path.join(module,"effectful-ct")]) {
-              yield s.tok(ctImport,{name:p,optional:true,$ns:name})
-            }
-          }
-        }
-      }
-    },
-    Match.clean,
-    Array.from)
+function namespaces(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  const imports = root.imports
+  if (!imports)
+    return s
+  const patStr = s.opts.presetsImportPattern
+  const pat = patStr && patStr.substr && new RegExp(patStr)
+  let imp = s.opts.importRT
+  const presets = new Set()
+  if (s.opts.preset) {
+    if (Array.isArray(s.opts.preset)) {
+      presets.add(...s.opts.preset)
+    } else if (s.opts.preset.split) {
+      presets.add(...s.opts.preset.split(/\s*,\s*/))
+    }
+  }
+  const libs = s.opts.libs
+  const namespaces = root.namespaces = new Map()
+  for(const [lib,imps] of imports) {
+    for(const {ns} of imps) {
+      if (!ns)
+        continue
+      if (libs[lib])
+        s.opts.importRT = imp = lib
+      namespaces.set(lib,ns.sym)
+    }
+  }
+  let $ns
+  root.skipFile = false
+  if (imp)
+    $ns = namespaces.get(imp)
+  s.first.value.nsImported = !!$ns
+  if (!$ns) {
+    $ns = Kit.scope.newSym(s.opts.ns || "M")
+    // suppressing scope warning
+    if (!imp)
+	    $ns.num = -1
+    $ns.global = true
+  }
+  root.$ns = $ns
+  let cur = s
+  if (imp) {
+    cur = applyLib(imp,true,cur)
+    cur = applyLib(`${imp}-ct`,true,cur)
+    cur = applyLib(`${imp}/ct`,true,cur)
+  }
+  for(const i of presets)
+    cur = applyLib(i,false,cur)
+  function applyLib(lib, optional, si) {
+    const s = Kit.auto(si)
+    const r = resolveImport(lib,s.opts,optional)
+    if (r != null)
+      return r(s)
+    return s
+  }
+  return cur
+}
 
 /** marks place of profile application */
 export const profile = symbol("profile")
@@ -679,10 +652,11 @@ export function* propagateConfigDiff(s) {
 }
 
 /** puts user config options into the stream */
+/*
 function emitInitOptions(s) {
   s = Kit.auto(s)
   const res = collect()
-  if (s.opts.preset || s.opts.presetsImportPattern || s.opts.detectRT)
+  if (s.opts.preset || s.opts.presetsImportPattern)
     return ctImportPass(res)
   return res
   function* collect() {
@@ -692,22 +666,17 @@ function emitInitOptions(s) {
     let $ns
     const root = s.first.value
     root.skipFile = false
-    if (s.opts.importRT || s.opts.detectRT)
-      $ns = root.namespaces && root.namespaces.get(s.opts.importRT || s.opts.detectRT)
+    if (s.opts.importRT)
+      $ns = root.namespaces && root.namespaces.get(s.opts.importRT)
     s.first.value.nsImported = !!$ns
     if (!$ns) {
-      if (s.opts.detectRT) {
-        root.$ns = null
-        yield* s
-        return
-      }
       $ns = Kit.scope.newSym(s.opts.ns || "M")
       // suppressing scope warning
       if (!s.opts.importRT)
 	      $ns.num = -1
       $ns.global = true
     }
-    root.value.$ns = $ns
+    root.$ns = $ns
     if (s.opts.preset != null) {
       if (Array.isArray(s.opts.preset)) {
         for(const i of s.opts.preset)
@@ -719,20 +688,13 @@ function emitInitOptions(s) {
     yield* s
   }
 }
+*/
 
 /** combines a few preparation passes */
 export const prepare =
   Kit.pipe(
     aliases,
-    Kit.enableIf(i => i.opts.presetsImportPattern
-                 || i.opts.reuseImports,
-                 presets),
-    emitInitOptions,
-    ifDirectives(Kit.pipe(
-      directives,
-      configDiffPass,
-      applyProfiles,
-      configDiffPass)))
+    namespaces)
 
 /** for `ns` function application marks inner expression to be effectful */
 export function unwrapNs(si) {

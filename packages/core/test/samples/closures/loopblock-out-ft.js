@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a(p) {
   var a = M.context();
   a._p = p;

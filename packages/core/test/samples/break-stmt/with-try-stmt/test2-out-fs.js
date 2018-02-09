@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- when it is the last statement
 (function () {
   var e;

@@ -34,3 +34,5 @@ export {packId,auto,autoBlock,autoBlockPass,rmEmpty,removeNulls,
         enter,leave,tok,repeat,complete,Any,completeAny,finalize,
         strip,swap,swapTok,produce,consume,tagValue,idTok,
         lookahead,rsub,prepare,resetLevel,sysId,coerceId}
+export const globalOpts = kit.getOpts
+

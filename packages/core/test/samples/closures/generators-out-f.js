@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 const a = w => function mfs(s) {
   var v, k, r;
   return M.scopeH(_1, _2);

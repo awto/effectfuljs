@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- with state
 function a() {
   var i, pat;

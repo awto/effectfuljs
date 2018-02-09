@@ -1,7 +1,7 @@
 import {Tag,produce as esproduce,symbol,toArray,isSymbol,
         symName,symInfo,consume as esconsume,
         scope} from "@effectful/transducers"
-import {pipe,curry,Wrapper} from "@effectful/transducers/kit"
+import {pipe,curry,Wrapper,getOpts} from "@effectful/transducers/kit"
 import * as T from "babel-types"
 import * as assert from "assert"
 
@@ -594,7 +594,7 @@ function CtorWrap(i) {
   Wrapper.call(this,i)
 }
 
-CtorWrap.prototype = new Wrapper()
+CtorWrap.prototype = Object.create(Wrapper.prototype)
 CtorWrap.prototype.valCtor = ctor
 
 export function auto(i) {

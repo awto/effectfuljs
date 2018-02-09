@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 const a = w => {
   var ctx = {};
   ctx._w = w;

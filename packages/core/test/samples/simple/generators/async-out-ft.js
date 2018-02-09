@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a1() {
   var a1 = M.async();
   return a1.scopeH(a1_1, a1_2);

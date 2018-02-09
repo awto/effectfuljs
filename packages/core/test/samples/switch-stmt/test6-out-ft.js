@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 // *- without default branch
 function a() {
   var a = M.context();

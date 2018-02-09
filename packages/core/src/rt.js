@@ -1,13 +1,90 @@
 import * as Kit from "./kit"
 import * as T from "babel-types"
 import * as RT from "@effectful/transducers/rt"
+import * as assert from "assert"
 
 const {Tag} = Kit
 
 const emptyMap = new Map()
 
+/** 
+ * collects all ES or CommonJS imports into root's import field 
+ *
+ *    type RootValue = RootValue & {imports:Map<string,
+ *                                              {ns?:IdValue,
+ *                                               locals?:Map<string,IdValue>}[]> }
+ */
+export function collectImports(si) {
+  const sa = Kit.toArray(si)
+  const root = sa[0].value
+  const s = Kit.auto(sa)
+  const imports = root.imports = new Map()
+  function reg(path, ns, locals) {
+    let mods = imports.get(path)
+    if (!mods)
+      imports.set(path, mods = [])
+    mods.push({ns,locals})
+  }
+  for(const i of s) {
+    if (i.enter) {
+      switch(i.type) {
+      case Tag.AssignmentExpression:
+        if (i.value.node.operator !== "=")
+          break
+      case Tag.VariableDeclarator:
+        const pat = s.take()
+        if (pat.type !== Tag.Identifier)
+          break
+        // TODO patterns
+        s.close(pat)
+        const call = s.take()
+        if (!call.type === Tag.CallExpression)
+          break
+        const callee = s.cur()
+        if (callee.type !== Tag.Identifier || callee.value.node.name !== "require")
+          break
+        for(const i of s)
+          if (i.enter && i.pos === Tag.arguments)
+            break
+        const mod = s.cur()
+        if (mod.type !== Tag.StringLiteral)
+          break
+        reg(mod.value.node.value,pat.value)
+        break
+      case Tag.ImportDeclaration:
+        let ns, locals
+        for(const i of s.one()) {
+          if (i.enter) {
+            switch(i.type) {
+            case Tag.ImportDefaultSpecifier:
+            case Tag.ImportNamespaceSpecifier:
+              ns = s.cur().value
+              break
+            case Tag.ImportSpecifier:
+              if (!locals)
+                locals = new Map()
+              const loc = s.take()
+              s.close(loc)
+              locals.set(s.cur().value.node.name,loc.value)
+              break
+            }
+          }
+        }
+        const src = s.cur()
+        assert.ok(src.type === Tag.StringLiteral)
+        reg(src.value.node.value,ns,locals)
+        break
+      case Tag.BlockStatement:
+        Kit.skip(s.copy(i))
+        break
+      }
+    }
+  }
+  return sa
+}
+
 /** collects all symbol with library ns */
-export function collect(s) {
+export function collectUsages(s) {
   const sa = Kit.toArray(s)
   const root = sa[0].value
   const rootNs = root.$ns

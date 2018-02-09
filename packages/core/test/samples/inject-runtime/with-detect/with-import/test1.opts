@@ -1,0 +1,7 @@
+{
+  "preset": "@effectful/generators",
+  "detectRT": "@effectful/generators",
+  "profile": null
+}
+
+

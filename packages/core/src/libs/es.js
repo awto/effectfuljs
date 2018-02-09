@@ -1,12 +1,15 @@
 import * as Policy from "../policy"
 import * as Kit from "../kit"
 
-export default function* init(opts) {
-  const ops = {
-    YieldExpression: true,
+const ops = {
+  YieldExpression: true,
     AwaitExpression: true
-  }
-  return Kit.pipe(
+}
+
+export default function(si) {
+  const s = Kit.auto(si)
+  const opts = s.opts
+  return  Kit.pipe(
     Policy.setFuncOpts({generator:false,
                         async:false,
                         coerce:false,
@@ -53,5 +56,7 @@ export default function* init(opts) {
        scopePostfix:true,
        wrapFunction: "asyncGeneratorFunction"
       },opts.all,opts.asyncGenerators)),
-    Policy.configDiffPass)
+    Policy.configDiffPass
+  )(s)
 }
+

@@ -1,3 +1,5 @@
+import * as M from '@effectful/core';
+
 function a() {
   var k, i, j, l;
   k = 0;
