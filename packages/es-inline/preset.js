@@ -1,1 +1,1 @@
-module.exports = require("@effectful/js").babelPreset(require("./options"))
+module.exports = require("@effectful/core").babelPreset(require("./options"))

@@ -91,7 +91,7 @@ function() {
 ```
 
 There are more examples of input/output in the
-[test folder](https://github.com/awto/effectfuljs/tree/master/test/samples).
+[test folder](https://github.com/awto/effectfuljs/tree/master/packages/js/test/samples).
 
 It is arguable if explicit or implicit levels separation is better. This likely
 depends on what kind of effects is used. The succinct and more readable code is good,
@@ -105,7 +105,8 @@ There are babel presets in separate packages.
 * [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
   for two-levels syntax (overloads ECMAScript async, generator and async generators
   functions)
-* single level - SOON
+* [@effectful/js](https://github.com/awto/effectfuljs/tree/master/packages/js)
+  single level syntax (the second level is implicit).
 
 ## Known major limitations
  * ES6 supper just replaced with `Object.getPrototypeOf(...)` and `call`, 

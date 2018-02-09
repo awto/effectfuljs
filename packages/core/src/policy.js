@@ -166,7 +166,8 @@ export const presets =
     function importDetect(s) {
       s = Kit.auto(s)
       const patStr = s.opts.presetsImportPattern
-      if (!patStr)
+      const detect = s.opts.detectRT
+      if (!patStr && !detect)
         return s
       return _presets()
       function* _presets() {
@@ -183,6 +184,7 @@ export const presets =
               if (j.type === Tag.StringLiteral) {
                 const name = j.value.node.value
                 if (name == null || name !== s.opts.preset
+                    && detect !== name
                     && !s.opts.libs[name] && !(pat && pat.test(name)))
                 {
                   i.value.v.match = false
@@ -209,6 +211,7 @@ export const presets =
     Match.commit,
     function* checkStaticImport(s) {
       s = Kit.auto(s)
+      const detect = s.opts.detectRT
       yield* s.till(i => i.pos === Tag.top)
       for(const i of s) {
         yield i
@@ -221,7 +224,7 @@ export const presets =
             yield* s.till(j => j.leave && j.type === Match.Root)
             if (i.value.index < 2)
               yield* s.till(j => j.leave && Kit.typeInfo(j).stmt)
-            if (s.opts.preset === module || s.opts.libs[module])
+            if (detect === module || s.opts.libs[module])
               yield s.tok(ctImport,{name:module,
                                     optional:true,
                                     $ns:name})
@@ -679,7 +682,7 @@ export function* propagateConfigDiff(s) {
 function emitInitOptions(s) {
   s = Kit.auto(s)
   const res = collect()
-  if (s.opts.preset || s.opts.presetsImportPattern)
+  if (s.opts.preset || s.opts.presetsImportPattern || s.opts.detectRT)
     return ctImportPass(res)
   return res
   function* collect() {
@@ -688,17 +691,23 @@ function emitInitOptions(s) {
     }
     let $ns
     const root = s.first.value
-    if (s.opts.importRT)
-      $ns = root.namespaces && root.namespaces.get(s.opts.importRT)
+    root.skipFile = false
+    if (s.opts.importRT || s.opts.detectRT)
+      $ns = root.namespaces && root.namespaces.get(s.opts.importRT || s.opts.detectRT)
     s.first.value.nsImported = !!$ns
     if (!$ns) {
+      if (s.opts.detectRT) {
+        root.$ns = null
+        yield* s
+        return
+      }
       $ns = Kit.scope.newSym(s.opts.ns || "M")
       // suppressing scope warning
       if (!s.opts.importRT)
-	$ns.num = -1
+	      $ns.num = -1
       $ns.global = true
     }
-    s.first.value.$ns = $ns
+    root.value.$ns = $ns
     if (s.opts.preset != null) {
       if (Array.isArray(s.opts.preset)) {
         for(const i of s.opts.preset)

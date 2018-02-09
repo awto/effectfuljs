@@ -1,12 +1,12 @@
 {
-  "name": "@effectful/js-loose",
+  "name": "@effectful/core-loose",
   "version": "0.1.4",
-  "description": "@effectful/js built with faster generators",
+  "description": "@effectful/core built with faster generators",
   "main": "compiler.js",
   "scripts": {
     "test": "mocha",
-    "prepare-test": "babel ../js/test --out-dir=test",
-    "build-loose": "cross-env BABEL_ENV=loose babel ../js/src --out-dir=."
+    "prepare-test": "babel ../core/test --out-dir=test",
+    "build-loose": "cross-env BABEL_ENV=loose babel ../core/src --out-dir=."
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "mocha": "^5.0.0"
   },
   "dependencies": {
-    "@effectful/es-loose-rt": "^0.1.1",
+    "@effectful/es-rt": "^0.1.1",
     "@effectful/transducers-loose": "^0.1.4",
     "resolve": "^1.5.0"
   },

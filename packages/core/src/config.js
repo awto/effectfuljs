@@ -125,6 +125,9 @@ export default {
   // injects runtime from provided module
   importRT: null,
 
+  // transpiles only modules containing the runtime import
+  detectRT: null,
+
   // runtime function to be inlined in the module
   inlineRT: null,
 

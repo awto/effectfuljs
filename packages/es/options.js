@@ -1,4 +1,4 @@
-const C = require("@effectful/js")
+const C = require("@effectful/core")
 const config = C.config
 const Policy = C.Policy
 const T = C.Transform
@@ -191,12 +191,18 @@ const disabled = {
 module.exports = function esProfile(opts={}) {
   let importRT = opts.importRT
   if (importRT == null) {
-    importRT = "@effectful/es-"
-    if (opts.loose && !opts.defunct)
-      importRT += "loose-"
-    else if (opts.inline && opts.defunct)
-      importRT += "inline-"
-    importRT += "rt"
+    const p = []
+    if (opts.defunct)
+      p.push("defunct")
+    if (opts.loose)
+      p.push("loose")
+    else if (opts.inline)
+      p.push("inline")
+    if (opts.delegateForOf)
+      p.push("delegate")
+    importRT = "@effectful/es-rt"
+    if (p.length)
+      importRT += "/opts/" + p.join("-")
   }
   const pure = Object.assign({},config,rebind.all)
   const file = Object.assign({},config,

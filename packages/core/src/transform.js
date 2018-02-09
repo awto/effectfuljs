@@ -30,15 +30,19 @@ export const preproc = Kit.pipe(
   Prop.prepare,
   Policy.prepare,
   Policy.stage("prepare"),
-  Gens.prepare,
-  Scope.arrowFunToBlock,
-  Policy.unwrapNs,
-  Policy.assignBindCalls,
-  Policy.assignThrowEff,
-  Policy.stage("propagate"),
-  Control.assignLabels,
-  Prop.propagateEff,
-  State.prepare)
+  Kit.enableIf(
+    i => i.$ns,
+    Kit.pipe(
+      Gens.prepare,
+      Scope.arrowFunToBlock,
+      Policy.unwrapNs,
+      Policy.assignBindCalls,
+      Policy.assignThrowEff,
+      Policy.stage("propagate"),
+      Control.assignLabels,
+      Prop.propagateEff,
+      State.prepare
+    )))
 
 /* default transform for all functions if loose mode is set */
 export const loose = ifLoose(Kit.pipe(
@@ -149,6 +153,8 @@ const stage1 = Kit.pipe(
 export function pass(s) {
   const transformMap = new Map()
   const sa = Kit.toArray(preproc(s))
+  if (!sa[0].value.$ns)
+    return
   const inp = Kit.toArray(Scope.splitScopes(sa))
   let scopeNum = 0
   const len = inp.length

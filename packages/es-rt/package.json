@@ -49,9 +49,6 @@
     "mocha": "^4.0.1",
     "rollup": "^0.50.0"
   },
-  "dependencies": {
-    "babel-preset-env": "^1.6.1"
-  },
   "publishConfig": {
     "access": "public"
   }

@@ -1,4 +1,4 @@
-# @effectful/js
+# @effectful/core
 
 The main library of transforms used by all the other presets.
 
