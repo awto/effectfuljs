@@ -5,9 +5,9 @@ function a() {
   var r;
 
   if (true) {
-    return M.chainBH(eff(1), _1, _2);
+    return M.chain(eff(1), _1, _2);
   } else {
-    return M.chainBH(eff(2), _1, _2);
+    return M.chain(eff(2), _1, _2);
   }
 
   function _1(r) {
@@ -23,9 +23,9 @@ function b() {
   var r;
 
   if (true) {
-    return M.chainBH(eff(1), _1, _2);
+    return M.chain(eff(1), _1, _2);
   } else {
-    return M.chainBH(eff(2), _1, _2);
+    return M.chain(eff(2), _1, _2);
   }
 
   function _1(r) {
@@ -39,17 +39,17 @@ function b() {
 
 function c() {
   if (true) {
-    return M.chainBH(eff(1), _1, _4);
+    return M.chain(eff(1), _1, _4);
   } else {
-    return M.chainBH(eff(2), _1, _4);
+    return M.chain(eff(2), _1, _4);
   }
 
   function _1() {
-    return M.chainBH(eff(3), _2, _4);
+    return M.chain(eff(3), _2, _4);
   }
 
   function _2() {
-    return M.chainBH(eff(4), _3, _4);
+    return M.chain(eff(4), _3, _4);
   }
 
   function _3() {
@@ -62,22 +62,22 @@ function c() {
 }
 
 function d() {
-  return M.chainBH(eff('a'), _1, _5);
+  return M.chain(eff('a'), _1, _5);
 
   function _1() {
     if (true) {
-      return M.chainBH(eff(1), _2, _5);
+      return M.chain(eff(1), _2, _5);
     } else {
-      return M.chainBH(eff(2), _2, _5);
+      return M.chain(eff(2), _2, _5);
     }
   }
 
   function _2() {
-    return M.chainBH(eff(3), _3, _5);
+    return M.chain(eff(3), _3, _5);
   }
 
   function _3() {
-    return M.chainBH(eff(4), _4, _5);
+    return M.chain(eff(4), _4, _5);
   }
 
   function _4() {
@@ -91,7 +91,7 @@ function d() {
 
 function e() {
   var r;
-  return M.chainBH(eff(1), _1, _2);
+  return M.chain(eff(1), _1, _2);
 
   function _1(a) {
     if (a) {
@@ -108,7 +108,7 @@ function e() {
 
 function f() {
   var r;
-  return M.chainBH(eff(1), _1, _2);
+  return M.chain(eff(1), _1, _2);
 
   function _1(a) {
     if (a) {

@@ -3,11 +3,11 @@ import * as M from '@effectful/core';
 function a() {
   var i;
   i = 0;
-  return M.chainBH(eff1(i), _1, _3);
+  return M.chain(eff1(i), _1, _3);
 
   function _1() {
     i++;
-    return M.chainBH(eff2(i), _2, _3);
+    return M.chain(eff2(i), _2, _3);
   }
 
   function _2() {

@@ -3,15 +3,15 @@ Z = require('@effectful/generators');
 
 function a() {
   var a = Z.generator();
-  return Z.scopeH(a_1, a_4);
+  return Z.scope(a_1, a_4);
 }
 
 function a_1(a) {
-  return Z.yldBH(1, a_2, a_4);
+  return Z.yld(1, a_2, a_4);
 }
 
 function a_2(a) {
-  return Z.yldBH(2, a_3, a_4);
+  return Z.yld(2, a_3, a_4);
 }
 
 function a_3(a) {

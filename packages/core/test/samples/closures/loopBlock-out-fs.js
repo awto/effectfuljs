@@ -2,44 +2,44 @@ import * as M from '@effectful/core';
 
 function a(p) {
   var a;
-  return M.chainBH(eff(1), _1, _7);
+  return M.chain(eff(1), _1, _7);
 
   function _1() {
     var b;
     a = 0;
     b = a;
-    return M.chainBH(eff(2, b), _2, _7);
+    return M.chain(eff(2, b), _2, _7);
   }
 
   function _2(b) {
     var loop, a;
     a = M.iterator(b);
     loop = a;
-    return M.jumpH(_3, _9, loop);
+    return M.jump(void 0, _3, _9, loop);
   }
 
-  function _3(loop) {
+  function _3(b, loop) {
     var i;
 
     if (!(loop = loop.step()).done) {
       i = loop.value;
-      return M.chainBH((i => {
+      return M.chain((i => {
         var j, k, b, c;
         b = a;
         c = a;
-        return M.chainBH(eff(3, b, c), _1, _4);
+        return M.chain(eff(3, b, c), _1, _4);
 
         function _1() {
           j = i + 1;
           k = i + 1;
           i++;
-          return M.chainBH(eff(function b(k) {
+          return M.chain(eff(function b(k) {
             var c, d, e, f;
             c = a;
             d = j;
             e = k++;
             f = p;
-            return M.chainBH(eff(4, c, d, e, f), _1, _4, k);
+            return M.chain(eff(4, c, d, e, f), _1, _4, k);
 
             function _1(k) {
               var _k, b, c, d;
@@ -52,7 +52,7 @@ function a(p) {
               b = a;
               c = i;
               d = p;
-              return M.chainBH(eff(5, b, c, _k, d), _2, _4, k);
+              return M.chain(eff(5, b, c, _k, d), _2, _4, k);
             }
 
             function _2(k) {
@@ -60,7 +60,7 @@ function a(p) {
               b = a;
               c = i;
               d = p;
-              return M.chainBH(eff(6, b, c, k, d), _3, _4);
+              return M.chain(eff(6, b, c, k, d), _3, _4);
             }
 
             function _3() {
@@ -78,7 +78,7 @@ function a(p) {
           b = a;
           c = i;
           d = j;
-          return M.chainBH(eff(7, b, c, d), _3, _4);
+          return M.chain(eff(7, b, c, d), _3, _4);
         }
 
         function _3() {
@@ -90,7 +90,7 @@ function a(p) {
         }
       })(i), _3, _9, loop);
     } else {
-      return M.jumpH(_4, _7, _5, _7);
+      return M.jump(void 0, _4, _7, _5, _7);
     }
   }
 
@@ -99,14 +99,14 @@ function a(p) {
       loop.exit();
     }
 
-    return M.jumpH(fc, fe, err);
+    return M.jump(void 0, fc, fe, err);
   }
 
   function _5() {
     var b, c;
     b = a;
     c = p;
-    return M.chainBH(eff(8, b, c), _6, _7);
+    return M.chain(eff(8, b, c), _6, _7);
   }
 
   function _6() {
@@ -122,6 +122,6 @@ function a(p) {
   }
 
   function _9(a) {
-    return M.jumpH(_4, _7, _8, _7, a);
+    return M.jump(void 0, _4, _7, _8, _7, a);
   }
 }

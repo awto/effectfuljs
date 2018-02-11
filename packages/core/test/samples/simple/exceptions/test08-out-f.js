@@ -2,16 +2,16 @@ import * as M from '@effectful/core';
 
 function a() {
   var fc, fe, err;
-  return M.jumpH(_1, _6);
+  return M.jump(void 0, _1, _6);
 
   function _1() {
     fc = _3, fe = _4;
-    return M.chainBH(eff(1), _2, _4);
+    return M.chain(eff(1), _2, _4);
   }
 
   function _2() {
     console.log('fin');
-    return M.jumpH(fc, fe);
+    return M.jump(void 0, fc, fe);
   }
 
   function _3() {
@@ -28,6 +28,6 @@ function a() {
 
   function _6(a) {
     fc = _5, fe = _4, err = a;
-    return M.jumpH(_2, _4);
+    return M.jump(void 0, _2, _4);
   }
 }

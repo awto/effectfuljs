@@ -2,19 +2,19 @@ import * as M from '@effectful/core';
 
 (function () {
   var e, ex;
-  return M.jumpH(_1, _6);
+  return M.jump(void 0, _1, _6);
 
   function _1() {
-    return M.chainBH(eff(2), _3, _5);
+    return M.chain(eff(2), _3, _5);
   }
 
   function _2() {
     e = ex;
-    return M.chainBH(eff(3), _3, _5);
+    return M.chain(eff(3), _3, _5);
   }
 
   function _3() {
-    return M.chainBH(eff(4), _4, _5);
+    return M.chain(eff(4), _4, _5);
   }
 
   function _4() {
@@ -27,6 +27,6 @@ import * as M from '@effectful/core';
 
   function _6(a) {
     ex = a;
-    return M.jumpH(_2, _5);
+    return M.jump(void 0, _2, _5);
   }
 });

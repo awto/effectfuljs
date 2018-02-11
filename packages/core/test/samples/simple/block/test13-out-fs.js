@@ -5,18 +5,18 @@ function a() {
   i = 0;
 
   if (t) {
-    return M.chainBH(eff1(i), _1, _4, i);
+    return M.chain(eff1(i), _1, _4, i);
   } else {
     i++;
-    return M.jumpH(_1, _4, i);
+    return M.jump(void 0, _1, _4, i);
   }
 
   function _1(i) {
-    return M.chainBH(eff2(i), _2, _4, i);
+    return M.chain(eff2(i), _2, _4, i);
   }
 
   function _2(i) {
-    return M.chainBH(eff3(i), _3, _4);
+    return M.chain(eff3(i), _3, _4);
   }
 
   function _3() {

@@ -5,17 +5,17 @@ M = require('@effectfuljs/core');
 Q = require('Q');
 QM = require('@effectfuljs/promise')(Q);
 describe('yop', function () {
-  return M.chainBH(it('should yield fiber until promise is resolved', function (done) {
+  return M.chain(it('should yield fiber until promise is resolved', function (done) {
     var addLater = function addLater(a, b) {
       var deferred, r;
-      return M.chainBH(Q.defer(), _1, _2);
+      return M.chain(Q.defer(), _1, _2);
 
       function _1(c) {
         deferred = c;
         process.nextTick(function () {
           var c;
           c = deferred;
-          return M.chainBH(c.resolve(a + b), _1, _2);
+          return M.chain(c.resolve(a + b), _1, _2);
 
           function _1() {
             return M.pure();
@@ -36,50 +36,50 @@ describe('yop', function () {
 
     if (done.async) {
       a = done;
-      return M.chainBH(a.async(), _1, _4);
+      return M.chain(a.async(), _1, _4);
     } else {
-      return M.jumpH(_2, _4);
+      return M.jump(void 0, _2, _4);
     }
 
     function _1(a) {
       done = a;
-      return M.jumpH(_2, _4);
+      return M.jump(void 0, _2, _4);
     }
 
     function _2() {
-      return M.chainBH(M.run(QM, function () {
+      return M.chain(M.run(QM, function () {
         var result, r;
-        return M.chainBH(addLater(1, 2), _1, _3);
+        return M.chain(addLater(1, 2), _1, _3);
 
         function _1(a) {
-          return M.chainBH(a.mapply(function ($dm$b) {
+          return M.chain(a.mapply(function ($dm$b) {
             var err, ex;
             result = $dm$b;
-            return M.jumpH(_1, _7);
+            return M.jump(void 0, _1, _7);
 
             function _1() {
               var a;
               a = result;
-              return M.chainBH(expect(a), _2, _7);
+              return M.chain(expect(a), _2, _7);
             }
 
             function _2(b) {
               var a;
               a = b.to;
-              return M.chainBH(a.equal(3), _3, _7);
+              return M.chain(a.equal(3), _3, _7);
             }
 
             function _3() {
               var a;
               a = done;
-              return M.chainBH(a(), _5, _6);
+              return M.chain(a(), _5, _6);
             }
 
             function _4() {
               var a;
               err = ex;
               a = done;
-              return M.chainBH(a(err), _5, _6);
+              return M.chain(a(err), _5, _6);
             }
 
             function _5() {
@@ -92,7 +92,7 @@ describe('yop', function () {
 
             function _7(a) {
               ex = a;
-              return M.jumpH(_4, _6);
+              return M.jump(void 0, _4, _6);
             }
           }), _2, _3);
         }
@@ -117,17 +117,17 @@ describe('yop', function () {
   }), _1, _4);
 
   function _1() {
-    return M.chainBH(it('should throw reasons from rejected promises into fiber', function (done) {
+    return M.chain(it('should throw reasons from rejected promises into fiber', function (done) {
       var throwErrorLater = function throwErrorLater() {
         var deferred, r;
-        return M.chainBH(Q.defer(), _1, _2);
+        return M.chain(Q.defer(), _1, _2);
 
         function _1(a) {
           deferred = a;
           process.nextTick(function () {
             var a;
             a = deferred;
-            return M.chainBH(a.reject(new Error('promise rejected')), _1, _2);
+            return M.chain(a.reject(new Error('promise rejected')), _1, _2);
 
             function _1() {
               return M.pure();
@@ -148,55 +148,55 @@ describe('yop', function () {
 
       if (done.async) {
         a = done;
-        return M.chainBH(a.async(), _1, _4);
+        return M.chain(a.async(), _1, _4);
       } else {
-        return M.jumpH(_2, _4);
+        return M.jump(void 0, _2, _4);
       }
 
       function _1(a) {
         done = a;
-        return M.jumpH(_2, _4);
+        return M.jump(void 0, _2, _4);
       }
 
       function _2() {
-        return M.chainBH(M.run(QM, function () {
+        return M.chain(M.run(QM, function () {
           var r;
-          return M.chainBH(M.scope(function ($dm$root) {
+          return M.chain(M.scope(function ($dm$root) {
             var r;
-            return M.chainBH(throwErrorLater(), _1, _4);
+            return M.chain(throwErrorLater(), _1, _4);
 
             function _1(a) {
-              return M.chainBH(a.mhandle(function (err) {
+              return M.chain(a.mhandle(function (err) {
                 var expectErr, ex, r;
-                return M.jumpH(_1, _8);
+                return M.jump(void 0, _1, _8);
 
                 function _1() {
                   var a;
                   a = err.message;
-                  return M.chainBH(expect(a), _2, _8);
+                  return M.chain(expect(a), _2, _8);
                 }
 
                 function _2(b) {
                   var a;
                   a = b.to;
-                  return M.chainBH(a.equal('promise rejected'), _3, _8);
+                  return M.chain(a.equal('promise rejected'), _3, _8);
                 }
 
                 function _3() {
                   var a;
                   a = done;
-                  return M.chainBH(a(), _5, _7);
+                  return M.chain(a(), _5, _7);
                 }
 
                 function _4() {
                   var a;
                   expectErr = ex;
                   a = done;
-                  return M.chainBH(a(expectErr), _5, _7);
+                  return M.chain(a(expectErr), _5, _7);
                 }
 
                 function _5() {
-                  return M.chainBH($dm$root.brk(), _6, _7);
+                  return M.chain($dm$root.brk(), _6, _7);
                 }
 
                 function _6(r) {
@@ -209,16 +209,16 @@ describe('yop', function () {
 
                 function _8(a) {
                   ex = a;
-                  return M.jumpH(_4, _7);
+                  return M.jump(void 0, _4, _7);
                 }
               }), _2, _4);
             }
 
             function _2(a) {
-              return M.chainBH(a.mapply(function () {
+              return M.chain(a.mapply(function () {
                 var a;
                 a = done;
-                return M.chainBH(a(new Error('yop should have thrown reason from rejected promise')), _1, _2);
+                return M.chain(a(new Error('yop should have thrown reason from rejected promise')), _1, _2);
 
                 function _1() {
                   return M.pure();
@@ -260,55 +260,55 @@ describe('yop', function () {
   }
 
   function _2() {
-    return M.chainBH(it('should work just fine with passed a value instead of a promise', function (done) {
+    return M.chain(it('should work just fine with passed a value instead of a promise', function (done) {
       var a;
 
       if (done.async) {
         a = done;
-        return M.chainBH(a.async(), _1, _4);
+        return M.chain(a.async(), _1, _4);
       } else {
-        return M.jumpH(_2, _4);
+        return M.jump(void 0, _2, _4);
       }
 
       function _1(a) {
         done = a;
-        return M.jumpH(_2, _4);
+        return M.jump(void 0, _2, _4);
       }
 
       function _2() {
-        return M.chainBH(M.run(QM, function () {
+        return M.chain(M.run(QM, function () {
           var result, r;
-          return M.chainBH(1 + 2, _1, _3);
+          return M.chain(1 + 2, _1, _3);
 
           function _1(a) {
-            return M.chainBH(a.mapply(function ($dm$b) {
+            return M.chain(a.mapply(function ($dm$b) {
               var err, ex;
               result = $dm$b;
-              return M.jumpH(_1, _7);
+              return M.jump(void 0, _1, _7);
 
               function _1() {
                 var a;
                 a = result;
-                return M.chainBH(expect(a), _2, _7);
+                return M.chain(expect(a), _2, _7);
               }
 
               function _2(b) {
                 var a;
                 a = b.to;
-                return M.chainBH(a.equal(3), _3, _7);
+                return M.chain(a.equal(3), _3, _7);
               }
 
               function _3() {
                 var a;
                 a = done;
-                return M.chainBH(a(), _5, _6);
+                return M.chain(a(), _5, _6);
               }
 
               function _4() {
                 var a;
                 err = ex;
                 a = done;
-                return M.chainBH(a(err), _5, _6);
+                return M.chain(a(err), _5, _6);
               }
 
               function _5() {
@@ -321,7 +321,7 @@ describe('yop', function () {
 
               function _7(a) {
                 ex = a;
-                return M.jumpH(_4, _6);
+                return M.jump(void 0, _4, _6);
               }
             }), _2, _3);
           }

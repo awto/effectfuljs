@@ -2,10 +2,10 @@ import * as M from '@effectful/core';
 
 function a() {
   var e;
-  return M.jumpH(_1, _5);
+  return M.jump(void 0, _1, _5);
 
   function _1() {
-    return M.chainBH(eff(1), _3, _4);
+    return M.chain(eff(1), _3, _4);
   }
 
   function _2(ex) {
@@ -23,6 +23,6 @@ function a() {
   }
 
   function _5(a) {
-    return M.jumpH(_2, _4, a);
+    return M.jump(void 0, _2, _4, a);
   }
 }

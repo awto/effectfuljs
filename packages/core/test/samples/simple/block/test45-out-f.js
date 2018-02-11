@@ -4,21 +4,21 @@ function a() {
   var i, a;
   i = 0;
   a = i++;
-  return M.chainBH(eff5(a), _1, _4);
+  return M.chain(eff5(a), _1, _4);
 
   function _1() {
     var a;
 
     if (ee) {
       a = i++;
-      return M.chainBH(eff7(a), _2, _4);
+      return M.chain(eff7(a), _2, _4);
     } else {
-      return M.jumpH(_2, _4);
+      return M.jump(void 0, _2, _4);
     }
   }
 
   function _2() {
-    return M.chainBH(eff8(i), _3, _4);
+    return M.chain(eff8(i), _3, _4);
   }
 
   function _3() {

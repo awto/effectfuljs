@@ -4,7 +4,7 @@ const T = C.Transform
 module.exports = function esProfile(pOpts={}) {
   const opts = Object.assign(
     {},
-    config,
+    C.config,
     {preset:"@effectful/js",modules:"esDefault"},
     pOpts)
   return {

@@ -1,20 +1,20 @@
 import * as M from '@effectful/core';
 
 function a() {
-  return M.jumpH(_1, _7);
+  return M.jump(void 0, _1, _7);
 
   function _1() {
-    return M.chainBH(eff(1), _2, _5, _4, _5);
+    return M.chain(eff(1), _2, _5, _4, _5);
   }
 
   function _2(fc, fe, err) {
     console.log(1);
-    return M.chainBH(eff(2), _3, _5, fc, fe, err);
+    return M.chain(eff(2), _3, _5, fc, fe, err);
   }
 
   function _3(fc, fe, err) {
     console.log(2);
-    return M.jumpH(fc, fe, err);
+    return M.jump(void 0, fc, fe, err);
   }
 
   function _4() {
@@ -30,6 +30,6 @@ function a() {
   }
 
   function _7(a) {
-    return M.jumpH(_2, _5, _6, _5, a);
+    return M.jump(void 0, _2, _5, _6, _5, a);
   }
 }

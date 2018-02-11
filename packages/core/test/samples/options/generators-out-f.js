@@ -4,10 +4,10 @@ import * as G from '@effectful/es';
 var _c = G.generatorFunction(c);
 
 function c() {
-  return G.scopeH(_1, _3);
+  return G.scope(_1, _3);
 
   function _1() {
-    return G.yldStarBH(z, _2, _3);
+    return G.yldStar(z, _2, _3);
   }
 
   function _2() {

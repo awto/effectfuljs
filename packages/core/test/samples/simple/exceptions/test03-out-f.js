@@ -3,22 +3,22 @@ import * as M from '@effectful/core';
 function a() {
   var e, error, _error, ex;
 
-  return M.jumpH(_1, _6);
+  return M.jump(void 0, _1, _6);
 
   function _1() {
     console.log('1');
-    return M.chainBH(eff(1), _3, _5);
+    return M.chain(eff(1), _3, _5);
   }
 
   function _2() {
     _error = ex;
     e = _error;
     console.log('2');
-    return M.jumpH(_3, _5);
+    return M.jump(void 0, _3, _5);
   }
 
   function _3() {
-    return M.chainBH(eff(e), _4, _5);
+    return M.chain(eff(e), _4, _5);
   }
 
   function _4() {
@@ -31,18 +31,18 @@ function a() {
 
   function _6(a) {
     ex = a;
-    return M.jumpH(_2, _5);
+    return M.jump(void 0, _2, _5);
   }
 }
 
 function a() {
   var e, error, _error, ex;
 
-  return M.jumpH(_1, _6);
+  return M.jump(void 0, _1, _6);
 
   function _1() {
     console.log('1');
-    return M.chainBH(eff(1), _3, _5);
+    return M.chain(eff(1), _3, _5);
   }
 
   function _2() {
@@ -50,11 +50,11 @@ function a() {
     e = _error;
     console.log('2');
     _error = null;
-    return M.jumpH(_3, _5);
+    return M.jump(void 0, _3, _5);
   }
 
   function _3() {
-    return M.chainBH(eff(e), _4, _5);
+    return M.chain(eff(e), _4, _5);
   }
 
   function _4() {
@@ -67,6 +67,6 @@ function a() {
 
   function _6(a) {
     ex = a;
-    return M.jumpH(_2, _5);
+    return M.jump(void 0, _2, _5);
   }
 }

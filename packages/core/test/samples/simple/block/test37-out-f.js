@@ -7,7 +7,7 @@ function a() {
     1 + 1;
   }
 
-  return M.chainBH(M.pure(), _1, _2);
+  return M.chain(M.pure(), _1, _2);
 
   function _1(r) {
     return M.pure(r);

@@ -4,14 +4,14 @@ import * as M from '@effectful/core';
   var j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
-  return M.jumpH(_1, _3, j, len, ref);
+  return M.jump(void 0, _1, _3, j, len, ref);
 
   function _1(j, len, ref) {
     var i;
 
     if (j < len) {
       i = ref[j];
-      return M.chainBH(eff(i), _2, _3, j, len, ref);
+      return M.chain(eff(i), _2, _3, j, len, ref);
     } else {
       return M.pure();
     }
@@ -22,7 +22,7 @@ import * as M from '@effectful/core';
       return M.pure();
     } else {
       j++;
-      return M.jumpRH(_1, _3, j, len, ref);
+      return M.jump(void 0, _1, _3, j, len, ref);
     }
   }
 

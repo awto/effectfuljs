@@ -2,7 +2,7 @@ import * as M from '@effectful/core';
 
 function a() {
   var a = M.context();
-  return M.scopeH(a_1, a_7);
+  return M.scope(a_1, a_7);
 }
 
 function b() {
@@ -19,32 +19,32 @@ function b() {
   M.reify(function () {
     var ctx = M.context();
     ctx._b = b;
-    return M.scopeH(_f_1, _f_3);
+    return M.scope(_f_1, _f_3);
   }).done();
 }
 
 function a_1(a) {
-  return M.chainBH(eff('a'), a_2, a_7);
+  return M.chain(eff('a'), a_2, a_7);
 }
 
 function a_2(a) {
-  return M.chainBH(M.reflect(monadish), a_3, a_7);
+  return M.chain(M.reflect(monadish), a_3, a_7);
 }
 
 function a_3(a) {
-  return M.chainBH(eff(1), a_4, a_7);
+  return M.chain(eff(1), a_4, a_7);
 }
 
 function a_4(a) {
-  return M.chainBH(M.reflect(monadish + 2), a_5, a_7);
+  return M.chain(M.reflect(monadish + 2), a_5, a_7);
 }
 
 function f_1(ctx) {
-  return M.chainBH(eff(1), f_2, f_4);
+  return M.chain(eff(1), f_2, f_4);
 }
 
 function f_2(ctx) {
-  return M.chainBH(eff(2), f_3, f_4);
+  return M.chain(eff(2), f_3, f_4);
 }
 
 function f_3(ctx) {
@@ -56,9 +56,9 @@ function f_4(ctx, e) {
 }
 
 function a_5(a) {
-  return M.chainBH(M.reify(function () {
+  return M.chain(M.reify(function () {
     var ctx = M.context();
-    return M.scopeH(f_1, f_4);
+    return M.scope(f_1, f_4);
   }), a_6, a_7);
 }
 
@@ -72,7 +72,7 @@ function a_7(a, e) {
 }
 
 function _f_1(ctx) {
-  return M.chainBH(ctx._b._addLater(1, 2), _f_2, _f_3);
+  return M.chain(ctx._b._addLater(1, 2), _f_2, _f_3);
 }
 
 function _f_2(ctx, a) {

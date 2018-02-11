@@ -124,7 +124,8 @@ export const stage0 = Kit.pipe(
     Block.splitEffBlock,
     Ops.combine,
     Flat.convert,
-    Inline.jsExceptions)))
+    Inline.jsExceptions
+ )))
 
 const stage1 = Kit.pipe(
   Kit.map(Kit.pipe(

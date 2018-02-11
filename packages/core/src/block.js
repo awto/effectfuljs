@@ -359,6 +359,8 @@ export function ctxMethods(si) {
   const {contextMethodOps,contextMethodOpsSpec,scopeConstructor} = s.opts
   if (!contextSym || !contextMethodOps)
     return s
+  if (!s.opts.static)
+    throw new Error("`contextMethodOps:true` requires `static:true`")
   return walk()
   function* walk() {
     for(const i of s) {

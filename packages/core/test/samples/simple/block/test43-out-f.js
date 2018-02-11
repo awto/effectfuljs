@@ -2,13 +2,13 @@ import * as M from '@effectful/core';
 
 function a() {
   var r;
-  return M.chainBH(eff1(), _1, _3);
+  return M.chain(eff1(), _1, _3);
 
   function _1() {
     if (a) {
       return M.pure(5);
     } else {
-      return M.chainBH(eff6(), _2, _3);
+      return M.chain(eff6(), _2, _3);
     }
   }
 

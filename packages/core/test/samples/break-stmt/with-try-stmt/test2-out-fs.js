@@ -7,7 +7,7 @@ import * as M from '@effectful/core';
 
   function _1(ex) {
     e = ex;
-    return M.chainBH(eff(3), _2, _3);
+    return M.chain(eff(3), _2, _3);
   }
 
   function _2() {
@@ -19,6 +19,6 @@ import * as M from '@effectful/core';
   }
 
   function _4(a) {
-    return M.jumpH(_1, _3, a);
+    return M.jump(void 0, _1, _3, a);
   }
 });

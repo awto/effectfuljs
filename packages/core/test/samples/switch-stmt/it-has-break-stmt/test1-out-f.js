@@ -3,14 +3,14 @@ import * as M from '@effectful/core';
 function a(z) {
   switch (z) {
     case 1:
-      return M.chainBH(eff(1), _1, _3);
+      return M.chain(eff(1), _1, _3);
 
     default:
-      return M.chainBH(eff(2), _1, _3);
+      return M.chain(eff(2), _1, _3);
   }
 
   function _1() {
-    return M.chainBH(eff(3), _2, _3);
+    return M.chain(eff(3), _2, _3);
   }
 
   function _2() {
@@ -25,19 +25,19 @@ function a(z) {
 function a(z) {
   switch (z) {
     case 1:
-      return M.chainBH(eff(1), _1, _3);
+      return M.chain(eff(1), _1, _3);
 
     case 2:
       console.log('1');
-      return M.jumpH(_1, _3);
+      return M.jump(void 0, _1, _3);
 
     default:
       console.log('2');
-      return M.jumpH(_1, _3);
+      return M.jump(void 0, _1, _3);
   }
 
   function _1() {
-    return M.chainBH(eff(3), _2, _3);
+    return M.chain(eff(3), _2, _3);
   }
 
   function _2() {
@@ -52,10 +52,10 @@ function a(z) {
 function c(z) {
   switch (z) {
     case 1:
-      return M.chainBH(eff(1), _1, _4);
+      return M.chain(eff(1), _1, _4);
 
     case 2:
-      return M.chainBH(eff(2), _2, _4);
+      return M.chain(eff(2), _2, _4);
 
     case 3:
       {
@@ -63,15 +63,15 @@ function c(z) {
       }
 
     default:
-      return M.chainBH(eff(3), _1, _4);
+      return M.chain(eff(3), _1, _4);
   }
 
   function _1() {
-    return M.chainBH(eff(4), _2, _4);
+    return M.chain(eff(4), _2, _4);
   }
 
   function _2() {
-    return M.chainBH(eff(5), _3, _4);
+    return M.chain(eff(5), _3, _4);
   }
 
   function _3() {
@@ -86,25 +86,25 @@ function c(z) {
 function d(z) {
   switch (z) {
     case 1:
-      return M.chainBH(eff(1), _1, _4);
+      return M.chain(eff(1), _1, _4);
 
     case 2:
-      return M.chainBH(eff(2), _2, _4);
+      return M.chain(eff(2), _2, _4);
 
     case 3:
       console.log('z');
-      return M.chainBH(eff(5), _2, _4);
+      return M.chain(eff(5), _2, _4);
 
     default:
-      return M.chainBH(eff(3), _1, _4);
+      return M.chain(eff(3), _1, _4);
   }
 
   function _1() {
-    return M.chainBH(eff(4), _2, _4);
+    return M.chain(eff(4), _2, _4);
   }
 
   function _2() {
-    return M.chainBH(eff(6), _3, _4);
+    return M.chain(eff(6), _3, _4);
   }
 
   function _3() {

@@ -92,7 +92,7 @@ export default {
   
   // marks operation binding some value with "B" character
   // otherwise every operation is marked
-  markBindValue: true,
+  markBindValue: false,
 
   // marks number of additional arguments threaded to op's call
   // if more than `unpackMax` it is "N" character
@@ -100,13 +100,13 @@ export default {
 
   // marks pure jumps back from inside loop block
   // to insert some trampoline if needed
-  markRepeat: true,
+  markRepeat: false,
 
   // marks operations containing error handling continuation with "H" character
-  markErrorCont: true,
+  markErrorCont: false,
 
   // marks operation containing result continuation with "F" character
-  markResultCont: true,
+  markResultCont: false,
 
   // does some optimization specific conversion in pure code
   loose: false,

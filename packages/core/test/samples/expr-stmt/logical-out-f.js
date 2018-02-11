@@ -1,11 +1,11 @@
 import * as M from '@effectful/core';
 
 function a1() {
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(a) {
     if (!a) {
-      return M.chainBH(eff(2), _2, _3);
+      return M.chain(eff(2), _2, _3);
     } else {
       return M.pure(a);
     }
@@ -21,11 +21,11 @@ function a1() {
 }
 
 function a2() {
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(a) {
     if (a) {
-      return M.chainBH(eff(2), _2, _3);
+      return M.chain(eff(2), _2, _3);
     } else {
       return M.pure(a);
     }
@@ -42,11 +42,11 @@ function a2() {
 
 function a3() {
   var a;
-  return M.chainBH(eff(1), _1, _4);
+  return M.chain(eff(1), _1, _4);
 
   function _1(b) {
     a = b;
-    return M.chainBH(eff(2), _2, _4);
+    return M.chain(eff(2), _2, _4);
   }
 
   function _2(c) {
@@ -54,7 +54,7 @@ function a3() {
     b = a || c;
 
     if (!b) {
-      return M.chainBH(eff(3), _3, _4);
+      return M.chain(eff(3), _3, _4);
     } else {
       return M.pure(b);
     }
@@ -71,11 +71,11 @@ function a3() {
 
 function a4() {
   var a;
-  return M.chainBH(eff(1), _1, _4);
+  return M.chain(eff(1), _1, _4);
 
   function _1(b) {
     a = b;
-    return M.chainBH(eff(2), _2, _4);
+    return M.chain(eff(2), _2, _4);
   }
 
   function _2(c) {
@@ -83,7 +83,7 @@ function a4() {
     b = a && c;
 
     if (b) {
-      return M.chainBH(eff(3), _3, _4);
+      return M.chain(eff(3), _3, _4);
     } else {
       return M.pure(b);
     }
@@ -103,7 +103,7 @@ function a5() {
   a = 1;
 
   if (!a) {
-    return M.chainBH(eff(2), _1, _2);
+    return M.chain(eff(2), _1, _2);
   } else {
     return M.pure(a);
   }
@@ -118,7 +118,7 @@ function a5() {
 }
 
 function a6() {
-  return M.chainBH(eff(2), _1, _2);
+  return M.chain(eff(2), _1, _2);
 
   function _1(a) {
     if (!a) {
@@ -138,7 +138,7 @@ function a7() {
   a = 1 + 1;
 
   if (!a) {
-    return M.chainBH(eff(2), _1, _2);
+    return M.chain(eff(2), _1, _2);
   } else {
     return M.pure(a);
   }
@@ -153,7 +153,7 @@ function a7() {
 }
 
 function a8() {
-  return M.chainBH(eff(2), _1, _2);
+  return M.chain(eff(2), _1, _2);
 
   function _1(a) {
     if (!a) {
@@ -173,7 +173,7 @@ function a9() {
   a = 1;
 
   if (a) {
-    return M.chainBH(eff(2), _1, _2);
+    return M.chain(eff(2), _1, _2);
   } else {
     return M.pure(a);
   }
@@ -188,7 +188,7 @@ function a9() {
 }
 
 function a10() {
-  return M.chainBH(eff(2), _1, _2);
+  return M.chain(eff(2), _1, _2);
 
   function _1(a) {
     if (a) {
@@ -208,7 +208,7 @@ function a11() {
   a = 1 + 1;
 
   if (a) {
-    return M.chainBH(eff(2), _1, _2);
+    return M.chain(eff(2), _1, _2);
   } else {
     return M.pure(a);
   }
@@ -223,7 +223,7 @@ function a11() {
 }
 
 function a12() {
-  return M.chainBH(eff(2), _1, _2);
+  return M.chain(eff(2), _1, _2);
 
   function _1(a) {
     if (a) {
@@ -239,13 +239,13 @@ function a12() {
 }
 
 function a13() {
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(a) {
     if (a) {
-      return M.chainBH(eff(2), _2, _3);
+      return M.chain(eff(2), _2, _3);
     } else {
-      return M.chainBH(eff(3), _2, _3);
+      return M.chain(eff(3), _2, _3);
     }
   }
 
@@ -259,7 +259,7 @@ function a13() {
 }
 
 function a14() {
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(a) {
     var b;
@@ -268,7 +268,7 @@ function a14() {
       b = 2;
       return M.pure(b);
     } else {
-      return M.chainBH(eff(3), _2, _3);
+      return M.chain(eff(3), _2, _3);
     }
   }
 
@@ -283,16 +283,16 @@ function a14() {
 
 function a14_1() {
   var r;
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(a) {
     var b;
 
     if (a) {
       b = 2;
-      return M.jumpBH(b, _2, _3);
+      return M.jump(b, _2, _3);
     } else {
-      return M.chainBH(eff(3), _2, _3);
+      return M.chain(eff(3), _2, _3);
     }
   }
 
@@ -306,13 +306,13 @@ function a14_1() {
 }
 
 function a15() {
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(a) {
     var b;
 
     if (a) {
-      return M.chainBH(eff(2), _2, _3);
+      return M.chain(eff(2), _2, _3);
     } else {
       b = 3;
       return M.pure(b);
@@ -330,9 +330,9 @@ function a15() {
 
 function a16() {
   if (1) {
-    return M.chainBH(eff(2), _1, _2);
+    return M.chain(eff(2), _1, _2);
   } else {
-    return M.chainBH(eff(3), _1, _2);
+    return M.chain(eff(3), _1, _2);
   }
 
   function _1() {
@@ -345,7 +345,7 @@ function a16() {
 }
 
 function a17() {
-  return M.chainBH(eff(1), _1, _2);
+  return M.chain(eff(1), _1, _2);
 
   function _1(a) {
     var b;
@@ -367,11 +367,11 @@ function a17() {
 
 function a18() {
   var a;
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(b) {
     a = b;
-    return M.chainBH(eff(2), _2, _3);
+    return M.chain(eff(2), _2, _3);
   }
 
   function _2(b) {
@@ -391,11 +391,11 @@ function a18() {
 
 function a18_1() {
   var a, r;
-  return M.chainBH(eff(1), _1, _3);
+  return M.chain(eff(1), _1, _3);
 
   function _1(b) {
     a = b;
-    return M.chainBH(eff(2), _2, _3);
+    return M.chain(eff(2), _2, _3);
   }
 
   function _2(b) {
@@ -417,29 +417,29 @@ function a18_1() {
 
 function a19() {
   var a;
-  return M.chainBH(eff(1), _1, _6);
+  return M.chain(eff(1), _1, _6);
 
   function _1(a) {
     if (!a) {
-      return M.chainBH(eff(2), _2, _6);
+      return M.chain(eff(2), _2, _6);
     } else {
-      return M.jumpBH(a, _4, _6);
+      return M.jump(a, _4, _6);
     }
   }
 
   function _2(b) {
     a = b;
-    return M.chainBH(eff(3), _3, _6);
+    return M.chain(eff(3), _3, _6);
   }
 
   function _3(c) {
     var b;
     b = (a, c);
-    return M.jumpH(_4, _6);
+    return M.jump(void 0, _4, _6);
   }
 
   function _4(b) {
-    return M.chainBH(eff(b), _5, _6);
+    return M.chain(eff(b), _5, _6);
   }
 
   function _5() {
@@ -453,29 +453,29 @@ function a19() {
 
 function a19_1() {
   var a, r;
-  return M.chainBH(eff(1), _1, _6);
+  return M.chain(eff(1), _1, _6);
 
   function _1(a) {
     if (!a) {
-      return M.chainBH(eff(2), _2, _6);
+      return M.chain(eff(2), _2, _6);
     } else {
-      return M.jumpBH(a, _4, _6);
+      return M.jump(a, _4, _6);
     }
   }
 
   function _2(b) {
     a = b;
-    return M.chainBH(eff(3), _3, _6);
+    return M.chain(eff(3), _3, _6);
   }
 
   function _3(c) {
     var b;
     b = (a, c);
-    return M.jumpH(_4, _6);
+    return M.jump(void 0, _4, _6);
   }
 
   function _4(b) {
-    return M.chainBH(eff(b), _5, _6);
+    return M.chain(eff(b), _5, _6);
   }
 
   function _5(r) {
@@ -489,25 +489,25 @@ function a19_1() {
 
 function b() {
   var r;
-  return M.chainBH(eff(1), _1, _21);
+  return M.chain(eff(1), _1, _21);
 
   function _1(a) {
     if (!a) {
-      return M.chainBH(eff(2), _2, _21);
+      return M.chain(eff(2), _2, _21);
     } else {
-      return M.jumpBH(a, _2, _21);
+      return M.jump(a, _2, _21);
     }
   }
 
   function _2() {
-    return M.chainBH(eff(1), _3, _21);
+    return M.chain(eff(1), _3, _21);
   }
 
   function _3(a) {
     if (a) {
-      return M.chainBH(eff(2), _4, _21);
+      return M.chain(eff(2), _4, _21);
     } else {
-      return M.jumpBH(a, _4, _21);
+      return M.jump(a, _4, _21);
     }
   }
 
@@ -516,14 +516,14 @@ function b() {
     a = 1;
 
     if (!a) {
-      return M.chainBH(eff(2), _5, _21);
+      return M.chain(eff(2), _5, _21);
     } else {
-      return M.jumpBH(a, _5, _21);
+      return M.jump(a, _5, _21);
     }
   }
 
   function _5() {
-    return M.chainBH(eff(2), _6, _21);
+    return M.chain(eff(2), _6, _21);
   }
 
   function _6(a) {
@@ -536,14 +536,14 @@ function b() {
     b = 1 + 1;
 
     if (!b) {
-      return M.chainBH(eff(2), _7, _21);
+      return M.chain(eff(2), _7, _21);
     } else {
-      return M.jumpBH(b, _7, _21);
+      return M.jump(b, _7, _21);
     }
   }
 
   function _7() {
-    return M.chainBH(eff(2), _8, _21);
+    return M.chain(eff(2), _8, _21);
   }
 
   function _8(a) {
@@ -556,14 +556,14 @@ function b() {
     b = 1;
 
     if (b) {
-      return M.chainBH(eff(2), _9, _21);
+      return M.chain(eff(2), _9, _21);
     } else {
-      return M.jumpBH(b, _9, _21);
+      return M.jump(b, _9, _21);
     }
   }
 
   function _9() {
-    return M.chainBH(eff(2), _10, _21);
+    return M.chain(eff(2), _10, _21);
   }
 
   function _10(a) {
@@ -576,14 +576,14 @@ function b() {
     b = 1 + 1;
 
     if (b) {
-      return M.chainBH(eff(2), _11, _21);
+      return M.chain(eff(2), _11, _21);
     } else {
-      return M.jumpBH(b, _11, _21);
+      return M.jump(b, _11, _21);
     }
   }
 
   function _11() {
-    return M.chainBH(eff(2), _12, _21);
+    return M.chain(eff(2), _12, _21);
   }
 
   function _12(a) {
@@ -591,19 +591,19 @@ function b() {
       a = 1 + 1;
     }
 
-    return M.chainBH(eff(1), _13, _21);
+    return M.chain(eff(1), _13, _21);
   }
 
   function _13(a) {
     if (a) {
-      return M.chainBH(eff(2), _14, _21);
+      return M.chain(eff(2), _14, _21);
     } else {
-      return M.chainBH(eff(3), _14, _21);
+      return M.chain(eff(3), _14, _21);
     }
   }
 
   function _14() {
-    return M.chainBH(eff(1), _15, _21);
+    return M.chain(eff(1), _15, _21);
   }
 
   function _15(a) {
@@ -611,37 +611,37 @@ function b() {
 
     if (a) {
       b = 2;
-      return M.jumpBH(b, _16, _21);
+      return M.jump(b, _16, _21);
     } else {
-      return M.chainBH(eff(3), _16, _21);
+      return M.chain(eff(3), _16, _21);
     }
   }
 
   function _16() {
-    return M.chainBH(eff(1), _17, _21);
+    return M.chain(eff(1), _17, _21);
   }
 
   function _17(a) {
     var b;
 
     if (a) {
-      return M.chainBH(eff(2), _18, _21);
+      return M.chain(eff(2), _18, _21);
     } else {
       b = 3;
-      return M.jumpBH(b, _18, _21);
+      return M.jump(b, _18, _21);
     }
   }
 
   function _18() {
     if (1) {
-      return M.chainBH(eff(2), _19, _21);
+      return M.chain(eff(2), _19, _21);
     } else {
-      return M.chainBH(eff(3), _19, _21);
+      return M.chain(eff(3), _19, _21);
     }
   }
 
   function _19() {
-    return M.chainBH(eff(1), _20, _21);
+    return M.chain(eff(1), _20, _21);
   }
 
   function _20(a) {
@@ -663,22 +663,22 @@ function b() {
 
 function a1() {
   var i, r;
-  return M.scopeH(_1, _30);
+  return M.scope(_1, _30);
 
   function _1() {
-    return M.yldStarBH(M.yld('a1'), _2, _30);
+    return M.yldStar(M.yld('a1'), _2, _30);
   }
 
   function _2(a) {
     if (a) {
-      return M.yldStarBH(M.yld('a2'), _3, _30);
+      return M.yldStar(M.yld('a2'), _3, _30);
     } else {
-      return M.yldStarBH(M.yld('a3'), _3, _30);
+      return M.yldStar(M.yld('a3'), _3, _30);
     }
   }
 
   function _3() {
-    return M.yldStarBH(M.yld('b1'), _4, _30);
+    return M.yldStar(M.yld('b1'), _4, _30);
   }
 
   function _4(a) {
@@ -690,30 +690,30 @@ function a1() {
       b = 'b3';
     }
 
-    return M.yldStarBH(M.yld(b), _5, _30);
+    return M.yldStar(M.yld(b), _5, _30);
   }
 
   function _5() {
-    return M.yldStarBH(M.yld('c1'), _6, _30);
+    return M.yldStar(M.yld('c1'), _6, _30);
   }
 
   function _6(a) {
     var b;
 
     if (a % 2) {
-      return M.yldStarBH(M.yld('c2'), _7, _30);
+      return M.yldStar(M.yld('c2'), _7, _30);
     } else {
       b = 'c3';
-      return M.jumpBH(b, _7, _30);
+      return M.jump(b, _7, _30);
     }
   }
 
   function _7(a) {
-    return M.yldStarBH(M.yld(a), _8, _30);
+    return M.yldStar(M.yld(a), _8, _30);
   }
 
   function _8() {
-    return M.yldStarBH(M.yld('d1'), _9, _30);
+    return M.yldStar(M.yld('d1'), _9, _30);
   }
 
   function _9(a) {
@@ -721,46 +721,46 @@ function a1() {
 
     if (a % 2) {
       b = 'd2';
-      return M.jumpBH(b, _10, _30);
+      return M.jump(b, _10, _30);
     } else {
-      return M.yldStarBH(M.yld('d3'), _10, _30);
+      return M.yldStar(M.yld('d3'), _10, _30);
     }
   }
 
   function _10(a) {
-    return M.yldStarBH(M.yld(a), _11, _30);
+    return M.yldStar(M.yld(a), _11, _30);
   }
 
   function _11() {
-    return M.yldStarBH(M.yld('e1'), _12, _30);
+    return M.yldStar(M.yld('e1'), _12, _30);
   }
 
   function _12(a) {
     if (a % 2) {
-      return M.yldStarBH(M.yld('e2'), _13, _30);
+      return M.yldStar(M.yld('e2'), _13, _30);
     } else {
-      return M.yldStarBH(M.yld('e3'), _13, _30);
+      return M.yldStar(M.yld('e3'), _13, _30);
     }
   }
 
   function _13(a) {
-    return M.yldStarBH(M.yld(a), _14, _30);
+    return M.yldStar(M.yld(a), _14, _30);
   }
 
   function _14() {
     var a;
     a = 'a1l' && 'a1r';
-    return M.yldStarBH(M.yld(a), _15, _30);
+    return M.yldStar(M.yld(a), _15, _30);
   }
 
   function _15() {
     var a;
     a = 'a2l' && 'a2r';
-    return M.yldStarBH(M.yld(a), _16, _30);
+    return M.yldStar(M.yld(a), _16, _30);
   }
 
   function _16(a) {
-    return M.yldStarBH(M.yld(a), _17, _30);
+    return M.yldStar(M.yld(a), _17, _30);
   }
 
   function _17() {
@@ -768,14 +768,14 @@ function a1() {
     a = 'a3l';
 
     if (a) {
-      return M.yldStarBH(M.yld('a3r'), _18, _30);
+      return M.yldStar(M.yld('a3r'), _18, _30);
     } else {
-      return M.jumpBH(a, _18, _30);
+      return M.jump(a, _18, _30);
     }
   }
 
   function _18(a) {
-    return M.yldStarBH(M.yld(a), _19, _30);
+    return M.yldStar(M.yld(a), _19, _30);
   }
 
   function _19() {
@@ -783,28 +783,28 @@ function a1() {
     a = 'a4l';
 
     if (a) {
-      return M.yldStarBH(M.yld('a4r'), _20, _30);
+      return M.yldStar(M.yld('a4r'), _20, _30);
     } else {
-      return M.jumpBH(a, _20, _30);
+      return M.jump(a, _20, _30);
     }
   }
 
   function _20(a) {
-    return M.yldStarBH(M.yld(a), _21, _30);
+    return M.yldStar(M.yld(a), _21, _30);
   }
 
   function _21(a) {
-    return M.yldStarBH(M.yld(a), _22, _30);
+    return M.yldStar(M.yld(a), _22, _30);
   }
 
   function _22() {
     var a;
     a = 'o1l' || 'o1r';
-    return M.yldStarBH(M.yld(a), _23, _30);
+    return M.yldStar(M.yld(a), _23, _30);
   }
 
   function _23() {
-    return M.yldStarBH(M.yld('o2l'), _24, _30);
+    return M.yldStar(M.yld('o2l'), _24, _30);
   }
 
   function _24(a) {
@@ -812,7 +812,7 @@ function a1() {
       a = 'o2r';
     }
 
-    return M.yldStarBH(M.yld(a), _25, _30);
+    return M.yldStar(M.yld(a), _25, _30);
   }
 
   function _25() {
@@ -820,25 +820,25 @@ function a1() {
     a = 'o3l';
 
     if (a) {
-      return M.yldStarBH(M.yld('o3r'), _26, _30);
+      return M.yldStar(M.yld('o3r'), _26, _30);
     } else {
-      return M.jumpBH(a, _26, _30);
+      return M.jump(a, _26, _30);
     }
   }
 
   function _26(a) {
-    return M.yldStarBH(M.yld(a), _27, _30);
+    return M.yldStar(M.yld(a), _27, _30);
   }
 
   function _27() {
-    return M.yldStarBH(M.yld('o4l'), _28, _30);
+    return M.yldStar(M.yld('o4l'), _28, _30);
   }
 
   function _28(a) {
     if (a) {
-      return M.yldStarBH(M.yld('o4r'), _29, _30);
+      return M.yldStar(M.yld('o4r'), _29, _30);
     } else {
-      return M.jumpBH(a, _29, _30);
+      return M.jump(a, _29, _30);
     }
   }
 

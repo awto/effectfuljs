@@ -2,26 +2,26 @@ import * as M from '@effectful/core';
 
 function a() {
   var a = M.context();
-  return M.scopeH(a_1, a_5);
+  return M.scope(a_1, a_5);
 }
 
 function a_1(a) {
   a._i = 0;
 
   if (t) {
-    return M.chainBH(eff1(a._i), a_2, a_5);
+    return M.chain(eff1(a._i), a_2, a_5);
   } else {
     a._i++;
-    return M.jumpH(a_2, a_5);
+    return M.jump(void 0, a_2, a_5);
   }
 }
 
 function a_2(a) {
-  return M.chainBH(eff2(a._i), a_3, a_5);
+  return M.chain(eff2(a._i), a_3, a_5);
 }
 
 function a_3(a) {
-  return M.chainBH(eff3(a._i), a_4, a_5);
+  return M.chain(eff3(a._i), a_4, a_5);
 }
 
 function a_4(a) {

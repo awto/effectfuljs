@@ -5,6 +5,7 @@ M.option({inlineContAssign:true,
           invertForOf:true,
           contextState:true,
           storeCont:true,
+          markRepeat:true,
           storeErrorCont:true})
 
 function* a1() {

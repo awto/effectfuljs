@@ -2,20 +2,20 @@ import * as M from '@effectful/core';
 
 (function () {
   var ctx = M.context();
-  return M.scopeH(f_1, f_9);
+  return M.scope(f_1, f_9);
 });
 
 function f_1(ctx) {
-  return M.chainBH(eff(2), f_2, f_9);
+  return M.chain(eff(2), f_2, f_9);
 }
 
 function f_2(ctx) {
-  return M.chainBH(eff(3), f_3, f_9);
+  return M.chain(eff(3), f_3, f_9);
 }
 
 function f_3(ctx, a) {
   if (a) {
-    return M.jumpH(f_6, f_8);
+    return M.jump(void 0, f_6, f_8);
   } else {
     throw new Error('error');
   }
@@ -23,15 +23,15 @@ function f_3(ctx, a) {
 
 function f_4(ctx) {
   ctx._e = ctx._ex;
-  return M.chainBH(eff(5), f_5, f_8);
+  return M.chain(eff(5), f_5, f_8);
 }
 
 function f_5(ctx) {
-  return M.chainBH(eff(6), f_6, f_8);
+  return M.chain(eff(6), f_6, f_8);
 }
 
 function f_6(ctx) {
-  return M.chainBH(eff(7), f_7, f_8);
+  return M.chain(eff(7), f_7, f_8);
 }
 
 function f_7(ctx) {
@@ -44,5 +44,5 @@ function f_8(ctx, e) {
 
 function f_9(ctx, a) {
   ctx._ex = a;
-  return M.jumpH(f_4, f_8);
+  return M.jump(void 0, f_4, f_8);
 }

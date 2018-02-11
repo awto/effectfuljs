@@ -1,14 +1,14 @@
 import * as M from '@effectful/core';
 
 function a() {
-  return M.chainBH(eff(1), _1, _4);
+  return M.chain(eff(1), _1, _4);
 
   function _1(a) {
-    return M.chainBH(eff(2), _2, _4, a);
+    return M.chain(eff(2), _2, _4, a);
   }
 
   function _2(b, a) {
-    return M.chainBH(effC(a, b), _3, _4);
+    return M.chain(effC(a, b), _3, _4);
   }
 
   function _3() {
