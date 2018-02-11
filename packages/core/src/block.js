@@ -26,13 +26,7 @@ export const pure = symbol("pure")
 export const sharedRef = symbol("sharedRef")
 /** effectful operation */
 export const op = symbol("op")
-
-
-export const pureUndefId = Kit.sysId("pureUndef")
 export const pureId = Kit.sysId("pure")
-export const bindId = Kit.sysId("bind")
-export const arrId = Kit.sysId("arr")
-export const mapId = Kit.sysId("map")
 
 /**
  * Replaces binary `app` nodes with its first component member function call 
@@ -167,42 +161,6 @@ export const cleanupEffSeq = Kit.pipe(
     yield* walk()
   },
   Kit.completeSubst)
-
-/** converts chains to JS expressions */
-export function* interpretBinEffSeq(s) {
-  const sl = Kit.auto(s)
-  function* walk(sw) {
-    for(const i of sw) {
-      switch(i.type) {
-      case bindPat:
-        yield Kit.setType(i,Tag.Identifier)
-        break
-      case chain:
-        if (i.enter) {
-          assert.equal(i.value.count,2)
-          const patSym = sl.cur().value.sym
-          const sym = bindId
-          const lab = sl.label()
-          const head = sl.enter(i.pos,app,{sym})
-          yield head
-          yield* walk(sl.one())
-          yield sl.enter(Tag.params,Tag.Array)
-          if (patSym != null)
-            yield s.tok(Tag.push,Tag.Identifier,{sym:patSym})
-          yield* sl.leave()
-          if (!sl.cur().value.eff)
-            head.sym = mapId
-          yield* walk(sl.sub())
-          yield* lab()
-        }
-        break
-      default:
-        yield i
-      }
-    }
-  }
-  yield* walk(sl)
-}
 
 /** corrects JS AST nodes types to match specification */
 export const interpretCasts = Kit.pipe(

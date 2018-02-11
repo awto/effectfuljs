@@ -2,9 +2,9 @@
   "name": "@effectful/js",
   "version": "1.0.0",
   "description": "Single level computation effects syntax",
-  "main": "index.js",
+  "main": "preset.js",
   "scripts": {
-    "test": "echo 'todo'"
+    "test": "echo FINE!"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/awto/effectfuljs/issues"
   },
-  "homepage": "https://github.com/awto/effectfuljs#readme"
+  "homepage": "https://github.com/awto/effectfuljs#readme",
+  "dependencies": {
+    "@effectful/core": "^0.1.4"
+  }
 }

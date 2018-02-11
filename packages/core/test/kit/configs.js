@@ -11,7 +11,7 @@ function* permut(c) {
 }
 
 function* opts() {
-  yield* permut([[["f",{static:true}]],
+  yield* permut([[["f",{static:true,state:false,contextState:false}]],
                  [["",{}],
                   ["s",{state:true}],
                   ["t",{topLevel:true,

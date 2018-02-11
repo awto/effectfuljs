@@ -102,11 +102,15 @@ compiler supports both options.
 
 There are babel presets in separate packages.
 
-* [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
-  for two-levels syntax (overloads ECMAScript async, generator and async generators
-  functions)
 * [@effectful/js](https://github.com/awto/effectfuljs/tree/master/packages/js)
-  single level syntax (the second level is implicit).
+  compiles to the most abstract code, single or double level depending on
+  parameters
+* [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+  for two-levels syntax either concrete ECMAScript compatible effects or abstract for
+  async, generator and async generators semantics overloading.
+* [@effectful/es-inline](https://github.com/awto/effectfuljs/tree/master/packages/es)
+  A shortcut for [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+  with concrete ECMAScript effects implementations.
 
 ## Known major limitations
  * ES6 supper just replaced with `Object.getPrototypeOf(...)` and `call`, 
