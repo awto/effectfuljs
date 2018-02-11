@@ -1084,6 +1084,9 @@ export function interpretJumps(si) {
   const passCont = !s.opts.inlineContAssign
   const passCatchCont = !s.opts.inlineErrorContAssign
   const passResultCont = !s.opts.inlineResultContAssign
+  const threadContext = s.opts.threadContext && [[ctxSym,ctxSym]]
+  if (threadContext && s.opts.state)
+    throw new Error("`threadContext:true` isn't compatible with `{state:true}`")
   const {markRepeat} = s.opts
   const {resFrameRedir} = root
   function* argPack(arr,inner) {
@@ -1155,7 +1158,7 @@ export function interpretJumps(si) {
               yield* walk()
           } else {
             const {sym:patSym} = i.value
-            const threadArgs = i.value.threadArgs || emptyArr
+            const threadArgs = threadContext || i.value.threadArgs || emptyArr
             let catchCont, resCont
             if (goto) {
               if (passCatchCont && goto.catchContRedir
@@ -1201,7 +1204,7 @@ export function interpretJumps(si) {
             }
             appVal.sym = Kit.sysId(name)
             if (passCont)
-              appVal.hasCont = true
+              appVal.hasCont = true            
             yield s.enter(pos,Block.app,appVal)
             assert.ok(goto)
             if (s.curLev())

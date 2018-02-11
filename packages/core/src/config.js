@@ -36,6 +36,9 @@ export default {
   // creates a context object for each effectul function's call
   scopeContext: false,
 
+  // pass context to operations (as their first argument) 
+  threadContext: false,
+
   // adds extra first frame, e.g. to make the effectful result object suspended
   // after effectful function call
   scopePrefix: false,
