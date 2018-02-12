@@ -8,23 +8,19 @@ function a() {
 
 function b() {
   var b = M.context();
-  return M.scope(b_1, b_4);
+  return M.scope(b_1);
 }
 
 function b_1(b) {
   eff(1);
-  return M.chain(eff(2), b_2, b_4);
+  return M.chain(eff(2), b_2);
 }
 
 function b_2(b) {
   eff(3);
-  return M.chain(eff(4), b_3, b_4);
+  return M.chain(eff(4), b_3);
 }
 
 function b_3(b) {
-  return M.pure(5);
-}
-
-function b_4(b, e) {
-  return M.raise(e);
+  return 5;
 }

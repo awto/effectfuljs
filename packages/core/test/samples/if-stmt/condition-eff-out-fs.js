@@ -3,7 +3,7 @@ import * as M from '@effectful/core';
 // *- when branches are pure but its condition has effects
 // *- should bind statement's condition part using fmap
 function a() {
-  return M.chain(eff(1), _1, _2);
+  return M.chain(eff(1), _1);
 
   function _1(a) {
     if (a) {
@@ -11,11 +11,5 @@ function a() {
     } else {
       console.log(2);
     }
-
-    return M.pure();
-  }
-
-  function _2(e) {
-    return M.raise(e);
   }
 }

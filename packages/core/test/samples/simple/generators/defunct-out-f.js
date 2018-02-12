@@ -4,23 +4,20 @@ function a() {
   var a = M.generator();
   a.$run = _1;
   a.$sc = 0;
-  return M.scope(3);
+  return M.scope();
 
   function _1(a, p) {
     switch (a.$sc) {
       case 0:
         a.$sc = 1;
-        return M.yldStar(M.yld(1), 3);
+        return M.yldStar(M.yld(1));
 
       case 1:
         a.$sc = 2;
-        return M.yldStar(M.yld(2), 3);
+        return M.yldStar(M.yld(2));
 
       case 2:
         return M.pure();
-
-      case 3:
-        return M.raise(p);
     }
   }
 }
@@ -29,33 +26,30 @@ function b() {
   var b = M.generator();
   b.$run = _1;
   b.$sc = 0;
-  return M.scope(4);
+  return M.scope();
 
   function _1(b, p) {
     switch (b.$sc) {
       case 0:
         b.$sc = 1;
-        return M.yldStar(M.yld(1), 5);
+        return M.yldStar(M.yld(1), 4);
 
       case 1:
         b.$sc = 3;
-        return M.yldStar(M.yld(2), 4);
+        return M.yldStar(M.yld(2));
 
       case 2:
         b._e = b._ex;
         b.$sc = 3;
-        return M.yldStar(M.yld(b._e), 4);
+        return M.yldStar(M.yld(b._e));
 
       case 3:
         return M.pure();
 
       case 4:
-        return M.raise(p);
-
-      case 5:
         b.$sc = 2;
         b._ex = p;
-        return M.jump(void 0, 4);
+        return M.jump();
     }
   }
 }
@@ -64,7 +58,7 @@ function c() {
   var c = M.generator();
   c.$run = _1;
   c.$sc = 0;
-  return M.scope(5);
+  return M.scope();
 
   function _1(c, p) {
     switch (c.$sc) {
@@ -75,13 +69,13 @@ function c() {
       case 1:
         c.$sc = 3;
         c._fc = 4, c._fe = 5;
-        return M.yldStar(M.yld(2), 5);
+        return M.yldStar(M.yld(2));
 
       case 2:
         c._e = c._ex;
         c.$sc = 3;
         c._fc = 4, c._fe = 5;
-        return M.yldStar(M.yld(c._e), 5);
+        return M.yldStar(M.yld(c._e));
 
       case 3:
         c.$sc = c._fc;
@@ -104,7 +98,7 @@ function c() {
       case 8:
         c.$sc = 3;
         c._fc = 6, c._fe = 5, c._err1 = p;
-        return M.jump(void 0, 5);
+        return M.jump();
     }
   }
 }
@@ -113,7 +107,7 @@ function d() {
   var d = M.generator();
   d.$run = _1;
   d.$sc = 0;
-  return M.scope(5);
+  return M.scope();
 
   function _1(d, p) {
     switch (d.$sc) {
@@ -130,7 +124,7 @@ function d() {
         } else {
           d.$sc = 3;
           d._fc = 4, d._fe = 5;
-          return M.jump(void 0, 5);
+          return M.jump();
         }
 
       case 2:
@@ -157,7 +151,7 @@ function d() {
       case 7:
         d.$sc = 3;
         d._fc = 6, d._fe = 5, d._err1 = p;
-        return M.jump(void 0, 5);
+        return M.jump();
     }
   }
 }
@@ -171,33 +165,30 @@ function b2() {
   var b2 = M.generator();
   b2.$run = _1;
   b2.$sc = 0;
-  return M.scope(4);
+  return M.scope();
 
   function _1(b2, p) {
     switch (b2.$sc) {
       case 0:
         b2.$sc = 1;
-        return M.yldStar(M.yld(1), 5);
+        return M.yldStar(M.yld(1), 4);
 
       case 1:
         b2.$sc = 3;
-        return M.yldStar(M.yld(2), 4);
+        return M.yldStar(M.yld(2));
 
       case 2:
         b2._e = b2._ex;
         b2.$sc = 3;
-        return M.yldStar(M.yld(b2._e), 4);
+        return M.yldStar(M.yld(b2._e));
 
       case 3:
         return M.pure();
 
       case 4:
-        return M.raise(p);
-
-      case 5:
         b2.$sc = 2;
         b2._ex = p;
-        return M.jump(void 0, 4);
+        return M.jump();
     }
   }
 }

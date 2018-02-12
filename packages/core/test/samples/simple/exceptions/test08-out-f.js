@@ -6,7 +6,7 @@ function a() {
 
   function _1() {
     fc = _3, fe = _4;
-    return M.chain(eff(1), _2, _4);
+    return M.chain(eff(1), _2);
   }
 
   function _2() {
@@ -14,9 +14,7 @@ function a() {
     return M.jump(void 0, fc, fe);
   }
 
-  function _3() {
-    return M.pure();
-  }
+  function _3() {}
 
   function _4(e) {
     return M.raise(e);
@@ -28,6 +26,6 @@ function a() {
 
   function _6(a) {
     fc = _5, fe = _4, err = a;
-    return M.jump(void 0, _2, _4);
+    return M.jump(void 0, _2);
   }
 }

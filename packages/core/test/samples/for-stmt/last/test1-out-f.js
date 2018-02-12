@@ -4,27 +4,19 @@ import * as M from '@effectful/core';
   var i, j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
-  return M.jump(void 0, _1, _3);
+  return M.jump(void 0, _1);
 
   function _1() {
     if (j < len) {
       i = ref[j];
-      return M.chain(eff(i), _2, _3);
-    } else {
-      return M.pure();
+      return M.chain(eff(i), _2);
     }
   }
 
   function _2(a) {
-    if (a) {
-      return M.pure();
-    } else {
+    if (a) {} else {
       j++;
-      return M.jump(void 0, _1, _3);
+      return M.jump(void 0, _1);
     }
-  }
-
-  function _3(e) {
-    return M.raise(e);
   }
 });

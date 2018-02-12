@@ -2,136 +2,108 @@ import * as M from '@effectful/core';
 
 (function () {
   var ctx = M.context();
-  return M.scope(f_1, f_7);
+  return M.scope(f_1);
 });
 
 (function () {
   var ctx = M.context();
-  return M.scope(_f_1, _f_7);
+  return M.scope(_f_1);
 });
 
 (function () {
   var ctx = M.context();
-  return M.scope(f_11, f_8);
+  return M.scope(f_11);
 });
 
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_3);
+  return M.scope(a_1);
 }
 
 function f_1(ctx) {
-  return M.chain(eff(1), f_2, f_7);
+  return M.chain(eff(1), f_2);
 }
 
 function f_2(ctx) {
-  return M.chain(eff(2), f_3, f_7);
+  return M.chain(eff(2), f_3);
 }
 
 function f_3(ctx, a) {
   if (a) {
-    return M.jump(void 0, f_4, f_7);
+    return M.jump(void 0, f_4);
   } else {
-    return M.chain(eff(3), f_4, f_7);
+    return M.chain(eff(3), f_4);
   }
 }
 
 function f_4(ctx) {
-  return M.chain(eff(4), f_5, f_7);
+  return M.chain(eff(4), f_5);
 }
 
 function f_5(ctx) {
-  return M.chain(eff(5), f_6, f_7);
+  return M.chain(eff(5), f_6);
 }
 
-function f_6(ctx) {
-  return M.pure();
-}
-
-function f_7(ctx, e) {
-  return M.raise(e);
-}
+function f_6(ctx) {}
 
 function _f_1(ctx) {
-  return M.chain(eff(1), _f_2, _f_7);
+  return M.chain(eff(1), _f_2);
 }
 
 function _f_2(ctx) {
-  return M.chain(eff(2), _f_3, _f_7);
+  return M.chain(eff(2), _f_3);
 }
 
 function _f_3(ctx, a) {
   if (a) {
-    return M.chain(eff('a'), _f_4, _f_7);
+    return M.chain(eff('a'), _f_4);
   } else {
-    return M.chain(eff(3), _f_4, _f_7);
+    return M.chain(eff(3), _f_4);
   }
 }
 
 function _f_4(ctx) {
-  return M.chain(eff(4), _f_5, _f_7);
+  return M.chain(eff(4), _f_5);
 }
 
 function _f_5(ctx) {
-  return M.chain(eff(5), _f_6, _f_7);
+  return M.chain(eff(5), _f_6);
 }
 
-function _f_6(ctx) {
-  return M.pure();
-}
-
-function _f_7(ctx, e) {
-  return M.raise(e);
-}
+function _f_6(ctx) {}
 
 function f_11(ctx) {
-  return M.chain(eff(1), f_21, f_8);
+  return M.chain(eff(1), f_21);
 }
 
 function f_21(ctx) {
-  return M.chain(eff(2), f_31, f_8);
+  return M.chain(eff(2), f_31);
 }
 
 function f_31(ctx, a) {
   if (a) {
-    return M.chain(eff('a'), f_41, f_8);
+    return M.chain(eff('a'), f_41);
   } else {
-    return M.chain(eff(4), f_51, f_8);
+    return M.chain(eff(4), f_51);
   }
 }
 
 function f_41(ctx) {
-  return M.chain(eff('b'), f_71, f_8);
+  return eff('b');
 }
 
 function f_51(ctx) {
-  return M.chain(eff(5), f_61, f_8);
+  return M.chain(eff(5), f_61);
 }
 
 function f_61(ctx) {
-  return M.pure(ctx._r);
-}
-
-function f_71(ctx, r) {
-  return M.pure(r);
-}
-
-function f_8(ctx, e) {
-  return M.raise(e);
+  return ctx._r;
 }
 
 function a_1(a) {
   if (e) {
-    return M.chain(eff('b'), a_2, a_3);
+    return eff('b');
   } else {
-    return M.pure(a._r);
+    return a._r;
   }
-}
-
-function a_2(a, r) {
-  return M.pure(r);
-}
-
-function a_3(a, e) {
-  return M.raise(e);
 }

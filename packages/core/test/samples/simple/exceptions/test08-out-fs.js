@@ -4,7 +4,7 @@ function a() {
   return M.jump(void 0, _1, _6);
 
   function _1() {
-    return M.chain(eff(1), _2, _4, _3, _4);
+    return M.chain(eff(1), _2, _3, _4);
   }
 
   function _2(fc, fe, err) {
@@ -12,9 +12,7 @@ function a() {
     return M.jump(void 0, fc, fe, err);
   }
 
-  function _3() {
-    return M.pure();
-  }
+  function _3() {}
 
   function _4(e) {
     return M.raise(e);
@@ -25,6 +23,6 @@ function a() {
   }
 
   function _6(a) {
-    return M.jump(void 0, _2, _4, _5, _4, a);
+    return M.jump(void 0, _2, _5, _4, a);
   }
 }

@@ -4,11 +4,11 @@ import * as M from '@effectful/core';
 // *- should bind statement's condition part using fmap
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_3);
+  return M.scope(a_1);
 }
 
 function a_1(a) {
-  return M.chain(eff(1), a_2, a_3);
+  return M.chain(eff(1), a_2);
 }
 
 function a_2(a, b) {
@@ -17,10 +17,4 @@ function a_2(a, b) {
   } else {
     console.log(2);
   }
-
-  return M.pure();
-}
-
-function a_3(a, e) {
-  return M.raise(e);
 }

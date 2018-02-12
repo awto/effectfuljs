@@ -11,7 +11,7 @@ function a() {
       return M.chain(eff(1), _1, _7);
     } else {
       fc = _3, fe = _5;
-      return M.jump(void 0, _2, _5);
+      return M.jump(void 0, _2);
     }
   }
 
@@ -27,9 +27,7 @@ function a() {
     return M.chain(eff(2), _4, _5);
   }
 
-  function _4() {
-    return M.pure();
-  }
+  function _4() {}
 
   function _5(e) {
     return M.raise(e);
@@ -41,13 +39,13 @@ function a() {
 
   function _7(a) {
     fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 }
 
 function b() {
   var i, loop, fc, fe, err;
-  return M.chain(eff('d'), _1, _6);
+  return M.chain(eff('d'), _1);
 
   function _1(b) {
     var a;
@@ -62,7 +60,7 @@ function b() {
       return M.chain(eff(i), _2, _8);
     } else {
       fc = _4, fe = _6;
-      return M.jump(void 0, _3, _6);
+      return M.jump(void 0, _3);
     }
   }
 
@@ -78,9 +76,7 @@ function b() {
     return M.chain(eff(i), _5, _6);
   }
 
-  function _5() {
-    return M.pure();
-  }
+  function _5() {}
 
   function _6(e) {
     return M.raise(e);
@@ -92,7 +88,7 @@ function b() {
 
   function _8(a) {
     fc = _7, fe = _6, err = a;
-    return M.jump(void 0, _3, _6);
+    return M.jump(void 0, _3);
   }
 }
 
@@ -109,7 +105,7 @@ function c() {
       return M.jump(void 0, _2, _11);
     } else {
       _fc = _5, _fe = _7;
-      return M.jump(void 0, _4, _7);
+      return M.jump(void 0, _4);
     }
   }
 
@@ -144,9 +140,7 @@ function c() {
     return M.chain(eff(i, j), _6, _7);
   }
 
-  function _6() {
-    return M.pure();
-  }
+  function _6() {}
 
   function _7(e) {
     return M.raise(e);
@@ -162,7 +156,7 @@ function c() {
 
   function _10(a) {
     _fc = _8, _fe = _7, err = a;
-    return M.jump(void 0, _4, _7);
+    return M.jump(void 0, _4);
   }
 
   function _11(a) {
@@ -182,7 +176,7 @@ function d() {
       return M.chain(eff(1), _1, _7);
     } else {
       fc = _3, fe = _5;
-      return M.jump(void 0, _2, _5);
+      return M.jump(void 0, _2);
     }
   }
 
@@ -198,9 +192,7 @@ function d() {
     return M.chain(eff(2), _4, _5);
   }
 
-  function _4() {
-    return M.pure();
-  }
+  function _4() {}
 
   function _5(e) {
     return M.raise(e);
@@ -212,7 +204,7 @@ function d() {
 
   function _7(a) {
     fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 }
 

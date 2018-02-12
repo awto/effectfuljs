@@ -2,22 +2,22 @@ import * as M from '@effectful/core';
 
 function a() {
   var a = M.context();
-  return M.scope(a_1, a_6);
+  return M.scope(a_1);
 }
 
 function b() {
   var b = M.context();
-  return M.scope(b_1, b_7);
+  return M.scope(b_1);
 }
 
 function c() {
   var c = M.context();
-  return M.scope(c_1, c_8);
+  return M.scope(c_1);
 }
 
 function d() {
   var d = M.context();
-  return M.scope(d_1, d_6);
+  return M.scope(d_1);
 }
 
 function p() {
@@ -39,7 +39,7 @@ function a_2(a) {
     return M.chain(eff(1), a_2, a_8);
   } else {
     a._fc = a_4, a._fe = a_6;
-    return M.jump(void 0, a_3, a_6);
+    return M.jump(void 0, a_3);
   }
 }
 
@@ -55,9 +55,7 @@ function a_4(a) {
   return M.chain(eff(2), a_5, a_6);
 }
 
-function a_5(a) {
-  return M.pure();
-}
+function a_5(a) {}
 
 function a_6(a, e) {
   return M.raise(e);
@@ -69,11 +67,11 @@ function a_7(a) {
 
 function a_8(a, b) {
   a._fc = a_7, a._fe = a_6, a._err1 = b;
-  return M.jump(void 0, a_3, a_6);
+  return M.jump(void 0, a_3);
 }
 
 function b_1(b) {
-  return M.chain(eff('d'), b_2, b_7);
+  return M.chain(eff('d'), b_2);
 }
 
 function b_2(b, c) {
@@ -89,7 +87,7 @@ function b_3(b) {
     return M.chain(eff(b._i), b_3, b_9);
   } else {
     b._fc = b_5, b._fe = b_7;
-    return M.jump(void 0, b_4, b_7);
+    return M.jump(void 0, b_4);
   }
 }
 
@@ -105,9 +103,7 @@ function b_5(b) {
   return M.chain(eff(b._i), b_6, b_7);
 }
 
-function b_6(b) {
-  return M.pure();
-}
+function b_6(b) {}
 
 function b_7(b, e) {
   return M.raise(e);
@@ -119,7 +115,7 @@ function b_8(b) {
 
 function b_9(b, a) {
   b._fc = b_8, b._fe = b_7, b._err1 = a;
-  return M.jump(void 0, b_4, b_7);
+  return M.jump(void 0, b_4);
 }
 
 function c_1(c) {
@@ -134,7 +130,7 @@ function c_2(c) {
     return M.jump(void 0, c_3, c_12);
   } else {
     c._fc1 = c_6, c._fe1 = c_8;
-    return M.jump(void 0, c_5, c_8);
+    return M.jump(void 0, c_5);
   }
 }
 
@@ -169,9 +165,7 @@ function c_6(c) {
   return M.chain(eff(c._i, c._j), c_7, c_8);
 }
 
-function c_7(c) {
-  return M.pure();
-}
+function c_7(c) {}
 
 function c_8(c, e) {
   return M.raise(e);
@@ -187,7 +181,7 @@ function c_10(c) {
 
 function c_11(c, a) {
   c._fc1 = c_9, c._fe1 = c_8, c._err1 = a;
-  return M.jump(void 0, c_5, c_8);
+  return M.jump(void 0, c_5);
 }
 
 function c_12(c, a) {
@@ -206,7 +200,7 @@ function d_2(d) {
     return M.chain(eff(1), d_2, d_8);
   } else {
     d._fc = d_4, d._fe = d_6;
-    return M.jump(void 0, d_3, d_6);
+    return M.jump(void 0, d_3);
   }
 }
 
@@ -222,9 +216,7 @@ function d_4(d) {
   return M.chain(eff(2), d_5, d_6);
 }
 
-function d_5(d) {
-  return M.pure();
-}
+function d_5(d) {}
 
 function d_6(d, e) {
   return M.raise(e);
@@ -236,5 +228,5 @@ function d_7(d) {
 
 function d_8(d, a) {
   d._fc = d_7, d._fe = d_6, d._err1 = a;
-  return M.jump(void 0, d_3, d_6);
+  return M.jump(void 0, d_3);
 }

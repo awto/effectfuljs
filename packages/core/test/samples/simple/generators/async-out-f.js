@@ -2,206 +2,162 @@ import * as M from '@effectful/core';
 
 function a1() {
   var a1 = M.async();
-  return a1.scope(_1, _2);
+  return a1.scope(_1);
 
   function _1(a1) {
     return a1.pure();
-  }
-
-  function _2(a1, e) {
-    return a1.raise(e);
   }
 }
 
 function a2() {
   var a2 = M.async();
-  return a2.scope(_1, _3);
+  return a2.scope(_1);
 
   function _1(a2) {
     var a;
     a = delay(1);
-    return a2.chain(a, _2, _3);
+    return a2.chain(a, _2);
   }
 
   function _2(a2) {
     return a2.pure();
   }
-
-  function _3(a2, e) {
-    return a2.raise(e);
-  }
 }
 
 function a3() {
   var a3 = M.async();
-  return a3.scope(_1, _3);
+  return a3.scope(_1);
 
   function _1(a3) {
     var a;
     a = delay(1);
-    return a3.chain(a, _2, _3);
-  }
-
-  function _2(a3, r) {
-    return a3.pure(r);
-  }
-
-  function _3(a3, e) {
-    return a3.raise(e);
+    return a;
   }
 }
 
 function g2() {
   var g2 = M.generator();
-  return g2.scope(_1, _3);
+  return g2.scope(_1);
 
   function _1(g2) {
     var a;
     a = delay(1);
-    return g2.yldStar(a, _2, _3);
+    return g2.yldStar(a, _2);
   }
 
   function _2(g2) {
     return g2.pure();
   }
-
-  function _3(g2, e) {
-    return g2.raise(e);
-  }
 }
 
 function g3() {
   var g3 = M.generator();
-  return g3.scope(_1, _3);
+  return g3.scope(_1);
 
   function _1(g3) {
     var a;
     a = delay(1);
-    return g3.yldStar(a, _2, _3);
-  }
-
-  function _2(g3, r) {
-    return g3.pure(r);
-  }
-
-  function _3(g3, e) {
-    return g3.raise(e);
+    return a;
   }
 }
 
 function a4() {
   var a4 = M.async();
-  return a4.scope(_1, _4);
+  return a4.scope(_1);
 
   function _1(a4) {
     var a;
     a = delay(1);
-    return a4.chain(a, _2, _4);
+    return a4.chain(a, _2);
   }
 
   function _2(a4, a) {
-    return a4.chain(a, _3, _4);
+    return a4.chain(a, _3);
   }
 
   function _3(a4) {
     return a4.pure();
   }
-
-  function _4(a4, e) {
-    return a4.raise(e);
-  }
 }
 
 function a5() {
   var a5 = M.async();
-  return a5.scope(_1, _5);
+  return a5.scope(_1);
 
   function _1(a5) {
     var a;
     a = delay(1);
-    return a5.chain(a, _2, _5);
+    return a5.chain(a, _2);
   }
 
   function _2(a5, a) {
-    return a5.chain(a, _3, _5);
+    return a5.chain(a, _3);
   }
 
   function _3(a5, a) {
-    return a5.chain(a, _4, _5);
+    return a5.chain(a, _4);
   }
 
   function _4(a5) {
     return a5.pure();
   }
-
-  function _5(a5, e) {
-    return a5.raise(e);
-  }
 }
 
 function ag1() {
   var ag1 = M.asyncGenerator();
-  return ag1.scope(_1, _3);
+  return ag1.scope(_1);
 
   function _1(ag1) {
-    return ag1.yld(1, _2, _3);
+    return ag1.yld(1, _2);
   }
 
   function _2(ag1) {
     return ag1.pure();
   }
-
-  function _3(ag1, e) {
-    return ag1.raise(e);
-  }
 }
 
 function ag2() {
   var ag2 = M.asyncGenerator();
-  return ag2.scope(_1, _8);
+  return ag2.scope(_1);
 
   function _1(ag2) {
     var a;
     a = delay(1);
-    return ag2.chain(a, _2, _8);
+    return ag2.chain(a, _2);
   }
 
   function _2(ag2, a) {
-    return ag2.yld(a, _3, _8);
+    return ag2.yld(a, _3);
   }
 
   function _3(ag2) {
     var a;
     a = delay(2);
-    return ag2.chain(a, _4, _8);
+    return ag2.chain(a, _4);
   }
 
   function _4(ag2, a) {
-    return ag2.yld(a, _5, _8);
+    return ag2.yld(a, _5);
   }
 
   function _5(ag2) {
     var a;
     a = delay(3);
-    return ag2.chain(a, _6, _8);
+    return ag2.chain(a, _6);
   }
 
   function _6(ag2, a) {
-    return ag2.yld(a, _7, _8);
+    return ag2.yld(a, _7);
   }
 
   function _7(ag2) {
     return ag2.pure();
   }
-
-  function _8(ag2, e) {
-    return ag2.raise(e);
-  }
 }
 
 function ag3() {
   var ag3 = M.asyncGenerator();
-  return ag3.scope(_1, _8);
+  return ag3.scope(_1);
 
   function _1(ag3) {
     ag3._loop = ag3.iteratorM(f());
@@ -223,7 +179,7 @@ function ag3() {
       return ag3.chain(d, _4, _10);
     } else {
       ag3._fc = _7, ag3._fe = _8;
-      return ag3.jump(void 0, _6, _8);
+      return ag3.jump(void 0, _6);
     }
   }
 
@@ -257,13 +213,13 @@ function ag3() {
 
   function _10(ag3, a) {
     ag3._fc = _9, ag3._fe = _8, ag3._err1 = a;
-    return ag3.jump(void 0, _6, _8);
+    return ag3.jump(void 0, _6);
   }
 }
 
 function switches() {
   var switches = M.asyncGenerator();
-  return switches.scope(_1, _45);
+  return switches.scope(_1);
 
   function _1(switches) {
     switches._loop = switches.iteratorM(gen());
@@ -285,14 +241,14 @@ function switches() {
       switch (switches._i) {
         case 3:
           switches._fc = _5, switches._fe = _45;
-          return switches.jump(void 0, _4, _45);
+          return switches.jump(void 0, _4);
 
         default:
           return switches.jump(void 0, _2, _55);
       }
     } else {
       switches._fc = _5, switches._fe = _45;
-      return switches.jump(void 0, _4, _45);
+      return switches.jump(void 0, _4);
     }
   }
 
@@ -330,13 +286,13 @@ function switches() {
       }
     } else {
       switches._fc1 = _10, switches._fe1 = _45;
-      return switches.jump(void 0, _9, _45);
+      return switches.jump(void 0, _9);
     }
   }
 
   function _8(switches) {
     switches._fc1 = _10, switches._fe1 = _45;
-    return switches.jump(void 0, _9, _45);
+    return switches.jump(void 0, _9);
   }
 
   function _9(switches) {
@@ -367,14 +323,14 @@ function switches() {
       switch (switches._i2) {
         case 3:
           switches._fc2 = _14, switches._fe2 = _45;
-          return switches.jump(void 0, _13, _45);
+          return switches.jump(void 0, _13);
 
         default:
           return switches.yld(`l3-${switches._i2}`, _11, _57);
       }
     } else {
       switches._fc2 = _14, switches._fe2 = _45;
-      return switches.jump(void 0, _13, _45);
+      return switches.jump(void 0, _13);
     }
   }
 
@@ -406,14 +362,14 @@ function switches() {
       switch (switches._i3) {
         case 3:
           switches._fc3 = _18, switches._fe3 = _45;
-          return switches.jump(void 0, _17, _45);
+          return switches.jump(void 0, _17);
 
         default:
           return switches.yld(`l4-${switches._i3}`, _15, _58);
       }
     } else {
       switches._fc3 = _18, switches._fe3 = _45;
-      return switches.jump(void 0, _17, _45);
+      return switches.jump(void 0, _17);
     }
   }
 
@@ -444,7 +400,7 @@ function switches() {
       return switches.yld(`l5-${switches._i4}`, _21, _59);
     } else {
       switches._fc4 = _23, switches._fe4 = _45;
-      return switches.jump(void 0, _22, _45);
+      return switches.jump(void 0, _22);
     }
   }
 
@@ -452,7 +408,7 @@ function switches() {
     switch (switches._i4) {
       case 3:
         switches._fc4 = _23, switches._fe4 = _45;
-        return switches.jump(void 0, _22, _45);
+        return switches.jump(void 0, _22);
 
       default:
         return switches.jump(void 0, _19, _59);
@@ -493,13 +449,13 @@ function switches() {
       }
     } else {
       switches._fc5 = _28, switches._fe5 = _45;
-      return switches.jump(void 0, _27, _45);
+      return switches.jump(void 0, _27);
     }
   }
 
   function _26(switches) {
     switches._fc5 = _28, switches._fe5 = _45;
-    return switches.jump(void 0, _27, _45);
+    return switches.jump(void 0, _27);
   }
 
   function _27(switches) {
@@ -555,13 +511,13 @@ function switches() {
       }
     } else {
       switches._fc6 = _34, switches._fe6 = _45;
-      return switches.jump(void 0, _33, _45);
+      return switches.jump(void 0, _33);
     }
   }
 
   function _31(switches) {
     switches._fc6 = _34, switches._fe6 = _45;
-    return switches.jump(void 0, _33, _45);
+    return switches.jump(void 0, _33);
   }
 
   function _32(switches) {
@@ -596,7 +552,7 @@ function switches() {
       return switches.jump(void 0, _37, _63);
     } else {
       switches._fc8 = _44, switches._fe8 = _45;
-      return switches.jump(void 0, _43, _45);
+      return switches.jump(void 0, _43);
     }
   }
 
@@ -764,42 +720,42 @@ function switches() {
 
   function _55(switches, a) {
     switches._fc = _46, switches._fe = _45, switches._err1 = a;
-    return switches.jump(void 0, _4, _45);
+    return switches.jump(void 0, _4);
   }
 
   function _56(switches, a) {
     switches._fc1 = _47, switches._fe1 = _45, switches._err2 = a;
-    return switches.jump(void 0, _9, _45);
+    return switches.jump(void 0, _9);
   }
 
   function _57(switches, a) {
     switches._fc2 = _48, switches._fe2 = _45, switches._err3 = a;
-    return switches.jump(void 0, _13, _45);
+    return switches.jump(void 0, _13);
   }
 
   function _58(switches, a) {
     switches._fc3 = _49, switches._fe3 = _45, switches._err4 = a;
-    return switches.jump(void 0, _17, _45);
+    return switches.jump(void 0, _17);
   }
 
   function _59(switches, a) {
     switches._fc4 = _50, switches._fe4 = _45, switches._err5 = a;
-    return switches.jump(void 0, _22, _45);
+    return switches.jump(void 0, _22);
   }
 
   function _60(switches, a) {
     switches._fc5 = _51, switches._fe5 = _45, switches._err6 = a;
-    return switches.jump(void 0, _27, _45);
+    return switches.jump(void 0, _27);
   }
 
   function _61(switches, a) {
     switches._fc6 = _52, switches._fe6 = _45, switches._err7 = a;
-    return switches.jump(void 0, _33, _45);
+    return switches.jump(void 0, _33);
   }
 
   function _62(switches, a) {
     switches._fc8 = _53, switches._fe8 = _45, switches._err8 = a;
-    return switches.jump(void 0, _43, _45);
+    return switches.jump(void 0, _43);
   }
 
   function _63(switches, a) {
@@ -810,10 +766,10 @@ function switches() {
 
 function c() {
   var c = M.asyncGenerator();
-  return c.scope(_1, _11);
+  return c.scope(_1);
 
   function _1(c) {
-    return c.yld(1, _2, _11);
+    return c.yld(1, _2);
   }
 
   function _2(c) {
@@ -828,7 +784,7 @@ function c() {
       return c.jump(void 0, _4, _15);
     } else {
       c._fc1 = _10, c._fe1 = _11;
-      return c.jump(void 0, _9, _11);
+      return c.jump(void 0, _9);
     }
   }
 
@@ -916,7 +872,7 @@ function c() {
 
   function _14(c, a) {
     c._fc1 = _12, c._fe1 = _11, c._err1 = a;
-    return c.jump(void 0, _9, _11);
+    return c.jump(void 0, _9);
   }
 
   function _15(c, a) {
@@ -928,35 +884,27 @@ function c() {
 class A {
   method() {
     var ctx = M.async();
-    return ctx.scope(_1, _3);
+    return ctx.scope(_1);
 
     function _1(ctx) {
-      return ctx.chain(something, _2, _3);
+      return ctx.chain(something, _2);
     }
 
     function _2(ctx) {
       return ctx.pure();
-    }
-
-    function _3(ctx, e) {
-      return ctx.raise(e);
     }
   }
 
   static method() {
     var ctx = M.async();
-    return ctx.scope(_1, _3);
+    return ctx.scope(_1);
 
     function _1(ctx) {
-      return ctx.chain(somethingElse, _2, _3);
+      return ctx.chain(somethingElse, _2);
     }
 
     function _2(ctx) {
       return ctx.pure();
-    }
-
-    function _3(ctx, e) {
-      return ctx.raise(e);
     }
   }
 
@@ -965,18 +913,14 @@ class A {
 var b = new class {
   method() {
     var ctx = M.async();
-    return ctx.scope(_1, _3);
+    return ctx.scope(_1);
 
     function _1(ctx) {
-      return ctx.chain(something, _2, _3);
+      return ctx.chain(something, _2);
     }
 
     function _2(ctx) {
       return ctx.pure();
-    }
-
-    function _3(ctx, e) {
-      return ctx.raise(e);
     }
   }
 
@@ -985,34 +929,26 @@ var b = new class {
     ctx._A = class A {
       m2() {
         var ctx = M.async();
-        return ctx.scope(_1, _3);
+        return ctx.scope(_1);
 
         function _1(ctx) {
-          return ctx.chain(something, _2, _3);
+          return ctx.chain(something, _2);
         }
 
         function _2(ctx) {
           return ctx.pure();
         }
-
-        function _3(ctx, e) {
-          return ctx.raise(e);
-        }
       }
 
     };
-    return ctx.scope(_1, _3);
+    return ctx.scope(_1);
 
     function _1(ctx) {
-      return ctx.chain(somethingElse, _2, _3);
+      return ctx.chain(somethingElse, _2);
     }
 
     function _2(ctx) {
       return ctx.pure();
-    }
-
-    function _3(ctx, e) {
-      return ctx.raise(e);
     }
   }
 
@@ -1020,72 +956,52 @@ var b = new class {
 var c = new class C {
   [getName()]() {
     var ctx = M.async();
-    return ctx.scope(_1, _3);
+    return ctx.scope(_1);
 
     function _1(ctx) {
-      return ctx.chain(something, _2, _3);
+      return ctx.chain(something, _2);
     }
 
     function _2(ctx) {
       return ctx.pure();
-    }
-
-    function _3(ctx, e) {
-      return ctx.raise(e);
     }
   }
 
   static [Symbol.iterator]() {
     var ctx = M.async();
-    return ctx.scope(_1, _3);
+    return ctx.scope(_1);
 
     function _1(ctx) {
-      return ctx.chain(somethingElse, _2, _3);
+      return ctx.chain(somethingElse, _2);
     }
 
     function _2(ctx) {
       return ctx.pure();
-    }
-
-    function _3(ctx, e) {
-      return ctx.raise(e);
     }
   }
 
 }()(i => {
   var ctx = M.async();
   ctx._i = i;
-  return ctx.scope(_1, _3);
+  return ctx.scope(_1);
 
   function _1(ctx) {
-    return ctx.chain(ctx._i, _2, _3);
-  }
-
-  function _2(ctx, r) {
-    return ctx.pure(r);
-  }
-
-  function _3(ctx, e) {
-    return ctx.raise(e);
+    return ctx._i;
   }
 })(10);
 
 (function (i) {
   var ctx = M.async();
   ctx._i = i;
-  return ctx.scope(_1, _3);
+  return ctx.scope(_1);
 
   function _1(ctx) {
-    return ctx.chain(ctx._i, _2, _3);
+    return ctx.chain(ctx._i, _2);
   }
 
   function _2(ctx, a) {
     ctx._f = a;
     return ctx.pure();
-  }
-
-  function _3(ctx, e) {
-    return ctx.raise(e);
   }
 })(10);
 
@@ -1093,17 +1009,13 @@ var c = new class C {
   var _zz = M.async();
 
   _zz._i = i;
-  return _zz.scope(_1, _3);
+  return _zz.scope(_1);
 
   function _1(_zz) {
-    return _zz.chain(_zz._i, _2, _3);
+    return _zz.chain(_zz._i, _2);
   }
 
   function _2(_zz) {
     return _zz.pure();
-  }
-
-  function _3(_zz, e) {
-    return _zz.raise(e);
   }
 })(10);

@@ -9,9 +9,9 @@ function a() {
 
   function _2(a) {
     if (a) {
-      return M.jump(void 0, _3, _6, _5, _6);
+      return M.jump(void 0, _3, _5, _6);
     } else {
-      return M.jump(void 0, _3, _6, _4, _6);
+      return M.jump(void 0, _3, _4, _6);
     }
   }
 
@@ -23,9 +23,7 @@ function a() {
     return M.chain(eff('after `finally`'), _5, _6);
   }
 
-  function _5() {
-    return M.pure();
-  }
+  function _5() {}
 
   function _6(e) {
     return M.raise(e);
@@ -36,6 +34,6 @@ function a() {
   }
 
   function _8(a) {
-    return M.jump(void 0, _3, _6, _7, _6, a);
+    return M.jump(void 0, _3, _7, _6, a);
   }
 }

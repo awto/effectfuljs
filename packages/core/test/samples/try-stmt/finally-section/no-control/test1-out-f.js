@@ -6,7 +6,7 @@ function a() {
 
   function _1() {
     fc = _3, fe = _5;
-    return M.chain(eff('in body'), _2, _5);
+    return M.chain(eff('in body'), _2);
   }
 
   function _2() {
@@ -17,9 +17,7 @@ function a() {
     return M.chain(eff('after `finally`'), _4, _5);
   }
 
-  function _4() {
-    return M.pure();
-  }
+  function _4() {}
 
   function _5(e) {
     return M.raise(e);
@@ -31,7 +29,7 @@ function a() {
 
   function _7(a) {
     fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 }
 
@@ -41,13 +39,13 @@ function b() {
 
   function _1() {
     fc = _4, fe = _6;
-    return M.chain(eff('in body'), _3, _6);
+    return M.chain(eff('in body'), _3);
   }
 
   function _2() {
     e = ex;
     fc = _4, fe = _6;
-    return M.chain(eff('in `catch`', e), _3, _6);
+    return M.chain(eff('in `catch`', e), _3);
   }
 
   function _3() {
@@ -58,9 +56,7 @@ function b() {
     return M.chain(eff('after `finally`'), _5, _6);
   }
 
-  function _5() {
-    return M.pure();
-  }
+  function _5() {}
 
   function _6(e) {
     return M.raise(e);
@@ -77,7 +73,7 @@ function b() {
 
   function _9(a) {
     fc = _7, fe = _6, err = a;
-    return M.jump(void 0, _3, _6);
+    return M.jump(void 0, _3);
   }
 }
 
@@ -87,7 +83,7 @@ function c() {
 
   function _1() {
     fc = _3, fe = _5;
-    return M.chain(eff('in body'), _2, _5);
+    return M.chain(eff('in body'), _2);
   }
 
   function _2() {
@@ -99,9 +95,7 @@ function c() {
     return M.chain(eff('after `finally`'), _4, _5);
   }
 
-  function _4() {
-    return M.pure();
-  }
+  function _4() {}
 
   function _5(e) {
     return M.raise(e);
@@ -113,7 +107,7 @@ function c() {
 
   function _7(a) {
     fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 }
 
@@ -124,7 +118,7 @@ function d() {
   function _1() {
     console.log('in body');
     fc = _3, fe = _5;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
   function _2() {
@@ -135,9 +129,7 @@ function d() {
     return M.chain(eff('after `finally`'), _4, _5);
   }
 
-  function _4() {
-    return M.pure();
-  }
+  function _4() {}
 
   function _5(e) {
     return M.raise(e);
@@ -149,7 +141,7 @@ function d() {
 
   function _7(a) {
     fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 }
 
@@ -161,7 +153,7 @@ function e() {
   function _1() {
     console.log('in body');
     fc = _6, fe = _8;
-    return M.chain(eff('in body'), _4, _8);
+    return M.chain(eff('in body'), _4);
   }
 
   function _2() {
@@ -173,12 +165,12 @@ function e() {
   function _3() {
     console.log('catch', e);
     fc = _6, fe = _8;
-    return M.jump(void 0, _4, _8);
+    return M.jump(void 0, _4);
   }
 
   function _4() {
     console.log('in finally');
-    return M.chain(eff('in `finally`'), _5, _8);
+    return M.chain(eff('in `finally`'), _5);
   }
 
   function _5() {
@@ -191,9 +183,7 @@ function e() {
     return M.chain(eff('after `finally`'), _7, _8);
   }
 
-  function _7() {
-    return M.pure();
-  }
+  function _7() {}
 
   function _8(e) {
     return M.raise(e);
@@ -210,7 +200,7 @@ function e() {
 
   function _11(a) {
     fc = _9, fe = _8, err = a;
-    return M.jump(void 0, _4, _8);
+    return M.jump(void 0, _4);
   }
 }
 
@@ -220,13 +210,13 @@ function f() {
 
   function _1() {
     fc = _4, fe = _6;
-    return M.chain(eff('in body'), _3, _6);
+    return M.chain(eff('in body'), _3);
   }
 
   function _2() {
     e = ex;
     fc = _4, fe = _6;
-    return M.chain(eff('in `catch`'), _3, _6);
+    return M.chain(eff('in `catch`'), _3);
   }
 
   function _3() {
@@ -238,9 +228,7 @@ function f() {
     return M.chain(eff('after `finally`'), _5, _6);
   }
 
-  function _5() {
-    return M.pure();
-  }
+  function _5() {}
 
   function _6(e) {
     return M.raise(e);
@@ -257,7 +245,7 @@ function f() {
 
   function _9(a) {
     fc = _7, fe = _6, err = a;
-    return M.jump(void 0, _3, _6);
+    return M.jump(void 0, _3);
   }
 }
 
@@ -267,14 +255,14 @@ function g() {
 
   function _1() {
     fc = _4, fe = _6;
-    return M.chain(eff('in body'), _3, _6);
+    return M.chain(eff('in body'), _3);
   }
 
   function _2() {
     e = ex;
     console.log('in `catch`');
     fc = _4, fe = _6;
-    return M.jump(void 0, _3, _6);
+    return M.jump(void 0, _3);
   }
 
   function _3() {
@@ -286,9 +274,7 @@ function g() {
     return M.chain(eff('after `finally`'), _5, _6);
   }
 
-  function _5() {
-    return M.pure();
-  }
+  function _5() {}
 
   function _6(e) {
     return M.raise(e);
@@ -305,6 +291,6 @@ function g() {
 
   function _9(a) {
     fc = _7, fe = _6, err = a;
-    return M.jump(void 0, _3, _6);
+    return M.jump(void 0, _3);
   }
 }

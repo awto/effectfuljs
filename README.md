@@ -112,6 +112,12 @@ There are babel presets in separate packages.
   A shortcut for [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
   with concrete ECMAScript effects implementations.
 
+All the presets are just shortcuts to
+[@effectful/core](https://github.com/awto/effectfuljs/tree/master/packages/es)
+setting needed lower level options described in
+[config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js).
+
+
 ## Known major limitations
  * ES6 supper just replaced with `Object.getPrototypeOf(...)` and `call`, 
    this is enough for most applications. If it is not, transpile classes with babel 

@@ -8,251 +8,175 @@ describe('yop', function () {
   return M.chain(it('should yield fiber until promise is resolved', function (done) {
     var addLater = function addLater(a, b) {
       var deferred;
-      return M.chain(Q.defer(), _1, _2);
+      return M.chain(Q.defer(), _1);
 
       function _1(c) {
         deferred = c;
         process.nextTick(function () {
           var c;
           c = deferred;
-          return M.chain(c.resolve(a + b), _1, _2);
+          return M.chain(c.resolve(a + b), _1);
 
-          function _1() {
-            return M.pure();
-          }
-
-          function _2(e) {
-            return M.raise(e);
-          }
+          function _1() {}
         });
-        return M.pure(deferred.promise);
-      }
-
-      function _2(e) {
-        return M.raise(e);
+        return deferred.promise;
       }
     },
         a;
 
     if (done.async) {
       a = done;
-      return M.chain(a.async(), _1, _4);
+      return M.chain(a.async(), _1);
     } else {
-      return M.jump(void 0, _2, _4);
+      return M.jump(void 0, _2);
     }
 
     function _1(a) {
       done = a;
-      return M.jump(void 0, _2, _4);
+      return M.jump(void 0, _2);
     }
 
     function _2() {
       return M.chain(M.run(QM, function () {
         var result;
-        return M.chain(addLater(1, 2), _1, _3);
+        return M.chain(addLater(1, 2), _1);
 
         function _1(a) {
-          return M.chain(a.mapply(function ($dm$b) {
+          return a.mapply(function ($dm$b) {
             var err;
             result = $dm$b;
-            return M.jump(void 0, _1, _7);
+            return M.jump(void 0, _1, _6);
 
             function _1() {
               var a;
               a = result;
-              return M.chain(expect(a), _2, _7);
+              return M.chain(expect(a), _2, _6);
             }
 
             function _2(b) {
               var a;
               a = b.to;
-              return M.chain(a.equal(3), _3, _7);
+              return M.chain(a.equal(3), _3, _6);
             }
 
             function _3() {
               var a;
               a = done;
-              return M.chain(a(), _5, _6);
+              return M.chain(a(), _5);
             }
 
             function _4(ex) {
               var a;
               err = ex;
               a = done;
-              return M.chain(a(err), _5, _6);
+              return M.chain(a(err), _5);
             }
 
-            function _5() {
-              return M.pure();
-            }
+            function _5() {}
 
-            function _6(e) {
-              return M.raise(e);
+            function _6(a) {
+              return M.jump(void 0, _4, a);
             }
-
-            function _7(a) {
-              return M.jump(void 0, _4, _6, a);
-            }
-          }), _2, _3);
+          });
         }
-
-        function _2(r) {
-          return M.pure(r);
-        }
-
-        function _3(e) {
-          return M.raise(e);
-        }
-      }), _3, _4);
+      }), _3);
     }
 
-    function _3() {
-      return M.pure();
-    }
-
-    function _4(e) {
-      return M.raise(e);
-    }
-  }), _1, _4);
+    function _3() {}
+  }), _1);
 
   function _1() {
     return M.chain(it('should throw reasons from rejected promises into fiber', function (done) {
       var throwErrorLater = function throwErrorLater() {
         var deferred;
-        return M.chain(Q.defer(), _1, _2);
+        return M.chain(Q.defer(), _1);
 
         function _1(a) {
           deferred = a;
           process.nextTick(function () {
             var a;
             a = deferred;
-            return M.chain(a.reject(new Error('promise rejected')), _1, _2);
+            return M.chain(a.reject(new Error('promise rejected')), _1);
 
-            function _1() {
-              return M.pure();
-            }
-
-            function _2(e) {
-              return M.raise(e);
-            }
+            function _1() {}
           });
-          return M.pure(deferred.promise);
-        }
-
-        function _2(e) {
-          return M.raise(e);
+          return deferred.promise;
         }
       },
           a;
 
       if (done.async) {
         a = done;
-        return M.chain(a.async(), _1, _4);
+        return M.chain(a.async(), _1);
       } else {
-        return M.jump(void 0, _2, _4);
+        return M.jump(void 0, _2);
       }
 
       function _1(a) {
         done = a;
-        return M.jump(void 0, _2, _4);
+        return M.jump(void 0, _2);
       }
 
       function _2() {
         return M.chain(M.run(QM, function () {
-          return M.chain(M.scope(function ($dm$root) {
-            return M.chain(throwErrorLater(), _1, _4);
+          return M.scope(function ($dm$root) {
+            return M.chain(throwErrorLater(), _1);
 
             function _1(a) {
               return M.chain(a.mhandle(function (err) {
                 var expectErr;
-                return M.jump(void 0, _1, _8);
+                return M.jump(void 0, _1, _6);
 
                 function _1() {
                   var a;
                   a = err.message;
-                  return M.chain(expect(a), _2, _8);
+                  return M.chain(expect(a), _2, _6);
                 }
 
                 function _2(b) {
                   var a;
                   a = b.to;
-                  return M.chain(a.equal('promise rejected'), _3, _8);
+                  return M.chain(a.equal('promise rejected'), _3, _6);
                 }
 
                 function _3() {
                   var a;
                   a = done;
-                  return M.chain(a(), _5, _7);
+                  return M.chain(a(), _5);
                 }
 
                 function _4(ex) {
                   var a;
                   expectErr = ex;
                   a = done;
-                  return M.chain(a(expectErr), _5, _7);
+                  return M.chain(a(expectErr), _5);
                 }
 
                 function _5() {
-                  return M.chain($dm$root.brk(), _6, _7);
+                  return $dm$root.brk();
                 }
 
-                function _6(r) {
-                  return M.pure(r);
+                function _6(a) {
+                  return M.jump(void 0, _4, a);
                 }
-
-                function _7(e) {
-                  return M.raise(e);
-                }
-
-                function _8(a) {
-                  return M.jump(void 0, _4, _7, a);
-                }
-              }), _2, _4);
+              }), _2);
             }
 
             function _2(a) {
-              return M.chain(a.mapply(function () {
+              return a.mapply(function () {
                 var a;
                 a = done;
-                return M.chain(a(new Error('yop should have thrown reason from rejected promise')), _1, _2);
+                return M.chain(a(new Error('yop should have thrown reason from rejected promise')), _1);
 
-                function _1() {
-                  return M.pure();
-                }
-
-                function _2(e) {
-                  return M.raise(e);
-                }
-              }), _3, _4);
+                function _1() {}
+              });
             }
-
-            function _3(r) {
-              return M.pure(r);
-            }
-
-            function _4(e) {
-              return M.raise(e);
-            }
-          }), _1, _2);
-
-          function _1(r) {
-            return M.pure(r);
-          }
-
-          function _2(e) {
-            return M.raise(e);
-          }
-        }), _3, _4);
+          });
+        }), _3);
       }
 
-      function _3() {
-        return M.pure();
-      }
-
-      function _4(e) {
-        return M.raise(e);
-      }
-    }), _2, _4);
+      function _3() {}
+    }), _2);
   }
 
   function _2() {
@@ -261,91 +185,65 @@ describe('yop', function () {
 
       if (done.async) {
         a = done;
-        return M.chain(a.async(), _1, _4);
+        return M.chain(a.async(), _1);
       } else {
-        return M.jump(void 0, _2, _4);
+        return M.jump(void 0, _2);
       }
 
       function _1(a) {
         done = a;
-        return M.jump(void 0, _2, _4);
+        return M.jump(void 0, _2);
       }
 
       function _2() {
         return M.chain(M.run(QM, function () {
           var result;
-          return M.chain(1 + 2, _1, _3);
+          return M.chain(1 + 2, _1);
 
           function _1(a) {
-            return M.chain(a.mapply(function ($dm$b) {
+            return a.mapply(function ($dm$b) {
               var err;
               result = $dm$b;
-              return M.jump(void 0, _1, _7);
+              return M.jump(void 0, _1, _6);
 
               function _1() {
                 var a;
                 a = result;
-                return M.chain(expect(a), _2, _7);
+                return M.chain(expect(a), _2, _6);
               }
 
               function _2(b) {
                 var a;
                 a = b.to;
-                return M.chain(a.equal(3), _3, _7);
+                return M.chain(a.equal(3), _3, _6);
               }
 
               function _3() {
                 var a;
                 a = done;
-                return M.chain(a(), _5, _6);
+                return M.chain(a(), _5);
               }
 
               function _4(ex) {
                 var a;
                 err = ex;
                 a = done;
-                return M.chain(a(err), _5, _6);
+                return M.chain(a(err), _5);
               }
 
-              function _5() {
-                return M.pure();
-              }
+              function _5() {}
 
-              function _6(e) {
-                return M.raise(e);
+              function _6(a) {
+                return M.jump(void 0, _4, a);
               }
-
-              function _7(a) {
-                return M.jump(void 0, _4, _6, a);
-              }
-            }), _2, _3);
+            });
           }
-
-          function _2(r) {
-            return M.pure(r);
-          }
-
-          function _3(e) {
-            return M.raise(e);
-          }
-        }), _3, _4);
+        }), _3);
       }
 
-      function _3() {
-        return M.pure();
-      }
-
-      function _4(e) {
-        return M.raise(e);
-      }
-    }), _3, _4);
+      function _3() {}
+    }), _3);
   }
 
-  function _3() {
-    return M.pure();
-  }
-
-  function _4(e) {
-    return M.raise(e);
-  }
+  function _3() {}
 });

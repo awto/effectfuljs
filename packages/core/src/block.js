@@ -293,30 +293,6 @@ export function* cleanPureEff(s) {
   }
 }
 
-/** converts `pure` tags into JS expressions */
-export function* interpretPure(s) {
-  const sl = Kit.auto(s)
-  const root = sl.first.value
-  const ctxSym = root.contextSym
-  const noResult = sl.opts.returnContext === false
-  function* walk() {
-    for(const i of sl.sub()) {
-      if (i.type === pure) {
-        if (i.enter) {
-          const lab = sl.label()
-          yield sl.enter(i.pos,Tag.CallExpression,{result:!noResult})
-          yield sl.tok(Tag.callee, Tag.Identifier, {sym: pureId})
-          yield sl.enter(Tag.arguments,Tag.Array)
-          yield* Kit.reposOne(walk(),Tag.push)
-          yield* lab()
-        }
-      } else
-        yield i
-    }
-  }
-  yield* walk()
-}
-
 /**
  * for frames ending with effectful let adds its reference to `effLet` field
  *

@@ -4,165 +4,141 @@ import * as M from '@effectful/core';
   var i, j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
-  return M.jump(void 0, _1, _4);
+  return M.jump(void 0, _1);
 
   function _1() {
     if (j < len) {
       i = ref[j];
-      return M.chain(eff(i), _2, _4);
-    } else {
-      return M.pure();
+      return M.chain(eff(i), _2);
     }
   }
 
   function _2(a) {
     if (a) {
-      return M.jump(void 0, _3, _4);
+      return M.jump(void 0, _3);
     } else {
-      return M.jump(void 0, _3, _4);
+      return M.jump(void 0, _3);
     }
   }
 
   function _3() {
     j++;
-    return M.jump(void 0, _1, _4);
-  }
-
-  function _4(e) {
-    return M.raise(e);
+    return M.jump(void 0, _1);
   }
 });
 
 (function () {
   var i;
-  return M.chain(eff('bi'), _1, _5);
+  return M.chain(eff('bi'), _1);
 
   function _1() {
     i = 0;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
   function _2() {
     if (i < 3) {
-      return M.chain(eff('bi:', i), _3, _5);
+      return M.chain(eff('bi:', i), _3);
     } else {
-      return M.chain(eff('ai'), _4, _5);
+      return M.chain(eff('ai'), _4);
     }
   }
 
   function _3() {
     i++;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
-  function _4() {
-    return M.pure();
-  }
-
-  function _5(e) {
-    return M.raise(e);
-  }
+  function _4() {}
 });
 
 (function () {
   var i;
-  return M.chain(eff('bi'), _1, _5);
+  return M.chain(eff('bi'), _1);
 
   function _1() {
     i = 0;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
   function _2() {
     if (i < 3) {
-      return M.chain(eff('bi:', i), _3, _5);
+      return M.chain(eff('bi:', i), _3);
     } else {
-      return M.chain(eff('ai'), _4, _5);
+      return M.chain(eff('ai'), _4);
     }
   }
 
   function _3() {
     i++;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
-  function _4() {
-    return M.pure();
-  }
-
-  function _5(e) {
-    return M.raise(e);
-  }
+  function _4() {}
 });
 
 (function () {
   var i, j;
-  return M.chain(eff('bi'), _1, _9);
+  return M.chain(eff('bi'), _1);
 
   function _1() {
     i = 0;
-    return M.jump(void 0, _2, _9);
+    return M.jump(void 0, _2);
   }
 
   function _2() {
     if (i < 3) {
-      return M.chain(eff('bj:' + i), _3, _9);
+      return M.chain(eff('bj:' + i), _3);
     } else {
-      return M.jump(void 0, _7, _9);
+      return M.jump(void 0, _7);
     }
   }
 
   function _3() {
     j = 0;
-    return M.jump(void 0, _4, _9);
+    return M.jump(void 0, _4);
   }
 
   function _4() {
     if (j < 40) {
       if (j === 10) {
-        return M.jump(void 0, _6, _9);
+        return M.jump(void 0, _6);
       } else {
         if (j === 30) {
-          return M.jump(void 0, _7, _9);
+          return M.jump(void 0, _7);
         } else {
-          return M.chain(eff(i + j), _5, _9);
+          return M.chain(eff(i + j), _5);
         }
       }
     } else {
-      return M.chain(eff('aj:' + i), _6, _9);
+      return M.chain(eff('aj:' + i), _6);
     }
   }
 
   function _5() {
     j += 10;
-    return M.jump(void 0, _4, _9);
+    return M.jump(void 0, _4);
   }
 
   function _6() {
     i++;
-    return M.jump(void 0, _2, _9);
+    return M.jump(void 0, _2);
   }
 
   function _7() {
-    return M.chain(eff('ai'), _8, _9);
+    return M.chain(eff('ai'), _8);
   }
 
-  function _8() {
-    return M.pure();
-  }
-
-  function _9(e) {
-    return M.raise(e);
-  }
+  function _8() {}
 });
 
 function a() {
   var i;
-  return M.chain(eff('b'), _1, _5);
+  return M.chain(eff('b'), _1);
 
   function _1() {
     i = 0;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
   function _2() {
@@ -171,36 +147,30 @@ function a() {
         console.log(i);
       }
 
-      return M.chain(eff(i), _3, _5);
+      return M.chain(eff(i), _3);
     } else {
-      return M.chain(eff('a'), _4, _5);
+      return M.chain(eff('a'), _4);
     }
   }
 
   function _3() {
     i++;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
-  function _4() {
-    return M.pure();
-  }
-
-  function _5(e) {
-    return M.raise(e);
-  }
+  function _4() {}
 }
 
 ;
 
 function a1() {
   var i, j;
-  return M.chain(eff('b'), _1, _5);
+  return M.chain(eff('b'), _1);
 
   function _1() {
     i = 0;
     j = 10;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
   function _2() {
@@ -209,45 +179,35 @@ function a1() {
         console.log(i, j);
       }
 
-      return M.chain(eff(i, j), _3, _5);
+      return M.chain(eff(i, j), _3);
     } else {
-      return M.chain(effRes(i, j), _4, _5);
+      return M.chain(effRes(i, j), _4);
     }
   }
 
   function _3() {
     i++, j += 2;
-    return M.jump(void 0, _2, _5);
+    return M.jump(void 0, _2);
   }
 
-  function _4() {
-    return M.pure();
-  }
-
-  function _5(e) {
-    return M.raise(e);
-  }
+  function _4() {}
 }
 
 function b() {
-  return M.chain(eff('b'), _1, _2);
+  return M.chain(eff('b'), _1);
 
   function _1() {
     if (i === 2) {
       console.log(i);
     }
 
-    return M.chain(eff(i), _1, _2);
-  }
-
-  function _2(e) {
-    return M.raise(e);
+    return M.chain(eff(i), _1);
   }
 }
 
 function c() {
   var r;
-  return M.chain(eff('b'), _1, _2);
+  return M.chain(eff('b'), _1);
 
   function _1() {
     if (i === 2) {
@@ -255,14 +215,10 @@ function c() {
     }
 
     if (i === 3) {
-      return M.pure(10);
+      return 10;
     } else {
-      return M.chain(eff(i), _1, _2);
+      return M.chain(eff(i), _1);
     }
-  }
-
-  function _2(e) {
-    return M.raise(e);
   }
 }
 
@@ -270,87 +226,69 @@ function d() {
   var result, i;
   result = 0;
   i = 0;
-  return M.jump(void 0, _1, _4);
+  return M.jump(void 0, _1);
 
   function _1() {
     if (i < 10) {
-      return M.chain(eff(result, i), _2, _4);
+      return M.chain(eff(result, i), _2);
     } else {
-      return M.chain(eff(result), _3, _4);
+      return M.chain(eff(result), _3);
     }
   }
 
   function _2(a) {
     result = a;
     i++;
-    return M.jump(void 0, _1, _4);
+    return M.jump(void 0, _1);
   }
 
-  function _3() {
-    return M.pure();
-  }
-
-  function _4(e) {
-    return M.raise(e);
-  }
+  function _3() {}
 }
 
 function e() {
   var result, i;
   result = 0;
   i = 0;
-  return M.jump(void 0, _1, _4);
+  return M.jump(void 0, _1);
 
   function _1() {
     if (i < 10) {
-      return M.chain(eff(i), _2, _4);
+      return M.chain(eff(i), _2);
     } else {
-      return M.chain(eff(), _3, _4);
+      return M.chain(eff(), _3);
     }
   }
 
   function _2(a) {
     result = a;
     i++;
-    return M.jump(void 0, _1, _4);
+    return M.jump(void 0, _1);
   }
 
-  function _3() {
-    return M.pure();
-  }
-
-  function _4(e) {
-    return M.raise(e);
-  }
+  function _3() {}
 }
 
 function f() {
   var result, i;
   result = 0;
   i = 0;
-  return M.jump(void 0, _1, _4);
+  return M.jump(void 0, _1);
 
   function _1() {
     if (i < 10) {
-      return M.chain(eff(i), _2, _4);
+      return M.chain(eff(i), _2);
     } else {
-      return M.chain(eff(result), _3, _4);
+      return M.chain(eff(result), _3);
     }
   }
 
   function _2(a) {
     result = a;
     i++;
-    return M.jump(void 0, _1, _4);
+    return M.jump(void 0, _1);
   }
 
-  function _3() {
-    return M.pure();
-  }
-
-  function _4(e) {
-    return M.raise(e);
-  }
+  function _3() {}
 }
 
 function c1() {
@@ -362,36 +300,24 @@ function c1() {
       result[i] = function cc() {
         var a;
         a = result += i++;
-        return M.chain(eff(a), _1, _2);
+        return M.chain(eff(a), _1);
 
-        function _1() {
-          return M.pure();
-        }
-
-        function _2(e) {
-          return M.raise(e);
-        }
+        function _1() {}
       };
     })(i);
   }
 
   a = result;
-  return M.chain(eff(a), _1, _2);
+  return M.chain(eff(a), _1);
 
-  function _1() {
-    return M.pure();
-  }
-
-  function _2(e) {
-    return M.raise(e);
-  }
+  function _1() {}
 }
 
 function c2() {
   var result, i;
   result = [];
   i = 0;
-  return M.jump(void 0, _1, _3);
+  return M.jump(void 0, _1);
 
   function _1() {
     var a;
@@ -401,46 +327,29 @@ function c2() {
         return M.chain(eff(function cc() {
           var a;
           a = result += i++;
-          return M.chain(eff(a), _1, _2);
+          return M.chain(eff(a), _1);
 
-          function _1() {
-            return M.pure();
-          }
-
-          function _2(e) {
-            return M.raise(e);
-          }
-        }), _1, _2);
+          function _1() {}
+        }), _1);
 
         function _1(a) {
           result[i] = a;
-          return M.pure();
         }
-
-        function _2(e) {
-          return M.raise(e);
-        }
-      })(i), _1, _3);
+      })(i), _1);
     } else {
       a = result;
-      return M.chain(eff(a), _2, _3);
+      return M.chain(eff(a), _2);
     }
   }
 
-  function _2() {
-    return M.pure();
-  }
-
-  function _3(e) {
-    return M.raise(e);
-  }
+  function _2() {}
 }
 
 function c2() {
   var result, i;
   result = [];
   i = 0;
-  return M.jump(void 0, _1, _3);
+  return M.jump(void 0, _1);
 
   function _1() {
     var a;
@@ -452,41 +361,24 @@ function c2() {
         return M.chain(function cc(j) {
           var a;
           a = result += i += j;
-          return M.chain(eff(a), _1, _2);
+          return M.chain(eff(a), _1);
 
-          function _1() {
-            return M.pure();
-          }
-
-          function _2(e) {
-            return M.raise(e);
-          }
-        }(a), _1, _3);
+          function _1() {}
+        }(a), _1);
 
         function _1(a) {
-          return M.chain(eff(a), _2, _3);
+          return M.chain(eff(a), _2);
         }
 
         function _2(a) {
           result[i] = a;
-          return M.pure();
         }
-
-        function _3(e) {
-          return M.raise(e);
-        }
-      })(i), _1, _3);
+      })(i), _1);
     } else {
       a = result;
-      return M.chain(eff(a), _2, _3);
+      return M.chain(eff(a), _2);
     }
   }
 
-  function _2() {
-    return M.pure();
-  }
-
-  function _3(e) {
-    return M.raise(e);
-  }
+  function _2() {}
 }

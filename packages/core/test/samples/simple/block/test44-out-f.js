@@ -2,25 +2,17 @@ import * as M from '@effectful/core';
 
 function a() {
   var r;
-  return M.chain(eff1(), _1, _4);
+  return M.chain(eff1(), _1);
 
   function _1() {
     if (a) {
-      return M.chain(eff5(5), _3, _4);
+      return eff5(5);
     } else {
-      return M.chain(eff6(), _2, _4);
+      return M.chain(eff6(), _2);
     }
   }
 
   function _2() {
-    return M.pure(r);
-  }
-
-  function _3(r) {
-    return M.pure(r);
-  }
-
-  function _4(e) {
-    return M.raise(e);
+    return r;
   }
 }

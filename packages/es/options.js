@@ -32,6 +32,11 @@ const rebind = {
     coerce:false,
     contextBy:"this",
     shortFrameNames:false,
+    keepLastPure:true,
+    keepLastRaise:true,
+    inlineRaiseOp:null,
+    inlineScopeOp:null,
+    inlinePureJumps:null,
     contextMethodOpsSpec: {
       iterator: false,
       iteratorM: false,
@@ -45,9 +50,7 @@ const rebind = {
     scopePostfix:true,
     wrapFunction: "generatorFunction",
     storeResultCont:"$exit",
-    keepLastPure:true,
-    ops:{YieldExpression: true},
-    keepLastRaise:true
+    ops:{YieldExpression: true}
   },
   async: {
     bindName:"chain",

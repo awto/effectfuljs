@@ -11,10 +11,10 @@ function a() {
   function _2(a) {
     if (a) {
       fc = _5, fe = _6;
-      return M.jump(void 0, _3, _6);
+      return M.jump(void 0, _3);
     } else {
       fc = _4, fe = _6;
-      return M.jump(void 0, _3, _6);
+      return M.jump(void 0, _3);
     }
   }
 
@@ -26,9 +26,7 @@ function a() {
     return M.chain(eff('after `finally`'), _5, _6);
   }
 
-  function _5() {
-    return M.pure();
-  }
+  function _5() {}
 
   function _6(e) {
     return M.raise(e);
@@ -40,6 +38,6 @@ function a() {
 
   function _8(a) {
     fc = _7, fe = _6, err = a;
-    return M.jump(void 0, _3, _6);
+    return M.jump(void 0, _3);
   }
 }

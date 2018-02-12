@@ -1439,6 +1439,12 @@ function cleanup(si) {
               i.value.catchContRedir.required = true
               
           }
+          if (!needErrorCont && i.value.catchCont
+              && i.value.catchCont.frameArgs) {
+            const args = i.value.catchCont.frameArgs
+            if ([...args.values()].indexOf(errFrameRedir.declSym) !== -1)
+              errFrameRedir.required = true
+          }
           if (i.value.resultContRedir) {
             if (needResultCont)
               i.value.resultContRedir.required = true

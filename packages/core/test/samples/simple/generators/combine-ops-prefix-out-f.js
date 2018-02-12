@@ -2,27 +2,27 @@ import * as M from '@effectful/core';
 
 function d(i) {
   var j, r;
-  return M.scope(_1, _7);
+  return M.scope(_1);
 
   function _1() {
     var a;
     j = 0;
     a = i++;
-    return M.yld(a, _2, _7);
+    return M.yld(a, _2);
   }
 
   function _2(a) {
     var b;
     b = j++;
-    return M.yld((a, b), _3, _7);
+    return M.yld((a, b), _3);
   }
 
   function _3() {
-    return M.yldStar(some(i += 2, j) + j, _4, _7);
+    return M.yldStar(some(i += 2, j) + j, _4);
   }
 
   function _4(a) {
-    return M.yld(a, _5, _7);
+    return M.yld(a, _5);
   }
 
   function _5(a) {
@@ -30,24 +30,16 @@ function d(i) {
 
     if (a) {
       b = i += 3;
-      return M.yldStar(b, _6, _7);
+      return b;
     } else {
       return M.pure(i);
     }
-  }
-
-  function _6(r) {
-    return M.pure(r);
-  }
-
-  function _7(e) {
-    return M.raise(e);
   }
 }
 
 function a4() {
   var e, ex, a, fc, fe, err;
-  return M.scope(_1, _12);
+  return M.scope(_1);
 
   function _1() {
     return M.yld(1, _2, _14);
@@ -59,7 +51,7 @@ function a4() {
 
   function _3() {
     fc = _8, fe = _12;
-    return M.yld(3, _6, _12);
+    return M.yld(3, _6);
   }
 
   function _4() {
@@ -69,11 +61,11 @@ function a4() {
 
   function _5() {
     fc = _8, fe = _12;
-    return M.yld(e, _6, _12);
+    return M.yld(e, _6);
   }
 
   function _6() {
-    return M.yld('f', _7, _12);
+    return M.yld('f', _7);
   }
 
   function _7() {
@@ -83,14 +75,14 @@ function a4() {
   function _8() {
     var a;
     a = a2();
-    return M.yldStar(a, _9, _12);
+    return M.yldStar(a, _9);
   }
 
   function _9(c) {
     var b;
     a = c;
     b = a3();
-    return M.yldStar(b, _10, _12);
+    return M.yldStar(b, _10);
   }
 
   function _10(c) {
@@ -118,13 +110,13 @@ function a4() {
 
   function _15(a) {
     fc = _13, fe = _12, err = a;
-    return M.jump(void 0, _6, _12);
+    return M.jump(void 0, _6);
   }
 }
 
 function a5() {
   var i, loop, fc, fe, err;
-  return M.scope(_1, _5);
+  return M.scope(_1);
 
   function _1() {
     loop = M.iterator(a4());
@@ -137,7 +129,7 @@ function a5() {
       return M.yld(i, _2, _7);
     } else {
       fc = _4, fe = _5;
-      return M.jump(void 0, _3, _5);
+      return M.jump(void 0, _3);
     }
   }
 
@@ -163,6 +155,6 @@ function a5() {
 
   function _7(a) {
     fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _3, _5);
+    return M.jump(void 0, _3);
   }
 }

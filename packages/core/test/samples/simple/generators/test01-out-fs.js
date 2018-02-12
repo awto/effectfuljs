@@ -1,27 +1,27 @@
 import * as M from '@effectful/core';
 
 function d(i) {
-  return M.scope(_1, _8, i);
+  return M.scope(_1, i);
 
   function _1(b, i) {
     var j, a;
     j = 0;
     a = i++;
-    return M.yldStar(M.yld(a), _2, _8, i, j);
+    return M.yldStar(M.yld(a), _2, i, j);
   }
 
   function _2(a, i, j) {
     var b;
     b = j++;
-    return M.yldStar(M.yld((a, b)), _3, _8, i, j);
+    return M.yldStar(M.yld((a, b)), _3, i, j);
   }
 
   function _3(i, j) {
-    return M.yldStar(M.yldStar(some(i += 2, j) + j), _4, _8, i, j);
+    return M.yldStar(M.yldStar(some(i += 2, j) + j), _4, i, j);
   }
 
   function _4(a, i, j) {
-    return M.yldStar(M.yld(a), _5, _8, i, j);
+    return M.yldStar(M.yld(a), _5, i, j);
   }
 
   function _5(a, i, j) {
@@ -29,12 +29,12 @@ function d(i) {
 
     if (a) {
       b = i += 3;
-      return M.yldStar(M.yldStar(b), _7, _8);
+      return M.yldStar(b);
     } else {
       if (j) {
         return M.pure(i);
       } else {
-        return M.yldStar(M.yld(2), _6, _8);
+        return M.yldStar(M.yld(2), _6);
       }
     }
   }
@@ -43,19 +43,11 @@ function d(i) {
     var r;
     return M.pure(r);
   }
-
-  function _7(r) {
-    return M.pure(r);
-  }
-
-  function _8(e) {
-    return M.raise(e);
-  }
 }
 
 function a4() {
   var e;
-  return M.scope(_1, _11);
+  return M.scope(_1);
 
   function _1() {
     return M.yldStar(M.yld(1), _2, _13);
@@ -66,7 +58,7 @@ function a4() {
   }
 
   function _3() {
-    return M.yldStar(M.yld(3), _6, _11, _8, _11);
+    return M.yldStar(M.yld(3), _6, _8, _11);
   }
 
   function _4(ex) {
@@ -75,11 +67,11 @@ function a4() {
   }
 
   function _5() {
-    return M.yldStar(M.yld(e), _6, _11, _8, _11);
+    return M.yldStar(M.yld(e), _6, _8, _11);
   }
 
   function _6(fc, fe, err) {
-    return M.yldStar(M.yld('f'), _7, _11, fc, fe, err);
+    return M.yldStar(M.yld('f'), _7, fc, fe, err);
   }
 
   function _7(fc, fe, err) {
@@ -89,7 +81,7 @@ function a4() {
   function _8() {
     var a;
     a = a2();
-    return M.yldStar(M.yldStar(a), _9, _11);
+    return M.yldStar(M.yldStar(a), _9);
   }
 
   function _9(a) {
@@ -113,13 +105,13 @@ function a4() {
   }
 
   function _14(a) {
-    return M.jump(void 0, _6, _11, _12, _11, a);
+    return M.jump(void 0, _6, _12, _11, a);
   }
 }
 
 function a5() {
   var i;
-  return M.scope(_1, _5);
+  return M.scope(_1);
 
   function _1() {
     var loop;
@@ -132,7 +124,7 @@ function a5() {
       i = loop.value;
       return M.yldStar(M.yld(i), _2, _7, loop);
     } else {
-      return M.jump(void 0, _3, _5, _4, _5);
+      return M.jump(void 0, _3, _4, _5);
     }
   }
 
@@ -157,13 +149,13 @@ function a5() {
   }
 
   function _7(a) {
-    return M.jump(void 0, _3, _5, _6, _5, a);
+    return M.jump(void 0, _3, _6, _5, a);
   }
 }
 
 function cfb1() {
   var e;
-  return M.scope(_1, _10);
+  return M.scope(_1);
 
   function _1() {
     var i;
@@ -188,16 +180,16 @@ function cfb1() {
   }
 
   function _5(i, ex, err) {
-    return M.yldStar(M.yld(`b${i++}`), _9, _10, i, err);
+    return M.yldStar(M.yld(`b${i++}`), _9, i, err);
   }
 
   function _6(i, ex) {
     e = ex;
-    return M.yldStar(M.yld(`e${i}`), _7, _10, i);
+    return M.yldStar(M.yld(`e${i}`), _7, i);
   }
 
   function _7(i) {
-    return M.yldStar(M.yld(e), _8, _10, i);
+    return M.yldStar(M.yld(e), _8, i);
   }
 
   function _8(i) {
@@ -214,7 +206,7 @@ function cfb1() {
   }
 
   function _11(a) {
-    return M.jump(void 0, _6, _10, void 0, a);
+    return M.jump(void 0, _6, void 0, a);
   }
 
   function _12(a) {
@@ -223,82 +215,58 @@ function cfb1() {
 }
 
 function c() {
-  return M.scope(_1, _3);
+  return M.scope(_1);
 
   function _1() {
-    return M.yldStar(M.yld(1), _2, _3);
+    return M.yldStar(M.yld(1), _2);
   }
 
   function _2() {
     return M.pure();
   }
-
-  function _3(e) {
-    return M.raise(e);
-  }
 }
 
 const v = v => {
-  return M.scope(_1, _3);
+  return M.scope(_1);
 
   function _1() {
-    return M.chain(M.chain(v), _2, _3);
-  }
-
-  function _2(r) {
-    return M.pure(r);
-  }
-
-  function _3(e) {
-    return M.raise(e);
+    return M.chain(v);
   }
 };
 
 const obj = {
   a1: function () {
-    return M.scope(_1, _3);
+    return M.scope(_1);
 
     function _1() {
-      return M.yldStar(M.yld(1), _2, _3);
+      return M.yldStar(M.yld(1), _2);
     }
 
     function _2() {
       return M.pure();
-    }
-
-    function _3(e) {
-      return M.raise(e);
     }
   },
   a2: function (a) {
-    return M.scope(_1, _3);
+    return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(a), _2, _3);
+      return M.chain(M.chain(a), _2);
     }
 
     function _2() {
       return M.pure();
-    }
-
-    function _3(e) {
-      return M.raise(e);
     }
   },
 
   a3(a, b) {
-    return M.scope(_1, _3);
+    return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(a), _2, _3);
+      return M.chain(M.chain(a), _2);
     }
 
     function _2() {
       return M.pure();
-    }
-
-    function _3(e) {
-      return M.raise(e);
     }
   }
 
@@ -306,34 +274,26 @@ const obj = {
 
 class A {
   static a(b) {
-    return M.scope(_1, _3);
+    return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(b), _2, _3);
+      return M.chain(M.chain(b), _2);
     }
 
     function _2() {
       return M.pure();
-    }
-
-    function _3(e) {
-      return M.raise(e);
     }
   }
 
   b(a) {
-    return M.scope(_1, _3);
+    return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(a), _2, _3);
+      return M.chain(M.chain(a), _2);
     }
 
     function _2() {
       return M.pure();
-    }
-
-    function _3(e) {
-      return M.raise(e);
     }
   }
 

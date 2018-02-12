@@ -99,21 +99,34 @@ export function inject(s) {
   return walk(sl)
   function* walk(sw) {
     for(const i of sw) {
-      yield i
-      if (i.enter && i.type === Block.app
-          && i.value.static === false) {
-        yield sl.enter(i.pos,expr)
-        yield* walk(sl.one())
-        yield* sl.leave()
-        continue
+      if (i.enter && i.type === Block.app) {
+        if (i.value.static === false) {
+          yield i
+          yield sl.enter(i.pos,expr)
+          yield* walk(sl.one())
+          yield* sl.leave()
+          continue
+        }
+        if (i.value.sym === Block.pureId) {
+          if (sl.curLev()) {
+            const inner = Kit.toArray(sl.sub())
+            inner[0].value.result = true
+            yield* inner
+          }
+          sl.close(i)
+          continue
+        }
       }
+      yield i
     }
   }
 }
 
 export function interpret(s) {
   const sl = Kit.auto(s)
-  function* walk() {
+  if (!sl.opts.coerce)
+    return sl
+  function* _interpret() {
     for(const i of sl.sub()) {
         switch(i.type) {
         case expr:
@@ -123,7 +136,7 @@ export function interpret(s) {
               continue
             switch(j.type) {
             case Block.effExpr:
-              yield* Kit.reposOne(walk(),i.pos)
+              yield* Kit.reposOne(_interpret(),i.pos)
               continue
             }
             const lab = sl.label()
@@ -131,7 +144,7 @@ export function interpret(s) {
             yield sl.enter(Tag.expression,Tag.CallExpression)
             yield sl.tok(Tag.callee,Tag.Identifier,{sym:coerceSymNs})
             yield sl.enter(Tag.arguments,Tag.Array)
-            yield* Kit.reposOne(walk(),Tag.push)
+            yield* Kit.reposOne(_interpret(),Tag.push)
             yield* lab()
           }
           continue
@@ -139,5 +152,5 @@ export function interpret(s) {
       yield i
     }
   }
-  return walk()
+  return _interpret()
 }

@@ -151,8 +151,8 @@ export default {
   inlineScopeOp: null, // "unwrap" | "call" | "context" | null
   inlineYieldOp: null, // "iterator" | null
   inlineYieldStarOp: null, // "iterator" | null
-  inlinePureOp:null,   // "noop" | "iterator" | "promise" | null
-  inlineRaiseOp:null,  // "throw" | "promise" | null
+  inlinePureOp: null,   // "noop" | "iterator" | "promise" | null
+  inlineRaiseOp: null,  // "throw" | "promise" | null
 
   // creates a copy of context with each variable copied on each suspendable op
   // TODO: not yet implemented
@@ -183,10 +183,10 @@ export default {
   reuseTempVars: true,
 
   // always calls `pure` operation at return
-  keepLastPure: true,
+  keepLastPure:false,
 
   // always calls `raise` operation at function's exit by exception
-  keepLastRaise: true,
+  keepLastRaise:false,
   
   // inline assigning of error and result continuations into context
   // specifies name of a context's field to assign it to

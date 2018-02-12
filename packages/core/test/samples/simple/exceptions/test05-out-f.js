@@ -6,14 +6,14 @@ function a() {
 
   function _1() {
     fc = _4, fe = _5;
-    return M.chain(eff(1), _3, _5);
+    return M.chain(eff(1), _3);
   }
 
   function _2() {
     e = ex;
     console.log(e);
     fc = _4, fe = _5;
-    return M.jump(void 0, _3, _5);
+    return M.jump(void 0, _3);
   }
 
   function _3() {
@@ -21,9 +21,7 @@ function a() {
     return M.jump(void 0, fc, fe);
   }
 
-  function _4() {
-    return M.pure();
-  }
+  function _4() {}
 
   function _5(e) {
     return M.raise(e);
@@ -40,6 +38,6 @@ function a() {
 
   function _8(a) {
     fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _3, _5);
+    return M.jump(void 0, _3);
   }
 }
