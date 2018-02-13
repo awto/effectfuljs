@@ -115,8 +115,8 @@ There are babel presets in separate packages.
 All the presets are just shortcuts to
 [@effectful/core](https://github.com/awto/effectfuljs/tree/master/packages/es)
 setting needed lower level options described in
-[config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js).
-
+[config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js)
+thus generated code uses different runtime interfaces.
 
 ## Known major limitations
  * ES6 supper just replaced with `Object.getPrototypeOf(...)` and `call`, 

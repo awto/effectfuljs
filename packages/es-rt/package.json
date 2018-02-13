@@ -29,7 +29,7 @@
     "build-tl": "cross-env EJS_ENV=defunct,loose npm run build-bundle-opt",
     "build-ti": "cross-env EJS_ENV=defunct,inline npm run build-bundle-opt",
     "build-d": "cross-env EJS_ENV=local,delegate,inline npm run build-bundle-opt",
-    "build-dl": "cross-env EJS_ENV=local,notail,delegate,loose npm run build-bundle-opt",
+    "build-dl": "cross-env EJS_ENV=local,delegate,loose npm run build-bundle-opt",
     "prepare": "npm run build"
   },
   "keywords": [

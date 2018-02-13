@@ -4,6 +4,12 @@
       "plugins": [["transform-es2015-modules-commonjs",
                    {"loose":true,"noInterop":true}]]
     },
+    "regenerator": {"presets":[["env",{"useBuiltIns": true}]],
+                    "plugins":[["transform-runtime", {
+                      "helpers": false,
+                      "polyfill": false,
+                      "regenerator": true,
+                    }]]},
     "loose": {
       "passPerPreset": true,
       "presets": [
@@ -12,6 +18,7 @@
           "all": {
             "jsExceptions":false,
             "inlineJsExceptions":false,
+            "jsTailCalls":true,
             "inlineThrow":true,
             "loopBlockScoping":false,
             "moduleAliases":{
@@ -29,6 +36,26 @@
         }
       ]
     },
+    "abstract": {
+      "passPerPreset": true,
+      "presets": [
+        ["es-dev",{
+          "all":{
+            "moduleAliases":{
+              "@effectful/transducers":"@effectful/transducers-loose",
+              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
+              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
+              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
+              "@effectful/transducers/match":"@effectful/transducers-loose/match"
+            }
+          }
+        }],
+        {
+          "plugins": [["transform-es2015-modules-commonjs",
+                       {"loose":true,"noInterop":true}]]
+        }
+      ]
+    },
     "loose-defunct-top": {
       "passPerPreset": true,
       "presets": [
@@ -36,10 +63,63 @@
          {"loose":true,
           "topLevel":true,
           "defunct":true,
-          "importRT":"@effectful/es-rt/opts/defunct-loose",
-          "loopBlockScoping":false,
           "all": {
+            "loopBlockScoping":false,
             "jsExceptions":false,
+            "inlineJsExceptions":false,
+            "inlineThrow":true,
+            "moduleAliases":{
+              "@effectful/transducers":"@effectful/transducers-loose",
+              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
+              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
+              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
+              "@effectful/transducers/match":"@effectful/transducers-loose/match"
+            }
+          }
+         }],
+        {
+          "plugins": [["transform-es2015-modules-commonjs",
+                       {"loose":true,"noInterop":true}]]
+        }
+      ]
+    },
+    "loose-defunct": {
+      "passPerPreset": true,
+      "presets": [
+        ["es-dev",
+         {"loose":true,
+          "defunct":true,
+          "all": {
+            "loopBlockScoping":false,
+            "jsExceptions":false,
+            "inlineJsExceptions":false,
+            "inlineThrow":true,
+            "moduleAliases":{
+              "@effectful/transducers":"@effectful/transducers-loose",
+              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
+              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
+              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
+              "@effectful/transducers/match":"@effectful/transducers-loose/match"
+            }
+          }
+         }],
+        {
+          "plugins": [["transform-es2015-modules-commonjs",
+                       {"loose":true,"noInterop":true}]]
+        }
+      ]
+    },
+    "loose-top": {
+      "passPerPreset": true,
+      "presets": [
+        ["es-dev",
+         {"loose":true,
+          "defunct":false,
+          "top":true,
+          "all": {
+            "loopBlockScoping":false,
+            "jsExceptions":false,
+            "jsTailCalls":true,
             "inlineJsExceptions":false,
             "inlineThrow":true,
             "moduleAliases":{
