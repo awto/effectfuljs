@@ -72,6 +72,8 @@ const globals = Scope.newSym("g")
 function replaceCalls(si) {
   const s = Kit.auto(si)
   s.first.value.ctxSym = globals
+  const noConstrs = s.opts.noClosConstrs
+  const noThis = s.opts.noClosThis
   function* walk(sw,decls) {
     for(const i of sw) {
       if (i.enter) {
@@ -79,10 +81,12 @@ function replaceCalls(si) {
         case Tag.FunctionDeclaration:
         case Tag.FunctionExpression:
           yield i
-          i.value.ctxSym = thisSym
+          i.value.ctxSym = Scope.newSym("loc") // thisSym
           yield* walk(s.sub(),i.value.clDecls)
           continue
         case Tag.NewExpression:
+          if (noConstrs)
+              break
         case Tag.CallExpression:
           const j = s.curLev()
           const lab = s.label()
@@ -90,7 +94,7 @@ function replaceCalls(si) {
           yield s.peel(Kit.setType(i, Tag.CallExpression))
           yield s.enter(Tag.callee,Tag.MemberExpression)
           let sym
-          if (j.type === Tag.MemberExpression) {
+          if (j.type === Tag.MemberExpression && !noThis) {
             s.take()
             yield s.enter(Tag.object,j.type,j.value)
             const k = s.curLev()
@@ -114,7 +118,7 @@ function replaceCalls(si) {
                       {node:{name:constr?"constr":"call"}})
           yield* s.leave()
           yield s.peel()
-          if (!constr)
+          if (!constr && !noThis)
             yield s.tok(Tag.push,Tag.Identifier,{sym})
           yield* walk(s.sub(),decls)
           yield* s.leave()
@@ -131,12 +135,14 @@ function replaceCalls(si) {
 function* functToObj(si) {
   const s = Kit.auto(si)
   const hoisted = []
-  const rtSym = new Scope.newSym("RT")
+  const rtSym = Scope.newSym("RT")
   const closureSym = s.first.value.closureSym
   const dpref = s.opts.closDepPrefix || ""
   const dpost = s.opts.closDepPostfix || ""
+  const noThis = s.opts.noClosThis
+  const root = s.first.value
   function* walk(sw,root,blockHoisted) {
-    const selfSym = root.selfSym = Scope.newSym("self")
+    const selfSym = root.selfSym = !noThis && Scope.newSym("self")
     function* func(i,pos) {
       const sym = i.value.closSym
       yield* s.template(pos, "=new $I($_)", {funcVal:i.value}, sym)
@@ -166,6 +172,8 @@ function* functToObj(si) {
           yield* s.leave()
           continue
         case Tag.ThisExpression:
+          if (!selfSym)
+            throw new Error("`this` is not supported with `noClosThis:true`")
           yield s.tok(i.pos,Tag.Identifier,{sym:selfSym})
           s.close(i)
           continue
@@ -232,13 +240,11 @@ function* functToObj(si) {
       copies.push(sym)
       sym.copyOf = j.closSym
       yield s.tok(Tag.push,Tag.Identifier,{sym})
-//      yield s.tok(Tag.push,Tag.Identifier,{sym:j.closSym})
     }
     yield* s.refocus()
     for(const j of fun.closDeps)
-      yield* s.toks(Tag.push,`$1.${dpref}${j.closSym.name}${dpost} = $2`,
-                    fun.ctxSym,copies.shift()
-                   )
+      yield* s.toks(Tag.push,`this.${dpref}${j.closSym.name}${dpost} = $I`,
+                    copies.shift())
     yield* s.refocus()
     yield s.enter(Tag.push,Tag.FunctionExpression,fun)
     if (s.cur().pos === Tag.id)
@@ -250,11 +256,29 @@ function* functToObj(si) {
   }
   yield* Kit.fileBody(s)
   const buf = Kit.toArray(walk(s,s.first.value,hoisted))
-  yield* s.toks(Tag.push,"var $I = {}",s.first.value.ctxSym)
   for(const i of hoisted)
     yield* i
   yield* buf
   yield* s
+}
+
+function* injectLocObjs(si) {
+  const s = Kit.auto(si)
+  for(const i of s) {
+    yield i
+    if (i.enter) {
+      switch(i.type) {
+      case Tag.File:
+      case Tag.FunctionExpression:
+      case Tag.FunctionDeclaration:
+        if (i.value.ctxSym
+            && i.value.clDecls.some(i => i.refScopes && i.refScopes.size)) {
+          yield* Kit.fileBody(s)
+          yield* s.toks(Tag.push,`var $I = {}`,i.value.ctxSym)
+        }
+      }
+    }
+  }
 }
 
 function substIds(si) {
@@ -309,7 +333,8 @@ function substIds(si) {
         case Tag.FunctionExpression:
           yield i
           yield* s.till(i => i.pos === Tag.params)
-          yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.selfSym})
+          if (i.value.selfSym)
+            yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.selfSym})
           yield* emitDecls(i.value)
           yield* walk(i.value)
           continue
@@ -325,13 +350,13 @@ function substIds(si) {
             } else if (sym.refScopes) {
               if (root === sym.declScope)
                 yield* s.toks(i.pos,`=$I.${vpref}${sym.name}${vpost}`,
-                              {origSym:root.ctxSym},root.ctxSym)
+                              {origSym:sym},root.ctxSym)
               else
                 yield* s.toks(
                   i.pos,
-                  `=$I.${dpref}${sym.declScope.closSym.name}${dpost}
+                  `=this.${dpref}${sym.declScope.closSym.orig}${dpost}
                       .${vpref}${sym.name}${vpost}`,
-                  root.ctxSym)
+                  {origSym:sym})
               s.close(i)
               continue
             }
@@ -353,5 +378,6 @@ export default Kit.pipe(
   functToObj,
   Kit.toArray,
   substIds,
+  injectLocObjs,
   RT.inline,
   Scope.resolve)

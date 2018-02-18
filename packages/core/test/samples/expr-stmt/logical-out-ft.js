@@ -116,7 +116,7 @@ function b() {
 }
 
 function a1() {
-  var a1 = M.generator();
+  var a1 = M.context();
   return M.scope(_a1_1);
 }
 

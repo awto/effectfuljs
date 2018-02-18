@@ -31,7 +31,7 @@ function aa() {
       function _1() {
         var a;
         a = Object.getPrototypeOf(B.prototype).method.call(_this);
-        return M.chain(M.chain(a), _2);
+        return M.chain(a, _2);
       }
 
       function _2(a) {
@@ -48,7 +48,7 @@ function aa() {
       function _1() {
         var a;
         a = Object.getPrototypeOf(B.prototype).method.call(_this);
-        return M.chain(M.chain(a), _2);
+        return M.chain(a, _2);
       }
 
       function _2(a) {

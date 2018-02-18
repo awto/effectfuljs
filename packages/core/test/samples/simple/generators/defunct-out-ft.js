@@ -1,28 +1,28 @@
 import * as M from '@effectful/core';
 
 function a() {
-  var a = M.generator();
+  var a = M.context();
   a.$run = a_1;
   a.$sc = 0;
   return M.scope();
 }
 
 function b() {
-  var b = M.generator();
+  var b = M.context();
   b.$run = b_1;
   b.$sc = 0;
   return M.scope();
 }
 
 function c() {
-  var c = M.generator();
+  var c = M.context();
   c.$run = c_1;
   c.$sc = 0;
   return M.scope();
 }
 
 function d() {
-  var d = M.generator();
+  var d = M.context();
   d.$run = d_1;
   d.$sc = 0;
   return M.scope();
@@ -34,7 +34,7 @@ async function af1() {
 }
 
 function b2() {
-  var b2 = M.generator();
+  var b2 = M.context();
   b2.$run = b2_1;
   b2.$sc = 0;
   return M.scope();

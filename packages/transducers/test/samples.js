@@ -427,8 +427,8 @@ describe("closure conversion", function() {
         gg(j).kk(1);
         new gg(0);
       }`)).to.equal(pretty(`
-        var apply;
         var g = {};
+        var apply;
         function _apply(fn) {
           this.fn = fn;
         }
@@ -449,21 +449,23 @@ describe("closure conversion", function() {
           this.ff = ff;
         }
         closure(_gg, function(self, k) {
+          var loc = {};
           var obj;
           obj = {
-            kk: new kk(this.ff, this)
+            kk: new kk(this.ff, loc)
           };
-          for (this.j of arr) {
-            this.ff.i += this.j + k;
+          for (loc.j of arr) {
+            this.ff.i += loc.j + k;
           }
           obj.kk.call(obj, 10);
           return obj;
         });
         function ff() {}
         closure(ff, function(self) {
+          var loc = {};
           var j, gg, temp;
-          gg = new _gg(this);
-          this.i = 0, j = 0;
+          gg = new _gg(loc);
+          loc.i = 0, j = 0;
           (temp = gg.call(void 0, j)).kk.call(temp, 1);
           gg.constr(0);
         });
@@ -496,10 +498,9 @@ describe("closure conversion", function() {
       
       console.log([{num:2},{num:1},{num:3}].sort(function(a, b) { return a.num - b.num; }))`
               )).to.equal(pretty(`
+        var g = {};
         var a, res, i, k, j, temp;
 
-        var g = {};
-        
         function _b(fn, a) {
           this.fn = fn;
           this.a = a;
@@ -515,11 +516,12 @@ describe("closure conversion", function() {
         }
         
         closure(_a, function(self, j) {
+          var loc = {}
           var b;
-          this.j = j;
-          b = new _b(this.fn, this);
+          loc.j = j;
+          b = new _b(this.fn, loc);
           
-          this.fn.i += this.j;
+          this.fn.i += loc.j;
           
           return b;
         });

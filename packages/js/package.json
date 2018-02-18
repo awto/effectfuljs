@@ -1,6 +1,6 @@
 {
   "name": "@effectful/js",
-  "version": "1.0.0",
+  "version": "0.1.4",
   "description": "Single level computation effects syntax",
   "main": "preset.js",
   "scripts": {

@@ -2,7 +2,7 @@ import * as M from '@effectful/core';
 
 function d(i) {
   var j,
-      d = M.generator(),
+      d = M.context(),
       r;
   return M.scope(_1);
 
@@ -41,7 +41,7 @@ function d(i) {
 
 function a4() {
   var e,
-      a4 = M.generator(),
+      a4 = M.context(),
       ex,
       a,
       fc,
@@ -124,7 +124,7 @@ function a4() {
 
 function a5() {
   var i,
-      a5 = M.generator(),
+      a5 = M.context(),
       loop,
       fc,
       fe,

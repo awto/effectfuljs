@@ -10,9 +10,6 @@ const fullOpts = {
       process:false,
       pack:false
     },
-    libNs: {
-      reify: false
-    },
     all: true,
     ns: true
   },
@@ -56,7 +53,10 @@ const postproc = Kit.pipe(
 
 export default Kit.pipe(
   function* init(si) {
-    const generators = Policy.injectFuncOpts({
+    const s = Kit.auto(si)
+    const defaults = s.opts.effectful
+    const disabled = Policy.injectFuncOpts(disabledOpts)
+    const generators = Policy.injectFuncOpts(Object.assign({
       generator:true,
       async:false,
       esRebind:true,
@@ -65,26 +65,26 @@ export default Kit.pipe(
       ops:generatorOps,
       coerce:false,
       scopePrefix:true,
-      scopeConstructor:"generator",
       bindName:"yldStar",
       requireFinalPure:true,
       pureForOf:true
-    })
-    const asyncDo = Policy.injectFuncOpts({
+    },defaults))
+    const asyncDo = Policy.injectFuncOpts(Object.assign({
       generator:false,
       async:true,
       bindCalls: {},
       esRebind:true,
       ops:generatorOps,
       coerce:false,
+      static:true,
       transform:true,
       scopePrefix:true,
-      scopeConstructor:"async",
+      combineOps:true,
       bindName:"chain",
       requireFinalPure:false,
       pureForOf:true
-    })
-    const asyncGeneratorsDo = Policy.injectFuncOpts({
+    },defaults))
+    const asyncGeneratorsDo = Policy.injectFuncOpts(Object.assign({
       generator:true,
       async:true,
       bindCalls: {},
@@ -93,13 +93,11 @@ export default Kit.pipe(
       coerce:false,
       transform:true,
       scopePrefix:true,
-      scopeConstructor:"asyncGenerator",
+      combineOps:{chain:true},
       bindName:"chain",
       requireFinalPure:false,
       pureForOf:true
-    })
-    const disabled = Policy.injectFuncOpts(disabledOpts)
-    const s = Kit.auto(si)
+    },defaults))
     yield Kit.tok(Policy.configDiff,{
       node: {
         profiles: {

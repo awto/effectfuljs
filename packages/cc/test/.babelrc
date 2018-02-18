@@ -1,0 +1,4 @@
+{
+  "passPerPreset": true,
+  "presets": [["../transform-async-do",{"detectRT":"../main"}]]
+}

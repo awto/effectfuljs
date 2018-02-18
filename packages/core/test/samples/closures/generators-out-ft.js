@@ -4,7 +4,7 @@ const a = w => {
   var ctx = {};
   ctx._w = w;
   return function mfs(s) {
-    var _mfs = M.generator();
+    var _mfs = M.context();
 
     _mfs._f = ctx;
     _mfs._s = s;
@@ -13,13 +13,13 @@ const a = w => {
 };
 
 function e1(k) {
-  var e1 = M.generator();
+  var e1 = M.context();
   e1._k = k;
   return M.scope(e1_1);
 }
 
 function e1(k) {
-  var e1 = M.generator();
+  var e1 = M.context();
   e1._k = k;
   return M.scope(_e1_1);
 }
@@ -48,7 +48,7 @@ function nn_3(nn) {
 function vv_1(_vv) {
   _vv._id = void 0;
   return M.yldStar(M.yld(function _nn(mm) {
-    var nn = M.generator();
+    var nn = M.context();
     nn._f = _vv._f;
     nn._mfs = _vv._mfs;
     nn._kk = _vv._kk;
@@ -69,7 +69,7 @@ function mfs_1(_mfs) {
     var _kk = {};
     _kk._k = k;
     return function vv(ww) {
-      var _vv = M.generator();
+      var _vv = M.context();
 
       _vv._f = _mfs._f;
       _vv._mfs = _mfs;
@@ -99,7 +99,7 @@ function e2_2(_e2) {
 function e1_2(e1) {
   return M.yldStar(M.yld(function p1(m) {
     return function e2(l) {
-      var _e2 = M.generator();
+      var _e2 = M.context();
 
       _e2._e1 = e1;
       _e2._l = l;
@@ -130,7 +130,7 @@ function e3_2(_e3) {
 
 function _e2_1(_e2) {
   return M.yldStar(M.yld(function e3(l) {
-    var _e3 = M.generator();
+    var _e3 = M.context();
 
     _e3._e1 = _e2._e1;
     _e3._l = l;
@@ -144,7 +144,7 @@ function _e2_2(_e2) {
 
 function _e1_2(e1) {
   return M.yldStar(M.yld(function e2(m) {
-    var _e2 = M.generator();
+    var _e2 = M.context();
 
     _e2._e1 = e1;
     _e2._m = m;

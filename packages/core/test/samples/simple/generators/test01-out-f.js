@@ -239,7 +239,7 @@ const v = v => {
   return M.scope(_1);
 
   function _1() {
-    return M.chain(v);
+    return v;
   }
 };
 
@@ -259,7 +259,7 @@ const obj = {
     return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(a), _2);
+      return M.chain(a, _2);
     }
 
     function _2() {
@@ -271,7 +271,7 @@ const obj = {
     return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(a), _2);
+      return M.chain(a, _2);
     }
 
     function _2() {
@@ -286,7 +286,7 @@ class A {
     return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(b), _2);
+      return M.chain(b, _2);
     }
 
     function _2() {
@@ -298,7 +298,7 @@ class A {
     return M.scope(_1);
 
     function _1() {
-      return M.chain(M.chain(a), _2);
+      return M.chain(a, _2);
     }
 
     function _2() {

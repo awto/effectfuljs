@@ -157,6 +157,7 @@ function namespaces(si) {
   const s = Kit.auto(si)
   const root = s.first.value
   const imports = root.imports
+  const verbose = s.opts.verbose
   if (!imports)
     return s
   const patStr = s.opts.presetsImportPattern
@@ -190,23 +191,28 @@ function namespaces(si) {
     $ns = Kit.scope.newSym(s.opts.ns || "M")
     // suppressing scope warning
     if (!imp)
-	    $ns.num = -1
+      $ns.num = -1
     $ns.global = true
   }
   root.$ns = $ns
   let cur = s
   if (imp) {
-    cur = applyLib(imp,true,cur)
     cur = applyLib(`${imp}-ct`,true,cur)
     cur = applyLib(`${imp}/ct`,true,cur)
   }
   for(const i of presets)
     cur = applyLib(i,false,cur)
   function applyLib(lib, optional, si) {
+    if (verbose)
+      console.log(`${optional ? "trying to apply" : "applying"
+                 } presets from ${lib}...`)
     const s = Kit.auto(si)
     const r = resolveImport(lib,s.opts,optional)
-    if (r != null)
+    if (r != null) {
       return r(s)
+    } else if (verbose) {
+      console.log(`no preset ${lib} found, that's probably ok`)
+    }
     return s
   }
   return cur
@@ -554,27 +560,25 @@ export function assignBindCalls(s) {
     for(const i of s) {
       if (i.type === Tag.CallExpression && i.value.opts.transform
           && i.value.bind == null) {
-        if (s.opts.bindCalls) {
+        const prof = s.opts.bindCalls
+        if (prof) {
           const j = s.cur()
           const q = i.value.qname
           if (q != null) {
-            const prof = s.opts.bindCalls
-            if (prof != null) {
-              let v = null
-              if (v == null && prof.byQName != null)
-                v = prof.byQName[q.join(".")]
-              if (v == null && prof.byId != null)
-                v = prof.byId[q[q.length-1]]
-              if (v == null && prof.byNs != null && q.length > 1)
-                v = prof.byNs[q[0]]
-              if (v == null && prof.libNs && q.length === 2
-                  && q[0] === $ns)
-                v = prof.libNs[q[1]]
-              if (v == null)
-                v = prof.all
-              if (v != null)
-                i.value.bind = v
-            }
+            let v = null
+            if (v == null && prof.byQName != null)
+              v = prof.byQName[q.join(".")]
+            if (v == null && prof.byId != null)
+              v = prof.byId[q[q.length-1]]
+            if (v == null && prof.byNs != null && q.length > 1)
+              v = prof.byNs[q[0]]
+            if (v == null && prof.libNs && q.length === 2
+                && q[0] === $ns.orig)
+              v = prof.libNs[q[1]]
+            if (v == null)
+              v = prof.all
+            if (v != null)
+              i.value.bind = v
           }
         }
       }
@@ -650,45 +654,6 @@ export function* propagateConfigDiff(s) {
     yield i
   }
 }
-
-/** puts user config options into the stream */
-/*
-function emitInitOptions(s) {
-  s = Kit.auto(s)
-  const res = collect()
-  if (s.opts.preset || s.opts.presetsImportPattern)
-    return ctImportPass(res)
-  return res
-  function* collect() {
-    function* preset(name) {
-      yield s.tok(ctImport,{name,optional:false})
-    }
-    let $ns
-    const root = s.first.value
-    root.skipFile = false
-    if (s.opts.importRT)
-      $ns = root.namespaces && root.namespaces.get(s.opts.importRT)
-    s.first.value.nsImported = !!$ns
-    if (!$ns) {
-      $ns = Kit.scope.newSym(s.opts.ns || "M")
-      // suppressing scope warning
-      if (!s.opts.importRT)
-	      $ns.num = -1
-      $ns.global = true
-    }
-    root.$ns = $ns
-    if (s.opts.preset != null) {
-      if (Array.isArray(s.opts.preset)) {
-        for(const i of s.opts.preset)
-          yield* preset(i)
-      } else {
-        yield* preset(s.opts.preset)
-      }
-    }
-    yield* s
-  }
-}
-*/
 
 /** combines a few preparation passes */
 export const prepare =

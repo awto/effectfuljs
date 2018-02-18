@@ -568,11 +568,11 @@ export const babelBridge = curry(function babelBridge(pass,path,state) {
                          file:Object.assign(state.file.opts),
                          babel:{root:path,state}},
                         _opts)
-  try {
+//  try {
     pass(produce({type:"File",program:path.node}))
-  } catch(e) {
-    throw path.hub.file.buildCodeFrameError(e.esNode, e.message)
-  }
+//  } catch(e) {
+//    throw path.hub.file.buildCodeFrameError(e.esNode, e.message)
+//  }
   _opts = optSave
 })
 

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": ".",
+    "lib": ["es6"],
+    "sourceMap": false,
+    "removeComments": false,
+    "strict": true,
+    "allowJs": false
+  },
+  "include": ["src/main.ts"],
+  "exclude": []
+}

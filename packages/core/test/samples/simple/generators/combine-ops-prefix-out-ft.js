@@ -1,18 +1,18 @@
 import * as M from '@effectful/core';
 
 function d(i) {
-  var d = M.generator();
+  var d = M.context();
   d._i = i;
   return M.scope(d_1);
 }
 
 function a4() {
-  var a4 = M.generator();
+  var a4 = M.context();
   return M.scope(a4_1);
 }
 
 function a5() {
-  var a5 = M.generator();
+  var a5 = M.context();
   return M.scope(a5_1);
 }
 

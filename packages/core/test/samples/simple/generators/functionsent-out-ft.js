@@ -1,7 +1,7 @@
 import * as M from '@effectful/core';
 
 function fSent() {
-  var fSent = M.generator();
+  var fSent = M.context();
   return M.scope(fSent_1);
 }
 

@@ -1,50 +1,50 @@
 import * as M from '@effectful/core';
 
 function d(i) {
-  var d = M.generator();
+  var d = M.context();
   d._i = i;
   return M.scope(d_1);
 }
 
 function a4() {
-  var a4 = M.generator();
+  var a4 = M.context();
   return M.scope(a4_1);
 }
 
 function a5() {
-  var a5 = M.generator();
+  var a5 = M.context();
   return M.scope(a5_1);
 }
 
 function cfb1() {
-  var cfb1 = M.generator();
+  var cfb1 = M.context();
   return M.scope(cfb1_1);
 }
 
 function c() {
-  var c = M.generator();
+  var c = M.context();
   return M.scope(c_1);
 }
 
 const v = v => {
-  var ctx = M.async();
+  var ctx = M.context();
   ctx._v = v;
   return M.scope(f_1);
 };
 
 const obj = {
   a1: function () {
-    var ctx = M.generator();
+    var ctx = M.context();
     return M.scope(_f_1);
   },
   a2: function (a) {
-    var ctx = M.async();
+    var ctx = M.context();
     ctx._a = a;
     return M.scope(f_11);
   },
 
   a3(a, b) {
-    var ctx = M.async();
+    var ctx = M.context();
     ctx._a = a;
     ctx._b = b;
     return M.scope(a3_1);
@@ -54,13 +54,13 @@ const obj = {
 
 class A {
   static a(b) {
-    var ctx = M.async();
+    var ctx = M.context();
     ctx._b = b;
     return M.scope(a_1);
   }
 
   b(a) {
-    var ctx = M.async();
+    var ctx = M.context();
     ctx._a = a;
     return M.scope(b_1);
   }
@@ -278,7 +278,7 @@ function c_2(c) {
 }
 
 function f_1(ctx) {
-  return M.chain(ctx._v);
+  return ctx._v;
 }
 
 function _f_1(ctx) {
@@ -290,7 +290,7 @@ function f_2(ctx) {
 }
 
 function f_11(ctx) {
-  return M.chain(M.chain(ctx._a), _f_2);
+  return M.chain(ctx._a, _f_2);
 }
 
 function _f_2(ctx) {
@@ -298,7 +298,7 @@ function _f_2(ctx) {
 }
 
 function a3_1(ctx) {
-  return M.chain(M.chain(ctx._a), a3_2);
+  return M.chain(ctx._a, a3_2);
 }
 
 function a3_2(ctx) {
@@ -306,7 +306,7 @@ function a3_2(ctx) {
 }
 
 function a_1(ctx) {
-  return M.chain(M.chain(ctx._b), a_2);
+  return M.chain(ctx._b, a_2);
 }
 
 function a_2(ctx) {
@@ -314,7 +314,7 @@ function a_2(ctx) {
 }
 
 function b_1(ctx) {
-  return M.chain(M.chain(ctx._a), b_2);
+  return M.chain(ctx._a, b_2);
 }
 
 function b_2(ctx) {

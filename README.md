@@ -8,15 +8,16 @@ There are such libraries for:
 
  * EcmaScript effects extensions (async functions, generators and async generators)
    [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
- * Multi-prompt delimited continuations - SOON [Old version](https://github.com/awto/mfjs-cc)
+ * Multi-prompt delimited continuations -
+   [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/cc)
  * Logical programming - SOON [Old version](https://github.com/awto/mfjs-logic)
- * Reactive programming (with RxJS) - [Old version](https://github.com/awto/mfjs-rx)
 
 Not yet implemented:
  * probabilistic programming
  * parallel and distributed programming
  * persistent continuations
  * adaptive computations
+ * reactive programming (with RxJS) - [Old version](https://github.com/awto/mfjs-rx)
 
 They are typically small libraries, some of them are just tiny wrappers
 around well known interfaces, such as Promises or Observables.

@@ -210,9 +210,13 @@ export default {
   // the defaults here are only for testing purposes
   libs: {
     "@effectful/core": core,
+    "@effectful/core-ct": core,
     "@effectful/js": core,
+    "@effectful/js-ct": core,
     "@effectful/es": es,
-    "@effectful/generators": es
+    "@effectful/es-ct": es,
+    "@effectful/generators": es,
+    "@effectful/generators-ct": es
   },
 
   // profile definitions (dictionary of same opts object)

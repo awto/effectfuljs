@@ -1,7 +1,7 @@
 import * as M from '@effectful/core';
 
 function a() {
-  var a = M.generator();
+  var a = M.context();
   return a.scope(_1);
 
   function _1(a) {
@@ -10,7 +10,7 @@ function a() {
 }
 
 function a1() {
-  var a1 = M.generator();
+  var a1 = M.context();
   return a1.scope(_1);
 
   function _1(a1) {
@@ -23,7 +23,7 @@ function a1() {
 }
 
 function a3() {
-  var a3 = M.generator();
+  var a3 = M.context();
   return a3.scope(_1);
 
   function _1(a3) {
@@ -32,7 +32,7 @@ function a3() {
 }
 
 function a2() {
-  var a2 = M.generator();
+  var a2 = M.context();
   return a2.scope(_1);
 
   function _1(a2) {
@@ -45,7 +45,7 @@ function a2() {
 }
 
 function a() {
-  var a = M.generator();
+  var a = M.context();
   return a.scope(_1);
 
   function _1(a) {
@@ -72,7 +72,7 @@ function a() {
 }
 
 function d(i) {
-  var d = M.generator();
+  var d = M.context();
   d._i = i;
   return d.scope(_1);
 
@@ -95,7 +95,7 @@ function d(i) {
 }
 
 function d2(i) {
-  var d2 = M.generator();
+  var d2 = M.context();
   d2._i = i;
   return d2.scope(_1);
 
@@ -133,7 +133,7 @@ function d2(i) {
 }
 
 function a4() {
-  var a4 = M.generator();
+  var a4 = M.context();
   return a4.scope(_1);
 
   function _1(a4) {
@@ -220,7 +220,7 @@ function a4() {
 }
 
 function a5() {
-  var a5 = M.generator();
+  var a5 = M.context();
   return a5.scope(_1);
 
   function _1(a5) {
@@ -265,7 +265,7 @@ function a5() {
 }
 
 function a6() {
-  var a6 = M.generator();
+  var a6 = M.context();
   return a6.scope(_1);
 
   function _1(a6) {
@@ -331,7 +331,7 @@ function a6() {
 }
 
 function a1() {
-  var a1 = M.generator();
+  var a1 = M.context();
   return a1.scope(_1);
 
   function _1(a1) {
@@ -344,7 +344,7 @@ function a1() {
 }
 
 function a2() {
-  var a2 = M.generator();
+  var a2 = M.context();
   return a2.scope(_1);
 
   function _1(a2) {
@@ -393,7 +393,7 @@ function a2() {
 }
 
 function a3() {
-  var a3 = M.generator();
+  var a3 = M.context();
   return a3.scope(_1);
 
   function _1(a3) {
@@ -438,7 +438,7 @@ function a3() {
 }
 
 function a6() {
-  var a6 = M.generator();
+  var a6 = M.context();
   return a6.scope(_1);
 
   function _1(a6) {
@@ -462,7 +462,7 @@ function a6() {
 }
 
 function a7() {
-  var a7 = M.generator();
+  var a7 = M.context();
   return a7.scope(_1);
 
   function _1(a7) {
@@ -505,7 +505,7 @@ function a7() {
 }
 
 function a7_1() {
-  var a7_1 = M.generator();
+  var a7_1 = M.context();
   return a7_1.scope(_1);
 
   function _1(a7_1) {
@@ -558,7 +558,7 @@ function a7_1() {
 }
 
 function a7_2() {
-  var a7_2 = M.generator();
+  var a7_2 = M.context();
   return a7_2.scope(_1);
 
   function _1(a7_2) {
@@ -619,7 +619,7 @@ function a7_2() {
 }
 
 function a7_3() {
-  var a7_3 = M.generator();
+  var a7_3 = M.context();
   return a7_3.scope(_1);
 
   function _1(a7_3) {
@@ -654,7 +654,7 @@ function a7_3() {
 }
 
 function a7_4() {
-  var a7_4 = M.generator();
+  var a7_4 = M.context();
   return a7_4.scope(_1);
 
   function _1(a7_4) {
@@ -686,7 +686,7 @@ function a7_4() {
 }
 
 function a7_5() {
-  var a7_5 = M.generator();
+  var a7_5 = M.context();
   return a7_5.scope(_1);
 
   function _1(a7_5) {
@@ -707,7 +707,7 @@ function a7_5() {
 }
 
 function a7_6() {
-  var a7_6 = M.generator();
+  var a7_6 = M.context();
   return a7_6.scope(_1);
 
   function _1(a7_6) {
@@ -742,7 +742,7 @@ function a7_6() {
 }
 
 function finallyBlock1() {
-  var finallyBlock1 = M.generator();
+  var finallyBlock1 = M.context();
   return finallyBlock1.scope(_1);
 
   function _1(finallyBlock1) {
@@ -790,7 +790,7 @@ function finallyBlock1() {
 }
 
 function ae() {
-  var ae = M.generator();
+  var ae = M.context();
   return ae.scope(_1);
 
   function _1(ae) {
@@ -815,7 +815,7 @@ function ae() {
 }
 
 function cfb() {
-  var cfb = M.generator();
+  var cfb = M.context();
   return cfb.scope(_1);
 
   function _1(cfb) {
@@ -878,7 +878,7 @@ function cfb() {
 }
 
 function cfb1() {
-  var cfb1 = M.generator();
+  var cfb1 = M.context();
   return cfb1.scope(_1);
 
   function _1(cfb1) {
@@ -929,7 +929,7 @@ function cfb1() {
 }
 
 function cfb1() {
-  var cfb1 = M.generator();
+  var cfb1 = M.context();
   return cfb1.scope(_1);
 
   function _1(cfb1) {
@@ -961,7 +961,7 @@ function cfb1() {
 }
 
 function cfb2() {
-  var cfb2 = M.generator();
+  var cfb2 = M.context();
   return cfb2.scope(_1);
 
   function _1(cfb2) {
@@ -1016,7 +1016,7 @@ function cfb2() {
 }
 
 function cfb3() {
-  var cfb3 = M.generator();
+  var cfb3 = M.context();
   return cfb3.scope(_1);
 
   function _1(cfb3) {
@@ -1080,7 +1080,7 @@ function cfb3() {
 }
 
 function cfb4() {
-  var cfb4 = M.generator();
+  var cfb4 = M.context();
   return cfb4.scope(_1, _4);
 
   function _1(cfb4) {
@@ -1103,7 +1103,7 @@ function cfb4() {
 }
 
 function cfb2() {
-  var cfb2 = M.generator();
+  var cfb2 = M.context();
   return cfb2.scope(_1);
 
   function _1(cfb2) {
@@ -1150,7 +1150,7 @@ function cfb2() {
 }
 
 function cfb6() {
-  var cfb6 = M.generator();
+  var cfb6 = M.context();
   return cfb6.scope(_1, _8);
 
   function _1(cfb6) {
@@ -1196,7 +1196,7 @@ function cfb6() {
 }
 
 function fb4() {
-  var fb4 = M.generator();
+  var fb4 = M.context();
   return fb4.scope(_1);
 
   function _1(fb4) {
@@ -1246,7 +1246,7 @@ function fb4() {
 }
 
 function while2() {
-  var while2 = M.generator();
+  var while2 = M.context();
   return while2.scope(_1);
 
   function _1(while2) {
@@ -1273,7 +1273,7 @@ function while2() {
 }
 
 function for2() {
-  var for2 = M.generator();
+  var for2 = M.context();
   return for2.scope(_1);
 
   function _1(for2) {
@@ -1305,16 +1305,16 @@ function for2() {
 
 function c1() {
   var a = function _a() {
-    var a = M.generator();
+    var a = M.context();
 
     a._b = function _b() {
-      var b = M.generator();
+      var b = M.context();
       b._c1 = c1;
       return b.scope(_1);
 
       function _1(b) {
         return b.pure(function c() {
-          var _c = M.generator();
+          var _c = M.context();
 
           _c._c1 = c1;
           return _c.scope(_1);
@@ -1340,10 +1340,10 @@ function c1() {
 
 function c2() {
   var inner = function _inner() {
-    var inner = M.generator();
+    var inner = M.context();
 
     inner._a = function a1() {
-      var _a = M.generator();
+      var _a = M.context();
 
       _a._c2 = c2;
       return _a.scope(_1);
@@ -1383,7 +1383,7 @@ function c2() {
           j = 10;
           _c2._i++;
           return function z() {
-            var _z = M.generator();
+            var _z = M.context();
 
             _z._c = function c() {
               var _c2 = c2;
@@ -1415,7 +1415,7 @@ function c2() {
 
             function _5(_z) {
               return _z.pure(function z(j) {
-                var _z = M.generator();
+                var _z = M.context();
 
                 _z._c2 = c2;
                 _z._f = ctx;
@@ -1508,7 +1508,7 @@ function c2() {
 }
 
 function c1() {
-  var c1 = M.generator();
+  var c1 = M.context();
   return c1.scope(_1);
 
   function _1(c1) {
@@ -1518,7 +1518,7 @@ function c1() {
 }
 
 function c2() {
-  var c2 = M.generator();
+  var c2 = M.context();
   return c2.scope(_1);
 
   function _1(c2) {
@@ -1534,7 +1534,7 @@ function c2() {
 }
 
 function forOf() {
-  var forOf = M.generator();
+  var forOf = M.context();
   return forOf.scope(_1);
 
   function _1(forOf) {
@@ -1580,7 +1580,7 @@ function forOf() {
 
 const objMethods = {
   a() {
-    var ctx = M.generator();
+    var ctx = M.context();
     return ctx.scope(_1);
 
     function _1(ctx) {
@@ -1593,7 +1593,7 @@ const objMethods = {
   },
 
   b() {
-    var ctx = M.generator();
+    var ctx = M.context();
     ctx.__this = this;
     ctx.__args = arguments;
     return ctx.scope(_1);
@@ -1618,7 +1618,7 @@ const objMethods = {
 };
 const objM = {
   objMethod() {
-    var ctx = M.generator();
+    var ctx = M.context();
     return ctx.scope(_1);
 
     function _1(ctx) {
@@ -1633,7 +1633,7 @@ const objM = {
 };
 
 function objMethodsClosure() {
-  var objMethodsClosure = M.generator();
+  var objMethodsClosure = M.context();
   return objMethodsClosure.scope(_1);
 
   function _1(objMethodsClosure) {
@@ -1642,7 +1642,7 @@ function objMethodsClosure() {
     objMethodsClosure._m = 0;
     return objMethodsClosure.pure({
       objMethod1(k) {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._objMethodsClosure = objMethodsClosure;
         ctx._k = k;
         return ctx.scope(_1);
@@ -1669,7 +1669,7 @@ function objMethodsClosure() {
         function _4(ctx) {
           return ctx.pure({
             objMethod2(m) {
-              var _ctx = M.generator();
+              var _ctx = M.context();
 
               _ctx._f = ctx;
               _ctx._m = m;
@@ -1708,7 +1708,7 @@ function objMethodsClosure() {
 
 const objMThis = {
   [objMethod(a)]() {
-    var ctx = M.generator();
+    var ctx = M.context();
     ctx.__this = this;
     ctx.__args = arguments;
     return ctx.scope(_1);
@@ -1736,7 +1736,7 @@ const objMThis = {
 
 class SomeClass {
   f(i) {
-    var ctx = M.generator();
+    var ctx = M.context();
     ctx.__this = this;
     ctx.__args = arguments;
     ctx._i = i;
@@ -1763,7 +1763,7 @@ class SomeClass {
 
 class SomeChild extends SomeClass {
   f(i) {
-    var ctx = M.generator();
+    var ctx = M.context();
     ctx.__this = this;
     ctx.__args = arguments;
     ctx._i = i;
@@ -1789,7 +1789,7 @@ class SomeChild extends SomeClass {
   }
 
   static f(i) {
-    var ctx = M.generator();
+    var ctx = M.context();
     ctx.__this = this;
     ctx._i = i;
     return ctx.scope(_1);
@@ -1808,7 +1808,7 @@ class SomeChild extends SomeClass {
 }
 
 function clasClosure(A) {
-  var clasClosure = M.generator();
+  var clasClosure = M.context();
   clasClosure._B = class B extends clasClosure._A {
     constructor() {
       var _clasClosure = clasClosure;
@@ -1816,7 +1816,7 @@ function clasClosure(A) {
     }
 
     static f() {
-      var ctx = M.generator();
+      var ctx = M.context();
       return ctx.scope(_1);
 
       function _1(ctx) {
@@ -1836,7 +1836,7 @@ function clasClosure(A) {
     }
 
     static f() {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._clasClosure = clasClosure;
       return ctx.scope(_1);
 
@@ -1872,7 +1872,7 @@ function clasClosure(A) {
     var a;
     clasClosure._C = class extends clasClosure._A {
       static f() {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._clasClosure = clasClosure;
         return ctx.scope(_1);
 
@@ -1916,10 +1916,10 @@ function clasClosure(A) {
 }
 
 function c2() {
-  var c2 = M.generator();
+  var c2 = M.context();
 
   c2._closure1_a = function _closure1_a() {
-    var closure1_a = M.generator();
+    var closure1_a = M.context();
     closure1_a._c2 = c2;
     return closure1_a.scope(_1);
 
@@ -1959,7 +1959,7 @@ function c2() {
 }
 
 function loopCapt1() {
-  var loopCapt1 = M.generator();
+  var loopCapt1 = M.context();
   return loopCapt1.scope(_1);
 
   function _1(loopCapt1) {
@@ -1969,7 +1969,7 @@ function loopCapt1() {
         ctx._i = i;
         ctx._j = 0;
         funs(function iter() {
-          var _iter = M.generator();
+          var _iter = M.context();
 
           _iter._f = ctx;
           return _iter.scope(_1);
@@ -1990,7 +1990,7 @@ function loopCapt1() {
 }
 
 function loopCapt2() {
-  var loopCapt2 = M.generator();
+  var loopCapt2 = M.context();
   return loopCapt2.scope(_1);
 
   function _1(loopCapt2) {
@@ -2003,7 +2003,7 @@ function loopCapt2() {
 
     if (loopCapt2._i < 3) {
       a = (i => {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._i = i;
         return ctx.scope(_1);
 
@@ -2016,7 +2016,7 @@ function loopCapt2() {
         function _2(ctx) {
           ctx._j = ctx._i + 1;
           funs(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._f = ctx;
             return _iter.scope(_1);
@@ -2050,7 +2050,7 @@ function loopCapt2() {
 }
 
 function loopCapt3() {
-  var loopCapt3 = M.generator();
+  var loopCapt3 = M.context();
   return loopCapt3.scope(_1);
 
   function _1(loopCapt3) {
@@ -2063,7 +2063,7 @@ function loopCapt3() {
 
     if (loopCapt3._i < 3) {
       a = (i => {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._i = i;
         return ctx.scope(_1);
 
@@ -2083,7 +2083,7 @@ function loopCapt3() {
 
           if (ctx._j < 3) {
             a = (j => {
-              var _ctx = M.generator();
+              var _ctx = M.context();
 
               _ctx._j = j;
               return _ctx.scope(_1);
@@ -2096,7 +2096,7 @@ function loopCapt3() {
 
               function _2(_ctx) {
                 funs(function iter() {
-                  var _iter = M.generator();
+                  var _iter = M.context();
 
                   _iter._f = ctx;
                   _iter._f1 = _ctx;
@@ -2139,7 +2139,7 @@ function loopCapt3() {
 }
 
 function loopCapt4() {
-  var loopCapt4 = M.generator();
+  var loopCapt4 = M.context();
   return loopCapt4.scope(_1);
 
   function _1(loopCapt4) {
@@ -2154,7 +2154,7 @@ function loopCapt4() {
             var _ctx = {};
             _ctx._j = j;
             funs(function iter() {
-              var _iter = M.generator();
+              var _iter = M.context();
 
               _iter._f = ctx;
               _iter._f1 = _ctx;
@@ -2178,7 +2178,7 @@ function loopCapt4() {
 }
 
 function forOfCapt1() {
-  var forOfCapt1 = M.generator();
+  var forOfCapt1 = M.context();
   return forOfCapt1.scope(_1);
 
   function _1(forOfCapt1) {
@@ -2188,7 +2188,7 @@ function forOfCapt1() {
         ctx._i = i;
         ctx._j = 0;
         funs(function iter() {
-          var _iter = M.generator();
+          var _iter = M.context();
 
           _iter._f = ctx;
           return _iter.scope(_1);
@@ -2209,7 +2209,7 @@ function forOfCapt1() {
 }
 
 function forOfCapt2() {
-  var forOfCapt2 = M.generator();
+  var forOfCapt2 = M.context();
   return forOfCapt2.scope(_1);
 
   function _1(forOfCapt2) {
@@ -2224,7 +2224,7 @@ function forOfCapt2() {
       forOfCapt2._i = forOfCapt2._loop.value;
 
       a = (i => {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._i = i;
         return ctx.scope(_1);
 
@@ -2237,7 +2237,7 @@ function forOfCapt2() {
 
         function _2(ctx) {
           funs(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._f = ctx;
             return _iter.scope(_1);
@@ -2288,7 +2288,7 @@ function forOfCapt2() {
 }
 
 function forOfCapt3() {
-  var forOfCapt3 = M.generator();
+  var forOfCapt3 = M.context();
   return forOfCapt3.scope(_1);
 
   function _1(forOfCapt3) {
@@ -2303,7 +2303,7 @@ function forOfCapt3() {
             var _ctx = {};
             _ctx._j = j;
             funs(function iter() {
-              var _iter = M.generator();
+              var _iter = M.context();
 
               _iter._f = ctx;
               _iter._f1 = _ctx;
@@ -2327,7 +2327,7 @@ function forOfCapt3() {
 }
 
 function forOfCapt4() {
-  var forOfCapt4 = M.generator();
+  var forOfCapt4 = M.context();
   return forOfCapt4.scope(_1);
 
   function _1(forOfCapt4) {
@@ -2342,7 +2342,7 @@ function forOfCapt4() {
       forOfCapt4._i = forOfCapt4._loop.value;
 
       a = (i => {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._i = i;
         return ctx.scope(_1);
 
@@ -2358,7 +2358,7 @@ function forOfCapt4() {
             ctx._j = ctx._loop.value;
 
             a = (j => {
-              var _ctx = M.generator();
+              var _ctx = M.context();
 
               _ctx._j = j;
               return _ctx.scope(_1);
@@ -2371,7 +2371,7 @@ function forOfCapt4() {
 
               function _2(_ctx) {
                 funs(function iter() {
-                  var _iter = M.generator();
+                  var _iter = M.context();
 
                   _iter._f = ctx;
                   _iter._f1 = _ctx;
@@ -2456,7 +2456,7 @@ function forOfCapt4() {
 }
 
 function forOfCapt5() {
-  var forOfCapt5 = M.generator();
+  var forOfCapt5 = M.context();
   return forOfCapt5.scope(_1);
 
   function _1(forOfCapt5) {
@@ -2471,7 +2471,7 @@ function forOfCapt5() {
       forOfCapt5._i = forOfCapt5._loop.value;
 
       a = (i => {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._i = i;
         return ctx.scope(_1);
 
@@ -2487,7 +2487,7 @@ function forOfCapt5() {
               var _ctx = {};
               _ctx._j = j;
               funs(function iter() {
-                var _iter = M.generator();
+                var _iter = M.context();
 
                 _iter._f = ctx;
                 _iter._f1 = _ctx;
@@ -2542,7 +2542,7 @@ function forOfCapt5() {
 }
 
 function forOfCapt6() {
-  var forOfCapt6 = M.generator();
+  var forOfCapt6 = M.context();
   return forOfCapt6.scope(_1);
 
   function _1(forOfCapt6) {
@@ -2557,7 +2557,7 @@ function forOfCapt6() {
       forOfCapt6._i = forOfCapt6._loop.value;
 
       a = (i => {
-        var ctx = M.generator();
+        var ctx = M.context();
         ctx._i = i;
         return ctx.scope(_1);
 
@@ -2579,7 +2579,7 @@ function forOfCapt6() {
             ctx._j = ctx._loop.value;
 
             a = (j => {
-              var _ctx = M.generator();
+              var _ctx = M.context();
 
               _ctx._f = ctx;
               _ctx._j = j;
@@ -2593,7 +2593,7 @@ function forOfCapt6() {
 
               function _2(_ctx) {
                 funs(function iter() {
-                  var _iter = M.generator();
+                  var _iter = M.context();
 
                   _iter._f = ctx;
                   _iter._f1 = _ctx;
@@ -2678,7 +2678,7 @@ function forOfCapt6() {
 }
 
 function forIn() {
-  var forIn = M.generator();
+  var forIn = M.context();
   return forIn.scope(_1);
 
   function _1(forIn) {
@@ -2699,7 +2699,7 @@ function forIn() {
 }
 
 function while1() {
-  var while1 = M.generator();
+  var while1 = M.context();
   return while1.scope(_1);
 
   function _1(while1) {
@@ -2727,7 +2727,7 @@ function while1() {
 }
 
 function catchBlock2() {
-  var catchBlock2 = M.generator();
+  var catchBlock2 = M.context();
   return catchBlock2.scope(_1);
 
   function _1(catchBlock2) {
@@ -2772,7 +2772,7 @@ function catchBlock2() {
 }
 
 function closure2() {
-  var closure2 = M.generator();
+  var closure2 = M.context();
   return closure2.scope(_1);
 
   function _1(closure2) {
@@ -2790,7 +2790,7 @@ function closure2() {
 
   function _3(closure2) {
     return closure2.pure(function sub(k) {
-      var _sub = M.generator();
+      var _sub = M.context();
 
       _sub._closure2 = closure2;
       _sub._k = k;
@@ -2813,7 +2813,7 @@ function closure2() {
 }
 
 function switches() {
-  var switches = M.generator();
+  var switches = M.context();
   return switches.scope(_1);
 
   function _1(switches) {

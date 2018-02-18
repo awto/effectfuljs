@@ -1,29 +1,29 @@
 import * as M from '@effectful/core';
 
 function aa() {
-  var aa = M.async();
+  var aa = M.context();
   aa._A = class A {
     method() {
-      var ctx = M.async();
+      var ctx = M.context();
       return M.scope(method_1);
     }
 
     static smethod() {
-      var ctx = M.async();
+      var ctx = M.context();
       return M.scope(smethod_1);
     }
 
   };
   aa._B = class B extends aa._A {
     method() {
-      var ctx = M.async();
+      var ctx = M.context();
       ctx._aa = aa;
       ctx.__this = this;
       return M.scope(_method_1);
     }
 
     static smethod() {
-      var ctx = M.async();
+      var ctx = M.context();
       ctx._aa = aa;
       ctx.__this = this;
       return M.scope(_smethod_1);
@@ -44,7 +44,7 @@ function smethod_1(ctx) {
 function _method_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
-  return M.chain(M.chain(a), method_2);
+  return M.chain(a, method_2);
 }
 
 function method_2(ctx, a) {
@@ -54,7 +54,7 @@ function method_2(ctx, a) {
 function _smethod_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
-  return M.chain(M.chain(a), smethod_2);
+  return M.chain(a, smethod_2);
 }
 
 function smethod_2(ctx, a) {

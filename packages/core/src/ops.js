@@ -172,32 +172,32 @@ export function interpret(si) {
  *
  *    bind(yield a, cont) ==> bindYield(a, cont)
  */
-export function* combine(si) {
+export function combine(si) {
   const s = Kit.auto(si)
-  if (!s.opts.combineOps) {
-    yield* s
-    return
-  }
-  const defaultName = s.opts.bindName
-  const defaultSym = Kit.sysId(defaultName)
-  for(const i of s) {
-    yield i
-    if (i.enter && i.type === Block.letStmt && i.value.eff) {
-      const j = s.curLev()
-      if (j && j.type === op) {
-        i.value.op = j.value
-        i.value.opSym = j.value.sym
-        i.value.bindName = j.value.sym.orig
-        s.take()
-        if (!j.leave) {
-          yield* s.sub()
-          s.close(j)
+  const ops = s.opts.combineOps
+  return ops ? _combine() : s
+  function* _combine() {
+    const defaultName = s.opts.bindName
+    const defaultSym = Kit.sysId(defaultName)
+    for(const i of s) {
+      yield i
+      if (i.enter && i.type === Block.letStmt && i.value.eff) {
+        const j = s.curLev()
+        if (j && j.type === op && (ops === true || ops[j.value.sym.orig])) {
+          i.value.op = j.value
+          i.value.opSym = j.value.sym
+          i.value.bindName = j.value.sym.orig
+          s.take()
+          if (!j.leave) {
+            yield* s.sub()
+            s.close(j)
+          }
+          continue
         }
-        continue
+        i.value.op = null
+        i.value.opSym = defaultSym
+        i.value.bindName = defaultName
       }
-      i.value.op = null
-      i.value.opSym = defaultSym
-      i.value.bindName = defaultName
     }
   }
 }

@@ -1,7 +1,7 @@
 import * as M from '@effectful/core';
 
 function a1() {
-  var a1 = M.generator();
+  var a1 = M.context();
   a1.$sc = _1;
   return M.scope(_5);
 
@@ -47,7 +47,7 @@ function a1() {
 }
 
 function a2() {
-  var a2 = M.generator();
+  var a2 = M.context();
   a2.$sc = _1;
   return M.scope(_6);
 
@@ -97,7 +97,7 @@ function a2() {
 }
 
 function a3() {
-  var a3 = M.generator();
+  var a3 = M.context();
   a3.$sc = _1;
   return M.scope(_9);
 
@@ -177,7 +177,7 @@ function a3() {
 }
 
 function a4() {
-  var a4 = M.generator();
+  var a4 = M.context();
   a4.$sc = _1;
   return M.scope(_11);
 
@@ -263,7 +263,7 @@ function a4() {
 }
 
 function a5(i) {
-  var a5 = M.generator();
+  var a5 = M.context();
   a5._i = i;
   a5.$sc = _1;
   return M.scope(_16);
@@ -480,7 +480,7 @@ function a5(i) {
 }
 
 function a5_1(i) {
-  var a5_1 = M.generator();
+  var a5_1 = M.context();
   a5_1._i = i;
   a5_1.$sc = _1;
   return M.scope(_12);
@@ -644,7 +644,7 @@ function a5_1(i) {
 }
 
 function a5_2(i) {
-  var a5_2 = M.generator();
+  var a5_2 = M.context();
   a5_2._i = i;
   a5_2.$sc = _1;
   return M.scope(_16);
@@ -856,7 +856,7 @@ function a5_2(i) {
 }
 
 function a5_2(i) {
-  var a5_2 = M.generator();
+  var a5_2 = M.context();
   a5_2._i = i;
   a5_2.$sc = _1;
   return M.scope(_16);

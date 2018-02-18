@@ -1,7 +1,7 @@
 import * as M from '@effectful/core';
 
 function forOfBlockScope() {
-  var forOfBlockScope = M.generator();
+  var forOfBlockScope = M.context();
   return M.scope(forOfBlockScope_1);
 }
 
@@ -42,7 +42,7 @@ function forOfBlockScope_1(forOfBlockScope) {
       ctx._j = 0;
 
       _forOfBlockScope._funs.push(function iter() {
-        var _iter = M.generator();
+        var _iter = M.context();
 
         _iter._f = ctx;
         return M.scope(iter_1);
@@ -54,7 +54,7 @@ function forOfBlockScope_1(forOfBlockScope) {
     forOfBlockScope._j = 0;
 
     forOfBlockScope._funs.push(function iter() {
-      var _iter = M.generator();
+      var _iter = M.context();
 
       _iter._forOfBlockScope = forOfBlockScope;
       return M.scope(_iter_1);
@@ -76,7 +76,7 @@ function forOfBlockScope_1(forOfBlockScope) {
           _ctx._j = j;
 
           forOfBlockScope._funs.push(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._f = f;
             _iter._f1 = _ctx;
@@ -110,7 +110,7 @@ function iter_22(_iter) {
 
 function f_2(_ctx) {
   _ctx._forOfBlockScope._funs.push(function iter() {
-    var _iter = M.generator();
+    var _iter = M.context();
 
     _iter._f = _ctx._f;
     _iter._f1 = _ctx;
@@ -127,7 +127,7 @@ function _f_2(ctx) {
     ctx._j = ctx._loop.value;
 
     a = (j => {
-      var _ctx = M.generator();
+      var _ctx = M.context();
 
       _ctx._forOfBlockScope = ctx._forOfBlockScope;
       _ctx._f = ctx;
@@ -174,7 +174,7 @@ function forOfBlockScope_2(forOfBlockScope) {
     forOfBlockScope._i3 = forOfBlockScope._loop.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(_f_1);
@@ -221,7 +221,7 @@ function f_21(ctx) {
       _ctx._j = j;
 
       forOfBlockScope._funs.push(function iter() {
-        var _iter = M.generator();
+        var _iter = M.context();
 
         _iter._f = f;
         _iter._f1 = _ctx;
@@ -240,7 +240,7 @@ function forOfBlockScope_5(forOfBlockScope) {
     forOfBlockScope._i4 = forOfBlockScope._loop1.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_11);
@@ -289,7 +289,7 @@ function iter_24(_iter) {
 
 function f_22(_ctx) {
   _ctx._forOfBlockScope._funs.push(function iter() {
-    var _iter = M.generator();
+    var _iter = M.context();
 
     _iter._f = _ctx._f;
     _iter._f1 = _ctx;
@@ -306,7 +306,7 @@ function _f_3(ctx) {
     ctx._j = ctx._loop.value;
 
     a = (j => {
-      var _ctx = M.generator();
+      var _ctx = M.context();
 
       _ctx._forOfBlockScope = ctx._forOfBlockScope;
       _ctx._f = ctx;
@@ -353,7 +353,7 @@ function forOfBlockScope_8(forOfBlockScope) {
     forOfBlockScope._i5 = forOfBlockScope._loop2.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_13);
@@ -418,7 +418,7 @@ function forOfBlockScope_13(forOfBlockScope) {
       ctx._i = i;
 
       _forOfBlockScope._funs.push(function iter() {
-        var _iter = M.generator();
+        var _iter = M.context();
 
         _iter._f = ctx;
         return M.scope(iter_15);
@@ -444,7 +444,7 @@ function iter_26(_iter) {
 
 function f_24(ctx) {
   ctx._forOfBlockScope._funs.push(function iter() {
-    var _iter = M.generator();
+    var _iter = M.context();
 
     _iter._f = ctx;
     return M.scope(iter_16);
@@ -460,7 +460,7 @@ function forOfBlockScope_14(forOfBlockScope) {
     forOfBlockScope._i8 = forOfBlockScope._loop4.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_14);
@@ -510,7 +510,7 @@ function f_25(ctx) {
       return M.pure(1);
     } else {
       ctx._forOfBlockScope._funs.push(function iter() {
-        var _iter = M.generator();
+        var _iter = M.context();
 
         _iter._forOfBlockScope = ctx._forOfBlockScope;
         _iter._f = ctx;
@@ -529,7 +529,7 @@ function forOfBlockScope_17(forOfBlockScope) {
     forOfBlockScope._i9 = forOfBlockScope._loop5.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_15);
@@ -599,7 +599,7 @@ function forOfBlockScope_20(forOfBlockScope) {
           if (_ctx._n === 5) return 3;
 
           forOfBlockScope._funs.push(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._forOfBlockScope = forOfBlockScope;
             _iter._f = f;
@@ -685,7 +685,7 @@ function f_16(_ctx) {
           return M.pure(3);
         } else {
           _ctx._forOfBlockScope._funs.push(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._forOfBlockScope = _ctx._forOfBlockScope;
             _iter._f = _ctx._f;
@@ -707,7 +707,7 @@ function f_31(ctx) {
     ctx._j = ctx._loop.value;
 
     a = (j => {
-      var _ctx = M.generator();
+      var _ctx = M.context();
 
       _ctx._forOfBlockScope = ctx._forOfBlockScope;
       _ctx._f = ctx;
@@ -776,7 +776,7 @@ function forOfBlockScope_21(forOfBlockScope) {
     forOfBlockScope._i11 = forOfBlockScope._loop6.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_17);
@@ -853,7 +853,7 @@ function f_27(_ctx) {
           return M.pure(3);
         } else {
           _ctx._forOfBlockScope._funs.push(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._forOfBlockScope = _ctx._forOfBlockScope;
             _iter._f = _ctx._f;
@@ -875,7 +875,7 @@ function f_28(ctx) {
     ctx._j = ctx._loop.value;
 
     a = (j => {
-      var _ctx = M.generator();
+      var _ctx = M.context();
 
       _ctx._forOfBlockScope = ctx._forOfBlockScope;
       _ctx._f = ctx;
@@ -944,7 +944,7 @@ function forOfBlockScope_25(forOfBlockScope) {
     forOfBlockScope._i12 = forOfBlockScope._loop7.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_19);
@@ -1029,7 +1029,7 @@ function f_29(_ctx) {
           return M.pure(3);
         } else {
           _ctx._forOfBlockScope._funs.push(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._forOfBlockScope = _ctx._forOfBlockScope;
             _iter._f = _ctx._f;
@@ -1051,7 +1051,7 @@ function f_33(ctx) {
     ctx._j = ctx._loop.value;
 
     a = (j => {
-      var _ctx = M.generator();
+      var _ctx = M.context();
 
       _ctx._forOfBlockScope = ctx._forOfBlockScope;
       _ctx._f = ctx;
@@ -1120,7 +1120,7 @@ function forOfBlockScope_30(forOfBlockScope) {
     forOfBlockScope._i13 = forOfBlockScope._loop8.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_111);
@@ -1205,7 +1205,7 @@ function f_211(_ctx) {
           return M.pure(3);
         } else {
           _ctx._forOfBlockScope._funs.push(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._forOfBlockScope = _ctx._forOfBlockScope;
             _iter._f = _ctx._f;
@@ -1227,7 +1227,7 @@ function f_34(ctx) {
     ctx._j = ctx._loop.value;
 
     a = (j => {
-      var _ctx = M.generator();
+      var _ctx = M.context();
 
       _ctx._forOfBlockScope = ctx._forOfBlockScope;
       _ctx._f = ctx;
@@ -1296,7 +1296,7 @@ function forOfBlockScope_35(forOfBlockScope) {
     forOfBlockScope._i14 = forOfBlockScope._loop9.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_113);
@@ -1378,7 +1378,7 @@ function f_213(_ctx) {
           return M.pure(3);
         } else {
           _ctx._forOfBlockScope._funs.push(function iter() {
-            var _iter = M.generator();
+            var _iter = M.context();
 
             _iter._forOfBlockScope = _ctx._forOfBlockScope;
             _iter._f = _ctx._f;
@@ -1438,7 +1438,7 @@ function f_36(ctx) {
     ctx._j = ctx._loop.value;
 
     a = (j => {
-      var _ctx = M.generator();
+      var _ctx = M.context();
 
       _ctx._forOfBlockScope = ctx._forOfBlockScope;
       _ctx._f = ctx;
@@ -1507,7 +1507,7 @@ function forOfBlockScope_39(forOfBlockScope) {
     forOfBlockScope._i15 = forOfBlockScope._loop10.value;
 
     a = (i => {
-      var ctx = M.generator();
+      var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_115);

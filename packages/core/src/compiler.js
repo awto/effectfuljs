@@ -19,7 +19,7 @@ export const Tag = Kit.Tag
  *                                 main: (t: Tokens) => void }
  */
 export function babelPreset(transform) {
-  return function (b,ropts) {
+  const res = function (b,ropts) {
     const opts = transform(ropts)
     return {
       plugins: [
@@ -43,6 +43,10 @@ export function babelPreset(transform) {
       ]
     }
   }
+  res.options = (opts) => babelPreset(iopts => transform(Object.assign({},opts,iopts)))
+  res.rebind = map => babelPreset(opts => map(opts,transform))
+  res.modify = map => babelPreset(opts => transform(map(opts)))
+  return res
 }
 
 /** applies transform description to `ast` from babylon */
