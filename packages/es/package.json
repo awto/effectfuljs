@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Standard JavaScript effects using @effectful/core (abstract interface)",
   "main": "preset.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/es-rt": "^0.1.4",
+    "@effectful/es-rt": "^0.1.5",
     "benchmark": "^2.1.4",
     "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
@@ -40,7 +40,7 @@
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
-    "@effectful/core": "^0.1.4",
+    "@effectful/core": "^0.1.5",
     "babel-types": "^6.26.0"
   },
   "publishConfig": {

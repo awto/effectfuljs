@@ -91,14 +91,14 @@ export function substContextIds(si) {
   return walk()
   function* id(pos,sym) {
     assert.ok(sym.fieldName)
-    yield s.enter(pos,Tag.MemberExpression)
+    yield s.enter(pos,Tag.MemberExpression,{origSym:sym})
     if (ctxDeps && sym.declScope !== root) {
       const info = ctxDeps.get(sym.declScope)
       assert.ok(info)
       const {copy} = info
       if (copy.interpr === Bind.ctxField) {
         assert.ok(copy.fieldName)
-        yield s.enter(Tag.object,Tag.MemberExpression)
+        yield s.enter(Tag.object,Tag.MemberExpression,{origSym:copy})
         yield s.tok(Tag.object,Tag.Identifier,
                     {sym:contextSym,lhs:false,rhs:true,decl:false})
         assert.ok(copy.fieldName)

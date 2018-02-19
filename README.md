@@ -58,30 +58,28 @@ This is an example of one of a few possible outputs:
 
 ```javascript
 function a() {
-  return M.chainBH(getX(), _1, _2);
+  return M.chain(getX(), _1);
 
   function _1(a) {
     console.log("x:",a)
   }
 
-  function _2(e) {
-    return M.raise(e);
-  }
 }
 ```
 
-There `chainBH`, `raise` methods are provided by some runtime library.
+There `chain`, `raise` methods are provided by some runtime library.
 For example its concrete implementation for Promises calls `then` function
-for `chainBH` and rejects the promise in `M.raise`.
+for `chain` and rejects the promise in `M.raise`.
 
 The names and interfaces of the functions in the generated code
 are configurable.
 
 There is a dozen of such functions required to be implemented in concrete
-effects implementation library but usually they are trivial.
+effects implementation library but usually most of them are trivial.
 
 The interface is based on Monads. However understanding Monads is required
-only to implement some new effects library.
+only to implement some new effects library. No needs to know anything about 
+them to use the libraries.
 
 With the implicit single-level mode the same code may be even more succinct:
 

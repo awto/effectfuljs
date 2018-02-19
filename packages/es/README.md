@@ -79,7 +79,7 @@ Other options are:
   function's body
 
 There are quite a few of lower level options described in
-[config.js](https://github.com/awto/effectfuljs/blob/master/packages/js/src/config.js).
+[config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js).
 
 Their values can be provided using `all`, `file`, `pure`, `effectful`, `generators`, `async`,
 `asyncGenerators` fields in the preset options. For example, to use CommonJS modules instead
