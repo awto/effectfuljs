@@ -203,6 +203,8 @@ module.exports = function esProfile(opts={}) {
       p.push("inline")
     if (opts.delegateForOf)
       p.push("delegate")
+    if (opts.all && opts.all.jsTailCalls)
+      p.push("tc")
     importRT = "@effectful/es-rt"
     if (p.length)
       importRT += "/opts/" + p.join("-")

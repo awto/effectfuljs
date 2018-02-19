@@ -11,6 +11,8 @@ if (process.env.EJS_OPT) {
     opts.push("inline")
   if (process.env.EJS_DELEGATE_FOR_OF)
     opts.push("delegate")
+  if (process.env.EJS_NO_TRAMPOLINE)
+    opts.push("tc")
   const name = opts.length ?  opts.join("-") : "default"
   file = `./opts/${name}.js` 
 }
