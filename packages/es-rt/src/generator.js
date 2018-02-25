@@ -28,7 +28,7 @@ var Gp = Generator.prototype = Object.create(IterablePrototype)
 
 var runningCont
 
-if (process.env.EJS_NO_ES_OBJECT_MODEL) {
+if (process.env.EJS_NO_ES_OBJECT_MODEL && !process.env.EJS_DEFUNCT) {
   generator = function generator() {
     var res = Object.create(Gp)
     res.value = void 0
