@@ -6,8 +6,7 @@
                 "defunct":true,
                 "contextState":true,
                 "contextBy":"this",
-                "importRT":"@effectful/es-rt/opts/defunct-inline",
-                "all": {"wrapFunction":null}}],
+                "importRT":"@effectful/es-rt/opts/defunct-inline"}],
               {
                 "plugins":[
                   ["transform-es2015-modules-commonjs",

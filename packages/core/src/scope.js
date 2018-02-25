@@ -251,14 +251,24 @@ export function funcWraps(si) {
     return sym
   }
   function check(i) {
-    if (i.value.topEff && i.value.opts.transform
-        && i.value.opts.wrapFunction) {
-      if (i.value.opts.topLevel)
+    if (i.value.topEff && i.value.opts.transform) {
+      if (i.value.opts.wrapFunction)
+        return true
+      if (i.value.opts.defunctHandlerInProto)
         throw s.error(
-          "NOT IMPLEMENTED: ES object model  with top level handlers",i.value)
-      return true
+          "`defunctHandlerInProto` requires `wrapFunction`")
     }
     return false
+  }
+  function* implFrame(root) {
+    if (!root.opts.defunctHandlerInProto)
+      return
+    if (!root.opts.topLevel || !root.opts.defunct)
+      throw s.error(
+        "`defunctHandlerInProto` requires `topLevel`, `defunct`")
+    const sym = root.implFrame && root.implFrame.value.declSym
+    if (sym)
+      yield s.tok(Tag.push,Tag.Identifier,{sym})
   }
   function reorder(si) {
     const s = Kit.auto(Kit.toArray(si))
@@ -325,6 +335,8 @@ export function funcWraps(si) {
                   }
                   yield* Kit.reposOne(j.key,Tag.property)
                   yield* s.leave()
+                  if (j.params)
+                    yield* j.params
                 }()])
               }
               yield* _reorder(s.sub(),nsubst)
@@ -442,6 +454,8 @@ export function funcWraps(si) {
             yield s.enter(Tag.push,Tag.FunctionExpression)
             yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.wrapId})
             yield* _funcWraps(s.sub(),block)
+            yield* s.leave()
+            yield* implFrame(i.value)
             yield* lab()
             continue
           }
@@ -474,7 +488,9 @@ export function funcWraps(si) {
             classMethods.push({key,keySimple,static:i.value.node.static,
                                computed,name:i.value.opts.wrapFunction,
                                wrapId:i.value.wrapId,
-                               ns:i.value.$ns})
+                               ns:i.value.$ns,
+                               params:[...implFrame(i.value)]
+                              })
           continue
         case Tag.ClassExpression:
         case Tag.ClassDeclaration:
@@ -507,6 +523,7 @@ export function funcWraps(si) {
                      sym:sysId(i.value.opts.wrapFunction)}),
               s.enter(Tag.arguments,Tag.Array),
               s.tok(Tag.push,Tag.Identifier,{sym:i.value.funcId}),
+              ...implFrame(i.value),
               ...lab()]
             if (i.pos === Tag.push || i.pos === Tag.declaration) {
               yield s.peel(i)
@@ -539,6 +556,8 @@ export function funcWraps(si) {
             else
               s.cur().value.sym = i.value.wrapId
             yield* _funcWraps(s.sub(),block)
+            yield* s.leave()
+            yield* implFrame(i.value)
             yield* lab()
             continue
           }
@@ -556,6 +575,8 @@ export function funcWraps(si) {
             yield s.enter(Tag.arguments,Tag.Array)
             yield s.peel(Kit.setPos(i,Tag.push))
             yield* _funcWraps(s.sub(),block)
+            yield* s.leave()
+            yield* implFrame(i.value)
             yield* lab()
             continue
           }
@@ -566,8 +587,6 @@ export function funcWraps(si) {
     }
   }
 }
-
-
 
 /** 
  * if arrow function has expression, converts it into block statement 

@@ -6,8 +6,7 @@
                 "defunct":true,
                 "loose":true,
                 "importRT":"@effectful/es-rt/opts/defunct-loose",
-                "all": {"wrapFunction":null,
-                        "removeAsserts":false}}],
+                "all": {"removeAsserts":false}}],
               {
                 "plugins":[
                   ["transform-es2015-modules-commonjs",

@@ -146,8 +146,8 @@ export function* frames(si) {
   const discrimArg = impl.ctrlParam
         = s.opts.defunctStateDiscriminant === "arg" && Kit.scope.newSym("s")
   const f = yield* s.till(i => i.type === Block.frame)
-  // TODO: it top level this must be set in prototype
-  yield* s.toks(Tag.push,`$I.${s.opts.storeHandler} = $I`,contextSym,impl.declSym)
+  if (!s.opts.defunctHandlerInProto)
+    yield* s.toks(Tag.push,`$I.${s.opts.storeHandler} = $I`,contextSym,impl.declSym)
   yield* s.sub()
   yield s.close(f)
   yield root.implFrame

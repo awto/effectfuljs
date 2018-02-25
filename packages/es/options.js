@@ -181,6 +181,14 @@ const topLevel = {
   }
 }
 
+
+const topLevelDefunct = {
+  generators: {
+    wrapFunction: "generatorFunction",
+    defunctHandlerInProto: true
+  }
+}
+
 const disabled = {
   pure:{transform:false,loose:false,importRT:null},
   generators:{transform:false,loose:false,importRT:null},
@@ -247,6 +255,8 @@ module.exports = function esProfile(opts={}) {
     Object.assign(generators,topLevel.all,topLevel.effectful)
     Object.assign(async,topLevel.all,topLevel.effectful)
     Object.assign(asyncGenerators,topLevel.all,topLevel.effectful)
+    if (opts.defunct)
+      Object.assign(generators,topLevelDefunct.generators)
   }
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})

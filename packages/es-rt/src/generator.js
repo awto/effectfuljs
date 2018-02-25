@@ -284,9 +284,28 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   GeneratorFunctionPrototype.constructor = GeneratorFunction
   GeneratorFunctionPrototype[Symbol.toString] =
     GeneratorFunction.displayName = "GeneratorFunction"
-  generatorFunction = function generatorFunction(fun) {
+  generatorFunction = function generatorFunction(fun,handler) {
     Object.setPrototypeOf(fun, GeneratorFunctionPrototype)
     fun.prototype = Object.create(Gp)
+    if (process.env.EJS_DEFUNCT) {
+      if (handler) {
+        if (process.env.EJS_INLINE)
+          fun.prototype.step = handler
+        else
+          fun.prototype.$run = handler
+      }
+    }
+    return fun
+  }
+} else if (process.env.EJS_DEFUNCT) {
+  generatorFunction = function generatorFunction(fun,handler) {
+    fun.prototype = Object.create(Gp)
+    if (handler) {
+      if (process.env.EJS_INLINE)
+        fun.prototype.step = handler
+      else
+        fun.prototype.$run = handler
+    }
     return fun
   }
 }

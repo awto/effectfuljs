@@ -145,6 +145,9 @@ export default {
   // stores control flow continuation in the field's name of context object
   storeCont: null,
 
+  // keep single defunctHandler in a prototype
+  defunctHandlerInProto: false,
+  
   // stores result continuation in the field's name of context object
   storeResultCont: null,
 

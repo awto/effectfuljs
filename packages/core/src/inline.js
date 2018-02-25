@@ -63,7 +63,7 @@ export function storeContinuations(si) {
   const errIgnore = s.opts.inlineErrorContAssign === "ignore"
   const resIgnore = s.opts.inlineResultContAssign === "ignore"
   const thisCtx = s.opts.contextBy === "this"
-  if (s.opts.defunct && s.opts.storeHandler)
+  if (s.opts.defunct && s.opts.storeHandler && !s.opts.defunctHandlerInProto)
     root.runSym = makeSym(s.opts.storeHandler,"rn")
   const reentry = !s.opts.defunct && s.opts.inlineReentryCheck && cont
   if (!err && !res && !cont)

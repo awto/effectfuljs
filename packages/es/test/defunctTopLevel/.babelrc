@@ -7,8 +7,7 @@
                  "defunct":true,
                  "contextState":true,
                  "contextBy":"this",
-                 "importRT":"@effectful/es-rt/opts/defunct",
-                 "all": {"wrapFunction":null}}],
+                 "importRT":"@effectful/es-rt/opts/defunct"}],
               {
                 "plugins":[
                   ["transform-es2015-modules-commonjs",

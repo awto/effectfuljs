@@ -8,6 +8,8 @@ import * as Bind from "./bind"
 import * as Ctrl from "./control"
 
 const emptyArr = []
+const emptyMap = new Map()
+const emptySet = new Set()
 
 /** moves frame steps to top level of JS module */
 export function depsToTop(si) {
@@ -35,9 +37,6 @@ export function depsToTop(si) {
     }
   }
 }
-
-const emptyMap = new Map()
-const emptySet = new Set()
 
 /** 
  * adds declarations and constructions for context objects
@@ -68,8 +67,8 @@ export const contextDecls = Kit.map(function contextDecls(si) {
                {sym:Kit.sysId(s.opts.scopeConstructor || "context"),ns:false}),
          s.enter(Tag.arguments, Tag.Array),
          ...(root.wrapId
-             ? [s.tok(Tag.push,Tag.Identifier,{sym:root.wrapId})]
-             : []),
+             ? [s.tok(Tag.push,Tag.Identifier,{sym:root.wrapId,keepClos:true})]
+             : emptyArr),
          ...s.leave(),
          ...s.leave()]
        : [
@@ -119,7 +118,8 @@ export function substContextIds(si) {
     for(const i of s) {
       if (i.enter && i.type === Tag.Identifier) {
         const {sym} = i.value
-        if (!i.value.decl && sym && sym.interpr === Bind.ctxField) {
+        if (!i.value.decl && sym && sym.interpr === Bind.ctxField
+            && !i.value.keepClos) {
           yield* id(i.pos,sym)
           s.close(i)
           continue
