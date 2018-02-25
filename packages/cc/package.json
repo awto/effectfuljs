@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/js": "^0.1.6",
     "babel-cli": "^6.26.0",
     "cross-env": "^5.1.3",
     "env-cmd": "^7.0.0",
@@ -34,5 +33,8 @@
     "typedoc": "^0.10.0",
     "typedoc-plugin-markdown": "^1.0.14",
     "typescript": "^2.7.1"
+  },
+  "peerDependencies": {
+    "@effectful/js": "^0.1.6"
   }
 }

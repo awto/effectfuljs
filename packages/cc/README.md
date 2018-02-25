@@ -23,7 +23,7 @@ For two-level syntax with `async/await` overloading:
 
 ```json
 {
-  "presets": [["@effectful/js,{"detectRT":"@effectful/cc",profile:"asyncDo"}]]"
+  "presets": "@effectful/cc/transform-async-do"
 }
 ```
 
@@ -32,7 +32,7 @@ NOTE: If you need another babel presets, add `"passPerPreset":true`, e.g.
 ```json
 {
   "passPerPreset": true,
-  "presets": [["@effectful/js,{"detectRT":"@effectful/cc",profile:"asyncDo"}], "env"]
+  "presets": ["@effectful/cc/transform-async-do", "env"]
 }
 ```
 
