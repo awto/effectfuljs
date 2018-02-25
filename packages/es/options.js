@@ -46,7 +46,7 @@ const rebind = {
   generators: {
     bindName:"yldStar",
     scopeConstructor:"generator",
-    markRepeat:true,
+    markRepeat:false,
     scopePostfix:true,
     wrapFunction: "generatorFunction",
     storeResultCont:"$exit",
@@ -62,6 +62,7 @@ const rebind = {
     bindName:"chain",
     scopeConstructor:"asyncGenerator",
     scopePostfix:true,
+    storeResultCont:"$exit",
     wrapFunction: "asyncGeneratorFunction",
     ops:{
       YieldExpression: true,
@@ -75,7 +76,8 @@ const inline = {
     contextBy:"reference",
     inlineJsExceptions:true,
     inlinePureJumps:"call",
-    inlineScopeOp:"unwrap",
+    inlineScopeOp:"context",
+    markRepeat:true,
     keepLastPure:true,
     keepLastRaise:true
   },
@@ -86,9 +88,11 @@ const inline = {
     storeCont:"$step",
     storeResultCont:"$exit",
     storeErrorCont:"$handle",
-    inlineReentryCheck:true,
     inlineYieldOp:"iterator",
-    inlineYieldStarOp:"iterator"
+    inlineYieldStarOp:"iterator",
+    inlineReentryCheck:true,
+    inlinePureOp: "iterator",
+    inlineRaiseOp:"throw"
   },
   async: {
     storeCont:false ,
@@ -101,41 +105,44 @@ const inline = {
     inlinePureOp:"promise",
     inlineScopeOp:null,
     inlineChainOp:"promise",
-    inlineResultContAssign:false,
     storeResultCont:false,
-    inlineRaiseOp:"promise"
+    inlineRaiseOp:"promise",
+    inlinePureOp: "promise"
   },
   asyncGenerators: {
     inlineResultContAssign:true,
     inlineErrorContAssign:true,
     inlineContAssign:true,
+    inlineScopeOp:"unwrap",
     storeCont:"step",
     storeErrorCont:"handle",
     storeResultCont:"$exit",
-    inlineReentryCheck:false,
     inlineYieldOp:"iterator",
     inlineYieldStarOp:"iterator",
-    inlineChainOp:"promise"
+    inlineChainOp:"promise",
+    inlinePureOp: "iterator",
+    inlineRaiseOp:"promise"
   }
 }
 
 const defunct = {
   effectful: {
     storeCont:"$step",
-    defunct:true
+    storeHandler:"$run",
+    defunct:true,
+    defunctStateDiscriminant:"arg"
   }
 }
 
 const defunctInline = {
   effectful: {
     markRepeat:false,
-    inlineScopeOp:"unwrap",
-    inlineJsExceptions:true,
-    inlinePureJumps:"tail",
+    defunctStateDiscriminant:"field",
     storeCont:"$step",
     storeErrorCont:"$handle",
-    inlineReentryCheck:false,
+    storeHandler:"step",
     inlineErrorContAssign:true,
+    inlinePureJumps:"tail",
     inlineContAssign:true,
     inlineChainOp:false,
     scopePrefix:true
@@ -156,16 +163,6 @@ const loose = {
     wrapFunction:false,
     wrapAsyncIteratorValue:false,
     inlineReentryCheck:false
-  }
-}
-
-const invertForOf = {
-  generators: {
-    inlineYieldOp:false,
-    invertForOf:true,
-    markRepeat:true,
-    contextBy:"reference",
-    finalizeForOf:true
   }
 }
 
@@ -201,8 +198,6 @@ module.exports = function esProfile(opts={}) {
       p.push("loose")
     else if (opts.inline)
       p.push("inline")
-    if (opts.delegateForOf)
-      p.push("delegate")
     if (opts.all && opts.all.jsTailCalls)
       p.push("tc")
     importRT = "@effectful/es-rt"
@@ -234,6 +229,10 @@ module.exports = function esProfile(opts={}) {
       Object.assign(async,defunctInline.effectful,defunctInline.async)
       Object.assign(asyncGenerators,defunctInline.effectful)
     }
+    // if (!opts.all || !opts.all.jsTailCalls) {
+    //  generators.inlinePureJumps = async.inlinePureJumps
+    //    = asyncGenerators.inlinePureJumps = "tail" 
+    // }
   }
   if (opts.loose) {
     Object.assign(pure,loose.all)
@@ -248,9 +247,6 @@ module.exports = function esProfile(opts={}) {
     Object.assign(generators,topLevel.all,topLevel.effectful)
     Object.assign(async,topLevel.all,topLevel.effectful)
     Object.assign(asyncGenerators,topLevel.all,topLevel.effectful)
-  }
-  if (opts.invertForOf) {
-    Object.assign(generators,invertForOf.generators)
   }
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})

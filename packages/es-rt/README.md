@@ -30,9 +30,7 @@ building own runtime. The environment variable options are:
  * `EJS_LOCAL_SYMBOLS` - use local Symbol's for iterator names, if there are
  a few builds loaded, and some uses different implementation for interfaces
  * `EJS_DEFUNCT` - support for `defunct` option 
- * `EJS_DELEGATE_FOR_OF` - faster implementation for `for-of` with effectful mode
-    (compiler's `invertForOf` option support)
- * EJS_NO_TRAMPOLINE - don't use trampoline for tail calls, for example, if target
+ * `EJS_NO_TRAMPOLINE` - don't use trampoline for tail calls, for example, if target
  JavaScript engine already supports tail calls
 
 ## Abstract interface

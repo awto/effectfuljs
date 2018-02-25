@@ -1252,6 +1252,8 @@ function calcPatSym(cfg) {
  */
 function calcVarDeps(sa) {
   const frames = getCfg(sa)
+  const root = sa[0].value
+  const ops = new Set()
   calcPatSym(frames)
   sa = cfgPostProcess(sa)
   State.calcFlatCfg(frames,sa)
@@ -1782,16 +1784,6 @@ function optUselessFrames(cfg) {
                && !(exit.frameArgs && exit.frameArgs.size))
     {
       let skip = false
-      /*
-      if (exit.goto && exit.goto.jumpsOnly) {
-        for(const j of i.enters) {
-          if (j.bindJump) {
-            skip = true
-            break
-          }
-        }
-      }
-      */
       if (!skip) {
         i.substJump = exit.goto
         i.removed = true

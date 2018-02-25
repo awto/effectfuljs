@@ -30,8 +30,13 @@ export default {
   // switch statements
   defunct: false,
 
-  // throws exception on invalid state, for debugging purposes
-  defunctGuardInvalidState: false,
+  // throw exception on invalid state (for debugging purposes)
+  defunctGuardInvalidState: true,
+
+  // defunct `switch` statement discriminant source
+  // "field" - ctx.$step field
+  // "argument" - handler's function argument
+  defunctStateDiscriminant: "field",
 
   // creates a context object for each effectul function's call
   scopeContext: false,
@@ -145,6 +150,9 @@ export default {
 
   // stores error continuation in the field's name of context object
   storeErrorCont: null,
+
+  // stores single handler function for defunct: true
+  storeHandler: null,
 
   // some named templates for some operations (mostly for ES compatibility):
   inlineChainOp: null, // "promise" | null
@@ -319,5 +327,4 @@ export default {
   normPureWhile: false,
   normPureForIn: false,
   normPureBlocks: false
-
 }

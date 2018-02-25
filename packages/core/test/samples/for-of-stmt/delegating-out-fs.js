@@ -6,7 +6,7 @@ function a1() {
   return M.scope(_5);
 
   function _1(a1) {
-    a1._fc = _4, a1._loop = M.delegate(b(), a1, a1, a1._fc);
+    a1._fc = _4, a1._loop = M.$delegate(b(), a1, a1, a1._fc);
     a1.$yld = _2;
     return M.jump(void 0, _7);
   }
@@ -52,7 +52,7 @@ function a2() {
   return M.scope(_6);
 
   function _1(a2) {
-    a2._fc = _4, a2._loop = M.delegate(b(), a2, a2, a2._fc);
+    a2._fc = _4, a2._loop = M.$delegate(b(), a2, a2, a2._fc);
     a2.$yld = _2;
     return M.jump(void 0, _8);
   }
@@ -102,7 +102,7 @@ function a3() {
   return M.scope(_9);
 
   function _1(a3) {
-    a3._fc = _7, a3._loop = M.delegate(b(), a3, a3, a3._fc);
+    a3._fc = _7, a3._loop = M.$delegate(b(), a3, a3, a3._fc);
     a3.$yld = _2;
     return M.jump(void 0, _11);
   }
@@ -182,7 +182,7 @@ function a4() {
   return M.scope(_11);
 
   function _1(a4) {
-    a4._fc = _7, a4._fc1 = _8, a4._loop = M.delegate(b(), a4, a4, a4._fc);
+    a4._fc = _7, a4._fc1 = _8, a4._loop = M.$delegate(b(), a4, a4, a4._fc);
     a4.$yld = _2;
     return M.jump(void 0, _12);
   }
@@ -269,7 +269,7 @@ function a5(i) {
   return M.scope(_16);
 
   function _1(a5) {
-    a5._fc2 = _15, a5._loop = M.delegate(some, a5, a5, a5._fc2);
+    a5._fc2 = _15, a5._loop = M.$delegate(some, a5, a5, a5._fc2);
     a5.$yld = _2;
     return M.jump(void 0, _20);
   }
@@ -278,7 +278,7 @@ function a5(i) {
     a5._loop.$s = a5.unwrap.$t;
     {
       a5._i1 = i;
-      a5._fc1 = _2, a5._loop1 = M.delegate(a5._i1, a5, a5._loop.$s, a5._loop.$s.true, _2);
+      a5._fc1 = _2, a5._loop1 = M.$delegate(a5._i1, a5, a5._loop.$s, a5._loop.$s.true, _2);
       a5.$yld = _3;
       return M.jumpR(void 0, _21);
     }
@@ -486,7 +486,7 @@ function a5_1(i) {
   return M.scope(_12);
 
   function _1(a5_1) {
-    a5_1._fc1 = _11, a5_1._loop = M.delegate(some, a5_1, a5_1, a5_1._fc1);
+    a5_1._fc1 = _11, a5_1._loop = M.$delegate(some, a5_1, a5_1, a5_1._fc1);
     a5_1.$yld = _2;
     return M.jump(void 0, _15);
   }
@@ -495,7 +495,7 @@ function a5_1(i) {
     a5_1._loop.$s = a5_1.unwrap.$t;
     {
       a5_1._i1 = i;
-      a5_1._fc = _2, a5_1._loop1 = M.delegate(a5_1._i1, a5_1, a5_1._loop.$s, a5_1._loop.$s.true, _2);
+      a5_1._fc = _2, a5_1._loop1 = M.$delegate(a5_1._i1, a5_1, a5_1._loop.$s, a5_1._loop.$s.true, _2);
       a5_1.$yld = _3;
       return M.jumpR(void 0, _16);
     }
@@ -650,7 +650,7 @@ function a5_2(i) {
   return M.scope(_16);
 
   function _1(a5_2) {
-    a5_2._fc2 = _15, a5_2._loop = M.delegate(some, a5_2, a5_2, a5_2._fc2);
+    a5_2._fc2 = _15, a5_2._loop = M.$delegate(some, a5_2, a5_2, a5_2._fc2);
     a5_2.$yld = _2;
     return M.jump(void 0, _20);
   }
@@ -659,7 +659,7 @@ function a5_2(i) {
     a5_2._loop.$s = a5_2.unwrap.$t;
     {
       a5_2._i1 = i;
-      a5_2._fc1 = _2, a5_2._loop1 = M.delegate(a5_2._i1, a5_2, a5_2._loop.$s, a5_2._loop.$s.true, _2);
+      a5_2._fc1 = _2, a5_2._loop1 = M.$delegate(a5_2._i1, a5_2, a5_2._loop.$s, a5_2._loop.$s.true, _2);
       a5_2.$yld = _3;
       return M.jumpR(void 0, _21);
     }
@@ -862,7 +862,7 @@ function a5_2(i) {
   return M.scope(_16);
 
   function _1(a5_2) {
-    a5_2._fc2 = _15, a5_2._loop = M.delegate(some, a5_2, a5_2, a5_2._fc2);
+    a5_2._fc2 = _15, a5_2._loop = M.$delegate(some, a5_2, a5_2, a5_2._fc2);
     a5_2.$yld = _2;
     return M.jump(void 0, _20);
   }
@@ -871,7 +871,7 @@ function a5_2(i) {
     a5_2._loop.$s = a5_2.unwrap.$t;
     {
       a5_2._i1 = i;
-      a5_2._fc1 = _2, a5_2._loop1 = M.delegate(a5_2._i1, a5_2, a5_2._loop.$s, a5_2._loop.$s.true, _2);
+      a5_2._fc1 = _2, a5_2._loop1 = M.$delegate(a5_2._i1, a5_2, a5_2._loop.$s, a5_2._loop.$s.true, _2);
       a5_2.$yld = _3;
       return M.jumpR(void 0, _21);
     }

@@ -8,12 +8,10 @@ import * as Except from "./exceptions"
 import * as Branch from "./branch"
 import * as Loop from "./loops"
 
-const alreadyRunningSym = Kit.sysId("alreadyRunning")
-
 /** marks frames with only jump in its payload, so no needs to check reentry */
 export function markSimpleRedir(si) {
   const s = Kit.auto(si)
-  return s.opts.inlineReentryCheck ? _markSimpleRedir() : s
+  return s.opts.inlineReentryCheck || !s.opts.defunt ? _markSimpleRedir() : s
   function* _markSimpleRedir() {
     for(const i of s) {
       if (i.enter && i.type === Block.frame) {
@@ -58,17 +56,16 @@ export function storeContinuations(si) {
         && makeSym(s.opts.storeResultCont,"rc")
   const err = root.errContSym = s.opts.inlineErrorContAssign
         && makeSym(s.opts.storeErrorCont,"ec")
-  const cont = root.contSym = s.opts.inlineContAssign
+  const inlineConts = s.opts.inlineContAssign
+  const inlineContJumps = inlineConts  || s.opts.inlinePureJumps === "tail"
+  const cont = root.contSym = inlineContJumps
         && makeSym(s.opts.storeCont,"sc")
   const errIgnore = s.opts.inlineErrorContAssign === "ignore"
   const resIgnore = s.opts.inlineResultContAssign === "ignore"
   const thisCtx = s.opts.contextBy === "this"
-  if (s.opts.defunct)
-    root.runSym = makeSym("$run","rn")
-  const reentry = s.opts.inlineReentryCheck && cont
-  if (reentry && s.opts.defunct)
-    throw s.error(
-      "`defunct:true` is not compatible with `inlineReentryCheck:true`")
+  if (s.opts.defunct && s.opts.storeHandler)
+    root.runSym = makeSym(s.opts.storeHandler,"rn")
+  const reentry = !s.opts.defunct && s.opts.inlineReentryCheck && cont
   if (!err && !res && !cont)
     return s
   return _storeContinuations()
@@ -116,17 +113,18 @@ export function storeContinuations(si) {
         if (err && eframe && !eframe.removed && assignError && !errIgnore)
           yield* assign(err,eframe.declSym)
         if (reentry && !f.first && !f.simpleRedir)
-          yield* assign(reentry,alreadyRunningSym)
+          yield* assign(reentry,Block.alreadyRunningSym)
         for(const j of s.sub()) {
           if (j.enter) {
             switch(j.type) {
             case Block.letStmt:
               if (!j.value.eff ||
-                  invertForOf && j.value.storeCont === false)
+                  invertForOf && j.value.storeCont === false
+                 || !inlineConts)
                 break
             case Ctrl.jump:
               if (noPureJumpsStore && j.type === Ctrl.jump
-                  && !j.value.rec && !thisCtx)
+                  && !j.value.rec && !thisCtx || !inlineContJumps)
                 break
               const {goto} = j.value
               if (cont
@@ -143,14 +141,13 @@ export function storeContinuations(si) {
   }
 }
 
-const delegateSym = Kit.sysId("delegate")
-
 function* assignValue(s,contextSym) {
   yield s.enter(Tag.push,Tag.AssignmentExpression,
                 {node:{operator:"="}})
   yield* s.toks(Tag.left,"=$I.value",contextSym)
-  yield* s.curLev() ? Kit.reposOne(s.sub(),Tag.right)
+  yield* s.curLev() ? Kit.reposOne(s.one(),Tag.right)
     : Kit.scope.emitUndefined(Tag.right)
+  Kit.skip(s.sub())
   yield* s.leave()
 }
 
@@ -198,7 +195,7 @@ function generatorsYield(si) {
           if (!inlineYieldStar)
             break
           yield s.enter(Tag.push,Tag.CallExpression,{result:!noResult})
-          yield s.tok(Tag.callee,Tag.Identifier,{sym:delegateSym})
+          yield s.tok(Tag.callee,Tag.Identifier,{sym:Block.delegateSym})
           yield s.enter(Tag.arguments,Tag.Array)
           yield* s.sub()
           yield* s.leave()
@@ -298,6 +295,7 @@ export function jumpOps(si) {
   const inlineJumps = s.opts.inlinePureJumps === "call"
   const inlineScope = s.opts.inlineScopeOp === "call"
   const jumpsExit = s.opts.inlinePureJumps === "exit"
+  const promiseRec = s.opts.inlineChainOp === "promise"
   if (s.opts.inlinePureJumps && !inlineJumps && !jumpsExit
       && s.opts.inlinePureJumps && s.opts.inlinePureJumps !== "tail") {
     throw s.error(
@@ -386,14 +384,21 @@ export function jumpOps(si) {
               if (j.value.sym === jumpRId && (inlineJumps || jumpsExit)
                   || j.value.sym === jumpId && jumpsExit) {
                 const ctx = j.value.delegateCtx || contextSym
-                if (j.value.hasBindVal)
-                  yield* assignValue(s,ctx)
-                if (j.value.delegateCtx) {
-                  yield* s.toks(Tag.push,"=$1.$s.$running = true, $1.$s",{result:true},ctx)
+                if (promiseRec) {
+                  yield* s.template(Tag.push,`=Promise.resolve($E).then($1)`,
+                                    {result:true},j.value.goto)
+                  yield* s.one()
+                  yield* s.leave()
                 } else {
-                  yield* s.toks(Tag.push,"$I.$running = true", ctx)
-                  if (!noResult)
-                    yield s.tok(Tag.push,Tag.Identifier,{sym:ctx,result:true})
+                  if (j.value.hasBindVal)
+                    yield* assignValue(s,ctx)
+                  if (j.value.delegateCtx) {
+                    yield* s.toks(Tag.push,"=$1.$s.$running = true, $1.$s",{result:true},ctx)
+                  } else {
+                    yield* s.toks(Tag.push,"$I.$running = true", ctx)
+                    if (!noResult)
+                      yield s.tok(Tag.push,Tag.Identifier,{sym:ctx,result:true})
+                  }
                 }
                 Kit.skip(s.sub())
                 s.close(j)
@@ -507,6 +512,7 @@ export function pureOp(si) {
     throw s.error("not implemented inlinePure: 'iterator' without context")
   const field = s.opts.storeCont, exitField = s.opts.storeResultCont
   const noResult = s.opts.returnContext === false
+  const exitCont = s.opts.defunct ? "1" : `$1.${exitField}`
   return _pureOp()
   function* val(pos) {
     const j = s.curLev()
@@ -522,30 +528,32 @@ export function pureOp(si) {
   }
   function* _pureOp() {
     for(const i of s) {
-      if (i.enter && i.type === Block.app && i.value.sym === Block.pureId) {
-        if (noop) {
-          yield* val(i.pos)
-        } else if (promise) {
-          yield s.enter(Tag.push,Tag.CallExpression,{result:!noResult})
-          yield s.enter(Tag.callee,Tag.MemberExpression)
-          yield s.tok(Tag.object,Tag.Identifier,{node:{name:"Promise"}})
-          yield s.tok(Tag.property,Tag.Identifier,{node:{name:"resolve"}})
-          yield* s.leave()
-          yield s.enter(Tag.arguments,Tag.Array)
-          if (s.curLev())
-            yield* s.sub()
-          yield* s.leave()
-          yield* s.leave()
-        } else {
-          yield* s.toks(Tag.push,
-                        `$1.${field} = $1.${exitField}, $1.done = true`,
-                        contextSym)
-          yield* assignValue(s,contextSym)
-          if (!noResult)
-            yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
+      if (i.enter && i.type === Block.app) {
+        if (i.value.sym === Block.pureId) {
+          if (noop) {
+            yield* val(i.pos)
+          } else if (promise) {
+            yield s.enter(Tag.push,Tag.CallExpression,{result:!noResult})
+            yield s.enter(Tag.callee,Tag.MemberExpression)
+            yield s.tok(Tag.object,Tag.Identifier,{node:{name:"Promise"}})
+            yield s.tok(Tag.property,Tag.Identifier,{node:{name:"resolve"}})
+            yield* s.leave()
+            yield s.enter(Tag.arguments,Tag.Array)
+            if (s.curLev())
+              yield* s.sub()
+            yield* s.leave()
+            yield* s.leave()
+          } else {
+            yield* assignValue(s,contextSym)
+            yield* s.toks(Tag.push,
+                          `$1.${field} = ${exitCont}, $1.done = true`,
+                          contextSym)
+            if (!noResult)
+              yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
+          }
+          s.close(i)
+          continue
         }
-        s.close(i)
-        continue
       }
       yield i
     }
@@ -566,18 +574,25 @@ export function raiseOp(si) {
   const asReject = s.opts.inlineRaiseOp === "promise"
   if (!asThrow && !asReject)
     throw new Error(`unknown 'inlineRaiseOp' option ${s.opts.inlineRaiseOp}`)
+  const {contextSym} = s.first.value
+  const field = s.opts.storeCont, exitField = s.opts.storeResultCont
+  const noResult = s.opts.returnContext === false
+  const exitCont = s.opts.defunct ? "1" : `$1.${exitField}`
   return _raiseOp()
   function* _raiseOp() {
     for(const i of s) {
       const lab = s.label()
       if (i.enter && i.type === Block.app && i.value.sym === Except.raiseId) {
         if (asThrow) {
+          yield* s.toks(Tag.push,
+                        `$1.${field} = ${exitCont}`,
+                        contextSym)
           yield s.enter(i.pos,Tag.ThrowStatement)
           yield* Kit.reposOne(s.sub(),Tag.argument)
         } else {
-          yield s.enter(i.pos,Tag.CallExpression,{result:true})
-          yield* s.toks(Tag.callee,"=Promise.reject")
-          yield s.enter(Tag.arguments,Tag.Array)
+          yield* s.template(Tag.push,
+                            `=$1.${field} = ${exitCont}, Promise.reject($E)`,
+                            {result:true},contextSym)
           yield* Kit.reposOne(s.sub(),Tag.push)
         }
         yield* lab()
@@ -880,7 +895,7 @@ export function invertForOf(si) {
             assert.ok(call.type === Tag.CallExpression)
             const iterSym = s.take()
             assert.ok(iterSym.value.sym === Loop.iteratorId)
-            iterSym.value.sym = delegateSym
+            iterSym.value.sym = Block.delegateSym
             yield* s.copy(iterSym)
             yield s.peel()
             yield* s.sub()
@@ -942,7 +957,7 @@ function delegateYield(si) {
             yield* s.template(
               Tag.push,
               `=$2=$3($E,$1.$y,$E,$4)`,
-              ctx, sym, delegateSym, i.value.goto.declSym)
+              ctx, sym, Block.delegateSym, i.value.goto.declSym)
             yield* s.sub()
             yield* s.refocus()
             const {forOfInfo:up} = i.value.goto

@@ -52,8 +52,4 @@ describe("regenerator with loose inlined operations", function() {
     global.skipTests = looseSkip
     require("./looseDefunctTop/links/regenerator")
   })
-  describe("with inverted for-of", function() {
-    global.skipTests = top
-    require("./looseDelegate/links/regenerator")
-  })
 })

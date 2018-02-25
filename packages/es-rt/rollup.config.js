@@ -1,6 +1,7 @@
 import babel from "rollup-plugin-babel"
 
 let file = "index.js"
+
 if (process.env.EJS_OPT) {
   const opts = []
   if (process.env.EJS_DEFUNCT)
@@ -9,8 +10,6 @@ if (process.env.EJS_OPT) {
     opts.push("loose")
   if (process.env.EJS_INLINE && !process.env.EJS_LOOSE)
     opts.push("inline")
-  if (process.env.EJS_DELEGATE_FOR_OF)
-    opts.push("delegate")
   if (process.env.EJS_NO_TRAMPOLINE)
     opts.push("tc")
   const name = opts.length ?  opts.join("-") : "default"

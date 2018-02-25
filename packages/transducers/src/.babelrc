@@ -17,7 +17,6 @@
         ["es-dev",{"loose":true,
                    "all": {
                      "jsExceptions":false,
-                     "jsTailCalls":true,
                      "inlineJsExceptions":false,
                      "inlineThrow":true,
                      "loopBlockScoping":false
@@ -101,7 +100,6 @@
           "top":true,
           "all": {
             "loopBlockScoping":false,
-            "jsTailCalls":true,
             "jsExceptions":false,
             "inlineJsExceptions":false,
             "inlineThrow":true,
@@ -130,7 +128,6 @@
                    "all": {
                      "jsExceptions":false,
                      "inlineJsExceptions":false,
-                     "jsTailCalls":true,
                      "inlineThrow":true,
                      "inlineScopeOp":"context"
                    }

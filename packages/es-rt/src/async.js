@@ -47,41 +47,53 @@ if (!process.env.EJS_INLINE) {
     try {
       this.$handle = handle
       this.$step = step
-      return process.env.EJS_DEFUNCT ? this.$run() : this.$step()
+      return process.env.EJS_DEFUNCT ?
+        (process.env.EJS_INLINE ? this.step() : this.$run(this.$step)) : this.$step()
     } catch(e) {
       return process.env.EJS_DEFUNCT
-        ? (this.$step= this.$handle, this.$run(e))
+        ? (this.$step = this.$handle,
+           process.env.EJS_INLINE ? this.step(e) : this.$run(this.$step,e))
         : this.$handle(e)
     }
   }
   
   Ap.chain = function chain(p, step, handle) {
+    const ctx = this
     return Promise.resolve(p)
       .then(
-        v => {
-          this.$handle = handle
-          this.$step = step
+        function(v) {
+          ctx.$handle = handle
+          ctx.$step = step
           try {
-            return process.env.EJS_DEFUNCT ? this.$run(v) : this.$step(v)
+            return process.env.EJS_DEFUNCT
+              ? (process.env.EJS_INLINE ? ctx.step(v) : ctx.$run(ctx.$step,v))
+            : ctx.$step(v)
           } catch(e) {
             return process.env.EJS_DEFUNCT
-              ? (this.$step = this.$handle, this.$run(e))
-              : this.$handle(e)
+              ? (ctx.$step = ctx.$handle,
+                 (process.env.EJS_INLINE ? ctx.step(e) : ctx.$run(ctx.$step,e)))
+              : ctx.$handle(e)
           }
         },
-        e => process.env.EJS_DEFUNCT
-          ? (this.$step = this.$handle, this.$run(e))
-          : this.$handle(e))
+        function(e) {
+          return process.env.EJS_DEFUNCT
+            ? (ctx.$step = ctx.$handle,
+               (process.env.EJS_INLINE ? ctx.step(e) : ctx.$run(ctx.$step,e)))
+            : ctx.$handle(e)
+        })
   }
   
   Ap.jump = function jump(value, step, handle) {
     this.$handle = handle
     this.$step = step
     try {
-      return process.env.EJS_DEFUNCT ? this.$run(value) : this.$step(value)
+      return process.env.EJS_DEFUNCT
+        ? (process.env.EJS_INLINE ? this.step(value) : this.$run(this.$step,value))
+      : this.$step(value)
     } catch(e) {
       return process.env.EJS_DEFUNCT
-        ? (this.$step = this.$handle, this.$run(e))
+        ? (this.$step = this.$handle,
+           (process.env.EJS_INLINE ? this.step(e) : this.$run(this.$step,e)))
         : this.$handle(e)
     }
   }
@@ -95,10 +107,15 @@ if (!process.env.EJS_INLINE) {
   }
 } else if (process.env.EJS_DEFUNCT) {
   function contNext(ctx) {
-    return function(v) { return ctx.$run(v) }
+    return function(v) {
+      return (process.env.EJS_INLINE ? ctx.step(v) : ctx.$run(ctx.$step,v))
+    }
   }
   function contErr(ctx) {
-    return function(v) { return ctx.$step = ctx.$handle, ctx.$run(v) }
+    return function(v) {
+      return ctx.$step = ctx.$handle,
+      (process.env.EJS_INLINE ? ctx.step(v) : ctx.$run(ctx.$step,v))
+    }
   }
   Ap.chain = function chain(p) {
     return Promise.resolve(p).then(contNext(this),contErr(this))

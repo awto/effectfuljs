@@ -18,7 +18,6 @@
           "all": {
             "jsExceptions":false,
             "inlineJsExceptions":false,
-            "jsTailCalls":true,
             "inlineThrow":true,
             "loopBlockScoping":false,
             "moduleAliases":{
@@ -119,7 +118,6 @@
           "all": {
             "loopBlockScoping":false,
             "jsExceptions":false,
-            "jsTailCalls":true,
             "inlineJsExceptions":false,
             "inlineThrow":true,
             "moduleAliases":{
@@ -147,7 +145,6 @@
           "all": {
             "jsExceptions":false,
             "inlineJsExceptions":false,
-            "jsTailCalls":true,
             "inlineThrow":true,
             "loopBlockScoping":false,
             "moduleAliases":{
@@ -163,7 +160,6 @@
             "inlineJsExceptions":false,
             "inlineYieldOp":false,
             "invertForOf":true,
-            "jsTailCalls":true,
             "markRepeat":true,
             "contextBy":"reference",
             "inlineThrow":true,

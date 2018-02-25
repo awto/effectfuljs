@@ -6,6 +6,8 @@ import * as Ctrl from "./control"
 import * as assert from "assert"
 import * as Except from "./exceptions"
 
+const reentryCont = 3
+
 /** prepares vars for storing current state and bind */
 export function* prepare(si) {
   const s = Kit.auto(si)
@@ -27,23 +29,36 @@ export function* prepare(si) {
     })
   const errMap = inline && (root.errMap = new Map())
   const errFrame = root.errFrameRedir
-  let num = 0
+  const resFrame = root.resFrameRedir
+  let num = 3
+  // needs already running check
+  if (!s.opts.loose)
+    num++
+  let hasYldStar = false
   const first = (yield* s.till(i => i.type === Block.frame && i.leave)).value
   for(const i of s) {
-    if (i.enter && i.type === Block.frame) {
-      i.value.stateId = i.value.declSym.numConst = num++
-      if (errMap) {
-        const catchCont = i.value.catchContRedir
-        if (catchCont && catchCont !== errFrame) {
-          let frames = errMap.get(catchCont)
-          if (!frames)
-            errMap.set(catchCont,frames = [])
-          frames.push(i.value)
+    if (i.enter) {
+      if (i.type === Block.frame) {
+        i.value.stateId = i.value.declSym.numConst =
+          i.value === resFrame ? 1
+          : i.value === errFrame ? 2
+          : num++
+        if (errMap) {
+          const catchCont = i.value.catchContRedir
+          if (catchCont && catchCont !== errFrame) {
+            let frames = errMap.get(catchCont)
+            if (!frames)
+              errMap.set(catchCont,frames = [])
+            frames.push(i.value)
+          }
         }
+      } else if (i.type === Block.letStmt && i.value.bindName === "yldStar") {
+        hasYldStar = true
       }
     }
     yield i
   }
+  root.hasYldStar = hasYldStar
 }
 
 /** 
@@ -72,6 +87,9 @@ export function inlineExceptions(si) {
       if (i.enter && i.value === implFrame)
         break
     }
+    if (s.opts.inlineReentryCheck)
+      yield* s.toks(Tag.push, `if ($I === ${reentryCont}) $I()`,
+                   root.contSym,Block.alreadyRunningSym)
     yield s.enter(Tag.push,Tag.TryStatement)
     const tlab = s.label()
     yield s.enter(Tag.block,Tag.BlockStatement)
@@ -85,7 +103,7 @@ export function inlineExceptions(si) {
     yield s.enter(Tag.body,Tag.Array)
     if (errMap.size) {
       yield s.enter(Tag.push,Tag.SwitchStatement)
-      yield s.tok(Tag.discriminant,Tag.Identifier,{sym:contSym})
+      yield s.tok(Tag.discriminant,Tag.Identifier,{sym:implFrame.discrimSym})
       yield s.enter(Tag.cases,Tag.Array)
       const clab = s.label()
       for(const [goto,i] of errMap) {
@@ -125,18 +143,38 @@ export function* frames(si) {
   assert.ok(contSym)
   const decls = root.implFrame.value.savedDecls = new Map()
   const impl = root.implFrame.value
+  const discrimArg = impl.ctrlParam
+        = s.opts.defunctStateDiscriminant === "arg" && Kit.scope.newSym("s")
   const f = yield* s.till(i => i.type === Block.frame)
   // TODO: it top level this must be set in prototype
-  yield* s.toks(Tag.push,`$I.$run = $I`,contextSym,impl.declSym)
+  yield* s.toks(Tag.push,`$I.${s.opts.storeHandler} = $I`,contextSym,impl.declSym)
   yield* s.sub()
   yield s.close(f)
   yield root.implFrame
   const lab = s.label()
   yield s.enter(Tag.push,Tag.SwitchStatement)
-  yield s.tok(Tag.discriminant,Tag.Identifier,{sym:contSym})
+  if (discrimArg) {
+    if (s.opts.inlineReentryCheck)
+      yield* s.toks(Tag.discriminant,`=$2 = ${reentryCont}, $1`,
+                    discrimArg,contSym)
+    else
+      yield s.tok(Tag.discriminant, Tag.Identifier, {sym:discrimArg})
+    impl.discrimSym = discrimArg
+  } else {
+    const sym = Kit.scope.newSym("s")
+    impl.savedDecls.set(sym,{})
+    if (s.opts.inlineReentryCheck)
+      yield* s.toks(Tag.discriminant,`=$1=$2, $2 = ${reentryCont}, $1`,
+                    sym,contSym)
+    else
+      yield* s.toks(Tag.discriminant,`=$1=$2, $1`,
+                    sym,contSym)
+    impl.discrimSym = sym
+  }
   yield s.enter(Tag.cases,Tag.Array)
   const clab = s.label()
   let hasJumps = false
+  const noResult = s.opts.returnContext === false
   for(const i of s.sub()) {
     if (i.enter && i.type === Block.frame) {
       if (i.value.catchContRedir !== errFrameRedir)
@@ -169,6 +207,13 @@ export function* frames(si) {
       s.close(i)
     } else
       yield i
+  }
+  if (root.hasYldStar) {
+    yield s.enter(Tag.push, Tag.SwitchCase)
+    yield s.tok(Tag.test,Tag.NumericLiteral,{node:{value:0}})
+    yield s.enter(Tag.consequent,Tag.Array)
+    yield* s.toks(Tag.push,`=$I($I)`,{result:true},Block.redirSym,root.commonPatSym)
+    yield* clab()
   }
   if (s.opts.defunctGuardInvalidState) {
     yield s.enter(Tag.push, Tag.SwitchCase)
@@ -203,8 +248,6 @@ export function tailJumps(si) {
     return s
   if (!s.opts.defunct) 
     throw s.error("`inlinePureJumps:'tail'` requires `defunct:true`")
-  if (!s.opts.inlineContAssign)
-    throw s.error("`inlinePureJumps:'tail'` requires `inlineContAssign:true`")
   return walk()
   //TODO: make a marking pass
   function* walk() {

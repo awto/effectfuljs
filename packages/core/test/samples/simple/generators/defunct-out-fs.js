@@ -2,136 +2,162 @@ import * as M from '@effectful/core';
 
 function a() {
   var a = M.context();
-  a.$run = _1;
-  a.$sc = 0;
+  a.null = _1;
+  a.$sc = 4;
   return M.scope();
 
   function _1(a, p) {
-    switch (a.$sc) {
-      case 0:
-        a.$sc = 1;
+    var s;
+
+    switch (s = a.$sc, s) {
+      case 4:
+        a.$sc = 5;
         return M.yldStar(M.yld(1));
 
-      case 1:
-        a.$sc = 2;
+      case 5:
+        a.$sc = 6;
         return M.yldStar(M.yld(2));
 
-      case 2:
+      case 6:
         return M.pure();
+
+      case 0:
+        return M.$redir(p);
+
+      default:
+        throw new Error('invalid state');
     }
   }
 }
 
 function b() {
   var b = M.context();
-  b.$run = _1;
-  b.$sc = 0;
+  b.null = _1;
+  b.$sc = 4;
   return M.scope();
 
   function _1(b, p) {
-    switch (b.$sc) {
-      case 0:
-        b.$sc = 1;
-        return M.yldStar(M.yld(1), 4);
+    var s;
 
-      case 1:
-        b.$sc = 3;
+    switch (s = b.$sc, s) {
+      case 4:
+        b.$sc = 5;
+        return M.yldStar(M.yld(1), 8);
+
+      case 5:
+        b.$sc = 7;
         return M.yldStar(M.yld(2));
 
-      case 2:
+      case 6:
         b._e = b._ex;
-        b.$sc = 3;
+        b.$sc = 7;
         return M.yldStar(M.yld(b._e));
 
-      case 3:
+      case 7:
         return M.pure();
 
-      case 4:
-        b.$sc = 2;
+      case 8:
+        b.$sc = 6;
         b._ex = p;
         return M.jump();
+
+      case 0:
+        return M.$redir(p);
+
+      default:
+        throw new Error('invalid state');
     }
   }
 }
 
 function c() {
   var c = M.context();
-  c.$run = _1;
-  c.$sc = 0;
+  c.null = _1;
+  c.$sc = 4;
   return M.scope();
 
   function _1(c, p) {
-    switch (c.$sc) {
-      case 0:
-        c.$sc = 1;
-        return M.yldStar(M.yld(1), 7);
+    var s;
 
-      case 1:
-        c.$sc = 3;
-        c._fc = 4, c._fe = 5;
+    switch (s = c.$sc, s) {
+      case 4:
+        c.$sc = 5;
+        return M.yldStar(M.yld(1), 10);
+
+      case 5:
+        c.$sc = 7;
+        c._fc = 8, c._fe = 2;
         return M.yldStar(M.yld(2));
 
-      case 2:
+      case 6:
         c._e = c._ex;
-        c.$sc = 3;
-        c._fc = 4, c._fe = 5;
+        c.$sc = 7;
+        c._fc = 8, c._fe = 2;
         return M.yldStar(M.yld(c._e));
 
-      case 3:
+      case 7:
         c.$sc = c._fc;
         return M.yldStar(M.yld('F'), c._fe);
 
-      case 4:
+      case 8:
         return M.pure();
 
-      case 5:
+      case 2:
         return M.raise(p);
 
-      case 6:
+      case 9:
         return M.raise(c._err1);
 
-      case 7:
-        c.$sc = 2;
+      case 10:
+        c.$sc = 6;
         c._ex = p;
-        return M.jump(void 0, 8);
+        return M.jump(void 0, 11);
 
-      case 8:
-        c.$sc = 3;
-        c._fc = 6, c._fe = 5, c._err1 = p;
+      case 11:
+        c.$sc = 7;
+        c._fc = 9, c._fe = 2, c._err1 = p;
         return M.jump();
+
+      case 0:
+        return M.$redir(p);
+
+      default:
+        throw new Error('invalid state');
     }
   }
 }
 
 function d() {
   var d = M.context();
-  d.$run = _1;
-  d.$sc = 0;
+  d.null = _1;
+  d.$sc = 4;
   return M.scope();
 
   function _1(d, p) {
-    switch (d.$sc) {
-      case 0:
-        d._loop = M.iterator(s);
-        d.$sc = 1;
-        return M.jump(void 0, 7);
+    var _s;
 
-      case 1:
+    switch (_s = d.$sc, _s) {
+      case 4:
+        d._loop = M.iterator(s);
+        d.$sc = 5;
+        return M.jump(void 0, 10);
+
+      case 5:
         if (!(d._loop = d._loop.step()).done) {
           d._i = d._loop.value;
-          d.$sc = 2;
-          return M.yldStar(M.yldStar([d._i]), 7);
+          d.$sc = 6;
+          return M.yldStar(M.yldStar([d._i]), 10);
         } else {
-          d.$sc = 3;
-          d._fc = 4, d._fe = 5;
+          d.$sc = 7;
+          d._fc = 8, d._fe = 2;
           return M.jump();
         }
 
-      case 2:
-        d.$sc = 1;
-        return M.yldStar(M.yld(d._i), 7);
+      case 6:
+        d.$sc = 5;
+        return M.yldStar(M.yld(d._i), 10);
 
-      case 3:
+      case 7:
         if (d._loop.exit) {
           d._loop.exit();
         }
@@ -139,19 +165,25 @@ function d() {
         d.$sc = d._fc;
         return M.jump(void 0, d._fe);
 
-      case 4:
+      case 8:
         return M.pure();
 
-      case 5:
+      case 2:
         return M.raise(p);
 
-      case 6:
+      case 9:
         return M.raise(d._err1);
 
-      case 7:
-        d.$sc = 3;
-        d._fc = 6, d._fe = 5, d._err1 = p;
+      case 10:
+        d.$sc = 7;
+        d._fc = 9, d._fe = 2, d._err1 = p;
         return M.jump();
+
+      case 0:
+        return M.$redir(p);
+
+      default:
+        throw new Error('invalid state');
     }
   }
 }
@@ -163,32 +195,40 @@ async function af1() {
 
 function b2() {
   var b2 = M.context();
-  b2.$run = _1;
-  b2.$sc = 0;
+  b2.null = _1;
+  b2.$sc = 4;
   return M.scope();
 
   function _1(b2, p) {
-    switch (b2.$sc) {
-      case 0:
-        b2.$sc = 1;
-        return M.yldStar(M.yld(1), 4);
+    var s;
 
-      case 1:
-        b2.$sc = 3;
+    switch (s = b2.$sc, s) {
+      case 4:
+        b2.$sc = 5;
+        return M.yldStar(M.yld(1), 8);
+
+      case 5:
+        b2.$sc = 7;
         return M.yldStar(M.yld(2));
 
-      case 2:
+      case 6:
         b2._e = b2._ex;
-        b2.$sc = 3;
+        b2.$sc = 7;
         return M.yldStar(M.yld(b2._e));
 
-      case 3:
+      case 7:
         return M.pure();
 
-      case 4:
-        b2.$sc = 2;
+      case 8:
+        b2.$sc = 6;
         b2._ex = p;
         return M.jump();
+
+      case 0:
+        return M.$redir(p);
+
+      default:
+        throw new Error('invalid state');
     }
   }
 }

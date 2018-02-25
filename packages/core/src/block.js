@@ -27,6 +27,9 @@ export const sharedRef = symbol("sharedRef")
 /** effectful operation */
 export const op = symbol("op")
 export const pureId = Kit.sysId("pure")
+export const alreadyRunningSym = Kit.sysId("$alreadyRunning")
+export const delegateSym = Kit.sysId("$delegate")
+export const redirSym = Kit.sysId("$redir")
 
 /**
  * Replaces binary `app` nodes with its first component member function call 

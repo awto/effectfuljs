@@ -2,8 +2,7 @@
  * lean iterator for JS array
  */
 import {LeanIteratorPrototype} from "./leanIterator"
-import {Generator} from "./esIterator"
-import {iterator as iterSym, delegateIterator as delegateSym} from "./symbol"
+import {iterator as iterSym} from "./symbol"
 
 function ArrayLeanIterator(arr) {
   this.arr = arr
@@ -14,70 +13,15 @@ function ArrayLeanIterator(arr) {
 
 var ALIp = ArrayLeanIterator.prototype = Object.create(LeanIteratorPrototype)
 
-if (process.env.EJS_DELEGATE_FOR_OF) {
-  function ArrayLeanDelegateIterator(arr,dst,y,r,rstep,iyld) {
-    this.arr = arr
-    this.x = 0
-    this.done = arr.length === 0
-    this.$s = this
-    this.$i = this.$e = dst
-    this.$y = y
-    this.$r = r
-    this.$rstep = rstep
-    this.$iyld = iyld
-    this.unwrap = dst.unwrap
-  }
-  var ALDIp = ArrayLeanDelegateIterator.prototype
-  ALDIp.step = ALDIp.$step = function() {
-    if (this.x >= this.arr.length) {
-      this.$r.$res = this.$rstep, this.$i.$yld = this.$iyld
-      return this.$r.$res()
-    }
-    this.unwrap.$t = this
-    return this.$y.$yld(this.arr[this.x++])
-  }
-  ALDIp.exit = ALDIp.$exit = function() {
-    this.done = true
-    this.$r.$res = this.$rstep, this.$i.$yld = this.$iyld
-    this.x = this.arr.lenth
-    return this.$r.$res()
-  }
-  ALDIp[iterSym] = function() {
-    return Object.create(ALIp,{arr:this.arr,x:this.x,done:this.done})
-  }
-  ALIp[delegateSym] = ALDIp[delegateSym] = function(dst,y,r,rstep,iyld) {
-    var res = new ArrayLeanDelegateIterator(this.arr,dst,y,r,rstep,iyld)
-    res.x = this.x
-    res.done = this.done
-    return res
-  }
-  ALIp.step = ALIp.$step = function() {
-    if (this.x >= this.arr.length) {
-      this.done = true
-      this.value = void 0
-    } else
-      this.value = this.arr[this.x++]
-    return this
-  }
-  Array.prototype[delegateSym] = function(dst,y,r,rstep,iyld) {
-    return new ArrayLeanDelegateIterator(this,dst,y,r,rstep,iyld)
-  }
-  Array.prototype[iterSym] = function() {
-    return new ArrayLeanIterator(this)
-  }
-  Array.prototype[delegateSym] = function(dst,y,r,rstep,iyld) {
-    return new ArrayLeanDelegateIterator(this,dst,y,r,rstep,iyld)
-  }
-} else {
-  ALIp.step = function step() {
-    if (this.x >= this.arr.length)
-      return this.pure()
-    this.value = this.arr[this.x++]
-    return this
-  }
-  Array.prototype[iterSym] = function() {
-    return new ArrayLeanIterator(this)
-  }
+ALIp.step = function step() {
+  if (this.x >= this.arr.length)
+    return this.pure()
+  this.value = this.arr[this.x++]
+  return this
+}
+
+Array.prototype[iterSym] = function() {
+  return new ArrayLeanIterator(this)
 }
 
 ALIp[iterSym] = function() { return this }
@@ -109,4 +53,5 @@ ALIp.next = function next() {
   return {value: this.value, done: this.done }
 }
 
+ALIp[Symbol.iterator] = function() { return this }
 

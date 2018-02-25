@@ -15,17 +15,17 @@ export var UnwrapWrapper
 
 if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {
   UnwrapWrapper = function UnwrapWrapper(inner) {
-    this.inner = inner
+    this.$inner = inner
     this.done = false
   }
   UnwrapWrapper.prototype = Object.create(LeanAsyncIteratorPrototype)
 
-  function doUnwrap(ctx,v) {
+  function unwrap(ctx,v) {
     function rethrow(e) { return ctx.raise(e) }
     return Promise.resolve(v).then(
       function(inner) {
         return Promise.resolve(inner.value).then(function(value) {
-          ctx.inner = inner
+          ctx.$inner = inner
           if (inner.done)
             return ctx.pure(value)
           ctx.value = inner.value = value
@@ -38,15 +38,15 @@ if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {
   }
 
   UnwrapWrapper.prototype.step = function step(v) {
-    return doUnwrap(this,this.inner.step(v))
+    return unwrap(this,this.$inner.step(v))
   }
 
   UnwrapWrapper.prototype.handle = function handle(e) {
-    return doUnwrap(this,this.inner.handle(e))
+    return unwrap(this,this.$inner.handle(e))
   }
 
   UnwrapWrapper.prototype.exit = function exit(v) {
-    return doUnwrap(this,this.inner.exit(v))
+    return unwrap(this,this.$inner.exit(v))
   }
 
   UnwrapWrapper.prototype.pure = function pure(value) {

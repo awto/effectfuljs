@@ -21,15 +21,12 @@
     "build-bundle-opt": "cross-env env-cmd configure,opt,$EJS_ENV rollup -c",
     "build-default-opts": "npm run build-l && npm run build-i",
     "build-defunct-opts": "npm run build-t && npm run build-tl && npm run build-ti",
-    "build-delegate-opts": "npm run build-dl && npm run build-d",
-    "build-opts": "npm run build-default-opts && npm run build-defunct-opts && npm run build-delegate-opts",
+    "build-opts": "npm run build-default-opts && npm run build-defunct-opts",
     "build-l": "cross-env EJS_ENV=loose npm run build-bundle-opt",
     "build-i": "cross-env EJS_ENV=inline npm run build-bundle-opt",
     "build-t": "cross-env EJS_ENV=defunct npm run build-bundle-opt",
     "build-tl": "cross-env EJS_ENV=defunct,loose npm run build-bundle-opt",
     "build-ti": "cross-env EJS_ENV=defunct,inline npm run build-bundle-opt",
-    "build-d": "cross-env EJS_ENV=local,delegate,inline npm run build-bundle-opt",
-    "build-dl": "cross-env EJS_ENV=local,delegate,loose npm run build-bundle-opt",
     "prepare": "npm run build"
   },
   "keywords": [

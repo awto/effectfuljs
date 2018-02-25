@@ -8,4 +8,3 @@ describe("generators using abstract context passing runtime", function() {
       require("./defunctTopLevel/links/generators"))
 })
 
-
