@@ -144,7 +144,6 @@ const defunctInline = {
     inlineErrorContAssign:true,
     inlinePureJumps:"tail",
     inlineContAssign:true,
-    inlineChainOp:false,
     scopePrefix:true
   },
   async: {
@@ -173,19 +172,23 @@ const topLevel = {
   all: {
     topLevel:true,
     contextBy: "this",
-    contextState:true,
-    wrapFunction: false
-  },
-  effectful: {
-    inlineChainOp:false
+    contextState:true
   }
 }
 
 
 const topLevelDefunct = {
-  generators: {
-    wrapFunction: "generatorFunction",
+  effectful: {
     defunctHandlerInProto: true
+  },
+  generators: {
+    wrapFunction: "generatorFunction"
+  },
+  async: {
+    wrapFunction: "asyncFunction"
+  },
+  asyncGenerators: {
+    wrapFunction: "asyncGeneratorFunction"
   }
 }
 
@@ -221,7 +224,9 @@ module.exports = function esProfile(opts={}) {
   const async = Object.assign({},config,rebind.all,rebind.effectful,rebind.async)
   const asyncGenerators = Object.assign({},config,rebind.all,rebind.effectful,
                                         rebind.asyncGenerators)
-  if (opts.inline || opts.loose) {
+  if (opts.loose)
+    opts.inline = true
+  if (opts.inline) {
     Object.assign(generators,inline.all,
                   inline.effectful,inline.generators)
     Object.assign(async,inline.all,inline.effectful,inline.async)
@@ -237,10 +242,6 @@ module.exports = function esProfile(opts={}) {
       Object.assign(async,defunctInline.effectful,defunctInline.async)
       Object.assign(asyncGenerators,defunctInline.effectful)
     }
-    // if (!opts.all || !opts.all.jsTailCalls) {
-    //  generators.inlinePureJumps = async.inlinePureJumps
-    //    = asyncGenerators.inlinePureJumps = "tail" 
-    // }
   }
   if (opts.loose) {
     Object.assign(pure,loose.all)
@@ -255,8 +256,11 @@ module.exports = function esProfile(opts={}) {
     Object.assign(generators,topLevel.all,topLevel.effectful)
     Object.assign(async,topLevel.all,topLevel.effectful)
     Object.assign(asyncGenerators,topLevel.all,topLevel.effectful)
-    if (opts.defunct)
-      Object.assign(generators,topLevelDefunct.generators)
+    if (opts.defunct) {
+      Object.assign(generators,topLevelDefunct.effectful,topLevelDefunct.generators)
+      Object.assign(async,topLevelDefunct.effectful,topLevelDefunct.async)
+      Object.assign(asyncGenerators,topLevelDefunct.effectful,topLevelDefunct.asyncGenerators)
+    }
   }
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})

@@ -3,7 +3,7 @@ import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
 import {Generator,delegateCont} from "./generator"
 import {iteratorM,UnwrapWrapper} from "./leanAsyncIterator"
-import {Async} from "./async"
+import {Async,setupCallbacks} from "./async"
 
 export var AsyncIteratorPrototype = {}
 
@@ -27,9 +27,8 @@ var LGp = Generator.prototype
 
 export function asyncGenerator(caller) {
   var esProto, esGen, leanGen, leanProto, wrap
-  if (process.env.EJS_NO_ES_OBJECT_MODEL
-      && caller && caller.prototype instanceof AsyncGenerator) {
-    esProto = caller.profile
+  if (caller && caller.prototype instanceof AsyncGenerator) {
+    esProto = caller.prototype
     leanProto = caller.leanAsyncGeneratorPrototype
   } else {
     esProto = AGp
@@ -43,6 +42,8 @@ export function asyncGenerator(caller) {
     ? leanGen : new UnwrapWrapper(leanGen)
   esGen.$queue = []
   leanGen.unwrap = esGen
+  if (process.env.EJS_INLINE)
+    setupCallbacks(leanGen)
   return leanGen
 }
 
@@ -177,6 +178,16 @@ if (!process.env.EJS_DEFUNCT || !process.env.EJS_INLINE) {
 
 LAGp.exit = LGp.exit
 
+function setupHandler(ctx, handler) {
+  if (process.env.EJS_DEFUNCT) {
+    if (handler) {
+      if (process.env.EJS_INLINE)
+        ctx.step = handler
+      else
+        ctx.$run = handler
+    }
+  }
+}
 
 if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   function AsyncGeneratorFunction() {}
@@ -186,10 +197,16 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   AsyncGeneratorFunctionPrototype.constructor = AsyncGeneratorFunction;
   AsyncGeneratorFunctionPrototype[Symbol.toString] =
     AsyncGeneratorFunction.displayName = "AsyncGeneratorFunction";
-  asyncGeneratorFunction = function asyncGeneratorFunction(fun) {
+  asyncGeneratorFunction = function asyncGeneratorFunction(fun,handler) {
     Object.setPrototypeOf(fun, AsyncGeneratorFunctionPrototype);
     fun.prototype = Object.create(AGp)
-    fun.leanAsyncGeneratorPrototype = Object.create(LAGp)
+    setupHandler(fun.leanAsyncGeneratorPrototype = Object.create(LAGp), handler)
+    return fun
+  }
+} else {
+  asyncGeneratorFunction = function asyncGeneratorFunction(fun,handler) {
+    fun.prototype = Object.create(AGp)
+    setupHandler(fun.leanAsyncGeneratorPrototype = Object.create(LAGp), handler)
     return fun
   }
 }

@@ -63,8 +63,11 @@ export function storeContinuations(si) {
   const errIgnore = s.opts.inlineErrorContAssign === "ignore"
   const resIgnore = s.opts.inlineResultContAssign === "ignore"
   const thisCtx = s.opts.contextBy === "this"
-  if (s.opts.defunct && s.opts.storeHandler && !s.opts.defunctHandlerInProto)
-    root.runSym = makeSym(s.opts.storeHandler,"rn")
+  if (s.opts.defunct && s.opts.storeHandler) {
+    root.handlerSym = makeSym(s.opts.storeHandler,"rn")
+    if (!s.opts.defunctHandlerInProto)
+      root.runSym = root.handlerSym
+  }
   const reentry = !s.opts.defunct && s.opts.inlineReentryCheck && cont
   if (!err && !res && !cont)
     return s
@@ -234,7 +237,7 @@ export function promises(si) {
   if (s.opts.inlineChainOp !== "promise")
     return s
   const root = s.first.value
-  const {errFrameRedir,resFrameRedir} = root
+  const {errFrameRedir,resFrameRedir,contextSym} = root
   return _promises()
   function* _promises() {
     for(const i of s) {
@@ -243,38 +246,19 @@ export function promises(si) {
           && i.value.bindName === "chain") {
         if (i.value.threadArgs && i.value.threadArgs.length)
           throw s.error("`inlineChainOp: promise` with threaded arguments")
-        if (s.opts.contextBy !== "reference")
-          throw s.error(
-            "`inlineChainOp: promise` without `contextBy: reference`")
-        const lab = s.label()
         const errCnt = i.value.ref.catchContRedir
-        const needThen = i.value.goto !== resFrameRedir
-              || (errCnt && errCnt !== errFrameRedir)
-        if (needThen) {
-          yield s.enter(i.pos,Tag.CallExpression,{result:true})
-          yield s.enter(Tag.callee,Tag.MemberExpression)
-          yield s.enter(Tag.object,Tag.CallExpression)
-        } else
-          yield s.enter(i.pos,Tag.CallExpression,{result:true})
-        yield s.enter(Tag.callee,Tag.MemberExpression)
-        yield s.tok(Tag.object,Tag.Identifier,{node:{name:"Promise"}})
-        yield s.tok(Tag.property,Tag.Identifier,{node:{name:"resolve"}})
-        yield* s.leave()
-        yield s.enter(Tag.arguments,Tag.Array)
+        if (s.opts.contextBy === "reference" && !s.opts.defunct) {
+          yield* s.template(i.pos,
+                            `=Promise.resolve($E).then($I,$I)`,
+                            {result:true}, i.value.goto.declSym,errCnt.declSym)
+        } else {
+          yield* s.template(i.pos,
+                            `=Promise.resolve($E).then($1.$resolve,$1.$reject)`,
+                            {result:true},contextSym)
+        }
         if (!i.leave)
           yield* s.sub()
         yield* s.leave()
-        yield* s.leave()
-        if (needThen) {
-          yield s.tok(Tag.property,Tag.Identifier,{node:{name:"then"}})
-          yield* s.leave()
-          yield s.enter(Tag.arguments,Tag.Array)
-          yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.goto.declSym})
-          if (errCnt && errCnt !== errFrameRedir)
-            yield s.tok(Tag.push,Tag.Identifier,
-                        {sym:errCnt.declSym})
-        }
-        yield* lab()
         s.close(i)
         continue
       }
@@ -319,7 +303,7 @@ export function jumpOps(si) {
   const jumpId = Kit.sysId(s.opts.pureBindName)
   const jumpRId = Kit.sysId(s.opts.pureBindName + "R")
   const scopeId = Kit.sysId("scope")
-  const inlineCont = root.runSym || s.opts.inlineContAssign && root.contSym
+  const inlineCont = root.handlerSym || s.opts.inlineContAssign && root.contSym
   const refCtx = s.opts.contextBy === "reference"
   const paramCtx = s.opts.contextBy === "parameter"
   const thisCtx = s.opts.contextBy === "this"
