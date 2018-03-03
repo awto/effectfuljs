@@ -46,17 +46,15 @@
 * [newPrompt](#newprompt)
 * [pure](#pure)
 * [pushPrompt](#pushprompt)
-* [pushPromptT](#pushpromptt)
 * [pushSubCont](#pushsubcont)
-* [pushSubContT](#pushsubcontt)
 * [reflect](#reflect)
 * [reify](#reify)
 * [reset](#reset)
 * [run](#run)
-* [runT](#runt)
 * [shift](#shift)
 * [shift0](#shift0)
 * [splitAt](#splitat)
+* [thunk](#thunk)
 * [withSubCont](#withsubcont)
 
 
@@ -210,7 +208,7 @@ ___
 
 
 
-*Defined in main.ts:293*
+*Defined in main.ts:265*
 
 
 
@@ -248,7 +246,7 @@ ___
 
 
 
-*Defined in main.ts:236*
+*Defined in main.ts:272*
 
 
 
@@ -306,7 +304,7 @@ ___
 
 
 
-*Defined in main.ts:261*
+*Defined in main.ts:233*
 
 
 
@@ -344,7 +342,7 @@ ___
 
 
 
-*Defined in main.ts:279*
+*Defined in main.ts:251*
 
 
 
@@ -483,43 +481,6 @@ uses prompt in its first operand to delimit the current continuation during the 
 
 ___
 
-<a id="pushpromptt"></a>
-
-###  pushPromptT
-
-► **pushPromptT**A(p: *[Prompt](classes/prompt.md)`A`*, f: *`function`*): [CC](interfaces/cc.md)`A`
-
-
-
-*Defined in main.ts:174*
-
-
-
-a short-cut to `pushPrompt`: `pushPromptT(p,f) === pushPrompt(p,f())`
-
-
-**Type parameters:**
-
-#### A 
-**Parameters:**
-
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`A`   |  - |
-| f | `function`   |  - |
-
-
-
-
-
-**Returns:** [CC](interfaces/cc.md)`A`
-
-
-
-
-
-___
-
 <a id="pushsubcont"></a>
 
 ###  pushSubCont
@@ -528,7 +489,7 @@ ___
 
 
 
-*Defined in main.ts:182*
+*Defined in main.ts:177*
 
 
 
@@ -558,44 +519,6 @@ composes sub-continuation `subk` with current continuation and evaluates its sec
 
 ___
 
-<a id="pushsubcontt"></a>
-
-###  pushSubContT
-
-► **pushSubContT**A,B(subk: *[SubCont](interfaces/subcont.md)`A`, `B`*, f: *`function`*): [CC](interfaces/cc.md)`B`
-
-
-
-*Defined in main.ts:187*
-
-
-
-a short-cut to `pushSubCont`: `pushSubContT(p, f) === pushSubCont(p, f())`
-
-
-**Type parameters:**
-
-#### A 
-#### B 
-**Parameters:**
-
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| subk | [SubCont](interfaces/subcont.md)`A`, `B`   |  - |
-| f | `function`   |  - |
-
-
-
-
-
-**Returns:** [CC](interfaces/cc.md)`B`
-
-
-
-
-
-___
-
 <a id="reflect"></a>
 
 ###  reflect
@@ -604,7 +527,7 @@ ___
 
 
 
-*Defined in main.ts:203*
+*Defined in main.ts:193*
 
 
 
@@ -640,7 +563,7 @@ ___
 
 
 
-*Defined in main.ts:194*
+*Defined in main.ts:184*
 
 
 
@@ -676,7 +599,7 @@ ___
 
 
 
-*Defined in main.ts:287*
+*Defined in main.ts:259*
 
 
 
@@ -712,7 +635,7 @@ ___
 
 
 
-*Defined in main.ts:210*
+*Defined in main.ts:200*
 
 
 
@@ -740,42 +663,6 @@ evaluate all frames till resulting value
 
 ___
 
-<a id="runt"></a>
-
-###  runT
-
-► **runT**A(f: *`function`*): `A`
-
-
-
-*Defined in main.ts:229*
-
-
-
-a short-cut to run: `runT(f) === run(f())`
-
-
-**Type parameters:**
-
-#### A 
-**Parameters:**
-
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| f | `function`   |  - |
-
-
-
-
-
-**Returns:** `A`
-
-
-
-
-
-___
-
 <a id="shift"></a>
 
 ###  shift
@@ -784,7 +671,7 @@ ___
 
 
 
-*Defined in main.ts:249*
+*Defined in main.ts:221*
 
 
 
@@ -822,7 +709,7 @@ ___
 
 
 
-*Defined in main.ts:270*
+*Defined in main.ts:242*
 
 
 
@@ -876,6 +763,39 @@ ___
 
 
 **Returns:** [Seq](#seq)`any`, `any`
+
+
+
+
+
+___
+
+<a id="thunk"></a>
+
+###  thunk
+
+► **thunk**A(f: *`function`*): `A`
+
+
+
+*Defined in main.ts:278*
+
+
+
+**Type parameters:**
+
+#### A 
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| f | `function`   |  - |
+
+
+
+
+
+**Returns:** `A`
 
 
 

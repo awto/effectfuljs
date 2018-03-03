@@ -170,22 +170,12 @@ export function pushPrompt<A>(p: Prompt<A>, cont: CCV<A>): CC<A> {
   return new PushPrompt<A>(p, cont)
 }
 
-/** a short-cut to `pushPrompt`: `pushPromptT(p,f) === pushPrompt(p,f())` */
-export function pushPromptT<A>(p: Prompt<A>, f: () => CCV<A>): CC<A> {
-  return new PushPrompt<A>(p, f())
-}
-
 /**
  * composes sub-continuation `subk` with current continuation and evaluates 
  * its second argument
  */
 export function pushSubCont<A, B>(subk: SubCont<A, B>, cont: CCV<A>): CC<B> {
   return new PushSubCont<A, B>(subk, cont)
-}
-
-/** a short-cut to `pushSubCont`: `pushSubContT(p, f) === pushSubCont(p, f())` */
-export function pushSubContT<A, B>(subk: SubCont<A, B>, f: () => CCV<A>): CC<B> {
-  return new PushSubCont<A, B>(subk, f())
 }
 
 /** 
@@ -222,24 +212,6 @@ export function run<A>(c: CCV<A>): A {
     }
   }
 }
-
-/**
- * a short-cut to run: `runT(f) === run(f())`
- */
-export function runT<A>(f: () => CCV<A>): A {
-  return run(f())
-}
-
-/**
- * returns `v` if is instance of `CC` or `pure(v)` otherwise
- */
-export function coerce<A>(v:CCV<A>):CC<A> {
-  if ((v as any)[stepSymbol])
-    return v as any
-  return pure<A>(v as any)
-}
-
-export default coerce;
 
 /**
  * caputes and aborts the current continuation until prompt `p` and calls `f`
@@ -293,3 +265,22 @@ export function reset<A>(e: (p: Prompt<A>) => CCV<A>): CC<A> {
 export function abort<A, B>(p: Prompt<B>, e: CCV<B>): CC<A> {
   return withSubCont<A, B>(p, sk => e)
 }
+
+/**
+ * returns `v` if is instance of `CC` or `pure(v)` otherwise
+ */
+export function coerce<A>(v:CCV<A>):CC<A> {
+  if ((v as any)[stepSymbol])
+    return v as any
+  return pure<A>(v as any)
+}
+
+function CC<A>(f:() => A) {
+  return f()
+}
+
+export default Object.assign(
+  CC,
+  {newPrompt,withSubCont,pushPrompt,pushSubCont,reify,reflect,pure,
+   context,reset,control0,shift0,control,shift,run,abort,coerce})
+

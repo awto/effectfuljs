@@ -27,6 +27,7 @@
   "devDependencies": {
     "@effectful/js": "^0.1.7",
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "cross-env": "^5.1.3",
     "env-cmd": "^7.0.0",
     "mocha": "^5.0.0",
