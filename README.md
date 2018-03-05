@@ -123,7 +123,7 @@ thus generated code uses different runtime interfaces.
    before effectful pass. No plans to fix this for now. No plans to implement.
  * In parameter's threading mode closure captured variables are always handled by reference. 
    Compiler tries to handle only
-   variables by value. All mutating operation like `Array::push` or object's 
+   variables by value. All mutating operation like `Array.prototype.push` or object's 
    field setting are still visible in other control threads. Closure capturing variables
    semantically are nothing but object's field. So they are references now too.
    But there are short term plans to track even mutating updates soon.
