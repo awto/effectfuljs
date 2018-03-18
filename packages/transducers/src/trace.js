@@ -2,7 +2,6 @@ import * as assert from "assert"
 import generate from "babel-generator"
 import * as T from "babel-types"
 import {Tag,symKind,symInfo,typeInfo,symName,resetFieldInfo} from "./core"
-import chalk from "chalk"
 
 const MAX_TRACE_CODE_LEN = 40
 const TYPE_SIZE = 20
@@ -110,6 +109,7 @@ const traceImpl = BROWSER_DEBUG ? browserTraceImpl : traceNodeImpl
 function* traceNodeImpl(prefix, s) {
   let level = 0
   let x = 0
+  const chalk = require("chalk")
   for(const i of s) {
     if (i.enter)
       level++

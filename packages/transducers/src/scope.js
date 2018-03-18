@@ -350,6 +350,7 @@ export const assignSym = Kit.pipe(
               _collectDecls(i.value,block.value,nextSyms,new Map(),nextSyms)
               i.value.body = block.value
               i.value.paramSyms = params
+              i.value.parScope = func
               checkScope(block.value,nextSyms)
               if (block.type === Tag.BlockStatement)
                 s.close(block)
@@ -418,6 +419,7 @@ export const assignSym = Kit.pipe(
               if (!i.value.funcId)
                 i.value.funcId = funcId
               i.value.paramSyms = params
+              i.value.parScope = func
               checkScope(j.value,nextSyms)
               Kit.skip(s.leave())
             }

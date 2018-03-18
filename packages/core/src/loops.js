@@ -137,6 +137,7 @@ function forOfStmtImpl(loose, s) {
   const invert = !loose && s.opts.invertForOf
   const finalize = s.opts.finalizeForOf !== false || invert
   const exitName  = "exit" // bind ? "exitM" : "exit"
+  const noResult = s.opts.returnContext === false
   const {normPureForIn} = s.opts
   function* readLeft(sym,forOfInfo) {
     function* val(pos) {
@@ -185,7 +186,7 @@ function forOfStmtImpl(loose, s) {
     yield* lab()
   }
   // TODO: remove ForAwaitStatement in babel 7
-  function* walk(sw) {
+  function* _forOfStmtImpl(sw,root) {
     for(const i of sw) {
       if (i.enter && (all || i.value.eff)) {
         switch(i.type) {
@@ -197,7 +198,7 @@ function forOfStmtImpl(loose, s) {
         case Tag.FunctionDeclaration:
           yield i
           if (!i.leave) {
-            yield* walk(s.sub(),[])
+            yield* _forOfStmtImpl(s.sub(),i.value)
             yield s.close(i)
           }
           continue
@@ -207,7 +208,7 @@ function forOfStmtImpl(loose, s) {
         case Tag.ForAwaitStatement:
         case Tag.ForOfStatement:
           const loop = i.value
-          const sym = loop.iterVar = Bind.tempVarSym(s.first.value,"loop")
+          const sym = loop.iterVar = Bind.tempVarSym(root,"loop")
           let forOfInfo
           if (invert && i.value.eff && i.type === Tag.ForOfStatement) {
             forOfInfo = {sym,loop}
@@ -259,19 +260,30 @@ function forOfStmtImpl(loose, s) {
           const flab = s.label()
           yield s.enter(Tag.test,Tag.UnaryExpression,{node:{operator:"!"},forOfInfo})
           yield s.enter(Tag.argument,Tag.MemberExpression)
-          yield s.enter(Tag.object,Tag.AssignmentExpression,
-                        {node:{operator:"="}})
-          yield s.tok(Tag.left,Tag.Identifier,
-                      {sym,lhs:true,rhs:false,decl:false})
-          yield s.enter(Tag.right,Tag.CallExpression,{bind,eff:bind})
+          let stepPos
+          const stepLab = s.label()
+          if (noResult) {
+            yield s.enter(Tag.object,Tag.SequenceExpression)
+            yield s.enter(Tag.expressions,Tag.Array)
+            stepPos = Tag.push
+          } else {
+            yield s.enter(Tag.object,Tag.AssignmentExpression,
+                          {node:{operator:"="}})
+            yield s.tok(Tag.left,Tag.Identifier,
+                        {sym,lhs:true,rhs:false,decl:false})
+            stepPos = Tag.right
+          }
+          yield s.enter(stepPos,Tag.CallExpression,{bind,eff:bind})
           yield s.enter(Tag.callee,Tag.MemberExpression)
           yield s.tok(Tag.object,Tag.Identifier,{sym,lhs:false,rhs:true})
           yield s.tok(Tag.property,Tag.Identifier,
-                      {node:{name:"step"/*bind ? "stepM" : "step"*/}})
+                      {node:{name:"step"}})
           yield* s.leave()
           yield s.tok(Tag.arguments,Tag.Array)
           yield* s.leave()
-          yield* s.leave()
+          if (noResult)
+            yield s.tok(Tag.push,Tag.Identifier,{sym,lhs:false,rhs:true})
+          yield* stepLab()
           yield s.tok(Tag.property, Tag.Identifier, {node:{name:"done"}})
           yield* flab()
           const body = s.curLev()
@@ -280,7 +292,7 @@ function forOfStmtImpl(loose, s) {
             yield s.peel()
             yield* s.peelTo(Tag.body)
             yield* init
-            yield* walk(s.sub())
+            yield* _forOfStmtImpl(s.sub(),root)
           } else {
             yield s.enter(Tag.body, Tag.BlockStatement)
             yield s.enter(Tag.body, Tag.Array)
@@ -288,7 +300,7 @@ function forOfStmtImpl(loose, s) {
               Kit.skip(s.one())
             else {
               yield* init
-              yield* Kit.reposOne(walk(s.one()),Tag.push)
+              yield* Kit.reposOne(_forOfStmtImpl(s.one(),root),Tag.push)
             }
           }
           if (finlab) {
@@ -304,7 +316,7 @@ function forOfStmtImpl(loose, s) {
       yield i
     }
   }
-  return walk(s,[])
+  return _forOfStmtImpl(s,s.first.value)
 }
 
 

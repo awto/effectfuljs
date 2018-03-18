@@ -297,16 +297,18 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
     }
     return fun
   }
-} else if (process.env.EJS_DEFUNCT) {
+} else
   generatorFunction = function generatorFunction(fun,handler) {
     fun.prototype = Object.create(Gp)
-    if (handler) {
-      if (process.env.EJS_INLINE)
-        fun.prototype.step = handler
-      else
-        fun.prototype.$run = handler
+    if (process.env.EJS_DEFUNCT) {
+      if (handler) {
+        if (process.env.EJS_INLINE)
+          fun.prototype.step = handler
+        else
+          fun.prototype.$run = handler
+      }
     }
     return fun
   }
-}
+
 

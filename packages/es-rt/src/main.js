@@ -1,10 +1,11 @@
 import "./arrayIterator"
 export {forInIterator} from "./forInIterator"
 export {iterator} from "./leanIterator"
-export {generatorFunction,generator,esIterator} from "./generator"
-export {asyncFunction,async} from "./async"
+export {generatorFunction,Generator,generator,esIterator} from "./generator"
+export {asyncFunction,async,Async} from "./async"
 export {iteratorM} from "./leanAsyncIterator"
-export {asyncGenerator,asyncGeneratorFunction,esAsyncIterator} from "./asyncGenerator"
+export {asyncGenerator,AsyncGenerator,asyncGeneratorFunction,esAsyncIterator}
+  from "./asyncGenerator"
 
 // TODO: move to (info) file
 export var opts = {

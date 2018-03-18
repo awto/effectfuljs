@@ -65,6 +65,7 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
 } else {
   asyncFunction = function asyncFunction(fun,handler) {
     fun.prototype = Object.create(Ap)
+    fun.prototype.constructor = fun
     if (process.env.EJS_DEFUNCT) {
       if (handler) {
         if (process.env.EJS_INLINE)

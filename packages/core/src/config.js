@@ -53,6 +53,8 @@ export default {
 
   // name of a function to construct context object
   scopeConstructor: "context",
+  // name of a function to construct an object with closure captured variables
+  pureScopeConstructor: false,
 
   // calls operations from either namespace or context object, otherwise
   // from current effectful object, this applies only for operations with

@@ -26,7 +26,7 @@ function calcClosCapt(si) {
     const decls = root.clDecls = []
     const sym = root.closSym
           = Scope.newSym(root.node.id && root.node.id.name || "fn")
-    const closDeps = new Set()
+    const closDeps = root.closDepsSet = new Set()
     function id(i) {
       const si = i.value.sym
       if (si != null) {
@@ -39,7 +39,10 @@ function calcClosCapt(si) {
         if (si.declScope) {
           if (si.declScope !== root)  {
             (si.refScopes || (si.refScopes = new Set())).add(root)
-            closDeps.add(si.declScope)
+            for(let c = root;c && c !== si.declScope;c = c.parScope) {
+              debugger
+              c.closDepsSet.add(si.declScope)
+            }
           }
         }
       }
@@ -72,6 +75,7 @@ const globals = Scope.newSym("g")
 function replaceCalls(si) {
   const s = Kit.auto(si)
   s.first.value.ctxSym = globals
+  //  globals.global = true
   const noConstrs = s.opts.noClosConstrs
   const noThis = s.opts.noClosThis
   function* walk(sw,decls) {
@@ -150,7 +154,8 @@ function* functToObj(si) {
         if (j === root)
           yield s.tok(Tag.push,Tag.Identifier,{sym:root.ctxSym})
         else
-          yield* s.toks(Tag.push,`=this.${dpref}$I${dpost}`,j.closSym)
+          yield* s.toks(Tag.push,`=this.${dpref}${j.closSym.name}${dpost}`,
+                        {origSym:j.closSym})
       }
       yield* s.leave()
       const objArr = Kit.toArray(obj(i.value,sym))
@@ -242,9 +247,13 @@ function* functToObj(si) {
       yield s.tok(Tag.push,Tag.Identifier,{sym})
     }
     yield* s.refocus()
-    for(const j of fun.closDeps)
-      yield* s.toks(Tag.push,`this.${dpref}${j.closSym.name}${dpost} = $I`,
-                    copies.shift())
+    for(const j of fun.closDeps) {
+      const copySym = copies.shift()
+      yield* s.template(Tag.push,`$E = $I`,copySym)
+      yield* s.toks(Tag.left,`=this.${dpref}${j.closSym.name}${dpost}`,
+                    {origSym:j.closSym,copySym})
+      yield* s.leave()
+    }
     yield* s.refocus()
     yield s.enter(Tag.push,Tag.FunctionExpression,fun)
     if (s.cur().pos === Tag.id)
@@ -320,8 +329,9 @@ function substIds(si) {
       yield s.enter(Tag.expression,Tag.SequenceExpression)
       yield s.enter(Tag.expressions, Tag.Array)
       for(const i of params) {
-        yield* s.toks(Tag.push, `=$1.${vpref}${i.name}${vpost} = $2`,
-                      {clParam:i}, ctxSym, i)
+        yield* s.template(Tag.push, `=$E = $I`,{clParam:i}, i)
+        yield* s.toks(Tag.left,`=$1.${vpref}${i.name}${vpost}`,{origSym:i},ctxSym)
+        yield* s.leave()
       }
       yield* lab()
     }
@@ -351,12 +361,15 @@ function substIds(si) {
               if (root === sym.declScope)
                 yield* s.toks(i.pos,`=$I.${vpref}${sym.name}${vpost}`,
                               {origSym:sym},root.ctxSym)
-              else
+              else {
+                yield* s.template(i.pos,`=$E.${vpref}${sym.name}${vpost}`,
+                                  {origSym:sym})
                 yield* s.toks(
-                  i.pos,
-                  `=this.${dpref}${sym.declScope.closSym.orig}${dpost}
-                      .${vpref}${sym.name}${vpost}`,
-                  {origSym:sym})
+                  Tag.object,
+                  `=this.${dpref}${sym.declScope.closSym.orig}${dpost}`,
+                  {origSym:sym.declScope.closSym})
+                yield* s.leave()
+              }
               s.close(i)
               continue
             }
@@ -381,3 +394,5 @@ export default Kit.pipe(
   injectLocObjs,
   RT.inline,
   Scope.resolve)
+
+
