@@ -1,6 +1,6 @@
 {
   "name": "@effectful/cc",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Multi-prompt delimited continuations runtime",
   "main": "main.js",
   "scripts": {
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/js": "^0.1.7",
+    "@effectful/js": "^0.1.8",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "cross-env": "^5.1.3",
@@ -37,6 +37,6 @@
     "typescript": "^2.7.1"
   },
   "peerDependencies": {
-    "@effectful/js": "^0.1.6"
+    "@effectful/js": "^0.1.8"
   }
 }
