@@ -13,12 +13,12 @@ let promptId = 0
 
 export class Prompt<A> {
   constructor(name: string) {
-    this.name = name;
-    this.id = promptId++;
+    this.name = name
+    this.id = promptId++
   }
-  name: string;
-  id: number;
-  ___promt_tag_?: A;
+  name: string
+  id: number
+  ___promt_tag_?: A
 }
 
 export const stepSymbol = Symbol("Effectful.ccStep")

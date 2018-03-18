@@ -54,7 +54,6 @@
 * [shift](#shift)
 * [shift0](#shift0)
 * [splitAt](#splitat)
-* [thunk](#thunk)
 * [withSubCont](#withsubcont)
 
 
@@ -763,39 +762,6 @@ ___
 
 
 **Returns:** [Seq](#seq)`any`, `any`
-
-
-
-
-
-___
-
-<a id="thunk"></a>
-
-###  thunk
-
-► **thunk**A(f: *`function`*): `A`
-
-
-
-*Defined in main.ts:278*
-
-
-
-**Type parameters:**
-
-#### A 
-**Parameters:**
-
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| f | `function`   |  - |
-
-
-
-
-
-**Returns:** `A`
 
 
 

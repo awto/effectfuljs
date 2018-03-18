@@ -17,6 +17,36 @@ effectful value
 * [PushSubCont](../classes/pushsubcont.md)
 * [WithSubCont](../classes/withsubcont.md)
 
+## Callable
+► **CC**A(f: *`function`*): `A`
+
+
+
+*Defined in main.ts:278*
+
+
+
+effectful value
+
+
+**Type parameters:**
+
+#### A 
+**Parameters:**
+
+| Param | Type | Description |
+| ------ | ------ | ------ |
+| f | `function`   |  - |
+
+
+
+
+
+**Returns:** `A`
+
+
+
+
 
 ## Methods
 <a id="__computed"></a>

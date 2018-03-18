@@ -59,3 +59,9 @@ code (more details in [Applicative vs Monad interface](#applicative-vs-monad-int
 There are also concrete side effects compilers with single level syntax,
 for example flapjax and webppl.
 
+There are a few languages now with direct style effects operations using type 
+system extensions - Algebraic Effects. E.g. [koka](https://github.com/koka-lang/koka)
+or [eff](https://github.com/matijapretnar/eff). Types provide additional safety 
+there and it is easier to combine algebraic effects comparing to monads.
+
+
