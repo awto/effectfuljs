@@ -36,6 +36,8 @@ export function async(caller) {
   var esProto = caller && caller.prototype instanceof Async
       ? caller.prototype : Async.prototype,
       ctx = Object.create(esProto)
+  if (!process.env.EJS_NO_ES_OBJECT_MODEL)
+    ctx.constructor.call(ctx)
   if (process.env.EJS_INLINE)
     setupCallbacks(ctx)
   return ctx

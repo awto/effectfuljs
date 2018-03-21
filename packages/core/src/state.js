@@ -265,6 +265,8 @@ export function* restoreDecls(s) {
               for(const sym of i.value.paramSyms) {
                 if (sym.interpr === Bind.ctxField) {
                   const copy = sym.decl.value.sym = Kit.scope.newSym(sym.orig)
+                  copy.copyOf = sym
+                  sym.localCopy = copy
                   copy.type = sym.type
                   assigns.push(
                     {sym,init:[sl.tok(Tag.right,Tag.Identifier,

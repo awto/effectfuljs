@@ -27,6 +27,7 @@ building own runtime. The environment variable options are:
  on calling its method
  * `EJS_NO_UNWRAP_ASYNC_ITERATOR` - do not add standard required unwrapping
  for generator's output
+ * `EJS_NO_ASYNC_ITERATOR_QUEUE` - do not add a queue to method calls
  * `EJS_LOCAL_SYMBOLS` - use local Symbol's for iterator names, if there are
  a few builds loaded, and some uses different implementation for interfaces
  * `EJS_DEFUNCT` - support for `defunct` option 

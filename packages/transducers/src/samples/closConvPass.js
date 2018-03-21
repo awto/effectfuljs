@@ -39,10 +39,8 @@ function calcClosCapt(si) {
         if (si.declScope) {
           if (si.declScope !== root)  {
             (si.refScopes || (si.refScopes = new Set())).add(root)
-            for(let c = root;c && c !== si.declScope;c = c.parScope) {
-              debugger
+            for(let c = root;c && c !== si.declScope;c = c.parScope)
               c.closDepsSet.add(si.declScope)
-            }
           }
         }
       }
@@ -354,7 +352,7 @@ function substIds(si) {
           continue
         case Tag.Identifier:
           const {sym} = i.value
-          if (sym && i.pos !== Tag.property) {
+          if (sym) {
             if (sym === Scope.argumentsSym) {
               i.value.sym = root.argumentsSym
             } else if (sym.refScopes) {

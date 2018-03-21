@@ -2,7 +2,7 @@ import {asyncIterator as asyncIterSym} from "./symbol"
 import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
 import {Generator,delegateCont} from "./generator"
-import {iteratorM,UnwrapWrapper} from "./leanAsyncIterator"
+import {iteratorM,QueueWrapper,UnwrapWrapper,LeanAsyncIterator,EsWrapper} from "./leanAsyncIterator"
 import {Async,setupCallbacks} from "./async"
 
 export var AsyncIteratorPrototype = {}
@@ -12,97 +12,65 @@ if (!process.env.EJS_NO_ES_ITERATORS)
 
 export var asyncGeneratorFunction
 
-export function AsyncGenerator(lean) {
-  this.$state = lean
-  this.$queue = []
+/** generators without queues and unwraps wrappers */
+export var LeanAsyncGenerator
+/** generators with optionally added queues and unwraps */
+export var AsyncGenerator
+
+var LAGp, AGp
+var Gp = Generator.prototype
+
+if (!process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
+  LeanAsyncGenerator = function LeanAsyncGenerator() {
+    if (process.env.EJS_INLINE)
+      setupCallbacks(this)
+  }
+  LAGp = LeanAsyncGenerator.prototype = Object.create(LeanAsyncIterator.prototype)
+  LAGp.constructor = LeanAsyncGenerator
+  AsyncGenerator = function AsyncGenerator() {
+    var lean = this.$lean = Object.create(this.leanPrototype)
+    this.leanPrototype.constructor.call(lean)
+    if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR)
+      this.$inner = new UnwrapWrapper(lean)
+    else
+      this.$inner = lean
+    this.$queue = []
+  }
+  AGp = AsyncGenerator.prototype = Object.create(QueueWrapper.prototype)
+  AGp.constructor = AsyncGenerator
+  AGp.leanPrototype = LAGp
+} else {
+  AsyncGenerator = LeanAsyncIterator = function AsyncGenerator() {
+    if (process.env.EJS_INLINE)
+      setupCallbacks(this)
+  }
+  AGp = LAGp = LeanAsyncGenerator.prototype = Object.create(LeanAsyncIterator.prototype)
+  LAGp.constructor = AsyncGenerator
 }
-
-var AGp = AsyncGenerator.prototype = Object.create(AsyncIteratorPrototype)
-
-function LeanAsyncGenerator() {}
-
-var LAGp = LeanAsyncGenerator.prototype
-
-var LGp = Generator.prototype
 
 export function asyncGenerator(caller) {
-  var esProto, esGen, leanGen, leanProto, wrap
-  if (caller && caller.prototype instanceof AsyncGenerator) {
-    esProto = caller.prototype
-    leanProto = caller.leanAsyncGeneratorPrototype
+  var proto, es
+  if (caller && caller.prototype instanceof LeanAsyncIterator) {
+    proto = caller.prototype
   } else {
-    esProto = AGp
-    leanProto = LAGp
+    proto = AGp
   }
-  esGen = Object.create(esProto)
-  leanGen = Object.create(leanProto)
-  leanGen.$state = void 0
-  leanGen.done = false
-  esGen.$state = process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR
-    ? leanGen : new UnwrapWrapper(leanGen)
-  esGen.$queue = []
-  leanGen.unwrap = esGen
-  if (process.env.EJS_INLINE)
-    setupCallbacks(leanGen)
-  return leanGen
-}
-
-if (!process.env.EJS_NO_ES_ITERATORS) {
-  AGp[asyncIterSym] = function() { return this.state }
-
-  function result(ctx, v) {
-    return Promise.resolve(v).then(function(i) {
-      ctx.$state = i;
-      return {value:i.value, done:i.done}
-    })
-  }
-  
-  function enqueue(ctx, func) {
-    var res
-    function wait(value) {
-      if (!ctx.$queue.length) { 
-        ctx.$busy = null
-        return
-      }
-      var i = ctx.$queue.shift()
-      ctx.$busy =
-        Promise.resolve(i.func(ctx.$state))
-        .then(function(v) {
-          i.cont(v)
-          wait(ctx)
-        })
+  es = Object.create(proto)
+  proto.constructor.call(es)
+  if (process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
+    es.unwrap = es
+    return es
+  } else {
+    if (es.$lean) { 
+      es.$lean.unwrap = es
+      return es.$lean
     }
-    if (ctx.$busy) {
-      res = new Promise(function(cont) {
-        ctx.$queue.push({func:func,cont:cont})
-      })
-    } else {
-      res = Promise.resolve(func(ctx.$state))
-      ctx.$busy = res.then(wait,wait)
-    }
-    return res
-  }
-
-  AGp.next = function esFromLeanAsyncNext(v) {
-    var ctx = this
-    return enqueue(ctx, function(i) { return result(ctx,i.step(v)) })
-  }
-  
-  AGp.throw = function esFromLeanAsyncNext(e) {
-    var ctx = this
-    return enqueue(ctx, function(i) { return result(ctx,i.handle(e)) })
-  }
-  
-  AGp.return = function esFromLeanAsyncNext(v) {
-    var ctx = this
-    return enqueue(ctx, function(i) { return result(ctx,i.exit(v)) })
+    return es
   }
 }
 
 export function esAsyncIterator(lean) {
-  return lean[Symbol.asyncIterator]
-    ? lean[Symbol.asyncIterator]()
-    : new AsyncGenerator(lean)
+  return lean[Symbol.asyncIterator]()
 }
 
 if (!process.env.EJS_INLINE) {
@@ -113,11 +81,11 @@ if (!process.env.EJS_INLINE) {
     this.$exit = this.$contExit = exit
     return this.unwrap
   }
-  LAGp.yldStar = LGp.yldStar
+  LAGp.yldStar = Gp.yldStar
   LAGp.chain = Ap.chain
   
   LAGp.jump = function jump(value, step, handle, exit) {
-    // it is actually also same as the one from LGp, but without trampoline
+    // it is actually also same as the one from Gp, but without trampoline
     try {
       this.$step = step
       this.$handle = this.$contHandle = handle
@@ -127,7 +95,7 @@ if (!process.env.EJS_INLINE) {
       return this.handle(e)
     }
   }
-  LAGp.yld = LGp.yld
+  LAGp.yld = Gp.yld
   if (process.env.EJS_LEAN_METHOD_ITERATORS) {
     LAGp.iterator = iterator
     LAGp.forInIterator = forInIterator
@@ -139,11 +107,11 @@ if (!process.env.EJS_INLINE) {
 
 LAGp[asyncIterSym] = LAGp[Symbol.asyncIterator] = function() { return this }
 
-LAGp.handle = LGp.handle
-LAGp.pure = LGp.pure
-LAGp.raise = LGp.raise
+LAGp.handle = Gp.handle
+LAGp.pure = Gp.pure
+LAGp.raise = Gp.raise
 
-LAGp.$redirResultPure = LGp.redirResult
+LAGp.$redirResultPure = Gp.redirResult
 
 LAGp.$redirResult = function(iter) {
   var ctx = this
@@ -171,12 +139,12 @@ if (!process.env.EJS_DEFUNCT || !process.env.EJS_INLINE) {
       return runImpl(this, value)
     } catch(e) {
       this.$step = this.$handle
-      return runImpl(this, value)
+      return runImpl(this, e)
     }
   }
 }
 
-LAGp.exit = LGp.exit
+LAGp.exit = Gp.exit
 
 var AsyncGeneratorFunctionPrototype
 
@@ -184,25 +152,31 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   function AsyncGeneratorFunction() {}
   AsyncGeneratorFunctionPrototype = function AsyncGeneratorFunctionPrototype() {}
   AsyncGeneratorFunctionPrototype.prototype = AGp
-  AsyncGeneratorFunction.prototype = AGp.constructor = AsyncGeneratorFunctionPrototype
+  AsyncGeneratorFunction.prototype = AsyncGeneratorFunctionPrototype
   AsyncGeneratorFunctionPrototype.constructor = AsyncGeneratorFunction;
   AsyncGeneratorFunctionPrototype[Symbol.toString] =
     AsyncGeneratorFunction.displayName = "AsyncGeneratorFunction";
 }
 
 asyncGeneratorFunction = function asyncGeneratorFunction(fun,handler) {
-  if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
+  var leanProto = LAGp
+  if (!process.env.EJS_NO_ES_OBJECT_MODEL)
     Object.setPrototypeOf(fun, AsyncGeneratorFunctionPrototype);
-  }
-  fun.prototype = Object.create(AGp)
-  var ctx = fun.leanAsyncGeneratorPrototype = Object.create(LAGp)
   if (process.env.EJS_DEFUNCT) {
     if (handler) {
+      leanProto = Object.create(LAGp)
       if (process.env.EJS_INLINE)
-        ctx.step = handler
+        leanProto.step = handler
       else
-        ctx.$run = handler
+        leanProto.$run = handler
     }
+  }
+  if (process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
+    fun.prototype = leanProto
+  } else {
+    var esProto = Object.create(AGp)
+    esProto.leanPrototype = leanProto
+    fun.prototype = esProto
   }
   return fun
 }
