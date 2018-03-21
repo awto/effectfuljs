@@ -17,10 +17,12 @@ In .babelrc:
 
 ```json
 {
-  "presets": "@effectful/es-persist/transform"
+  "presets": ["@effectful/es-persist/transform"]
 }
 
 ```
+
+If there are other babel presets, add `"passPerPreset":true`.
 
 Unlike ECMAScript, async functions won't return Promise object, but an object
 storing all the local variables values and execution control state.
