@@ -1,0 +1,37 @@
+{
+  "name": "@effectful/es-persist",
+  "version": "0.0.1",
+  "description": "Persistent state for ECMAScript effects",
+  "main": "index.js",
+  "module": "main.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "rollup main.js --o index.js --f cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectfuljs.git"
+  },
+  "keywords": [
+    "effectful",
+    "effectfuljs",
+    "monad",
+    "linq"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awto/effectfuljs/issues"
+  },
+  "homepage": "https://github.com/awto/effectfuljs#readme",
+  "peerDependencies": {
+    "@effectful/es": "^0.1.7"
+  },
+  "devDependencies": {
+    "@effectful/es": "^0.1.7",
+    "rollup": "^0.57.1"
+  },
+  "dependencies": {
+    "@effectful/es-rt": "^0.1.7"
+  }
+}

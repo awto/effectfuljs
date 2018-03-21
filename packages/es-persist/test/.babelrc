@@ -1,0 +1,17 @@
+{
+  "passPerPreset": true,
+  "presets": [["@effectful/es",
+               {
+                 "topLevel":true,
+                 "defunct":true,
+                 "importRT":"../index"
+               }],
+              {
+                "plugins":[
+                  ["transform-es2015-modules-commonjs",
+                   {strict:false,loose:true}]]
+              }]
+}
+
+
+
