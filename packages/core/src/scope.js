@@ -243,7 +243,7 @@ export function funcWraps(si) {
   const mods = root.injectRT || emptyMap
   const rootDefs = mods.get(ns)
   let any = false
-  return reorder(_funcWraps(s))
+  return hoist(_funcWraps(s))
   function sysId(name) {
     const sym = Kit.sysId(name)
     if (rootDefs)
@@ -270,11 +270,11 @@ export function funcWraps(si) {
     if (sym)
       yield s.tok(Tag.push,Tag.Identifier,{sym})
   }
-  function reorder(si) {
+  function hoist(si) {
     const s = Kit.auto(Kit.toArray(si))
     let nsFound = !root.nsImported
-    return _reorder(s)
-    function* _reorder(sw,subst,buf) {
+    return _hoist(s)
+    function* _hoist(sw,subst,buf) {
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
@@ -339,7 +339,7 @@ export function funcWraps(si) {
                     yield* j.params
                 }()])
               }
-              yield* _reorder(s.sub(),nsubst)
+              yield* _hoist(s.sub(),nsubst)
               yield* slab()
               if (decl) {
                 yield s.enter(Tag.push,Tag.ExpressionStatement)
@@ -393,13 +393,12 @@ export function funcWraps(si) {
               const lab = s.label()
               yield s.peel(i)
               yield* s.peelTo(Tag.body)
-              if (i.type === Tag.Program) {
-                while(s.curLev() && !nsFound) {
-                  yield* _reorder(s.one(),subst)
-                }
-                yield* i.value.wraps
-                yield* _reorder(s.sub(),subst)
-              }
+              while(s.curLev() && !nsFound)
+                yield* _hoist(s.one(),subst)
+              while(s.cur().type === Tag.ImportDeclaration)
+                yield* s.one()
+              yield* i.value.wraps
+              yield* _hoist(s.sub(),subst)
               yield* lab()
               continue
             }
@@ -410,7 +409,7 @@ export function funcWraps(si) {
               yield s.peel(i)
               yield* s.peelTo(Tag.body)
               yield* i.value.wraps
-              yield* _reorder(s.sub(), subst)
+              yield* _hoist(s.sub(), subst)
               yield* lab()
               continue
             }
