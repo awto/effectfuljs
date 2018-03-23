@@ -1,6 +1,5 @@
 import {Tag,symbol} from "./kit"
 import * as Kit from "./kit"
-import * as T from "babel-types"
 import * as Block from "./block"
 import * as State from "./state"
 import * as Prop from "./propagate"

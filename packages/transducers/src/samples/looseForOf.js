@@ -1,6 +1,6 @@
 import {produce,consume,Tag} from "../core"
 import * as Kit from "../kit"
-import * as T from "babel-types"
+import * as T from "@babel/types"
 import * as assert from "assert"
 import * as Match from "../match"
 

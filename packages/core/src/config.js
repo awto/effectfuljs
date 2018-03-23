@@ -238,7 +238,7 @@ export default {
   // babylon options (not used if executed using babel tools)
   parser: {},
 
-  // babel-generator options (not used if executed using babel tools)
+  // @babel/generator options (not used if executed using babel tools)
   printer: {},
 
   // effectful operations to be called as method of

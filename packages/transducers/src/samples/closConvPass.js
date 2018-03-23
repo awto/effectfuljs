@@ -7,7 +7,6 @@ import * as RT from "../rt"
 
 import {symbol,produce} from "../core"
 
-const fs = require("fs")
 const path = require("path")
 
 /** calculates captured vars dependencies */

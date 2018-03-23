@@ -1,6 +1,5 @@
 import * as Kit from "../kit"
 import {prepareScopes,consumeScope} from "../transform"
-import generate from "babel-generator"
 import {parse} from "babylon"
 import * as Loops from "../loops"
 import * as assert from "assert"

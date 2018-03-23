@@ -2,7 +2,7 @@ import {Tag,produce as esproduce,symbol,toArray,isSymbol,
         symName,symInfo,consume as esconsume,
         scope} from "@effectful/transducers"
 import {pipe,curry,Wrapper,getOpts} from "@effectful/transducers/kit"
-import * as T from "babel-types"
+import * as T from "@babel/types"
 import * as assert from "assert"
 
 let curId = 0

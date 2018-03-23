@@ -1,19 +1,13 @@
 {
   "env": {
     "development": {
-      "plugins": [["transform-es2015-modules-commonjs",
+      "plugins": [["@babel/plugin-transform-modules-commonjs",
                    {"loose":true,"noInterop":true}]]
     },
-    "regenerator": {"presets":[["env",{"useBuiltIns": true}]],
-                    "plugins":[["transform-runtime", {
-                      "helpers": false,
-                      "polyfill": false,
-                      "regenerator": true,
-                    }]]},
     "loose": {
       "passPerPreset": true,
       "presets": [
-        ["es-dev",
+        ["es-dev/index",
          {"loose":true,
           "all": {
             "jsExceptions":false,
@@ -30,144 +24,7 @@
           }
          }],
         {
-          "plugins": [["transform-es2015-modules-commonjs",
-                       {"loose":true,"noInterop":true}]]
-        }
-      ]
-    },
-    "abstract": {
-      "passPerPreset": true,
-      "presets": [
-        ["es-dev",{
-          "all":{
-            "moduleAliases":{
-              "@effectful/transducers":"@effectful/transducers-loose",
-              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
-              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
-              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
-              "@effectful/transducers/match":"@effectful/transducers-loose/match"
-            }
-          }
-        }],
-        {
-          "plugins": [["transform-es2015-modules-commonjs",
-                       {"loose":true,"noInterop":true}]]
-        }
-      ]
-    },
-    "loose-defunct-top": {
-      "passPerPreset": true,
-      "presets": [
-        ["es-dev",
-         {"loose":true,
-          "topLevel":true,
-          "defunct":true,
-          "all": {
-            "loopBlockScoping":false,
-            "jsExceptions":false,
-            "inlineJsExceptions":false,
-            "inlineThrow":true,
-            "moduleAliases":{
-              "@effectful/transducers":"@effectful/transducers-loose",
-              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
-              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
-              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
-              "@effectful/transducers/match":"@effectful/transducers-loose/match"
-            }
-          }
-         }],
-        {
-          "plugins": [["transform-es2015-modules-commonjs",
-                       {"loose":true,"noInterop":true}]]
-        }
-      ]
-    },
-    "loose-defunct": {
-      "passPerPreset": true,
-      "presets": [
-        ["es-dev",
-         {"loose":true,
-          "defunct":true,
-          "all": {
-            "loopBlockScoping":false,
-            "jsExceptions":false,
-            "inlineJsExceptions":false,
-            "inlineThrow":true,
-            "moduleAliases":{
-              "@effectful/transducers":"@effectful/transducers-loose",
-              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
-              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
-              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
-              "@effectful/transducers/match":"@effectful/transducers-loose/match"
-            }
-          }
-         }],
-        {
-          "plugins": [["transform-es2015-modules-commonjs",
-                       {"loose":true,"noInterop":true}]]
-        }
-      ]
-    },
-    "loose-top": {
-      "passPerPreset": true,
-      "presets": [
-        ["es-dev",
-         {"loose":true,
-          "defunct":false,
-          "top":true,
-          "all": {
-            "loopBlockScoping":false,
-            "jsExceptions":false,
-            "inlineJsExceptions":false,
-            "inlineThrow":true,
-            "moduleAliases":{
-              "@effectful/transducers":"@effectful/transducers-loose",
-              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
-              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
-              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
-              "@effectful/transducers/match":"@effectful/transducers-loose/match"
-            }
-          }
-         }],
-        {
-          "plugins": [["transform-es2015-modules-commonjs",
-                       {"loose":true,"noInterop":true}]]
-        }
-      ]
-    },
-    "loose-for-ofs": {
-      "passPerPreset": true,
-      "presets": [
-        ["es-dev",
-         {"loose":true,
-          "invertForOf":true,
-	        "importRT":"@effectful/es-rt/opts/loose-delegate",
-          "all": {
-            "jsExceptions":false,
-            "inlineJsExceptions":false,
-            "inlineThrow":true,
-            "loopBlockScoping":false,
-            "moduleAliases":{
-              "@effectful/transducers":"@effectful/transducers-loose",
-              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
-              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
-              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
-              "@effectful/transducers/match":"@effectful/transducers-loose/match"
-            }
-          },
-          "effectful": {
-            "jsExceptions":false,
-            "inlineJsExceptions":false,
-            "inlineYieldOp":false,
-            "invertForOf":true,
-            "markRepeat":true,
-            "contextBy":"reference",
-            "inlineThrow":true,
-         	  "inlineScopeOp":"context"
-          }
-         }],
-        {
-          "plugins": [["transform-es2015-modules-commonjs",
+          "plugins": [["@babel/plugin-transform-modules-commonjs",
                        {"loose":true,"noInterop":true}]]
         }
       ]

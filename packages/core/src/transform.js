@@ -1,4 +1,3 @@
-import * as T from "babel-types"
 import * as assert from "assert"
 import * as Kit from "./kit"
 import {Tag,produce,consume,enter,leave,tok,varScope} from "./kit"
@@ -238,6 +237,9 @@ export function run(s) {
   const res = pass(s)
   if (!res)
     return
+  try {
+    require("@babel/traverse").default.cache.clearScope()
+  } catch(e) {}
   consume(varScope.resolve(res))
 }
 

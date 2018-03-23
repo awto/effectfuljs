@@ -31,7 +31,7 @@ export function prepare(si) {
       if (i.enter) {
         switch(i.type) {
         case Tag.ForOfStatement:
-          if (!i.value.node.async && s.opts.pureForOf)
+          if (!i.value.node.await && s.opts.pureForOf)
             break
         case Tag.AwaitExpression:
         case Tag.YieldExpression:
@@ -43,9 +43,6 @@ export function prepare(si) {
             yield* s.leave()
             continue           
           }
-          break
-        case Tag.ForAwaitStatement:
-          i.value.bind = true
           break
         default:
           if(i.value.func) {

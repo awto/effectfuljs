@@ -1,6 +1,6 @@
 import * as assert from "assert"
-import generate from "babel-generator"
-import * as T from "babel-types"
+import generate from "@babel/generator"
+import * as T from "@babel/types"
 import {Tag,symKind,symInfo,typeInfo,symName,resetFieldInfo} from "./core"
 
 const MAX_TRACE_CODE_LEN = 40

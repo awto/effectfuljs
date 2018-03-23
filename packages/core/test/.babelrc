@@ -1,7 +1,7 @@
 {
-  "plugins": [["transform-es2015-modules-commonjs",
+  "plugins": [["@babel/plugin-transform-modules-commonjs",
                {"loose":true,"noInterop":true}],
-              "syntax-async-generators",
-              "syntax-function-sent"]
+              "@babel/syntax-async-generators",
+              "@babel/syntax-function-sent"]
 }
 

@@ -1,6 +1,6 @@
 import {produce,consume,Tag} from ".."
 import {parse} from "babylon"
-import generate from "babel-generator"
+import generate from "@babel/generator"
 import * as Kit from "../kit"
 import * as Match from "../match"
 import * as Trace from "../trace"

@@ -39,7 +39,6 @@ export function assignLabels(s) {
           case Tag.ForStatement:
           case Tag.SwitchStatement:
           case Tag.ForInStatement:
-          case Tag.ForAwaitStatement:
           case Tag.ForOfStatement:
             const lmap = new Map(map)
             const nextBrkLab = i.type === Tag.SwitchStatement ? "#s" : "#"

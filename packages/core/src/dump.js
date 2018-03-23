@@ -2,9 +2,8 @@ import * as Kit from "./kit"
 import {Tag,produce,consume,symName} from "./kit"
 import * as Trace from "./kit/trace"
 import * as fs from "fs"
-import generate from "babel-generator"
+import generate from "@babel/generator"
 import * as assert from "assert"
-import * as T from "babel-types"
 
 const isNode = typeof window === "undefined"
 

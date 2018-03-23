@@ -3,10 +3,9 @@ import {tempNames} from "./scope"
 import * as Trace from "./trace"
 import {Tag,produce,symName,consume,symInfo,
         resetFieldInfo,typeInfo,removeNulls} from "./core"
-import generate from "babel-generator"
+import generate from "@babel/generator"
 import * as assert from "assert"
-import * as T from "babel-types"
-const fs = require("fs")
+import * as T from "@babel/types"
 
 const BROWSER_DEBUG = Trace.BROWSER_DEBUG
 
@@ -196,7 +195,7 @@ export const output = Kit.curry(function dump(tag,s) {
   if (dest === "console") {
     toConsole(tag,sl)
   } else {
-    fs.writeFileSync(dest,toStr(sl))
+    require("fs").writeFileSync(dest,toStr(sl))
   }
   return sa
 })

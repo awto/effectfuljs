@@ -2,15 +2,13 @@
   "env": {
     "development": {
       "plugins": [
-        "transform-es2015-modules-commonjs",
+        "@babel/transform-modules-commonjs",
         "transform-inline-environment-variables",
-        "minify-constant-folding",
         "minify-dead-code-elimination"]
     },
     "configure": {
       "plugins": [
         "transform-inline-environment-variables",
-        "minify-constant-folding",
         "minify-dead-code-elimination"]
     }
   }

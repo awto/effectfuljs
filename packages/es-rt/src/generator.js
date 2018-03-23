@@ -280,7 +280,8 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   function GeneratorFunction() {}
   function GeneratorFunctionPrototype() {}
   GeneratorFunctionPrototype.prototype = Gp
-  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype
+  GeneratorFunction.prototype = Gp.constructor
+    = GeneratorFunctionPrototype
   GeneratorFunctionPrototype.constructor = GeneratorFunction
   GeneratorFunctionPrototype[Symbol.toString] =
     GeneratorFunction.displayName = "GeneratorFunction"

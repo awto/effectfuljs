@@ -2,6 +2,6 @@
   "passPerPreset": true,
   "presets": [
     ["../transform-async-do",{"detectRT":"../main"}],
-    {"plugins":["transform-es2015-modules-commonjs"]}
+    {"plugins":["@babel/plugin-transform-modules-commonjs"]}
   ]
 }

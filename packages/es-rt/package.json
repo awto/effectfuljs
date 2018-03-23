@@ -39,7 +39,7 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.0.0-beta.42",
     "cross-env": "^5.1.1",
     "env-cmd": "^7.0.0",
     "eslint": "^4.10.0",

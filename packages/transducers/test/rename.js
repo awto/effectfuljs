@@ -1,7 +1,7 @@
 import {produce,consume,Tag,symbol} from ".."
 import * as Kit from "../kit"
 import {parse} from "babylon"
-import generate from "babel-generator"
+import generate from "@babel/generator"
 
 const Scope = symbol("Scope","ctrl")
 

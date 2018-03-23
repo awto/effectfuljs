@@ -1,2 +1,3 @@
-require("babel-register")
+require("@babel/register")
 global.assert = require("assert")
+

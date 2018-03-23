@@ -1,4 +1,4 @@
-import {VISITOR_KEYS,NODE_FIELDS,ALIAS_KEYS,BUILDER_KEYS} from "babel-types"
+import {VISITOR_KEYS,NODE_FIELDS,ALIAS_KEYS,BUILDER_KEYS} from "@babel/types"
 import * as assert from "assert"
 
 const SYMBOLS_IMPL = "sym"
@@ -220,27 +220,35 @@ for(const i in VISITOR_KEYS) {
   }
   function getTy(ty,pos) {
     let enumValues = null,
-    nt = new Set(),
-    atomicType = null,
-    nillable = false
+        nt = new Set(),
+        atomicType = null,
+        nillable = false
     if (ty != null && ty.chainOf != null) {
-      assert.equal(ty.chainOf.length, 2)
-      if (ty.chainOf[0].type === "array") {
-        const elem = getTy(ty.chainOf[1].each)
-        if (pos === Tag.params)
-          elem.declVar = true
-        return {
-          array: true,
-          elem: elem,
-          fieldsMap: new Map([[Tag.push,elem]])
+      let chain = ty.chainOf.filter(i => i.type !=null
+                                    || i.oneOf != null
+                                    || i.each != null
+                                    || i.oneOfNodeTypes != null
+                                    || i.oneOfNodeOrValueTypes != null)
+      if (chain.length === 1) {
+        ty = chain[0]
+      } else if (chain.length === 2) {
+        if (chain[0].type === "array") {
+          const elem = getTy(chain[1].each)
+          if (pos === Tag.params)
+            elem.declVar = true
+          return {
+            array: true,
+            elem: elem,
+            fieldsMap: new Map([[Tag.push,elem]])
+          }
+        } else if (chain[0].type === "string") {
+          assert.ok(chain[1].oneOf)
+          enumValues = chain[1].oneOf
+          atomicType = "string"
+          ty = null
+        } else {
+          throw new Error("not implemented")
         }
-      } else if (ty.chainOf[0].type === "string") {
-        assert.ok(ty.chainOf[1].oneOf)
-        enumValues = ty.chainOf[1].oneOf
-        atomicType = "string"
-        ty = null
-      } else {
-        throw new Error("not implemented")
       }
     }
     if (ty != null) {
@@ -253,8 +261,13 @@ for(const i in VISITOR_KEYS) {
           nt.add(p)
         }
       } else if (ty.oneOf != null) {
-        enumValues = ty.oneOf
-        atomicType = "string"
+        const first = ty.oneOf.filter(i => i != null)[0]
+        if (first.substr) {
+          enumValues = ty.oneOf
+          atomicType = "string"
+        } else if (first === true || first === false) {
+          atomicType = "bool"
+        }
       } else if (ty.oneOfNodeOrValueTypes != null) {
         nt = new Set()
         for(const k of ty.oneOfNodeOrValueTypes) {
@@ -328,6 +341,7 @@ function setComputed(sym,prop) {
 setComputed(Tag.ObjectProperty,Tag.key)
 
 // TODO: remove in babel 7
+/*
 {
   symInfo(Tag.ObjectMethod).fieldsMap
     .set(Tag.params,symInfo(Tag.FunctionExpression).fieldsMap.get(Tag.params))
@@ -338,6 +352,7 @@ setComputed(Tag.ObjectProperty,Tag.key)
   symInfo(Tag.ClassMethod).fieldsMap.set(Tag.key,keyProp)
   symInfo(Tag.ClassProperty).fieldsMap.set(Tag.key,keyProp)
 }
+*/
 
 symInfo(Tag.CatchClause).fieldsMap.get(Tag.param).declVar = true
 {

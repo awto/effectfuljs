@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
 import {Tag,symbol} from "./kit"
-import * as T from "babel-types"
 import * as assert from "assert"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
@@ -36,7 +35,6 @@ export const toBlocks = Kit.pipe(
           case Tag.ForStatement:
           case Tag.ForInStatement:
           case Tag.ForOfStatement:
-          case Tag.ForAwaitStatement:
           case Tag.DoWhileStatement:
           case Tag.WhileStatement:
             const lab = s.label()
@@ -66,7 +64,6 @@ export const toBlocks = Kit.pipe(
           case Tag.ForStatement:
           case Tag.ForInStatement:
           case Tag.ForOfStatement:
-          case Tag.ForAwaitStatement:
           case Tag.DoWhileStatement:
           case Tag.WhileStatement:
             const p = yield* s.findPos(Tag.body)
@@ -143,7 +140,7 @@ function forOfStmtImpl(loose, s) {
     function* val(pos) {
       yield s.enter(pos,Tag.MemberExpression,{forOfInfo})
       yield s.tok(Tag.object,Tag.Identifier,{sym,lhs:false,rhs:true})
-      yield s.tok(Tag.property,{node:T.identifier("value")})
+      yield s.tok(Tag.property,Tag.Identifier,{node:{name:"value"}})
       yield* s.leave()
     }
     const i = s.take()
@@ -185,7 +182,6 @@ function forOfStmtImpl(loose, s) {
     yield s.enter(Tag.arguments,Tag.Array)
     yield* lab()
   }
-  // TODO: remove ForAwaitStatement in babel 7
   function* _forOfStmtImpl(sw,root) {
     for(const i of sw) {
       if (i.enter && (all || i.value.eff)) {
@@ -205,7 +201,6 @@ function forOfStmtImpl(loose, s) {
         case Tag.ForInStatement:
           if (loose && !normPureForIn)
             break
-        case Tag.ForAwaitStatement:
         case Tag.ForOfStatement:
           const loop = i.value
           const sym = loop.iterVar = Bind.tempVarSym(root,"loop")
@@ -235,9 +230,7 @@ function forOfStmtImpl(loose, s) {
           yield s.enter(Tag.init,Tag.CallExpression)
           const bind = loop.bindIter = !loose
             && i.type !== Tag.ForInStatement
-            && (i.type === Tag.ForAwaitStatement
-                || loop.node.async
-                || s.opts.pureForOf === false)
+            && (loop.node.await || s.opts.pureForOf === false)
           yield s.tok(Tag.callee,Tag.Identifier,{
             sym:i.type === Tag.ForInStatement ? forInIteratorId
               : bind ? effIteratorId
@@ -608,7 +601,6 @@ export function blockScoping(sa) {
           continue
         case Tag.ForStatement:
         case Tag.ForOfStatement:
-        case Tag.ForAwaitStatement:
         case Tag.ForInStatement:
         case Tag.WhileStatement:
         case Tag.DoWhileStatement:

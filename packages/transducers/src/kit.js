@@ -2,7 +2,7 @@ import * as assert from "assert"
 import {produce,consume,Tag,enter,resetFieldInfo,
         leave,tok,symbol,symInfo,typeInfo,removeNulls,isSymbol,
        } from "./core"
-import * as T from "babel-types"
+import * as T from "@babel/types"
 import {parse as babelParse} from "babylon"
 
 const BROWSER_DEBUG = typeof window !== "undefined" && window.chrome
@@ -568,11 +568,11 @@ export const babelBridge = curry(function babelBridge(pass,path,state) {
                          file:Object.assign(state.file.opts),
                          babel:{root:path,state}},
                         _opts)
-//  try {
+  try {
     pass(produce({type:"File",program:path.node}))
-//  } catch(e) {
-//    throw path.hub.file.buildCodeFrameError(e.esNode, e.message)
-//  }
+  } catch(e) {
+    throw path.hub.file.buildCodeFrameError(e.esNode, e.message)
+  }
   _opts = optSave
 })
 

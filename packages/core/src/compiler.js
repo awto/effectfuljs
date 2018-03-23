@@ -1,5 +1,4 @@
 import defaults from "./config"
-import generate from "babel-generator"
 import {parse} from "babylon"
 import * as Kit from "./kit"
 import * as path from "path"

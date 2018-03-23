@@ -5,11 +5,7 @@
                                "defunct":false,
                                "contextState":true,
                                "contextBy":"this",
-                               "all": {"wrapFunction":null}}],
-              {
-                "plugins":[
-                  ["transform-es2015-modules-commonjs",
-                   {strict:false,loose:true}]]
-              }]
+                               "modules":"commonjs",
+                               "all": {"wrapFunction":null}}]]
 }
 

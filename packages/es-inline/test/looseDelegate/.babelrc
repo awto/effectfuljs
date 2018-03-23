@@ -1,5 +1,4 @@
 {
-  "passPerPreset": true,
   "sourceType": "script",
   "presets": [["../../preset",
                {
@@ -7,6 +6,7 @@
                  "defunct":false,
                  "importRT":"@effectful/es-rt/opts/loose-delegate",
                  "all":{"removeAsserts":false},
+                 "modules":"commonjs",
                  "generators": {
                    "inlineYieldOp":false,
                    "invertForOf":true,
@@ -15,10 +15,5 @@
 	                 "inlineScopeOp":"context",
                    "contextBy":"reference"
                  }
-               }],
-              {
-                "plugins":[
-                  ["transform-es2015-modules-commonjs",
-                   {strict:false,loose:true}]]
-              }]
+               }]]
 }

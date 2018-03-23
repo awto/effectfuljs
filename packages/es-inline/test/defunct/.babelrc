@@ -1,15 +1,10 @@
 {
-  "passPerPreset": true,
   "sourceType": "script",
   "presets": [["../../preset",
                {"topLevel":false,
                 "defunct":true,
                 "contextState":true,
+                "modules":"commonjs",
                 "contextBy":"this",
-                "importRT":"@effectful/es-rt/opts/defunct-inline",}],
-              {
-                "plugins":[
-                  ["transform-es2015-modules-commonjs",
-                   {strict:false,loose:true}]]
-              }]
+                "importRT":"@effectful/es-rt/opts/defunct-inline"}]]
 }

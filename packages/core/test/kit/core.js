@@ -1,5 +1,5 @@
 import * as assert from "assert"
-import generate from "babel-generator"
+import generate from "@babel/generator"
 import {parse} from "babylon"
 import {Tag,consume} from "../../kit"
 import * as Kit from "../../kit"

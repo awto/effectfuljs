@@ -1,6 +1,5 @@
 import * as Kit from "../kit"
 import {flatten,prepareScopes,consumeScope} from "../transform"
-import generate from "babel-generator"
 import {parse} from "babylon"
 import {doWhileStmt,forOfStmt} from "../loops"
 import {removeEmptyBinds} from "../transform"

@@ -1,10 +1,8 @@
 import {produce,consume,Tag} from ".."
 import {parse} from "babylon"
-import generate from "babel-generator"
-import * as T from "babel-types"
+import generate from "@babel/generator"
+import * as T from "@babel/types"
 import * as Kit from "../kit"
-
-const fs = require("fs")
 
 describe("lookahead iterator", function() {
   const COUNT = 1000

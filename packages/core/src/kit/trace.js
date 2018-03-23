@@ -1,5 +1,5 @@
-import generate from "babel-generator"
-import * as T from "babel-types"
+import generate from "@babel/generator"
+import * as T from "@babel/types"
 import {symName} from "@effectful/transducers"
 import * as Kit from "./"
 

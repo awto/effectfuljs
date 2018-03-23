@@ -1,10 +1,10 @@
 {
-  "passPerPreset": true,
   "sourceType": "script",
   "presets": [["../../preset",
                {"topLevel":false,
                 "defunct":false,
                 "inline":true,
+                "modules":"commonjs",
                 "importRT":"@effectful/es-rt/opts/inline-delegate",
                 "all":{"removeAsserts":false},
                 "generators":{
@@ -13,10 +13,5 @@
                   "markRepeat":false,
                   "contextBy":"reference",
                   "stateStorageField":"$"
-                }}],
-              {
-                "plugins":[
-                  ["transform-es2015-modules-commonjs",
-                   {strict:false,loose:true}]]
-              }]
+                }}]]
 }

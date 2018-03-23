@@ -2,7 +2,6 @@ import * as Kit from "../kit"
 import {consumeScope,
         debDumbBindStmt,
         removeEmptyBinds} from "../transform"
-import generate from "babel-generator"
 import {parse} from "babylon"
 import * as assert from "assert"
 import {equal,print,transformExpr} from "./kit/core"

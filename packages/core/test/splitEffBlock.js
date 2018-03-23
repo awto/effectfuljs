@@ -1,5 +1,4 @@
 import * as Kit from "../kit"
-import generate from "babel-generator"
 import {parse} from "babylon"
 import * as assert from "assert"
 import {equal,print,transformExpr} from "./kit/core"

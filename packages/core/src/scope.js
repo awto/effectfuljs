@@ -598,16 +598,18 @@ export function arrowFunToBlock(si) {
     for(const i of sw) {
       yield i
       if (i.enter && i.type === Tag.ArrowFunctionExpression
-          && i.value.node.expression && i.value.opts.transform) {
+          && i.value.opts.transform) {
         i.value.node.expression = false
         while(s.cur().pos !== Tag.body)
           yield* _arrowFunToBlock(s.one())
-        const lab = s.label()
-        yield s.enter(Tag.body,Tag.BlockStatement,{decls:s.cur().value.decls})
-        yield s.enter(Tag.body,Tag.Array)
-        yield s.enter(Tag.push,Tag.ReturnStatement)
-        yield* Kit.reposOne(_arrowFunToBlock(s.one()),Tag.argument)
-        yield* lab()
+        if (s.cur().type !== Tag.BlockStatement) {
+          const lab = s.label()
+          yield s.enter(Tag.body,Tag.BlockStatement,{decls:s.cur().value.decls})
+          yield s.enter(Tag.body,Tag.Array)
+          yield s.enter(Tag.push,Tag.ReturnStatement)
+          yield* Kit.reposOne(_arrowFunToBlock(s.one()),Tag.argument)
+          yield* lab()
+        }
       }
     }
   }

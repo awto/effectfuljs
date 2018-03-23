@@ -1,6 +1,6 @@
 {
   "passPerPreset": true,
-  "presets": [["@effectful/es",
+  "presets": [["@effectful/es/preset",
                {
                  "topLevel":true,
                  "defunct":true,
@@ -8,10 +8,8 @@
                }],
               {
                 "plugins":[
-                  ["transform-es2015-modules-commonjs",
+                  ["@babel/plugin-transform-modules-commonjs",
                    {strict:false,loose:true}]]
               }]
 }
-
-
 

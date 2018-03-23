@@ -27,7 +27,7 @@
   "devDependencies": {
     "@effectful/es-rt": "^0.1.8",
     "glob": "^7.1.2",
-    "mocha": "^3.4.2",
+    "mocha": "^5.0.0",
     "promise": "^8.0.1",
     "test262-parser": "^2.0.7"
   },

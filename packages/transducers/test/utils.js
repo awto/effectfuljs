@@ -1,8 +1,8 @@
 import {produce,consume,Tag} from ".."
 import * as Kit from "../kit"
 import {parse} from "babylon"
-import generate from "babel-generator"
-import * as T from "babel-types"
+import generate from "@babel/generator"
+import * as T from "@babel/types"
 
 function toStr(iter) {
   const a = Array.from(iter)

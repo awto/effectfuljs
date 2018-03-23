@@ -3,17 +3,12 @@
   "sourceType": "script",
   "presets": [["../../preset",
                {"loose":true,"defunct":false,
+                "modules": "commonjs",
                 "all":{
-                  "modules": "commonjs",
                   "removeAsserts":false,
                   "jsExceptions":false,
                   "inlineJsExceptions":false,
                   "inlineThrow":true
-                }}],
-              {
-                "plugins":[
-                  ["transform-es2015-modules-commonjs",
-                   {strict:false,loose:true}]]
-              }]
+                }}]]
 }
 

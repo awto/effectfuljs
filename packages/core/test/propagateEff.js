@@ -1,6 +1,5 @@
 import * as Kit from "../kit"
 import {prepareScopes,consumeScope} from "../transform"
-import generate from "babel-generator"
 import {parse} from "babylon"
 import {equal,print,transformExpr} from "./kit/core"
 import * as Debug from "../debug"

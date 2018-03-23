@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
 import {Tag,produce,consume,symbol,scope} from "@effectful/transducers"
-import * as T from "babel-types"
 const {enter,leave,tok} = Kit
 import * as Block from "./block"
 import * as Bind from "./bind"
@@ -53,9 +52,9 @@ export const saveDecls = Kit.pipe(
             }
             break
           case Tag.CatchClause:
-	    if (sl.cur().pos === Tag.param) {
-	      if (pureTry) {
-		yield i
+	          if (sl.cur().pos === Tag.param) {
+	            if (pureTry) {
+		            yield i
                 for(const k of sl.one()) {
                   yield k
                   if (k.enter && k.type === Tag.Identifier
@@ -63,9 +62,9 @@ export const saveDecls = Kit.pipe(
                     k.value.sym.interpr = null
                   }
                 }
-	      } else {
-		const ids = []
-		for(const j of sl.one()) {
+	            } else {
+		            const ids = []
+		            for(const j of sl.one()) {
                   if (j.enter && j.type === Tag.Identifier && j.value.decl) {
                     decls.set(j.value.sym, {raw:null})
                     j.value.lhs = true
@@ -73,25 +72,25 @@ export const saveDecls = Kit.pipe(
                     j.value.decl = false
                   }
                   ids.push(j)
-		}
-		const sym = Bind.tempVarSym(top.value,"ex")
-		const lab = sl.label()
-		yield sl.peel(i)
-		yield sl.tok(Tag.param, Tag.Identifier, {sym})
-		yield sl.peel()
-		yield* sl.peelTo(Tag.body)
-		const blab = sl.label()
-		yield sl.enter(Tag.push, Tag.ExpressionStatement)
-		yield sl.enter(Tag.expression, Tag.AssignmentExpression,
+		            }
+		            const sym = Bind.tempVarSym(top.value,"ex")
+		            const lab = sl.label()
+		            yield sl.peel(i)
+		            yield sl.tok(Tag.param, Tag.Identifier, {sym})
+		            yield sl.peel()
+		            yield* sl.peelTo(Tag.body)
+		            const blab = sl.label()
+		            yield sl.enter(Tag.push, Tag.ExpressionStatement)
+		            yield sl.enter(Tag.expression, Tag.AssignmentExpression,
                                {node:{operator:"="}})
-		yield* Kit.reposOne(ids, Tag.left)
-		yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
-		yield* blab()
-		yield* _saveDecls()
-		yield* lab()
+		            yield* Kit.reposOne(ids, Tag.left)
+		            yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
+		            yield* blab()
+		            yield* _saveDecls()
+		            yield* lab()
               }
-	      continue
-	    }
+	            continue
+	          }
             break
           case Tag.VariableDeclaration:
             const kind = i.value.node.kind
@@ -111,7 +110,7 @@ export const saveDecls = Kit.pipe(
                 if (j.enter && j.type === Tag.Identifier && j.value.decl) {
                   const sym = j.value.sym
                   if (!sym.noDecl) {
-                    decls.set(sym, {raw:null})
+                    decls.set(sym, {raw:null,node:j.value.node})
                   }
                   j.value.decl = false
                 }
@@ -185,24 +184,26 @@ export const saveDecls = Kit.pipe(
 /** restores declaration removed `saveDecls` in the beginning of root's body */
 export function* restoreDecls(s) {
   let sl = Kit.auto(s)
-  if (sl.first.type === Tag.ArrowFunctionExpression
-      && sl.first.value.node.expression) {
-    sl.first.value.node.expression = false
+  if (sl.first.type === Tag.ArrowFunctionExpression) {
+    const loc = sl
     sl = Kit.auto(Kit.toArray(function*() {
       let i
-      for(i of sl) {
+      for(i of loc) {
         if (i.pos === Tag.body)
           break
         yield i
       }
-      const lab = sl.label()
-      yield sl.enter(Tag.body,Tag.BlockStatement,{decls:i.value.decls})
-      yield sl.enter(Tag.body,Tag.Array)
-      yield sl.enter(Tag.push,Tag.ReturnStatement)
-      yield sl.peel(Kit.setPos(i,Tag.argument))
-      yield* sl.sub()
-      yield* lab()
-      yield* sl
+      if (i.type !== Tag.BlockStatement) {
+        const lab = loc.label()
+        yield loc.enter(Tag.body,Tag.BlockStatement,{decls:i.value.decls})
+        yield loc.enter(Tag.body,Tag.Array)
+        yield loc.enter(Tag.push,Tag.ReturnStatement)
+        yield loc.peel(Kit.setPos(i,Tag.argument))
+        yield* loc.sub()
+        yield* lab()
+      } else
+        yield i
+      yield* loc
     }()))
   }
   const root = sl.first.value
