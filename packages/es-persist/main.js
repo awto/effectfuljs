@@ -1,7 +1,7 @@
 import * as Es from "@effectful/es-rt/opts/defunct"
 
-export var contextSymbol = Symbol("@effectful/redux/context")
-export var chainSymbol = Symbol("@effectful/redux/then")
+export var contextSymbol = Symbol("@effectful/es-persist/context")
+export var chainSymbol = Symbol("@effectful/es-persist/then")
 
 export var generator = Es.generator
 export var async = Es.async
@@ -19,6 +19,7 @@ export function context() {
 export function Async() {
   this[contextSymbol].threads.add(this)
   this.awaiting = void 0
+  this.$next = []
 }
 
 var EsAp = Es.Async.prototype
@@ -43,14 +44,38 @@ Ap.chain = AGp.chain = function chain(value, cont, handle, exit) {
   this.$step = cont
   this.$handle = handle
   this.$exit = exit
-  return value && value[chainSymbol] ? value[chainSymbol](this) : this
+  value && value[chainSymbol] && value[chainSymbol](this)
+  return this
+}
+
+Ap.then = function(resume, handle) {
+  if (this.done)
+    return resume(this.value)
+  function canceled() { return this }
+  function cancel() { this.resume = canceled }
+  this.$next.push({resume,handle,cancel})
+  return this
 }
 
 AGp[chainSymbol] = Ap[chainSymbol] = function(next) {
-  return this.awaiting === void 0 ? next.resume(this.value) : this.$next = next
+  if (this.awaiting === void 0)
+    next.resume(this.value)
+  else
+    this.$next.push(next)
+}
+
+Promise.prototype[chainSymbol] = function(next) {
+  return this.then(v => next.resume(v), e => next.handle(e))
+}
+
+Ap.cancel = function cancel() {
+  this.canceld = true
+  this.$awaiting = void 0
 }
 
 AGp.resume = Ap.resume = function resume(value) {
+  if (this.canceled)
+    return this
   this.awaiting = void 0
   return this.$run(this.$step, value)
 }
@@ -60,12 +85,22 @@ function Context() {
 }
 
 function cont(ctx,v) {
-  var next = ctx.$next
-  return next ? (ctx.$next = null, next.resume(v)) : ctx
+  var next
+  while((next = ctx.$next.shift()))
+    next.resume(v)
+  return ctx
+}
+
+function contErr(ctx,v) {
+  var next
+  while((next = ctx.$next.shift()))
+    next.handle(v)
+  return ctx
 }
 
 Ap.pure = function pure(v) {
   this[contextSymbol].threads.delete(this)
+  this.done = true
   this.value = v
   return cont(this,v)
 }
@@ -81,9 +116,25 @@ AGp.yld = function yld(v, step, handle, exit) {
   return cont(this,this)
 }
 
+
+AGp.exit = function exit(v) {
+  if (this.awaiting && this.awaiting.cancel)
+    this.awaiting.cancel()
+  return EsAGp.exit.call(this,v)
+}
+
+AGp.handle = function handle(v) {
+  if (this.awaiting && this.awaiting.cancel)
+    this.awaiting.cancel()
+  return EsAGp.handle.call(this,v)
+}
+
 AGp.raise = Ap.raise = function raise(v) {
+  if (this.awaiting && this.awaiting.cancel)
+    this.awaiting.cancel()
   this[contextSymbol].threads.delete(this)
-  throw v
+  contErr(this,v)
+  return this
 }
 
 function ext(proto) {

@@ -23,7 +23,31 @@ async function b1() {
   return await a()
 }
 
+async function promise() {
+  await new Promise(i => setTimeout(i,10))
+  return 11
+}
+
 describe("async function", function() {
+  it("should support Promises", function(done) {
+    const state = R.context()
+    const p = promise()
+    assert.equal(state.threads.size,1)
+    assert.ok(state.threads.has(p))
+    assert.equal(p.awaiting.constructor, Promise)
+    p.awaiting.then(i => {
+      assert.equal(state.threads.size, 0)
+      assert.equal(p.awaiting, void 0)
+      assert.equal(p.value, 11)
+      done()
+    })
+  })
+  it("should be thenable", function(done) {
+    promise().then(i => {
+      assert.equal(i, 11)
+      done()
+    })
+  })
   it("should have its state visible", function() {
     const state = R.context()
     const s = b1()

@@ -1,6 +1,35 @@
 import * as R from "../index"
 import * as assert from "assert"
 
+export function subject() {
+  let callback
+  const queue = []
+  const iter = thread()
+  return {
+    send(event) {
+      if (callback)
+        callback()
+      queue.push(event)
+    },
+    return(v) {
+      if (callback)
+        callback()
+      return iter.return()
+    },
+    next(value) { return iter.next() },
+    [Symbol.asyncIterator]() { return this }
+  }
+
+  async function* thread() {
+    for(;;) {
+      while(queue.length)
+        yield queue.shift()
+      await new Promise(i => callback = i)
+      callback = null
+    }
+  }
+}
+
 async function* fn() {
   let i = 1
   function clos2() {
@@ -83,5 +112,56 @@ describe("async generator function", function() {
     threads = subThreads()
     assert.equal(threads.length,0)
     assert.equal(s.awaiting, void 0)
+  })
+  it("should be cancelable", function(done) {
+    const src = subject()
+    let finallyCalled1 = false
+    let finallyCalled2 = false
+    /*
+    async function* a1() {
+      try {
+        for await(const i of src)
+          yield i
+      } finally {
+        finallyCalled1 = true
+      }
+    }
+    async function* a2() {
+      try {
+        yield* a1()
+      } finally {
+        finallyCalled1 = true
+      }
+    }
+    async function* a3() {
+      const v = a2()
+      try {
+        for(let i;!(i = await v.next()).done;) {
+          yield i.value
+        }
+      } finally {
+        await v.return()
+      }
+      return 2
+    }
+    */
+    async function a4() {
+      debugger
+      const v = src // a2()
+      const i1 = await v.next()
+      assert.ok(!i1.done)
+      assert.equal(i1.value,1)
+      const i2 = await v.return()
+      assert.ok(i2.done)
+      assert.equal(i2.value,2)
+      assert.ok(finallyCalled1)
+      assert.ok(finallyCalled2)
+      assert.equal(R.context().threads.size,1)
+      return 3
+    }
+    a4().then(i => {
+      debugger
+      done()
+    })
   })
 })
