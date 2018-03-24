@@ -114,7 +114,7 @@ const inline = {
     inlineErrorContAssign:true,
     inlineContAssign:true,
     inlineScopeOp:"unwrap",
-    storeCont:"step",
+    storeCont:"$step",
     storeErrorCont:"handle",
     storeResultCont:"$exit",
     inlineYieldOp:"iterator",

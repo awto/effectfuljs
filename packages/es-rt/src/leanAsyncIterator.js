@@ -96,6 +96,7 @@ if (!process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
       return Promise.resolve(func(i)).then(function(v) {
         ctx.done = ctx.$inner.done
         ctx.value = ctx.$inner.value
+        return ctx
       }) 
     }
     function wait() {

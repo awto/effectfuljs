@@ -3,12 +3,16 @@ const expected = require("../samples/src/async")
 
 global.skipTests = {}
 
-module.exports = function generators(name, from) {
+function eqlPromises(n, a, b) {
+  return global.effectfulTrace === true
+    ? Kit.eqlPromises(Kit.tracePromise(`RES:{${n}}`,a),
+                      Kit.tracePromise(`EXP:{${n}}`,b))
+    : Kit.eqlPromises(a,b)
+}
+
+module.exports = function asyncFun(name, from) {
   describe(name, function() {
-    for(const n in from) {
-      it(from[n].name, function() {
-        return Kit.eqlPromises(from[n](),expected[n]())
-      })
-    }
+    for(const n in from)
+      it(n, () => eqlPromises(n,from[n](),expected[n]()))
   })
 }

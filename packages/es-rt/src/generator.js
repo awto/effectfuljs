@@ -49,7 +49,7 @@ if (process.env.EJS_NO_ES_OBJECT_MODEL && !process.env.EJS_DEFUNCT) {
   }
 }
 
-Gp.$redirResult = function delegateResult(iter) {
+Gp.$redirResult = function redirResult(iter) {
   if (iter.done) {
     this.$step = this.$resume
     this.$sub = this.$iter = this.$resume = void 0
@@ -168,7 +168,7 @@ if (!process.env.EJS_INLINE) {
     this.$contHandle = handle
     this.$contExit = exit
     this.$resume = step
-    this.$sub = iterator(iter)
+    this.$sub = this.iterator(iter)
     if (process.env.EJS_DEFUNCT)
       return this.$redir(void 0)
     else
@@ -201,7 +201,7 @@ if (!process.env.EJS_INLINE) {
   Gp.$delegate = function yldStar(iter) {
     this.$resume = this.$step
     this.$step = delegateCont
-    this.$sub = iterator(iter)
+    this.$sub = this.iterator(iter)
     if (process.env.EJS_DEFUNCT)
       return this.$redir(void 0)
     else
@@ -247,10 +247,8 @@ Gp.raise = function genRaise(ex) {
   throw ex
 }
 
-if (process.env.EJS_LEAN_METHOD_ITERATORS) {
-  Gp.iterator = iterator
-  Gp.forInIterator = forInIterator
-}
+Gp.iterator = iterator
+Gp.forInIterator = forInIterator
 
 Gp[iterSym] = function() { return this }
 

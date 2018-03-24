@@ -42,7 +42,7 @@ exports.runAll = function runAll(g) {
 }
 
 /** adds console output to each iterator's method */
-exports.trace = function trace(name, g) {
+exports.traceGens = function traceGens(name, g) {
   const a = g[Symbol.iterator]()
   let num = 0
   function method(m) {
@@ -89,6 +89,14 @@ function eqlPromises(a, b, rethrow) {
                      if (rethrow) throw ae
                    }))
 }
+
+exports.tracePromise = tracePromise
+function tracePromise(name, a) {
+  return a.then(
+    (av) => {console.log(`${name}-resolved`,av); av},
+    (ae) => {console.error(`${name}-rejected`,ae); throw ae})
+}
+
 
 /** 
  * turns iterator into async iterator by adding small random delay 

@@ -96,14 +96,15 @@ if (!process.env.EJS_INLINE) {
     }
   }
   LAGp.yld = Gp.yld
-  if (process.env.EJS_LEAN_METHOD_ITERATORS) {
-    LAGp.iterator = iterator
-    LAGp.forInIterator = forInIterator
-    LAGp.iteratorM = iteratorM
-  }
-} else if (process.env.EJS_DEFUNCT) {
-  LAGp.chain = Async.prototype.chain
+} else {
+  if (process.env.EJS_DEFUNCT)
+    LAGp.chain = Async.prototype.chain
+  LAGp.$delegate = Gp.$delegate 
 }
+
+LAGp.iterator = iteratorM
+LAGp.forInIterator = forInIterator
+LAGp.iteratorM = iteratorM
 
 LAGp[asyncIterSym] = LAGp[Symbol.asyncIterator] = function() { return this }
 
@@ -111,7 +112,11 @@ LAGp.handle = Gp.handle
 LAGp.pure = Gp.pure
 LAGp.raise = Gp.raise
 
-LAGp.$redirResultPure = Gp.redirResult
+LAGp.$redirResultPure = Gp.$redirResult
+
+if (process.env.EJS_DEFUNCT) {
+  LAGp.$redir = Gp.$redir
+}
 
 LAGp.$redirResult = function(iter) {
   var ctx = this
@@ -120,27 +125,26 @@ LAGp.$redirResult = function(iter) {
   })
 }
 
-if (!process.env.EJS_DEFUNCT || !process.env.EJS_INLINE) {
-  function runImpl(ctx,value) {
-    if (process.env.EJS_DEFUNCT) {
-      return ctx.$run(ctx.$step,value)
-    } else {
-      return ctx.$step(value)
+function runImpl(ctx,value) {
+  if (process.env.EJS_DEFUNCT) {
+    return ctx.$run(ctx.$step,value)
+  } else {
+    return ctx.$step(value)
+  }
+}
+
+LAGp.step = function step(value) {
+  if (!process.env.EJS_INLINE) {
+    if (this.$step !== delegateCont) {
+      this.$handle = this.$contHandle
+      this.$exit = this.$contExit
     }
   }
-  LAGp.step = function step(value) {
-    if (!process.env.EJS_INLINE) {
-      if (this.$step !== delegateCont) {
-        this.$handle = this.$contHandle
-        this.$exit = this.$contExit
-      }
-    }
-    try {
-      return runImpl(this, value)
-    } catch(e) {
-      this.$step = this.$handle
-      return runImpl(this, e)
-    }
+  try {
+    return runImpl(this, value)
+  } catch(e) {
+    this.$step = this.$handle
+    return runImpl(this, e)
   }
 }
 
