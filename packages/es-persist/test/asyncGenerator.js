@@ -113,7 +113,7 @@ describe("async generator function", function() {
     assert.equal(threads.length,0)
     assert.equal(s.awaiting, void 0)
   })
-  it("should be cancelable", function(done) {
+  it.skip("should be cancelable", function(done) {
     const src = subject()
     let finallyCalled1 = false
     let finallyCalled2 = false

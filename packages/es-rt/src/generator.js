@@ -138,7 +138,7 @@ if (!process.env.EJS_DEFUNCT || !process.env.EJS_INLINE) {
   }
 }
 
-export var delegateCont = process.env.EJS_DEFUNCT ? 0 : delegateStep
+var delegateCont = process.env.EJS_DEFUNCT ? 2 : delegateStep
 
 function delegateStep(v) {
   try {
@@ -201,7 +201,7 @@ if (!process.env.EJS_INLINE) {
   Gp.$delegate = function yldStar(iter) {
     this.$resume = this.$step
     this.$step = delegateCont
-    this.$sub = this.iterator(iter)
+    this.$sub = iterator(iter)
     if (process.env.EJS_DEFUNCT)
       return this.$redir(void 0)
     else
@@ -210,14 +210,14 @@ if (!process.env.EJS_INLINE) {
 
 }
 
-var terminated = process.env.EJS_DEFUNCT ? 1 : function terminated(value) {
+var terminated = process.env.EJS_DEFUNCT ? 0 : function terminated(value) {
   if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING)
     this.$step = terminated
   this.value = value
   return this
 }
 
-var terminatedHandle = process.env.EJS_DEFUNCT ? 2 : function terminatedHandle(value) {
+var terminatedHandle = process.env.EJS_DEFUNCT ? 1 : function terminatedHandle(value) {
   if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING)
     this.$step = terminated
   throw value

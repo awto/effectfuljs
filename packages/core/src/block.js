@@ -30,6 +30,7 @@ export const pureId = Kit.sysId("pure")
 export const alreadyRunningSym = Kit.sysId("$alreadyRunning")
 export const delegateSym = Kit.sysId("$delegate")
 export const redirSym = Kit.sysId("$redir")
+export const redirResultSym = Kit.sysId("$redirResult")
 
 /**
  * Replaces binary `app` nodes with its first component member function call 

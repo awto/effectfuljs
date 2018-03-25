@@ -496,7 +496,7 @@ export function pureOp(si) {
     throw s.error("not implemented inlinePure: 'iterator' without context")
   const field = s.opts.storeCont, exitField = s.opts.storeResultCont
   const noResult = s.opts.returnContext === false
-  const exitCont = s.opts.defunct ? "1" : `$1.${exitField}`
+  const exitCont = s.opts.defunct ? "0" : `$1.${exitField}`
   return _pureOp()
   function* val(pos) {
     const j = s.curLev()
@@ -561,7 +561,7 @@ export function raiseOp(si) {
   const {contextSym} = s.first.value
   const field = s.opts.storeCont, exitField = s.opts.storeResultCont
   const noResult = s.opts.returnContext === false
-  const exitCont = s.opts.defunct ? "1" : `$1.${exitField}`
+  const exitCont = s.opts.defunct ? "0" : `$1.${exitField}`
   return _raiseOp()
   function* _raiseOp() {
     for(const i of s) {

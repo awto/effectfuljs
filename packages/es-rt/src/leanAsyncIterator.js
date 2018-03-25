@@ -16,7 +16,11 @@ LeanAsyncIteratorPrototype[Symbol.asyncIterator]
   = function () { return this }
 
 function esResult(ctx, v) {
-  return Promise.resolve(v).then(function() { return {value:ctx.value, done:ctx.done}})
+  return ctx.ap(v,function() { return {value:ctx.value, done:ctx.done} })
+}
+
+LeanAsyncIteratorPrototype.ap = function(v,f) {
+  return Promise.resolve(v).then(f)
 }
 
 LeanAsyncIteratorPrototype.next = function esNext(v) {
@@ -149,7 +153,6 @@ if (!process.env.EJS_NO_ES_ITERATORS) {
 
   EsWrapper.prototype.constructor = EsWrapper
   
-  // TODO: v8 shows off their bind is faster, check it
   function result(ctx,v) {
     return Promise.resolve(v).then(
       function(i) {

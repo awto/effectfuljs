@@ -31,6 +31,9 @@ export function* prepare(si) {
   const errFrame = root.errFrameRedir
   const resFrame = root.resFrameRedir
   let num = 3
+  if (s.opts.bindName === "chain") {
+    num++
+  }
   // needs already running check
   if (!s.opts.loose)
     num++
@@ -40,8 +43,8 @@ export function* prepare(si) {
     if (i.enter) {
       if (i.type === Block.frame) {
         i.value.stateId = i.value.declSym.numConst =
-          i.value === resFrame ? 1
-          : i.value === errFrame ? 2
+          i.value === resFrame ? 0
+          : i.value === errFrame ? 1
           : num++
         if (errMap) {
           const catchCont = i.value.catchContRedir
@@ -209,11 +212,28 @@ export function* frames(si) {
       yield i
   }
   if (root.hasYldStar) {
-    yield s.enter(Tag.push, Tag.SwitchCase)
-    yield s.tok(Tag.test,Tag.NumericLiteral,{node:{value:0}})
-    yield s.enter(Tag.consequent,Tag.Array)
-    yield* s.toks(Tag.push,`=$I($I)`,{result:true},Block.redirSym,root.commonPatSym)
-    yield* clab()
+    if (s.opts.bindName === "chain") {
+      yield s.enter(Tag.push, Tag.SwitchCase)
+      yield s.tok(Tag.test,Tag.NumericLiteral,{node:{value:2}})
+      yield s.enter(Tag.consequent,Tag.Array)
+      if (s.opts.inlineChainOp === "promise")
+        yield* s.toks(Tag.push,`=Promise.resolve($2($3)).then($1.$resolve,$1.$reject)`,
+                      {result:true},contextSym,Block.redirSym,root.commonPatSym)
+      else
+        yield* s.toks(Tag.push,`=$I($I)`,{result:true},Block.redirSym,root.commonPatSym)
+      yield* clab()
+      yield s.enter(Tag.push, Tag.SwitchCase)
+      yield s.tok(Tag.test,Tag.NumericLiteral,{node:{value:3}})
+      yield s.enter(Tag.consequent,Tag.Array)
+      yield* s.toks(Tag.push,`=$I($I)`,{result:true},Block.redirResultSym,root.commonPatSym)
+      yield* clab()
+    } else {
+      yield s.enter(Tag.push, Tag.SwitchCase)
+      yield s.tok(Tag.test,Tag.NumericLiteral,{node:{value:2}})
+      yield s.enter(Tag.consequent,Tag.Array)
+      yield* s.toks(Tag.push,`=$I($I)`,{result:true},Block.redirSym,root.commonPatSym)
+      yield* clab()
+    }
   }
   if (s.opts.defunctGuardInvalidState) {
     yield s.enter(Tag.push, Tag.SwitchCase)

@@ -1,7 +1,7 @@
 import {asyncIterator as asyncIterSym} from "./symbol"
 import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
-import {Generator,delegateCont} from "./generator"
+import {Generator} from "./generator"
 import {iteratorM,QueueWrapper,UnwrapWrapper,LeanAsyncIterator,EsWrapper} from "./leanAsyncIterator"
 import {Async,setupCallbacks} from "./async"
 
@@ -73,6 +73,31 @@ export function esAsyncIterator(lean) {
   return lean[Symbol.asyncIterator]()
 }
 
+
+var delegateCont = process.env.EJS_DEFUNCT ? 2 : function delegateStep(v) {
+  try {
+    var ctx = this
+    if (process.env.EJS_INLINE) {
+      return Promise.resolve(this.$sub.step(v))
+        .then(function(v) {
+          ctx.$step = delegateCont
+          return ctx.$redirResult(ctx.$sub);
+        });
+    } else {
+      return this.chain(
+        this.$sub.step(v),
+        function(v) {
+          ctx.$step = delegateCont
+          return ctx.$redirResult(ctx.$sub);
+        });
+    }
+  } catch (e) {
+    this.$step = this.$handle;
+    this.$sub = this.$iter = this.$resume = void 0;
+    return this.step(e);
+  }
+}
+
 if (!process.env.EJS_INLINE) {
   var Ap = Async.prototype
   LAGp.scope = function(step,handle,exit) {
@@ -81,9 +106,7 @@ if (!process.env.EJS_INLINE) {
     this.$exit = this.$contExit = exit
     return this.unwrap
   }
-  LAGp.yldStar = Gp.yldStar
-  LAGp.chain = Ap.chain
-  
+  LAGp.chain = Ap.chain  
   LAGp.jump = function jump(value, step, handle, exit) {
     // it is actually also same as the one from Gp, but without trampoline
     try {
@@ -96,10 +119,29 @@ if (!process.env.EJS_INLINE) {
     }
   }
   LAGp.yld = Gp.yld
+  LAGp.yldStar = function yldStar(iter, step, handle, exit) {
+    this.$step = delegateCont
+    this.$contHandle = handle
+    this.$contExit = exit
+    this.$resume = step
+    this.$sub = iteratorM(iter)
+    if (process.env.EJS_DEFUNCT)
+      return this.$redir(void 0)
+    else
+      return this.step(void 0)
+  }
 } else {
-  if (process.env.EJS_DEFUNCT)
-    LAGp.chain = Async.prototype.chain
-  LAGp.$delegate = Gp.$delegate 
+  LAGp.$delegate = function yldStar(iter) {
+    this.$resume = this.$step
+    this.$step = delegateCont
+    this.$sub = iteratorM(iter)
+    if (process.env.EJS_DEFUNCT) {
+      this.$step = 2
+      return this.step()
+    } else {
+      return this.$step()
+    }
+  }
 }
 
 LAGp.iterator = iteratorM
@@ -112,17 +154,26 @@ LAGp.handle = Gp.handle
 LAGp.pure = Gp.pure
 LAGp.raise = Gp.raise
 
-LAGp.$redirResultPure = Gp.$redirResult
-
-if (process.env.EJS_DEFUNCT) {
-  LAGp.$redir = Gp.$redir
+LAGp.$redirResult = function a(iter) {
+  if (iter.done) {
+    this.$step = this.$resume
+    this.$sub = this.$iter = this.$resume = void 0
+    return this.step(iter.value)
+  }
+  this.$step = delegateCont
+  this.value = iter.value
+  return this // iter
 }
 
-LAGp.$redirResult = function(iter) {
-  var ctx = this
-  return Promise.resolve(iter).then(function(iter) {
-    return ctx.$redirResultPure(iter)
-  })
+if (process.env.EJS_DEFUNCT) {
+  LAGp.$redir = function a(p) {
+    if (!process.env.EJS_INLINE) {
+      return this.chain(this.$sub.step(p),3,this.$handle,this.$exit)
+    } else {
+      this.$step = 3
+      return this.$sub.step(p)
+    }
+  }
 }
 
 function runImpl(ctx,value) {

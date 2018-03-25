@@ -167,9 +167,10 @@ exports.traceAsync = function traceAsync(name, g) {
  */
 exports.asyncRunAll = function asyncRunAll(g, buf) {
   const a = g[Symbol.asyncIterator]()
+  let num = 0
   return iter()
   function iter() {
-    return a.next().then(function(i) {
+    return a.next(num++).then(function(i) {
       if (i.done)
         return i.value
       if (buf)

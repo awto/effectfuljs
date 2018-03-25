@@ -108,22 +108,22 @@ Ap.pure = function pure(v) {
 AGp.pure = function pure(v) {
   this[contextSymbol].threads.delete(this)
   EsAGp.pure.call(this,v)
-  return cont(this,this)
+  return cont(this,{value:this.value,done:true})
 }
 
 AGp.yld = function yld(v, step, handle, exit) {
   EsAGp.yld.call(this,v)
-  return cont(this,this)
+  return cont(this,{value:this.value,done:false})
 }
 
 
-AGp.exit = function exit(v) {
+AGp.return = AGp.exit = function exit(v) {
   if (this.awaiting && this.awaiting.cancel)
     this.awaiting.cancel()
   return EsAGp.exit.call(this,v)
 }
 
-AGp.handle = function handle(v) {
+AGp.throw = AGp.handle = function handle(v) {
   if (this.awaiting && this.awaiting.cancel)
     this.awaiting.cancel()
   return EsAGp.handle.call(this,v)
