@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var e;
@@ -15,7 +15,7 @@ function a() {
   }
 
   function _3(fc, fe, err) {
-    console.log('fin');
+    console.log("fin");
     return M.jump(void 0, fc, fe, err);
   }
 

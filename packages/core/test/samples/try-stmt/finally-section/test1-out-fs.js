@@ -1,10 +1,10 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   return M.jump(void 0, _1, _8);
 
   function _1() {
-    return M.chain(eff('in body'), _2, _8);
+    return M.chain(eff("in body"), _2, _8);
   }
 
   function _2(a) {
@@ -16,11 +16,11 @@ function a() {
   }
 
   function _3(fc, fe, err) {
-    return M.chain(eff('in `finally`'), fc, fe, err);
+    return M.chain(eff("in `finally`"), fc, fe, err);
   }
 
   function _4() {
-    return M.chain(eff('after `finally`'), _5, _6);
+    return M.chain(eff("after `finally`"), _5, _6);
   }
 
   function _5() {}

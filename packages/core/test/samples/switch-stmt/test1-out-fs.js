@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   return M.chain(eff(), _1);
@@ -26,7 +26,7 @@ function a() {
   }
 
   function _4() {
-    return M.chain(effR('default'), _5);
+    return M.chain(effR("default"), _5);
   }
 
   function _5() {}

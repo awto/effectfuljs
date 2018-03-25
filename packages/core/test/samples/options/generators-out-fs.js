@@ -1,5 +1,5 @@
 // *- DEFAULT
-import * as G from '@effectful/es';
+import * as G from "@effectful/es";
 
 var _c = G.generatorFunction(c);
 

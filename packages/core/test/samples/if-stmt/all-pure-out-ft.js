@@ -5,10 +5,10 @@ function a() {
 
 function b() {
   if (true) {
-    console.log('a');
-    console.log('b');
+    console.log("a");
+    console.log("b");
   } else {
-    console.log('c');
-    console.log('d');
+    console.log("c");
+    console.log("d");
   }
 }

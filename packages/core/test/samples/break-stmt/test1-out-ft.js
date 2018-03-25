@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 (function () {
   var ctx = M.context();
@@ -56,7 +56,7 @@ function _f_2(ctx) {
 
 function _f_3(ctx, a) {
   if (a) {
-    return M.chain(eff('a'), _f_4);
+    return M.chain(eff("a"), _f_4);
   } else {
     return M.chain(eff(3), _f_4);
   }
@@ -82,14 +82,14 @@ function f_21(ctx) {
 
 function f_31(ctx, a) {
   if (a) {
-    return M.chain(eff('a'), f_41);
+    return M.chain(eff("a"), f_41);
   } else {
     return M.chain(eff(4), f_51);
   }
 }
 
 function f_41(ctx) {
-  return eff('b');
+  return eff("b");
 }
 
 function f_51(ctx) {
@@ -102,7 +102,7 @@ function f_61(ctx) {
 
 function a_1(a) {
   if (e) {
-    return eff('b');
+    return eff("b");
   } else {
     return a._r;
   }

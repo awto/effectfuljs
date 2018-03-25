@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a(z) {
   switch (z) {
@@ -22,11 +22,11 @@ function a(z) {
       return M.chain(eff(1), _1);
 
     case 2:
-      console.log('1');
+      console.log("1");
       return M.jump(void 0, _1);
 
     default:
-      console.log('2');
+      console.log("2");
       return M.jump(void 0, _1);
   }
 
@@ -47,7 +47,7 @@ function c(z) {
 
     case 3:
       {
-        console.log('z');
+        console.log("z");
       }
 
     default:
@@ -74,7 +74,7 @@ function d(z) {
       return M.chain(eff(2), _2);
 
     case 3:
-      console.log('z');
+      console.log("z");
       return M.chain(eff(5), _2);
 
     default:

@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a1() {
   var a1 = M.context();
@@ -637,44 +637,44 @@ function b_21(b, a) {
 }
 
 function _a1_1(a1) {
-  return M.yldStar(M.yld('a1'), _a1_2);
+  return M.yldStar(M.yld("a1"), _a1_2);
 }
 
 function _a1_2(a1, a) {
   if (a) {
-    return M.yldStar(M.yld('a2'), _a1_3);
+    return M.yldStar(M.yld("a2"), _a1_3);
   } else {
-    return M.yldStar(M.yld('a3'), _a1_3);
+    return M.yldStar(M.yld("a3"), _a1_3);
   }
 }
 
 function _a1_3(a1) {
-  return M.yldStar(M.yld('b1'), a1_4);
+  return M.yldStar(M.yld("b1"), a1_4);
 }
 
 function a1_4(a1, a) {
   var b;
 
   if (a % 2) {
-    b = 'b2';
+    b = "b2";
   } else {
-    b = 'b3';
+    b = "b3";
   }
 
   return M.yldStar(M.yld(b), a1_5);
 }
 
 function a1_5(a1) {
-  return M.yldStar(M.yld('c1'), a1_6);
+  return M.yldStar(M.yld("c1"), a1_6);
 }
 
 function a1_6(a1, a) {
   var b;
 
   if (a % 2) {
-    return M.yldStar(M.yld('c2'), a1_7);
+    return M.yldStar(M.yld("c2"), a1_7);
   } else {
-    b = 'c3';
+    b = "c3";
     return M.jump(b, a1_7);
   }
 }
@@ -684,17 +684,17 @@ function a1_7(a1, a) {
 }
 
 function a1_8(a1) {
-  return M.yldStar(M.yld('d1'), a1_9);
+  return M.yldStar(M.yld("d1"), a1_9);
 }
 
 function a1_9(a1, a) {
   var b;
 
   if (a % 2) {
-    b = 'd2';
+    b = "d2";
     return M.jump(b, a1_10);
   } else {
-    return M.yldStar(M.yld('d3'), a1_10);
+    return M.yldStar(M.yld("d3"), a1_10);
   }
 }
 
@@ -703,14 +703,14 @@ function a1_10(a1, a) {
 }
 
 function a1_11(a1) {
-  return M.yldStar(M.yld('e1'), a1_12);
+  return M.yldStar(M.yld("e1"), a1_12);
 }
 
 function a1_12(a1, a) {
   if (a % 2) {
-    return M.yldStar(M.yld('e2'), a1_13);
+    return M.yldStar(M.yld("e2"), a1_13);
   } else {
-    return M.yldStar(M.yld('e3'), a1_13);
+    return M.yldStar(M.yld("e3"), a1_13);
   }
 }
 
@@ -720,13 +720,13 @@ function a1_13(a1, a) {
 
 function a1_14(a1) {
   var a;
-  a = 'a1l' && 'a1r';
+  a = "a1l" && "a1r";
   return M.yldStar(M.yld(a), a1_15);
 }
 
 function a1_15(a1) {
   var a;
-  a = 'a2l' && 'a2r';
+  a = "a2l" && "a2r";
   return M.yldStar(M.yld(a), a1_16);
 }
 
@@ -736,10 +736,10 @@ function a1_16(a1, a) {
 
 function a1_17(a1) {
   var a;
-  a = 'a3l';
+  a = "a3l";
 
   if (a) {
-    return M.yldStar(M.yld('a3r'), a1_18);
+    return M.yldStar(M.yld("a3r"), a1_18);
   } else {
     return M.jump(a, a1_18);
   }
@@ -751,10 +751,10 @@ function a1_18(a1, a) {
 
 function a1_19(a1) {
   var a;
-  a = 'a4l';
+  a = "a4l";
 
   if (a) {
-    return M.yldStar(M.yld('a4r'), a1_20);
+    return M.yldStar(M.yld("a4r"), a1_20);
   } else {
     return M.jump(a, a1_20);
   }
@@ -770,17 +770,17 @@ function a1_21(a1, a) {
 
 function a1_22(a1) {
   var a;
-  a = 'o1l' || 'o1r';
+  a = "o1l" || "o1r";
   return M.yldStar(M.yld(a), a1_23);
 }
 
 function a1_23(a1) {
-  return M.yldStar(M.yld('o2l'), a1_24);
+  return M.yldStar(M.yld("o2l"), a1_24);
 }
 
 function a1_24(a1, a) {
   if (a) {
-    a = 'o2r';
+    a = "o2r";
   }
 
   return M.yldStar(M.yld(a), a1_25);
@@ -788,10 +788,10 @@ function a1_24(a1, a) {
 
 function a1_25(a1) {
   var a;
-  a = 'o3l';
+  a = "o3l";
 
   if (a) {
-    return M.yldStar(M.yld('o3r'), a1_26);
+    return M.yldStar(M.yld("o3r"), a1_26);
   } else {
     return M.jump(a, a1_26);
   }
@@ -802,12 +802,12 @@ function a1_26(a1, a) {
 }
 
 function a1_27(a1) {
-  return M.yldStar(M.yld('o4l'), a1_28);
+  return M.yldStar(M.yld("o4l"), a1_28);
 }
 
 function a1_28(a1, a) {
   if (a) {
-    return M.yld('o4r');
+    return M.yld("o4r");
   } else {
     return a;
   }

@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -118,7 +118,7 @@ function e_2(e) {
 }
 
 function g_1(g) {
-  return M.chain(eff('a'), g_2);
+  return M.chain(eff("a"), g_2);
 }
 
 function g_2(g) {
@@ -153,18 +153,18 @@ function g_6(g, a) {
   if (a) {
     return M.jump(void 0, g_7);
   } else {
-    return M.chain(eff('c'), g_4);
+    return M.chain(eff("c"), g_4);
   }
 }
 
 function g_7(g) {
-  return M.chain(eff('z'), g_8);
+  return M.chain(eff("z"), g_8);
 }
 
 function g_8(g) {}
 
 function h_1(h) {
-  return M.chain(eff('a'), h_2);
+  return M.chain(eff("a"), h_2);
 }
 
 function h_2(h) {
@@ -175,7 +175,7 @@ function h_2(h) {
 function h_3(h) {
   if (!(h._loop = h._loop.step()).done) {
     h._j = h._loop.value;
-    console.log('j');
+    console.log("j");
     return M.chain(effA(h._j), h_4);
   } else {
     return M.jump(void 0, h_13);
@@ -196,8 +196,8 @@ function h_5(h, b) {
 function h_6(h) {
   if (!(h._loop1 = h._loop1.step()).done) {
     h._i = h._loop1.value;
-    console.log('b');
-    return M.chain(eff('b'), h_7);
+    console.log("b");
+    return M.chain(eff("b"), h_7);
   } else {
     return M.jump(void 0, h_12);
   }
@@ -235,7 +235,7 @@ function h_11(h, a) {
   if (a) {
     return M.jump(void 0, h_12);
   } else {
-    return M.chain(eff('c'), h_6);
+    return M.chain(eff("c"), h_6);
   }
 }
 
@@ -244,7 +244,7 @@ function h_12(h) {
 }
 
 function h_13(h) {
-  return M.chain(eff('z'), h_14);
+  return M.chain(eff("z"), h_14);
 }
 
 function h_14(h) {}

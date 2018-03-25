@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function aS() {
   var aS = M.context();
@@ -58,11 +58,11 @@ function aS_1(aS) {
 
 function aS_2(aS, a) {
   aS._b1 = a;
-  return M.chain(eff('a'), aS_3);
+  return M.chain(eff("a"), aS_3);
 }
 
 function aS_3(aS) {
-  return M.chain(eff('b'), aS_4);
+  return M.chain(eff("b"), aS_4);
 }
 
 function aS_4(aS) {}
@@ -74,11 +74,11 @@ function a_1(a) {
 
 function a_2(a, b) {
   a._b1 = b;
-  return M.chain(eff('a'), a_3);
+  return M.chain(eff("a"), a_3);
 }
 
 function a_3(a) {
-  return M.chain(eff('b'), a_4);
+  return M.chain(eff("b"), a_4);
 }
 
 function a_4(a) {}
@@ -89,11 +89,11 @@ function a1_1(a1) {
 
 function a1_2(a1, a) {
   a1._a = a;
-  return M.chain(eff('a'), a1_3);
+  return M.chain(eff("a"), a1_3);
 }
 
 function a1_3(a1) {
-  return M.chain(eff('b'), a1_4);
+  return M.chain(eff("b"), a1_4);
 }
 
 function a1_4(a1) {}
@@ -174,11 +174,11 @@ function c_2(c, a) {
 
 function c_3(c, a) {
   c._c = a;
-  return M.chain(eff('a'), c_4);
+  return M.chain(eff("a"), c_4);
 }
 
 function c_4(c) {
-  return M.chain(eff('b'), c_5);
+  return M.chain(eff("b"), c_5);
 }
 
 function c_5(c) {
@@ -199,13 +199,13 @@ function c_7(c, a) {
 function c_8(c, a) {
   c._g = a;
   c._j = 8;
-  return M.chain(eff('x'), c_9);
+  return M.chain(eff("x"), c_9);
 }
 
 function c_9(c, a) {
   c._x = a;
-  c._y = 'y';
-  return M.chain(eff('z'), c_10);
+  c._y = "y";
+  return M.chain(eff("z"), c_10);
 }
 
 function c_10(c, a) {
@@ -221,7 +221,7 @@ function c_11(c) {
 function c_12(c) {}
 
 function d_1(d) {
-  return M.chain(eff1('a'), d_2);
+  return M.chain(eff1("a"), d_2);
 }
 
 function d_2(d, a) {
@@ -231,7 +231,7 @@ function d_2(d, a) {
 
 function d_3(d, a) {
   d._.some = a;
-  return M.chain(eff('b'), d_4);
+  return M.chain(eff("b"), d_4);
 }
 
 function d_4(d, a) {
@@ -241,12 +241,12 @@ function d_4(d, a) {
 
 function d_5(d, a) {
   d._1.some += a;
-  return M.chain(eff('c'), d_6);
+  return M.chain(eff("c"), d_6);
 }
 
 function d_6(d, a) {
   a.some++;
-  some['d']--;
+  some["d"]--;
 }
 
 function e1_1(e1) {

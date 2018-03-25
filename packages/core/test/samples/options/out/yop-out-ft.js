@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-import * as M from '@effectful/core';
-M = require('@effectfuljs/core');
-Q = require('Q');
-QM = require('@effectfuljs/promise')(Q);
-describe('yop', function () {
+import * as M from "@effectful/core";
+M = require("@effectfuljs/core");
+Q = require("Q");
+QM = require("@effectfuljs/promise")(Q);
+describe("yop", function () {
   var ctx = M.context();
   return M.scope(f_112);
 });
@@ -110,7 +110,7 @@ function _f_3(_ctx) {
 function _f_4(_ctx) {}
 
 function f_112(ctx) {
-  return M.chain(it('should yield fiber until promise is resolved', function (done) {
+  return M.chain(it("should yield fiber until promise is resolved", function (done) {
     var _ctx = M.context();
 
     _ctx._addLater = function _addLater(a, b) {
@@ -132,7 +132,7 @@ function throwErrorLater_1(throwErrorLater) {
 function f_17(ctx) {
   var a;
   a = ctx._throwErrorLater._deferred;
-  return M.chain(a.reject(new Error('promise rejected')), f_26);
+  return M.chain(a.reject(new Error("promise rejected")), f_26);
 }
 
 function f_26(ctx) {}
@@ -176,7 +176,7 @@ function f_13(_ctx) {
 function f_23(_ctx, b) {
   var a;
   a = b.to;
-  return M.chain(a.equal('promise rejected'), f_31, _f_6);
+  return M.chain(a.equal("promise rejected"), f_31, _f_6);
 }
 
 function f_31(_ctx) {
@@ -215,7 +215,7 @@ function f_25(ctx, a) {
 function f_14(_ctx) {
   var a;
   a = _ctx._f._done;
-  return M.chain(a(new Error('yop should have thrown reason from rejected promise')), f_24);
+  return M.chain(a(new Error("yop should have thrown reason from rejected promise")), f_24);
 }
 
 function f_24(_ctx) {}
@@ -250,7 +250,7 @@ function f_33(ctx) {
 function f_42(ctx) {}
 
 function f_211(ctx) {
-  return M.chain(it('should throw reasons from rejected promises into fiber', function (done) {
+  return M.chain(it("should throw reasons from rejected promises into fiber", function (done) {
     var ctx = M.context();
 
     ctx._throwErrorLater = function _throwErrorLater() {
@@ -342,7 +342,7 @@ function f_35(_ctx) {
 function f_44(_ctx) {}
 
 function f_36(ctx) {
-  return M.chain(it('should work just fine with passed a value instead of a promise', function (done) {
+  return M.chain(it("should work just fine with passed a value instead of a promise", function (done) {
     var _ctx = M.context();
 
     _ctx._done = done;

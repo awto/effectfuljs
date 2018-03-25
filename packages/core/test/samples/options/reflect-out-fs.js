@@ -1,7 +1,7 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
-  return M.chain(eff('a'), _1);
+  return M.chain(eff("a"), _1);
 
   function _1() {
     return M.chain(M.reflect(monadish), _2);

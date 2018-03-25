@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a1() {
   var a1 = M.context();
@@ -70,7 +70,7 @@ function a2() {
   }
 
   function _4(a2) {
-    return M.yldStar(M.yld('f'), _6);
+    return M.yldStar(M.yld("f"), _6);
   }
 
   function _5(a2) {
@@ -150,7 +150,7 @@ function a3() {
   }
 
   function _7(a3) {
-    return M.yldStar(M.yld('f'), _9);
+    return M.yldStar(M.yld("f"), _9);
   }
 
   function _8(a3) {
@@ -218,7 +218,7 @@ function a4() {
   }
 
   function _7(a4) {
-    return M.yldStar(M.yld('f'), a4._fe1);
+    return M.yldStar(M.yld("f"), a4._fe1);
   }
 
   function _8(a4) {
@@ -416,7 +416,7 @@ function a5(i) {
   }
 
   function _12(a5, a) {
-    console.log('F');
+    console.log("F");
     a5.$sc = a5._fc;
     return a5._fx.true();
   }
@@ -792,7 +792,7 @@ function a5_2(i) {
   }
 
   function _12(a5_2) {
-    console.log('F');
+    console.log("F");
     a5_2.$sc = a5_2._fc;
     return a5_2._fx.true();
   }
@@ -994,7 +994,7 @@ function a5_2(i) {
 
   function _12(a5_2) {
     a5_2._err2 = a5_2._err3;
-    return M.yldStar(M.yld('F'), a5_2._fe);
+    return M.yldStar(M.yld("F"), a5_2._fe);
   }
 
   function _13(a5_2) {

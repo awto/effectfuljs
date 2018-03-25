@@ -1,8 +1,8 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a, r;
-  return M.chain(eff('1'), _1);
+  return M.chain(eff("1"), _1);
 
   function _1(b) {
     a = b;
@@ -11,6 +11,6 @@ function a() {
 
   function _2(b) {
     console.log(a, b, 3);
-    return console.log('4');
+    return console.log("4");
   }
 }

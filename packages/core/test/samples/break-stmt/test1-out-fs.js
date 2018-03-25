@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 (function () {
   return M.chain(eff(1), _1);
@@ -35,7 +35,7 @@ import * as M from '@effectful/core';
 
   function _2(a) {
     if (a) {
-      return M.chain(eff('a'), _3);
+      return M.chain(eff("a"), _3);
     } else {
       return M.chain(eff(3), _3);
     }
@@ -61,14 +61,14 @@ import * as M from '@effectful/core';
 
   function _2(a) {
     if (a) {
-      return M.chain(eff('a'), _3);
+      return M.chain(eff("a"), _3);
     } else {
       return M.chain(eff(4), _4);
     }
   }
 
   function _3() {
-    return eff('b');
+    return eff("b");
   }
 
   function _4() {
@@ -85,7 +85,7 @@ function a() {
   var r;
 
   if (e) {
-    return eff('b');
+    return eff("b");
   } else {
     return r;
   }

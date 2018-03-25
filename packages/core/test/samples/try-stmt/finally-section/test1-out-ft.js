@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -6,7 +6,7 @@ function a() {
 }
 
 function a_1(a) {
-  return M.chain(eff('in body'), a_2, a_8);
+  return M.chain(eff("in body"), a_2, a_8);
 }
 
 function a_2(a, b) {
@@ -20,11 +20,11 @@ function a_2(a, b) {
 }
 
 function a_3(a) {
-  return M.chain(eff('in `finally`'), a._fc, a._fe);
+  return M.chain(eff("in `finally`"), a._fc, a._fe);
 }
 
 function a_4(a) {
-  return M.chain(eff('after `finally`'), a_5, a_6);
+  return M.chain(eff("after `finally`"), a_5, a_6);
 }
 
 function a_5(a) {}

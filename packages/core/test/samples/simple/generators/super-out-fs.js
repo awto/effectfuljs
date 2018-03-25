@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function aa() {
   var A = class A {
@@ -6,7 +6,7 @@ function aa() {
       return M.scope(_1);
 
       function _1() {
-        return M.pure('from A');
+        return M.pure("from A");
       }
     }
 
@@ -14,7 +14,7 @@ function aa() {
       return M.scope(_1);
 
       function _1() {
-        return M.pure('static from A');
+        return M.pure("static from A");
       }
     }
 
@@ -32,7 +32,7 @@ function aa() {
       }
 
       function _2(a) {
-        return M.pure('from B ' + a);
+        return M.pure("from B " + a);
       }
     }
 
@@ -48,7 +48,7 @@ function aa() {
       }
 
       function _2(a) {
-        return M.pure('static from B ' + a);
+        return M.pure("static from B " + a);
       }
     }
 

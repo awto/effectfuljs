@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function aS() {
   var b1;
@@ -6,11 +6,11 @@ function aS() {
 
   function _1(a) {
     b1 = a;
-    return M.chain(eff('a'), _2);
+    return M.chain(eff("a"), _2);
   }
 
   function _2() {
-    return M.chain(eff('b'), _3);
+    return M.chain(eff("b"), _3);
   }
 
   function _3() {}
@@ -25,11 +25,11 @@ function a() {
 
   function _1(a) {
     b1 = a;
-    return M.chain(eff('a'), _2);
+    return M.chain(eff("a"), _2);
   }
 
   function _2() {
-    return M.chain(eff('b'), _3);
+    return M.chain(eff("b"), _3);
   }
 
   function _3() {}
@@ -41,11 +41,11 @@ function a1() {
 
   function _1(b) {
     a = b;
-    return M.chain(eff('a'), _2);
+    return M.chain(eff("a"), _2);
   }
 
   function _2() {
-    return M.chain(eff('b'), _3);
+    return M.chain(eff("b"), _3);
   }
 
   function _3() {}
@@ -130,11 +130,11 @@ function c() {
 
   function _2(a) {
     c = a;
-    return M.chain(eff('a'), _3);
+    return M.chain(eff("a"), _3);
   }
 
   function _3() {
-    return M.chain(eff('b'), _4);
+    return M.chain(eff("b"), _4);
   }
 
   function _4() {
@@ -155,13 +155,13 @@ function c() {
   function _7(a) {
     g = a;
     j = 8;
-    return M.chain(eff('x'), _8);
+    return M.chain(eff("x"), _8);
   }
 
   function _8(a) {
     x = a;
-    y = 'y';
-    return M.chain(eff('z'), _9);
+    y = "y";
+    return M.chain(eff("z"), _9);
   }
 
   function _9(a) {
@@ -179,7 +179,7 @@ function c() {
 
 function d() {
   var a, b;
-  return M.chain(eff1('a'), _1);
+  return M.chain(eff1("a"), _1);
 
   function _1(b) {
     a = b;
@@ -188,7 +188,7 @@ function d() {
 
   function _2(b) {
     a.some = b;
-    return M.chain(eff('b'), _3);
+    return M.chain(eff("b"), _3);
   }
 
   function _3(a) {
@@ -198,12 +198,12 @@ function d() {
 
   function _4(a) {
     b.some += a;
-    return M.chain(eff('c'), _5);
+    return M.chain(eff("c"), _5);
   }
 
   function _5(a) {
     a.some++;
-    some['d']--;
+    some["d"]--;
   }
 }
 

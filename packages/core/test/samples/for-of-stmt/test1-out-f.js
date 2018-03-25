@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var i, loop, fc, fe, err;
@@ -45,7 +45,7 @@ function a() {
 
 function b() {
   var i, loop, fc, fe, err;
-  return M.chain(eff('d'), _1);
+  return M.chain(eff("d"), _1);
 
   function _1(b) {
     var a;

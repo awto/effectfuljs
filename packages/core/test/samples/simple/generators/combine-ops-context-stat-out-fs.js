@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -151,7 +151,7 @@ function a4() {
 
   function _4(a4) {
     a4._e = a4._ex;
-    return a4.yld('excep', _5, _16);
+    return a4.yld("excep", _5, _16);
   }
 
   function _5(a4) {
@@ -169,11 +169,11 @@ function a4() {
   }
 
   function _7(a4) {
-    return a4.yld('f', _8);
+    return a4.yld("f", _8);
   }
 
   function _8(a4) {
-    return a4.yld('e', a4._fc, a4._fe);
+    return a4.yld("e", a4._fc, a4._fe);
   }
 
   function _9(a4) {
@@ -292,11 +292,11 @@ function a6() {
 
   function _5(a6) {
     a6._err1 = a6._err2;
-    return a6.yld('f1', _6);
+    return a6.yld("f1", _6);
   }
 
   function _6(a6) {
-    return a6.yld('f2', a6._fc1, a6._fe1);
+    return a6.yld("f2", a6._fc1, a6._fe1);
   }
 
   function _7(a6) {
@@ -453,7 +453,7 @@ function a6() {
   }
 
   function _3(a6, a) {
-    if (a === 'exit') {
+    if (a === "exit") {
       return a6.pure(100);
     } else {
       return a6.jump(void 0, _2);
@@ -471,15 +471,15 @@ function a7() {
 
   function _2(a7, a) {
     if (a) {
-      return a7.yld('A', _3);
+      return a7.yld("A", _3);
     } else {
-      return a7.yld('c', _5);
+      return a7.yld("c", _5);
     }
   }
 
   function _3(a7, a) {
     a7._ = a;
-    return a7.yld('b', _4);
+    return a7.yld("b", _4);
   }
 
   function _4(a7, a) {
@@ -488,12 +488,12 @@ function a7() {
 
   function _5(a7, a) {
     a7._1 = a;
-    return a7.yld('d', _6);
+    return a7.yld("d", _6);
   }
 
   function _6(a7, a) {
     if (a) {
-      return a7.yld('e', _7);
+      return a7.yld("e", _7);
     } else {
       return a7.yldStar(a, _7);
     }
@@ -514,15 +514,15 @@ function a7_1() {
 
   function _2(a7_1, a) {
     if (a) {
-      return a7_1.yld('A', _3);
+      return a7_1.yld("A", _3);
     } else {
-      return a7_1.yld('c', _5);
+      return a7_1.yld("c", _5);
     }
   }
 
   function _3(a7_1, a) {
     a7_1._2 = a;
-    return a7_1.yld('b', _4);
+    return a7_1.yld("b", _4);
   }
 
   function _4(a7_1, a) {
@@ -532,12 +532,12 @@ function a7_1() {
 
   function _5(a7_1, a) {
     a7_1._3 = a;
-    return a7_1.yld('d', _6);
+    return a7_1.yld("d", _6);
   }
 
   function _6(a7_1, a) {
     if (a) {
-      return a7_1.yld('e', _7);
+      return a7_1.yld("e", _7);
     } else {
       return a7_1.yldStar(a, _7);
     }
@@ -567,15 +567,15 @@ function a7_2() {
 
   function _2(a7_2, a) {
     if (a) {
-      return a7_2.yld('A', _3);
+      return a7_2.yld("A", _3);
     } else {
-      return a7_2.yld('c', _5);
+      return a7_2.yld("c", _5);
     }
   }
 
   function _3(a7_2, a) {
     a7_2._1 = a;
-    return a7_2.yld('b', _4);
+    return a7_2.yld("b", _4);
   }
 
   function _4(a7_2, a) {
@@ -585,12 +585,12 @@ function a7_2() {
 
   function _5(a7_2, a) {
     a7_2._2 = a;
-    return a7_2.yld('d', _6);
+    return a7_2.yld("d", _6);
   }
 
   function _6(a7_2, a) {
     if (a) {
-      return a7_2.yld('e', _7);
+      return a7_2.yld("e", _7);
     } else {
       return a7_2.yldStar(a, _7);
     }
@@ -610,7 +610,7 @@ function a7_2() {
   }
 
   function _10(a7_2) {
-    return a7_2.yld('ex', _11);
+    return a7_2.yld("ex", _11);
   }
 
   function _11(a7_2) {
@@ -628,15 +628,15 @@ function a7_3() {
 
   function _2(a7_3, a) {
     if (a % 2) {
-      return a7_3.yld('A', _3);
+      return a7_3.yld("A", _3);
     } else {
-      return a7_3.yld('c', _5);
+      return a7_3.yld("c", _5);
     }
   }
 
   function _3(a7_3, a) {
     a7_3._ = a;
-    return a7_3.yld('b', _4);
+    return a7_3.yld("b", _4);
   }
 
   function _4(a7_3, a) {
@@ -718,7 +718,7 @@ function a7_6() {
     var b;
 
     if (a) {
-      return a7_6.yld('A', _3);
+      return a7_6.yld("A", _3);
     } else {
       b = 1;
       return a7_6.yldStar(b, _5);
@@ -727,7 +727,7 @@ function a7_6() {
 
   function _3(a7_6, a) {
     a7_6._1 = a;
-    return a7_6.yld('b', _4);
+    return a7_6.yld("b", _4);
   }
 
   function _4(a7_6, b) {
@@ -764,7 +764,7 @@ function finallyBlock1() {
   }
 
   function _4(finallyBlock1) {
-    return finallyBlock1.yld('exit', _5);
+    return finallyBlock1.yld("exit", _5);
   }
 
   function _5(finallyBlock1) {
@@ -1220,7 +1220,7 @@ function fb4() {
   }
 
   function _4(fb4) {
-    return fb4.yld('exit', _5);
+    return fb4.yld("exit", _5);
   }
 
   function _5(fb4) {
@@ -2035,7 +2035,7 @@ function loopCapt2() {
 
       return loopCapt2.yldStar(a, _3);
     } else {
-      return loopCapt2.yld('f', _4);
+      return loopCapt2.yld("f", _4);
     }
   }
 

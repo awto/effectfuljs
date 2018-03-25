@@ -1,4 +1,4 @@
-import Z from '@effectful/generators';
+import Z from "@effectful/generators";
 
 function a() {
   var a = Z.generator();

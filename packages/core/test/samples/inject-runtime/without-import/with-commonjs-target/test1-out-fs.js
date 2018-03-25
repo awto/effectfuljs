@@ -1,4 +1,4 @@
-var M = require('@effectful/generators');
+var M = require("@effectful/generators");
 
 var _a = M.generatorFunction(a);
 

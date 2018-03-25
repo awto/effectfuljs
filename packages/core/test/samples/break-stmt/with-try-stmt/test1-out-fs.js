@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 (function () {
   var e;
@@ -10,7 +10,7 @@ import * as M from '@effectful/core';
 
   function _2(a) {
     if (a) {
-      return M.chain(eff('before break'), _5);
+      return M.chain(eff("before break"), _5);
     } else {
       return M.chain(eff(2), _4);
     }

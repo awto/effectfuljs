@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 // *- when branches are pure but its condition has effects
 // *- should bind statement's condition part using fmap

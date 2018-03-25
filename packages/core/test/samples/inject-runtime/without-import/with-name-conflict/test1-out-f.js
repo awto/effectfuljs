@@ -1,4 +1,4 @@
-import * as _M from '@effectful/generators';
+import * as _M from "@effectful/generators";
 
 var _a = _M.generatorFunction(a);
 

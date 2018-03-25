@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a1() {
   return M.chain(eff(1), _1);
@@ -529,44 +529,44 @@ function a1() {
   return M.scope(_1);
 
   function _1() {
-    return M.yldStar(M.yld('a1'), _2);
+    return M.yldStar(M.yld("a1"), _2);
   }
 
   function _2(a) {
     if (a) {
-      return M.yldStar(M.yld('a2'), _3);
+      return M.yldStar(M.yld("a2"), _3);
     } else {
-      return M.yldStar(M.yld('a3'), _3);
+      return M.yldStar(M.yld("a3"), _3);
     }
   }
 
   function _3() {
-    return M.yldStar(M.yld('b1'), _4);
+    return M.yldStar(M.yld("b1"), _4);
   }
 
   function _4(a) {
     var b;
 
     if (a % 2) {
-      b = 'b2';
+      b = "b2";
     } else {
-      b = 'b3';
+      b = "b3";
     }
 
     return M.yldStar(M.yld(b), _5);
   }
 
   function _5() {
-    return M.yldStar(M.yld('c1'), _6);
+    return M.yldStar(M.yld("c1"), _6);
   }
 
   function _6(a) {
     var b;
 
     if (a % 2) {
-      return M.yldStar(M.yld('c2'), _7);
+      return M.yldStar(M.yld("c2"), _7);
     } else {
-      b = 'c3';
+      b = "c3";
       return M.jump(b, _7);
     }
   }
@@ -576,17 +576,17 @@ function a1() {
   }
 
   function _8() {
-    return M.yldStar(M.yld('d1'), _9);
+    return M.yldStar(M.yld("d1"), _9);
   }
 
   function _9(a) {
     var b;
 
     if (a % 2) {
-      b = 'd2';
+      b = "d2";
       return M.jump(b, _10);
     } else {
-      return M.yldStar(M.yld('d3'), _10);
+      return M.yldStar(M.yld("d3"), _10);
     }
   }
 
@@ -595,14 +595,14 @@ function a1() {
   }
 
   function _11() {
-    return M.yldStar(M.yld('e1'), _12);
+    return M.yldStar(M.yld("e1"), _12);
   }
 
   function _12(a) {
     if (a % 2) {
-      return M.yldStar(M.yld('e2'), _13);
+      return M.yldStar(M.yld("e2"), _13);
     } else {
-      return M.yldStar(M.yld('e3'), _13);
+      return M.yldStar(M.yld("e3"), _13);
     }
   }
 
@@ -612,13 +612,13 @@ function a1() {
 
   function _14() {
     var a;
-    a = 'a1l' && 'a1r';
+    a = "a1l" && "a1r";
     return M.yldStar(M.yld(a), _15);
   }
 
   function _15() {
     var a;
-    a = 'a2l' && 'a2r';
+    a = "a2l" && "a2r";
     return M.yldStar(M.yld(a), _16);
   }
 
@@ -628,10 +628,10 @@ function a1() {
 
   function _17() {
     var a;
-    a = 'a3l';
+    a = "a3l";
 
     if (a) {
-      return M.yldStar(M.yld('a3r'), _18);
+      return M.yldStar(M.yld("a3r"), _18);
     } else {
       return M.jump(a, _18);
     }
@@ -643,10 +643,10 @@ function a1() {
 
   function _19() {
     var a;
-    a = 'a4l';
+    a = "a4l";
 
     if (a) {
-      return M.yldStar(M.yld('a4r'), _20);
+      return M.yldStar(M.yld("a4r"), _20);
     } else {
       return M.jump(a, _20);
     }
@@ -662,17 +662,17 @@ function a1() {
 
   function _22() {
     var a;
-    a = 'o1l' || 'o1r';
+    a = "o1l" || "o1r";
     return M.yldStar(M.yld(a), _23);
   }
 
   function _23() {
-    return M.yldStar(M.yld('o2l'), _24);
+    return M.yldStar(M.yld("o2l"), _24);
   }
 
   function _24(a) {
     if (a) {
-      a = 'o2r';
+      a = "o2r";
     }
 
     return M.yldStar(M.yld(a), _25);
@@ -680,10 +680,10 @@ function a1() {
 
   function _25() {
     var a;
-    a = 'o3l';
+    a = "o3l";
 
     if (a) {
-      return M.yldStar(M.yld('o3r'), _26);
+      return M.yldStar(M.yld("o3r"), _26);
     } else {
       return M.jump(a, _26);
     }
@@ -694,12 +694,12 @@ function a1() {
   }
 
   function _27() {
-    return M.yldStar(M.yld('o4l'), _28);
+    return M.yldStar(M.yld("o4l"), _28);
   }
 
   function _28(a) {
     if (a) {
-      return M.yld('o4r');
+      return M.yld("o4r");
     } else {
       return a;
     }

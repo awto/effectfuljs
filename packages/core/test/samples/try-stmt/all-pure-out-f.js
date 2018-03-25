@@ -1,37 +1,37 @@
 function a() {
-  console.log('in');
+  console.log("in");
 
   try {
-    console.log('inner');
+    console.log("inner");
   } catch (e) {
-    console.log('exception', e);
+    console.log("exception", e);
   }
 
-  console.log('out');
+  console.log("out");
 }
 
 function b() {
-  console.log('in');
+  console.log("in");
 
   try {
-    console.log('inner');
+    console.log("inner");
   } catch (e) {
-    console.log('exception', e);
+    console.log("exception", e);
   } finally {
-    console.log('fin');
+    console.log("fin");
   }
 
-  console.log('out');
+  console.log("out");
 }
 
 function c() {
-  console.log('in');
+  console.log("in");
 
   try {
-    console.log('inner');
+    console.log("inner");
   } finally {
-    console.log('fin');
+    console.log("fin");
   }
 
-  console.log('out');
+  console.log("out");
 }

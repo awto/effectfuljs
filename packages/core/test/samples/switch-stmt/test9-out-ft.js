@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 // *- with state
 function a() {
@@ -31,7 +31,7 @@ function a_3(a, b) {
 
     case 3:
       {
-        console.log('hi', a._i);
+        console.log("hi", a._i);
       }
 
     default:

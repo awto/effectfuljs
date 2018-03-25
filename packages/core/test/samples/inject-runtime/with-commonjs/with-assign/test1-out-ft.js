@@ -1,5 +1,5 @@
 var Z;
-Z = require('@effectful/generators');
+Z = require("@effectful/generators");
 
 function a() {
   var a = Z.generator();

@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function forOfBlockScope() {
   var a, b, funs, i, j, _i, k, _k, k1, k2;

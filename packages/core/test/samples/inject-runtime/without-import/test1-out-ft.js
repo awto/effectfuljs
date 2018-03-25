@@ -1,4 +1,4 @@
-import * as M from '@effectful/generators';
+import * as M from "@effectful/generators";
 
 function a() {
   var a = M.generator();

@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 // *- when there is a mix of pure and effectful branches
 function a() {
@@ -100,7 +100,7 @@ function c_4(c) {
 }
 
 function d_1(d) {
-  return M.chain(eff('a'), d_2);
+  return M.chain(eff("a"), d_2);
 }
 
 function d_2(d) {
@@ -123,26 +123,26 @@ function d_4(d) {
 function d_5(d) {}
 
 function e_1(e) {
-  return M.chain(eff('1'), e_2);
+  return M.chain(eff("1"), e_2);
 }
 
 function e_2(e, a) {
   if (a) {} else {
-    return M.chain(eff('2'), e_3);
+    return M.chain(eff("2"), e_3);
   }
 }
 
 function e_3(e) {}
 
 function f_1(f) {
-  return M.chain(eff('1'), f_2);
+  return M.chain(eff("1"), f_2);
 }
 
 function f_2(f, a) {
   if (a) {
-    return eff('i');
+    return eff("i");
   } else {
-    return M.chain(eff('2'), f_3);
+    return M.chain(eff("2"), f_3);
   }
 }
 
@@ -151,35 +151,35 @@ function f_3(f) {
 }
 
 function g_1(g) {
-  return M.chain(eff('1'), g_2);
+  return M.chain(eff("1"), g_2);
 }
 
 function g_2(g, a) {
   if (a) {} else {
-    console.log('2');
+    console.log("2");
   }
 }
 
 function h_1(h) {
-  return M.chain(eff('1'), h_2);
+  return M.chain(eff("1"), h_2);
 }
 
 function h_2(h, a) {
   if (a) {} else {
-    console.log('2');
-    return M.chain(eff('2'), h_3);
+    console.log("2");
+    return M.chain(eff("2"), h_3);
   }
 }
 
 function h_3(h) {}
 
 function i_1(i) {
-  return M.chain(eff('1'), i_2);
+  return M.chain(eff("1"), i_2);
 }
 
 function i_2(i, a) {
   if (a) {} else {
-    console.log('2');
+    console.log("2");
     return M.chain(eff(2), i_3);
   }
 }
@@ -187,16 +187,16 @@ function i_2(i, a) {
 function i_3(i) {}
 
 function j_1(j) {
-  return M.chain(eff('1'), j_2);
+  return M.chain(eff("1"), j_2);
 }
 
 function j_2(j, a) {
   if (a) {} else {
-    console.log('2');
+    console.log("2");
     return M.chain(eff(2), j_3);
   }
 }
 
 function j_3(j) {
-  console.log('3');
+  console.log("3");
 }

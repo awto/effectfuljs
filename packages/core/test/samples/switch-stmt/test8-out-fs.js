@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 // *- with state
 function a() {
@@ -45,7 +45,7 @@ function a() {
 
   function _5(a, i, pat) {
     if (pat === a) {
-      console.log('hi', i);
+      console.log("hi", i);
     }
 
     return M.chain(eff(i), _6);

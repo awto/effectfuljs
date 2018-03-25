@@ -1,4 +1,4 @@
-import * as _M from '@effectful/core';
+import * as _M from "@effectful/core";
 
 function M() {
   return _M.chain(eff(2), _1);

@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -17,7 +17,7 @@ function a() {
 }
 
 function a_1(a) {
-  console.log('hi');
+  console.log("hi");
   return M.chain(e1(), a_2);
 }
 

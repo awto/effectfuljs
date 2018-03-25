@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -60,11 +60,11 @@ function a_1(a, p) {
     case 6:
       return M.pure();
 
-    case 0:
+    case 2:
       return M.$redir(p);
 
     default:
-      throw new Error('invalid state');
+      throw new Error("invalid state");
   }
 }
 
@@ -93,11 +93,11 @@ function b_1(b, p) {
       b._ex = p;
       return M.jump();
 
-    case 0:
+    case 2:
       return M.$redir(p);
 
     default:
-      throw new Error('invalid state');
+      throw new Error("invalid state");
   }
 }
 
@@ -111,23 +111,23 @@ function c_1(c, p) {
 
     case 5:
       c.$sc = 7;
-      c._fc = 8, c._fe = 2;
+      c._fc = 8, c._fe = 1;
       return M.yldStar(M.yld(2));
 
     case 6:
       c._e = c._ex;
       c.$sc = 7;
-      c._fc = 8, c._fe = 2;
+      c._fc = 8, c._fe = 1;
       return M.yldStar(M.yld(c._e));
 
     case 7:
       c.$sc = c._fc;
-      return M.yldStar(M.yld('F'), c._fe);
+      return M.yldStar(M.yld("F"), c._fe);
 
     case 8:
       return M.pure();
 
-    case 2:
+    case 1:
       return M.raise(p);
 
     case 9:
@@ -140,14 +140,14 @@ function c_1(c, p) {
 
     case 11:
       c.$sc = 7;
-      c._fc = 9, c._fe = 2, c._err1 = p;
+      c._fc = 9, c._fe = 1, c._err1 = p;
       return M.jump();
 
-    case 0:
+    case 2:
       return M.$redir(p);
 
     default:
-      throw new Error('invalid state');
+      throw new Error("invalid state");
   }
 }
 
@@ -167,7 +167,7 @@ function d_1(d, p) {
         return M.yldStar(M.yldStar([d._i]), 10);
       } else {
         d.$sc = 7;
-        d._fc = 8, d._fe = 2;
+        d._fc = 8, d._fe = 1;
         return M.jump();
       }
 
@@ -186,7 +186,7 @@ function d_1(d, p) {
     case 8:
       return M.pure();
 
-    case 2:
+    case 1:
       return M.raise(p);
 
     case 9:
@@ -194,14 +194,14 @@ function d_1(d, p) {
 
     case 10:
       d.$sc = 7;
-      d._fc = 9, d._fe = 2, d._err1 = p;
+      d._fc = 9, d._fe = 1, d._err1 = p;
       return M.jump();
 
-    case 0:
+    case 2:
       return M.$redir(p);
 
     default:
-      throw new Error('invalid state');
+      throw new Error("invalid state");
   }
 }
 
@@ -230,10 +230,10 @@ function b2_1(b2, p) {
       b2._ex = p;
       return M.jump();
 
-    case 0:
+    case 2:
       return M.$redir(p);
 
     default:
-      throw new Error('invalid state');
+      throw new Error("invalid state");
   }
 }

@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 (function () {
   var ctx = M.context();
@@ -99,7 +99,7 @@ function f_4(ctx) {
 }
 
 function _f_1(ctx) {
-  return M.chain(eff('bi'), _f_2);
+  return M.chain(eff("bi"), _f_2);
 }
 
 function _f_2(ctx) {
@@ -109,9 +109,9 @@ function _f_2(ctx) {
 
 function _f_3(ctx) {
   if (ctx._i < 3) {
-    return M.chain(eff('bi:', ctx._i), _f_4);
+    return M.chain(eff("bi:", ctx._i), _f_4);
   } else {
-    return M.chain(eff('ai'), f_5);
+    return M.chain(eff("ai"), f_5);
   }
 }
 
@@ -123,7 +123,7 @@ function _f_4(ctx) {
 function f_5(ctx) {}
 
 function f_11(ctx) {
-  return M.chain(eff('bi'), f_21);
+  return M.chain(eff("bi"), f_21);
 }
 
 function f_21(ctx) {
@@ -133,9 +133,9 @@ function f_21(ctx) {
 
 function f_31(ctx) {
   if (ctx._i < 3) {
-    return M.chain(eff('bi:', ctx._i), f_41);
+    return M.chain(eff("bi:", ctx._i), f_41);
   } else {
-    return M.chain(eff('ai'), _f_5);
+    return M.chain(eff("ai"), _f_5);
   }
 }
 
@@ -147,7 +147,7 @@ function f_41(ctx) {
 function _f_5(ctx) {}
 
 function f_12(ctx) {
-  return M.chain(eff('bi'), f_22);
+  return M.chain(eff("bi"), f_22);
 }
 
 function f_22(ctx) {
@@ -157,7 +157,7 @@ function f_22(ctx) {
 
 function f_32(ctx) {
   if (ctx._i < 3) {
-    return M.chain(eff('bj:' + ctx._i), f_42);
+    return M.chain(eff("bj:" + ctx._i), f_42);
   } else {
     return M.jump(void 0, f_8);
   }
@@ -180,7 +180,7 @@ function f_51(ctx) {
       }
     }
   } else {
-    return M.chain(eff('aj:' + ctx._i), f_7);
+    return M.chain(eff("aj:" + ctx._i), f_7);
   }
 }
 
@@ -195,13 +195,13 @@ function f_7(ctx) {
 }
 
 function f_8(ctx) {
-  return M.chain(eff('ai'), f_9);
+  return M.chain(eff("ai"), f_9);
 }
 
 function f_9(ctx) {}
 
 function a_1(a) {
-  return M.chain(eff('b'), a_2);
+  return M.chain(eff("b"), a_2);
 }
 
 function a_2(a) {
@@ -217,7 +217,7 @@ function a_3(a) {
 
     return M.chain(eff(a._i), a_4);
   } else {
-    return M.chain(eff('a'), a_5);
+    return M.chain(eff("a"), a_5);
   }
 }
 
@@ -229,7 +229,7 @@ function a_4(a) {
 function a_5(a) {}
 
 function a1_1(a1) {
-  return M.chain(eff('b'), a1_2);
+  return M.chain(eff("b"), a1_2);
 }
 
 function a1_2(a1) {
@@ -258,7 +258,7 @@ function a1_4(a1) {
 function a1_5(a1) {}
 
 function b_1(b) {
-  return M.chain(eff('b'), b_2);
+  return M.chain(eff("b"), b_2);
 }
 
 function b_2(b) {
@@ -270,7 +270,7 @@ function b_2(b) {
 }
 
 function c_1(c) {
-  return M.chain(eff('b'), c_2);
+  return M.chain(eff("b"), c_2);
 }
 
 function c_2(c) {

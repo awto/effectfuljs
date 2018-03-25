@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function d(i) {
   var j, r;
@@ -64,7 +64,7 @@ function a4() {
 
   function _4() {
     e = ex;
-    return M.yldStar(M.yld('excep'), _5, _14);
+    return M.yldStar(M.yld("excep"), _5, _14);
   }
 
   function _5() {
@@ -73,11 +73,11 @@ function a4() {
   }
 
   function _6() {
-    return M.yldStar(M.yld('f'), _7);
+    return M.yldStar(M.yld("f"), _7);
   }
 
   function _7() {
-    return M.yldStar(M.yld('e'), fc, fe);
+    return M.yldStar(M.yld("e"), fc, fe);
   }
 
   function _8() {

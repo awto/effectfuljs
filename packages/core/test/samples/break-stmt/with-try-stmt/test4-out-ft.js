@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 (function () {
   var ctx = M.context();
@@ -17,7 +17,7 @@ function f_3(ctx, a) {
   if (a) {
     return M.jump(void 0, f_6);
   } else {
-    throw new Error('error');
+    throw new Error("error");
   }
 }
 

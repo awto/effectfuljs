@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -37,15 +37,15 @@ function g() {
 
 function a_1(a) {
   a._fc = a_3, a._fe = a_5;
-  return M.chain(eff('in body'), a_2);
+  return M.chain(eff("in body"), a_2);
 }
 
 function a_2(a) {
-  return M.chain(eff('in `finally`'), a._fc, a._fe);
+  return M.chain(eff("in `finally`"), a._fc, a._fe);
 }
 
 function a_3(a) {
-  return M.chain(eff('after `finally`'), a_4, a_5);
+  return M.chain(eff("after `finally`"), a_4, a_5);
 }
 
 function a_4(a) {}
@@ -65,21 +65,21 @@ function a_7(a, b) {
 
 function b_1(b) {
   b._fc = b_4, b._fe = b_6;
-  return M.chain(eff('in body'), b_3);
+  return M.chain(eff("in body"), b_3);
 }
 
 function b_2(b) {
   b._e = b._ex;
   b._fc = b_4, b._fe = b_6;
-  return M.chain(eff('in `catch`', b._e), b_3);
+  return M.chain(eff("in `catch`", b._e), b_3);
 }
 
 function b_3(b) {
-  return M.chain(eff('in `finally`'), b._fc, b._fe);
+  return M.chain(eff("in `finally`"), b._fc, b._fe);
 }
 
 function b_4(b) {
-  return M.chain(eff('after `finally`'), b_5, b_6);
+  return M.chain(eff("after `finally`"), b_5, b_6);
 }
 
 function b_5(b) {}
@@ -104,16 +104,16 @@ function b_9(b, a) {
 
 function c_1(c) {
   c._fc = c_3, c._fe = c_5;
-  return M.chain(eff('in body'), c_2);
+  return M.chain(eff("in body"), c_2);
 }
 
 function c_2(c) {
-  console.log('in `finally`');
+  console.log("in `finally`");
   return M.jump(void 0, c._fc, c._fe);
 }
 
 function c_3(c) {
-  return M.chain(eff('after `finally`'), c_4, c_5);
+  return M.chain(eff("after `finally`"), c_4, c_5);
 }
 
 function c_4(c) {}
@@ -132,17 +132,17 @@ function c_7(c, a) {
 }
 
 function d_1(d) {
-  console.log('in body');
+  console.log("in body");
   d._fc = d_3, d._fe = d_5;
   return M.jump(void 0, d_2);
 }
 
 function d_2(d) {
-  return M.chain(eff('in `finally`'), d._fc, d._fe);
+  return M.chain(eff("in `finally`"), d._fc, d._fe);
 }
 
 function d_3(d) {
-  return M.chain(eff('after `finally`'), d_4, d_5);
+  return M.chain(eff("after `finally`"), d_4, d_5);
 }
 
 function d_4(d) {}
@@ -161,41 +161,41 @@ function d_7(d, a) {
 }
 
 function e_1(e) {
-  console.log('before');
-  return M.chain(eff('before'), e_2, e_11);
+  console.log("before");
+  return M.chain(eff("before"), e_2, e_11);
 }
 
 function e_2(e) {
-  console.log('in body');
+  console.log("in body");
   e._fc = e_7, e._fe = e_9;
-  return M.chain(eff('in body'), e_5);
+  return M.chain(eff("in body"), e_5);
 }
 
 function e_3(e) {
   e._e = e._ex;
-  console.log('catch', e._e);
-  return M.chain(eff('catch', e._e), e_4, e_12);
+  console.log("catch", e._e);
+  return M.chain(eff("catch", e._e), e_4, e_12);
 }
 
 function e_4(e) {
-  console.log('catch', e._e);
+  console.log("catch", e._e);
   e._fc = e_7, e._fe = e_9;
   return M.jump(void 0, e_5);
 }
 
 function e_5(e) {
-  console.log('in finally');
-  return M.chain(eff('in `finally`'), e_6);
+  console.log("in finally");
+  return M.chain(eff("in `finally`"), e_6);
 }
 
 function e_6(e) {
-  console.log('in finally 2');
+  console.log("in finally 2");
   return M.jump(void 0, e._fc, e._fe);
 }
 
 function e_7(e) {
-  console.log('after `finally`');
-  return M.chain(eff('after `finally`'), e_8, e_9);
+  console.log("after `finally`");
+  return M.chain(eff("after `finally`"), e_8, e_9);
 }
 
 function e_8(e) {}
@@ -220,22 +220,22 @@ function e_12(e, a) {
 
 function f_1(f) {
   f._fc = f_4, f._fe = f_6;
-  return M.chain(eff('in body'), f_3);
+  return M.chain(eff("in body"), f_3);
 }
 
 function f_2(f) {
   f._e = f._ex;
   f._fc = f_4, f._fe = f_6;
-  return M.chain(eff('in `catch`'), f_3);
+  return M.chain(eff("in `catch`"), f_3);
 }
 
 function f_3(f) {
-  console.log('in `finally`');
+  console.log("in `finally`");
   return M.jump(void 0, f._fc, f._fe);
 }
 
 function f_4(f) {
-  return M.chain(eff('after `finally`'), f_5, f_6);
+  return M.chain(eff("after `finally`"), f_5, f_6);
 }
 
 function f_5(f) {}
@@ -260,23 +260,23 @@ function f_9(f, a) {
 
 function g_1(g) {
   g._fc = g_4, g._fe = g_6;
-  return M.chain(eff('in body'), g_3);
+  return M.chain(eff("in body"), g_3);
 }
 
 function g_2(g) {
   g._e = g._ex;
-  console.log('in `catch`');
+  console.log("in `catch`");
   g._fc = g_4, g._fe = g_6;
   return M.jump(void 0, g_3);
 }
 
 function g_3(g) {
-  console.log('in `finally`');
+  console.log("in `finally`");
   return M.jump(void 0, g._fc, g._fe);
 }
 
 function g_4(g) {
-  return M.chain(eff('after `finally`'), g_5, g_6);
+  return M.chain(eff("after `finally`"), g_5, g_6);
 }
 
 function g_5(g) {}

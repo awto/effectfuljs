@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-import * as M from '@effectful/core';
-M = require('@effectfuljs/core');
-Q = require('Q');
-QM = require('@effectfuljs/promise')(Q);
-describe('yop', function () {
-  return M.chain(it('should yield fiber until promise is resolved', function (done) {
+import * as M from "@effectful/core";
+M = require("@effectfuljs/core");
+Q = require("Q");
+QM = require("@effectfuljs/promise")(Q);
+describe("yop", function () {
+  return M.chain(it("should yield fiber until promise is resolved", function (done) {
     var addLater = function addLater(a, b) {
       var deferred, r;
       return M.chain(Q.defer(), _1);
@@ -87,7 +87,7 @@ describe('yop', function () {
   }), _1);
 
   function _1() {
-    return M.chain(it('should throw reasons from rejected promises into fiber', function (done) {
+    return M.chain(it("should throw reasons from rejected promises into fiber", function (done) {
       var throwErrorLater = function throwErrorLater() {
         var deferred, r;
         return M.chain(Q.defer(), _1);
@@ -97,7 +97,7 @@ describe('yop', function () {
           process.nextTick(function () {
             var a;
             a = deferred;
-            return M.chain(a.reject(new Error('promise rejected')), _1);
+            return M.chain(a.reject(new Error("promise rejected")), _1);
 
             function _1() {}
           });
@@ -139,7 +139,7 @@ describe('yop', function () {
                 function _2(b) {
                   var a;
                   a = b.to;
-                  return M.chain(a.equal('promise rejected'), _3, _6);
+                  return M.chain(a.equal("promise rejected"), _3, _6);
                 }
 
                 function _3() {
@@ -170,7 +170,7 @@ describe('yop', function () {
               return a.mapply(function () {
                 var a;
                 a = done;
-                return M.chain(a(new Error('yop should have thrown reason from rejected promise')), _1);
+                return M.chain(a(new Error("yop should have thrown reason from rejected promise")), _1);
 
                 function _1() {}
               });
@@ -184,7 +184,7 @@ describe('yop', function () {
   }
 
   function _2() {
-    return M.chain(it('should work just fine with passed a value instead of a promise', function (done) {
+    return M.chain(it("should work just fine with passed a value instead of a promise", function (done) {
       var a;
 
       if (done.async) {

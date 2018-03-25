@@ -1,24 +1,24 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a01() {
   var e, ex;
-  console.log('in');
+  console.log("in");
   return M.jump(void 0, _1, _5);
 
   function _1() {
-    console.log('inner');
-    return M.chain(eff('inner'), _3);
+    console.log("inner");
+    return M.chain(eff("inner"), _3);
   }
 
   function _2() {
     e = ex;
-    console.log('exception', e);
-    return M.chain(eff('exception', e), _3);
+    console.log("exception", e);
+    return M.chain(eff("exception", e), _3);
   }
 
   function _3() {
-    console.log('out');
-    return M.chain(eff('out'), _4);
+    console.log("out");
+    return M.chain(eff("out"), _4);
   }
 
   function _4() {}
@@ -31,34 +31,34 @@ function a01() {
 
 function a02() {
   var e, ex;
-  console.log('in');
+  console.log("in");
   return M.jump(void 0, _1, _7);
 
   function _1() {
-    return M.chain(eff('inner'), _2, _7);
+    return M.chain(eff("inner"), _2, _7);
   }
 
   function _2() {
-    console.log('inner');
+    console.log("inner");
     return M.jump(void 0, _5);
   }
 
   function _3() {
     e = ex;
-    return M.chain(eff('exception', e), _4);
+    return M.chain(eff("exception", e), _4);
   }
 
   function _4() {
-    console.log('exception', e);
+    console.log("exception", e);
     return M.jump(void 0, _5);
   }
 
   function _5() {
-    return M.chain(eff('out'), _6);
+    return M.chain(eff("out"), _6);
   }
 
   function _6() {
-    console.log('out');
+    console.log("out");
   }
 
   function _7(a) {
@@ -73,18 +73,18 @@ function a03() {
   i = void 0;
   j = void 0;
   ex = void 0;
-  console.log('in', i++, j += 2);
+  console.log("in", i++, j += 2);
   a = i++;
   return M.chain(eff(a, j), _1, _7);
 
   function _1() {
     var a;
     a = i++;
-    return M.chain(eff('inner', a, j), _2, _7);
+    return M.chain(eff("inner", a, j), _2, _7);
   }
 
   function _2() {
-    console.log('inner');
+    console.log("inner");
     return M.jump(void 0, _5);
   }
 
@@ -93,20 +93,20 @@ function a03() {
     e = _ex;
     ex = e;
     a = j++;
-    return M.chain(eff('exception', e, a), _4);
+    return M.chain(eff("exception", e, a), _4);
   }
 
   function _4() {
-    console.log('exception', e);
+    console.log("exception", e);
     return M.jump(void 0, _5);
   }
 
   function _5() {
-    return M.chain(eff('out', ex, i), _6);
+    return M.chain(eff("out", ex, i), _6);
   }
 
   function _6() {
-    console.log('out');
+    console.log("out");
   }
 
   function _7(a) {
@@ -185,7 +185,7 @@ function a04() {
   }
 
   function _9() {
-    console.log('i');
+    console.log("i");
     err1 = err2;
     return M.jump(void 0, _10, _26);
   }
@@ -679,7 +679,7 @@ function a11() {
 
   function _3() {
     _fc = _5, _fe = _7;
-    return M.chain(eff('a'), _4);
+    return M.chain(eff("a"), _4);
   }
 
   function _4() {
@@ -741,7 +741,7 @@ function a12() {
 
   function _4() {
     _fc = _6, _fe = _8;
-    return M.chain(eff('A'), _5);
+    return M.chain(eff("A"), _5);
   }
 
   function _5() {
@@ -804,12 +804,12 @@ function a13() {
 
   function _4() {
     err = _err;
-    return M.chain(eff('2'), fc, fe);
+    return M.chain(eff("2"), fc, fe);
   }
 
   function _5() {
     _fc = _7, _fe = _9;
-    return M.chain(eff('A'), _6);
+    return M.chain(eff("A"), _6);
   }
 
   function _6() {
@@ -874,7 +874,7 @@ function a14() {
             return M.jump(void 0, _3, _13);
           } else {
             if (a === 5) {
-              return eff('REZ');
+              return eff("REZ");
             } else {
               fc = _5, fe = _13;
               return M.chain(eff(2), _3, _13);
@@ -943,7 +943,7 @@ function a15() {
   return M.jump(void 0, _1);
 
   function _1() {
-    console.log('a');
+    console.log("a");
     return M.jump(void 0, _2);
   }
 
@@ -982,7 +982,7 @@ function a16() {
   return M.chain(eff(0), _1);
 
   function _1() {
-    console.log('a');
+    console.log("a");
     return M.jump(void 0, _2);
   }
 
@@ -1705,7 +1705,7 @@ function a31() {
   return M.jump(void 0, _1, _6);
 
   function _1() {
-    console.log('hi');
+    console.log("hi");
     return M.chain(eff(1), _2, _6);
   }
 
@@ -1737,7 +1737,7 @@ function a32(a1, a2) {
   return M.jump(void 0, _1, _8);
 
   function _1() {
-    console.log('hi');
+    console.log("hi");
     return M.chain(eff(1), _2, _8);
   }
 
@@ -1778,7 +1778,7 @@ function a33() {
   return M.jump(void 0, _1, _9);
 
   function _1() {
-    console.log('hi');
+    console.log("hi");
     return M.chain(eff(1), _2, _9);
   }
 
@@ -1829,7 +1829,7 @@ function a34() {
   return M.jump(void 0, _1, _11);
 
   function _1() {
-    console.log('hi');
+    console.log("hi");
     fc = _3, fe = _10;
     return M.chain(eff(1), _2, _10);
   }
@@ -1889,28 +1889,28 @@ function a35() {
   return M.jump(void 0, _1, _9);
 
   function _1() {
-    console.log('hi');
+    console.log("hi");
     fc = _3, fe = _8;
-    return M.chain(eff('try>try>body'), _2, _8);
+    return M.chain(eff("try>try>body"), _2, _8);
   }
 
   function _2() {
     ex = err;
-    return M.chain(eff('try>try>finally'), fc, fe);
+    return M.chain(eff("try>try>finally"), fc, fe);
   }
 
   function _3() {
-    return M.chain(eff('try>body'), _5);
+    return M.chain(eff("try>body"), _5);
   }
 
   function _4() {
     e = ex;
     console.log(e);
-    return M.chain(eff('try>catch'), _5);
+    return M.chain(eff("try>catch"), _5);
   }
 
   function _5() {
-    return M.chain(eff('last'), _6, _7);
+    return M.chain(eff("last"), _6, _7);
   }
 
   function _6() {}
@@ -1940,12 +1940,12 @@ function a36(a1) {
       return M.jump(void 0, _2);
     } else {
       fc = _3, fe = _4;
-      return M.chain(eff('body'), _2);
+      return M.chain(eff("body"), _2);
     }
   }
 
   function _2() {
-    return M.chain(eff('finally'), fc, fe);
+    return M.chain(eff("finally"), fc, fe);
   }
 
   function _3() {}
@@ -1975,12 +1975,12 @@ function a37(a1, a2) {
       return M.jump(void 0, _2, _13);
     } else {
       _fc = _5, _fe = _13;
-      return M.chain(eff('l1>try-body>l2>try-body'), _2, _13);
+      return M.chain(eff("l1>try-body>l2>try-body"), _2, _13);
     }
   }
 
   function _2() {
-    return M.chain(eff('l1>try-body>l2>try-finally'), _3, _15);
+    return M.chain(eff("l1>try-body>l2>try-finally"), _3, _15);
   }
 
   function _3() {
@@ -1989,26 +1989,26 @@ function a37(a1, a2) {
       return M.jump(void 0, _4, _13);
     } else {
       fc = _fc, fe = _fe;
-      return M.chain(eff('l1>try-body>l2>try-finally>try-body'), _4, _13);
+      return M.chain(eff("l1>try-body>l2>try-finally>try-body"), _4, _13);
     }
   }
 
   function _4() {
     err = err1;
-    return M.chain(eff('l1>try-body>l2>try-finally>try-finally'), fc, fe);
+    return M.chain(eff("l1>try-body>l2>try-finally>try-finally"), fc, fe);
   }
 
   function _5() {
     fc1 = _7, fe1 = _9;
-    return M.chain(eff('l1>try-body'), _6);
+    return M.chain(eff("l1>try-body"), _6);
   }
 
   function _6() {
-    return M.chain(eff('l1>try-finally'), fc1, fe1);
+    return M.chain(eff("l1>try-finally"), fc1, fe1);
   }
 
   function _7() {
-    return M.chain(eff('end'), _8, _9);
+    return M.chain(eff("end"), _8, _9);
   }
 
   function _8() {}
@@ -2049,7 +2049,7 @@ function a38(a1) {
   var i, j, fc, fe, r, err;
   i = 0;
   j = 0;
-  return M.chain(eff('pref', i, j), _1, _6);
+  return M.chain(eff("pref", i, j), _1, _6);
 
   function _1() {
     i += 1, j += 2;
@@ -2059,12 +2059,12 @@ function a38(a1) {
       return M.jump(void 0, _2);
     } else {
       fc = _3, fe = _4;
-      return M.chain(eff('body', i, j), _2);
+      return M.chain(eff("body", i, j), _2);
     }
   }
 
   function _2() {
-    return M.chain(eff('finally', i), fc, fe);
+    return M.chain(eff("finally", i), fc, fe);
   }
 
   function _3() {
@@ -2089,7 +2089,7 @@ function a39(a1) {
   var i, j, fc, fe, r, err;
   i = 0;
   j = 0;
-  return M.chain(eff('pref', i, j), _1, _7);
+  return M.chain(eff("pref", i, j), _1, _7);
 
   function _1() {
     i += 1, j += 2;
@@ -2099,16 +2099,16 @@ function a39(a1) {
       return M.jump(void 0, _2);
     } else {
       fc = _3, fe = _5;
-      return M.chain(eff('body', i, j), _2);
+      return M.chain(eff("body", i, j), _2);
     }
   }
 
   function _2() {
-    return M.chain(eff('finally', i), fc, fe);
+    return M.chain(eff("finally", i), fc, fe);
   }
 
   function _3() {
-    return M.chain(eff('exit', j), _4, _5);
+    return M.chain(eff("exit", j), _4, _5);
   }
 
   function _4() {
@@ -2134,12 +2134,12 @@ function a40(a1) {
 
   i = 0;
   j = 0;
-  return M.chain(eff('pref', i, j), _1, _11);
+  return M.chain(eff("pref", i, j), _1, _11);
 
   function _1() {
     var a;
     a = j++;
-    return M.chain(eff('l1', i, a), _2, _12);
+    return M.chain(eff("l1", i, a), _2, _12);
   }
 
   function _2() {
@@ -2154,27 +2154,27 @@ function a40(a1) {
         return M.jump(void 0, _3, _11);
       } else {
         fc = _4, fe = _11;
-        return M.chain(eff('l1 > body', i, j), _3, _11);
+        return M.chain(eff("l1 > body", i, j), _3, _11);
       }
     }
   }
 
   function _3() {
     err = _err;
-    return M.chain(eff('l1 > finally', i), fc, fe);
+    return M.chain(eff("l1 > finally", i), fc, fe);
   }
 
   function _4() {
     _fc = _6, _fe = _8;
-    return M.chain(eff('l1 > exit', j), _5);
+    return M.chain(eff("l1 > exit", j), _5);
   }
 
   function _5() {
-    return M.chain(eff('body > finally', i), _fc, _fe);
+    return M.chain(eff("body > finally", i), _fc, _fe);
   }
 
   function _6() {
-    return M.chain(eff('exit', j), _7, _8);
+    return M.chain(eff("exit", j), _7, _8);
   }
 
   function _7() {
@@ -2216,7 +2216,7 @@ function a41(a1) {
       if (a1 === 3) {
         return M.chain(eff(12), _1);
       } else {
-        return M.chain(eff('exit'), _1);
+        return M.chain(eff("exit"), _1);
       }
     }
   }
@@ -2254,11 +2254,11 @@ function a42(a1) {
   }
 
   function _3() {
-    return M.chain(eff('finally'), fc, fe);
+    return M.chain(eff("finally"), fc, fe);
   }
 
   function _4() {
-    return M.chain(eff('exit'), _5, _6);
+    return M.chain(eff("exit"), _5, _6);
   }
 
   function _5() {
@@ -2284,12 +2284,12 @@ function a43(a1) {
 
   i = 0;
   j = 0;
-  return M.chain(eff('pref', i, j), _1, _11);
+  return M.chain(eff("pref", i, j), _1, _11);
 
   function _1() {
     var a;
     a = j++;
-    return M.chain(eff('l1', i, a), _2, _12);
+    return M.chain(eff("l1", i, a), _2, _12);
   }
 
   function _2() {
@@ -2304,27 +2304,27 @@ function a43(a1) {
         return M.jump(void 0, _3, _11);
       } else {
         fc = _4, fe = _11;
-        return M.chain(eff('l1 > body', i, j), _3, _11);
+        return M.chain(eff("l1 > body", i, j), _3, _11);
       }
     }
   }
 
   function _3() {
     err = _err;
-    return M.chain(eff('l1 > finally', i), fc, fe);
+    return M.chain(eff("l1 > finally", i), fc, fe);
   }
 
   function _4() {
     _fc = _6, _fe = _8;
-    return M.chain(eff('l1 > exit', j), _5);
+    return M.chain(eff("l1 > exit", j), _5);
   }
 
   function _5() {
-    return M.chain(eff('body > finally', i), _fc, _fe);
+    return M.chain(eff("body > finally", i), _fc, _fe);
   }
 
   function _6() {
-    return M.chain(eff('exit', j), _7, _8);
+    return M.chain(eff("exit", j), _7, _8);
   }
 
   function _7() {

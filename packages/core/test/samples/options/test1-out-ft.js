@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -58,7 +58,7 @@ function b_6(b) {
 }
 
 function b_7(b) {
-  console.log('7');
+  console.log("7");
 }
 
 function c_1(c) {
@@ -86,5 +86,5 @@ function c_6(c) {
 }
 
 function c_7(c) {
-  console.log('7');
+  console.log("7");
 }

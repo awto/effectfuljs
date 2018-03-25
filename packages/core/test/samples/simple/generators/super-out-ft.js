@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function aa() {
   var aa = M.context();
@@ -34,11 +34,11 @@ function aa() {
 }
 
 function method_1(ctx) {
-  return M.pure('from A');
+  return M.pure("from A");
 }
 
 function smethod_1(ctx) {
-  return M.pure('static from A');
+  return M.pure("static from A");
 }
 
 function _method_1(ctx) {
@@ -48,7 +48,7 @@ function _method_1(ctx) {
 }
 
 function method_2(ctx, a) {
-  return M.pure('from B ' + a);
+  return M.pure("from B " + a);
 }
 
 function _smethod_1(ctx) {
@@ -58,7 +58,7 @@ function _smethod_1(ctx) {
 }
 
 function smethod_2(ctx, a) {
-  return M.pure('static from B ' + a);
+  return M.pure("static from B " + a);
 }
 
 function aa_1(aa) {

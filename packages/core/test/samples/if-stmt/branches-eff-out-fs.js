@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 // *- when branches has effects and it is the last statement
 function a() {
@@ -36,7 +36,7 @@ function c() {
 }
 
 function d() {
-  return M.chain(eff('a'), _1);
+  return M.chain(eff("a"), _1);
 
   function _1() {
     if (true) {

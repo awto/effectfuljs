@@ -1,7 +1,7 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
-  console.log('hi');
+  console.log("hi");
   return M.chain(e1(), _1);
 
   function _1() {
@@ -13,7 +13,7 @@ function a() {
   }
 
   function _3() {
-    console.profile('minimal');
+    console.profile("minimal");
     return M.chain(p2(), _4);
   }
 

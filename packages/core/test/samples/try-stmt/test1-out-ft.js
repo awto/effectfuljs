@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a01() {
   var a01 = M.context();
@@ -234,24 +234,24 @@ function a43(a1) {
 }
 
 function a01_1(a01) {
-  console.log('in');
+  console.log("in");
   return M.jump(void 0, a01_2, a01_6);
 }
 
 function a01_2(a01) {
-  console.log('inner');
-  return M.chain(eff('inner'), a01_4);
+  console.log("inner");
+  return M.chain(eff("inner"), a01_4);
 }
 
 function a01_3(a01) {
   a01._e = a01._ex;
-  console.log('exception', a01._e);
-  return M.chain(eff('exception', a01._e), a01_4);
+  console.log("exception", a01._e);
+  return M.chain(eff("exception", a01._e), a01_4);
 }
 
 function a01_4(a01) {
-  console.log('out');
-  return M.chain(eff('out'), a01_5);
+  console.log("out");
+  return M.chain(eff("out"), a01_5);
 }
 
 function a01_5(a01) {}
@@ -262,35 +262,35 @@ function a01_6(a01, a) {
 }
 
 function a02_1(a02) {
-  console.log('in');
+  console.log("in");
   return M.jump(void 0, a02_2, a02_8);
 }
 
 function a02_2(a02) {
-  return M.chain(eff('inner'), a02_3, a02_8);
+  return M.chain(eff("inner"), a02_3, a02_8);
 }
 
 function a02_3(a02) {
-  console.log('inner');
+  console.log("inner");
   return M.jump(void 0, a02_6);
 }
 
 function a02_4(a02) {
   a02._e = a02._ex;
-  return M.chain(eff('exception', a02._e), a02_5);
+  return M.chain(eff("exception", a02._e), a02_5);
 }
 
 function a02_5(a02) {
-  console.log('exception', a02._e);
+  console.log("exception", a02._e);
   return M.jump(void 0, a02_6);
 }
 
 function a02_6(a02) {
-  return M.chain(eff('out'), a02_7);
+  return M.chain(eff("out"), a02_7);
 }
 
 function a02_7(a02) {
-  console.log('out');
+  console.log("out");
 }
 
 function a02_8(a02, a) {
@@ -303,7 +303,7 @@ function a03_1(a03) {
   a03._i = void 0;
   a03._j = void 0;
   a03._ex = void 0;
-  console.log('in', a03._i++, a03._j += 2);
+  console.log("in", a03._i++, a03._j += 2);
   a = a03._i++;
   return M.chain(eff(a, a03._j), a03_2, a03_8);
 }
@@ -311,11 +311,11 @@ function a03_1(a03) {
 function a03_2(a03) {
   var a;
   a = a03._i++;
-  return M.chain(eff('inner', a, a03._j), a03_3, a03_8);
+  return M.chain(eff("inner", a, a03._j), a03_3, a03_8);
 }
 
 function a03_3(a03) {
-  console.log('inner');
+  console.log("inner");
   return M.jump(void 0, a03_6);
 }
 
@@ -324,20 +324,20 @@ function a03_4(a03) {
   a03._e = a03._ex1;
   a03._ex = a03._e;
   a = a03._j++;
-  return M.chain(eff('exception', a03._e, a), a03_5);
+  return M.chain(eff("exception", a03._e, a), a03_5);
 }
 
 function a03_5(a03) {
-  console.log('exception', a03._e);
+  console.log("exception", a03._e);
   return M.jump(void 0, a03_6);
 }
 
 function a03_6(a03) {
-  return M.chain(eff('out', a03._ex, a03._i), a03_7);
+  return M.chain(eff("out", a03._ex, a03._i), a03_7);
 }
 
 function a03_7(a03) {
-  console.log('out');
+  console.log("out");
 }
 
 function a03_8(a03, a) {
@@ -415,7 +415,7 @@ function a04_9(a04) {
 }
 
 function a04_10(a04) {
-  console.log('i');
+  console.log("i");
   a04._err3 = a04._err4;
   return M.jump(void 0, a04_11, a04_27);
 }
@@ -891,7 +891,7 @@ function a11_2(a11) {
 
 function a11_3(a11) {
   a11._fc1 = a11_5, a11._fe1 = a11_7;
-  return M.chain(eff('a'), a11_4);
+  return M.chain(eff("a"), a11_4);
 }
 
 function a11_4(a11) {
@@ -947,7 +947,7 @@ function a12_3(a12) {
 
 function a12_4(a12) {
   a12._fc1 = a12_6, a12._fe1 = a12_8;
-  return M.chain(eff('A'), a12_5);
+  return M.chain(eff("A"), a12_5);
 }
 
 function a12_5(a12) {
@@ -1004,12 +1004,12 @@ function a13_3(a13) {
 
 function a13_4(a13) {
   a13._err1 = a13._err2;
-  return M.chain(eff('2'), a13._fc, a13._fe);
+  return M.chain(eff("2"), a13._fc, a13._fe);
 }
 
 function a13_5(a13) {
   a13._fc1 = a13_7, a13._fe1 = a13_9;
-  return M.chain(eff('A'), a13_6);
+  return M.chain(eff("A"), a13_6);
 }
 
 function a13_6(a13) {
@@ -1068,7 +1068,7 @@ function a14_2(a14, a) {
           return M.jump(void 0, a14_3, a14_13);
         } else {
           if (a14._a === 5) {
-            return eff('REZ');
+            return eff("REZ");
           } else {
             a14._fc = a14_5, a14._fe = a14_13;
             return M.chain(eff(2), a14_3, a14_13);
@@ -1131,7 +1131,7 @@ function a14_14(a14, a) {
 }
 
 function a15_1(a15) {
-  console.log('a');
+  console.log("a");
   return M.jump(void 0, a15_2);
 }
 
@@ -1168,7 +1168,7 @@ function a16_1(a16) {
 }
 
 function a16_2(a16) {
-  console.log('a');
+  console.log("a");
   return M.jump(void 0, a16_3);
 }
 
@@ -1807,7 +1807,7 @@ function a30_15(a30, a) {
 }
 
 function a31_1(a31) {
-  console.log('hi');
+  console.log("hi");
   return M.chain(eff(1), a31_2, a31_6);
 }
 
@@ -1833,7 +1833,7 @@ function a31_6(a31, a) {
 }
 
 function a32_1(a32) {
-  console.log('hi');
+  console.log("hi");
   return M.chain(eff(1), a32_2, a32_8);
 }
 
@@ -1869,7 +1869,7 @@ function a32_8(a32, a) {
 }
 
 function a33_1(a33) {
-  console.log('hi');
+  console.log("hi");
   return M.chain(eff(1), a33_2, a33_9);
 }
 
@@ -1914,7 +1914,7 @@ function a33_10(a33, a) {
 }
 
 function a34_1(a34) {
-  console.log('hi');
+  console.log("hi");
   a34._fc = a34_3, a34._fe = a34_10;
   return M.chain(eff(1), a34_2, a34_10);
 }
@@ -1969,28 +1969,28 @@ function a34_12(a34, a) {
 }
 
 function a35_1(a35) {
-  console.log('hi');
+  console.log("hi");
   a35._fc = a35_3, a35._fe = a35_8;
-  return M.chain(eff('try>try>body'), a35_2, a35_8);
+  return M.chain(eff("try>try>body"), a35_2, a35_8);
 }
 
 function a35_2(a35) {
   a35._ex = a35._err1;
-  return M.chain(eff('try>try>finally'), a35._fc, a35._fe);
+  return M.chain(eff("try>try>finally"), a35._fc, a35._fe);
 }
 
 function a35_3(a35) {
-  return M.chain(eff('try>body'), a35_5);
+  return M.chain(eff("try>body"), a35_5);
 }
 
 function a35_4(a35) {
   a35._e = a35._ex;
   console.log(a35._e);
-  return M.chain(eff('try>catch'), a35_5);
+  return M.chain(eff("try>catch"), a35_5);
 }
 
 function a35_5(a35) {
-  return M.chain(eff('last'), a35_6, a35_7);
+  return M.chain(eff("last"), a35_6, a35_7);
 }
 
 function a35_6(a35) {}
@@ -2015,12 +2015,12 @@ function a36_1(a36) {
     return M.jump(void 0, a36_2);
   } else {
     a36._fc = a36_3, a36._fe = a36_4;
-    return M.chain(eff('body'), a36_2);
+    return M.chain(eff("body"), a36_2);
   }
 }
 
 function a36_2(a36) {
-  return M.chain(eff('finally'), a36._fc, a36._fe);
+  return M.chain(eff("finally"), a36._fc, a36._fe);
 }
 
 function a36_3(a36) {}
@@ -2044,12 +2044,12 @@ function a37_1(a37) {
     return M.jump(void 0, a37_2, a37_13);
   } else {
     a37._fc1 = a37_5, a37._fe1 = a37_13;
-    return M.chain(eff('l1>try-body>l2>try-body'), a37_2, a37_13);
+    return M.chain(eff("l1>try-body>l2>try-body"), a37_2, a37_13);
   }
 }
 
 function a37_2(a37) {
-  return M.chain(eff('l1>try-body>l2>try-finally'), a37_3, a37_15);
+  return M.chain(eff("l1>try-body>l2>try-finally"), a37_3, a37_15);
 }
 
 function a37_3(a37) {
@@ -2058,26 +2058,26 @@ function a37_3(a37) {
     return M.jump(void 0, a37_4, a37_13);
   } else {
     a37._fc = a37._fc1, a37._fe = a37._fe1;
-    return M.chain(eff('l1>try-body>l2>try-finally>try-body'), a37_4, a37_13);
+    return M.chain(eff("l1>try-body>l2>try-finally>try-body"), a37_4, a37_13);
   }
 }
 
 function a37_4(a37) {
   a37._err1 = a37._err3;
-  return M.chain(eff('l1>try-body>l2>try-finally>try-finally'), a37._fc, a37._fe);
+  return M.chain(eff("l1>try-body>l2>try-finally>try-finally"), a37._fc, a37._fe);
 }
 
 function a37_5(a37) {
   a37._fc2 = a37_7, a37._fe2 = a37_9;
-  return M.chain(eff('l1>try-body'), a37_6);
+  return M.chain(eff("l1>try-body"), a37_6);
 }
 
 function a37_6(a37) {
-  return M.chain(eff('l1>try-finally'), a37._fc2, a37._fe2);
+  return M.chain(eff("l1>try-finally"), a37._fc2, a37._fe2);
 }
 
 function a37_7(a37) {
-  return M.chain(eff('end'), a37_8, a37_9);
+  return M.chain(eff("end"), a37_8, a37_9);
 }
 
 function a37_8(a37) {}
@@ -2116,7 +2116,7 @@ function a37_15(a37, a) {
 function a38_1(a38) {
   a38._i = 0;
   a38._j = 0;
-  return M.chain(eff('pref', a38._i, a38._j), a38_2, a38_7);
+  return M.chain(eff("pref", a38._i, a38._j), a38_2, a38_7);
 }
 
 function a38_2(a38) {
@@ -2127,12 +2127,12 @@ function a38_2(a38) {
     return M.jump(void 0, a38_3);
   } else {
     a38._fc = a38_4, a38._fe = a38_5;
-    return M.chain(eff('body', a38._i, a38._j), a38_3);
+    return M.chain(eff("body", a38._i, a38._j), a38_3);
   }
 }
 
 function a38_3(a38) {
-  return M.chain(eff('finally', a38._i), a38._fc, a38._fe);
+  return M.chain(eff("finally", a38._i), a38._fc, a38._fe);
 }
 
 function a38_4(a38) {
@@ -2155,7 +2155,7 @@ function a38_7(a38, a) {
 function a39_1(a39) {
   a39._i = 0;
   a39._j = 0;
-  return M.chain(eff('pref', a39._i, a39._j), a39_2, a39_8);
+  return M.chain(eff("pref", a39._i, a39._j), a39_2, a39_8);
 }
 
 function a39_2(a39) {
@@ -2166,16 +2166,16 @@ function a39_2(a39) {
     return M.jump(void 0, a39_3);
   } else {
     a39._fc = a39_4, a39._fe = a39_6;
-    return M.chain(eff('body', a39._i, a39._j), a39_3);
+    return M.chain(eff("body", a39._i, a39._j), a39_3);
   }
 }
 
 function a39_3(a39) {
-  return M.chain(eff('finally', a39._i), a39._fc, a39._fe);
+  return M.chain(eff("finally", a39._i), a39._fc, a39._fe);
 }
 
 function a39_4(a39) {
-  return M.chain(eff('exit', a39._j), a39_5, a39_6);
+  return M.chain(eff("exit", a39._j), a39_5, a39_6);
 }
 
 function a39_5(a39) {
@@ -2198,13 +2198,13 @@ function a39_8(a39, a) {
 function a40_1(a40) {
   a40._i = 0;
   a40._j = 0;
-  return M.chain(eff('pref', a40._i, a40._j), a40_2, a40_12);
+  return M.chain(eff("pref", a40._i, a40._j), a40_2, a40_12);
 }
 
 function a40_2(a40) {
   var a;
   a = a40._j++;
-  return M.chain(eff('l1', a40._i, a), a40_3, a40_13);
+  return M.chain(eff("l1", a40._i, a), a40_3, a40_13);
 }
 
 function a40_3(a40) {
@@ -2219,27 +2219,27 @@ function a40_3(a40) {
       return M.jump(void 0, a40_4, a40_12);
     } else {
       a40._fc = a40_5, a40._fe = a40_12;
-      return M.chain(eff('l1 > body', a40._i, a40._j), a40_4, a40_12);
+      return M.chain(eff("l1 > body", a40._i, a40._j), a40_4, a40_12);
     }
   }
 }
 
 function a40_4(a40) {
   a40._err1 = a40._err2;
-  return M.chain(eff('l1 > finally', a40._i), a40._fc, a40._fe);
+  return M.chain(eff("l1 > finally", a40._i), a40._fc, a40._fe);
 }
 
 function a40_5(a40) {
   a40._fc1 = a40_7, a40._fe1 = a40_9;
-  return M.chain(eff('l1 > exit', a40._j), a40_6);
+  return M.chain(eff("l1 > exit", a40._j), a40_6);
 }
 
 function a40_6(a40) {
-  return M.chain(eff('body > finally', a40._i), a40._fc1, a40._fe1);
+  return M.chain(eff("body > finally", a40._i), a40._fc1, a40._fe1);
 }
 
 function a40_7(a40) {
-  return M.chain(eff('exit', a40._j), a40_8, a40_9);
+  return M.chain(eff("exit", a40._j), a40_8, a40_9);
 }
 
 function a40_8(a40) {
@@ -2278,7 +2278,7 @@ function a41_1(a41) {
       if (a41._a1 === 3) {
         return M.chain(eff(12), a41_2);
       } else {
-        return M.chain(eff('exit'), a41_2);
+        return M.chain(eff("exit"), a41_2);
       }
     }
   }
@@ -2312,11 +2312,11 @@ function a42_2(a42) {
 }
 
 function a42_3(a42) {
-  return M.chain(eff('finally'), a42._fc, a42._fe);
+  return M.chain(eff("finally"), a42._fc, a42._fe);
 }
 
 function a42_4(a42) {
-  return M.chain(eff('exit'), a42_5, a42_6);
+  return M.chain(eff("exit"), a42_5, a42_6);
 }
 
 function a42_5(a42) {
@@ -2339,13 +2339,13 @@ function a42_8(a42, a) {
 function a43_1(a43) {
   a43._i = 0;
   a43._j = 0;
-  return M.chain(eff('pref', a43._i, a43._j), a43_2, a43_12);
+  return M.chain(eff("pref", a43._i, a43._j), a43_2, a43_12);
 }
 
 function a43_2(a43) {
   var a;
   a = a43._j++;
-  return M.chain(eff('l1', a43._i, a), a43_3, a43_13);
+  return M.chain(eff("l1", a43._i, a), a43_3, a43_13);
 }
 
 function a43_3(a43) {
@@ -2360,27 +2360,27 @@ function a43_3(a43) {
       return M.jump(void 0, a43_4, a43_12);
     } else {
       a43._fc = a43_5, a43._fe = a43_12;
-      return M.chain(eff('l1 > body', a43._i, a43._j), a43_4, a43_12);
+      return M.chain(eff("l1 > body", a43._i, a43._j), a43_4, a43_12);
     }
   }
 }
 
 function a43_4(a43) {
   a43._err1 = a43._err2;
-  return M.chain(eff('l1 > finally', a43._i), a43._fc, a43._fe);
+  return M.chain(eff("l1 > finally", a43._i), a43._fc, a43._fe);
 }
 
 function a43_5(a43) {
   a43._fc1 = a43_7, a43._fe1 = a43_9;
-  return M.chain(eff('l1 > exit', a43._j), a43_6);
+  return M.chain(eff("l1 > exit", a43._j), a43_6);
 }
 
 function a43_6(a43) {
-  return M.chain(eff('body > finally', a43._i), a43._fc1, a43._fe1);
+  return M.chain(eff("body > finally", a43._i), a43._fc1, a43._fe1);
 }
 
 function a43_7(a43) {
-  return M.chain(eff('exit', a43._j), a43_8, a43_9);
+  return M.chain(eff("exit", a43._j), a43_8, a43_9);
 }
 
 function a43_8(a43) {

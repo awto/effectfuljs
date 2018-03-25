@@ -1,4 +1,4 @@
-import * as _M from '@effectful/core';
+import * as _M from "@effectful/core";
 
 function M() {
   var M = _M.context();

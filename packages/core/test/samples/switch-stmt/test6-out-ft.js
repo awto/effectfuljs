@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 // *- without default branch
 function a() {
@@ -18,7 +18,8 @@ function a_2(a, b) {
     case 2:
       return M.chain(effB(2), a_3);
 
-    default:}
+    default:
+  }
 }
 
 function a_3(a) {}

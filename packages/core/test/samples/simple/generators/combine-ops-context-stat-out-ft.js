@@ -1,4 +1,4 @@
-import * as M from '@effectful/core';
+import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
@@ -533,7 +533,7 @@ function a4_3(a4) {
 
 function a4_4(a4) {
   a4._e = a4._ex;
-  return a4.yld('excep', a4_5, a4_16);
+  return a4.yld("excep", a4_5, a4_16);
 }
 
 function a4_5(a4) {
@@ -551,11 +551,11 @@ function a4_6(a4, a) {
 }
 
 function a4_7(a4) {
-  return a4.yld('f', a4_8);
+  return a4.yld("f", a4_8);
 }
 
 function a4_8(a4) {
-  return a4.yld('e', a4._fc, a4._fe);
+  return a4.yld("e", a4._fc, a4._fe);
 }
 
 function a4_9(a4) {
@@ -664,11 +664,11 @@ function a6_4(a6, a) {
 
 function a6_5(a6) {
   a6._err1 = a6._err2;
-  return a6.yld('f1', a6_6);
+  return a6.yld("f1", a6_6);
 }
 
 function a6_6(a6) {
-  return a6.yld('f2', a6._fc1, a6._fe1);
+  return a6.yld("f2", a6._fc1, a6._fe1);
 }
 
 function a6_7(a6) {
@@ -805,7 +805,7 @@ function _a6_2(a6) {
 }
 
 function _a6_3(a6, a) {
-  if (a === 'exit') {
+  if (a === "exit") {
     return a6.pure(100);
   } else {
     return a6.jump(void 0, _a6_2);
@@ -818,15 +818,15 @@ function _a7_1(a7) {
 
 function _a7_2(a7, a) {
   if (a) {
-    return a7.yld('A', _a7_3);
+    return a7.yld("A", _a7_3);
   } else {
-    return a7.yld('c', _a7_5);
+    return a7.yld("c", _a7_5);
   }
 }
 
 function _a7_3(a7, a) {
   a7._ = a;
-  return a7.yld('b', _a7_4);
+  return a7.yld("b", _a7_4);
 }
 
 function _a7_4(a7, a) {
@@ -835,12 +835,12 @@ function _a7_4(a7, a) {
 
 function _a7_5(a7, a) {
   a7._1 = a;
-  return a7.yld('d', _a7_6);
+  return a7.yld("d", _a7_6);
 }
 
 function _a7_6(a7, a) {
   if (a) {
-    return a7.yld('e', a7_7);
+    return a7.yld("e", a7_7);
   } else {
     return a7.yldStar(a, a7_7);
   }
@@ -856,15 +856,15 @@ function a7_1_1(a7_1) {
 
 function a7_1_2(a7_1, a) {
   if (a) {
-    return a7_1.yld('A', a7_1_3);
+    return a7_1.yld("A", a7_1_3);
   } else {
-    return a7_1.yld('c', a7_1_5);
+    return a7_1.yld("c", a7_1_5);
   }
 }
 
 function a7_1_3(a7_1, a) {
   a7_1._2 = a;
-  return a7_1.yld('b', a7_1_4);
+  return a7_1.yld("b", a7_1_4);
 }
 
 function a7_1_4(a7_1, a) {
@@ -874,12 +874,12 @@ function a7_1_4(a7_1, a) {
 
 function a7_1_5(a7_1, a) {
   a7_1._3 = a;
-  return a7_1.yld('d', a7_1_6);
+  return a7_1.yld("d", a7_1_6);
 }
 
 function a7_1_6(a7_1, a) {
   if (a) {
-    return a7_1.yld('e', a7_1_7);
+    return a7_1.yld("e", a7_1_7);
   } else {
     return a7_1.yldStar(a, a7_1_7);
   }
@@ -904,15 +904,15 @@ function a7_2_1(a7_2) {
 
 function a7_2_2(a7_2, a) {
   if (a) {
-    return a7_2.yld('A', a7_2_3);
+    return a7_2.yld("A", a7_2_3);
   } else {
-    return a7_2.yld('c', a7_2_5);
+    return a7_2.yld("c", a7_2_5);
   }
 }
 
 function a7_2_3(a7_2, a) {
   a7_2._1 = a;
-  return a7_2.yld('b', a7_2_4);
+  return a7_2.yld("b", a7_2_4);
 }
 
 function a7_2_4(a7_2, a) {
@@ -922,12 +922,12 @@ function a7_2_4(a7_2, a) {
 
 function a7_2_5(a7_2, a) {
   a7_2._2 = a;
-  return a7_2.yld('d', a7_2_6);
+  return a7_2.yld("d", a7_2_6);
 }
 
 function a7_2_6(a7_2, a) {
   if (a) {
-    return a7_2.yld('e', a7_2_7);
+    return a7_2.yld("e", a7_2_7);
   } else {
     return a7_2.yldStar(a, a7_2_7);
   }
@@ -947,7 +947,7 @@ function a7_2_9(a7_2, a) {
 }
 
 function a7_2_10(a7_2) {
-  return a7_2.yld('ex', a7_2_11);
+  return a7_2.yld("ex", a7_2_11);
 }
 
 function a7_2_11(a7_2) {
@@ -960,15 +960,15 @@ function a7_3_1(a7_3) {
 
 function a7_3_2(a7_3, a) {
   if (a % 2) {
-    return a7_3.yld('A', a7_3_3);
+    return a7_3.yld("A", a7_3_3);
   } else {
-    return a7_3.yld('c', a7_3_5);
+    return a7_3.yld("c", a7_3_5);
   }
 }
 
 function a7_3_3(a7_3, a) {
   a7_3._ = a;
-  return a7_3.yld('b', a7_3_4);
+  return a7_3.yld("b", a7_3_4);
 }
 
 function a7_3_4(a7_3, a) {
@@ -1035,7 +1035,7 @@ function a7_6_2(a7_6, a) {
   var b;
 
   if (a) {
-    return a7_6.yld('A', a7_6_3);
+    return a7_6.yld("A", a7_6_3);
   } else {
     b = 1;
     return a7_6.yldStar(b, a7_6_5);
@@ -1044,7 +1044,7 @@ function a7_6_2(a7_6, a) {
 
 function a7_6_3(a7_6, a) {
   a7_6._1 = a;
-  return a7_6.yld('b', a7_6_4);
+  return a7_6.yld("b", a7_6_4);
 }
 
 function a7_6_4(a7_6, b) {
@@ -1076,7 +1076,7 @@ function finallyBlock1_3(finallyBlock1, a) {
 }
 
 function finallyBlock1_4(finallyBlock1) {
-  return finallyBlock1.yld('exit', finallyBlock1_5);
+  return finallyBlock1.yld("exit", finallyBlock1_5);
 }
 
 function finallyBlock1_5(finallyBlock1) {
@@ -1482,7 +1482,7 @@ function fb4_3(fb4, a) {
 }
 
 function fb4_4(fb4) {
-  return fb4.yld('exit', fb4_5);
+  return fb4.yld("exit", fb4_5);
 }
 
 function fb4_5(fb4) {
@@ -2103,7 +2103,7 @@ function loopCapt2_2(loopCapt2) {
 
     return loopCapt2.yldStar(a, loopCapt2_3);
   } else {
-    return loopCapt2.yld('f', loopCapt2_4);
+    return loopCapt2.yld("f", loopCapt2_4);
   }
 }
 
