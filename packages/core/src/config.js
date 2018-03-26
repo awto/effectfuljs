@@ -162,7 +162,7 @@ export default {
   // some named templates for some operations (mostly for ES compatibility):
   inlineChainOp: null, // "promise" | null
   inlineScopeOp: null, // "unwrap" | "call" | "context" | null
-  inlineYieldOp: null, // "iterator" | null
+  inlineYieldOp: null, // "iterator" | "iteratorResult" | "iteratorResultPromise" | null
   inlineYieldStarOp: null, // "iterator" | null
   inlinePureOp: null,   // "noop" | "iterator" | "promise" | null
   inlineRaiseOp: null,  // "throw" | "promise" | null

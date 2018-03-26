@@ -108,7 +108,7 @@ function ag1() {
   return ag1.scope(_1);
 
   function _1(ag1) {
-    return ag1.chain(ag1.yld(1), _2);
+    return ag1.yld(1, _2);
   }
 
   function _2(ag1) {
@@ -127,7 +127,7 @@ function ag2() {
   }
 
   function _2(ag2, a) {
-    return ag2.chain(ag2.yld(a), _3);
+    return ag2.yld(a, _3);
   }
 
   function _3(ag2) {
@@ -137,7 +137,7 @@ function ag2() {
   }
 
   function _4(ag2, a) {
-    return ag2.chain(ag2.yld(a), _5);
+    return ag2.yld(a, _5);
   }
 
   function _5(ag2) {
@@ -147,7 +147,7 @@ function ag2() {
   }
 
   function _6(ag2, a) {
-    return ag2.chain(ag2.yld(a), _7);
+    return ag2.yld(a, _7);
   }
 
   function _7(ag2) {
@@ -184,11 +184,11 @@ function ag3() {
   }
 
   function _4(ag3, a) {
-    return ag3.chain(ag3.yld(a), _5, _10);
+    return ag3.yld(a, _5, _10);
   }
 
   function _5(ag3) {
-    return ag3.chain(ag3.yld(ag3._i), _2, _10);
+    return ag3.yld(ag3._i, _2, _10);
   }
 
   function _6(ag3) {
@@ -279,7 +279,7 @@ function switches() {
 
       switch (switches._i1) {
         case 3:
-          return switches.chain(switches.yld(`l2-${switches._i1}`), _8, _56);
+          return switches.yld(`l2-${switches._i1}`, _8, _56);
 
         default:
           return switches.jump(void 0, _6, _56);
@@ -326,7 +326,7 @@ function switches() {
           return switches.jump(void 0, _13);
 
         default:
-          return switches.chain(switches.yld(`l3-${switches._i2}`), _11, _57);
+          return switches.yld(`l3-${switches._i2}`, _11, _57);
       }
     } else {
       switches._fc2 = _14, switches._fe2 = _45;
@@ -365,7 +365,7 @@ function switches() {
           return switches.jump(void 0, _17);
 
         default:
-          return switches.chain(switches.yld(`l4-${switches._i3}`), _15, _58);
+          return switches.yld(`l4-${switches._i3}`, _15, _58);
       }
     } else {
       switches._fc3 = _18, switches._fe3 = _45;
@@ -397,7 +397,7 @@ function switches() {
 
     if (!a) {
       switches._i4 = switches._loop4.value;
-      return switches.chain(switches.yld(`l5-${switches._i4}`), _21, _59);
+      return switches.yld(`l5-${switches._i4}`, _21, _59);
     } else {
       switches._fc4 = _23, switches._fe4 = _45;
       return switches.jump(void 0, _22);
@@ -442,10 +442,10 @@ function switches() {
 
       switch (switches._i5) {
         case 3:
-          return switches.chain(switches.yld(`l6-1-${switches._i5}`), _26, _60);
+          return switches.yld(`l6-1-${switches._i5}`, _26, _60);
 
         default:
-          return switches.chain(switches.yld(`l6-2-${switches._i5}`), _24, _60);
+          return switches.yld(`l6-2-${switches._i5}`, _24, _60);
       }
     } else {
       switches._fc5 = _28, switches._fe5 = _45;
@@ -489,25 +489,25 @@ function switches() {
 
         case 1:
         case 2:
-          return switches.chain(switches.yld(`l7-1-${switches._i6}`), _29, _61);
+          return switches.yld(`l7-1-${switches._i6}`, _29, _61);
 
         case 3:
           return switches.jump(void 0, _29, _61);
 
         case 4:
-          return switches.chain(switches.yld(`l7-2-${switches._i6}`), _29, _61);
+          return switches.yld(`l7-2-${switches._i6}`, _29, _61);
 
         case 5:
-          return switches.chain(switches.yld(`l7-3-${switches._i6}`), _32, _61);
+          return switches.yld(`l7-3-${switches._i6}`, _32, _61);
 
         case 6:
           return switches.jump(void 0, _29, _61);
 
         case 7:
-          return switches.chain(switches.yld(`l7-4-${switches._i6}`), _31, _61);
+          return switches.yld(`l7-4-${switches._i6}`, _31, _61);
 
         default:
-          return switches.chain(switches.yld(`l7-5-${switches._i6}`), _32, _61);
+          return switches.yld(`l7-5-${switches._i6}`, _32, _61);
       }
     } else {
       switches._fc6 = _34, switches._fe6 = _45;
@@ -521,7 +521,7 @@ function switches() {
   }
 
   function _32(switches) {
-    return switches.chain(switches.yld(`l7-6-${switches._i6}`), _29, _61);
+    return switches.yld(`l7-6-${switches._i6}`, _29, _61);
   }
 
   function _33(switches) {
@@ -564,25 +564,25 @@ function switches() {
         case 0:
         case 1:
         case 2:
-          return switches.chain(switches.yld(`s1:${switches._i7},${switches._j}`), _38, _63);
+          return switches.yld(`s1:${switches._i7},${switches._j}`, _38, _63);
 
         case 3:
           switch (switches._j) {
             case 2:
             case 3:
-              return switches.chain(switches.yld(`s2:${switches._i7},${switches._j}`), _37, _63);
+              return switches.yld(`s2:${switches._i7},${switches._j}`, _37, _63);
 
             case 5:
-              return switches.chain(switches.yld(`s3:${switches._i7},${switches._j}`), _37, _63);
+              return switches.yld(`s3:${switches._i7},${switches._j}`, _37, _63);
 
             case 7:
-              return switches.chain(switches.yld(`s4:${switches._i7},${switches._j}`), _37, _63);
+              return switches.yld(`s4:${switches._i7},${switches._j}`, _37, _63);
 
             case 8:
-              return switches.chain(switches.yld(`s5:${switches._i7},${switches._j}`), _37, _63);
+              return switches.yld(`s5:${switches._i7},${switches._j}`, _37, _63);
 
             case 9:
-              return switches.chain(switches.yld(`s6:${switches._i7},${switches._j}`), _39, _63);
+              return switches.yld(`s6:${switches._i7},${switches._j}`, _39, _63);
 
             default:
               return switches.jump(void 0, _37, _63);
@@ -592,26 +592,26 @@ function switches() {
           switch (switches._j) {
             case 2:
             case 3:
-              return switches.chain(switches.yld(`s7:${switches._i7},${switches._j}`), _41, _63);
+              return switches.yld(`s7:${switches._i7},${switches._j}`, _41, _63);
 
             case 5:
-              return switches.chain(switches.yld(`s8:${switches._i7},${switches._j}`), _37, _63);
+              return switches.yld(`s8:${switches._i7},${switches._j}`, _37, _63);
 
             case 6:
               switches._fc7 = _35, switches._fe7 = _62;
               return switches.jump(void 0, _42, _62);
 
             case 7:
-              return switches.chain(switches.yld(`s9:${switches._i7},${switches._j}`), _41, _63);
+              return switches.yld(`s9:${switches._i7},${switches._j}`, _41, _63);
 
             case 8:
-              return switches.chain(switches.yld(`s10:${switches._i7},${switches._j}`), _37, _63);
+              return switches.yld(`s10:${switches._i7},${switches._j}`, _37, _63);
 
             case 9:
-              return switches.chain(switches.yld(`s11:${switches._i7},${switches._j}`), _40, _63);
+              return switches.yld(`s11:${switches._i7},${switches._j}`, _40, _63);
 
             default:
-              return switches.chain(switches.yld(`s12:${switches._i7},${switches._j}`), _41, _63);
+              return switches.yld(`s12:${switches._i7},${switches._j}`, _41, _63);
           }
 
         case 5:
@@ -654,7 +654,7 @@ function switches() {
   }
 
   function _41(switches) {
-    return switches.chain(switches.yld(`s13:${switches._i7},${switches._j}`), _37, _63);
+    return switches.yld(`s13:${switches._i7},${switches._j}`, _37, _63);
   }
 
   function _42(switches) {
@@ -769,7 +769,7 @@ function c() {
   return c.scope(_1);
 
   function _1(c) {
-    return c.chain(c.yld(1), _2);
+    return c.yld(1, _2);
   }
 
   function _2(c) {
@@ -799,7 +799,7 @@ function c() {
 
     if (!a) {
       c._j = c._loop1.value;
-      return c.chain(c.yld(c._i), _6, _15);
+      return c.yld(c._i, _6, _15);
     } else {
       c._fc = _3, c._fe = _14;
       return c.jump(void 0, _8, _14);

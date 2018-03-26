@@ -6,7 +6,7 @@ const ops = {
     AwaitExpression: true
 }
 
-export default function(si) {
+export default function options(si) {
   const s = Kit.auto(si)
   const opts = s.opts
   return  Kit.pipe(

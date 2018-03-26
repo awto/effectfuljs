@@ -93,7 +93,7 @@ export default Kit.pipe(
       coerce:false,
       transform:true,
       scopePrefix:true,
-      combineOps:{chain:true},
+      combineOps:true,
       bindName:"chain",
       requireFinalPure:false,
       pureForOf:true

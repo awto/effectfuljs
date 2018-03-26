@@ -157,19 +157,23 @@ function* assignValue(s,contextSym) {
 /**
  * inlining yield/yield* expressions for generators implementation
  * handles options:
- *  - `inlineYieldOp: "iterator"`
+ *  - `inlineYieldOp: "iterator" || "iteratorResult" || "iteratorResultPromise"`
  *  - `inlineYieldStarOp: "iterator"`
  *  - `inlineScopeOp: "unwrap" | "context"`
  */
 function generatorsYield(si) {
   const s = Kit.auto(si)
-  const inlineYield = s.opts.inlineYieldOp === "iterator"
-  const inlineYieldStar = s.opts.inlineYieldStarOp === "iterator"
-  const inlineScopeUnwrap = s.opts.inlineScopeOp === "unwrap"
-  const inlineScopeRetCtx = s.opts.inlineScopeOp === "context"
+  const {inlineYieldOp,inlineYieldStarOp,inlineScopeOp} = s.opts
+  const inlineYield = inlineYieldOp === "iterator"
+  const inlineYieldResult = inlineYieldOp === "iteratorResult"
+  const inlineYieldResultPromise = inlineYieldOp === "iteratorResultPromise"
+  const inlineYieldStar = inlineYieldStarOp === "iterator"
+  const inlineScopeUnwrap = inlineScopeOp === "unwrap"
+  const inlineScopeRetCtx = inlineScopeOp === "context"
   const delegate = s.opts.invertForOf
   const cont = s.opts.storeCont
-  if (!inlineYieldStar && !inlineYield
+  if (!inlineYieldStar && !inlineYield && !inlineYieldResult
+      && !inlineYieldResultPromise
       && !inlineScopeUnwrap && !inlineScopeRetCtx)
     return s
   const {contextSym} = s.first.value
@@ -186,12 +190,26 @@ function generatorsYield(si) {
       if (i.enter && i.type === Block.letStmt && i.value.eff) {
         switch(i.value.bindName) {
         case "yld":
-          if (!inlineYield)
+          if (!inlineYield && !inlineYieldResult && !inlineYieldResultPromise)
             break
-          const ctx = contextSym
-          yield* assignValue(s,ctx)
-          if (!noResult)
-            yield s.tok(Tag.push,Tag.Identifier,{result:true,sym:ctx})
+          if (inlineYield) {
+            const ctx = contextSym
+            yield* assignValue(s,ctx)
+            if (!noResult)
+              yield s.tok(Tag.push,Tag.Identifier,{result:true,sym:ctx})
+            s.close(i)
+            continue
+          }
+          yield* s.template(Tag.push,
+                            inlineYieldResult
+                            ? `=({value:$E,done:false})`
+                            : `=Promise.resolve({value:$E,done:false})`,
+                            {result:true})
+          yield* s.curLev() ? Kit.reposOne(s.one(),Tag.value)
+            : Kit.scope.emitUndefined(Tag.right)
+          Kit.skip(s.sub())
+          yield* s.sub()
+          yield* s.leave()
           s.close(i)
           continue
         case "yldStar":
