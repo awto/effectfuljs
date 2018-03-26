@@ -16,7 +16,7 @@ LeanAsyncIteratorPrototype[Symbol.asyncIterator]
   = function () { return this }
 
 function esResult(ctx, v) {
-  return ctx.ap(v,function() { return {value:ctx.value, done:ctx.done} })
+  return ctx.ap(v,function(w) { return {value:w.value, done:w.done} })
 }
 
 LeanAsyncIteratorPrototype.ap = function(v,f) {
@@ -52,21 +52,15 @@ if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {
 
   UnwrapWrapper.prototype.constructor = UnwrapWrapper
 
-  UnwrapWrapper.prototype.init = function init() {
-    this.done = false
-    return (this.$inner = Object.create(this.unwrapPrototype)).init()
-  }
-
   function unwrap(ctx,v) {
     function rethrow(e) { return ctx.raise(e) }
     return Promise.resolve(v).then(
       function(inner) {
         return Promise.resolve(inner.value).then(function(value) {
-          ctx.$inner = inner
           if (inner.done)
               ctx.done = true
           ctx.value = inner.value = value
-          return ctx
+          return inner
         })
       })
   }
@@ -86,6 +80,7 @@ if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {
 
 if (!process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
   QueueWrapper = function AsyncGenerator(inner) {
+    this.done = false
     this.$inner = inner
     this.$queue = []
   }
@@ -98,10 +93,10 @@ if (!process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
     var res
     function run(i) {
       return Promise.resolve(func(i)).then(function(v) {
-        ctx.done = ctx.$inner.done
-        ctx.value = ctx.$inner.value
+        ctx.done = v.done
+        ctx.value = v.value
         return ctx
-      }) 
+      })
     }
     function wait() {
       if (!ctx.$queue.length) { 

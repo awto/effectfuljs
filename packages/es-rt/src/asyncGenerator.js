@@ -22,6 +22,7 @@ var Gp = Generator.prototype
 
 if (!process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
   LeanAsyncGenerator = function LeanAsyncGenerator() {
+    this.done = false
     if (process.env.EJS_INLINE)
       setupCallbacks(this)
   }
@@ -81,14 +82,14 @@ var delegateCont = process.env.EJS_DEFUNCT ? 2 : function delegateStep(v) {
       return Promise.resolve(this.$sub.step(v))
         .then(function(v) {
           ctx.$step = delegateCont
-          return ctx.$redirResult(ctx.$sub);
+          return ctx.$redirResult(v);
         });
     } else {
       return this.chain(
         this.$sub.step(v),
         function(v) {
           ctx.$step = delegateCont
-          return ctx.$redirResult(ctx.$sub);
+          return ctx.$redirResult(v);
         });
     }
   } catch (e) {
@@ -162,7 +163,7 @@ LAGp.$redirResult = function a(iter) {
   }
   this.$step = delegateCont
   this.value = iter.value
-  return this // iter
+  return iter
 }
 
 if (process.env.EJS_DEFUNCT) {
