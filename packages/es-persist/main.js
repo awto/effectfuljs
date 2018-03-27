@@ -117,19 +117,19 @@ AGp.yld = function yld(v, step, handle, exit) {
 }
 
 
-AGp.return = AGp.exit = function exit(v) {
+AGp.return = function(v) {
   if (this.awaiting && this.awaiting.cancel)
     this.awaiting.cancel()
-  return EsAGp.exit.call(this,v)
+  return EsAGp.return.call(this,v)
 }
 
-AGp.throw = AGp.handle = function handle(v) {
+AGp.throw = function(v) {
   if (this.awaiting && this.awaiting.cancel)
     this.awaiting.cancel()
-  return EsAGp.handle.call(this,v)
+  return EsAGp.throw.call(this,v)
 }
 
-AGp.raise = Ap.raise = function raise(v) {
+AGp.raise = Ap.raise = function(v) {
   if (this.awaiting && this.awaiting.cancel)
     this.awaiting.cancel()
   this[contextSymbol].threads.delete(this)

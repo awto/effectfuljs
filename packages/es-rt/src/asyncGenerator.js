@@ -1,9 +1,7 @@
-import {asyncIterator as asyncIterSym} from "./symbol"
 import {iterator} from "./leanIterator"
 import {forInIterator} from "./forInIterator"
-import {Generator} from "./generator"
 import {iteratorM,QueueWrapper,UnwrapWrapper,LeanAsyncIterator,EsWrapper} from "./leanAsyncIterator"
-import {Async,setupCallbacks} from "./async"
+import {Async} from "./async"
 
 export var AsyncIteratorPrototype = {}
 
@@ -11,23 +9,34 @@ if (!process.env.EJS_NO_ES_ITERATORS)
   AsyncIteratorPrototype[Symbol.asyncIterator] = function () { return this }
 
 export var asyncGeneratorFunction
-
-/** generators without queues and unwraps wrappers */
-export var LeanAsyncGenerator
 /** generators with optionally added queues and unwraps */
 export var AsyncGenerator
 
 var LAGp, AGp
-var Gp = Generator.prototype
+
+/** generators without queues and unwraps wrappers */
+export var LeanAsyncGenerator = function AsyncGenerator() {
+  if (process.env.EJS_INLINE) {
+    var ctx = this
+    ctx.$resolve = function(v) {
+      return process.env.EJS_DEFUNCT
+        ? (process.env.EJS_INLINE ? ctx.next(v) : ctx.$run(ctx.$step,v))
+        : res.$step(v)
+    }
+    ctx.$reject = function(v) {
+      return process.env.EJS_DEFUNCT
+        ? (process.env.EJS_INLINE
+           ? (ctx.$step = ctx.$handle, ctx.next(v))
+           : ctx.$run(ctx.$handle,v))
+        : ctx.$handle(v)
+    }
+  }
+}
+
+LAGp = LeanAsyncGenerator.prototype = Object.create(LeanAsyncIterator.prototype)
+LAGp.constructor = LeanAsyncGenerator
 
 if (!process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
-  LeanAsyncGenerator = function LeanAsyncGenerator() {
-    this.done = false
-    if (process.env.EJS_INLINE)
-      setupCallbacks(this)
-  }
-  LAGp = LeanAsyncGenerator.prototype = Object.create(LeanAsyncIterator.prototype)
-  LAGp.constructor = LeanAsyncGenerator
   AsyncGenerator = function AsyncGenerator() {
     var lean = this.$lean = Object.create(this.leanPrototype)
     this.leanPrototype.constructor.call(lean)
@@ -41,12 +50,8 @@ if (!process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
   AGp.constructor = AsyncGenerator
   AGp.leanPrototype = LAGp
 } else {
-  AsyncGenerator = LeanAsyncIterator = function AsyncGenerator() {
-    if (process.env.EJS_INLINE)
-      setupCallbacks(this)
-  }
-  AGp = LAGp = LeanAsyncGenerator.prototype = Object.create(LeanAsyncIterator.prototype)
-  LAGp.constructor = AsyncGenerator
+  AsyncGenerator = LeanAsyncIterator
+  AGp = LAGp
 }
 
 export function asyncGenerator(caller) {
@@ -70,32 +75,27 @@ export function asyncGenerator(caller) {
   }
 }
 
-export function esAsyncIterator(lean) {
-  return lean[Symbol.asyncIterator]()
-}
-
+export function esAsyncIterator(lean) { return lean[Symbol.asyncIterator]() }
 
 var delegateCont = process.env.EJS_DEFUNCT ? 2 : function delegateStep(v) {
   try {
     var ctx = this
     if (process.env.EJS_INLINE) {
-      return Promise.resolve(this.$sub.step(v))
+      return Promise.resolve(this.$sub.next(v))
         .then(function(v) {
-          ctx.$step = delegateCont
           return ctx.$redirResult(v);
         });
     } else {
       return this.chain(
-        this.$sub.step(v),
+        this.$sub.next(v),
         function(v) {
-          ctx.$step = delegateCont
           return ctx.$redirResult(v);
         });
     }
   } catch (e) {
     this.$step = this.$handle;
     this.$sub = this.$iter = this.$resume = void 0;
-    return this.step(e);
+    return this.next(e);
   }
 }
 
@@ -114,12 +114,17 @@ if (!process.env.EJS_INLINE) {
       this.$step = step
       this.$handle = this.$contHandle = handle
       this.$exit = this.$contExit = exit
-      return this.step(value)
+      return this.next(value)
     } catch(e) {
-      return this.handle(e)
+      return this.throw(e)
     }
   }
-  LAGp.yld = Gp.yld
+  LAGp.yld = function(value, step, handle, exit) {
+    this.$step = step
+    this.$contHandle = handle
+    this.$contExit = exit
+    return {value:value, done:false}
+  }
   LAGp.yldStar = function yldStar(iter, step, handle, exit) {
     this.$step = delegateCont
     this.$contHandle = handle
@@ -127,9 +132,9 @@ if (!process.env.EJS_INLINE) {
     this.$resume = step
     this.$sub = iteratorM(iter)
     if (process.env.EJS_DEFUNCT)
-      return this.$redir(void 0)
+      return this.$redir()
     else
-      return this.step(void 0)
+      return this.next()
   }
 } else {
   LAGp.$delegate = function yldStar(iter) {
@@ -138,7 +143,7 @@ if (!process.env.EJS_INLINE) {
     this.$sub = iteratorM(iter)
     if (process.env.EJS_DEFUNCT) {
       this.$step = 2
-      return this.step()
+      return this.next()
     } else {
       return this.$step()
     }
@@ -149,30 +154,48 @@ LAGp.iterator = iteratorM
 LAGp.forInIterator = forInIterator
 LAGp.iteratorM = iteratorM
 
-LAGp[asyncIterSym] = LAGp[Symbol.asyncIterator] = function() { return this }
+var terminated = process.env.EJS_DEFUNCT ? 0
+    : function (value) { return {value:value,done:true} }
+var terminatedThrow = process.env.EJS_DEFUNCT ? 1
+    : function (e) { throw e }
 
-LAGp.handle = Gp.handle
-LAGp.pure = Gp.pure
-LAGp.raise = Gp.raise
+LAGp.pure = function(value) {
+  this.$step = this.$exit = terminated
+  this.$handle = terminatedThrow
+  if (!process.env.EJS_INLINE) {
+    this.$contExit = terminated
+    this.$contHandle = terminatedThrow
+  }
+  return {value:value,done:true}
+}
+
+LAGp.raise = function(e) {
+  this.$step = this.$exit = terminated
+  this.$handle = terminatedThrow
+  if (!process.env.EJS_INLINE) {
+    this.$contExit = terminated
+    this.$contHandle = terminatedThrow
+  }
+  throw e
+}
 
 LAGp.$redirResult = function a(iter) {
   if (iter.done) {
     this.$step = this.$resume
     this.$sub = this.$iter = this.$resume = void 0
-    return this.step(iter.value)
+    return this.next(iter.value)
   }
   this.$step = delegateCont
-  this.value = iter.value
   return iter
 }
 
 if (process.env.EJS_DEFUNCT) {
   LAGp.$redir = function a(p) {
     if (!process.env.EJS_INLINE) {
-      return this.chain(this.$sub.step(p),3,this.$handle,this.$exit)
+      return this.chain(this.$sub.next(p),3,this.$handle,this.$exit)
     } else {
       this.$step = 3
-      return this.$sub.step(p)
+      return this.$sub.next(p)
     }
   }
 }
@@ -185,22 +208,35 @@ function runImpl(ctx,value) {
   }
 }
 
-LAGp.step = function step(value) {
+LAGp.next = function next(value) {
   if (!process.env.EJS_INLINE) {
     if (this.$step !== delegateCont) {
       this.$handle = this.$contHandle
       this.$exit = this.$contExit
     }
   }
-  try {
-    return runImpl(this, value)
-  } catch(e) {
-    this.$step = this.$handle
-    return runImpl(this, e)
-  }
+  return runImpl(this, value)
 }
 
-LAGp.exit = Gp.exit
+
+LAGp.throw = function(value) {
+  if (this.$step === delegateCont) {
+    return this.$redirResult(this.$sub.throw(value))
+  }
+  this.$step = this.$handle
+  return this.next(value)
+}
+
+LAGp.return = function(value) {
+  if (this.$step === delegateCont) {
+    var iter = this.$sub
+    this.$resume = this.$exit
+    return this.$redirResult(this.$sub.return(value))
+  } else {
+    this.$step = this.$exit
+    return this.next(value)
+  }
+}
 
 var AsyncGeneratorFunctionPrototype
 
@@ -222,7 +258,7 @@ asyncGeneratorFunction = function asyncGeneratorFunction(fun,handler) {
     if (handler) {
       leanProto = Object.create(LAGp)
       if (process.env.EJS_INLINE)
-        leanProto.step = handler
+        leanProto.next = handler
       else
         leanProto.$run = handler
     }

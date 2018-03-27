@@ -9,8 +9,10 @@ M.option({
 })
 
 async function* a1() {
-  if (yield 1)
-    return (yield (await (yield 2)))
+  if (yield 1) {
+    const k = yield 2
+    return (yield (await k))
+  }
   yield* b
 }
 
@@ -32,8 +34,10 @@ M.option({
 })
 
 async function* a2() {
-  if (yield 1)
-    return (yield (await (yield 2)))
+  if (yield 1) {
+    const k = yield 2
+    return (yield (await k))
+  }
   yield* b
 }
 
@@ -46,8 +50,10 @@ M.option({
 })
 
 async function* a3() {
-  if (yield 1)
-    return (yield (await (yield 2)))
+  if (yield 1) {
+    const k = yield 2
+    return (yield (await k))
+  }
   yield* b
 }
 
@@ -59,8 +65,10 @@ M.option({
 })
 
 async function* a4() {
-  if (yield 1)
-    return (yield (await (yield 2)))
+  if (yield 1) {
+    const k = yield 2
+    return (yield (await k))
+  }
   yield* b
 }
 

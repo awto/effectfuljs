@@ -15,7 +15,12 @@ export function Async() {}
 
 var Ap = Async.prototype
 
-export function setupCallbacks(ctx) {
+export function async(caller) {
+  var esProto = caller && caller.prototype instanceof Async
+      ? caller.prototype : Async.prototype,
+      ctx = Object.create(esProto)
+  if (!process.env.EJS_NO_ES_OBJECT_MODEL)
+    ctx.constructor.call(ctx)
   if (process.env.EJS_INLINE) {
     ctx.$resolve = function(v) {
       return process.env.EJS_DEFUNCT
@@ -30,16 +35,6 @@ export function setupCallbacks(ctx) {
         : ctx.$handle(v)
     }
   }
-}
-
-export function async(caller) {
-  var esProto = caller && caller.prototype instanceof Async
-      ? caller.prototype : Async.prototype,
-      ctx = Object.create(esProto)
-  if (!process.env.EJS_NO_ES_OBJECT_MODEL)
-    ctx.constructor.call(ctx)
-  if (process.env.EJS_INLINE)
-    setupCallbacks(ctx)
   return ctx
 }
 

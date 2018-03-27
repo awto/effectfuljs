@@ -37,6 +37,7 @@ const rebind = {
     inlineRaiseOp:null,
     inlineScopeOp:null,
     inlinePureJumps:null,
+    esForAwaitOf:true,
     contextMethodOpsSpec: {
       iterator: false,
       iteratorM: false,
@@ -115,9 +116,9 @@ const inline = {
     inlineContAssign:true,
     inlineScopeOp:"unwrap",
     storeCont:"$step",
-    storeErrorCont:"handle",
+    storeErrorCont:"$handle",
     storeResultCont:"$exit",
-    inlineYieldOp:"iterator",
+    inlineYieldOp:"iteratorResultPromise",
     inlineYieldStarOp:"iterator",
     inlineChainOp:"promise",
     inlinePureOp: "iterator",
@@ -148,6 +149,9 @@ const defunctInline = {
   },
   async: {
     inlineScopeOp:"call"
+  },
+  asyncGenerators: {
+    storeHandler:"next"
   }
 }
 
@@ -240,7 +244,7 @@ module.exports = function esProfile(opts={}) {
     if (opts.inline) {
       Object.assign(generators,defunctInline.effectful)
       Object.assign(async,defunctInline.effectful,defunctInline.async)
-      Object.assign(asyncGenerators,defunctInline.effectful)
+      Object.assign(asyncGenerators,defunctInline.effectful,defunctInline.asyncGenerators)
     }
   }
   if (opts.loose) {

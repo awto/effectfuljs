@@ -300,8 +300,9 @@ export const mochaPrepare = Kit.pipe(
   // moveConfigPath(0),
   // moveConfigPath(-1),
   moveConfigPath(1),
-  toArr,
-  crop(2))
+  toArr
+  ,crop(5)
+)
 
 export const mochaBdd = Kit.pipe(
   parse,

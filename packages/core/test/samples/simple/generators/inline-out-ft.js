@@ -89,7 +89,8 @@ function a1_2(a1, a) {
 }
 
 function a1_3(a1, a) {
-  return M.chain(a, a1_4);
+  a1._k = a;
+  return M.chain(a1._k, a1_4);
 }
 
 function a1_4(a1, a) {
@@ -118,8 +119,9 @@ function a2_2(a2, a) {
 }
 
 function a2_3(a2, a) {
+  a2._k = a;
   a2.$sc = a2_4;
-  return Promise.resolve(a).then(a2.$resolve, a2.$reject);
+  return Promise.resolve(a2._k).then(a2.$resolve, a2.$reject);
 }
 
 function a2_4(a2, a) {
@@ -167,8 +169,9 @@ function a3_1(a3, p) {
       }
 
     case 7:
+      a3._k = p;
       a3.$sc = 8;
-      return Promise.resolve(p).then(a3.$resolve, a3.$reject);
+      return Promise.resolve(a3._k).then(a3.$resolve, a3.$reject);
 
     case 8:
       a3.$sc = 0;
@@ -227,8 +230,9 @@ function a4_1(a4, p) {
       }
 
     case 7:
+      a4._k = p;
       a4.$sc = 8;
-      return Promise.resolve(p).then(a4.$resolve, a4.$reject);
+      return Promise.resolve(a4._k).then(a4.$resolve, a4.$reject);
 
     case 8:
       a4.$sc = 0;
