@@ -133,7 +133,8 @@ function forOfStmtImpl(loose, s) {
   const all = (loose || s.opts.loose) && s.opts.leanForOf
   const invert = !loose && s.opts.invertForOf
   const finalize = s.opts.finalizeForOf !== false || invert
-  const exitName  = "exit" // bind ? "exitM" : "exit"
+  const esPureProtocol = s.opts.esForOf
+  const esEffProtocol = s.opts.esForAwaitOf
   const noResult = s.opts.returnContext === false
   const {normPureForIn} = s.opts
   function* readLeft(sym,forOfInfo) {
@@ -166,6 +167,8 @@ function forOfStmtImpl(loose, s) {
   function* exit(loop,forOfExit) {
     const lab = s.label()
     const bind = loop.bindIter
+    const esProtocol = bind && esEffProtocol || !bind && esPureProtocol
+    const exitName = esProtocol ? "return" : "exit"
     yield s.enter(Tag.push,Tag.IfStatement,{forOfExit})
     yield s.enter(Tag.test,Tag.MemberExpression)
     yield s.tok(Tag.object,Tag.Identifier,{sym:loop.iterVar})
@@ -205,6 +208,10 @@ function forOfStmtImpl(loose, s) {
           const loop = i.value
           const sym = loop.iterVar = Bind.tempVarSym(root,"loop")
           let forOfInfo
+          const bind = loop.bindIter = !loose
+            && i.type !== Tag.ForInStatement
+                && (loop.node.await || s.opts.pureForOf === false)
+          const esProtocol = bind && esEffProtocol || !bind && esPureProtocol
           if (invert && i.value.eff && i.type === Tag.ForOfStatement) {
             forOfInfo = {sym,loop}
             root.hasForOf = true
@@ -219,18 +226,23 @@ function forOfStmtImpl(loose, s) {
           }
           let finlab
           const iterVar = {sym,lhs:true,decl:true,forOfInfo}
-          const init = Kit.toArray(readLeft(sym,forOfInfo))
+          let iterResultSym = esProtocol && Bind.tempVarSym(root,"i")
+          const init = Kit.toArray(readLeft(
+            esProtocol ? iterResultSym : sym,forOfInfo))
           let start = Kit.setType(i,Tag.ForStatement)
           const slab = s.label()
           yield s.enter(Tag.push,Tag.VariableDeclaration,
                         {node:{kind:"var"},forOfInfo})
           yield s.enter(Tag.declarations,Tag.Array)
+          if (esProtocol) {
+            yield s.enter(Tag.push,Tag.VariableDeclarator)
+            yield s.tok(Tag.id,Tag.Identifier,
+                        {sym:iterResultSym,lhs:false,decl:true})
+            yield* s.leave()
+          }
           yield s.enter(Tag.push,Tag.VariableDeclarator)
           yield s.tok(Tag.id,Tag.Identifier,iterVar)
           yield s.enter(Tag.init,Tag.CallExpression)
-          const bind = loop.bindIter = !loose
-            && i.type !== Tag.ForInStatement
-            && (loop.node.await || s.opts.pureForOf === false)
           yield s.tok(Tag.callee,Tag.Identifier,{
             sym:i.type === Tag.ForInStatement ? forInIteratorId
               : bind ? effIteratorId
@@ -255,7 +267,7 @@ function forOfStmtImpl(loose, s) {
           yield s.enter(Tag.argument,Tag.MemberExpression)
           let stepPos
           const stepLab = s.label()
-          if (noResult) {
+          if (noResult && !esProtocol) {
             yield s.enter(Tag.object,Tag.SequenceExpression)
             yield s.enter(Tag.expressions,Tag.Array)
             stepPos = Tag.push
@@ -263,21 +275,22 @@ function forOfStmtImpl(loose, s) {
             yield s.enter(Tag.object,Tag.AssignmentExpression,
                           {node:{operator:"="}})
             yield s.tok(Tag.left,Tag.Identifier,
-                        {sym,lhs:true,rhs:false,decl:false})
+                        {sym:esProtocol?iterResultSym:sym,
+                         lhs:true,rhs:false,decl:false})
             stepPos = Tag.right
           }
           yield s.enter(stepPos,Tag.CallExpression,{bind,eff:bind})
           yield s.enter(Tag.callee,Tag.MemberExpression)
           yield s.tok(Tag.object,Tag.Identifier,{sym,lhs:false,rhs:true})
           yield s.tok(Tag.property,Tag.Identifier,
-                      {node:{name:"step"}})
+                      {node:{name:esProtocol?"next":"step"}})
           yield* s.leave()
           yield s.tok(Tag.arguments,Tag.Array)
           yield* s.leave()
-          if (noResult)
+          if (noResult && !esProtocol)
             yield s.tok(Tag.push,Tag.Identifier,{sym,lhs:false,rhs:true})
           yield* stepLab()
-          yield s.tok(Tag.property, Tag.Identifier, {node:{name:"done"}})
+          yield s.tok(Tag.property,Tag.Identifier,{node:{name:"done"}})
           yield* flab()
           const body = s.curLev()
           assert.equal(body.pos, Tag.body)

@@ -64,3 +64,40 @@ async function* a4() {
   yield* b
 }
 
+
+function* a5() {
+  for(const i of b) {
+    yield i
+  }
+}
+
+async function* a6() {
+  for await(const i of b) {
+    yield i
+  }
+}
+
+
+M.option({esForOf:true})
+
+function* a7() {
+  for(const i of b) {
+    yield i
+  }
+}
+
+async function* a8() {
+  for await(const i of b) {
+    yield i
+  }
+}
+
+M.option({esForAwaitOf:true})
+
+async function* a9() {
+  for await(const i of b) {
+    yield i
+  }
+}
+
+

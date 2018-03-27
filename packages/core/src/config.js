@@ -64,13 +64,17 @@ export default {
   // combines Monadic bind and effectful operation into one function's call
   combineOps: false,
 
-  // using pure lead iterator for for-of statement
+  // using pure lean iterator for for-of statement
   pureForOf: true,
 
   // translates pure `for-of` into lean iterators traversal
   // activated only with `loose:true`
   leanForOf: true,
 
+  // use ECMAScript iteration protocol for for-ofs
+  esForOf: false,
+  esForAwaitOf: false,
+  
   // name of a function to call for each effectful function
   // it may change something in object's protocol for that function
   wrapFunction: null,
@@ -238,7 +242,7 @@ export default {
   // babylon options (not used if executed using babel tools)
   parser: {},
 
-  // @babel/generator options (not used if executed using babel tools)
+  // babel-generator options (not used if executed using babel tools)
   printer: {},
 
   // effectful operations to be called as method of
