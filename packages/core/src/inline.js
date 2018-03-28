@@ -290,6 +290,7 @@ export function promises(si) {
  * possible values:
  *    - 'call' - replaces with simple function call
  *    - 'tail' - moves the call to the end of frame
+ *    - 'promise' - wraps with promise resolve
  *    - 'exit' - doesn't call anything and leaves it to caller to re-call
  */
 export function jumpOps(si) {
@@ -297,20 +298,21 @@ export function jumpOps(si) {
   const inlineJumps = s.opts.inlinePureJumps === "call"
   const inlineScope = s.opts.inlineScopeOp === "call"
   const jumpsExit = s.opts.inlinePureJumps === "exit"
+  const promiseJumps = s.opts.inlinePureJumps === "promise"
   const promiseRec = s.opts.inlineChainOp === "promise"
-  if (s.opts.inlinePureJumps && !inlineJumps && !jumpsExit
+  if (s.opts.inlinePureJumps && !inlineJumps && !jumpsExit && !promiseJumps
       && s.opts.inlinePureJumps && s.opts.inlinePureJumps !== "tail") {
     throw s.error(
       `unsupported value ${s.opts.inlinePureJumps} for inlinePureJumps`)
   }
-  if (!inlineJumps && !inlineScope && !jumpsExit)
+  if (!inlineJumps && !inlineScope && !jumpsExit && !promiseJumps)
     return s
   if (inlineScope && !s.opts.defunct)
     throw s.error("`inlineScope:'call'` requires `defunct:true`")
-  if (jumpsExit) {
+  if (jumpsExit || promiseJumps) {
     if (!s.opts.inlineContAssign)
       throw s.error(
-        "`inlineJumps:'exit' works only with `{inlineContAssign:true}`")
+        "`inlineJumps:'exit'|'promise' works only with `{inlineContAssign:true}`")
   }
   const {jsTailCalls} = s.opts
   const root = s.first.value
@@ -383,10 +385,11 @@ export function jumpOps(si) {
                 s.close(j)
                 continue
               }
-              if (j.value.sym === jumpRId && (inlineJumps || jumpsExit)
-                  || j.value.sym === jumpId && jumpsExit) {
+              if (j.value.sym === jumpRId
+                  && (inlineJumps || jumpsExit || promiseJumps)
+                  || j.value.sym === jumpId && (jumpsExit || promiseJumps)) {
                 const ctx = j.value.delegateCtx || contextSym
-                if (promiseRec) {
+                if (promiseRec || promiseJumps) {
                   yield* s.template(Tag.push,`=Promise.resolve($E).then($1)`,
                                     {result:true},j.value.goto)
                   yield* s.one()

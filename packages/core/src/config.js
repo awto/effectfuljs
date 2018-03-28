@@ -185,6 +185,7 @@ export default {
   // possible values are:
   // * 'call' - replaces with simple function call
   // * 'tail' - optimized for defunct:true (requires inlineContAssign)
+  // * 'promise' - wraps with promise resolve
   // * 'exit' - same tail calls but managed on generator (requires inlineContAssign)
   inlinePureJumps: null,
 
