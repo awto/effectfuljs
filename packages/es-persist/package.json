@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-persist",
-  "version": "0.0.2",
+  "version": "0.1.9",
   "description": "Persistent state for ECMAScript effects",
   "main": "index.js",
   "module": "main.js",
@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "peerDependencies": {
-    "@effectful/es": "^0.1.7"
+    "@effectful/es": "^0.1.9"
   },
   "devDependencies": {
-    "@effectful/es": "^0.1.7",
+    "@effectful/es": "^0.1.9",
     "rollup": "^0.57.1"
   },
   "dependencies": {
