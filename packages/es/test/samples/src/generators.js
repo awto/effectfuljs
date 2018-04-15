@@ -670,8 +670,7 @@ exports.forOfBlockScope = function* forOfBlockScope() {
       }
     }
   }
-  for(const i of funs)
-    yield* i()
+  yield "never"
 }
 
 exports.whileBlockScope = function* whileBlockScope() {

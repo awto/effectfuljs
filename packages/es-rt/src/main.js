@@ -1,7 +1,7 @@
 import "./arrayIterator"
 export {forInIterator} from "./forInIterator"
 export {iterator} from "./leanIterator"
-export {generatorFunction,Generator,generator,esIterator} from "./generator"
+export {generatorFunction,Generator,generator} from "./generator"
 export {asyncFunction,async,Async} from "./async"
 export {iteratorM} from "./leanAsyncIterator"
 export {asyncGenerator,AsyncGenerator,asyncGeneratorFunction,esAsyncIterator}

@@ -8,10 +8,6 @@ export var generator
 /** a separate object for iterables for ES object model compliance */
 export var IterablePrototype = {}
 
-export function esIterator(i) {
-  return i
-}
-
 if (!process.env.EJS_NO_ES_ITERATORS)
   IterablePrototype[Symbol.iterator] = function () { return this }
 
@@ -53,6 +49,11 @@ Gp.$redirResult = function redirResult(iter) {
   if (iter.done) {
     this.$step = this.$resume
     this.$sub = this.$iter = this.$resume = void 0
+    if (!process.env.EJS_INLINE) {
+      this.$contExit = this.$resumeExit
+      this.$contHandle = this.$resumeHandle
+      this.$resumeExit = this.$resumeHandle = void 0
+    }
     return this.step(iter.value)
   }
   if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING)
@@ -69,8 +70,12 @@ Gp.handle = function handle(value) {
       value = e
     }
   }
-  this.$step = this.$handle
-  return this.step(value)
+  if (this.$handle) {
+    this.$step = this.$handle
+    this.$handle = void 0
+    return this.step(value)
+  }
+  throw value
 }
 
 Gp.exit = function exit(value) {
@@ -90,48 +95,42 @@ Gp.exit = function exit(value) {
 
 if (!process.env.EJS_DEFUNCT || !process.env.EJS_INLINE) {
   function runImpl(ctx,value) {
-    if (process.env.EJS_DEFUNCT) {
-      if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
-        var s
-        ctx.$run((s = ctx.$step, ctx.$step = runningCont, s),value)
-      } else {
-        ctx.$run(ctx.$step,value)
-      }
-    } else {
-      if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
-        ctx.$run = ctx.$step
-        ctx.$step = runningCont
-        ctx.$run(value)
-      } else {
-        ctx.$step(value)
-      }
-    }
-  }
-  function runTryCatch(ctx,value) {
     if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING)
       if (ctx.$step === runningCont)
         ctx.$alreadyRunning()
     try {
-      runImpl(ctx,value)
+      if (process.env.EJS_DEFUNCT) {
+        if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
+          var s
+          ctx.$run((s = ctx.$step, ctx.$step = runningCont, s),value)
+        } else {
+        ctx.$run(ctx.$step,value)
+        }
+      } else {
+        if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
+          ctx.$run = ctx.$step
+          ctx.$step = runningCont
+          ctx.$run(value)
+        } else {
+          ctx.$step(value)
+        }
+      }
     } catch(e) {
-      ctx.$step = ctx.$handle
-      runImpl(ctx,e)
+      ctx.handle(e)
     }
   }
   Gp.step = function step(value) {
     if (!process.env.EJS_INLINE) {
-      if (this.$step !== delegateCont) {
-        this.$handle = this.$contHandle
-        this.$exit = this.$contExit
-      }
+      this.$handle = this.$contHandle
+      this.$exit = this.$contExit
     }
     if (!process.env.EJS_NO_TRAMPOLINE)
       this.$running = false
-    runTryCatch(this,value)
+    runImpl(this,value)
     if (!process.env.EJS_NO_TRAMPOLINE) {
       while(this.$running) {
         this.$running = false
-        runTryCatch(this,this.value)
+        runImpl(this,this.value)
       }
     }
     return this
@@ -146,6 +145,8 @@ function delegateStep(v) {
   } catch(e) {
     this.$step = this.$handle
     this.$sub = this.$iter = this.$resume = void 0
+    if (!process.env.EJS_INLINE)
+      this.$resumeExit = this.$resumeHandle = void 0
     return this.step(e)
   }
 }
@@ -165,8 +166,8 @@ if (!process.env.EJS_INLINE) {
   
   Gp.yldStar = function yldStar(iter, step, handle, exit) {
     this.$step = delegateCont
-    this.$contHandle = handle
-    this.$contExit = exit
+    this.$resumeHandle = handle
+    this.$resumeExit = exit
     this.$resume = step
     this.$sub = this.iterator(iter)
     if (process.env.EJS_DEFUNCT)
@@ -175,7 +176,7 @@ if (!process.env.EJS_INLINE) {
       return this.step(void 0)
   }
 
-  Gp.jump = function jump(value, step, handle, exit) {
+  Gp.jump = Gp.jumpR = function jump(value, step, handle, exit) {
     try {
       this.$step = step
       this.$handle = this.$contHandle = handle
@@ -216,21 +217,15 @@ var terminated = process.env.EJS_DEFUNCT ? 0 : function terminated(value) {
   this.value = value
   return this
 }
-
-var terminatedHandle = process.env.EJS_DEFUNCT ? 1 : function terminatedHandle(value) {
-  if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING)
-    this.$step = terminated
-  throw value
-}
   
 Gp.pure = function pure(value) {
   this.done = true
   this.value = value
   this.$step = this.$exit = terminated
-  this.$handle = terminatedHandle
+  this.$handle = void 0
   if (!process.env.EJS_INLINE) {
     this.$contExit = terminated
-    this.$contHandle = terminatedHandle
+    this.$contHandle = void 0
   }
   return this
 }
@@ -239,10 +234,10 @@ Gp.raise = function genRaise(ex) {
   this.done = true
   this.value = void 0
   this.$step = this.$exit = terminated
-  this.$handle = terminatedHandle
+  this.$handle = void 0
   if (!process.env.EJS_INLINE) {
     this.$contExit = terminated
-    this.$contHandle = terminatedHandle
+    this.$contHandle = void 0
   }
   throw ex
 }

@@ -4,7 +4,10 @@
                {
                  "topLevel":true,
                  "defunct":true,
-                 "importRT":"../index"
+                 "importRT":"../index",
+                 "effectful":{
+                   "cleanupFrameVars": true
+                 }
                }],
               {
                 "plugins":[

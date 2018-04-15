@@ -24,6 +24,8 @@ export var LeanAsyncGenerator = function AsyncGenerator() {
         : res.$step(v)
     }
     ctx.$reject = function(v) {
+      if (!ctx.$handle)
+        return ctx.raise(v)
       return process.env.EJS_DEFUNCT
         ? (process.env.EJS_INLINE
            ? (ctx.$step = ctx.$handle, ctx.next(v))
@@ -83,19 +85,24 @@ var delegateCont = process.env.EJS_DEFUNCT ? 2 : function delegateStep(v) {
     if (process.env.EJS_INLINE) {
       return Promise.resolve(this.$sub.next(v))
         .then(function(v) {
-          return ctx.$redirResult(v);
-        });
+          return ctx.$redirResult(v)
+        })
     } else {
       return this.chain(
         this.$sub.next(v),
         function(v) {
-          return ctx.$redirResult(v);
-        });
+          return ctx.$redirResult(v)
+        })
     }
   } catch (e) {
-    this.$step = this.$handle;
-    this.$sub = this.$iter = this.$resume = void 0;
-    return this.next(e);
+    if (!this.$handle)
+      return this.raise(e)
+    this.$step = this.$handle
+    this.$sub = this.$iter = this.$resume = void 0
+    if (!process.env.EJS_INLINE) {
+      this.$resumeExit = this.$resumeHandle = void 0
+    }
+    return this.next(e)
   }
 }
 
@@ -114,7 +121,7 @@ if (!process.env.EJS_INLINE) {
       this.$step = step
       this.$handle = this.$contHandle = handle
       this.$exit = this.$contExit = exit
-      return this.next(value)
+      return runImpl(this, value)
     } catch(e) {
       return this.throw(e)
     }
@@ -127,10 +134,10 @@ if (!process.env.EJS_INLINE) {
   }
   LAGp.yldStar = function yldStar(iter, step, handle, exit) {
     this.$step = delegateCont
-    this.$contHandle = handle
-    this.$contExit = exit
-    this.$resume = step
     this.$sub = iteratorM(iter)
+    this.$resumeHandle = handle
+    this.$resumeExit = exit
+    this.$resume = step
     if (process.env.EJS_DEFUNCT)
       return this.$redir()
     else
@@ -156,37 +163,75 @@ LAGp.iteratorM = iteratorM
 
 var terminated = process.env.EJS_DEFUNCT ? 0
     : function (value) { return {value:value,done:true} }
-var terminatedThrow = process.env.EJS_DEFUNCT ? 1
-    : function (e) { throw e }
 
 LAGp.pure = function(value) {
   this.$step = this.$exit = terminated
-  this.$handle = terminatedThrow
+  this.$handle = void 0
   if (!process.env.EJS_INLINE) {
     this.$contExit = terminated
-    this.$contHandle = terminatedThrow
+    this.$contHandle = void 0
   }
   return {value:value,done:true}
 }
 
 LAGp.raise = function(e) {
   this.$step = this.$exit = terminated
-  this.$handle = terminatedThrow
+  this.$handle = void 0
   if (!process.env.EJS_INLINE) {
     this.$contExit = terminated
-    this.$contHandle = terminatedThrow
+    this.$contHandle = void 0
   }
   throw e
 }
 
-LAGp.$redirResult = function a(iter) {
+
+function runImpl(ctx,value) {
+  if (process.env.EJS_DEFUNCT) {
+    if (process.env.EJS_INLINE) {
+      return ctx.$run(ctx.$step,value)
+    } else {
+      try {
+        return ctx.$run(ctx.$step,value)
+      } catch(e) {
+        if (!ctx.$handle)
+          throw e
+        ctx.$step = ctx.$handle
+        return runImpl(ctx, e)
+      }
+    }
+  } else {
+    if (process.env.EJS_INLINE) {
+      return ctx.$step(value)
+    } else {
+      try {
+        return ctx.$step(value)
+      } catch(e) {
+        if (!ctx.$handle)
+          throw e
+        ctx.$step = ctx.$handle
+        return runImpl(ctx, e)
+      }
+    }
+  }
+}
+
+LAGp.$redirResult = function(iter) {
   if (iter.done) {
     this.$step = this.$resume
+    if (!process.env.EJS_INLINE) {
+      this.$handle = this.$resumeHandle
+      this.$exit = this.$resumeExit
+      this.$resumeHandle = this.$resumeExit = void 0
+    }
     this.$sub = this.$iter = this.$resume = void 0
-    return this.next(iter.value)
+    return runImpl(this,iter.value)
   }
-  this.$step = delegateCont
-  return iter
+  if (process.env.EJS_INLINE) {
+    this.$step = delegateCont
+    return iter
+  } else {
+    return this.yld(iter.value,delegateCont,this.$contHandle,this.$contExit)
+  }
 }
 
 if (process.env.EJS_DEFUNCT) {
@@ -200,29 +245,26 @@ if (process.env.EJS_DEFUNCT) {
   }
 }
 
-function runImpl(ctx,value) {
-  if (process.env.EJS_DEFUNCT) {
-    return ctx.$run(ctx.$step,value)
-  } else {
-    return ctx.$step(value)
-  }
-}
-
 LAGp.next = function next(value) {
   if (!process.env.EJS_INLINE) {
-    if (this.$step !== delegateCont) {
-      this.$handle = this.$contHandle
-      this.$exit = this.$contExit
-    }
+    this.$handle = this.$contHandle
+    this.$exit = this.$contExit
   }
   return runImpl(this, value)
 }
 
-
 LAGp.throw = function(value) {
   if (this.$step === delegateCont) {
-    return this.$redirResult(this.$sub.throw(value))
+    if (!process.env.EJS_INLINE) {
+      return this.chain(this.$sub.throw(value),
+                        3,this.$handle,this.$exit)
+    } else {
+      this.$step = 3
+      return this.$sub.throw(value)
+    }
   }
+  if (!this.$handle)
+    return this.raise(value)
   this.$step = this.$handle
   return this.next(value)
 }
@@ -231,7 +273,13 @@ LAGp.return = function(value) {
   if (this.$step === delegateCont) {
     var iter = this.$sub
     this.$resume = this.$exit
-    return this.$redirResult(this.$sub.return(value))
+    if (!process.env.EJS_INLINE) {
+      return this.chain(this.$sub.return(value),
+                        3,this.$handle,this.$exit)
+    } else {
+      this.$step = 3
+      return this.$sub.return(value)
+    }
   } else {
     this.$step = this.$exit
     return this.next(value)

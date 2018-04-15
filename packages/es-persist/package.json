@@ -6,7 +6,7 @@
   "module": "main.js",
   "scripts": {
     "test": "mocha",
-    "build": "rollup main.js --o index.js --f cjs"
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",

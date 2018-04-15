@@ -20,10 +20,10 @@ module.exports = function(Lib) {
   describe("lean iterator", function() {
     it("has isomorphic conversion to ES iterators", function() {
       Array.from(Kit.eqlGens([1,2,3],
-                             Lib.esIterator(Lib.iterator([1,2,3]))))
+                             Lib.iterator([1,2,3])))
       Array.from(Kit.eqlGens(new Set([10,20,30]),
-                             Lib.esIterator(Lib.iterator(new Set([10,20,30])))))
-      const sampleIter = Kit.eqlGens(sample,Lib.esIterator(Lib.iterator(sample)))
+                             Lib.iterator(new Set([10,20,30]))))
+      const sampleIter = Kit.eqlGens(sample,Lib.iterator(sample))
       sampleIter.next(1)
       sampleIter.next(2)
       sampleIter.throw(3)

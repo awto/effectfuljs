@@ -1,25 +1,85 @@
+/**
+ * ES async, generator, async generator functions implementation with
+ * access to their current state
+ */
+
 import * as Es from "@effectful/es-rt/opts/defunct"
 
+/** a property name for accessing threads store */
 export var contextSymbol = Symbol("@effectful/es-persist/context")
-export var chainSymbol = Symbol("@effectful/es-persist/then")
+
+/** 
+ * a name of a method like `Promise.prototype.then`, but instead of two 
+ * callbacks it takes an object with `resume`/`reject` methods, thus
+ * making it easier to serialize 
+ */
+export var chainSymbol = Symbol("@effectful/es-persist/chain")
+
+/** 
+ * same as `chainSymbol` but the method doesn't return next async value,
+ * just subscribes to `this` settlement events
+ */
+export var awaitSymbol = Symbol("@effectful/es-persist/await")
 
 export var generator = Es.generator
+export var generatorFunction = Es.generatorFunction
+
 export var async = Es.async
-export var asyncGenerator = Es.asyncGenerator
 export var iterator = Es.iterator
 export var iteratorM = Es.iteratorM
 export var forInIterator = Es.forInIterator
 
+/** global registry of currently running async functions */
+function Context() {
+  this.threads = new Set()
+}
+
+/** 
+ * called for each async function once, at its module's top level
+ */
+Context.prototype.reg = function(fun) {}
+
+/**
+ * called on each async function execution
+ */
+Context.prototype.startThread = function startThread(thread) {
+  this.threads.add(thread)
+}
+
+/**
+ * called on each asyn function exit
+ */
+Context.prototype.exitThread = function exitThread(thread) {
+  this.threads.delete(thread)
+  thread.$handle = thread.$step = thread.$exit
+    = thread.$contHandle = thread.$contExit = 0
+}
+
+/** default registry */
 var globalContext = new Context()
 
-export function context() {
+var contextStack = []
+
+/** 
+ * gets current context or replace it with some new one if an argument is provided
+ */
+export function context(ctx) {
+  if (ctx)
+    globalContext = ctx
   return globalContext
 }
 
+export var AsyncState = {
+  pending: 0,
+  resolved: 1,
+  rejected: 2
+}
+
 export function Async() {
-  this[contextSymbol].threads.add(this)
-  this.awaiting = void 0
-  this.$next = []
+  this[contextSymbol].startThread(this)
+  this.dest = []
+  this.state = AsyncState.pending
+  this.value = void 0
 }
 
 var EsAp = Es.Async.prototype
@@ -27,114 +87,211 @@ var Ap = Async.prototype = Object.create(EsAp)
 Ap.constructor = Async
 
 function AsyncGenerator() {
-  Async.call(this)
-  this.unwrap = this
+  this[contextSymbol].startThread(this)
+  this.queue = []
+}
+
+export function asyncGenerator(caller) {
+  var res = Object.create(caller.prototype)
+  caller.prototype.constructor.call(res)
+  return res
 }
 
 var EsAGp = Es.AsyncGenerator.prototype.leanPrototype
 var AGp = AsyncGenerator.prototype = Object.create(EsAGp)
 AGp.constructor = AsyncGenerator
 
+function Residual() {
+  this.dest = []
+  this.state = AsyncState.pending
+}
+
+var Rp = Residual.prototype
+
+Promise.prototype[chainSymbol] = Rp[chainSymbol] = function chain(t) {
+  var res = new Residual()
+  t.cont = res
+  this[awaitSymbol](t)
+  return res
+}
+
 function Generator() {}
 var Gp = Generator.prototype = Object.create(Es.Generator.prototype)
 Gp.constructor = Generator
 
-Ap.chain = AGp.chain = function chain(value, cont, handle, exit) {
-  this.awaiting = value
+Rp.resume = function(value) {
+  var dest = this.dest, i
+  this.state = AsyncState.resolved
+  this.value = value
+  while((i = dest.pop()))
+    i.resume(value)
+}
+
+Rp.reject = function (e) {
+  var dest = this.dest, i
+  this.state = AsyncState.rejected
+  this.value = e
+  while((i = dest.pop()))
+    i.reject(e)
+}
+
+Rp.then = function(next, err) {
+  return this.toPromise().then(next,err)
+}
+
+Rp.toPromise = function() {
+  var ctx = this
+  switch(this.state) {
+  case AsyncState.resolved:
+    return Promise.resolve(this.value)
+  case AsyncState.rejected:
+    return Promise.reject(this.value)
+  default:
+    return new Promise(function(r,e) {
+      ctx.dest.push({resume:r,reject:e,debFrom:(new Error()).stack})
+    })
+  }
+}
+  
+Rp[awaitSymbol] = function(next) {
+  switch(this.state) {
+  case AsyncState.resolved:
+    next.resume(this.value)
+    break
+  case AsyncState.rejected:
+    next.reject(this.value)
+    break
+  default:
+    this.dest.push(next)
+  }
+}
+
+function trampoline(res) {
+  var value
+  while(res)
+    res = res.$run(res.$step,(value = res.value,res.value = void 0,value))
+}
+
+Promise.prototype[awaitSymbol] = function(next) {
+  this.then(function(v) { next.resume(v) },function(e) { next.reject(e) })
+}
+
+AGp.jump = Ap.jump = function(v, cont, handle, exit) {
   this.$step = cont
   this.$handle = handle
   this.$exit = exit
-  value && value[chainSymbol] && value[chainSymbol](this)
-  return this
-}
-
-Ap.then = function(resume, handle) {
-  if (this.done)
-    return resume(this.value)
-  function canceled() { return this }
-  function cancel() { this.resume = canceled }
-  this.$next.push({resume,handle,cancel})
-  return this
-}
-
-AGp[chainSymbol] = Ap[chainSymbol] = function(next) {
-  if (this.awaiting === void 0)
-    next.resume(this.value)
-  else
-    this.$next.push(next)
-}
-
-Promise.prototype[chainSymbol] = function(next) {
-  return this.then(v => next.resume(v), e => next.handle(e))
-}
-
-Ap.cancel = function cancel() {
-  this.canceld = true
-  this.$awaiting = void 0
-}
-
-AGp.resume = Ap.resume = function resume(value) {
-  if (this.canceled)
-    return this
-  this.awaiting = void 0
-  return this.$run(this.$step, value)
-}
-
-function Context() {
-  this.threads = new Set()
-}
-
-function cont(ctx,v) {
-  var next
-  while((next = ctx.$next.shift()))
-    next.resume(v)
-  return ctx
-}
-
-function contErr(ctx,v) {
-  var next
-  while((next = ctx.$next.shift()))
-    next.handle(v)
-  return ctx
-}
-
-Ap.pure = function pure(v) {
-  this[contextSymbol].threads.delete(this)
-  this.done = true
   this.value = v
-  return cont(this,v)
-}
-
-AGp.pure = function pure(v) {
-  this[contextSymbol].threads.delete(this)
-  EsAGp.pure.call(this,v)
-  return cont(this,{value:this.value,done:true})
-}
-
-AGp.yld = function yld(v, step, handle, exit) {
-  EsAGp.yld.call(this,v)
-  return cont(this,{value:this.value,done:false})
-}
-
-
-AGp.return = function(v) {
-  if (this.awaiting && this.awaiting.cancel)
-    this.awaiting.cancel()
-  return EsAGp.return.call(this,v)
-}
-
-AGp.throw = function(v) {
-  if (this.awaiting && this.awaiting.cancel)
-    this.awaiting.cancel()
-  return EsAGp.throw.call(this,v)
-}
-
-AGp.raise = Ap.raise = function(v) {
-  if (this.awaiting && this.awaiting.cancel)
-    this.awaiting.cancel()
-  this[contextSymbol].threads.delete(this)
-  contErr(this,v)
   return this
+}
+
+AGp.scope = function(step,handle,exit) {
+  this.$step = step
+  this.$handle = this.$contHandle = handle
+  this.$exit = this.$contExit = exit
+  return this
+}
+
+AGp.chain = Ap.chain = function(v, cont, handle, exit) {
+  this.$step = cont
+  this.$handle = handle
+  this.$exit = exit
+  if (!v[awaitSymbol]) {
+    this.value = v
+    return this // tail call
+  }
+  return v[awaitSymbol](this)
+}
+
+Ap.scope = function(cont, handle, exit) {
+  this.$step = cont
+  this.$handle = handle
+  this.$exit = exit
+  this.cont = new Residual()
+  trampoline(this.$run(cont))
+  return this.cont
+}
+
+Ap.pure = function(value) {
+  this[contextSymbol].exitThread(this)
+  this.cont.resume(value)
+}
+
+Ap.raise = function(error) {
+  this[contextSymbol].exitThread(this)
+  this.cont.reject(error)
+}
+
+AGp.pure = function(result) {
+  this[contextSymbol].exitThread(this)
+  this.queue.shift().resume({value:result,done:true})
+}
+
+AGp.raise = function(error) {
+  this[contextSymbol].exitThread(this)
+  this.queue.shift().reject(error)
+}
+
+AGp.resume = Ap.resume = function resume(v) {
+  try {
+    trampoline(this.$run(this.$step, v))
+  } catch(e) {
+    this.reject(e)
+  }
+}
+
+AGp.yld = function(value, step, handle, exit) {
+  var ctx = this[contextSymbol]
+  this.$step = step
+  this.$contHandle = handle
+  this.$contExit = exit
+  return this.queue.shift().resume({value:value,done:false})
+}
+
+AGp.return = function(value) {
+  var res = new Residual(this)
+  this.queue.push(res)
+  if (this.$step === 2) {
+    this.$resume = this.$exit
+    trampoline(this.chain(this.$sub.return(value),
+                          3,this.$handle,this.$exit))
+  } else {
+    this.$step = this.$exit
+    this.resume(value)
+  }
+  return res
+}
+
+AGp.reject = Ap.reject = function(e) {
+  if (this.$handle) {
+    this.$step = this.$handle
+    this.$handle = void 0
+    this.resume(e)
+  } else
+    this.raise(e)
+}
+
+AGp.throw = function(value) {
+  var res = new Residual(this)
+  this.queue.push(res)
+  if (this.$step === 2) {
+    trampoline(this.chain(this.$sub.throw(value),
+                          3,this.$handle,this.$exit))
+  } else if (this.$handle)  {
+    this.$step = this.$handle
+    this.resume(value)
+  } else {
+    this.raise(value)
+  }
+  return res
+}
+
+AGp.next = function next(value) {
+  var res = new Residual(this)
+  this.queue.push(res)
+  this.$handle = this.$contHandle
+  this.$exit = this.$contExit
+  this.resume(value)
+  return res
 }
 
 function ext(proto) {
@@ -144,11 +301,78 @@ function ext(proto) {
       fun.prototype[contextSymbol] = globalContext
     fun.prototype.$run = handler
     fun.prototype.name = fun.name
+    fun.prototype[contextSymbol].reg(fun)
     return fun
   }
 }
 
-export const generatorFunction = ext(Gp)
 export const asyncFunction = ext(Ap)
 export const asyncGeneratorFunction = ext(AGp)
 
+function All(arr) {
+  var len = arr.length, i
+  this.dest = []
+  this.state = len === 0 ? AsyncState.resolved : AsyncState.pending
+  this.value = new Array(len)
+  this.countdown = len
+  for(i=0;i<len;++i)
+    arr[i][awaitSymbol](new AllCont(this,i))
+}
+
+/** like `Promise.all` */
+export function all(iterable) {
+  return new All(Array.from(iterable))
+}
+
+var AllProto = All.prototype = Object.create(Rp)
+AllProto.constructor = All
+
+function AllCont(src,index) {
+  this.src = src
+  this.index = index
+}
+
+AllCont.prototype.resume = function(value) {
+  var src = this.src
+  if (src.state !== AsyncState.rejected) {
+    src.value[this.index] = value
+    if (--src.countdown === 0)
+      src.resume(src.value)
+  }
+}
+
+AllCont.prototype.reject = function(value) {
+  this.src.reject(value)
+}
+
+function Any(arr) {
+  var len = arr.length, i
+  this.dest = []
+  this.state = AsyncState.pending
+  for(i=0;i<len;++i)
+    arr[i][awaitSymbol](new AnyCont(this))
+}
+
+/** like `Promise.race` */
+export function any(iterable) {
+  return new Any(Array.from(iterable))
+}
+
+function AnyCont(src) {
+  this.src = src
+}
+
+AnyCont.prototype.resume = function(value) {
+  var src = this.src
+  if (src.state === AsyncState.pending)
+    src.resume(value)
+}
+
+AnyCont.prototype.reject = function(value) {
+  var src = this.src
+  if (src.state === AsyncState.pending)
+    src.reject(value)
+}
+
+var AnyProto = Any.prototype = Object.create(Rp)
+AnyProto.constructor = Any
