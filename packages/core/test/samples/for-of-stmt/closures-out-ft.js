@@ -14,7 +14,7 @@ function iter_2(_iter) {
 }
 
 function _iter_1(_iter) {
-  return M.yldStar(M.yld(`fo2: ${_iter._forOfBlockScope._i1} ${_iter._forOfBlockScope._j++}`), _iter_2);
+  return M.yldStar(M.yld(`fo2: ${_iter._forOfBlockScope._i} ${_iter._forOfBlockScope._j++}`), _iter_2);
 }
 
 function _iter_2(_iter) {
@@ -30,11 +30,13 @@ function iter_21(_iter) {
 }
 
 function forOfBlockScope_1(forOfBlockScope) {
+  var i, _i;
+
   forOfBlockScope._a = [1, 2, 3, 4, 5, 6, 7, 8];
   forOfBlockScope._b = [10, 11, 12, 13, 14, 15, 16];
   forOfBlockScope._funs = [];
 
-  for (forOfBlockScope._i of forOfBlockScope._a) {
+  for (i of forOfBlockScope._a) {
     (i => {
       var ctx = {},
           _forOfBlockScope = forOfBlockScope;
@@ -47,10 +49,10 @@ function forOfBlockScope_1(forOfBlockScope) {
         _iter._f = ctx;
         return M.scope(iter_1);
       });
-    })(forOfBlockScope._i);
+    })(i);
   }
 
-  for (forOfBlockScope._i1 of forOfBlockScope._a) {
+  for (forOfBlockScope._i of forOfBlockScope._a) {
     forOfBlockScope._j = 0;
 
     forOfBlockScope._funs.push(function iter() {
@@ -61,7 +63,7 @@ function forOfBlockScope_1(forOfBlockScope) {
     });
   }
 
-  for (forOfBlockScope._i2 of forOfBlockScope._a) {
+  for (_i of forOfBlockScope._a) {
     (i => {
       var j,
           ctx = {},
@@ -84,7 +86,7 @@ function forOfBlockScope_1(forOfBlockScope) {
           });
         })(j);
       }
-    })(forOfBlockScope._i2);
+    })(_i);
   }
 
   forOfBlockScope._loop = M.iterator(forOfBlockScope._a);
@@ -121,10 +123,10 @@ function f_2(_ctx) {
 }
 
 function _f_2(ctx) {
-  var a;
+  var j, a;
 
   if (!(ctx._loop = ctx._loop.step()).done) {
-    ctx._j = ctx._loop.value;
+    j = ctx._loop.value;
 
     a = (j => {
       var _ctx = M.context();
@@ -133,7 +135,7 @@ function _f_2(ctx) {
       _ctx._f = ctx;
       _ctx._j = j;
       return M.scope(f_1);
-    })(ctx._j);
+    })(j);
 
     return M.yldStar(M.yldStar(a), _f_2, f_7);
   } else {
@@ -168,17 +170,17 @@ function f_7(ctx, a) {
 }
 
 function forOfBlockScope_2(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop = forOfBlockScope._loop.step()).done) {
-    forOfBlockScope._i3 = forOfBlockScope._loop.value;
+    i = forOfBlockScope._loop.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(_f_1);
-    })(forOfBlockScope._i3);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_2, forOfBlockScope_55);
   } else {
@@ -213,7 +215,9 @@ function iter_23(_iter) {
 }
 
 function f_21(ctx) {
-  for (ctx._j of ctx._forOfBlockScope._b) {
+  var j;
+
+  for (j of ctx._forOfBlockScope._b) {
     (j => {
       var _ctx = {},
           forOfBlockScope = ctx._forOfBlockScope,
@@ -227,24 +231,24 @@ function f_21(ctx) {
         _iter._f1 = _ctx;
         return M.scope(iter_13);
       });
-    })(ctx._j);
+    })(j);
   }
 
   return M.pure();
 }
 
 function forOfBlockScope_5(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop1 = forOfBlockScope._loop1.step()).done) {
-    forOfBlockScope._i4 = forOfBlockScope._loop1.value;
+    i = forOfBlockScope._loop1.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_11);
-    })(forOfBlockScope._i4);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_5, forOfBlockScope_56);
   } else {
@@ -300,10 +304,10 @@ function f_22(_ctx) {
 }
 
 function _f_3(ctx) {
-  var a;
+  var j, a;
 
   if (!(ctx._loop = ctx._loop.step()).done) {
-    ctx._j = ctx._loop.value;
+    j = ctx._loop.value;
 
     a = (j => {
       var _ctx = M.context();
@@ -312,7 +316,7 @@ function _f_3(ctx) {
       _ctx._f = ctx;
       _ctx._j = j;
       return M.scope(f_12);
-    })(ctx._j);
+    })(j);
 
     return M.yldStar(M.yldStar(a), _f_3, f_8);
   } else {
@@ -347,17 +351,17 @@ function f_8(ctx, a) {
 }
 
 function forOfBlockScope_8(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop2 = forOfBlockScope._loop2.step()).done) {
-    forOfBlockScope._i5 = forOfBlockScope._loop2.value;
+    i = forOfBlockScope._loop2.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_13);
-    })(forOfBlockScope._i5);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_8, forOfBlockScope_57);
   } else {
@@ -380,11 +384,11 @@ function forOfBlockScope_10(forOfBlockScope) {
 }
 
 function forOfBlockScope_11(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop3 = forOfBlockScope._loop3.step()).done) {
-    forOfBlockScope._i6 = forOfBlockScope._loop3.value;
-    a = forOfBlockScope._i6();
+    i = forOfBlockScope._loop3.value;
+    a = i();
     return M.yldStar(M.yldStar(a), forOfBlockScope_11, forOfBlockScope_58);
   } else {
     forOfBlockScope._fc3 = forOfBlockScope_13, forOfBlockScope._fe3 = forOfBlockScope_43;
@@ -409,9 +413,10 @@ function iter_25(_iter) {
 }
 
 function forOfBlockScope_13(forOfBlockScope) {
+  var i;
   forOfBlockScope._funs.length = 0;
 
-  for (forOfBlockScope._i7 of forOfBlockScope._a) {
+  for (i of forOfBlockScope._a) {
     (i => {
       var ctx = {},
           _forOfBlockScope = forOfBlockScope;
@@ -423,7 +428,7 @@ function forOfBlockScope_13(forOfBlockScope) {
         _iter._f = ctx;
         return M.scope(iter_15);
       });
-    })(forOfBlockScope._i7);
+    })(i);
   }
 
   forOfBlockScope._loop4 = M.iterator(forOfBlockScope._a);
@@ -454,17 +459,17 @@ function f_24(ctx) {
 }
 
 function forOfBlockScope_14(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop4 = forOfBlockScope._loop4.step()).done) {
-    forOfBlockScope._i8 = forOfBlockScope._loop4.value;
+    i = forOfBlockScope._loop4.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_14);
-    })(forOfBlockScope._i8);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_14, forOfBlockScope_59);
   } else {
@@ -500,7 +505,8 @@ function iter_27(_iter) {
 }
 
 function f_25(ctx) {
-  ctx._m = ctx._forOfBlockScope._k;
+  var m;
+  m = ctx._forOfBlockScope._k;
   ctx._forOfBlockScope._k++;
 
   if (ctx._forOfBlockScope._k === 3) {
@@ -523,17 +529,17 @@ function f_25(ctx) {
 }
 
 function forOfBlockScope_17(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop5 = forOfBlockScope._loop5.step()).done) {
-    forOfBlockScope._i9 = forOfBlockScope._loop5.value;
+    i = forOfBlockScope._loop5.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_15);
-    })(forOfBlockScope._i9);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_18, forOfBlockScope_60);
   } else {
@@ -574,9 +580,10 @@ function iter_28(_iter) {
 }
 
 function forOfBlockScope_20(forOfBlockScope) {
+  var i;
   forOfBlockScope._k = 0;
 
-  up1: for (forOfBlockScope._i10 of forOfBlockScope._a) {
+  up1: for (i of forOfBlockScope._a) {
     switch ((i => {
       var j,
           ctx = {},
@@ -625,7 +632,7 @@ function forOfBlockScope_20(forOfBlockScope) {
 
         break;
       }
-    })(forOfBlockScope._i10)) {
+    })(i)) {
       case 0:
         {
           continue up1;
@@ -701,10 +708,10 @@ function f_16(_ctx) {
 }
 
 function f_31(ctx) {
-  var a;
+  var j, a;
 
   if (!(ctx._loop = ctx._loop.step()).done) {
-    ctx._j = ctx._loop.value;
+    j = ctx._loop.value;
 
     a = (j => {
       var _ctx = M.context();
@@ -713,7 +720,7 @@ function f_31(ctx) {
       _ctx._f = ctx;
       _ctx._j = j;
       return M.scope(f_16);
-    })(ctx._j);
+    })(j);
 
     return M.yldStar(M.yldStar(a), f_41, f_9);
   } else {
@@ -770,17 +777,17 @@ function f_9(ctx, a) {
 }
 
 function forOfBlockScope_21(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop6 = forOfBlockScope._loop6.step()).done) {
-    forOfBlockScope._i11 = forOfBlockScope._loop6.value;
+    i = forOfBlockScope._loop6.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_17);
-    })(forOfBlockScope._i11);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_22, forOfBlockScope_61);
   } else {
@@ -869,10 +876,10 @@ function f_27(_ctx) {
 }
 
 function f_28(ctx) {
-  var a;
+  var j, a;
 
   if (!(ctx._loop = ctx._loop.step()).done) {
-    ctx._j = ctx._loop.value;
+    j = ctx._loop.value;
 
     a = (j => {
       var _ctx = M.context();
@@ -881,7 +888,7 @@ function f_28(ctx) {
       _ctx._f = ctx;
       _ctx._j = j;
       return M.scope(f_18);
-    })(ctx._j);
+    })(j);
 
     return M.yldStar(M.yldStar(a), f_32, f_81);
   } else {
@@ -938,17 +945,17 @@ function f_81(ctx, a) {
 }
 
 function forOfBlockScope_25(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop7 = forOfBlockScope._loop7.step()).done) {
-    forOfBlockScope._i12 = forOfBlockScope._loop7.value;
+    i = forOfBlockScope._loop7.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_19);
-    })(forOfBlockScope._i12);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_26, forOfBlockScope_62);
   } else {
@@ -981,7 +988,7 @@ function forOfBlockScope_27(forOfBlockScope) {
 
 function forOfBlockScope_28(forOfBlockScope) {
   forOfBlockScope._k1 = 0;
-  return M.yldStar(M.yld(`fo21: ${forOfBlockScope._i1} ${forOfBlockScope._k1}`), forOfBlockScope_29);
+  return M.yldStar(M.yld(`fo21: ${forOfBlockScope._i} ${forOfBlockScope._k1}`), forOfBlockScope_29);
 }
 
 function forOfBlockScope_29(forOfBlockScope) {
@@ -1045,10 +1052,10 @@ function f_29(_ctx) {
 }
 
 function f_33(ctx) {
-  var a;
+  var j, a;
 
   if (!(ctx._loop = ctx._loop.step()).done) {
-    ctx._j = ctx._loop.value;
+    j = ctx._loop.value;
 
     a = (j => {
       var _ctx = M.context();
@@ -1057,7 +1064,7 @@ function f_33(ctx) {
       _ctx._f = ctx;
       _ctx._j = j;
       return M.scope(f_110);
-    })(ctx._j);
+    })(j);
 
     return M.yldStar(M.yldStar(a), f_43, _f_9);
   } else {
@@ -1114,17 +1121,17 @@ function _f_9(ctx, a) {
 }
 
 function forOfBlockScope_30(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop8 = forOfBlockScope._loop8.step()).done) {
-    forOfBlockScope._i13 = forOfBlockScope._loop8.value;
+    i = forOfBlockScope._loop8.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_111);
-    })(forOfBlockScope._i13);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_31, forOfBlockScope_63);
   } else {
@@ -1221,10 +1228,10 @@ function f_211(_ctx) {
 }
 
 function f_34(ctx) {
-  var a;
+  var j, a;
 
   if (!(ctx._loop = ctx._loop.step()).done) {
-    ctx._j = ctx._loop.value;
+    j = ctx._loop.value;
 
     a = (j => {
       var _ctx = M.context();
@@ -1233,7 +1240,7 @@ function f_34(ctx) {
       _ctx._f = ctx;
       _ctx._j = j;
       return M.scope(f_112);
-    })(ctx._j);
+    })(j);
 
     return M.yldStar(M.yldStar(a), f_44, f_91);
   } else {
@@ -1290,17 +1297,17 @@ function f_91(ctx, a) {
 }
 
 function forOfBlockScope_35(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop9 = forOfBlockScope._loop9.step()).done) {
-    forOfBlockScope._i14 = forOfBlockScope._loop9.value;
+    i = forOfBlockScope._loop9.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_113);
-    })(forOfBlockScope._i14);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_36, forOfBlockScope_64);
   } else {
@@ -1394,11 +1401,11 @@ function f_213(_ctx) {
 }
 
 function f_35(_ctx) {
-  var a;
+  var i, a;
 
   if (!(_ctx._loop = _ctx._loop.step()).done) {
-    _ctx._i = _ctx._loop.value;
-    a = _ctx._i();
+    i = _ctx._loop.value;
+    a = i();
     return M.yldStar(M.yldStar(a), f_35, f_84);
   } else {
     _ctx._fc = f_55, _ctx._fe = f_65;
@@ -1432,10 +1439,10 @@ function f_84(_ctx, a) {
 }
 
 function f_36(ctx) {
-  var a;
+  var j, a;
 
   if (!(ctx._loop = ctx._loop.step()).done) {
-    ctx._j = ctx._loop.value;
+    j = ctx._loop.value;
 
     a = (j => {
       var _ctx = M.context();
@@ -1444,7 +1451,7 @@ function f_36(ctx) {
       _ctx._f = ctx;
       _ctx._j = j;
       return M.scope(f_114);
-    })(ctx._j);
+    })(j);
 
     return M.yldStar(M.yldStar(a), f_46, f_92);
   } else {
@@ -1501,17 +1508,17 @@ function f_92(ctx, a) {
 }
 
 function forOfBlockScope_39(forOfBlockScope) {
-  var a;
+  var i, a;
 
   if (!(forOfBlockScope._loop10 = forOfBlockScope._loop10.step()).done) {
-    forOfBlockScope._i15 = forOfBlockScope._loop10.value;
+    i = forOfBlockScope._loop10.value;
 
     a = (i => {
       var ctx = M.context();
       ctx._forOfBlockScope = forOfBlockScope;
       ctx._i = i;
       return M.scope(f_115);
-    })(forOfBlockScope._i15);
+    })(i);
 
     return M.yldStar(M.yldStar(a), forOfBlockScope_40, forOfBlockScope_65);
   } else {

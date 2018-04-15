@@ -244,9 +244,10 @@ function a01_2(a01) {
 }
 
 function a01_3(a01) {
-  a01._e = a01._ex;
-  console.log("exception", a01._e);
-  return M.chain(eff("exception", a01._e), a01_4);
+  var e;
+  e = a01._ex;
+  console.log("exception", e);
+  return M.chain(eff("exception", e), a01_4);
 }
 
 function a01_4(a01) {
@@ -708,14 +709,15 @@ function a09_3(a09) {
   return M.chain(eff(3), a09_4, a09_20);
 }
 
-function a09_4(a09, a) {
-  a09._a = a;
+function a09_4(a09, b) {
+  var a;
+  a = b;
 
-  if (a09._a === 1) {
+  if (a === 1) {
     a09._fc1 = a09_15, a09._fe1 = a09_17;
     return M.jump(void 0, a09_12);
   } else {
-    if (a09._a === 2) {
+    if (a === 2) {
       return M.chain(eff(4), a09_5, a09_20);
     } else {
       return M.jump(void 0, a09_6, a09_21);
@@ -736,14 +738,15 @@ function a09_7(a09) {
   return M.chain(eff(6), a09_8, a09_21);
 }
 
-function a09_8(a09, a) {
-  a09._a1 = a;
+function a09_8(a09, b) {
+  var a;
+  a = b;
 
-  if (a09._a1 === 1) {
+  if (a === 1) {
     a09._fc = a09_12, a09._fe = a09_17, a09._fc1 = a09_15, a09._fe1 = a09_17;
     return M.jump(void 0, a09_9, a09_20);
   } else {
-    if (a09._a1 === 2) {
+    if (a === 2) {
       a09._fc = a09_12, a09._fe = a09_17, a09._fc1 = a09_16, a09._fe1 = a09_17, a09._r = 10;
       return M.jump(void 0, a09_9, a09_20);
     } else {
@@ -821,10 +824,11 @@ function a10_3(a10) {
   return M.chain(eff(6), a10_4, a10_15);
 }
 
-function a10_4(a10, a) {
-  a10._a = a;
+function a10_4(a10, b) {
+  var a;
+  a = b;
 
-  if (a10._a) {
+  if (a) {
     return eff(3);
   } else {
     a10._fc1 = a10_9, a10._fe1 = a10_11;
@@ -1048,26 +1052,27 @@ function a14_1(a14) {
   return M.chain(eff(1), a14_2, a14_14);
 }
 
-function a14_2(a14, a) {
-  a14._a = a;
+function a14_2(a14, b) {
+  var a;
+  a = b;
 
-  if (a14._a === 1) {
+  if (a === 1) {
     a14._fc = a14_6, a14._fe = a14_10, a14._fc1 = a14_8, a14._fe1 = a14_10;
     return M.jump(void 0, a14_3, a14_13);
   } else {
-    if (a14._a === 2) {
+    if (a === 2) {
       a14._fc = a14_1, a14._fe = a14_14;
       return M.jump(void 0, a14_3, a14_13);
     } else {
-      if (a14._a === 3) {
+      if (a === 3) {
         a14._fc = a14_6, a14._fe = a14_10, a14._fc1 = a14_9, a14._fe1 = a14_10, a14._r = 1;
         return M.jump(void 0, a14_3, a14_13);
       } else {
-        if (a14._a === 4) {
+        if (a === 4) {
           a14._fc = a14_6, a14._fe = a14_10, a14._fc1 = a14_9, a14._fe1 = a14_10;
           return M.jump(void 0, a14_3, a14_13);
         } else {
-          if (a14._a === 5) {
+          if (a === 5) {
             return eff("REZ");
           } else {
             a14._fc = a14_5, a14._fe = a14_13;
@@ -1139,10 +1144,12 @@ function a15_2(a15) {
   return M.chain(eff(1), a15_3);
 }
 
-function a15_3(a15, b) {
-  a15._a = b;
+function a15_3(a15, a) {
+  var _a;
 
-  if (a15._a === 1) {
+  _a = a;
+
+  if (_a === 1) {
     if (a) {
       return M.chain(eff(8), a15_4);
     } else {
@@ -1176,10 +1183,12 @@ function a16_3(a16) {
   return M.chain(eff(1), a16_4);
 }
 
-function a16_4(a16, b) {
-  a16._a = b;
+function a16_4(a16, a) {
+  var _a;
 
-  if (a16._a === 1) {
+  _a = a;
+
+  if (_a === 1) {
     if (a) {
       return M.chain(eff(8), a16_5);
     } else {
@@ -1196,10 +1205,11 @@ function a17_1(a17) {
   return M.chain(eff(1), a17_2);
 }
 
-function a17_2(a17, a) {
-  a17._a = a;
+function a17_2(a17, c) {
+  var a;
+  a = c;
 
-  if (a17._a === 1) {
+  if (a === 1) {
     if (b) {
       return M.chain(eff(8), a17_3);
     } else {
@@ -1216,10 +1226,11 @@ function a18_1(a18) {
   return M.chain(eff(1), a18_2, a18_9);
 }
 
-function a18_2(a18, a) {
-  a18._a = a;
+function a18_2(a18, b) {
+  var a;
+  a = b;
 
-  if (a18._a === 1) {
+  if (a === 1) {
     a18._fc = a18_5, a18._fe = a18_7;
     return M.jump(void 0, a18_3);
   } else {
@@ -1500,16 +1511,16 @@ function a25_5(a25, e) {
 }
 
 function a25_6(a25) {
-  return M.raise(a25._err2);
+  return M.raise(a25._err1);
 }
 
 function a25_7(a25, a) {
-  a25._err1 = a;
+  var err;
   return M.jump(void 0, a25_2, a25_8);
 }
 
 function a25_8(a25, a) {
-  a25._fc = a25_6, a25._fe = a25_5, a25._err2 = a;
+  a25._fc = a25_6, a25._fe = a25_5, a25._err1 = a;
   return M.jump(void 0, a25_3);
 }
 
@@ -1537,16 +1548,16 @@ function a26_5(a26, e) {
 }
 
 function a26_6(a26) {
-  return M.raise(a26._err2);
+  return M.raise(a26._err1);
 }
 
 function a26_7(a26, a) {
-  a26._err1 = a;
+  var err;
   return M.jump(void 0, a26_2, a26_8);
 }
 
 function a26_8(a26, a) {
-  a26._fc = a26_6, a26._fe = a26_5, a26._err2 = a;
+  a26._fc = a26_6, a26._fe = a26_5, a26._err1 = a;
   return M.jump(void 0, a26_3);
 }
 
@@ -1578,16 +1589,16 @@ function a27_6(a27, e) {
 }
 
 function a27_7(a27) {
-  return M.raise(a27._err2);
+  return M.raise(a27._err1);
 }
 
 function a27_8(a27, a) {
-  a27._err1 = a;
+  var err;
   return M.jump(void 0, a27_2, a27_9);
 }
 
 function a27_9(a27, a) {
-  a27._fc = a27_7, a27._fe = a27_6, a27._err2 = a;
+  a27._fc = a27_7, a27._fe = a27_6, a27._err1 = a;
   return M.jump(void 0, a27_3);
 }
 
@@ -1816,8 +1827,9 @@ function a31_2(a31) {
 }
 
 function a31_3(a31) {
-  a31._e = a31._ex;
-  console.log(a31._e);
+  var e;
+  e = a31._ex;
+  console.log(e);
   return M.chain(eff(3), a31_4);
 }
 
@@ -1842,13 +1854,15 @@ function a32_2(a32) {
 }
 
 function a32_3(a32) {
-  a32._e = a32._ex;
-  console.log(a32._e);
+  var e;
+  e = a32._ex;
+  console.log(e);
   return M.chain(eff(3), a32_5);
 }
 
 function a32_4(a32) {
-  a32._ee = a32._ex1;
+  var ee;
+  ee = a32._ex1;
   return M.chain(eff(4), a32_5);
 }
 
@@ -1879,8 +1893,9 @@ function a33_2(a33) {
 }
 
 function a33_3(a33) {
-  a33._e = a33._ex;
-  console.log(a33._e);
+  var e;
+  e = a33._ex;
+  console.log(e);
   a33._fc = a33_5, a33._fe = a33_7;
   return M.chain(eff(3), a33_4);
 }
@@ -1930,9 +1945,10 @@ function a34_3(a34) {
 }
 
 function a34_4(a34) {
-  a34._e = a34._ex;
+  var e;
+  e = a34._ex;
   a34._fc1 = a34_6, a34._fe1 = a34_8;
-  return M.chain(eff(a34._e), a34_5);
+  return M.chain(eff(e), a34_5);
 }
 
 function a34_5(a34) {
@@ -1984,8 +2000,9 @@ function a35_3(a35) {
 }
 
 function a35_4(a35) {
-  a35._e = a35._ex;
-  console.log(a35._e);
+  var e;
+  e = a35._ex;
+  console.log(e);
   return M.chain(eff("try>catch"), a35_5);
 }
 

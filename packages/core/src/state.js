@@ -1235,14 +1235,44 @@ export function handleSpecVars(si) {
 
 export function calcFlatCfg(cfg,sa) {
   const root = sa[0].value
-  // if (!root.opts.state && !root.opts.contextState && !root.functionSentSym)
-  //  return
   calcFrameStateVars(sa)
   const ctxSyms = []
-  for(const i of root.scopeDecls)
-    if (i.interpr === Bind.ctxField)
-      ctxSyms.push(i)
-  allUniqFields(ctxSyms,root.opts.closVarPrefix,root.opts.closVarPostfix)
+  if (root.opts.contextState) {
+    const resSym = root.resSym
+    for(const i of cfg) {
+      const sw = i.stateVars
+      if (!sw)
+        continue
+      for(const j of sw.r)
+        (j.refFrames || (j.refFrames = new Set())).add(i)
+      for(const j of sw.w)
+        (j.refFrames || (j.refFrames = new Set())).add(i)
+      for(const j of i.exits) {
+        if (j.frameArgs) {
+          for(const k of j.frameArgs.keys())
+            (k.refFrames || (k.refFrames = new Set())).add(i)
+        }
+      }
+    }
+    for(const i of root.scopeDecls) {
+      if (i.refFrames && !i.closCapt) {
+        if (i.refFrames.size === 1) {
+          const [f] = i.refFrames;
+          if (f !== cfg[0] && i !== f.patSym
+              && i !== f.errSym && i !== resSym) {
+            i.interpr = null
+            i.fieldName = null
+            root.savedDecls.delete(i);
+            (f.savedDecls || (f.savedDecls = new Map())).set(i,{raw:null})
+          }
+        }
+      }
+      if (i.interpr === Bind.ctxField) {
+        ctxSyms.push(i)
+      }
+    }
+    allUniqFields(ctxSyms,root.opts.closVarPrefix,root.opts.closVarPostfix)
+  }
   resolveFrameParams(cfg)
   propagateArgs(cfg)
   resolveFrameArgs(cfg)

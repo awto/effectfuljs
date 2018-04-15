@@ -1,5 +1,5 @@
 function a1() {
-    eff(1) || eff(2);
+  eff(1) || eff(2);
 }
 
 function a2() {
@@ -112,6 +112,7 @@ function* a1() {
   yield ("a1l" && "a1r")
   yield (yield ("a2l") && "a2r")
   yield ("a3l" && (yield "a3r"))
+  yield ("a3l" && !(yield "a3r"))
   yield (yield ("a4l") && (yield "a4r"))
   yield ("o1l" || "o1r")
   yield ((yield "o2l") && "o2r")

@@ -16,8 +16,9 @@ function a_1(a) {
 }
 
 function a_2(a) {
-  a._error1 = a._ex;
-  a._e = a._error1;
+  var error;
+  error = a._ex;
+  a._e = error;
   console.log("2");
   return M.jump(void 0, a_3);
 }
@@ -39,10 +40,11 @@ function _a_1(a) {
 }
 
 function _a_2(a) {
-  a._error1 = a._ex;
-  a._e = a._error1;
+  var error;
+  error = a._ex;
+  a._e = error;
   console.log("2");
-  a._error1 = null;
+  error = null;
   return M.jump(void 0, _a_3);
 }
 

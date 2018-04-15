@@ -10,7 +10,8 @@ function f_1(ctx) {
 }
 
 function f_2(ctx) {
-  ctx._e = ctx._ex;
+  var e;
+  e = ctx._ex;
   return M.chain(eff(3), f_3);
 }
 

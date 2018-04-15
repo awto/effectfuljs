@@ -11,8 +11,9 @@ function a_1(a) {
 }
 
 function a_2(a) {
-  a._e = a._ex;
-  console.log(a._e);
+  var e;
+  e = a._ex;
+  console.log(e);
   a._fc = a_4, a._fe = a_5;
   return M.jump(void 0, a_3);
 }

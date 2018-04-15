@@ -65,10 +65,11 @@ function _f_1(ctx) {
 }
 
 function _f_2(ctx, a) {
-  ctx._result = a;
+  var result;
+  result = a;
 
   try {
-    expect(ctx._result).to.equal(3);
+    expect(result).to.equal(3);
     done();
   } catch (err) {
     done(err);

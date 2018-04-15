@@ -6,8 +6,8 @@ function a() {
 }
 
 function a_1(a) {
-  var b;
-  b = a._i++;
+  var i, b;
+  b = i++;
   return M.chain(eff1(b), a_2);
 }
 

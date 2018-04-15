@@ -22,7 +22,8 @@ function f_3(ctx, a) {
 }
 
 function f_4(ctx) {
-  ctx._e = ctx._ex;
+  var e;
+  e = ctx._ex;
   return M.chain(eff(5), f_5);
 }
 

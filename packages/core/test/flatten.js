@@ -31,8 +31,8 @@ describe('flatten expressions', function() {
             /*VD|S|E*/var c = /*CE|B*/eff(2);
             /*VD|S|E*/var d = /*CE|B*/eff3();
             /*VD|S*/var b = c + d;
-          } else /*BS|..|E*/{
-            /*VD|S|E*/var b = /*CE|..|B*/pure(a);
+          } else /*BS|..*/{
+            /*VD|S*/var b = a;
           }
         }))
     })

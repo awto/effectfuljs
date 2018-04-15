@@ -57,7 +57,8 @@ function aS_1(aS) {
 }
 
 function aS_2(aS, a) {
-  aS._b1 = a;
+  var b1;
+  b1 = a;
   return M.chain(eff("a"), aS_3);
 }
 
@@ -87,8 +88,9 @@ function a1_1(a1) {
   return M.chain(eff(1), a1_2);
 }
 
-function a1_2(a1, a) {
-  a1._a = a;
+function a1_2(a1, b) {
+  var a;
+  a = b;
   return M.chain(eff("a"), a1_3);
 }
 

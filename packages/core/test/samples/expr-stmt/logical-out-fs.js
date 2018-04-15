@@ -291,10 +291,13 @@ function a19() {
   return M.chain(eff(1), _1);
 
   function _1(a) {
+    var b;
+
     if (!a) {
       return M.chain(eff(2), _2);
     } else {
-      return M.jump(a, _4);
+      b = a;
+      return M.jump(void 0, _4, b);
     }
   }
 
@@ -305,7 +308,7 @@ function a19() {
   function _3(c, a) {
     var b;
     b = (a, c);
-    return M.jump(void 0, _4);
+    return M.jump(void 0, _4, b);
   }
 
   function _4(b) {
@@ -319,10 +322,13 @@ function a19_1() {
   return M.chain(eff(1), _1);
 
   function _1(a) {
+    var b;
+
     if (!a) {
       return M.chain(eff(2), _2);
     } else {
-      return M.jump(a, _4);
+      b = a;
+      return M.jump(void 0, _4, b);
     }
   }
 
@@ -333,7 +339,7 @@ function a19_1() {
   function _3(c, a) {
     var b;
     b = (a, c);
-    return M.jump(void 0, _4);
+    return M.jump(void 0, _4, b);
   }
 
   function _4(b) {
@@ -628,62 +634,84 @@ function a1() {
   }
 
   function _19() {
-    var a;
-    a = "a4l";
+    var a, b;
+    a = "a3l";
 
     if (a) {
-      return M.yldStar(M.yld("a4r"), _20);
+      return M.yldStar(M.yld("a3r"), _20);
     } else {
-      return M.jump(a, _20);
+      b = a;
+      return M.jump(void 0, _21, b);
     }
   }
 
   function _20(a) {
-    return M.yldStar(M.yld(a), _21);
+    var b;
+    b = !a;
+    return M.jump(void 0, _21, b);
   }
 
-  function _21(a) {
-    return M.yldStar(M.yld(a), _22);
+  function _21(b) {
+    return M.yldStar(M.yld(b), _22);
   }
 
   function _22() {
     var a;
-    a = "o1l" || "o1r";
-    return M.yldStar(M.yld(a), _23);
+    a = "a4l";
+
+    if (a) {
+      return M.yldStar(M.yld("a4r"), _23);
+    } else {
+      return M.jump(a, _23);
+    }
   }
 
-  function _23() {
-    return M.yldStar(M.yld("o2l"), _24);
+  function _23(a) {
+    return M.yldStar(M.yld(a), _24);
   }
 
   function _24(a) {
-    if (a) {
-      a = "o2r";
-    }
-
     return M.yldStar(M.yld(a), _25);
   }
 
   function _25() {
     var a;
+    a = "o1l" || "o1r";
+    return M.yldStar(M.yld(a), _26);
+  }
+
+  function _26() {
+    return M.yldStar(M.yld("o2l"), _27);
+  }
+
+  function _27(a) {
+    if (a) {
+      a = "o2r";
+    }
+
+    return M.yldStar(M.yld(a), _28);
+  }
+
+  function _28() {
+    var a;
     a = "o3l";
 
     if (a) {
-      return M.yldStar(M.yld("o3r"), _26);
+      return M.yldStar(M.yld("o3r"), _29);
     } else {
-      return M.jump(a, _26);
+      return M.jump(a, _29);
     }
   }
 
-  function _26(a) {
-    return M.yldStar(M.yld(a), _27);
+  function _29(a) {
+    return M.yldStar(M.yld(a), _30);
   }
 
-  function _27() {
-    return M.yldStar(M.yld("o4l"), _28);
+  function _30() {
+    return M.yldStar(M.yld("o4l"), _31);
   }
 
-  function _28(a) {
+  function _31(a) {
     if (a) {
       return M.yld("o4r");
     } else {

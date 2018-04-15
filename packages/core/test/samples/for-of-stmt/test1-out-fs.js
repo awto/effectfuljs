@@ -10,11 +10,11 @@ function a() {
       i = loop.value;
       return M.chain(eff(1), _1, _7, loop);
     } else {
-      return M.jump(void 0, _2, _3, _5);
+      return M.jump(void 0, _2, loop, _3, _5);
     }
   }
 
-  function _2(fc, fe, err) {
+  function _2(loop, fc, fe, err) {
     if (loop.exit) {
       loop.exit();
     }
@@ -37,7 +37,7 @@ function a() {
   }
 
   function _7(a) {
-    return M.jump(void 0, _2, _6, _5, a);
+    return M.jump(void 0, _2, void 0, _6, _5, a);
   }
 }
 
@@ -57,11 +57,11 @@ function b() {
       i = loop.value;
       return M.chain(eff(i), _2, _8, loop);
     } else {
-      return M.jump(void 0, _3, _4, _6);
+      return M.jump(void 0, _3, loop, _4, _6);
     }
   }
 
-  function _3(fc, fe, err) {
+  function _3(loop, fc, fe, err) {
     if (loop.exit) {
       loop.exit();
     }
@@ -84,7 +84,7 @@ function b() {
   }
 
   function _8(a) {
-    return M.jump(void 0, _3, _7, _6, a);
+    return M.jump(void 0, _3, void 0, _7, _6, a);
   }
 }
 
@@ -110,11 +110,11 @@ function c() {
       j = _loop.value;
       return M.chain(eff(i, j), _2, _11, loop, _loop, _fc, _fe, _err);
     } else {
-      return M.jump(void 0, _3, _10, [loop, _1, _10, _fc, _fe, _err]);
+      return M.jump(void 0, _3, _10, [loop, _loop, _1, _10, _fc, _fe, _err]);
     }
   }
 
-  function _3([loop, fc, fe, _fc, _fe, _err]) {
+  function _3([loop, _loop, fc, fe, _fc, _fe, _err]) {
     if (_loop.exit) {
       _loop.exit();
     }
@@ -122,7 +122,7 @@ function c() {
     return M.jump(void 0, fc, fe, loop, _fc, _fe, _err, _err);
   }
 
-  function _4(_loop, _fc, _fe, err, _err) {
+  function _4(loop, _fc, _fe, err, _err) {
     if (loop.exit) {
       loop.exit();
     }
@@ -153,7 +153,7 @@ function c() {
   }
 
   function _11(a) {
-    return M.jump(void 0, _3, _10, [void 0, _4, _7, _9, _7, a]);
+    return M.jump(void 0, _3, _10, [void 0, void 0, _4, _7, _9, _7, a]);
   }
 }
 
@@ -167,11 +167,11 @@ function d() {
       i = loop.value;
       return M.chain(eff(1), _1, _7, loop);
     } else {
-      return M.jump(void 0, _2, _3, _5);
+      return M.jump(void 0, _2, loop, _3, _5);
     }
   }
 
-  function _2(fc, fe, err) {
+  function _2(loop, fc, fe, err) {
     if (loop.exit) {
       loop.exit();
     }
@@ -194,7 +194,7 @@ function d() {
   }
 
   function _7(a) {
-    return M.jump(void 0, _2, _6, _5, a);
+    return M.jump(void 0, _2, void 0, _6, _5, a);
   }
 }
 

@@ -34,8 +34,10 @@ function a_1(a) {
 }
 
 function a_2(a) {
+  var i;
+
   if (!(a._loop = a._loop.step()).done) {
-    a._i = a._loop.value;
+    i = a._loop.value;
     return M.chain(eff(1), a_2, a_8);
   } else {
     a._fc = a_4, a._fe = a_6;
@@ -195,8 +197,10 @@ function d_1(d) {
 }
 
 function d_2(d) {
+  var i;
+
   if (!(d._loop = d._loop.step()).done) {
-    d._i = d._loop.value;
+    i = d._loop.value;
     return M.chain(eff(1), d_2, d_8);
   } else {
     d._fc = d_4, d._fe = d_6;

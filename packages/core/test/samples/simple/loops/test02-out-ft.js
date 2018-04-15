@@ -33,9 +33,9 @@ function a_5(a) {
 }
 
 function a_6(a, b) {
-  var c;
-  a._k = b;
-  c = a._k++;
+  var k, c;
+  k = b;
+  c = k++;
   return M.chain(eff4(c), a_7);
 }
 

@@ -79,9 +79,11 @@ function f_1(ctx) {
 }
 
 function f_2(ctx) {
+  var i;
+
   if (ctx._j < ctx._len) {
-    ctx._i = ctx._ref[ctx._j];
-    return M.chain(eff(ctx._i), f_3);
+    i = ctx._ref[ctx._j];
+    return M.chain(eff(i), f_3);
   }
 }
 
@@ -360,10 +362,10 @@ function cc_1(_cc) {
 function cc_2(_cc) {}
 
 function c1_1(c1) {
-  var a;
+  var i, a;
   c1._result = [];
 
-  for (c1._i = 0; c1._i < 10;) {
+  for (i = 0; i < 10;) {
     (i => {
       var ctx = {},
           _c1 = c1;
@@ -376,7 +378,7 @@ function c1_1(c1) {
         _cc._f = ctx;
         return M.scope(cc_1);
       };
-    })(c1._i);
+    })(i);
   }
 
   a = c1._result;

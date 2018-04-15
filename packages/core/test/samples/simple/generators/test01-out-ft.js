@@ -176,9 +176,11 @@ function a5_1(a5) {
 }
 
 function a5_2(a5) {
+  var i;
+
   if (!(a5._loop = a5._loop.step()).done) {
-    a5._i = a5._loop.value;
-    return M.yldStar(M.yld(a5._i), a5_2, a5_7);
+    i = a5._loop.value;
+    return M.yldStar(M.yld(i), a5_2, a5_7);
   } else {
     a5._fc = a5_4, a5._fe = a5_5;
     return M.jump(void 0, a5_3);

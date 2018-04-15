@@ -74,7 +74,7 @@ export const flatten = Kit.pipe(
         }
       }
     }
-    function bind(i,buf,sym,skip) {
+    function bind(i,buf,sym) {
       if (!sym)
         sym = tempVarSym(root)
       sym.bound = false
@@ -253,8 +253,12 @@ export const flatten = Kit.pipe(
                   yield* i
                 yield* ilab()
                 yield s.enter(Tag.alternate,Block.chain)
-                yield s.enter(Tag.push,Block.letStmt,{sym:rsym,eff:true})
-                yield s.enter(Tag.expression,Block.pure,{bind:true})
+                // two let to same var, they both should have equal `eff`
+                if (right.value.bind) {
+                  yield s.enter(Tag.push,Block.letStmt,{sym:rsym,eff:true})
+                  yield s.enter(Tag.expression,Block.pure,{bind:true})
+                } else
+                  yield s.enter(Tag.push,Block.letStmt,{sym:rsym})
                 yield s.tok(Tag.push,Block.bindPat,{sym:lsym})
               } else {
                 yield s.enter(Tag.consequent,Tag.BlockStatement)

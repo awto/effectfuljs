@@ -171,7 +171,7 @@ function forOfStmtImpl(loose, s) {
     const exitName = esProtocol ? "return" : "exit"
     yield s.enter(Tag.push,Tag.IfStatement,{forOfExit})
     yield s.enter(Tag.test,Tag.MemberExpression)
-    yield s.tok(Tag.object,Tag.Identifier,{sym:loop.iterVar})
+    yield s.tok(Tag.object,Tag.Identifier,{sym:loop.iterVar,lhs:false,rhs:true,decl:false})
     yield s.tok(Tag.property,Tag.Identifier,{node:{name:exitName}})
     yield* s.leave()
     yield s.enter(Tag.consequent,Tag.BlockStatement)
@@ -179,7 +179,7 @@ function forOfStmtImpl(loose, s) {
     yield s.enter(Tag.push,Tag.ExpressionStatement)
     yield s.enter(Tag.expression,Tag.CallExpression,{bind})
     yield s.enter(Tag.callee,Tag.MemberExpression)
-    yield s.tok(Tag.object,Tag.Identifier,{sym:loop.iterVar})
+    yield s.tok(Tag.object,Tag.Identifier,{sym:loop.iterVar,lhs:false,rhs:true,decl:false})
     yield s.tok(Tag.property,Tag.Identifier,{node:{name:exitName}})
     yield* s.leave()
     yield s.enter(Tag.arguments,Tag.Array)
@@ -237,7 +237,7 @@ function forOfStmtImpl(loose, s) {
           if (esProtocol) {
             yield s.enter(Tag.push,Tag.VariableDeclarator)
             yield s.tok(Tag.id,Tag.Identifier,
-                        {sym:iterResultSym,lhs:false,decl:true})
+                        {sym:iterResultSym,lhs:false,rhs:false,decl:true})
             yield* s.leave()
           }
           yield s.enter(Tag.push,Tag.VariableDeclarator)
@@ -547,7 +547,7 @@ export function blockScoping(sa) {
               yield s.enter(Tag.expressions,Tag.Array)
               yield s.enter(Tag.push,Tag.AssignmentExpression,
                             {node:{operator:"="}})
-              yield s.tok(Tag.left,Tag.Identifier,{sym:resSym})
+              yield s.tok(Tag.left,Tag.Identifier,{sym:resSym,lhs:true,rhs:false,decl:false})
               yield* Kit.reposOne(walk(s.sub(),root,subst,capt,ctrl,labs),
                                   Tag.right)
               yield* s.leave()

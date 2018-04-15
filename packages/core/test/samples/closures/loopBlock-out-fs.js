@@ -78,11 +78,11 @@ function a(p) {
         function _3() {}
       })(i), _3, _9, loop);
     } else {
-      return M.jump(void 0, _4, _5, _7);
+      return M.jump(void 0, _4, loop, _5, _7);
     }
   }
 
-  function _4(fc, fe, err) {
+  function _4(loop, fc, fe, err) {
     if (loop.exit) {
       loop.exit();
     }
@@ -108,6 +108,6 @@ function a(p) {
   }
 
   function _9(a) {
-    return M.jump(void 0, _4, _8, _7, a);
+    return M.jump(void 0, _4, void 0, _8, _7, a);
   }
 }

@@ -34,11 +34,11 @@ function a_5(a, b) {
 }
 
 function a_6(a, b) {
-  var c;
-  a._l = b;
-  a._l++;
+  var l, c;
+  l = b;
+  l++;
   c = a._j++;
-  return M.chain(eff5(c, a._k, a._l), a_7);
+  return M.chain(eff5(c, a._k, l), a_7);
 }
 
 function a_7(a) {

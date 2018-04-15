@@ -21,8 +21,10 @@ function f_2(ctx) {
 }
 
 function f_3(ctx) {
+  var d;
+
   if (ctx._j < ctx._len) {
-    ctx._d = ctx._ref[ctx._j];
+    d = ctx._ref[ctx._j];
     return M.chain(eff(ctx._i), f_4);
   } else {
     return M.chain(eff(2), f_5);

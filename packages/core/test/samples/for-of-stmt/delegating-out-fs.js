@@ -11,15 +11,16 @@ function a1() {
     return M.jump(void 0, _7);
   }
 
-  function _2(a1, i) {
+  function _2(a1, _i) {
+    var i;
     a1._loop.$s = a1.unwrap.$t;
     {
-      a1._i = i;
-      return M.yldStar(M.yld(a1._i), _7);
+      i = _i;
+      return M.yldStar(M.yld(i), _7);
     }
   }
 
-  function _3(a1) {
+  function _3(a1, a) {
     return a1._loop.$exit();
   }
 
@@ -57,15 +58,16 @@ function a2() {
     return M.jump(void 0, _8);
   }
 
-  function _2(a2, i) {
+  function _2(a2, _i) {
+    var i;
     a2._loop.$s = a2.unwrap.$t;
     {
-      a2._i = i;
-      return M.yldStar(M.yld(a2._i), _8);
+      i = _i;
+      return M.yldStar(M.yld(i), _8);
     }
   }
 
-  function _3(a2) {
+  function _3(a2, a) {
     return a2._loop.$exit();
   }
 
@@ -115,7 +117,7 @@ function a3() {
     }
   }
 
-  function _3(a3) {
+  function _3(a3, b) {
     var a;
     a = a3._i++;
     return M.yldStar(M.yld(a), _11);
@@ -145,7 +147,7 @@ function a3() {
     }
   }
 
-  function _6(a3) {
+  function _6(a3, a) {
     return a3._loop.$exit();
   }
 
@@ -201,9 +203,9 @@ function a4() {
   }
 
   function _4(a4) {
-    var a;
-    a4._e = a4._ex;
-    a = a4._e.message;
+    var e, a;
+    e = a4._ex;
+    a = e.message;
     return M.yldStar(M.yld(a), _12);
   }
 
@@ -212,9 +214,10 @@ function a4() {
   }
 
   function _6(a4, a) {
-    a4._e1 = a4._ex1;
+    var e;
+    e = a4._ex1;
     a4._fc1 = _8, a4._fe1 = _9;
-    return M.yldStar(M.yld(a4._e1), _9);
+    return M.yldStar(M.yld(e), _9);
   }
 
   function _7(a4) {
@@ -285,9 +288,10 @@ function a5(i) {
   }
 
   function _3(a5, i) {
+    var j;
     a5._loop1.$s = a5.unwrap.$t;
     {
-      a5._j = i;
+      j = i;
       a5.$sc = _4;
       return M.jumpR(void 0, _22);
     }
@@ -502,9 +506,10 @@ function a5_1(i) {
   }
 
   function _3(a5_1, i) {
+    var j;
     a5_1._loop1.$s = a5_1.unwrap.$t;
     {
-      a5_1._j = i;
+      j = i;
       return M.yldStar(M.yld(a5_1._i1), _16);
     }
   }
@@ -666,9 +671,10 @@ function a5_2(i) {
   }
 
   function _3(a5_2, i) {
+    var j;
     a5_2._loop1.$s = a5_2.unwrap.$t;
     {
-      a5_2._j = i;
+      j = i;
       a5_2.$sc = _4;
       return M.jumpR(void 0, _22);
     }
@@ -878,9 +884,10 @@ function a5_2(i) {
   }
 
   function _3(a5_2, i) {
+    var j;
     a5_2._loop1.$s = a5_2.unwrap.$t;
     {
-      a5_2._j = i;
+      j = i;
       a5_2.$sc = _4;
       return M.jumpR(void 0, _22);
     }

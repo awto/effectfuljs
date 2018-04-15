@@ -17,8 +17,9 @@ function a1() {
   }
 
   function _3(a1, a) {
-    a1._k = a;
-    return M.chain(a1._k, _4);
+    var k;
+    k = a;
+    return M.chain(k, _4);
   }
 
   function _4(a1, a) {
@@ -55,9 +56,10 @@ function a2() {
   }
 
   function _3(a2, a) {
-    a2._k = a;
+    var k;
+    k = a;
     a2.$sc = _4;
-    return Promise.resolve(a2._k).then(a2.$resolve, a2.$reject);
+    return Promise.resolve(k).then(a2.$resolve, a2.$reject);
   }
 
   function _4(a2, a) {
@@ -91,7 +93,7 @@ function a3() {
   return 5(a3);
 
   function _1(a3, p) {
-    var s;
+    var k, s;
 
     switch (s = a3.$sc, s) {
       case 5:
@@ -114,9 +116,9 @@ function a3() {
         }
 
       case 7:
-        a3._k = p;
+        k = p;
         a3.$sc = 8;
-        return Promise.resolve(a3._k).then(a3.$resolve, a3.$reject);
+        return Promise.resolve(k).then(a3.$resolve, a3.$reject);
 
       case 8:
         a3.$sc = 0;
@@ -161,7 +163,7 @@ function a4() {
   return a4;
 
   function _1(a4, p) {
-    var s;
+    var k, s;
 
     switch (s = a4.$sc, s) {
       case 5:
@@ -184,9 +186,9 @@ function a4() {
         }
 
       case 7:
-        a4._k = p;
+        k = p;
         a4.$sc = 8;
-        return Promise.resolve(a4._k).then(a4.$resolve, a4.$reject);
+        return Promise.resolve(k).then(a4.$resolve, a4.$reject);
 
       case 8:
         a4.$sc = 0;
@@ -227,7 +229,7 @@ function a5() {
   return a5;
 
   function _1(a5, p) {
-    var s;
+    var i, s;
 
     switch (s = a5.$sc, s) {
       case 4:
@@ -240,9 +242,10 @@ function a5() {
         a5.$ec = 9;
 
         if (!(a5._loop = a5._loop.step()).done) {
-          a5._i = a5._loop.value;
+          var i;
+          i = a5._loop.value;
           a5.$sc = 5;
-          return M.$delegate(M.yld(a5._i));
+          return M.$delegate(M.yld(i));
         } else {
           a5.$sc = 6;
           a5._fc = 7;
@@ -304,7 +307,7 @@ function a6() {
   return a6;
 
   function _1(a6, p) {
-    var a, c, s;
+    var i, a, c, s;
 
     switch (s = a6.$sc, s) {
       case 5:
@@ -323,11 +326,11 @@ function a6() {
         a = c.done;
 
         if (!a) {
-          var a, c;
-          a6._i = a6._loop.value;
+          var i, a, c;
+          i = a6._loop.value;
           a6.$sc = 6;
           return Promise.resolve({
-            value: a6._i,
+            value: i,
             done: false
           });
         } else {
@@ -389,7 +392,7 @@ function a7() {
   return a7;
 
   function _1(a7, p) {
-    var s;
+    var i, _i, s;
 
     switch (s = a7.$sc, s) {
       case 4:
@@ -401,10 +404,12 @@ function a7() {
         a7.$rc = 10;
         a7.$ec = 9;
 
-        if (!(a7._i1 = a7._loop.next()).done) {
-          a7._i = a7._i1.value;
+        if (!(_i = a7._loop.next()).done) {
+          var i, _i;
+
+          i = _i.value;
           a7.$sc = 5;
-          return M.$delegate(M.yld(a7._i));
+          return M.$delegate(M.yld(i));
         } else {
           a7.$sc = 6;
           a7._fc = 7;
@@ -466,7 +471,7 @@ function a8() {
   return a8;
 
   function _1(a8, p) {
-    var a, c, s;
+    var i, a, c, s;
 
     switch (s = a8.$sc, s) {
       case 5:
@@ -485,11 +490,11 @@ function a8() {
         a = c.done;
 
         if (!a) {
-          var a, c;
-          a8._i = a8._loop.value;
+          var i, a, c;
+          i = a8._loop.value;
           a8.$sc = 6;
           return Promise.resolve({
-            value: a8._i,
+            value: i,
             done: false
           });
         } else {
@@ -551,7 +556,7 @@ function a9() {
   return a9;
 
   function _1(a9, p) {
-    var a, c, s;
+    var i, _i, a, c, s;
 
     switch (s = a9.$sc, s) {
       case 5:
@@ -566,15 +571,16 @@ function a9() {
         return Promise.resolve(a9._loop.next()).then(a9.$resolve, a9.$reject);
 
       case 7:
-        c = a9._i1 = p;
+        c = _i = p;
         a = c.done;
 
         if (!a) {
-          var a, c;
-          a9._i = a9._i1.value;
+          var i, _i, a, c;
+
+          i = _i.value;
           a9.$sc = 6;
           return Promise.resolve({
-            value: a9._i,
+            value: i,
             done: false
           });
         } else {

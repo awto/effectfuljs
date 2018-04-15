@@ -69,9 +69,10 @@ function b_1(b) {
 }
 
 function b_2(b) {
-  b._e = b._ex;
+  var e;
+  e = b._ex;
   b._fc = b_4, b._fe = b_6;
-  return M.chain(eff("in `catch`", b._e), b_3);
+  return M.chain(eff("in `catch`", e), b_3);
 }
 
 function b_3(b) {
@@ -224,7 +225,8 @@ function f_1(f) {
 }
 
 function f_2(f) {
-  f._e = f._ex;
+  var e;
+  e = f._ex;
   f._fc = f_4, f._fe = f_6;
   return M.chain(eff("in `catch`"), f_3);
 }
@@ -264,7 +266,8 @@ function g_1(g) {
 }
 
 function g_2(g) {
-  g._e = g._ex;
+  var e;
+  e = g._ex;
   console.log("in `catch`");
   g._fc = g_4, g._fe = g_6;
   return M.jump(void 0, g_3);

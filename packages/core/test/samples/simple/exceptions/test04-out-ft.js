@@ -10,8 +10,9 @@ function a_1(a) {
 }
 
 function a_2(a) {
-  a._e = a._ex;
-  console.log(a._e);
+  var e;
+  e = a._ex;
+  console.log(e);
 }
 
 function a_3(a) {}

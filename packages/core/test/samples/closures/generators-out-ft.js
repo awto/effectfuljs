@@ -63,8 +63,9 @@ function vv_2(_vv) {
 }
 
 function mfs_1(_mfs) {
+  var k;
   _mfs._v = void 0;
-  _mfs._k = void 0;
+  k = void 0;
   return M.pure(function kk(k) {
     var _kk = {};
     _kk._k = k;

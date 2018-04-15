@@ -37,7 +37,7 @@ function b() {
   return M.scope();
 
   function _1(b, p) {
-    var s;
+    var e, s;
 
     switch (s = b.$sc, s) {
       case 4:
@@ -49,9 +49,9 @@ function b() {
         return M.yldStar(M.yld(2));
 
       case 6:
-        b._e = b._ex;
+        e = b._ex;
         b.$sc = 7;
-        return M.yldStar(M.yld(b._e));
+        return M.yldStar(M.yld(e));
 
       case 7:
         return M.pure();
@@ -77,7 +77,7 @@ function c() {
   return M.scope();
 
   function _1(c, p) {
-    var s;
+    var e, s;
 
     switch (s = c.$sc, s) {
       case 4:
@@ -90,10 +90,10 @@ function c() {
         return M.yldStar(M.yld(2));
 
       case 6:
-        c._e = c._ex;
+        e = c._ex;
         c.$sc = 7;
         c._fc = 8, c._fe = 1;
-        return M.yldStar(M.yld(c._e));
+        return M.yldStar(M.yld(e));
 
       case 7:
         c.$sc = c._fc;
@@ -200,7 +200,7 @@ function b2() {
   return M.scope();
 
   function _1(b2, p) {
-    var s;
+    var e, s;
 
     switch (s = b2.$sc, s) {
       case 4:
@@ -212,9 +212,9 @@ function b2() {
         return M.yldStar(M.yld(2));
 
       case 6:
-        b2._e = b2._ex;
+        e = b2._ex;
         b2.$sc = 7;
-        return M.yldStar(M.yld(b2._e));
+        return M.yldStar(M.yld(e));
 
       case 7:
         return M.pure();

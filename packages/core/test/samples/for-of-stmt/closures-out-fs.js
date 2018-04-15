@@ -6,7 +6,7 @@ function forOfBlockScope() {
   return M.scope(_1);
 
   function _1() {
-    var _i, i1, loop7;
+    var _i, i1, loop;
 
     a = [1, 2, 3, 4, 5, 6, 7, 8];
     b = [10, 11, 12, 13, 14, 15, 16];
@@ -64,15 +64,15 @@ function forOfBlockScope() {
       })(i1);
     }
 
-    loop7 = M.iterator(a);
-    return M.jump(void 0, _2, _55, loop7);
+    loop = M.iterator(a);
+    return M.jump(void 0, _2, _55, loop);
   }
 
-  function _2(c, loop7) {
+  function _2(c, loop) {
     var i, a;
 
-    if (!(loop7 = loop7.step()).done) {
-      i = loop7.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         return M.scope(_1);
@@ -114,11 +114,11 @@ function forOfBlockScope() {
 
             return M.yldStar(M.yldStar(a), _2, _7, loop);
           } else {
-            return M.jump(void 0, _3, _4, _5);
+            return M.jump(void 0, _3, loop, _4, _5);
           }
         }
 
-        function _3(fc, fe, err) {
+        function _3(loop, fc, fe, err) {
           if (loop.exit) {
             loop.exit();
           }
@@ -139,35 +139,35 @@ function forOfBlockScope() {
         }
 
         function _7(a) {
-          return M.jump(void 0, _3, _6, _5, a);
+          return M.jump(void 0, _3, void 0, _6, _5, a);
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _2, _55, loop7);
+      return M.yldStar(M.yldStar(a), _2, _55, loop);
     } else {
-      return M.jump(void 0, _3, _4, _43);
+      return M.jump(void 0, _3, loop, _4, _43);
     }
   }
 
-  function _3(fc, fe, err) {
-    if (loop7.exit) {
-      loop7.exit();
+  function _3(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _4() {
-    var loop8;
-    loop8 = M.iterator(a);
-    return M.jump(void 0, _5, _56, loop8);
+    var loop;
+    loop = M.iterator(a);
+    return M.jump(void 0, _5, _56, loop);
   }
 
-  function _5(c, loop8) {
+  function _5(c, loop) {
     var i, a;
 
-    if (!(loop8 = loop8.step()).done) {
-      i = loop8.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         return M.scope(_1);
@@ -199,31 +199,31 @@ function forOfBlockScope() {
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _5, _56, loop8);
+      return M.yldStar(M.yldStar(a), _5, _56, loop);
     } else {
-      return M.jump(void 0, _6, _7, _43);
+      return M.jump(void 0, _6, loop, _7, _43);
     }
   }
 
-  function _6(fc, fe, err) {
-    if (loop8.exit) {
-      loop8.exit();
+  function _6(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _7() {
-    var loop9;
-    loop9 = M.iterator(a);
-    return M.jump(void 0, _8, _57, loop9);
+    var loop;
+    loop = M.iterator(a);
+    return M.jump(void 0, _8, _57, loop);
   }
 
-  function _8(c, loop9) {
+  function _8(c, loop) {
     var i, a;
 
-    if (!(loop9 = loop9.step()).done) {
-      i = loop9.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         return M.scope(_1);
@@ -233,17 +233,16 @@ function forOfBlockScope() {
         }
 
         function _2() {
-          var _loop;
-
-          _loop = M.iterator(b);
-          return M.jump(void 0, _3, _8, _loop);
+          var loop;
+          loop = M.iterator(b);
+          return M.jump(void 0, _3, _8, loop);
         }
 
-        function _3(b, _loop) {
+        function _3(b, loop) {
           var j, a;
 
-          if (!(_loop = _loop.step()).done) {
-            j = _loop.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
               return M.scope(_1);
@@ -268,15 +267,15 @@ function forOfBlockScope() {
               }
             })(j);
 
-            return M.yldStar(M.yldStar(a), _3, _8, _loop);
+            return M.yldStar(M.yldStar(a), _3, _8, loop);
           } else {
-            return M.jump(void 0, _4, _5, _6);
+            return M.jump(void 0, _4, loop, _5, _6);
           }
         }
 
-        function _4(fc, fe, err) {
-          if (_loop.exit) {
-            _loop.exit();
+        function _4(loop, fc, fe, err) {
+          if (loop.exit) {
+            loop.exit();
           }
 
           return M.jump(void 0, fc, fe, err);
@@ -295,52 +294,52 @@ function forOfBlockScope() {
         }
 
         function _8(a) {
-          return M.jump(void 0, _4, _7, _6, a);
+          return M.jump(void 0, _4, void 0, _7, _6, a);
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _8, _57, loop9);
+      return M.yldStar(M.yldStar(a), _8, _57, loop);
     } else {
-      return M.jump(void 0, _9, _10, _43);
+      return M.jump(void 0, _9, loop, _10, _43);
     }
   }
 
-  function _9(fc, fe, err) {
-    if (loop9.exit) {
-      loop9.exit();
+  function _9(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _10() {
-    var loop10;
-    loop10 = M.iterator(funs);
-    return M.jump(void 0, _11, _58, loop10);
+    var loop;
+    loop = M.iterator(funs);
+    return M.jump(void 0, _11, _58, loop);
   }
 
-  function _11(b, loop10) {
+  function _11(b, loop) {
     var a;
 
-    if (!(loop10 = loop10.step()).done) {
-      _i = loop10.value;
+    if (!(loop = loop.step()).done) {
+      _i = loop.value;
       a = _i();
-      return M.yldStar(M.yldStar(a), _11, _58, loop10);
+      return M.yldStar(M.yldStar(a), _11, _58, loop);
     } else {
-      return M.jump(void 0, _12, _13, _43);
+      return M.jump(void 0, _12, loop, _13, _43);
     }
   }
 
-  function _12(fc, fe, err) {
-    if (loop10.exit) {
-      loop10.exit();
+  function _12(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _13() {
-    var i, loop11;
+    var i, loop;
     funs.length = 0;
 
     for (i of a) {
@@ -359,15 +358,15 @@ function forOfBlockScope() {
       })(i);
     }
 
-    loop11 = M.iterator(a);
-    return M.jump(void 0, _14, _59, loop11);
+    loop = M.iterator(a);
+    return M.jump(void 0, _14, _59, loop);
   }
 
-  function _14(b, loop11) {
+  function _14(b, loop) {
     var i, a;
 
-    if (!(loop11 = loop11.step()).done) {
-      i = loop11.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         return M.scope(_1);
@@ -392,32 +391,32 @@ function forOfBlockScope() {
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _14, _59, loop11);
+      return M.yldStar(M.yldStar(a), _14, _59, loop);
     } else {
-      return M.jump(void 0, _15, _16, _43);
+      return M.jump(void 0, _15, loop, _16, _43);
     }
   }
 
-  function _15(fc, fe, err) {
-    if (loop11.exit) {
-      loop11.exit();
+  function _15(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _16() {
-    var loop12;
+    var loop;
     k = 0;
-    loop12 = M.iterator(a);
-    return M.jump(void 0, _17, _60, loop12);
+    loop = M.iterator(a);
+    return M.jump(void 0, _17, _60, loop);
   }
 
-  function _17(loop12) {
+  function _17(loop) {
     var i, a;
 
-    if (!(loop12 = loop12.step()).done) {
-      i = loop12.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         var m;
@@ -455,35 +454,35 @@ function forOfBlockScope() {
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _18, _60, loop12);
+      return M.yldStar(M.yldStar(a), _18, _60, loop);
     } else {
-      return M.jump(void 0, _19, _20, _43);
+      return M.jump(void 0, _19, loop, _20, _43);
     }
   }
 
-  function _18(a, loop12) {
+  function _18(a, loop) {
     switch (a) {
       case 0:
-        return M.jump(void 0, _17, _60, loop12);
+        return M.jump(void 0, _17, _60, loop);
 
       case 1:
-        return M.jump(void 0, _19, _20, _43);
+        return M.jump(void 0, _19, loop, _20, _43);
 
       default:
-        return M.jump(void 0, _17, _60, loop12);
+        return M.jump(void 0, _17, _60, loop);
     }
   }
 
-  function _19(fc, fe, err) {
-    if (loop12.exit) {
-      loop12.exit();
+  function _19(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _20() {
-    var i, loop13;
+    var i, loop;
     k = 0;
 
     up1: for (i of a) {
@@ -549,15 +548,15 @@ function forOfBlockScope() {
     }
 
     k = 0;
-    loop13 = M.iterator(a);
-    return M.jump(void 0, _21, _61, loop13);
+    loop = M.iterator(a);
+    return M.jump(void 0, _21, _61, loop);
   }
 
-  function _21(loop13) {
+  function _21(loop) {
     var i, a;
 
-    if (!(loop13 = loop13.step()).done) {
-      i = loop13.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         var m;
@@ -570,16 +569,16 @@ function forOfBlockScope() {
         }
 
         function _2() {
-          var loop1;
-          loop1 = M.iterator(b);
-          return M.jump(void 0, _3, _9, loop1);
+          var loop;
+          loop = M.iterator(b);
+          return M.jump(void 0, _3, _9, loop);
         }
 
-        function _3(loop1) {
+        function _3(loop) {
           var j, a;
 
-          if (!(loop1 = loop1.step()).done) {
-            j = loop1.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
               var n;
@@ -622,34 +621,34 @@ function forOfBlockScope() {
               }
             })(j);
 
-            return M.yldStar(M.yldStar(a), _4, _9, loop1);
+            return M.yldStar(M.yldStar(a), _4, _9, loop);
           } else {
-            return M.jump(void 0, _5, _6, _7);
+            return M.jump(void 0, _5, loop, _6, _7);
           }
         }
 
-        function _4(a, loop1) {
+        function _4(a, loop) {
           switch (a) {
             case 0:
-              return M.jump(0, _5, _6, _7);
+              return M.jump(0, _5, loop, _6, _7);
 
             case 1:
-              return M.jump(1, _5, _6, _7);
+              return M.jump(1, _5, loop, _6, _7);
 
             case 2:
-              return M.jump(void 0, _3, _9, loop1);
+              return M.jump(void 0, _3, _9, loop);
 
             case 3:
-              return M.jump(void 0, _5, _6, _7);
+              return M.jump(void 0, _5, loop, _6, _7);
 
             default:
-              return M.jump(void 0, _3, _9, loop1);
+              return M.jump(void 0, _3, _9, loop);
           }
         }
 
-        function _5(fc, fe, r, err) {
-          if (loop1.exit) {
-            loop1.exit();
+        function _5(loop, fc, fe, r, err) {
+          if (loop.exit) {
+            loop.exit();
           }
 
           return M.jump(void 0, fc, fe, r, err);
@@ -668,67 +667,67 @@ function forOfBlockScope() {
         }
 
         function _9(a) {
-          return M.jump(void 0, _5, _8, _7, void 0, a);
+          return M.jump(void 0, _5, void 0, _8, _7, void 0, a);
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _22, _61, loop13);
+      return M.yldStar(M.yldStar(a), _22, _61, loop);
     } else {
-      return M.jump(void 0, _23, _24, _43);
+      return M.jump(void 0, _23, loop, _24, _43);
     }
   }
 
-  function _22(a, loop13) {
+  function _22(a, loop) {
     switch (a) {
       case 0:
-        return M.jump(void 0, _21, _61, loop13);
+        return M.jump(void 0, _21, _61, loop);
 
       case 1:
-        return M.jump(void 0, _23, _24, _43);
+        return M.jump(void 0, _23, loop, _24, _43);
 
       default:
-        return M.jump(void 0, _21, _61, loop13);
+        return M.jump(void 0, _21, _61, loop);
     }
   }
 
-  function _23(fc, fe, err) {
-    if (loop13.exit) {
-      loop13.exit();
+  function _23(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _24() {
-    var loop14;
+    var loop;
     k = 0;
-    loop14 = M.iterator(a);
-    return M.jump(void 0, _25, _62, loop14);
+    loop = M.iterator(a);
+    return M.jump(void 0, _25, _62, loop);
   }
 
-  function _25(loop14) {
+  function _25(loop) {
     var i, a;
 
-    if (!(loop14 = loop14.step()).done) {
-      i = loop14.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         var m;
         return M.scope(_1);
 
         function _1() {
-          var loop2;
+          var loop;
           m = 0;
           k++;
-          loop2 = M.iterator(b);
-          return M.jump(void 0, _2, _8, loop2);
+          loop = M.iterator(b);
+          return M.jump(void 0, _2, _8, loop);
         }
 
-        function _2(loop2) {
+        function _2(loop) {
           var j, a;
 
-          if (!(loop2 = loop2.step()).done) {
-            j = loop2.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
               var n;
@@ -775,34 +774,34 @@ function forOfBlockScope() {
               }
             })(j);
 
-            return M.yldStar(M.yldStar(a), _3, _8, loop2);
+            return M.yldStar(M.yldStar(a), _3, _8, loop);
           } else {
-            return M.jump(void 0, _4, _5, _6);
+            return M.jump(void 0, _4, loop, _5, _6);
           }
         }
 
-        function _3(a, loop2) {
+        function _3(a, loop) {
           switch (a) {
             case 0:
-              return M.jump(0, _4, _5, _6);
+              return M.jump(0, _4, loop, _5, _6);
 
             case 1:
-              return M.jump(1, _4, _5, _6);
+              return M.jump(1, _4, loop, _5, _6);
 
             case 2:
-              return M.jump(void 0, _2, _8, loop2);
+              return M.jump(void 0, _2, _8, loop);
 
             case 3:
-              return M.jump(void 0, _4, _5, _6);
+              return M.jump(void 0, _4, loop, _5, _6);
 
             default:
-              return M.jump(void 0, _2, _8, loop2);
+              return M.jump(void 0, _2, _8, loop);
           }
         }
 
-        function _4(fc, fe, r, err) {
-          if (loop2.exit) {
-            loop2.exit();
+        function _4(loop, fc, fe, r, err) {
+          if (loop.exit) {
+            loop.exit();
           }
 
           return M.jump(void 0, fc, fe, r, err);
@@ -821,32 +820,32 @@ function forOfBlockScope() {
         }
 
         function _8(a) {
-          return M.jump(void 0, _4, _7, _6, void 0, a);
+          return M.jump(void 0, _4, void 0, _7, _6, void 0, a);
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _26, _62, loop14);
+      return M.yldStar(M.yldStar(a), _26, _62, loop);
     } else {
-      return M.jump(void 0, _27, _28, _43);
+      return M.jump(void 0, _27, loop, _28, _43);
     }
   }
 
-  function _26(a, loop14) {
+  function _26(a, loop) {
     switch (a) {
       case 0:
-        return M.jump(void 0, _25, _62, loop14);
+        return M.jump(void 0, _25, _62, loop);
 
       case 1:
-        return M.jump(void 0, _27, _28, _43);
+        return M.jump(void 0, _27, loop, _28, _43);
 
       default:
-        return M.jump(void 0, _25, _62, loop14);
+        return M.jump(void 0, _25, _62, loop);
     }
   }
 
-  function _27(fc, fe, err) {
-    if (loop14.exit) {
-      loop14.exit();
+  function _27(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
@@ -858,16 +857,16 @@ function forOfBlockScope() {
   }
 
   function _29() {
-    var loop15;
-    loop15 = M.iterator(a);
-    return M.jump(void 0, _30, _63, loop15);
+    var loop;
+    loop = M.iterator(a);
+    return M.jump(void 0, _30, _63, loop);
   }
 
-  function _30(loop15) {
+  function _30(loop) {
     var i, a;
 
-    if (!(loop15 = loop15.step()).done) {
-      i = loop15.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         var m;
@@ -880,16 +879,16 @@ function forOfBlockScope() {
         }
 
         function _2() {
-          var loop3;
-          loop3 = M.iterator(b);
-          return M.jump(void 0, _3, _9, loop3);
+          var loop;
+          loop = M.iterator(b);
+          return M.jump(void 0, _3, _9, loop);
         }
 
-        function _3(loop3) {
+        function _3(loop) {
           var j, a;
 
-          if (!(loop3 = loop3.step()).done) {
-            j = loop3.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
               var n;
@@ -936,34 +935,34 @@ function forOfBlockScope() {
               }
             })(j);
 
-            return M.yldStar(M.yldStar(a), _4, _9, loop3);
+            return M.yldStar(M.yldStar(a), _4, _9, loop);
           } else {
-            return M.jump(void 0, _5, _6, _7);
+            return M.jump(void 0, _5, loop, _6, _7);
           }
         }
 
-        function _4(a, loop3) {
+        function _4(a, loop) {
           switch (a) {
             case 1:
-              return M.jump(0, _5, _6, _7);
+              return M.jump(0, _5, loop, _6, _7);
 
             case 0:
-              return M.jump(1, _5, _6, _7);
+              return M.jump(1, _5, loop, _6, _7);
 
             case 2:
-              return M.jump(void 0, _3, _9, loop3);
+              return M.jump(void 0, _3, _9, loop);
 
             case 3:
-              return M.jump(void 0, _5, _6, _7);
+              return M.jump(void 0, _5, loop, _6, _7);
 
             default:
-              return M.jump(void 0, _3, _9, loop3);
+              return M.jump(void 0, _3, _9, loop);
           }
         }
 
-        function _5(fc, fe, r, err) {
-          if (loop3.exit) {
-            loop3.exit();
+        function _5(loop, fc, fe, r, err) {
+          if (loop.exit) {
+            loop.exit();
           }
 
           return M.jump(void 0, fc, fe, r, err);
@@ -982,32 +981,32 @@ function forOfBlockScope() {
         }
 
         function _9(a) {
-          return M.jump(void 0, _5, _8, _7, void 0, a);
+          return M.jump(void 0, _5, void 0, _8, _7, void 0, a);
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _31, _63, loop15);
+      return M.yldStar(M.yldStar(a), _31, _63, loop);
     } else {
-      return M.jump(void 0, _32, _33, _43);
+      return M.jump(void 0, _32, loop, _33, _43);
     }
   }
 
-  function _31(a, loop15) {
+  function _31(a, loop) {
     switch (a) {
       case 0:
-        return M.jump(void 0, _32, _33, _43);
+        return M.jump(void 0, _32, loop, _33, _43);
 
       case 1:
-        return M.jump(void 0, _30, _63, loop15);
+        return M.jump(void 0, _30, _63, loop);
 
       default:
-        return M.jump(void 0, _30, _63, loop15);
+        return M.jump(void 0, _30, _63, loop);
     }
   }
 
-  function _32(fc, fe, err) {
-    if (loop15.exit) {
-      loop15.exit();
+  function _32(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
@@ -1019,16 +1018,16 @@ function forOfBlockScope() {
   }
 
   function _34() {
-    var loop16;
-    loop16 = M.iterator(a);
-    return M.jump(void 0, _35, _64, loop16);
+    var loop;
+    loop = M.iterator(a);
+    return M.jump(void 0, _35, _64, loop);
   }
 
-  function _35(loop16) {
+  function _35(loop) {
     var i, a;
 
-    if (!(loop16 = loop16.step()).done) {
-      i = loop16.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         var m;
@@ -1041,16 +1040,16 @@ function forOfBlockScope() {
         }
 
         function _2() {
-          var loop4;
-          loop4 = M.iterator(b);
-          return M.jump(void 0, _3, _9, loop4);
+          var loop;
+          loop = M.iterator(b);
+          return M.jump(void 0, _3, _9, loop);
         }
 
-        function _3(loop4) {
+        function _3(loop) {
           var j, a;
 
-          if (!(loop4 = loop4.step()).done) {
-            j = loop4.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
               var n;
@@ -1097,34 +1096,34 @@ function forOfBlockScope() {
               }
             })(j);
 
-            return M.yldStar(M.yldStar(a), _4, _9, loop4);
+            return M.yldStar(M.yldStar(a), _4, _9, loop);
           } else {
-            return M.jump(void 0, _5, _6, _7);
+            return M.jump(void 0, _5, loop, _6, _7);
           }
         }
 
-        function _4(a, loop4) {
+        function _4(a, loop) {
           switch (a) {
             case 1:
-              return M.jump(0, _5, _6, _7);
+              return M.jump(0, _5, loop, _6, _7);
 
             case 0:
-              return M.jump(1, _5, _6, _7);
+              return M.jump(1, _5, loop, _6, _7);
 
             case 2:
-              return M.jump(void 0, _3, _9, loop4);
+              return M.jump(void 0, _3, _9, loop);
 
             case 3:
-              return M.jump(void 0, _5, _6, _7);
+              return M.jump(void 0, _5, loop, _6, _7);
 
             default:
-              return M.jump(void 0, _3, _9, loop4);
+              return M.jump(void 0, _3, _9, loop);
           }
         }
 
-        function _5(fc, fe, r, err) {
-          if (loop4.exit) {
-            loop4.exit();
+        function _5(loop, fc, fe, r, err) {
+          if (loop.exit) {
+            loop.exit();
           }
 
           return M.jump(void 0, fc, fe, r, err);
@@ -1143,49 +1142,49 @@ function forOfBlockScope() {
         }
 
         function _9(a) {
-          return M.jump(void 0, _5, _8, _7, void 0, a);
+          return M.jump(void 0, _5, void 0, _8, _7, void 0, a);
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _36, _64, loop16);
+      return M.yldStar(M.yldStar(a), _36, _64, loop);
     } else {
-      return M.jump(void 0, _37, _38, _43);
+      return M.jump(void 0, _37, loop, _38, _43);
     }
   }
 
-  function _36(a, loop16) {
+  function _36(a, loop) {
     switch (a) {
       case 0:
-        return M.jump(void 0, _37, _38, _43);
+        return M.jump(void 0, _37, loop, _38, _43);
 
       case 1:
-        return M.jump(void 0, _35, _64, loop16);
+        return M.jump(void 0, _35, _64, loop);
 
       default:
-        return M.jump(void 0, _35, _64, loop16);
+        return M.jump(void 0, _35, _64, loop);
     }
   }
 
-  function _37(fc, fe, err) {
-    if (loop16.exit) {
-      loop16.exit();
+  function _37(loop, fc, fe, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, err);
   }
 
   function _38() {
-    var loop17;
+    var loop;
     k2 = 0;
-    loop17 = M.iterator(a);
-    return M.jump(void 0, _39, _65, loop17);
+    loop = M.iterator(a);
+    return M.jump(void 0, _39, _65, loop);
   }
 
-  function _39(loop17) {
+  function _39(loop) {
     var i, a;
 
-    if (!(loop17 = loop17.step()).done) {
-      i = loop17.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
         var m;
@@ -1198,16 +1197,16 @@ function forOfBlockScope() {
         }
 
         function _2() {
-          var loop6;
-          loop6 = M.iterator(b);
-          return M.jump(void 0, _3, _9, loop6);
+          var loop;
+          loop = M.iterator(b);
+          return M.jump(void 0, _3, _9, loop);
         }
 
-        function _3(loop6) {
+        function _3(loop) {
           var j, a;
 
-          if (!(loop6 = loop6.step()).done) {
-            j = loop6.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
               var n, _i;
@@ -1221,14 +1220,14 @@ function forOfBlockScope() {
               }
 
               function _2() {
-                var loop5, r;
+                var loop, r;
 
                 if (k2 === 3) {
                   return M.pure(0);
                 } else {
                   if (k2 === 5) {
-                    loop5 = M.iterator(funs);
-                    return M.jump(void 0, _3, _8, loop5);
+                    loop = M.iterator(funs);
+                    return M.jump(void 0, _3, _8, loop);
                   } else {
                     if (n === 3) {
                       return M.pure(2);
@@ -1255,27 +1254,28 @@ function forOfBlockScope() {
                 }
               }
 
-              function _3(b, loop5) {
+              function _3(b, loop) {
                 var a;
 
-                if (!(loop5 = loop5.step()).done) {
-                  _i = loop5.value;
+                if (!(loop = loop.step()).done) {
+                  _i = loop.value;
                   a = _i();
-                  return M.yldStar(M.yldStar(a), _3, _8, loop5);
+                  return M.yldStar(M.yldStar(a), _3, _8, loop);
                 } else {
-                  return M.jump(void 0, _4, _5, _6);
+                  return M.jump(void 0, _4, loop, _5, _6);
                 }
               }
 
-              function _4(fc, fe, err) {
-                if (loop5.exit) {
-                  loop5.exit();
+              function _4(loop, fc, fe, err) {
+                if (loop.exit) {
+                  loop.exit();
                 }
 
                 return M.jump(void 0, fc, fe, err);
               }
 
               function _5() {
+                var br;
                 return M.pure((br = `r: ${i} ${j} ${k2} ${m} ${n}`, 1));
               }
 
@@ -1288,38 +1288,38 @@ function forOfBlockScope() {
               }
 
               function _8(a) {
-                return M.jump(void 0, _4, _7, _6, a);
+                return M.jump(void 0, _4, void 0, _7, _6, a);
               }
             })(j);
 
-            return M.yldStar(M.yldStar(a), _4, _9, loop6);
+            return M.yldStar(M.yldStar(a), _4, _9, loop);
           } else {
-            return M.jump(void 0, _5, _6, _7);
+            return M.jump(void 0, _5, loop, _6, _7);
           }
         }
 
-        function _4(a, loop6) {
+        function _4(a, loop) {
           switch (a) {
             case 1:
-              return M.jump(0, _5, _6, _7);
+              return M.jump(0, _5, loop, _6, _7);
 
             case 0:
-              return M.jump(1, _5, _6, _7);
+              return M.jump(1, _5, loop, _6, _7);
 
             case 2:
-              return M.jump(void 0, _3, _9, loop6);
+              return M.jump(void 0, _3, _9, loop);
 
             case 3:
-              return M.jump(void 0, _5, _6, _7);
+              return M.jump(void 0, _5, loop, _6, _7);
 
             default:
-              return M.jump(void 0, _3, _9, loop6);
+              return M.jump(void 0, _3, _9, loop);
           }
         }
 
-        function _5(fc, fe, r, err) {
-          if (loop6.exit) {
-            loop6.exit();
+        function _5(loop, fc, fe, r, err) {
+          if (loop.exit) {
+            loop.exit();
           }
 
           return M.jump(void 0, fc, fe, r, err);
@@ -1338,34 +1338,34 @@ function forOfBlockScope() {
         }
 
         function _9(a) {
-          return M.jump(void 0, _5, _8, _7, void 0, a);
+          return M.jump(void 0, _5, void 0, _8, _7, void 0, a);
         }
       })(i);
 
-      return M.yldStar(M.yldStar(a), _40, _65, loop17);
+      return M.yldStar(M.yldStar(a), _40, _65, loop);
     } else {
-      return M.jump(void 0, _41, _42, _43);
+      return M.jump(void 0, _41, loop, _42, _43);
     }
   }
 
-  function _40(a, loop17) {
+  function _40(a, loop) {
     var br;
 
     switch (a) {
       case 0:
-        return M.jump(br, _41, _42, _43);
+        return M.jump(br, _41, loop, _42, _43);
 
       case 1:
-        return M.jump(void 0, _39, _65, loop17);
+        return M.jump(void 0, _39, _65, loop);
 
       default:
-        return M.jump(void 0, _39, _65, loop17);
+        return M.jump(void 0, _39, _65, loop);
     }
   }
 
-  function _41(fc, fe, r, err) {
-    if (loop17.exit) {
-      loop17.exit();
+  function _41(loop, fc, fe, r, err) {
+    if (loop.exit) {
+      loop.exit();
     }
 
     return M.jump(void 0, fc, fe, r, err);
@@ -1424,46 +1424,46 @@ function forOfBlockScope() {
   }
 
   function _55(a) {
-    return M.jump(void 0, _3, _44, _43, a);
+    return M.jump(void 0, _3, void 0, _44, _43, a);
   }
 
   function _56(a) {
-    return M.jump(void 0, _6, _45, _43, a);
+    return M.jump(void 0, _6, void 0, _45, _43, a);
   }
 
   function _57(a) {
-    return M.jump(void 0, _9, _46, _43, a);
+    return M.jump(void 0, _9, void 0, _46, _43, a);
   }
 
   function _58(a) {
-    return M.jump(void 0, _12, _47, _43, a);
+    return M.jump(void 0, _12, void 0, _47, _43, a);
   }
 
   function _59(a) {
-    return M.jump(void 0, _15, _48, _43, a);
+    return M.jump(void 0, _15, void 0, _48, _43, a);
   }
 
   function _60(a) {
-    return M.jump(void 0, _19, _49, _43, a);
+    return M.jump(void 0, _19, void 0, _49, _43, a);
   }
 
   function _61(a) {
-    return M.jump(void 0, _23, _50, _43, a);
+    return M.jump(void 0, _23, void 0, _50, _43, a);
   }
 
   function _62(a) {
-    return M.jump(void 0, _27, _51, _43, a);
+    return M.jump(void 0, _27, void 0, _51, _43, a);
   }
 
   function _63(a) {
-    return M.jump(void 0, _32, _52, _43, a);
+    return M.jump(void 0, _32, void 0, _52, _43, a);
   }
 
   function _64(a) {
-    return M.jump(void 0, _37, _53, _43, a);
+    return M.jump(void 0, _37, void 0, _53, _43, a);
   }
 
   function _65(a) {
-    return M.jump(void 0, _41, _54, _43, void 0, a);
+    return M.jump(void 0, _41, void 0, _54, _43, void 0, a);
   }
 }

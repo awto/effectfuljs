@@ -28,9 +28,9 @@ function a_4(a) {
 }
 
 function a_5(a, b) {
-  var c;
-  a._j = b;
-  c = a._j++;
+  var j, c;
+  j = b;
+  c = j++;
   return M.chain(eff4(c), a_6);
 }
 

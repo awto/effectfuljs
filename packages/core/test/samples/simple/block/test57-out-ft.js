@@ -6,7 +6,8 @@ function a() {
 }
 
 function a_1(a) {
-  a._i = 0;
+  var i;
+  i = 0;
   return M.chain(eff2(2), a_2);
 }
 

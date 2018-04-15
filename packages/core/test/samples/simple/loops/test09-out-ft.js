@@ -10,7 +10,8 @@ function a_1(a1) {
 }
 
 function a_2(a1, a) {
-  a1._i = a;
+  var i;
+  i = a;
   return M.jump(void 0, a_3);
 }
 

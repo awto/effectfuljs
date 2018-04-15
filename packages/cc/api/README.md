@@ -172,7 +172,8 @@ ___
 
 
 
-# Monadic framework for delimited continuations
+Monadic framework for delimited continuations
+=============================================
 
 import * as CC from "@effectful/cc"
 

@@ -260,7 +260,7 @@ export function promises(si) {
   function* _promises() {
     for(const i of s) {
       if (i.enter && i.type === Block.letStmt
-          && i.value.goto
+          && i.value.gotoSym
           && i.value.bindName === "chain") {
         if (i.value.threadArgs && i.value.threadArgs.length)
           throw s.error("`inlineChainOp: promise` with threaded arguments")

@@ -57,8 +57,9 @@ function a() {
   }
 
   function _3(a) {
-    a._e = a._ex;
-    return a.yld(a._e, _4);
+    var e;
+    e = a._ex;
+    return a.yld(e, _4);
   }
 
   function _4(a) {
@@ -229,9 +230,11 @@ function a5() {
   }
 
   function _2(a5) {
+    var i;
+
     if (!(a5._loop = a5._loop.step()).done) {
-      a5._i = a5._loop.value;
-      return a5.yld(a5._i, _2, _7);
+      i = a5._loop.value;
+      return a5.yld(i, _2, _7);
     } else {
       a5._fc = _4, a5._fe = _5;
       return a5.jump(void 0, _3);
@@ -353,9 +356,11 @@ function a2() {
   }
 
   function _2(a2) {
+    var i;
+
     if (!(a2._loop = a2._loop.step()).done) {
-      a2._i = a2._loop.value;
-      return a2.yld(a2._i, _2, _8);
+      i = a2._loop.value;
+      return a2.yld(i, _2, _8);
     } else {
       a2._fc = _4, a2._fe = _6;
       return a2.jump(void 0, _3);
@@ -402,9 +407,11 @@ function a3() {
   }
 
   function _2(a3) {
+    var i;
+
     if (!(a3._loop = a3._loop.step()).done) {
-      a3._i = a3._loop.value;
-      return a3.yld(a3._i, _2, _7);
+      i = a3._loop.value;
+      return a3.yld(i, _2, _7);
     } else {
       a3._fc = _4, a3._fe = _5;
       return a3.jump(void 0, _3);
@@ -495,7 +502,7 @@ function a7() {
     if (a) {
       return a7.yld("e", _7);
     } else {
-      return a7.yldStar(a, _7);
+      return a7.jump(a, _7);
     }
   }
 
@@ -539,7 +546,7 @@ function a7_1() {
     if (a) {
       return a7_1.yld("e", _7);
     } else {
-      return a7_1.yldStar(a, _7);
+      return a7_1.jump(a, _7);
     }
   }
 
@@ -592,7 +599,7 @@ function a7_2() {
     if (a) {
       return a7_2.yld("e", _7);
     } else {
-      return a7_2.yldStar(a, _7);
+      return a7_2.jump(a, _7);
     }
   }
 
@@ -721,7 +728,7 @@ function a7_6() {
       return a7_6.yld("A", _3);
     } else {
       b = 1;
-      return a7_6.yldStar(b, _5);
+      return a7_6.jump(b, _5);
     }
   }
 
@@ -895,7 +902,8 @@ function cfb1() {
   }
 
   function _4(cfb1) {
-    cfb1._e = cfb1._ex;
+    var e;
+    e = cfb1._ex;
     cfb1._fc = _6, cfb1._fe = _7, cfb1._r = cfb1._i++;
     return cfb1.jump(void 0, _5);
   }
@@ -946,7 +954,8 @@ function cfb1() {
   }
 
   function _4(cfb1) {
-    cfb1._e = cfb1._ex;
+    var e;
+    e = cfb1._ex;
     return cfb1.pure(cfb1._i++);
   }
 
@@ -988,8 +997,9 @@ function cfb2() {
   }
 
   function _6(cfb2) {
-    cfb2._e = cfb2._ex;
-    return cfb2.yld(cfb2._e, _7);
+    var e;
+    e = cfb2._ex;
+    return cfb2.yld(e, _7);
   }
 
   function _7(cfb2) {
@@ -1088,7 +1098,8 @@ function cfb4() {
   }
 
   function _2(cfb4) {
-    cfb4._e = cfb4._ex;
+    var e;
+    e = cfb4._ex;
     return cfb4.pure(10);
   }
 
@@ -1122,8 +1133,9 @@ function cfb2() {
   }
 
   function _4(cfb2) {
-    cfb2._e = cfb2._ex;
-    return cfb2.yld(cfb2._e, _5);
+    var e;
+    e = cfb2._ex;
+    return cfb2.yld(e, _5);
   }
 
   function _5(cfb2) {
@@ -1159,7 +1171,8 @@ function cfb6() {
   }
 
   function _2(cfb6) {
-    cfb6._e = cfb6._ex;
+    var e;
+    e = cfb6._ex;
     return cfb6.yld(2, _3, _9);
   }
 
@@ -1363,7 +1376,9 @@ function c2() {
     return inner.scope(_1);
 
     function _1(inner) {
-      inner._b = () => {
+      var b;
+
+      b = () => {
         var j,
             ctx = {},
             _c2 = c2;
@@ -1448,19 +1463,22 @@ function c2() {
       };
 
       inner._k = 1;
-      return inner.yldStar(inner._b(), _2);
+      return inner.yldStar(b(), _2);
     }
 
     function _2(inner, a) {
-      inner._f = [inner._a, a];
-      inner._loop = inner.iterator(inner._f);
+      var f;
+      f = [inner._a, a];
+      inner._loop = inner.iterator(f);
       return inner.jump(void 0, _3, _10);
     }
 
     function _3(inner) {
+      var j;
+
       if (!(inner._loop = inner._loop.step()).done) {
-        inner._j = inner._loop.value;
-        return inner.yldStar(inner._j(), _4, _10);
+        j = inner._loop.value;
+        return inner.yldStar(j(), _4, _10);
       } else {
         inner._fc = _7, inner._fe = _8;
         return inner.jump(void 0, _6);
@@ -1512,8 +1530,9 @@ function c1() {
   return c1.scope(_1);
 
   function _1(c1) {
-    c1._i = 0;
-    return `a:${c1._i}`;
+    var i;
+    i = 0;
+    return `a:${i}`;
   }
 }
 
@@ -1543,9 +1562,11 @@ function forOf() {
   }
 
   function _2(forOf) {
+    var i;
+
     if (!(forOf._loop = forOf._loop.step()).done) {
-      forOf._i = forOf._loop.value;
-      return forOf.yld(forOf._i, _2, _7);
+      i = forOf._loop.value;
+      return forOf.yld(i, _2, _7);
     } else {
       forOf._fc = _4, forOf._fe = _5;
       return forOf.jump(void 0, _3);
@@ -1637,8 +1658,9 @@ function objMethodsClosure() {
   return objMethodsClosure.scope(_1);
 
   function _1(objMethodsClosure) {
+    var k;
     objMethodsClosure._i = 0;
-    objMethodsClosure._k = 0;
+    k = 0;
     objMethodsClosure._m = 0;
     return objMethodsClosure.pure({
       objMethod1(k) {
@@ -1963,7 +1985,9 @@ function loopCapt1() {
   return loopCapt1.scope(_1);
 
   function _1(loopCapt1) {
-    for (loopCapt1._i = 0; loopCapt1._i < 3; loopCapt1._i++) {
+    var i;
+
+    for (i = 0; i < 3; i++) {
       (i => {
         var ctx = {};
         ctx._i = i;
@@ -1982,7 +2006,7 @@ function loopCapt1() {
             return _iter.pure();
           }
         });
-      })(loopCapt1._i);
+      })(i);
     }
 
     return loopCapt1.pure();
@@ -2143,7 +2167,9 @@ function loopCapt4() {
   return loopCapt4.scope(_1);
 
   function _1(loopCapt4) {
-    for (loopCapt4._i = 0; loopCapt4._i < 3; loopCapt4._i++) {
+    var i;
+
+    for (i = 0; i < 3; i++) {
       (i => {
         var j,
             ctx = {};
@@ -2170,7 +2196,7 @@ function loopCapt4() {
             });
           })(j);
         }
-      })(loopCapt4._i);
+      })(i);
     }
 
     return loopCapt4.pure();
@@ -2182,7 +2208,9 @@ function forOfCapt1() {
   return forOfCapt1.scope(_1);
 
   function _1(forOfCapt1) {
-    for (forOfCapt1._i of a) {
+    var i;
+
+    for (i of a) {
       (i => {
         var ctx = {};
         ctx._i = i;
@@ -2201,7 +2229,7 @@ function forOfCapt1() {
             return _iter.pure();
           }
         });
-      })(forOfCapt1._i);
+      })(i);
     }
 
     return forOfCapt1.pure();
@@ -2218,10 +2246,10 @@ function forOfCapt2() {
   }
 
   function _2(forOfCapt2) {
-    var a;
+    var i, a;
 
     if (!(forOfCapt2._loop = forOfCapt2._loop.step()).done) {
-      forOfCapt2._i = forOfCapt2._loop.value;
+      i = forOfCapt2._loop.value;
 
       a = (i => {
         var ctx = M.context();
@@ -2252,7 +2280,7 @@ function forOfCapt2() {
           });
           return ctx.pure();
         }
-      })(forOfCapt2._i);
+      })(i);
 
       return forOfCapt2.yldStar(a, _2, _7);
     } else {
@@ -2292,7 +2320,9 @@ function forOfCapt3() {
   return forOfCapt3.scope(_1);
 
   function _1(forOfCapt3) {
-    for (forOfCapt3._i of a) {
+    var i;
+
+    for (i of a) {
       (i => {
         var j,
             ctx = {};
@@ -2319,7 +2349,7 @@ function forOfCapt3() {
             });
           })(j);
         }
-      })(forOfCapt3._i);
+      })(i);
     }
 
     return forOfCapt3.pure();
@@ -2336,10 +2366,10 @@ function forOfCapt4() {
   }
 
   function _2(forOfCapt4) {
-    var a;
+    var i, a;
 
     if (!(forOfCapt4._loop = forOfCapt4._loop.step()).done) {
-      forOfCapt4._i = forOfCapt4._loop.value;
+      i = forOfCapt4._loop.value;
 
       a = (i => {
         var ctx = M.context();
@@ -2352,10 +2382,10 @@ function forOfCapt4() {
         }
 
         function _2(ctx) {
-          var a;
+          var j, a;
 
           if (!(ctx._loop = ctx._loop.step()).done) {
-            ctx._j = ctx._loop.value;
+            j = ctx._loop.value;
 
             a = (j => {
               var _ctx = M.context();
@@ -2387,7 +2417,7 @@ function forOfCapt4() {
                 });
                 return _ctx.pure();
               }
-            })(ctx._j);
+            })(j);
 
             return ctx.yldStar(a, _2, _7);
           } else {
@@ -2420,7 +2450,7 @@ function forOfCapt4() {
           ctx._fc = _6, ctx._fe = _5, ctx._err1 = a;
           return ctx.jump(void 0, _3);
         }
-      })(forOfCapt4._i);
+      })(i);
 
       return forOfCapt4.yldStar(a, _2, _7);
     } else {
@@ -2465,10 +2495,10 @@ function forOfCapt5() {
   }
 
   function _2(forOfCapt5) {
-    var a;
+    var i, a;
 
     if (!(forOfCapt5._loop = forOfCapt5._loop.step()).done) {
-      forOfCapt5._i = forOfCapt5._loop.value;
+      i = forOfCapt5._loop.value;
 
       a = (i => {
         var ctx = M.context();
@@ -2482,7 +2512,9 @@ function forOfCapt5() {
         }
 
         function _2(ctx) {
-          for (ctx._j of b) {
+          var j;
+
+          for (j of b) {
             (j => {
               var _ctx = {};
               _ctx._j = j;
@@ -2501,12 +2533,12 @@ function forOfCapt5() {
                   return _iter.pure();
                 }
               });
-            })(ctx._j);
+            })(j);
           }
 
           return ctx.pure();
         }
-      })(forOfCapt5._i);
+      })(i);
 
       return forOfCapt5.yldStar(a, _2, _7);
     } else {
@@ -2551,10 +2583,10 @@ function forOfCapt6() {
   }
 
   function _2(forOfCapt6) {
-    var a;
+    var i, a;
 
     if (!(forOfCapt6._loop = forOfCapt6._loop.step()).done) {
-      forOfCapt6._i = forOfCapt6._loop.value;
+      i = forOfCapt6._loop.value;
 
       a = (i => {
         var ctx = M.context();
@@ -2573,10 +2605,10 @@ function forOfCapt6() {
         }
 
         function _3(ctx) {
-          var a;
+          var j, a;
 
           if (!(ctx._loop = ctx._loop.step()).done) {
-            ctx._j = ctx._loop.value;
+            j = ctx._loop.value;
 
             a = (j => {
               var _ctx = M.context();
@@ -2609,7 +2641,7 @@ function forOfCapt6() {
                 });
                 return _ctx.pure();
               }
-            })(ctx._j);
+            })(j);
 
             return ctx.yldStar(a, _3, _8);
           } else {
@@ -2642,7 +2674,7 @@ function forOfCapt6() {
           ctx._fc = _7, ctx._fe = _6, ctx._err1 = a;
           return ctx.jump(void 0, _4);
         }
-      })(forOfCapt6._i);
+      })(i);
 
       return forOfCapt6.yldStar(a, _2, _7);
     } else {
@@ -2689,9 +2721,11 @@ function forIn() {
   }
 
   function _2(forIn) {
+    var i;
+
     if (!(forIn._loop = forIn._loop.step()).done) {
-      forIn._i = forIn._loop.value;
-      return forIn.yld(forIn._i, _2);
+      i = forIn._loop.value;
+      return forIn.yld(i, _2);
     } else {
       return forIn.pure();
     }
@@ -2776,10 +2810,11 @@ function closure2() {
   return closure2.scope(_1);
 
   function _1(closure2) {
-    closure2._k = 0;
+    var k;
+    k = 0;
     closure2._j = 1;
     closure2._m = 0;
-    return closure2.yld(closure2._k++ + closure2._j + closure2._m++, _2);
+    return closure2.yld(k++ + closure2._j + closure2._m++, _2);
   }
 
   function _2(closure2) {
@@ -2844,10 +2879,11 @@ function switches() {
   }
 
   function _4(switches) {
+    var i;
     console.log(4);
 
-    f1: for (switches._i = 0;; switches._i++) {
-      switch (switches._i) {
+    f1: for (i = 0;; i++) {
+      switch (i) {
         case 3:
           {
             break f1;
@@ -2855,15 +2891,17 @@ function switches() {
       }
     }
 
-    switches._i1 = 0;
+    switches._i = 0;
     return switches.jump(void 0, _5);
   }
 
   function _5(switches) {
-    switch (switches._i1) {
+    var i;
+
+    switch (switches._i) {
       case 3:
-        l1: for (switches._i2 of gen()) {
-          switch (switches._i2) {
+        l1: for (i of gen()) {
+          switch (i) {
             case 3:
               {
                 break l1;
@@ -2875,22 +2913,24 @@ function switches() {
         return switches.jump(void 0, _7, _48);
 
       default:
-        return switches.yld(`f2-${switches._i1}`, _6);
+        return switches.yld(`f2-${switches._i}`, _6);
     }
   }
 
   function _6(switches) {
-    switches._i1++;
+    switches._i++;
     return switches.jump(void 0, _5);
   }
 
   function _7(switches) {
-    if (!(switches._loop = switches._loop.step()).done) {
-      switches._i3 = switches._loop.value;
+    var i;
 
-      switch (switches._i3) {
+    if (!(switches._loop = switches._loop.step()).done) {
+      i = switches._loop.value;
+
+      switch (i) {
         case 3:
-          return switches.yld(`l2-${switches._i3}`, _8, _48);
+          return switches.yld(`l2-${i}`, _8, _48);
 
         default:
           return switches.jump(void 0, _7, _48);
@@ -2920,16 +2960,18 @@ function switches() {
   }
 
   function _11(switches) {
-    if (!(switches._loop1 = switches._loop1.step()).done) {
-      switches._i4 = switches._loop1.value;
+    var i;
 
-      switch (switches._i4) {
+    if (!(switches._loop1 = switches._loop1.step()).done) {
+      i = switches._loop1.value;
+
+      switch (i) {
         case 3:
           switches._fc1 = _13, switches._fe1 = _39;
           return switches.jump(void 0, _12);
 
         default:
-          return switches.yld(`l3-${switches._i4}`, _11, _49);
+          return switches.yld(`l3-${i}`, _11, _49);
       }
     } else {
       switches._fc1 = _13, switches._fe1 = _39;
@@ -2951,16 +2993,18 @@ function switches() {
   }
 
   function _14(switches) {
-    if (!(switches._loop2 = switches._loop2.step()).done) {
-      switches._i5 = switches._loop2.value;
+    var i;
 
-      switch (switches._i5) {
+    if (!(switches._loop2 = switches._loop2.step()).done) {
+      i = switches._loop2.value;
+
+      switch (i) {
         case 3:
           switches._fc2 = _16, switches._fe2 = _39;
           return switches.jump(void 0, _15);
 
         default:
-          return switches.yld(`l4-${switches._i5}`, _14, _50);
+          return switches.yld(`l4-${i}`, _14, _50);
       }
     } else {
       switches._fc2 = _16, switches._fe2 = _39;
@@ -2983,8 +3027,8 @@ function switches() {
 
   function _17(switches) {
     if (!(switches._loop3 = switches._loop3.step()).done) {
-      switches._i6 = switches._loop3.value;
-      return switches.yld(`l5-${switches._i6}`, _18, _51);
+      switches._i1 = switches._loop3.value;
+      return switches.yld(`l5-${switches._i1}`, _18, _51);
     } else {
       switches._fc3 = _20, switches._fe3 = _39;
       return switches.jump(void 0, _19);
@@ -2992,7 +3036,7 @@ function switches() {
   }
 
   function _18(switches) {
-    switch (switches._i6) {
+    switch (switches._i1) {
       case 3:
         switches._fc3 = _20, switches._fe3 = _39;
         return switches.jump(void 0, _19);
@@ -3016,15 +3060,17 @@ function switches() {
   }
 
   function _21(switches) {
-    if (!(switches._loop4 = switches._loop4.step()).done) {
-      switches._i7 = switches._loop4.value;
+    var i;
 
-      switch (switches._i7) {
+    if (!(switches._loop4 = switches._loop4.step()).done) {
+      i = switches._loop4.value;
+
+      switch (i) {
         case 3:
-          return switches.yld(`l6-1-${switches._i7}`, _22, _52);
+          return switches.yld(`l6-1-${i}`, _22, _52);
 
         default:
-          return switches.yld(`l6-2-${switches._i7}`, _21, _52);
+          return switches.yld(`l6-2-${i}`, _21, _52);
       }
     } else {
       switches._fc4 = _24, switches._fe4 = _39;
@@ -3052,33 +3098,33 @@ function switches() {
 
   function _25(switches) {
     if (!(switches._loop5 = switches._loop5.step()).done) {
-      switches._i8 = switches._loop5.value;
+      switches._i2 = switches._loop5.value;
 
-      switch (switches._i8) {
+      switch (switches._i2) {
         case 0:
           return switches.jump(void 0, _25, _53);
 
         case 1:
         case 2:
-          return switches.yld(`l7-1-${switches._i8}`, _25, _53);
+          return switches.yld(`l7-1-${switches._i2}`, _25, _53);
 
         case 3:
           return switches.jump(void 0, _25, _53);
 
         case 4:
-          return switches.yld(`l7-2-${switches._i8}`, _25, _53);
+          return switches.yld(`l7-2-${switches._i2}`, _25, _53);
 
         case 5:
-          return switches.yld(`l7-3-${switches._i8}`, _27, _53);
+          return switches.yld(`l7-3-${switches._i2}`, _27, _53);
 
         case 6:
           return switches.jump(void 0, _25, _53);
 
         case 7:
-          return switches.yld(`l7-4-${switches._i8}`, _26, _53);
+          return switches.yld(`l7-4-${switches._i2}`, _26, _53);
 
         default:
-          return switches.yld(`l7-5-${switches._i8}`, _27, _53);
+          return switches.yld(`l7-5-${switches._i2}`, _27, _53);
       }
     } else {
       switches._fc5 = _29, switches._fe5 = _39;
@@ -3092,7 +3138,7 @@ function switches() {
   }
 
   function _27(switches) {
-    return switches.yld(`l7-6-${switches._i8}`, _25, _53);
+    return switches.yld(`l7-6-${switches._i2}`, _25, _53);
   }
 
   function _28(switches) {
@@ -3110,7 +3156,7 @@ function switches() {
 
   function _30(switches) {
     if (!(switches._loop6 = switches._loop6.step()).done) {
-      switches._i9 = switches._loop6.value;
+      switches._i3 = switches._loop6.value;
       switches._loop7 = switches.iterator(gen());
       return switches.jump(void 0, _31, _55);
     } else {
@@ -3123,29 +3169,29 @@ function switches() {
     if (!(switches._loop7 = switches._loop7.step()).done) {
       switches._j = switches._loop7.value;
 
-      switch (switches._i9) {
+      switch (switches._i3) {
         case 0:
         case 1:
         case 2:
-          return switches.yld(`s1:${switches._i9},${switches._j}`, _32, _55);
+          return switches.yld(`s1:${switches._i3},${switches._j}`, _32, _55);
 
         case 3:
           switch (switches._j) {
             case 2:
             case 3:
-              return switches.yld(`s2:${switches._i9},${switches._j}`, _31, _55);
+              return switches.yld(`s2:${switches._i3},${switches._j}`, _31, _55);
 
             case 5:
-              return switches.yld(`s3:${switches._i9},${switches._j}`, _31, _55);
+              return switches.yld(`s3:${switches._i3},${switches._j}`, _31, _55);
 
             case 7:
-              return switches.yld(`s4:${switches._i9},${switches._j}`, _31, _55);
+              return switches.yld(`s4:${switches._i3},${switches._j}`, _31, _55);
 
             case 8:
-              return switches.yld(`s5:${switches._i9},${switches._j}`, _31, _55);
+              return switches.yld(`s5:${switches._i3},${switches._j}`, _31, _55);
 
             case 9:
-              return switches.yld(`s6:${switches._i9},${switches._j}`, _33, _55);
+              return switches.yld(`s6:${switches._i3},${switches._j}`, _33, _55);
 
             default:
               return switches.jump(void 0, _31, _55);
@@ -3155,26 +3201,26 @@ function switches() {
           switch (switches._j) {
             case 2:
             case 3:
-              return switches.yld(`s7:${switches._i9},${switches._j}`, _35, _55);
+              return switches.yld(`s7:${switches._i3},${switches._j}`, _35, _55);
 
             case 5:
-              return switches.yld(`s8:${switches._i9},${switches._j}`, _31, _55);
+              return switches.yld(`s8:${switches._i3},${switches._j}`, _31, _55);
 
             case 6:
               switches._fc6 = _30, switches._fe6 = _54;
               return switches.jump(void 0, _36, _54);
 
             case 7:
-              return switches.yld(`s9:${switches._i9},${switches._j}`, _35, _55);
+              return switches.yld(`s9:${switches._i3},${switches._j}`, _35, _55);
 
             case 8:
-              return switches.yld(`s10:${switches._i9},${switches._j}`, _31, _55);
+              return switches.yld(`s10:${switches._i3},${switches._j}`, _31, _55);
 
             case 9:
-              return switches.yld(`s11:${switches._i9},${switches._j}`, _34, _55);
+              return switches.yld(`s11:${switches._i3},${switches._j}`, _34, _55);
 
             default:
-              return switches.yld(`s12:${switches._i9},${switches._j}`, _35, _55);
+              return switches.yld(`s12:${switches._i3},${switches._j}`, _35, _55);
           }
 
         case 5:
@@ -3217,7 +3263,7 @@ function switches() {
   }
 
   function _35(switches) {
-    return switches.yld(`s13:${switches._i9},${switches._j}`, _31, _55);
+    return switches.yld(`s13:${switches._i3},${switches._j}`, _31, _55);
   }
 
   function _36(switches) {

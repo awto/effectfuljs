@@ -123,11 +123,11 @@ function a5() {
       i = loop.value;
       return M.yld(i, _2, _7, loop);
     } else {
-      return M.jump(void 0, _3, _4, _5);
+      return M.jump(void 0, _3, loop, _4, _5);
     }
   }
 
-  function _3(fc, fe, err) {
+  function _3(loop, fc, fe, err) {
     if (loop.exit) {
       loop.exit();
     }
@@ -148,6 +148,6 @@ function a5() {
   }
 
   function _7(a) {
-    return M.jump(void 0, _3, _6, _5, a);
+    return M.jump(void 0, _3, void 0, _6, _5, a);
   }
 }

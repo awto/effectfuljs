@@ -13,8 +13,9 @@ function a() {
 }
 
 function b_1(b) {
-  b._j = b._a._i;
-  return M.chain(eff(2, b._j), b_2);
+  var j;
+  j = b._a._i;
+  return M.chain(eff(2, j), b_2);
 }
 
 function b_2(b) {

@@ -138,7 +138,9 @@ const stage1 = Kit.pipe(
     Coerce.interpret,
     Block.interpretCasts,
     Branch.clean,
-    State.restoreDecls,
+    State.restoreDecls)),
+  Array.from,
+  Kit.map(Kit.pipe(
     Closure.substContextIds,
     Block.ctxMethods,
     Rt.collectUsages,

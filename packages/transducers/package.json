@@ -12,7 +12,6 @@
   "scripts": {
     "test": "mocha",
     "build": "babel src --out-dir=.",
-    "watch": "babel -w src --out-dir=.",
     "prepare": "npm run build"
   },
   "repository": "git+https://github.com/awto/effectfuljs.git",

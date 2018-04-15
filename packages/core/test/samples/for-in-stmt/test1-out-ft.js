@@ -53,9 +53,11 @@ function a_2(a, c) {
 }
 
 function a_3(a) {
+  var i;
+
   if (!(a._loop = a._loop.step()).done) {
-    a._i = a._loop.value;
-    return M.chain(eff(a._i), a_3);
+    i = a._loop.value;
+    return M.chain(eff(i), a_3);
   }
 }
 
@@ -71,9 +73,11 @@ function b_2(b, c) {
 }
 
 function b_3(b) {
+  var i;
+
   if (!(b._loop = b._loop.step()).done) {
-    b._i = b._loop.value;
-    return M.chain(eff(b._i), b_3);
+    i = b._loop.value;
+    return M.chain(eff(i), b_3);
   }
 }
 
@@ -89,9 +93,11 @@ function c_2(c, b) {
 }
 
 function c_3(c) {
+  var i;
+
   if (!(c._loop = c._loop.step()).done) {
-    c._i = c._loop.value;
-    return M.chain(eff(c._i), c_3);
+    i = c._loop.value;
+    return M.chain(eff(i), c_3);
   }
 }
 
@@ -100,8 +106,10 @@ function d_1(d) {
 }
 
 function d_2(d, a) {
-  for (d._i in a) {
-    console.log(d._i);
+  var i;
+
+  for (i in a) {
+    console.log(i);
   }
 }
 
@@ -111,9 +119,11 @@ function e_1(e) {
 }
 
 function e_2(e) {
+  var i;
+
   if (!(e._loop = e._loop.step()).done) {
-    e._i = e._loop.value;
-    return M.chain(eff(e._i), e_2);
+    i = e._loop.value;
+    return M.chain(eff(i), e_2);
   }
 }
 

@@ -69,7 +69,7 @@ function a_1(a, p) {
 }
 
 function b_1(b, p) {
-  var s;
+  var e, s;
 
   switch (s = b.$sc, s) {
     case 4:
@@ -81,9 +81,9 @@ function b_1(b, p) {
       return M.yldStar(M.yld(2));
 
     case 6:
-      b._e = b._ex;
+      e = b._ex;
       b.$sc = 7;
-      return M.yldStar(M.yld(b._e));
+      return M.yldStar(M.yld(e));
 
     case 7:
       return M.pure();
@@ -102,7 +102,7 @@ function b_1(b, p) {
 }
 
 function c_1(c, p) {
-  var s;
+  var e, s;
 
   switch (s = c.$sc, s) {
     case 4:
@@ -115,10 +115,10 @@ function c_1(c, p) {
       return M.yldStar(M.yld(2));
 
     case 6:
-      c._e = c._ex;
+      e = c._ex;
       c.$sc = 7;
       c._fc = 8, c._fe = 1;
-      return M.yldStar(M.yld(c._e));
+      return M.yldStar(M.yld(e));
 
     case 7:
       c.$sc = c._fc;
@@ -206,7 +206,7 @@ function d_1(d, p) {
 }
 
 function b2_1(b2, p) {
-  var s;
+  var e, s;
 
   switch (s = b2.$sc, s) {
     case 4:
@@ -218,9 +218,9 @@ function b2_1(b2, p) {
       return M.yldStar(M.yld(2));
 
     case 6:
-      b2._e = b2._ex;
+      e = b2._ex;
       b2.$sc = 7;
-      return M.yldStar(M.yld(b2._e));
+      return M.yldStar(M.yld(e));
 
     case 7:
       return M.pure();

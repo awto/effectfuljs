@@ -41,16 +41,16 @@ function b_1(_b) {
 }
 
 function b_2(_b) {
-  var a, b, c;
-  _b._k1 = 10;
+  var k, a, b, c;
+  k = 10;
   _b._f._j++;
   _b._a._a++;
   _b._f._i++;
-  _b._k1++, _b._a._p++;
+  k++, _b._a._p++;
   a = _b._a._a;
   b = _b._f._i;
   c = _b._a._p;
-  return M.chain(eff(5, a, b, _b._k1, c), b_3);
+  return M.chain(eff(5, a, b, k, c), b_3);
 }
 
 function b_3(_b) {
@@ -64,8 +64,9 @@ function b_3(_b) {
 function b_4(_b) {}
 
 function f_2(ctx) {
+  var k;
   ctx._j = ctx._i + 1;
-  ctx._k = ctx._i + 1;
+  k = ctx._i + 1;
   ctx._i++;
   return M.chain(eff(function b(k) {
     var _b = M.context();
@@ -88,14 +89,16 @@ function f_3(ctx) {
 function f_4(ctx) {}
 
 function a_4(a) {
+  var i;
+
   if (!(a._loop = a._loop.step()).done) {
-    a._i = a._loop.value;
+    i = a._loop.value;
     return M.chain((i => {
       var ctx = M.context();
       ctx._a = a;
       ctx._i = i;
       return M.scope(f_1);
-    })(a._i), a_4, a_10);
+    })(i), a_4, a_10);
   } else {
     a._fc = a_6, a._fe = a_8;
     return M.jump(void 0, a_5);

@@ -142,7 +142,7 @@ export const convert = Kit.pipe(
         if (i.goto == null)
           i.goto = value
      }
-    function* walk(sw,cur) {
+    function* _convert(sw,cur) {
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
@@ -150,9 +150,9 @@ export const convert = Kit.pipe(
             yield i
             yield* s.one()
             assert.ok(!cur.length)
-            cur.push(...yield* walk(s.one(),[]))
+            cur.push(...yield* _convert(s.one(),[]))
             if (s.curLev() != null)
-              cur.push(...yield* walk(s.one(),[]))
+              cur.push(...yield* _convert(s.one(),[]))
             yield s.close(i)
             continue
           case Block.chain:
@@ -165,7 +165,7 @@ export const convert = Kit.pipe(
                   yield* i.value.directives
                 yield s.enter(Tag.body,Tag.Array)
               }
-              cur = yield* walk(s.sub(),cur)
+              cur = yield* _convert(s.sub(),cur)
               const goto = frames.length > fl ? frames[fl][0].value : null
               yield s.tok(Tag.push,Ctrl.jump,{goto})
               yield* lab()
@@ -186,7 +186,7 @@ export const convert = Kit.pipe(
             const declSym = i.value.declSym = Kit.scope.newSym("_")
             const inner = [i]
             frames.push(inner)
-            cur = Kit.result(Kit.repos(walk(s.sub(),[],true),Tag.push),inner)
+            cur = Kit.result(Kit.repos(_convert(s.sub(),[],true),Tag.push),inner)
             const last = inner[inner.length-1]
             if (!i.value.eff && inner[inner.length-1].type !== Ctrl.jump) {
               const j = s.tok(Tag.push,Ctrl.jump)
@@ -199,7 +199,7 @@ export const convert = Kit.pipe(
             if (i.value.eff) {
               assert.ok(!cur.length)
               let fl = frames.length
-              const bodyJumps = yield* walk(s.one(),cur)
+              const bodyJumps = yield* _convert(s.one(),cur)
               const j = s.curLev()
               let params
               if (j.pos === Tag.params) {
@@ -208,7 +208,7 @@ export const convert = Kit.pipe(
                 s.close(j)
               }
               const hl = frames.length
-              const hjumps = Kit.skip(walk(s.one(),[]))
+              const hjumps = Kit.skip(_convert(s.one(),[]))
               const bodyOpen = frames[fl][0].value
               const bodyClose = frames[hl-1][0].value
               const handle = frames[hl][0].value
@@ -263,8 +263,11 @@ export const convert = Kit.pipe(
             continue
           case Block.letStmt:
             const j = s.curLev()
-            if (j != null && j.type === Block.pure) {
+            if (j != null && j.type === Block.pure
+                && (!i.value.bindName || i.value.bindName === s.opts.bindName)) {
               s.take()
+              i.value.eff = false
+              i.value.bindName = i.value.opSym = void 0
               yield s.enter(i.pos, Ctrl.jump, i.value)
               if (!j.leave)
                 yield* s.sub()
@@ -280,7 +283,7 @@ export const convert = Kit.pipe(
             continue
           case Loop.repeat:
             const fl = frames.length
-            const ncur = yield* walk(s.sub(),cur)
+            const ncur = yield* _convert(s.sub(),cur)
             const nfl = frames.length
             if (nfl > fl) {
               const k = frames[fl][0].value
@@ -306,7 +309,7 @@ export const convert = Kit.pipe(
       case Block.chain:
         if (i.enter) {
           yield Kit.setPos(i,Tag.body)
-          yield* walk(s.sub(),[])
+          yield* _convert(s.sub(),[])
           for(const j of frames) {
             const v = j[0].value
             if (v.onOpen) {
@@ -335,9 +338,9 @@ export const convert = Kit.pipe(
     const root = s.first.value
     const noLoopContOpt = s.opts.invertForOf && root.hasForOf
     const bindName = s.opts.bindName || "chain"
-    walk()
+    _postproc()
     return sa
-    function walk() {
+    function _postproc() {
       for(const i of s.sub()) {
         if (i.enter) {
           switch(i.type) {
@@ -857,6 +860,14 @@ function* copyFrameVars(si) {
         case Ctrl.jump:
           if (!i.value.gotoDests.length)
             break
+          const {goto} = i.value
+          let gotoSym, catchContSym, resultContSym
+          if (goto) {
+            const {catchContRedir:cc,resultContRedir:rc} = goto
+            gotoSym = goto && goto.declSym
+            catchContSym = cc && !cc.removed && cc.declSym
+            resultContSym = rc && !rc.removed && rc.declSym
+          }
           const del = new Set()
           const args = i.value.frameArgs
           let assignArg
@@ -894,10 +905,6 @@ function* copyFrameVars(si) {
           }
           if (del.size) {
             const delList = []
-            for(const i of del) {
-              delList.push([i,[s.tok(Tag.right,Tag.NullLiteral)]])
-            }
-            delList.sort(byNumFst)
             const subst = new Map()
             let tmpVarNum = 0
             function getCopy(sym) {
@@ -914,9 +921,6 @@ function* copyFrameVars(si) {
               }
               return copy
             }
-            if (i.value.goto && i.value.goto.dynamicJump
-                && del.has(i.value.goto.declSym))
-              i.value.goto.declSym = getCopy(i.value.goto.declSym)
             if (inner) {
               for(const j of inner) {
                 let sym
@@ -935,10 +939,22 @@ function* copyFrameVars(si) {
                 }
               }
             }
+            if (gotoSym && del.has(gotoSym))
+              gotoSym = getCopy(gotoSym)
+            if (catchContSym && del.has(catchContSym))
+              catchContSym = getCopy(catchContSym)
+            if (resultContSym && del.has(resultContSym))
+              resultContSym = getCopy(resultContSym)
+            for(const i of del)
+              delList.push([i,[s.tok(Tag.right,Tag.NullLiteral)]])
+            delList.sort(byNumFst)
             assign.push(...delList)
           }
           const lab = s.label()
           assert.ok(i.pos === Tag.push)
+          i.value.gotoSym = gotoSym
+          i.value.catchContSym = catchContSym
+          i.value.resultContSym = resultContSym
           if (assign.length) {
             yield s.enter(Tag.push, Tag.SequenceExpression)
             yield s.enter(Tag.expressions, Tag.Array)
@@ -1161,16 +1177,14 @@ export function interpretJumps(si) {
             const threadArgs = threadContext || i.value.threadArgs || emptyArr
             let catchCont, resCont
             if (goto) {
-              if (passCatchCont && goto.catchContRedir
-                  && !goto.catchContRedir.removed)
-                catchCont = goto.catchContRedir.declSym
-              if (passResultCont && goto.resultContRedir
-                  && !goto.resultContRedir.removed)
-                resCont = goto.resultContRedir.declSym
+              if (passCatchCont && i.value.catchContSym)
+                catchCont = i.value.catchContSym
+              if (passResultCont && i.value.resultContSym)
+                resCont = i.value.resultContSym
             }
             const appVal = {fam:Kit.sysId(name),static:st,
                             insideCtx:!i.value.ref.first,delegateCtx,
-                            passCont,goto:goto && goto.declSym,
+                            passCont,goto:i.value.gotoSym,
                             result:name === "scope"}
             if (s.curLev()) {
               if (s.opts.markBindValue !== false)
@@ -1212,7 +1226,7 @@ export function interpretJumps(si) {
             else if (appVal.hasBindVal)
               yield s.tok(Tag.push,Tag.Identifier,{sym:Kit.scope.undefinedSym})
             if (passCont)
-              yield s.tok(Tag.push,Tag.Identifier,{sym:goto.declSym})
+              yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.gotoSym})
             if (catchCont && passCatchCont)
               yield s.tok(Tag.push,Tag.Identifier,{sym:catchCont})
             if (resCont && passResultCont)
@@ -1844,7 +1858,7 @@ function optUselessFrames(cfg) {
 
 /** applyies inlines previously marked by `optimizeJump` */
 function applyInlines(si) {
-  function* walk(sw) {
+  function* _applyInlines(sw) {
     let skip = false
     for(const i of sw) {
       if (skip) {
@@ -1859,7 +1873,7 @@ function applyInlines(si) {
             break
         case Ctrl.jump:
           if (i.value.inlineFrame) {
-            yield* walk(i.value.inlineFrame)
+            yield* _applyInlines(i.value.inlineFrame)
             if (!i.leave)
               skip = i.value
             continue
@@ -1869,7 +1883,7 @@ function applyInlines(si) {
       yield i
     }
   }
-  return walk(si)
+  return _applyInlines(si)
 }
 
 /** 
