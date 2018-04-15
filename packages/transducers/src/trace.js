@@ -12,6 +12,10 @@ const newTagStyle = "color:purple;font-size:large"
 const positionStyle = "color:gray;text-decoration:underline"
 const dirStyle = "font-size:x-large;font-weight:bolder"
 
+export const opts = {
+  color: true
+}
+
 /**
   * outputs short description of AST node
   */ 

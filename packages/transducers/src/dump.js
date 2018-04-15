@@ -9,6 +9,10 @@ import * as T from "@babel/types"
 
 const BROWSER_DEBUG = Trace.BROWSER_DEBUG
 
+export const opts = {
+  color: true
+}
+
 export function* markNodeType(s) {
   for(const i of s) {
     if (i.enter) {
@@ -69,6 +73,10 @@ export const convertCtrl = Kit.pipe(
 
 export const color = BROWSER_DEBUG
   ? function* color(s) {
+      if (!opts.color) {
+        yield* s
+        return
+      }
       for(const i of s) {
         if (i.enter && i.value.comments) {
           for (const j of i.value.comments) {
@@ -134,7 +142,7 @@ export const toConsole = Kit.curry(function toConsole(tag,s) {
   let name = symName(s.first.type).match(/[A-Z]/g).join("")
   if (root.funcId)
     name += ":" + root.funcId.id
-  if (BROWSER_DEBUG)
+  if (BROWSER_DEBUG && opts.color)
     (tag[0] === "+" ? console.group : console.groupCollapsed)(
       `dump %c${tag} %c${name}`,
       "color:orange;font-size:large",
