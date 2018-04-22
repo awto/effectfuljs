@@ -1,11 +1,12 @@
 [@effectful/cc](../README.md) > [Context](../classes/context.md)
 
-
-
 # Class: Context
 
-
 EffectfulJS abstract interface implementation
+
+## Hierarchy
+
+**Context**
 
 ## Index
 
@@ -17,21 +18,17 @@ EffectfulJS abstract interface implementation
 * [pure](context.md#pure)
 * [scope](context.md#scope)
 
-
-
 ---
+
 ## Methods
+
 <a id="chain"></a>
 
 ###  chain
 
-► **chain**A,B(v: *[CCV](../#ccv)`A`*, f: *[Step](../#step)`A`, `B`*): [CC](../interfaces/cc.md)`B`
-
-
+▸ **chain**A,B(v: *[CCV](../#ccv)`A`*, f: *[Step](../#step)`A`, `B`*): [CC](../interfaces/cc.md)`B`
 
 *Defined in main.ts:37*
-
-
 
 **Type parameters:**
 
@@ -44,15 +41,7 @@ EffectfulJS abstract interface implementation
 | v | [CCV](../#ccv)`A`   |  - |
 | f | [Step](../#step)`A`, `B`   |  - |
 
-
-
-
-
 **Returns:** [CC](../interfaces/cc.md)`B`
-
-
-
-
 
 ___
 
@@ -60,13 +49,9 @@ ___
 
 ###  jump
 
-► **jump**A,B(v: *`A`*, f: *[Step](../#step)`A`, `B`*): [CCV](../#ccv)`B`
-
-
+▸ **jump**A,B(v: *`A`*, f: *[Step](../#step)`A`, `B`*): [CCV](../#ccv)`B`
 
 *Defined in main.ts:40*
-
-
 
 **Type parameters:**
 
@@ -79,15 +64,7 @@ ___
 | v | `A`   |  - |
 | f | [Step](../#step)`A`, `B`   |  - |
 
-
-
-
-
 **Returns:** [CCV](../#ccv)`B`
-
-
-
-
 
 ___
 
@@ -95,13 +72,9 @@ ___
 
 ###  jumpR
 
-► **jumpR**A,B(v: *`A`*, f: *[Step](../#step)`A`, `B`*): [CC](../interfaces/cc.md)`B`
-
-
+▸ **jumpR**A,B(v: *`A`*, f: *[Step](../#step)`A`, `B`*): [CC](../interfaces/cc.md)`B`
 
 *Defined in main.ts:43*
-
-
 
 **Type parameters:**
 
@@ -114,15 +87,7 @@ ___
 | v | `A`   |  - |
 | f | [Step](../#step)`A`, `B`   |  - |
 
-
-
-
-
 **Returns:** [CC](../interfaces/cc.md)`B`
-
-
-
-
 
 ___
 
@@ -130,13 +95,9 @@ ___
 
 ###  pure
 
-► **pure**A(v: *`A`*): [CC](../interfaces/cc.md)`A`
-
-
+▸ **pure**A(v: *`A`*): [CC](../interfaces/cc.md)`A`
 
 *Defined in main.ts:46*
-
-
 
 **Type parameters:**
 
@@ -147,15 +108,7 @@ ___
 | ------ | ------ | ------ |
 | v | `A`   |  - |
 
-
-
-
-
 **Returns:** [CC](../interfaces/cc.md)`A`
-
-
-
-
 
 ___
 
@@ -163,13 +116,9 @@ ___
 
 ###  scope
 
-► **scope**A(f: *`function`*): [CC](../interfaces/cc.md)`A`
-
-
+▸ **scope**A(f: *`function`*): [CC](../interfaces/cc.md)`A`
 
 *Defined in main.ts:49*
-
-
 
 **Type parameters:**
 
@@ -180,16 +129,7 @@ ___
 | ------ | ------ | ------ |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** [CC](../interfaces/cc.md)`A`
 
-
-
-
-
 ___
-
 

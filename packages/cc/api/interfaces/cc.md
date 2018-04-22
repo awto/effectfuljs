@@ -1,14 +1,15 @@
 [@effectful/cc](../README.md) > [CC](../interfaces/cc.md)
 
-
-
 # Interface: CC
-
 
 effectful value
 
 ## Type parameters
 #### A 
+## Hierarchy
+
+**CC**
+
 ## Implemented by
 
 * [Chain](../classes/chain.md)
@@ -18,16 +19,11 @@ effectful value
 * [WithSubCont](../classes/withsubcont.md)
 
 ## Callable
-► **CC**A(f: *`function`*): `A`
-
-
+▸ **CC**A(f: *`function`*): `A`
 
 *Defined in main.ts:278*
 
-
-
 effectful value
-
 
 **Type parameters:**
 
@@ -38,28 +34,25 @@ effectful value
 | ------ | ------ | ------ |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** `A`
 
+## Index
 
+### Methods
 
+* [__computed](cc.md#__computed)
 
+---
 
 ## Methods
+
 <a id="__computed"></a>
 
 ###  __computed
 
-► **__computed**(k: *[Seq](../#seq)`A`, `any`*): [CCV](../#ccv)`any`
-
-
+▸ **__computed**(k: *[Seq](../#seq)`A`, `any`*): [CCV](../#ccv)`any`
 
 *Defined in main.ts:28*
-
-
 
 **Parameters:**
 
@@ -67,16 +60,7 @@ effectful value
 | ------ | ------ | ------ |
 | k | [Seq](../#seq)`A`, `any`   |  - |
 
-
-
-
-
 **Returns:** [CCV](../#ccv)`any`
 
-
-
-
-
 ___
-
 

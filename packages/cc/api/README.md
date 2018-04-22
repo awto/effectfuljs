@@ -1,6 +1,4 @@
 
-
-
 #  @effectful/cc
 
 ## Index
@@ -15,12 +13,10 @@
 * [PushSubCont](classes/pushsubcont.md)
 * [WithSubCont](classes/withsubcont.md)
 
-
 ### Interfaces
 
 * [CC](interfaces/cc.md)
 * [SubCont](interfaces/subcont.md)
-
 
 ### Type aliases
 
@@ -29,12 +25,10 @@
 * [Seq](#seq)
 * [Step](#step)
 
-
 ### Variables
 
 * [promptId](#promptid)
 * [stepSymbol](#stepsymbol)
-
 
 ### Functions
 
@@ -56,10 +50,10 @@
 * [splitAt](#splitat)
 * [withSubCont](#withsubcont)
 
-
-
 ---
-# Type aliases
+
+## Type aliases
+
 <a id="ccv"></a>
 
 ###  CCV
@@ -67,10 +61,6 @@
 **Τ CCV**:  *[CC](interfaces/cc.md)`A`⎮`A`* 
 
 *Defined in main.ts:31*
-
-
-
-
 
 ___
 
@@ -82,33 +72,13 @@ ___
 
 *Defined in main.ts:60*
 
-
 #### Type declaration
 
+`Optional`  ctx: [Context](classes/context.md)
 
+`Optional`  prompt: [Prompt](classes/prompt.md)`A`
 
-
-«Optional»  ctx: [Context](classes/context.md)
-
-
-
-
-
-
-«Optional»  prompt: [Prompt](classes/prompt.md)`A`
-
-
-
-
-
-
-«Optional»  seg: [Step](#step)`A`, `any`
-
-
-
-
-
-
+`Optional`  seg: [Step](#step)`A`, `any`
 
 ___
 
@@ -120,10 +90,6 @@ ___
 
 *Defined in main.ts:58*
 
-
-
-
-
 ___
 
 <a id="step"></a>
@@ -134,11 +100,8 @@ ___
 
 *Defined in main.ts:33*
 
-
 #### Type declaration
-►(x: *[Context](classes/context.md)*, a: *`A`*): [CCV](#ccv)`B`
-
-
+▸(x: *[Context](classes/context.md)*, a: *`A`*): [CCV](#ccv)`B`
 
 **Parameters:**
 
@@ -147,30 +110,19 @@ ___
 | x | [Context](classes/context.md)   |  - |
 | a | `A`   |  - |
 
-
-
-
-
 **Returns:** [CCV](#ccv)`B`
-
-
-
-
-
 
 ___
 
+## Variables
 
-# Variables
 <a id="promptid"></a>
 
-### «Let» promptId
+### `<Let>` promptId
 
 **●  promptId**:  *`number`*  = 0
 
 *Defined in main.ts:12*
-
-
 
 Monadic framework for delimited continuations
 =============================================
@@ -179,41 +131,29 @@ import * as CC from "@effectful/cc"
 
 CC.run(function() { // ..... });
 
-
-
-
 ___
 
 <a id="stepsymbol"></a>
 
-### «Const» stepSymbol
+### `<Const>` stepSymbol
 
 **●  stepSymbol**:  *`unique symbol`*  =  Symbol("Effectful.ccStep")
 
 *Defined in main.ts:24*
 
-
-
-
-
 ___
 
+## Functions
 
-# Functions
 <a id="abort"></a>
 
 ###  abort
 
-► **abort**A,B(p: *[Prompt](classes/prompt.md)`B`*, e: *[CCV](#ccv)`B`*): [CC](interfaces/cc.md)`A`
-
-
+▸ **abort**A,B(p: *[Prompt](classes/prompt.md)`B`*, e: *[CCV](#ccv)`B`*): [CC](interfaces/cc.md)`A`
 
 *Defined in main.ts:265*
 
-
-
 aborts current continution up to the prompt `p`
-
 
 **Type parameters:**
 
@@ -226,15 +166,7 @@ aborts current continution up to the prompt `p`
 | p | [Prompt](classes/prompt.md)`B`   |  - |
 | e | [CCV](#ccv)`B`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)`A`
-
-
-
-
 
 ___
 
@@ -242,16 +174,11 @@ ___
 
 ###  coerce
 
-► **coerce**A(v: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`A`
-
-
+▸ **coerce**A(v: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`A`
 
 *Defined in main.ts:272*
 
-
-
 returns `v` if is instance of `CC` or `pure(v)` otherwise
-
 
 **Type parameters:**
 
@@ -262,15 +189,7 @@ returns `v` if is instance of `CC` or `pure(v)` otherwise
 | ------ | ------ | ------ |
 | v | [CCV](#ccv)`A`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)`A`
-
-
-
-
 
 ___
 
@@ -278,21 +197,11 @@ ___
 
 ###  context
 
-► **context**(): [Context](classes/context.md)
-
-
+▸ **context**(): [Context](classes/context.md)
 
 *Defined in main.ts:54*
 
-
-
-
-
 **Returns:** [Context](classes/context.md)
-
-
-
-
 
 ___
 
@@ -300,16 +209,11 @@ ___
 
 ###  control
 
-► **control**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
-
-
+▸ **control**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
 
 *Defined in main.ts:233*
 
-
-
 caputes and aborts the current continuation until prompt `p` and calls `f` passing captured continuation as a function to its argument, deoesn't delimit captured, delimits resultinging continuation
-
 
 **Type parameters:**
 
@@ -322,15 +226,7 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 | p | [Prompt](classes/prompt.md)`B`   |  - |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** [CCV](#ccv)`A`
-
-
-
-
 
 ___
 
@@ -338,16 +234,11 @@ ___
 
 ###  control0
 
-► **control0**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
-
-
+▸ **control0**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
 
 *Defined in main.ts:251*
 
-
-
 caputes and aborts the current continuation until prompt `p` and calls `f` passing captured continuation as a function to its argument, doesn't delimit captured and resulting continuations
-
 
 **Type parameters:**
 
@@ -360,15 +251,7 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 | p | [Prompt](classes/prompt.md)`B`   |  - |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** [CCV](#ccv)`A`
-
-
-
-
 
 ___
 
@@ -376,16 +259,11 @@ ___
 
 ###  newPrompt
 
-► **newPrompt**A(name?: *`string`*): [Prompt](classes/prompt.md)`A`
-
-
+▸ **newPrompt**A(name?: *`string`*): [Prompt](classes/prompt.md)`A`
 
 *Defined in main.ts:161*
 
-
-
 Creates a new prompt, distinct from all existing prompts
-
 
 **Type parameters:**
 
@@ -396,15 +274,7 @@ Creates a new prompt, distinct from all existing prompts
 | ------ | ------ | ------ | ------ |
 | name | `string`  | &quot;p&quot; |   - |
 
-
-
-
-
 **Returns:** [Prompt](classes/prompt.md)`A`
-
-
-
-
 
 ___
 
@@ -412,16 +282,11 @@ ___
 
 ###  pure
 
-► **pure**A(v: *`A`*): [CC](interfaces/cc.md)`A`
-
-
+▸ **pure**A(v: *`A`*): [CC](interfaces/cc.md)`A`
 
 *Defined in main.ts:154*
 
-
-
 returns effectful value returning `v`
-
 
 **Type parameters:**
 
@@ -432,15 +297,7 @@ returns effectful value returning `v`
 | ------ | ------ | ------ |
 | v | `A`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)`A`
-
-
-
-
 
 ___
 
@@ -448,16 +305,11 @@ ___
 
 ###  pushPrompt
 
-► **pushPrompt**A(p: *[Prompt](classes/prompt.md)`A`*, cont: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`A`
-
-
+▸ **pushPrompt**A(p: *[Prompt](classes/prompt.md)`A`*, cont: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`A`
 
 *Defined in main.ts:169*
 
-
-
 uses prompt in its first operand to delimit the current continuation during the evaluation of its second operand.
-
 
 **Type parameters:**
 
@@ -469,15 +321,7 @@ uses prompt in its first operand to delimit the current continuation during the 
 | p | [Prompt](classes/prompt.md)`A`   |  - |
 | cont | [CCV](#ccv)`A`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)`A`
-
-
-
-
 
 ___
 
@@ -485,16 +329,11 @@ ___
 
 ###  pushSubCont
 
-► **pushSubCont**A,B(subk: *[SubCont](interfaces/subcont.md)`A`, `B`*, cont: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`B`
-
-
+▸ **pushSubCont**A,B(subk: *[SubCont](interfaces/subcont.md)`A`, `B`*, cont: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`B`
 
 *Defined in main.ts:177*
 
-
-
 composes sub-continuation `subk` with current continuation and evaluates its second argument
-
 
 **Type parameters:**
 
@@ -507,15 +346,7 @@ composes sub-continuation `subk` with current continuation and evaluates its sec
 | subk | [SubCont](interfaces/subcont.md)`A`, `B`   |  - |
 | cont | [CCV](#ccv)`A`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)`B`
-
-
-
-
 
 ___
 
@@ -523,16 +354,11 @@ ___
 
 ###  reflect
 
-► **reflect**A(v: *[CCV](#ccv)`A`*): [CCV](#ccv)`A`
-
-
+▸ **reflect**A(v: *[CCV](#ccv)`A`*): [CCV](#ccv)`A`
 
 *Defined in main.ts:193*
 
-
-
 for single-level mode, can be used for converting effectful value into pure value
-
 
 **Type parameters:**
 
@@ -543,15 +369,7 @@ for single-level mode, can be used for converting effectful value into pure valu
 | ------ | ------ | ------ |
 | v | [CCV](#ccv)`A`   |  - |
 
-
-
-
-
 **Returns:** [CCV](#ccv)`A`
-
-
-
-
 
 ___
 
@@ -559,16 +377,11 @@ ___
 
 ###  reify
 
-► **reify**A(f: *`function`*): [CC](interfaces/cc.md)[CCV](#ccv)`A`
-
-
+▸ **reify**A(f: *`function`*): [CC](interfaces/cc.md)[CCV](#ccv)`A`
 
 *Defined in main.ts:184*
 
-
-
 for single-level mode, can be used for converting pure value into effectful
-
 
 **Type parameters:**
 
@@ -579,15 +392,7 @@ for single-level mode, can be used for converting pure value into effectful
 | ------ | ------ | ------ |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)[CCV](#ccv)`A`
-
-
-
-
 
 ___
 
@@ -595,16 +400,11 @@ ___
 
 ###  reset
 
-► **reset**A(e: *`function`*): [CC](interfaces/cc.md)`A`
-
-
+▸ **reset**A(e: *`function`*): [CC](interfaces/cc.md)`A`
 
 *Defined in main.ts:259*
 
-
-
 creates new prompt, and calls `e` passing this new prompt, delimiting resulting continuation with it
-
 
 **Type parameters:**
 
@@ -615,15 +415,7 @@ creates new prompt, and calls `e` passing this new prompt, delimiting resulting 
 | ------ | ------ | ------ |
 | e | `function`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)`A`
-
-
-
-
 
 ___
 
@@ -631,16 +423,11 @@ ___
 
 ###  run
 
-► **run**A(c: *[CCV](#ccv)`A`*): `A`
-
-
+▸ **run**A(c: *[CCV](#ccv)`A`*): `A`
 
 *Defined in main.ts:200*
 
-
-
 evaluate all frames till resulting value
-
 
 **Type parameters:**
 
@@ -651,15 +438,7 @@ evaluate all frames till resulting value
 | ------ | ------ | ------ |
 | c | [CCV](#ccv)`A`   |  - |
 
-
-
-
-
 **Returns:** `A`
-
-
-
-
 
 ___
 
@@ -667,16 +446,11 @@ ___
 
 ###  shift
 
-► **shift**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
-
-
+▸ **shift**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
 
 *Defined in main.ts:221*
 
-
-
 caputes and aborts the current continuation until prompt `p` and calls `f` passing captured continuation as a function to its argument, delimits captured and resulting continuations
-
 
 **Type parameters:**
 
@@ -689,15 +463,7 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 | p | [Prompt](classes/prompt.md)`B`   |  - |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** [CCV](#ccv)`A`
-
-
-
-
 
 ___
 
@@ -705,16 +471,11 @@ ___
 
 ###  shift0
 
-► **shift0**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
-
-
+▸ **shift0**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
 
 *Defined in main.ts:242*
 
-
-
 caputes and aborts the current continuation until prompt `p` and calls `f` passing captured continuation as a function to its argument, delimits captured, doesn't delimit resultinging continuation
-
 
 **Type parameters:**
 
@@ -727,15 +488,7 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 | p | [Prompt](classes/prompt.md)`B`   |  - |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** [CCV](#ccv)`A`
-
-
-
-
 
 ___
 
@@ -743,13 +496,9 @@ ___
 
 ###  splitAt
 
-► **splitAt**(seq: *[Seq](#seq)`any`, `any`*, p: *[Prompt](classes/prompt.md)`any`*): [Seq](#seq)`any`, `any`
-
-
+▸ **splitAt**(seq: *[Seq](#seq)`any`, `any`*, p: *[Prompt](classes/prompt.md)`any`*): [Seq](#seq)`any`, `any`
 
 *Defined in main.ts:66*
-
-
 
 **Parameters:**
 
@@ -758,15 +507,7 @@ ___
 | seq | [Seq](#seq)`any`, `any`   |  - |
 | p | [Prompt](classes/prompt.md)`any`   |  - |
 
-
-
-
-
 **Returns:** [Seq](#seq)`any`, `any`
-
-
-
-
 
 ___
 
@@ -774,16 +515,11 @@ ___
 
 ###  withSubCont
 
-► **withSubCont**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CC](interfaces/cc.md)`A`
-
-
+▸ **withSubCont**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CC](interfaces/cc.md)`A`
 
 *Defined in main.ts:149*
 
-
-
 Captures a portion of the current continuation back to but not including the activation of pushPrompt with prompt `p`, aborts the current continuation back to and including the activation of `pushPrompt`, and invokes `f`, passing it an abstract value representing the captured subcontinuation. If more than one activation of pushPrompt with prompt p is still active, the most recent enclosing activation, i.e., the one that delimits the smallest subcontinuation, is selected.
-
 
 **Type parameters:**
 
@@ -796,16 +532,7 @@ Captures a portion of the current continuation back to but not including the act
 | p | [Prompt](classes/prompt.md)`B`   |  - |
 | f | `function`   |  - |
 
-
-
-
-
 **Returns:** [CC](interfaces/cc.md)`A`
 
-
-
-
-
 ___
-
 

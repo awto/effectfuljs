@@ -1,0 +1,18 @@
+{
+  "env": {
+    "build": {
+      "plugins": [
+        ["@babel/plugin-transform-for-of", {"loose": true}],
+        ["@babel/plugin-proposal-object-rest-spread", { "loose": true, "useBuiltIns": true }],
+        ["@babel/plugin-transform-spread", {"loose": true}],
+        ["@babel/plugin-transform-destructuring",{"useBuiltIns":true}],
+        ["@babel/plugin-transform-block-scoping",{"throwIfClosureRequired":true}],
+        "@babel/plugin-transform-shorthand-properties",
+        "@babel/plugin-transform-arrow-functions"
+      ]
+    },
+    "development": {
+      "plugins": ["@babel/transform-modules-commonjs"]
+    }
+  }
+}

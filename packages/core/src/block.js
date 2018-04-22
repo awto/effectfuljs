@@ -170,7 +170,7 @@ export const cleanupEffSeq = Kit.pipe(
 export const interpretCasts = Kit.pipe(
   function* cleanEffExpr(s) {
     const sl = Kit.auto(s)
-    const noResult = sl.opts.returnContext === false
+    const noResult = false // sl.opts.returnContext === false
     function* walk() {
       for(const i of sl.sub()) {
         switch(i.type) {
