@@ -4,6 +4,7 @@
   "description": "Persistent state for ECMAScript effects",
   "main": "index.js",
   "module": "main.js",
+  "jsnext:main":"main.js",
   "scripts": {
     "test": "mocha",
     "build": "rollup -c"

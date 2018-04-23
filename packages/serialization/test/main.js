@@ -242,29 +242,30 @@ describe("opaque values pattern", function() {
     const e = Symbol("e")
     const obj = {a:1,b(a) { return this.a + a },
                  c:[Symbol("c"),Symbol.for("d")]}
-    obj.rec = new Set([obj,new Map([[e,obj],[obj,e]])])
+    obj.recMap = new Map([[e,obj],[obj,e]])
+    obj.rec = new Set([obj,obj.recMap])
     const opaque = new Map()
     const pat = Lib.pattern(obj,opaque)
     assert.deepStrictEqual([...opaque],[[obj.b,0],[obj.c[0],1],[e,2]])
     assert.deepStrictEqual(pat,{b:{"#opaque":0},
                                 c:{0:{"#opaque":1}},
-                                rec:{1:{0:{0:{"#opaque":2}},1:{1:{"#opaque":2}}}}})
+                                recMap:{0:{0:{"#opaque":2}},1:{1:{"#opaque":2}}}})
     
     const json = Lib.write(obj, opaque)
     assert.deepStrictEqual(
       json,
       {"#ref":0,
        "#shared":{
-         "0":{
-           "a":1,
-           "b":{"#opaque":0},
-           "c":[{"#opaque":1}, {"#type":"Symbol","name":"d"}],
-           "rec":{"#type":"Set",
-                  "#data":[{"#ref":0},
-                           {"#type":"Map",
-                            "#data":[
-                              [{"#opaque":2},{"#ref":0}],
-                              [{"#ref":0},{"#opaque":2}]]}]}}}})
+         0:{
+           a:1,
+           b:{"#opaque":0},
+           c:[{"#opaque":1},
+              {"#type":"Symbol","name":"d"}],
+           recMap:{"#ref":1},
+           rec:{"#type":"Set",
+                "#data":[{"#ref":0},{"#ref":1}]}},
+         1:{"#type":"Map",
+            "#data":[[{"#opaque":2},{"#ref":0}],[{"#ref":0},{"#opaque":2}]]}}})
     const back = Lib.read(json, new Map([...opaque].map(([a,b]) => [b,a])))
     assert.notStrictEqual(obj,back)
     assert.deepStrictEqual(obj,back)
@@ -273,12 +274,14 @@ describe("opaque values pattern", function() {
                        b(a){ return this.a - a},
                        c:[Symbol("c"),Symbol.for("d")]}
     const re = Symbol("e")
-    objRemote.rec = new Set([objRemote,
-                             new Map([[re,objRemote],[objRemote,re]])])
+    objRemote.recMap = new Map([[re,objRemote],[objRemote,re]])
+    objRemote.rec = new Set([objRemote, objRemote.recMap])
     Lib.match(objRemote,pat,remoteOpaque)
-    assert.deepStrictEqual([...remoteOpaque],[[0,objRemote.b],
-                                              [1,objRemote.c[0]],
-                                              [2,re]])
+    assert.deepStrictEqual([...remoteOpaque].sort(([a],[b]) => a - b),
+                           [[0,objRemote.b],
+                            [1,objRemote.c[0]],
+                            [2,re],
+                           ])
     const objRemoteNext = Lib.read(json, remoteOpaque)
     assert.notStrictEqual(objRemoteNext,objRemote)
     assert.deepStrictEqual(objRemoteNext,objRemote)

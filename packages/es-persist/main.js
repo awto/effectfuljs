@@ -15,11 +15,19 @@ export var contextSymbol = Symbol("@effectful/es-persist/context")
  */
 export var chainSymbol = Symbol("@effectful/es-persist/chain")
 
+var prototypeSym = Symbol("@effectful/es-persist/prototype")
+
 /** 
  * same as `chainSymbol` but the method doesn't return next async value,
  * just subscribes to `this` settlement events
  */
 export var awaitSymbol = Symbol("@effectful/es-persist/await")
+
+/**
+ * list of constructors used by this lib to be handled by some serialization
+ * library if needed
+ */
+export var constructors = []
 
 export var generator = Es.generator
 export var generatorFunction = Es.generatorFunction
@@ -29,10 +37,18 @@ export var iterator = Es.iterator
 export var iteratorM = Es.iteratorM
 export var forInIterator = Es.forInIterator
 
-/** global registry of currently running async functions */
-function Context() {
+/** 
+ * registry for currently running async functions 
+ * 
+ * The default value may be overriden by setting context into
+ * async (generator) function definition with `contextSymbol` 
+ * property.
+ */
+export function Context() {
   this.threads = new Set()
 }
+
+constructors.push(Context)
 
 /** 
  * called for each async function once, at its module's top level
@@ -106,6 +122,8 @@ function Residual() {
   this.state = AsyncState.pending
 }
 
+constructors.push(Residual)
+
 var Rp = Residual.prototype
 
 Promise.prototype[chainSymbol] = Rp[chainSymbol] = function chain(t) {
@@ -148,7 +166,7 @@ Rp.toPromise = function() {
     return Promise.reject(this.value)
   default:
     return new Promise(function(r,e) {
-      ctx.dest.push({resume:r,reject:e,debFrom:(new Error()).stack})
+      ctx.dest.push({resume:r,reject:e})
     })
   }
 }
@@ -296,12 +314,18 @@ AGp.next = function next(value) {
 
 function ext(proto) {
   return function(fun, handler) {
-    fun.prototype = Object.create(proto)
-    if (!fun.prototype[contextSymbol])
-      fun.prototype[contextSymbol] = globalContext
-    fun.prototype.$run = handler
-    fun.prototype.name = fun.name
-    fun.prototype[contextSymbol].reg(fun)
+    var p = handler[prototypeSym]
+    if (p) {
+      fun.prototype = p
+      return fun
+    }
+    p = Object.create(proto)
+    fun.prototype = handler[prototypeSym] = p
+    if (!p[contextSymbol])
+      p[contextSymbol] = globalContext
+    p.$run = handler
+    p.name = fun.name
+    p[contextSymbol].reg(fun)
     return fun
   }
 }
@@ -319,6 +343,8 @@ function All(arr) {
     arr[i][awaitSymbol](new AllCont(this,i))
 }
 
+constructors.push(All)
+
 /** like `Promise.all` */
 export function all(iterable) {
   return new All(Array.from(iterable))
@@ -331,6 +357,8 @@ function AllCont(src,index) {
   this.src = src
   this.index = index
 }
+
+constructors.push(AllCont)
 
 AllCont.prototype.resume = function(value) {
   var src = this.src
@@ -353,6 +381,8 @@ function Any(arr) {
     arr[i][awaitSymbol](new AnyCont(this))
 }
 
+constructors.push(Any)
+
 /** like `Promise.race` */
 export function any(iterable) {
   return new Any(Array.from(iterable))
@@ -361,6 +391,8 @@ export function any(iterable) {
 function AnyCont(src) {
   this.src = src
 }
+
+constructors.push(AnyCont)
 
 AnyCont.prototype.resume = function(value) {
   var src = this.src

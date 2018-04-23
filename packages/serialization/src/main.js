@@ -80,8 +80,19 @@ export function read(json, opaque) {
 export function pattern(value, opaque) {
   if (typeof value !== "object")
     throw new TypeError("root value must be Object")
-  const ctx = {opaque,visited:new Set(),count:0}
-  return patternStep(ctx,value)
+  const ctx = {opaque,
+               visited:new Set(),
+               count:0,
+               actions:[]}
+  const dest = {}
+  const actions = ctx.actions = []
+  const queue = ctx.queue = [{rec:true,key:"value",dest,json:null,value}]
+  for(let f;(f = queue.shift());)
+    getValueMeta(f.value).pattern(ctx,f.value,f.key,f.dest)
+  for(const i of ctx.actions)
+    if (i.json)
+      (i.dest.json || (i.dest.json = {}))[i.key] = i.json
+  return dest.json && dest.json.value
 }
 
 /** 
@@ -104,10 +115,6 @@ function readStep(ctx, json) {
   return getJsonMeta(json).read(ctx, json)
 }
 
-function patternStep(ctx, value) {
-  return getValueMeta(value).pattern(ctx, value)
-}
-
 function matchStep(ctx, value, json) {
   if (json) {
     const opaqueRef = json["#opaque"]
@@ -126,14 +133,11 @@ function objectRead(ctx, json) {
   return value
 }
 
-function objectPattern(ctx, value) {
-  let parts
-  for(const i of Object.keys(value)) {
-    const field = patternStep(ctx, value[i])
-    if (field)
-        (parts || (parts = {}))[i] = field
-  }
-  return parts
+function objectPattern(ctx, value, key, dest) {
+  const json = {dest,key}
+  ctx.actions.unshift(json)
+  for(const key of Object.keys(value))
+    ctx.queue.push({key,dest:json,value:value[key]})
 }
 
 function objectMatch(ctx, value, json) {
@@ -144,6 +148,7 @@ function objectMatch(ctx, value, json) {
     matchStep(ctx, next, json[i])
   }
 }
+
 const objectMeta = (prototype, name) => ({
   name: name || "Object",
   write(ctx, value) {
@@ -190,11 +195,11 @@ export const refAwareMeta = (meta) => ({
       return ctx.shared.get(ref)
     return meta.read(ctx, json)
   },
-  pattern(ctx, value) {
-    if (ctx.visited.has(value))
-      return
-    ctx.visited.add(value)
-    return meta.pattern(ctx,value)
+  pattern(ctx, value, key, dest) {
+    if (!ctx.visited.has(value)) {
+      ctx.visited.add(value)
+      meta.pattern(ctx, value, key, dest)
+    }
   },
   create:meta.create,
   readContent:meta.readContent,
@@ -254,11 +259,11 @@ const OpaqueMeta = {
   read(ctx, json) {
     return ctx.opaque.get(json["#opaque"])
   },
-  pattern(ctx, value) {
+  pattern(ctx, value, key, dest) {
     let id = ctx.opaque.get(value)
     if (id == null)
-      ctx.opaque.set(value, id = ctx.count++)
-    return {"#opaque": id}
+      ctx.opaque.set(value, id = ctx.count++);
+    (dest.json || (dest.json = {}))[key] = {"#opaque": id}
   },
   match(ctx, value, json) {
     if (value) {
@@ -318,8 +323,8 @@ function getJsonMeta(json) {
   return PojsoMeta
 }
 
-function iterablePattern(ctx, value) {
-  return objectPattern(ctx,Array.from(value))
+function iterablePattern(ctx, value, key, dest) {
+  return objectPattern(ctx, Array.from(value), key, dest)
 }
 
 function iterableMatch(ctx, value, json) {
@@ -374,7 +379,7 @@ const MapMeta = refAwareMeta({
     const json = []
     for(const [k,v] of value) {
       const item = []
-      item.push(writeStep(ctx, k, item, 0), writeStep(ctx, v, item, 0))
+      item.push(writeStep(ctx, k, item, 0), writeStep(ctx, v, item, 1))
       json.push(item)
     }
     return {"#type":"Map","#data":json}
