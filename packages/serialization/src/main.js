@@ -24,22 +24,11 @@ export function write(value, opaque) {
   if (typeof value !== "object" || Array.isArray(value))
     throw new TypeError("wrong argument type")
   const ctx = {curId:0,opaque,sharedRefs:new Map()}
-  const res = []
-  res.push(writeStep(ctx, value, res, 0))
-  if (ctx.sharedRefs.size) {
-    let refs
-    for(const i of ctx.sharedRefs.values()) {
-      if (i.id != null) {
-        if (!refs)
-          refs = {}
-        refs[i.id] = i.data
-        i.parent[i.index] = {"#ref":i.id}
-      }
-    }
-    if (refs)
-      res[0]["#shared"] = refs
-  }
-  return res[0]
+  const queue = ctx.queue = []
+  const res = writeStep(ctx, value)
+  for(let f;(f = queue.shift());)
+    f.dest[f.key] = writeStep(ctx, f.value)
+  return res
 }
 
 /** 
@@ -52,22 +41,12 @@ export function read(json, opaque) {
   if (typeof json !== "object")
     throw new TypeError("root value must be Object")
   const ctx = {opaque}
+  const queue = ctx.queue = []
   const vals = ctx.shared = new Map()
-  const {"#shared":shared} = json
-  const tasks = []
-  if (shared) {
-    for(const i in shared) {
-      const json = shared[i]
-      const meta = getJsonMeta(json)
-      const value = meta.create(json)
-      vals.set(+i, value)
-      tasks.push({json,value,meta})
-    }
-  }
-  // apply match here? 
-  for(const {json,value,meta} of tasks)
-    meta.readContent(ctx, json, value)
-  return getJsonMeta(json).read(ctx,json)
+  const res = getJsonMeta(json).read(ctx,json)
+  for(let f;(f = queue.shift());)
+    f.meta.readContent(ctx, f.json, f.value)
+  return res
 }
 
 /**
@@ -127,17 +106,11 @@ function matchStep(ctx, value, json) {
   getValueMeta(value).match(ctx, value, json)
 }
 
-function objectRead(ctx, json) {
-  const value = this.create(ctx)
-  this.readContent(ctx, json, value)
-  return value
-}
-
 function objectPattern(ctx, value, key, dest) {
   const json = {dest,key}
   ctx.actions.unshift(json)
   for(const key of Object.keys(value))
-    ctx.queue.push({key,dest:json,value:value[key]})
+    ctx.queue.push({value:value[key],dest:json,key})
 }
 
 function objectMatch(ctx, value, json) {
@@ -152,16 +125,20 @@ function objectMatch(ctx, value, json) {
 const objectMeta = (prototype, name) => ({
   name: name || "Object",
   write(ctx, value) {
-    const parts = {}
+    const dest = {}
     for(const i of Object.keys(value))
-      parts[i[0] === "#" ? "#" + i : i] = writeStep(ctx, value[i], parts, i)
+      ctx.queue.push({value:value[i],dest,key:i[0] === "#" ? "#" + i : i})
     if (name)
-      parts["#type"] = name
-    return parts
+      dest["#type"] = name
+    return dest
   },
-  create() { return Object.create(prototype) },
+  read(ctx, json) {
+    const value = Object.create(prototype)
+    ctx.queue.push({meta:this,json,value})
+    return value
+  },
   readContent(ctx, json, value) {
-    for(const i in json) {
+    for(const i of Object.keys(json)) {
       let name = i
       if (i[0] === "#") {
         if (i[1] !== "#")
@@ -171,7 +148,6 @@ const objectMeta = (prototype, name) => ({
       value[name] = readStep(ctx, json[i])
     }
   },
-  read:objectRead,
   pattern: objectPattern,
   match: objectMatch
 })
@@ -179,17 +155,23 @@ const objectMeta = (prototype, name) => ({
 /** value is stored by reference of if there are more than one */
 export const refAwareMeta = (meta) => ({
   name:meta.name,
-  write(ctx, value, parent, index) {
-    let info = ctx.sharedRefs.get(value)
-    if (info == null) {
-      ctx.sharedRefs.set(value,info = {id:null,parent,index,meta})
-      return info.data = meta.write(ctx, value, parent, index)
+  write(ctx, value) {
+    let json = ctx.sharedRefs.get(value)
+    if (json == null) {
+      ctx.sharedRefs.set(value,json = meta.write(ctx, value))
+      return json
     }
-    if (info.id == null)
-      info.id = ctx.curId++
-    return {"#ref":info.id}
+    if (json["#id"] == null)
+      json["#id"] = ctx.curId++
+    return {"#ref":json["#id"]}
   },
   read(ctx, json) {
+    const id = json["#id"]
+    if (id != null) {
+      let value
+      ctx.shared.set(id, value = meta.read(ctx,json))
+      return value
+    }
     const ref = json["#ref"]
     if (ref != null)
       return ctx.shared.get(ref)
@@ -234,20 +216,14 @@ const PrimMeta = {
 }
 
 const SymbolMeta = {
-  write(ctx, value) {
-    return {"#type":"Symbol",name:Symbol.keyFor(value)}
-  },
-  read(ctx, value) {
-    return Symbol.for(value.name)
-  },
+  write(ctx, value) { return {"#type":"Symbol",name:Symbol.keyFor(value)} },
+  read(ctx, value) { return Symbol.for(value.name) },
   pattern() {},
   match() {}
 }
 
 const RefMeta = {
-  read(ctx, json) {
-    return ctx.shared.get(json["#ref"])
-  }
+  read(ctx, json) { return ctx.shared.get(json["#ref"]) }
 }
 
 const OpaqueMeta = {
@@ -333,18 +309,23 @@ function iterableMatch(ctx, value, json) {
 
 const ArrayMeta = refAwareMeta({
   name: "Array",
+  constr:Array,
   write(ctx, value) {
-    const res = []
+    const dest = []
+    let key = 0
     for(const i of value)
-      res.push(writeStep(ctx, i, res, res.length))
-    return res
+      ctx.queue.push({value:i,dest,key:key++})
+    return {"#type":this.name,"#data":dest}
   },
-  create() { return [] },
+  read(ctx, json) {
+    const value = new this.constr()
+    ctx.queue.push({meta:this,json,value})
+    return value
+  },
   readContent(ctx, json, value) {
-    for(const i of json)
+    for(const i of json["#data"])
       value.push(readStep(ctx,i))
   },
-  read:objectRead,
   pattern:objectPattern,
   match:objectMatch
 })
@@ -354,18 +335,13 @@ Array.prototype[metaSym] = ArrayMeta
 
 const SetMeta = refAwareMeta({
   name: "Set",
-  write(ctx, value) {
-    const json = []
-    for(const i of value)
-      json.push(writeStep(ctx, i, json, json.length))
-    return {"#type":"Set","#data":json}
-  },
-  create() { return new Set() },
+  constr: Set,
+  write:ArrayMeta.noRefs.write,
+  read:ArrayMeta.noRefs.read,
   readContent(ctx, json, value) {
     for(const i of json["#data"])
       value.add(readStep(ctx,i))
   },
-  read:objectRead,
   pattern:iterablePattern,
   match:iterableMatch
 })
@@ -379,17 +355,20 @@ const MapMeta = refAwareMeta({
     const json = []
     for(const [k,v] of value) {
       const item = []
-      item.push(writeStep(ctx, k, item, 0), writeStep(ctx, v, item, 1))
+      ctx.queue.push({value:k,dest:item,key:0},{value:v,dest:item,key:1})
       json.push(item)
     }
     return {"#type":"Map","#data":json}
   },
-  create() { return new Map() },
+  read(ctx, json) {
+    const value = new Map()
+    ctx.queue.push({meta:this,json,value})
+    return value
+  },
   readContent(ctx, json, value) {
     for(const [k,v] of json["#data"])
       value.set(readStep(ctx,k),readStep(ctx,v))
   },
-  read:objectRead,
   pattern:iterablePattern,
   match:iterableMatch
 })
