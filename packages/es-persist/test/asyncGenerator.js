@@ -223,3 +223,22 @@ describe("async generator function", function() {
               e => { done() })
   })
 })
+
+describe("subject", function() {
+  it("should follow generators protocol", function() {
+    return async function subj1() {
+      const s = R.subject()
+      s.send(1)
+      assert.deepEqual(await s.next(), {done:false,value:1})
+      s.send(2)
+      s.send(3)
+      assert.deepEqual(await s.next(), {done:false,value:2})
+      assert.deepEqual(await s.next(), {done:false,value:3})
+      setTimeout(() => s.send(4),10)
+      assert.deepEqual(await s.next(), {done:false,value:4})
+      s.stop(5)
+      assert.deepEqual(await s.next(), {done:true,value:5})
+    }()
+  })
+})
+

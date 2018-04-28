@@ -166,7 +166,7 @@ Rp.toPromise = function() {
     return Promise.reject(this.value)
   default:
     return new Promise(function(r,e) {
-      ctx.dest.push({resume:r,reject:e})
+      ctx.dest.push({resume:r,reject:e,deb_:(new Error()).stack})
     })
   }
 }
@@ -213,7 +213,7 @@ AGp.chain = Ap.chain = function(v, cont, handle, exit) {
   this.$step = cont
   this.$handle = handle
   this.$exit = exit
-  if (!v[awaitSymbol]) {
+  if (!v || !v[awaitSymbol]) {
     this.value = v
     return this // tail call
   }
@@ -226,8 +226,11 @@ Ap.scope = function(cont, handle, exit) {
   this.$exit = exit
   this.cont = new Residual()
   trampoline(this.$run(cont))
-  return this.cont
+  return this
 }
+
+Ap[chainSymbol] = function chain(t) { return this.cont[chainSymbol](t) }
+Ap.then = function (t,e) { return this.cont.then(t, e) }
 
 Ap.pure = function(value) {
   this[contextSymbol].exitThread(this)
@@ -268,7 +271,7 @@ AGp.yld = function(value, step, handle, exit) {
 AGp.return = function(value) {
   var res = new Residual(this)
   this.queue.push(res)
-  if (this.$step === 2) {
+  if (this.$step === 2 && this.$sub.return) {
     this.$resume = this.$exit
     trampoline(this.chain(this.$sub.return(value),
                           3,this.$handle,this.$exit))
@@ -291,7 +294,7 @@ AGp.reject = Ap.reject = function(e) {
 AGp.throw = function(value) {
   var res = new Residual(this)
   this.queue.push(res)
-  if (this.$step === 2) {
+  if (this.$step === 2 && this.$sub.throw) {
     trampoline(this.chain(this.$sub.throw(value),
                           3,this.$handle,this.$exit))
   } else if (this.$handle)  {
@@ -408,3 +411,46 @@ AnyCont.prototype.reject = function(value) {
 
 var AnyProto = Any.prototype = Object.create(Rp)
 AnyProto.constructor = Any
+
+/** 
+ * returns async iterator where message can be sent using
+ * `send` method and it can be finished with `stop` method
+ */
+export function subject() {
+  return new Subject()
+}
+
+function Subject() {
+  this.iq = []
+  this.oq = []
+}
+
+constructors.push(Subject)
+
+Subject.prototype[Symbol.asyncIterator] = function() { return this }
+
+Subject.prototype.next = function(value) {
+  var res = new Residual(this)
+  if (this.oq.length)
+    res.resume(this.oq.shift())
+  else
+    this.iq.push(res)
+  return res
+}
+
+Subject.prototype.stop = function(value) {
+  var frame = this.iq.shift()
+  if (frame)
+    frame.resume({value,done:true})
+  else
+    this.oq.push({value,done:true})
+}
+
+Subject.prototype.send = function(value) {
+  var frame = this.iq.shift()
+  if (frame)
+    frame.resume({value,done:false})
+  else
+    this.oq.push({value,done:false})
+}
+
