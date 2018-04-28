@@ -237,55 +237,39 @@ describe("`Map` serialization", function() {
   })
 })
 
-describe("opaque values pattern", function() {
-  it("should replace opaque values with unique ids", function() {
-    const e = Symbol("e")
-    const obj = {a:1,b(a) { return this.a + a },
-                 c:[Symbol("c"),Symbol.for("d")]}
-    obj.recMap = new Map([[e,obj],[obj,e]])
-    obj.rec = new Set([obj,obj.recMap])
-    const opaque = new Map()
-    const pat = Lib.pattern(obj,opaque)
-    assert.deepStrictEqual([...opaque],[[obj.b,0],[obj.c[0],1],[e,2]])
-    assert.deepStrictEqual(pat,{b:{"#opaque":0},
-                                c:{0:{"#opaque":1}},
-                                recMap:{0:{0:{"#opaque":2}},1:{1:{"#opaque":2}}}})
-    
-    const json = Lib.write(obj, opaque)
-    assert.deepStrictEqual(
-      json,
-      {"#ref":0,
-       "#shared":{
-         0:{
-           a:1,
-           b:{"#opaque":0},
-           c:[{"#opaque":1},
-              {"#type":"Symbol","name":"d"}],
-           recMap:{"#ref":1},
-           rec:{"#type":"Set",
-                "#data":[{"#ref":0},{"#ref":1}]}},
-         1:{"#type":"Map",
-            "#data":[[{"#opaque":2},{"#ref":0}],[{"#ref":0},{"#opaque":2}]]}}})
-    const back = Lib.read(json, new Map([...opaque].map(([a,b]) => [b,a])))
-    assert.notStrictEqual(obj,back)
-    assert.deepStrictEqual(obj,back)
-    const remoteOpaque = new Map()
-    const objRemote = {a:1,
-                       b(a){ return this.a - a},
-                       c:[Symbol("c"),Symbol.for("d")]}
-    const re = Symbol("e")
-    objRemote.recMap = new Map([[re,objRemote],[objRemote,re]])
-    objRemote.rec = new Set([objRemote, objRemote.recMap])
-    Lib.match(objRemote,pat,remoteOpaque)
-    assert.deepStrictEqual([...remoteOpaque].sort(([a],[b]) => a - b),
-                           [[0,objRemote.b],
-                            [1,objRemote.c[0]],
-                            [2,re],
-                           ])
-    const objRemoteNext = Lib.read(json, remoteOpaque)
-    assert.notStrictEqual(objRemoteNext,objRemote)
-    assert.deepStrictEqual(objRemoteNext,objRemote)
+describe("opaque objects serialization", function() {
+  it("should throw for not registered objects", function() {
+    function a() {}
+    assert.throws(() => Lib.write({a}), TypeError)
+  })
+  it("should not throw if `ignore:true`", function() {
+    function a() {}
+    assert.deepStrictEqual(Lib.write({a},{ignore:true}),{a:undefined})
+  })
+  it("should output object's name if registered", function() {
+    function a() {}
+    Lib.regOpaqueObject(a)
+    assert.deepStrictEqual(Lib.write({a}),{a:{"#oid":"a"}});
+    assert.deepStrictEqual(Lib.read({a:{"#oid":"a"}}),{a});
+    (function() {
+      function a() {}
+      Lib.regOpaqueObject(a)
+      assert.deepStrictEqual(Lib.write({a}),{a:{"#oid":"a_1"}})
+      assert.deepStrictEqual(Lib.read({a:{"#oid":"a_1"}}),{a})
+    })()
   })
 })
 
+describe("type with `$$typeof` attribute", function() {
+  Lib.regMeta({
+    name: "hundred",
+    typeofTag:100,
+    read(ctx, json) { return {$$typeof:100} },
+    write(ctx, value) { return {"#type":"hundred"} }
+  })
+  it("should use overriden methods", function() {
+    assert.deepStrictEqual(Lib.write({$$typeof:100}),{"#type":"hundred"})
+    assert.deepStrictEqual(Lib.read({"#type":"hundred"}),{$$typeof:100})
+  })
+})
 

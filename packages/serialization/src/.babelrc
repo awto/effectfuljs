@@ -12,7 +12,8 @@
       ]
     },
     "development": {
-      "plugins": ["@babel/transform-modules-commonjs"]
+      "plugins": ["@babel/plugin-proposal-object-rest-spread",
+                  "@babel/transform-modules-commonjs"]
     }
   }
 }

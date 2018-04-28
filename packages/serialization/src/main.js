@@ -1,7 +1,10 @@
 export const metaSym = Symbol("@effectful/serialization/meta")
 
 const metaByName = new Map()
-const metaByPrototype = new WeakMap()
+const metaByValue = new WeakMap()
+
+/** react uses `$$typeof` property for its values, it is the mapping  */
+const metaByTypeOfProp = new Map()
 
 /** converts to serializable objects and calls `JSON.stringify`  */
 export function stringify(value, replacer, spaces) {
@@ -13,31 +16,52 @@ export function parse(json) {
   return read(JSON.parse(json))
 }
 
+class WriteContext {
+  constructor(opts) {
+    this.sharedRefs = new Map()
+    this.refs = []
+    this.ignore = opts && opts.ignore
+  }
+  step(value, parent, key) {
+    const meta = getValueMeta(value)
+    if (!meta) {
+      if (this.ignore)
+        return void 0
+      throw new TypeError(`not writable value ${value}`)
+    }
+    return meta.write(this, value, parent, key)
+  }
+}
+
+class ReadContext {
+  step(json) {
+    return getJsonMeta(json).read(this, json)
+  }
+}
+
 /** 
  * converts JS value to `JSON.stringify` serializable object 
  * 
  * @param {Object} value - original object
- * @param {Map<any,number>} opaque - known opaque values with their ids
- * @returns {Object} `JSON.stringify` serializable object
+ * @param {{ignore:boolean}} opts - options
  */
-export function write(value, opaque) {
+export function write(value,opts) {
   if (typeof value !== "object" || Array.isArray(value))
     throw new TypeError("wrong argument type")
-  const ctx = {curId:0,opaque,sharedRefs:new Map()}
+  const ctx = new WriteContext(opts)
   const res = []
-  res.push(writeStep(ctx, value, res, 0))
-  if (ctx.sharedRefs.size) {
-    let refs
-    for(const i of ctx.sharedRefs.values()) {
-      if (i.id != null) {
-        if (!refs)
-          refs = {}
-        refs[i.id] = i.data
-        i.parent[i.index] = {"#ref":i.id}
+  res.push(ctx.step(value, res, 0))
+  if (ctx.refs.length) {
+    const refs = ctx.refs.filter(i => i.ref != null)
+    if (refs.length) {
+      let id = 0
+      const dict = {}
+      for(const i of refs) {
+        dict[i.ref["#ref"] = id++] = i.data
+        i.parent[i.index] = i.ref
       }
+      return {...res[0], "#shared": dict}
     }
-    if (refs)
-      res[0]["#shared"] = refs
   }
   return res[0]
 }
@@ -46,202 +70,155 @@ export function write(value, opaque) {
  * converts JSON objects back into JS objects
  *
  * @param {Object} json - object to read
- * @param {Map<number,any>} opaque - map from ids to values to substitute Opaque types
  */
-export function read(json, opaque) {
+export function read(json) {
   if (typeof json !== "object")
     throw new TypeError("root value must be Object")
-  const ctx = {opaque}
+  const ctx = new ReadContext()
   const vals = ctx.shared = new Map()
   const {"#shared":shared} = json
   const tasks = []
   if (shared) {
-    for(const i in shared) {
+    for(const i of Object.keys(shared)) {
       const json = shared[i]
       const meta = getJsonMeta(json)
-      const value = meta.create(json)
+      const value = meta.create(ctx,json)
       vals.set(+i, value)
       tasks.push({json,value,meta})
     }
   }
-  // apply match here? 
   for(const {json,value,meta} of tasks)
     meta.readContent(ctx, json, value)
   return getJsonMeta(json).read(ctx,json)
 }
 
-/**
- * queries all value's parts not serializable (opaque) sub-values
- *
- * @param {Object} value - root object to traverse
- * @param {Map<any,number>} - returns found Opaque values with their unique ids
- * @returns {Object} - pattern JSON serilazable object to apply in `match`
- */
-export function pattern(value, opaque) {
-  if (typeof value !== "object")
-    throw new TypeError("root value must be Object")
-  const ctx = {opaque,
-               visited:new Set(),
-               count:0,
-               actions:[]}
-  const dest = {}
-  const actions = ctx.actions = []
-  const queue = ctx.queue = [{rec:true,key:"value",dest,json:null,value}]
-  for(let f;(f = queue.shift());)
-    getValueMeta(f.value).pattern(ctx,f.value,f.key,f.dest)
-  for(const i of ctx.actions)
-    if (i.json)
-      (i.dest.json || (i.dest.json = {}))[i.key] = i.json
-  return dest.json && dest.json.value
+function escape(name) {
+  return name[0] === "#" ? "#" + name : name
 }
 
-/** 
- * applies result of `pattern` to the corresponding object 
- * to queriying corresponding opaque sub-values 
- *
- * @param {Object} value - the corresponding object
- * @param {Object} json - the result of `pattern` 
- * @param {Map<number, any>} - mapping of unique id to opaque value
- */
-export function match(value, json, opaque) {
-  matchStep({opaque}, value, json)
+function unescape(name) {
+  return name[0] === "#" ? (name[1] !== "#" ? null : name.substr(1)) : name
 }
 
-function writeStep(ctx, value, parent, index) {
-  return getValueMeta(value).write(ctx, value, parent, index)
-}
-
-function readStep(ctx, json) {
-  return getJsonMeta(json).read(ctx, json)
-}
-
-function matchStep(ctx, value, json) {
-  if (json) {
-    const opaqueRef = json["#opaque"]
-    if (opaqueRef != null) {
-      if (value)
-        ctx.opaque.set(opaqueRef, value)
-      return
-    }
-  }
-  getValueMeta(value).match(ctx, value, json)
-}
-
-function objectRead(ctx, json) {
-  const value = this.create(ctx)
-  this.readContent(ctx, json, value)
-  return value
-}
-
-function objectPattern(ctx, value, key, dest) {
-  const json = {dest,key}
-  ctx.actions.unshift(json)
-  for(const key of Object.keys(value))
-    ctx.queue.push({key,dest:json,value:value[key]})
-}
-
-function objectMatch(ctx, value, json) {
-  for(const i in json) {
-    const next = value[i]
-    if (!next)
-      throw new TypeError(`no matching field: ${i}`)
-    matchStep(ctx, next, json[i])
-  }
-}
-
-const objectMeta = (prototype, name) => ({
-  name: name || "Object",
+const ObjectMeta = {
+  read(ctx, json) {
+    const value = this.create(ctx,json)
+    this.readContent(ctx, json, value)
+    return value
+  },
   write(ctx, value) {
     const parts = {}
     for(const i of Object.keys(value))
-      parts[i[0] === "#" ? "#" + i : i] = writeStep(ctx, value[i], parts, i)
-    if (name)
-      parts["#type"] = name
+      parts[escape(i)] = ctx.step(value[i], parts, i)
+    if (this.valuePrototype !== void 0)
+      parts["#type"] = this.name
     return parts
   },
-  create() { return Object.create(prototype) },
+  create() {
+    if (this.valueConstructor)
+      return new this.valueConstructor()
+    if (this.valuePrototype !== void 0)
+      return Object.create(this.valuePrototype)
+    return {}
+  },
   readContent(ctx, json, value) {
     for(const i in json) {
-      let name = i
-      if (i[0] === "#") {
-        if (i[1] !== "#")
-          continue
-        name = i.substr(1)
-      }
-      value[name] = readStep(ctx, json[i])
+      let name = unescape(i)
+      if (name == null)
+        continue
+      value[name] = ctx.step(json[i])
     }
-  },
-  read:objectRead,
-  pattern: objectPattern,
-  match: objectMatch
-})
+  }
+}
 
 /** value is stored by reference of if there are more than one */
-export const refAwareMeta = (meta) => ({
-  name:meta.name,
-  write(ctx, value, parent, index) {
-    let info = ctx.sharedRefs.get(value)
-    if (info == null) {
-      ctx.sharedRefs.set(value,info = {id:null,parent,index,meta})
-      return info.data = meta.write(ctx, value, parent, index)
-    }
-    if (info.id == null)
-      info.id = ctx.curId++
-    return {"#ref":info.id}
-  },
-  read(ctx, json) {
-    const ref = json["#ref"]
-    if (ref != null)
-      return ctx.shared.get(ref)
-    return meta.read(ctx, json)
-  },
-  pattern(ctx, value, key, dest) {
-    if (!ctx.visited.has(value)) {
-      ctx.visited.add(value)
-      meta.pattern(ctx, value, key, dest)
-    }
-  },
-  create:meta.create,
-  readContent:meta.readContent,
-  match: meta.match,
-  noRefs: meta
-})
+export const refAwareMeta = (meta) =>
+  (meta.noRefs
+   ? meta : {
+     ...meta,
+     read(ctx, json) {
+       const ref = json["#ref"]
+       if (ref != null)
+         return ctx.shared.get(ref)
+       return this.readNoRef(ctx, json)
+     },
+     write(ctx, value, parent, index) {
+       let info = ctx.sharedRefs.get(value)
+       if (info == null) {
+         ctx.sharedRefs.set(value,info = {ref:null,parent,index,meta})
+         if (this.always && parent)
+           info.ref = {}
+         info.data = this.writeNoRef(ctx, value, parent, index)
+         ctx.refs.push(info)
+         return info.data
+       }
+       if (info.ref == null)
+         info.ref = {}
+       return info.ref
+     },
+     writeNoRef:meta.write,
+     readNoRef:meta.read,
+     noRefs: meta
+   })
 
-export function regMeta(meta, name) {
-  metaByName.set(meta.name || "Object", meta)
-  if (name)
-    meta.type = name
+export function regMeta(meta) {
+  const name = guessMetaName(meta)
+  let uniq = name, i = 0
+  for(;metaByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
+  meta = {...meta,name:uniq}
+  metaByName.set(meta.name, meta)
+  if (meta.typeofTag)
+    metaByTypeOfProp.set(meta.typeofTag, meta)
   return meta
 }
 
-export function regConstructor(constructor,
-                               name = constructor.name || "Object") {
-  const prototype = constructor.prototype
-  let uniq = name
-  for(let i = 0; metaByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
-  return prototype[metaSym] ||
-    (prototype[metaSym] = regMeta(refAwareMeta(
-      objectMeta(prototype, uniq)),uniq))
+function guessObjectName(value) {
+  return value.name
+    || value.constructor && value.constructor.name
+    || "Object"
 }
 
-const PojsoMeta = regMeta(refAwareMeta(objectMeta(Object.prototype)))
+function guessMetaName(meta) {
+  if (meta.name)
+    return meta.name
+  if (meta.valuePrototype && meta.valuePrototype.name)
+    return meta.valuePrototype.name
+  if (meta.valueConstructor && meta.valueConstructor.name)
+    return meta.valueConstructor.name
+  if (meta.valuePrototype
+      && meta.valuePrototype.constructor
+      && meta.valuePrototype.constructor.name)
+    return meta.valuePrototype.constructor.name
+  return "Object"
+}
+
+export function regObjectMeta(meta) {
+  return regMeta(refAwareMeta(meta))
+}
+
+export function regOpaqueObject(value, name = guessObjectName(value)) {
+  return value[metaSym] = regObjectMeta({...OpaqueMeta,name,value})
+}
+
+export function regConstructor(constr, meta = ObjectMeta) {
+  const prototype = constr.prototype
+  return prototype[metaSym]
+    = regMeta(refAwareMeta({...meta,
+                            valuePrototype:prototype,
+                            name:constr.name}))
+}
+
+export function regPrimValue(value, name) {
+  const meta = regMeta({...OpaqueMeta,name,value})
+  metaByValue.set(value,meta)
+  return meta
+}
+
+const PojsoMeta = regObjectMeta(ObjectMeta)
 
 const PrimMeta = {
   write(ctx, value) { return value },
-  read(ctx, json) { return json },
-  pattern() {},
-  match() {}
-}
-
-const SymbolMeta = {
-  write(ctx, value) {
-    return {"#type":"Symbol",name:Symbol.keyFor(value)}
-  },
-  read(ctx, value) {
-    return Symbol.for(value.name)
-  },
-  pattern() {},
-  match() {}
+  read(ctx, json) { return json }
 }
 
 const RefMeta = {
@@ -251,30 +228,32 @@ const RefMeta = {
 }
 
 const OpaqueMeta = {
-  write(ctx, value) {
-    const id = ctx.opaque.get(value)
-    if (id != null)
-      return {"#opaque":id}
-  },
   read(ctx, json) {
-    return ctx.opaque.get(json["#opaque"])
+    return this.create(ctx, json)
   },
-  pattern(ctx, value, key, dest) {
-    let id = ctx.opaque.get(value)
-    if (id == null)
-      ctx.opaque.set(value, id = ctx.count++);
-    (dest.json || (dest.json = {}))[key] = {"#opaque": id}
+  readContent() {},
+  create(ctx, json) {
+    const res = metaByName.get(json["#oid"])
+    if (!res)
+      throw new Error(`not found object ${json["#oid"]}`)
+    return this.value
   },
-  match(ctx, value, json) {
-    if (value) {
-      const ref = json["#opaque"]
-      if (ref)
-        ctx.opaque.set(ref, value)
-    }
+  write(ctx, value) {
+    return {"#oid":this.name}
   }
 }
 
-metaByName.set("Symbol", SymbolMeta)
+
+const SymbolMeta = regMeta({
+  write(ctx, value) {
+    return {"#type":"Symbol",name:Symbol.keyFor(value)}
+  },
+  read(ctx, value) {
+    return Symbol.for(value.name)
+  },
+  name:"Symbol"
+})
+
 
 function getValueMeta(value) {
   switch(typeof value) {
@@ -290,16 +269,19 @@ function getValueMeta(value) {
     if (meta)
       return meta
     const proto = Object.getPrototypeOf(value)
-    if (proto == null || proto === Object.prototype)
+    if (proto == null || proto === Object.prototype) {
+      if (value.$$typeof)
+        return metaByTypeOfProp.get(value.$$typeof)
       return PojsoMeta
-    return OpaqueMeta
+    }
+    return null
   case "function":
-    return OpaqueMeta
+    return value[metaSym] || null
   case "symbol":
     if (Symbol.keyFor(value))
       return SymbolMeta
   }
-  return OpaqueMeta
+  return null
 }
 
 function lookupMeta(typeName) {
@@ -316,84 +298,56 @@ function getJsonMeta(json) {
     return ArrayMeta
   if ("#ref" in json)
     return RefMeta
-  if ("#opaque" in json)
-    return OpaqueMeta
+  if ("#oid" in json)
+    return lookupMeta(json["#oid"])
   if ("#type" in json)
     return lookupMeta(json["#type"])
   return PojsoMeta
 }
 
-function iterablePattern(ctx, value, key, dest) {
-  return objectPattern(ctx, Array.from(value), key, dest)
-}
-
-function iterableMatch(ctx, value, json) {
-  objectMatch(ctx, Array.from(value), json)
-}
-
-const ArrayMeta = refAwareMeta({
-  name: "Array",
+const ArrayMeta = regConstructor(Array,{
+  ...ObjectMeta,
   write(ctx, value) {
     const res = []
     for(const i of value)
-      res.push(writeStep(ctx, i, res, res.length))
+      res.push(ctx.step(i, res, res.length))
     return res
   },
-  create() { return [] },
+  valueConstructor:Array,
+  name:"Array",
   readContent(ctx, json, value) {
     for(const i of json)
-      value.push(readStep(ctx,i))
-  },
-  read:objectRead,
-  pattern:objectPattern,
-  match:objectMatch
+      value.push(ctx.step(i))
+  }
 })
 
-metaByName.set("Array", ArrayMeta)
-Array.prototype[metaSym] = ArrayMeta
-
-const SetMeta = refAwareMeta({
-  name: "Set",
+const IterableMeta = {
+  ...ObjectMeta,
   write(ctx, value) {
     const json = []
     for(const i of value)
-      json.push(writeStep(ctx, i, json, json.length))
-    return {"#type":"Set","#data":json}
+      json.push(ctx.step(i, json, json.length))
+    return {"#type":this.name,"#data":json}
   },
-  create() { return new Set() },
   readContent(ctx, json, value) {
     for(const i of json["#data"])
-      value.add(readStep(ctx,i))
-  },
-  read:objectRead,
-  pattern:iterablePattern,
-  match:iterableMatch
+      value.add(ctx.step(i))
+  }
+}
+
+regConstructor(Set,{
+  ...IterableMeta,
+  valueConstructor:Set,
+  name:"Set"
 })
 
-Set.prototype[metaSym] = SetMeta
-metaByName.set("Set",SetMeta)
-
-const MapMeta = refAwareMeta({
-  name: "Map",
-  write(ctx, value) {
-    const json = []
-    for(const [k,v] of value) {
-      const item = []
-      item.push(writeStep(ctx, k, item, 0), writeStep(ctx, v, item, 1))
-      json.push(item)
-    }
-    return {"#type":"Map","#data":json}
-  },
-  create() { return new Map() },
+regConstructor(Map,{
+  ...IterableMeta,
+  valueConstructor:Map,
+  name:"Map",
   readContent(ctx, json, value) {
     for(const [k,v] of json["#data"])
-      value.set(readStep(ctx,k),readStep(ctx,v))
-  },
-  read:objectRead,
-  pattern:iterablePattern,
-  match:iterableMatch
+      value.set(ctx.step(k),ctx.step(v))
+  }
 })
-
-Map.prototype[metaSym] = MapMeta
-metaByName.set("Map",MapMeta)
 
