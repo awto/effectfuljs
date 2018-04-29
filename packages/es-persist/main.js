@@ -225,7 +225,7 @@ Ap.scope = function(cont, handle, exit) {
   this.$handle = handle
   this.$exit = exit
   this.cont = new Residual()
-  trampoline(this.$run(cont))
+  this.cont.resume()
   return this
 }
 
