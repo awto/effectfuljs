@@ -8,17 +8,6 @@ One of the examples is recent ES standard updates with generators and `async/awa
 It is a new concrete side effect embedded into language. Adding same coroutines
 effects with effectful-js doesn't require standard, syntax change and new compilers.
 
-Human readability for generated code aim is shared with
-[kneden](https://github.com/marten-de-vries/kneden) transpiler, and turning
-`async/await` into promises expressions. The same may be achieved using effectful-js
-with a tiny adapter from promises interface into effectfuljs. There is one implemented
-in [@effectful/es-inline-rt](https://github.com/awto/effectfuljs/tree/master/packages/es-inline-rt), 
-so effectfuljs approach does require runtime library loading, while kneden team highlights no runtime
-library dependency as an advantage. Though from it is easy to remove not used features from 
-Effectful.js runtime. And it may be even inlined into target modules.
-Also, effectfuljs is more complete than kneden(at the time of writing this). It at least
-can handle `breaks/return/continue` from `try/catch/finally`.
-
 There are other less known JS extensions may be implemented as library using effectfuljs
 compiler. These are [webppl](https://github.com/probmods/webppl) for probabilistic
 programming, [flapjax](http://www.flapjax-lang.org/) language for reactive
@@ -54,7 +43,7 @@ paper from 1994. There is a more recent implementation of the same idea for Java
 [this post](https://www.infoq.com/articles/Dont-graft-Monads-onto-Imperative-Languages).
 Continuations based implementation doesn't allow detecting and automatically
 generating Applicative combinators instead of Monadic ones, for more efficient
-code (more details in [Applicative vs Monad interface](#applicative-vs-monad-interface)).
+code (this is going to be implemented SOON).
 
 There are also concrete side effects compilers with single level syntax,
 for example flapjax and webppl.
@@ -63,5 +52,10 @@ There are a few languages now with direct style effects operations using type
 system extensions - Algebraic Effects. E.g. [koka](https://github.com/koka-lang/koka)
 or [eff](https://github.com/matijapretnar/eff). Types provide additional safety 
 there and it is easier to combine algebraic effects comparing to monads.
+The same but with dynamic typing may be achieved with EffectfulJS using
+[@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/cc)
+library and dynamically dispatching to corresponding effect handler. However
+it makes impossible using Applicative combinators in result.
+
 
 
