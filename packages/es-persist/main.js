@@ -3,12 +3,14 @@
  * access to their current state
  */
 
-import * as Es from "@effectful/es-rt/opts/defunct"
+export {generator,generatorFunction,iterator,
+        iteratorM,forInIterator} from "@effectful/es-rt"
+import {Generator,iteratorM} from "@effectful/es-rt"
 
 /** a property name for accessing threads store */
 export var contextSymbol = Symbol("@effectful/es-persist/context")
 
-/** 
+/**
  * a name of a method like `Promise.prototype.then`, but instead of two 
  * callbacks it takes an object with `resume`/`reject` methods, thus
  * making it easier to serialize 
@@ -27,15 +29,10 @@ export var awaitSymbol = Symbol("@effectful/es-persist/await")
  * list of constructors used by this lib to be handled by some serialization
  * library if needed
  */
-export var constructors = []
+export var constructors = [Generator]
 
-export var generator = Es.generator
-export var generatorFunction = Es.generatorFunction
-
-export var async = Es.async
-export var iterator = Es.iterator
-export var iteratorM = Es.iteratorM
-export var forInIterator = Es.forInIterator
+var DELEGATE_CONT = 2
+var DELEGATE_RESUME = 3
 
 /** 
  * registry for currently running async functions 
@@ -44,11 +41,10 @@ export var forInIterator = Es.forInIterator
  * async (generator) function definition with `contextSymbol` 
  * property.
  */
-export function Context() {
+export function Context(scheduler) {
   this.threads = new Set()
+  this.scheduler = scheduler || new EventLoopScheduler()
 }
-
-constructors.push(Context)
 
 /** 
  * called for each async function once, at its module's top level
@@ -67,8 +63,13 @@ Context.prototype.startThread = function startThread(thread) {
  */
 Context.prototype.exitThread = function exitThread(thread) {
   this.threads.delete(thread)
-  thread.$handle = thread.$step = thread.$exit
-    = thread.$contHandle = thread.$contExit = 0
+  thread.$last = thread.$step = 0
+}
+
+function EventLoopScheduler() {}
+
+EventLoopScheduler.prototype.enqueue = function(job) {
+  Promise.resolve().then(() => job.run())
 }
 
 /** default registry */
@@ -98,8 +99,9 @@ export function Async() {
   this.value = void 0
 }
 
-var EsAp = Es.Async.prototype
-var Ap = Async.prototype = Object.create(EsAp)
+constructors.push(Async)
+
+var Ap = Async.prototype
 Ap.constructor = Async
 
 function AsyncGenerator() {
@@ -107,15 +109,24 @@ function AsyncGenerator() {
   this.queue = []
 }
 
-export function asyncGenerator(caller) {
+constructors.push(AsyncGenerator)
+
+function construct(caller) {
   var res = Object.create(caller.prototype)
   caller.prototype.constructor.call(res)
   return res
 }
 
-var EsAGp = Es.AsyncGenerator.prototype.leanPrototype
-var AGp = AsyncGenerator.prototype = Object.create(EsAGp)
+export var asyncGenerator = construct
+export var async = construct
+
+var AGp = AsyncGenerator.prototype
 AGp.constructor = AsyncGenerator
+
+Ap.$err = AGp.$err = function() { return 1 }
+AGp.$fin = function() { return 0 }
+
+AGp[Symbol.asyncIterator] = function() { return this }
 
 function Residual() {
   this.dest = []
@@ -123,6 +134,20 @@ function Residual() {
 }
 
 constructors.push(Residual)
+
+/**
+ * returns Residual value
+ * 
+ * Residual value is like Promise but without callbacks, 
+ * there is a `[chainSymbol]` method instead of `then` to specify next 
+ * continuations. The continuation object has two methods `resume`/`reject` to continue 
+ * execution in either normal or exception paths.
+ *
+ * The Residual object is itself an instance of continuation. 
+ */
+export function residual() {
+  return new Residual()
+}
 
 var Rp = Residual.prototype
 
@@ -132,10 +157,6 @@ Promise.prototype[chainSymbol] = Rp[chainSymbol] = function chain(t) {
   this[awaitSymbol](t)
   return res
 }
-
-function Generator() {}
-var Gp = Generator.prototype = Object.create(Es.Generator.prototype)
-Gp.constructor = Generator
 
 Rp.resume = function(value) {
   var dest = this.dest, i
@@ -184,49 +205,44 @@ Rp[awaitSymbol] = function(next) {
   }
 }
 
-function trampoline(res) {
-  var value
-  while(res)
-    res = res.$run(res.$step,(value = res.value,res.value = void 0,value))
-}
-
 Promise.prototype[awaitSymbol] = function(next) {
-  this.then(function(v) { next.resume(v) },function(e) { next.reject(e) })
+  this.then(function(v) { next.resume(v) },
+            function(e) { next.reject(e) })
 }
 
-AGp.jump = Ap.jump = function(v, cont, handle, exit) {
+Ap.jump = AGp.jump = function(v, cont) {
   this.$step = cont
-  this.$handle = handle
-  this.$exit = exit
-  this.value = v
-  return this
+  this.enqueue(v)
 }
 
-AGp.scope = function(step,handle,exit) {
-  this.$step = step
-  this.$handle = this.$contHandle = handle
-  this.$exit = this.$contExit = exit
-  return this
-}
-
-AGp.chain = Ap.chain = function(v, cont, handle, exit) {
-  this.$step = cont
-  this.$handle = handle
-  this.$exit = exit
-  if (!v || !v[awaitSymbol]) {
-    this.value = v
-    return this // tail call
+AGp.run = Ap.run = function() {
+  var value
+  try {
+    return this.$run(this.$last = this.$step,
+                     (value = this.$arg, this.$arg = void 0,value))
+  } catch(e) {
+    this.reject(e)
   }
-  return v[awaitSymbol](this)
 }
 
-Ap.scope = function(cont, handle, exit) {
-  this.$step = cont
-  this.$handle = handle
-  this.$exit = exit
-  this.cont = new Residual()
-  this.cont.resume()
+AGp.scope = function(step) {
+  this.$last = this.$step = step
   return this
+}
+
+AGp.chain = Ap.chain = function(v, cont) {
+  this.$step = cont
+  if (!v || !v[awaitSymbol])
+    this.enqueue(v)
+  else
+    v[awaitSymbol](this)
+}
+
+Ap.scope = function(cont) {
+  this.$step = cont
+  this.cont = new Residual()
+  this.resume()
+  return this.cont
 }
 
 Ap[chainSymbol] = function chain(t) { return this.cont[chainSymbol](t) }
@@ -254,54 +270,73 @@ AGp.raise = function(error) {
 
 AGp.resume = Ap.resume = function resume(v) {
   try {
-    trampoline(this.$run(this.$step, v))
+    var s = this.$step
+    switch(s) {
+    case DELEGATE_CONT:
+      this.chain(this.$sub.next(v), DELEGATE_RESUME)
+      break
+    case DELEGATE_RESUME:
+      if (v.done) {
+        this.$run(this.$last = this.$step = this.$resume, v)
+        this.$sub = this.$resume = void 0
+        break
+      }
+      this.yld(v.value, DELEGATE_CONT)
+      break
+    default:
+      this.$last = this.$step
+      this.$run(this.$step, v)
+    }
   } catch(e) {
     this.reject(e)
   }
 }
 
-AGp.yld = function(value, step, handle, exit) {
-  var ctx = this[contextSymbol]
+AGp.enqueue = Ap.enqueue = function enqueue(v) {
+  this.$arg = v
+  this[contextSymbol].scheduler.enqueue(this)
+}
+
+AGp.yld = function(value, step) {
   this.$step = step
-  this.$contHandle = handle
-  this.$contExit = exit
   return this.queue.shift().resume({value:value,done:false})
+}
+
+
+AGp.yldStar = function(iter, step) {
+  this.$sub = iteratorM(iter)
+  this.$resume = step
+  return this.chain(this.$sub.next(),DELEGATE_RESUME)
 }
 
 AGp.return = function(value) {
   var res = new Residual(this)
   this.queue.push(res)
-  if (this.$step === 2 && this.$sub.return) {
-    this.$resume = this.$exit
-    trampoline(this.chain(this.$sub.return(value),
-                          3,this.$handle,this.$exit))
+  if (this.$step === DELEGATE_CONT && this.$sub.return) {
+    this.$resume = this.$fin(this.$last)
+    this.chain(this.$sub.return(value),DELEGATE_RESUME)
   } else {
-    this.$step = this.$exit
-    this.resume(value)
+    this.$step = this.$fin(this.$last)
+    this.enqueue(value)
   }
   return res
 }
 
-AGp.reject = Ap.reject = function(e) {
-  if (this.$handle) {
-    this.$step = this.$handle
-    this.$handle = void 0
-    this.resume(e)
-  } else
+Ap.reject = AGp.reject = function(e) {
+  if((this.$step = this.$err(this.$last)) !== 1)
+    this.enqueue(e)
+  else
     this.raise(e)
 }
 
 AGp.throw = function(value) {
   var res = new Residual(this)
   this.queue.push(res)
-  if (this.$step === 2 && this.$sub.throw) {
-    trampoline(this.chain(this.$sub.throw(value),
-                          3,this.$handle,this.$exit))
-  } else if (this.$handle)  {
-    this.$step = this.$handle
-    this.resume(value)
+  if (this.$step === DELEGATE_CONT && this.$sub.throw) {
+    this.chain(this.$sub.throw(value),DELEGATE_RESUME)
   } else {
-    this.raise(value)
+    this.$step = this.$err(this.$last)
+    this.enqueue(value)
   }
   return res
 }
@@ -309,14 +344,16 @@ AGp.throw = function(value) {
 AGp.next = function next(value) {
   var res = new Residual(this)
   this.queue.push(res)
-  this.$handle = this.$contHandle
-  this.$exit = this.$contExit
-  this.resume(value)
+  if (this.$step === DELEGATE_CONT) {
+    this.chain(this.$sub.next(value),DELEGATE_RESUME)
+  } else {
+    this.enqueue(value)
+  }
   return res
 }
 
-function ext(proto) {
-  return function(fun, handler) {
+function makeConstructor(proto) {
+  return function(fun, handler, err, fin) {
     var p = handler[prototypeSym]
     if (p) {
       fun.prototype = p
@@ -327,14 +364,18 @@ function ext(proto) {
     if (!p[contextSymbol])
       p[contextSymbol] = globalContext
     p.$run = handler
+    if (err)
+      p.$err = err
+    if (fin)
+      p.$fin = fin
     p.name = fun.name
     p[contextSymbol].reg(fun)
     return fun
   }
 }
 
-export const asyncFunction = ext(Ap)
-export const asyncGeneratorFunction = ext(AGp)
+export var asyncFunction = makeConstructor(Ap)
+export var asyncGeneratorFunction = makeConstructor(AGp)
 
 function All(arr) {
   var len = arr.length, i
@@ -452,5 +493,25 @@ Subject.prototype.send = function(value) {
     frame.resume({value,done:false})
   else
     this.oq.push({value,done:false})
+}
+
+function Fork() {}
+
+/** 
+ * captures current continuation returning a function to 
+ * resume into it
+ *
+ * it doesn't clone the control context
+ */
+export function fork() {
+  return new Fork()
+}
+
+constructors.push(Fork)
+
+Fork.prototype[awaitSymbol] = function(cont) {
+  var res = new Residual()
+  res.dest.push(cont)
+  cont.resume(res)
 }
 

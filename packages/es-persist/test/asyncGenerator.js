@@ -10,6 +10,8 @@ Wait.prototype[R.awaitSymbol] = function(next) {
 
 function empty() {}
 
+const ctx = new R.Context({enqueue(job){job.run()}})
+
 async function* fn() {
   let i = 1
   function clos2() {
@@ -18,12 +20,15 @@ async function* fn() {
       for(let k = 0; k < 2; k++)
         yield k + j
     }
-    return async function* b() {   
+    gen.prototype[R.contextSymbol] = ctx
+    const bf = async function* b() {   
       for(const k of gen()) {
         await new Wait(j+=i + k)
         empty(k)
       }
-    }()
+    }
+    bf.prototype[R.contextSymbol] = ctx
+    return bf()
   }
   await new Wait("start")
   for await(const j of clos2())
@@ -36,15 +41,16 @@ async function run() {
     await new Wait(i)
 }
 
+fn.prototype[R.contextSymbol] = run.prototype[R.contextSymbol] = ctx
+
 // what I need to have is a separate layer for this
 
 describe("async generator function", function() {
   it("should have its state visible", function() {
-    const state = R.context()
     const s = run()
-    const t = [...state.threads].find(i => i.cont === s)
-    const subThreads = () => [...state.threads].filter(i => i.cont !== s)
-    assert.equal(state.threads.size, 2)
+    const t = [...ctx.threads].find(i => i.cont === s)
+    const subThreads = () => [...ctx.threads].filter(i => i.cont !== s)
+    assert.equal(ctx.threads.size, 2)
     assert.equal(t.name, "run")
     let threads = subThreads()
     assert.equal(threads.length,1)
@@ -108,8 +114,7 @@ describe("async generator function", function() {
     assert.equal(threads.length,0)
     assert.equal(s.awaiting, void 0)
   })
-  it("should conform to ES", function(done) {
-    const ctx = R.context()
+  it("should conform to ES", function() {
     let finallyCalledSrc = 0
     let finallyCalled1 = 0
     let finallyCalled2 = 0
@@ -120,20 +125,25 @@ describe("async generator function", function() {
     let p2 = {
       [R.awaitSymbol](next) {
         tasks.push(next)
+        assert.equal(R.context().threads.size, 6)
+        assert.equal([...R.context().threads].map(i => i.name).sort().join(),
+                 "_a1,_a2,_a3,_a4,_scheduler,_src")
         cbtask()
       }
     }
-
     async function scheduler() {
       await new Promise(i => cbtask = i)
       tasks.pop().resume("t1")
     }
-
     scheduler()
     async function* src() {
       try {
         yield (await p1)
+        assert.equal(R.context().threads.size, 6)
         yield (await p2)
+        assert.equal(R.context().threads.size, 5)
+        assert.equal([...R.context().threads].map(i => i.name).sort().join(),
+                 "_a1,_a2,_a3,_a4,_src")
         assert.fail("never")
       } finally {
         finallyCalledSrc++
@@ -175,7 +185,6 @@ describe("async generator function", function() {
       assert.ok(!i1.done)
       assert.equal(i1.value,"a3:a1:hi")
       const n = v.next()
-      assert.equal(tasks.length, 1)
       const i2 = await n
       assert.ok(!i2.done)
       assert.equal(i2.value,"a3:a1:t1")
@@ -185,19 +194,19 @@ describe("async generator function", function() {
       assert.ok(finallyCalledSrc)
       assert.ok(finallyCalled1)
       assert.ok(finallyCalled2)
-      assert.equal(R.context().threads.size,2)
+      assert.equal(R.context().threads.size,1)
       return 3
     }
     const t4 = a4()
-    t4.then(i => {
+    const res = t4.then(i => {
       assert.equal(i, 3)
       assert.equal(R.context().threads.size,0)
-      done()
     })
     cb("hi")
-    assert.equal(ctx.threads.size, 6)
+    assert.equal(R.context().threads.size, 3)
     assert.equal([...R.context().threads].map(i => i.name).sort().join(),
-                 "_a1,_a2,_a3,_a4,_scheduler,_src")
+                 "_a3,_a4,_scheduler")
+    return res
   })
   it("should propagate exceptions", function(done) {
     async function* a1() {
@@ -241,4 +250,39 @@ describe("subject", function() {
     }()
   })
 })
+
+
+describe("fork", function() {
+  it("should be possible to resume", async function() {
+    const ctx = R.context()
+    const state = {}
+    let resume
+    let forkCalled = 0
+    const f = async function* fork() {
+      let i = 0
+      await Promise.resolve()
+      const r = await R.fork()
+      if (r && r.resume) {
+        resume = r
+        Object.assign(state,f)
+        return `main:${++i}`
+      } else {
+        return `fork:${++i}-${r}`
+      }
+    }()
+    assert.deepStrictEqual(await f.next(), {value:"main:1",done:true})
+    const saveResume = resume.dest.slice()
+    Object.assign(f,state)
+    const n1 = f.next()
+    resume.resume(1)
+    assert.deepStrictEqual(await n1, {value:"fork:1-1",done:true})
+    Object.assign(f,state)
+    resume.state = 0
+    resume.dest = saveResume
+    const n2 = f.next()
+    resume.resume(2)
+    assert.deepStrictEqual(await n2, {value:"fork:1-2",done:true})
+  })
+})
+
 
