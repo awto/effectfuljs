@@ -162,6 +162,7 @@ function a3_3(a3, b) {
   a = a3._ || b;
 
   if (!a) {
+    a3._ = null;
     return M.chain(eff(3), a3_4);
   } else {
     return a;
@@ -184,6 +185,7 @@ function a4_3(a4, b) {
   a = a4._ && b;
 
   if (a) {
+    a4._ = null;
     return M.chain(eff(3), a4_4);
   } else {
     return a;
@@ -417,6 +419,7 @@ function _a19_1(a19) {
 
 function a19_2(a19, a) {
   if (!a) {
+    a19._ = null;
     return M.chain(eff(2), a19_3);
   } else {
     a19._ = a;
@@ -431,11 +434,14 @@ function a19_3(a19, a) {
 
 function a19_4(a19, a) {
   a19._ = (a19._1, a);
+  a19._1 = null;
   return M.jump(void 0, a19_5);
 }
 
 function a19_5(a19) {
-  return M.chain(eff(a19._), a19_6);
+  var a;
+  a = a19._, a19._ = null;
+  return M.chain(eff(a), a19_6);
 }
 
 function a19_6(a19) {}
@@ -446,6 +452,7 @@ function a19_1_1(a19_1) {
 
 function a19_1_2(a19_1, a) {
   if (!a) {
+    a19_1._1 = null;
     return M.chain(eff(2), a19_1_3);
   } else {
     a19_1._1 = a;
@@ -460,6 +467,7 @@ function a19_1_3(a19_1, a) {
 
 function a19_1_4(a19_1, a) {
   a19_1._1 = (a19_1._2, a);
+  a19_1._2 = null;
   return M.jump(void 0, a19_1_5);
 }
 
@@ -754,6 +762,7 @@ function a1_19(a1) {
   a = "a3l";
 
   if (a) {
+    a1._ = null;
     return M.yldStar(M.yld("a3r"), a1_20);
   } else {
     a1._ = a;
@@ -767,7 +776,9 @@ function a1_20(a1, a) {
 }
 
 function a1_21(a1) {
-  return M.yldStar(M.yld(a1._), a1_22);
+  var a;
+  a = a1._, a1._ = null;
+  return M.yldStar(M.yld(a), a1_22);
 }
 
 function a1_22(a1) {

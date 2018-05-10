@@ -30,9 +30,9 @@ effectful value
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| f | `function` | 
 
 **Returns:** `A`
 
@@ -50,17 +50,17 @@ effectful value
 
 ###  __computed
 
-▸ **__computed**(k: *[Seq](../#seq)`A`, `any`*): [CCV](../#ccv)`any`
+▸ **__computed**(k: *[Seq](../#seq)<`A`, `any`>*): [CCV](../#ccv)<`any`>
 
 *Defined in main.ts:28*
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| k | [Seq](../#seq)`A`, `any`   |  - |
+| Param | Type |
+| ------ | ------ |
+| k | [Seq](../#seq)<`A`, `any`> | 
 
-**Returns:** [CCV](../#ccv)`any`
+**Returns:** [CCV](../#ccv)<`any`>
 
 ___
 

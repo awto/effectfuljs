@@ -15,6 +15,7 @@ function f_2(ctx) {
   if (ctx._i < 3) {
     return M.chain(eff(ctx._i), f_3);
   } else {
+    ctx._i = null;
     return M.jump(void 0, f_10);
   }
 }
@@ -29,6 +30,7 @@ function f_4(ctx) {
     d = ctx._ref[ctx._j];
     return M.chain(eff(d), f_5);
   } else {
+    ctx._j = null, ctx._len = null;
     return M.jump(void 0, f_7);
   }
 }
@@ -43,6 +45,7 @@ function f_5(ctx, a) {
 
 function f_6(ctx, a) {
   if (a) {
+    ctx._j = null;
     return M.jump(void 0, f_10);
   } else {
     ctx._j++;

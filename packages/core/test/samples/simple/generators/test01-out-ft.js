@@ -98,6 +98,7 @@ function d_5(d, a) {
     if (d._j) {
       return M.pure(d._i);
     } else {
+      d._i = null, d._j = null;
       return M.yldStar(M.yld(2), d_6);
     }
   }
@@ -122,12 +123,14 @@ function a4_3(a4) {
 
 function a4_4(a4) {
   a4._e = a4._ex;
+  a4._ex = null;
   return M.yldStar(M.yld("excep"), a4_5, a4_14);
 }
 
 function a4_5(a4) {
-  a4._fc = a4_8, a4._fe = a4_11;
-  return M.yldStar(M.yld(a4._e), a4_6);
+  var a;
+  a4._fc = a4_8, a4._fe = a4_11, a = a4._e, a4._e = null;
+  return M.yldStar(M.yld(a), a4_6);
 }
 
 function a4_6(a4) {
@@ -135,7 +138,9 @@ function a4_6(a4) {
 }
 
 function a4_7(a4) {
-  return M.yldStar(M.yld("e"), a4._fc, a4._fe);
+  var a, b;
+  a = a4._fc, b = a4._fe, a4._fc = null, a4._fe = null;
+  return M.yldStar(M.yld("e"), a, b);
 }
 
 function a4_8(a4) {
@@ -188,11 +193,14 @@ function a5_2(a5) {
 }
 
 function a5_3(a5) {
+  var a, b;
+
   if (a5._loop.exit) {
     a5._loop.exit();
   }
 
-  return M.jump(void 0, a5._fc, a5._fe);
+  a = a5._fc, b = a5._fe, a5._loop = null, a5._fc = null, a5._fe = null;
+  return M.jump(void 0, a, b);
 }
 
 function a5_4(a5) {
@@ -231,8 +239,9 @@ function cfb1_3(cfb1, a) {
 }
 
 function cfb1_4(cfb1) {
-  cfb1._ex = cfb1._err1;
-  return M.yldStar(M.yld(`f1${cfb1._i++}`), cfb1._fc, cfb1._fe);
+  var a, b;
+  cfb1._ex = cfb1._err1, a = cfb1._fc, b = cfb1._fe, cfb1._fc = null, cfb1._fe = null;
+  return M.yldStar(M.yld(`f1${cfb1._i++}`), a, b);
 }
 
 function cfb1_5(cfb1) {
@@ -241,11 +250,14 @@ function cfb1_5(cfb1) {
 
 function cfb1_6(cfb1) {
   cfb1._e = cfb1._ex;
+  cfb1._ex = null;
   return M.yldStar(M.yld(`e${cfb1._i}`), cfb1_7);
 }
 
 function cfb1_7(cfb1) {
-  return M.yldStar(M.yld(cfb1._e), cfb1_8);
+  var a;
+  a = cfb1._e, cfb1._e = null;
+  return M.yldStar(M.yld(a), cfb1_8);
 }
 
 function cfb1_8(cfb1) {
@@ -292,7 +304,9 @@ function f_2(ctx) {
 }
 
 function f_11(ctx) {
-  return M.chain(ctx._a, _f_2);
+  var a;
+  a = ctx._a, ctx._a = null;
+  return M.chain(a, _f_2);
 }
 
 function _f_2(ctx) {
@@ -300,7 +314,9 @@ function _f_2(ctx) {
 }
 
 function a3_1(ctx) {
-  return M.chain(ctx._a, a3_2);
+  var a;
+  a = ctx._a, ctx._a = null;
+  return M.chain(a, a3_2);
 }
 
 function a3_2(ctx) {
@@ -308,7 +324,9 @@ function a3_2(ctx) {
 }
 
 function a_1(ctx) {
-  return M.chain(ctx._b, a_2);
+  var a;
+  a = ctx._b, ctx._b = null;
+  return M.chain(a, a_2);
 }
 
 function a_2(ctx) {
@@ -316,7 +334,9 @@ function a_2(ctx) {
 }
 
 function b_1(ctx) {
-  return M.chain(ctx._a, b_2);
+  var a;
+  a = ctx._a, ctx._a = null;
+  return M.chain(a, b_2);
 }
 
 function b_2(ctx) {

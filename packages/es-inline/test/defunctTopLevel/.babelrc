@@ -5,6 +5,5 @@
                 "defunct":true,
                 "contextState":true,
                 "contextBy":"this",
-                "modules":"commonjs",
-                "importRT":"@effectful/es-rt/opts/defunct-inline"}]]
+                "modules":"commonjs"}]]
 }

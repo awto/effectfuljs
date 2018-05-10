@@ -70,11 +70,13 @@ function aS_4(aS) {}
 
 function a_1(a) {
   a._b1 = 0;
+  a._b1 = null;
   return M.chain(eff(1), a_2);
 }
 
 function a_2(a, b) {
   a._b1 = b;
+  a._b1 = null;
   return M.chain(eff("a"), a_3);
 }
 
@@ -110,12 +112,16 @@ function bS_2(bS, a) {
 }
 
 function bS_3(bS, a) {
+  var b;
   bS._b2 = a;
-  return M.chain(eff(bS._b1), bS_4);
+  b = bS._b1, bS._b1 = null;
+  return M.chain(eff(b), bS_4);
 }
 
 function bS_4(bS) {
-  return M.chain(eff(bS._b2), bS_5);
+  var a;
+  a = bS._b2, bS._b2 = null;
+  return M.chain(eff(a), bS_5);
 }
 
 function bS_5(bS) {}
@@ -130,12 +136,16 @@ function b_2(b, a) {
 }
 
 function b_3(b, a) {
+  var c;
   b._b2 = a;
-  return M.chain(eff(b._b1), b_4);
+  c = b._b1, b._b1 = null;
+  return M.chain(eff(c), b_4);
 }
 
 function b_4(b) {
-  return M.chain(eff(b._b2), b_5);
+  var a;
+  a = b._b2, b._b2 = null;
+  return M.chain(eff(a), b_5);
 }
 
 function b_5(b) {
@@ -152,14 +162,17 @@ function b1_2(b1, a) {
 }
 
 function b1_3(b1, b) {
-  var a;
+  var a, c;
   a = b1._c = b;
   b1._, a;
-  return M.chain(eff(b1._a), b1_4);
+  c = b1._a, b1._a = null, b1._ = null;
+  return M.chain(eff(c), b1_4);
 }
 
 function b1_4(b1) {
-  return M.chain(eff(b1._c), b1_5);
+  var a;
+  a = b1._c, b1._c = null;
+  return M.chain(eff(a), b1_5);
 }
 
 function b1_5(b1) {}
@@ -171,11 +184,13 @@ function c_1(c) {
 function c_2(c, a) {
   c._a = a;
   c._b = 2;
+  c._a = null, c._b = null;
   return M.chain(eff(3), c_3);
 }
 
 function c_3(c, a) {
   c._c = a;
+  c._c = null;
   return M.chain(eff("a"), c_4);
 }
 
@@ -190,33 +205,39 @@ function c_5(c) {
 function c_6(c, a) {
   c._d = a;
   c._e = 5;
+  c._d = null, c._e = null;
   return M.chain(eff(6), c_7);
 }
 
 function c_7(c, a) {
   c._f = a;
+  c._f = null;
   return M.chain(eff(7), c_8);
 }
 
 function c_8(c, a) {
   c._g = a;
   c._j = 8;
+  c._g = null, c._j = null;
   return M.chain(eff("x"), c_9);
 }
 
 function c_9(c, a) {
   c._x = a;
   c._y = "y";
+  c._x = null, c._y = null;
   return M.chain(eff("z"), c_10);
 }
 
 function c_10(c, a) {
   c._z = a;
+  c._z = null;
   return M.chain(eff(9), c_11);
 }
 
 function c_11(c) {
   c._a = c._b = c._c = c._d = c._e = c._f = c._g = c._j = c._x = c._y = c._z = 1000;
+  c._a = null, c._b = null, c._c = null, c._d = null, c._e = null, c._f = null, c._g = null, c._j = null, c._x = null, c._y = null, c._z = null;
   return M.chain(eff(10), c_12);
 }
 
@@ -233,6 +254,7 @@ function d_2(d, a) {
 
 function d_3(d, a) {
   d._.some = a;
+  d._ = null;
   return M.chain(eff("b"), d_4);
 }
 
@@ -243,6 +265,7 @@ function d_4(d, a) {
 
 function d_5(d, a) {
   d._1.some += a;
+  d._1 = null;
   return M.chain(eff("c"), d_6);
 }
 
@@ -252,28 +275,38 @@ function d_6(d, a) {
 }
 
 function e1_1(e1) {
-  return M.chain(eff(1, e1._cc), e1_2);
+  var a;
+  a = e1._cc, e1._cc = null;
+  return M.chain(eff(1, a), e1_2);
 }
 
 function e1_2(e1, a) {
+  var b;
   e1._cc = a;
-  return M.chain(eff(2, e1._cc), e1_3);
+  b = e1._cc, e1._cc = null;
+  return M.chain(eff(2, b), e1_3);
 }
 
 function e1_3(e1, a) {
+  var b;
   e1._cc = a;
-  return M.chain(eff(2, e1._cc), e1_4);
+  b = e1._cc, e1._cc = null;
+  return M.chain(eff(2, b), e1_4);
 }
 
 function e1_4(e1) {}
 
 function e2_1(e2) {
-  return M.chain(eff(1, e2._cc), e2_2);
+  var a;
+  a = e2._cc, e2._cc = null;
+  return M.chain(eff(1, a), e2_2);
 }
 
 function e2_2(e2, a) {
+  var b;
   e2._cc = a;
-  return M.chain(eff(2, e2._cc), e2_3);
+  b = e2._cc, e2._cc = null;
+  return M.chain(eff(2, b), e2_3);
 }
 
 function e2_3(e2, a) {
@@ -282,21 +315,29 @@ function e2_3(e2, a) {
 }
 
 function e2_4(e2) {
-  return M.chain(eff(4, e2._cc1), e2_5);
+  var a;
+  a = e2._cc1, e2._cc1 = null;
+  return M.chain(eff(4, a), e2_5);
 }
 
 function e2_5(e2, a) {
+  var b;
   e2._cc1 = a;
-  return M.chain(eff(5, e2._cc1), e2_6);
+  b = e2._cc1, e2._cc1 = null;
+  return M.chain(eff(5, b), e2_6);
 }
 
 function e2_6(e2, a) {
+  var b;
   e2._cc1 = a;
-  return M.chain(eff(6, e2._cc1), e2_7);
+  b = e2._cc1, e2._cc1 = null;
+  return M.chain(eff(6, b), e2_7);
 }
 
 function e2_7(e2) {
-  return M.chain(eff(7, e2._cc), e2_8);
+  var a;
+  a = e2._cc, e2._cc = null;
+  return M.chain(eff(7, a), e2_8);
 }
 
 function e2_8(e2) {}

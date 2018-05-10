@@ -15,7 +15,9 @@ function a_2(a) {
 }
 
 function a_3(a) {
-  return M.chain(eff3(a.__this), a_4);
+  var b;
+  b = a.__this, a.__this = null;
+  return M.chain(eff3(b), a_4);
 }
 
 function a_4(a) {}

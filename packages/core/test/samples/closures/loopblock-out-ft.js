@@ -54,11 +54,12 @@ function b_2(_b) {
 }
 
 function b_3(_b) {
-  var a, b, c;
+  var a, b, c, d;
   a = _b._a._a;
   b = _b._f._i;
   c = _b._a._p;
-  return M.chain(eff(6, a, b, _b._k, c), b_4);
+  d = _b._k, _b._k = null;
+  return M.chain(eff(6, a, b, d, c), b_4);
 }
 
 function b_4(_b) {}
@@ -106,11 +107,14 @@ function a_4(a) {
 }
 
 function a_5(a) {
+  var b, c;
+
   if (a._loop.exit) {
     a._loop.exit();
   }
 
-  return M.jump(void 0, a._fc, a._fe);
+  b = a._fc, c = a._fe, a._loop = null, a._fc = null, a._fe = null;
+  return M.jump(void 0, b, c);
 }
 
 function a_6(a) {

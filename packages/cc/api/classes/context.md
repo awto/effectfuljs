@@ -26,7 +26,7 @@ EffectfulJS abstract interface implementation
 
 ###  chain
 
-▸ **chain**A,B(v: *[CCV](../#ccv)`A`*, f: *[Step](../#step)`A`, `B`*): [CC](../interfaces/cc.md)`B`
+▸ **chain**A,B(v: *[CCV](../#ccv)<`A`>*, f: *[Step](../#step)<`A`, `B`>*): [CC](../interfaces/cc.md)<`B`>
 
 *Defined in main.ts:37*
 
@@ -36,20 +36,19 @@ EffectfulJS abstract interface implementation
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| v | [CCV](../#ccv)`A`   |  - |
-| f | [Step](../#step)`A`, `B`   |  - |
+| Param | Type |
+| ------ | ------ |
+| v | [CCV](../#ccv)<`A`> | 
+| f | [Step](../#step)<`A`, `B`> | 
 
-**Returns:** [CC](../interfaces/cc.md)`B`
+**Returns:** [CC](../interfaces/cc.md)<`B`>
 
 ___
-
 <a id="jump"></a>
 
 ###  jump
 
-▸ **jump**A,B(v: *`A`*, f: *[Step](../#step)`A`, `B`*): [CCV](../#ccv)`B`
+▸ **jump**A,B(v: *`A`*, f: *[Step](../#step)<`A`, `B`>*): [CCV](../#ccv)<`B`>
 
 *Defined in main.ts:40*
 
@@ -59,20 +58,19 @@ ___
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| v | `A`   |  - |
-| f | [Step](../#step)`A`, `B`   |  - |
+| Param | Type |
+| ------ | ------ |
+| v | `A` | 
+| f | [Step](../#step)<`A`, `B`> | 
 
-**Returns:** [CCV](../#ccv)`B`
+**Returns:** [CCV](../#ccv)<`B`>
 
 ___
-
 <a id="jumpr"></a>
 
 ###  jumpR
 
-▸ **jumpR**A,B(v: *`A`*, f: *[Step](../#step)`A`, `B`*): [CC](../interfaces/cc.md)`B`
+▸ **jumpR**A,B(v: *`A`*, f: *[Step](../#step)<`A`, `B`>*): [CC](../interfaces/cc.md)<`B`>
 
 *Defined in main.ts:43*
 
@@ -82,20 +80,19 @@ ___
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| v | `A`   |  - |
-| f | [Step](../#step)`A`, `B`   |  - |
+| Param | Type |
+| ------ | ------ |
+| v | `A` | 
+| f | [Step](../#step)<`A`, `B`> | 
 
-**Returns:** [CC](../interfaces/cc.md)`B`
+**Returns:** [CC](../interfaces/cc.md)<`B`>
 
 ___
-
 <a id="pure"></a>
 
 ###  pure
 
-▸ **pure**A(v: *`A`*): [CC](../interfaces/cc.md)`A`
+▸ **pure**A(v: *`A`*): [CC](../interfaces/cc.md)<`A`>
 
 *Defined in main.ts:46*
 
@@ -104,19 +101,18 @@ ___
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| v | `A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| v | `A` | 
 
-**Returns:** [CC](../interfaces/cc.md)`A`
+**Returns:** [CC](../interfaces/cc.md)<`A`>
 
 ___
-
 <a id="scope"></a>
 
 ###  scope
 
-▸ **scope**A(f: *`function`*): [CC](../interfaces/cc.md)`A`
+▸ **scope**A(f: *`function`*): [CC](../interfaces/cc.md)<`A`>
 
 *Defined in main.ts:49*
 
@@ -125,11 +121,11 @@ ___
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| f | `function` | 
 
-**Returns:** [CC](../interfaces/cc.md)`A`
+**Returns:** [CC](../interfaces/cc.md)<`A`>
 
 ___
 

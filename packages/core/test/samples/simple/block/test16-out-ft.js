@@ -16,10 +16,12 @@ function a_2(a) {
 }
 
 function a_3(a) {
+  var b;
   {
     a._i++;
   }
-  return M.chain(eff2(a._i), a_4);
+  b = a._i, a._i = null;
+  return M.chain(eff2(b), a_4);
 }
 
 function a_4(a) {}

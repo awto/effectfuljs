@@ -147,6 +147,7 @@ function g_4(g) {
     g._i = g._loop.value;
     return M.chain(eff(g._i), g_5);
   } else {
+    g._i = null, g._loop = null;
     return M.jump(void 0, g_7);
   }
 }
@@ -188,6 +189,7 @@ function h_3(h) {
     console.log("j");
     return M.chain(effA(h._j), h_4);
   } else {
+    h._j = null, h._loop = null;
     return M.jump(void 0, h_13);
   }
 }
@@ -209,6 +211,7 @@ function h_6(h) {
     console.log("b");
     return M.chain(eff("b"), h_7);
   } else {
+    h._loop1 = null;
     return M.jump(void 0, h_12);
   }
 }
@@ -227,6 +230,7 @@ function h_8(h, a) {
 
 function h_9(h, a) {
   if (a) {
+    h._i = null;
     return M.jump(void 0, h_13);
   } else {
     return M.chain(eff(h._i), h_10);

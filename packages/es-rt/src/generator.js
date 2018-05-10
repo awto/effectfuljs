@@ -48,8 +48,8 @@ if (process.env.EJS_NO_ES_OBJECT_MODEL && !process.env.EJS_DEFUNCT) {
 Gp.$redirResult = function redirResult(iter) {
   if (iter.done) {
     this.$step = this.$resume
-    this.$sub = this.$iter = this.$resume = void 0
-    if (!process.env.EJS_INLINE) {
+    this.$sub = this.$resume = void 0
+    if (!process.env.EJS_INLINE && !process.env.EJS_DEFUNCT) {
       this.$contExit = this.$resumeExit
       this.$contHandle = this.$resumeHandle
       this.$resumeExit = this.$resumeHandle = void 0
@@ -70,25 +70,35 @@ Gp.handle = function handle(value) {
       value = e
     }
   }
-  if (this.$handle) {
-    this.$step = this.$handle
-    this.$handle = void 0
-    return this.step(value)
+  if (process.env.EJS_DEFUNCT && !process.env.EJS_INLINE) {
+    if ((this.$step =  this.$err(this.$last)) !== 1)
+      return this.step(value)
+  } else {
+    if (this.$handle) {
+      this.$step = this.$handle
+      this.$handle = void 0
+      return this.step(value)
+    }
   }
-  throw value
+  this.raise(value)
 }
 
 Gp.exit = function exit(value) {
   if (this.$step === delegateCont) {
     try {
       var iter = this.$sub
-      this.$resume = this.$exit
+      this.$resume = process.env.EJS_DEFUNCT && !process.env.EJS_INLINE
+        ? this.$fin(this.$last) : this.$exit
       return this.$redirResult(this.$sub.exit(value))
     } catch(e) {
       return this.handle(e)
     }
   } else {
-    this.$step = this.$exit
+    if (process.env.EJS_DEFUNCT && !process.env.EJS_INLINE) {
+      this.$step = this.$fin(this.$last)
+    } else {
+      this.$step = this.$exit
+    }
     return this.step(value)
   }
 }
@@ -100,6 +110,10 @@ if (!process.env.EJS_DEFUNCT || !process.env.EJS_INLINE) {
         ctx.$alreadyRunning()
     try {
       if (process.env.EJS_DEFUNCT) {
+        if (!process.env.EJS_INLINE) {
+          if (ctx.$step !== delegateCont)
+            ctx.$last = ctx.$step
+        }
         if (!process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING) {
           var s
           ctx.$run((s = ctx.$step, ctx.$step = runningCont, s),value)
@@ -120,7 +134,7 @@ if (!process.env.EJS_DEFUNCT || !process.env.EJS_INLINE) {
     }
   }
   Gp.step = function step(value) {
-    if (!process.env.EJS_INLINE) {
+    if (!process.env.EJS_INLINE && !process.env.EJS_DEFUNCT) {
       this.$handle = this.$contHandle
       this.$exit = this.$contExit
     }
@@ -143,9 +157,10 @@ function delegateStep(v) {
   try {
     return this.$redirResult(this.$sub.step(v))
   } catch(e) {
-    this.$step = this.$handle
-    this.$sub = this.$iter = this.$resume = void 0
-    if (!process.env.EJS_INLINE)
+    this.$step = process.env.EJS_DEFUNCT && !process.env.EJS_INLINE
+      ? this.$err(this.$last) : this.$handle
+    this.$sub = this.$resume = void 0
+    if (!process.env.EJS_INLINE && !process.env.EJS_INLINE)
       this.$resumeExit = this.$resumeHandle = void 0
     return this.step(e)
   }
@@ -156,47 +171,80 @@ if (process.env.EJS_DEFUNCT) {
 }
 
 if (!process.env.EJS_INLINE) {
-  Gp.yld = function yld(value, step, handle, exit) {
-    this.value = value
-    this.$step = step
-    this.$contHandle = handle
-    this.$contExit = exit
-    return this
-  }
-  
-  Gp.yldStar = function yldStar(iter, step, handle, exit) {
-    this.$step = delegateCont
-    this.$resumeHandle = handle
-    this.$resumeExit = exit
-    this.$resume = step
-    this.$sub = this.iterator(iter)
-    if (process.env.EJS_DEFUNCT)
+  if (process.env.EJS_DEFUNCT) {
+    Gp.$err = function() { return 1 }
+    Gp.$fin = function() { return 0 }
+    Gp.yld = function yld(value, step) {
+      this.value = value
+      this.$step = step
+      return this
+    }
+    
+    Gp.yldStar = function yldStar(iter, step, handle, exit) {
+      this.$step = delegateCont
+      this.$resume = step
+      this.$sub = this.iterator(iter)
       return this.$redir(void 0)
-    else
+    }
+    
+    Gp.jump = Gp.jumpR = function jump(value, step, handle, exit) {
+      try {
+        this.$step = step
+        if (process.env.EJS_NO_TRAMPOLINE)
+          return this.step(value)
+        else {
+          this.$running = true
+          return this
+        }
+      } catch(e) {
+        return this.handle(e)
+      }
+    }
+    
+    Gp.scope = function scope(step, handle, exit) {
+      this.$last = this.$step = step
+      return this
+    }
+  } else {
+    Gp.yld = function yld(value, step, handle, exit) {
+      this.value = value
+      this.$step = step
+      this.$contHandle = handle
+      this.$contExit = exit
+      return this
+    }
+    
+    Gp.yldStar = function yldStar(iter, step, handle, exit) {
+      this.$step = delegateCont
+      this.$resumeHandle = handle
+      this.$resumeExit = exit
+      this.$resume = step
+      this.$sub = this.iterator(iter)
       return this.step(void 0)
-  }
-
-  Gp.jump = Gp.jumpR = function jump(value, step, handle, exit) {
-    try {
+    }
+    
+    Gp.jump = Gp.jumpR = function jump(value, step, handle, exit) {
+      try {
+        this.$step = step
+        this.$handle = this.$contHandle = handle
+        this.$exit = this.$contExit = exit
+        if (process.env.EJS_NO_TRAMPOLINE)
+          return this.step(value)
+        else {
+          this.$running = true
+          return this
+        }
+      } catch(e) {
+        return this.handle(e)
+      }
+    }
+    
+    Gp.scope = function scope(step, handle, exit) {
       this.$step = step
       this.$handle = this.$contHandle = handle
       this.$exit = this.$contExit = exit
-      if (process.env.EJS_NO_TRAMPOLINE)
-        return this.step(value)
-      else {
-        this.$running = true
-        return this
-      }
-    } catch(e) {
-      return this.handle(e)
+      return this
     }
-  }
-  
-  Gp.scope = function scope(step, handle, exit) {
-    this.$step = step
-    this.$handle = this.$contHandle = handle
-    this.$exit = this.$contExit = exit
-    return this
   }
 } else {
   Gp.$delegate = function yldStar(iter) {
@@ -221,11 +269,16 @@ var terminated = process.env.EJS_DEFUNCT ? 0 : function terminated(value) {
 Gp.pure = function pure(value) {
   this.done = true
   this.value = value
-  this.$step = this.$exit = terminated
-  this.$handle = void 0
-  if (!process.env.EJS_INLINE) {
-    this.$contExit = terminated
-    this.$contHandle = void 0
+  this.$step = terminated
+  if (!process.env.EJS_INLINE && process.env.EJS_DEFUNCT) {
+    this.$last = terminated
+  } else {
+    this.$exit = terminated
+    this.$handle = void 0
+    if (!process.env.EJS_INLINE) {
+      this.$contExit = terminated
+      this.$contHandle = void 0
+    }
   }
   return this
 }
@@ -233,11 +286,17 @@ Gp.pure = function pure(value) {
 Gp.raise = function genRaise(ex) {
   this.done = true
   this.value = void 0
-  this.$step = this.$exit = terminated
-  this.$handle = void 0
-  if (!process.env.EJS_INLINE) {
-    this.$contExit = terminated
-    this.$contHandle = void 0
+  this.$step = terminated
+  this.$step = terminated
+  if (!process.env.EJS_INLINE && process.env.EJS_DEFUNCT) {
+    this.$last = terminated
+  } else {
+    this.$exit = terminated
+    this.$handle = void 0
+    if (!process.env.EJS_INLINE) {
+      this.$contExit = terminated
+      this.$contHandle = void 0
+    }
   }
   throw ex
 }
@@ -278,7 +337,7 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   GeneratorFunctionPrototype.constructor = GeneratorFunction
   GeneratorFunctionPrototype[Symbol.toString] =
     GeneratorFunction.displayName = "GeneratorFunction"
-  generatorFunction = function generatorFunction(fun,handler) {
+  generatorFunction = function generatorFunction(fun,handler,err,fin) {
     Object.setPrototypeOf(fun, GeneratorFunctionPrototype)
     fun.prototype = Object.create(Gp)
     if (process.env.EJS_DEFUNCT) {
@@ -288,11 +347,17 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
         else
           fun.prototype.$run = handler
       }
+      if (!process.env.EJS_INLINE) {
+        if (err)
+          fun.prototype.$err = err
+        if (fin)
+          fun.prototype.$fin = fin
+      }
     }
     return fun
   }
 } else
-  generatorFunction = function generatorFunction(fun,handler) {
+  generatorFunction = function generatorFunction(fun,handler,err,fin) {
     fun.prototype = Object.create(Gp)
     if (process.env.EJS_DEFUNCT) {
       if (handler) {
@@ -300,6 +365,12 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
           fun.prototype.step = handler
         else
           fun.prototype.$run = handler
+      }
+      if (!process.env.EJS_INLINE) {
+        if (err)
+          fun.prototype.$err = err
+        if (fin)
+          fun.prototype.$fin = fin
       }
     }
     return fun

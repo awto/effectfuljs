@@ -506,9 +506,12 @@ export function pureOp(si) {
   const s = Kit.auto(si)
   if (!s.opts.inlinePureOp)
     return s
+  const {inlineYieldOp} = s.opts
   const template = s.opts.inlinePureOp
   const noop = template === "noop"
   const generators = template === "iterator"
+  const inlineYieldResult = inlineYieldOp === "iteratorResult"
+  const inlineYieldResultPromise = inlineYieldOp === "iteratorResultPromise"
   const promise = template === "promise"
   if (!noop && !generators && !promise)
     throw s.error(`unsupported value ${s.opts.inlinePureOp}`)
@@ -549,12 +552,22 @@ export function pureOp(si) {
             yield* s.leave()
             yield* s.leave()
           } else {
-            yield* assignValue(s,contextSym)
-            yield* s.toks(Tag.push,
-                          `$1.${field} = ${exitCont}, $1.done = true`,
-                          contextSym)
-            if (!noResult)
-              yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
+            yield* s.toks(Tag.push,`$1.${field} = ${exitCont}`,contextSym)
+            if (inlineYieldResult || inlineYieldResultPromise) {
+              yield* s.template(Tag.push,
+                                inlineYieldResult ? `=({value:$E,done:true})`
+                                  : `=Promise.resolve({value:$E,done:true})`,
+                                {result:true})
+              yield* s.curLev() ? Kit.reposOne(s.one(),Tag.value)
+                : Kit.scope.emitUndefined(Tag.value)
+              Kit.skip(s.sub())
+              yield* s.leave()
+            } else {
+              yield* assignValue(s,contextSym)
+              yield* s.toks(Tag.push,`=$I.done = true`,contextSym)
+              if (!noResult)
+                yield s.tok(Tag.push,Tag.Identifier,{sym:contextSym,result:true})
+            }
           }
           s.close(i)
           continue

@@ -14,13 +14,15 @@ function a_2(a) {
   var e;
   e = a._ex;
   console.log(e);
-  a._fc = a_4, a._fe = a_5;
+  a._fc = a_4, a._fe = a_5, a._ex = null;
   return M.jump(void 0, a_3);
 }
 
 function a_3(a) {
+  var b, c;
   console.log("fin");
-  return M.jump(void 0, a._fc, a._fe);
+  b = a._fc, c = a._fe, a._fc = null, a._fe = null;
+  return M.jump(void 0, b, c);
 }
 
 function a_4(a) {}

@@ -33,7 +33,7 @@ function resolveImport(name,opts,optional = false) {
       const cp = resolve(name, {
         basedir: path.dirname(opts.file.filename)
       })
-      r = require(cp)
+      r = require(/* webpackIgnore: true */cp)
     } catch(e) {
       if (optional) {
         if (opts.resolveTrace)

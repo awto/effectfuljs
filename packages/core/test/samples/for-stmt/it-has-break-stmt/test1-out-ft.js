@@ -18,12 +18,14 @@ function f_2(ctx) {
     i = ctx._ref[ctx._j];
     return M.chain(eff(i), f_3);
   } else {
+    ctx._j = null, ctx._len = null, ctx._ref = null;
     return M.jump(void 0, f_4);
   }
 }
 
 function f_3(ctx, a) {
   if (a) {
+    ctx._j = null;
     return M.jump(void 0, f_4);
   } else {
     ctx._j++;

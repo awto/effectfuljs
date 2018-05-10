@@ -36,7 +36,9 @@ function a_2(a) {
 }
 
 function a_3(a) {
-  return M.chain(eff(5, a._i, a._k), a_4);
+  var b;
+  b = a._k, a._k = null;
+  return M.chain(eff(5, a._i, b), a_4);
 }
 
 function a_4(a) {}

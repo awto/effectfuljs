@@ -34,7 +34,9 @@ function a_5(a) {
 }
 
 function a_6(a) {
-  return M.chain(eff7(a._i), a_7);
+  var b;
+  b = a._i, a._i = null;
+  return M.chain(eff7(b), a_7);
 }
 
 function a_7(a) {}

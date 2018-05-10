@@ -1018,46 +1018,12 @@ function resolveFrameArgs(cfg) {
 
 /** 
  * propagates informations about variable required to be read to 
- * all control flow ancestors chain
- * 
+ * all control flow ancestors chain (calculates `frameParamClos`)
  */
 function propagateArgs(cfg) {
   // propagating writes in fact rarely needed, only if there are some
   // uninitialized variables
   const dyn = []
-  // checks what symbols may be assigned till the frame
-  function calcAvail(frame,seen) {
-    if (frame.frameAvail != null)
-      return frame.frameAvail
-    if (seen.has(frame))
-      return emptySet
-    seen.add(frame)
-    const res = new Set()
-    if (frame.enters != null && frame.enters.size) {
-      for(const i of frame.enters) {
-        if (i.frameArgs) {
-          for(const j of i.frameArgs.keys())
-            res.add(j)
-        }
-        const src = i.ref
-        if (src.frameLocals)
-          src.frameLocals.forEach(res.add,res)
-        if (i.ref.patSym)
-          res.add(i.ref.patSym)
-        calcAvail(src,seen).forEach(res.add,res)
-      }
-    } else {
-      if (frame.root.paramSyms != null) {
-        for(const i of frame.root.paramSyms)
-          res.add(i)
-      }
-      if (frame.root.scopeCapt != null) {
-        for(const i of frame.root.scopeCapt)
-          res.add(i)
-      }
-    }
-    return res
-  }
   function allReads(frame,seen) {
     if (frame.frameParamsClos != null)
       return frame.frameParamsClos
@@ -1075,6 +1041,8 @@ function propagateArgs(cfg) {
           cur.forEach(res.add,res)
         }
       }
+      if (frame.catchContRedir)
+        (new Set(allReads(frame.catchContRedir,seen))).forEach(res.add, res)
     }
     const locals = frame.frameLocals
     if (locals != null)
@@ -1083,24 +1051,7 @@ function propagateArgs(cfg) {
       res.delete(frame.patSym)
     if (frame.errSym)
       res.delete(frame.errSym)
-    const avail = frame.frameAvail
-    if (avail != null)
-      for(const i of res)
-        if (!avail.has(i))
-          res.delete(i)
     return res
-  }
-  for (const i of cfg) {
-    const assigned = i.frameAvail = calcAvail(i,new Set())
-    const params = i.frameParams
-    const locals = i.frameLocals
-    const exceptSym = i.exceptSym
-    for (const j of params) {
-      if (!assigned.has(j)) {
-        params.delete(j)
-        locals.add(j)
-      }
-    }
   }
   // propagating transitive closure of each frame's parameter
   // each frame needs to receive all vars it needs plus all the
@@ -1233,49 +1184,53 @@ export function handleSpecVars(si) {
   return walk()
 }
 
-export function calcFlatCfg(cfg,sa) {
-  const root = sa[0].value
-  calcFrameStateVars(sa)
+/** if variable is used only in 1 frame no needs to store it in context */
+function optimizeContextState(root, cfg) {
   const ctxSyms = []
-  if (root.opts.contextState) {
-    const resSym = root.resSym
-    for(const i of cfg) {
-      const sw = i.stateVars
-      if (!sw)
-        continue
-      for(const j of sw.r)
-        (j.refFrames || (j.refFrames = new Set())).add(i)
-      for(const j of sw.w)
-        (j.refFrames || (j.refFrames = new Set())).add(i)
-      for(const j of i.exits) {
+  const resSym = root.resSym
+  for(const i of cfg) {
+    const sw = i.stateVars
+    if (!sw)
+      continue
+    for(const j of sw.r)
+      (j.refFrames || (j.refFrames = new Set())).add(i)
+    for(const j of sw.w)
+      (j.refFrames || (j.refFrames = new Set())).add(i)
+    for(const j of i.exits) {
         if (j.frameArgs) {
           for(const k of j.frameArgs.keys())
             (k.refFrames || (k.refFrames = new Set())).add(i)
         }
       }
-    }
-    for(const i of root.scopeDecls) {
-      if (i.refFrames && !i.closCapt) {
-        if (i.refFrames.size === 1) {
-          const [f] = i.refFrames;
-          if (f !== cfg[0] && i !== f.patSym
-              && i !== f.errSym && i !== resSym) {
-            i.interpr = null
-            i.fieldName = null
-            root.savedDecls.delete(i);
-            (f.savedDecls || (f.savedDecls = new Map())).set(i,{raw:null})
-          }
+  }
+  for(const i of root.scopeDecls) {
+    if (i.refFrames && !i.closCapt) {
+      if (i.refFrames.size === 1) {
+        const [f] = i.refFrames;
+        if (f !== cfg[0] && i !== f.patSym
+            && i !== f.errSym && i !== resSym) {
+          i.interpr = null
+          i.fieldName = null
+          root.savedDecls.delete(i);
+          (f.savedDecls || (f.savedDecls = new Map())).set(i,{raw:null})
         }
       }
-      if (i.interpr === Bind.ctxField) {
-        ctxSyms.push(i)
-      }
     }
-    allUniqFields(ctxSyms,root.opts.closVarPrefix,root.opts.closVarPostfix)
+    if (i.interpr === Bind.ctxField) {
+      ctxSyms.push(i)
+    }
   }
+  allUniqFields(ctxSyms,root.opts.closVarPrefix,root.opts.closVarPostfix)
+}
+
+export function calcFlatCfg(cfg,sa) {
+  const root = sa[0].value
+  calcFrameStateVars(sa)
+  if (root.opts.contextState)
+    optimizeContextState(root,cfg)
   resolveFrameParams(cfg)
   propagateArgs(cfg)
-  resolveFrameArgs(cfg)
+//  resolveFrameArgs(cfg)
   localsDecls(cfg)
 }
 

@@ -20,11 +20,14 @@ function a_2(a) {
   error = a._ex;
   a._e = error;
   console.log("2");
+  a._ex = null;
   return M.jump(void 0, a_3);
 }
 
 function a_3(a) {
-  return M.chain(eff(a._e), a_4);
+  var b;
+  b = a._e, a._e = null;
+  return M.chain(eff(b), a_4);
 }
 
 function a_4(a) {}
@@ -45,11 +48,14 @@ function _a_2(a) {
   a._e = error;
   console.log("2");
   error = null;
+  a._ex = null;
   return M.jump(void 0, _a_3);
 }
 
 function _a_3(a) {
-  return M.chain(eff(a._e), _a_4);
+  var b;
+  b = a._e, a._e = null;
+  return M.chain(eff(b), _a_4);
 }
 
 function _a_4(a) {}

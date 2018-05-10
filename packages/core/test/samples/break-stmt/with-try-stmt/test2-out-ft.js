@@ -9,6 +9,7 @@ import * as M from "@effectful/core";
 function f_1(ctx) {
   var e;
   e = ctx._ex;
+  ctx._ex = null;
   return M.chain(eff(3), f_2);
 }
 

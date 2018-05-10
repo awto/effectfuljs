@@ -40,7 +40,9 @@ function a_3(a, b) {
 }
 
 function a_4(a) {
-  return M.chain(eff(a._i), a_5);
+  var b;
+  b = a._i, a._i = null;
+  return M.chain(eff(b), a_5);
 }
 
 function a_5(a) {}

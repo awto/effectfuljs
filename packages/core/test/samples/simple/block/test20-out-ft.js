@@ -20,8 +20,10 @@ function a_3(a) {
 }
 
 function a_4(a) {
+  var b;
   a._i++;
-  return M.chain(eff1(a._i), a_5);
+  b = a._i, a._i = null;
+  return M.chain(eff1(b), a_5);
 }
 
 function a_5(a) {}

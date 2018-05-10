@@ -12,7 +12,6 @@ const reentryCont = 3
 export function* prepare(si) {
   const s = Kit.auto(si)
   const root = s.first.value
-  const inline = s.opts.inlineJsExceptions
   const contSym = root.contSym || s.opts.storeCont
         && s.opts.contextMethodOps
         && (root.contSym = Kit.sysId(s.opts.storeCont))
@@ -25,9 +24,10 @@ export function* prepare(si) {
       declSym:Kit.scope.newSym("_"),
       patSym:root.commonPatSym = Kit.scope.newSym("p"),
       savedDecls:new Map(),
-      threadParams:[],root
+      root
     })
-  const errMap = inline && (root.errMap = new Map())
+  const errMap = root.errMap = !s.opts.storeErrorCont && new Map()
+  const resMap = root.resMap = !s.opts.storeResultCont && new Map()
   const errFrame = root.errFrameRedir
   const resFrame = root.resFrameRedir
   let num = 3
@@ -55,6 +55,15 @@ export function* prepare(si) {
             frames.push(i.value)
           }
         }
+        if (resMap) {
+          const resCont = i.value.resultContRedir
+          if (resCont && resCont !== resFrame) {
+            let frames = resMap.get(resCont)
+            if (!frames)
+              resMap.set(resCont,frames = [])
+            frames.push(i.value)
+          }
+        }
       } else if (i.type === Block.letStmt && i.value.bindName === "yldStar") {
         hasYldStar = true
       }
@@ -64,9 +73,94 @@ export function* prepare(si) {
   root.hasYldStar = hasYldStar
 }
 
+/** sets handlers ($run,$err,$res) to context if needed */
+export function assignHandlers(si) {
+  const s = Kit.auto(si)
+  if (s.opts.defunctHandlerInProto && s.opts.topLevel) {
+    if (!s.opts.wrapFunction)
+      throw s.error("`defunctHandlerInProto` requires `wrapFunction`")
+    return s
+  }
+  const root = s.first.value
+  const contextSym = root.contextSym
+  return _assignHandlers()
+  function* _assignHandlers() {
+    const f = yield* s.till(i => i.type === Block.frame)
+    yield* s.toks(Tag.push,`$I.${s.opts.storeHandler} = $I`,
+                  contextSym,root.implFrame.value.declSym)
+    if (!s.opts.defunctHandlerInProto) {
+      if (root.errMapSym)
+        yield* s.toks(Tag.push,`$I.$err = $I`,contextSym,root.errMapSym)
+      if (root.resMapSym)
+        yield* s.toks(Tag.push,`$I.$fin = $I`,contextSym,root.resMapSym)
+    }
+    yield* s
+  }
+}
+
+export function stateMappings(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  const module = root.module
+  if (!root.errMap && !root.resMap)
+    return s
+  const implFrame = root.implFrame.value
+  return _stateMappings()
+  function* _stateMappings() {
+    for(const i of s) {
+      yield i
+      if (i.type === Block.frame && i.leave)
+        break
+    }
+    if (root.errMap)
+      root.errMapSym = yield* genMap(root.errMap,"err",1)
+    if (root.resMap)
+      root.resMapSym = yield* genMap(root.resMap,"fin",0)
+    yield* s
+  }
+  function* genMap(map,name,defaultValue) {
+    if (!map.size)
+      return null
+    const lab = s.label()
+    const sym = Kit.scope.newSym(`${root.rootName}_${name}`)
+    yield s.enter(Tag.push,Tag.FunctionDeclaration,{moveToTop:true})
+    module.hasTop = true
+    yield s.tok(Tag.id,Tag.Identifier,{sym})
+    const paramSym = Kit.scope.newSym("s")
+    yield s.enter(Tag.params,Tag.Array)
+    yield s.tok(Tag.push,Tag.Identifier,{sym:paramSym})
+    yield* s.leave()
+    yield s.enter(Tag.body,Tag.BlockStatement)
+    yield s.enter(Tag.body,Tag.Array)
+    yield s.enter(Tag.push,Tag.SwitchStatement)
+    yield s.tok(Tag.discriminant,Tag.Identifier,{sym:paramSym})
+    yield s.enter(Tag.cases,Tag.Array)
+    const clab = s.label()
+    for(const [goto,i] of map) {
+      const last = i[i.length-1]
+      for(const j of i) {
+        yield s.enter(Tag.push,Tag.SwitchCase)
+        yield s.tok(Tag.test,Tag.NumericLiteral,
+                    {node:{value:j.stateId}})
+        yield s.enter(Tag.consequent,Tag.Array)
+        if (j === last) {
+          yield s.enter(Tag.push, Tag.ReturnStatement)
+          yield s.tok(Tag.argument, Tag.Identifier, {sym:goto.declSym})
+        }
+        yield* clab()
+      }
+    }
+    yield s.enter(Tag.push,Tag.SwitchCase)
+    yield s.enter(Tag.consequent,Tag.Array)
+    yield s.enter(Tag.push, Tag.ReturnStatement)
+    yield s.tok(Tag.argument, Tag.NumericLiteral, {node:{value:defaultValue}})
+    yield* lab()
+    return sym
+  }
+}
+
 /** 
  * handles `inlineJsExceptions` option for defunct frames 
- * requires `root.errMap : Map<CatchFrameVal,FrameVal>` from `prepare`
  */
 export function inlineExceptions(si) {
   const s = Kit.auto(si)
@@ -74,15 +168,17 @@ export function inlineExceptions(si) {
     return s
   const root = s.first.value
   const errMap = root.errMap
+  const contextSym = root.contextSym
   if (!errMap.size && !s.opts.keepLastRaise)
     return s
   if (s.opts.inlinePureJumps !== "tail")
     throw s.error(
       "inlineJsExceptions && defunct requires inlinePureJumps:'tail'")
-  const {contSym,commonPatSym} = root
+  const {contSym,errContSym,commonPatSym} = root
   assert.ok(contSym && commonPatSym)
   const fieldSym = Kit.sysId(s.opts.contFieldName)
   const implFrame = root.implFrame.value
+  const errFrame = root.errFrameRedir
   return walk()
   function* walk() {
     for(const i of s) {
@@ -92,7 +188,7 @@ export function inlineExceptions(si) {
     }
     if (s.opts.inlineReentryCheck)
       yield* s.toks(Tag.push, `if ($I === ${reentryCont}) $I()`,
-                   root.contSym,Block.alreadyRunningSym)
+                    root.contSym,Block.alreadyRunningSym)
     yield s.enter(Tag.push,Tag.TryStatement)
     const tlab = s.label()
     yield s.enter(Tag.block,Tag.BlockStatement)
@@ -104,31 +200,30 @@ export function inlineExceptions(si) {
     yield s.tok(Tag.param,Tag.Identifier,{sym:ex})
     yield s.enter(Tag.body,Tag.BlockStatement)
     yield s.enter(Tag.body,Tag.Array)
-    if (errMap.size) {
-      yield s.enter(Tag.push,Tag.SwitchStatement)
-      yield s.tok(Tag.discriminant,Tag.Identifier,{sym:implFrame.discrimSym})
-      yield s.enter(Tag.cases,Tag.Array)
-      const clab = s.label()
-      for(const [goto,i] of errMap) {
-        const last = i[i.length-1]
-        for(const j of i) {
-          yield s.enter(Tag.push,Tag.SwitchCase)
-          yield s.tok(Tag.test,Tag.NumericLiteral,
-                      {node:{value:j.stateId}})
-          yield s.enter(Tag.consequent,Tag.Array)
-          if (j === last) {
-            yield* s.toks(Tag.push,"$I = $I, $I = $I",
-                          commonPatSym,ex,contSym,goto.declSym)
-            yield s.tok(Tag.push,Tag.ContinueStatement)
-          }
-          yield* clab()
-        }
+    if (s.opts.inlineRaiseOp === "promise") {
+      if (s.opts.storeErrorCont) {
+        yield* s.toks(Tag.push, `=$I = $I, $I = $I`,
+                      contSym,errContSym,commonPatSym,ex)
+      } else if (root.errMapSym) {
+        yield* s.toks(Tag.push, `=$I = $I($I)`,
+                      contSym,root.errMapSym,implFrame.discrimSym)
       }
-      yield s.enter(Tag.push,Tag.SwitchCase)
-      yield s.enter(Tag.consequent,Tag.Array)
+    } else {
+      yield s.enter(Tag.push,Tag.IfStatement)
+      if (s.opts.storeErrorCont) {
+        yield* s.toks(Tag.test, `=($I = $I, $I = $I) !== $I`,
+                      commonPatSym,ex,contSym,errContSym,errFrame.declSym)
+      } else if (root.errMapSym) {
+        yield* s.toks(Tag.test, `=($I = $I, $I = $I($I)) !== $I`,
+                      commonPatSym,ex,contSym,root.errMapSym,
+                      implFrame.discrimSym,errFrame.declSym)
+      }
+      yield s.tok(Tag.consequent, Tag.ContinueStatement)
+      yield* s.leave()
+      yield s.enter(Tag.push,Block.app,{sym:Except.raiseId,result:true})
+      yield s.tok(Tag.push,Tag.Identifier,{sym:ex})
     }
-    yield s.enter(Tag.push,Block.app,{sym:Except.raiseId})
-    yield s.enter(Tag.push,Tag.Identifier,{sym:ex})
+    implFrame.hasJumps = true
     yield* tlab()
     yield* s.leave()
     yield* s
@@ -149,8 +244,6 @@ export function* frames(si) {
   const discrimArg = impl.ctrlParam
         = s.opts.defunctStateDiscriminant === "arg" && Kit.scope.newSym("s")
   const f = yield* s.till(i => i.type === Block.frame)
-  if (!s.opts.defunctHandlerInProto)
-    yield* s.toks(Tag.push,`$I.${s.opts.storeHandler} = $I`,contextSym,impl.declSym)
   yield* s.sub()
   yield s.close(f)
   yield root.implFrame
@@ -182,8 +275,6 @@ export function* frames(si) {
     if (i.enter && i.type === Block.frame) {
       if (i.value.catchContRedir !== errFrameRedir)
         hasJumps = true
-      if (i.value.threadParams.length)
-        throw new SyntaxError("not implemented: defunct with threaded params")
       yield s.enter(Tag.push, Tag.SwitchCase,i.value)
       yield s.tok(Tag.test,Tag.NumericLiteral,
                   {node:{value:i.value.stateId}})
@@ -246,6 +337,7 @@ export function* frames(si) {
   yield* s
 }
 
+/** changes state symbols to numbers */
 export function* substSymConsts(si) {
   for(const i of si) {
     if (i.type === Tag.Identifier
@@ -310,6 +402,10 @@ export function tailJumps(si) {
 export const convert = Kit.pipe(
   frames,
   Kit.toArray,
+  stateMappings,
+  Kit.toArray,
+  assignHandlers,
   inlineExceptions,
+  Kit.toArray,
   tailJumps)
 

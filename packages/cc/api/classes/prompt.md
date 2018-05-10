@@ -26,19 +26,21 @@
 
 <a id="constructor"></a>
 
-### ⊕ **new Prompt**(name: *`string`*): [Prompt](prompt.md)
+###  constructor
+
+⊕ **new Prompt**(name: *`string`*): [Prompt](prompt.md)
 
 *Defined in main.ts:14*
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| name | `string`   |  - |
+| Param | Type |
+| ------ | ------ |
+| name | `string` | 
 
 **Returns:** [Prompt](prompt.md)
 
----
+___
 
 ## Properties
 
@@ -46,27 +48,25 @@
 
 ### `<Optional>` ___promt_tag_
 
-**●  ___promt_tag_**:  *[A]()* 
+**● ___promt_tag_**: *[A]()*
 
 *Defined in main.ts:21*
 
 ___
-
 <a id="id"></a>
 
 ###  id
 
-**●  id**:  *`number`* 
+**● id**: *`number`*
 
 *Defined in main.ts:20*
 
 ___
-
 <a id="name"></a>
 
 ###  name
 
-**●  name**:  *`string`* 
+**● name**: *`string`*
 
 *Defined in main.ts:19*
 

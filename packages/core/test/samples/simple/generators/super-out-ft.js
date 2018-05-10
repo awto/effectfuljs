@@ -44,6 +44,7 @@ function smethod_1(ctx) {
 function _method_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
+  ctx.__this = null;
   return M.chain(a, method_2);
 }
 
@@ -54,6 +55,7 @@ function method_2(ctx, a) {
 function _smethod_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
+  ctx.__this = null;
   return M.chain(a, smethod_2);
 }
 

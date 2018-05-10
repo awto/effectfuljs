@@ -14,11 +14,12 @@ const emptySet = new Set()
 /** moves frame steps to top level of JS module */
 export function depsToTop(si) {
   const s = Kit.auto(si)
+  const root = s.first.value
   const top = []
-  if (!s.opts.topLevel)
+  if (!root.hasTop)
     return s
-  return walk()
-  function* walk() {
+  return _depsToTop()
+  function* _depsToTop() {
     yield* s.till(i => i.pos === Tag.body && i.type === Tag.Array)
     while(s.cur().type === Tag.ImportDeclaration)
       yield* s.one()
@@ -30,7 +31,7 @@ export function depsToTop(si) {
   }
   function* collect() {
     for(const i of s.sub()) {
-      if (i.enter && i.type === Tag.FunctionDeclaration && i.value.frameStep) {
+      if (i.enter && i.type === Tag.FunctionDeclaration && i.value.moveToTop) {
         top.push([i,...collect(),s.close(i)])
       } else
         yield i
@@ -61,14 +62,15 @@ export const contextDecls = Kit.map(function contextDecls(si) {
     State.allUniqFields(ctxSyms,s.opts.closVarPrefix,s.opts.closVarPostfix)
     // needs both because after loop block scoping pure functions may have
     // same options (TODO: unify them)
-    const constr = topEff ? s.opts.scopeConstructor : s.opts.pureScopeConstructor  
+    const constr = topEff ? s.opts.scopeConstructor : s.opts.pureScopeConstructor
+    const constrSym = root.constrSym = constr && Kit.sysId(constr) 
     saved.set(
       contextSym,
       {raw:null,
        init: constr ? [
          s.enter(Tag.init, Tag.CallExpression),
          s.tok(Tag.callee, Tag.Identifier,
-               {sym:Kit.sysId(constr),ns:false}),
+               {sym:constrSym,ns:false}),
          s.enter(Tag.arguments, Tag.Array),
          ...(root.wrapId
              ? [s.tok(Tag.push,Tag.Identifier,{sym:root.wrapId,keepClos:true})]

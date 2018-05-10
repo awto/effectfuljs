@@ -38,9 +38,11 @@ function a_7(a, b) {
     if (a._i === a._j) {
       return M.chain(updJ(), a_6);
     } else {
+      a._j = null;
       return M.jump(void 0, a_8);
     }
   } else {
+    a._j = null;
     return M.jump(void 0, a_8);
   }
 }

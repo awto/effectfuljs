@@ -20,7 +20,9 @@ function a_2(a, b) {
 }
 
 function a_3(a) {
-  return M.chain(eff("in `finally`"), a._fc, a._fe);
+  var b, c;
+  b = a._fc, c = a._fe, a._fc = null, a._fe = null;
+  return M.chain(eff("in `finally`"), b, c);
 }
 
 function a_4(a) {

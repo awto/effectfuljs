@@ -9,12 +9,10 @@ function eqlAsyncGens(n,a,b) {
     : Kit.eqlAsyncGens(a,b) 
 }
 
-module.exports = function asyncGenerators(name, from) {
-  describe(name, function() {
-    for(const n in from) {
-      it(from[n].name, function() {
-        return Kit.asyncRunAll(eqlAsyncGens(n,from[n](),expected[n]()))
-      })
-    }
-  })
+module.exports = function asyncGenerators(from) {
+  for(const n in from) {
+    it(from[n].name, function() {
+      return Kit.asyncRunAll(eqlAsyncGens(n,from[n](),expected[n]()))
+    })
+  }
 }

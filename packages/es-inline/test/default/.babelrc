@@ -2,7 +2,6 @@
   "sourceType": "script",
   "presets": [
     ["../../preset",{"defunct":false,
-                     "modules":"commonjs",
-                     "importRT":"@effectful/es-rt/opts/inline"}]]
+                     "modules":"commonjs"}]]
 }
 

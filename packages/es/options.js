@@ -131,7 +131,11 @@ const defunct = {
     storeCont:"$step",
     storeHandler:"$run",
     defunct:true,
-    defunctStateDiscriminant:"arg"
+    defunctStateDiscriminant:"arg",
+    storeErrorCont:false,
+    storeResultCont:false,
+    inlineErrorContAsign: false,
+    inlineResultContAssign:false
   }
 }
 
@@ -140,10 +144,12 @@ const defunctInline = {
     markRepeat:false,
     defunctStateDiscriminant:"field",
     storeCont:"$step",
-    storeErrorCont:"$handle",
     storeHandler:"step",
-    inlineErrorContAssign:true,
     inlinePureJumps:"tail",
+    storeResultCont:"$exit",
+    storeErrorCont:"$handle",
+    inlineResultContAssign:true,
+    inlineErrorContAssign:true,
     inlineContAssign:true,
     scopePrefix:true
   },
@@ -207,8 +213,8 @@ module.exports = function esProfile(opts={}) {
   let importRT = opts.importRT
   if (importRT == null) {
     const p = []
-    if (opts.defunct)
-      p.push("defunct")
+    if (opts.defunct === false)
+      p.push("funct")
     if (opts.loose)
       p.push("loose")
     else if (opts.inline)
@@ -237,7 +243,7 @@ module.exports = function esProfile(opts={}) {
     Object.assign(asyncGenerators,inline.all,inline.effectful,
                   inline.asyncGenerators)
   }
-  if (opts.defunct) {
+  if (opts.defunct !== false) {
     Object.assign(generators,defunct.effectful)
     Object.assign(async,defunct.effectful)
     Object.assign(asyncGenerators,defunct.effectful)

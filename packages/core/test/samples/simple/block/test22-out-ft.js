@@ -30,11 +30,14 @@ function a_4(a) {
 function a_5(a) {
   var b;
   b = a._i += 2;
+  a._i = null;
   return M.chain(eff4(b, a._j), a_6);
 }
 
 function a_6(a) {
-  return M.chain(eff5(a._j), a_7);
+  var b;
+  b = a._j, a._j = null;
+  return M.chain(eff5(b), a_7);
 }
 
 function a_7(a) {}

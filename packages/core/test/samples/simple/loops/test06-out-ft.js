@@ -23,10 +23,13 @@ function a_4(a) {
 }
 
 function a_5(a, b) {
+  var c;
+
   if (a._i !== b) {
     return M.chain(eff5(a._i), a_6);
   } else {
-    return M.chain(eff7(a._i), a_9);
+    c = a._i, a._i = null;
+    return M.chain(eff7(c), a_9);
   }
 }
 
@@ -35,7 +38,9 @@ function a_6(a) {
 }
 
 function a_7(a) {
-  return M.chain(eff4(a._i), a_8);
+  var b;
+  b = a._i, a._i = null;
+  return M.chain(eff4(b), a_8);
 }
 
 function a_8(a, b) {

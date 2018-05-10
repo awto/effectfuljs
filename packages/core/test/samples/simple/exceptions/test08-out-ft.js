@@ -11,8 +11,10 @@ function a_1(a) {
 }
 
 function a_2(a) {
+  var b, c;
   console.log("fin");
-  return M.jump(void 0, a._fc, a._fe);
+  b = a._fc, c = a._fe, a._fc = null, a._fe = null;
+  return M.jump(void 0, b, c);
 }
 
 function a_3(a) {}

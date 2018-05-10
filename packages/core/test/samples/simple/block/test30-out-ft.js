@@ -20,10 +20,11 @@ function b_1(b) {
 }
 
 function b_2(b) {
-  var a;
+  var a, c;
   b._i++, b._a._j++;
   a = b._a._j;
-  return M.chain(eff2(b._i, a), b_3);
+  c = b._i, b._i = null;
+  return M.chain(eff2(c, a), b_3);
 }
 
 function b_3(b) {}
@@ -37,15 +38,18 @@ function a_1(a) {
 }
 
 function a_2(a) {
+  var b;
   a._i++, a._j--;
-  return M.chain(a._b(a._i), a_3);
+  b = a._b, a._b = null;
+  return M.chain(b(a._i), a_3);
 }
 
 function a_3(a) {
-  var b;
+  var b, c;
   a._i--, a._j++;
   b = a._j;
-  return M.chain(eff4(a._i, b), a_4);
+  c = a._i, a._i = null;
+  return M.chain(eff4(c, b), a_4);
 }
 
 function a_4(a) {}

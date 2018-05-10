@@ -239,9 +239,6 @@ export function run(s) {
   const res = pass(s)
   if (!res)
     return
-  try {
-    require("@babel/traverse").default.cache.clearScope()
-  } catch(e) {}
   consume(varScope.resolve(res))
 }
 

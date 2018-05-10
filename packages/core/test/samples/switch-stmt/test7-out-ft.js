@@ -37,6 +37,7 @@ function a_5(a, b) {
 
 function a_6(a, b) {
   if (a._pat === b) {
+    a._pat = null;
     return M.chain(effB(2), a_9);
   } else {
     return M.chain(check(4), a_7);
@@ -61,6 +62,7 @@ function a_7(a, b) {
 
 function a_8(a, b) {
   if (a._pat === b) {
+    a._pat = null;
     return M.chain(effB(3), a_9);
   }
 }

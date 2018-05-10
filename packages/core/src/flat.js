@@ -70,6 +70,8 @@ export const convert = Kit.pipe(
   function convertPrepare(si) {
     const s = Kit.auto(si)
     const root = s.first.value
+    root.rootName = (!s.opts.shortFrameNames || s.opts.topLevel)
+      && root.funcId && root.funcId.name || ""
     function* walk() {
       let res = false
       for(const i of s.sub()) {
@@ -131,8 +133,8 @@ export const convert = Kit.pipe(
   },
   function* convert(si) {
     const s = Kit.auto(si)
-    const needNextErrCont = !s.opts.inlineErrorContAssign
-    const needNextResCont = !s.opts.inlineResultContAssign
+    const needNextErrCont = !s.opts.defunct && !s.opts.inlineErrorContAssign
+    const needNextResCont = !s.opts.defunct && !s.opts.inlineResultContAssign
           && s.opts.storeResultCont
     const root = s.first.value
     const frames = []
@@ -571,7 +573,7 @@ export const convert = Kit.pipe(
     const s = Kit.auto(si)
     const root = s.first.value
     const {resFrame,resSym,errFrameRedir} = root
-    const storeResultCont = root.opts.storeResultCont
+    const storeResultCont = root.opts.storeResultCont || root.opts.defunct
     const redirFrames = []
     for(const i of s) {
       yield i
@@ -983,39 +985,10 @@ export function interpretFrames(si) {
   const s = Kit.auto(si)
   const unpackMax = s.opts.unpackMax
   const root = s.first.value
-  const rootName = (!s.opts.shortFrameNames || s.opts.topLevel)
-        && root.funcId && root.funcId.name || ""
-  function* args(thread) {
-    if (thread) {
-      for(const j of thread)
-        yield s.tok(Tag.push,Tag.Identifier,{sym:j})
-    }
-  }
-  function* arrUnpack(thread) {
-    yield s.enter(Tag.push,Tag.ArrayPattern)
-    yield s.enter(Tag.elements,Tag.Array)
-    yield* args(thread)
-    yield* s.leave()
-    yield* s.leave()
-  }
-  function* objUnpack(thread) {
-    yield s.enter(Tag.push,Tag.ObjectPattern)
-    yield s.enter(Tag.properties,Tag.Array)
-    for(const j of thread) {
-      yield s.enter(Tag.push,Tag.ObjectProperty,{node:{shorthand:true}})
-      yield s.tok(Tag.key,Tag.Identifier,{sym:j})
-      yield s.tok(Tag.value,Tag.Identifier,{sym:j})
-      yield* s.leave()
-    }
-    yield* s.leave()
-    yield* s.leave()
-  }
-  let paramUnpack
-  switch(s.opts.packArgs) {
-  case "apply"  : paramUnpack = args; break
-  case "object" : paramUnpack = objUnpack; break
-  default       : paramUnpack = arrUnpack
-  }
+  const rootName = root.rootName
+  const top = !!s.opts.topLevel
+  if (top)
+    root.module.hasTop = true
   let paramPrefix = function*(){}
   const ctxSym = s.first.value.contextSym
   if (ctxSym && ctxSym.bound && s.opts.contextBy === "parameter") {
@@ -1045,7 +1018,7 @@ export function interpretFrames(si) {
           continue
         case Block.frame:
           const fn = num++
-          i.value.frameStep = s.first.value
+          i.value.moveToTop = top
           const flab = s.label()
           if (fn !== 0) {
             i.value.declSym.orig = `${rootName}_${fn}`
@@ -1053,7 +1026,6 @@ export function interpretFrames(si) {
               (i.value.savedDecls || (i.value.savedDecls = new Map())).set(
                 ctxSym,
                 {raw:null,init:[s.tok(Tag.init,Tag.ThisExpression)]})
-            const thread = i.value.threadParams
             i.value.func = true
             yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
             yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.declSym,decl:true})
@@ -1063,11 +1035,8 @@ export function interpretFrames(si) {
             if (i.value.ctrlParam)
               yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.ctrlParam})
             const patSym = i.value.errSym || i.value.patSym
-            if (patSym && (thread && thread.length || !patSym.dummy))
+            if (patSym && !patSym.dummy)
               yield s.tok(Tag.push,Tag.Identifier,{sym:patSym})
-            if (thread && thread.length)
-              yield* thread.length <= unpackMax
-                ? args(thread) : paramUnpack(thread)
             yield* paramLab()
             yield s.enter(Tag.body,Tag.BlockStatement)
             yield s.enter(Tag.body,Tag.Array)
@@ -1098,11 +1067,9 @@ export function interpretJumps(si) {
   const ctxSym = root.contextSym
   const requireFinalPure = s.opts.scopePostfix
   const passCont = !s.opts.inlineContAssign
-  const passCatchCont = !s.opts.inlineErrorContAssign
-  const passResultCont = !s.opts.inlineResultContAssign
+  const passCatchCont = !s.opts.defunct && !s.opts.inlineErrorContAssign
+  const passResultCont = !s.opts.defunct && !s.opts.inlineResultContAssign
   const threadContext = s.opts.threadContext && [[ctxSym,ctxSym]]
-  if (threadContext && s.opts.state)
-    throw new Error("`threadContext:true` isn't compatible with `{state:true}`")
   const {markRepeat} = s.opts
   const {resFrameRedir} = root
   function* argPack(arr,inner) {
@@ -1174,7 +1141,7 @@ export function interpretJumps(si) {
               yield* walk()
           } else {
             const {sym:patSym} = i.value
-            const threadArgs = threadContext || i.value.threadArgs || emptyArr
+            const threadArgs = threadContext || emptyArr
             let catchCont, resCont
             if (goto) {
               if (passCatchCont && i.value.catchContSym)
@@ -1261,7 +1228,6 @@ function calcPatSym(cfg) {
  *  - `frameLocals: Set<Symbol>`: used or written by the frame but not read:
  *  - `frameParams: Set<Symbol>`: needed by the frame
  *  - `framePat: Set<Symbol>`: received from bound effectful value
- *  - `frameAvail: Set<Symbol>`: value assigned in some former frame
  *  - `frameParamsClos: Set<Symbol>`: needed by the frame or some next frame
  */
 function calcVarDeps(sa) {

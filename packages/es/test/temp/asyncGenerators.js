@@ -1,11 +1,21 @@
 const run = require("../templates/asyncGenerators")
-
 describe("async/await using context passing runtime", function() {
-  run("with default options", require("../default/links/asyncGenerators"))
-  run("with top level handlers", require("../topLevel/links/asyncGenerators"))
-  run("with single frame function",require("../defunct/links/asyncGenerators"))
-  run("with top level single frame function",
-      require("../defunctTopLevel/links/asyncGenerators"))
+  context("with default options", function() {
+    run(require("../default/links/asyncGenerators"))
+    require("../default/links/asyncGeneratorsTest")
+  })
+  context("with top level handlers", function() {
+    run(require("../topLevel/links/asyncGenerators"))
+    require("../topLevel/links/asyncGeneratorsTest")
+  })
+  context("with single frame function", function() {
+    run(require("../defunct/links/asyncGenerators"))
+    require("../defunct/links/asyncGeneratorsTest")
+  })
+  context("with top level single frame function", function() {
+    run(require("../defunctTopLevel/links/asyncGenerators"))
+    require("../defunctTopLevel/links/asyncGeneratorsTest")
+  })
 })
 
 

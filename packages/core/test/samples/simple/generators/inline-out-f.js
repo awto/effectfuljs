@@ -128,14 +128,18 @@ function a3() {
         };
 
       case 9:
-        a3.value = a3._r;
-        a3.$step = 0, a3.done = true;
-        return a3;
+        a3.$step = 0;
+        return {
+          value: a3._r,
+          done: true
+        };
 
       case 0:
-        a3.value = p;
-        a3.$step = 0, a3.done = true;
-        return a3;
+        a3.$step = 0;
+        return {
+          value: p,
+          done: true
+        };
 
       case 1:
         a3.$rc = 0;

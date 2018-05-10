@@ -15,7 +15,9 @@ function a_2(a, b) {
 }
 
 function a_3(a) {
-  return M.chain(write(a._i), a_4);
+  var b;
+  b = a._i, a._i = null;
+  return M.chain(write(b), a_4);
 }
 
 function a_4(a) {}

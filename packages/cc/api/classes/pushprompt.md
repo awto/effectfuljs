@@ -10,7 +10,7 @@
 
 ## Implements
 
-* [CC](../interfaces/cc.md)`A`
+* [CC](../interfaces/cc.md)<`A`>
 
 ## Index
 
@@ -28,20 +28,22 @@
 
 <a id="constructor"></a>
 
-### ⊕ **new PushPrompt**(p: *[Prompt](prompt.md)`A`*, c: *[CCV](../#ccv)`A`*): [PushPrompt](pushprompt.md)
+###  constructor
+
+⊕ **new PushPrompt**(p: *[Prompt](prompt.md)<`A`>*, c: *[CCV](../#ccv)<`A`>*): [PushPrompt](pushprompt.md)
 
 *Defined in main.ts:76*
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](prompt.md)`A`   |  - |
-| c | [CCV](../#ccv)`A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](prompt.md)<`A`> | 
+| c | [CCV](../#ccv)<`A`> | 
 
 **Returns:** [PushPrompt](pushprompt.md)
 
----
+___
 
 ## Methods
 
@@ -49,7 +51,7 @@
 
 ###  __computed
 
-▸ **__computed**(k: *[Seq](../#seq)`A`, `any`*): [CCV](../#ccv)`any`
+▸ **__computed**(k: *[Seq](../#seq)<`A`, `any`>*): [CCV](../#ccv)<`any`>
 
 *Implementation of [CC](../interfaces/cc.md).[__computed](../interfaces/cc.md#__computed)*
 
@@ -57,11 +59,11 @@
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| k | [Seq](../#seq)`A`, `any`   |  - |
+| Param | Type |
+| ------ | ------ |
+| k | [Seq](../#seq)<`A`, `any`> | 
 
-**Returns:** [CCV](../#ccv)`any`
+**Returns:** [CCV](../#ccv)<`any`>
 
 ___
 

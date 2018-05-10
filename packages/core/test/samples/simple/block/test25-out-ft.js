@@ -20,12 +20,14 @@ function a_1(a) {
 function a_2(a) {
   var b;
   b = a._i++;
+  a._i = null;
   return M.chain(eff2(b), a_4);
 }
 
 function a_3(a) {
   var b;
   b = a._i++;
+  a._i = null;
   return M.chain(eff2(b), a_4);
 }
 

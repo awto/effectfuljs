@@ -21,6 +21,7 @@ function a_2(a, b) {
 
 function a_3(a, b) {
   if (a._pat === b) {
+    a._pat = null;
     return M.chain(effR(1), a_6);
   } else {
     return M.chain(effC(2), a_4);
@@ -29,8 +30,10 @@ function a_3(a, b) {
 
 function a_4(a, b) {
   if (a._pat === b) {
+    a._pat = null;
     return M.chain(effR(2), a_5);
   } else {
+    a._pat = null;
     return M.jump(void 0, a_5);
   }
 }
@@ -64,6 +67,7 @@ function c_4(c) {
 
 function c_5(c, a) {
   if (c._pat === a) {
+    c._pat = null;
     return M.chain(eff(5), c_7);
   } else {
     if (c._pat === 6) {
@@ -79,6 +83,7 @@ function c_6(c) {
     console.log(9);
   }
 
+  c._pat = null;
   return M.chain(eff(10), c_7);
 }
 

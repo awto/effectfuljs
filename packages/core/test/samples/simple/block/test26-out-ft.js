@@ -8,6 +8,7 @@ function a() {
 function a_1(a) {
   var b;
   b = a._i++;
+  a._i = null;
   return M.chain(eff1(b), a_2);
 }
 
@@ -19,12 +20,15 @@ function a_2(a, b) {
 function a_3(a) {
   var b;
   b = a._i++;
+  a._i = null;
   return M.chain(eff3(b), a_4);
 }
 
 function a_4(a, b) {
+  var c;
   a._i = b;
-  return M.chain(eff4(a._i), a_5);
+  c = a._i, a._i = null;
+  return M.chain(eff4(c), a_5);
 }
 
 function a_5(a) {}

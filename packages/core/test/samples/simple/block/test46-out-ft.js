@@ -73,6 +73,7 @@ function a_9(a) {
 function a_10(a) {
   var b;
   b = a._i++;
+  a._i = null;
   return M.chain(eff10(b), a_11);
 }
 

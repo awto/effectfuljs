@@ -24,6 +24,7 @@ function f_3(ctx, a) {
 function f_4(ctx) {
   var e;
   e = ctx._ex;
+  ctx._ex = null;
   return M.chain(eff(5), f_5);
 }
 

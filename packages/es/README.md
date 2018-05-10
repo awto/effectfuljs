@@ -47,7 +47,7 @@ implementations libraries.
 
 ```json
 {
-  "presets": [["@effectful/es",{"importRT":"my-custom-effects"}]]
+  "presets": [["@effectful/es/preset",{"importRT":"my-custom-effects"}]]
 }
 ```
 
@@ -62,7 +62,7 @@ This .babelrc
 
 ```json
 {
-  "presets": [["@effectful/es",{"inline":true}]]
+  "presets": [["@effectful/es/preset",{"inline":true}]]
 }
 ```
 
@@ -87,7 +87,7 @@ of defaulting ES for runtime injection use:
 
 ```json
 {
-  "presets": [["@effectful/es",{"file":{"modules":"commonjs"}}]]
+  "presets": [["@effectful/es/preset",{"file":{"modules":"commonjs"}}]]
 }
 ```
 

@@ -11,17 +11,16 @@ function* permut(c) {
 }
 
 function* opts() {
-  yield* permut([[["f",{static:true,state:false,contextState:false}]],
+  yield* permut([[["f",{static:true,contextState:false}]],
                  [["",{}],
-                  ["s",{state:true}],
                   ["t",{topLevel:true,
                         scopeContext:true,
                         contextState:true,
                         scopePrefix:true,
+                        cleanupFrameVars:true,
                         all:{
                           wrapFunction:null
                         }
-                        //contextMethodOps:true
                        }],["",{}]]
                 ])
 }

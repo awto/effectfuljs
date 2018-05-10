@@ -12,6 +12,7 @@ function a_1(a) {
 
 function a_2(a) {
   a._i++;
+  a._i = null;
   return M.chain(eff(2), a_3);
 }
 

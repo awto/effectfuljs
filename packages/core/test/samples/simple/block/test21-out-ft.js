@@ -26,11 +26,14 @@ function a_3(a) {
 function a_4(a) {
   var b;
   b = a._i += 2;
+  a._i = null;
   return M.chain(eff3(b, a._j), a_5);
 }
 
 function a_5(a) {
-  return M.chain(eff4(a._j), a_6);
+  var b;
+  b = a._j, a._j = null;
+  return M.chain(eff4(b), a_6);
 }
 
 function a_6(a) {}

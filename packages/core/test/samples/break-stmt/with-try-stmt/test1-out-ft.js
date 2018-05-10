@@ -20,6 +20,7 @@ function f_2(ctx, a) {
 function f_3(ctx) {
   var e;
   e = ctx._ex;
+  ctx._ex = null;
   return M.chain(eff(3), f_4);
 }
 

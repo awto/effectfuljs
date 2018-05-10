@@ -7,6 +7,7 @@ function a() {
 
 function a_1(a) {
   a._i = 0;
+  a._i = null;
   return M.chain(read1(), a_2);
 }
 
@@ -16,7 +17,9 @@ function a_2(a, b) {
 }
 
 function a_3(a) {
-  return M.chain(write(a._i), a_4);
+  var b;
+  b = a._i, a._i = null;
+  return M.chain(write(b), a_4);
 }
 
 function a_4(a) {}

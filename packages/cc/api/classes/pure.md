@@ -10,7 +10,7 @@
 
 ## Implements
 
-* [CC](../interfaces/cc.md)`A`
+* [CC](../interfaces/cc.md)<`A`>
 
 ## Index
 
@@ -32,19 +32,21 @@
 
 <a id="constructor"></a>
 
-### ⊕ **new Pure**(value: *`A`*): [Pure](pure.md)
+###  constructor
+
+⊕ **new Pure**(value: *`A`*): [Pure](pure.md)
 
 *Defined in main.ts:132*
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| value | `A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| value | `A` | 
 
 **Returns:** [Pure](pure.md)
 
----
+___
 
 ## Properties
 
@@ -52,7 +54,7 @@
 
 ###  value
 
-**●  value**:  *`A`* 
+**● value**: *`A`*
 
 *Defined in main.ts:137*
 
@@ -64,7 +66,7 @@ ___
 
 ###  __computed
 
-▸ **__computed**(k: *[Seq](../#seq)`A`, `any`*): [CCV](../#ccv)`any`
+▸ **__computed**(k: *[Seq](../#seq)<`A`, `any`>*): [CCV](../#ccv)<`any`>
 
 *Implementation of [CC](../interfaces/cc.md).[__computed](../interfaces/cc.md#__computed)*
 
@@ -72,11 +74,11 @@ ___
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| k | [Seq](../#seq)`A`, `any`   |  - |
+| Param | Type |
+| ------ | ------ |
+| k | [Seq](../#seq)<`A`, `any`> | 
 
-**Returns:** [CCV](../#ccv)`any`
+**Returns:** [CCV](../#ccv)<`any`>
 
 ___
 

@@ -11,7 +11,7 @@
 
 ## Implements
 
-* [CC](../interfaces/cc.md)`B`
+* [CC](../interfaces/cc.md)<`B`>
 
 ## Index
 
@@ -29,21 +29,23 @@
 
 <a id="constructor"></a>
 
-### ⊕ **new Chain**(a: *[CCV](../#ccv)`A`*, f: *[Step](../#step)`A`, `B`*, x?: *[Context](context.md)*): [Chain](chain.md)
+###  constructor
+
+⊕ **new Chain**(a: *[CCV](../#ccv)<`A`>*, f: *[Step](../#step)<`A`, `B`>*, x?: *[Context](context.md)*): [Chain](chain.md)
 
 *Defined in main.ts:89*
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| a | [CCV](../#ccv)`A`   |  - |
-| f | [Step](../#step)`A`, `B`   |  - |
-| x | [Context](context.md)   |  - |
+| Param | Type |
+| ------ | ------ |
+| a | [CCV](../#ccv)<`A`> | 
+| f | [Step](../#step)<`A`, `B`> | 
+| `Optional` x | [Context](context.md) | 
 
 **Returns:** [Chain](chain.md)
 
----
+___
 
 ## Methods
 
@@ -51,7 +53,7 @@
 
 ###  __computed
 
-▸ **__computed**(k: *[Seq](../#seq)`B`, `any`*): [CCV](../#ccv)`any`
+▸ **__computed**(k: *[Seq](../#seq)<`B`, `any`>*): [CCV](../#ccv)<`any`>
 
 *Implementation of [CC](../interfaces/cc.md).[__computed](../interfaces/cc.md#__computed)*
 
@@ -59,11 +61,11 @@
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| k | [Seq](../#seq)`B`, `any`   |  - |
+| Param | Type |
+| ------ | ------ |
+| k | [Seq](../#seq)<`B`, `any`> | 
 
-**Returns:** [CCV](../#ccv)`any`
+**Returns:** [CCV](../#ccv)<`any`>
 
 ___
 

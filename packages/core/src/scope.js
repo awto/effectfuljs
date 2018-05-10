@@ -155,6 +155,7 @@ export function recalcLocals(sl) {
  */
 export function splitScopes(si) {
   const s = Kit.auto(methodsHack(si))
+  const module = s.first.value
   const frames = []
   frames.push([..._splitScopes(s.take())])
   return frames
@@ -164,6 +165,7 @@ export function splitScopes(si) {
       if (i.enter && !i.leave && s.curLev() != null && i.value.func) {
         frames.push([..._splitScopes(i)])
         i.value.parScope = p.value
+        i.value.module = module
         if (!i.value.funcId)
           i.value.funcId = Kit.scope.newSym("fn")
         if (i.value.opts.wrapFunction) {          
@@ -262,13 +264,18 @@ export function funcWraps(si) {
   }
   function* implFrame(root) {
     if (!root.opts.defunctHandlerInProto)
-      return
-    if (!root.opts.topLevel || !root.opts.defunct)
-      throw s.error(
-        "`defunctHandlerInProto` requires `topLevel`, `defunct`")
+        return 
+    if (!root.opts.defunct)
+      throw s.error("`defunctHandlerInProto` requires `defunct`")
     const sym = root.implFrame && root.implFrame.value.declSym
-    if (sym)
-      yield s.tok(Tag.push,Tag.Identifier,{sym})
+    if (!sym)
+      return
+    yield s.tok(Tag.push,Tag.Identifier,
+                {sym:root.opts.topLevel ? sym : Kit.scope.undefinedSym})
+    yield s.tok(Tag.push,Tag.Identifier,
+                {sym:root.errMapSym||Kit.scope.undefinedSym})
+    yield s.tok(Tag.push,Tag.Identifier,
+                {sym:root.resMapSym||Kit.scope.undefinedSym})
   }
   function hoist(si) {
     const s = Kit.auto(Kit.toArray(si))

@@ -16,10 +16,14 @@ function a_2(a) {
 }
 
 function a_3(a) {
+  var b;
+
   if (t) {
-    return M.chain(eff2(a._i), a_4);
+    b = a._i, a._i = null;
+    return M.chain(eff2(b), a_4);
   } else {
-    return M.chain(eff3(a._i), a_4);
+    b = a._i, a._i = null;
+    return M.chain(eff3(b), a_4);
   }
 }
 

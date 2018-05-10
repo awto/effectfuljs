@@ -5,6 +5,5 @@
                 "defunct":true,
                 "loose":true,
                 "modules":"commonjs",
-                "importRT":"@effectful/es-rt/opts/defunct-loose",
                 "all": {"removeAsserts":false}}]]
 }

@@ -193,10 +193,6 @@ export default {
   // to avoid possible leaks if effectful computation is suspended for long
   cleanupFrameVars: false,
 
-  // how to pack threaded args if they don't fit `unpackMax`
-  // possible values are "array" | "apply" | "object"
-  packArgs: "array",
-
   // tries to minimize number of generated temporal variables
   reuseTempVars: true,
 
@@ -268,14 +264,6 @@ export default {
 
   // replaces `let`/`const` with `var`
   blockScoping: false,
-
-  // Handles local variables as threaded arguments, passed to operations
-  // and further back to next continuation, this makes their values isolated
-  // between different continuations
-  // WARNING: it doesn't handle closure captured vars,
-  // they are treated as references
-  // It is ignored if contextState: true
-  state: false,
 
   // rewrites module's import
   moduleAliases: null,

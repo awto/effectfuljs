@@ -24,7 +24,9 @@ function a_2(a) {
 }
 
 function a_3(a) {
-  return M.chain(eff8(a._i), a_4);
+  var b;
+  b = a._i, a._i = null;
+  return M.chain(eff8(b), a_4);
 }
 
 function a_4(a) {}

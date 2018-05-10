@@ -25,10 +25,13 @@ function a_4(a, b) {
 }
 
 function a_5(a) {
+  var b, c;
+
   if (a._i < 10 && a._j > -10) {
     return M.chain(eff3(a._i), a_6);
   } else {
-    return M.chain(eff5(a._i, a._j), a_8);
+    b = a._i, c = a._j, a._i = null, a._j = null;
+    return M.chain(eff5(b, c), a_8);
   }
 }
 

@@ -11,7 +11,7 @@
 
 ## Implements
 
-* [CC](../interfaces/cc.md)`B`
+* [CC](../interfaces/cc.md)<`B`>
 
 ## Index
 
@@ -29,20 +29,22 @@
 
 <a id="constructor"></a>
 
-### ⊕ **new PushSubCont**(sc: *[SubCont](../interfaces/subcont.md)`A`, `B`*, c: *[CCV](../#ccv)`A`*): [PushSubCont](pushsubcont.md)
+###  constructor
+
+⊕ **new PushSubCont**(sc: *[SubCont](../interfaces/subcont.md)<`A`, `B`>*, c: *[CCV](../#ccv)<`A`>*): [PushSubCont](pushsubcont.md)
 
 *Defined in main.ts:119*
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| sc | [SubCont](../interfaces/subcont.md)`A`, `B`   |  - |
-| c | [CCV](../#ccv)`A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| sc | [SubCont](../interfaces/subcont.md)<`A`, `B`> | 
+| c | [CCV](../#ccv)<`A`> | 
 
 **Returns:** [PushSubCont](pushsubcont.md)
 
----
+___
 
 ## Methods
 
@@ -50,7 +52,7 @@
 
 ###  __computed
 
-▸ **__computed**(k: *[Seq](../#seq)`B`, `any`*): [CCV](../#ccv)`any`
+▸ **__computed**(k: *[Seq](../#seq)<`B`, `any`>*): [CCV](../#ccv)<`any`>
 
 *Implementation of [CC](../interfaces/cc.md).[__computed](../interfaces/cc.md#__computed)*
 
@@ -58,11 +60,11 @@
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| k | [Seq](../#seq)`B`, `any`   |  - |
+| Param | Type |
+| ------ | ------ |
+| k | [Seq](../#seq)<`B`, `any`> | 
 
-**Returns:** [CCV](../#ccv)`any`
+**Returns:** [CCV](../#ccv)<`any`>
 
 ___
 

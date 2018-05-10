@@ -27,9 +27,11 @@ function d(z) {
 function a_1(a) {
   switch (a._z) {
     case 1:
+      a._z = null;
       return M.chain(eff(1), a_2);
 
     default:
+      a._z = null;
       return M.chain(eff(2), a_2);
   }
 }
@@ -43,14 +45,17 @@ function a_3(a) {}
 function _a_1(a) {
   switch (a._z) {
     case 1:
+      a._z = null;
       return M.chain(eff(1), _a_2);
 
     case 2:
       console.log("1");
+      a._z = null;
       return M.jump(void 0, _a_2);
 
     default:
       console.log("2");
+      a._z = null;
       return M.jump(void 0, _a_2);
   }
 }
@@ -64,9 +69,11 @@ function _a_3(a) {}
 function c_1(c) {
   switch (c._z) {
     case 1:
+      c._z = null;
       return M.chain(eff(1), c_2);
 
     case 2:
+      c._z = null;
       return M.chain(eff(2), c_3);
 
     case 3:
@@ -75,6 +82,7 @@ function c_1(c) {
       }
 
     default:
+      c._z = null;
       return M.chain(eff(3), c_2);
   }
 }
@@ -92,16 +100,20 @@ function c_4(c) {}
 function d_1(d) {
   switch (d._z) {
     case 1:
+      d._z = null;
       return M.chain(eff(1), d_2);
 
     case 2:
+      d._z = null;
       return M.chain(eff(2), d_3);
 
     case 3:
       console.log("z");
+      d._z = null;
       return M.chain(eff(5), d_3);
 
     default:
+      d._z = null;
       return M.chain(eff(3), d_2);
   }
 }

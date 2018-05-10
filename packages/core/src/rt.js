@@ -133,7 +133,7 @@ export function inject(si) {
   return RT.importSyms(s)
 }
 
-
+/** replaces symbols with special meaning with their interpretation */
 export function interpretLibSyms(si) {
   const s = Kit.auto(si)
   if (s.opts.nsStatic)
@@ -151,7 +151,7 @@ export function interpretLibSyms(si) {
         if (sym.nsDefault) {
           yield s.tok(i.pos,Tag.Identifier,{sym:ns})
         } else if (ns) {
-          yield s.enter(i.pos,Tag.MemberExpression,{})
+          yield s.enter(i.pos,Tag.MemberExpression,{origSym:sym})
           yield s.tok(Tag.object,Tag.Identifier,{sym:ns})
           yield s.tok(Tag.property,Tag.Identifier,{sym,node:{name:sym.name}})
           yield* s.leave()

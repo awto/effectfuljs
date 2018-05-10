@@ -22,7 +22,7 @@ export function babelPreset(transform) {
     const opts = transform(ropts)
     return {
       plugins: [
-        function (t) {
+        function (babel) {
           return {
             manipulateOptions(mopts, parserOpts) {
               if (opts.syntaxPlugins)
@@ -35,6 +35,8 @@ export function babelPreset(transform) {
                   Kit.setOpts(opts.options)
                   Kit.babelBridge(Kit.pipe(Kit.prepare,opts.main),path,state)
                 })
+                babel.traverse.cache.clearScope()
+                babel.traverse.clearNode(path.node)
               }
             }
           }

@@ -20,11 +20,15 @@ function a_3(a, b) {
 }
 
 function a_4(a, b) {
-  return M.chain(a._1(b), a_5);
+  var c;
+  c = a._1, a._1 = null;
+  return M.chain(c(b), a_5);
 }
 
 function a_5(a, b) {
-  return M.chain(a._(b), a_6);
+  var c;
+  c = a._, a._ = null;
+  return M.chain(c(b), a_6);
 }
 
 function a_6(a) {}

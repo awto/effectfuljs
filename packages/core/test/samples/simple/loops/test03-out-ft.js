@@ -20,11 +20,15 @@ function a_3(a, b) {
 }
 
 function a_4(a) {
+  var b, c, d;
+
   if (a._i < 10) {
     a._k++;
+    a._j = null;
     return M.chain(eff3(a._i), a_5);
   } else {
-    return M.chain(eff6(a._i, a._j, a._k), a_8);
+    b = a._i, c = a._j, d = a._k, a._k = null, a._i = null, a._j = null;
+    return M.chain(eff6(b, c, d), a_8);
   }
 }
 

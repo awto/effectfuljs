@@ -16,6 +16,7 @@ function f_2(ctx) {
     ctx._j = 0, ctx._len = ctx._ref.length;
     return M.jump(void 0, f_3);
   } else {
+    ctx._i = null, ctx._j = null, ctx._len = null, ctx._ref = null;
     return M.chain(eff(3), f_6);
   }
 }

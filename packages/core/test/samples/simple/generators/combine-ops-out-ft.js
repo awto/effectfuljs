@@ -30,7 +30,9 @@ function d_2(d, a) {
 }
 
 function d_3(d) {
-  return M.yldStar(some(d._i += 2, d._j) + d._j, d_4);
+  var a;
+  a = d._j, d._j = null;
+  return M.yldStar(some(d._i += 2, a) + a, d_4);
 }
 
 function d_4(d, a) {
@@ -63,12 +65,14 @@ function a4_3(a4) {
 
 function a4_4(a4) {
   a4._e = a4._ex;
+  a4._ex = null;
   return M.yld("excep", a4_5, a4_15);
 }
 
 function a4_5(a4) {
-  a4._fc = a4_8, a4._fe = a4_12;
-  return M.yld(a4._e, a4_6);
+  var a;
+  a4._fc = a4_8, a4._fe = a4_12, a = a4._e, a4._e = null;
+  return M.yld(a, a4_6);
 }
 
 function a4_6(a4) {
@@ -76,7 +80,9 @@ function a4_6(a4) {
 }
 
 function a4_7(a4) {
-  return M.yld("e", a4._fc, a4._fe);
+  var a, b;
+  a = a4._fc, b = a4._fe, a4._fc = null, a4._fe = null;
+  return M.yld("e", a, b);
 }
 
 function a4_8(a4) {
@@ -95,6 +101,7 @@ function a4_9(a4, b) {
 function a4_10(a4, b) {
   var a;
   a = a1(a4._1, b);
+  a4._1 = null;
   return M.yld(a, a4_11, a4_12);
 }
 
@@ -138,11 +145,14 @@ function a5_2(a5) {
 }
 
 function a5_3(a5) {
+  var a, b;
+
   if (a5._loop.exit) {
     a5._loop.exit();
   }
 
-  return M.jump(void 0, a5._fc, a5._fe);
+  a = a5._fc, b = a5._fe, a5._loop = null, a5._fc = null, a5._fe = null;
+  return M.jump(void 0, a, b);
 }
 
 function a5_4(a5) {

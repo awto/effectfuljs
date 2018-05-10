@@ -6,14 +6,18 @@ function a() {
 }
 
 function a_1(a) {
+  var b;
   a._i = 0;
   a._j = 0;
   a._k = 0;
-  return M.chain(eff(a._i, a._j, a._k), a_2);
+  b = a._k, a._k = null;
+  return M.chain(eff(a._i, a._j, b), a_2);
 }
 
 function a_2(a) {
-  return M.chain(eff1(a._i), a_3);
+  var b;
+  b = a._i, a._i = null;
+  return M.chain(eff1(b), a_3);
 }
 
 function a_3(a) {

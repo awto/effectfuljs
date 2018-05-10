@@ -17,6 +17,7 @@ function fSent_2(fSent, a) {
 
 function fSent_3(fSent) {
   console.log(fSent._s, fSent._sent);
+  fSent._s = null, fSent._sent = null;
   return M.yldStar(M.yld(), fSent_4);
 }
 

@@ -47,6 +47,7 @@ function f_4(ctx) {
     d = ctx._ref[ctx._j];
     return M.chain(eff(d), f_5);
   } else {
+    ctx._j = null, ctx._len = null;
     return M.jump(void 0, f_7);
   }
 }
@@ -95,6 +96,7 @@ function _f_4(ctx) {
     d = ctx._ref[ctx._j];
     return M.chain(eff(d), _f_5);
   } else {
+    ctx._j = null, ctx._len = null;
     return M.jump(void 0, f_8);
   }
 }
@@ -132,10 +134,14 @@ function f_11(ctx) {
 }
 
 function f_21(ctx) {
+  var a;
+
   if (ctx._i < 3) {
+    ctx._j = null;
     return M.chain(eff(ctx._i), f_31);
   } else {
-    return M.chain(eff(ctx._j), f_71);
+    a = ctx._j, ctx._i = null, ctx._j = null;
+    return M.chain(eff(a), f_71);
   }
 }
 
@@ -149,6 +155,7 @@ function f_41(ctx) {
     d = ctx._ref[ctx._j];
     return M.chain(eff(d), f_51);
   } else {
+    ctx._len = null;
     return M.jump(void 0, f_61);
   }
 }
@@ -225,7 +232,9 @@ function f_33(ctx) {
 }
 
 function f_43(ctx) {
-  return M.chain(eff(ctx._j), f_52);
+  var a;
+  a = ctx._j, ctx._j = null;
+  return M.chain(eff(a), f_52);
 }
 
 function f_52(ctx) {}

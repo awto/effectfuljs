@@ -12,6 +12,7 @@ function a_1(a) {
 function a_2(a) {
   a._e = a._ex;
   console.log(a._e, 1);
+  a._ex = null;
   return M.chain(eff(2), a_3);
 }
 

@@ -183,14 +183,18 @@ function a3_1(a3, p) {
       };
 
     case 9:
-      a3.value = a3._r;
-      a3.$step = 0, a3.done = true;
-      return a3;
+      a3.$step = 0;
+      return {
+        value: a3._r,
+        done: true
+      };
 
     case 0:
-      a3.value = p;
-      a3.$step = 0, a3.done = true;
-      return a3;
+      a3.$step = 0;
+      return {
+        value: p,
+        done: true
+      };
 
     case 1:
       a3.$rc = 0;
@@ -266,7 +270,7 @@ function a4_1(a4, p) {
 }
 
 function a5_1(a5, p) {
-  var i, s;
+  var i, a, s;
 
   switch (s = a5.$sc, s) {
     case 4:
@@ -294,11 +298,14 @@ function a5_1(a5, p) {
       a5.$ec = 1;
 
       if (a5._loop.exit) {
+        var a;
+
         a5._loop.exit();
       }
 
       a5.$sc = a5._fc;
-      return a5._fc(a5);
+      a = a5._fc, a5._loop = null, a5._fc = null;
+      return a(a5);
 
     case 7:
       return Promise.resolve(a5._r);
@@ -335,7 +342,7 @@ function a5_1(a5, p) {
 }
 
 function a6_1(a6, p) {
-  var i, a, c, s;
+  var i, a, c, d, e, f, s;
 
   switch (s = a6.$sc, s) {
     case 5:
@@ -347,7 +354,8 @@ function a6_1(a6, p) {
       a6.$rc = 12;
       a6.$ec = 11;
       a6.$sc = 7;
-      return Promise.resolve(a6._loop.step()).then(a6.$resolve, a6.$reject);
+      d = a6._loop, a6._loop = null;
+      return Promise.resolve(d.step()).then(a6.$resolve, a6.$reject);
 
     case 7:
       c = a6._loop = p;
@@ -372,11 +380,14 @@ function a6_1(a6, p) {
       a6.$ec = 1;
 
       if (a6._loop.exit) {
+        var e, f;
         a6.$sc = a6._fc;
-        return Promise.resolve(a6._loop.exit()).then(a6.$resolve, a6.$reject);
+        e = a6._loop, f = a6._fc, a6._loop = null, a6._fc = null;
+        return Promise.resolve(e.exit()).then(a6.$resolve, a6.$reject);
       } else {
         a6.$sc = a6._fc;
-        return a6._fc(a6);
+        e = a6._fc, a6._loop = null, a6._fc = null;
+        return e(a6);
       }
 
     case 9:
@@ -411,7 +422,7 @@ function a6_1(a6, p) {
 }
 
 function a7_1(a7, p) {
-  var i, _i, s;
+  var i, _i, a, s;
 
   switch (s = a7.$sc, s) {
     case 4:
@@ -440,11 +451,14 @@ function a7_1(a7, p) {
       a7.$ec = 1;
 
       if (a7._loop.return) {
+        var a;
+
         a7._loop.return();
       }
 
       a7.$sc = a7._fc;
-      return a7._fc(a7);
+      a = a7._fc, a7._loop = null, a7._fc = null;
+      return a(a7);
 
     case 7:
       return Promise.resolve(a7._r);
@@ -481,7 +495,7 @@ function a7_1(a7, p) {
 }
 
 function a8_1(a8, p) {
-  var i, a, c, s;
+  var i, a, c, d, e, f, s;
 
   switch (s = a8.$sc, s) {
     case 5:
@@ -493,7 +507,8 @@ function a8_1(a8, p) {
       a8.$rc = 12;
       a8.$ec = 11;
       a8.$sc = 7;
-      return Promise.resolve(a8._loop.step()).then(a8.$resolve, a8.$reject);
+      d = a8._loop, a8._loop = null;
+      return Promise.resolve(d.step()).then(a8.$resolve, a8.$reject);
 
     case 7:
       c = a8._loop = p;
@@ -518,11 +533,14 @@ function a8_1(a8, p) {
       a8.$ec = 1;
 
       if (a8._loop.exit) {
+        var e, f;
         a8.$sc = a8._fc;
-        return Promise.resolve(a8._loop.exit()).then(a8.$resolve, a8.$reject);
+        e = a8._loop, f = a8._fc, a8._loop = null, a8._fc = null;
+        return Promise.resolve(e.exit()).then(a8.$resolve, a8.$reject);
       } else {
         a8.$sc = a8._fc;
-        return a8._fc(a8);
+        e = a8._fc, a8._loop = null, a8._fc = null;
+        return e(a8);
       }
 
     case 9:
@@ -557,7 +575,7 @@ function a8_1(a8, p) {
 }
 
 function a9_1(a9, p) {
-  var i, _i, a, c, s;
+  var i, _i, a, c, d, e, s;
 
   switch (s = a9.$sc, s) {
     case 5:
@@ -595,11 +613,14 @@ function a9_1(a9, p) {
       a9.$ec = 1;
 
       if (a9._loop.return) {
+        var d, e;
         a9.$sc = a9._fc;
-        return Promise.resolve(a9._loop.return()).then(a9.$resolve, a9.$reject);
+        d = a9._loop, e = a9._fc, a9._loop = null, a9._fc = null;
+        return Promise.resolve(d.return()).then(a9.$resolve, a9.$reject);
       } else {
         a9.$sc = a9._fc;
-        return a9._fc(a9);
+        d = a9._fc, a9._loop = null, a9._fc = null;
+        return d(a9);
       }
 
     case 9:
