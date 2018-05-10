@@ -32,7 +32,7 @@ For example:
 ```json
 {
   "passPerPreset": true,
-  "presets": ["@effectful/es","env"]
+  "presets": ["@effectful/es/preset","@babel/preset-env"]
 }
 ```
 

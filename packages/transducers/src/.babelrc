@@ -1,43 +1,4 @@
 {
-  "env": {
-    "development": {
-      "plugins": [["@babel/plugin-transform-modules-commonjs",
-                   {"loose":true,"noInterop":true}]]
-    },
-    "loose": {
-      "passPerPreset": true,
-      "presets": [
-        ["module:es-dev",{"loose":true,
-                   "all": {
-                     "jsExceptions":false,
-                     "inlineJsExceptions":false,
-                     "inlineThrow":true,
-                     "loopBlockScoping":false
-                   },
-                  }],
-        {
-          "plugins": [["@babel/transform-modules-commonjs",
-                       {"loose":true,"noInterop":true}]]
-        }
-      ]
-    },
-    "loose-tmp": {
-      "passPerPreset": true,
-      "presets": [
-        ["module:es-dev",{"loose":true,
-                   "all": {
-                     "jsExceptions":false,
-                     "inlineJsExceptions":false,
-                     "inlineThrow":true,
-                     "loopBlockScoping":false
-                   },
-                  }]
-      ]
-    },
-    "ozer": {
-      "plugins": [["@babel/transform-modules-commonjs",
-                   {"loose":true,"noInterop":true}]]
-    }
-  }
+  "plugins": [["@babel/plugin-transform-modules-commonjs",
+               {"loose":true,"noInterop":true}]]
 }
-

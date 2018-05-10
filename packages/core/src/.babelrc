@@ -1,34 +1,5 @@
 {
-  "env": {
-    "development": {
-      "plugins": [["@babel/plugin-transform-modules-commonjs",
-                   {"loose":true,"noInterop":true}]]
-    },
-    "loose": {
-      "passPerPreset": true,
-      "presets": [
-        ["es-dev/index",
-         {"loose":true,
-          "all": {
-            "jsExceptions":false,
-            "inlineJsExceptions":false,
-            "inlineThrow":true,
-            "loopBlockScoping":false,
-            "moduleAliases":{
-              "@effectful/transducers":"@effectful/transducers-loose",
-              "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
-              "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
-              "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
-              "@effectful/transducers/match":"@effectful/transducers-loose/match"
-            }
-          }
-         }],
-        {
-          "plugins": [["@babel/plugin-transform-modules-commonjs",
-                       {"loose":true,"noInterop":true}]]
-        }
-      ]
-    }
-  }
+  "plugins": [["@babel/plugin-transform-modules-commonjs",
+               {"loose":true,"noInterop":true}]]
 }
 

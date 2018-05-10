@@ -58,17 +58,18 @@
 
 ###  CCV
 
-**Τ CCV**:  *[CC](interfaces/cc.md)`A`⎮`A`* 
+**ΤCCV**: *[CC](interfaces/cc.md)<`A`> |
+`A`
+*
 
 *Defined in main.ts:31*
 
 ___
-
 <a id="frame"></a>
 
 ###  Frame
 
-**Τ Frame**:  *`object`* 
+**ΤFrame**: *`object`*
 
 *Defined in main.ts:60*
 
@@ -76,41 +77,39 @@ ___
 
 `Optional`  ctx: [Context](classes/context.md)
 
-`Optional`  prompt: [Prompt](classes/prompt.md)`A`
+`Optional`  prompt: [Prompt](classes/prompt.md)<`A`>
 
-`Optional`  seg: [Step](#step)`A`, `any`
+`Optional`  seg: [Step](#step)<`A`, `any`>
 
 ___
-
 <a id="seq"></a>
 
 ###  Seq
 
-**Τ Seq**:  *[Frame](#frame)`any`[]* 
+**ΤSeq**: *[Frame](#frame)<`any`>[]*
 
 *Defined in main.ts:58*
 
 ___
-
 <a id="step"></a>
 
 ###  Step
 
-**Τ Step**:  *`function`* 
+**ΤStep**: *`function`*
 
 *Defined in main.ts:33*
 
 #### Type declaration
-▸(x: *[Context](classes/context.md)*, a: *`A`*): [CCV](#ccv)`B`
+▸(x: *[Context](classes/context.md)*, a: *`A`*): [CCV](#ccv)<`B`>
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| x | [Context](classes/context.md)   |  - |
-| a | `A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| x | [Context](classes/context.md) | 
+| a | `A` | 
 
-**Returns:** [CCV](#ccv)`B`
+**Returns:** [CCV](#ccv)<`B`>
 
 ___
 
@@ -120,7 +119,7 @@ ___
 
 ### `<Let>` promptId
 
-**●  promptId**:  *`number`*  = 0
+**● promptId**: *`number`* = 0
 
 *Defined in main.ts:12*
 
@@ -132,12 +131,11 @@ import * as CC from "@effectful/cc"
 CC.run(function() { // ..... });
 
 ___
-
 <a id="stepsymbol"></a>
 
 ### `<Const>` stepSymbol
 
-**●  stepSymbol**:  *`unique symbol`*  =  Symbol("Effectful.ccStep")
+**● stepSymbol**: *`unique symbol`* =  Symbol("Effectful.ccStep")
 
 *Defined in main.ts:24*
 
@@ -149,7 +147,7 @@ ___
 
 ###  abort
 
-▸ **abort**A,B(p: *[Prompt](classes/prompt.md)`B`*, e: *[CCV](#ccv)`B`*): [CC](interfaces/cc.md)`A`
+▸ **abort**A,B(p: *[Prompt](classes/prompt.md)<`B`>*, e: *[CCV](#ccv)<`B`>*): [CC](interfaces/cc.md)<`A`>
 
 *Defined in main.ts:265*
 
@@ -161,20 +159,19 @@ aborts current continution up to the prompt `p`
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`B`   |  - |
-| e | [CCV](#ccv)`B`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](classes/prompt.md)<`B`> | 
+| e | [CCV](#ccv)<`B`> | 
 
-**Returns:** [CC](interfaces/cc.md)`A`
+**Returns:** [CC](interfaces/cc.md)<`A`>
 
 ___
-
 <a id="coerce"></a>
 
 ###  coerce
 
-▸ **coerce**A(v: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`A`
+▸ **coerce**A(v: *[CCV](#ccv)<`A`>*): [CC](interfaces/cc.md)<`A`>
 
 *Defined in main.ts:272*
 
@@ -185,14 +182,13 @@ returns `v` if is instance of `CC` or `pure(v)` otherwise
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| v | [CCV](#ccv)`A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| v | [CCV](#ccv)<`A`> | 
 
-**Returns:** [CC](interfaces/cc.md)`A`
+**Returns:** [CC](interfaces/cc.md)<`A`>
 
 ___
-
 <a id="context"></a>
 
 ###  context
@@ -204,12 +200,11 @@ ___
 **Returns:** [Context](classes/context.md)
 
 ___
-
 <a id="control"></a>
 
 ###  control
 
-▸ **control**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
+▸ **control**A,B(p: *[Prompt](classes/prompt.md)<`B`>*, f: *`function`*): [CCV](#ccv)<`A`>
 
 *Defined in main.ts:233*
 
@@ -221,20 +216,19 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`B`   |  - |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](classes/prompt.md)<`B`> | 
+| f | `function` | 
 
-**Returns:** [CCV](#ccv)`A`
+**Returns:** [CCV](#ccv)<`A`>
 
 ___
-
 <a id="control0"></a>
 
 ###  control0
 
-▸ **control0**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
+▸ **control0**A,B(p: *[Prompt](classes/prompt.md)<`B`>*, f: *`function`*): [CCV](#ccv)<`A`>
 
 *Defined in main.ts:251*
 
@@ -246,20 +240,19 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`B`   |  - |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](classes/prompt.md)<`B`> | 
+| f | `function` | 
 
-**Returns:** [CCV](#ccv)`A`
+**Returns:** [CCV](#ccv)<`A`>
 
 ___
-
 <a id="newprompt"></a>
 
 ###  newPrompt
 
-▸ **newPrompt**A(name?: *`string`*): [Prompt](classes/prompt.md)`A`
+▸ **newPrompt**A(name?: *`string`*): [Prompt](classes/prompt.md)<`A`>
 
 *Defined in main.ts:161*
 
@@ -270,19 +263,18 @@ Creates a new prompt, distinct from all existing prompts
 #### A 
 **Parameters:**
 
-| Param | Type | Default value | Description |
-| ------ | ------ | ------ | ------ |
-| name | `string`  | &quot;p&quot; |   - |
+| Param | Type | Default value |
+| ------ | ------ | ------ |
+| `Default value` name | `string` | &quot;p&quot; | 
 
-**Returns:** [Prompt](classes/prompt.md)`A`
+**Returns:** [Prompt](classes/prompt.md)<`A`>
 
 ___
-
 <a id="pure"></a>
 
 ###  pure
 
-▸ **pure**A(v: *`A`*): [CC](interfaces/cc.md)`A`
+▸ **pure**A(v: *`A`*): [CC](interfaces/cc.md)<`A`>
 
 *Defined in main.ts:154*
 
@@ -293,19 +285,18 @@ returns effectful value returning `v`
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| v | `A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| v | `A` | 
 
-**Returns:** [CC](interfaces/cc.md)`A`
+**Returns:** [CC](interfaces/cc.md)<`A`>
 
 ___
-
 <a id="pushprompt"></a>
 
 ###  pushPrompt
 
-▸ **pushPrompt**A(p: *[Prompt](classes/prompt.md)`A`*, cont: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`A`
+▸ **pushPrompt**A(p: *[Prompt](classes/prompt.md)<`A`>*, cont: *[CCV](#ccv)<`A`>*): [CC](interfaces/cc.md)<`A`>
 
 *Defined in main.ts:169*
 
@@ -316,20 +307,19 @@ uses prompt in its first operand to delimit the current continuation during the 
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`A`   |  - |
-| cont | [CCV](#ccv)`A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](classes/prompt.md)<`A`> | 
+| cont | [CCV](#ccv)<`A`> | 
 
-**Returns:** [CC](interfaces/cc.md)`A`
+**Returns:** [CC](interfaces/cc.md)<`A`>
 
 ___
-
 <a id="pushsubcont"></a>
 
 ###  pushSubCont
 
-▸ **pushSubCont**A,B(subk: *[SubCont](interfaces/subcont.md)`A`, `B`*, cont: *[CCV](#ccv)`A`*): [CC](interfaces/cc.md)`B`
+▸ **pushSubCont**A,B(subk: *[SubCont](interfaces/subcont.md)<`A`, `B`>*, cont: *[CCV](#ccv)<`A`>*): [CC](interfaces/cc.md)<`B`>
 
 *Defined in main.ts:177*
 
@@ -341,20 +331,19 @@ composes sub-continuation `subk` with current continuation and evaluates its sec
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| subk | [SubCont](interfaces/subcont.md)`A`, `B`   |  - |
-| cont | [CCV](#ccv)`A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| subk | [SubCont](interfaces/subcont.md)<`A`, `B`> | 
+| cont | [CCV](#ccv)<`A`> | 
 
-**Returns:** [CC](interfaces/cc.md)`B`
+**Returns:** [CC](interfaces/cc.md)<`B`>
 
 ___
-
 <a id="reflect"></a>
 
 ###  reflect
 
-▸ **reflect**A(v: *[CCV](#ccv)`A`*): [CCV](#ccv)`A`
+▸ **reflect**A(v: *[CCV](#ccv)<`A`>*): [CCV](#ccv)<`A`>
 
 *Defined in main.ts:193*
 
@@ -365,19 +354,18 @@ for single-level mode, can be used for converting effectful value into pure valu
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| v | [CCV](#ccv)`A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| v | [CCV](#ccv)<`A`> | 
 
-**Returns:** [CCV](#ccv)`A`
+**Returns:** [CCV](#ccv)<`A`>
 
 ___
-
 <a id="reify"></a>
 
 ###  reify
 
-▸ **reify**A(f: *`function`*): [CC](interfaces/cc.md)[CCV](#ccv)`A`
+▸ **reify**A(f: *`function`*): [CC](interfaces/cc.md)<[CCV](#ccv)<`A`>>
 
 *Defined in main.ts:184*
 
@@ -388,19 +376,18 @@ for single-level mode, can be used for converting pure value into effectful
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| f | `function` | 
 
-**Returns:** [CC](interfaces/cc.md)[CCV](#ccv)`A`
+**Returns:** [CC](interfaces/cc.md)<[CCV](#ccv)<`A`>>
 
 ___
-
 <a id="reset"></a>
 
 ###  reset
 
-▸ **reset**A(e: *`function`*): [CC](interfaces/cc.md)`A`
+▸ **reset**A(e: *`function`*): [CC](interfaces/cc.md)<`A`>
 
 *Defined in main.ts:259*
 
@@ -411,19 +398,18 @@ creates new prompt, and calls `e` passing this new prompt, delimiting resulting 
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| e | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| e | `function` | 
 
-**Returns:** [CC](interfaces/cc.md)`A`
+**Returns:** [CC](interfaces/cc.md)<`A`>
 
 ___
-
 <a id="run"></a>
 
 ###  run
 
-▸ **run**A(c: *[CCV](#ccv)`A`*): `A`
+▸ **run**A(c: *[CCV](#ccv)<`A`>*): `A`
 
 *Defined in main.ts:200*
 
@@ -434,19 +420,18 @@ evaluate all frames till resulting value
 #### A 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| c | [CCV](#ccv)`A`   |  - |
+| Param | Type |
+| ------ | ------ |
+| c | [CCV](#ccv)<`A`> | 
 
 **Returns:** `A`
 
 ___
-
 <a id="shift"></a>
 
 ###  shift
 
-▸ **shift**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
+▸ **shift**A,B(p: *[Prompt](classes/prompt.md)<`B`>*, f: *`function`*): [CCV](#ccv)<`A`>
 
 *Defined in main.ts:221*
 
@@ -458,20 +443,19 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`B`   |  - |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](classes/prompt.md)<`B`> | 
+| f | `function` | 
 
-**Returns:** [CCV](#ccv)`A`
+**Returns:** [CCV](#ccv)<`A`>
 
 ___
-
 <a id="shift0"></a>
 
 ###  shift0
 
-▸ **shift0**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CCV](#ccv)`A`
+▸ **shift0**A,B(p: *[Prompt](classes/prompt.md)<`B`>*, f: *`function`*): [CCV](#ccv)<`A`>
 
 *Defined in main.ts:242*
 
@@ -483,39 +467,37 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`B`   |  - |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](classes/prompt.md)<`B`> | 
+| f | `function` | 
 
-**Returns:** [CCV](#ccv)`A`
+**Returns:** [CCV](#ccv)<`A`>
 
 ___
-
 <a id="splitat"></a>
 
 ###  splitAt
 
-▸ **splitAt**(seq: *[Seq](#seq)`any`, `any`*, p: *[Prompt](classes/prompt.md)`any`*): [Seq](#seq)`any`, `any`
+▸ **splitAt**(seq: *[Seq](#seq)<`any`, `any`>*, p: *[Prompt](classes/prompt.md)<`any`>*): [Seq](#seq)<`any`, `any`>
 
 *Defined in main.ts:66*
 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| seq | [Seq](#seq)`any`, `any`   |  - |
-| p | [Prompt](classes/prompt.md)`any`   |  - |
+| Param | Type |
+| ------ | ------ |
+| seq | [Seq](#seq)<`any`, `any`> | 
+| p | [Prompt](classes/prompt.md)<`any`> | 
 
-**Returns:** [Seq](#seq)`any`, `any`
+**Returns:** [Seq](#seq)<`any`, `any`>
 
 ___
-
 <a id="withsubcont"></a>
 
 ###  withSubCont
 
-▸ **withSubCont**A,B(p: *[Prompt](classes/prompt.md)`B`*, f: *`function`*): [CC](interfaces/cc.md)`A`
+▸ **withSubCont**A,B(p: *[Prompt](classes/prompt.md)<`B`>*, f: *`function`*): [CC](interfaces/cc.md)<`A`>
 
 *Defined in main.ts:149*
 
@@ -527,12 +509,12 @@ Captures a portion of the current continuation back to but not including the act
 #### B 
 **Parameters:**
 
-| Param | Type | Description |
-| ------ | ------ | ------ |
-| p | [Prompt](classes/prompt.md)`B`   |  - |
-| f | `function`   |  - |
+| Param | Type |
+| ------ | ------ |
+| p | [Prompt](classes/prompt.md)<`B`> | 
+| f | `function` | 
 
-**Returns:** [CC](interfaces/cc.md)`A`
+**Returns:** [CC](interfaces/cc.md)<`A`>
 
 ___
 

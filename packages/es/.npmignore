@@ -10,3 +10,5 @@ node_modules
 src
 test
 packages
+babel.loose.json
+babel.test.json

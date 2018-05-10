@@ -16,11 +16,13 @@ function calcClosCapt(si) {
   const closureSym = s.first.value.closureSym = Scope.newSym("closure")
   closureSym.global = true
   const rt = s.first.value.rt
-  if (!s.opts.noRT)
+  if (!s.opts.noRT) {
+    const fs = require("fs")
     rt.inlineSyms.push({syms:[closureSym],
                         content:fs.readFileSync(
                           path.join(__dirname,"closConvRT.js"),"utf-8")
                        })
+  }
   function walk(root,sw) {
     const decls = root.clDecls = []
     const sym = root.closSym
