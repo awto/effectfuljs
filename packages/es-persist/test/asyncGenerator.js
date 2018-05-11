@@ -231,6 +231,37 @@ describe("async generator function", function() {
     a4().then(i => assert.fail("never"),
               e => { done() })
   })
+  describe("current continuation clone", function() {
+    it("should be possible to resume", async function() {
+      const ctx = R.context()
+      let resume
+      const save = {}
+      let forkCalled = 0
+      async function* fork() {
+        let i = 0
+        await Promise.resolve()
+        const r = await R.current()
+        if (r && r.resume) {
+          resume = r
+          Object.assign(save,r)
+          yield `main:${++i}`
+          await R.abort()
+          assert.fail("NEVER")
+        } else {
+          return `fork:${++i}-${r}`
+        }
+      }
+      const f = fork()
+      const n1 = f.next()
+      const n2 = f.next()
+      assert.deepStrictEqual(await n1, {value:"main:1",done:false})
+      Object.assign(resume,save)
+      resume.resume(1)
+      assert.deepStrictEqual(await n2, {value:"fork:1-1",done:true})
+      Object.assign(resume,save)
+      assert.deepStrictEqual(await f.next(2), {value:"fork:1-2",done:true})
+    })
+  })
 })
 
 describe("subject", function() {
@@ -250,39 +281,3 @@ describe("subject", function() {
     }()
   })
 })
-
-
-describe("fork", function() {
-  it("should be possible to resume", async function() {
-    const ctx = R.context()
-    const state = {}
-    let resume
-    let forkCalled = 0
-    const f = async function* fork() {
-      let i = 0
-      await Promise.resolve()
-      const r = await R.fork()
-      if (r && r.resume) {
-        resume = r
-        Object.assign(state,f)
-        return `main:${++i}`
-      } else {
-        return `fork:${++i}-${r}`
-      }
-    }()
-    assert.deepStrictEqual(await f.next(), {value:"main:1",done:true})
-    const saveResume = resume.dest.slice()
-    Object.assign(f,state)
-    const n1 = f.next()
-    resume.resume(1)
-    assert.deepStrictEqual(await n1, {value:"fork:1-1",done:true})
-    Object.assign(f,state)
-    resume.state = 0
-    resume.dest = saveResume
-    const n2 = f.next()
-    resume.resume(2)
-    assert.deepStrictEqual(await n2, {value:"fork:1-2",done:true})
-  })
-})
-
-

@@ -20,6 +20,17 @@ export var chainSymbol = Symbol("@effectful/es-persist/chain")
 var prototypeSym = Symbol("@effectful/es-persist/prototype")
 
 /** 
+ * a name of method to send defunct method messages 
+ * (next:0/throw:1/return:2) 
+ * to async iterator if supported
+ */
+export var sendSymbol = Symbol("@effectful/es-persist/send")
+
+var NEXT_METHOD = 0
+var THROW_METHOD = 1
+var RETURN_METHOD = 2
+
+/** 
  * same as `chainSymbol` but the method doesn't return next async value,
  * just subscribes to `this` settlement events
  */
@@ -69,7 +80,7 @@ Context.prototype.exitThread = function exitThread(thread) {
 function EventLoopScheduler() {}
 
 EventLoopScheduler.prototype.enqueue = function(job) {
-  Promise.resolve().then(() => job.run())
+  Promise.resolve().then(function() { job.run() })
 }
 
 /** default registry */
@@ -174,6 +185,20 @@ Rp.reject = function (e) {
     i.reject(e)
 }
 
+Rp.run = function() {
+  var i, dest = this.dest
+  switch(this.state) {
+  case AsyncState.resolved:
+    while((i = dest.pop()))
+      i.resume(this.value)
+    break
+  case AsyncState.rejected:
+    while((i = dest.pop()))
+      i.reject(this.value)
+    break
+  }
+}
+
 Rp.then = function(next, err) {
   return this.toPromise().then(next,err)
 }
@@ -187,7 +212,7 @@ Rp.toPromise = function() {
     return Promise.reject(this.value)
   default:
     return new Promise(function(r,e) {
-      ctx.dest.push({resume:r,reject:e,deb_:(new Error()).stack})
+      ctx.dest.push({resume:r,reject:e})
     })
   }
 }
@@ -258,14 +283,14 @@ Ap.raise = function(error) {
   this.cont.reject(error)
 }
 
-AGp.pure = function(result) {
+AGp.pure = function(value) {
   this[contextSymbol].exitThread(this)
-  this.queue.shift().resume({value:result,done:true})
+  result(this,{value:value,done:true},AsyncState.resolved)
 }
 
 AGp.raise = function(error) {
   this[contextSymbol].exitThread(this)
-  this.queue.shift().reject(error)
+  result(this,error,AsyncState.rejected)
 }
 
 AGp.resume = Ap.resume = function resume(v) {
@@ -299,9 +324,8 @@ AGp.enqueue = Ap.enqueue = function enqueue(v) {
 
 AGp.yld = function(value, step) {
   this.$step = step
-  return this.queue.shift().resume({value:value,done:false})
+  result(this, {value:value,done:false}, AsyncState.resolved)
 }
-
 
 AGp.yldStar = function(iter, step) {
   this.$sub = iteratorM(iter)
@@ -309,17 +333,69 @@ AGp.yldStar = function(iter, step) {
   return this.chain(this.$sub.next(),DELEGATE_RESUME)
 }
 
-AGp.return = function(value) {
-  var res = new Residual(this)
-  this.queue.push(res)
-  if (this.$step === DELEGATE_CONT && this.$sub.return) {
-    this.$resume = this.$fin(this.$last)
-    this.chain(this.$sub.return(value),DELEGATE_RESUME)
-  } else {
-    this.$step = this.$fin(this.$last)
-    this.enqueue(value)
+function send(ctx, value, method) {
+  if (ctx[sendSymbol]) {
+    return ctx[sendSymbol](value, method)
   }
-  return res
+  switch(method) {
+  case NEXT_METHOD:
+    return ctx.next(value)
+  case THROW_METHOD:
+    return ctx.throw(value)
+  case RETURN_METHOD:
+    return ctx.return(value)
+  }
+  throw new Error("unknown method")
+}
+
+function method(ctx, cont, arg, method) {
+  if (ctx.$step === DELEGATE_CONT) {
+    if (method === RETURN_METHOD)
+      ctx.$resume = ctx.$fin(ctx.$last)
+    ctx.chain(send(ctx.$sub,arg,method),DELEGATE_RESUME)
+  } else {
+    if (method !== NEXT_METHOD)
+      ctx.$step = method === THROW_METHOD
+        ? ctx.$err(ctx.$last) : ctx.$fin(ctx.$last)
+    ctx.enqueue(arg)
+  }
+}
+
+function result(ctx, value, state) {
+  var queue = ctx.queue,
+      frame = queue.shift(),
+      cont
+  frame.state = state
+  frame.value = value
+  if (queue.length) {
+    cont = queue[0]
+    method(ctx, cont, cont.$arg, cont.$method)
+  }
+  frame.run()
+}
+
+AGp[sendSymbol] = function(value, methodId) {
+  var queue = this.queue,
+      cont = new Residual()
+  if (queue.push(cont) === 1)
+    method(this, cont, value, methodId)
+  else { 
+    cont.$arg = value
+    cont.$method = methodId
+  }
+  return cont
+}
+
+AGp.next = function(value) {
+  return this[sendSymbol](value, NEXT_METHOD)
+}
+
+AGp.throw = function(value) {
+  return this[sendSymbol](value, THROW_METHOD)
+}
+
+AGp.return = function(value) {
+  return this[sendSymbol](value, RETURN_METHOD)
 }
 
 Ap.reject = AGp.reject = function(e) {
@@ -327,29 +403,6 @@ Ap.reject = AGp.reject = function(e) {
     this.enqueue(e)
   else
     this.raise(e)
-}
-
-AGp.throw = function(value) {
-  var res = new Residual(this)
-  this.queue.push(res)
-  if (this.$step === DELEGATE_CONT && this.$sub.throw) {
-    this.chain(this.$sub.throw(value),DELEGATE_RESUME)
-  } else {
-    this.$step = this.$err(this.$last)
-    this.enqueue(value)
-  }
-  return res
-}
-
-AGp.next = function next(value) {
-  var res = new Residual(this)
-  this.queue.push(res)
-  if (this.$step === DELEGATE_CONT) {
-    this.chain(this.$sub.next(value),DELEGATE_RESUME)
-  } else {
-    this.enqueue(value)
-  }
-  return res
 }
 
 function makeConstructor(proto) {
@@ -495,23 +548,26 @@ Subject.prototype.send = function(value) {
     this.oq.push({value,done:false})
 }
 
-function Fork() {}
+function Current() {}
 
-/** 
- * captures current continuation returning a function to 
- * resume into it
- *
- * it doesn't clone the control context
- */
-export function fork() {
-  return new Fork()
+constructors.push(Current)
+
+/** returns current continuation */
+export function current() {
+  return new Current()
 }
 
-constructors.push(Fork)
-
-Fork.prototype[awaitSymbol] = function(cont) {
-  var res = new Residual()
-  res.dest.push(cont)
-  cont.resume(res)
+Current.prototype[awaitSymbol] = function(cont) {
+  cont.resume(cont)
 }
 
+function Abort() {}
+
+constructors.push(Abort)
+
+/** stops current continuation */
+export function abort() {
+  return new Abort()
+}
+
+Abort.prototype[awaitSymbol] = function() {}
