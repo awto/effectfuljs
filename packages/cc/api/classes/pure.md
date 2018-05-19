@@ -42,7 +42,7 @@
 
 | Param | Type |
 | ------ | ------ |
-| value | `A` | 
+| value | `A` |
 
 **Returns:** [Pure](pure.md)
 
@@ -76,7 +76,7 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| k | [Seq](../#seq)<`A`, `any`> | 
+| k | [Seq](../#seq)<`A`, `any`> |
 
 **Returns:** [CCV](../#ccv)<`any`>
 

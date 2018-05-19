@@ -39,8 +39,8 @@
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](prompt.md)<`B`> | 
-| k | `function` | 
+| p | [Prompt](prompt.md)<`B`> |
+| k | `function` |
 
 **Returns:** [WithSubCont](withsubcont.md)
 
@@ -62,7 +62,7 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| k | [Seq](../#seq)<`A`, `any`> | 
+| k | [Seq](../#seq)<`A`, `any`> |
 
 **Returns:** [CCV](../#ccv)<`any`>
 

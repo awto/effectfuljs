@@ -36,7 +36,7 @@
 
 | Param | Type |
 | ------ | ------ |
-| name | `string` | 
+| name | `string` |
 
 **Returns:** [Prompt](prompt.md)
 

@@ -38,8 +38,8 @@
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](prompt.md)<`A`> | 
-| c | [CCV](../#ccv)<`A`> | 
+| p | [Prompt](prompt.md)<`A`> |
+| c | [CCV](../#ccv)<`A`> |
 
 **Returns:** [PushPrompt](pushprompt.md)
 
@@ -61,7 +61,7 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| k | [Seq](../#seq)<`A`, `any`> | 
+| k | [Seq](../#seq)<`A`, `any`> |
 
 **Returns:** [CCV](../#ccv)<`any`>
 

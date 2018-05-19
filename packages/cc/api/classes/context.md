@@ -38,8 +38,8 @@ EffectfulJS abstract interface implementation
 
 | Param | Type |
 | ------ | ------ |
-| v | [CCV](../#ccv)<`A`> | 
-| f | [Step](../#step)<`A`, `B`> | 
+| v | [CCV](../#ccv)<`A`> |
+| f | [Step](../#step)<`A`, `B`> |
 
 **Returns:** [CC](../interfaces/cc.md)<`B`>
 
@@ -60,8 +60,8 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| v | `A` | 
-| f | [Step](../#step)<`A`, `B`> | 
+| v | `A` |
+| f | [Step](../#step)<`A`, `B`> |
 
 **Returns:** [CCV](../#ccv)<`B`>
 
@@ -82,8 +82,8 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| v | `A` | 
-| f | [Step](../#step)<`A`, `B`> | 
+| v | `A` |
+| f | [Step](../#step)<`A`, `B`> |
 
 **Returns:** [CC](../interfaces/cc.md)<`B`>
 
@@ -103,7 +103,7 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| v | `A` | 
+| v | `A` |
 
 **Returns:** [CC](../interfaces/cc.md)<`A`>
 
@@ -123,7 +123,7 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| f | `function` | 
+| f | `function` |
 
 **Returns:** [CC](../interfaces/cc.md)<`A`>
 

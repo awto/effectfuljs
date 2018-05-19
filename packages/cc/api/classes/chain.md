@@ -39,9 +39,9 @@
 
 | Param | Type |
 | ------ | ------ |
-| a | [CCV](../#ccv)<`A`> | 
-| f | [Step](../#step)<`A`, `B`> | 
-| `Optional` x | [Context](context.md) | 
+| a | [CCV](../#ccv)<`A`> |
+| f | [Step](../#step)<`A`, `B`> |
+| `Optional` x | [Context](context.md) |
 
 **Returns:** [Chain](chain.md)
 
@@ -63,7 +63,7 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| k | [Seq](../#seq)<`B`, `any`> | 
+| k | [Seq](../#seq)<`B`, `any`> |
 
 **Returns:** [CCV](../#ccv)<`any`>
 

@@ -1,7 +1,9 @@
 {
   "name": "@effectful/serialization",
-  "version": "0.0.0",
+  "version": "0.1.7",
   "description": "References-aware JS values serialization library",
+  "module": "main.js",
+  "jsnext:main": "main.js",
   "main": "index.js",
   "repository": "https://github.com/awto/effectfuljs.git",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",

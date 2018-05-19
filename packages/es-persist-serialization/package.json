@@ -1,0 +1,36 @@
+{
+  "name": "@effectful/es-persist-serialization",
+  "version": "0.0.2",
+  "description": "@effectful/es-persist with @effectful/serialization for storing state",
+  "main": "index.js",
+  "module": "main.js",
+  "jsnext:main": "main.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awto/effectfuljs.git"
+  },
+  "keywords": [
+    "effectful",
+    "effectfuljs",
+    "monad",
+    "linq"
+  ],
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awto/effectfuljs/issues"
+  },
+  "homepage": "https://github.com/awto/effectfuljs#readme",
+  "devDependencies": {
+    "mocha": "^5.0.5",
+    "rollup": "^0.59.1"
+  },
+  "dependencies": {
+    "@effectful/es-persist": "^0.1.7",
+    "@effectful/serialization": "^0.1.7"
+  }
+}

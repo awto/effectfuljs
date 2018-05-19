@@ -243,7 +243,6 @@ const OpaqueMeta = {
   }
 }
 
-
 const SymbolMeta = regMeta({
   write(ctx, value) {
     return {"#type":"Symbol",name:Symbol.keyFor(value)}
@@ -349,5 +348,29 @@ regConstructor(Map,{
     for(const [k,v] of json["#data"])
       value.set(ctx.step(k),ctx.step(v))
   }
+})
+
+export function bind(func, self, ...args) {
+  const bind = (...rest) => func.apply(self, [...args,...rest])
+  bind[metaSym] = {
+    write(ctx, value) {
+      return {"#type":BindMeta.name,
+              "#data":ctx.step({func,self,args})}
+    }
+  }
+  return bind
+}
+
+const BindMeta = regObjectMeta({
+  name: "Bind",
+  read(ctx, json) {
+    const data = ctx.step(json["#data"])
+    return bind(data.func, data.self, ...data.args)
+  },
+  create(ctx, json) {
+    const data = ctx.step(json["#data"])
+    return bind(data.func, data.self, ...data.args)
+  },
+  readContent() {}
 })
 

@@ -39,8 +39,8 @@
 
 | Param | Type |
 | ------ | ------ |
-| sc | [SubCont](../interfaces/subcont.md)<`A`, `B`> | 
-| c | [CCV](../#ccv)<`A`> | 
+| sc | [SubCont](../interfaces/subcont.md)<`A`, `B`> |
+| c | [CCV](../#ccv)<`A`> |
 
 **Returns:** [PushSubCont](pushsubcont.md)
 
@@ -62,7 +62,7 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| k | [Seq](../#seq)<`B`, `any`> | 
+| k | [Seq](../#seq)<`B`, `any`> |
 
 **Returns:** [CCV](../#ccv)<`any`>
 

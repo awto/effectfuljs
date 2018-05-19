@@ -58,8 +58,7 @@
 
 ###  CCV
 
-**ΤCCV**: *[CC](interfaces/cc.md)<`A`> |
-`A`
+**ΤCCV**: * [CC](interfaces/cc.md)<`A`> &#124; `A`
 *
 
 *Defined in main.ts:31*
@@ -106,8 +105,8 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| x | [Context](classes/context.md) | 
-| a | `A` | 
+| x | [Context](classes/context.md) |
+| a | `A` |
 
 **Returns:** [CCV](#ccv)<`B`>
 
@@ -161,8 +160,8 @@ aborts current continution up to the prompt `p`
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](classes/prompt.md)<`B`> | 
-| e | [CCV](#ccv)<`B`> | 
+| p | [Prompt](classes/prompt.md)<`B`> |
+| e | [CCV](#ccv)<`B`> |
 
 **Returns:** [CC](interfaces/cc.md)<`A`>
 
@@ -184,7 +183,7 @@ returns `v` if is instance of `CC` or `pure(v)` otherwise
 
 | Param | Type |
 | ------ | ------ |
-| v | [CCV](#ccv)<`A`> | 
+| v | [CCV](#ccv)<`A`> |
 
 **Returns:** [CC](interfaces/cc.md)<`A`>
 
@@ -218,8 +217,8 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](classes/prompt.md)<`B`> | 
-| f | `function` | 
+| p | [Prompt](classes/prompt.md)<`B`> |
+| f | `function` |
 
 **Returns:** [CCV](#ccv)<`A`>
 
@@ -242,8 +241,8 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](classes/prompt.md)<`B`> | 
-| f | `function` | 
+| p | [Prompt](classes/prompt.md)<`B`> |
+| f | `function` |
 
 **Returns:** [CCV](#ccv)<`A`>
 
@@ -265,7 +264,7 @@ Creates a new prompt, distinct from all existing prompts
 
 | Param | Type | Default value |
 | ------ | ------ | ------ |
-| `Default value` name | `string` | &quot;p&quot; | 
+| `Default value` name | `string` | &quot;p&quot; |
 
 **Returns:** [Prompt](classes/prompt.md)<`A`>
 
@@ -287,7 +286,7 @@ returns effectful value returning `v`
 
 | Param | Type |
 | ------ | ------ |
-| v | `A` | 
+| v | `A` |
 
 **Returns:** [CC](interfaces/cc.md)<`A`>
 
@@ -309,8 +308,8 @@ uses prompt in its first operand to delimit the current continuation during the 
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](classes/prompt.md)<`A`> | 
-| cont | [CCV](#ccv)<`A`> | 
+| p | [Prompt](classes/prompt.md)<`A`> |
+| cont | [CCV](#ccv)<`A`> |
 
 **Returns:** [CC](interfaces/cc.md)<`A`>
 
@@ -333,8 +332,8 @@ composes sub-continuation `subk` with current continuation and evaluates its sec
 
 | Param | Type |
 | ------ | ------ |
-| subk | [SubCont](interfaces/subcont.md)<`A`, `B`> | 
-| cont | [CCV](#ccv)<`A`> | 
+| subk | [SubCont](interfaces/subcont.md)<`A`, `B`> |
+| cont | [CCV](#ccv)<`A`> |
 
 **Returns:** [CC](interfaces/cc.md)<`B`>
 
@@ -356,7 +355,7 @@ for single-level mode, can be used for converting effectful value into pure valu
 
 | Param | Type |
 | ------ | ------ |
-| v | [CCV](#ccv)<`A`> | 
+| v | [CCV](#ccv)<`A`> |
 
 **Returns:** [CCV](#ccv)<`A`>
 
@@ -378,7 +377,7 @@ for single-level mode, can be used for converting pure value into effectful
 
 | Param | Type |
 | ------ | ------ |
-| f | `function` | 
+| f | `function` |
 
 **Returns:** [CC](interfaces/cc.md)<[CCV](#ccv)<`A`>>
 
@@ -400,7 +399,7 @@ creates new prompt, and calls `e` passing this new prompt, delimiting resulting 
 
 | Param | Type |
 | ------ | ------ |
-| e | `function` | 
+| e | `function` |
 
 **Returns:** [CC](interfaces/cc.md)<`A`>
 
@@ -422,7 +421,7 @@ evaluate all frames till resulting value
 
 | Param | Type |
 | ------ | ------ |
-| c | [CCV](#ccv)<`A`> | 
+| c | [CCV](#ccv)<`A`> |
 
 **Returns:** `A`
 
@@ -445,8 +444,8 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](classes/prompt.md)<`B`> | 
-| f | `function` | 
+| p | [Prompt](classes/prompt.md)<`B`> |
+| f | `function` |
 
 **Returns:** [CCV](#ccv)<`A`>
 
@@ -469,8 +468,8 @@ caputes and aborts the current continuation until prompt `p` and calls `f` passi
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](classes/prompt.md)<`B`> | 
-| f | `function` | 
+| p | [Prompt](classes/prompt.md)<`B`> |
+| f | `function` |
 
 **Returns:** [CCV](#ccv)<`A`>
 
@@ -487,8 +486,8 @@ ___
 
 | Param | Type |
 | ------ | ------ |
-| seq | [Seq](#seq)<`any`, `any`> | 
-| p | [Prompt](classes/prompt.md)<`any`> | 
+| seq | [Seq](#seq)<`any`, `any`> |
+| p | [Prompt](classes/prompt.md)<`any`> |
 
 **Returns:** [Seq](#seq)<`any`, `any`>
 
@@ -511,8 +510,8 @@ Captures a portion of the current continuation back to but not including the act
 
 | Param | Type |
 | ------ | ------ |
-| p | [Prompt](classes/prompt.md)<`B`> | 
-| f | `function` | 
+| p | [Prompt](classes/prompt.md)<`B`> |
+| f | `function` |
 
 **Returns:** [CC](interfaces/cc.md)<`A`>
 

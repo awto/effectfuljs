@@ -32,7 +32,7 @@ effectful value
 
 | Param | Type |
 | ------ | ------ |
-| f | `function` | 
+| f | `function` |
 
 **Returns:** `A`
 
@@ -58,7 +58,7 @@ effectful value
 
 | Param | Type |
 | ------ | ------ |
-| k | [Seq](../#seq)<`A`, `any`> | 
+| k | [Seq](../#seq)<`A`, `any`> |
 
 **Returns:** [CCV](../#ccv)<`any`>
 
