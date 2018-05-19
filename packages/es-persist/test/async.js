@@ -1,4 +1,4 @@
-import * as R from "../index"
+import * as R from "../main"
 import * as assert from "assert"
 
 const tasks = []

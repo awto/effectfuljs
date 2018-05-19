@@ -1,4 +1,4 @@
-import * as R from "../index"
+import * as R from "../main"
 import * as assert from "assert"
 
 const tasks = []
@@ -240,26 +240,44 @@ describe("async generator function", function() {
       async function* fork() {
         let i = 0
         await Promise.resolve()
-        const r = await R.current()
+        const r = await R.current
         if (r && r.resume) {
           resume = r
           Object.assign(save,r)
           yield `main:${++i}`
-          await R.abort()
+          await R.abort
           assert.fail("NEVER")
         } else {
           return `fork:${++i}-${r}`
         }
       }
       const f = fork()
-      const n1 = f.next()
-      const n2 = f.next()
+      const n1 = f.next(-1)
       assert.deepStrictEqual(await n1, {value:"main:1",done:false})
       Object.assign(resume,save)
-      resume.resume(1)
+      const n2 = f.next(1)
       assert.deepStrictEqual(await n2, {value:"fork:1-1",done:true})
       Object.assign(resume,save)
       assert.deepStrictEqual(await f.next(2), {value:"fork:1-2",done:true})
+    })
+  })
+  describe("current idle continuation clone", function() {
+    it("should wait for other jobs to finish", async function() {
+      let delayDone = false
+      async function delay() {
+        for(let i = 0; i < 100; ++i)
+          await null
+        delayDone = true
+      }
+      async function* fork() {
+        delay()
+        const c = await R.current
+        assert.ok(!delayDone)
+        const i = await R.idle
+        assert.ok(delayDone)
+        assert.strictEqual(c, i)
+      }
+      assert.ok((await fork().next()).done)
     })
   })
 })

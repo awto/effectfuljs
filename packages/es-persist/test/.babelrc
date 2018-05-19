@@ -1,14 +1,6 @@
 {
   "passPerPreset": true,
-  "presets": [["@effectful/es/preset",
-               {
-                 "topLevel":true,
-                 "defunct":true,
-                 "importRT":"../index",
-                 "effectful":{
-                   "cleanupFrameVars": true
-                 }
-               }],
+  "presets": [["../preset", {"importRT":"../index"}],
               {
                 "plugins":[
                   ["@babel/plugin-transform-modules-commonjs",

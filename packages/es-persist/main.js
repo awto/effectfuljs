@@ -77,10 +77,27 @@ Context.prototype.exitThread = function exitThread(thread) {
   thread.$last = thread.$step = 0
 }
 
-function EventLoopScheduler() {}
+function EventLoopScheduler() {
+  this.jobs = 0
+  this._idle = []
+}
 
 EventLoopScheduler.prototype.enqueue = function(job) {
-  Promise.resolve().then(function() { job.run() })
+  var self = this
+  ++this.jobs
+  Promise.resolve().then(function trampoline() {
+    job.run()
+    --self.jobs
+    while(self.jobs === 0 && self._idle.length)
+      self._idle.shift().run()
+  })
+}
+
+EventLoopScheduler.prototype.onIdle = function(job) {
+  if (this.jobs === 0)
+    this.enqueue(job)
+  else
+    this._idle.push(job)
 }
 
 /** default registry */
@@ -110,8 +127,6 @@ export function Async() {
   this.value = void 0
 }
 
-constructors.push(Async)
-
 var Ap = Async.prototype
 Ap.constructor = Async
 
@@ -119,8 +134,6 @@ function AsyncGenerator() {
   this[contextSymbol].startThread(this)
   this.queue = []
 }
-
-constructors.push(AsyncGenerator)
 
 function construct(caller) {
   var res = Object.create(caller.prototype)
@@ -341,9 +354,11 @@ function send(ctx, value, method) {
   case NEXT_METHOD:
     return ctx.next(value)
   case THROW_METHOD:
-    return ctx.throw(value)
+    return ctx.throw ? ctx.throw(value) : Promise.reject(value)
   case RETURN_METHOD:
-    return ctx.return(value)
+    return ctx.return
+      ? ctx.return(value)
+      : Promise.resolve({value:void 0, done:true})
   }
   throw new Error("unknown method")
 }
@@ -356,7 +371,7 @@ function method(ctx, cont, arg, method) {
   } else {
     if (method !== NEXT_METHOD)
       ctx.$step = method === THROW_METHOD
-        ? ctx.$err(ctx.$last) : ctx.$fin(ctx.$last)
+      ? ctx.$err(ctx.$last) : ctx.$fin(ctx.$last)
     ctx.enqueue(arg)
   }
 }
@@ -405,7 +420,7 @@ Ap.reject = AGp.reject = function(e) {
     this.raise(e)
 }
 
-function makeConstructor(proto) {
+function makeConstructor(proto,reg) {
   return function(fun, handler, err, fin) {
     var p = handler[prototypeSym]
     if (p) {
@@ -422,13 +437,29 @@ function makeConstructor(proto) {
     if (fin)
       p.$fin = fin
     p.name = fun.name
-    p[contextSymbol].reg(fun)
+    reg(fun)
     return fun
   }
 }
 
-export var asyncFunction = makeConstructor(Ap)
-export var asyncGeneratorFunction = makeConstructor(AGp)
+function nop() {}
+
+/** 
+ * async function constructor for libraries overriding default behavior
+ */
+export function makeAsyncFunctionConstructor(reg) {
+  return makeConstructor(Ap, reg)
+}
+
+/** 
+ * async generator function constructor for libraries overriding default behavior
+ */
+export function makeAsyncGeneratorFunctionConstructor(reg) {
+  return makeConstructor(AGp, reg)
+}
+
+export var asyncFunction = makeConstructor(Ap,nop)
+export var asyncGeneratorFunction = makeConstructor(AGp,nop)
 
 function All(arr) {
   var len = arr.length, i
@@ -524,7 +555,7 @@ constructors.push(Subject)
 Subject.prototype[Symbol.asyncIterator] = function() { return this }
 
 Subject.prototype.next = function(value) {
-  var res = new Residual(this)
+  var res = new Residual()
   if (this.oq.length)
     res.resume(this.oq.shift())
   else
@@ -553,9 +584,7 @@ function Current() {}
 constructors.push(Current)
 
 /** returns current continuation */
-export function current() {
-  return new Current()
-}
+export var current = new Current()
 
 Current.prototype[awaitSymbol] = function(cont) {
   cont.resume(cont)
@@ -566,8 +595,23 @@ function Abort() {}
 constructors.push(Abort)
 
 /** stops current continuation */
-export function abort() {
-  return new Abort()
-}
+export var abort = new Abort()
 
 Abort.prototype[awaitSymbol] = function() {}
+
+function Idle() {}
+
+constructors.push(Idle)
+
+/** 
+ * like `current` but also suspends current continuation until jobs 
+ * queue is empty  
+ */
+export const idle = new Idle()
+
+Idle.prototype[awaitSymbol] = function(next) {
+  next.$arg = next
+  next[contextSymbol].scheduler.onIdle(next)
+}
+
+

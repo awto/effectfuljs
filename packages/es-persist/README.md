@@ -17,7 +17,7 @@ In .babelrc:
 
 ```json
 {
-  "presets": ["@effectful/es-persist/transform"]
+  "presets": ["@effectful/es-persist/preset"]
 }
 
 ```
@@ -52,7 +52,11 @@ It contains `threads` field with a `Set` of all currently running async function
 and may be used to store and restore the whole application state.
 
 The library itself doesn't contain any serialization routine, any third party
-can be applied.
+can be applied. There is
+[@effectful/serialization](https://github.com/awto/effectfuljs/tree/master/packages/serialization)
+library and it is bound to this library through
+[@effectful/es-persist-serialization](https://github.com/awto/effectfuljs/tree/master/packages/es-persist-serialization)
+.
 
 The library may be also used for time traveling. Just store state diffs and patch
 the current state if needed.
@@ -71,7 +75,8 @@ type Chainable = {
 }
 
 type Resumable = {
-   resume(v:any): Chainable
+   resume(v:any): void,
+   reject(v:any): void
 }
 
 ```
