@@ -1,6 +1,6 @@
 {
   "name": "@effectful/transducers-loose",
-  "version": "0.1.8",
+  "version": "1.0.0",
   "description": "@effectful/transducers built with faster generators",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "dependencies": {
-    "@effectful/es-rt": "^0.1.8"
+    "@effectful/es-rt": "^1.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.42",
