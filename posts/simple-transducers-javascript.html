@@ -9,20 +9,9 @@
     <meta name="description" content="JavaScript simple transducers" />
     
     <title>Effectful.js - JavaScript simple transducers</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" integrity="sha384-L/tgI3wSsbb3f/nW9V6Yqlaw3Gj7mpE56LWrhew/c8MIhAYWZ/FNirA64AVkB5pI" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../css/default.css" />
     <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-79647665-2', 'auto');
-  ga('send', 'pageview');
-
-    </script>
   </head>
   <body>
     <div class="container">
@@ -40,7 +29,7 @@
     </nav>
       <div class="container-fluid">
  <h1 id="simpler-transducers">Simpler transducers</h1>
-<p>It is, of course, good design practice to split computation into several separate stages. The smaller the stage, the easier it is to reason, develop and maintain. For example we split some computation into 3 stages in functions f, g, k with resulting one is <code>input =&gt; f(g(k(input)))</code> or using Ramda <code>R.comp(f,g,k)</code>. The problem with this approach is intermediate data passed between functions, and each sub-stage should finish its computation completely before passing the result to next stage. The data size they operate with may be large or even infinite if it is some server requests stream. In a case of unlimited data <code>k</code> will never return control. As it is often occurring task, there are many solutions, like nodejs streams with their <code>.pipe()</code> operation adding stream transformer to the chain. Transducers described in this post may be seen as a simpler solution to the problem.</p>
+<p>Developers often want to split computations into several separate stages. The smaller the stage, the easier it is to reason, develop and maintain. For example we split some computation into 3 stages in functions f, g, k with resulting one is <code>input =&gt; f(g(k(input)))</code> or using Ramda <code>R.comp(f,g,k)</code>. The problem with this approach is intermediate data passed between functions, and each sub-stage should finish its computation completely before passing the result to next stage. The data size they operate with may be large or even infinite if it is some server requests stream. In a case of unlimited data <code>k</code> will never return control. As it is often occurring task, there are many solutions, like nodejs streams with their <code>.pipe()</code> operation adding stream transformer to the chain. Transducers described in this post may be seen as a simpler solution to the problem.</p>
 <p>Transducers are easy to compose. In fact they are just functions and function composition is just enough, the expressions above (<code>input =&gt; f(g(k(input)))</code> and <code>R.comp(f,g,k)</code>) are the same for transducers. The resulting transducer is a pipeline of computations receiving data from <em>producer</em> and passing it to <em>consumer</em>. Producer and consumer may do many things, read/write network data, file, DB, or just in-memory array.</p>
 <p>The term transducers became popular after introducing them in Clojure in this <a href="http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming">blog post</a> and ported to JavaScript by a few libraries including Ramda. Clojure style transducers are different to the ones described in this post. They transform consumers, which are called reducers in Clojure. Unlike these transducers which transform producers. This distinction makes them much simpler to define in use in ES6 because of generator functions.</p>
 <p>Clojure transducers type from the original blog post is:</p>
@@ -85,34 +74,9 @@ whatever, input <span class="kw">-&gt;</span> whatever
 <span class="op">}</span></code></pre></div>
 <p>Hierarchical data may be handled as well; an example is <a href="https://github.com/awto/estree-transducers">estree-transducers</a> project for JavaScript syntax transformation.</p>
 <p>But everything is not this simple if there is an asynchronous code at some stage. Likely this is required in Producer because IO in JavaScript is typically asynchronous. It is possible to call <code>next</code> of an iterator in an asynchronous callback, but not <code>yield</code>. This complicates things a lot. However, there is a simple solution for this, namely using <a href="https://github.com/awto/effectfuljs">Effectful.js compiler</a> with asynchronous functions, and simple, readable <code>for-of</code> loops.</p>
-<p>UPD: another option is to use not fully finished yet <a href="https://github.com/tc39/proposal-async-iteration">Async Generator Functions</a></p>
-<p>UPD: there is <a href="https://github.com/benji6/imlazy">imlazy</a> library implementing this kind of transducers.</p>
+<p>UPD: the new option is to use <a href="https://github.com/tc39/proposal-async-iteration">Async Generator Functions</a></p>
 
  <small>Posted on June 23, 2016</small>
-
- <div id="disqus_thread"></div>
-<script>
-    /**
-     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-     */
-    /*
-    var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() {  // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
-        
-        s.src = '//mfjs.disqus.com/embed.js';
-        
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-</div>
 
       <hr />
       <footer class="footer">
