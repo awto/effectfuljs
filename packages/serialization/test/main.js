@@ -250,6 +250,7 @@ describe("opaque objects serialization", function() {
     function a() {}
     Lib.regOpaqueObject(a)
     assert.deepStrictEqual(Lib.write({a}),{a:{"#oid":"a"}});
+    Lib.regOpaqueObject(a)
     assert.deepStrictEqual(Lib.read({a:{"#oid":"a"}}),{a});
     (function() {
       function a() {}
@@ -260,8 +261,25 @@ describe("opaque objects serialization", function() {
   })
 })
 
+describe("opaque primitive value serialization", function() {
+  it("should output object's name if registered", function() {
+    const a = Symbol("a")
+    Lib.regOpaquePrim(a,"sa")
+    assert.ok(!a[Lib.descriptorSymbol])
+    assert.deepStrictEqual(Lib.write({a}),{a:{"#oid":"sa"}});
+    Lib.regOpaquePrim(a,"sb")
+    assert.deepStrictEqual(Lib.read({a:{"#oid":"sa"}}),{a});
+    (function() {
+      const a = Symbol("a")
+      Lib.regOpaquePrim(a,"sa")
+      assert.deepStrictEqual(Lib.write({a}),{a:{"#oid":"sa_1"}})
+      assert.deepStrictEqual(Lib.read({a:{"#oid":"sa_1"}}),{a})
+    })()
+  })
+})
+
 describe("type with `$$typeof` attribute", function() {
-  Lib.regMeta({
+  Lib.regDescriptor({
     name: "hundred",
     typeofTag:100,
     read(ctx, json) { return {$$typeof:100} },
@@ -273,3 +291,30 @@ describe("type with `$$typeof` attribute", function() {
   })
 })
 
+describe("bind function arguments", function() {
+  it("should be serializable", function() {
+    const obj = {}
+    function f1(a1, a2, a3) { return [this, a1, a2, a3] }
+    const a1 = {}, a2 = {}, a3 = {}
+    Lib.regOpaqueObject(obj,"obj")
+    Lib.regOpaqueObject(f1)
+    Lib.regOpaqueObject(a1,"arg")
+    Lib.regOpaqueObject(a2,"arg")
+    const fjson = Lib.write({f:Lib.bind(f1, obj, a1, a2)})
+    assert.deepStrictEqual(
+      fjson,
+      {f:{"#type":"Bind",
+          "#data":{func: {"#oid":"f1"},
+                   self:{"#oid":"obj"},
+                   args:[{"#oid":"arg"},{"#oid":"arg_1"}]}}})
+    const f2 = Lib.read(fjson).f
+    assert.notStrictEqual(f1, f2)
+    const res = f2(a3)
+    assert.strictEqual(res.length, 4)
+    const [robj, ra1, ra2, ra3] = res
+    assert.strictEqual(obj, robj)
+    assert.strictEqual(a1, ra1)
+    assert.strictEqual(a2, ra2)
+    assert.strictEqual(a3, ra3)
+  })
+})

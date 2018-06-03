@@ -10,14 +10,13 @@
   "license": "MIT",
   "scripts": {
     "test": "mocha",
-    "build": "cross-env BABEL_ENV=build babel src --out-dir .",
-    "bundle": "cross-env BABEL_ENV=build rollup -c",
-    "prepare": "npm run build && npm run bundle"
+    "build-module": "babel --env-name build src --out-dir .",
+    "build-node": "babel --config-file ../es/babel.cjs.json -o index.js main.js",
+    "build": "npm run build-module && npm run build-node",
+    "docs": "markdox src/main.js -o api.md"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.44",
-    "cross-env": "^5.1.4",
-    "mocha": "^5.1.0",
-    "rollup": "^0.57.1"
+    "mocha": "^5.1.0"
   }
 }
