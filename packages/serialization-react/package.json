@@ -1,6 +1,6 @@
 {
   "name": "@effectful/serialization-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Registering @effectful/serialization format descriptor for React Element",
   "module": "main.js",
   "jsnext:main": "main.js",
@@ -24,8 +24,8 @@
     "react": "^16.3.2"
   },
   "devDependencies": {
-    "@effectful/serialization": "^1.0.0",
     "@babel/cli": "^7.0.0-beta.47",
+    "@effectful/serialization": "^1.0.1",
     "react": "^16.3.2"
   }
 }
