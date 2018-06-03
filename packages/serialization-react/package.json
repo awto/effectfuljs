@@ -1,0 +1,26 @@
+{
+  "name": "@effectful/serialization-react",
+  "version": "1.0.0",
+  "description": "Registering @effectful/serialization format descriptor for React Element",
+  "module": "main.js",
+  "jsnext:main": "main.js",
+  "main": "index.js",
+  "repository": "https://github.com/awto/effectfuljs",
+  "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha",
+    "build-module": "babel --env-name build src --out-dir .",
+    "build-node": "babel --config-file ../es/babel.cjs.json -o index.js main.js",
+    "build": "npm run build-module && npm run build-node"
+  },
+  "peerDependencies": {
+    "@effectful/serialization": "^1.0.0",
+    "react": "^16.3.2"
+  },
+  "devDependencies": {
+    "@effectful/serialization": "^1.0.0",
+    "@babel/cli": "^7.0.0-beta.47",
+    "react": "^16.3.2"
+  }
+}

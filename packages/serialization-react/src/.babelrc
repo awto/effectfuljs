@@ -1,0 +1,16 @@
+{
+  "env": {
+    "build": {
+      "plugins": [
+        ["@babel/plugin-proposal-object-rest-spread", { "loose": true, "useBuiltIns": true }],
+        ["@babel/plugin-transform-spread", {"loose": true}],
+        ["@babel/plugin-transform-block-scoping",{"throwIfClosureRequired":true}],
+        "@babel/plugin-transform-shorthand-properties"
+      ]
+    },
+    "development": {
+      "plugins": ["@babel/plugin-proposal-object-rest-spread",
+                  "@babel/transform-modules-commonjs"]
+    }
+  }
+}

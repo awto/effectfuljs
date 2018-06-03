@@ -1,8 +1,11 @@
-import * as R from "./main"
+import {regDescriptor} from "@effectful/serialization"
+import * as React from "react"
 
-/** registers serialization format descriptor for React elements */
-export default function register(React) {
-  R.regMeta({
+/** 
+ * serialization format descriptor for React Element 
+ * @type {Descriptor}
+ */
+export default regDescriptor({
     name: "ReactElement",
     typeofTag: Symbol.for("react.element"),
     write(ctx, value) {
@@ -25,6 +28,4 @@ export default function register(React) {
     create(ctx, json) {
       return this.read(ctx, json)
     }
-  })
-}
-
+})
