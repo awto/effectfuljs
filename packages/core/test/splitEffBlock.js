@@ -1,5 +1,5 @@
 import * as Kit from "../kit"
-import {parse} from "babylon"
+import {parse} from "@babel/parser"
 import * as assert from "assert"
 import {equal,print,transformExpr} from "./kit/core"
 import {recalcEff} from "../propagate"

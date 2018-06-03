@@ -1,6 +1,6 @@
 import {produce,consume,Tag} from ".."
 import * as Kit from "../kit"
-import {parse} from "babylon"
+import {parse} from "@babel/parser"
 import generate from "@babel/generator"
 import * as T from "@babel/types"
 

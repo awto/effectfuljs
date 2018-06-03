@@ -1,6 +1,6 @@
 import * as Kit from "../kit"
 import {flatten,prepareScopes,consumeScope} from "../transform"
-import {parse} from "babylon"
+import {parse} from "@babel/parser"
 import {doWhileStmt,forOfStmt} from "../loops"
 import {removeEmptyBinds} from "../transform"
 import * as assert from "assert"

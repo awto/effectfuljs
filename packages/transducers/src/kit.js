@@ -3,7 +3,7 @@ import {produce,consume,Tag,enter,resetFieldInfo,
         leave,tok,symbol,symInfo,typeInfo,removeNulls,isSymbol,
        } from "./core"
 import * as T from "@babel/types"
-import {parse as babelParse} from "babylon"
+import {parse as babelParse} from "@babel/parser"
 
 const BROWSER_DEBUG = typeof window !== "undefined" && window.chrome
 let _opts = {}

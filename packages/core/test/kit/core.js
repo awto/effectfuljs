@@ -1,6 +1,6 @@
 import * as assert from "assert"
 import generate from "@babel/generator"
-import {parse} from "babylon"
+import {parse} from "@babel/parser"
 import {Tag,consume} from "../../kit"
 import * as Kit from "../../kit"
 import * as Transform from "../../transform"

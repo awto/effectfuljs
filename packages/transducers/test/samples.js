@@ -1,5 +1,5 @@
 import {produce,consume,Tag} from ".."
-import {parse} from "babylon"
+import {parse} from "@babel/parser"
 import generate from "@babel/generator"
 import * as Kit from "../kit"
 import eagerGenerators from "../samples/eagerGenerators"

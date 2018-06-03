@@ -1,5 +1,4 @@
 import defaults from "./config"
-import {parse} from "babylon"
 import * as Kit from "./kit"
 import * as path from "path"
 import * as T from "./transform"
