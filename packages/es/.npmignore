@@ -12,3 +12,4 @@ test
 packages
 babel.loose.json
 babel.test.json
+babel.cjs.json

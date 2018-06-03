@@ -1,28 +1,25 @@
 /**
- * ES async, generator, async generator functions implementation with
- * access to their current state
+ * @file ES async, generator, async generator functions implementation with
+ *       access to their current state
  */
 
 export {generator,generatorFunction,iterator,
         iteratorM,forInIterator} from "@effectful/es-rt"
 import {Generator,iteratorM} from "@effectful/es-rt"
 
-/** a property name for accessing threads store */
-export var contextSymbol = Symbol("@effectful/es-persist/context")
-
-/**
- * a name of a method like `Promise.prototype.then`, but instead of two 
- * callbacks it takes an object with `resume`/`reject` methods, thus
- * making it easier to serialize 
+/** 
+ * Property name for accessing coroutines store.
+ * @type {Symbol}
  */
-export var chainSymbol = Symbol("@effectful/es-persist/chain")
+export var contextSymbol = Symbol("@effectful/es-persist/context")
 
 var prototypeSym = Symbol("@effectful/es-persist/prototype")
 
 /** 
- * a name of method to send defunct method messages 
- * (next:0/throw:1/return:2) 
- * to async iterator if supported
+ * Name of a method to send defunct method messages (next:0/throw:1/return:2) to
+ * async iterator if supported
+ *
+ * @type {Symbol}
  */
 export var sendSymbol = Symbol("@effectful/es-persist/send")
 
@@ -30,51 +27,52 @@ var NEXT_METHOD = 0
 var THROW_METHOD = 1
 var RETURN_METHOD = 2
 
-/** 
- * same as `chainSymbol` but the method doesn't return next async value,
- * just subscribes to `this` settlement events
+/**
+ * Name of a method like `Promise.prototype.then`. But instead of two callbacks,
+ * it takes an object with `resume`/`reject` methods, thus making it easier to
+ * serialize. And it returns nothing to avoid some allocations. Use `chain`
+ * function To chain a few async computations without async/await
+ * syntax. 
+ * @Type {Symbol}
  */
 export var awaitSymbol = Symbol("@effectful/es-persist/await")
 
 /**
- * list of constructors used by this lib to be handled by some serialization
+ * List of constructors used by this lib to be handled by some serialization
  * library if needed
+ * @type {Array.<Function>}
  */
 export var constructors = [Generator]
 
 var DELEGATE_CONT = 2
 var DELEGATE_RESUME = 3
 
+export const eventLoopScheduler = new EventLoopScheduler()
+
 /** 
- * registry for currently running async functions 
+ * Registry for currently running async functions.
  * 
- * The default value may be overriden by setting context into
- * async (generator) function definition with `contextSymbol` 
- * property.
+ * The default value may be overriden by setting context into async (generator) function definition with `contextSymbol` property.
+ * @constructor
  */
 export function Context(scheduler) {
-  this.threads = new Set()
-  this.scheduler = scheduler || new EventLoopScheduler()
-}
-
-/** 
- * called for each async function once, at its module's top level
- */
-Context.prototype.reg = function(fun) {}
-
-/**
- * called on each async function execution
- */
-Context.prototype.startThread = function startThread(thread) {
-  this.threads.add(thread)
+  this.running = new Set()
+  this.scheduler = scheduler || eventLoopScheduler
 }
 
 /**
- * called on each asyn function exit
+ * Called on each async thread (function's call) execution start
  */
-Context.prototype.exitThread = function exitThread(thread) {
-  this.threads.delete(thread)
-  thread.$last = thread.$step = 0
+Context.prototype.reg = function reg(instance) {
+  this.running.add(instance)
+}
+
+/**
+ * Called on each async thread exit
+ */
+Context.prototype.unreg = function unreg(instance) {
+  this.running.delete(instance)
+  instance.$last = instance.$step = 0
 }
 
 function EventLoopScheduler() {
@@ -103,14 +101,16 @@ EventLoopScheduler.prototype.onIdle = function(job) {
 /** default registry */
 var globalContext = new Context()
 
-var contextStack = []
-
 /** 
- * gets current context or replace it with some new one if an argument is provided
+ * Gets current context or replace it with some new one if an argument is
+ * provided
  */
 export function context(ctx) {
-  if (ctx)
+  if (ctx) {
+    var old = globalContext
     globalContext = ctx
+    return old
+  }
   return globalContext
 }
 
@@ -121,7 +121,7 @@ export var AsyncState = {
 }
 
 export function Async() {
-  this[contextSymbol].startThread(this)
+  this[contextSymbol].reg(this)
   this.dest = []
   this.state = AsyncState.pending
   this.value = void 0
@@ -131,7 +131,7 @@ var Ap = Async.prototype
 Ap.constructor = Async
 
 function AsyncGenerator() {
-  this[contextSymbol].startThread(this)
+  this[contextSymbol].reg(this)
   this.queue = []
 }
 
@@ -160,27 +160,18 @@ function Residual() {
 constructors.push(Residual)
 
 /**
- * returns Residual value
+ * Returns Residual value
  * 
- * Residual value is like Promise but without callbacks, 
- * there is a `[chainSymbol]` method instead of `then` to specify next 
- * continuations. The continuation object has two methods `resume`/`reject` to continue 
- * execution in either normal or exception paths.
+ * Some async function can use the result of this function to block in `await`
+ * expression, and some another async function may unblock it by calling
+ * `resume` there.
  *
- * The Residual object is itself an instance of continuation. 
  */
-export function residual() {
+export function lock() {
   return new Residual()
 }
 
 var Rp = Residual.prototype
-
-Promise.prototype[chainSymbol] = Rp[chainSymbol] = function chain(t) {
-  var res = new Residual()
-  t.cont = res
-  this[awaitSymbol](t)
-  return res
-}
 
 Rp.resume = function(value) {
   var dest = this.dest, i
@@ -256,8 +247,7 @@ Ap.jump = AGp.jump = function(v, cont) {
 AGp.run = Ap.run = function() {
   var value
   try {
-    return this.$run(this.$last = this.$step,
-                     (value = this.$arg, this.$arg = void 0,value))
+    return this.resume((value = this.$arg, this.$arg = void 0,value))
   } catch(e) {
     this.reject(e)
   }
@@ -283,26 +273,26 @@ Ap.scope = function(cont) {
   return this.cont
 }
 
-Ap[chainSymbol] = function chain(t) { return this.cont[chainSymbol](t) }
-Ap.then = function (t,e) { return this.cont.then(t, e) }
+Ap[awaitSymbol] = function(t) { this.cont[awaitSymbol](t) }
+Ap.then = function(t,e) { return this.cont.then(t, e) }
 
 Ap.pure = function(value) {
-  this[contextSymbol].exitThread(this)
+  this[contextSymbol].unreg(this)
   this.cont.resume(value)
 }
 
 Ap.raise = function(error) {
-  this[contextSymbol].exitThread(this)
+  this[contextSymbol].unreg(this)
   this.cont.reject(error)
 }
 
 AGp.pure = function(value) {
-  this[contextSymbol].exitThread(this)
+  this[contextSymbol].unreg(this)
   result(this,{value:value,done:true},AsyncState.resolved)
 }
 
 AGp.raise = function(error) {
-  this[contextSymbol].exitThread(this)
+  this[contextSymbol].unreg(this)
   result(this,error,AsyncState.rejected)
 }
 
@@ -322,8 +312,7 @@ AGp.resume = Ap.resume = function resume(v) {
       this.yld(v.value, DELEGATE_CONT)
       break
     default:
-      this.$last = this.$step
-      this.$run(this.$step, v)
+      this.$run(this.$last = this.$step, v)
     }
   } catch(e) {
     this.reject(e)
@@ -347,9 +336,8 @@ AGp.yldStar = function(iter, step) {
 }
 
 function send(ctx, value, method) {
-  if (ctx[sendSymbol]) {
+  if (ctx[sendSymbol])
     return ctx[sendSymbol](value, method)
-  }
   switch(method) {
   case NEXT_METHOD:
     return ctx.next(value)
@@ -541,20 +529,20 @@ AnyProto.constructor = Any
  * returns async iterator where message can be sent using
  * `send` method and it can be finished with `stop` method
  */
-export function subject() {
-  return new Subject()
+export function producer() {
+  return new Producer()
 }
 
-function Subject() {
+function Producer() {
   this.iq = []
   this.oq = []
 }
 
-constructors.push(Subject)
+constructors.push(Producer)
 
-Subject.prototype[Symbol.asyncIterator] = function() { return this }
+Producer.prototype[Symbol.asyncIterator] = function() { return this }
 
-Subject.prototype.next = function(value) {
+Producer.prototype.next = function(value) {
   var res = new Residual()
   if (this.oq.length)
     res.resume(this.oq.shift())
@@ -563,7 +551,7 @@ Subject.prototype.next = function(value) {
   return res
 }
 
-Subject.prototype.stop = function(value) {
+Producer.prototype.stop = function(value) {
   var frame = this.iq.shift()
   if (frame)
     frame.resume({value,done:true})
@@ -571,7 +559,7 @@ Subject.prototype.stop = function(value) {
     this.oq.push({value,done:true})
 }
 
-Subject.prototype.send = function(value) {
+Producer.prototype.send = function(value) {
   var frame = this.iq.shift()
   if (frame)
     frame.resume({value,done:false})
@@ -580,10 +568,9 @@ Subject.prototype.send = function(value) {
 }
 
 function Current() {}
-
 constructors.push(Current)
 
-/** returns current continuation */
+/** Returns current continuation */
 export var current = new Current()
 
 Current.prototype[awaitSymbol] = function(cont) {
@@ -591,27 +578,35 @@ Current.prototype[awaitSymbol] = function(cont) {
 }
 
 function Abort() {}
-
 constructors.push(Abort)
 
-/** stops current continuation */
+/** Stops current continuation */
 export var abort = new Abort()
 
 Abort.prototype[awaitSymbol] = function() {}
 
 function Idle() {}
-
 constructors.push(Idle)
 
 /** 
- * like `current` but also suspends current continuation until jobs 
+ * Like `current`, but also suspends current continuation until jobs 
  * queue is empty  
  */
-export const idle = new Idle()
+export var idle = new Idle()
 
 Idle.prototype[awaitSymbol] = function(next) {
   next.$arg = next
   next[contextSymbol].scheduler.onIdle(next)
 }
 
+function Managed() {}
+constructors.push(Managed)
 
+/** 
+ * Resolves to `true` if current thread is transpiled 
+ * and runs using `es-persist` runtime.
+ */
+export var managed = new Managed()
+
+Managed.prototype[awaitSymbol] = function(next) { next.resume(true) }
+Managed.prototype.then = function(resolve) { resolve(false) }

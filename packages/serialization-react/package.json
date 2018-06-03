@@ -6,6 +6,11 @@
   "jsnext:main": "main.js",
   "main": "index.js",
   "repository": "https://github.com/awto/effectfuljs",
+  "keywords": [
+    "react",
+    "serialization",
+    "effectful"
+  ],
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "scripts": {

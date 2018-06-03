@@ -7,6 +7,7 @@
   "jsnext:main": "main.js",
   "scripts": {
     "test": "mocha",
+    "docs": "typedoc --mode file --out api --theme markdown --excludePrivate --readme none",
     "build": "rollup -c"
   },
   "repository": {
@@ -16,6 +17,7 @@
   "keywords": [
     "effectful",
     "effectfuljs",
+    "serialization",
     "monad",
     "linq"
   ],
@@ -31,7 +33,9 @@
   "devDependencies": {
     "@effectful/es": "^1.0.0",
     "mocha": "^5.0.5",
-    "rollup": "^0.57.1"
+    "rollup": "^0.57.1",
+    "typedoc": "^0.11.1",
+    "typedoc-plugin-markdown": "^1.1.12"
   },
   "dependencies": {
     "@effectful/es-rt": "^1.0.0"

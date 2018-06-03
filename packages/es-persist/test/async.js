@@ -45,17 +45,17 @@ describe("async function", function() {
   it("should support Promises", function(done) {
     const state = R.context()
     const p = promise()
-    assert.equal(state.threads.size,1)
+    assert.equal(state.running.size,1)
     p.then(i => {
-      assert.equal(state.threads.size, 0)
+      assert.equal(state.running.size, 0)
       assert.equal(i, 11)
     }).then(i => {
-      assert.equal(state.threads.size, 0)
+      assert.equal(state.running.size, 0)
       const e = rejectedPromise()
-      assert.equal(state.threads.size, 1)
+      assert.equal(state.running.size, 1)
       e.then(i => assert.fail("never"),
              e => {
-               assert.equal(state.threads.size, 0)
+               assert.equal(state.running.size, 0)
                assert.equal(e.message, ":-(")
                done()
              })
@@ -70,8 +70,8 @@ describe("async function", function() {
   it("should have its state visible", function() {
     const state = R.context()
     const s = b1()
-    const subThreads = () => [...state.threads].filter(i => i.cont !== s)
-    assert.equal(state.threads.size, 2)
+    const subThreads = () => [...state.running].filter(i => i.cont !== s)
+    assert.equal(state.running.size, 2)
     let threads = subThreads()
     assert.equal(threads.length,1)
     const clos1 = threads[0]._clos1
@@ -199,41 +199,55 @@ describe("`all` combinator", function() {
   })
 })
 
-describe("`chainSymbol` function", function() {
+describe("`chain` function sample", function() {
   it("should work like `Promise.prototype.then`", function(done) {
-    (new Promise((r) => setTimeout(() => r(1),0)))[R.chainSymbol]({
-      resume(v) {
-        assert.equal(v, 1)
-        const c1 = this.cont;
-        (new Promise((r,e) => setTimeout(() => e(2),0)))[R.chainSymbol]({
+    function chain(arg, cont) {
+      var res = R.lock()
+      cont.cont = res
+      arg[R.awaitSymbol](cont)
+      return res
+    }
+    chain(
+      chain(
+        new Promise((r) => setTimeout(() => r(1),0)),
+        {
           resume(v) {
-            assert.fail("never")
+            assert.equal(v, 1)
+            const c1 = this.cont;
+            chain(
+              chain(
+                new Promise((r,e) => setTimeout(() => e(2),0)),
+                {
+                  resume(v) {
+                    assert.fail("never")
+                  },
+                  reject(e) {
+                    assert.equal(e, 2)
+                    this.cont.reject(3)
+                  }
+                }),
+              {
+                resume(v) {
+                  assert.fail("never")
+                },
+                reject(e) {
+                  assert.equal(e, 3)
+                  c1.resume(4)
+                }
+              })
           },
           reject(e) {
-            assert.equal(e, 2)
-            this.cont.reject(3)
-          }
-        })[R.chainSymbol]({
-          resume(v) {
             assert.fail("never")
-          },
-          reject(e) {
-            assert.equal(e, 3)
-            c1.resume(4)
           }
-        })
-      },
-      reject(e) {
-        assert.fail("never")
-      }
-    })[R.chainSymbol]({
-      resume(v) {
-        assert.equal(v, 4)
-        done()
-      },
-      reject(e) {
-        assert.fail("never")
-      }
-    })
+        }),
+      {
+        resume(v) {
+          assert.equal(v, 4)
+          done()
+        },
+        reject(e) {
+          assert.fail("never")
+        }
+      })
   })
 })

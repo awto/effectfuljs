@@ -9,6 +9,5 @@
     "strict": true,
     "allowJs": false
   },
-  "include": ["src/main.ts"],
-  "exclude": []
+  "files": ["src/main.ts"]
 }

@@ -48,13 +48,13 @@ fn.prototype[R.contextSymbol] = run.prototype[R.contextSymbol] = ctx
 describe("async generator function", function() {
   it("should have its state visible", function() {
     const s = run()
-    const t = [...ctx.threads].find(i => i.cont === s)
-    const subThreads = () => [...ctx.threads].filter(i => i.cont !== s)
-    assert.equal(ctx.threads.size, 2)
+    const t = [...ctx.running].find(i => i.cont === s)
+    const subThreads = () => [...ctx.running].filter(i => i.cont !== s)
+    assert.equal(ctx.running.size, 2)
     assert.equal(t.name, "run")
-    let threads = subThreads()
-    assert.equal(threads.length,1)
-    const fn = threads[0]
+    let running = subThreads()
+    assert.equal(running.length,1)
+    const fn = running[0]
     assert.equal(fn.name, "fn")
     assert.ok(tasks.length, 1)
     assert.ok(tasks.every(i => i.src.constructor === Wait))
@@ -66,11 +66,11 @@ describe("async generator function", function() {
     assert.equal(typeof fn._clos2, "function")
     tasks.length = 0
     fn.resume()
-    threads = subThreads()
-    assert.equal(threads.length,2)
+    running = subThreads()
+    assert.equal(running.length,2)
     assert.equal(tasks.map(i => i.src.value).join(),"21")
-    assert.equal(fn, threads[0])
-    const b = threads[1]
+    assert.equal(fn, running[0])
+    const b = running[1]
     assert.ok(tasks[0].next === b)
     assert.equal(b.name, "b")
     const clos2 = b._clos2
@@ -86,12 +86,12 @@ describe("async generator function", function() {
     assert.ok(fn.queue[0].dest[0] === t)
     tasks.length = 0
     b.resume()
-    threads = subThreads()
+    running = subThreads()
     assert.ok(tasks[0].next === b)
     assert.equal(tasks.map(i => i.src.value).join(),"44")
-    assert.equal(threads.length,2)
-    assert.equal(fn, threads[0])
-    assert.equal(b, threads[1])
+    assert.equal(running.length,2)
+    assert.equal(fn, running[0])
+    assert.equal(b, running[1])
     assert.equal(b._k, 22)
     assert.ok(b.queue[0].dest[0] === fn)
     assert.ok(fn.queue[0].dest[0] === t)
@@ -100,18 +100,18 @@ describe("async generator function", function() {
     assert.equal(clos2._j, 44)
     tasks.length = 0
     b.resume()
-    threads = subThreads()
+    running = subThreads()
     assert.equal(tasks.map(i => i.src.value).join(),"result")
     assert.ok(tasks[0].next === fn)
-    assert.equal(threads.length,1)
-    assert.equal(fn, threads[0])
+    assert.equal(running.length,1)
+    assert.equal(fn, running[0])
     assert.equal(fn._i, 1)
     assert.ok(fn.queue[0].dest[0] === t)
     tasks.length = 0
     fn.resume()
     assert.equal(tasks.length, 0)
-    threads = subThreads()
-    assert.equal(threads.length,0)
+    running = subThreads()
+    assert.equal(running.length,0)
     assert.equal(s.awaiting, void 0)
   })
   it("should conform to ES", function() {
@@ -125,8 +125,8 @@ describe("async generator function", function() {
     let p2 = {
       [R.awaitSymbol](next) {
         tasks.push(next)
-        assert.equal(R.context().threads.size, 6)
-        assert.equal([...R.context().threads].map(i => i.name).sort().join(),
+        assert.equal(R.context().running.size, 6)
+        assert.equal([...R.context().running].map(i => i.name).sort().join(),
                  "_a1,_a2,_a3,_a4,_scheduler,_src")
         cbtask()
       }
@@ -139,10 +139,10 @@ describe("async generator function", function() {
     async function* src() {
       try {
         yield (await p1)
-        assert.equal(R.context().threads.size, 6)
+        assert.equal(R.context().running.size, 6)
         yield (await p2)
-        assert.equal(R.context().threads.size, 5)
-        assert.equal([...R.context().threads].map(i => i.name).sort().join(),
+        assert.equal(R.context().running.size, 5)
+        assert.equal([...R.context().running].map(i => i.name).sort().join(),
                  "_a1,_a2,_a3,_a4,_src")
         assert.fail("never")
       } finally {
@@ -194,17 +194,17 @@ describe("async generator function", function() {
       assert.ok(finallyCalledSrc)
       assert.ok(finallyCalled1)
       assert.ok(finallyCalled2)
-      assert.equal(R.context().threads.size,1)
+      assert.equal(R.context().running.size,1)
       return 3
     }
     const t4 = a4()
     const res = t4.then(i => {
       assert.equal(i, 3)
-      assert.equal(R.context().threads.size,0)
+      assert.equal(R.context().running.size,0)
     })
     cb("hi")
-    assert.equal(R.context().threads.size, 3)
-    assert.equal([...R.context().threads].map(i => i.name).sort().join(),
+    assert.equal(R.context().running.size, 3)
+    assert.equal([...R.context().running].map(i => i.name).sort().join(),
                  "_a3,_a4,_scheduler")
     return res
   })
@@ -282,10 +282,10 @@ describe("async generator function", function() {
   })
 })
 
-describe("subject", function() {
+describe("producer", function() {
   it("should follow generators protocol", function() {
-    return async function subj1() {
-      const s = R.subject()
+    return async function producer1() {
+      const s = R.producer()
       s.send(1)
       assert.deepEqual(await s.next(), {done:false,value:1})
       s.send(2)

@@ -35,7 +35,7 @@ describe("serialization", function() {
       next.resume(2)
       await next.cont
     }
-    main()[R.chainSymbol]({resume,reject})
+    main()[R.awaitSymbol]({resume,reject})
   })
 })
 

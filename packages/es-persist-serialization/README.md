@@ -4,20 +4,23 @@ The library uses [@effectful/es-persist](https://github.com/awto/effectfuljs/tre
 to store async function state for
 [@effectful/es-persist](https://github.com/awto/effectfuljs/tree/master/packages/es-persist).
 
-It re-exports `@effectful/es-persist`.
+It re-exports both of the libraries, and `@effectful/serialization` is
+imported as peer dependency.
 
 ## Usage
 
+Install from npm:
+
 ```
 $ npm install --save-dev @effectful/es
-$ npm install --save @effectful/es-persist-serialization
+$ npm install --save @effectful/es-persist-serialization @effectful/serialization
 ```
 
 In .babelrc:
 
 ```json
 {
-  "presets": ["@effectful/es-persist-serialization/preset"]
+  "presets": ["@effectful/es-persist-serialization/transform"]
 }
 
 ```

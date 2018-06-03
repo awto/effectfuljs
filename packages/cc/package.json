@@ -7,7 +7,7 @@
     "test": "mocha",
     "docs": "typedoc --mode file --out api --theme markdown --excludePrivate src --readme none",
     "build": "tsc",
-    "prepare": "npm run build && npm run docs"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
