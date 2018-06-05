@@ -61,6 +61,7 @@ export default Kit.pipe(
   function joinMemExprCollect(s) {
     const sa = Kit.toArray(s)
     const sl = Kit.auto(sa)
+    const disregard = sl.opts.disregard || {}
     function walk(dir) {
       for(const i of sl.sub()) {
         if (i.enter) {
@@ -116,8 +117,8 @@ export default Kit.pipe(
               }
             }
             break
-          case Tag.AssignmentExpression:
           case Tag.CallExpression:
+          case Tag.AssignmentExpression:
             const c = sl.cur()
             if (c.type === Tag.MemberExpression) {
               c.value.discharge = true
@@ -125,7 +126,8 @@ export default Kit.pipe(
             break
           case Tag.MemberExpression:
             const o = sl.cur()
-            if (o.type === Tag.Identifier && !i.value.node.computed) {
+            if (o.type === Tag.Identifier && !i.value.node.computed
+                && !disregard[o.value.node.name]) {
               const info = dir.get(o.value.node.name)
               if (info != null) {
                 if (i.value.discharge && !info.pack) {

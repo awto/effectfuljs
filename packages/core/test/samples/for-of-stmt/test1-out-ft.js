@@ -87,9 +87,12 @@ function b_2(b, c) {
 }
 
 function b_3(b) {
+  var a;
+
   if (!(b._loop = b._loop.step()).done) {
     b._i = b._loop.value;
-    return M.chain(eff(b._i), b_3, b_9);
+    a = b._i, b._i = null;
+    return M.chain(eff(a), b_3, b_9);
   } else {
     b._fc = b_5, b._fe = b_7;
     return M.jump(void 0, b_4);
@@ -145,9 +148,12 @@ function c_2(c) {
 }
 
 function c_3(c) {
+  var a;
+
   if (!(c._loop1 = c._loop1.step()).done) {
     c._j = c._loop1.value;
-    return M.chain(eff(c._i, c._j), c_3, c_12);
+    a = c._j, c._j = null;
+    return M.chain(eff(c._i, a), c_3, c_12);
   } else {
     c._fc = c_2, c._fe = c_11;
     return M.jump(void 0, c_4, c_11);
@@ -161,7 +167,7 @@ function c_4(c) {
     c._loop1.exit();
   }
 
-  c._err1 = c._err2, a = c._fc, b = c._fe, c._fc = null, c._fe = null;
+  c._err1 = c._err2, a = c._fc, b = c._fe, c._loop1 = null, c._fc = null, c._fe = null;
   return M.jump(void 0, a, b);
 }
 

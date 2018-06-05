@@ -304,9 +304,11 @@ It works only in transpiled code.
 ## Performance
 
 At the time of writing this, @effectful generators implementation is faster than
-natives for all mainstream engines. Implementing persistence requires replacing
-local variable references with object's member access. It is an overhead, but
-modern engines handle it well.
+natives for all mainstream engines. But anyway, this is usually a very small
+part of the whole program to care about.
+
+Implementing persistence requires replacing local variable references with
+object's member access. It is an overhead, but modern engines handle it well.
 
 ## License
 

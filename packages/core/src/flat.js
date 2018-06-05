@@ -734,7 +734,7 @@ export const convert = Kit.pipe(
     instantiateJumps(cfg.keys())
     resetEnters(cfg.keys())
     optInlineFrames(cfg)
-    const markRepeat = root.opts.markRepeat
+    const markRepeat = root.opts.markRepeat || root.opts.invertForOf
     for(const i of cfg.keys()) {
       if (i.repeat && i.repeat.length) {
         for(const j of i.enters) {
@@ -1072,48 +1072,8 @@ export function interpretJumps(si) {
   const threadContext = s.opts.threadContext && [[ctxSym,ctxSym]]
   const {markRepeat} = s.opts
   const {resFrameRedir} = root
-  function* argPack(arr,inner) {
-    function* arg(i,pos,last) {
-      if (i === argSym) {
-        if (inner) 
-          yield* Kit.reposOneArr(inner, Tag.push)
-        else if (i !== last)
-          yield s.tok(Tag.push,Tag.Identifier,{sym:undefinedSym})
-      }
-      else
-        yield s.tok(Tag.push,Tag.Identifier,{sym:i})
-    }
-    if (inner && inner.length && !arr.find(([i]) => i === argSym))
-      yield* Kit.reposOneArr(inner, Tag.push)
-    if (arr.length) {
-      const last = arr[arr.length-1][1]
-      if (arr.length <= unpackMax) {
-        for(const j of arr)
-          yield* arg(j[1],Tag.push,last)
-      } else {
-        const lab = s.label()
-        if (packAsObj) {
-          yield s.enter(Tag.push, Tag.ObjectExpression)
-          yield s.enter(Tag.properties, Tag.Array)
-          for(const j of arr) {
-            yield s.enter(Tag.push, Tag.ObjectProperty,
-                          {node:{shorthand:true}})
-            yield s.tok(Tag.key,Tag.Identifier,{sym:j[0]})
-            yield* arg(j[1],Tag.value)
-            yield* s.leave()
-          }
-          yield* lab()
-          return
-        }
-        yield s.enter(Tag.push, Tag.ArrayExpression)
-        yield s.enter(Tag.elements, Tag.Array)
-        for(const j of arr)
-          yield* arg(j[1],Tag.push,last)
-        yield* lab()
-      }
-    }
-  }
-  function* walk() {
+  return _interpretJumps()
+  function* _interpretJumps() {
     for(const i of s.sub()) {
       if (i.enter) {
         switch(i.type) {
@@ -1138,10 +1098,9 @@ export function interpretJumps(si) {
               ? s.enter(pos,Block.app,{sym:Block.pureId,insideCtx,delegateCtx})
               : s.enter(pos,Block.effExpr)
             if (!i.leave)
-              yield* walk()
+              yield* _interpretJumps()
           } else {
             const {sym:patSym} = i.value
-            const threadArgs = threadContext || emptyArr
             let catchCont, resCont
             if (goto) {
               if (passCatchCont && i.value.catchContSym)
@@ -1159,15 +1118,6 @@ export function interpretJumps(si) {
               appVal.hasBindVal = true
             } else if (i.type === Ctrl.jump && s.opts.markBindValue === false) {
                 appVal.hasBindVal = true
-            }
-            if (threadArgs && threadArgs.length) {
-              if (s.opts.markArgNum !== false) {
-                if (threadArgs.length > unpackMax)
-                  name += "N"
-                else
-                  name += threadArgs.length
-              }
-              appVal.threadArgsNum = threadArgs.length
             }
             if (rec) {
               name += "R"
@@ -1189,7 +1139,7 @@ export function interpretJumps(si) {
             yield s.enter(pos,Block.app,appVal)
             assert.ok(goto)
             if (s.curLev())
-              yield* walk()
+              yield* _interpretJumps()
             else if (appVal.hasBindVal)
               yield s.tok(Tag.push,Tag.Identifier,{sym:Kit.scope.undefinedSym})
             if (passCont)
@@ -1198,7 +1148,9 @@ export function interpretJumps(si) {
               yield s.tok(Tag.push,Tag.Identifier,{sym:catchCont})
             if (resCont && passResultCont)
               yield s.tok(Tag.push,Tag.Identifier,{sym:resCont})
-            yield* argPack(threadArgs)
+            if (i.value.params)
+              for(const sym of i.value.params)
+                yield s.tok(Tag.push,Tag.Identifier,{sym})
           }
           yield* lab()
           s.close(i)
@@ -1208,7 +1160,6 @@ export function interpretJumps(si) {
       yield i
     }
   }
-  return walk()
 }
 
 /** calculates `patSym` field */
@@ -1875,11 +1826,11 @@ function unfoldCfg(cfg,sa) {
 
 /** conferts flat structure to JS expressions */
 export const interpret = Kit.pipe(
-  Inline.prepareInvertForOf,
+  Loop.prepareInvertForOf,
   Inline.markSimpleRedir,
   Kit.toArray,
   calcVarDeps,
-  Inline.invertForOf,
+  Loop.invertForOf,
   Inline.storeContinuations,
   ifDefunct(Defunct.prepare),
   Gens.functionSentAssign,

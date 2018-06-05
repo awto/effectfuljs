@@ -536,13 +536,12 @@ function* markFrameSyms(s) {
         const params = v.frameParams || emptySet
         const clos = v.frameParamsClos || emptySet
         const dst = v.dstClassParams || emptySet
-        const thread = v.threadParams ? new Set(v.threadParams) : emptySet
         const w = v.stateVars ? v.stateVars.w : emptySet
         const r = v.stateVars ? v.stateVars.r : emptySet
         const d = v.stateVars && v.stateVars.d || emptySet
         const saved = v.savedDecls ? new Set(v.savedDecls.keys()) : emptySet
         const all = new Set([...avail, ...locals, ...clos, ...saved, ...dst,
-                             ...params, ...thread, ...w, ...r, ...d])
+                             ...params, ...w, ...r, ...d])
         if (v.patSym)
           all.add(v.patSym)
         if (v.errSym)
@@ -554,7 +553,6 @@ function* markFrameSyms(s) {
                      + (avail.has(i) ? "A" : "")
                      + (locals.has(i) ? "L" : "")
                      + (params.has(i) ? "P" : (clos.has(i) ? "p" : ""))
-                     + (thread.has(i) ? "T" : "")
                      + (r.has(i) ? "R" : "")
                      + (w.has(i) ? "W" : "")
                      + (d.has(i) ? "d" : "")

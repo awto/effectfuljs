@@ -324,9 +324,9 @@ function d_3(d, a) {
 function d_4(d) {}
 
 function e_1(e) {
-  e._result = 0;
+  var result;
+  result = 0;
   e._i = 0;
-  e._result = null;
   return M.jump(void 0, e_2);
 }
 
@@ -340,9 +340,9 @@ function e_2(e) {
 }
 
 function e_3(e, a) {
-  e._result = a;
+  var result;
+  result = a;
   e._i++;
-  e._result = null;
   return M.jump(void 0, e_2);
 }
 

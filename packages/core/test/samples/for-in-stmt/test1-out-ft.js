@@ -73,11 +73,9 @@ function b_2(b, c) {
 }
 
 function b_3(b) {
-  var i;
-
   if (!(b._loop = b._loop.step()).done) {
-    i = b._loop.value;
-    return M.chain(eff(i), b_3);
+    b._i = b._loop.value;
+    return M.chain(eff(b._i), b_3);
   }
 }
 
@@ -153,10 +151,14 @@ function g_4(g) {
 }
 
 function g_5(g, a) {
+  var b;
+
   if (a) {
+    g._i = null;
     return M.jump(void 0, g_4);
   } else {
-    return M.chain(effB(g._i), g_6);
+    b = g._i, g._i = null;
+    return M.chain(effB(b), g_6);
   }
 }
 
@@ -211,7 +213,7 @@ function h_6(h) {
     console.log("b");
     return M.chain(eff("b"), h_7);
   } else {
-    h._loop1 = null;
+    h._i = null, h._loop1 = null;
     return M.jump(void 0, h_12);
   }
 }
@@ -222,6 +224,7 @@ function h_7(h) {
 
 function h_8(h, a) {
   if (a) {
+    h._i = null;
     return M.jump(void 0, h_3);
   } else {
     return M.chain(effB(h._i + h._j), h_9);
@@ -238,10 +241,14 @@ function h_9(h, a) {
 }
 
 function h_10(h, a) {
+  var b;
+
   if (a) {
+    h._i = null;
     return M.jump(void 0, h_6);
   } else {
-    return M.chain(effB(h._i), h_11);
+    b = h._i, h._i = null;
+    return M.chain(effB(b), h_11);
   }
 }
 

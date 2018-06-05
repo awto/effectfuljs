@@ -285,6 +285,7 @@ export function* frames(si) {
           assert.ok(!init)
           decls.set(sym,{raw:null})
         }
+        i.value.savedDecls.clear()
       }
       if (inlineJumps) {
         for(const j of s.sub()) {

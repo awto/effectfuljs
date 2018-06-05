@@ -769,8 +769,8 @@ export function calcFrameStateVars(si) {
             sw.w.add(sym)
             // not each branch resets the symbol
             // so it needs to read it to pass further
-            if (num !== len)
-              sw.r.add(sym)
+            // if (num !== len)
+            //  sw.r.add(sym)
           }
           for(const k of allR)
             sw.r.add(k)
@@ -899,119 +899,6 @@ function localsDecls(cfg) {
           if (!j.interpr || j.interpr === Bind.paramThread && !m.has(j))
             m.set(j, {raw:null})
       }
-    }
-  }
-}
-
-/** 
- * calculates what should be passed to binds on each `goto` and what should
- * be received in each frame's arguments
- *
- *     type FrameVal = FrameVal & { threadParams: Sym[] }
- *     type JumpVal = JumpVal & { threadArgs: [Sym,Sym][] }
- *
- *     (cfg: FrameVal[]) => {} 
- */
-function resolveFrameArgs(cfg) {
-  for(const i of cfg) {
-    const visible = i.frameVisible = [
-      ...i.frameParamsClos,
-      ...i.frameLocals || emptyArr].map(i => [i,i])
-    const patSym = i.errSym || i.patSym
-    if (patSym)
-      visible.push([patSym,patSym])
-    i.dstClass = i
-    i.dstClassRank = 0
-  }
-  // unifying threaded params positions 
-  function find(i) {
-    if (i.dstClass !== i)
-      i.dstClass = find(i.dstClass)
-    return i.dstClass
-  }
-  function union(i,j) {
-    const ir = find(i)
-    const jr = find(j)
-    if (ir === jr)
-      return
-    if (ir.dstClassRank > jr.dstClassRank) {
-      jr.dstClass = ir
-    } else { 
-      ir.dstClass = jr
-      if (jr.dstClassRank === ir.dstClassRank)
-        ++ir.dstClassRank
-    }
-    return
-  }
-  for(const i of cfg) {
-    for(const j of i.exits) {
-      let cur
-      for(const k of j.gotoDests) {
-        if (k.frameParamsClos.size || k.patSym) {
-          if (!cur)
-            cur = k
-          else
-            union(cur,k)
-        }
-      }
-    }
-  }
-  for(const i of cfg) {
-    const par = find(i)
-    const tot = par.dstClassParams || (par.dstClassParams = new Set())
-  }
-  const sets = new Map()
-  for(const i of cfg) {
-    const par = find(i)
-    Kit.mapPush(sets,find(i),i)
-  }
-  for(const [par,frames] of sets) {
-    const common = new Set()
-    let hasBind = false
-    for(const i of frames) {
-      par.dstClassParams = common
-      for(const j of i.frameParamsClos)
-        if (j.interpr === Bind.paramThread)
-          common.add(j)
-      if (i.patSym)
-        hasBind = true
-    }
-    const tot = [...common].sort((a,b) => a.num - b.num)
-    for(const i of frames) {
-      const thread = i.threadParams = []
-      const common = i.threadParamsCommon = tot
-      const real = i.frameParamsClos
-      for(const j of tot) {
-        if (real.has(j))
-          thread.push(j)
-        else {
-          const sym = Kit.scope.newSym(j.orig)
-          thread.push(sym)
-          sym.dummy = true
-        }
-      }
-      if (hasBind && !i.patSym && !i.errSym)
-        i.patSym = Kit.scope.newSym()
-      for(let j;(j = thread[thread.length-1]) && !j.interpr;)
-        thread.pop()
-    }
-  }
-  for(const i of cfg) {
-    const visible = i.frameVisible
-    for(const j of i.exits) {
-      const [dst] = j.gotoDests
-      if (dst == null) {
-        j.threadArgs = []
-        continue
-      }
-      const params = dst.threadParamsCommon
-      const argsMap = new Map([...visible,
-                               ...(j.frameArgs ? j.frameArgs : emptyArr)])
-      const args = j.threadArgs = []
-      for(const k of params)
-        args.push([k,argsMap.get(k) || Kit.scope.undefinedSym])
-      for(let j;(j = args[args.length-1]) && j[1] === Kit.scope.undefinedSym;)
-        args.pop()
     }
   }
 }
@@ -1185,40 +1072,47 @@ export function handleSpecVars(si) {
 }
 
 /** if variable is used only in 1 frame no needs to store it in context */
-function optimizeContextState(root, cfg) {
+function prepareContextVars(root, cfg) {
   const ctxSyms = []
   const resSym = root.resSym
-  for(const i of cfg) {
-    const sw = i.stateVars
-    if (!sw)
-      continue
-    for(const j of sw.r)
-      (j.refFrames || (j.refFrames = new Set())).add(i)
-    for(const j of sw.w)
-      (j.refFrames || (j.refFrames = new Set())).add(i)
-    for(const j of i.exits) {
-        if (j.frameArgs) {
-          for(const k of j.frameArgs.keys())
-            (k.refFrames || (k.refFrames = new Set())).add(i)
-        }
+  const opt = root.opts.optimizeContextVars !== false
+  if (opt) {
+    const first = cfg[0]
+    for(const i of root.ctxDeps.values())
+      i.copy.hasReads = true
+    for(const i of cfg) {
+      if (i === first)
+        continue
+      const sw = i.stateVars
+      if (!sw)
+        continue
+      for(const j of sw.r)
+        j.hasReads = true
+    }
+    for(const i of cfg) {
+      if (i === first)
+        continue
+      const sw = i.stateVars
+      if (!sw)
+        continue
+      for(const j of sw.w) {
+        if (!j.hasReads && j !== i.patSym && j !== i.errSym && j !== resSym)
+          (j.writeFrames || (j.writeFrames = new Set())).add(i)
       }
+
+    }
   }
   for(const i of root.scopeDecls) {
-    if (i.refFrames && !i.closCapt) {
-      if (i.refFrames.size === 1) {
-        const [f] = i.refFrames;
-        if (f !== cfg[0] && i !== f.patSym
-            && i !== f.errSym && i !== resSym) {
-          i.interpr = null
-          i.fieldName = null
-          root.savedDecls.delete(i);
+    if (opt && !i.closCapt &&  !i.hasReads && i.writeFrames) {
+      i.interpr = null
+      i.fieldName = null
+      root.savedDecls.delete(i)
+      if (i.writeFrames)
+        for(const f of i.writeFrames)
           (f.savedDecls || (f.savedDecls = new Map())).set(i,{raw:null})
-        }
-      }
     }
-    if (i.interpr === Bind.ctxField) {
+    if (i.interpr === Bind.ctxField)
       ctxSyms.push(i)
-    }
   }
   allUniqFields(ctxSyms,root.opts.closVarPrefix,root.opts.closVarPostfix)
 }
@@ -1227,10 +1121,9 @@ export function calcFlatCfg(cfg,sa) {
   const root = sa[0].value
   calcFrameStateVars(sa)
   if (root.opts.contextState)
-    optimizeContextState(root,cfg)
+    prepareContextVars(root,cfg)
   resolveFrameParams(cfg)
   propagateArgs(cfg)
-//  resolveFrameArgs(cfg)
   localsDecls(cfg)
 }
 

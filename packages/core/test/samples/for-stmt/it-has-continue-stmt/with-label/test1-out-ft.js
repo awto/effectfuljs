@@ -192,8 +192,7 @@ function f_22(ctx) {
 }
 
 function f_32(ctx) {
-  var i;
-  i++;
+  ctx._i++;
 
   if (t2) {
     return M.jump(void 0, f_42);

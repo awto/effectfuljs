@@ -262,8 +262,6 @@ export function promises(si) {
       if (i.enter && i.type === Block.letStmt
           && i.value.gotoSym
           && i.value.bindName === "chain") {
-        if (i.value.threadArgs && i.value.threadArgs.length)
-          throw s.error("`inlineChainOp: promise` with threaded arguments")
         const errCnt = i.value.ref.catchContRedir
         if (s.opts.contextBy === "reference" && !s.opts.defunct) {
           yield* s.template(i.pos,
@@ -713,81 +711,12 @@ export function coerce(si) {
   }
 }
 
-export function prepareInvertForOf(si) {
-  const sa = Kit.toArray(si)
-  const root = sa[0].value
-  if (!root.opts.invertForOf)
-    return sa
-  if (!root.hasForOf)
-    return sa
-  recover(sa)
-  return sa
-  function recover() {
-    const s = Kit.auto(sa)
-    for(const i of s) {
-      if (i.enter) {
-        switch(i.type) {
-        case Tag.IfStatement:
-	        if (i.value.forOfExit) {
-	          for(const k of s) {
-	            if (k.enter && k.type === Ctrl.jump) {
-	              k.value.ref.forOfFin = i.value.forOfExit
-	              i.value.forOfExit.fin = k.value
-                if (k.value.goto.dynamicJump) {
-                  k.value.goto.declSym.dynForOf = i.value.forOfExit
-                }
-	              break
-	            }
-	          }
-	        }
-	        const j = s.cur()
-          const {forOfInfo} = j.value
-          if (!forOfInfo)
-            continue
-          i.value.forOfInfo = j.value.forOfInfo
-          Kit.skip(s.one())
-          Kit.skip(s.one())
-          assert.ok(s.cur().pos === Tag.alternate)
-          assert.ok(s.cur().type === Tag.BlockStatement)
-          let jump
-          for(const j of s.one())
-            if (j.enter && j.type === Ctrl.jump)
-              jump = j.value
-          assert.ok(jump)
-          jump.goto.catchContRedir.required = true
-          jump.goto.required = true
-          const frame = jump.ref
-          const patSym = forOfInfo.patSym = frame.patSym =
-	              frame.patSym
-	              || root.commonPatSym
-	              || Kit.scope.newSym("i")
-          jump.ref.forOfInfo = forOfInfo
-	        forOfInfo.body = jump.ref
-          forOfInfo.exit = jump
-          break
-        case Ctrl.jump:
-          const {goto} = i.value
-          if (goto.dynamicJump) {
-            goto.declSym.savedContext = null
-            for(const j of i.value.gotoDests) {
-              if (j.forOfInfo) {
-                goto.declSym.savedContext = Bind.tempVarSym(root,"fx")                 
-                break
-              }
-            }
-          }
-          break
-        }
-      }
-    }
-  }
-}
 
 /** injects interpretation `for-of` with `invertForOf:true` (CPS style) */
 export function invertForOf(si) {
   const sa = Kit.toArray(si)
   const root = sa[0].value
-  if (!root.opts.invertForOf || !root.hasForOf)
+  if (!root.opts.invertForOf || !root.hasForOf || !root.opts.inlineYieldStar)
     return sa
   const jumpsExit = root.opts.inlinePureJumps === "exit"
   const dirCall = root.opts.storeCont === "step"
@@ -814,15 +743,15 @@ export function invertForOf(si) {
     function* _inject(sw) {
       for(const i of sw) {
         if (i.enter) {
-	        if ((i.type === Ctrl.jump || i.type === Block.letStmt)
-	            && i.value.frameArgs) {
-	          const args = i.value.frameArgs
-	          for(const [n,v] of args) {
-	            if (!v.substLoop)
-		            continue
-	            args.set(n, v.substLoop)
-	          }
-	        }
+	  if ((i.type === Ctrl.jump || i.type === Block.letStmt)
+	      && i.value.frameArgs) {
+	    const args = i.value.frameArgs
+	    for(const [n,v] of args) {
+	      if (!v.substLoop)
+		continue
+	      args.set(n, v.substLoop)
+	    }
+	  }
           switch(i.type) {
           case Tag.MemberExpression:
             if (!i.value.forOfInfo)
@@ -831,25 +760,24 @@ export function invertForOf(si) {
             Kit.skip(s.copy(i))
             continue
           case Block.frame:
-	          frames.push(i.value)
+	    frames.push(i.value)
             i.value.declSym.forOfInfo = i.value.forOfInfo
-	          if (i.value.forOfFin) {
-	            const cur = i.value.forOfFin
-	            const exit = cur.exit.goto
+	    if (i.value.forOfFin) {
+	      const cur = i.value.forOfFin
+	      const exit = cur.exit.goto
 	            const up = cur.up
-	            yield i
-	            Kit.skip(s.sub())
-	            yield* s.toks(Tag.push, `=$1.$exit()`,
-			                      {result:true}, cur.sym)
+	      yield i
+	      Kit.skip(s.sub())
+	      yield* s.toks(Tag.push, `=$1.$exit()`,
+			    {result:true}, cur.sym)
 	            yield s.close(i)
-	            continue
-	          }
+	      continue
+	    }
             if (!i.value.forOfInfo)
               break
-	          i.value.declSym.forOfInfo = i.value.forOfInfo
             yield i
             yield* s.toks(Tag.push,"=$2.$s = $1.unwrap.$t",
-			                    ctx,i.value.forOfInfo.sym)
+			  ctx,i.value.forOfInfo.sym)
             continue
           case Block.letStmt:
             if (!i.value.eff)
@@ -865,16 +793,16 @@ export function invertForOf(si) {
               break
             i.value.storeCont = false
             i.value.delegateCtx = goto.forOfInfo.sym
-	          const exit = forOfInfo.exit.goto
-	          const up = exit.forOfInfo
-	          if (up) {
-	            yield* s.toks(Tag.push,
-			                      `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
-			                      forOfInfo.sym, up.sym)
-	          }
+	    const exit = forOfInfo.exit.goto
+	    const up = exit.forOfInfo
+	    if (up) {
+	      yield* s.toks(Tag.push,
+			    `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
+			    forOfInfo.sym, up.sym)
+	    }
             // TODO: if there are no inner loops this may be avoided
             yield* s.toks(Tag.push,`=$1.$yld = $2`,
-			                    ctx, goto.declSym)
+			  ctx, goto.declSym)
             break }
           case Tag.IfStatement:
             if (!i.value.forOfInfo)
@@ -889,23 +817,23 @@ export function invertForOf(si) {
             if (j.type !== Tag.Identifier || !j.value.forOfInfo)
               break
             const {forOfInfo} = j.value
-	          let exit, up
-	          if (forOfInfo.exit.indirJumps) {
-	            for(const [dst,redir] of forOfInfo.exit.indirJumps) {
-		            if (redir === forOfInfo.fin.goto) {
-		              up = forOfInfo.up = dst.forOfInfo
+	    let exit, up
+	    if (forOfInfo.exit.indirJumps) {
+	      for(const [dst,redir] of forOfInfo.exit.indirJumps) {
+		if (redir === forOfInfo.fin.goto) {
+		  up = forOfInfo.up = dst.forOfInfo
                   dst.declSym.dynForOf = forOfInfo
                   break
-		            }
-	            }
-	          }
+		}
+	      }
+	    }
             const lab = s.label()
             yield s.enter(i.pos,Tag.SequenceExpression)
             yield s.enter(Tag.expressions,Tag.Array)
-	          if (forOfInfo.exit.indirJumps) {
-	            for(const [dst,redir] of forOfInfo.exit.indirJumps)
-		            yield* s.toks(Tag.push, `=$I = $I`, redir.declSym, dst.declSym)
-	          }
+	    if (forOfInfo.exit.indirJumps) {
+	      for(const [dst,redir] of forOfInfo.exit.indirJumps)
+		yield* s.toks(Tag.push, `=$I = $I`, redir.declSym, dst.declSym)
+	    }
             yield s.peel(Kit.setPos(i,Tag.push))
             yield* s.one()
             const call = s.take()
@@ -941,7 +869,7 @@ export function invertForOf(si) {
             yield s.close(call)
             yield* s.sub()
             yield* lab()
-	          continue
+	    continue
           }
         }
         yield i
@@ -1010,7 +938,7 @@ const yldId = Kit.sysId("yld")
 /** injects delegating object fields `$r`, `$y`  */
 function delegateOps(si) {
   const s = Kit.auto(si)
-  if (!s.opts.invertForOf)
+  if (!s.opts.invertForOf || !s.opts.inlineYieldStar)
     return s
   const root = s.first.value
   const pure = mkSym("$res","$r")
@@ -1031,8 +959,8 @@ function delegateOps(si) {
 	        break
         case Block.pureId:
 	        yield* s.toks(Tag.push,
-			                  `=$1.$r.$res = $1.$rstep, $1.$i.$yld = $1.$iyld`,
-			                  ctx)
+			      `=$1.$r.$res = $1.$rstep, $1.$i.$yld = $1.$iyld`,
+			      ctx)
           i.value.sym = pure
 	        break
         case yldId:
@@ -1058,7 +986,7 @@ function delegateOps(si) {
  */
 function delegateIndirJumps(si) {
   const s = Kit.auto(si)
-  if (!s.opts.invertForOf)
+  if (!s.opts.invertForOf || !s.opts.inlineYieldStar)
     return s
   const root = s.first.value
   const ctx = root.contextSym

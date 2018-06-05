@@ -33,7 +33,8 @@ function b1() {
 }
 
 function c() {
-  var c = M.context();
+  var _c = M.context();
+
   return M.scope(c_1);
 }
 
@@ -69,14 +70,14 @@ function aS_3(aS) {
 function aS_4(aS) {}
 
 function a_1(a) {
-  a._b1 = 0;
-  a._b1 = null;
+  var b1;
+  b1 = 0;
   return M.chain(eff(1), a_2);
 }
 
 function a_2(a, b) {
-  a._b1 = b;
-  a._b1 = null;
+  var b1;
+  b1 = b;
   return M.chain(eff("a"), a_3);
 }
 
@@ -177,71 +178,71 @@ function b1_4(b1) {
 
 function b1_5(b1) {}
 
-function c_1(c) {
+function c_1(_c) {
   return M.chain(eff(1), c_2);
 }
 
-function c_2(c, a) {
-  c._a = a;
-  c._b = 2;
-  c._a = null, c._b = null;
+function c_2(_c, c) {
+  var a, b;
+  a = c;
+  b = 2;
   return M.chain(eff(3), c_3);
 }
 
-function c_3(c, a) {
-  c._c = a;
-  c._c = null;
+function c_3(_c, a) {
+  var c;
+  c = a;
   return M.chain(eff("a"), c_4);
 }
 
-function c_4(c) {
+function c_4(_c) {
   return M.chain(eff("b"), c_5);
 }
 
-function c_5(c) {
+function c_5(_c) {
   return M.chain(eff(4), c_6);
 }
 
-function c_6(c, a) {
-  c._d = a;
-  c._e = 5;
-  c._d = null, c._e = null;
+function c_6(_c, a) {
+  var d, e;
+  d = a;
+  e = 5;
   return M.chain(eff(6), c_7);
 }
 
-function c_7(c, a) {
-  c._f = a;
-  c._f = null;
+function c_7(_c, a) {
+  var f;
+  f = a;
   return M.chain(eff(7), c_8);
 }
 
-function c_8(c, a) {
-  c._g = a;
-  c._j = 8;
-  c._g = null, c._j = null;
+function c_8(_c, a) {
+  var g, j;
+  g = a;
+  j = 8;
   return M.chain(eff("x"), c_9);
 }
 
-function c_9(c, a) {
-  c._x = a;
-  c._y = "y";
-  c._x = null, c._y = null;
+function c_9(_c, a) {
+  var x, y;
+  x = a;
+  y = "y";
   return M.chain(eff("z"), c_10);
 }
 
-function c_10(c, a) {
-  c._z = a;
-  c._z = null;
+function c_10(_c, a) {
+  var z;
+  z = a;
   return M.chain(eff(9), c_11);
 }
 
-function c_11(c) {
-  c._a = c._b = c._c = c._d = c._e = c._f = c._g = c._j = c._x = c._y = c._z = 1000;
-  c._a = null, c._b = null, c._c = null, c._d = null, c._e = null, c._f = null, c._g = null, c._j = null, c._x = null, c._y = null, c._z = null;
+function c_11(_c) {
+  var a, b, c, d, e, f, g, j, x, y, z;
+  a = b = c = d = e = f = g = j = x = y = z = 1000;
   return M.chain(eff(10), c_12);
 }
 
-function c_12(c) {}
+function c_12(_c) {}
 
 function d_1(d) {
   return M.chain(eff1("a"), d_2);
