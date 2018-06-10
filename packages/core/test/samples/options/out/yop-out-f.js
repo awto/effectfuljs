@@ -38,8 +38,9 @@ describe("yop", function () {
 
     function _2() {
       return M.chain(M.run(QM, function () {
-        var result, r;
-        return M.chain(addLater(1, 2), _1);
+        var result, a, r;
+        a = addLater;
+        return M.chain(a(1, 2), _1);
 
         function _1(a) {
           return a.mapply(function ($dm$b) {
@@ -122,8 +123,9 @@ describe("yop", function () {
         return M.chain(M.run(QM, function () {
           var r;
           return M.scope(function ($dm$root) {
-            var r;
-            return M.chain(throwErrorLater(), _1);
+            var a, r;
+            a = throwErrorLater;
+            return M.chain(a(), _1);
 
             function _1(a) {
               return M.chain(a.mhandle(function (err) {

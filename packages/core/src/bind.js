@@ -103,12 +103,6 @@ export const flatten = Kit.pipe(
             yield* scope()
             yield* s.leave()
             continue
-          case Tag.Identifier:
-            if (!i.value.sym || i.value.lhs ||
-                !i.value.sym.closCapt || i.value.sym.singleAssign) {
-              break
-            }
-            // may have a side effect in getter too
           case Tag.AssignmentExpression:
             if (i.value.eff) {
               const sym = tempVarSym(root)
@@ -120,10 +114,13 @@ export const flatten = Kit.pipe(
                   s.peel(),
                   ...walk(buf,s.sub(),true),
                   ...s.leave()]
-                if (op !== "=" && s.cur().value.eff &&
-                    lhs.some(i => i.type === Tag.Identifier
-                             && i.value.sym
-                             && i.value.sym.closCapt)) {
+                if (op !== "=" && s.cur().value.eff
+                    && lhs[0].type !== Block.bindPat
+                    && lhs.some(i => i.enter
+                                && (i.type === Block.bindPat
+                                    || i.type === Tag.Identifier
+                                    && i.value.sym
+                                    && i.value.sym.closCapt))) {
                   // closure scoped variable may change in parent context
                   // but we still need to capture its rhs
                   const sub = tempVarSym(root)
@@ -159,9 +156,12 @@ export const flatten = Kit.pipe(
             yield bind(i,buf)
             continue
           case Tag.MemberExpression:
-            if (i.pos === Tag.callee || i.value.lhs) {
-              yield i
-              continue
+            yield i.pos === Tag.callee || i.value.lhs ? i : bind(i,buf)
+            continue
+          case Tag.Identifier:
+            if (!i.value.sym || i.value.lhs ||
+                !i.value.sym.closCapt || i.value.sym.singleAssign) {
+              break
             }
           case Tag.CallExpression:
             yield bind(i,buf)

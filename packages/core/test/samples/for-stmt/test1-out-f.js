@@ -324,6 +324,9 @@ function c2() {
 
     if (i < 10) {
       return M.chain((i => {
+        var a, b;
+        a = result;
+        b = i;
         return M.chain(eff(function cc() {
           var a;
           a = result += i++;
@@ -332,8 +335,8 @@ function c2() {
           function _1() {}
         }), _1);
 
-        function _1(a) {
-          result[i] = a;
+        function _1(c) {
+          a[b] = c;
         }
       })(i), _1);
     } else {
@@ -356,22 +359,24 @@ function c2() {
 
     if (i < 10) {
       return M.chain((i => {
-        var a;
-        a = i++;
+        var a, b, c;
+        a = result;
+        b = i;
+        c = i++;
         return M.chain(function cc(j) {
           var a;
           a = result += i += j;
           return M.chain(eff(a), _1);
 
           function _1() {}
-        }(a), _1);
+        }(c), _1);
 
         function _1(a) {
           return M.chain(eff(a), _2);
         }
 
-        function _2(a) {
-          result[i] = a;
+        function _2(c) {
+          a[b] = c;
         }
       })(i), _1);
     } else {

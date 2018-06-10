@@ -2032,9 +2032,7 @@ function loopCapt2() {
         return ctx.scope(_1);
 
         function _1(ctx) {
-          var a;
-          a = ctx._i;
-          return ctx.yld(a, _2);
+          return ctx.yld(ctx._i, _2);
         }
 
         function _2(ctx) {
@@ -2092,9 +2090,7 @@ function loopCapt3() {
         return ctx.scope(_1);
 
         function _1(ctx) {
-          var a;
-          a = ctx._i;
-          return ctx.yld(a, _2);
+          return ctx.yld(ctx._i, _2);
         }
 
         function _2(ctx) {
@@ -2257,10 +2253,8 @@ function forOfCapt2() {
         return ctx.scope(_1);
 
         function _1(ctx) {
-          var a;
           ctx._j = 0;
-          a = ctx._i;
-          return ctx.yld(a, _2);
+          return ctx.yld(ctx._i, _2);
         }
 
         function _2(ctx) {
@@ -2506,9 +2500,7 @@ function forOfCapt5() {
         return ctx.scope(_1);
 
         function _1(ctx) {
-          var a;
-          a = ctx._i;
-          return ctx.yld(a, _2);
+          return ctx.yld(ctx._i, _2);
         }
 
         function _2(ctx) {
@@ -2594,9 +2586,7 @@ function forOfCapt6() {
         return ctx.scope(_1);
 
         function _1(ctx) {
-          var a;
-          a = ctx._i;
-          return ctx.yld(a, _2);
+          return ctx.yld(ctx._i, _2);
         }
 
         function _2(ctx) {
@@ -2618,9 +2608,7 @@ function forOfCapt6() {
               return _ctx.scope(_1);
 
               function _1(_ctx) {
-                var a;
-                a = _ctx._f._i;
-                return _ctx.yld(a, _2);
+                return _ctx.yld(_ctx._f._i, _2);
               }
 
               function _2(_ctx) {
@@ -2838,9 +2826,7 @@ function closure2() {
       }
 
       function _2(_sub, a) {
-        var b;
-        b = _sub._closure2._j;
-        a, b;
+        a, _sub._closure2._j;
         return _sub.pure();
       }
     });

@@ -48,7 +48,9 @@ function f_22(_ctx, a) {
 }
 
 function _f_1(ctx) {
-  return M.chain(ctx._f._addLater(1, 2), _f_2);
+  var a;
+  a = ctx._f._addLater;
+  return M.chain(a(1, 2), _f_2);
 }
 
 function f_1(_ctx) {
@@ -166,7 +168,9 @@ function f_27(ctx, a) {
 }
 
 function f_15(ctx) {
-  return M.chain(ctx._f._throwErrorLater(), f_25);
+  var a;
+  a = ctx._f._throwErrorLater;
+  return M.chain(a(), f_25);
 }
 
 function f_13(_ctx) {

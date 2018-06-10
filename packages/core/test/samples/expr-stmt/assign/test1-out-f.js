@@ -178,7 +178,7 @@ function c() {
 }
 
 function d() {
-  var a, b;
+  var a, b, c;
   return M.chain(eff1("a"), _1);
 
   function _1(b) {
@@ -193,11 +193,12 @@ function d() {
 
   function _3(a) {
     b = a;
+    c = b.some;
     return M.chain(eff(3), _4);
   }
 
   function _4(a) {
-    b.some += a;
+    b.some = c + a;
     return M.chain(eff("c"), _5);
   }
 

@@ -73,9 +73,11 @@ function b_2(b, c) {
 }
 
 function b_3(b) {
+  var i;
+
   if (!(b._loop = b._loop.step()).done) {
-    b._i = b._loop.value;
-    return M.chain(eff(b._i), b_3);
+    i = b._loop.value;
+    return M.chain(eff(i), b_3);
   }
 }
 
@@ -224,7 +226,7 @@ function h_7(h) {
 
 function h_8(h, a) {
   if (a) {
-    h._i = null;
+    h._j = null, h._i = null;
     return M.jump(void 0, h_3);
   } else {
     return M.chain(effB(h._i + h._j), h_9);
@@ -261,7 +263,9 @@ function h_11(h, a) {
 }
 
 function h_12(h) {
-  return M.chain(effB(h._j), h_3);
+  var a;
+  a = h._j, h._j = null;
+  return M.chain(effB(a), h_3);
 }
 
 function h_13(h) {

@@ -2180,9 +2180,7 @@ function loopCapt2_1(loopCapt2) {
 }
 
 function f_16(ctx) {
-  var a;
-  a = ctx._i;
-  return ctx.yld(a, f_26);
+  return ctx.yld(ctx._i, f_26);
 }
 
 function _iter_1(_iter) {
@@ -2236,9 +2234,7 @@ function loopCapt3_1(loopCapt3) {
 }
 
 function f_18(ctx) {
-  var a;
-  a = ctx._i;
-  return ctx.yld(a, f_28);
+  return ctx.yld(ctx._i, f_28);
 }
 
 function f_28(ctx) {
@@ -2386,10 +2382,8 @@ function forOfCapt2_1(forOfCapt2) {
 }
 
 function f_19(ctx) {
-  var a;
   ctx._j = 0;
-  a = ctx._i;
-  return ctx.yld(a, f_29);
+  return ctx.yld(ctx._i, f_29);
 }
 
 function iter_14(_iter) {
@@ -2631,9 +2625,7 @@ function forOfCapt5_1(forOfCapt5) {
 }
 
 function f_112(ctx) {
-  var a;
-  a = ctx._i;
-  return ctx.yld(a, f_212);
+  return ctx.yld(ctx._i, f_212);
 }
 
 function iter_17(_iter) {
@@ -2718,9 +2710,7 @@ function forOfCapt6_1(forOfCapt6) {
 }
 
 function f_114(ctx) {
-  var a;
-  a = ctx._i;
-  return ctx.yld(a, f_214);
+  return ctx.yld(ctx._i, f_214);
 }
 
 function f_214(ctx) {
@@ -2729,9 +2719,7 @@ function f_214(ctx) {
 }
 
 function f_113(_ctx) {
-  var a;
-  a = _ctx._f._i;
-  return _ctx.yld(a, f_213);
+  return _ctx.yld(_ctx._f._i, f_213);
 }
 
 function iter_18(_iter) {
@@ -2956,9 +2944,7 @@ function sub_1(_sub) {
 }
 
 function sub_2(_sub, a) {
-  var b;
-  b = _sub._closure2._j;
-  a, b;
+  a, _sub._closure2._j;
   return _sub.pure();
 }
 

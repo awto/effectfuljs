@@ -423,6 +423,8 @@ function _cc_1(_cc) {
 function _cc_2(_cc) {}
 
 function f_14(ctx) {
+  ctx._ = ctx._c2._result;
+  ctx._1 = ctx._i;
   return M.chain(eff(function cc() {
     var _cc = M.context();
 
@@ -433,7 +435,7 @@ function f_14(ctx) {
 }
 
 function f_24(ctx, a) {
-  ctx._c2._result[ctx._i] = a;
+  ctx._[ctx._1] = a;
 }
 
 function c2_2(c2) {
@@ -472,6 +474,8 @@ function cc_21(_cc) {}
 
 function f_15(ctx) {
   var a;
+  ctx._ = ctx._c2._result;
+  ctx._1 = ctx._i;
   a = ctx._i++;
   return M.chain(function cc(j) {
     var _cc = M.context();
@@ -488,7 +492,7 @@ function f_25(ctx, a) {
 }
 
 function f_34(ctx, a) {
-  ctx._c2._result[ctx._i] = a;
+  ctx._[ctx._1] = a;
 }
 
 function _c2_2(c2) {

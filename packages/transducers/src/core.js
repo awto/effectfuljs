@@ -289,7 +289,7 @@ for(const i in VISITOR_KEYS) {
       assert.equal(enumValues.filter(v => v.substr == null).length,0)
     }
     const expr = nt.has(Tag.Expression),
-          lval = nt.has(Tag.LVal)
+          lval = nt.has(Tag.LVal) || pos === Tag.local
     return {
       atomicType,nodeTypes:nt,nillable,enumValues,expr,
       stmt: nt.has(Tag.Statement),

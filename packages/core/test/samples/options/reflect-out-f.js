@@ -42,8 +42,9 @@ function b() {
   };
 
   M.reify(function () {
-    var result;
-    return M.chain(addLater(1, 2), _1);
+    var result, a;
+    a = addLater;
+    return M.chain(a(1, 2), _1);
 
     function _1(a) {
       result = a;

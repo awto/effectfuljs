@@ -52,9 +52,9 @@ export const saveDecls = Kit.pipe(
             }
             break
           case Tag.CatchClause:
-	          if (sl.cur().pos === Tag.param) {
-	            if (pureTry) {
-		            yield i
+	    if (sl.cur().pos === Tag.param) {
+	      if (pureTry) {
+		yield i
                 for(const k of sl.one()) {
                   yield k
                   if (k.enter && k.type === Tag.Identifier
@@ -62,9 +62,9 @@ export const saveDecls = Kit.pipe(
                     k.value.sym.interpr = null
                   }
                 }
-	            } else {
-		            const ids = []
-		            for(const j of sl.one()) {
+	      } else {
+		const ids = []
+		for(const j of sl.one()) {
                   if (j.enter && j.type === Tag.Identifier && j.value.decl) {
                     decls.set(j.value.sym, {raw:null})
                     j.value.lhs = true
@@ -72,25 +72,25 @@ export const saveDecls = Kit.pipe(
                     j.value.decl = false
                   }
                   ids.push(j)
-		            }
-		            const sym = Bind.tempVarSym(top.value,"ex")
-		            const lab = sl.label()
-		            yield sl.peel(i)
+		}
+		const sym = Bind.tempVarSym(top.value,"ex")
+		const lab = sl.label()
+		yield sl.peel(i)
 		            yield sl.tok(Tag.param, Tag.Identifier, {sym})
-		            yield sl.peel()
-		            yield* sl.peelTo(Tag.body)
-		            const blab = sl.label()
+		yield sl.peel()
+		yield* sl.peelTo(Tag.body)
+		const blab = sl.label()
 		            yield sl.enter(Tag.push, Tag.ExpressionStatement)
-		            yield sl.enter(Tag.expression, Tag.AssignmentExpression,
+		yield sl.enter(Tag.expression, Tag.AssignmentExpression,
                                {node:{operator:"="}})
-		            yield* Kit.reposOne(ids, Tag.left)
-		            yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
-		            yield* blab()
-		            yield* _saveDecls()
-		            yield* lab()
+		yield* Kit.reposOne(ids, Tag.left)
+		yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
+		yield* blab()
+		yield* _saveDecls()
+		yield* lab()
               }
-	            continue
-	          }
+	      continue
+	    }
             break
           case Tag.VariableDeclaration:
             const kind = i.value.node.kind
@@ -297,8 +297,7 @@ export function* restoreDecls(s) {
   }
 }
 
-/** calculates for each Identifier lhs/rhs fields */
-function calcRefKind(si) {
+function calcRefKindZ(si) {
   const s = Kit.auto(si)
   function* walk(declLhs) {
     for(const i of s.sub()) {
@@ -333,6 +332,17 @@ function calcRefKind(si) {
     }
   }
   return walk()
+}
+/** calculates for each Identifier lhs/rhs fields */
+function* calcRefKind(si) {
+  for(const i of Kit.resetFieldInfo(si)) {
+    yield i
+    if (i.enter) {
+      const fi = i.value.fieldInfo
+      i.value.lhs = fi && fi.mod
+      i.value.rhs = fi && fi.expr
+    }
+  }
 }
 
 /** identifier is passed threaded between effectful frames as their args */
@@ -517,8 +527,10 @@ export function calcRefScopes(si) {
     }
   }
   if (loops.size && s.opts.loopBlockScoping) {
-    for (const i of allDecls)
+    for (const i of allDecls) {
       i.sym.refScopes = null
+      i.sym.singleAssign = null
+    }
     funcs = []
     sa = Kit.toArray(Kit.scope.reset(Loop.blockScoping(sa)))
     s = Kit.auto(sa)

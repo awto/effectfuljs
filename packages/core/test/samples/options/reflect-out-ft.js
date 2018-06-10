@@ -61,7 +61,9 @@ function a_6(a, b) {
 }
 
 function _f_1(ctx) {
-  return M.chain(ctx._b._addLater(1, 2), _f_2);
+  var a;
+  a = ctx._b._addLater;
+  return M.chain(a(1, 2), _f_2);
 }
 
 function _f_2(ctx, a) {

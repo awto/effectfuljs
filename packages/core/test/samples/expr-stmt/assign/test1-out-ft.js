@@ -261,12 +261,13 @@ function d_3(d, a) {
 
 function d_4(d, a) {
   d._1 = a;
+  d._2 = d._1.some;
   return M.chain(eff(3), d_5);
 }
 
 function d_5(d, a) {
-  d._1.some += a;
-  d._1 = null;
+  d._1.some = d._2 + a;
+  d._1 = null, d._2 = null;
   return M.chain(eff("c"), d_6);
 }
 
