@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`collect 1`] = `
+Object {
+  "BAR": "f1",
+  "FOO": "f2",
+}
+`;
+
+exports[`collect 2`] = `
+Object {
+  "BAR": "f1",
+  "FOO": "f2",
+}
+`;
+
+exports[`flushing 1`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`flushing 2`] = `
+Object {
+  "type": "FOO",
+}
+`;
+
+exports[`flushing 3`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`flushing 4`] = `
+Object {
+  "type": "BAR",
+}
+`;
+
+exports[`flushing 5`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`map 1`] = `
+Object {
+  "type": "FOO",
+  "value": "f1",
+}
+`;
+
+exports[`map 2`] = `
+Object {
+  "type": "BAZ",
+  "value": Object {
+    "type": "BAR",
+    "value": "f1",
+  },
+}
+`;
+
+exports[`map 3`] = `
+Object {
+  "type": "FOO",
+  "value": "f2",
+}
+`;
+
+exports[`map 4`] = `
+Object {
+  "type": "BAZ",
+  "value": Object {
+    "type": "BAR",
+    "value": "f1",
+  },
+}
+`;
+
+exports[`map 5`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`map 6`] = `
+Object {
+  "type": "BAZ",
+  "value": Object {
+    "type": "BAR",
+    "value": "f1",
+  },
+}
+`;
+
+exports[`map 7`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`pipe 1`] = `
+Object {
+  "type": "FOO",
+  "value": "f1--s-foo",
+}
+`;
+
+exports[`pipe 2`] = `
+Object {
+  "type": "BAR",
+  "value": "f1--s-bar",
+}
+`;
+
+exports[`pipe 3`] = `
+Object {
+  "type": "FOO",
+  "value": "f2--s-foo",
+}
+`;
+
+exports[`pipe 4`] = `
+Object {
+  "type": "BAR",
+  "value": "f1--s-bar",
+}
+`;
+
+exports[`pipe 5`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`pipe 6`] = `
+Object {
+  "type": "BAR",
+  "value": "f1--s-bar",
+}
+`;
+
+exports[`pipe 7`] = `
+Object {
+  "type": "FLUSH",
+}
+`;

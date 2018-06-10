@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`persist 1`] = `
+Object {
+  "#shared": Object {
+    "0": Object {
+      "#type": "Async$1",
+      "$last": 6,
+      "$step": 7,
+      "_i": "hi",
+      "cont": Object {
+        "#type": "Residual",
+        "dest": Array [
+          Object {
+            "#oid": "persistExit",
+          },
+        ],
+        "state": 0,
+      },
+      "dest": Array [],
+      "state": 0,
+      "value": undefined,
+    },
+    "1": Object {
+      "#type": "save",
+      "$arg": undefined,
+      "$last": 6,
+      "$step": 6,
+      "cont": Object {
+        "#type": "Residual",
+        "dest": Array [
+          Object {
+            "#ref": 0,
+          },
+        ],
+        "state": 0,
+      },
+      "dest": Array [],
+      "state": 0,
+      "value": undefined,
+    },
+  },
+  "resume": Object {
+    "#ref": 1,
+  },
+  "running": Object {
+    "#data": Array [
+      Object {
+        "#ref": 0,
+      },
+      Object {
+        "#ref": 1,
+      },
+    ],
+    "#type": "Set",
+  },
+}
+`;
+
+exports[`persist 2`] = `"there"`;

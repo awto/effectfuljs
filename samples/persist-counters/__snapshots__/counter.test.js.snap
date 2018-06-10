@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`controlsList 1`] = `
+<span>
+  Item 1
+</span>
+`;
+
+exports[`controlsList 2`] = `
+Array [
+  <span>
+    Item 1
+  </span>,
+  <span>
+    Item 2
+  </span>,
+]
+`;
+
+exports[`controlsList 3`] = `
+Array [
+  <span>
+    Item 3
+  </span>,
+  <span>
+    Item 1
+  </span>,
+  <span>
+    Item 2
+  </span>,
+]
+`;
+
+exports[`controlsList 4`] = `
+Array [
+  <span>
+    Item 3
+  </span>,
+  <span>
+    Item 1
+  </span>,
+]
+`;
+
+exports[`counterControl 1`] = `
+<span>
+  Control
+</span>
+`;
+
+exports[`counterControl 2`] = `
+Array [
+  <p>
+    Clicked: 
+    10
+     times
+    <button
+      onClick={[Function]}
+    >
+      +
+    </button>
+    <button
+      onClick={[Function]}
+    >
+      -
+    </button>
+    <span>
+      Menu
+    </span>
+  </p>,
+  <div
+    style={
+      Object {
+        "paddingLeft": 10,
+      }
+    }
+  >
+    <span>
+      Control
+    </span>
+  </div>,
+]
+`;
+
+exports[`counterControl 3`] = `
+Array [
+  <p>
+    Clicked: 
+    11
+     times
+    <button
+      onClick={[Function]}
+    >
+      +
+    </button>
+    <button
+      onClick={[Function]}
+    >
+      -
+    </button>
+    <span>
+      Menu
+    </span>
+  </p>,
+  <div
+    style={
+      Object {
+        "paddingLeft": 10,
+      }
+    }
+  >
+    <span>
+      Control
+    </span>
+  </div>,
+]
+`;
+
+exports[`prepControl 1`] = `
+Object {
+  "type": "MENU",
+  "value": Object {
+    "#data": Object {
+      "children": Array [
+        "Menu",
+      ],
+      "props": Object {
+        "children": undefined,
+      },
+      "type": "span",
+    },
+    "#type": "ReactElement",
+  },
+}
+`;
+
+exports[`prepControl 2`] = `
+Object {
+  "type": "VALUE",
+  "value": 10,
+}
+`;
+
+exports[`prepControl 3`] = `
+Object {
+  "type": "CONTROL",
+  "value": Object {
+    "#data": Object {
+      "children": Array [
+        "Control",
+      ],
+      "props": Object {
+        "children": undefined,
+      },
+      "type": "span",
+    },
+    "#type": "ReactElement",
+  },
+}
+`;
+
+exports[`prepControl 4`] = `
+Object {
+  "type": "COLLECTION",
+  "value": Object {
+    "CONTROL": Object {
+      "#data": Object {
+        "children": Array [
+          "Control",
+        ],
+        "props": Object {
+          "children": undefined,
+        },
+        "type": "span",
+      },
+      "#type": "ReactElement",
+    },
+    "MENU": Object {
+      "#data": Object {
+        "children": Array [
+          "Menu",
+        ],
+        "props": Object {
+          "children": undefined,
+        },
+        "type": "span",
+      },
+      "#type": "ReactElement",
+    },
+    "VALUE": 10,
+  },
+}
+`;
+
+exports[`prepControl 5`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`prepControl 6`] = `
+Object {
+  "type": "VALUE",
+  "value": 11,
+}
+`;
+
+exports[`prepControl 7`] = `
+Object {
+  "type": "COLLECTION",
+  "value": Object {
+    "CONTROL": Object {
+      "#data": Object {
+        "children": Array [
+          "Control",
+        ],
+        "props": Object {
+          "children": undefined,
+        },
+        "type": "span",
+      },
+      "#type": "ReactElement",
+    },
+    "MENU": Object {
+      "#data": Object {
+        "children": Array [
+          "Menu",
+        ],
+        "props": Object {
+          "children": undefined,
+        },
+        "type": "span",
+      },
+      "#type": "ReactElement",
+    },
+    "VALUE": 11,
+  },
+}
+`;
+
+exports[`prepControl 8`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`totals 1`] = `
+<b>
+  Total 
+  1
+</b>
+`;
+
+exports[`totals 2`] = `
+<b>
+  Total 
+  11
+</b>
+`;
+
+exports[`totals 3`] = `
+<b>
+  Total 
+  111
+</b>
+`;
+
+exports[`totals 4`] = `
+<b>
+  Total 
+  101
+</b>
+`;
