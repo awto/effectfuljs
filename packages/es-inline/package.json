@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-inline",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Standard JavaScript effects using @effectful/js",
   "main": "preset.js",
   "scripts": {
@@ -32,8 +32,8 @@
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
-    "@effectful/core": "^1.0.1",
-    "@effectful/es": "^1.0.1"
+    "@effectful/core": "^1.0.2",
+    "@effectful/es": "^1.0.2"
   },
   "publishConfig": {
     "access": "public"
