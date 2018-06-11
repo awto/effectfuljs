@@ -39,7 +39,7 @@ header .menu ul li a:hover { text-decoration: underline; }
 .content .row .about p:last-child { text-align: right; }
 .content .row .about .defb { position: relative; padding-left: 56px; }
 .content .row .about .defb:before { content: ""; background: url("../images/github-logo-w.svg") no-repeat center; display: inline-block; width: 30.75px; height: 30px; position: absolute; top: 5px; left: 5px; }
-.content .row .features { list-style: none; margin: 0; padding: 25px 0 0 0; display: flex; flex-wrap: wrap; justify-content: space-between; }
+.content .row .features { list-style: none; margin: 0; padding: 25px 0 0 0; display: flex; flex-wrap: wrap; justify-content: space-between; font-size:14px; }
 .content .row .features li { width: 41.66%; display: flex; flex-wrap: wrap; margin-bottom: 44px; }
 .content .row .features li h3 { font-size: 24px; margin: 0 0 25px 0; padding-left: 80px; line-height: 110%; position: relative; background-size: contain !important; }
 .content .row .features li:nth-child(1) h3 { background: url("../images/a.svg") no-repeat left center; }
@@ -91,7 +91,7 @@ footer .defb:hover { background:none; border-color: #F9B03D; color: #F9B03D; }
 	header .menu { display: none; }
 	header .logo { width: 100%; text-align: center; margin-top: 20px; }
 	header .logo img { width: 135px; }
-	.content .row .about { width: 100%; font-size:17px }
+	.content .row .about { width: 100%; font-size:18px }
 	.content .row .about h1 { text-align: center; }
 	.content .row .about h1 br { display: none; }
 	.content .row .about p:last-child { text-align: center; }
