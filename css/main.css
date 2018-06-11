@@ -1,0 +1,110 @@
+/* Ilya leoshko (c) 2018 */
+
+/* fonts */
+@font-face { font-family:"Ubuntu-Regular"; src:url("../fonts/Ubuntu-Regular.ttf") format('opentype'); }
+@font-face { font-family:"Ubuntu-Light"; src:url("../fonts/Ubuntu-Light.ttf") format('opentype'); }
+@font-face { font-family:"Ubuntu-Bold"; src:url("../fonts/Ubuntu-Bold.ttf") format('opentype'); }
+
+/* ILYAs css reset */
+* { -webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;outline:none; }
+*:before,*:after {-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box; }
+a { text-decoration:none;color:#4A4A4A; }
+
+/* ILYAs Styles */
+* { transition: all .3s; }
+body { margin: 0; padding: 0; font-family:"Ubuntu-Regular"; font-size: 12px; color: #4A4A4A; background: #fff; }
+h1, h2, h3 { font-family:"Ubuntu-Regular"; font-weight: 100; }
+b, strong { font-family:"Ubuntu-Bold"; }
+.clearer { clear: both; }
+.center { text-align: center; }
+.content { margin: 0 auto; width: 940px;  }
+.frame { margin: 0 auto; width: 940px;  }
+.defb { color: #fff; text-transform: uppercase; text-align: center; font-size: 14px; background: linear-gradient(180deg, #FDD870 0%, #F9B03D 100%); border-radius: 22.5px; height: 40px; font-weight: 600; display: inline-block; padding: 0 24px; line-height: 40px; }
+.defb:hover { background: linear-gradient(180deg, #F9B03D 0%, #FDD870 100%); }
+.defb:active { background: #F9B03D; }
+header { margin-bottom: 55px; }
+header .content, header .frame { position: relative; }
+header .frame .bige { position: absolute; right: 350px; top: -560px; z-index: -1; }
+header .logo { float: left; height: 53px; margin-top: 67px }
+header .logo img { width: 300px; }
+header .menu { float: right; margin-top: 67px }
+header .menu ul { list-style: none; margin: 0; padding: 0; display: flex; height: 53px; align-items: center; }
+header .menu ul li { text-transform: uppercase; font-size: 18px; margin-left: 60px; }
+header .menu ul li a:hover { text-decoration: underline; }
+.row h2 { text-align: center; text-transform: uppercase; font-size: 30px; margin: 0 0 45px 0 }
+.row h2 span { font-size: 20px; font-family:"Ubuntu-Light"; }
+.content .row .about { float: right; width: 41.66%; }
+.content .row .about h1 { font-size: 36px; text-align: right; line-height: 110%; margin: 0 0 30px 0; }
+.content .row .about p { font-family:"Ubuntu-Light"; line-height: 140%; text-align: justify; margin: 0 0 25px 0; font-size:18px; }
+.content .row .about p:last-child { text-align: right; }
+.content .row .about .defb { position: relative; padding-left: 56px; }
+.content .row .about .defb:before { content: ""; background: url("../images/github-logo-w.svg") no-repeat center; display: inline-block; width: 30.75px; height: 30px; position: absolute; top: 5px; left: 5px; }
+.content .row .features { list-style: none; margin: 0; padding: 25px 0 0 0; display: flex; flex-wrap: wrap; justify-content: space-between; }
+.content .row .features li { width: 41.66%; display: flex; flex-wrap: wrap; margin-bottom: 44px; }
+.content .row .features li h3 { font-size: 24px; margin: 0 0 25px 0; padding-left: 80px; line-height: 110%; position: relative; background-size: contain !important; }
+.content .row .features li:nth-child(1) h3 { background: url("../images/a.svg") no-repeat left center; }
+.content .row .features li:nth-child(2) h3 { background: url("../images/d.svg") no-repeat left center; }
+.content .row .features li:nth-child(3) h3 { background: url("../images/r.svg") no-repeat left center; }
+.content .row .features li:nth-child(4) h3 { background: url("../images/l.svg") no-repeat left center; }
+.content .row .features li p { font-family:"Ubuntu-Light"; line-height: 140%; text-align: justify; margin: 0 0 25px 0; }
+.content .row .features li p:last-child { margin-bottom: 0; }
+.content .row .codes { border: 1px solid #E0E0E0; border-top-right-radius: 10px; border-top-left-radius: 10px; width: 350px; margin: 0 auto; margin-bottom: 55px; }
+.content .row .codes .head { border-bottom: 1px solid #E0E0E0; height: 40px; display: flex; align-items: center; }
+.content .row .codes .head p { margin: 0; padding: 0 15px; font-size: 14px; }
+.content .row .codes .head p span { color: #F9B03D; font-size: 12px; }
+.content .row .codes .code { background: #FAF9F9; }
+.content .row .codes .code>div { border: none !important; padding: 10px 15px !important; background: #fff !important; }
+.content .row .codesimg { width: 50%;margin: 0 auto;display: block;margin-bottom: 55px;border: 1px solid #E0E0E0; border-radius: 5px;box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+.content .row .blog { list-style: none; margin: 0; padding: 0; padding-bottom: 20px; }
+.content .row .blog li { margin-bottom: 30px; }
+.content .row .blog li h3 { font-size: 24px; margin: 0 0 20px 0; }
+.content .row .blog li p { line-height: 140%; text-align: justify; }
+.content .row .blog li p:last-child { margin-bottom: 0; border-bottom: 1px solid #BDBDBD; padding-bottom: 10px; position: relative; }
+.content .row .blog li span, .content .row .blog li a { display: inline-block; background: #fff; position: absolute; }
+.content .row .blog li a { color: #F9B03D; right: 0; padding-left: 5px; }
+.content .row .blog li a:hover { text-decoration: underline; }
+.content .row .blog li span { color: #BDBDBD; left: 0; padding-right: 5px; }
+.content .row .blog.cols { display: flex; flex-wrap: wrap; justify-content: space-between; }
+.content .row .blog.cols li { width: 32%; }
+.content .row .blog.cols li span { display: none; }
+footer { background: #FAF9F9; width: 100%; display: flex; height: 80px; justify-content: center; align-items: center; }
+footer .defb { background: transparent; color: #BDBDBD; border:1px solid #BDBDBD; height: 50px; border-radius: 22.5px; line-height: 50px; font-family:"Ubuntu-Light"; font-size: 18px; font-weight: 100; position: relative; padding-left: 56px; }
+footer .defb span { font-family:"Ubuntu-Regular"; }
+footer .defb:before { content: ""; background: url("../images/github-logo.svg") no-repeat center; display: inline-block; width: 41px; height: 40px; position: absolute; top: 4px; left: 4px; }
+footer .defb:hover { background:none; border-color: #F9B03D; color: #F9B03D; }
+
+.blog p:first-of-type { min-height: 64px }
+
+
+/* breakpoints */
+/* width */
+@media (max-width:990px){
+	.content { margin: 0 auto; width: 90%; min-width: 320px; padding: 0 15px; }
+	header .frame { margin: 0 auto; width: 90%; min-width: 320px; padding: 0 15px; }
+	header .frame .bige { width: 900px; top: -280px; right: initial; left: -430px; }
+}
+
+@media (max-width:850px){
+	header { overflow: hidden; height: 170px;  }
+	header .frame { width: 100%; padding: 0; text-align: center; margin: 0 auto; width: 90%; min-width: 320px; padding: 0 15px; }
+	header .frame .bige { transform: rotate(141deg); left: initial; top:-435px; width: 634px; margin-left: -260px; }
+	header .menu { display: none; }
+	header .logo { width: 100%; text-align: center; margin-top: 20px; }
+	header .logo img { width: 135px; }
+	.content .row .about { width: 100%; font-size:17px }
+	.content .row .about h1 { text-align: center; }
+	.content .row .about h1 br { display: none; }
+	.content .row .about p:last-child { text-align: center; }
+	.content .row .features li p:last-child { text-align: center; width: 100%; }
+	.content .row .features li { width: 45% }
+	.content .row .blog.cols li { width: 100%; }
+}
+
+@media (max-width:720px){
+	header { margin-bottom: 20px; }
+	.content .row .features li, .content .row .codes { width: 100%; }
+	.content .row .about h1 { font-size: 24px; }
+	.row h2 { font-size: 24px; }
+	.content .row .codesimg { max-width: 300px; width: 100% }
+}
+

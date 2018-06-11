@@ -1,98 +1,110 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="description" content="Home" />
-    <title>Effectful.js - Home</title>
-    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="./css/default.css" />
-  </head>
-  <body>
-    <div class="container">
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="./">Effectful.js</a>
-        </div>
-        <ul class="nav navbar-nav">
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="./archive.html">Blog</a></li>
-        </ul>
-      </div>
-    </nav>
-      <div class="jumbotron">
-  <div class="container">
-    <h1>Embedding Effects in JavaScript</h1>
-    <p>
-      <strong>JavaScript</strong> language keeps extending with new side effects.
-      The recent ones are <strong>Generators</strong> and <strong>Async</strong>
-      functions. But there is a problem. It is impossible to add another useful
-      side effect without changing the language.... <a class="btn btn-link" href="posts/abstract-matters.html" role="button">Read more</a>
-      <br /><br />
-      This transpiler offers unlimited <strong>JavaScript</strong> extensions with
-      new <strong>Monad</strong> interface compatible side effects loaded
-      as a runtime library, not even as a compiler plugin. There are a few
-      <strong>Monads</strong> already implemented and usable for many practical
-      applications.
-      <br /><br />
-      Generated code is human readable and executable for most
-      <strong>JavaScript</strong> engines including browsers. The tool translates
-      ES5 to ES5. So it may embed arbitrary new side effects into other languages
-      with compiler targeting JavaScript, like Babel, CoffeeScript, TypeScript, etc.
-    </p>
-    <p>
-      <a class="btn btn-primary btn-lg" href="https://github.com/awto/effectfuljs" role="button">
-        On GitHub »
-      </a>
-    </p>
-  </div>
-</div>
-<div class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <h2>Asynchronous programming</h2>
-      <p>
-        An adapter over <strong>Promises</strong> interface for direct style
-        asynchronous programming. It may be a replacement for <strong>Async</strong>
-        functions from ES7, but optionally offering implicit syntax.</p>
-      <a class="btn btn-default" href="https://github.com/awto/mfjs-promise" role="button">View details »</a>
-    </div>
-    <div class="col-md-6">
-      <h2>Reactive programming</h2>
-      <p>A tiny <strong>Rx Observable</strong> adapter for turning JavaScipt into
-        <strong>reactive</strong> programming language</p>
-      <a class="btn btn-default" href="https://github.com/awto/mfjs-rx" role="button">View details »</a>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <h2>Delimited continuations</h2>
-      <p>Multi-prompt delimited continuations in JavaScript.
-        A generalization of <strong>Generator</strong> functions
-        with optional implicit syntax, ability to resume computation from
-        a single point more than a few times.
-        It is a mother of all <strong>Monads</strong>. Any other side
-        effect may be implemented using this one.</p>
-      <a class="btn btn-default" b href="https://github.com/awto/mfjs-cc" role="button">View details »</a>
-    </div>
-    <div class="col-md-6">
-      <h2>Logic programming</h2>
-      <p>Using JavaScript as logical programming language, like <strong>Prolog</strong>.</p>
-      <a class="btn btn-default" href="https://github.com/awto/mfjs-logic" role="button">View details »</a>
-    </div>
-    
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>effectful JS</title>
+		<meta name="Description" content="Description here">
+		<meta name="Keywords" content="Keywords here">
+		<link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+		<link rel="stylesheet" type="text/css" href="css/main.css?ver=1.0.3" media="screen">
+	</head>
+	<body>
 
-      <hr />
-      <footer class="footer">
-        <p>© 2016-2018 <a href="mailto:vitaliy.akimov@gmail.com">Vitaliy Akimov</a></p>
-      </footer>
-    </div>
-  </body>
+		<header id="header">
+			<div class="frame">
+				<img src="images/e.svg" class="bige">
+			</div>
+			<div class="content">
+				<div class="logo">
+					<a href="/">
+						<img src="images/logo.svg" alt="effectful JS">
+					</a>
+				</div>
+				<div class="menu">
+					<ul>
+						<li>
+							<a href="#features">Features</a>
+						</li>									
+						<li>
+							<a href="#links">links</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="clearer"></div>
+		</header>
+		<div class="content">
+			<div class="row">
+				<div class="about">
+					<h1>Embedding Effects<br> in JavaScript</h1>
+          <p>Effectfull.js is a JavaScript transpiler</p>
+          <p>Making programs simpler to read, write, test and maintain by embedding custom computational effects</p>
+          <p>Based on a computer science background, but doesn't require any math knowledge to use</p>
+          <p>Doesn't extend syntax, converts ECMAScript 2018  to ECMAScript 2018, works for browsers and Node.js</p>
+					<p><a href="#" class="defb">ON GITHUB</a></p>
+				</div>
+				<div class="clearer"></div>
+			</div>
+			<div class="row" id="features">
+				<h2>Features</h2>
+				<ul class="features">
+					<li>
+						<h3>Asynchronous <br>programming</h3>
+						<p>An adapter over Promises interface for direct style asynchronous programming. It may be a replacement
+              for Async functions from ES7, but optionally offering implicit syntax, cancelation, persistent state,
+              better performance</p>
+						<p><a href="#" class="defb">View details</a></p>
+					</li>
+					<li>
+						<h3>Delimited <br>continuations</h3>
+						<p>Multi-prompt delimited continuations in JavaScript. A generalization of Generator functions with optional
+              implicit syntax, ability to resume computation from a single point more than once.</p>
+						<p><a href="#" class="defb">View details</a></p>
+					</li>
+					<li>
+						<h3>Reactive <br>programming</h3>
+						<p>A tiny Observable adapter for turning JavaScipt into reactive programming language.</p>
+						<p><a href="#" class="defb">View details</a></p>
+					</li>
+					<li>
+						<h3>Logic <br>programming</h3>
+						<p>Using JavaScript as logical programming language, like Prolog.</p>
+						<p><a href="#" class="defb">View details</a></p>
+					</li>
+				</ul>
+			</div>
+			<div class="row">
+				<img src="images/carbon.png" align="Workflow sample" class="codesimg">
+			</div>
+			<div class="row" id="links">
+				<h2>Links</h2>
+				<ul class="blog cols">
+					<li>
+						<h3>Decouple Business Logic using Async Generators</h3>
+						<p>Async generators provide a simple, easy to use but very powerful tool for
+              splitting programs into smaller parts, making sources easier to write,
+              read, maintain and test.</p>
+						<p><span>January 11, 2018</span>
+              <a href="https://medium.com/dailyjs/decoupling-business-logic-using-async-generators-cc257f80ab33">Read more</a></p>
+					</li>
+					<li>
+						<h3>Why abstract interface for effects matters</h3>
+						<p class="short">JavaScript has three effects syntax extension. These are concrete effects API.
+              This article describes how abstracting the interfaces can improve JavaScript programs.</p>
+						<p><span>May 5, 2017</span><a href="https://medium.com/@vitaliy.akimov/why-abstract-interface-for-effects-matters-81ad4e32785d">Read more</a></p>
+					</li>
+					<li>
+						<h3>Simpler Transducers for JavaScript</h3>
+						<p>Introducation for ECMAScript generators based stream transducers,
+              as a functions transforming iterators.</p>
+						<p><span>June 23, 2016</span><a href="https://medium.com/@vitaliy.akimov/simpler-transducers-for-javascript-4d02a0926648">Read more</a></p>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<footer id="footer">
+			<a href="#" class="defb">On <span>github</span></a>
+		</footer>
+	</body>
 </html>
