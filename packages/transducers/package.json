@@ -1,6 +1,6 @@
 {
   "name": "@effectful/transducers",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JS syntax transformation framework for @effectful/js",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
