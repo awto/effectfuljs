@@ -9,11 +9,15 @@ import {symbol,produce} from "../core"
 
 const path = require("path")
 
+const thisSym = Scope.newSym("this", true)
+const globals = Scope.newSym("g")
+
 /** calculates captured vars dependencies */
 function calcClosCapt(si) {
   const sa = Kit.toArray(si)
   const s = Kit.auto(sa)
   const closureSym = s.first.value.closureSym = Scope.newSym("closure")
+  s.first.value.ctxSym = globals
   closureSym.global = true
   const rt = s.first.value.rt
   if (!s.opts.noRT) {
@@ -27,6 +31,8 @@ function calcClosCapt(si) {
     const decls = root.clDecls = []
     const sym = root.closSym
           = Scope.newSym(root.node.id && root.node.id.name || "fn")
+    if (!root.ctxSym)
+      root.ctxSym = Scope.newSym("loc") // thisSym    
     const closDeps = root.closDepsSet = new Set()
     function id(i) {
       const si = i.value.sym
@@ -67,16 +73,16 @@ function calcClosCapt(si) {
   return sa;
 }
 
-const thisSym = Scope.newSym("this", true)
-const globals = Scope.newSym("g")
-
 /** replaces function calls, to call method */
 function replaceCalls(si) {
   const s = Kit.auto(si)
-  s.first.value.ctxSym = globals
   //  globals.global = true
+  //  if (s.opts.closImplicitCall)
+  //    return s
+  const callMethod = !s.opts.closImplicitCall
   const noConstrs = s.opts.noClosConstrs
   const noThis = s.opts.noClosThis
+  return walk(s,s.first.value.clDecls)
   function* walk(sw,decls) {
     for(const i of sw) {
       if (i.enter) {
@@ -84,13 +90,15 @@ function replaceCalls(si) {
         case Tag.FunctionDeclaration:
         case Tag.FunctionExpression:
           yield i
-          i.value.ctxSym = Scope.newSym("loc") // thisSym
           yield* walk(s.sub(),i.value.clDecls)
           continue
         case Tag.NewExpression:
           if (noConstrs)
               break
         case Tag.CallExpression:
+          i.value.callRedir = true
+          if (!callMethod)
+            break
           const j = s.curLev()
           const lab = s.label()
           const constr = i.type === Tag.NewExpression
@@ -132,7 +140,6 @@ function replaceCalls(si) {
       yield i
     }
   }
-  return walk(s,s.first.value.clDecls)
 }
 
 function* functToObj(si) {

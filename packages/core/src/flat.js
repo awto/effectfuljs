@@ -1840,6 +1840,8 @@ export const interpret = Kit.pipe(
   Policy.stage("interpretFrames"),
   Kit.toArray,
   ifDefunct(Defunct.convert),
+  Kit.toArray,
+  Policy.stage("defunctFrames"),
   Inline.jumps,
   interpretJumps,
   Kit.toArray,

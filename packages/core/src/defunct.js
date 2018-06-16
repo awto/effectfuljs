@@ -256,6 +256,8 @@ export function* frames(si) {
     else
       yield s.tok(Tag.discriminant, Tag.Identifier, {sym:discrimArg})
     impl.discrimSym = discrimArg
+  } else if (s.opts.defunctStateDiscriminant === false) {
+    yield s.tok(Tag.discriminant,Tag.Identifier,{sym:contSym})
   } else {
     const sym = Kit.scope.newSym("s")
     impl.savedDecls.set(sym,{})
@@ -303,7 +305,7 @@ export function* frames(si) {
     } else
       yield i
   }
-  if (root.hasYldStar) {
+  if (root.hasYldStar && s.opts.delegateRedir !== false) {
     if (s.opts.bindName === "chain") {
       yield s.enter(Tag.push, Tag.SwitchCase)
       yield s.tok(Tag.test,Tag.NumericLiteral,{node:{value:2}})
