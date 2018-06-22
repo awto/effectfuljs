@@ -324,5 +324,26 @@ export default {
   normPureDoWhile: false,
   normPureWhile: false,
   normPureForIn: false,
-  normPureBlocks: false
+  normPureBlocks: false,
+  
+  // NOT IMPLEMENTED: using applicative combinators 
+  // * null  - leave everything sequential
+  // * false - sequential by default, but will check for another options
+  //           within the function
+  // * true  - tries to parallelize effects frames if possible
+  par: false,
+  // NOT IMPLEMENTED: if `par` it will ignore effectful values binds dependency
+  // (works only if `par:true`)
+  parIgnoreBinds: false,
+  // NOT IMPLEMENTED: how to treat variables dependencies (works only if `par:true`)
+  // * "none"        - doesn't consider any dependency
+  // * "write"/null  - variable reads should be before writes
+  // * "all"         - any variable reference shouldn't be parallelized
+  parVars: null,
+  // NOT IMPLEMENTED: allow frames reordering
+  // * null - preserve order
+  // * "expr" - only within single expressions
+  // * "full" - statements too
+  parReorder: null
 }
+

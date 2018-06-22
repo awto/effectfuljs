@@ -12,6 +12,7 @@ import * as Policy from "./policy"
 import * as Defunct from "./defunct"
 import * as Gens from "./generators"
 import * as Inline from "./inline"
+import * as Par from "./par"
 
 const undefinedSym = Kit.scope.undefinedSym
 
@@ -1188,6 +1189,7 @@ function calcVarDeps(sa) {
   calcPatSym(frames)
   sa = cfgPostProcess(sa)
   State.calcFlatCfg(frames,sa)
+  Par.prepare(root, frames)
   return sa
 }
 
@@ -1515,7 +1517,7 @@ function instantiateJumps(frames) {
  * fills frames: FrameVal[] with a list of frame (if defined)
  * calculates FrameVal & {enters:Set<JumpVal>,exits:Set<JumpVal>}
  */
-function* prepareCfg(si, collapsed, framesList) {
+export function* prepareCfg(si, collapsed, framesList) {
   const s = Kit.auto(si)
   const root = s.first.value
   let first
@@ -1606,7 +1608,7 @@ function resetEnters(frames) {
 }
 
 /** restores original stream after `prepareCfg` folded frames */
-function* restoreFromCfg(cfg, si) {
+export function* restoreFromCfg(cfg, si) {
   for(const i of si) {
     if (i.enter && i.type === Block.frame) {
       assert.ok(i.leave)
@@ -1805,7 +1807,7 @@ function applyInlines(si) {
 
 /** 
  * returns optimized CFG and replaces frames in scopes to folded tokens
- * it is just applies `prepareCfg` to each item in `scopes` 
+ * it just applies `prepareCfg` to each item in `scopes` 
  */
 function getCfgFolded(sa,cfg) {
   return Kit.toArray(prepareCfg(sa,cfg))
