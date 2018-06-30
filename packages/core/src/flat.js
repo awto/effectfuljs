@@ -1189,7 +1189,7 @@ function calcVarDeps(sa) {
   calcPatSym(frames)
   sa = cfgPostProcess(sa)
   State.calcFlatCfg(frames,sa)
-  Par.prepare(root, frames)
+  Par.prepare(root, frames, sa)
   return sa
 }
 
@@ -1832,6 +1832,7 @@ export const interpret = Kit.pipe(
   Inline.markSimpleRedir,
   Kit.toArray,
   calcVarDeps,
+  Par.interpret,
   Loop.invertForOf,
   Inline.storeContinuations,
   ifDefunct(Defunct.prepare),

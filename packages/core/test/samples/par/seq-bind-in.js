@@ -1,3 +1,4 @@
+// *- SKIP
 function a$def() {
     eff(1) + eff(2);
 }

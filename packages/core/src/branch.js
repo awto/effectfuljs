@@ -145,7 +145,7 @@ export function toBlocks(si) {
             const lab = s.label()
             yield s.enter(i.pos,Tag.BlockStatement,i.value)
             yield s.enter(Tag.body,Tag.Array)
-            yield s.enter(Tag.push,Tag.SwitchStatement)
+            yield s.enter(Tag.push,Tag.SwitchStatement,{origSwitch:i.value})
             yield* walk()
             yield* lab()
             s.close(i)

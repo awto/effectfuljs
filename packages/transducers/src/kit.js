@@ -438,9 +438,9 @@ export const find = curry(function* find(pred, s) {
   if (pred(s.cur()))
     return true
   for(const i of s) {
+    yield i
     if (pred(s.cur()))
       return true
-    yield i
   }
   return false
 })

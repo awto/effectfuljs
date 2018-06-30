@@ -1138,5 +1138,3 @@ export function calcFlatCfg(cfg,sa) {
   propagateArgs(cfg)
   localsDecls(cfg)
 }
-
-

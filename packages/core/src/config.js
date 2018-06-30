@@ -339,7 +339,7 @@ export default {
   // * "none"        - doesn't consider any dependency
   // * "write"/null  - variable reads should be before writes
   // * "all"         - any variable reference shouldn't be parallelized
-  parVars: null,
+  parLocalDeps: "write",
   // NOT IMPLEMENTED: allow frames reordering
   // * null - preserve order
   // * "expr" - only within single expressions

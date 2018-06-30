@@ -1,109 +1,66 @@
-// *- SKIP
+M.profile("es")
 
-function a() {
-    if (eff(1)) {
-        console.log(eff(2) + eff(3));
-    } else {        
-        eff(4)(eff(eff(5)));
-    }
+M.option({combineOps:true,
+          scopeContext:true,
+          scopePrefix:true,
+          contextState:true,
+          contextMethodOps:true,
+          parVars:"none",
+          par: true})
+
+async function p0(a,b) {
+  await g_1(await f_3, await f_4)
 }
 
-function resa() {
-    var tmp$1;
-    eff(1).fmap(eff(2), eff(3), eff(4),
-                eff(5).fmap(function(t) { tmp$1 = t; }),
-                eff(dm$tmp$1),
-                function(a$1, a$2, a$3, a$4, a$5, a$6) {
-                    if (a$1) {
-                        console.log(a$2 + a$3);
-                    } else {
-                        a$4(a$6);
-                    }
-                }
-    );
+async function p1() {
+  await k_1(await a_1)
+  await k_2(await a_2)
 }
 
-/*
-so embedded application doesn't look to have any sence at all
-
-par levels:
-  * always - will raise error if not capable
-  * try - will do sequential if not capable
-  * no - always sequential 
-
-HOWEVER:
-that function must return static thing anyway, the only problem
-we cannot split that effectful and static thing from it without
-inlining, or probably a kind of destination passing style?
-
-*/
-
-
-function pItem(n) {
-    var cur = 0;
-    for(var i = 0; i < n; i++) {
-        cur += pInt();
-        pWS();
-    }
-    return cur;
+async function p2() {
+  await f_2
+  await g_1(await f_3, await f_4)
+  await f_5
 }
 
-function pOther(n) {
-    var res = pInt() + n;
-    pWS();
+async function p3() {
+  await f_2(await a_1)
+  await g_1(await f_3, await f_4)
+  await f_5
 }
 
-function pSomegram() {
-    var i = pInt(); // say number of next items
-    pWS();
-    var j = pItem(i); // the items
+async function p4() {
+  if (await f0) 
+    await e0(await f2)
+  else
+    await f1
+  await f_2
 }
 
-function pItemEff(n) {
-    pInt().fmap(pWS(), function(i) { return i + n; });
+async function p5() {
+  await f8(await f3, await f9(await f5))
+  await g2(await g3, await g4)
+  await f_3
 }
 
-function pSomegramEff() {
-    var i, j;
-    pInt().fmap(function(t1) { i = t1; })
-          .fmap(pInt(), pWS(), function(t2) { j = i + t2; });
+async function p6() {
+  await f_3
+  await f8(await f3, await f9(await f5))
+  await g2(await g3, await g4)
 }
 
-function pSomegram2() {
-    var i = pInt(); // say number of next items
-    pWS();
-    var res = pInt() + i;
-    pWS();
-    var j = res;
+async function p7() {
+  await k_0
+  if (await f0) 
+    await e0(await f2)
+  else
+    await f1
+  await f_2
+  await f_3
+  await f8(await f3, await f9(await f5))
+  await g2(await g3, await g4)
 }
 
-function pSomegramEff() {
-    var i, j, res;
-    pInt().fmap(function(t1) { i = t1; })
-        .fmap(pWS(), 
-              pInt().fmap(function(t2) { res = t2 + i; }), 
-              pWS())
-        .fmap(function() { j = res; });
+async function p8(a,b) {
+  await m_1((await g_1(await f_3, await f_4)), await k_1)
 }
-
-// what it would look like splitted?
-
-function pSomegramEff() {
-    var i, j, res;
-    return pInt().fmap(pWS(), pInt(), pWS(),
-                function(t1,t2,t3,t4) {
-                    i = t1;
-                    res = t3 + i;
-                    j = res;
-                });
-    // so this an ide we split funcions into 2 parts
-    // M.arr(pInt(), pWS(), pInt(), pWS())
-    // and a pure function takin that as arguments
-    // but that would probably can be the next step?
-    // can we match resul type? (e.g. expect fmap)
-    // no some parameter may be applied to the function's body
-    // special combinator to call
-    // M.call(pItem, p)
-    // will check if there 
-}
-

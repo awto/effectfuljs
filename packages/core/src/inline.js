@@ -123,7 +123,7 @@ export function storeContinuations(si) {
             case Block.letStmt:
               if (!j.value.eff ||
                   invertForOf && j.value.storeCont === false
-                 || !inlineConts)
+                  || !inlineConts)
                 break
             case Ctrl.jump:
               if (noPureJumpsStore && j.type === Ctrl.jump
@@ -554,7 +554,7 @@ export function pureOp(si) {
             if (inlineYieldResult || inlineYieldResultPromise) {
               yield* s.template(Tag.push,
                                 inlineYieldResult ? `=({value:$E,done:true})`
-                                  : `=Promise.resolve({value:$E,done:true})`,
+                                : `=Promise.resolve({value:$E,done:true})`,
                                 {result:true})
               yield* s.curLev() ? Kit.reposOne(s.one(),Tag.value)
                 : Kit.scope.emitUndefined(Tag.value)
@@ -743,15 +743,15 @@ export function invertForOf(si) {
     function* _inject(sw) {
       for(const i of sw) {
         if (i.enter) {
-	  if ((i.type === Ctrl.jump || i.type === Block.letStmt)
-	      && i.value.frameArgs) {
-	    const args = i.value.frameArgs
-	    for(const [n,v] of args) {
-	      if (!v.substLoop)
-		continue
-	      args.set(n, v.substLoop)
-	    }
-	  }
+	        if ((i.type === Ctrl.jump || i.type === Block.letStmt)
+	            && i.value.frameArgs) {
+	          const args = i.value.frameArgs
+	          for(const [n,v] of args) {
+	            if (!v.substLoop)
+		            continue
+	            args.set(n, v.substLoop)
+	          }
+	        }
           switch(i.type) {
           case Tag.MemberExpression:
             if (!i.value.forOfInfo)
@@ -760,24 +760,24 @@ export function invertForOf(si) {
             Kit.skip(s.copy(i))
             continue
           case Block.frame:
-	    frames.push(i.value)
+	          frames.push(i.value)
             i.value.declSym.forOfInfo = i.value.forOfInfo
-	    if (i.value.forOfFin) {
-	      const cur = i.value.forOfFin
-	      const exit = cur.exit.goto
+	          if (i.value.forOfFin) {
+	            const cur = i.value.forOfFin
+	            const exit = cur.exit.goto
 	            const up = cur.up
-	      yield i
-	      Kit.skip(s.sub())
-	      yield* s.toks(Tag.push, `=$1.$exit()`,
-			    {result:true}, cur.sym)
+	            yield i
+	            Kit.skip(s.sub())
+	            yield* s.toks(Tag.push, `=$1.$exit()`,
+			                      {result:true}, cur.sym)
 	            yield s.close(i)
-	      continue
-	    }
+	            continue
+	          }
             if (!i.value.forOfInfo)
               break
             yield i
             yield* s.toks(Tag.push,"=$2.$s = $1.unwrap.$t",
-			  ctx,i.value.forOfInfo.sym)
+			                    ctx,i.value.forOfInfo.sym)
             continue
           case Block.letStmt:
             if (!i.value.eff)
@@ -793,16 +793,16 @@ export function invertForOf(si) {
               break
             i.value.storeCont = false
             i.value.delegateCtx = goto.forOfInfo.sym
-	    const exit = forOfInfo.exit.goto
-	    const up = exit.forOfInfo
-	    if (up) {
-	      yield* s.toks(Tag.push,
-			    `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
-			    forOfInfo.sym, up.sym)
-	    }
+	          const exit = forOfInfo.exit.goto
+	          const up = exit.forOfInfo
+	          if (up) {
+	            yield* s.toks(Tag.push,
+			                      `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
+			                      forOfInfo.sym, up.sym)
+	          }
             // TODO: if there are no inner loops this may be avoided
             yield* s.toks(Tag.push,`=$1.$yld = $2`,
-			  ctx, goto.declSym)
+			                    ctx, goto.declSym)
             break }
           case Tag.IfStatement:
             if (!i.value.forOfInfo)
@@ -817,23 +817,23 @@ export function invertForOf(si) {
             if (j.type !== Tag.Identifier || !j.value.forOfInfo)
               break
             const {forOfInfo} = j.value
-	    let exit, up
-	    if (forOfInfo.exit.indirJumps) {
-	      for(const [dst,redir] of forOfInfo.exit.indirJumps) {
-		if (redir === forOfInfo.fin.goto) {
-		  up = forOfInfo.up = dst.forOfInfo
+	          let exit, up
+	          if (forOfInfo.exit.indirJumps) {
+	            for(const [dst,redir] of forOfInfo.exit.indirJumps) {
+		            if (redir === forOfInfo.fin.goto) {
+		              up = forOfInfo.up = dst.forOfInfo
                   dst.declSym.dynForOf = forOfInfo
                   break
-		}
-	      }
-	    }
+		            }
+	            }
+	          }
             const lab = s.label()
             yield s.enter(i.pos,Tag.SequenceExpression)
             yield s.enter(Tag.expressions,Tag.Array)
-	    if (forOfInfo.exit.indirJumps) {
-	      for(const [dst,redir] of forOfInfo.exit.indirJumps)
-		yield* s.toks(Tag.push, `=$I = $I`, redir.declSym, dst.declSym)
-	    }
+	          if (forOfInfo.exit.indirJumps) {
+	            for(const [dst,redir] of forOfInfo.exit.indirJumps)
+		            yield* s.toks(Tag.push, `=$I = $I`, redir.declSym, dst.declSym)
+	          }
             yield s.peel(Kit.setPos(i,Tag.push))
             yield* s.one()
             const call = s.take()
@@ -869,7 +869,7 @@ export function invertForOf(si) {
             yield s.close(call)
             yield* s.sub()
             yield* lab()
-	    continue
+	          continue
           }
         }
         yield i
@@ -959,8 +959,8 @@ function delegateOps(si) {
 	        break
         case Block.pureId:
 	        yield* s.toks(Tag.push,
-			      `=$1.$r.$res = $1.$rstep, $1.$i.$yld = $1.$iyld`,
-			      ctx)
+			                  `=$1.$r.$res = $1.$rstep, $1.$i.$yld = $1.$iyld`,
+			                  ctx)
           i.value.sym = pure
 	        break
         case yldId:
