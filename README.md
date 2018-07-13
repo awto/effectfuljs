@@ -7,7 +7,13 @@ compiler plugins.
 There are such libraries for:
 
  * EcmaScript effects extensions (async functions, generators and async generators)
-   [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+   * **_Why not native or other transpilers_**
+     * Abstract API - [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+     * Persistent state - [@effectful/es-persist](https://github.com/awto/effectfuljs/tree/master/packages/es-persist)
+     * Concrete API - [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es),
+       the best performance
+     * Implicit parallelism - Docs SOON
+     * Deriving program's static graphs for analysis and conversion to other languages - SOON
  * Multi-prompt delimited continuations -
    [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/cc)
  * Logical programming - SOON [Old version](https://github.com/awto/mfjs-logic)

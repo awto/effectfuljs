@@ -15,6 +15,17 @@ standard effects.
 
 The project is a part of [EffectfulJS](https://github.com/awto/effectfuljs) tool chain.
 
+
+## Why
+
+Here is a list of things not available with native or other transpiler implementations:
+
+ * Abstract API - can be re-implemented or amended for your purposes, next items are consequences of this one
+ * Custome Concrete API for better performance
+ * [Persistent state](https://github.com/awto/effectfuljs/tree/master/packages/es-persist)
+ * Implicit parallelism - Docs SOON
+ * Deriving program's graph for static analysis - SOON
+
 ## Usage
 
 ### Abstract interface

@@ -6,8 +6,18 @@ state. The state can be clonable and serializable.
 This enables:
   * universal apps, time traveling, hot reloading
   * custom jobs scheduling
-  * long-running workflows (storing state in DB)
+  * long-running workflows (storing state in DB, e.g. while awaiting users e-mail confirmation)
   * various control manipulation operators
+
+## Demo
+
+There is a simple counters demo - [sources](https://github.com/awto/effectfuljs/tree/master/samples/persist-counters)
+/[transpiled](https://effectful.js.org/demo/alternative/). More details about it are in 
+[Async Generators as an alternative to State Management](https://medium.com/dailyjs/async-generators-as-an-alternative-to-state-management-f9871390ffca) article. 
+
+It uses this library to implement:
+* Undo/Redo - [undoredo.js](https://github.com/awto/effectfuljs/blob/master/samples/persist-counters/undoredo.js)
+* Storing the whole state in `localStorage` -  [storage.js](https://github.com/awto/effectfuljs/blob/master/samples/persist-counters/storage.js)
 
 ## Usage
 
