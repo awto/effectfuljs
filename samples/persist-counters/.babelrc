@@ -7,7 +7,7 @@
                   {"plugins":["@babel/plugin-syntax-async-generators",
                               "@babel/plugin-proposal-object-rest-spread"]}]
     },
-    "productionO": {
+    "production": {
       "passPerPreset": true,
       "presets": ["@babel/preset-react",
                   "@effectful/es-persist-serialization/transform",
