@@ -1,0 +1,417 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`animateDelete 1`] = `
+Object {
+  "type": "SOMETHING",
+  "value": <div
+    id="box"
+  />,
+}
+`;
+
+exports[`animateDelete 2`] = `
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
+    className="box"
+    style={
+      Object {
+        "height": 1000,
+        "left": 1010,
+        "top": 2020,
+        "width": 100,
+      }
+    }
+  />,
+}
+`;
+
+exports[`animateDelete 3`] = `
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
+    className="box"
+    style={
+      Object {
+        "height": 800,
+        "left": 1012,
+        "top": 2024,
+        "width": 80,
+      }
+    }
+  />,
+}
+`;
+
+exports[`animateDelete 4`] = `
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
+    className="box"
+    style={
+      Object {
+        "height": 600,
+        "left": 1014,
+        "top": 2028,
+        "width": 60,
+      }
+    }
+  />,
+}
+`;
+
+exports[`animateDelete 5`] = `
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
+    className="box"
+    style={
+      Object {
+        "height": 400,
+        "left": 1016,
+        "top": 2032,
+        "width": 40,
+      }
+    }
+  />,
+}
+`;
+
+exports[`animateDelete 6`] = `
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
+    className="box"
+    style={
+      Object {
+        "height": 200,
+        "left": 1018,
+        "top": 2036,
+        "width": 20,
+      }
+    }
+  />,
+}
+`;
+
+exports[`animateDelete 7`] = `
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
+    className="box"
+    style={
+      Object {
+        "height": 0,
+        "left": 1020,
+        "top": 2040,
+        "width": 0,
+      }
+    }
+  />,
+}
+`;
+
+exports[`animateDelete 8`] = `
+Object {
+  "key": 1,
+  "rect": Object {
+    "height": 1000,
+    "width": 100,
+    "x": 10,
+    "y": 20,
+  },
+  "type": "DELETE",
+  "x": 20,
+  "y": 40,
+}
+`;
+
+exports[`collectBoxes 1`] = `
+<div
+  id="root"
+/>
+`;
+
+exports[`collectBoxes 2`] = `
+<div
+  id="root"
+>
+  <div
+    id="box-2"
+  />
+</div>
+`;
+
+exports[`collectBoxes 3`] = `
+<div
+  id="root"
+>
+  <div
+    id="box-1"
+  />
+  <div
+    id="box-2"
+  />
+</div>
+`;
+
+exports[`collectBoxes 4`] = `
+<div
+  id="root"
+>
+  <div
+    id="box-1"
+  />
+  <div
+    id="box-2"
+  />
+  <div
+    id="box-3"
+  />
+</div>
+`;
+
+exports[`collectBoxes 5`] = `
+<div
+  id="root"
+>
+  <div
+    id="box-1"
+  />
+  <div
+    id="box-3"
+  />
+</div>
+`;
+
+exports[`insertBox 1`] = `
+Object {
+  "button": 0,
+  "key": 10,
+  "type": "START",
+  "x": 100,
+  "y": 200,
+}
+`;
+
+exports[`insertBox 2`] = `
+Object {
+  "key": 10,
+  "type": "BOX",
+  "value": <div
+    className="drawing"
+    onContextMenu={
+      Object {
+        "key": 10,
+        "type": "DELETE",
+      }
+    }
+    style={
+      Object {
+        "height": 20,
+        "left": 1100,
+        "top": 2200,
+        "width": 10,
+      }
+    }
+  />,
+}
+`;
+
+exports[`insertBox 3`] = `
+Object {
+  "key": 10,
+  "start": Object {
+    "x": 100,
+    "y": 200,
+  },
+  "type": "MARK",
+  "x": 110,
+  "y": 220,
+}
+`;
+
+exports[`insertBox 4`] = `
+Object {
+  "key": 10,
+  "type": "BOX",
+  "value": <div
+    className="drawing"
+    onContextMenu={
+      Object {
+        "key": 10,
+        "type": "DELETE",
+      }
+    }
+    style={
+      Object {
+        "height": 40,
+        "left": 1100,
+        "top": 2200,
+        "width": 20,
+      }
+    }
+  />,
+}
+`;
+
+exports[`insertBox 5`] = `
+Object {
+  "key": 10,
+  "start": Object {
+    "x": 100,
+    "y": 200,
+  },
+  "type": "MARK",
+  "x": 120,
+  "y": 240,
+}
+`;
+
+exports[`insertBox 6`] = `
+Object {
+  "key": 10,
+  "type": "BOX",
+  "value": <div
+    className="box"
+    onContextMenu={
+      Object {
+        "key": 10,
+        "type": "DELETE",
+      }
+    }
+    style={
+      Object {
+        "height": 60,
+        "left": 1100,
+        "top": 2200,
+        "width": 50,
+      }
+    }
+  />,
+}
+`;
+
+exports[`insertBox 7`] = `
+Object {
+  "key": 10,
+  "start": Object {
+    "x": 100,
+    "y": 200,
+  },
+  "type": "DONE",
+  "x": 150,
+  "y": 260,
+}
+`;
+
+exports[`rootContainer 1`] = `
+Object {
+  "type": "ROOT",
+  "value": <div
+    onMouseDown={
+      Object {
+        "key": 1,
+        "type": "START",
+      }
+    }
+  />,
+}
+`;
+
+exports[`rootContainer 2`] = `
+Object {
+  "button": 0,
+  "key": 10,
+  "type": "START",
+  "x": 100,
+  "y": 200,
+}
+`;
+
+exports[`rootContainer 3`] = `
+Object {
+  "type": "ROOT",
+  "value": <div
+    onMouseMove={
+      Object {
+        "key": 1,
+        "start": Object {
+          "button": 0,
+          "key": 10,
+          "type": "START",
+          "x": 100,
+          "y": 200,
+        },
+        "type": "MARK",
+      }
+    }
+    onMouseUp={
+      Object {
+        "key": 1,
+        "start": Object {
+          "button": 0,
+          "key": 10,
+          "type": "START",
+          "x": 100,
+          "y": 200,
+        },
+        "type": "DONE",
+      }
+    }
+  />,
+}
+`;
+
+exports[`rootContainer 4`] = `
+Object {
+  "key": 10,
+  "type": "MARK",
+  "x": 110,
+  "y": 220,
+}
+`;
+
+exports[`rootContainer 5`] = `
+Object {
+  "key": 10,
+  "type": "MARK",
+  "x": 120,
+  "y": 240,
+}
+`;
+
+exports[`rootContainer 6`] = `
+Object {
+  "key": 10,
+  "type": "DONE",
+  "x": 150,
+  "y": 260,
+}
+`;
+
+exports[`rootContainer 7`] = `
+Object {
+  "type": "ROOT",
+  "value": <div
+    onMouseDown={
+      Object {
+        "key": 2,
+        "type": "START",
+      }
+    }
+  />,
+}
+`;
+
+exports[`rootContainer 8`] = `
+Object {
+  "type": "STOP",
+}
+`;

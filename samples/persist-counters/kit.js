@@ -87,8 +87,6 @@ R.regOpaqueObject(resend)
  * @returns {Producer}
  */
 export function createProducer() {
-  let callback
-  const queue = []
   const producer = R.producer()
   producer.dispatch = R.bind(resend, producer)
   return producer

@@ -19,7 +19,7 @@ test("saveLocal", () => {
       return
     expect.assertions(3)
     for await(const i of saveLocal(data()))
-    expect(R.write(i)).toMatchSnapshot()
+      expect(R.write(i)).toMatchSnapshot()
     expect(getItem).toHaveBeenLastCalledWith("counters")
     expect(setItem.mock.calls).toMatchSnapshot()
   })()[R.awaitSymbol](exit)

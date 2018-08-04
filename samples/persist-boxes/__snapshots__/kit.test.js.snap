@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pipe 1`] = `
+Object {
+  "type": "FOO",
+  "value": "f1--s-foo",
+}
+`;
+
+exports[`pipe 2`] = `
+Object {
+  "type": "BAR",
+  "value": "f1--s-bar",
+}
+`;
+
+exports[`pipe 3`] = `
+Object {
+  "type": "FOO",
+  "value": "f2--s-foo",
+}
+`;
+
+exports[`pipe 4`] = `
+Object {
+  "type": "BAR",
+  "value": "f1--s-bar",
+}
+`;
+
+exports[`pipe 5`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`pipe 6`] = `
+Object {
+  "type": "BAR",
+  "value": "f1--s-bar",
+}
+`;
+
+exports[`pipe 7`] = `
+Object {
+  "type": "FLUSH",
+}
+`;

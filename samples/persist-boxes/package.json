@@ -1,7 +1,7 @@
 {
-  "name": "persist-counters",
+  "name": "persist-boxes",
   "version": "1.0.3",
-  "description": "@effectful/es-persist with @effectful/es-serialization demo",
+  "description": "drawing boxes - @effectful/es-persist with @effectful/es-serialization demo",
   "main": "index.html",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
@@ -17,7 +17,6 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.49",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.49",
     "@babel/plugin-syntax-async-generators": "^7.0.0-beta.49",
     "@babel/plugin-transform-modules-commonjs": "^7.0.0-beta.49",
@@ -26,8 +25,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "babel-loader": "^8.0.0-beta",
-    "jest": "^23.4.2",
-    "react-test-renderer": "^16.4.0",
+    "jest": "^23.1.0",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.3",
     "webpack-serve": "^1.0.4"
