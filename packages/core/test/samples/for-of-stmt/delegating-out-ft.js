@@ -168,11 +168,9 @@ function a3_4(a3, a) {
 
   if (a) {
     a3.$sc = a3_2;
-    a3._i = null;
     return M.jumpForOfR(void 0, a3_11, a3_6, a3._loop);
   } else {
     b = a3._i += 2;
-    a3._i = null;
     return M.yldStar(M.yld(b), a3_11);
   }
 }
@@ -237,9 +235,7 @@ function a4_2(a4, i) {
 }
 
 function a4_3(a4) {
-  var a;
-  a = a4._i, a4._i = null;
-  return M.yldStar(M.yld(a), a4_12);
+  return M.yldStar(M.yld(a4._i), a4_12);
 }
 
 function a4_4(a4) {
@@ -446,7 +442,7 @@ function a5_13(a5) {
   }
 
   a5.$sc = a5._fc1;
-  a5._err1 = a5._err2, a5._loop1 = null;
+  a5._err1 = a5._err2;
   return M.jump(void 0, a5._fe1);
 }
 
@@ -609,7 +605,7 @@ function a5_1_9(a5_1) {
   }
 
   a5_1.$sc = a5_1._fc;
-  a5_1._err1 = a5_1._err2, a = a5_1._fc, b = a5_1._fe, a5_1._loop1 = null, a5_1._fc = null, a5_1._fe = null;
+  a5_1._err1 = a5_1._err2, a = a5_1._fc, b = a5_1._fe, a5_1._fc = null, a5_1._fe = null;
   return M.jump(void 0, b);
 }
 
@@ -785,7 +781,7 @@ function a5_2_13(a5_2) {
   }
 
   a5_2.$sc = a5_2._fc1;
-  a5_2._err1 = a5_2._err2, a5_2._loop1 = null;
+  a5_2._err1 = a5_2._err2;
   return M.jump(void 0, a5_2._fe1);
 }
 
@@ -969,7 +965,7 @@ function _a5_2_13(a5_2) {
   }
 
   a5_2.$sc = a5_2._fc1;
-  a5_2._err1 = a5_2._err2, a5_2._loop1 = null;
+  a5_2._err1 = a5_2._err2;
   return M.jump(void 0, a5_2._fe1);
 }
 

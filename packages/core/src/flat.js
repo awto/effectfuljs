@@ -1060,6 +1060,7 @@ export function interpretFrames(si) {
   return walk()
 }
 
+/** converts `letStmt` and `jump` into JS expressions*/ 
 export function interpretJumps(si) {
   const s = Kit.auto(si)
   const packAsObj = s.opts.packArgs === "object"

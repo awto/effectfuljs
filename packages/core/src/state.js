@@ -46,15 +46,15 @@ export const saveDecls = Kit.pipe(
             continue
           case Tag.TryStatement:
             if (!i.value.eff) {
-	      yield i
-	      yield* _saveDecls(true)
+	            yield i
+	            yield* _saveDecls(true)
               continue
             }
             break
           case Tag.CatchClause:
-	    if (sl.cur().pos === Tag.param) {
-	      if (pureTry) {
-		yield i
+	          if (sl.cur().pos === Tag.param) {
+	            if (pureTry) {
+		            yield i
                 for(const k of sl.one()) {
                   yield k
                   if (k.enter && k.type === Tag.Identifier
@@ -62,9 +62,9 @@ export const saveDecls = Kit.pipe(
                     k.value.sym.interpr = null
                   }
                 }
-	      } else {
-		const ids = []
-		for(const j of sl.one()) {
+	            } else {
+		            const ids = []
+		            for(const j of sl.one()) {
                   if (j.enter && j.type === Tag.Identifier && j.value.decl) {
                     decls.set(j.value.sym, {raw:null})
                     j.value.lhs = true
@@ -72,25 +72,25 @@ export const saveDecls = Kit.pipe(
                     j.value.decl = false
                   }
                   ids.push(j)
-		}
-		const sym = Bind.tempVarSym(top.value,"ex")
-		const lab = sl.label()
-		yield sl.peel(i)
+		            }
+		            const sym = Bind.tempVarSym(top.value,"ex")
+		            const lab = sl.label()
+		            yield sl.peel(i)
 		            yield sl.tok(Tag.param, Tag.Identifier, {sym})
-		yield sl.peel()
-		yield* sl.peelTo(Tag.body)
-		const blab = sl.label()
+		            yield sl.peel()
+		            yield* sl.peelTo(Tag.body)
+		            const blab = sl.label()
 		            yield sl.enter(Tag.push, Tag.ExpressionStatement)
-		yield sl.enter(Tag.expression, Tag.AssignmentExpression,
+		            yield sl.enter(Tag.expression, Tag.AssignmentExpression,
                                {node:{operator:"="}})
-		yield* Kit.reposOne(ids, Tag.left)
-		yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
-		yield* blab()
-		yield* _saveDecls()
-		yield* lab()
+		            yield* Kit.reposOne(ids, Tag.left)
+		            yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
+		            yield* blab()
+		            yield* _saveDecls()
+		            yield* lab()
               }
-	      continue
-	    }
+	            continue
+	          }
             break
           case Tag.VariableDeclaration:
             const kind = i.value.node.kind
@@ -210,16 +210,16 @@ export function* restoreDecls(s) {
   const {ctxDeps,savedDecls:saved} = root
   if (ctxDeps && ctxDeps.size) {
     for(const [f,{copy,fld,ctx}] of ctxDeps) {
-     //  assert.ok(!fld || fld.fieldName)
+      //  assert.ok(!fld || fld.fieldName)
       saved.set(
         copy,
         {raw:null,
          init:fld
          ? fld.interpr === Bind.ctxField
-           ? [sl.enter(Tag.init,Tag.MemberExpression),
-              sl.tok(Tag.object,Tag.Identifier,{sym:ctx}),
-              sl.tok(Tag.property,Tag.Identifier,{node:{name:fld.fieldName}}),
-              ...sl.leave()]
+         ? [sl.enter(Tag.init,Tag.MemberExpression),
+            sl.tok(Tag.object,Tag.Identifier,{sym:ctx}),
+            sl.tok(Tag.property,Tag.Identifier,{node:{name:fld.fieldName}}),
+            ...sl.leave()]
          : [sl.tok(Tag.init,Tag.Identifier,{sym:fld})]
          : [sl.tok(Tag.init,Tag.Identifier,{sym:ctx})]})
     }
@@ -387,7 +387,7 @@ function calcVarsHandling(si) {
   }
   return walk()
 }
- 
+
 /** 
  * for each variable sets its usages scope (list of functions where the
  * variable is used except declaration function)
@@ -473,7 +473,7 @@ export function calcRefScopes(si) {
                 for(let j = root.parentScope;
                     j && j !== decl;
                     j = j.parentScope) {
-                   if (j.opts.transform && j.opts.topLevel) {
+                  if (j.opts.transform && j.opts.topLevel) {
                     j.scopeCapt.add(si)
                     si.refScopes.add(j)
                   }
@@ -706,6 +706,7 @@ export const locals = Kit.pipe(localFuncDecls, localCalls)
  *  type FrameVal = FrameVal & { 
  *     r: Set<Sym>, // vars read by the frame 
  *     w: Set<Sym>, // written in the frame
+ *     c: Set<Sym>  // variable is updated
  *     }
  */
 export function calcFrameStateVars(si) {
@@ -721,7 +722,7 @@ export function calcFrameStateVars(si) {
       }
     }
   }
-  let first = {r:new Set(),w:new Set()}
+  let first = {r:new Set(),w:new Set(),c:new Set()}
   if (root.paramSyms)
     root.paramSyms.forEach(Set.prototype.add,first.w)
   for(const [sym,{raw,init}] of root.savedDecls) {
@@ -746,7 +747,7 @@ export function calcFrameStateVars(si) {
           if (first) {
             first = undefined
           } else {
-            sw = {r:new Set(),w:new Set()}
+            sw = {r:new Set(),w:new Set(),c:new Set()}
           }
           i.value.stateVars = sw
           frame = i.value
@@ -766,14 +767,16 @@ export function calcFrameStateVars(si) {
           walk(sw,threads)
           let len = threads.length
           const allW = new Map()
-          const allR = new Set()
           for(const j of threads) {
             for(const k of j.w)
               if (!sw.w.has(k))
                 allW.set(k, (allW.get(k) || 0) + 1)
             for(const k of j.r)
               if (!sw.w.has(k))
-                allR.add(k)
+                sw.r.add(k)
+            for(const k of j.c)
+              if (!sw.w.has(k))
+                sw.c.add(k)
           }
           if (!threads[len-1].alt)
             len++
@@ -781,14 +784,21 @@ export function calcFrameStateVars(si) {
             sw.w.add(sym)
             // not each branch resets the symbol
             // so it needs to read it to pass further
-            // if (num !== len)
-            //  sw.r.add(sym)
+            // e.g.
+            //
+            //     let a
+            //  --- f1
+            //     if (something)
+            //       a = 3
+            //  --- f2
+            //     console.log(a)
+            // it the same like reading `a` in `f1` to pass it further to `f2` 
+            if (num !== len)
+              sw.c.add(sym)
           }
-          for(const k of allR)
-            sw.r.add(k)
           break
         case Branch.thread:
-          const nxt = {r:new Set(),w:new Set(),alt:i.pos === Tag.alternate}
+          const nxt = {r:new Set(),w:new Set(),c:new Set(),alt:i.pos === Tag.alternate}
           walk(nxt)
           fork.push(nxt)
           break
@@ -879,7 +889,7 @@ function resolveFrameParams(cfg) {
     const exits = i.exits
     const patSym = i.errSym || i.patSym
     if (sw != null) {
-      for(const i of sw.r)
+      for(const i of Kit.concat(sw.r,sw.c))
         params.add(i)
       if (exits != null) {
         for(const j of sw.w) {
@@ -1131,6 +1141,7 @@ function prepareContextVars(root, cfg) {
 
 export function calcFlatCfg(cfg,sa) {
   const root = sa[0].value
+  debugger
   calcFrameStateVars(sa)
   if (root.opts.contextState)
     prepareContextVars(root,cfg)

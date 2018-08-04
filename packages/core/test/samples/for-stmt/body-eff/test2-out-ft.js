@@ -28,7 +28,6 @@ function f_3(ctx) {
     d = ctx._ref[ctx._j];
     return M.chain(eff(ctx._i), f_4);
   } else {
-    ctx._j = null;
     return M.chain(eff(2), f_5);
   }
 }

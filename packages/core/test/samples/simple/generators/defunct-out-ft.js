@@ -194,7 +194,7 @@ function d_err(s) {
 }
 
 function d_1(d, p) {
-  var a, b, _s;
+  var a, _s;
 
   switch (_s = d.$sc, _s) {
     case 4:
@@ -215,8 +215,7 @@ function d_1(d, p) {
 
     case 6:
       d.$sc = 5;
-      a = d._i, d._i = null;
-      return M.yldStar(M.yld(a));
+      return M.yldStar(M.yld(d._i));
 
     case 7:
       if (d._loop.exit) {
@@ -224,7 +223,7 @@ function d_1(d, p) {
       }
 
       d.$sc = d._fc;
-      b = d._fc, d._loop = null, d._fc = null;
+      a = d._fc, d._loop = null, d._fc = null;
       return M.jump();
 
     case 8:
