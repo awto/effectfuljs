@@ -1,5 +1,6 @@
 import * as R from "@effectful/es-persist-serialization"
 import "@effectful/serialization-react"
+import ReactDOM from "react-dom"
 
 function eventHandler(props, propagate, e) {
   if (!propagate) {
@@ -57,3 +58,10 @@ export async function* anim({delay = 400, easing = v => v}) {
   yield easing(1)
 }
 
+export const render = (el) => async function render(input) {
+  for await(const i of input) {
+    console.log("render",i)
+    if (i.type === "ROOT")
+      ReactDOM.render(i.value, el) 
+  }
+}

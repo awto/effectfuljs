@@ -1,15 +1,14 @@
 /** business logic */
 import {createProducer,pipe, anim} from "./kit"
-import ReactDOM from "react-dom"
 import React from "react"
 
 /**
  * merges all box elements emited on former stage into one 
+ * @type {Transducer}
  */
-export async function collectBoxes(input) {
-  const element = document.getElementById("root")
+export async function* collectBoxes(input) {
   const boxes = {}
-  let container
+  let root
   for await(const i of input) {
     switch(i.type) {
     case "BOX":
@@ -19,18 +18,19 @@ export async function collectBoxes(input) {
       delete boxes[i.key]
       break
     case "ROOT":
-      container = i.value
+      root = i.value
       break
     default:
       continue
     }
-    ReactDOM.render(
-      React.cloneElement(container,{},...Object.values(boxes)),
-      element)
+    yield {type:"ROOT", value:React.cloneElement(root,{},...Object.values(boxes))}
   }
 }
 
-/** emits BOX elements when drawing and a resulting box when finished */
+/** 
+ * emits BOX elements when drawing and a resulting box when finished 
+ * @type {Transducer}
+ */
 export async function* insertBox(input, event) {
   for await(const i of input) {
     if (i.type === "DONE" || i.type === "MARK")
@@ -48,7 +48,10 @@ export async function* insertBox(input, event) {
   }
 }
 
-/** emits boxes container, handling draw control flow */
+/** 
+ * emits boxes container, handling draw control flow 
+ * @type {Transducer}
+ */
 export async function* rootContainer(input, event) {
   let key = 0
   for(;;) {
@@ -72,7 +75,10 @@ export async function* rootContainer(input, event) {
   }
 }
 
-/** adds delete animation */
+/**
+ * adds delete animation 
+ * @type {Transducer}
+ */
 export const animateDelete = (opts = {}) => async function* animateDelete(input) {
   for await(const i of input) {
     if (i.type === "DELETE") {

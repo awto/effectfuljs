@@ -3,11 +3,18 @@
  */
 
 import * as D from "./draw"
-import {run} from "./kit"
+import * as S from "./state"
+import {run,render} from "./kit"
+import * as R from "@effectful/es-persist-serialization"
+
+const root = document.getElementById("root")
+R.regOpaqueObject(root,"root")
 
 run(
+  S.undoRedo,
   D.rootContainer,
   D.animateDelete({}),
   D.insertBox,
-  D.collectBoxes)
-
+  D.collectBoxes,
+  S.undoRedoMenu,
+  render(root))

@@ -6,23 +6,15 @@ import {share} from "./kit"
 
 jest.mock("react-dom")
 
-const rootEl = {}
-
-global.document = {
-  getElementById: jest.fn(() => rootEl)
-}
-
 test("collectBoxes", async () => {
   expect.assertions(10)
-  await D.collectBoxes(share([
+  for await(const i of D.collectBoxes(share([
     {type:"ROOT", value:<div id="root"/>},
     {type:"BOX", key:2, value:<div id="box-2"/>},
     {type:"BOX", key:1, value:<div id="box-1"/>},
     {type:"BOX", key:3, value:<div id="box-3"/>},
     {type:"DELETE", key:2, value:<div id="box-1"/>}   
-  ]))
-  for(const [el,root] of ReactDOM.render.mock.calls) {
-    expect(root).toBe(rootEl)
+  ]))) {
     expect(el).toMatchSnapshot()
   }
 })
