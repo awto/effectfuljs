@@ -11,10 +11,9 @@ const root = document.getElementById("root")
 R.regOpaqueObject(root,"root")
 
 run(
-  S.undoRedo,
   D.rootContainer,
   D.animateDelete({}),
   D.insertBox,
   D.collectBoxes,
-  S.undoRedoMenu,
+  S.saveLocal,
   render(root))

@@ -27,14 +27,22 @@ export function createProducer() {
   return {producer,event:R.bind(event,producer)}
 }
 
-export function share(iterable) {
-  const iterator = iterable[Symbol.asyncIterator]
-        ? iterable[Symbol.asyncIterator]()
-        : iterable[Symbol.iterator]()
-  return {
-    next() { return iterator.next() },
-    [Symbol.asyncIterator]() { return this }
+class Share {
+  constructor(iterable) {
+    this.iterator = iterable[Symbol.asyncIterator]
+      ? iterable[Symbol.asyncIterator]()
+      : iterable[Symbol.iterator]()
   }
+  next() { return this.iterator.next() }
+  [Symbol.asyncIterator]() { return this }
+}
+
+R.regConstructor(Share)
+if (typeof DOMRect !== "undefined")
+  R.regConstructor(DOMRect)
+
+export function share(iterable) {
+  return new Share(iterable)
 }
 
 export const pipe = (...args) => (input, dispatch) =>
@@ -47,7 +55,10 @@ export function run(...args) {
   return main(producer,event)
 }
 
-export async function* anim({delay = 400, easing = v => v}) {
+function id(v) { return v }
+R.regOpaqueObject(id)
+
+export async function* anim({delay = 400, easing = id}) {
   const start = performance.now()
   const stop = start + delay
   const step = 1 / delay
@@ -60,7 +71,6 @@ export async function* anim({delay = 400, easing = v => v}) {
 
 export const render = (el) => async function render(input) {
   for await(const i of input) {
-    console.log("render",i)
     if (i.type === "ROOT")
       ReactDOM.render(i.value, el) 
   }

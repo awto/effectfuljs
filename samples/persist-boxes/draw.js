@@ -10,17 +10,22 @@ export async function* collectBoxes(input) {
   const boxes = {}
   let root
   for await(const i of input) {
+    if (i.type !== "ROOT")
+      yield i
     switch(i.type) {
     case "BOX":
       boxes[i.key] = i.value
+      yield i
       break
     case "DELETE":
       delete boxes[i.key]
+      yield i
       break
     case "ROOT":
       root = i.value
       break
     default:
+      yield i
       continue
     }
     yield {type:"ROOT", value:React.cloneElement(root,{},...Object.values(boxes))}
@@ -48,7 +53,7 @@ export async function* insertBox(input, event) {
   }
 }
 
-/** 
+/**
  * emits boxes container, handling draw control flow 
  * @type {Transducer}
  */

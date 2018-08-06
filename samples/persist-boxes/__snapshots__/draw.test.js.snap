@@ -133,61 +133,156 @@ Object {
 `;
 
 exports[`collectBoxes 1`] = `
-<div
-  id="root"
-/>
+Object {
+  "type": "ROOT",
+  "value": <div
+    id="root"
+  />,
+}
 `;
 
 exports[`collectBoxes 2`] = `
-<div
-  id="root"
->
-  <div
+Object {
+  "key": 2,
+  "type": "BOX",
+  "value": <div
     id="box-2"
-  />
-</div>
+  />,
+}
 `;
 
 exports[`collectBoxes 3`] = `
-<div
-  id="root"
->
-  <div
-    id="box-1"
-  />
-  <div
+Object {
+  "key": 2,
+  "type": "BOX",
+  "value": <div
     id="box-2"
-  />
-</div>
+  />,
+}
 `;
 
 exports[`collectBoxes 4`] = `
-<div
-  id="root"
->
-  <div
-    id="box-1"
-  />
-  <div
-    id="box-2"
-  />
-  <div
-    id="box-3"
-  />
-</div>
+Object {
+  "type": "ROOT",
+  "value": <div
+    id="root"
+  >
+    <div
+      id="box-2"
+    />
+  </div>,
+}
 `;
 
 exports[`collectBoxes 5`] = `
-<div
-  id="root"
->
-  <div
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
     id="box-1"
-  />
-  <div
+  />,
+}
+`;
+
+exports[`collectBoxes 6`] = `
+Object {
+  "key": 1,
+  "type": "BOX",
+  "value": <div
+    id="box-1"
+  />,
+}
+`;
+
+exports[`collectBoxes 7`] = `
+Object {
+  "type": "ROOT",
+  "value": <div
+    id="root"
+  >
+    <div
+      id="box-1"
+    />
+    <div
+      id="box-2"
+    />
+  </div>,
+}
+`;
+
+exports[`collectBoxes 8`] = `
+Object {
+  "key": 3,
+  "type": "BOX",
+  "value": <div
     id="box-3"
-  />
-</div>
+  />,
+}
+`;
+
+exports[`collectBoxes 9`] = `
+Object {
+  "key": 3,
+  "type": "BOX",
+  "value": <div
+    id="box-3"
+  />,
+}
+`;
+
+exports[`collectBoxes 10`] = `
+Object {
+  "type": "ROOT",
+  "value": <div
+    id="root"
+  >
+    <div
+      id="box-1"
+    />
+    <div
+      id="box-2"
+    />
+    <div
+      id="box-3"
+    />
+  </div>,
+}
+`;
+
+exports[`collectBoxes 11`] = `
+Object {
+  "key": 2,
+  "type": "DELETE",
+  "value": <div
+    id="box-1"
+  />,
+}
+`;
+
+exports[`collectBoxes 12`] = `
+Object {
+  "key": 2,
+  "type": "DELETE",
+  "value": <div
+    id="box-1"
+  />,
+}
+`;
+
+exports[`collectBoxes 13`] = `
+Object {
+  "type": "ROOT",
+  "value": <div
+    id="root"
+  >
+    <div
+      id="box-1"
+    />
+    <div
+      id="box-3"
+    />
+  </div>,
+}
 `;
 
 exports[`insertBox 1`] = `

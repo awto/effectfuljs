@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`saveLocal 1`] = `
+Object {
+  "type": "START",
+}
+`;
+
+exports[`saveLocal 2`] = `
+Object {
+  "type": "DONE",
+}
+`;
+
+exports[`saveLocal 3`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`saveLocal 4`] = `
+Object {
+  "type": "DELETE",
+}
+`;
+
+exports[`saveLocal 5`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`saveLocal 6`] = `
+Object {
+  "type": "DONE",
+}
+`;
+
+exports[`saveLocal 7`] = `
+Object {
+  "type": "FLUSH",
+}
+`;
+
+exports[`saveLocal 8`] = `
+Array [
+  Array [
+    "boxes",
+    "{\\"running\\":{\\"#type\\":\\"Set\\",\\"#data\\":[{\\"#ref\\":4},{\\"#ref\\":0},{\\"#ref\\":3},{\\"#ref\\":2}]},\\"resume\\":{\\"#ref\\":3},\\"#shared\\":{\\"0\\":{\\"queue\\":[],\\"$step\\":7,\\"$last\\":6,\\"#type\\":\\"_data\\"},\\"1\\":{\\"type\\":\\"DONE\\"},\\"2\\":{\\"queue\\":[],\\"_input\\":null,\\"$step\\":8,\\"$last\\":7,\\"_loop\\":{\\"#ref\\":0},\\"_i\\":{\\"#ref\\":1},\\"#type\\":\\"addFlush\\"},\\"3\\":{\\"queue\\":[{\\"dest\\":[{\\"#ref\\":4}],\\"state\\":0,\\"#type\\":\\"Residual\\"}],\\"_input\\":null,\\"$step\\":13,\\"$last\\":13,\\"_loop\\":{\\"#ref\\":2},\\"_i\\":{\\"#ref\\":1},\\"#type\\":\\"saveLocal\\"},\\"4\\":{\\"dest\\":[],\\"state\\":0,\\"_f\\":{\\"_data\\":{\\"#oid\\":\\"saveLocalData\\"}},\\"$step\\":8,\\"cont\\":{\\"dest\\":[{\\"#oid\\":\\"saveLocalExit\\"}],\\"state\\":0,\\"#type\\":\\"Residual\\"},\\"$last\\":7,\\"_loop\\":{\\"#ref\\":3},\\"#type\\":\\"Async$1\\"}}}",
+  ],
+  Array [
+    "boxes",
+    "{\\"running\\":{\\"#type\\":\\"Set\\",\\"#data\\":[{\\"#ref\\":4},{\\"#ref\\":0},{\\"#ref\\":3},{\\"#ref\\":2}]},\\"resume\\":{\\"#ref\\":3},\\"#shared\\":{\\"0\\":{\\"queue\\":[],\\"$step\\":8,\\"$last\\":7,\\"#type\\":\\"_data\\"},\\"1\\":{\\"type\\":\\"DELETE\\"},\\"2\\":{\\"queue\\":[],\\"_input\\":null,\\"$step\\":8,\\"$last\\":7,\\"_loop\\":{\\"#ref\\":0},\\"_i\\":{\\"#ref\\":1},\\"#type\\":\\"addFlush\\"},\\"3\\":{\\"queue\\":[{\\"dest\\":[{\\"#ref\\":4}],\\"state\\":0,\\"#type\\":\\"Residual\\"}],\\"_input\\":null,\\"$step\\":13,\\"$last\\":13,\\"_loop\\":{\\"#ref\\":2},\\"_i\\":{\\"#ref\\":1},\\"#type\\":\\"saveLocal\\"},\\"4\\":{\\"dest\\":[],\\"state\\":0,\\"_f\\":{\\"_data\\":{\\"#oid\\":\\"saveLocalData\\"}},\\"$step\\":8,\\"cont\\":{\\"dest\\":[{\\"#oid\\":\\"saveLocalExit\\"}],\\"state\\":0,\\"#type\\":\\"Residual\\"},\\"$last\\":7,\\"_loop\\":{\\"#ref\\":3},\\"#type\\":\\"Async$1\\"}}}",
+  ],
+  Array [
+    "boxes",
+    "{\\"running\\":{\\"#type\\":\\"Set\\",\\"#data\\":[{\\"#ref\\":4},{\\"#ref\\":0},{\\"#ref\\":3},{\\"#ref\\":2}]},\\"resume\\":{\\"#ref\\":3},\\"#shared\\":{\\"0\\":{\\"queue\\":[],\\"$step\\":9,\\"$last\\":8,\\"#type\\":\\"_data\\"},\\"1\\":{\\"type\\":\\"DONE\\"},\\"2\\":{\\"queue\\":[],\\"_input\\":null,\\"$step\\":8,\\"$last\\":7,\\"_loop\\":{\\"#ref\\":0},\\"_i\\":{\\"#ref\\":1},\\"#type\\":\\"addFlush\\"},\\"3\\":{\\"queue\\":[{\\"dest\\":[{\\"#ref\\":4}],\\"state\\":0,\\"#type\\":\\"Residual\\"}],\\"_input\\":null,\\"$step\\":13,\\"$last\\":13,\\"_loop\\":{\\"#ref\\":2},\\"_i\\":{\\"#ref\\":1},\\"#type\\":\\"saveLocal\\"},\\"4\\":{\\"dest\\":[],\\"state\\":0,\\"_f\\":{\\"_data\\":{\\"#oid\\":\\"saveLocalData\\"}},\\"$step\\":8,\\"cont\\":{\\"dest\\":[{\\"#oid\\":\\"saveLocalExit\\"}],\\"state\\":0,\\"#type\\":\\"Residual\\"},\\"$last\\":7,\\"_loop\\":{\\"#ref\\":3},\\"#type\\":\\"Async$1\\"}}}",
+  ],
+]
+`;
