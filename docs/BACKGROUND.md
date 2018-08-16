@@ -55,7 +55,7 @@ there and it is easier to combine algebraic effects comparing to monads.
 The same but with dynamic typing may be achieved with EffectfulJS using
 [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/cc)
 library and dynamically dispatching to corresponding effect handler. However
-it makes impossible using Applicative combinators in result.
-
-
+it makes impossible to use Applicative combinators in result. Here are some
+details of how to convert delimited control to algebraic effects -
+[Eff directly in OCaml](http://okmij.org/ftp/ML/index.html#eff) by Oleg Kiselyov.
 

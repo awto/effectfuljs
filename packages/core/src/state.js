@@ -1141,7 +1141,6 @@ function prepareContextVars(root, cfg) {
 
 export function calcFlatCfg(cfg,sa) {
   const root = sa[0].value
-  debugger
   calcFrameStateVars(sa)
   if (root.opts.contextState)
     prepareContextVars(root,cfg)
