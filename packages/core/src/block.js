@@ -16,8 +16,6 @@ export const chain = symbol("chain")
 export const bindPat = symbol("bindPat")
 /** marks effectful expression, not requiring coercion */
 export const effExpr = symbol("effExpr")
-/** marks effectful block, not requiring coercion */
-export const effBlock = symbol("effBlock")
 /** a chain of applications to some library operation */
 export const app = symbol("app")
 /** marks an expression which shouldn't be bound */
@@ -27,6 +25,7 @@ export const sharedRef = symbol("sharedRef")
 /** effectful operation */
 export const op = symbol("op")
 export const pureId = Kit.sysId("pure")
+export const chainId = Kit.sysId("chain")
 export const alreadyRunningSym = Kit.sysId("$alreadyRunning")
 export const delegateSym = Kit.sysId("$delegate")
 export const redirSym = Kit.sysId("$redir")
@@ -170,27 +169,24 @@ export const cleanupEffSeq = Kit.pipe(
 export const interpretCasts = Kit.pipe(
   function* cleanEffExpr(s) {
     const sl = Kit.auto(s)
-    const noResult = false // sl.opts.returnContext === false
     function* walk() {
       for(const i of sl.sub()) {
         switch(i.type) {
         case effExpr:
           if (i.enter) {
-            yield sl.enter(i.pos,Kit.Subst)
             const j = sl.curLev()
-            if (j != null && (!noResult || i.value.result))
-              j.value.result = true
-            yield* walk()
-            yield* sl.leave()
-          }
-          break
-        case effBlock:
-          if (i.enter) {
-            yield sl.enter(i.pos,Tag.BlockStatement)
-            yield sl.enter(Tag.body,Tag.Array)
-            yield* walk()
-            yield* sl.leave()
-            yield* sl.leave()
+            const result = j != null && !i.value.reflected
+            if (i.value.tmpVar) {
+              yield s.enter(i.pos, Tag.AssignmentExpression,
+                            {node:{operator:"="},result})
+              yield s.tok(Tag.left, Tag.Identifier, {sym:i.value.tmpVar})
+              yield* Kit.reposOne(walk(), Tag.right)
+              yield* s.leave()
+            } else {
+              if (j)
+                j.value.result = result
+              yield* Kit.reposOne(walk(), i.pos)
+            }
           }
           break
         default: 
@@ -200,9 +196,7 @@ export const interpretCasts = Kit.pipe(
     }
     yield* walk()
   },
-  Kit.completeSubst,
-  Kit.adjustFieldType
-)
+  Kit.adjustFieldType)
 
 /** splits JS into frames with at most 1 effectful expression (the last one) */
 export const splitEffBlock = Kit.pipe(

@@ -335,11 +335,9 @@ export default {
   // NOT IMPLEMENTED: if `par` it will ignore effectful values binds dependency
   // (works only if `par:true`)
   parIgnoreBinds: false,
-  // NOT IMPLEMENTED: how to treat variables dependencies (works only if `par:true`)
-  // * "none"        - doesn't consider any dependency
-  // * "write"/null  - variable reads should be before writes
-  // * "all"         - any variable reference shouldn't be parallelized
-  parLocalDeps: "write",
+  // if `true` fill assume any variable reference (LHS or RHS) as dependency
+  // otherwise only RHS positions are dependent on LHS positions only
+  parAllLocals: false,
   // NOT IMPLEMENTED: allow frames reordering
   // * null - preserve order
   // * "expr" - only within single expressions

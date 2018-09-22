@@ -32,7 +32,7 @@
     "rollup": "^0.55.3",
     "typedoc": "^0.10.0",
     "typedoc-plugin-markdown": "^1.0.14",
-    "typescript": "^2.7.1"
+    "typescript": "^2.9.2"
   },
   "peerDependencies": {
     "@effectful/js": "^1.0.0"

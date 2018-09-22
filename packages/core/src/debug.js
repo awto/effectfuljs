@@ -402,7 +402,6 @@ export function* markBindEff(s) {
   }
 }
 
-
 function* removeSubScopes(s) {
   for(const i of s) {
     if (i.enter && i.pos !== Tag.top) {
@@ -425,6 +424,88 @@ function* removeSubScopes(s) {
     }
     yield i
   }
+}
+
+const undefPatSym = Kit.scope.newSym("__")
+
+export function singleFrameTxt(frame,s) {
+  const f = Kit.toArray(singleFrameToks(frame,s))
+  return D.toStr(D.fin(f),{comments:false})
+}
+
+export function* singleFrameToks(frame,si) {
+  const s = Kit.auto(si)
+  yield* s.template(Tag.push,`($I) => {$_}`,frame.patSym || undefPatSym)
+  yield* _frame()
+  yield* s.leave()
+  function* _frame() {
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(symName(i.type)) {
+        case "bindPat":
+          yield s.tok(i.pos,Tag.Identifier,{sym:i.value.sym})
+          Kit.skip(s.copy(i))
+          continue
+        case "app":
+          yield* s.template(Tag.push,`=$I($E)`,i.value.sym)
+          if (!i.leave)
+            yield* _frame()
+          yield* s.leave()
+          s.close(i)
+          continue
+        case "letStmt": {
+          const args = []
+          if (i.value.sym)
+            args.push(i.value.sym)
+          if (i.value.tmpVar)
+            args.push(i.value.tmpVar)
+          if (i.value.goto)
+            args.push(i.value.goto.declSym)
+          yield* s.template(
+            Tag.push,`=${i.value.sym ? "$I =" : ""}`
+              + `${i.value.bindName || (i.value.eff?"e":"p")}`
+              + `(${i.value.tmpVar?"$I=":""}`
+              + `$E${i.value.goto ? ",$I" : ""})`,...args)
+          if (!i.leave)
+            yield* Kit.reposOne(_frame(),i.value.tmpVar?Tag.right:Tag.push)
+          yield* s.leave() }
+          s.close(i)
+          continue
+        case "jump": {
+          const args = []
+          if (i.value.tmpVar)
+            args.push(i.value.tmpVar)
+          if (i.value.goto)
+            args.push(i.value.goto.declSym)
+          yield* s.template(
+            Tag.push,`=${i.value.tmpVar ? "$I =" : ""}`
+              + `j($E${i.value.goto ? ",$I" : ""})`,...args)
+          if (!i.leave)
+            yield* Kit.reposOne(_frame(),Tag.push)
+          yield* s.leave() }
+          s.close(i)
+          continue
+        case "fork":
+          yield* s.template(Tag.push,`=F($E)`,i.value.sym)
+          yield* Kit.reposOne(_frame(),Tag.push)
+          yield* s.leave()
+          s.close(i)
+          continue
+        }
+      }
+      yield i
+    }
+  }
+}
+
+export const framesTxt = (opts = {}) => (si) => {
+  const sa = Kit.toArray(si)
+  const s = Kit.auto(sa)
+  for(const i of s) {
+    if (i.enter && symName(i.type) === "frame")
+      i.value[`deb_txt_${opts.name||""}`] = singleFrameTxt(i.value,s.sub())
+  }
+  return sa
 }
 
 const dumpPrep = Kit.pipe(
@@ -572,7 +653,7 @@ function* markFrameSyms(s) {
           ? `|Pre{${v.preCompose.map(
                i => id(i.declSym) +"->"
                   + (i.contArg ? id(i.contArg.declSym):"")).join()}}`
-          : ""
+            : ""
         let args = v.frameArgs
               ? `|Args{${[...v.frameArgs]
                 .map(([k,v]) => `${id(k)}=${id(v)}`).join()}}`
@@ -596,7 +677,7 @@ function* markFrameSyms(s) {
         if (v.contextSym)
           name+=`.S-${v.contextSym.id}`
         i = D.setComment(
-          i,`${name}[${dst}${args}${thread}${fin}]`,"hl")
+          i,`${name}[${dst}${args}${thread}${fin}]#${i.value.id || "u"}`,"hl")
       }
     }
     yield i

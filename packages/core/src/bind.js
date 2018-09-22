@@ -5,6 +5,9 @@ import * as Block from "./block"
 import * as Ctrl from "./control"
 import * as Prop from "./propagate"
 
+/**
+ * Converts `letStmt` without `eff` into JS expressions
+ */
 export function interpretPureLet(si) {
   const s = Kit.auto(si)
   function* walk() {
@@ -30,6 +33,9 @@ export function interpretPureLet(si) {
   return walk()
 }
 
+/**
+ * Generates temporal local variable
+ */
 export function tempVarSym(top, pat, byVal = top.opts.state) {
   const sym = Kit.scope.newSym(pat)
   top.scopeDecls.add(sym)
@@ -37,6 +43,7 @@ export function tempVarSym(top, pat, byVal = top.opts.state) {
   sym.byVal = top.opts.state
   sym.declScope = top
   sym.bound = true
+  sym.optional = false
   setSymInterpr(sym)
   if (sym.interpr === closureVar && top.savedDecls)
     top.savedDecls.set(sym,{raw:null})

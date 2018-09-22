@@ -524,6 +524,34 @@ function b() {
   }
 }
 
+function l1() {
+  var a, b, c, d, e;
+  cond ? a = 1 : something;
+  return M.chain(eff(a), _1);
+
+  function _1() {
+    cond ? something : b = 1;
+    return M.chain(eff(b), _2);
+  }
+
+  function _2() {
+    cond ? c = 1 : c = 2;
+    return M.chain(eff(b), _3);
+  }
+
+  function _3() {
+    d = 3 && something;
+    return M.chain(eff(d), _4);
+  }
+
+  function _4() {
+    something && (e = 4);
+    return M.chain(eff(e), _5);
+  }
+
+  function _5() {}
+}
+
 function a1() {
   var i, a, r;
   return M.scope(_1);

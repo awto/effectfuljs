@@ -115,6 +115,11 @@ function b() {
   return M.scope(b_1);
 }
 
+function l1() {
+  var l1 = M.context();
+  return M.scope(l1_1);
+}
+
 function a1() {
   var a1 = M.context();
   return M.scope(_a1_1);
@@ -643,6 +648,40 @@ function b_21(b, a) {
 
   return c;
 }
+
+function l1_1(l1) {
+  var a;
+  cond ? l1._a = 1 : something;
+  a = l1._a, l1._a = null;
+  return M.chain(eff(a), l1_2);
+}
+
+function l1_2(l1) {
+  cond ? something : l1._b = 1;
+  return M.chain(eff(l1._b), l1_3);
+}
+
+function l1_3(l1) {
+  var c, a;
+  cond ? c = 1 : c = 2;
+  a = l1._b, l1._b = null;
+  return M.chain(eff(a), l1_4);
+}
+
+function l1_4(l1) {
+  var d;
+  d = 3 && something;
+  return M.chain(eff(d), l1_5);
+}
+
+function l1_5(l1) {
+  var a;
+  something && (l1._e = 4);
+  a = l1._e, l1._e = null;
+  return M.chain(eff(a), l1_6);
+}
+
+function l1_6(l1) {}
 
 function _a1_1(a1) {
   return M.yldStar(M.yld("a1"), _a1_2);

@@ -12,34 +12,68 @@ export const thread = symbol("branch.thread")
  * marks branched control flow with `Block.fork` and `Block.thread` 
  * used to unify passes behavior of switch/if statements
  */
-export function* mark(s) {
-  for(const i of s) {
-    if (i.enter) {
-      switch(i.pos) {
-      case Tag.consequent:
-      case Tag.alternate:
-        yield Kit.enter(i.pos,thread,i.value)
+export function mark(s) {
+  s = Kit.auto(s)
+  return _mark(s)
+  function* _mark(sw) {
+    for(const i of sw) {
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.IfStatement:
+        case Tag.ConditionalExpression:
+          yield s.enter(i.pos,fork,i.value)
+          yield i
+          yield* _mark(s.one())
+          yield s.enter(Tag.consequent,thread,s.cur().value)
+          yield* _mark(s.one())
+          yield* s.leave()
+          /// if there is no alternate in `if` we still create a branch
+          const n = s.curLev()
+          yield s.enter(Tag.alternate,thread,n && n.value)
+          yield* _mark(s.one())
+          yield* s.leave()
+          yield s.close(i)
+          yield* s.leave()
+          continue
+        case Tag.SwitchStatement:
+          yield s.enter(i.pos,fork,i.value)
+          yield i
+          yield* _mark(s.one())
+          let hasAlt = false
+          for(const j of s.sub()) {
+            if (j.enter && j.pos === Tag.consequent) {
+              hasAlt = s.cur().pos !== Tag.test
+              yield s.enter(Tag.consequent,thread,j.value)
+              yield j
+              yield* _mark(s.sub())
+              yield s.close(j)
+              yield* s.leave()
+            } else
+              yield j
+          }
+          if (!hasAlt) {
+            yield s.enter(Tag.consequent,thread)
+            yield* s.leave()
+          }
+          yield s.close(i)
+          yield* s.leave()
+          continue
+        case Tag.LogicalExpression:
+          /// logical expression may skip evaluating its second component
+          yield s.enter(i.pos,fork,i.value)
+          yield i
+          yield* _mark(s.one())
+          yield s.enter(Tag.right,thread,s.cur())
+          yield* _mark(s.one())
+          yield* s.leave()
+          yield s.enter(Tag.alternate,thread,s.cur())
+          yield* s.leave()
+          yield s.close(i)
+          yield* s.leave()
+          continue
+        }
       }
-      switch(i.type) {
-      case Tag.IfStatement:
-      case Tag.ConditionalExpression:
-      case Tag.SwitchStatement:
-        yield Kit.enter(i.pos,fork,i.value)
-      }
-    }
-    yield i
-    if (i.leave) {
-      switch(i.type) {
-      case Tag.IfStatement:
-      case Tag.ConditionalExpression:
-      case Tag.SwitchStatement:
-        yield Kit.leave(i.pos,fork,i.value)
-      }
-      switch(i.pos) {
-      case Tag.consequent:
-      case Tag.alternate:
-        yield Kit.leave(i.pos,thread,i.value)
-      }
+      yield i
     }
   }
 }

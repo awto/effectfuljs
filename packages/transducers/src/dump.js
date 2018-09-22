@@ -172,8 +172,8 @@ export const fin = Kit.pipe(
   applyComments,
   Array.from)
 
-export function toStr(s) {
-  return generate(consume(fin(Kit.repos(s,Tag.top))).top).code
+export function toStr(s,opts={}) {
+  return generate(consume(Kit.repos(s,Tag.top)).top,opts).code
 }
 
 export const output = Kit.curry(function dump(tag,s) {

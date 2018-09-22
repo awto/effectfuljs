@@ -141,12 +141,26 @@ const stage1 = Kit.pipe(
     State.restoreDecls)),
   Array.from,
   Kit.map(Kit.pipe(
+    substSym,
     Closure.substContextIds,
     Block.ctxMethods,
     Rt.collectUsages,
     Simplify.main,
     Kit.toArray
   )))
+
+/** replacing sym with `substSym` property if it is defined */
+export function* substSym(si) {
+  const s = Kit.auto(si)
+  for(const i of s) {
+    if (i.enter && i.type === Tag.Identifier && i.value.sym
+        && i.value.sym.substSym) {
+      i.value.sym = i.value.sym.substSym
+    }
+    yield i
+  }
+}
+
 
 export function pass(s) {
   let sa = Kit.toArray(Rt.collectImports(s))

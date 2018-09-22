@@ -100,6 +100,21 @@ function b() {
     return eff(1) ? 2 : 3;
 }
 
+function l1() {
+  var a, b, c, d, e
+  cond ? (a = 1) : something
+  eff(a)
+  cond ? something : (b = 1)
+  eff(b)
+  cond ? (c = 1) : (c = 2)
+  eff(b)
+  d = 3 && something
+  eff(d)
+  something && (e = 4)
+  eff(e)
+  
+}
+
 M.profile("generators")
 
 function* a1() {
@@ -119,3 +134,4 @@ function* a1() {
   yield ("o3l" && (yield "o3r"))
   return ((yield "o4l") && (yield "o4r"))
 }
+

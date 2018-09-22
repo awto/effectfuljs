@@ -130,7 +130,7 @@ function c_err(s) {
 }
 
 function c_1(c, p) {
-  var e, a, s;
+  var e, s;
 
   switch (s = c.$sc, s) {
     case 4:
@@ -150,7 +150,7 @@ function c_1(c, p) {
 
     case 7:
       c.$sc = c._fc;
-      a = c._fc, c._fc = null;
+      e = c._fc, c._fc = null;
       return M.yldStar(M.yld("F"));
 
     case 8:

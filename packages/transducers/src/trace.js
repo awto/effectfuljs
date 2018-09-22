@@ -57,18 +57,18 @@ if (BROWSER_DEBUG) {
 export function* verify(s) {
   const stack = []
   for(const i of resetFieldInfo(s)) {
-    assert.ok(i.enter != null)
-    assert.ok(i.leave != null)
-    assert.ok(i.pos != null)
-    assert.ok(i.type != null)
-    assert.ok(i.value != null)
+    assert.ok(i.enter != null, "`enter` isn't defined")
+    assert.ok(i.leave != null, "`leave` isn't defined")
+    assert.ok(i.pos != null, "`pos` isn't defined")
+    assert.ok(i.type != null, "`type` isn't defined")
+    assert.ok(i.value != null, "`value` isn't defined")
     const ti = typeInfo(i)
     const ctrlPos = symInfo(i.pos).kind === "ctrl"
     if (i.enter && stack.length) {
       const [f,keys] = stack[stack.length-1]
       if (f.type === Tag.Array) {
         if (!ctrlPos)
-          assert.equal(i.pos, Tag.push)
+          assert.equal(i.pos, Tag.push, "expected array's element")
       } else if (keys != null && !ctrlPos) {
         let k
         while((k = keys.shift()) != null) {
@@ -90,15 +90,15 @@ export function* verify(s) {
     }
     if (!i.enter && i.leave) {
       const [f] = stack.pop()
-      assert.ok(f != null)
+      assert.ok(f != null, "no open tag")
       if (ti.kind !== "ctrl")
-        assert.equal(f.type,i.type)
-      assert.equal(f.pos,i.pos)
-      assert.ok(f.value === i.value)
+        assert.equal(f.type,i.type, "mismatched `type`")
+      assert.equal(f.pos,i.pos, "mismatched `pos`")
+      assert.ok(f.value === i.value, "mismatched `value`")
     }
     yield i
   }
-  assert.equal(stack.length,0)
+  assert.equal(stack.length,0,"no closing tags")
 }
 
 function pad(s) {

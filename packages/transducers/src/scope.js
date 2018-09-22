@@ -45,7 +45,7 @@ export function* tempNames(s) {
   for(const i of s) {
     if (i.enter && i.type === Tag.Identifier
         && i.value.sym != null
-        && i.value.node.name == null) {
+        && !i.value.node.name) {
       i.value.node.name = i.value.sym.strict
         ? i.value.sym.name
         : i.value.sym.id 

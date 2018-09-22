@@ -1,3 +1,6 @@
+/**
+ * Constructing and interpreting flat representation
+ */
 import * as Kit from "./kit"
 import {Tag} from "./kit"
 import * as assert from "assert"
@@ -354,8 +357,10 @@ export const convert = Kit.pipe(
                 case Block.bindPat:
                   break
                 case Block.letStmt:
-                  if (!j.value.eff)
+                  if (!j.value.eff) {
+                    j.value.ref = i.value
                     break
+                  }
                   if (j.value.bindName == null)
                     j.value.bindName = bindName
                   j.value.suspending = j.value.bindName !== bindName
@@ -381,6 +386,14 @@ export const convert = Kit.pipe(
   function* wrapChain(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
+    root.pureExitFrame = {
+      declSym: Block.pureId,
+      last:true,
+      enters: new Set(),
+      exits: new Set(),
+      frameParamsClos: new Set()
+    }
+
     let first = sa.find(i => i.type === Block.frame)
     if (!first)
       return s
@@ -393,6 +406,7 @@ export const convert = Kit.pipe(
     const j = s.cur()
     function* ctrlFrames() {
       const sym = root.resSym = unboundTempVar(root,"r")
+      sym.optional = true
       const f = s.enter(Tag.push, Block.frame,
                         {declSym:Kit.scope.newSym("ret"),root,
                          last:true})
@@ -816,6 +830,7 @@ function* copyFrameVars(si) {
     const vars = new Set()
     if (sw) {
       sw.w.forEach(vars.add,vars)
+      sw.c.forEach(vars.add,vars)
       sw.r.forEach(vars.add,vars)
     }
     const patSym = frame.errSym || frame.patSym
@@ -823,7 +838,12 @@ function* copyFrameVars(si) {
     if (patSym && isRef(patSym) && patSym.extBind) {
       patCopy = commonPatSym || Kit.scope.newSym()
       yield s.enter(Tag.push,Tag.AssignmentExpression,{node:{operator:"="}})
-      yield s.tok(Tag.left,Tag.Identifier,{sym:patSym})
+      let patOrig = patSym
+      if (patSym.assignedAt) {
+        patOrig = patSym.assignedAt.assignPat
+        patSym.removed = patSym.assignedAt.removed = true
+      }
+      yield s.tok(Tag.left,Tag.Identifier,{sym:patOrig})
       yield s.tok(Tag.right,Tag.Identifier,{sym:patCopy})
       yield* s.leave()
     } else if (commonPatSym) {
@@ -857,6 +877,12 @@ function* copyFrameVars(si) {
               i.value.insideCtx = !frame.first
           }
           break
+        case Tag.AssignmentExpression:
+          if (i.value.removed) {
+            Kit.skip(s.copy(i))
+            continue
+          }
+          break
         case Block.letStmt:
           if (!i.value.eff)
             break
@@ -884,18 +910,19 @@ function* copyFrameVars(si) {
                   if (commonPatSym && patSym && right === patSym)
                     right = commonPatSym
                   assign.push(
-                    [left,[s.tok(Tag.right,Tag.Identifier,
-                                 {sym:right})]])
+                    [left,[s.tok(Tag.right,Tag.Identifier,{sym:right})]])
                 }
               }
             }
           }
-          if (!first && s.opts.cleanupFrameVars) {
+          if (!first && !i.value.reflected && s.opts.cleanupFrameVars) {
             const nextList = []
             for(const j of i.value.gotoDests)
               nextList.push(...j.frameParamsClos)
             const next = new Set(nextList)
             for(const i of vars) {
+              if (i.removed)
+                continue
               if (!next.has(i) && !i.closCapt && isRef(i))
                 del.add(i)
             }
@@ -1094,11 +1121,17 @@ export function interpretJumps(si) {
           const defaultName = pure ? pureBindName : bindName
           let name = i.value.bindName || defaultName
           const st = s.opts.static || !s.opts.methodOps[name]
-          assert.ok(gotoDests.length)
-          if (!gotoDests.length && !requireFinalPure && name === defaultName) {
+          if (!gotoDests.length /* &&!requireFinalPure */
+              && name === defaultName
+              || pure && (goto === root.pureExitFrame
+                  || goto === root.resFrameRedir)) {
             yield pure
-              ? s.enter(pos,Block.app,{sym:Block.pureId,insideCtx,delegateCtx})
-              : s.enter(pos,Block.effExpr)
+              ? s.enter(pos,Block.app,{sym:Block.pureId,insideCtx,
+                                       delegateCtx,reflected:i.value.reflected,
+                                       tmpVar:i.value.tmpVar})
+              : s.enter(pos,Block.effExpr,
+                        {reflected:i.value.reflected,
+                         tmpVar:i.value.tmpVar})
             if (!i.leave)
               yield* _interpretJumps()
           } else {
@@ -1113,7 +1146,9 @@ export function interpretJumps(si) {
             const appVal = {fam:Kit.sysId(name),static:st,
                             insideCtx:!i.value.ref.first,delegateCtx,
                             passCont,goto:i.value.gotoSym,
-                            result:name === "scope"}
+                            result:name === "scope",
+                            reflected: i.value.reflected,
+                            tmpVar:i.value.tmpVar}
             if (s.curLev()) {
               if (s.opts.markBindValue !== false)
                 name += "B"
@@ -1183,26 +1218,56 @@ function calcPatSym(cfg) {
  *  - `framePat: Set<Symbol>`: received from bound effectful value
  *  - `frameParamsClos: Set<Symbol>`: needed by the frame or some next frame
  */
-function calcVarDeps(sa) {
+function calcVarDeps(si) {
+  let sa = Kit.toArray(si)
   const frames = getCfg(sa)
   const root = sa[0].value
   const ops = new Set()
   calcPatSym(frames)
-  sa = cfgPostProcess(sa)
+  sa = Kit.toArray(cleanup(sa))
   State.calcFlatCfg(frames,sa)
-  Par.prepare(root, frames, sa)
+  return sa
+}
+
+/**
+ * For all symbols which are still in the programm setting `bound: true`
+ */
+function markBound(si) {
+  const sa = Kit.toArray(si)
+  for(const i of si) {
+    if (i.enter && (i.type === Tag.Identifier || i.type === Block.bindPat)
+        && i.value.sym && !i.value.sym.optional) {
+      i.value.sym.bound = true
+    }
+  }
   return sa
 }
 
 /** 
  * if bind variable is used only in the frame where it is bound 
- * we can avoid tracking it
+ * we can avoid tracking it, also calculates `assignedAt` and `assignPat`
+ * fields for each assignment expression with bindPat RHS
  */
 function localizeBinds(sa) {
-  const s = Kit.auto(sa)
+  let s = Kit.auto(sa)
   const forseBind = s.opts.markBindValue === false || s.opts.defunct
   const rootDecls = s.first.value.savedDecls
   const bindVars = new Set()
+  if (s.opts.optBindAssign !== false) {
+    for(const i of s) {
+      switch(i.type) {
+      case Tag.AssignmentExpression:
+        if (i.value.node.operator === "=" && s.cur().type === Tag.Identifier) {
+          i.value.assignPat = s.cur().value.sym
+          Kit.skip(s.one())
+          if (s.cur().type === Block.bindPat)
+            s.cur().value.sym.assignedAt = i.value
+        }
+        break
+      }
+    }
+    s = Kit.auto(sa)
+  }
   for(const i of s) {
     if (i.enter && i.type === Block.frame) {
       if (i.value.patSym && !i.value.patSym.dummy) {
@@ -1234,7 +1299,6 @@ function localizeBinds(sa) {
             break
           case Block.bindPat:
             const {sym} = j.value
-            sym.bound = true;
             if (sym.boundAt !== i.value)
               sym.extBind = true
             break
@@ -1252,10 +1316,6 @@ function localizeBinds(sa) {
     }
   }
 }
-
-const cfgPostProcess = Kit.pipe(
-  cleanup,
-  Kit.toArray)
 
 /** 
  * removes a few useless items from resulting code 
@@ -1394,7 +1454,7 @@ function cleanup(si) {
           if (!i.value.eff)
             break
         case Ctrl.jump:
-          assert.ok(i.value.goto)
+          // assert.ok(i.value.goto)
           const args = i.value.frameArgs
           if (args) {
             for(const j of args.keys())
@@ -1403,7 +1463,7 @@ function cleanup(si) {
           }
           if (i.value.goto === resFrameRedir && !needResultCont) {
             const catchCont = i.value.ref.catchContRedir
-            yield s.enter(i.pos,Block.effExpr)
+            yield s.enter(i.pos,Block.effExpr,{result:i.value.result})
             yield* inner()
             yield* s.leave()
             s.close(i)
@@ -1417,7 +1477,7 @@ function cleanup(si) {
               resFrame.enters.delete(i.value)
               continue
             }
-          } else if (i.value.goto.throwSym) {
+          } else if (i.value.goto && i.value.goto.throwSym) {
             if (i.type === Ctrl.jump) {
               const [exit] = i.value.goto.exits
               yield* writeError(i)
@@ -1832,8 +1892,9 @@ export const interpret = Kit.pipe(
   Loop.prepareInvertForOf,
   Inline.markSimpleRedir,
   Kit.toArray,
-  calcVarDeps,
+  markBound,
   Par.interpret,
+  calcVarDeps,
   Loop.invertForOf,
   Inline.storeContinuations,
   ifDefunct(Defunct.prepare),

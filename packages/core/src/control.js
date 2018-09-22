@@ -6,6 +6,7 @@ import * as Debug from "./debug"
 
 export const blockId = Kit.sysId("block")
 export const scopeId = Kit.sysId("scope")
+export const jumpId = Kit.sysId("jump")
 
 /**
  * calculates links between control blocks and jumps referencing them

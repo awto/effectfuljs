@@ -8,6 +8,9 @@ import * as Except from "./exceptions"
 
 const reentryCont = 3
 
+const pureFrameSym = Kit.scope.newSym("pure")
+pureFrameSym.numConst = 0
+
 /** prepares vars for storing current state and bind */
 export function* prepare(si) {
   const s = Kit.auto(si)
@@ -26,6 +29,7 @@ export function* prepare(si) {
       savedDecls:new Map(),
       root
     })
+  root.pureExitFrame.declSym = pureFrameSym
   const errMap = root.errMap = !s.opts.storeErrorCont && new Map()
   const resMap = root.resMap = !s.opts.storeResultCont && new Map()
   const errFrame = root.errFrameRedir
@@ -239,8 +243,11 @@ export function* frames(si) {
   const inlineJumps = s.opts.inlinePureJumps === "tail"
   assert.ok(contextSym)
   assert.ok(contSym)
-  const decls = root.implFrame.value.savedDecls = new Map()
   const impl = root.implFrame.value
+  const decls = impl.savedDecls = new Map()
+  const reuseTemps = s.opts.reuseTempVars !== false
+
+  const varsPool = reuseTemps && []
   const discrimArg = impl.ctrlParam
         = s.opts.defunctStateDiscriminant === "arg" && Kit.scope.newSym("s")
   const f = yield* s.till(i => i.type === Block.frame)
@@ -282,10 +289,18 @@ export function* frames(si) {
                   {node:{value:i.value.stateId}})
       yield s.enter(Tag.consequent,Tag.Array)
       if (i.value.savedDecls) {
+        let poolPos = 0
         for(const [sym,{raw,init}] of i.value.savedDecls) {
           assert.ok(!raw)
           assert.ok(!init)
-          decls.set(sym,{raw:null})
+          if (varsPool && poolPos != null && varsPool.length > poolPos) {
+            sym.substSym = varsPool[poolPos++]
+          } else {
+            decls.set(sym,{raw:null})
+            if (varsPool)
+              varsPool.push(sym)
+            poolPos = null
+          }
         }
         i.value.savedDecls.clear()
       }
@@ -404,6 +419,7 @@ export function tailJumps(si) {
 
 export const convert = Kit.pipe(
   frames,
+//  deb_("defun-f"),
   Kit.toArray,
   stateMappings,
   Kit.toArray,

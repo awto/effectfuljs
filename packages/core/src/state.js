@@ -238,6 +238,8 @@ export function* restoreDecls(s) {
             const raw = []
             const assigns = []
             for(const [k,v] of decls) {
+              if (k.removed)
+                continue
               if (v.raw)
                 raw.push(v)
               else {
@@ -778,10 +780,9 @@ export function calcFrameStateVars(si) {
               if (!sw.w.has(k))
                 sw.c.add(k)
           }
-          if (!threads[len-1].alt)
-            len++
+          // if (!threads[len-1].alt)
+          //  len++
           for(const [sym,num] of allW) {
-            sw.w.add(sym)
             // not each branch resets the symbol
             // so it needs to read it to pass further
             // e.g.
@@ -793,12 +794,14 @@ export function calcFrameStateVars(si) {
             //  --- f2
             //     console.log(a)
             // it the same like reading `a` in `f1` to pass it further to `f2` 
-            if (num !== len)
+            if (num === len)
+              sw.w.add(sym)
+            else
               sw.c.add(sym)
           }
           break
         case Branch.thread:
-          const nxt = {r:new Set(),w:new Set(),c:new Set(),alt:i.pos === Tag.alternate}
+          const nxt = {r:new Set(),w:new Set(),c:new Set()}
           walk(nxt)
           fork.push(nxt)
           break
@@ -1117,11 +1120,10 @@ function prepareContextVars(root, cfg) {
       const sw = i.stateVars
       if (!sw)
         continue
-      for(const j of sw.w) {
+      for(const j of Kit.concat(sw.w,sw.c)) {
         if (!j.hasReads && j !== i.patSym && j !== i.errSym && j !== resSym)
           (j.writeFrames || (j.writeFrames = new Set())).add(i)
       }
-
     }
   }
   for(const i of root.scopeDecls) {
