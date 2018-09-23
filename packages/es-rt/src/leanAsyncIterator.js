@@ -27,6 +27,9 @@ if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {
       function(inner) {
         return Promise.resolve(inner.value).then(function(value) {
           return {value:value,done:inner.done}
+        },
+        function(e) {
+          return ctx.throw(e);
         })
       })
   }
