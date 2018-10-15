@@ -459,13 +459,12 @@ export function* singleFrameToks(frame,si) {
             args.push(i.value.sym)
           if (i.value.tmpVar)
             args.push(i.value.tmpVar)
-          if (i.value.goto)
-            args.push(i.value.goto.declSym)
           yield* s.template(
             Tag.push,`=${i.value.sym ? "$I =" : ""}`
               + `${i.value.bindName || (i.value.eff?"e":"p")}`
               + `(${i.value.tmpVar?"$I=":""}`
-              + `$E${i.value.goto ? ",$I" : ""})`,...args)
+              + `$E${i.value.goto ? "," + i.value.goto.declSym.id : ""}`
+              +`,${i.value.id})`,...args)
           if (!i.leave)
             yield* Kit.reposOne(_frame(),i.value.tmpVar?Tag.right:Tag.push)
           yield* s.leave() }
@@ -479,7 +478,8 @@ export function* singleFrameToks(frame,si) {
             args.push(i.value.goto.declSym)
           yield* s.template(
             Tag.push,`=${i.value.tmpVar ? "$I =" : ""}`
-              + `j($E${i.value.goto ? ",$I" : ""})`,...args)
+              + `j($E${i.value.goto ? "," + i.value.goto.declSym.id : ""}`
+              +`,${i.value.id})`,...args)
           if (!i.leave)
             yield* Kit.reposOne(_frame(),Tag.push)
           yield* s.leave() }
@@ -674,6 +674,8 @@ function* markFrameSyms(s) {
         let name = v.result ? "ret" : "goto"
         if (v.ext)
           name+=`.X-${v.ext.funcId.id}`
+        if (v.tmpVar)
+          name+=`.T-${v.tmpVar.id}`
         if (v.contextSym)
           name+=`.S-${v.contextSym.id}`
         i = D.setComment(

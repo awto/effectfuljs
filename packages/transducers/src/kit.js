@@ -185,7 +185,7 @@ export function skip(s) {
   let pos = node && (node.loc || node._loc)
   const babel = _opts.babel
   const name = i.value.value.stageName
-  if (!babel) {
+  if (!babel || _opts.debug) {
     for(;!(i = i.step()).done;) {}
   } else {
     try {
@@ -305,7 +305,7 @@ export function result(s,buf) {
   const babel = _opts.babel
   // for debugging purposes,
   // let the debugger catch the exception in browser
-  if (!babel) {
+  if (!babel || _opts.debug) {
     for(;!(i = i.step()).done;)
       buf.push(i.value)
     return i.value
@@ -568,10 +568,14 @@ export const babelBridge = curry(function babelBridge(pass,path,state) {
                          file:Object.assign(state.file.opts),
                          babel:{root:path,state}},
                         _opts)
-  try {
+  if (_opts.debug) {
     pass(produce({type:"File",program:path.node}))
-  } catch(e) {
-    throw path.hub.file.buildCodeFrameError(e.esNode, e.message)
+  } else {
+    try {
+      pass(produce({type:"File",program:path.node}))
+    } catch(e) {
+      throw path.hub.file.buildCodeFrameError(e.esNode, e.message)
+    }
   }
   _opts = optSave
 })
@@ -1179,6 +1183,8 @@ export function Wrapper(cont) {
     this.done = iter.done
     this.first = i
     this.opts = i.value && i.value.opts || _opts
+    if (i.value)
+      i.value.opts = this.opts
   } else
     this.opts = getOpts()
   this._stack = []
@@ -1194,8 +1200,12 @@ AFp.step = function() {
   if (this._inner.done)
     return this.pure()
   const t = this.value = this._inner.value
-  if (t.value && t.value.opts)
+  if (t.value) {
+    if (t.value.opts) 
       this.opts = t.value.opts
+    else if (t.value)
+      t.value.opts = this.opts
+  }
   this._inner = this._inner.step()
   if (t.enter)
     this.level++
