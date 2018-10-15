@@ -88,6 +88,9 @@ Other options are:
   function callback
   * `topLevel` - if `true` moves state transition functions outside original
   function's body
+  * `par` - enables implicit parallelism - enables `"par"`/`"seq:` JavaScript 
+  directives, it is default to `true` but the generated code will be still the 
+  same as if it is `false` if you don't use `"par"` directives.
 
 There are quite a few of lower level options described in
 [config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js).

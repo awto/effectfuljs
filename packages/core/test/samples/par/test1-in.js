@@ -6,7 +6,8 @@ M.option({combineOps:true,
           contextState:true,
           contextMethodOps:true,
           cleanupFrameVars:false,
-          par: true})
+          par:true,
+          parRegion:true})
 
 async function p0(a,b) {
   await g_1(await f_3, await f_4)
@@ -266,5 +267,194 @@ async function p31() {
   j = await g(i)
   k = await f(i)
   await m(k,j)
+}
+
+M.option({
+  parRegion:false,
+  blockDirectives: {
+    par: { parRegion:true },
+    seq: { parRegion:false }
+  }
+})
+
+async function p32() {
+  await init
+  {
+    "par";
+    await op_a
+    await op_b
+    {
+      "seq";
+      await op_sa
+      await op_sb
+      }
+    if (await op_test) {
+      await op_c
+      await op_d
+      if (test_1) {
+        await op_f(await op_e)
+        await op_g
+      }
+    }
+    await op_k
+  }
+}
+
+
+async function p33() {
+  "par"
+  await s_0
+  if (something) {
+    await s_1
+    await s_1_1
+  } else {
+    await s_2
+  }
+  await s_3
+} 
+
+async function p34() {
+  "par"
+  await s_0
+  if (something) {
+    await s_1(await s_1_1)
+  } else {
+    await s_2
+  }
+  await s_3
+} 
+
+async function p35() {
+  "par"
+  if (something) {
+    await s_1(await s_1_1)
+  } else {
+    await s_2
+  }
+  await s_3
+}
+
+async function p36() {
+  "par"
+  await(something ? await s_1(await s_1_1) : await s_2)
+  await s_3
+} 
+
+async function p37() {
+  "par"
+  await f_1(something ? await s_1(await s_1_1) : await s_2)
+  await s_3
+} 
+
+async function p38() {
+  "par"
+  await f_1(something ? await s_1(await s_1_1) : await s_2) / await s_3
+} 
+
+async function p39() {
+  "par"
+  await s_0
+  if (something) {
+    await s_1(await s_1_1)
+  } else {
+    await s_2
+  }
+}
+
+async function p40() {
+  "par"
+  if (await s_0) {
+    await s_1(await s_1_1)
+  } else {
+    await s_2
+  }
+}
+
+async function p41() {
+  "par"
+  await s_0
+  return something ? await s_1(await s_1_1) : await s_2
+}
+
+async function p42() {
+  "par"
+  if (await s_0) {
+    await s_1(await s_1_1)
+  } else {
+    return await s_2
+  }
+}
+
+async function p43() {
+  "par"
+  await s_0
+  if (something) {
+    return await s_1(await s_1_1)
+  } else {
+    return await s_2
+  }
+}
+
+async function p44() {
+  "par"
+  await s_0
+  if (something) {
+    await s_1(await s_1_1)
+  } else {
+    return await s_2
+  }
+}
+
+async function p45() {
+  "par"
+  await s_0
+  if (something) {
+    await s_1(await s_1_1)
+  } else {
+    return s_2
+  }
+}
+
+async function p46() {
+  "par"
+  await s_0
+  if (something) {
+    return s_1(await s_1_1)
+  } else {
+    await s_2
+  }
+}
+
+async function p47() {
+  "par"
+  await init
+  for(let i = 0;i<10;i++) {
+    const j = i
+    await gu_1(j)
+    await gu_2(j)
+  }
+  await fin_1
+}
+
+async function p48() {
+  "par"
+  await init
+  let i = 0
+  for(;i<10;i++) {
+    i+=await gu_1(i)
+    i+=await gu_2(i)
+  }
+  await fin_1(i)
+}
+
+async function p49() {
+  "par"
+  await init
+  let i = 0
+  for(;i<10;i++) {
+    await gu_1(i)
+    await gu_2(i)
+  }
+  await fin_1(i)
 }
 

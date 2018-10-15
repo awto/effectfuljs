@@ -12,90 +12,6 @@ const emptySet = new Set()
 export const shareId = Kit.sysId("share")
 export const forkId = Kit.sysId("fork")
 
-/**
- * for each frame calculates LHS/RHS for variables within frame's scope
- * it is different to stateVars, since the effectful bound variable is bounds
- * in the former frame 
- */
-function calcVars(sa) {
-  const s = Kit.auto(sa)
-  for(const i of s) {
-    if (i.enter && i.type === Block.frame) {
-      const bv = i.value.bv = new Set()
-      // if (i.value.patSym)
-      //  bv.add(i.value.patSym)
-      const fv = i.value.fv = new Set()
-      for(const i of s.sub()) {
-        if (i.enter) {
-          switch(i.type) {
-          case Block.letStmt:
-            if (i.value.sym /*&& !i.value.eff*/)
-              bv.add(i.value.sym)
-            break
-          case Tag.Identifier:
-            const sym = i.value.sym
-            if (!i.value.sym)
-              break
-            if (s.opts.parAllLocals) {
-              fv.add(sym)
-              bv.add(sym)
-            } else {
-              if (i.value.rhs && !bv.has(sym))
-                fv.add(sym)
-              if (i.value.lhs)
-                bv.add(sym)
-            }
-            break
-          case Block.bindPat:
-            fv.add(i.value.sym)
-            break
-          }
-        }  
-      }
-      bv.forEach(fv.delete,fv)
-    }
-  }
-}
-
-/** 
- * return initial list of graph nodes for each chain
- *
- *   type Node = {root:Val}
- *   type Val = Val & {parOp: Token[]}
- *   type FrameVal = FrameVal & { parOps: Val[] }
- */
-function getNodes(chains, sa) {
-  const heads = new Set()
-  const frames = new Set()
-  for(const [h, ...t] of chains) {
-    heads.add(h)
-    for(const i of t)
-      frames.add(i.ref)
-  }
-  const s = Kit.auto(sa)
-  for(const i of s) {
-    if (i.enter && i.type === Block.frame) {
-      if (frames.has(i.value)) {
-        const ops = i.value.parOps = []
-        for(let j; (j = s.curLev()) != null; j.value.parOp = [...s.one()]) {
-          ops.push(j.value)
-          if (!j.value.ref)
-            i.value.ref = i.value
-        }
-      } else {
-        for(const j of s.sub()) {
-          if (j.enter && j.type === Block.letStmt
-              && j.value.eff && heads.has(j.value)) {
-            j.value.parOp = [j,...s.sub(),s.close(j)]
-          }
-        }
-      }
-    }
-  }
-  return chains.map(([h, ...t]) =>
-                    [h, ...[].concat(...t.map(i => i.ref.parOps))])
-}
-
 /** 
  * returns edges for variables dependencies
  *
@@ -104,45 +20,76 @@ function getNodes(chains, sa) {
 function nodeVars(node) {
   const fv = node.fv = new Set()
   const bv = node.bv = new Set()
-  for(const i of node.parOp) {
-    if (i.enter) {
-      switch(i.type) {
-      case Block.letStmt:
-        if (i.value.sym)
-          bv.add(i.value.sym)
-        break
-      case Tag.Identifier:
-        const sym = i.value.sym
-        if (!i.value.sym)
+  function content(toks) {
+    for(const i of toks) {
+      if (i.enter) {
+        switch(i.type) {
+        case Block.letStmt:
+          if (i.value.sym)
+                bv.add(i.value.sym)
           break
-        if (node.opts.parAllLocals) {
-          fv.add(sym)
-          bv.add(sym)
-        } else {
-          if (i.value.rhs && !bv.has(sym))
+        case Tag.Identifier:
+          const sym = i.value.sym
+          if (!i.value.sym)
+            break
+          if (i.value.opts.parAllLocals) {
             fv.add(sym)
+            bv.add(sym)
+          } else {
+            if (i.value.rhs && !bv.has(sym))
+              fv.add(sym)
             if (i.value.lhs)
-              bv.add(sym)
+                  bv.add(sym)
+          }
+          break
+        case Block.bindPat:
+          fv.add(i.value.sym)
+          break
         }
-        break
-      case Block.bindPat:
-        fv.add(i.value.sym)
-        break
       }
     }
   }
+  if (node.skip) {
+    for(const i of node.value) {
+      for(const j of i.steps)
+        content(j.content)
+    }
+  } else
+    content(node.value.content)
 }
-
 
 /** 
  * returns list of edges built by fv/bv dependencies in nodes chain 
  *
- *    type Edge = [Node,Node]
+ *    type Edge = [Node, Node]
  *
  *  @param {Node[]} nodes
  *  @returns {Edge[]} 
  */
 function edgesByVars(nodes) {
+  const bv = new Map()
+  const res = []
+  let x = 0
+  for(const src of nodes) {
+    src.x = x++
+    for(const v of src.bv) {
+      let srcs = bv.get(v)
+      if (srcs == null)
+        bv.set(v, srcs = [])
+      srcs.push(src)
+    }
+  }
+  for(const dst of nodes) {
+    for(const v of dst.fv) {
+      const srcs = bv.get(v)
+      if (srcs) {
+        for(const src of srcs)
+          if (src !== dst)
+            res.push(src.x > dst.x ? [dst,src] : [src,dst])
+      }
+    }
+  }
+  /*
   const bv = new Map()
   const res = []
   for(const dst of nodes) {
@@ -154,12 +101,9 @@ function edgesByVars(nodes) {
     for(const i of dst.bv)
       bv.set(i, dst)
   }
+  */
   return res
 }
-
-/**
- * groups edges into a dependency graph
- */
 
 /** 
  * takes list of nodes and builds a dependecy graph (grouped by src)
@@ -175,31 +119,18 @@ function buildGraph(nodes,edges) {
   return res
 }
 
-/*
-  
-  the resulting thing is again 
-
-  type Graph 
-     = {type:"seq",  value:Graph[]} 
-     | {type:"par",  value:Graph[]} 
-     | {type:"leaf", value:Value[]} 
-
- */
-
 /**
  * returns the resulting graph (type is recursive)
  *
  * Input deps graph saying computation in `src` uses `dst`s (no trans clos)
  * 
  *    graph: {
- *      src: LetVal,
- *      dst: LetVal[]
+ *      src: Node,
+ *      dst: Node[]
  *    }
  *
  *  Each node specifies threads join 
  *
- *    type TokOp = Value & {parOp: Token[]}
- * 
  *    type Thread = {
  *      // unique thread's id
  *      id: number,
@@ -207,39 +138,42 @@ function buildGraph(nodes,edges) {
  *      rank: number,
  *      // threads to join (parallel if more than 1)
  *      // nothing on left means the thread starts with the function
- *      left: Graph[],
+ *      left: Thread[],
  *      // sequence of ops to run after the join
  *      // i.e. the ops running in the thread
- *      right: LetVal[],
- *      frames: FrameDescr[] 
+ *      right: Node[],
+ *      steps: Steps[] 
  *      // shared object describing `fork` operation for this thread
  *      fork: ForkVal,
- *      // indicates it is a first thread in fork's tuple
- *      // its first frame actually contains the fork
- *      startThread: boolean,
  *      // the threads's reference counter
  *      rc: number,  
  *      // first: FrameVal, === frames[0].exit
  *      reff: boolean        // right is effectful
  *      // nodes available after this node is computed
  *      // so the node itself and the ones it depends on
- *      scope: Set<LetVal>,
+ *      scope: Set<Node>,
  *      // last frame for this thread (usually contains `join` in its exit)
- *      lastFrame: FrameDescr
+ *      lastStep: Step
  *    }
  * 
- *    type FrameDescr = {
- *      // false if the frame is already in the input
- *      // i.e. a frame with a fork
+ *    type Step = {
+ *      skip: false
  *      // exit from the frame, 
  *      // we can parallelize only single exits frame
  *      // so it should be one
- *      exit: LetVal,      
+ *      exit: LetVal,
  *      frame: FrameVal,
  *      // content if it is a new frame or `false`
- *      toks: TokOp[] | false      
+ *      // false if the frame is already in the input
+ *      // i.e. a frame with a fork
+ *      toks: TokVal[] | false,
+ *    } | {
+ *      skip: true,
+ *      // prefix
+ *      toks: false,
+ *      value: FrameVal[],
+ *      after: FrameVal 
  *    }
- * 
  *    type ForkVal = {
  *      // threads to be started by this forks
  *      tuple: Thread[],
@@ -272,10 +206,7 @@ function buildGraph(nodes,edges) {
  *      } | {
  *        fork: false,
  *        // last fork appended to this thread (during optimization)
- *        tailFork: ForkVal | null,
- *        // last frame
- *        tailFrame: FrameVal,
- *        value: Thread
+ *        tailFork: ForkVal | null
  *      })
  *
  *  if letStmt can be parallelized:
@@ -284,27 +215,18 @@ function buildGraph(nodes,edges) {
  *     parFork?: ForkVal
  *   }
  *
- *   type RootVal = RootVal & {
- *     commonJoin: FrameValue, // a common frame with a sole join operation 
- *     commonJoinToks: TokOp[],
- *     parDefs: Thread[][]
- *   }
- *
- *   type FrameVal = FrameVal & {
- *     // the frame was replaced with parallel frames
- *     parErase: boolean;
- *     // jump to this frame is to be substituted with another address
- *     parSubst: boolean;
- *   }
+ *   type TokVal = Val & { content: Token[] }
+ * 
  */
 function deriveBlocks(graph, s, root) {
   const nodes = []
-  let store = [] // Node[]
+  let threads = [] //: Thread[]
   let id = 0
-  const {errFrameRedir,resFrameRedir,resFrame} = root
+  const {errFrameRedir,resFrameRedir,resFrame,pureExitFrame} = root
   /** first letStmt stays in same frame, other frames are rebuilt */
   const first = graph[0][0]
-  const exitGoto = graph[graph.length-1][0].goto
+  const last = graph[graph.length-1][0]
+  const exitGoto = last.skip ? last.after : last.value.goto
   exitGoto.required = true
   /**
    * ## Calculating initial threads graph from dependencies graph
@@ -334,19 +256,19 @@ function deriveBlocks(graph, s, root) {
     }
     cur.id = id++
     cur.rc = 0
-    store.push(cur)
+    threads.push(cur)
   }
   /**
    * pre-calculating thread reference counts and if it has effectful parts,
    * the pure only threads aren't interesting they are merged with corresp.
    * effectful ones in next stage
    */
-  for(const i of store) {
+  for(const i of threads) {
     for(const j of i.left)
       ++j.rc
     let reff = false
     for(const j of i.right) {
-      if (j.eff) {
+      if (j.skip || j.value.fbound) {
         reff = true
         break
       } 
@@ -356,9 +278,9 @@ function deriveBlocks(graph, s, root) {
   /**
    * ## Reducing the graph
    *
-   * merging serialized threads (running sequentially anyway)
+   * ### pure threads before effectful are ok to merge
    */
-  for(const i of store) {
+  for(const i of threads) {
     const eleft = []
     for(const j of i.left) {
       if (j.reff || j.rc !== 1) {
@@ -371,11 +293,11 @@ function deriveBlocks(graph, s, root) {
     }
     i.left = eleft
   }
-  store = store.filter(i => !i.removed)
+  threads = threads.filter(i => !i.removed)
   /**
-   * merging serialized threads (running sequentially anyway)
+   * ### merging serialized threads (running sequentially anyway)
    */
-  for(const i of store) {
+  for(const i of threads) {
     if (i.left.length === 1) {
       const [l] = i.left
       if (l.rc === 1) {
@@ -385,12 +307,12 @@ function deriveBlocks(graph, s, root) {
       }
     }
   }
-  store = store.filter(i => !i.remove)
+  threads = threads.filter(i => !i.remove)
 
   /**
    * nothing to run in parallel here (giving up)
    */
-  if (store.length === 1)
+  if (threads.length === 1)
     return
 
   /** 
@@ -401,7 +323,7 @@ function deriveBlocks(graph, s, root) {
    * objects for them.
    */
   const forks = new Map()
-  for(const i of store) {
+  for(const i of threads) {
     const lid = i.left.map(i => i.id).join()
     let fork = forks.get(lid)
     if (!fork)
@@ -410,31 +332,50 @@ function deriveBlocks(graph, s, root) {
     fork.tuple.push(i)
   }
   /**
-   * Splitting threads back into frames
+   * Splitting threads back into frames (steps)
    */
-  for(const i of store) {
+  for(const i of threads) {
     let toks = []
     let lastExit
-    const frames = i.frames = []
+    const steps = i.steps = []
     for(const j of i.right) {
-      if (j == first) {
-        lastExit = j
-        frames.push({toks:false,exit:j,frame:j.ref})
+      if (j.skip) {
+        const frame = j.value[0]
+        if (toks.length) {
+          const declSym = Kit.scope.newSym("_")
+          const ref = s.tok(Tag.push, Block.frame,
+                            {declSym,savedDecls:new Map(),
+                               resFrameRedir,catchContRedir:errFrameRedir}).value
+          const next = {toks,
+                        skip:false,
+                        frame:ref,
+                        exit:s.tok(Tag.push,Ctrl.jump,
+                                   {goto:frame,
+                                    ref,
+                                    gotoDests:[frame],
+                                    insideCtx:true,last:true})}
+          steps.push(next)
+          toks.push({content:[next.exit]})
+          toks = []
+        }
+        lastExit = null
+        steps.push({toks:false,skip:true,value:j.value,frame,after:j.after})
         continue
       }
-      toks.push(j)
-      if (j.eff) {
-        lastExit = j
+      toks.push(j.value)
+      /** # frame bounds - injecting new frame */
+      if (j.value.fbound) {
+        lastExit = j.value
         const declSym = Kit.scope.newSym("_")
         const frame = s.tok(Tag.push, Block.frame,
-                            {declSym,savedDecls:emptyMap,parSubst:true,
+                            {declSym,savedDecls:new Map(),
                              resFrameRedir,errFrameRedir}).value
-        frames.push({toks,exit:j,frame})
+        steps.push({toks,skip:false,exit:j.value,frame})
         toks = []
       }
     }
     const last = {toks}
-    frames.push(last)
+    steps.push(last)
     /**  
      * if there are some not-eff toks left or it binds some var
      * we are to add another frame with the pure code and join
@@ -442,13 +383,13 @@ function deriveBlocks(graph, s, root) {
     if (toks.length || (lastExit && lastExit.sym && lastExit.sym.bound)) {
       const declSym = Kit.scope.newSym("_")
       const frame = s.tok(Tag.push, Block.frame,
-                          {declSym,savedDecls:emptyMap,parSubst:true,
+                          {declSym,savedDecls:new Map(),
                            resFrameRedir,catchContRedir:errFrameRedir}).value
       const join = s.tok(Tag.push,Ctrl.jump,
-                         {eff:true,goto:root.pureExitFrame,
-                          gotoDests:[root.pureExitFrame],
+                         {goto:pureExitFrame,
+                          gotoDests:[pureExitFrame],
                           ref:frame,insideCtx:true,last:true})
-      toks.push({parOp:[join]})
+      toks.push({content:[join]})
       last.exit = join.value
       last.frame = frame
       if (lastExit)
@@ -457,37 +398,35 @@ function deriveBlocks(graph, s, root) {
         errFrameRedir.required = true
       if (resFrameRedir)
         resFrameRedir.required = true
-      i.lastFrame = last
+      i.lastStep = last
     } else {
       last.toks = false
       last.exit = false
-      last.frame = root.pureExitFrame
-      i.lastFrame = frames[frames.length-2]
+      last.frame = pureExitFrame
+      i.lastStep = steps[steps.length-2]
     }
   }
   /**
    * Generating frame's boundaries and calculating parameters
    * it require (patSym, declSym etc)
    */
-  for(const i of store) {
-    i.startThread = false
-    const fs = i.frames
-    for(const j of fs) {
+  for(const i of threads) {
+    const steps = i.steps
+    for(const j of steps) {
       const f = j.frame
       if (j.toks) {
         for(const k of j.toks) {
-          if (k.ref) {
-            k.ref.parErase = true
-            k.ref = f
-          }
+          if (!k.skip && k.ref)
+            k.ref.removed = true
         }
       }
     }
-    for(let j = 0, len = fs.length - 1; j < len; ++j) {
-      const cur = fs[j]
-      const next = fs[j+1]
-      cur.exit.gotoDests = [cur.exit.goto = next.frame]
-      next.frame.patSym = cur.exit.sym
+    for(let j = 0, len = steps.length - 1; j < len; ++j) {
+      const cur = steps[j]
+      const next = steps[j+1]
+      setStepTail(cur, next.frame)
+      if (!cur.skip)
+        next.frame.patSym = cur.exit.sym
     }
     i.rank = Math.max(0,...i.left.map(i => i.rank)) + 1
   }
@@ -495,10 +434,18 @@ function deriveBlocks(graph, s, root) {
   for(const i of forksArr)
     i.rank = Math.max(...i.tuple.map(i => i.rank))
   const maxRank = Math.max(...forksArr.map(i => i.rank))
+  const firstFrame = first.skip ? first.value[0] : first.value.ref
+  for(const fork of forksArr) {
+    fork.head = s.tok(Tag.push, Block.frame,
+                      {declSym:Kit.scope.newSym("_"),savedDecls:new Map(),
+                       resFrameRedir:firstFrame.resFrameRedir,
+                       catchContRedir:firstFrame.catchContRedir}).value
+  }
+  const firstHead = forksArr[0].head
+  for(const i of firstFrame.enters)
+    i.goto = firstHead
   for(const i of forksArr)
     liftForkExprs(i)
-  for(const fork of forksArr)
-    fork.enter = fork.tuple[0].frames[0].exit
   /** calculating root expression */
   for(const fork of forksArr) {
     const {exprs} = fork
@@ -512,32 +459,30 @@ function deriveBlocks(graph, s, root) {
       if (i.rc === 0)
         tup.add(i)
       if (i.fork) {
-        i.joinFrame = i.joinFork ? i.joinFork.enter.ref : root.pureExitFrame
+        i.joinFrame = i.joinFork ? i.joinFork.head : root.pureExitFrame
       } else {
         i.tailFork = null
-        i.tailFrame = i.value.lastFrame
       }
     }
-    if (tup.size === 1) {
+    if (tup.size === 1)
       [fork.rootExpr] = tup
-    } else
+    else
       fork.rootExpr = {fork:true,rc:0,tup,joinFork:null,joinFrame:resFrameRedir}
   }
-  forksArr[0].rootExpr.joinFrame = exitGoto
+  setExprTail(forksArr[0].rootExpr, exitGoto)
   for(const i of forksArr)
     i.rootExpr = optForkExpr(i.rootExpr)
-  /** marking letStmt to substitude forks */
-  for(const i of forksArr) {
-    if (i.rootExpr && i.enter)
-      i.enter.parFork = i
-    i.tuple[0].startThread = true
-  }
-  root.parDefs.push(store)
+  for(const i of forksArr)
+    calcExprRefCount(i.rootExpr)
+  root.parFrames.push([...emitFrames()])
+  root.parDefs.push(threads)
+  return
+  
   /**
    * gets all possible graph splittings calculating `dests`
    */
   function getOpts(dests/*:LetVal[]*/)/*: Thread[][] */ {
-    const len = store.length
+    const len = threads.length
     const res = []
     _bt(0, new Set(dests), [])
     return res
@@ -549,7 +494,7 @@ function deriveBlocks(graph, s, root) {
       }
       if (pos === len)
         return
-      const f = store[pos]
+      const f = threads[pos]
       const next = new Set(dests)
       f.scope.forEach(next.delete,next)
       if (dests.size !== next.size)
@@ -601,7 +546,7 @@ function deriveBlocks(graph, s, root) {
       fork.lub = nf
       fork.lubExpr = expr
     } else {
-      /** 
+      /**
        * not all deps are located in the same thread
        * looking for a common ancestor
        */
@@ -655,6 +600,13 @@ function deriveBlocks(graph, s, root) {
       }
     }
   }
+  function calcExprRefCount(expr) {
+    expr.rc++
+    if (expr.rc === 1 && expr.fork) {
+      for(const i of expr.tup)
+        calcExprRefCount(i)
+    }
+  }
   /**
    * optimizing fork expressions
    *   - removing single thread forks
@@ -666,152 +618,123 @@ function deriveBlocks(graph, s, root) {
    *         - Xs is associative, commutative
    */
   function optForkExpr(expr) {
-    if (!expr.fork)
-      return expr
     if (expr.opt)
       return expr.opt
-    if (expr.tup.size === 1) {
-      const [child] = expr.tup
-      if (child.rc < 2) {
-        const next = optForkExpr(child)
-        // TODO:
-        setTail(next,expr.joinFrame,expr.joinFork)
-        return expr.opt = next
+    if (!expr.fork)
+      return expr.opt = {fork:false,value:expr.value,tailFork:expr.tailFork,rc:0}
+    const tup = [...expr.tup].map(optForkExpr).filter(nonEmptyThread)
+    if (tup.length === 1) {
+      const [child] = tup
+      if (child.rc === 1) {
+        setExprTail(child,expr.joinFrame,expr.joinFork)
+        child.rc = 0
+        return expr.opt = child
       }
     }
-    return expr.opt = {fork:true,tup:[...expr.tup].map(optForkExpr),
-                       joinFrame:expr.joinFrame, joinFork:expr.joinFork}
+    return expr.opt = {fork:true,tup,joinFrame:expr.joinFrame,
+                       joinFork:expr.joinFork,rc:0}
   }
-  function setTail(expr, frame, fork) {
+  /** checks if the expression does anything */
+  function nonEmptyThread(expr) {
+    if (expr.fork)
+      return expr.tup.length > 0
+    const thread = expr.value
+    if (thread.steps.length !== 2)
+      return true
+    const [step] = thread.steps
+    if (step.skip || !step.toks || step.toks.length !== 1)
+      return true
+    const [tok] = step.toks
+    if (tok.origType !== Ctrl.jump)
+      return true
+    if (tok.goto !== pureExitFrame)
+      return true
+    step.removed = true
+    return false
+    
+  }
+  /** sets destination for a step */
+  function setStepTail(step, dest) {
+    if (step.skip) {
+      for(const i of step.after.enters)
+        i.goto = dest
+    } else
+      step.exit.goto = dest
+  }
+  /** sets destination for fork expression */
+  function setExprTail(expr, frame, fork) {
     if (expr.fork) {
       if (expr.joinFork) {
-        setTail(expr.joinFork.rootExpr, frame, fork)
+        setExprTail(expr.joinFork.rootExpr, frame, fork)
       } else {
         expr.joinFork = fork
         expr.joinFrame = frame
       }
     } else {
       if (expr.tailFork) {
-        setTail(expr.tailFork.rootExpr, frame, fork)
+        setExprTail(expr.tailFork.rootExpr, frame, fork)
       } else {
-        expr.value.lastFrame.exit.goto = frame
+        setStepTail(expr.value.lastStep, frame)
+        // expr.value.lastStep.exit.goto = frame
         expr.tailFork = fork
-        expr.tailFrame = frame
       }
     }
   }
-}
-
-/** 
- * calculates DAG and stores it into root
- *
- *   type DAG = [Node]
- *   type Node 
- *      // sequentialy running frames from `value`
- *      = { type: "leaf", value: FrameVal[] }
- *      // parallel sub-graphs 
- *      | { type: "fork", value: Node[] }
- *      // sequential sub-graphs
- *      | { type: "seq": value: Node[] }  
- */
-export function prepare(sa) {
-  const s = Kit.auto(sa/*deb_("pre-pa",sa)*/)
-  const root = s.first.value
-  const denyClone = root.opts.denyClone !== false
-  const chains = []
-  const inits = new Set()
-  if (!root.opts.scopePrefix)
-    throw new Error("`par` requires `scopePrefix:true`")
-  if (s.opts.cleanupFrameVars)
-    throw new Error("NOT IMPLEMENTED: `par` with `cleanupFrameVars:true`")
-  const [initJump] = root.first.exits
-  // calcVars(sa)
-  start(initJump)
-  const nodes = getNodes(chains,sa)
-  root.parDefs = []
-  nodes.map(solve)
-  // root.par = {chains:chains.map(rearrange)}
-  return sa
-  function solve(nodes) {
-    nodes.forEach(nodeVars)
-    const edges = edgesByVars(nodes)
-    const graph = buildGraph(nodes, edges)
-    deriveBlocks(graph, s, root)
-  }
-  function start(from) {
-    // skipping to first effectful jump
-    if (inits.has(from))
-      return
-    inits.add(from)
-    const seen = new Set()
-    const value = []
-    for(let cur = from;;[cur] = cur.goto.exits) {
-      if (seen.has(cur))
-        break
-      seen.add(cur)
-      if (cur.gotoDests.length > 1) {
-        for(const i of cur.gotoDests)
-          i.exits.forEach(start)
-        break
+  /** emits parallel frames */
+  function* emitFrames() {
+    for(const i of forksArr) {
+      if (i.rootExpr) {
+        const frame = i.head
+        yield s.enter(Tag.push,Block.frame,i.head)
+        // i.tuple[0].steps[0].enters //TODO:
+        for(const expr of flattenExpr(frame, i.rootExpr)) {
+          const lab = s.label()
+          const reflected = !expr.root
+          let tmpVar = expr.tmpVar
+          if (expr.rc > 1) {
+            yield s.enter(Tag.push, Block.app,{reflected,sym:shareId,tmpVar})
+            tmpVar = null
+          }
+          if (expr.fork) {
+            yield s.enter(Tag.push,Block.letStmt,{
+              eff:true,reflected,goto:expr.joinFrame,
+              ref:frame,tmpVar,noInline:expr.rc > 1})
+            if (expr.tup.length === 1) {
+              const [i] = expr.tup
+              yield s.tok(Tag.push,Tag.Identifier,{sym:i.tmpVar})
+            } else {
+              yield s.enter(Tag.push,Block.app,{
+                result:false,sym:forkId})
+              yield s.enter(Tag.push,Tag.ArrayExpression)
+              yield s.enter(Tag.elements,Tag.Array)
+              for(const i of expr.tup)
+                yield s.tok(Tag.push,Tag.Identifier,{sym:i.tmpVar})
+            }
+          } else {
+            const next = expr.value.steps[0].frame
+            // TODO: propagate share
+            if (expr.rc > 1) {
+              next.noInline = true
+            }
+            yield s.tok(Tag.push,Ctrl.jump,{
+              ref:frame,goto:next,reflected,tmpVar})
+          }
+          yield* lab()
+        }
+        yield* s.leave()
       }
-      const {goto} = cur
-      if (!goto)
-        break
-      if (denyClone && goto.enters.size !== 1) {
-        goto.exits.forEach(start)
-        break
-      }
-      const exitsNum = goto.exits.size
-      if (exitsNum > 1
-         || cur.ref.catchContRedir !== goto.catchContRedir
-         || cur.ref.resultContRedir !== goto.resultContRedir) {
-        goto.exits.forEach(start)
-        break
-      } else
-        if (cur.bindName === "chain")
-          value.push(cur)
-      if (exitsNum !== 1)
-          break
     }
-    if (value.length)
-      chains.push(value)
-  }
-}
-
-const forkSym = Kit.sysId("fork")
-
-const emptyMap = new Map()
-
-function* substFrames(si) {
-  const s = Kit.auto(si)
-  const root = s.first.value
-  yield* s.find(i => i.type === Block.frame)
-  for(const i of s.sub()) {
-    if (i.enter && i.type === Block.frame && i.value.parErase)
-      Kit.skip(s.copy(i))
-    else
-      yield i
-  }
-  for(const store of root.parDefs) {
-    for(const j of store) {
-      for(const k of j.frames) {
-        if (k.toks) {
-          yield s.enter(Tag.push, Block.frame, k.frame)
-          for(const l of k.toks)
-            yield* l.parOp
+    for(const i of threads) {
+      for(const j of i.steps) {
+        if (!j.skip && j.toks && !j.removed) {
+          yield s.enter(Tag.push, Block.frame, j.frame)
+          for(const l of j.toks)
+            yield* l.content
           yield* s.leave()
         }
       }
     }
   }
-  yield* s
-}
-
-/** 
- * interprets `parFork` field of `letStmt` to substitute corresponding tokens
- */
-function* substJumps(si) {
-  const s = Kit.auto(si)
   /** 
    * returning list of fork expressions ordered to resemble original order 
    * as much as possible
@@ -842,69 +765,214 @@ function* substJumps(si) {
       }
     }
   }
-  
-  for(const i of s) {
-    if (i.enter) {
-      switch(i.type) {
-      case Block.letStmt:
-        if (!i.value.eff)
+}
+
+/** 
+ * calculates frame's chains which can be parallelized
+ * 
+ *    type PreNode = { skip:false, value: FrameVal }
+ *      // sequence of frames which cannot be added to the chain
+ *      // because of more than one exit or enter, or `parRegion:false`  
+ *      //  * after - next frame going after - always should be one
+ *      // its `enters` field refers all the exits in the skipped block
+ *      | {skip:true, value:FrameVal[], after:FrameVal}
+ *
+ * each PreNode in the chain has exactly one enter from the previous link
+ * and exactly one exit to the next link
+ */
+export function frameThreads(first,resFrame) {
+  const chains = []
+  _collect(first, null, [], emptyMap)
+  return chains
+  /**
+   * frame, till: FrameVal 
+   * skip: FrameVal[]
+   */
+  function _preCollect(frame, till, skip, recSkips) {
+    let curSkip
+    const res = []
+    for(;frame && frame !== till;) {
+      const {exits} = frame
+      if (exits.size === 0)
+        break
+      const chain = [frame]
+      for(const i of exits) {
+        if (i.goto.dynamicJump)
+          return res
+        if (i.goto === frame) {
+          i.recExit = true
           break
-        if (!i.value.parFork || !i.value.parFork.rootExpr.fork)
-          break
-        const frame = i.value.ref
-        for(const expr of flattenExpr(frame, i.value.parFork.rootExpr)) {
-          const lab = s.label()
-          const reflected = !expr.root
-          let tmpVar = expr.tmpVar
-          if (expr.rc > 1) {
-            yield s.enter(Tag.push, Block.app,{reflected,sym:shareId,tmpVar})
-            tmpVar = null
-          }
-          if (expr.fork) {
-            yield s.enter(Tag.push,Block.letStmt,{
-              eff:true,reflected,goto:expr.joinFrame,
-              ref:frame,gotoDests:[expr.joinFrame],tmpVar})
-            yield s.enter(Tag.push,Block.app,{
-              result:false,sym:forkId})
-            yield s.enter(Tag.push,Tag.ArrayExpression)
-            yield s.enter(Tag.elements,Tag.Array)
-            for(const i of expr.tup)
-              yield s.tok(Tag.push,Tag.Identifier,{sym:i.tmpVar})
-          } else {
-            const v = expr.value
-            if (v.startThread) {
-              yield s.enter(Tag.push,Block.letStmt,{
-                eff:true,ref:frame,
-                goto:i.value.goto,gotoDests:[i.value.goto],
-                reflected,tmpVar})
-              yield* s.sub()
-              yield* s.leave()
-            } else {
-              const next = v.frames[0].frame
-              yield s.tok(Tag.push,Ctrl.jump,{
-                ref:frame,goto:next,gotoDests:[next],reflected,tmpVar})
-            }
-          }
-          yield* lab()
         }
-        Kit.skip(s.copy(i))
-        continue
+        i.recExit = false
+      }
+      for(const i of frame.enters) {
+        if (!i.rec)
+          continue
+        for(const j of exits) {
+          if (j.goto === frame)
+            continue
+          if (j.goto.framesAfter.has(i.ref)) {
+            j.recExit = true
+            continue
+          }
+        }
+      }
+      const nonRecExits = []
+      const recExits = []
+      for(const i of exits) {
+        (i.recExit ? recExits : nonRecExits).push(i)
+      }
+      if (recExits.length || nonRecExits.length > 1) {
+        if (!curSkip)
+          curSkip = []
+        curSkip.push(frame)
+      }
+      if (recExits.length) {
+        let nextSkip = []
+        const nextRecSkips = new Map(recSkips)
+        nextRecSkips.set(frame, nextSkip)
+        for(const i of recExits)
+          _collect(i.goto, null, nextSkip, nextRecSkips)
+        curSkip.push(...nextSkip)
+        nextSkip.unshift(frame)
+      }
+      skip.push(frame)
+      if (nonRecExits.length === 1) {
+        const [exit] = nonRecExits
+        if (exit.opts.parRegion) {
+          if (curSkip) {
+            res.push({skip:true,value:curSkip})
+            curSkip = null
+          }
+          if (recExits.length === 0)
+            res.push({skip:false,value:frame})
+          frame = exit.goto
+        } else {
+          if (!curSkip)
+            curSkip = []
+          curSkip.push(frame)
+        }
+        frame = exit.goto
+        if (exit.rec) {
+          const value = recSkips.get(frame)
+          res.pop() // TODO: remove
+          assert.ok(value)
+          res.push({skip:true,value,after:resFrame})
+          
+          return res
+        }
+      } else {
+        frame = _branchesJoin(nonRecExits)
+        for(const i of nonRecExits)
+          _collect(i.goto, frame, curSkip, recSkips)
       }
     }
-    yield i
+    if (curSkip && frame) {
+      res.push({skip:true,value:curSkip,after:frame})
+    }
+    return res
+  }
+  function _collect(frame, till, skip, recSkips) {
+    const res = _preCollect(frame, till, skip, recSkips)
+    if (res.length) {
+      for(let i = 0, len = res.length, prev = res[0]; i < len; i++) {
+        const cur = res[i]
+        if (cur.skip) {
+          const b = res[i-1], a = res[i+1]
+          if (a)
+            cur.after = a.value
+          assert.ok((!b || !b.skip) && (!a || !a.skip))
+        } else {
+          prev = cur
+        }
+      }
+      chains.unshift(res)
+    }
+  }
+  function _branchesJoin(exits) {
+    if (exits.length < 2)
+      return null
+    const [exit, ...rest] = exits
+    for(const j of exit.goto.framesAfter) {
+      if (rest.every(k => j === k.goto || k.goto.framesAfter.has(j)))
+        return j
+    }
+    return null
   }
 }
 
-export function interpret(si) {
+/**
+ * Returns chain with Frame links unfolded to their operations
+ *
+ *  chain: PreNode[]
+ *  type Node = {skip:false,value:Val} 
+ *    | {skip:true,value:FrameVal[],after:FrameVal}
+ *  returns Node[]
+ */
+function unfoldLinks(chain) {
+  const res = []
+  for(const i of chain) {
+    if (i.skip) {
+      res.push(i)
+      continue
+    }
+    for(const j of i.value.steps)
+      res.push({skip:false,value:j})
+  }
+  return res
+}
+
+const forkSym = Kit.sysId("fork")
+
+const emptyMap = new Map()
+
+function* substFrames(si) {
+  const s = Kit.auto(Block.cleanup(si))
+  const root = s.first.value
+  let c
+  for(c of s) {
+    if (c.leave && c.type === Block.chain)
+      break
+    yield c
+  }
+  for(const frame of root.parFrames)
+    yield* frame
+  yield c
+  yield* s
+}
+
+export function convert(si) {
   const sa = Kit.toArray(si)
   const s = Kit.auto(sa)
   const root = s.first.value
   if (!root.opts.par)
     return sa
-  prepare(sa)
+  const denyClone = root.opts.denyClone !== false
+  const chains = []
+  const inits = new Set()
+  if (!root.opts.scopePrefix)
+    throw new Error("`par` requires `scopePrefix:true`")
+  if (s.opts.cleanupFrameVars)
+    throw new Error("NOT IMPLEMENTED: `par` with `cleanupFrameVars:true`")
+  Ctrl.convolveFrames(sa)
+  const frames = root.cfg
+  const [initJump] = root.first.exits
+  const fchains = frameThreads(initJump.goto,root.resFrame)
+        .filter(i => i && i.length > 1)
+  const jchains = fchains.map(unfoldLinks)
+  root.parDefs = []
+  root.parFrames = []
+  for(const nodes of jchains) {
+    nodes.forEach(nodeVars)
+    const edges = edgesByVars(nodes)
+    const graph = buildGraph(nodes, edges)
+    deriveBlocks(graph, s, root)
+  }
   if (!root.parDefs || !root.parDefs.length)
     return s
-  return substJumps(substFrames(s))
+  const res = Kit.toArray(substFrames(s))
+  Ctrl.convolveFrames(res)
+  return res
 }
 
 function byId(a,b) { return a.id - b.id }
