@@ -20,7 +20,7 @@
     "docs": "markdox src/main.js -o api.md"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.44",
+    "@babel/cli": "^7.0.0",
     "mocha": "^5.1.0"
   }
 }

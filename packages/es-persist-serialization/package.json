@@ -29,7 +29,7 @@
     "@effectful/serialization": "^1.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.49",
+    "@babel/cli": "^7.0.0",
     "@effectful/serialization": "^1.0.1",
     "mocha": "^5.0.5"
   },
