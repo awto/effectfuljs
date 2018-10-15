@@ -131,8 +131,7 @@ function forOfStmtImpl(loose, s) {
   const root = s.first.value
   root.hasForOf = false
   const all = (loose || s.opts.loose) && s.opts.leanForOf
-  const invert = !loose && s.opts.invertForOf
-  const finalize = s.opts.finalizeForOf !== false // || invert
+  const finalize = s.opts.finalizeForOf !== false
   const esPureProtocol = s.opts.esForOf
   const esEffProtocol = s.opts.esForAwaitOf
   const noResult = s.opts.returnContext === false
@@ -212,10 +211,6 @@ function forOfStmtImpl(loose, s) {
             && i.type !== Tag.ForInStatement
                 && (loop.node.await || s.opts.pureForOf === false)
           const esProtocol = bind && esEffProtocol || !bind && esPureProtocol
-          if (invert && i.value.eff && i.type === Tag.ForOfStatement) {
-            forOfInfo = {sym,loop}
-            root.hasForOf = true
-          }
           sym.declBlock = sym.declLoop = loop
           sym.hasRefs = true
           i.value.forOfInfo = forOfInfo
@@ -783,145 +778,4 @@ export function blockScoping(sa) {
 }
 
 const blockScopeSwitch = Kit.symbol("blockScopeSwitch")
-
-export function prepareInvertForOf(si) {
-  const sa = Kit.toArray(si)
-  const root = sa[0].value
-  if (!root.opts.invertForOf)
-    return sa
-  if (!root.hasForOf)
-    return sa
-  recover(sa)
-  return sa
-  function recover() {
-    const s = Kit.auto(sa)
-    for(const i of s) {
-      if (i.enter) {
-        switch(i.type) {
-        case Tag.IfStatement:
-	        if (i.value.forOfExit) {
-	          for(const k of s) {
-	            if (k.enter && k.type === Ctrl.jump) {
-	              k.value.ref.forOfFin = i.value.forOfExit
-	              i.value.forOfExit.fin = k.value
-                if (k.value.goto.dynamicJump) {
-                  k.value.goto.declSym.dynForOf = i.value.forOfExit
-                }
-	              break
-	            }
-	          }
-	        }
-	        const j = s.cur()
-          const {forOfInfo} = j.value
-          if (!forOfInfo)
-            continue
-          i.value.forOfInfo = j.value.forOfInfo
-          Kit.skip(s.one())
-          Kit.skip(s.one())
-          assert.ok(s.cur().pos === Tag.alternate)
-          assert.ok(s.cur().type === Tag.BlockStatement)
-          let jump
-          for(const j of s.one())
-            if (j.enter && j.type === Ctrl.jump)
-              jump = j.value
-          assert.ok(jump)
-          jump.goto.catchContRedir.required = true
-          jump.goto.required = true
-          const frame = jump.ref
-          const patSym = forOfInfo.patSym = frame.patSym =
-	              frame.patSym
-	              || root.commonPatSym
-	              || Kit.scope.newSym("i")
-          jump.ref.forOfInfo = forOfInfo
-	        forOfInfo.body = jump.ref
-          forOfInfo.exit = jump
-          break
-        case Ctrl.jump:
-          const {goto} = i.value
-          if (goto.dynamicJump) {
-            goto.declSym.savedContext = null
-            for(const j of i.value.gotoDests) {
-              if (j.forOfInfo) {
-                goto.declSym.savedContext = Bind.tempVarSym(root,"fx")                 
-                break
-              }
-            }
-          }
-          break
-        }
-      }
-    }
-  }
-}
-
-
-/** inject for-of jumps */
-export function invertForOf(si) {
-  const sa = Kit.toArray(si)
-  const root = sa[0].value
-  if (!root.opts.invertForOf || !root.hasForOf)
-    return sa
-  const jumpsExit = root.opts.inlinePureJumps === "exit"
-  const dirCall = root.opts.storeCont === "step"
-  return inject()
-  function inject() {
-    const s = Kit.auto(sa)
-    const ctx = root.contextSym
-    const {storeResultCont,storeCont:cont} = s.opts
-    if (!ctx)
-      throw s.error("not implemented: `invertForOf` without context object")
-    const paramCtx = s.opts.contextBy === "parameter"
-    const thisCtx = s.opts.contextBy === "reference"
-    const frames = []
-    const res = Kit.toArray(_inject(s))
-    return res
-    function* _inject(sw) {
-      for(const i of sw) {
-        if (i.enter) {
-          switch(i.type) {
-          case Tag.MemberExpression:
-            if (!i.value.forOfInfo)
-              break
-            yield s.tok(i.pos,Tag.Identifier,{sym:i.value.forOfInfo.patSym})
-            Kit.skip(s.copy(i))
-            continue
-          case Block.frame:
-	    frames.push(i.value)
-            i.value.declSym.forOfInfo = i.value.forOfInfo
-            break
-          case Block.letStmt:
-            if (!i.value.eff)
-              break
-            if (i.value.bindName === "yldStar") {
-              i.value.storeCont = false
-              break
-            }
-          case Ctrl.jump: {
-            const {goto} = i.value
-            const {forOfInfo} = goto
-            if (!forOfInfo)
-              break
-            i.value.bindName = `${i.value.bindName||"jump"}ForOf`
-            const params = i.value.params || (i.value.params = [])
-            params.push(forOfInfo.exit.goto
-                        ? forOfInfo.exit.goto.declSym
-                        : root.resFrameRedir.declSym)
-            params.push(forOfInfo.sym)
-            break }
-            
-          case Tag.IfStatement:
-            if (!i.value.forOfInfo)
-              break
-            Kit.skip(s.one())
-            yield* Kit.reposOne(_inject(s.one()),i.pos)
-            Kit.skip(s.one())
-            s.close(i)
-            continue
-          }
-        }
-        yield i
-      }
-    }
-  }
-}
 

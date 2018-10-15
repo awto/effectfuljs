@@ -184,11 +184,8 @@ function a14() {
   return M.chain(eff(1), _1);
 
   function _1(a) {
-    var b;
-
     if (a) {
-      b = 2;
-      return b;
+      return 2;
     } else {
       return M.chain(eff(3), _2);
     }
@@ -202,11 +199,8 @@ function a14_1() {
   return M.chain(eff(1), _1);
 
   function _1(a) {
-    var b;
-
     if (a) {
-      b = 2;
-      return b;
+      return 2;
     } else {
       return eff(3);
     }
@@ -217,13 +211,10 @@ function a15() {
   return M.chain(eff(1), _1);
 
   function _1(a) {
-    var b;
-
     if (a) {
       return M.chain(eff(2), _2);
     } else {
-      b = 3;
-      return b;
+      return 3;
     }
   }
 
@@ -474,11 +465,8 @@ function b() {
   }
 
   function _15(a) {
-    var b;
-
     if (a) {
-      b = 2;
-      return M.jump(b, _16);
+      return M.jump(2, _16);
     } else {
       return M.chain(eff(3), _16);
     }
@@ -489,13 +477,10 @@ function b() {
   }
 
   function _17(a) {
-    var b;
-
     if (a) {
       return M.chain(eff(2), _18);
     } else {
-      b = 3;
-      return M.jump(b, _18);
+      return M.jump(3, _18);
     }
   }
 
@@ -589,13 +574,10 @@ function a1() {
   }
 
   function _6(a) {
-    var b;
-
     if (a % 2) {
       return M.yldStar(M.yld("c2"), _7);
     } else {
-      b = "c3";
-      return M.jump(b, _7);
+      return M.jump("c3", _7);
     }
   }
 
@@ -608,11 +590,8 @@ function a1() {
   }
 
   function _9(a) {
-    var b;
-
     if (a % 2) {
-      b = "d2";
-      return M.jump(b, _10);
+      return M.jump("d2", _10);
     } else {
       return M.yldStar(M.yld("d3"), _10);
     }
@@ -750,7 +729,7 @@ function a1() {
     if (a) {
       return M.yld("o4r");
     } else {
-      return a;
+      return M.pure(a);
     }
   }
 }

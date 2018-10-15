@@ -105,21 +105,24 @@ function c() {
         return M.pure(c._r);
 
       case 9:
-        return M.raise(c._err1);
+        return M.pure(c._r);
 
       case 10:
+        return M.raise(c._err1);
+
+      case 11:
         c.$sc = 6;
         c._ex = p;
         return M.jump();
 
-      case 11:
-        c.$sc = 7;
-        c._fc = 8, c._r = p;
-        return M.jump();
-
       case 12:
         c.$sc = 7;
-        c._fc = 9, c._err1 = p;
+        c._fc = 9, c._r = p;
+        return M.jump();
+
+      case 13:
+        c.$sc = 7;
+        c._fc = 10, c._err1 = p;
         return M.jump();
 
       case 2:
@@ -174,16 +177,19 @@ function d() {
         return M.pure(d._r);
 
       case 9:
-        return M.raise(d._err1);
+        return M.pure(d._r);
 
       case 10:
-        d.$sc = 7;
-        d._fc = 9, d._err1 = p;
-        return M.jump();
+        return M.raise(d._err1);
 
       case 11:
         d.$sc = 7;
-        d._fc = 8, d._r = p;
+        d._fc = 10, d._err1 = p;
+        return M.jump();
+
+      case 12:
+        d.$sc = 7;
+        d._fc = 9, d._r = p;
         return M.jump();
 
       case 2:
@@ -259,10 +265,10 @@ function _err(s) {
 function __err(s) {
   switch (s) {
     case 5:
-      return 10;
+      return 11;
 
     case 6:
-      return 12;
+      return 13;
 
     default:
       return 1;
@@ -273,7 +279,7 @@ function _err1(s) {
   switch (s) {
     case 5:
     case 6:
-      return 10;
+      return 11;
 
     default:
       return 1;

@@ -590,7 +590,7 @@ function a31() {
 function a32(a1,a2) {
   try {
     try {
-      console.log("hi");
+      console.log("hi",a1);
       eff(1);
       eff(2);
     } catch(e) {

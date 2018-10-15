@@ -44,7 +44,8 @@ function d_5(d, a) {
 
   if (a) {
     b = d._i += 3;
-    return b;
+    d._i = null;
+    return M.yldStar(b, M.pure);
   } else {
     return M.pure(d._i);
   }

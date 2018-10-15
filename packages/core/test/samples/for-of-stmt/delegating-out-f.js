@@ -127,7 +127,7 @@ function a3() {
 
     if (a) {
       a3.$sc = _2;
-      return M.jumpForOfR(void 0, _11, _6, a3._loop);
+      return M.jumpForOf(void 0, _11, _6, a3._loop);
     } else {
       b = a3._i += 2;
       return M.yldStar(M.yld(b), _11);
@@ -141,7 +141,7 @@ function a3() {
       return M.jump(void 0, _9);
     } else {
       a3.$sc = _2;
-      return M.jumpForOfR(void 0, _11, _6, a3._loop);
+      return M.jumpForOf(void 0, _11, _6, a3._loop);
     }
   }
 
@@ -192,7 +192,7 @@ function a4() {
     {
       a4._i = i;
       a4.$sc = _3;
-      return M.jumpR(void 0, _13);
+      return M.jump(void 0, _13);
     }
   }
 
@@ -282,7 +282,7 @@ function a5(i) {
       a5._i1 = i;
       a5._loop1 = M.iterator(a5._i1);
       a5.$sc = _3;
-      return M.jumpForOfR(void 0, _21, _13, a5._loop1);
+      return M.jumpForOf(void 0, _21, _13, a5._loop1);
     }
   }
 
@@ -291,7 +291,7 @@ function a5(i) {
     {
       j = i;
       a5.$sc = _4;
-      return M.jumpR(void 0, _22);
+      return M.jump(void 0, _22);
     }
   }
 
@@ -304,32 +304,32 @@ function a5(i) {
       case 1:
         a5.$sc = _12;
         a5._fc = _3, a5._fe = _21;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 2:
         a5.$sc = _12;
         a5._fc = _13, a5._fe = _20, a5._fc1 = _2, a5._fe1 = _20;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 3:
         a5.$sc = _12;
         a5._fc = _13, a5._fe = _20, a5._fc1 = _2, a5._fe1 = _20;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 4:
         a5.$sc = _12;
         a5._fc = _13, a5._fe = _20, a5._fc1 = _14, a5._fe1 = _16, a5._fc2 = _15, a5._fe2 = _16;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 5:
         a5.$sc = _12;
         a5._fc = _13, a5._fe = _20, a5._fc1 = _14, a5._fe1 = _16, a5._fc2 = _15, a5._fe2 = _16, a5._r = 10;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 6:
         a5.$sc = _12;
         a5._fc = _3, a5._fe = _21;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 7:
         return M.yldStar(M.yld(7), _22);
@@ -352,44 +352,44 @@ function a5(i) {
       default:
         a5.$sc = _12;
         a5._fc = _3, a5._fe = _21;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
     }
   }
 
   function _6(a5) {
     a5.$sc = _12;
     a5._fc = _3, a5._fe = _21;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _7(a5) {
     a5.$sc = _12;
     a5._fc = _13, a5._fe = _20, a5._fc1 = _2, a5._fe1 = _20;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _8(a5) {
     a5.$sc = _12;
     a5._fc = _13, a5._fe = _20, a5._fc1 = _2, a5._fe1 = _20;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _9(a5) {
     a5.$sc = _12;
     a5._fc = _13, a5._fe = _20, a5._fc1 = _14, a5._fe1 = _16, a5._fc2 = _15, a5._fe2 = _16;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _10(a5) {
     a5.$sc = _12;
     a5._fc = _13, a5._fe = _20, a5._fc1 = _14, a5._fe1 = _16, a5._fc2 = _15, a5._fe2 = _16, a5._r = 10;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _11(a5) {
     a5.$sc = _12;
     a5._fc = _3, a5._fe = _21;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _12(a5) {
@@ -474,7 +474,7 @@ function a5_1(i) {
       a5_1._i1 = i;
       a5_1._loop1 = M.iterator(a5_1._i1);
       a5_1.$sc = _3;
-      return M.jumpForOfR(void 0, _16, _9, a5_1._loop1);
+      return M.jumpForOf(void 0, _16, _9, a5_1._loop1);
     }
   }
 
@@ -490,7 +490,7 @@ function a5_1(i) {
     switch (a) {
       case 1:
         a5_1.$sc = _3;
-        return M.jumpForOfR(void 0, _16, _9, a5_1._loop1);
+        return M.jumpForOf(void 0, _16, _9, a5_1._loop1);
 
       case 2:
         a5_1.$sc = _9;
@@ -514,7 +514,7 @@ function a5_1(i) {
 
       case 6:
         a5_1.$sc = _3;
-        return M.jumpForOfR(void 0, _16, _9, a5_1._loop1);
+        return M.jumpForOf(void 0, _16, _9, a5_1._loop1);
 
       case 7:
         return M.yldStar(M.yld(7), _16);
@@ -536,7 +536,7 @@ function a5_1(i) {
 
       default:
         a5_1.$sc = _3;
-        return M.jumpForOfR(void 0, _16, _9, a5_1._loop1);
+        return M.jumpForOf(void 0, _16, _9, a5_1._loop1);
     }
   }
 
@@ -629,7 +629,7 @@ function a5_2(i) {
       a5_2._i1 = i;
       a5_2._loop1 = M.iterator(a5_2._i1);
       a5_2.$sc = _3;
-      return M.jumpForOfR(void 0, _21, _13, a5_2._loop1);
+      return M.jumpForOf(void 0, _21, _13, a5_2._loop1);
     }
   }
 
@@ -638,7 +638,7 @@ function a5_2(i) {
     {
       j = i;
       a5_2.$sc = _4;
-      return M.jumpR(void 0, _22);
+      return M.jump(void 0, _22);
     }
   }
 
@@ -651,31 +651,31 @@ function a5_2(i) {
       case 1:
         a5_2.$sc = _12;
         a5_2._fc = _3, a5_2._fe = _21;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 2:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 3:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 4:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 5:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16, a5_2._r = 10;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 6:
         a5_2.$sc = _11;
-        return M.jumpR(void 0, _22);
+        return M.jump(void 0, _22);
 
       case 7:
         return M.yldStar(M.yld(7), _22);
@@ -697,38 +697,38 @@ function a5_2(i) {
 
       default:
         a5_2.$sc = _11;
-        return M.jumpR(void 0, _22);
+        return M.jump(void 0, _22);
     }
   }
 
   function _6(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _3, a5_2._fe = _21;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _7(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _8(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _9(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _10(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16, a5_2._r = 10;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _11(a5_2) {
@@ -818,7 +818,7 @@ function a5_2(i) {
       a5_2._i1 = i;
       a5_2._loop1 = M.iterator(a5_2._i1);
       a5_2.$sc = _3;
-      return M.jumpForOfR(void 0, _21, _13, a5_2._loop1);
+      return M.jumpForOf(void 0, _21, _13, a5_2._loop1);
     }
   }
 
@@ -827,7 +827,7 @@ function a5_2(i) {
     {
       j = i;
       a5_2.$sc = _4;
-      return M.jumpR(void 0, _22);
+      return M.jump(void 0, _22);
     }
   }
 
@@ -840,31 +840,31 @@ function a5_2(i) {
       case 1:
         a5_2.$sc = _12;
         a5_2._fc = _3, a5_2._fe = _21;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 2:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 3:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 4:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 5:
         a5_2.$sc = _12;
         a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16, a5_2._r = 10;
-        return M.jumpR(void 0, _21);
+        return M.jump(void 0, _21);
 
       case 6:
         a5_2.$sc = _11;
-        return M.jumpR(void 0, _22);
+        return M.jump(void 0, _22);
 
       case 7:
         return M.yldStar(M.yld(7), _22);
@@ -886,38 +886,38 @@ function a5_2(i) {
 
       default:
         a5_2.$sc = _11;
-        return M.jumpR(void 0, _22);
+        return M.jump(void 0, _22);
     }
   }
 
   function _6(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _3, a5_2._fe = _21;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _7(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _8(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _2, a5_2._fe1 = _20;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _9(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _10(a5_2) {
     a5_2.$sc = _12;
     a5_2._fc = _13, a5_2._fe = _20, a5_2._fc1 = _14, a5_2._fe1 = _16, a5_2._fc2 = _15, a5_2._fe2 = _16, a5_2._r = 10;
-    return M.jumpR(void 0, _21);
+    return M.jump(void 0, _21);
   }
 
   function _11(a5_2) {

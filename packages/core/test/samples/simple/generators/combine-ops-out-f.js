@@ -30,7 +30,7 @@ function d(i) {
 
     if (a) {
       b = i += 3;
-      return b;
+      return M.yldStar(b, M.pure);
     } else {
       return M.pure(i);
     }

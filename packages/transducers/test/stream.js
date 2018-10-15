@@ -3,6 +3,7 @@ import {parse} from "@babel/parser"
 import generate from "@babel/generator"
 import * as T from "@babel/types"
 import * as Kit from "../kit"
+import * as Trace from "../trace"
 
 describe("lookahead iterator", function() {
   const COUNT = 1000

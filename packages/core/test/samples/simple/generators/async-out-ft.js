@@ -155,7 +155,7 @@ function g2_2(g2) {
 function g3_1(g3) {
   var a;
   a = delay(1);
-  return a;
+  return g3.yldStar(a, g3.pure);
 }
 
 function a4_1(a4) {
@@ -894,16 +894,16 @@ function c_1(c) {
 
 function c_2(c) {
   c._loop = c.iterator(somethng);
-  return c.jump(void 0, c_3, c_14);
+  return c.jump(void 0, c_3, c_15);
 }
 
 function c_3(c) {
   if (!(c._loop = c._loop.step()).done) {
     c._i = c._loop.value;
     c._loop1 = c.iteratorM(somethingElse);
-    return c.jump(void 0, c_4, c_15);
+    return c.jump(void 0, c_4, c_16);
   } else {
-    c._fc1 = c_10, c._fe1 = c_11, c._i = null, c._loop1 = null;
+    c._fc1 = c_10, c._fe1 = c_12, c._i = null, c._loop1 = null;
     return c.jump(void 0, c_9);
   }
 }
@@ -911,7 +911,7 @@ function c_3(c) {
 function c_4(c) {
   var a;
   a = c._loop1, c._loop1 = null;
-  return c.chain(a.step(), c_5, c_15);
+  return c.chain(a.step(), c_5, c_16);
 }
 
 function c_5(c, d) {
@@ -921,41 +921,41 @@ function c_5(c, d) {
 
   if (!a) {
     j = c._loop1.value;
-    return c.yld(c._i, c_6, c_15);
+    return c.yld(c._i, c_6, c_16);
   } else {
-    c._fc = c_3, c._fe = c_14;
-    return c.jump(void 0, c_8, c_14);
+    c._fc = c_3, c._fe = c_15;
+    return c.jump(void 0, c_8, c_15);
   }
 }
 
 function c_6(c, a) {
   switch (a) {
     case 1:
-      c._fc = c_9, c._fe = c_11, c._fc1 = c_10, c._fe1 = c_11, c._r = 10;
-      return c.jump(void 0, c_8, c_14);
+      c._fc = c_9, c._fe = c_12, c._fc1 = c_11, c._fe1 = c_12, c._r = 10;
+      return c.jump(void 0, c_8, c_15);
 
     case 2:
-      return c.jump(void 0, c_7, c_15);
+      return c.jump(void 0, c_7, c_16);
 
     case 3:
-      return c.jump(void 0, c_4, c_15);
+      return c.jump(void 0, c_4, c_16);
 
     case 5:
-      c._fc = c_3, c._fe = c_14;
-      return c.jump(void 0, c_8, c_14);
+      c._fc = c_3, c._fe = c_15;
+      return c.jump(void 0, c_8, c_15);
 
     case 6:
-      c._fc = c_9, c._fe = c_11, c._fc1 = c_10, c._fe1 = c_11;
-      return c.jump(void 0, c_8, c_14);
+      c._fc = c_9, c._fe = c_12, c._fc1 = c_10, c._fe1 = c_12;
+      return c.jump(void 0, c_8, c_15);
 
     default:
-      return c.jump(void 0, c_7, c_15);
+      return c.jump(void 0, c_7, c_16);
   }
 }
 
 function c_7(c) {
-  c._fc = c_3, c._fe = c_14;
-  return c.jump(void 0, c_8, c_14);
+  c._fc = c_3, c._fe = c_15;
+  return c.jump(void 0, c_8, c_15);
 }
 
 function c_8(c) {
@@ -985,26 +985,30 @@ function c_10(c) {
   return c.pure(c._r);
 }
 
-function c_11(c, e) {
+function c_11(c) {
+  return c.pure(c._r);
+}
+
+function c_12(c, e) {
   return c.raise(e);
 }
 
-function c_12(c) {
+function c_13(c) {
   return c.raise(c._err1);
 }
 
-function c_13(c) {
+function c_14(c) {
   return c.raise(c._err2);
 }
 
-function c_14(c, a) {
-  c._fc1 = c_12, c._fe1 = c_11, c._err1 = a;
+function c_15(c, a) {
+  c._fc1 = c_13, c._fe1 = c_12, c._err1 = a;
   return c.jump(void 0, c_9);
 }
 
-function c_15(c, a) {
-  c._fc = c_9, c._fe = c_11, c._fc1 = c_13, c._fe1 = c_11, c._err2 = a;
-  return c.jump(void 0, c_8, c_14);
+function c_16(c, a) {
+  c._fc = c_9, c._fe = c_12, c._fc1 = c_14, c._fe1 = c_12, c._err2 = a;
+  return c.jump(void 0, c_8, c_15);
 }
 
 function method_1(ctx) {

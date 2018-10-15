@@ -1,7 +1,7 @@
 const C = require("@effectful/core")
 const T = C.Transform
 
-module.exports = function esProfile(pOpts={}) {
+module.exports = function jsProfile(pOpts={}) {
   const opts = Object.assign(
     {},
     C.config,

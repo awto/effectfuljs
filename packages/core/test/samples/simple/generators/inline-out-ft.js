@@ -95,7 +95,7 @@ function a1_3(a1, a) {
 }
 
 function a1_4(a1, a) {
-  return a;
+  return M.yld(a, M.pure);
 }
 
 function a1_5(a1) {
@@ -127,7 +127,7 @@ function a2_3(a2, a) {
 }
 
 function a2_4(a2, a) {
-  a2.$sc = a2_6;
+  a2.$sc = M.pure;
   a2.value = a;
   return a2;
 }
@@ -137,6 +137,8 @@ function a2_5(a2) {
 }
 
 function a2_6(a2, r) {
+  a2.$rc = a2_6;
+  a2.$ec = a2_7;
   return r;
 }
 
@@ -190,6 +192,8 @@ function a3_1(a3, p) {
       };
 
     case 0:
+      a3.$rc = 0;
+      a3.$ec = 1;
       a3.$step = 0;
       return {
         value: p,
@@ -251,6 +255,8 @@ function a4_1(a4, p) {
       return Promise.resolve(a4._r);
 
     case 0:
+      a4.$rc = 0;
+      a4.$ec = 1;
       return Promise.resolve(p);
 
     case 1:
@@ -279,8 +285,8 @@ function a5_1(a5, p) {
       return 5(a5);
 
     case 5:
-      a5.$rc = 10;
-      a5.$ec = 9;
+      a5.$rc = 11;
+      a5.$ec = 10;
 
       if (!(a5._loop = a5._loop.step()).done) {
         i = a5._loop.value;
@@ -307,6 +313,9 @@ function a5_1(a5, p) {
     case 7:
       return Promise.resolve(a5._r);
 
+    case 8:
+      return Promise.resolve(a5._r);
+
     case 0:
       a5.$rc = 0;
       a5.$ec = 1;
@@ -317,17 +326,17 @@ function a5_1(a5, p) {
       a5.$ec = 1;
       return a5.$step = 0, Promise.reject(p);
 
-    case 8:
-      return a5.$step = 0, Promise.reject(a5._err1);
-
     case 9:
-      a5.$sc = 6;
-      a5._fc = 8, a5._err1 = p;
-      return 6(a5);
+      return a5.$step = 0, Promise.reject(a5._err1);
 
     case 10:
       a5.$sc = 6;
-      a5._fc = 7, a5._r = p;
+      a5._fc = 9, a5._err1 = p;
+      return 6(a5);
+
+    case 11:
+      a5.$sc = 6;
+      a5._fc = 8, a5._r = p;
       return 6(a5);
 
     case 2:
@@ -348,8 +357,8 @@ function a6_1(a6, p) {
       return 6(a6);
 
     case 6:
-      a6.$rc = 12;
-      a6.$ec = 11;
+      a6.$rc = 13;
+      a6.$ec = 12;
       a6.$sc = 7;
       c = a6._loop, a6._loop = null;
       return Promise.resolve(c.step()).then(a6.$resolve, a6.$reject);
@@ -388,6 +397,9 @@ function a6_1(a6, p) {
     case 9:
       return Promise.resolve(a6._r);
 
+    case 10:
+      return Promise.resolve(a6._r);
+
     case 0:
       a6.$rc = 0;
       a6.$ec = 1;
@@ -398,17 +410,17 @@ function a6_1(a6, p) {
       a6.$ec = 1;
       return a6.$step = 0, Promise.reject(p);
 
-    case 10:
-      return a6.$step = 0, Promise.reject(a6._err1);
-
     case 11:
-      a6.$sc = 8;
-      a6._fc = 10, a6._err1 = p;
-      return 8(a6);
+      return a6.$step = 0, Promise.reject(a6._err1);
 
     case 12:
       a6.$sc = 8;
-      a6._fc = 9, a6._r = p;
+      a6._fc = 11, a6._err1 = p;
+      return 8(a6);
+
+    case 13:
+      a6.$sc = 8;
+      a6._fc = 10, a6._r = p;
       return 8(a6);
 
     default:
@@ -426,8 +438,8 @@ function a7_1(a7, p) {
       return 5(a7);
 
     case 5:
-      a7.$rc = 10;
-      a7.$ec = 9;
+      a7.$rc = 11;
+      a7.$ec = 10;
 
       if (!(_i = a7._loop.next()).done) {
         i = _i.value;
@@ -454,6 +466,9 @@ function a7_1(a7, p) {
     case 7:
       return Promise.resolve(a7._r);
 
+    case 8:
+      return Promise.resolve(a7._r);
+
     case 0:
       a7.$rc = 0;
       a7.$ec = 1;
@@ -464,17 +479,17 @@ function a7_1(a7, p) {
       a7.$ec = 1;
       return a7.$step = 0, Promise.reject(p);
 
-    case 8:
-      return a7.$step = 0, Promise.reject(a7._err1);
-
     case 9:
-      a7.$sc = 6;
-      a7._fc = 8, a7._err1 = p;
-      return 6(a7);
+      return a7.$step = 0, Promise.reject(a7._err1);
 
     case 10:
       a7.$sc = 6;
-      a7._fc = 7, a7._r = p;
+      a7._fc = 9, a7._err1 = p;
+      return 6(a7);
+
+    case 11:
+      a7.$sc = 6;
+      a7._fc = 8, a7._r = p;
       return 6(a7);
 
     case 2:
@@ -495,8 +510,8 @@ function a8_1(a8, p) {
       return 6(a8);
 
     case 6:
-      a8.$rc = 12;
-      a8.$ec = 11;
+      a8.$rc = 13;
+      a8.$ec = 12;
       a8.$sc = 7;
       c = a8._loop, a8._loop = null;
       return Promise.resolve(c.step()).then(a8.$resolve, a8.$reject);
@@ -535,6 +550,9 @@ function a8_1(a8, p) {
     case 9:
       return Promise.resolve(a8._r);
 
+    case 10:
+      return Promise.resolve(a8._r);
+
     case 0:
       a8.$rc = 0;
       a8.$ec = 1;
@@ -545,17 +563,17 @@ function a8_1(a8, p) {
       a8.$ec = 1;
       return a8.$step = 0, Promise.reject(p);
 
-    case 10:
-      return a8.$step = 0, Promise.reject(a8._err1);
-
     case 11:
-      a8.$sc = 8;
-      a8._fc = 10, a8._err1 = p;
-      return 8(a8);
+      return a8.$step = 0, Promise.reject(a8._err1);
 
     case 12:
       a8.$sc = 8;
-      a8._fc = 9, a8._r = p;
+      a8._fc = 11, a8._err1 = p;
+      return 8(a8);
+
+    case 13:
+      a8.$sc = 8;
+      a8._fc = 10, a8._r = p;
       return 8(a8);
 
     default:
@@ -573,8 +591,8 @@ function a9_1(a9, p) {
       return 6(a9);
 
     case 6:
-      a9.$rc = 12;
-      a9.$ec = 11;
+      a9.$rc = 13;
+      a9.$ec = 12;
       a9.$sc = 7;
       return Promise.resolve(a9._loop.next()).then(a9.$resolve, a9.$reject);
 
@@ -612,6 +630,9 @@ function a9_1(a9, p) {
     case 9:
       return Promise.resolve(a9._r);
 
+    case 10:
+      return Promise.resolve(a9._r);
+
     case 0:
       a9.$rc = 0;
       a9.$ec = 1;
@@ -622,17 +643,17 @@ function a9_1(a9, p) {
       a9.$ec = 1;
       return a9.$step = 0, Promise.reject(p);
 
-    case 10:
-      return a9.$step = 0, Promise.reject(a9._err1);
-
     case 11:
-      a9.$sc = 8;
-      a9._fc = 10, a9._err1 = p;
-      return 8(a9);
+      return a9.$step = 0, Promise.reject(a9._err1);
 
     case 12:
       a9.$sc = 8;
-      a9._fc = 9, a9._r = p;
+      a9._fc = 11, a9._err1 = p;
+      return 8(a9);
+
+    case 13:
+      a9.$sc = 8;
+      a9._fc = 10, a9._r = p;
       return 8(a9);
 
     default:

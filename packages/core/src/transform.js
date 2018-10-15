@@ -15,7 +15,7 @@ import * as Policy from "./policy"
 import * as Placeholder from "./placeholder"
 import * as Gens from "./generators"
 import * as Rt from "./rt"
-import * as Ops from "./ops"
+import * as Ops from "./operations"
 import * as Flat from "./flat"
 import * as Closure from "./closure"
 import * as Inline from "./inline"
@@ -116,7 +116,7 @@ export const stage0 = Kit.pipe(
     Prop.recalcEff,
     Policy.stage("organize"),
     Bind.flatten,
-    Prop.recalcEff,
+    // Prop.recalcEff,
     Policy.stage("inject"),
     Exceptions.inject,
     Prop.recalcEff,

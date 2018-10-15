@@ -177,15 +177,21 @@ export const interpretCasts = Kit.pipe(
             const j = sl.curLev()
             const result = j != null && !i.value.reflected
             if (i.value.tmpVar) {
-              yield s.enter(i.pos, Tag.AssignmentExpression,
-                            {node:{operator:"="},result})
-              yield s.tok(Tag.left, Tag.Identifier, {sym:i.value.tmpVar})
-              yield* Kit.reposOne(walk(), Tag.right)
-              yield* s.leave()
+              if (j) {
+                yield sl.enter(i.pos, Tag.AssignmentExpression,
+                               {node:{operator:"="},result})
+                yield sl.tok(Tag.left, Tag.Identifier, {sym:i.value.tmpVar})
+                yield* Kit.reposOne(walk(), Tag.right)
+                yield* sl.leave()
+              }
             } else {
-              if (j)
+              if (j) {
                 j.value.result = result
-              yield* Kit.reposOne(walk(), i.pos)
+                yield* Kit.reposOne(walk(), i.pos)
+              } /* else {
+                yield sl.tok(i.pos, Tag.Identifier,
+                             {sym:Kit.scope.undefinedSym,result:true})
+              }*/
             }
           }
           break
@@ -360,5 +366,19 @@ export function ctxMethods(si) {
       }
       yield i
     }
+  }
+}
+
+/** removes frames with `removed: true` */
+export function* cleanup(si) {
+  const s = Kit.auto(si)
+  for(const i of s) {
+    if (i.enter && i.type === frame) {
+      if (i.value.removed)
+        Kit.skip(s.copy(i))
+      else 
+        yield* s.copy(i)
+    } else
+      yield i
   }
 }

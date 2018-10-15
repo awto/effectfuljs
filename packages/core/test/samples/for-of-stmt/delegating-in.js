@@ -1,3 +1,4 @@
+// *- SKIP
 M.profile("es")
 M.option({inlineContAssign:true,
           state:false,

@@ -2,7 +2,6 @@ import * as Kit from "./kit"
 import {Tag,produce,consume,symbol,scope as vars} from "@effectful/transducers"
 import * as assert from "assert"
 import * as Block from "./block"
-import * as Debug from "./debug"
 
 export const blockId = Kit.sysId("block")
 export const scopeId = Kit.sysId("scope")
@@ -273,3 +272,168 @@ export const injectBlock = Kit.pipe(
   Kit.map(Kit.toArray),
   Array.from)
 
+
+/**
+ * Saves frame's content into `steps` field list of its first level tokens
+ * Content of that tokens is stored in `content` field of their values too.
+ * Also collects jumps to and from each frame.
+ *
+ *    type FrameVal = FrameVal 
+ *      & {enters, exits: Set<LetJumpVal>,
+ *         steps:(Val & {content:Token[]})[]}
+ *    type JumpVal = JumpVal & { hasArg: boolean }
+ * \todo replace Flat.getCfg with this
+ */
+export function convolveFrames(sa) {
+  const s = Kit.auto(sa)
+  const root = s.first.value
+  const cfg = root.cfg = []
+  for(const i of s) {
+    if (i.enter && i.type === Block.frame) {
+      cfg.push(i.value)
+      i.value.first = false
+      const content = i.value.steps = []
+      const exits = i.value.exits = new Set()
+      i.value.enters = new Set()
+      for(const j of s.sub()) {
+        if (j.enter) {
+          switch(j.type) {
+          case Block.letStmt:
+          case jump:
+            if (j.value.goto)
+              exits.add(j.value)
+          }
+          j.value.ref = i.value
+          if (!j.leave) {
+            const buf = j.value.content = [j]
+            for(const k of s.sub()) {
+              if (k.enter) {
+                switch(k.type) {
+                case Block.letStmt:
+                case jump:
+                  if (!k.leave) {
+                    buf.push(...(k.value.content = [k,...s.sub(),s.close(k)]))
+                  } else {
+                    buf.push(k)
+                    k.value.content = [k]
+                  }
+                  if (k.value.goto)
+                    exits.add(k.value)
+                  k.value.ref = i.value
+                  continue
+                }
+              }
+              buf.push(k)
+            }
+            buf.push(s.close(j))
+            content.push(j.value)
+          } else {
+            j.value.content = [j]
+            content.push(j.value)
+          }
+        }
+      }
+      content[content.length-1].fbound = true
+    }
+  }
+  const first = root.first = cfg[0]
+  first.first = true
+  instantiateJumps(cfg)
+  resetEnters(cfg)
+  return sa
+}
+
+/**
+ * Recalculate `enters:Set<JumpLetVal>` expecting `exits:Set<JumpLetVal>` 
+ * is already calculated
+ */
+export function resetEnters(frames) {
+  for(const i of frames) {
+    for(const j of i.exits) {
+      if (j.gotoDests) {
+        for(const k of j.gotoDests)
+          k.enters.add(j)
+      } else if (j.goto && j.goto.enters)
+        j.goto.enters.add(j)
+    }
+  }
+}
+
+/**
+ * Returns flattened instances of dynamic jumps 
+ */
+export function flattenGotoDests(goto,res) {
+  if (goto.dynamicJump) {
+    for(const i of goto.instances)
+      flattenGotoDests(i,res)
+  } else {
+    res.push(goto)
+  }
+}
+
+/** 
+ * for each jump adds another field gotoDests: FrameVal[] 
+ * listing all possible jumps 
+ */
+export function instantiateJumps(frames) {
+  for(const i of frames) {
+    for(const j of i.exits) {
+      const dst = j.goto
+      if (dst) {
+        if (dst.dynamicJump) {
+          if (dst.args) {
+            const args = j.frameArgs || (j.frameArgs = new Map)
+            for(const [l,r] of dst.args)
+              args.set(l,r)
+          }
+          const dests = []
+          flattenGotoDests(dst,dests)
+          switch(dests.length) {
+          case 0:
+            const {errFrame,resFrame} = j.ref.root
+            const ngoto = resFrame === j.ref || errFrame === j.ref
+                  ? null : j.ref.root.resFrame
+            dst.declSym.bound = false
+            if (dst.catchContRedir)
+              dst.catchContRedir.declSym.bound = false
+            if (dst.resultContRedir)
+              dst.resultContRedir.declSym.bound = false
+            j.ref.contArg = null
+            j.gotoDests = []
+            j.goto = ngoto
+            if (ngoto)
+              j.gotoDests.push(ngoto)
+            break
+          case 1:
+            j.goto = dests[0]
+            const {contArg} = j.ref
+            dst.declSym.bound = false
+            if (dst.catchContRedir)
+              dst.catchContRedir.declSym.bound = false
+            if (dst.resultContRedir)
+              dst.resultContRedir.declSym.bound = false
+            j.ref.contArg = null
+            // j.goto.enters.add(j)
+            j.gotoDests = dests
+            break
+          default:
+            j.gotoDests = dests
+            // for(const k of j.gotoDests)
+            //  k.enters.add(j)
+            dst.declSym.bound = true
+          }
+        } else {
+          j.gotoDests = [dst]
+        }
+      } else
+        j.gotoDests = []
+      if (i.catchContRedir && j.opts.storeErrorCont
+          && !j.opts.inlineErrorContAssign)
+        j.gotoDests.push(i.catchContRedir)
+      if (i.resultContRedir && i.resultContRedir
+          && j.opts.storeResultCont
+          && !j.opts.inlineResultContAssign)
+        j.gotoDests.push(i.resultContRedir)
+    }
+  }
+}

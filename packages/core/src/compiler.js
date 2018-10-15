@@ -36,6 +36,7 @@ export function babelPreset(transform) {
                 })
                 babel.traverse.cache.clearScope()
                 babel.traverse.clearNode(path.node)
+                state.file.scope.path.traverse({Identifier() {}})
               }
             }
           }

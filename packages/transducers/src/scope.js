@@ -666,11 +666,6 @@ function solve(si) {
   }
   for(const j of allIds) {
     j.name = j.orig
-    if (!j.hasDecl && !j.strict && !j.global) {
-      j.name = `${j.name}_UNDECL_${j.num}`
-      console.warn(
-        `INTERNAL ERROR: not declared generated symbol name ${j.name}`)
-    }
   }
   if (conflicts.size) {
     const table = []
@@ -724,6 +719,13 @@ function solve(si) {
       }
     }
   }
+  for(const j of allIds) {
+    if (!j.hasDecl && !j.strict && !j.global) {
+      j.name = `${j.name}_UNDECL_${j.num}`
+      console.warn(
+        `INTERNAL ERROR: not declared generated symbol name ${j.name}`)
+    }
+  }  
   for(const i of idToks) {
     if (!i.sym.name) {
       i.sym.name = `UNKNOWN_${i.sym.id}`

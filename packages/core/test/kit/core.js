@@ -24,7 +24,6 @@ const defaultParseOpts = {
   sourceType: "module",
   plugins: ["asyncGenerators",
             "doExpressions",
-            "decorators",
             "functionBind",
             "functionSent"]
 }

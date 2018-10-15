@@ -154,3 +154,42 @@ export function interpret(s) {
   }
   return _interpret()
 }
+
+export function cleanPureJumps(si) {
+  const s = Kit.auto(si)
+  if (!s.opts.coerce)
+    return s
+  const {pureExitFrame} = s.first.value
+  return _cleanPureJumps()
+  function* _skip(i) {
+    yield s.enter(i.pos,Block.effExpr,i.value)
+    if (s.curLev()) {
+      yield* Kit.reposOne(s.one(),i.pos)
+    }
+    if (!i.leave)
+      Kit.skip(s.copy(i))
+    yield* s.leave()
+  }
+  function* _cleanPureJumps() {
+    for(const i of s) {
+      if (i.enter) {
+        switch(i.type) {
+        case Block.app:
+          if (i.value.sym === Block.pureId) {
+            yield* _skip(i)
+            continue
+          }
+          break
+        case Block.letStmt:
+        case Ctrl.jump:
+          if (i.value.goto === pureExitFrame) {
+            yield* _skip(i)
+            continue
+          }
+          break
+        }
+      }
+      yield i
+    }
+  }
+}

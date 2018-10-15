@@ -50,6 +50,8 @@ export function tempVarSym(top, pat, byVal = top.opts.state) {
   return sym
 }
 
+function isBindTrue(p) { return p.value.bind }
+
 /** 
  * extracts all effectful expressions into separate statements in a block, 
  * injects `letStmt` and `bindPat` to mark extracted expressions and its 
@@ -186,42 +188,47 @@ export const flatten = Kit.pipe(
               const cbuf = []
               const abuf = []
               const c = s.take()
-              const csym = tempVarSym(root)
-              csym.bound = false
-              const cpat = bind(c,cbuf,csym)
+              sym = tempVarSym(root)
+              sym.bound = false
+              bind(c,cbuf,sym)
+              /** 
+               * this is always letStmt with `sym` === `psym` in the last step
+               * but is it effectful or not isn't yet known 
+               */
+              const cl = cbuf[cbuf.length-1]
+              /** however it's enough to check if there is any `bind` there */
+              const cleff = cl.some(isBindTrue)
               const a = s.take()
-              let asym
-              if (a.value.eff === c.value.eff) {
-                asym = sym = csym
-              } else {
-                if (c.value.eff) {
-                  sym = csym
-                  asym = tempVarSym(root)
-                } else {
-                  sym = asym = tempVarSym(root)
-                }
-              }
-              asym.bound =  false
               const eff = a.value.eff || c.value.eff
-              const apat = bind(a,abuf,asym)
-              function* branch(pos, c, cbuf, cpat) {
+              bind(a,abuf,sym)
+              const al = abuf[abuf.length-1]
+              const aleff = al.some(isBindTrue)
+              /** 
+               * the experssion in bufs is always letStmt, 
+               * but it should have same eff in both cases 
+               */
+              function* branch(pos, c, cbuf, wrap) {
                 if (eff)
                   yield s.enter(pos,Block.chain)
                 else {
                   yield s.enter(pos,Tag.BlockStatement)
                   yield s.enter(Tag.body,Tag.Array)
                 }
-                for(const j of cbuf)
-                  yield* j
-                if (eff && !c.value.eff) {
+                if (wrap) {
+                  const [last] = cbuf.splice(-1)
+                  for(const j of cbuf)
+                    yield* j
                   yield s.enter(Tag.push,Block.letStmt,{sym,eff:true})
                   yield s.enter(Tag.expression,Block.pure,{bind:true})
-                  yield Kit.setPos(cpat,Tag.push)
+                  yield* last.splice(1,last.length-2)
+                } else {
+                  for(const j of cbuf)
+                    yield* j
                 }
                 yield* ilab()
               }
-              yield* branch(Tag.consequent,c,cbuf,cpat)
-              yield* branch(Tag.alternate,a,abuf,apat)
+              yield* branch(Tag.consequent,c,cbuf,!cleff && aleff)
+              yield* branch(Tag.alternate,a,abuf,!aleff && cleff)
               yield* s.leave()
             }()])
             yield s.tok(i.pos,Block.bindPat,{sym})

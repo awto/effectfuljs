@@ -33,9 +33,7 @@ export function storeContinuations(si) {
   const root = s.first.value
   const {contextSym} = root
   const contextStore = contextSym && s.opts.contextMethodOps
-  const invertForOf = s.opts.invertForOf
   const noPureJumpsStore = !s.opts.defunct
-        && !invertForOf
         && s.opts.contextBy === "reference"
   const stateStorageField = s.opts.stateStorageField
   function makeSym(name,pat) {
@@ -121,9 +119,7 @@ export function storeContinuations(si) {
           if (j.enter) {
             switch(j.type) {
             case Block.letStmt:
-              if (!j.value.eff ||
-                  invertForOf && j.value.storeCont === false
-                  || !inlineConts)
+              if (!j.value.eff || !inlineConts)
                 break
             case Ctrl.jump:
               if (noPureJumpsStore && j.type === Ctrl.jump
@@ -170,7 +166,6 @@ function generatorsYield(si) {
   const inlineYieldStar = inlineYieldStarOp === "iterator"
   const inlineScopeUnwrap = inlineScopeOp === "unwrap"
   const inlineScopeRetCtx = inlineScopeOp === "context"
-  const delegate = s.opts.invertForOf
   const cont = s.opts.storeCont
   if (!inlineYieldStar && !inlineYield && !inlineYieldResult
       && !inlineYieldResultPromise
@@ -878,195 +873,18 @@ export function invertForOf(si) {
   }
 }
 
-/** inlines `yield*` operations for `invertForOf` */
-function delegateYield(si) {
-  const s = Kit.auto(si)
-  const inlineYieldStar = s.opts.inlineYieldStarOp === "iterator"
-  const cont = s.opts.storeCont
-  if (!inlineYieldStar || !s.opts.invertForOf)
-    return s
-  const {contextSym:ctx} = s.first.value
-  const root = s.first.value
-  return _delegateYield()
-  function* _delegateYield() {
-    for(const i of s) {
-      if (i.enter) {
-	      switch(i.type) {
-	      case Block.letStmt:
-	        if (!i.value.eff)
-	          break
-          switch(i.value.bindName) {
-          case "yldStar":
-            const frame = i.value.ref
-            const sym = i.value.delegateCtx = Kit.scope.newSym()
-            frame.savedDecls.set(sym,{raw:null})
-            yield* s.template(
-              Tag.push,
-              `=$2=$3($E,$1.$y,$E,$4)`,
-              ctx, sym, Block.delegateSym, i.value.goto.declSym)
-            yield* s.sub()
-            yield* s.refocus()
-            const {forOfInfo:up} = i.value.goto
-            if (up) {
-              yield* s.toks(Tag.push,`=$I.$s`, up.sym)
-              yield* s.toks(Tag.push,`=$I.$s.${cont}`, up.sym)
-            } else {
-              yield s.tok(Tag.push,Tag.Identifier,{sym:ctx})
-              yield s.tok(Tag.push,Tag.Identifier,{sym:i.value.goto.declSym})
-            }
-            yield* s.leave()
-            yield* s.toks(Tag.push,`=$I.${cont}()`,{name:null,result:true},sym)
-            s.close(i)
-            continue
-          case "yld":
-            if (i.value.goto.forOfInfo)
-              yield* s.toks(Tag.push,`=$1.unwrap.$t = $2.$s`,
-                            ctx, i.value.goto.forOfInfo.sym)
-            else
-              yield* s.toks(Tag.push,`=$1.unwrap.$t = $1`, ctx)
-            break
-          }
-	      }
-      }
-      yield i
-    }
-  }
-}
-
 const yldId = Kit.sysId("yld")
 
-/** injects delegating object fields `$r`, `$y`  */
-function delegateOps(si) {
-  const s = Kit.auto(si)
-  if (!s.opts.invertForOf || !s.opts.inlineYieldStar)
-    return s
-  const root = s.first.value
-  const pure = mkSym("$res","$r")
-  if (!s.opts.storeErrorCont)
-    throw s.error("not implemented: `invertForOf` without `storeErrorCont`")
-  const raise = mkSym(s.opts.storeErrorCont,"$e")
-  const yld = mkSym("$yld","$y")
-  const ctx = root.contextSym
-  const cont = s.opts.storeCont
-  return _delegateOps()
-  function* _delegateOps() {
-    for(const i of s) {
-      if (i.enter && i.type === Block.app) {
-        switch(i.value.sym) {
-        case Except.raiseId:
-	        yield* s.toks(Tag.push,`=$1.$i.$yld = $1.$iyld`,ctx)
-          i.value.sym = raise
-	        break
-        case Block.pureId:
-	        yield* s.toks(Tag.push,
-			                  `=$1.$r.$res = $1.$rstep, $1.$i.$yld = $1.$iyld`,
-			                  ctx)
-          i.value.sym = pure
-	        break
-        case yldId:
-          i.value.sym = yld
-          break
-        }
-      }
-      yield i
-    }
-  }
-  function mkSym(pat,field) {
-    const sym = Kit.scope.newSym(pat)
-    sym.fieldName = pat
-    sym.lib = true
-    sym.ctxField = field
-    return sym
-  }
-}
-
-/**
- * handles indirect jumps to another context 
- * (e.g. if `finally` is the last block of `for-of`)
- */
-function delegateIndirJumps(si) {
-  const s = Kit.auto(si)
-  if (!s.opts.invertForOf || !s.opts.inlineYieldStar)
-    return s
-  const root = s.first.value
-  const ctx = root.contextSym
-  const cont = s.opts.storeCont
-  return _delegateIndirJumps()
-  function* _delegateIndirJumps() {
-    for(const i of s) {
-      if (i.enter) {
-        switch(i.type) {
-        case Block.frame:
-          // TODO: result and error jumps
-          break
-        case Block.letStmt:
-          if (!i.value.eff)
-            break
-        case Ctrl.jump:
-          if (i.value.frameArgs) {
-            for(const [fc,v] of i.value.frameArgs) {
-              if (fc.dynForOf) {
-                i.value.frameArgs.delete(fc)
-                if (v.forOfInfo) {
-                  yield* s.toks(Tag.push,
-                                `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
-                                fc.dynForOf.sym,
-                                v.forOfInfo.sym)
-                } else {
-                  yield* s.toks(Tag.push,
-                                `=$1.$r = $2, $1.$rstep = $3`,
-                                fc.dynForOf.sym,ctx,v)
-                }
-              } else if (fc.savedContext) {
-                i.value.frameArgs.delete(fc)
-                if (v.forOfInfo) {
-                  yield* s.toks(Tag.push,
-                                `=$1 = $2, $3 = $4`,
-                                fc.savedContext,
-                                v.forOfInfo.sym,
-                                fc, v)
-                } else {
-                  yield* s.toks(Tag.push,
-                                `=$1 = $2, $3 = $4`,
-                                fc.savedContext, ctx, fc, v)
-                }
-              }
-            }
-          }
-          const {goto} = i.value
-          if (goto && goto.dynamicJump && goto.declSym.savedContext) {
-            yield* s.template(Tag.push,
-                              `=$1.${cont}($E)`,
-                              {result:true}, goto.declSym.savedContext)
-            yield* s.sub()
-            yield* s.leave()
-            s.close(i)
-            continue
-          }
-          break
-        }
-      }
-      yield i
-    }
-  }
-}
-
 /** runs after `Flat.interpretJumps` */
-export const control = Kit.pipe(
-  delegateOps,
-  jumpOps)
+export const control = jumpOps
 
 /** runs before `Flat.interpretApp` */
 export const ops = Kit.pipe(
   pureOp,
   raiseOp)
 
-export const vars = Kit.pipe(
-  delegateIndirJumps)
-
 /** runs before `Block.interpretJumps` */
 export const jumps = Kit.pipe(
   promises,
   coerce,
-  delegateYield,
   generatorsYield)

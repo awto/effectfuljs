@@ -1,11 +1,14 @@
 /**
- * Constructing and interpreting flat representation
+ * Constructing and interpreting flat frames representation
+ * The representation is similar to 
+ * [ANF](https://en.wikipedia.org/wiki/A-normal_form)
  */
 import * as Kit from "./kit"
 import {Tag} from "./kit"
 import * as assert from "assert"
 import * as Block from "./block"
 import * as Ctrl from "./control"
+import * as Coerce from "./coerce"
 import * as Loop from "./loops"
 import * as Bind from "./bind"
 import * as State from "./state"
@@ -16,12 +19,9 @@ import * as Defunct from "./defunct"
 import * as Gens from "./generators"
 import * as Inline from "./inline"
 import * as Par from "./par"
+import * as Opt from "./optimization"
 
 const undefinedSym = Kit.scope.undefinedSym
-
-function byNum(a, b) {
-  return a.num - b.num
-}
 
 function byNumFst(a, b) {
   return a[0].num - b[0].num
@@ -29,14 +29,14 @@ function byNumFst(a, b) {
 
 const emptyArr = []
 
-// in frameArgs binds jump inner content
+/** in frameArgs binds jump inner content */
 const argSym = Kit.scope.newSym("arg")
 
-// temporal marker of all frames inside finally block
+/** temporal marker of all frames inside finally block */
 const finallyBlock = Kit.symbol("finally.block")
-// temporal marker of all frames inside catchBlock
+/** temporal marker of all frames inside catchBlock */
 const catchBlock = Kit.symbol("catch.block")
-// temporal marker delimiting handler block for both catch and finally
+/** temporal marker delimiting handler block for both catch and finally */
 const handleBlock = Kit.symbol("try.handle")
 
 const scopeSym = Kit.sysId("scope")
@@ -118,7 +118,7 @@ export const convert = Kit.pipe(
               }
               continue
             } else if (i.value.result) {
-              // last not-eff letStmt must be turned into explicit return
+              /** last not-eff letStmt must be turned into explicit return */
               yield s.enter(i.pos, Block.pure)
               if (s.curLev())
                 yield* Kit.reposOne(s.sub(), Tag.push)
@@ -185,10 +185,8 @@ export const convert = Kit.pipe(
           case Block.frame:
             setGoto(cur,i.value)
             i.value.repeat = []
-            // the frame should be present in final output
+            /** the frame should be present in final output */
             i.value.noInline = false
-            // only pure jumps to the frame are allowed
-            // i.value.jumpsOnly = false
             const declSym = i.value.declSym = Kit.scope.newSym("_")
             const inner = [i]
             frames.push(inner)
@@ -293,10 +291,6 @@ export const convert = Kit.pipe(
             const nfl = frames.length
             if (nfl > fl) {
               const k = frames[fl][0].value
-              for(let l = fl; l < nfl; l++) {
-                const f = frames[l][0].value
-                f.repeat.unshift(i.value)
-              }
               for(const l of ncur)
                 if (l.goto == null)
                   l.goto = k
@@ -342,7 +336,6 @@ export const convert = Kit.pipe(
   function postproc(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
-    const noLoopContOpt = s.opts.invertForOf && root.hasForOf
     const bindName = s.opts.bindName || "chain"
     _postproc()
     return sa
@@ -368,10 +361,6 @@ export const convert = Kit.pipe(
                   const bindJump = j.type === Block.letStmt
                   j.value.bindJump = bindJump
                   // avoiding inlining of some frame after for-of
-                  if (j.value.goto)
-                    j.value.goto.noSingleEnterInline =
-                      noLoopContOpt && j.value.orig
-                      && !!j.value.orig.forOfInfo
                   j.value.ref = i.value
                 }
               }
@@ -381,8 +370,10 @@ export const convert = Kit.pipe(
       }
     }
   },
-  // wraps chain with extra frames for exiting the function,
-  // normally or with exception
+  /**
+   * wraps chain with extra frames for exiting the function,
+   * normally or with exception
+   */
   function* wrapChain(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
@@ -407,6 +398,7 @@ export const convert = Kit.pipe(
     function* ctrlFrames() {
       const sym = root.resSym = unboundTempVar(root,"r")
       sym.optional = true
+      /** a frame returning `resSym` */
       const f = s.enter(Tag.push, Block.frame,
                         {declSym:Kit.scope.newSym("ret"),root,
                          last:true})
@@ -421,6 +413,7 @@ export const convert = Kit.pipe(
       const fr = s.enter(Tag.push, Block.frame,
                          {declSym:Kit.scope.newSym("retv"),
                           root,errSym:psym,last:true})
+      /** # a frame returning its argument */
       root.resFrameRedir = fr.value
       f.value.resultRedir = {errSym:psym,redir:fr.value}
       yield fr
@@ -439,29 +432,20 @@ export const convert = Kit.pipe(
       yield* s.leave()
       return [sym,f.value,fr.value,er.value]
     }
-    if (s.opts.scopePrefix) {
-      const lab = s.label()
-      const frame = s.enter(Tag.push, Block.frame,
-                            {declSym:Kit.scope.newSym("_"),
-                             root,result:false})
-      yield frame
+    const lab = s.label()
+    const frame = s.enter(Tag.push, Block.frame,
+                          {declSym:Kit.scope.newSym("_"),
+                           root,result:false})
+    yield frame
+    if (s.opts.scopePrefix) 
       yield s.tok(Tag.push, Block.letStmt,
                   {goto:first,ref:frame.value,eff:true,op:null,
                    opSym:scopeSym,bindName:"scope",bindJump:true,init:true})
-      yield* lab()
-    } else if (first.enters && first.enters.size) {
-      // the function starts from loop
-      const frame = s.enter(Tag.push, Block.frame,
-                            {declSym:Kit.scope.newSym("_"),root})
-      const jump = s.tok(Tag.push, Ctrl.jump,
-                         {goto:first,ref:frame.value,result:false})
-      yield frame
-      yield jump
-      yield* s.leave()
-    } else {
-      // first frame is inlined into function so must be skipped
-      yield* s.one()
-    }
+    else
+      yield s.tok(Tag.push, Ctrl.jump,
+                  {goto:first,ref:frame.value,eff:true,op:null,
+                   opSym:scopeSym,bindJump:false,init:true})
+    yield* s.leave()
     const resFrameCont = Kit.toArray(ctrlFrames())
     yield* s.sub()
     // needs to be in the end so `cleanup` pass can remove them if needed
@@ -538,8 +522,10 @@ export const convert = Kit.pipe(
     }
   },
   Kit.toArray,
-  // for try-finally (without catch) statements generates a frame for throwing
-  // catched exception again
+  /**
+   * for try-finally (without catch) statements generates a frame for throwing
+   * catched exception again
+   */
   function* addReThrowFrames(si) {
     const s = Kit.auto(si)
     const root = s.first.value
@@ -583,7 +569,9 @@ export const convert = Kit.pipe(
     yield* termFrames
     yield* s
   },
-  // emits auxiliary frames if there are jumps through several finally blocks
+  /** 
+   * emits auxiliary frames if there are jumps through several finally blocks 
+   */
   function* composeFinallyBlocks(si) {
     const s = Kit.auto(si)
     const root = s.first.value
@@ -659,7 +647,7 @@ export const convert = Kit.pipe(
       const sym = Kit.scope.newSym()
       const redir = s.enter(
         Tag.push,Block.frame,
-        {declSym:Kit.scope.newSym("ce_"),root,errSym:sym})
+        {declSym:Kit.scope.newSym("ce_"),root,errSym:sym,savedDecls:new Map()})
       cont.redir = redir.value
       yield redir
       const args = new Map(cont.frameArgs)
@@ -742,66 +730,46 @@ export const convert = Kit.pipe(
   Kit.toArray,
   function cfgPostProc(sa) {
     const root = sa[0].value
-    const cfg = new Map()
-    sa = getCfgFolded(sa,cfg)
-    instantiateJumps(cfg.keys())
-    optUselessFrames(cfg)
-    instantiateJumps(cfg.keys())
-    resetEnters(cfg.keys())
-    optInlineFrames(cfg)
-    const markRepeat = root.opts.markRepeat || root.opts.invertForOf
-    for(const i of cfg.keys()) {
-      if (i.repeat && i.repeat.length) {
-        for(const j of i.enters) {
-          if (!j.repeat || j.repeat.length < i.repeat.length) {
-            i.repeatStart = true
-            break
-          }
-        }
-        if (markRepeat && i.repeatStart) {
-          for(const j of i.exits) {
-            if (j.goto) {
-              const gr = j.goto.repeat
-              const fr = i.repeat
-              j.rec = (gr && gr.length >= fr.length
-                       && gr[fr.length-1] === fr[fr.length-1])
-            }
-          }
-        }
-      }
-    }
-    function jumpArgs(j,first) {
-      if (j.indirJumps) {
-        const args = j.frameArgs || (j.frameArgs = new Map)
-        for(const [dest,cont] of j.indirJumps) {
-          if (!cont.reachable)
-            continue
-          args.set(cont.declSym,dest.declSym)
-          cont.declSym.bound = true
-          if (cont.resultContRedir && dest.resultContRedir) {
-            args.set(cont.resultContRedir.declSym,
-                     dest.resultContRedir.declSym)
-            cont.resultContRedir.declSym.bound = true
-          }
-          if (cont.catchContRedir && dest.catchContRedir) {
-            args.set(cont.catchContRedir.declSym,
-                     dest.catchContRedir.declSym)
-            cont.catchContRedir.declSym.bound = true
-          }
-        }
-      }
-    }
-    for(const i of cfg.keys()) {
+    Ctrl.convolveFrames(sa)
+    let cfg = root.cfg
+    cfg = Opt.removeUnreachable(cfg)
+    Ctrl.instantiateJumps(cfg)
+    Ctrl.resetEnters(cfg)
+    for(const i of cfg) {
       if (i.throwSym)
         i.throwSym.bound = true
       for(const j of i.exits)
-        jumpArgs(j,i.root)
+        jumpArgs(j)
       if (i.catchCont)
-        jumpArgs(i.catchCont,i.root.first)
+        jumpArgs(i.catchCont)
     }
-    return unfoldCfg(cfg,sa)
+    return Block.cleanup(sa)
   },
+  Opt.removeSingleJumps,
   Kit.toArray)
+
+/** converts indirect jumps into symbol arguments */
+function jumpArgs(j) {
+  if (j.indirJumps) {
+    const args = j.frameArgs || (j.frameArgs = new Map)
+    for(const [dest,cont] of j.indirJumps) {
+      if (!cont.reachable)
+        continue
+      args.set(cont.declSym,dest.declSym)
+      cont.declSym.bound = true
+      if (cont.resultContRedir && dest.resultContRedir) {
+        args.set(cont.resultContRedir.declSym,
+                 dest.resultContRedir.declSym)
+        cont.resultContRedir.declSym.bound = true
+      }
+      if (cont.catchContRedir && dest.catchContRedir) {
+        args.set(cont.catchContRedir.declSym,
+                 dest.catchContRedir.declSym)
+        cont.catchContRedir.declSym.bound = true
+      }
+    }
+  }
+}
 
 /** generates local copies of variables used in each frame */
 function* copyFrameVars(si) {
@@ -1094,7 +1062,6 @@ export function interpretJumps(si) {
   const {bindName,pureBindName,unpackMax} = s.opts
   const root = s.first.value
   const ctxSym = root.contextSym
-  const requireFinalPure = s.opts.scopePostfix
   const passCont = !s.opts.inlineContAssign
   const passCatchCont = !s.opts.defunct && !s.opts.inlineErrorContAssign
   const passResultCont = !s.opts.defunct && !s.opts.inlineResultContAssign
@@ -1121,10 +1088,8 @@ export function interpretJumps(si) {
           const defaultName = pure ? pureBindName : bindName
           let name = i.value.bindName || defaultName
           const st = s.opts.static || !s.opts.methodOps[name]
-          if (!gotoDests.length /* &&!requireFinalPure */
-              && name === defaultName
-              || pure && (goto === root.pureExitFrame
-                  || goto === root.resFrameRedir)) {
+          if (!gotoDests.length && name === defaultName
+              || pure && goto === root.pureExitFrame) {
             yield pure
               ? s.enter(pos,Block.app,{sym:Block.pureId,insideCtx,
                                        delegateCtx,reflected:i.value.reflected,
@@ -1220,12 +1185,10 @@ function calcPatSym(cfg) {
  */
 function calcVarDeps(si) {
   let sa = Kit.toArray(si)
-  const frames = getCfg(sa)
   const root = sa[0].value
-  const ops = new Set()
-  calcPatSym(frames)
+  Ctrl.convolveFrames(sa)
   sa = Kit.toArray(cleanup(sa))
-  State.calcFlatCfg(frames,sa)
+  State.calcFlatCfg(root.cfg,sa)
   return sa
 }
 
@@ -1243,7 +1206,7 @@ function markBound(si) {
   return sa
 }
 
-/** 
+/**
  * if bind variable is used only in the frame where it is bound 
  * we can avoid tracking it, also calculates `assignedAt` and `assignPat`
  * fields for each assignment expression with bindPat RHS
@@ -1268,6 +1231,7 @@ function localizeBinds(sa) {
     }
     s = Kit.auto(sa)
   }
+  const bindExprs = []
   for(const i of s) {
     if (i.enter && i.type === Block.frame) {
       if (i.value.patSym && !i.value.patSym.dummy) {
@@ -1279,32 +1243,37 @@ function localizeBinds(sa) {
         if (j.enter) {
           switch(j.type) {
           case Block.letStmt:
-            if (j.value.eff) {
-              if (forseBind && j.value.gotoDests) {
-                for(const k of j.value.gotoDests) {
-                  if (!k.patSym && !k.errSym) {
-                    const sym = Kit.scope.newSym()
-                    sym.dummy = true
-                    k.patSym = sym
-                  }
-                }
-              }
-            } else {
+            if (!j.value.eff) {
               if (j.value.sym) {
                 j.value.sym.boundAt = i.value
                 bindVars.add(j.value.sym)
                 j.value.sym.extBind = false
               }
+              break
+            }
+          case Ctrl.jump:
+            if (forseBind && j.value.gotoDests) {
+              for(const k of j.value.gotoDests) {
+                if (!k.patSym && !k.errSym) {
+                  const sym = Kit.scope.newSym()
+                  sym.dummy = true
+                  k.patSym = sym
+                }
+              }
             }
             break
           case Block.bindPat:
-            const {sym} = j.value
-            if (sym.boundAt !== i.value)
-              sym.extBind = true
+            j.value.ref = i.value
+            bindExprs.push(j.value)
             break
           }
         }
       }
+    }
+  }
+  for(const i of bindExprs) {
+    if (i.sym.boundAt !== i.ref) {
+      i.sym.extBind = true
     }
   }
   for(const i of bindVars) {
@@ -1317,9 +1286,8 @@ function localizeBinds(sa) {
   }
 }
 
-/** 
+/**
  * removes a few useless items from resulting code 
- *  - frames with `remove:true` property
  *  - result/exception frames if they are not used
  *  - not bound identifiers
  */
@@ -1428,12 +1396,10 @@ function cleanup(si) {
             i.value.patSym.dummy = true
           }
           if (i.value.catchContRedir) {
-            if (i.value.catchContRedir === errFrameRedir
-                && !needErrorCont)
+            if (i.value.catchContRedir === errFrameRedir && !needErrorCont)
               i.value.catchContRedir = null
             else
-              i.value.catchContRedir.required = true
-              
+              i.value.catchContRedir.required = true              
           }
           if (!needErrorCont && i.value.catchCont
               && i.value.catchCont.frameArgs) {
@@ -1442,9 +1408,9 @@ function cleanup(si) {
               errFrameRedir.required = true
           }
           if (i.value.resultContRedir) {
-            if (needResultCont)
+            if (needResultCont) {
               i.value.resultContRedir.required = true
-            else
+            } else
               i.value.resultContRedir = null
           }
           break
@@ -1454,7 +1420,6 @@ function cleanup(si) {
           if (!i.value.eff)
             break
         case Ctrl.jump:
-          // assert.ok(i.value.goto)
           const args = i.value.frameArgs
           if (args) {
             for(const j of args.keys())
@@ -1497,414 +1462,93 @@ function cleanup(si) {
 }
 
 /** 
- * for each jump adds another field gotoDests: FrameVal[] 
- * listing all possible jumps 
+ * calcualtes transitive closure of frames' control flow graph if needed 
+ *    
+ *    type RootVal = RootVal & { cfg: FrameVal[] }
+ * 
+ *    type FrameVal = FrameVal & {
+ *      -- frames after this frame in control flow
+ *      framesAfter: Set<FrameVal>,
+ *      framesBefore: Set<FrameVal>
+ *    }
+ *
+ *    type JumpLetVal = JumpLetVal & {
+ *      // the jump is recursive
+ *      rec: boolean
+ *    }
+ *
+ * assumes the frames are topologically sorted
  */
-function instantiateJumps(frames) {
-  function flatten(goto,res) {
-    if (goto.dynamicJump) {
-      for(const i of goto.instances)
-        flatten(i,res)
-    } else {
-      res.push(goto)
+function prepareCfg(sa) {
+  const root = sa[0].value
+  const opts = root.opts
+  Ctrl.convolveFrames(sa)
+  const cfg = root.cfg
+  calcPatSym(cfg)
+  const needsTransClos = opts.par
+  const needsRec = needsTransClos || opts.markRepeat
+  root.pureExitFrame.framesAfter = new Map()
+  if (!needsRec)
+    return sa
+  /** initialization */
+  if (needsRec)
+    for(const i of cfg)
+      i.calcBranchesVisited = false
+  if (needsTransClos)
+    for(const i of cfg) {
+      i.framesAfter = new Set()
+      i.framesBefore = new Set()
+      
     }
-  }
-  for(const i of frames) {
-    for(const j of i.exits) {
-      const dst = j.goto
-      if (dst) {
-        if (dst.dynamicJump) {
-          if (dst.args) {
-            const args = j.frameArgs || (j.frameArgs = new Map)
-            for(const [l,r] of dst.args)
-              args.set(l,r)
-          }
-          const dests = []
-          flatten(dst,dests)
-          switch(dests.length) {
-          case 0:
-            const {errFrame,resFrame} = j.ref.root
-            const ngoto = resFrame === j.ref || errFrame === j.ref
-                  ? null : j.ref.root.resFrame
-            dst.declSym.bound = false
-            if (dst.catchContRedir)
-              dst.catchContRedir.declSym.bound = false
-            if (dst.resultContRedir)
-              dst.resultContRedir.declSym.bound = false
-            j.ref.contArg = null
-            j.gotoDests = []
-            j.goto = ngoto
-            if (ngoto)
-              j.gotoDests.push(ngoto)
-            break
-          case 1:
-            j.goto = dests[0]
-            const {contArg} = j.ref
-            dst.declSym.bound = false
-            if (dst.catchContRedir)
-              dst.catchContRedir.declSym.bound = false
-            if (dst.resultContRedir)
-              dst.resultContRedir.declSym.bound = false
-            j.ref.contArg = null
-            j.goto.enters.add(j)
-            j.gotoDests = dests
-            break
-          default:
-            j.gotoDests = dests
-            for(const k of j.gotoDests)
-              k.enters.add(j)
-            dst.declSym.bound = true
-          }
-        } else {
-          j.gotoDests = [dst]
-        }
-      } else
-        j.gotoDests = []
-      if (i.catchContRedir && j.opts.storeErrorCont
-          && !j.opts.inlineErrorContAssign)
-        j.gotoDests.push(i.catchContRedir)
-      if (i.resultContRedir && i.resultContRedir
-          && j.opts.storeResultCont
-          && !j.opts.inlineResultContAssign)
-        j.gotoDests.push(i.resultContRedir)
-    }
-  }
-}
-
-/** 
- * if collapse === true fills collapsed:Map<FrameVal,Token[]> 
- * and collapses all frames into tokens saving their content 
- * in the Map's value, if `collapsed` is null it doesn't collapse frames
- * fills frames: FrameVal[] with a list of frame (if defined)
- * calculates FrameVal & {enters:Set<JumpVal>,exits:Set<JumpVal>}
- */
-export function* prepareCfg(si, collapsed, framesList) {
-  const s = Kit.auto(si)
-  const root = s.first.value
-  let first
-  const frames = []
-  for(const i of s) {
-    if (i.enter && i.type === Block.frame) {
-      i.value.first = !first
-      if (first == null)
-        root.first = first = i.value
-      i.value.root = root
-      frames.push(i.value)
-      if (framesList)
-        framesList.push(i.value)
-      yield s.tok(i.pos,i.type,i.value)
-      const start = s.cur()
-      const buf = []
-      for(const j of s.sub()) {
-        if (j.enter) {
-          switch (j.type) {
-          case Block.letStmt:
-            if (!j.value.eff)
-              break
-          case Ctrl.jump:
-            j.value.singleSymResult = null
-            i.value.singleJump = false
-            if (j.type === Ctrl.jump && start === j && j.value.goto
-                && !j.value.goto.dynamicJump) {
-              const k = s.curLev()
-              if (k) {
-                if (k.type === Block.bindPat)
-                  i.value.singleSymResult = k.value.sym
-              } else {
-                i.value.singleJump = j.value.goto
-                // simplifying next substitution
-                if (!j.leave) {
-                  buf.push(s.tok(j.pos,j.type,j.value))
-                  s.close(j)
-                  continue
-                }
-              }
-            }
-          }
-        }
-        buf.push(j)
-      }
-      resetExits(i.value,buf)
-      if (collapsed) {
-        collapsed.set(i.value,buf)
-        s.close(i)
-      } else {
-        yield i
-        yield* buf
-      }
-    } else
-      yield i
-  }
-}
-
-function resetExits(frame,content) {
-  const exits = frame.exits = new Set()
-  frame.enters = new Set()
-  const start = content[0]
-  for(const j of content) {
-    if (j.enter) {
-      switch (j.type) {
-      case Block.letStmt:
-        if (!j.value.eff)
-          break
-      case Ctrl.jump:
-        j.value.ref = frame
-        exits.add(j.value)
-      }
-    }
-  }
-}
-
-function resetEnters(frames) {
-  for(const i of frames) {
-    for(const j of i.exits) {
-      if (j.gotoDests) {
-        for(const k of j.gotoDests) {
-          k.enters.add(j)
-        }
-      } else if (j.goto && j.goto.enters)
-        j.goto.enters.add(j)
-    }
-  }
-}
-
-/** restores original stream after `prepareCfg` folded frames */
-export function* restoreFromCfg(cfg, si) {
-  for(const i of si) {
-    if (i.enter && i.type === Block.frame) {
-      assert.ok(i.leave)
-      const f = cfg.get(i.value)
-      if (!f)
-        continue
-      yield Kit.enter(i.pos,i.type,i.value)
-      yield* f
-      yield Kit.leave(i.pos,i.type,i.value)
-    } else
-      yield i
-  }
-}
-
-/** inlines frames with only 1 jump into it */
-function optInlineFrames(cfg) {
-  for(const [i,toks] of cfg) {
-    if (i.noInline || i.noSingleEnterInline)
-      continue
-    if (i.enters.size === 1) {
-      const [enter] = i.enters
-      if (!enter.result && !enter.bindJump
-          && !enter.noInline
-          && !enter.goto.dynamicJump
-          && !(enter.frameArgs && enter.frameArgs.size)
-          && !(enter.indirJumps && enter.indirJumps.size)
-          && enter.ref.catchCont === i.catchCont) {
-        enter.inlineFrame = toks
-        i.removed = true
-        for(const j of i.exits) {
-          j.ref = enter.ref
-          enter.ref.exits.add(j)
-        }
-        enter.ref.exits.delete(enter)
-        cfg.delete(i)
-      }
-    }
-  }
-}
-
-/** removes not reachable and frame with only 1 jump */
-function optUselessFrames(cfg) {
-  for(const i of cfg.keys()) {
-    i.hasBindJump = false
-    i.reachable = false
-    for(const j of i.exits) {
-      if (j.bindJump) {
-        i.hasBindJump = true
-        break
-      }
-    }
-    const skipFirst = i.noInline = i.noInline || i.first || i.last
-  }
-  function markReachable(frame) {
-    if (!frame)
-      return
-    if (frame.reachable)
-      return
-    frame.reachable = true
-    if (frame.dynamicJump)
-      return
-    for(const i of frame.exits) {
-      if (i.indirJumps)
-        for(const j of i.indirJumps.keys())
-          markReachable(j)
-      if (i.goto)
-        markReachable(i.goto)
-    }
-    if (!frame.last) {
-      if (frame.resultContRedir)
-        markReachable(frame.resultContRedir)
-      if (frame.catchContRedir)
-        markReachable(frame.catchContRedir)
-    }
-  }
-  for(const i of cfg.keys()) {
-    if (i.first) {
-      markReachable(i)
-      markReachable(i.root.resFrameRedir)
-    }
-  }
-  for(const i of cfg.keys()) {
-    if (!i.reachable) {
-      i.removed = true
-      cfg.delete(i)
-      continue
-    }
-    if (i.catchContRedir)
-      i.catchContRedir.noInline = true
-    if (i.resultContRedir)
-      i.resultContRedir.noInline = true
-  }
-  for(const i of cfg.keys()) {
-    if (i.noInline)
-      continue
-    i.removed = false
-    const [exit] = i.exits
-    if (i.singleSymResult && exit.result) {
-      i.substJump = i.root.resFrameRedir
-      i.removed = true
-      cfg.delete(i)
-    } else if (i.singleJump && exit
-               && !(exit.goto && exit.goto.dynamicJump
-                    && exit.goto.args && exit.goto.args.size)
-               && !(exit.indirJumps && exit.indirJumps.size)
-               && !(exit.frameArgs && exit.frameArgs.size))
-    {
-      let skip = false
-      if (!skip) {
-        i.substJump = exit.goto
-        i.removed = true
-        cfg.delete(i)
-      }
-    }
-  }
-  // applying the substitutes
-  for(const i of cfg.keys()) {
-    for(const j of i.exits) {
-      const indir = j.indirJumps
-      if (indir) {
-        for(const [goto,arg] of indir) {
-          assert.ok(goto.reachable)
-          if (!goto.substJump)
-            continue
-          indir.delete(goto)
-          let subst
-          for(let k = goto.substJump;k;k = k.substJump)
-            subst = k
-          if (subst)
-            indir.set(subst,arg)
+  /** calculating recursive jumps */
+  if (needsRec)
+    for(const i of cfg) {
+      i.calcBranchesVisited = true
+      for(const j of i.exits) {
+        if (j.goto.calcBranchesVisited) {
+          j.rec = true         
         }
       }
-      const {goto} = j
-      if (!goto)
-        continue
-      if (goto.dynamicJump) {
-        substDyn(goto)
-        continue
-      }
-      let subst
-      for(let k = goto.substJump;k;k=k.substJump)
-        subst = k
-      if (subst)
-        j.goto = subst
     }
-  }
-  function substDyn(goto) {
-    const {instances} = goto
-    for(let dst of instances) {
-      if (!dst.reachable) {
-        instances.delete(dst)
-        continue
+  /** Propagating frames before */
+  if (needsTransClos)
+    for(const i of cfg) {
+      const res = i.framesBefore
+      for(const j of i.enters) {
+        if (j.rec)
+          continue
+        res.add(j.ref)
+        j.ref.framesBefore.forEach(res.add,res)
       }
-      if (dst.substJump) {
-        instances.delete(dst)
-        for(let k = dst.substJump;k;k = k.substJump)
-          dst = k
-        if (dst)
-          instances.add(dst)
-      }
-      if (dst.dynamicJump)
-        substDyn(dst)
     }
-  }
-}
-
-/** applyies inlines previously marked by `optimizeJump` */
-function applyInlines(si) {
-  function* _applyInlines(sw) {
-    let skip = false
-    for(const i of sw) {
-      if (skip) {
-        if (i.value === skip)
-          skip = false
-        continue
-      }
-      if (i.enter) {
-        switch(i.type) {
-        case Block.letStmt:
-          if (!i.value.eff)
-            break
-        case Ctrl.jump:
-          if (i.value.inlineFrame) {
-            yield* _applyInlines(i.value.inlineFrame)
-            if (!i.leave)
-              skip = i.value
-            continue
-          }
-        }
-      }
-      yield i
+  /** Calculating frames after */
+  if (needsTransClos)
+    for(const i of cfg) {
+      for(const j of i.framesBefore)
+        j.framesAfter.add(i)
     }
-  }
-  return _applyInlines(si)
-}
-
-/** 
- * returns optimized CFG and replaces frames in scopes to folded tokens
- * it just applies `prepareCfg` to each item in `scopes` 
- */
-function getCfgFolded(sa,cfg) {
-  return Kit.toArray(prepareCfg(sa,cfg))
-}
-
-/** same as getCfgFolded but doesn't fold tokens */
-function getCfg(sa) {
-  const cfg = []
-  Kit.skip(prepareCfg(sa,null,cfg))
-  resetEnters(cfg)
-  return cfg
-}
-
-/** reverse of `getCfgFolds` */
-function unfoldCfg(cfg,sa) {
-  return Kit.toArray(applyInlines(restoreFromCfg(cfg,sa)))
+  return sa
 }
 
 /** conferts flat structure to JS expressions */
 export const interpret = Kit.pipe(
-  Loop.prepareInvertForOf,
   Inline.markSimpleRedir,
   Kit.toArray,
   markBound,
-  Par.interpret,
+  prepareCfg,
+  Par.convert,
+  Opt.removeSingleJumps,
+  Opt.inlineFrames,
   calcVarDeps,
-  Loop.invertForOf,
   Inline.storeContinuations,
   ifDefunct(Defunct.prepare),
   Gens.functionSentAssign,
   Bind.interpretPureLet,
-  Inline.vars,
   copyFrameVars,
   Policy.stage("interpretFrames"),
   Kit.toArray,
   ifDefunct(Defunct.convert),
+  Coerce.cleanPureJumps,
   Kit.toArray,
   Policy.stage("defunctFrames"),
   Inline.jumps,
@@ -1914,4 +1558,3 @@ export const interpret = Kit.pipe(
   interpretFrames,
   Kit.toArray,
   ifDefunct(Defunct.substSymConsts))
-

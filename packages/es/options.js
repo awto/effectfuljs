@@ -23,6 +23,7 @@ const rebind = {
     markResultCont: false,
     scopeContext:true,
     scopePrefix:true,
+    scopePostfix:true,
     contextState:false,
     defunct: false,
     topLevel: false,
@@ -135,7 +136,8 @@ const defunct = {
     storeErrorCont:false,
     storeResultCont:false,
     inlineErrorContAsign: false,
-    inlineResultContAssign:false
+    inlineResultContAssign:false,
+    staticPure:true
   }
 }
 
@@ -272,6 +274,23 @@ module.exports = function esProfile(opts={}) {
       Object.assign(asyncGenerators,topLevelDefunct.effectful,topLevelDefunct.asyncGenerators)
     }
   }
+  if (opts.par) {
+    const newOpts = {
+      par:true,
+      parRegion:false,
+      blockDirectives: {
+        par: {
+          parRegion: true
+        },
+        seq: {
+          parRegion: false
+        }
+      }
+    }
+    Object.assign(file, newOpts)
+    Object.assign(async, newOpts)
+    Object.assign(asyncGenerators, newOpts)
+  }
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})
   Object.assign(file,opts.all,opts.file,
@@ -289,7 +308,6 @@ module.exports = function esProfile(opts={}) {
     options: file,
     main(si) {
       const sa = Kit.toArray(si)
-      const root = sa[0].value
       let any
       for(const i of sa) {
         if (i.enter) {
