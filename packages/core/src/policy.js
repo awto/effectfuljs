@@ -70,13 +70,11 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
 
 /** assigns opts field to each descendant value if there is no any */
 export function propagateOpts(si) {
-  const sa = Kit.toArray(si)
-  const s = Kit.auto(sa)
-  const stack = [s.opts]
-  for(const i of s) {
-    if (i.enter && i.value.opts) {
+  const sa = Kit.toArray(propagateBlockDirs(si))
+  const stack = [sa[0].value.opts]
+  for(const i of sa) {
+    if (i.enter && i.value.opts)
       stack.push(i.value.opts)
-    }
     if (i.leave) {
       if (i.value.opts)
         stack.pop()
@@ -333,8 +331,7 @@ export const directives = Kit.pipe(
               throw s.error("only string literals are supported")
             Kit.skip(s.till(j=>j.leave && j.type === Match.Root))
             const name = k.value.node.value
-            const value = {ns:j.value.node.name,node:{name}}
-            yield s.tok(profile,value)
+            yield s.tok(profile,{ns:j.value.node.name,node:{name}})
           } else {
             Kit.skip(s.till(j=>j.enter && j.type === Match.Placeholder))
             const j = s.cur()
@@ -720,7 +717,53 @@ export const setFuncOpts = function setFuncOpts(opts) {
   }
 }
 
-/** 
+/**
+ * Converts JS block directives into profiles call
+ */
+export function propagateBlockDirs(si) {
+  const s = Kit.auto(si)
+  const {blockDirectives} = s.first.value.opts
+  if (!blockDirectives)
+    return s
+  return _propagateBlockDirs()
+  function* _propagateBlockDirs(value) {
+    function dir(i,name) {
+      const descr = blockDirectives[name]
+      if (descr) {
+        value.opts = Object.assign(value.opts || {}, s.opts, descr)
+        Kit.skip(s.copy(i))
+        return true
+      }
+      return false
+    }
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.BlockStatement:
+        case Tag.Program:
+          yield i
+          yield* _propagateBlockDirs(i.value)
+          continue
+        case Tag.ExpressionStatement:
+          /// babel parser recognizes directives only
+          /// for program and functions block
+          if (s.cur().type === Tag.StringLiteral) {
+            if (dir(i,s.cur().value.node.value))
+              continue
+          }
+          break
+        case Tag.DirectiveLiteral:
+          if (dir(i,i.value.node.value))
+            continue
+          break
+        }
+      }
+      yield i
+    }
+  }
+}
+
+/**
  * posts option diff to the stream, 
  * so all the next in the scope options are updated with 
  * `x => Object.assign(x, opts)`
@@ -746,6 +789,7 @@ export const injectFuncOpts = (opts, withSelf = false) => {
   }
 }
 
+/** Marks and assign a name to set of passes */
 export const stage = Kit.curry(function(name, si) {
   let s = Kit.auto(si)
   const origStage = s.opts.stageName

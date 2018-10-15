@@ -3,34 +3,6 @@ import * as Policy from "../policy"
 import * as Debug from "../debug"
 import {ifDirectives} from "../options"
 
-const fullOpts = {
-  bindCalls: {
-    byNs: {
-      console:false,
-      process:false,
-      pack:false
-    },
-    all: true,
-    ns: true
-  },
-  generator:false,
-  async:false,
-  coerce:true,
-  transform:true
-}
-
-const minOpts = {
-  bindCalls: {
-    ns: true,
-    libNs: {
-      reflect: true
-    }
-  },
-  coerce:true,
-  generator:false,
-  transform:true
-}
-
 const disabledOpts = {
   transform: false
 }
@@ -42,7 +14,7 @@ const generatorOps = {
 
 const postproc = Kit.pipe(
   Policy.setFuncOpts(disabledOpts),
-  Policy.setQNames,
+  Policy.setQNames,  
   Policy.configDiffPass,
   Policy.applyProfiles,
   ifDirectives(Kit.pipe(
@@ -98,6 +70,32 @@ export default Kit.pipe(
       requireFinalPure:false,
       pureForOf:true
     },defaults))
+    const fullOpts = Object.assign({
+      bindCalls: {
+        byNs: {
+          console:false,
+          process:false,
+          pack:false
+        },
+        all: true,
+        ns: true
+      },
+      generator:false,
+      async:false,
+      coerce:true,
+      transform:true
+    },defaults)
+    const minOpts = Object.assign({
+      bindCalls: {
+        ns: true,
+        libNs: {
+          reflect: true
+        }
+      },
+      coerce:true,
+      generator:false,
+      transform:true
+    },defaults)
     yield Kit.tok(Policy.configDiff,{
       node: {
         profiles: {

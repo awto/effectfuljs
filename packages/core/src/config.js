@@ -51,6 +51,9 @@ export default {
   // adds extra last frame, e.g. to extract some effectful data from context
   scopePostfix: false,
 
+  // pure operation is static
+  staticPure: false,
+
   // name of a function to construct context object
   scopeConstructor: "context",
   // name of a function to construct an object with closure captured variables
@@ -272,8 +275,12 @@ export default {
   removeAsserts: false,
 
   // using in-code directives to change translator settings
+  // (`M.option`, `M.profile`)
   directives: true,
 
+  // converts JS block directives into options assignment
+  // string value or true for keys means profile assignment (same name if `true`)
+  blockDirectives: false,
   // defines call expressions to treat as effectful
   // {
   //    byNs: {[name:string]:boolen},   // ns names i.e. console
@@ -289,9 +296,6 @@ export default {
 
   // target JS engine has tail calls
   jsTailCalls: false,
-
-  // encode effectful `for-of` loops using CPS
-  invertForOf: false,
 
   // name of a context's field to store continuations and compuation values
   // stored directly in context if not defined
@@ -326,22 +330,20 @@ export default {
   normPureForIn: false,
   normPureBlocks: false,
   
-  // NOT IMPLEMENTED: using applicative combinators 
   // * null  - leave everything sequential
   // * false - sequential by default, but will check for another options
   //           within the function
   // * true  - tries to parallelize effects frames if possible
+  // it is a function's level option, if it is set to `true` it isn't going
+  // to be parallelized immediately, only parts with `parActive:true` will
+  // be considered, use `"par"` or `"seq"` block directives to amend
+  // the variable
   par: false,
-  // NOT IMPLEMENTED: if `par` it will ignore effectful values binds dependency
-  // (works only if `par:true`)
-  parIgnoreBinds: false,
+  // for functions with `par:true` specifies which parts of code should
+  // be parallel or sequential (usually changed with "par", "seq" directives
+  parRegion: false,
   // if `true` fill assume any variable reference (LHS or RHS) as dependency
   // otherwise only RHS positions are dependent on LHS positions only
-  parAllLocals: false,
-  // NOT IMPLEMENTED: allow frames reordering
-  // * null - preserve order
-  // * "expr" - only within single expressions
-  // * "full" - statements too
-  parReorder: null
+  parAllLocals: false
 }
 
