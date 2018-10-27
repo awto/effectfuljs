@@ -429,13 +429,16 @@ function* removeSubScopes(s) {
 const undefPatSym = Kit.scope.newSym("__")
 
 export function singleFrameTxt(frame,s) {
-  const f = Kit.toArray(singleFrameToks(frame,s))
+  const sa = Kit.toArray(s)
+  if (sa.length === 0)
+    return "<EMPTY>"
+  const f = Kit.toArray(singleFrameToks(frame,sa))
   return D.toStr(D.fin(f),{comments:false})
 }
 
 export function* singleFrameToks(frame,si) {
   const s = Kit.auto(si)
-  yield* s.template(Tag.push,`($I) => {$_}`,frame.patSym || undefPatSym)
+  yield* s.template(Tag.push,`($I) => {$_}`,frame && frame.patSym || undefPatSym)
   yield* _frame()
   yield* s.leave()
   function* _frame() {

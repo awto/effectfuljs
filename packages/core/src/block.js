@@ -37,8 +37,6 @@ export const redirResultSym = Kit.sysId("$redirResult")
  */
 export function interpretApp(s) {
   const sl = Kit.auto(s)
-  const {contextBy,contextMethodOps,contextMethodOpsSpec} = sl.opts
-  const {contextSym} = sl.first.value
   function* walk(sw) {
     for(const i of sw) {
       if (i.enter) {
@@ -48,7 +46,7 @@ export function interpretApp(s) {
           yield sl.enter(Tag.expression,Tag.CallExpression)
           if (i.value.static !== false) {
             yield sl.tok(Tag.callee,Tag.Identifier,
-                         {sym:i.value.sym})
+                         {sym:i.value.sym,origOp:i.value})
             yield sl.enter(Tag.arguments,Tag.Array)
             yield* Kit.reposOne(walk(sl.one()), Tag.push)
           } else {
@@ -353,11 +351,13 @@ export function ctxMethods(si) {
         yield s.enter(i.pos, Tag.MemberExpression)
         if (sym.ctxField) {
           yield s.enter(Tag.object,Tag.MemberExpression)
-          yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
+          yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym,
+                                                 origOp:i.value.origOp})
           yield s.tok(Tag.property,Tag.Identifier,{node:{name:sym.ctxField}})
           yield* s.leave()
         } else {
-          yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
+          yield s.tok(Tag.object,Tag.Identifier,
+                      {sym:contextSym,origOp:i.value.origOp})
         }
         yield s.tok(Tag.property,Tag.Identifier,{node:{name:i.value.sym.name}})
         yield* s.leave()

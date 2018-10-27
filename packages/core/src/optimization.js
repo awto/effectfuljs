@@ -15,8 +15,7 @@ export function inlineFrames(si) {
   const {scopePostfix,staticPure,coerce} = root.opts
   Ctrl.convolveFrames(sa)
   const res = Kit.toArray(_inlineJumps(sa))
-  return Kit.toArray(Block.cleanup(res))
-  
+  return Kit.toArray(Block.cleanup(res))  
   function* _inlineJumps(si) {
     const s = Kit.auto(si)
     for(const i of s) {
@@ -78,7 +77,7 @@ export function inlineFrames(si) {
                   || j.value.indirJumps && j.value.indirJumps.size
                   || j.value.frameArgs && j.value.frameArgs.size)
                 break
-              if (!goto.noInline && goto.dynamicJump || goto.enters.size !== 1
+              if (goto.dynamicJump || goto.enters.size !== 1
                   || goto.required || goto.noInline || goto === resFrame
                   || goto.catchContRedir
                      && goto.catchContRedir !== frame.catchContRedir
@@ -107,7 +106,6 @@ export function inlineFrames(si) {
         }
       }
     }
-    
   }
 }
 

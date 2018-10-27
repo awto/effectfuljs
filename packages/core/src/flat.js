@@ -117,7 +117,8 @@ export const convert = Kit.pipe(
                 yield s.close(i)
               }
               continue
-            } else if (i.value.result) {
+            }
+            if (i.value.result) {
               /** last not-eff letStmt must be turned into explicit return */
               yield s.enter(i.pos, Block.pure)
               if (s.curLev())
@@ -1020,8 +1021,7 @@ export function interpretFrames(si) {
             i.value.declSym.orig = `${rootName}_${fn}`
             if (byThis)
               (i.value.savedDecls || (i.value.savedDecls = new Map())).set(
-                ctxSym,
-                {raw:null,init:[s.tok(Tag.init,Tag.ThisExpression)]})
+                ctxSym, {raw:null,init:[s.tok(Tag.init,Tag.ThisExpression)]})
             i.value.func = true
             yield s.enter(Tag.push,Tag.FunctionDeclaration,i.value)
             yield s.tok(Tag.id,Tag.Identifier,{sym:i.value.declSym,decl:true})
@@ -1113,7 +1113,8 @@ export function interpretJumps(si) {
                             passCont,goto:i.value.gotoSym,
                             result:name === "scope",
                             reflected: i.value.reflected,
-                            tmpVar:i.value.tmpVar}
+                            tmpVar:i.value.tmpVar,
+                            cloneCtx:i.value.cloneCtx}
             if (s.curLev()) {
               if (s.opts.markBindValue !== false)
                 name += "B"
@@ -1542,6 +1543,7 @@ export const interpret = Kit.pipe(
   calcVarDeps,
   Inline.storeContinuations,
   ifDefunct(Defunct.prepare),
+  Par.interpret,
   Gens.functionSentAssign,
   Bind.interpretPureLet,
   copyFrameVars,

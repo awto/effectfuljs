@@ -7,7 +7,12 @@ M.option({combineOps:true,
           contextMethodOps:true,
           cleanupFrameVars:false,
           par:true,
-          parRegion:true})
+          defunct:true,
+          storeCont:"$state",
+          storeHandler:"$run",
+          parRegion:true,
+          reuseTempVars:true
+         })
 
 async function p0(a,b) {
   await g_1(await f_3, await f_4)
@@ -458,3 +463,11 @@ async function p49() {
   await fin_1(i)
 }
 
+async function p50() {
+  "par"
+  await init
+  for(let i = 0;i<10;i++) {
+    await fu_1(i += await gu_1(i),await gu_2(i))
+  }
+  await fin_1
+}

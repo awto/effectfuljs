@@ -19,7 +19,8 @@ export function* prepare(si) {
         && s.opts.contextMethodOps
         && (root.contSym = Kit.sysId(s.opts.storeCont))
   if (!contSym)
-    throw s.error("`defunct:true` requires stored control state")
+    throw s.error(
+      "`defunct:true` requires stored control state (e.g. \"storeCont\":\"$cont\")")
   if (!root.contextSym)
     throw s.error("`defunct:true` requires context object")
   root.implFrame = Kit.enter(
@@ -90,13 +91,17 @@ export function assignHandlers(si) {
   return _assignHandlers()
   function* _assignHandlers() {
     const f = yield* s.till(i => i.type === Block.frame)
-    yield* s.toks(Tag.push,`$I.${s.opts.storeHandler} = $I`,
-                  contextSym,root.implFrame.value.declSym)
+    if (root.closureHandler)
+      yield* s.toks(Tag.push,`$I = $I()`,
+                    root.handlerSym,root.closureHandler)
+    else
+      yield* s.toks(Tag.push,`$I = $I`,
+                    root.handlerSym,root.implFrame.value.declSym)
     if (!s.opts.defunctHandlerInProto) {
-      if (root.errMapSym)
-        yield* s.toks(Tag.push,`$I.$err = $I`,contextSym,root.errMapSym)
-      if (root.resMapSym)
-        yield* s.toks(Tag.push,`$I.$fin = $I`,contextSym,root.resMapSym)
+      if (root.errMapSym && root.errHandlerSym)
+        yield* s.toks(Tag.push,`$I = $I`,root.errHandlerSym,root.errMapSym)
+      if (root.resMapSym && root.resHandlerSym)
+        yield* s.toks(Tag.push,`$I = $I`,root.resHandlerSym,root.resMapSym)
     }
     yield* s
   }
@@ -244,7 +249,7 @@ export function* frames(si) {
   assert.ok(contextSym)
   assert.ok(contSym)
   const impl = root.implFrame.value
-  const decls = impl.savedDecls = new Map()
+  const decls = impl.savedDecls
   const reuseTemps = s.opts.reuseTempVars !== false
 
   const varsPool = reuseTemps && []
@@ -419,7 +424,6 @@ export function tailJumps(si) {
 
 export const convert = Kit.pipe(
   frames,
-//  deb_("defun-f"),
   Kit.toArray,
   stateMappings,
   Kit.toArray,

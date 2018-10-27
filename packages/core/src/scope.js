@@ -127,9 +127,8 @@ export function recalcLocals(sl) {
           if (info != null) {
             i.value.sym = info.sym
             refs.set(info.sym,info)
-            if (info.root !== root) {
+            if (info.root !== root)
               (info.capt || (info.capt = new Set())).add(root)
-            }
           }
           break
         case Tag.VariableDeclarator:
@@ -270,8 +269,15 @@ export function funcWraps(si) {
     const sym = root.implFrame && root.implFrame.value.declSym
     if (!sym)
       return
-    yield s.tok(Tag.push,Tag.Identifier,
-                {sym:root.opts.topLevel ? sym : Kit.scope.undefinedSym})
+    if (root.opts.topLevel) {
+      if (root.closureHandler) {
+        yield* s.toks(Tag.push,`=$I()`,root.closureHandler)
+      } else {
+        yield s.tok(Tag.push,Tag.Identifier,{sym})
+      }
+    } else {
+      yield s.tok(Tag.push,Tag.Identifier,{sym:Kit.scope.undefinedSym})
+    }
     yield s.tok(Tag.push,Tag.Identifier,
                 {sym:root.errMapSym||Kit.scope.undefinedSym})
     yield s.tok(Tag.push,Tag.Identifier,

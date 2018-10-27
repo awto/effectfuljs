@@ -724,6 +724,7 @@ export function calcFrameStateVars(si) {
       }
     }
   }
+  root.pureExitFrame.stateVars = {r:emptySet, w:emptySet, c:emptySet}
   let first = {r:new Set(),w:new Set(),c:new Set()}
   if (root.paramSyms)
     root.paramSyms.forEach(Set.prototype.add,first.w)

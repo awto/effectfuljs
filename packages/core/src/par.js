@@ -1,5 +1,6 @@
 /** 
- * implicit parallelization, detecting Applicative combinators 
+ * implicit parallelization
+ * detecting and injecting Applicative functor based combinators 
  */
 import * as Kit from "./kit"
 import {Tag} from "./kit"
@@ -7,10 +8,13 @@ import * as Block from "./block"
 import * as Bind from "./bind"
 import * as assert from "assert"
 import * as Ctrl from "./control"
+import * as State from "./state"
 
-const emptySet = new Set()
 export const shareId = Kit.sysId("share")
 export const forkId = Kit.sysId("fork")
+
+/** interpr value for thread local vars */
+export const threadLocal = {$:"tl",frameLocal:false}
 
 /** 
  * returns edges for variables dependencies
@@ -20,13 +24,15 @@ export const forkId = Kit.sysId("fork")
 function nodeVars(node) {
   const fv = node.fv = new Set()
   const bv = node.bv = new Set()
-  function content(toks) {
-    for(const i of toks) {
+  if (node.skip) {
+    travFrames(new Set(), node.value[0], node.after)
+  } else {
+    for(const i of node.value.content) {
       if (i.enter) {
         switch(i.type) {
         case Block.letStmt:
           if (i.value.sym)
-                bv.add(i.value.sym)
+            bv.add(i.value.sym)
           break
         case Tag.Identifier:
           const sym = i.value.sym
@@ -39,7 +45,7 @@ function nodeVars(node) {
             if (i.value.rhs && !bv.has(sym))
               fv.add(sym)
             if (i.value.lhs)
-                  bv.add(sym)
+              bv.add(sym)
           }
           break
         case Block.bindPat:
@@ -49,13 +55,28 @@ function nodeVars(node) {
       }
     }
   }
-  if (node.skip) {
-    for(const i of node.value) {
-      for(const j of i.steps)
-        content(j.content)
+  function travFrames(inited, frame, stop) {
+    const sw = frame.stateVars
+    for(const i of sw.r) {
+      if (!inited.has(i))
+        fv.add(i)
     }
-  } else
-    content(node.value.content)
+    sw.w.forEach(bv.add,bv)
+    if (frame.exits.size === 1) {
+      const [exit] = frame.exits
+      if (exit.goto === stop || exit.rec)
+        return
+      sw.w.forEach(inited.add,inited)
+      travFrames(inited, exit.goto, stop)
+    } else {
+      for(const i of frame.exits) {
+        const nInited = new Set(inited)
+        if (i.rec)
+          continue
+        travFrames(nInited, i.goto, stop)
+      }
+    }
+  }
 }
 
 /** 
@@ -69,39 +90,16 @@ function nodeVars(node) {
 function edgesByVars(nodes) {
   const bv = new Map()
   const res = []
-  let x = 0
-  for(const src of nodes) {
-    src.x = x++
-    for(const v of src.bv) {
-      let srcs = bv.get(v)
-      if (srcs == null)
-        bv.set(v, srcs = [])
-      srcs.push(src)
-    }
-  }
-  for(const dst of nodes) {
-    for(const v of dst.fv) {
-      const srcs = bv.get(v)
-      if (srcs) {
-        for(const src of srcs)
-          if (src !== dst)
-            res.push(src.x > dst.x ? [dst,src] : [src,dst])
-      }
-    }
-  }
-  /*
-  const bv = new Map()
-  const res = []
   for(const dst of nodes) {
     for(const i of dst.fv) {
       const src = bv.get(i)
       if (src)
         res.push([src,dst])
     }
-    for(const i of dst.bv)
+    for(const i of dst.bv) {
       bv.set(i, dst)
+    }
   }
-  */
   return res
 }
 
@@ -114,8 +112,9 @@ function edgesByVars(nodes) {
 function buildGraph(nodes,edges) {
   const res = nodes.map(dst => [dst,[]])
   const map = new Map(res)
-  for(const [src,dst] of edges)
+  for(const [src,dst] of edges) {
     map.get(dst).push(src)
+  }
   return res
 }
 
@@ -124,10 +123,7 @@ function buildGraph(nodes,edges) {
  *
  * Input deps graph saying computation in `src` uses `dst`s (no trans clos)
  * 
- *    graph: {
- *      src: Node,
- *      dst: Node[]
- *    }
+ *    graph: {src: Node, dst: Node[]}
  *
  *  Each node specifies threads join 
  *
@@ -142,9 +138,7 @@ function buildGraph(nodes,edges) {
  *      // sequence of ops to run after the join
  *      // i.e. the ops running in the thread
  *      right: Node[],
- *      steps: Steps[] 
- *      // shared object describing `fork` operation for this thread
- *      fork: ForkVal,
+ *      steps: Step[] 
  *      // the threads's reference counter
  *      rc: number,  
  *      // first: FrameVal, === frames[0].exit
@@ -153,7 +147,13 @@ function buildGraph(nodes,edges) {
  *      // so the node itself and the ones it depends on
  *      scope: Set<Node>,
  *      // last frame for this thread (usually contains `join` in its exit)
- *      lastStep: Step
+ *      lastStep: Step,
+ *      // transitive closure of deps in left
+ *      closLeft: Set<Thread>,
+ *      // threads which may run in parallel with this one
+ *      parThreads: Set<Thread>,
+ *      // vars written/read by this thread
+ *      w, r: Set<Symbol>
  *    }
  * 
  *    type Step = {
@@ -174,48 +174,30 @@ function buildGraph(nodes,edges) {
  *      value: FrameVal[],
  *      after: FrameVal 
  *    }
- *    type ForkVal = {
- *      // threads to be started by this forks
- *      tuple: Thread[],
- *      // this fork's dependencies
- *      left: Thread[],
- *      // jump to replace with the fork
- *      // first effectful let in the first frame
- *      enter: LetVal,
- *      // helper memo for `exprs` construction
- *      exprMemo: Map<Thread, ForkExpr>,
- *      // stack of fork expressions describing this fork
- *      exprs: ForkExpr[],
- *      // fork's rank in dependencies DAG
- *      rank: number,
- *      // actual computed fork expression, built from `exprs`
- *      rootExpr: ForkExpr
- *    }
  *
  *    type ForkExpr = {
  *        // reference counter
  *        rc: number
  *      } & ({
  *        fork: true,
- *        // the fork joins into this fork
- *        joinFork: ForkVal | null,
- *        // the fork joins into this frame
- *        joinFrame: FrameVal
- *        // parameters of the fork
- *        tup: Set<ForkExpr>
+ *        // the fork joins into this thread
+ *        join: Thread,
+ *        tup: ForkExpr[]
  *      } | {
  *        fork: false,
- *        // last fork appended to this thread (during optimization)
- *        tailFork: ForkVal | null
+ *        value: ThreadVal
  *      })
  *
  *  if letStmt can be parallelized:
  * 
- *   type LetVal = LetVal & {
- *     parFork?: ForkVal
- *   }
- *
  *   type TokVal = Val & { content: Token[] }
+ *
+ *   type RootVal = RootVal & { 
+ *     parDefs: Thread[][],
+ *     // new frames content
+ *     parFrames: Token[][],
+ *     // variables requiring copies after changing
+ *     parThreadLocalVars: Set<Symbol> }
  * 
  */
 function deriveBlocks(graph, s, root) {
@@ -313,24 +295,7 @@ function deriveBlocks(graph, s, root) {
    * nothing to run in parallel here (giving up)
    */
   if (threads.length === 1)
-    return
-
-  /** 
-   * ## calculating fork points 
-   *
-   * Several nodes can start running together if they have
-   * same dependency list (`left`). Calculating shared `fork` 
-   * objects for them.
-   */
-  const forks = new Map()
-  for(const i of threads) {
-    const lid = i.left.map(i => i.id).join()
-    let fork = forks.get(lid)
-    if (!fork)
-      forks.set(lid,fork = {tuple:[], left:i.left})
-    i.fork = fork
-    fork.tuple.push(i)
-  }
+    return false
   /**
    * Splitting threads back into frames (steps)
    */
@@ -424,60 +389,46 @@ function deriveBlocks(graph, s, root) {
     for(let j = 0, len = steps.length - 1; j < len; ++j) {
       const cur = steps[j]
       const next = steps[j+1]
-      setStepTail(cur, next.frame)
+      if (cur.skip) {
+        for(const i of cur.after.enters)
+          i.goto = next.frame
+      } else
+        cur.exit.goto = next.frame
       if (!cur.skip)
         next.frame.patSym = cur.exit.sym
     }
     i.rank = Math.max(0,...i.left.map(i => i.rank)) + 1
   }
-  const forksArr = [...forks.values()]
-  for(const i of forksArr)
-    i.rank = Math.max(...i.tuple.map(i => i.rank))
-  const maxRank = Math.max(...forksArr.map(i => i.rank))
   const firstFrame = first.skip ? first.value[0] : first.value.ref
-  for(const fork of forksArr) {
-    fork.head = s.tok(Tag.push, Block.frame,
-                      {declSym:Kit.scope.newSym("_"),savedDecls:new Map(),
-                       resFrameRedir:firstFrame.resFrameRedir,
-                       catchContRedir:firstFrame.catchContRedir}).value
-  }
-  const firstHead = forksArr[0].head
+  const head = s.tok(Tag.push, Block.frame,
+                     {declSym:Kit.scope.newSym("_"),savedDecls:new Map(),
+                      resFrameRedir:firstFrame.resFrameRedir,
+                      catchContRedir:firstFrame.catchContRedir}).value
   for(const i of firstFrame.enters)
-    i.goto = firstHead
-  for(const i of forksArr)
-    liftForkExprs(i)
-  /** calculating root expression */
-  for(const fork of forksArr) {
-    const {exprs} = fork
-    for(const i of exprs) {
-      if (i.fork)
-        for(const j of i.tup)
-          ++j.rc
+    i.goto = head
+  /** generating expressions */
+  for(const i of threads) {
+    const join = {fork:false,rc:0,value:i,enter:i.steps[0].frame}
+    if (i.left.length === 0) {
+      i.expr = join
+      continue
     }
-    const tup = new Set()
-    for(const i of exprs) {
-      if (i.rc === 0)
-        tup.add(i)
-      if (i.fork) {
-        i.joinFrame = i.joinFork ? i.joinFork.head : root.pureExitFrame
-      } else {
-        i.tailFork = null
-      }
+    const tup = []
+    for(const j of i.left) {
+      assert.ok(j.expr)
+      tup.push(j.expr)
+      ++j.expr.rc
     }
-    if (tup.size === 1)
-      [fork.rootExpr] = tup
-    else
-      fork.rootExpr = {fork:true,rc:0,tup,joinFork:null,joinFrame:resFrameRedir}
+    i.expr = {fork:true,rc:0,tup,join}
   }
-  setExprTail(forksArr[0].rootExpr, exitGoto)
-  for(const i of forksArr)
-    i.rootExpr = optForkExpr(i.rootExpr)
-  for(const i of forksArr)
-    calcExprRefCount(i.rootExpr)
+  const tup = []
+  for(const i of threads) {
+    if (i.rc === 0)
+      tup.push(i.expr)
+  }
   root.parFrames.push([...emitFrames()])
   root.parDefs.push(threads)
-  return
-  
+  return true
   /**
    * gets all possible graph splittings calculating `dests`
    */
@@ -502,232 +453,46 @@ function deriveBlocks(graph, s, root) {
       _bt(pos+1,dests,cur, res)
     }
   }
-  /**
-   * Constructs fork expressions 
-   */
-  function liftForkExprs(fork) {
-    if (fork.exprs)
-      return
-    const exprs = fork.exprs = []
-    const exprMemo = fork.exprMemo = new Map()
-    /** en expression for each thread */
-    for(const i of fork.tuple) {
-      const tip = {fork: false,rc:0,value:i,rc:0}
-      fork.exprMemo.set(i, tip)
-      fork.exprs.push(tip)
-    }
-    /** if no deps it is a least upper bound itself */
-    if (!fork.left.length) {
-      fork.lub = fork
-      fork.lubExpr = null
-      return
-    }
-    for(const i of fork.left)
-      liftForkExprs(i.fork)
-    const store = new Map()
-    /** grouping dependencies by threads where they are started */
-    for(const i of fork.left) {
-      let t = store.get(i.fork)
-      if (!t)
-        store.set(i.fork, t = new Set())
-      const em = i.fork.exprMemo.get(i)
-      assert.ok(em)
-      t.add(em)
-    }
-    if (store.size === 1) {
-      /** all deps are in the same thread, simply creating fork expression */
-      const [[nf, tup]] = store
-      const expr = {fork:true,rc:0,tup,joinFork:fork}
-      nf.exprs.push(expr)
-      for(const i of fork.tuple) {
-        assert.ok(i.fork === fork)
-        nf.exprMemo.set(i, expr)
-      }
-      fork.lub = nf
-      fork.lubExpr = expr
-    } else {
-      /**
-       * not all deps are located in the same thread
-       * looking for a common ancestor
-       */
-      const lubs = new Set()
-      for(const [nf,tup] of store) {
-        let expr
-        if (tup.size === 1)
-          [expr] = tup
-        else {
-          expr = {fork:true,rc:0,tup,joinFork:null}
-          nf.exprs.push(expr)
-        }
-        lubs.add(nf)
-      }
-      commonLUB(lubs,fork)
-    }
-  }
-  /** looks for a common ancestor for a few fork threads */
-  function commonLUB(forks, destFork) {
-    const lubs = new Map()
-    for(const i of forks) {
-      let t = lubs.get(i.lub)
-      if (i.lubExpr) {
-        if (t == null)
-          lubs.set(i.lub, t = new Set())
-        t.add(i.lubExpr)
-      }
-    }
-    for(;;) {
-      let maxRank = -1
-      let lub, tup
-      //TODO: priority queue
-      for(const [l,d] of lubs) {
-        if (l.rank > maxRank) {
-          maxRank = l.rank
-          lub = l
-          tup = d
-        }
-      }
-      lubs.delete(lub)
-      if (lubs.size) {
-        let t = lubs.get(lub.lub)
-        if (t == null)
-          lubs.set(lub.lub, t = new Set())
-        t.add(lub.lubExpr)
-        lub.exprs.push({fork:true,rc:0,tup,joinFork:null})
-      } else {
-        destFork.lub = lub
-        lub.exprs.push(destFork.lubExpr={fork:true,rc:0,tup,joinFork:destFork})
-        break
-      }
-    }
-  }
-  function calcExprRefCount(expr) {
-    expr.rc++
-    if (expr.rc === 1 && expr.fork) {
-      for(const i of expr.tup)
-        calcExprRefCount(i)
-    }
-  }
-  /**
-   * optimizing fork expressions
-   *   - removing single thread forks
-   *
-   *      fork [fork [X] join, ...Z] Y === fork [X, ...Z] y
-   *      fork [X] not-join (X referred only once) === X[goto = not-join]
-   *      fork [fork Xs goto] pure = fork Xs goto
-   *      forks with same Xs and goto can be removed 
-   *         - Xs is associative, commutative
-   */
-  function optForkExpr(expr) {
-    if (expr.opt)
-      return expr.opt
-    if (!expr.fork)
-      return expr.opt = {fork:false,value:expr.value,tailFork:expr.tailFork,rc:0}
-    const tup = [...expr.tup].map(optForkExpr).filter(nonEmptyThread)
-    if (tup.length === 1) {
-      const [child] = tup
-      if (child.rc === 1) {
-        setExprTail(child,expr.joinFrame,expr.joinFork)
-        child.rc = 0
-        return expr.opt = child
-      }
-    }
-    return expr.opt = {fork:true,tup,joinFrame:expr.joinFrame,
-                       joinFork:expr.joinFork,rc:0}
-  }
-  /** checks if the expression does anything */
-  function nonEmptyThread(expr) {
-    if (expr.fork)
-      return expr.tup.length > 0
-    const thread = expr.value
-    if (thread.steps.length !== 2)
-      return true
-    const [step] = thread.steps
-    if (step.skip || !step.toks || step.toks.length !== 1)
-      return true
-    const [tok] = step.toks
-    if (tok.origType !== Ctrl.jump)
-      return true
-    if (tok.goto !== pureExitFrame)
-      return true
-    step.removed = true
-    return false
-    
-  }
-  /** sets destination for a step */
-  function setStepTail(step, dest) {
-    if (step.skip) {
-      for(const i of step.after.enters)
-        i.goto = dest
-    } else
-      step.exit.goto = dest
-  }
   /** sets destination for fork expression */
-  function setExprTail(expr, frame, fork) {
-    if (expr.fork) {
-      if (expr.joinFork) {
-        setExprTail(expr.joinFork.rootExpr, frame, fork)
-      } else {
-        expr.joinFork = fork
-        expr.joinFrame = frame
-      }
+  function* emitFork(tup,joinFrame,tmpVar) {
+    assert.ok(joinFrame)
+    yield s.enter(Tag.push,Block.letStmt,{
+      eff:true,reflected:tmpVar != null,goto:joinFrame,ref:head,tmpVar})
+    if (tup.length > 1) {
+      yield s.tok(Tag.push,Block.app,{result:false,sym:forkId,tup})
     } else {
-      if (expr.tailFork) {
-        setExprTail(expr.tailFork.rootExpr, frame, fork)
-      } else {
-        setStepTail(expr.value.lastStep, frame)
-        // expr.value.lastStep.exit.goto = frame
-        expr.tailFork = fork
-      }
+      const [sub] = tup
+      assert.ok(sub.tmpVar)
+      yield s.tok(Tag.push,Tag.Identifier,{sym:sub.tmpVar})
+      sub.tmpVar.parThread = true
     }
   }
   /** emits parallel frames */
   function* emitFrames() {
-    for(const i of forksArr) {
-      if (i.rootExpr) {
-        const frame = i.head
-        yield s.enter(Tag.push,Block.frame,i.head)
-        // i.tuple[0].steps[0].enters //TODO:
-        for(const expr of flattenExpr(frame, i.rootExpr)) {
-          const lab = s.label()
-          const reflected = !expr.root
-          let tmpVar = expr.tmpVar
-          if (expr.rc > 1) {
-            yield s.enter(Tag.push, Block.app,{reflected,sym:shareId,tmpVar})
-            tmpVar = null
-          }
-          if (expr.fork) {
-            yield s.enter(Tag.push,Block.letStmt,{
-              eff:true,reflected,goto:expr.joinFrame,
-              ref:frame,tmpVar,noInline:expr.rc > 1})
-            if (expr.tup.length === 1) {
-              const [i] = expr.tup
-              yield s.tok(Tag.push,Tag.Identifier,{sym:i.tmpVar})
-            } else {
-              yield s.enter(Tag.push,Block.app,{
-                result:false,sym:forkId})
-              yield s.enter(Tag.push,Tag.ArrayExpression)
-              yield s.enter(Tag.elements,Tag.Array)
-              for(const i of expr.tup)
-                yield s.tok(Tag.push,Tag.Identifier,{sym:i.tmpVar})
-            }
-          } else {
-            const next = expr.value.steps[0].frame
-            // TODO: propagate share
-            if (expr.rc > 1) {
-              next.noInline = true
-            }
-            yield s.tok(Tag.push,Ctrl.jump,{
-              ref:frame,goto:next,reflected,tmpVar})
-          }
-          yield* lab()
-        }
-        yield* s.leave()
-      }
-    }
+    yield s.enter(Tag.push,Block.frame,head)
+    const lab = s.label()
     for(const i of threads) {
+      const {expr} = i
+      let tmpVar = expr.tmpVar = Kit.scope.newSym()
+      head.savedDecls.set(tmpVar,{})
+      tmpVar.shared = expr.rc > 1
+      if (expr.fork) {
+        yield* emitFork(expr.tup,expr.join.enter,tmpVar)
+      } else {
+        yield s.tok(Tag.push,Ctrl.jump,{
+          ref:head,goto:expr.enter,reflected:true,tmpVar})
+      }
+      yield* lab()
+    }
+    yield* emitFork(tup,exitGoto)
+    yield* lab()
+    yield* s.leave()
+    for(const i of threads) {
+      const cw = i.conflicts
       for(const j of i.steps) {
         if (!j.skip && j.toks && !j.removed) {
           yield s.enter(Tag.push, Block.frame, j.frame)
+          // TODO: wrap and copy!
           for(const l of j.toks)
             yield* l.content
           yield* s.leave()
@@ -735,34 +500,57 @@ function deriveBlocks(graph, s, root) {
       }
     }
   }
-  /** 
-   * returning list of fork expressions ordered to resemble original order 
-   * as much as possible
-   */
-  function flattenExpr(frame,expr) {
-    const res = []
-    _flattenExpr(expr, res, true)
-    return res.sort(byId)
-    function _flattenExpr(expr,res,root) {
-      if (expr.id != null)
-        return
-      expr.root = root
-      if (root)
-        expr.tmpVar = null
-      else
-        frame.savedDecls.set(expr.tmpVar = Kit.scope.newSym(),{})
-      res.push(expr)
-      if (expr.fork) {
-        let maxRank = 0
-        for(const i of expr.tup) {
-          _flattenExpr(i,res,false)
-          if (i.id > maxRank)
-            maxRank = i.id
+}
+
+export function emitForkApp(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  if (!root.hasPar)
+    return s
+  const {resFrameRedir,pureExitFrame} = root
+  return _emitFork()
+  function* _emitFork() {
+    for(const i of s) {
+      if (i.enter) {
+        switch(i.type) {
+        case Block.effExpr:
+          const {tmpVar} = i.value
+          if (!tmpVar)
+            break
+          const la = s.cur()
+          if (la.type !== Block.app || la.value.sym !== Block.pureId)
+            break
+          tmpVar.emptyThread = true
+          Kit.skip(s.copy(i))
+          continue
+        case Block.app:
+          if (i.value.sym === forkId) {
+            const vars = []
+            for(const {tmpVar:j} of i.value.tup) {
+              assert.ok(j)
+              if (!j.emptyThread)
+                vars.push(j)
+            }
+            if (vars.length === 1) {
+              yield s.tok(i.pos,Tag.Identifier,{sym:vars[0]})
+            } else {
+              const lab = s.label()
+              yield s.enter(i.pos,i.type,i.value)
+              yield s.enter(Tag.push,Tag.ArrayExpression)
+              yield s.enter(Tag.elements,Tag.Array)
+              for(const sym of vars) {
+                yield s.tok(Tag.push,Tag.Identifier,{sym})
+                sym.parThread = true
+              }
+              yield* lab()
+            }
+            s.close(i)
+            continue
+          }
+          break
         }
-        expr.id = maxRank + 1
-      } else {
-        expr.id = expr.value.id * 2
       }
+      yield i
     }
   }
 }
@@ -782,7 +570,7 @@ function deriveBlocks(graph, s, root) {
  */
 export function frameThreads(first,resFrame) {
   const chains = []
-  _collect(first, null, [], emptyMap)
+  _collect(first, null, [], new Map())
   return chains
   /**
    * frame, till: FrameVal 
@@ -922,10 +710,6 @@ function unfoldLinks(chain) {
   return res
 }
 
-const forkSym = Kit.sysId("fork")
-
-const emptyMap = new Map()
-
 function* substFrames(si) {
   const s = Kit.auto(Block.cleanup(si))
   const root = s.first.value
@@ -945,8 +729,14 @@ export function convert(si) {
   const sa = Kit.toArray(si)
   const s = Kit.auto(sa)
   const root = s.first.value
+  root.hasPar = false
   if (!root.opts.par)
     return sa
+  let hasAny = false
+  if (!sa.some(i => i.enter && i.type === Block.letStmt
+               && i.value.opts && i.value.opts.parRegion))
+    return sa
+  State.calcFrameStateVars(sa)
   const denyClone = root.opts.denyClone !== false
   const chains = []
   const inits = new Set()
@@ -966,7 +756,8 @@ export function convert(si) {
     nodes.forEach(nodeVars)
     const edges = edgesByVars(nodes)
     const graph = buildGraph(nodes, edges)
-    deriveBlocks(graph, s, root)
+    if (deriveBlocks(graph, s, root))
+      root.hasPar = true
   }
   if (!root.parDefs || !root.parDefs.length)
     return s
@@ -975,4 +766,323 @@ export function convert(si) {
   return res
 }
 
-function byId(a,b) { return a.id - b.id }
+export const interpret = Kit.pipe(
+  emitForkApp,
+  Kit.toArray,
+  copyVars)
+
+/** 
+ * collects all thread local vars into a separate storage 
+ * also assigns `cloneCtx` property for operations requiring 
+ * context's clone
+ */
+export function copyVars(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  if (!root.hasPar)
+    return s
+  const {opts} = root
+  if (!opts.defunct)
+    throw new Error(
+      "Not implemented: `parThreadState:\"closure\"` without `defunct:true`")
+  const asClosure = opts.parThreadState === "closure"
+  const asContext = opts.parThreadState === "context"
+  if (!asClosure && !asContext)
+    throw new Error(
+      "Invalid value for \"parThreadState\": \"${opts.parThreadState}\"")
+  if (asClosure && !root.handlerSym)
+    throw new Error(
+      `"parThreadState": "closure" requires "storeHandler", e.g. "storeHandler":"$run"`)
+  const vars = new Set()
+    /** detecting conflicting variables writes */
+  const threadVars = root.threadVars = []
+  for(const threads of root.parDefs) {
+    for(const i of threads) {
+      /** transitive closure thread's dependency */
+      const clos = i.closLeft = new Set()
+      for(const j of i.left) {
+        clos.add(j)
+        j.closLeft.forEach(clos.add,clos)
+      }
+      const parThreads = i.parThreads = new Set(threads)
+      parThreads.delete(i)
+      for(const j of clos) {
+        j.parThreads.delete(i)
+        parThreads.delete(j)
+      }
+      const w = i.w = new Set()
+      const r = i.r = new Set()
+      for(const j of i.steps) {
+        if (j.skip) {
+          for(const k of j.value)
+            _calcFrameVars(k,w,r)
+        } else {
+          _calcFrameVars(j.frame,w,r)
+        }
+      }
+    }
+    const tlv = root.parThreadLocalVars = new Set()
+    for(const i of threads) {
+      const cv = i.conflicts = new Set()
+      for(const j of i.parThreads) {
+        for(const k of j.r) {
+          if (i.w.has(k))
+            tlv.add(k)
+        }
+      }
+    }
+  }
+  let closureHandler
+  if (asClosure) {
+    root.closureHandler = Kit.scope.newSym()
+    root.implFrame.value.declSym.substToks
+      = [...s.toks(Tag.push,`$I()`,root.closureHandler)]
+  }
+  for(const i of vars) {
+    if (i.local) {
+      i.interpr = threadLocal
+      threadVars.push(i)
+    } else {
+      const copy = Kit.scope.newSym(asClosure ? `${i.name}l` : i.name)
+      i.parCopy = copy
+      copy.interpr = threadLocal
+      threadVars.push(copy)
+    }
+  }
+  _cleanVars(root)
+  let updTempCopyVar
+  return _substAssignCopy(s)
+  function _copy(from,to) {
+    for(const i of from) {
+      if (i.local && !i.extBind)
+        continue
+      to.add(i)
+    }
+  }
+  function _calcFrameVars(frame,w,r) {
+    if (frame.removed)
+      return
+    const sw = frame.stateVars
+    if (!sw.extw) {
+      _copy(sw.r,sw.er = new Set())
+      _copy(sw.w,sw.ew = new Set())
+    }
+    sw.er.forEach(r.add,r)
+    sw.ew.forEach(w.add,w)
+  }
+  function* _substAssignCopy(sw) {
+    for(const i of sw) {
+      if (i.enter) {
+        // this may be only a variable from the code
+        // and it may be changed only with assign or update
+        switch(i.type) {
+        case Block.frame:
+          _cleanVars(i.value)
+          break
+        case Block.letStmt:
+        case Ctrl.jump:
+          const {tmpVar} = i.value
+          if (tmpVar) {
+            if (tmpVar.parThread)
+              i.value.cloneCtx = true
+            if (tmpVar.shared) {
+              yield s.enter(Tag.push, Block.app,{reflected:true,sym:shareId,tmpVar})
+              i.value.tmpVar = null
+              yield* s.copy(i)
+              yield* s.leave()
+              continue
+            }
+          }
+          break
+        case Tag.Identifier:
+          const {sym} = i.value
+          if (sym.parCopy) {
+            assert.ok(!i.value.lhs)
+            yield s.tok(i.pos,Tag.Identifier,{sym:sym.parCopy})
+            s.close(i)
+            continue
+          }
+          break
+        case Tag.AssignmentExpression:
+          const lhs = s.cur()
+          const op = i.value.node.operator
+          if (lhs.type !== Tag.Identifier) {
+            const buf = []
+            const copies = []
+            for(const j of s.one()) {
+              buf.push(j)
+              if (j.enter && j.type === Tag.Identifier) {
+                const {sym} = j.value
+                if (sym.parCopy)
+                  copies.push(sym)
+              }
+            }
+            if (!copies.length) {
+              yield i
+              yield* buf
+              continue
+            }
+            const lab = s.label()
+            yield s.enter(i.pos, Tag.SequenceExpression)
+            yield s.enter(Tag.expressions, Tag.Array)
+            yield s.enter(Tag.push, i.type, i.value)
+            yield* buf
+            yield* _substAssignCopy(s.one())
+            yield* s.leave()
+            s.close(i)
+            for(const j of copies)
+              yield* s.toks(Tag.push,`=$I=$I`,j.parCopy,j)
+            yield* lab()
+            continue
+          }
+          const lhsSym = lhs.value.sym
+          if (lhsSym.parCopy) {
+            // TODO: may be wrong may be 
+            yield s.enter(i.pos,Tag.AssignmentExpression,{node:{operator:"="}})
+            yield s.tok(Tag.left,Tag.Identifier,{sym:lhsSym.parCopy})
+            yield s.enter(Tag.right, i.type, i.value)
+            yield* s.one()
+            yield* _substAssignCopy(s.sub())
+            s.close(i)
+            yield* s.leave()
+            yield* s.leave()
+            continue
+          }
+          break
+        case Tag.UpdateExpression:
+          const arg = s.cur()
+          if (arg.type !== Tag.Identifier)
+            break
+          const argSym = arg.value.sym
+          if (!argSym || !argSym.parCopy)
+            break
+          Kit.skip(s.sub())
+          s.close(i)
+          const uop = i.value.node.operator
+          if (i.value.node.prefix) {
+            yield* s.toks(i.pos,`=$I=${uop}$I`,argSym, argSym.parCopy)
+          } else {
+            if (!updTempCopyVar) {
+              updTempCopyVar = Kit.scope.newSym("tmp")
+              root.implFrame.value.savedDecls.set(updTempCopyVar,{raw:null})
+            }
+            yield* s.toks(i.pos,`=($1 = $2, $3 = ${uop}$2, $1)`,
+                          updTempCopyVar, argSym, argSym.parCopy)
+          }
+          continue
+        }
+      }
+      yield i
+    }
+    if (asContext)
+      State.allUniqFields(threadVars)
+  }  
+  function _cleanVars(value) {
+    const decls = value.savedDecls
+    if (!decls)
+      return
+    for(const [n,v] of decls) {
+      if (n.interpr === threadLocal) {
+        assert.ok(!v.init)
+        assert.ok(!v.raw)
+        decls.delete(n)
+      }
+    }
+  }
+}
+
+/** inject a wrapper function to hold thread local vars */
+export function injectThread(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  if (!root.hasPar)
+    return s
+  const {opts} = root
+  if (opts.parThreadState !== "closure")
+    return s
+  const {threadVars,implFrame:{value:implFrame}} = root
+  const implSym = implFrame.declSym
+  return _injectThread()
+  function *_injectThread() {
+    for(const i of s) {
+      if (i.enter && i.type === Tag.FunctionDeclaration
+          && i.value === implFrame) {
+        const lab = s.label()
+        yield s.enter(i.pos,Tag.FunctionDeclaration,{moveToTop:i.value.moveToTop})
+        yield s.tok(Tag.id,Tag.Identifier,{sym:root.closureHandler})
+        yield s.enter(Tag.params,Tag.Array)
+        for(const sym of  threadVars)
+          yield s.tok(Tag.push,Tag.Identifier,{sym})
+        yield* s.leave()
+        yield s.enter(Tag.body,Tag.BlockStatement)
+        yield s.enter(Tag.body,Tag.Array)
+        yield s.enter(Tag.push,Tag.ReturnStatement)
+        i.value.moveToTop = false
+        yield s.enter(Tag.argument,Tag.FunctionExpression,i.value)
+        yield* s.sub()
+        yield* lab()
+        s.close(i)
+        continue
+      }
+      yield i
+    }
+  }
+}
+
+/** inserts context's clones and thread vals references */
+export function cloneContext(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  if (!root.hasPar)
+    return s
+  const {opts,contextSym} = root
+  const closure = opts.parThreadState === "closure"
+  const handler = closure && root.closureHandler
+  const storageField = !closure && opts.threadStorageField
+  const threadVars = root.threadVars
+  return _cloneContext()
+  function* _cloneContext() {
+    for(const i of s) {
+      if (i.enter && i.type === Tag.Identifier) {
+        const {sym} = i.value
+        if (sym === contextSym && i.value.origOp && i.value.origOp.cloneCtx) {
+          const lab = s.label()
+          if (closure) {
+            yield* s.template(i.pos,`=$I.clone($I($E))`,contextSym,handler)
+            for(const sym of threadVars)
+              yield s.tok(Tag.push,Tag.Identifier,{sym})
+          } else {
+            yield* s.template(i.pos, `=$I.clone($E)`,contextSym)
+            yield s.enter(Tag.push,Tag.ObjectExpression)
+            yield s.enter(Tag.properties,Tag.Array)
+            for(const sym of threadVars) {
+              yield s.enter(Tag.push,Tag.ObjectProperty)
+              yield s.tok(Tag.key,Tag.Identifier,{node:{name:sym.fieldName}})
+              yield* field(Tag.value,sym)
+              yield* s.leave()
+            }
+          }
+          yield* lab()
+          s.close(i)
+          continue
+        }
+        if (storageField && sym && sym.interpr === threadLocal) {
+          yield* field(i.pos,sym)
+          s.close(i)
+          continue
+        }
+      }
+      yield i
+    }
+  }
+  function* field(pos, sym) {
+    assert.ok(sym.fieldName)
+    yield s.enter(pos,Tag.MemberExpression)
+    yield s.enter(Tag.object,Tag.MemberExpression)
+    yield s.tok(Tag.object,Tag.Identifier,{sym:contextSym})
+    yield s.tok(Tag.property,Tag.Identifier,{node:{name:storageField}})
+    yield* s.leave()
+    yield s.tok(Tag.property,Tag.Identifier,{node:{name:sym.fieldName}})
+    yield* s.leave()
+  }
+}

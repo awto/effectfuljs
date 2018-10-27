@@ -44,6 +44,7 @@ export function tempVarSym(top, pat, byVal = top.opts.state) {
   sym.declScope = top
   sym.bound = true
   sym.optional = false
+  sym.local = true
   setSymInterpr(sym)
   if (sym.interpr === closureVar && top.savedDecls)
     top.savedDecls.set(sym,{raw:null})

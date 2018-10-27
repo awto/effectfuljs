@@ -163,8 +163,8 @@ export default {
   // stores error continuation in the field's name of context object
   storeErrorCont: null,
 
-  // stores single handler function for defunct: true
-  storeHandler: null,
+  // name of a handler function for defunct: true
+  storeHandler: "$run",
 
   // some named templates for some operations (mostly for ES compatibility):
   inlineChainOp: null, // "promise" | null
@@ -297,13 +297,21 @@ export default {
   // target JS engine has tail calls
   jsTailCalls: false,
 
-  // name of a context's field to store continuations and compuation values
-  // stored directly in context if not defined
+  // Enbles storing variables in context fields sub objects.
+  // By default stored directly in context if not defined.
+  // Requres `contextState:true`
+  // By default, say, variable `x` will be stored in `context._x` field
+  // Then this option is enabled it will be `context.${stateStorageField}._x`
+  enableSubFields: false,
+  
+  // Name of a context's field to store continuations and compuation values.
+  // By default stored directly in context if not defined.
+  // Requires `contextState:true`
   stateStorageField: null,
 
-  // name of a context's field to store captured closures
-  // stored directly in context if not defined
-  // handled only with `contextState:true`
+  // Name of a context's field to store captured closures.
+  // By default stored directly in context or `stateStorageField`
+  // Requires `contextState:true`
   // NOT IMPLEMENTED
   closureStorageField: null,
   
@@ -338,12 +346,29 @@ export default {
   // to be parallelized immediately, only parts with `parActive:true` will
   // be considered, use `"par"` or `"seq"` block directives to amend
   // the variable
+  
   par: false,
   // for functions with `par:true` specifies which parts of code should
   // be parallel or sequential (usually changed with "par", "seq" directives
   parRegion: false,
   // if `true` fill assume any variable reference (LHS or RHS) as dependency
   // otherwise only RHS positions are dependent on LHS positions only
-  parAllLocals: false
+  parAllLocals: false,
+  
+  // where to store thread's local variables
+  // "closure" | "context"
+  parThreadState: "closure",
+
+  // context's field name for storing thread local variables
+  // for `parThreadState:"context"
+  threadStorageField:"tls",
+
+  // same as `scopeConstructor` but for function with implicit threads
+  // default to the value of `scopeConstructor`
+  parScopeConstructor: null,
+  // same as `wrapFunction` but for functions with implicit threads
+  // default to the value of `wrapFunction`
+  parWrapFunction: null
+  
 }
 

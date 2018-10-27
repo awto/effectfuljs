@@ -499,9 +499,11 @@ export const assignSym = Kit.pipe(
           case Tag.ForAwaitStatement:
           case Tag.ForOfStatement:
             const bscope = new Map(scope)
-            for(const sym of i.value.decls) {
-              if (sym.strict)
+            if (i.value.decls) {
+              for(const sym of i.value.decls) {
+                if (sym.strict)
                 bscope.set(sym.name,sym)
+              }
             }
             decls(s.sub(),func,bscope)
             break

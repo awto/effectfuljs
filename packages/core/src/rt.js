@@ -34,7 +34,6 @@ export function collectImports(si) {
         const pat = s.take()
         if (pat.type !== Tag.Identifier)
           break
-        // TODO patterns
         s.close(pat)
         const call = s.take()
         if (!call.type === Tag.CallExpression)

@@ -21,6 +21,7 @@ import * as Closure from "./closure"
 import * as Inline from "./inline"
 import * as Simplify from "./simplify"
 import {ifLoose} from "./options"
+import * as Par from "./par"
 
 export const consumeScope = consume
 
@@ -132,6 +133,7 @@ const stage1 = Kit.pipe(
     Policy.stage("interpret"),
     Ops.interpret,
     Flat.interpret,
+    Par.injectThread,
     Inline.ops,
     Coerce.inject,
     Block.interpretApp,
@@ -144,6 +146,7 @@ const stage1 = Kit.pipe(
     substSym,
     Closure.substContextIds,
     Block.ctxMethods,
+    Par.cloneContext,
     Rt.collectUsages,
     Simplify.main,
     Kit.toArray
@@ -153,9 +156,9 @@ const stage1 = Kit.pipe(
 export function* substSym(si) {
   const s = Kit.auto(si)
   for(const i of s) {
-    if (i.enter && i.type === Tag.Identifier && i.value.sym
-        && i.value.sym.substSym) {
-      i.value.sym = i.value.sym.substSym
+    if (i.enter && i.type === Tag.Identifier && i.value.sym) {
+      if (i.value.sym.substSym)
+        i.value.sym = i.value.sym.substSym
     }
     yield i
   }

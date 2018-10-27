@@ -90,10 +90,25 @@ export const contextDecls = Kit.map(function contextDecls(si) {
 export function substContextIds(si) {
   const s = Kit.auto(si)
   const root = s.first.value
-  const {contextSym,ctxDeps,savedDecls:saved} = root
+  const {opts,contextSym,ctxDeps,savedDecls:saved} = root
+  const subFieldsEnabled = opts.enableSubFields || root.hasPar
+  const varsSubField = subFieldsEnabled && opts.stateStorageField
+  const closSubField = subFieldsEnabled
+        && (opts.closureStorageField || varsSubField)
   if (!contextSym)
     return s
   return walk()
+  function* emitSubField(subField) {
+    if (subField) {
+      yield s.enter(Tag.object,Tag.MemberExpression)
+      yield s.tok(Tag.object,Tag.Identifier,
+                  {sym:contextSym,lhs:false,rhs:true,decl:false})
+      yield s.tok(Tag.property,Tag.Identifier,{node:{name:closSubField}})
+    } else {
+      yield s.tok(Tag.object,Tag.Identifier,
+                  {sym:contextSym,lhs:false,rhs:true,decl:false})
+    }
+  }
   function* id(pos,sym) {
     assert.ok(sym.fieldName)
     yield s.enter(pos,Tag.MemberExpression,{origSym:sym})
@@ -104,18 +119,16 @@ export function substContextIds(si) {
       if (copy.interpr === Bind.ctxField) {
         assert.ok(copy.fieldName)
         yield s.enter(Tag.object,Tag.MemberExpression,{origSym:copy})
-        yield s.tok(Tag.object,Tag.Identifier,
-                    {sym:contextSym,lhs:false,rhs:true,decl:false})
-        assert.ok(copy.fieldName)
+        yield* emitSubField(copy.subField || closSubField)
         yield s.tok(Tag.property,Tag.Identifier,
                     {node:{name:copy.fieldName}})
         yield* s.leave()
-      } else
+      } else {
         yield s.tok(Tag.object, Tag.Identifier,
                     {sym:copy,lhs:false,rhs:true,decl:false})
+      }
     } else {
-      yield s.tok(Tag.object, Tag.Identifier,
-                  {sym:contextSym,lhs:false,rhs:true,decl:false})
+      yield* emitSubField(sym.subField || varsSubField)
     }
     yield s.tok(Tag.property, Tag.Identifier, {node:{name:sym.fieldName}})
     yield* s.leave()

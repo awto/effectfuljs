@@ -35,19 +35,15 @@ export function storeContinuations(si) {
   const contextStore = contextSym && s.opts.contextMethodOps
   const noPureJumpsStore = !s.opts.defunct
         && s.opts.contextBy === "reference"
-  const stateStorageField = s.opts.stateStorageField
   function makeSym(name,pat) {
     if (!name)
       throw s.error(
         "inlining continuation assignment requires store<...>Cont property")
     if (name && contextStore) {
-      const res = Kit.sysId(name)
-      res.ctxField = stateStorageField
-      return res
+      return Kit.sysId(name)
     }
     const res = Bind.tempVarSym(root,pat)
-    res.ctxField = stateStorageField
-    res.fieldName = `$${pat}`
+    res.fieldName = name
     return res
   }
   const res = root.resContSym = s.opts.inlineResultContAssign
@@ -61,10 +57,14 @@ export function storeContinuations(si) {
   const errIgnore = s.opts.inlineErrorContAssign === "ignore"
   const resIgnore = s.opts.inlineResultContAssign === "ignore"
   const thisCtx = s.opts.contextBy === "this"
-  if (s.opts.defunct && s.opts.storeHandler) {
-    root.handlerSym = makeSym(s.opts.storeHandler,"rn")
-    if (!s.opts.defunctHandlerInProto)
+  if (s.opts.defunct) {
+    root.handlerSym = makeSym(s.opts.storeHandler || "$run","rn")
+    if (!s.opts.defunctHandlerInProto) {
       root.runSym = root.handlerSym
+      root.errHandlerSym = makeSym("$err","rn")
+      root.resHandlerSym = makeSym("$fin","rn")
+    }
+    
   }
   const reentry = !s.opts.defunct && s.opts.inlineReentryCheck && cont
   if (!err && !res && !cont)
@@ -361,7 +361,7 @@ export function jumpOps(si) {
                            && !j.value.delegateCtx) {
                   yield s.tok(Tag.callee,Tag.Identifier,{sym:j.value.goto})
                 } else if (j.value.delegateCtx) {
-		              yield* s.toks(Tag.callee,`=$I.$s.${cont}`,j.value.delegateCtx)
+		  yield* s.toks(Tag.callee,`=$I.$s.${cont}`,j.value.delegateCtx)
                 } else {
                   yield s.tok(Tag.callee,Tag.Identifier,{sym:inlineCont})
                 }
@@ -738,15 +738,15 @@ export function invertForOf(si) {
     function* _inject(sw) {
       for(const i of sw) {
         if (i.enter) {
-	        if ((i.type === Ctrl.jump || i.type === Block.letStmt)
-	            && i.value.frameArgs) {
-	          const args = i.value.frameArgs
-	          for(const [n,v] of args) {
-	            if (!v.substLoop)
-		            continue
-	            args.set(n, v.substLoop)
-	          }
-	        }
+	  if ((i.type === Ctrl.jump || i.type === Block.letStmt)
+	      && i.value.frameArgs) {
+	    const args = i.value.frameArgs
+	    for(const [n,v] of args) {
+	      if (!v.substLoop)
+		continue
+	      args.set(n, v.substLoop)
+	    }
+	  }
           switch(i.type) {
           case Tag.MemberExpression:
             if (!i.value.forOfInfo)
@@ -755,24 +755,24 @@ export function invertForOf(si) {
             Kit.skip(s.copy(i))
             continue
           case Block.frame:
-	          frames.push(i.value)
+	    frames.push(i.value)
             i.value.declSym.forOfInfo = i.value.forOfInfo
-	          if (i.value.forOfFin) {
-	            const cur = i.value.forOfFin
-	            const exit = cur.exit.goto
-	            const up = cur.up
-	            yield i
-	            Kit.skip(s.sub())
-	            yield* s.toks(Tag.push, `=$1.$exit()`,
-			                      {result:true}, cur.sym)
-	            yield s.close(i)
-	            continue
-	          }
+	    if (i.value.forOfFin) {
+	      const cur = i.value.forOfFin
+	      const exit = cur.exit.goto
+	      const up = cur.up
+	      yield i
+	      Kit.skip(s.sub())
+	      yield* s.toks(Tag.push, `=$1.$exit()`,
+			    {result:true}, cur.sym)
+	      yield s.close(i)
+	      continue
+	    }
             if (!i.value.forOfInfo)
               break
             yield i
             yield* s.toks(Tag.push,"=$2.$s = $1.unwrap.$t",
-			                    ctx,i.value.forOfInfo.sym)
+			  ctx,i.value.forOfInfo.sym)
             continue
           case Block.letStmt:
             if (!i.value.eff)
@@ -788,16 +788,16 @@ export function invertForOf(si) {
               break
             i.value.storeCont = false
             i.value.delegateCtx = goto.forOfInfo.sym
-	          const exit = forOfInfo.exit.goto
-	          const up = exit.forOfInfo
-	          if (up) {
-	            yield* s.toks(Tag.push,
-			                      `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
-			                      forOfInfo.sym, up.sym)
-	          }
+	    const exit = forOfInfo.exit.goto
+	    const up = exit.forOfInfo
+	    if (up) {
+	      yield* s.toks(Tag.push,
+			    `=$1.$r = $2.$s, $1.$rstep = $2.$s.$step`,
+			    forOfInfo.sym, up.sym)
+	    }
             // TODO: if there are no inner loops this may be avoided
             yield* s.toks(Tag.push,`=$1.$yld = $2`,
-			                    ctx, goto.declSym)
+			  ctx, goto.declSym)
             break }
           case Tag.IfStatement:
             if (!i.value.forOfInfo)
@@ -812,23 +812,23 @@ export function invertForOf(si) {
             if (j.type !== Tag.Identifier || !j.value.forOfInfo)
               break
             const {forOfInfo} = j.value
-	          let exit, up
-	          if (forOfInfo.exit.indirJumps) {
-	            for(const [dst,redir] of forOfInfo.exit.indirJumps) {
-		            if (redir === forOfInfo.fin.goto) {
-		              up = forOfInfo.up = dst.forOfInfo
+	    let exit, up
+	    if (forOfInfo.exit.indirJumps) {
+	      for(const [dst,redir] of forOfInfo.exit.indirJumps) {
+		if (redir === forOfInfo.fin.goto) {
+		  up = forOfInfo.up = dst.forOfInfo
                   dst.declSym.dynForOf = forOfInfo
                   break
-		            }
-	            }
-	          }
+		}
+	      }
+	    }
             const lab = s.label()
             yield s.enter(i.pos,Tag.SequenceExpression)
             yield s.enter(Tag.expressions,Tag.Array)
-	          if (forOfInfo.exit.indirJumps) {
-	            for(const [dst,redir] of forOfInfo.exit.indirJumps)
-		            yield* s.toks(Tag.push, `=$I = $I`, redir.declSym, dst.declSym)
-	          }
+	    if (forOfInfo.exit.indirJumps) {
+	      for(const [dst,redir] of forOfInfo.exit.indirJumps)
+		yield* s.toks(Tag.push, `=$I = $I`, redir.declSym, dst.declSym)
+	    }
             yield s.peel(Kit.setPos(i,Tag.push))
             yield* s.one()
             const call = s.take()
@@ -864,7 +864,7 @@ export function invertForOf(si) {
             yield s.close(call)
             yield* s.sub()
             yield* lab()
-	          continue
+	    continue
           }
         }
         yield i
