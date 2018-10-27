@@ -832,12 +832,6 @@ export function copyVars(si) {
       }
     }
   }
-  let closureHandler
-  if (asClosure) {
-    root.closureHandler = Kit.scope.newSym()
-    root.implFrame.value.declSym.substToks
-      = [...s.toks(Tag.push,`$I()`,root.closureHandler)]
-  }
   for(const i of vars) {
     if (i.local) {
       i.interpr = threadLocal
@@ -848,6 +842,10 @@ export function copyVars(si) {
       copy.interpr = threadLocal
       threadVars.push(copy)
     }
+  }
+  let closureHandler
+  if (asClosure && threadVars.length) {
+    closureHandler = root.closureHandler = Kit.scope.newSym()
   }
   _cleanVars(root)
   let updTempCopyVar
@@ -998,7 +996,7 @@ export function injectThread(si) {
   if (!root.hasPar)
     return s
   const {opts} = root
-  if (opts.parThreadState !== "closure")
+  if (!root.closureHandler)
     return s
   const {threadVars,implFrame:{value:implFrame}} = root
   const implSym = implFrame.declSym
@@ -1040,6 +1038,7 @@ export function cloneContext(si) {
   const handler = closure && root.closureHandler
   const storageField = !closure && opts.threadStorageField
   const threadVars = root.threadVars
+  const implFrame = root.implFrame.value.declSym
   return _cloneContext()
   function* _cloneContext() {
     for(const i of s) {
@@ -1048,18 +1047,25 @@ export function cloneContext(si) {
         if (sym === contextSym && i.value.origOp && i.value.origOp.cloneCtx) {
           const lab = s.label()
           if (closure) {
-            yield* s.template(i.pos,`=$I.clone($I($E))`,contextSym,handler)
-            for(const sym of threadVars)
-              yield s.tok(Tag.push,Tag.Identifier,{sym})
+            if (handler) {
+              yield* s.template(i.pos,`=$I.clone($I($E))`,contextSym,handler)
+              for(const sym of threadVars)
+                yield s.tok(Tag.push,Tag.Identifier,{sym})
+            } else
+              yield* s.toks(i.pos,`=$I.clone($I)`,contextSym,implFrame)
           } else {
-            yield* s.template(i.pos, `=$I.clone($E)`,contextSym)
-            yield s.enter(Tag.push,Tag.ObjectExpression)
-            yield s.enter(Tag.properties,Tag.Array)
-            for(const sym of threadVars) {
-              yield s.enter(Tag.push,Tag.ObjectProperty)
-              yield s.tok(Tag.key,Tag.Identifier,{node:{name:sym.fieldName}})
-              yield* field(Tag.value,sym)
-              yield* s.leave()
+            if (threadVars.length) {
+              yield* s.template(i.pos, `=$I.clone($E)`,contextSym)
+              yield s.enter(Tag.push,Tag.ObjectExpression)
+              yield s.enter(Tag.properties,Tag.Array)
+              for(const sym of threadVars) {
+                yield s.enter(Tag.push,Tag.ObjectProperty)
+                yield s.tok(Tag.key,Tag.Identifier,{node:{name:sym.fieldName}})
+                yield* field(Tag.value,sym)
+                yield* s.leave()
+              }
+            } else {
+              yield* s.toks(i.pos, `=$I.clone()`,contextSym)
             }
           }
           yield* lab()
