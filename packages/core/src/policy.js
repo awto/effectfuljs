@@ -68,19 +68,36 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
   return Kit.pipe(...post)
 })
 
-/** assigns opts field to each descendant value if there is no any */
+/** 
+ * Recalculates `opts` field, by propagating parent opts fields to children.
+ * Following fields are propagated: 
+ *  - `optsDiff` - recursively merging objects
+ *  - `optsAssign` - merging with `Object.assign`
+ *  - `optsSet` - fully resetting
+ */
 export function propagateOpts(si) {
-  const sa = Kit.toArray(propagateBlockDirs(si))
-  const stack = [sa[0].value.opts]
+  const sa = Kit.toArray(si)
+  let cur = sa[0].value.opts || Kit.getOpts()
+  const stack = []
   for(const i of sa) {
-    if (i.enter && i.value.opts)
-      stack.push(i.value.opts)
-    if (i.leave) {
-      if (i.value.opts)
-        stack.pop()
-      else
-        i.value.opts = stack[stack.length-1]
-    }
+    const {optsDiff:diff,optsAssign:assign,optsSet:set} = i.value
+    if (diff != null || assign != null || set != null) {
+      if (i.enter) {
+        stack.push(cur)
+        if (set)
+          cur = set
+        if (assign || diff)
+          cur = clone(cur)
+        if (diff != null)
+          cur = merge(cur, diff)
+        if (assign != null)
+          cur = Object.assign(cur,assign)
+      }
+      i.value.opts = cur
+      if (i.leave)
+        cur = stack.pop()
+    } else 
+      i.value.opts = cur
   }
   return sa
 }
@@ -224,28 +241,7 @@ export const profile = symbol("profile")
  */
 export const configDiffPass = Kit.pipe(
   propagateConfigDiff,
-  function* setOpts(s) {
-    s = Kit.auto(s)
-    let cur = s.opts
-    const stack = []
-    for(const i of s) {
-      if (i.value.optsDiff != null || i.value.optsAssign != null) {
-        if (i.enter) {
-          stack.push(cur)
-          cur = clone(cur)
-          if (i.value.optsDiff != null)
-            cur = merge(cur, i.value.optsDiff)
-          if (i.value.optsAssign != null)
-            cur = Object.assign(cur,i.value.optsAssign)
-        }
-        i.value.opts = cur
-        if (i.leave)
-          cur = stack.pop()
-      } else 
-        i.value.opts = cur
-      yield i
-    }
-  })
+  propagateOpts)
 
 /** marks profile change calls in the code */
 export const directives = Kit.pipe(
@@ -730,7 +726,7 @@ export function propagateBlockDirs(si) {
     function dir(i,name) {
       const descr = blockDirectives[name]
       if (descr) {
-        value.opts = Object.assign(value.opts || {}, s.opts, descr)
+        value.optsAssign = Object.assign(value.optsAssign || {}, descr)
         Kit.skip(s.copy(i))
         return true
       }
@@ -744,9 +740,8 @@ export function propagateBlockDirs(si) {
           yield i
           yield* _propagateBlockDirs(i.value)
           continue
+        /** babel parser recognizes directives only for progs and funct block*/
         case Tag.ExpressionStatement:
-          /// babel parser recognizes directives only
-          /// for program and functions block
           if (s.cur().type === Tag.StringLiteral) {
             if (dir(i,s.cur().value.node.value))
               continue

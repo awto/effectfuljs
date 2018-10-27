@@ -313,7 +313,7 @@ module.exports = function esProfile(opts={}) {
         if (i.enter) {
           switch(i.type) {
           case Tag.File:
-            i.value.opts = file
+            i.value.optsSet = file
             break
           case Tag.ClassMethod:
           case Tag.ObjectMethod:
@@ -323,7 +323,7 @@ module.exports = function esProfile(opts={}) {
             const {node} = i.value
             if (node.generator || node.async)
               any = true
-            i.value.opts = node.generator
+            i.value.optsSet = node.generator
               ? (node.async ? asyncGenerators : generators)
             : (node.async ? async : pure)
             break
@@ -331,7 +331,7 @@ module.exports = function esProfile(opts={}) {
         }
       }
       if (any || loose)
-        T.run(Policy.propagateOpts(sa))
+        T.run(Policy.propagateOpts(Policy.propagateBlockDirs(sa)))
     }
   }
 }
