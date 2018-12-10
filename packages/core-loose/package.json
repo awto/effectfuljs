@@ -1,6 +1,6 @@
 {
   "name": "@effectful/core-loose",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "@effectful/core built with faster generators",
   "main": "compiler.js",
   "scripts": {
@@ -36,8 +36,8 @@
   "dependencies": {
     "@babel/generator": "^7.0.0",
     "@babel/types": "^7.0.0",
-    "@effectful/es-rt": "^1.0.0",
-    "@effectful/transducers-loose": "^1.0.3",
+    "@effectful/es-rt": "^1.0.4",
+    "@effectful/transducers-loose": "^1.0.4",
     "resolve": "^1.5.0"
   },
   "publishConfig": {
