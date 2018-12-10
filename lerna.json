@@ -5,8 +5,7 @@
     "samples/*"
   ],
   "version": "1.0.4",
-  "npmClient": "yarn",
   "npmClientArgs": [
-    "--no-lockfile"
+    "--no-package-lock"
   ]
 }
