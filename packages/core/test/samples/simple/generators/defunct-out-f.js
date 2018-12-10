@@ -18,6 +18,9 @@ function a() {
         a.$cont = 6;
         return M.yldStar(M.yld(2));
 
+      case 0:
+        return M.pure(p);
+
       case 6:
         return M.pure();
 
@@ -54,6 +57,9 @@ function b() {
         b.$cont = 7;
         return M.yldStar(M.yld(e));
 
+      case 0:
+        return M.pure(p);
+
       case 7:
         return M.pure();
 
@@ -75,6 +81,7 @@ function c() {
   var c = M.context();
   c.$run = _1;
   c.$err = __err;
+  c.$fin = _fin;
   c.$cont = 4;
   return M.scope();
 
@@ -103,6 +110,9 @@ function c() {
 
       case 8:
         return M.pure(c._r);
+
+      case 0:
+        return M.pure(p);
 
       case 9:
         return M.pure(c._r);
@@ -138,6 +148,7 @@ function d() {
   var d = M.context();
   d.$run = _1;
   d.$err = _err1;
+  d.$fin = __fin;
   d.$cont = 4;
   return M.scope();
 
@@ -175,6 +186,9 @@ function d() {
 
       case 8:
         return M.pure(d._r);
+
+      case 0:
+        return M.pure(p);
 
       case 9:
         return M.pure(d._r);
@@ -230,6 +244,9 @@ function b2() {
         b2.$cont = 7;
         return M.yldStar(M.yld(e));
 
+      case 0:
+        return M.pure(p);
+
       case 7:
         return M.pure();
 
@@ -275,6 +292,17 @@ function __err(s) {
   }
 }
 
+function _fin(s) {
+  switch (s) {
+    case 5:
+    case 6:
+      return 12;
+
+    default:
+      return 0;
+  }
+}
+
 function _err1(s) {
   switch (s) {
     case 5:
@@ -283,6 +311,17 @@ function _err1(s) {
 
     default:
       return 1;
+  }
+}
+
+function __fin(s) {
+  switch (s) {
+    case 5:
+    case 6:
+      return 12;
+
+    default:
+      return 0;
   }
 }
 

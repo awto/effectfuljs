@@ -43,7 +43,7 @@ describe("yop", function () {
         return M.chain(a(1, 2), _1);
 
         function _1(a) {
-          return a.mapply(function ($dm$b) {
+          return M.chain(a.mapply(function ($dm$b) {
             var err, ex;
             result = $dm$b;
             return M.jump(void 0, _1, _6);
@@ -79,7 +79,11 @@ describe("yop", function () {
               ex = a;
               return M.jump(void 0, _4);
             }
-          });
+          }), _2);
+        }
+
+        function _2(a) {
+          return a;
         }
       }), _3);
     }
@@ -122,7 +126,7 @@ describe("yop", function () {
       function _2() {
         return M.chain(M.run(QM, function () {
           var r;
-          return M.scope(function ($dm$root) {
+          return M.chain(M.scope(function ($dm$root) {
             var a, r;
             a = throwErrorLater;
             return M.chain(a(), _1);
@@ -130,18 +134,18 @@ describe("yop", function () {
             function _1(a) {
               return M.chain(a.mhandle(function (err) {
                 var expectErr, ex, r;
-                return M.jump(void 0, _1, _6);
+                return M.jump(void 0, _1, _7);
 
                 function _1() {
                   var a;
                   a = err.message;
-                  return M.chain(expect(a), _2, _6);
+                  return M.chain(expect(a), _2, _7);
                 }
 
                 function _2(b) {
                   var a;
                   a = b.to;
-                  return M.chain(a.equal("promise rejected"), _3, _6);
+                  return M.chain(a.equal("promise rejected"), _3, _7);
                 }
 
                 function _3() {
@@ -158,10 +162,14 @@ describe("yop", function () {
                 }
 
                 function _5() {
-                  return $dm$root.brk();
+                  return M.chain($dm$root.brk(), _6);
                 }
 
                 function _6(a) {
+                  return a;
+                }
+
+                function _7(a) {
                   ex = a;
                   return M.jump(void 0, _4);
                 }
@@ -169,15 +177,23 @@ describe("yop", function () {
             }
 
             function _2(a) {
-              return a.mapply(function () {
+              return M.chain(a.mapply(function () {
                 var a;
                 a = done;
                 return M.chain(a(new Error("yop should have thrown reason from rejected promise")), _1);
 
                 function _1() {}
-              });
+              }), _3);
             }
-          });
+
+            function _3(a) {
+              return a;
+            }
+          }), _1);
+
+          function _1(a) {
+            return a;
+          }
         }), _3);
       }
 
@@ -207,7 +223,7 @@ describe("yop", function () {
           return M.chain(1 + 2, _1);
 
           function _1(a) {
-            return a.mapply(function ($dm$b) {
+            return M.chain(a.mapply(function ($dm$b) {
               var err, ex;
               result = $dm$b;
               return M.jump(void 0, _1, _6);
@@ -243,7 +259,11 @@ describe("yop", function () {
                 ex = a;
                 return M.jump(void 0, _4);
               }
-            });
+            }), _2);
+          }
+
+          function _2(a) {
+            return a;
           }
         }), _3);
       }

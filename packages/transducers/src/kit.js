@@ -466,27 +466,17 @@ export function prepend(...args) {
 /** shares single iterator between several uses */
 export function share(s) {
   let i = leanWrap(s)
-  const res = {
-    [Symbol.iterator]() {
-      return {
-        next(v) {
-          i = i.step()
-          return {value:i.value,done:i.done}
-        }
-      }
+  return {
+    [Symbol.iterator]() { return this },
+    next(v) {
+      i = i.step()
+      return {value:i.value,done:i.done}
+    },
+    take(v) {
+      i = i.step()
+      return i.done ? null : i.value
     }
   }
-  if (Symbol.effectfulIterator) {
-    res[Symbol.effectfulIterator] = function()  {
-      return {
-        step(v) {
-          i = i.step(v)
-          return this
-        }
-      }
-    }
-  }
-  return res
 }
 
 /** to be removed */
@@ -1529,6 +1519,29 @@ AFp.tillClose = function*(i) {
     if (j.value == i.value)
       return j
   }
+}
+
+export function* tillVal(value, iter) {
+  for(const i of iter) {
+    yield i
+    if (i.value === value)
+      return i
+  }
+  return null
+}
+
+/** 
+ * like `AFp.one` but returns everything until matching value 
+ * - this won't work if some inner iterator consumes the closing tag
+ */
+export function* single(iter) {
+  const {done,value} = iter.next()
+  if (done)
+    return null
+  yield value
+  if (!value.leave)
+    yield* tillVal(value.value,iter)
+  return value
 }
 
 /** 

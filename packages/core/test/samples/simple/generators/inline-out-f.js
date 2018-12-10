@@ -12,7 +12,7 @@ function a1() {
     if (a) {
       return M.yld(2, _3);
     } else {
-      return M.yldStar(b, _5);
+      return M.yldStar(b, _6);
     }
   }
 
@@ -23,10 +23,14 @@ function a1() {
   }
 
   function _4(a1, a) {
-    return M.yld(a, M.pure);
+    return M.yld(a, _5);
   }
 
-  function _5(a1) {
+  function _5(a1, a) {
+    return M.pure(a);
+  }
+
+  function _6(a1) {
     return M.pure(a1._r);
   }
 }
@@ -50,7 +54,7 @@ function a2() {
       a2.value = 2;
       return a2;
     } else {
-      a2.$step = _5;
+      a2.$step = _8;
       return M.$delegate(b);
     }
   }
@@ -63,13 +67,13 @@ function a2() {
   }
 
   function _4(a2, a) {
-    a2.$step = M.pure;
+    a2.$step = _5;
     a2.value = a;
     return a2;
   }
 
-  function _5(a2) {
-    return a2._r;
+  function _5(a2, a) {
+    return a;
   }
 
   function _6(a2, r) {
@@ -83,6 +87,10 @@ function a2() {
     a2.$handle = _7;
     a2.$step = a2.$exit;
     throw e;
+  }
+
+  function _8(a2) {
+    return a2._r;
   }
 }
 
@@ -113,7 +121,7 @@ function a3() {
             done: false
           };
         } else {
-          a3.$step = 9;
+          a3.$step = 10;
           return M.$delegate(b);
         }
 
@@ -123,7 +131,7 @@ function a3() {
         return Promise.resolve(k).then(a3.$resolve, a3.$reject);
 
       case 8:
-        a3.$step = 0;
+        a3.$step = 9;
         return {
           value: p,
           done: false
@@ -132,7 +140,7 @@ function a3() {
       case 9:
         a3.$step = 0;
         return {
-          value: a3._r,
+          value: p,
           done: true
         };
 
@@ -149,6 +157,13 @@ function a3() {
         a3.$exit = 0;
         a3.$handle = 1;
         return a3.$step = 0, Promise.reject(p);
+
+      case 10:
+        a3.$step = 0;
+        return {
+          value: a3._r,
+          done: true
+        };
 
       case 2:
         return Promise.resolve(M.$redir(p)).then(a3.$resolve, a3.$reject);
@@ -189,7 +204,7 @@ function a4() {
             done: false
           });
         } else {
-          a4.$step = 9;
+          a4.$step = 10;
           return M.$delegate(b);
         }
 
@@ -199,14 +214,14 @@ function a4() {
         return Promise.resolve(k).then(a4.$resolve, a4.$reject);
 
       case 8:
-        a4.$step = 0;
+        a4.$step = 9;
         return Promise.resolve({
           value: p,
           done: false
         });
 
       case 9:
-        return Promise.resolve(a4._r);
+        return Promise.resolve(p);
 
       case 0:
         a4.$exit = 0;
@@ -217,6 +232,9 @@ function a4() {
         a4.$exit = 0;
         a4.$handle = 1;
         return a4.$step = 0, Promise.reject(p);
+
+      case 10:
+        return Promise.resolve(a4._r);
 
       case 2:
         return Promise.resolve(M.$redir(p)).then(a4.$resolve, a4.$reject);
@@ -239,7 +257,7 @@ function a5() {
   return a5;
 
   function _1(a5, p) {
-    var i, s;
+    var s;
 
     switch (s = a5.$step, s) {
       case 4:
@@ -252,9 +270,9 @@ function a5() {
         a5.$handle = 10;
 
         if (!(a5._loop = a5._loop.step()).done) {
-          i = a5._loop.value;
+          a5._i = a5._loop.value;
           a5.$step = 5;
-          return M.$delegate(M.yld(i));
+          return M.$delegate(M.yld(a5._i));
         } else {
           a5.$step = 6;
           a5._fc = 7;
@@ -275,9 +293,6 @@ function a5() {
       case 7:
         return Promise.resolve(a5._r);
 
-      case 8:
-        return Promise.resolve(a5._r);
-
       case 0:
         a5.$exit = 0;
         a5.$handle = 1;
@@ -287,6 +302,9 @@ function a5() {
         a5.$exit = 0;
         a5.$handle = 1;
         return a5.$step = 0, Promise.reject(p);
+
+      case 8:
+        return Promise.resolve(a5._r);
 
       case 9:
         return a5.$step = 0, Promise.reject(a5._err1);
@@ -319,7 +337,7 @@ function a6() {
   return a6;
 
   function _1(a6, p) {
-    var i, a, c, s;
+    var a, c, s;
 
     switch (s = a6.$step, s) {
       case 5:
@@ -338,10 +356,10 @@ function a6() {
         a = c.done;
 
         if (!a) {
-          i = a6._loop.value;
+          a6._i = a6._loop.value;
           a6.$step = 6;
           return Promise.resolve({
-            value: i,
+            value: a6._i,
             done: false
           });
         } else {
@@ -365,9 +383,6 @@ function a6() {
       case 9:
         return Promise.resolve(a6._r);
 
-      case 10:
-        return Promise.resolve(a6._r);
-
       case 0:
         a6.$exit = 0;
         a6.$handle = 1;
@@ -377,6 +392,9 @@ function a6() {
         a6.$exit = 0;
         a6.$handle = 1;
         return a6.$step = 0, Promise.reject(p);
+
+      case 10:
+        return Promise.resolve(a6._r);
 
       case 11:
         return a6.$step = 0, Promise.reject(a6._err1);
@@ -406,7 +424,7 @@ function a7() {
   return a7;
 
   function _1(a7, p) {
-    var i, _i, s;
+    var s;
 
     switch (s = a7.$step, s) {
       case 4:
@@ -418,10 +436,10 @@ function a7() {
         a7.$exit = 11;
         a7.$handle = 10;
 
-        if (!(_i = a7._loop.next()).done) {
-          i = _i.value;
+        if (!(a7._i1 = a7._loop.next()).done) {
+          a7._i = a7._i1.value;
           a7.$step = 5;
-          return M.$delegate(M.yld(i));
+          return M.$delegate(M.yld(a7._i));
         } else {
           a7.$step = 6;
           a7._fc = 7;
@@ -442,9 +460,6 @@ function a7() {
       case 7:
         return Promise.resolve(a7._r);
 
-      case 8:
-        return Promise.resolve(a7._r);
-
       case 0:
         a7.$exit = 0;
         a7.$handle = 1;
@@ -454,6 +469,9 @@ function a7() {
         a7.$exit = 0;
         a7.$handle = 1;
         return a7.$step = 0, Promise.reject(p);
+
+      case 8:
+        return Promise.resolve(a7._r);
 
       case 9:
         return a7.$step = 0, Promise.reject(a7._err1);
@@ -486,7 +504,7 @@ function a8() {
   return a8;
 
   function _1(a8, p) {
-    var i, a, c, s;
+    var a, c, s;
 
     switch (s = a8.$step, s) {
       case 5:
@@ -505,10 +523,10 @@ function a8() {
         a = c.done;
 
         if (!a) {
-          i = a8._loop.value;
+          a8._i = a8._loop.value;
           a8.$step = 6;
           return Promise.resolve({
-            value: i,
+            value: a8._i,
             done: false
           });
         } else {
@@ -532,9 +550,6 @@ function a8() {
       case 9:
         return Promise.resolve(a8._r);
 
-      case 10:
-        return Promise.resolve(a8._r);
-
       case 0:
         a8.$exit = 0;
         a8.$handle = 1;
@@ -544,6 +559,9 @@ function a8() {
         a8.$exit = 0;
         a8.$handle = 1;
         return a8.$step = 0, Promise.reject(p);
+
+      case 10:
+        return Promise.resolve(a8._r);
 
       case 11:
         return a8.$step = 0, Promise.reject(a8._err1);
@@ -573,7 +591,7 @@ function a9() {
   return a9;
 
   function _1(a9, p) {
-    var i, _i, a, c, s;
+    var i, a, c, s;
 
     switch (s = a9.$step, s) {
       case 5:
@@ -588,14 +606,14 @@ function a9() {
         return Promise.resolve(a9._loop.next()).then(a9.$resolve, a9.$reject);
 
       case 7:
-        c = _i = p;
+        c = i = p;
         a = c.done;
 
         if (!a) {
-          i = _i.value;
+          a9._i = i.value;
           a9.$step = 6;
           return Promise.resolve({
-            value: i,
+            value: a9._i,
             done: false
           });
         } else {
@@ -619,9 +637,6 @@ function a9() {
       case 9:
         return Promise.resolve(a9._r);
 
-      case 10:
-        return Promise.resolve(a9._r);
-
       case 0:
         a9.$exit = 0;
         a9.$handle = 1;
@@ -631,6 +646,9 @@ function a9() {
         a9.$exit = 0;
         a9.$handle = 1;
         return a9.$step = 0, Promise.reject(p);
+
+      case 10:
+        return Promise.resolve(a9._r);
 
       case 11:
         return a9.$step = 0, Promise.reject(a9._err1);

@@ -32,10 +32,14 @@ function d(i) {
 
     if (a) {
       b = i += 3;
-      return M.yldStar(b);
+      return M.yldStar(M.yldStar(b), _6);
     } else {
       return M.pure(i);
     }
+  }
+
+  function _6(d, a) {
+    return M.pure(a);
   }
 }
 
@@ -58,7 +62,7 @@ function a4() {
   }
 
   function _3(a4) {
-    fc = _8, fe = _12;
+    fc = _8, fe = _11;
     return M.yldStar(M.yld(3), _6);
   }
 
@@ -68,7 +72,7 @@ function a4() {
   }
 
   function _5(a4) {
-    fc = _8, fe = _12;
+    fc = _8, fe = _11;
     return M.yldStar(M.yld(e), _6);
   }
 
@@ -96,15 +100,15 @@ function a4() {
   function _10(a4, c) {
     var b;
     b = a1(a, c);
-    return M.yldStar(M.yld(b), _11, _12);
+    return M.yldStar(M.yld(b), _12);
   }
 
-  function _11(a4) {
-    return M.pure();
-  }
-
-  function _12(a4, e) {
+  function _11(a4, e) {
     return M.raise(e);
+  }
+
+  function _12(a4) {
+    return M.pure();
   }
 
   function _13(a4) {
@@ -117,7 +121,7 @@ function a4() {
   }
 
   function _15(a4, a) {
-    fc = _13, fe = _12, err = a;
+    fc = _13, fe = _11, err = a;
     return M.jump(void 0, _6);
   }
 }

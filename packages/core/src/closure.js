@@ -58,7 +58,6 @@ export const contextDecls = Kit.map(function contextDecls(si) {
                                  || root.opts.contextMethodOps)
      ) {
     contextSym.bound = true
-    // debugger
     State.allUniqFields(ctxSyms,s.opts.closVarPrefix,s.opts.closVarPostfix)
     // needs both because after loop block scoping pure functions may have
     // same options (TODO: unify them)

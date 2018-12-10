@@ -1,6 +1,5 @@
 import * as Kit from "../kit"
 import * as Policy from "../policy"
-import * as Debug from "../debug"
 import {ifDirectives} from "../options"
 
 const disabledOpts = {
@@ -39,7 +38,8 @@ export default Kit.pipe(
       scopePrefix:true,
       bindName:"yldStar",
       requireFinalPure:true,
-      pureForOf:true
+      pureForOf:true,
+      keepLastPure:true
     },defaults))
     const asyncDo = Policy.injectFuncOpts(Object.assign({
       generator:false,
@@ -54,7 +54,8 @@ export default Kit.pipe(
       combineOps:true,
       bindName:"chain",
       requireFinalPure:false,
-      pureForOf:true
+      pureForOf:true,
+      keepLastPure:true
     },defaults))
     const asyncGeneratorsDo = Policy.injectFuncOpts(Object.assign({
       generator:true,
@@ -68,7 +69,8 @@ export default Kit.pipe(
       combineOps:true,
       bindName:"chain",
       requireFinalPure:false,
-      pureForOf:true
+      pureForOf:true,
+      keepLastPure:true
     },defaults))
     const fullOpts = Object.assign({
       bindCalls: {

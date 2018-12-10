@@ -1,3 +1,5 @@
+import * as M from "@effectful/core";
+
 function a() {
   var r;
 
@@ -5,5 +7,9 @@ function a() {
     1 + 1;
   }
 
-  return M.pure();
+  return M.chain(M.pure(), _1);
+
+  function _1(a) {
+    return a;
+  }
 }

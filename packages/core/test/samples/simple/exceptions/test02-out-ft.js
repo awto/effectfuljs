@@ -12,3 +12,5 @@ function a_1(a) {
 function a_2(a, b) {
   throw b;
 }
+
+function a_3(a) {}

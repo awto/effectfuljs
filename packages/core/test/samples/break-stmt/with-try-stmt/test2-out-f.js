@@ -10,9 +10,4 @@ import * as M from "@effectful/core";
   }
 
   function _2() {}
-
-  function _3(a) {
-    ex = a;
-    return M.jump(void 0, _1);
-  }
 });

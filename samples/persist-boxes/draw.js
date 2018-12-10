@@ -28,7 +28,8 @@ export async function* collectBoxes(input) {
       yield i
       continue
     }
-    yield {type:"ROOT", value:React.cloneElement(root,{},...Object.values(boxes))}
+    if (root != null)
+      yield {type:"ROOT", value:React.cloneElement(root,{},...Object.values(boxes))}
   }
 }
 

@@ -6,4 +6,6 @@ function a() {
   function _1(a) {
     throw a;
   }
+
+  function _2() {}
 }

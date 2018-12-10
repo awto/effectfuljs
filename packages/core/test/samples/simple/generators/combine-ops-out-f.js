@@ -1,139 +1,130 @@
 import * as M from "@effectful/core";
 
 function d(i) {
-  var j, r;
-  return M.scope(_1);
+  var j, a, r;
+  j = 0;
+  a = i++;
+  return M.yld(a, _1);
 
-  function _1() {
-    var a;
-    j = 0;
-    a = i++;
-    return M.yld(a, _2);
-  }
-
-  function _2(a) {
+  function _1(a) {
     var b;
     b = j++;
-    return M.yld((a, b), _3);
+    return M.yld((a, b), _2);
   }
 
-  function _3() {
-    return M.yldStar(some(i += 2, j) + j, _4);
+  function _2() {
+    return M.yldStar(some(i += 2, j) + j, _3);
+  }
+
+  function _3(a) {
+    return M.yld(a, _4);
   }
 
   function _4(a) {
-    return M.yld(a, _5);
-  }
-
-  function _5(a) {
     var b;
 
     if (a) {
       b = i += 3;
-      return M.yldStar(b, M.pure);
+      return M.yldStar(b, _5);
     } else {
       return M.pure(i);
     }
+  }
+
+  function _5(a) {
+    return M.pure(a);
   }
 }
 
 function a4() {
   var e, ex, a, fc, fe, err;
-  return M.scope(_1);
+  return M.yld(1, _1, _13);
 
   function _1() {
-    return M.yld(1, _2, _14);
+    return M.yld(2, _2, _13);
   }
 
   function _2() {
-    return M.yld(2, _3, _14);
+    fc = _7, fe = _10;
+    return M.yld(3, _5);
   }
 
   function _3() {
-    fc = _8, fe = _12;
-    return M.yld(3, _6);
+    e = ex;
+    return M.yld("excep", _4, _14);
   }
 
   function _4() {
-    e = ex;
-    return M.yld("excep", _5, _15);
+    fc = _7, fe = _10;
+    return M.yld(e, _5);
   }
 
   function _5() {
-    fc = _8, fe = _12;
-    return M.yld(e, _6);
+    return M.yld("f", _6);
   }
 
   function _6() {
-    return M.yld("f", _7);
-  }
-
-  function _7() {
     return M.yld("e", fc, fe);
   }
 
-  function _8() {
+  function _7() {
     var a;
     a = a2();
-    return M.yldStar(a, _9);
+    return M.yldStar(a, _8);
+  }
+
+  function _8(c) {
+    var b;
+    a = c;
+    b = a3();
+    return M.yldStar(b, _9);
   }
 
   function _9(c) {
     var b;
-    a = c;
-    b = a3();
-    return M.yldStar(b, _10);
+    b = a1(a, c);
+    return M.yld(b, _11);
   }
 
-  function _10(c) {
-    var b;
-    b = a1(a, c);
-    return M.yld(b, _11, _12);
+  function _10(e) {
+    return M.raise(e);
   }
 
   function _11() {
     return M.pure();
   }
 
-  function _12(e) {
-    return M.raise(e);
-  }
-
-  function _13() {
+  function _12() {
     return M.raise(err);
   }
 
-  function _14(a) {
+  function _13(a) {
     ex = a;
-    return M.jump(void 0, _4, _15);
+    return M.jump(void 0, _3, _14);
   }
 
-  function _15(a) {
-    fc = _13, fe = _12, err = a;
-    return M.jump(void 0, _6);
+  function _14(a) {
+    fc = _12, fe = _10, err = a;
+    return M.jump(void 0, _5);
   }
 }
 
 function a5() {
   var i, loop, fc, fe, err;
-  return M.scope(_1);
+  loop = M.iterator(a4());
+  return M.jump(void 0, _1, _6);
 
   function _1() {
-    loop = M.iterator(a4());
-    return M.jump(void 0, _2, _7);
-  }
-
-  function _2() {
     if (!(loop = loop.step()).done) {
       i = loop.value;
-      return M.yld(i, _2, _7);
+      return M.yld(i, _1, _6);
     } else {
-      fc = _4, fe = _5;
-      return M.jump(void 0, _3);
+      fc = _3, fe = _4;
+      return M.jump(void 0, _2);
     }
   }
 
-  function _3() {
+  function _2() {
     if (loop.exit) {
       loop.exit();
     }
@@ -141,20 +132,20 @@ function a5() {
     return M.jump(void 0, fc, fe);
   }
 
-  function _4() {
+  function _3() {
     return M.pure();
   }
 
-  function _5(e) {
+  function _4(e) {
     return M.raise(e);
   }
 
-  function _6() {
+  function _5() {
     return M.raise(err);
   }
 
-  function _7(a) {
-    fc = _6, fe = _5, err = a;
-    return M.jump(void 0, _3);
+  function _6(a) {
+    fc = _5, fe = _4, err = a;
+    return M.jump(void 0, _2);
   }
 }

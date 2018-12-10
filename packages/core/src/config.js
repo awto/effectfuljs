@@ -348,8 +348,8 @@ export default {
   // the variable
   
   par: false,
-  // for functions with `par:true` specifies which parts of code should
-  // be parallel or sequential (usually changed with "par", "seq" directives
+  // for functions with `par` specifies which parts of code should
+  // be parallel or sequential (usually changed with "par", "seq" block directives)
   parRegion: false,
   // if `true` fill assume any variable reference (LHS or RHS) as dependency
   // otherwise only RHS positions are dependent on LHS positions only

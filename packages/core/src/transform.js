@@ -117,7 +117,7 @@ export const stage0 = Kit.pipe(
     Prop.recalcEff,
     Policy.stage("organize"),
     Bind.flatten,
-    // Prop.recalcEff,
+    Par.markRegions,
     Policy.stage("inject"),
     Exceptions.inject,
     Prop.recalcEff,
@@ -197,7 +197,7 @@ export function pass(s) {
   const others = []
   for(const i of inp)
     i[0].value.track = i[0].value.track || i[0].value.topEff
-  // even pure functions must be converted if they have shared vars
+  /** even pure functions must be converted if they have shared vars */
   for(const i of inp) {
     const root = i[0].value
     if (root.scopeDecls) {
@@ -235,15 +235,19 @@ export function pass(s) {
       others.push(i)
   }
   if (!transform.length) {
-    // no transforms, but it may need to erase some directives
+    /** no transforms, but it may need to erase some directives */
     return ifLoose(loose)(sa)
   }
   const s0 = [...stage0(transform)]
   const n0 = [...normalizeOnlyStage0(normalize)]
   const s1 = [...Closure.contextDecls(s0)]
   const n1 = [...Closure.contextDecls(n0)]
+  /** loops for ofs requires no labeled statements */
+  const l1 = opts.loose
+        ? others.map(Kit.pipe(Control.removeLabeledStatement,Kit.toArray))
+        : others
   const res = [
-    ...others,
+    ...l1,
     ...stage1(s1),
     ...normalizeOnlyStage1(n1)]
   return finalize([...Scope.restore(root,res)])

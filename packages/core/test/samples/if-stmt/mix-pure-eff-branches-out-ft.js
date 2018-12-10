@@ -53,10 +53,14 @@ function j() {
 
 function a_1(a) {
   if (true) {
-    return eff(1);
+    return M.chain(eff(1), a_2);
   } else {
     return 3;
   }
+}
+
+function a_2(a, b) {
+  return b;
 }
 
 function b_1(b) {
@@ -140,13 +144,17 @@ function f_1(f) {
 
 function f_2(f, a) {
   if (a) {
-    return eff("i");
+    return M.chain(eff("i"), f_3);
   } else {
-    return M.chain(eff("2"), f_3);
+    return M.chain(eff("2"), f_4);
   }
 }
 
-function f_3(f) {
+function f_3(f, a) {
+  return a;
+}
+
+function f_4(f) {
   return f._r;
 }
 

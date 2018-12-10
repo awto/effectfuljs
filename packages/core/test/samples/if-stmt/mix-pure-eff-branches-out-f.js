@@ -5,9 +5,13 @@ function a() {
   var r;
 
   if (true) {
-    return eff(1);
+    return M.chain(eff(1), _1);
   } else {
     return 3;
+  }
+
+  function _1(a) {
+    return a;
   }
 }
 
@@ -94,13 +98,17 @@ function f() {
 
   function _1(a) {
     if (a) {
-      return eff("i");
+      return M.chain(eff("i"), _2);
     } else {
-      return M.chain(eff("2"), _2);
+      return M.chain(eff("2"), _3);
     }
   }
 
-  function _2() {
+  function _2(a) {
+    return a;
+  }
+
+  function _3() {
     return r;
   }
 }

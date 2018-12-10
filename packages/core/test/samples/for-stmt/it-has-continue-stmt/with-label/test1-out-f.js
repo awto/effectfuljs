@@ -1,6 +1,6 @@
 import * as M from "@effectful/core";
 
-(function () {
+function f1() {
   var i, j, len, ref;
   ref = [1, 2, 3];
   i = 0;
@@ -47,9 +47,11 @@ import * as M from "@effectful/core";
     i++;
     return M.jump(void 0, _1);
   }
-});
+}
 
-(function () {
+;
+
+function f2() {
   var i, j, len, ref;
   ref = [1, 2, 3];
   i = 0;
@@ -100,9 +102,11 @@ import * as M from "@effectful/core";
     i++;
     return M.jump(void 0, _1);
   }
-});
+}
 
-(function () {
+;
+
+function f3() {
   var i, j, len, ref;
   ref = [1, 2, 3];
   i = 0;
@@ -147,9 +151,11 @@ import * as M from "@effectful/core";
   }
 
   function _6() {}
-});
+}
 
-(function () {
+;
+
+function f4() {
   var i, j, len, ref;
   ref = [1, 2, 3];
   j = 0, len = ref.length;
@@ -176,9 +182,11 @@ import * as M from "@effectful/core";
     j++;
     return M.jump(void 0, _1);
   }
-});
+}
 
-(function () {
+;
+
+function f5() {
   var j, len;
   j = 0;
   return M.jump(void 0, _1);
@@ -207,4 +215,6 @@ import * as M from "@effectful/core";
   }
 
   function _4() {}
-});
+}
+
+;

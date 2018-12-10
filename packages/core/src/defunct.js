@@ -8,7 +8,7 @@ import * as Except from "./exceptions"
 
 const reentryCont = 3
 
-const pureFrameSym = Kit.scope.newSym("pure")
+export const pureFrameSym = Kit.scope.newSym("pure")
 pureFrameSym.numConst = 0
 
 /** prepares vars for storing current state and bind */
@@ -30,7 +30,6 @@ export function* prepare(si) {
       savedDecls:new Map(),
       root
     })
-  root.pureExitFrame.declSym = pureFrameSym
   const errMap = root.errMap = !s.opts.storeErrorCont && new Map()
   const resMap = root.resMap = !s.opts.storeResultCont && new Map()
   const errFrame = root.errFrameRedir

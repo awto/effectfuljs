@@ -73,12 +73,15 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
  * Following fields are propagated: 
  *  - `optsDiff` - recursively merging objects
  *  - `optsAssign` - merging with `Object.assign`
- *  - `optsSet` - fully resetting
+ *  - `optsSet` - fully resetting former optsSet, but parent's optsDiff/optsAssign 
+ *                are still applied
  */
 export function propagateOpts(si) {
   const sa = Kit.toArray(si)
   let cur = sa[0].value.opts || Kit.getOpts()
   const stack = []
+  const assignStack = [{}]
+  const mergeStack = [{}]
   for(const i of sa) {
     const {optsDiff:diff,optsAssign:assign,optsSet:set} = i.value
     if (diff != null || assign != null || set != null) {
@@ -86,16 +89,26 @@ export function propagateOpts(si) {
         stack.push(cur)
         if (set)
           cur = set
-        if (assign || diff)
-          cur = clone(cur)
+        if (assign)
+          assignStack.unshift(Object.assign({},assignStack[0],assign))
         if (diff != null)
-          cur = merge(cur, diff)
-        if (assign != null)
-          cur = Object.assign(cur,assign)
+          mergeStack.unshift(merge(clone(mergeStack[0]),diff))
+        if (assignStack.length > 1 || mergeStack.length > 1) {
+          cur = clone(cur)
+          if (assignStack.length > 1)
+            Object.assign(cur,assignStack[0])
+          if (mergeStack.length > 1)
+            merge(cur,mergeStack[0])
+        }
       }
       i.value.opts = cur
-      if (i.leave)
+      if (i.leave) {
         cur = stack.pop()
+        if (assign)
+          assignStack.shift()
+        if (merge)
+          mergeStack.shift()
+      }
     } else 
       i.value.opts = cur
   }
@@ -580,7 +593,12 @@ export function assignBindCalls(s) {
   }
 }
 
-/** object merging algorithm for options merge */ 
+/**
+ * object merging algorithm for options merge,
+ * like Object.assign but recursively merges all plain object fields
+ * arrays are concatenated rather than merged
+ * properties with names starting with "$" are copied by reference
+ */ 
 export function merge(a,b) {
   if (a === undefined)
     return b
@@ -747,8 +765,8 @@ export function propagateBlockDirs(si) {
               continue
           }
           break
-        case Tag.DirectiveLiteral:
-          if (dir(i,i.value.node.value))
+        case Tag.Directive:
+          if (dir(i,i.value.node.value.value))
             continue
           break
         }

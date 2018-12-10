@@ -219,7 +219,7 @@ export const injectBlock = Kit.pipe(
                                    {node,
                                     sym:top ? scopeId : blockId,
                                     ctrl:i.value.ctrl,
-                                    directives,
+                                    directives,optsAssign:i.value.optsAssign,
                                     root,stmt:true,bind:true})
             yield start
             i.value.ctrlNode = start.value
@@ -413,13 +413,10 @@ export function instantiateJumps(frames) {
             if (dst.resultContRedir)
               dst.resultContRedir.declSym.bound = false
             j.ref.contArg = null
-            // j.goto.enters.add(j)
             j.gotoDests = dests
             break
           default:
             j.gotoDests = dests
-            // for(const k of j.gotoDests)
-            //  k.enters.add(j)
             dst.declSym.bound = true
           }
         } else {
@@ -437,3 +434,131 @@ export function instantiateJumps(frames) {
     }
   }
 }
+
+/** 
+ * calculates control flow DAG with instantiated finally callbacks
+ * catch blocls are considered to be branches starting from the corresp `try`
+ *
+ * Graph node is:
+ *
+ *   type ICFGNode = {
+ *     frame: FrameVal, 
+ *     vars: Map<Symbol,FrameVal>, 
+ *     hash: String,
+ *     exits,recExits,nonRecExits,enters,
+ *        nonRecEnters,recEnters: Set<CfgNode>,
+ *     // depth-first traversal enter order
+ *     beg: number,
+ *     // depth-first traversal exit order
+ *     end: number,
+ *     parent: ICFGNode
+ *   }
+ *
+ */
+export function instantiatedCfg(frames) {
+  const memo = new Map()
+  const root = frames[0].root
+  const {errFrameRedir} = root
+  const nodes = []
+  const jobs = []
+  _node(frames[0])
+  let clock = 0
+  while(jobs.length) {
+    const job = jobs.pop()
+    const {node} = job
+    if (!job.start) {
+      job.node.end = clock++
+      continue
+    }
+    const {frame,vars,exits,recExits,nonRecExits} = node
+    node.beg = clock++
+    jobs.push({start:false,node})
+    for(let i of frame.exits) {
+      let {goto} = i
+      let nvars = vars
+      if (goto.dynamicJump) {
+        nvars = new Map(nvars)
+        const varsInfo = nvars.get(goto)
+        if (varsInfo) {
+          nvars.delete(goto)
+          goto = varsInfo
+        }
+      }
+      const indir = i.indirJumps
+      if (indir) {
+        nvars = new Map(nvars)
+        for(const [f,v] of indir)
+          nvars.set(v,f)
+      }
+      if (!goto)
+        continue
+      const enode = _node(goto, nvars)
+      if (enode.beg !== -1 && enode.end === -1) {
+        recExits.add(enode)
+        enode.recEnters.add(node)
+      } else {
+        nonRecExits.add(enode)
+        enode.nonRecEnters.add(node)
+      }
+      exits.add(enode)
+      enode.enters.add(node)
+      enode._scheduled = true
+    }
+  }
+  return nodes
+  function _node(frame, vars, _scheduled) {
+    const varsHash = ""
+    let hash = frame.declSym.id
+    if (vars && vars.size) {
+      const vstr = []
+      for(const [n,v] of vars)
+        vstr.push(`${n.declSym.id}=${v.declSym.id}`)
+      hash+=":"+vstr.join()
+    }
+    let node = memo.get(hash)
+    if (!node) {
+      memo.set(hash,node = {frame,vars,hash,_scheduled,
+                            beg:-1,end:-1,
+                            exits:new Set(),enters:new Set(),
+                            recExits:new Set(),recEnters:new Set(),
+                            nonRecExits:new Set(),nonRecEnters:new Set(),
+                            errorExits:new Set()})
+      nodes.push(node)
+      jobs.push({start:true,node})
+    }
+    return node
+  }
+}
+
+/** 
+ * calculates recursive edges
+ *
+ *   type ICfgNode = ICfgNode & { 
+ *     nonRecEnters: Set<CfgNode>,
+ *     recEnter: Set<CfgNode>,
+ *     nonRecExits: Set<CfgNode>,
+ *     recExits: Set<CfgNode> }
+ */
+export function icfgGetRec(icfg) {
+  for(const i of icfg) {
+    i._recVisited = false
+    i.recExits = new Set()
+    i.nonRecExits = new Set()
+    i.recEnters = new Set()
+    i.nonRecEnters = new Set()
+  }
+  for(const i of icfg) {
+    i._recVisited = true
+    const {recExits,nonRecExits} = i
+    for(const j of i.exits) {
+      if (j._recVisited) {
+        recExits.add(j)
+        j.recEnters.add(i)
+      } else {
+        nonRecExits.add(j)
+        j.nonRecEnters.add(i)
+      }
+    }
+  }
+}
+

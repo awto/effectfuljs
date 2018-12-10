@@ -76,7 +76,7 @@ function a(p) {
         function _3() {}
       })(i), _3, _9);
     } else {
-      fc = _5, fe = _7;
+      fc = _5, fe = _6;
       return M.jump(void 0, _4);
     }
   }
@@ -93,21 +93,21 @@ function a(p) {
     var b, c;
     b = a;
     c = p;
-    return M.chain(eff(8, b, c), _6, _7);
+    return M.chain(eff(8, b, c), _7);
   }
 
-  function _6() {}
-
-  function _7(e) {
+  function _6(e) {
     return M.raise(e);
   }
+
+  function _7() {}
 
   function _8() {
     return M.raise(err);
   }
 
   function _9(a) {
-    fc = _8, fe = _7, err = a;
+    fc = _8, fe = _6, err = a;
     return M.jump(void 0, _4);
   }
 }

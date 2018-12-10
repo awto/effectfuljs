@@ -14,8 +14,3 @@ function f_1(ctx) {
 }
 
 function f_2(ctx) {}
-
-function f_3(ctx, a) {
-  ctx._ex = a;
-  return M.jump(void 0, f_1);
-}

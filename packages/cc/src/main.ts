@@ -102,7 +102,7 @@ class Chain<A, B> implements CC<B> {
   private ctx?: Context;
 }
 
-export interface SubCont<A, B> { }
+export type SubCont<A, B> = Frame<any>[]
 
 class WithSubCont<A, B> implements CC<A> {
   constructor(p: Prompt<B>, k: (sc: SubCont<A, B>) => CCV<B>) {

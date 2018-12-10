@@ -90,18 +90,16 @@ function f_3(ctx) {
 function f_4(ctx) {}
 
 function a_4(a) {
-  var i;
-
   if (!(a._loop = a._loop.step()).done) {
-    i = a._loop.value;
+    a._i = a._loop.value;
     return M.chain((i => {
       var ctx = M.context();
       ctx._a = a;
       ctx._i = i;
       return M.scope(f_1);
-    })(i), a_4, a_10);
+    })(a._i), a_4, a_10);
   } else {
-    a._fc = a_6, a._fe = a_8;
+    a._fc = a_6, a._fe = a_7, a._i = null;
     return M.jump(void 0, a_5);
   }
 }
@@ -121,20 +119,20 @@ function a_6(a) {
   var b, c;
   b = a._a;
   c = a._p;
-  return M.chain(eff(8, b, c), a_7, a_8);
+  return M.chain(eff(8, b, c), a_8);
 }
 
-function a_7(a) {}
-
-function a_8(a, e) {
+function a_7(a, e) {
   return M.raise(e);
 }
+
+function a_8(a) {}
 
 function a_9(a) {
   return M.raise(a._err1);
 }
 
 function a_10(a, b) {
-  a._fc = a_9, a._fe = a_8, a._err1 = b;
+  a._fc = a_9, a._fe = a_7, a._err1 = b;
   return M.jump(void 0, a_5);
 }

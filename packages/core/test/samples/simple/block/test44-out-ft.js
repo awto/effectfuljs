@@ -12,12 +12,16 @@ function a_1(_a) {
 
 function a_2(_a) {
   if (a) {
-    return eff5(5);
+    return M.chain(eff5(5), a_3);
   } else {
-    return M.chain(eff6(), a_3);
+    return M.chain(eff6(), a_4);
   }
 }
 
-function a_3(_a) {
+function a_3(_a, a) {
+  return a;
+}
+
+function a_4(_a) {
   return _a._r;
 }

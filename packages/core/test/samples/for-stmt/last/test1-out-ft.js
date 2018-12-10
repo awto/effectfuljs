@@ -12,11 +12,9 @@ function f_1(ctx) {
 }
 
 function f_2(ctx) {
-  var i;
-
   if (ctx._j < ctx._len) {
-    i = ctx._ref[ctx._j];
-    return M.chain(eff(i), f_3);
+    ctx._i = ctx._ref[ctx._j];
+    return M.chain(eff(ctx._i), f_3);
   }
 }
 

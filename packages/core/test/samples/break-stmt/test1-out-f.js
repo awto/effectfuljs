@@ -64,19 +64,23 @@ import * as M from "@effectful/core";
     if (a) {
       return M.chain(eff("a"), _3);
     } else {
-      return M.chain(eff(4), _4);
+      return M.chain(eff(4), _5);
     }
   }
 
   function _3() {
-    return eff("b");
+    return M.chain(eff("b"), _4);
   }
 
-  function _4() {
-    return M.chain(eff(5), _5);
+  function _4(a) {
+    return a;
   }
 
   function _5() {
+    return M.chain(eff(5), _6);
+  }
+
+  function _6() {
     return r;
   }
 });
@@ -85,8 +89,12 @@ function a() {
   var r;
 
   if (e) {
-    return eff("b");
+    return M.chain(eff("b"), _1);
   } else {
     return r;
+  }
+
+  function _1(a) {
+    return a;
   }
 }

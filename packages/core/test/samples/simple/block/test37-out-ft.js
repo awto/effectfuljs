@@ -10,5 +10,9 @@ function a_1(a) {
     1 + 1;
   }
 
-  return M.pure();
+  return M.chain(M.pure(), a_2);
+}
+
+function a_2(a, b) {
+  return b;
 }

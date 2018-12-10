@@ -10,10 +10,10 @@ function a() {
 
   function _2(a) {
     if (a) {
-      fc = _5, fe = _6;
+      fc = _6, fe = _5;
       return M.jump(void 0, _3);
     } else {
-      fc = _4, fe = _6;
+      fc = _4, fe = _5;
       return M.jump(void 0, _3);
     }
   }
@@ -23,21 +23,21 @@ function a() {
   }
 
   function _4() {
-    return M.chain(eff("after `finally`"), _5, _6);
+    return M.chain(eff("after `finally`"), _6);
   }
 
-  function _5() {}
-
-  function _6(e) {
+  function _5(e) {
     return M.raise(e);
   }
+
+  function _6() {}
 
   function _7() {
     return M.raise(err);
   }
 
   function _8(a) {
-    fc = _7, fe = _6, err = a;
+    fc = _7, fe = _5, err = a;
     return M.jump(void 0, _3);
   }
 }

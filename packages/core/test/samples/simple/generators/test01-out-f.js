@@ -30,17 +30,21 @@ function d(i) {
 
     if (a) {
       b = i += 3;
-      return M.yldStar(b);
+      return M.yldStar(M.yldStar(b), _6);
     } else {
       if (j) {
         return M.pure(i);
       } else {
-        return M.yldStar(M.yld(2), _6);
+        return M.yldStar(M.yld(2), _7);
       }
     }
   }
 
-  function _6() {
+  function _6(a) {
+    return M.pure(a);
+  }
+
+  function _7() {
     return M.pure(r);
   }
 }
@@ -58,7 +62,7 @@ function a4() {
   }
 
   function _3() {
-    fc = _8, fe = _11;
+    fc = _8, fe = _10;
     return M.yldStar(M.yld(3), _6);
   }
 
@@ -68,7 +72,7 @@ function a4() {
   }
 
   function _5() {
-    fc = _8, fe = _11;
+    fc = _8, fe = _10;
     return M.yldStar(M.yld(e), _6);
   }
 
@@ -87,15 +91,15 @@ function a4() {
   }
 
   function _9(a) {
-    return M.yldStar(M.yld(a), _10, _11);
+    return M.yldStar(M.yld(a), _11);
   }
 
-  function _10() {
-    return M.pure();
-  }
-
-  function _11(e) {
+  function _10(e) {
     return M.raise(e);
+  }
+
+  function _11() {
+    return M.pure();
   }
 
   function _12() {
@@ -108,7 +112,7 @@ function a4() {
   }
 
   function _14(a) {
-    fc = _12, fe = _11, err = a;
+    fc = _12, fe = _10, err = a;
     return M.jump(void 0, _6);
   }
 }
@@ -177,7 +181,7 @@ function cfb1() {
     }
 
     fc = _5, fe = _11;
-    return M.yldStar(M.yld(`a${i}`), _4, _11);
+    return M.yldStar(M.yld(`a${i}`), _4, _13);
   }
 
   function _4() {
@@ -218,7 +222,12 @@ function cfb1() {
 
   function _12(a) {
     fc = _6, fe = _10, err = a;
-    return M.jump(void 0, _4, _11);
+    return M.jump(void 0, _4, _13);
+  }
+
+  function _13(a) {
+    ex = a;
+    return M.jump(void 0, _6);
   }
 }
 
@@ -239,7 +248,11 @@ const v = v => {
   return M.scope(_1);
 
   function _1() {
-    return v;
+    return M.chain(v, _2);
+  }
+
+  function _2(a) {
+    return M.pure(a);
   }
 };
 

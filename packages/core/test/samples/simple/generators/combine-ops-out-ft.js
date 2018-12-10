@@ -1,151 +1,141 @@
 import * as M from "@effectful/core";
 
 function d(i) {
-  var d = M.context();
+  var d = M.context(),
+      a;
   d._i = i;
-  return M.scope(d_1);
+  d._j = 0;
+  a = d._i++;
+  return M.yld(a, d_1);
 }
 
 function a4() {
   var a4 = M.context();
-  return M.scope(a4_1);
+  return M.yld(1, a4_1, a4_13);
 }
 
 function a5() {
   var a5 = M.context();
-  return M.scope(a5_1);
+  a5._loop = M.iterator(a4());
+  return M.jump(void 0, a5_1, a5_6);
 }
 
-function d_1(d) {
-  var a;
-  d._j = 0;
-  a = d._i++;
-  return M.yld(a, d_2);
-}
-
-function d_2(d, a) {
+function d_1(d, a) {
   var b;
   b = d._j++;
-  return M.yld((a, b), d_3);
+  return M.yld((a, b), d_2);
 }
 
-function d_3(d) {
+function d_2(d) {
   var a;
   a = d._j, d._j = null;
-  return M.yldStar(some(d._i += 2, a) + a, d_4);
+  return M.yldStar(some(d._i += 2, a) + a, d_3);
+}
+
+function d_3(d, a) {
+  return M.yld(a, d_4);
 }
 
 function d_4(d, a) {
-  return M.yld(a, d_5);
-}
-
-function d_5(d, a) {
   var b;
 
   if (a) {
     b = d._i += 3;
     d._i = null;
-    return M.yldStar(b, M.pure);
+    return M.yldStar(b, d_5);
   } else {
     return M.pure(d._i);
   }
 }
 
+function d_5(d, a) {
+  return M.pure(a);
+}
+
 function a4_1(a4) {
-  return M.yld(1, a4_2, a4_14);
+  return M.yld(2, a4_2, a4_13);
 }
 
 function a4_2(a4) {
-  return M.yld(2, a4_3, a4_14);
+  a4._fc = a4_7, a4._fe = a4_10;
+  return M.yld(3, a4_5);
 }
 
 function a4_3(a4) {
-  a4._fc = a4_8, a4._fe = a4_12;
-  return M.yld(3, a4_6);
+  a4._e = a4._ex;
+  a4._ex = null;
+  return M.yld("excep", a4_4, a4_14);
 }
 
 function a4_4(a4) {
-  a4._e = a4._ex;
-  a4._ex = null;
-  return M.yld("excep", a4_5, a4_15);
+  var a;
+  a4._fc = a4_7, a4._fe = a4_10, a = a4._e, a4._e = null;
+  return M.yld(a, a4_5);
 }
 
 function a4_5(a4) {
-  var a;
-  a4._fc = a4_8, a4._fe = a4_12, a = a4._e, a4._e = null;
-  return M.yld(a, a4_6);
+  return M.yld("f", a4_6);
 }
 
 function a4_6(a4) {
-  return M.yld("f", a4_7);
-}
-
-function a4_7(a4) {
   var a, b;
   a = a4._fc, b = a4._fe, a4._fc = null, a4._fe = null;
   return M.yld("e", a, b);
 }
 
-function a4_8(a4) {
+function a4_7(a4) {
   var a;
   a = a2();
+  return M.yldStar(a, a4_8);
+}
+
+function a4_8(a4, b) {
+  var a;
+  a4._1 = b;
+  a = a3();
   return M.yldStar(a, a4_9);
 }
 
 function a4_9(a4, b) {
   var a;
-  a4._1 = b;
-  a = a3();
-  return M.yldStar(a, a4_10);
-}
-
-function a4_10(a4, b) {
-  var a;
   a = a1(a4._1, b);
   a4._1 = null;
-  return M.yld(a, a4_11, a4_12);
+  return M.yld(a, a4_11);
+}
+
+function a4_10(a4, e) {
+  return M.raise(e);
 }
 
 function a4_11(a4) {
   return M.pure();
 }
 
-function a4_12(a4, e) {
-  return M.raise(e);
-}
-
-function a4_13(a4) {
+function a4_12(a4) {
   return M.raise(a4._err1);
 }
 
-function a4_14(a4, a) {
+function a4_13(a4, a) {
   a4._ex = a;
-  return M.jump(void 0, a4_4, a4_15);
+  return M.jump(void 0, a4_3, a4_14);
 }
 
-function a4_15(a4, a) {
-  a4._fc = a4_13, a4._fe = a4_12, a4._err1 = a;
-  return M.jump(void 0, a4_6);
+function a4_14(a4, a) {
+  a4._fc = a4_12, a4._fe = a4_10, a4._err1 = a;
+  return M.jump(void 0, a4_5);
 }
 
 function a5_1(a5) {
-  a5._loop = M.iterator(a4());
-  return M.jump(void 0, a5_2, a5_7);
-}
-
-function a5_2(a5) {
-  var i;
-
   if (!(a5._loop = a5._loop.step()).done) {
-    i = a5._loop.value;
-    return M.yld(i, a5_2, a5_7);
+    a5._i = a5._loop.value;
+    return M.yld(a5._i, a5_1, a5_6);
   } else {
-    a5._fc = a5_4, a5._fe = a5_5;
-    return M.jump(void 0, a5_3);
+    a5._fc = a5_3, a5._fe = a5_4, a5._i = null;
+    return M.jump(void 0, a5_2);
   }
 }
 
-function a5_3(a5) {
+function a5_2(a5) {
   var a, b;
 
   if (a5._loop.exit) {
@@ -156,19 +146,19 @@ function a5_3(a5) {
   return M.jump(void 0, a, b);
 }
 
-function a5_4(a5) {
+function a5_3(a5) {
   return M.pure();
 }
 
-function a5_5(a5, e) {
+function a5_4(a5, e) {
   return M.raise(e);
 }
 
-function a5_6(a5) {
+function a5_5(a5) {
   return M.raise(a5._err1);
 }
 
-function a5_7(a5, a) {
-  a5._fc = a5_6, a5._fe = a5_5, a5._err1 = a;
-  return M.jump(void 0, a5_3);
+function a5_6(a5, a) {
+  a5._fc = a5_5, a5._fe = a5_4, a5._err1 = a;
+  return M.jump(void 0, a5_2);
 }

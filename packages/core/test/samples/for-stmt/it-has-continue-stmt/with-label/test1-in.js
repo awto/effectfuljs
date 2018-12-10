@@ -1,4 +1,4 @@
-(function () {
+function f1() {
     var i, j, len, ref;
     ref = [1, 2, 3];
     lab: for (i = 0; i < 3; i++) { 
@@ -11,10 +11,10 @@
                 continue lab;
         }
     }
-});
+};
 
 
-(function () {
+function f2() {
     var i, j, len, ref;
     ref = [1, 2, 3];
     lab: for (i = 0; i < 3; i++) { 
@@ -27,8 +27,8 @@
                 continue lab;
         }
     }
-});
-(function () {
+};
+function f3() {
     var i, j, len, ref;
     ref = [1, 2, 3];
     lab: for (i = 0; i < 3; i++) { 
@@ -42,8 +42,8 @@
         }
     }
     eff(j);
-});
-(function () {
+};
+function f4() {
     var i, j, len, ref;
     ref = [1, 2, 3];
     for (j = 0, len = ref.length; j < len; j++) {
@@ -53,9 +53,9 @@
         if (t2)
             continue;
     }
-});
+};
 
-(function () {
+function f5() {
   var j,len;
   for(j = 0;true;j--) {
     eff(j);
@@ -64,4 +64,4 @@
       break;
   }
   eff(j);
-});
+};

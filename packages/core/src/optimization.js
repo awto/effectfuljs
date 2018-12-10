@@ -38,7 +38,7 @@ export function inlineFrames(si) {
       const noHandlers
             = (!frame.catchContRedir || frame.catchContRedir === errFrameRedir)
             && (!frame.resultContRedir
-                      || frame.resultContRedir === resFrameRedir)
+                || frame.resultContRedir === resFrameRedir)
       for(const {content} of frame.steps) {
         for(let i = 0, len = content.length;i<len;++i) {
           const j = content[i]
@@ -53,23 +53,38 @@ export function inlineFrames(si) {
                 j.value.reflected = true
               }
               const {goto} = j.value
-              if (!scopePostfix && noHandlers
-                  && (!goto || goto === resFrameRedir
-                      || goto === pureExitFrame)) {
+              if ((!scopePostfix && noHandlers || j.type === Ctrl.jump)
+                  && (!goto || goto === resFrameRedir || goto === pureExitFrame)) {
                 const lab = s.label()
-                yield s.enter(Tag.push,Block.effExpr,{
-                  tmpVar:j.value.tmpVar,reflected:j.value.reflected})
-                if (!coerce && j.type === Ctrl.jump)
-                  yield s.enter(Block.app,{sym:Block.pureId})
+                const inner = []
                 if (!j.leave) {
                   ++i
                   for(;i<len;++i) {
                     const v = content[i]
                     if (v.value === j.value)
                       break
-                    yield v
+                    inner.push(v)
                   }
                 }
+                
+                if (j.value.frameArgs) {
+                  for(const [l,r] of j.value.frameArgs) {
+                    yield s.enter(Tag.push,Tag.AssignmentExpression,{node:{operator:"="}})
+                    yield s.tok(Tag.left,Tag.Identifier,{sym:l,lhs:true,rhs:false,decl:false})
+                    if (r === Block.argSym) {
+                      assert.ok(inner.length)
+                      yield* Kit.reposOneArr(inner,Tag.right)
+                      inner.length = 0
+                    } else
+                      yield s.tok(Tag.right,Tag.Identifier,{sym:r,lhs:false,rhs:true,decl:false})
+                    yield* s.leave()
+                  }
+                }
+                yield s.enter(Tag.push,Block.effExpr,{
+                  tmpVar:j.value.tmpVar,reflected:j.value.reflected})
+                if (!coerce && j.type === Ctrl.jump)
+                  yield s.enter(Block.app,{sym:Block.pureId})
+                yield* inner
                 yield* lab()
                 continue
               }
@@ -78,10 +93,15 @@ export function inlineFrames(si) {
                   || j.value.frameArgs && j.value.frameArgs.size)
                 break
               if (goto.dynamicJump || goto.enters.size !== 1
-                  || goto.required || goto.noInline || goto === resFrame
-                  || goto.catchContRedir
-                     && goto.catchContRedir !== frame.catchContRedir
-                  || goto.resContRedir !== frame.resContRedir)
+                  || goto.required || goto.noInline || goto === resFrame)
+                break
+              if (goto.catchContRedir &&
+                  !(goto.catchContRedir === frame.catchContRedir
+                    || j.value.tmpVar && goto.catchContRedir === errFrameRedir))
+                break
+              if (goto.resContRedir &&
+                  !(goto.resContRedir === frame.resContRedir
+                    || j.value.tmpVar && (goto.resContRedir === resFrameRedir)))
                 break
               goto.removed = true
               const cont = j.value.content
@@ -184,8 +204,8 @@ export function removeSingleJumps(si) {
     if (step.frameArgs && step.frameArgs.size) {
       if (!step.result)
         return false
-      if (goto === resFrame)
-        return staticPure ? resFrameRedir : pureExitFrame
+//      if (goto === resFrame)
+//        return staticPure ? resFrameRedir : pureExitFrame
       return false
     }
     return goto

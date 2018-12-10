@@ -200,10 +200,14 @@ function a14_1() {
 
   function _1(a) {
     if (a) {
-      return 2;
+      return M.jump(2, _2);
     } else {
-      return eff(3);
+      return M.chain(eff(3), _2);
     }
+  }
+
+  function _2(a) {
+    return a;
   }
 }
 
@@ -341,7 +345,11 @@ function a19_1() {
   }
 
   function _4() {
-    return eff(a);
+    return M.chain(eff(a), _5);
+  }
+
+  function _5(a) {
+    return a;
   }
 }
 
@@ -727,9 +735,13 @@ function a1() {
 
   function _31(a) {
     if (a) {
-      return M.yld("o4r");
+      return M.yldStar(M.yld("o4r"), _32);
     } else {
-      return M.pure(a);
+      return M.jump(a, _32);
     }
+  }
+
+  function _32(a) {
+    return M.pure(a);
   }
 }

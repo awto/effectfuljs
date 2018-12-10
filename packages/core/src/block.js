@@ -31,6 +31,9 @@ export const delegateSym = Kit.sysId("$delegate")
 export const redirSym = Kit.sysId("$redir")
 export const redirResultSym = Kit.sysId("$redirResult")
 
+/** in frameArgs binds inner content of the jump tag */
+export const argSym = Kit.scope.newSym("arg")
+
 /**
  * Replaces binary `app` nodes with its first component member function call 
  * with `name`, passing second component as a function to its argument
@@ -224,6 +227,7 @@ export const splitEffBlock = Kit.pipe(
           }
           if (j.value.eff) {
             r.value.eff = true
+//            r.value.parRegion = j.value.parRegion
             yield* sl.leave()
             yield r = sl.enter(Tag.push,frame)
           }

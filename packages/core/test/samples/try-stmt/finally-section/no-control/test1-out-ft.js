@@ -36,7 +36,7 @@ function g() {
 }
 
 function a_1(a) {
-  a._fc = a_3, a._fe = a_5;
+  a._fc = a_3, a._fe = a_4;
   return M.chain(eff("in body"), a_2);
 }
 
@@ -47,33 +47,33 @@ function a_2(a) {
 }
 
 function a_3(a) {
-  return M.chain(eff("after `finally`"), a_4, a_5);
+  return M.chain(eff("after `finally`"), a_5);
 }
 
-function a_4(a) {}
-
-function a_5(a, e) {
+function a_4(a, e) {
   return M.raise(e);
 }
+
+function a_5(a) {}
 
 function a_6(a) {
   return M.raise(a._err1);
 }
 
 function a_7(a, b) {
-  a._fc = a_6, a._fe = a_5, a._err1 = b;
+  a._fc = a_6, a._fe = a_4, a._err1 = b;
   return M.jump(void 0, a_2);
 }
 
 function b_1(b) {
-  b._fc = b_4, b._fe = b_6;
+  b._fc = b_4, b._fe = b_5;
   return M.chain(eff("in body"), b_3);
 }
 
 function b_2(b) {
   var e;
   e = b._ex;
-  b._fc = b_4, b._fe = b_6, b._ex = null;
+  b._fc = b_4, b._fe = b_5, b._ex = null;
   return M.chain(eff("in `catch`", e), b_3);
 }
 
@@ -84,14 +84,14 @@ function b_3(b) {
 }
 
 function b_4(b) {
-  return M.chain(eff("after `finally`"), b_5, b_6);
+  return M.chain(eff("after `finally`"), b_6);
 }
 
-function b_5(b) {}
-
-function b_6(b, e) {
+function b_5(b, e) {
   return M.raise(e);
 }
+
+function b_6(b) {}
 
 function b_7(b) {
   return M.raise(b._err1);
@@ -103,12 +103,12 @@ function b_8(b, a) {
 }
 
 function b_9(b, a) {
-  b._fc = b_7, b._fe = b_6, b._err1 = a;
+  b._fc = b_7, b._fe = b_5, b._err1 = a;
   return M.jump(void 0, b_3);
 }
 
 function c_1(c) {
-  c._fc = c_3, c._fe = c_5;
+  c._fc = c_3, c._fe = c_4;
   return M.chain(eff("in body"), c_2);
 }
 
@@ -120,27 +120,27 @@ function c_2(c) {
 }
 
 function c_3(c) {
-  return M.chain(eff("after `finally`"), c_4, c_5);
+  return M.chain(eff("after `finally`"), c_5);
 }
 
-function c_4(c) {}
-
-function c_5(c, e) {
+function c_4(c, e) {
   return M.raise(e);
 }
+
+function c_5(c) {}
 
 function c_6(c) {
   return M.raise(c._err1);
 }
 
 function c_7(c, a) {
-  c._fc = c_6, c._fe = c_5, c._err1 = a;
+  c._fc = c_6, c._fe = c_4, c._err1 = a;
   return M.jump(void 0, c_2);
 }
 
 function d_1(d) {
   console.log("in body");
-  d._fc = d_3, d._fe = d_5;
+  d._fc = d_3, d._fe = d_4;
   return M.jump(void 0, d_2);
 }
 
@@ -151,21 +151,21 @@ function d_2(d) {
 }
 
 function d_3(d) {
-  return M.chain(eff("after `finally`"), d_4, d_5);
+  return M.chain(eff("after `finally`"), d_5);
 }
 
-function d_4(d) {}
-
-function d_5(d, e) {
+function d_4(d, e) {
   return M.raise(e);
 }
+
+function d_5(d) {}
 
 function d_6(d) {
   return M.raise(d._err1);
 }
 
 function d_7(d, a) {
-  d._fc = d_6, d._fe = d_5, d._err1 = a;
+  d._fc = d_6, d._fe = d_4, d._err1 = a;
   return M.jump(void 0, d_2);
 }
 
@@ -176,7 +176,7 @@ function e_1(e) {
 
 function e_2(e) {
   console.log("in body");
-  e._fc = e_7, e._fe = e_9;
+  e._fc = e_7, e._fe = e_8;
   return M.chain(eff("in body"), e_5);
 }
 
@@ -189,7 +189,7 @@ function e_3(e) {
 
 function e_4(e) {
   console.log("catch", e._e);
-  e._fc = e_7, e._fe = e_9, e._e = null;
+  e._fc = e_7, e._fe = e_8, e._e = null;
   return M.jump(void 0, e_5);
 }
 
@@ -207,14 +207,14 @@ function e_6(e) {
 
 function e_7(e) {
   console.log("after `finally`");
-  return M.chain(eff("after `finally`"), e_8, e_9);
+  return M.chain(eff("after `finally`"), e_9);
 }
 
-function e_8(e) {}
-
-function e_9(e, _e) {
+function e_8(e, _e) {
   return M.raise(_e);
 }
+
+function e_9(e) {}
 
 function e_10(e) {
   return M.raise(e._err1);
@@ -226,19 +226,19 @@ function e_11(e, a) {
 }
 
 function e_12(e, a) {
-  e._fc = e_10, e._fe = e_9, e._err1 = a;
+  e._fc = e_10, e._fe = e_8, e._err1 = a;
   return M.jump(void 0, e_5);
 }
 
 function f_1(f) {
-  f._fc = f_4, f._fe = f_6;
+  f._fc = f_4, f._fe = f_5;
   return M.chain(eff("in body"), f_3);
 }
 
 function f_2(f) {
   var e;
   e = f._ex;
-  f._fc = f_4, f._fe = f_6, f._ex = null;
+  f._fc = f_4, f._fe = f_5, f._ex = null;
   return M.chain(eff("in `catch`"), f_3);
 }
 
@@ -250,14 +250,14 @@ function f_3(f) {
 }
 
 function f_4(f) {
-  return M.chain(eff("after `finally`"), f_5, f_6);
+  return M.chain(eff("after `finally`"), f_6);
 }
 
-function f_5(f) {}
-
-function f_6(f, e) {
+function f_5(f, e) {
   return M.raise(e);
 }
+
+function f_6(f) {}
 
 function f_7(f) {
   return M.raise(f._err1);
@@ -269,12 +269,12 @@ function f_8(f, a) {
 }
 
 function f_9(f, a) {
-  f._fc = f_7, f._fe = f_6, f._err1 = a;
+  f._fc = f_7, f._fe = f_5, f._err1 = a;
   return M.jump(void 0, f_3);
 }
 
 function g_1(g) {
-  g._fc = g_4, g._fe = g_6;
+  g._fc = g_4, g._fe = g_5;
   return M.chain(eff("in body"), g_3);
 }
 
@@ -282,7 +282,7 @@ function g_2(g) {
   var e;
   e = g._ex;
   console.log("in `catch`");
-  g._fc = g_4, g._fe = g_6, g._ex = null;
+  g._fc = g_4, g._fe = g_5, g._ex = null;
   return M.jump(void 0, g_3);
 }
 
@@ -294,14 +294,14 @@ function g_3(g) {
 }
 
 function g_4(g) {
-  return M.chain(eff("after `finally`"), g_5, g_6);
+  return M.chain(eff("after `finally`"), g_6);
 }
 
-function g_5(g) {}
-
-function g_6(g, e) {
+function g_5(g, e) {
   return M.raise(e);
 }
+
+function g_6(g) {}
 
 function g_7(g) {
   return M.raise(g._err1);
@@ -313,6 +313,6 @@ function g_8(g, a) {
 }
 
 function g_9(g, a) {
-  g._fc = g_7, g._fe = g_6, g._err1 = a;
+  g._fc = g_7, g._fe = g_5, g._err1 = a;
   return M.jump(void 0, g_3);
 }

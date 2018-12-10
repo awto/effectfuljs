@@ -11,8 +11,16 @@ function a_1(a) {
 
 function a_2(a, b) {
   if (b) {
-    return eff(2);
+    return M.chain(eff(2), a_3);
   } else {
-    return eff(3);
+    return M.chain(eff(3), a_4);
   }
+}
+
+function a_3(a, b) {
+  return b;
+}
+
+function a_4(a, b) {
+  return b;
 }

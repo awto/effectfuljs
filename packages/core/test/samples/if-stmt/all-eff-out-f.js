@@ -6,9 +6,17 @@ function a() {
 
   function _1(a) {
     if (a) {
-      return eff(2);
+      return M.chain(eff(2), _2);
     } else {
-      return eff(3);
+      return M.chain(eff(3), _3);
     }
+  }
+
+  function _2(a) {
+    return a;
+  }
+
+  function _3(a) {
+    return a;
   }
 }

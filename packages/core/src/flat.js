@@ -29,9 +29,6 @@ function byNumFst(a, b) {
 
 const emptyArr = []
 
-/** in frameArgs binds jump inner content */
-const argSym = Kit.scope.newSym("arg")
-
 /** temporal marker of all frames inside finally block */
 const finallyBlock = Kit.symbol("finally.block")
 /** temporal marker of all frames inside catchBlock */
@@ -149,7 +146,7 @@ export const convert = Kit.pipe(
         if (i.goto == null)
           i.goto = value
      }
-    function* _convert(sw,cur) {
+    function* _convert(sw,cur,chain) {
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
@@ -157,9 +154,9 @@ export const convert = Kit.pipe(
             yield i
             yield* s.one()
             assert.ok(!cur.length)
-            cur.push(...yield* _convert(s.one(),[]))
+            cur.push(...yield* _convert(s.one(),[],chain))
             if (s.curLev() != null)
-              cur.push(...yield* _convert(s.one(),[]))
+              cur.push(...yield* _convert(s.one(),[],chain))
             yield s.close(i)
             continue
           case Block.chain:
@@ -172,7 +169,7 @@ export const convert = Kit.pipe(
                   yield* i.value.directives
                 yield s.enter(Tag.body,Tag.Array)
               }
-              cur = yield* _convert(s.sub(),cur)
+              cur = yield* _convert(s.sub(),cur,i.value)
               const goto = frames.length > fl ? frames[fl][0].value : null
               yield s.tok(Tag.push,Ctrl.jump,{goto})
               yield* lab()
@@ -188,10 +185,11 @@ export const convert = Kit.pipe(
             i.value.repeat = []
             /** the frame should be present in final output */
             i.value.noInline = false
+            i.value.chain = chain
             const declSym = i.value.declSym = Kit.scope.newSym("_")
             const inner = [i]
             frames.push(inner)
-            cur = Kit.result(Kit.repos(_convert(s.sub(),[],true),Tag.push),inner)
+            cur = Kit.result(Kit.repos(_convert(s.sub(),[],chain),Tag.push),inner)
             const last = inner[inner.length-1]
             if (!i.value.eff && inner[inner.length-1].type !== Ctrl.jump) {
               const j = s.tok(Tag.push,Ctrl.jump)
@@ -204,7 +202,7 @@ export const convert = Kit.pipe(
             if (i.value.eff) {
               assert.ok(!cur.length)
               let fl = frames.length
-              const bodyJumps = yield* _convert(s.one(),cur)
+              const bodyJumps = yield* _convert(s.one(),cur,chain)
               const j = s.curLev()
               let params
               if (j.pos === Tag.params) {
@@ -213,7 +211,7 @@ export const convert = Kit.pipe(
                 s.close(j)
               }
               const hl = frames.length
-              const hjumps = Kit.skip(_convert(s.one(),[]))
+              const hjumps = Kit.skip(_convert(s.one(),[],chain))
               const bodyOpen = frames[fl][0].value
               const bodyClose = frames[hl-1][0].value
               const handle = frames[hl][0].value
@@ -237,7 +235,8 @@ export const convert = Kit.pipe(
                     && {declSym:unboundTempVar(s.first.value,"fr")},
                   dynamicJump:true,
                   instances:new Set(),
-                  handle}
+                  handle,
+                  defaultJumps:bodyJumps}
                 handle.contArg = finJump
                 onOpen.unshift(s.enter(Tag.push,finallyBlock,{handle}))
                 onClose.push(...s.leave())
@@ -253,6 +252,7 @@ export const convert = Kit.pipe(
                 .unshift(s.enter(Tag.push,handleBlock,{}));
               (handleClose.onClose || (handleClose.onClose = []))
                 .push(...s.leave())
+              cur.push(handle.frameAfterTry = {close:handleClose})
               continue
             }
             break
@@ -288,7 +288,7 @@ export const convert = Kit.pipe(
             continue
           case Loop.repeat:
             const fl = frames.length
-            const ncur = yield* _convert(s.sub(),cur)
+            const ncur = yield* _convert(s.sub(),cur,chain)
             const nfl = frames.length
             if (nfl > fl) {
               const k = frames[fl][0].value
@@ -310,7 +310,7 @@ export const convert = Kit.pipe(
       case Block.chain:
         if (i.enter) {
           yield Kit.setPos(i,Tag.body)
-          yield* _convert(s.sub(),[])
+          yield* _convert(s.sub(),[],i.value)
           for(const j of frames) {
             const v = j[0].value
             if (v.onOpen) {
@@ -371,52 +371,39 @@ export const convert = Kit.pipe(
       }
     }
   },
-  /**
-   * wraps chain with extra frames for exiting the function,
-   * normally or with exception
-   */
+  /** wraps chain with extra frames for exiting the function */
   function* wrapChain(sa) {
     const s = Kit.auto(sa)
     const root = s.first.value
     root.pureExitFrame = {
-      declSym: Block.pureId,
+      declSym: s.opts.defunct ? Defunct.pureFrameSym : Block.pureId,
       last:true,
       enters: new Set(),
       exits: new Set(),
       frameParamsClos: new Set()
     }
-
     let first = sa.find(i => i.type === Block.frame)
     if (!first)
       return s
     first = first.value
+    let chain
     for(const i of s) {
       yield i
-      if (i.enter && i.type === Block.chain)
+      if (i.enter && i.type === Block.chain) {
+        chain = i.value
         break
+      }
     }
     const j = s.cur()
     function* ctrlFrames() {
       const sym = root.resSym = unboundTempVar(root,"r")
       sym.optional = true
-      /** a frame returning `resSym` */
-      const f = s.enter(Tag.push, Block.frame,
-                        {declSym:Kit.scope.newSym("ret"),root,
-                         last:true})
-      root.resFrame = f.value
-      yield f
-      yield s.enter(j.pos,Block.app,{sym:Block.pureId,
-                                     insideCtx:true,last:true})
-      yield s.tok(Tag.push,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
-      yield* s.leave()
-      yield* s.leave()
       const psym = Kit.scope.newSym("r")
       const fr = s.enter(Tag.push, Block.frame,
                          {declSym:Kit.scope.newSym("retv"),
                           root,errSym:psym,last:true})
       /** # a frame returning its argument */
       root.resFrameRedir = fr.value
-      f.value.resultRedir = {errSym:psym,redir:fr.value}
       yield fr
       yield s.enter(j.pos,Block.app,{sym:Block.pureId,insideCtx:true})
       yield s.tok(Tag.push,Tag.Identifier,{sym:psym})
@@ -429,6 +416,20 @@ export const convert = Kit.pipe(
       root.errFrameRedir = er.value
       yield s.enter(j.pos,Block.app,{sym:Except.raiseId,insideCtx:true})
       yield s.tok(Tag.push,Tag.Identifier,{sym:esym})
+      yield* s.leave()
+      yield* s.leave()
+      /** a frame returning `resSym` */
+      const f = s.enter(Tag.push, Block.frame,
+                        {declSym:Kit.scope.newSym("ret"),root,
+                         last:true,chain})
+      f.value.resultRedir = {errSym:psym,redir:fr.value}
+      root.resFrame = f.value
+      yield f
+      yield s.enter(Tag.push,Ctrl.jump,
+                    {goto:fr.value,ref:f.value,eff:true,
+                     op:null,opSym:null,bindJump:false,init:false})
+      yield s.tok(Tag.push,Tag.Identifier,
+                  {sym,lhs:false,rhs:true,decl:false})
       yield* s.leave()
       yield* s.leave()
       return [sym,f.value,fr.value,er.value]
@@ -458,7 +459,17 @@ export const convert = Kit.pipe(
    *   finally continuations:
    *   - preCompose: FrameVal[] 
    *   catch continuations for frames:
-   *   - catchCont - {preCompose:FrameVal[],errSym:Sym,Goto:FrameVal} 
+   *   - catchCont - {
+   *       // finally frames to execute on exit
+   *       preCompose:FrameVal[],
+   *       errSym:Sym,
+   *       // handler
+   *       goto:FrameVal,
+   *       // stack of `catch`/`finally` handlers for this frame
+   *       stack: FrameVal[]
+   *       // stack of `catch`/`finally` handler frames
+   *       hstack: FrameVal[]
+   *       }
    */
   Kit.toArray,
   function preComposeTryCatch(si) {
@@ -470,7 +481,8 @@ export const convert = Kit.pipe(
     const errPreCompose = []
     const resCont = root.resCont
     const errSym = unboundTempVar(root,"err")
-    return Kit.toArray(walk({goto:null,errSym,preCompose:[]}))
+    return Kit.toArray(walk({goto:null,errSym,preCompose:[],
+                             stack:[],hstack:[]}))
     function* walk(cc) {
       for(const i of s.sub()) {
         if (i.enter) {
@@ -481,7 +493,9 @@ export const convert = Kit.pipe(
             errPreCompose.unshift(i.value.handle)
             const errSym = unboundTempVar(root,"err")
             yield* walk({goto:cc.goto,errSym,
-                         preCompose:[...errPreCompose]})
+                         preCompose:[...errPreCompose],
+                         stack:[...cc.stack,i.value.handle],
+                         hstack:cc.hstack})
             preCompose.shift()
             errPreCompose.shift()
             s.close(i)
@@ -489,16 +503,21 @@ export const convert = Kit.pipe(
             assert.ok(fh.type === handleBlock)
             const args = cont.args || (cont.args = new Map())
             addArg(args,cc.errSym,errSym)
-            yield* walk(cc)
+            yield* walk({goto:cc.goto,errSym:cc.errSym,
+                         preCompose:cc.preCompose,
+                         stack:cc.stack,hstack:[...cc.hstack,i.value.handle]})
             s.close(fh)
             continue
           case catchBlock:
             yield* walk({goto:i.value.handle,errSym:i.value.errSym,
-                         preCompose:[...cc.preCompose]})
+                         preCompose:[...cc.preCompose],
+                         stack:[...cc.stack,i.value.handle],hstack:cc.hstack})
             s.close(i)
             const ch = s.take()
             assert.ok(ch.type === handleBlock)
-            yield* walk(cc)
+            yield* walk({goto:cc.goto,errSym:cc.errSym,
+                         preCompose:cc.preCompose,
+                         stack:cc.stack,hstack:[...cc.hstack,i.value.handle]})
             s.close(ch)
             continue
           case Block.letStmt:
@@ -513,6 +532,7 @@ export const convert = Kit.pipe(
             break
           case Block.frame:
             i.value.catchCont = cc
+            /** collects chain of finally blocks to be executed here */
             i.value.preCompose = [...preCompose]
             i.value.errPreCompose = [...errPreCompose]
             break
@@ -625,18 +645,21 @@ export const convert = Kit.pipe(
             cont.instances.add(next)
           } else {
             if (jump.goto) {
-              indirJumps.set(jump.goto,cont)
-              cont.instances.add(jump.goto)
+              if (cont) {
+                indirJumps.set(jump.goto,cont)
+                cont.instances.add(jump.goto)
+              }
             } else {
               if (jump.result) {
                 resSym.bound = true;
                 (jump.frameArgs || (jump.frameArgs = new Map()))
-                  .set(resSym,argSym)
+                  .set(resSym,Block.argSym)
               }
             }
             break
           }
         }
+        jump.indirGoto = jump.goto
         jump.goto = chain[0]
       }
     }
@@ -762,10 +785,14 @@ function jumpArgs(j) {
         args.set(cont.resultContRedir.declSym,
                  dest.resultContRedir.declSym)
         cont.resultContRedir.declSym.bound = true
+        dest.resultContRedir.required = true
+        cont.resultContRedir.required = true
       }
       if (cont.catchContRedir && dest.catchContRedir) {
         args.set(cont.catchContRedir.declSym,
                  dest.catchContRedir.declSym)
+        cont.catchContRedir.required = true
+        dest.catchContRedir.required = true
         cont.catchContRedir.declSym.bound = true
       }
     }
@@ -804,13 +831,17 @@ function* copyFrameVars(si) {
     }
     const patSym = frame.errSym || frame.patSym
     let patCopy
+    /** optimizing expressions like `v = await e` */
     if (patSym && isRef(patSym) && patSym.extBind) {
       patCopy = commonPatSym || Kit.scope.newSym()
       yield s.enter(Tag.push,Tag.AssignmentExpression,{node:{operator:"="}})
       let patOrig = patSym
       if (patSym.assignedAt) {
-        patOrig = patSym.assignedAt.assignPat
-        patSym.removed = patSym.assignedAt.removed = true
+        const {assignPat} = patSym.assignedAt
+        if (!assignPat.parCopy) {
+          patOrig = assignPat
+          patSym.removed = patSym.assignedAt.removed = true
+        }
       }
       yield s.tok(Tag.left,Tag.Identifier,{sym:patOrig})
       yield s.tok(Tag.right,Tag.Identifier,{sym:patCopy})
@@ -873,7 +904,7 @@ function* copyFrameVars(si) {
           if (args) {
             for(let [left,right] of args) {
               if (isRef(left)) {
-                if (right === argSym)
+                if (right === Block.argSym)
                   assignArg = left
                 else {
                   if (commonPatSym && patSym && right === patSym)
@@ -1066,7 +1097,7 @@ export function interpretJumps(si) {
   const passCatchCont = !s.opts.defunct && !s.opts.inlineErrorContAssign
   const passResultCont = !s.opts.defunct && !s.opts.inlineResultContAssign
   const threadContext = s.opts.threadContext && [[ctxSym,ctxSym]]
-  const {markRepeat} = s.opts
+  const {markRepeat,keepLastPure} = s.opts
   const {resFrameRedir} = root
   return _interpretJumps()
   function* _interpretJumps() {
@@ -1089,7 +1120,7 @@ export function interpretJumps(si) {
           let name = i.value.bindName || defaultName
           const st = s.opts.static || !s.opts.methodOps[name]
           if (!gotoDests.length && name === defaultName
-              || pure && goto === root.pureExitFrame) {
+              || !keepLastPure && pure && goto === root.pureExitFrame) {
             yield pure
               ? s.enter(pos,Block.app,{sym:Block.pureId,insideCtx,
                                        delegateCtx,reflected:i.value.reflected,
@@ -1308,13 +1339,43 @@ function cleanup(si) {
   for(const i of savedDecls.keys())
     if (i.bound === false)
       savedDecls.delete(i)
+  const res = Kit.toArray(walk())
+  for(const i of root.cfg)
+    i.removed = true
+  root.cfg[0].removed = false
+  for(const i of root.cfg) {
+    if (i.required)
+      i.removed = false
+    for(const j of i.exits)
+      markGoto(j)
+    markGoto(i.catchCont)
+    markGoto(i.resultCont)
+    if (i.catchContRedir)
+      i.catchContRedir.removed = false
+    if (i.resultContRedir)
+      i.resultContRedir.removed = false
+  }
+  return Block.cleanup(res)
+
+  function markGoto(value) {
+    if (!value)
+      return
+    if (value.goto)
+      value.goto.removed = false
+    if (value.indirJumps) {
+      for(const i of value.indirJumps.keys())
+        i.removed = false
+    }
+    if (value.redir)
+      value.redir.removed = false
+  }
   function* writeResult(j) {
     yield s.enter(j.pos,Block.app,{sym:Block.pureId,
                                    insideCtx:!j.value.ref.first})
     const args = j.value.frameArgs
     let sym
     if ((sym = args && args.get(resSym))) {
-      if (sym === argSym)
+      if (sym === Block.argSym)
         yield* inner()
       else
         yield s.tok(Tag.push,Tag.Identifier,
@@ -1370,49 +1431,36 @@ function cleanup(si) {
             i.value.patSym = null
           if (i.value.errSym && i.value.errSym.bound === false)
             i.value.errSym = null
-          if ((i.value === errFrameRedir || i.value.throwSym)
-              && !i.value.required) {
-            Kit.skip(s.copy(i))
-            i.value.removed = true
-            continue
-          }
-          if (i.value === resFrame || i.value === resFrameRedir) {
-            if (i.value.required || i.value.first) {
-              yield i
-              for(const j of inner()) {
-                if (j.enter && j.type === Ctrl.jump)
-                  yield* writeResult(j)
-                else
-                  yield j
-              }
-            } else {
-              i.value.removed = true
-              Kit.skip(s.copy(i))
-            }
-            continue
-          }
           if (i.value.patSym && i.value.patSym.interpr
               && !i.value.patSym.bound) {
             i.value.patSym.interpr = null
             i.value.patSym.dummy = true
           }
           if (i.value.catchContRedir) {
-            if (i.value.catchContRedir === errFrameRedir && !needErrorCont)
+            if (i.value.catchContRedir === errFrameRedir
+                && !needErrorCont
+                && !(i.value.catchCont
+                     && i.value.catchCont.indirJumps
+                     && i.value.catchCont.indirJumps.size)) {
               i.value.catchContRedir = null
-            else
-              i.value.catchContRedir.required = true              
-          }
-          if (!needErrorCont && i.value.catchCont
-              && i.value.catchCont.frameArgs) {
-            const args = i.value.catchCont.frameArgs
-            if ([...args.values()].indexOf(errFrameRedir.declSym) !== -1)
-              errFrameRedir.required = true
+              i.value.catchCont = null
+            }
           }
           if (i.value.resultContRedir) {
-            if (needResultCont) {
-              i.value.resultContRedir.required = true
-            } else
+            if (!needResultCont) {
               i.value.resultContRedir = null
+              i.value.resultCont = null
+            }
+          }
+          if (i.value === resFrame) {
+            yield i
+            for(const i of s.sub()) {
+              if ((i.type === Tag.Identifier || i.type === Block.bindPat)
+                  && i.value.sym && !i.value.sym.bound)
+                continue
+              yield i
+            }
+            continue
           }
           break
         case Block.letStmt:
@@ -1428,7 +1476,6 @@ function cleanup(si) {
                 args.delete(j)
           }
           if (i.value.goto === resFrameRedir && !needResultCont) {
-            const catchCont = i.value.ref.catchContRedir
             yield s.enter(i.pos,Block.effExpr,{result:i.value.result})
             yield* inner()
             yield* s.leave()
@@ -1452,14 +1499,11 @@ function cleanup(si) {
               continue
             }
           }
-          for(const j of i.value.gotoDests)
-            j.required = true
         }
       }
       yield i
     }
   }
-  return walk()
 }
 
 /** 
@@ -1487,11 +1531,10 @@ function prepareCfg(sa) {
   const cfg = root.cfg
   calcPatSym(cfg)
   const needsTransClos = opts.par
-  const needsRec = needsTransClos || opts.markRepeat
+  const needsRec = opts.par || opts.markRepeat
   root.pureExitFrame.framesAfter = new Map()
   if (!needsRec)
     return sa
-  /** initialization */
   if (needsRec)
     for(const i of cfg)
       i.calcBranchesVisited = false
@@ -1501,32 +1544,15 @@ function prepareCfg(sa) {
       i.framesBefore = new Set()
       
     }
-  /** calculating recursive jumps */
   if (needsRec)
     for(const i of cfg) {
       i.calcBranchesVisited = true
       for(const j of i.exits) {
-        if (j.goto.calcBranchesVisited) {
+        const goto = j.indirGoto || j.goto
+        if (goto.calcBranchesVisited) {
           j.rec = true         
         }
       }
-    }
-  /** Propagating frames before */
-  if (needsTransClos)
-    for(const i of cfg) {
-      const res = i.framesBefore
-      for(const j of i.enters) {
-        if (j.rec)
-          continue
-        res.add(j.ref)
-        j.ref.framesBefore.forEach(res.add,res)
-      }
-    }
-  /** Calculating frames after */
-  if (needsTransClos)
-    for(const i of cfg) {
-      for(const j of i.framesBefore)
-        j.framesAfter.add(i)
     }
   return sa
 }

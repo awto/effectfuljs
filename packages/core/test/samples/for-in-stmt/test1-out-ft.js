@@ -53,11 +53,9 @@ function a_2(a, c) {
 }
 
 function a_3(a) {
-  var i;
-
   if (!(a._loop = a._loop.step()).done) {
-    i = a._loop.value;
-    return M.chain(eff(i), a_3);
+    a._i = a._loop.value;
+    return M.chain(eff(a._i), a_3);
   }
 }
 
@@ -73,11 +71,9 @@ function b_2(b, c) {
 }
 
 function b_3(b) {
-  var i;
-
   if (!(b._loop = b._loop.step()).done) {
-    i = b._loop.value;
-    return M.chain(eff(i), b_3);
+    b._i = b._loop.value;
+    return M.chain(eff(b._i), b_3);
   }
 }
 
@@ -93,11 +89,9 @@ function c_2(c, b) {
 }
 
 function c_3(c) {
-  var i;
-
   if (!(c._loop = c._loop.step()).done) {
-    i = c._loop.value;
-    return M.chain(eff(i), c_3);
+    c._i = c._loop.value;
+    return M.chain(eff(c._i), c_3);
   }
 }
 
@@ -106,10 +100,8 @@ function d_1(d) {
 }
 
 function d_2(d, a) {
-  var i;
-
-  for (i in a) {
-    console.log(i);
+  for (d._i in a) {
+    console.log(d._i);
   }
 }
 
@@ -119,11 +111,9 @@ function e_1(e) {
 }
 
 function e_2(e) {
-  var i;
-
   if (!(e._loop = e._loop.step()).done) {
-    i = e._loop.value;
-    return M.chain(eff(i), e_2);
+    e._i = e._loop.value;
+    return M.chain(eff(e._i), e_2);
   }
 }
 
@@ -211,7 +201,7 @@ function h_6(h) {
     console.log("b");
     return M.chain(eff("b"), h_7);
   } else {
-    h._loop1 = null;
+    h._i = null, h._loop1 = null;
     return M.jump(void 0, h_12);
   }
 }
@@ -222,6 +212,7 @@ function h_7(h) {
 
 function h_8(h, a) {
   if (a) {
+    h._i = null;
     return M.jump(void 0, h_3);
   } else {
     return M.chain(effB(h._i + h._j), h_9);
@@ -238,10 +229,14 @@ function h_9(h, a) {
 }
 
 function h_10(h, a) {
+  var b;
+
   if (a) {
+    h._i = null;
     return M.jump(void 0, h_6);
   } else {
-    return M.chain(effB(h._i), h_11);
+    b = h._i, h._i = null;
+    return M.chain(effB(b), h_11);
   }
 }
 

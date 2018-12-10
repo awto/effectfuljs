@@ -467,6 +467,7 @@ export function* singleFrameToks(frame,si) {
               + `${i.value.bindName || (i.value.eff?"e":"p")}`
               + `(${i.value.tmpVar?"$I=":""}`
               + `$E${i.value.goto ? "," + i.value.goto.declSym.id : ""}`
+              + `${i.value.indirGoto ? "," + i.value.indirGoto.declSym.id : ""}`
               +`,${i.value.id})`,...args)
           if (!i.leave)
             yield* Kit.reposOne(_frame(),i.value.tmpVar?Tag.right:Tag.push)
@@ -482,6 +483,7 @@ export function* singleFrameToks(frame,si) {
           yield* s.template(
             Tag.push,`=${i.value.tmpVar ? "$I =" : ""}`
               + `j($E${i.value.goto ? "," + i.value.goto.declSym.id : ""}`
+              + `${i.value.indirGoto ? "," + i.value.indirGoto.declSym.id : ""}`
               +`,${i.value.id})`,...args)
           if (!i.leave)
             yield* Kit.reposOne(_frame(),Tag.push)
@@ -623,9 +625,10 @@ function* markFrameSyms(s) {
         const w = v.stateVars ? v.stateVars.w : emptySet
         const r = v.stateVars ? v.stateVars.r : emptySet
         const d = v.stateVars && v.stateVars.d || emptySet
+        const s = v.stateVars && v.stateVars.s || emptySet
         const saved = v.savedDecls ? new Set(v.savedDecls.keys()) : emptySet
         const all = new Set([...avail, ...locals, ...clos, ...saved, ...dst,
-                             ...params, ...w, ...r, ...d])
+                             ...params, ...w, ...r, ...d, ...s])
         if (v.patSym)
           all.add(v.patSym)
         if (v.errSym)
@@ -639,6 +642,7 @@ function* markFrameSyms(s) {
                      + (params.has(i) ? "P" : (clos.has(i) ? "p" : ""))
                      + (r.has(i) ? "R" : "")
                      + (w.has(i) ? "W" : "")
+                     + (s.has(i) ? "!" : "")
                      + (d.has(i) ? "d" : "")
                      + (saved.has(i) ? "D" : "")
                      + (i === v.sym ? "S" : "")
@@ -674,6 +678,8 @@ function* markFrameSyms(s) {
           const inst = [...v.goto.instances].map(i => id(i.declSym)).join()
           dst = `|${dst}<${inst}>`
         }
+        if (v.indirGoto)
+          dst = `${dst}~>${v.indirGoto.declSym.id}`
         let name = v.result ? "ret" : "goto"
         if (v.ext)
           name+=`.X-${v.ext.funcId.id}`

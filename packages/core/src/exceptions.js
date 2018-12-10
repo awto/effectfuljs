@@ -3,12 +3,12 @@ import * as assert from "assert"
 import {Tag} from "./kit"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
-import * as Debug from "./debug"
 
 export const handleId = Kit.sysId("handle")
 export const finallyId = Kit.sysId("finally")
 export const raiseId = Kit.sysId("raise")
 
+/** injects `Block.app` for try-catch statements */
 export function* inject(s) {
   const sl = Kit.auto(s)
   function* walk(sw) {

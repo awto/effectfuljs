@@ -27,7 +27,11 @@ function a3() {
   return a3.scope(_1);
 
   function _1(a3) {
-    return a3.yld(void 0, a3.pure);
+    return a3.yld(void 0, _2);
+  }
+
+  function _2(a3, a) {
+    return a3.pure(a);
   }
 }
 
@@ -126,10 +130,14 @@ function d2(i) {
 
     if (a) {
       b = d2._i += 3;
-      return d2.yldStar(b, d2.pure);
+      return d2.yldStar(b, _6);
     } else {
       return d2.pure(d2._i);
     }
+  }
+
+  function _6(d2, a) {
+    return d2.pure(a);
   }
 }
 
@@ -146,7 +154,7 @@ function a4() {
   }
 
   function _3(a4) {
-    a4._fc = _9, a4._fe = _13;
+    a4._fc = _9, a4._fe = _12;
     return a4.yld(3, _7);
   }
 
@@ -161,10 +169,10 @@ function a4() {
 
   function _6(a4, a) {
     if (a) {
-      a4._fc = _12, a4._fe = _13, a4._r = 10;
+      a4._fc = _13, a4._fe = _12, a4._r = 10;
       return a4.jump(void 0, _7);
     } else {
-      a4._fc = _9, a4._fe = _13;
+      a4._fc = _9, a4._fe = _12;
       return a4.jump(void 0, _7);
     }
   }
@@ -194,15 +202,15 @@ function a4() {
   function _11(a4, b) {
     var a;
     a = a4._1(a4._2, b);
-    return a4.yld(a, _12, _13);
+    return a4.yld(a, _13);
   }
 
-  function _12(a4) {
-    return a4.pure(a4._r);
-  }
-
-  function _13(a4, e) {
+  function _12(a4, e) {
     return a4.raise(e);
+  }
+
+  function _13(a4) {
+    return a4.pure(a4._r);
   }
 
   function _14(a4) {
@@ -215,7 +223,7 @@ function a4() {
   }
 
   function _16(a4, a) {
-    a4._fc = _14, a4._fe = _13, a4._err1 = a;
+    a4._fc = _14, a4._fe = _12, a4._err1 = a;
     return a4.jump(void 0, _7);
   }
 }
@@ -230,11 +238,9 @@ function a5() {
   }
 
   function _2(a5) {
-    var i;
-
     if (!(a5._loop = a5._loop.step()).done) {
-      i = a5._loop.value;
-      return a5.yld(i, _2, _7);
+      a5._i = a5._loop.value;
+      return a5.yld(a5._i, _2, _7);
     } else {
       a5._fc = _4, a5._fe = _5;
       return a5.jump(void 0, _3);
@@ -285,11 +291,11 @@ function a6() {
 
   function _4(a6, a) {
     if (a) {
-      a6._fc1 = _8, a6._fe1 = _9, a6._r = 10;
-      return a6.jump(void 0, _5, _12);
+      a6._fc1 = _9, a6._fe1 = _8, a6._r = 10;
+      return a6.jump(void 0, _5, _14);
     } else {
-      a6._fc1 = _7, a6._fe1 = _9;
-      return a6.yld(4, _5, _12);
+      a6._fc1 = _7, a6._fe1 = _8;
+      return a6.yld(4, _5, _14);
     }
   }
 
@@ -303,15 +309,15 @@ function a6() {
   }
 
   function _7(a6) {
-    return a6.yld(5, _8, _9);
+    return a6.yld(5, _9);
   }
 
-  function _8(a6) {
-    return a6.pure(a6._r);
-  }
-
-  function _9(a6, e) {
+  function _8(a6, e) {
     return a6.raise(e);
+  }
+
+  function _9(a6) {
+    return a6.pure(a6._r);
   }
 
   function _10(a6) {
@@ -323,13 +329,18 @@ function a6() {
   }
 
   function _12(a6, a) {
-    a6._fc1 = _10, a6._fe1 = _9, a6._err1 = a;
+    a6._fc1 = _10, a6._fe1 = _8, a6._err1 = a;
     return a6.jump(void 0, _6);
   }
 
   function _13(a6, a) {
-    a6._fc1 = _11, a6._fe1 = _9, a6._err2 = a;
-    return a6.jump(void 0, _5, _12);
+    a6._fc1 = _11, a6._fe1 = _8, a6._err2 = a;
+    return a6.jump(void 0, _5, _14);
+  }
+
+  function _14(a6, a) {
+    a6._fc1 = _10, a6._fe1 = _8, a6._err1 = a;
+    return a6.jump(void 0, _6);
   }
 }
 
@@ -356,13 +367,11 @@ function a2() {
   }
 
   function _2(a2) {
-    var i;
-
     if (!(a2._loop = a2._loop.step()).done) {
-      i = a2._loop.value;
-      return a2.yld(i, _2, _8);
+      a2._i = a2._loop.value;
+      return a2.yld(a2._i, _2, _8);
     } else {
-      a2._fc = _4, a2._fe = _6;
+      a2._fc = _4, a2._fe = _5;
       return a2.jump(void 0, _3);
     }
   }
@@ -376,15 +385,15 @@ function a2() {
   }
 
   function _4(a2) {
-    return a2.yld(10, _5, _6);
+    return a2.yld(10, _6);
   }
 
-  function _5(a2) {
-    return a2.pure();
-  }
-
-  function _6(a2, e) {
+  function _5(a2, e) {
     return a2.raise(e);
+  }
+
+  function _6(a2) {
+    return a2.pure();
   }
 
   function _7(a2) {
@@ -392,7 +401,7 @@ function a2() {
   }
 
   function _8(a2, a) {
-    a2._fc = _7, a2._fe = _6, a2._err1 = a;
+    a2._fc = _7, a2._fe = _5, a2._err1 = a;
     return a2.jump(void 0, _3);
   }
 }
@@ -407,11 +416,9 @@ function a3() {
   }
 
   function _2(a3) {
-    var i;
-
     if (!(a3._loop = a3._loop.step()).done) {
-      i = a3._loop.value;
-      return a3.yld(i, _2, _7);
+      a3._i = a3._loop.value;
+      return a3.yld(a3._i, _2, _7);
     } else {
       a3._fc = _4, a3._fe = _5;
       return a3.jump(void 0, _3);
@@ -534,17 +541,17 @@ function a7_1() {
   }
 
   function _3(a7_1, a) {
-    a7_1._2 = a;
+    a7_1._1 = a;
     return a7_1.yld("b", _4);
   }
 
   function _4(a7_1, a) {
-    a7_1._1 = a7_1._2 && a;
+    a7_1._ = a7_1._1 && a;
     return a7_1.jump(void 0, _8);
   }
 
   function _5(a7_1, a) {
-    a7_1._3 = a;
+    a7_1._2 = a;
     return a7_1.yld("d", _6);
   }
 
@@ -557,7 +564,7 @@ function a7_1() {
   }
 
   function _7(a7_1, a) {
-    a7_1._1 = a7_1._3 || a;
+    a7_1._ = a7_1._2 || a;
     return a7_1.jump(void 0, _8);
   }
 
@@ -566,7 +573,11 @@ function a7_1() {
   }
 
   function _9(a7_1, a) {
-    return a7_1.yld(a7_1._1 + a, a7_1.pure);
+    return a7_1.yld(a7_1._ + a, _10);
+  }
+
+  function _10(a7_1, a) {
+    return a7_1.pure(a);
   }
 }
 
@@ -678,12 +689,12 @@ function a7_4() {
   }
 
   function _2(a7_4, a) {
-    a7_4._1 = a;
+    a7_4._ = a;
     return a7_4.yld(4, _3);
   }
 
   function _3(a7_4, a) {
-    return a7_4.jump((a7_4._1, a), _4);
+    return a7_4.jump((a7_4._, a), _4);
   }
 
   function _4(a7_4, a) {
@@ -691,7 +702,11 @@ function a7_4() {
   }
 
   function _5(a7_4, a) {
-    return a7_4.yld(a, a7_4.pure);
+    return a7_4.yld(a, _6);
+  }
+
+  function _6(a7_4, a) {
+    return a7_4.pure(a);
   }
 }
 
@@ -712,7 +727,11 @@ function a7_5() {
   }
 
   function _3(a7_5, a) {
-    return a7_5.yld(a, a7_5.pure);
+    return a7_5.yld(a, _4);
+  }
+
+  function _4(a7_5, a) {
+    return a7_5.pure(a);
   }
 }
 
@@ -728,23 +747,27 @@ function a7_6() {
     if (a) {
       return a7_6.yld("A", _3);
     } else {
-      a7_6._1 = 1;
+      a7_6._ = 1;
       return a7_6.jump(void 0, _5);
     }
   }
 
   function _3(a7_6, a) {
-    a7_6._2 = a;
+    a7_6._1 = a;
     return a7_6.yld("b", _4);
   }
 
   function _4(a7_6, a) {
-    a7_6._1 = a7_6._2 && a;
+    a7_6._ = a7_6._1 && a;
     return a7_6.jump(void 0, _5);
   }
 
   function _5(a7_6) {
-    return a7_6.yld(a7_6._1, a7_6.pure);
+    return a7_6.yld(a7_6._, _6);
+  }
+
+  function _6(a7_6, a) {
+    return a7_6.pure(a);
   }
 }
 
@@ -763,7 +786,7 @@ function finallyBlock1() {
 
   function _3(finallyBlock1, a) {
     if (a) {
-      finallyBlock1._fc = _6, finallyBlock1._fe = _7;
+      finallyBlock1._fc = _7, finallyBlock1._fe = _6;
       return finallyBlock1.jump(void 0, _4);
     } else {
       return finallyBlock1.jump(void 0, _2, _9);
@@ -778,12 +801,12 @@ function finallyBlock1() {
     return finallyBlock1.yld(finallyBlock1._i, finallyBlock1._fc, finallyBlock1._fe);
   }
 
-  function _6(finallyBlock1) {
-    return finallyBlock1.pure();
+  function _6(finallyBlock1, e) {
+    return finallyBlock1.raise(e);
   }
 
-  function _7(finallyBlock1, e) {
-    return finallyBlock1.raise(e);
+  function _7(finallyBlock1) {
+    return finallyBlock1.pure();
   }
 
   function _8(finallyBlock1) {
@@ -791,7 +814,7 @@ function finallyBlock1() {
   }
 
   function _9(finallyBlock1, a) {
-    finallyBlock1._fc = _8, finallyBlock1._fe = _7, finallyBlock1._err1 = a;
+    finallyBlock1._fc = _8, finallyBlock1._fe = _6, finallyBlock1._err1 = a;
     return finallyBlock1.jump(void 0, _4);
   }
 }
@@ -839,7 +862,7 @@ function cfb() {
       throw new Error(`AAAAAAAAA${cfb._i++}`);
     }
 
-    cfb._fc = _8, cfb._fe = _10;
+    cfb._fc = _8, cfb._fe = _9;
     return cfb.yld(`a${cfb._i++}`, _7);
   }
 
@@ -853,7 +876,7 @@ function cfb() {
   }
 
   function _6(cfb) {
-    cfb._fc = _9, cfb._fe = _10, cfb._r = cfb._i++;
+    cfb._fc = _10, cfb._fe = _9, cfb._r = cfb._i++;
     return cfb.jump(void 0, _7);
   }
 
@@ -865,12 +888,12 @@ function cfb() {
     return cfb.pure(cfb._r);
   }
 
-  function _9(cfb) {
-    return cfb.pure(cfb._r);
+  function _9(cfb, e) {
+    return cfb.raise(e);
   }
 
-  function _10(cfb, e) {
-    return cfb.raise(e);
+  function _10(cfb) {
+    return cfb.pure(cfb._r);
   }
 
   function _11(cfb) {
@@ -883,7 +906,7 @@ function cfb() {
   }
 
   function _13(cfb, a) {
-    cfb._fc = _11, cfb._fe = _10, cfb._err1 = a;
+    cfb._fc = _11, cfb._fe = _9, cfb._err1 = a;
     return cfb.jump(void 0, _7);
   }
 }
@@ -908,7 +931,7 @@ function cfb1() {
   function _4(cfb1) {
     var e;
     e = cfb1._ex;
-    cfb1._fc = _7, cfb1._fe = _8, cfb1._r = cfb1._i++;
+    cfb1._fc = _8, cfb1._fe = _7, cfb1._r = cfb1._i++;
     return cfb1.jump(void 0, _5);
   }
 
@@ -921,12 +944,12 @@ function cfb1() {
     return cfb1.pure(cfb1._r);
   }
 
-  function _7(cfb1) {
-    return cfb1.pure(cfb1._r);
+  function _7(cfb1, e) {
+    return cfb1.raise(e);
   }
 
-  function _8(cfb1, e) {
-    return cfb1.raise(e);
+  function _8(cfb1) {
+    return cfb1.pure(cfb1._r);
   }
 
   function _9(cfb1) {
@@ -939,7 +962,7 @@ function cfb1() {
   }
 
   function _11(cfb1, a) {
-    cfb1._fc = _9, cfb1._fe = _8, cfb1._err1 = a;
+    cfb1._fc = _9, cfb1._fe = _7, cfb1._err1 = a;
     return cfb1.jump(void 0, _5);
   }
 }
@@ -983,20 +1006,20 @@ function cfb2() {
 
   function _1(cfb2) {
     cfb2._i = 0;
-    return cfb2.jump(void 0, _2, _12);
+    return cfb2.jump(void 0, _2, _11);
   }
 
   function _2(cfb2) {
-    return cfb2.yld(`a:${cfb2._i++}`, _3, _12);
+    return cfb2.yld(`a:${cfb2._i++}`, _3, _11);
   }
 
   function _3(cfb2) {
-    return cfb2.yld(`b:${cfb2._i++}`, _4, _12);
+    return cfb2.yld(`b:${cfb2._i++}`, _4, _11);
   }
 
   function _4(cfb2) {
-    cfb2._fc = _8, cfb2._fe = _10;
-    return cfb2.yld(`c:${cfb2._i++}`, _5, _11);
+    cfb2._fc = _8, cfb2._fe = _9;
+    return cfb2.yld(`c:${cfb2._i++}`, _5, _12);
   }
 
   function _5(cfb2) {
@@ -1011,29 +1034,29 @@ function cfb2() {
   }
 
   function _7(cfb2) {
-    return cfb2.yld(`e:${cfb2._i++}`, _9, _10);
+    return cfb2.yld(`e:${cfb2._i++}`, _10);
   }
 
   function _8(cfb2) {
     return cfb2.pure();
   }
 
-  function _9(cfb2) {
-    return cfb2.pure();
-  }
-
-  function _10(cfb2, e) {
+  function _9(cfb2, e) {
     return cfb2.raise(e);
   }
 
+  function _10(cfb2) {
+    return cfb2.pure();
+  }
+
   function _11(cfb2, a) {
-    cfb2._ex = a;
-    return cfb2.jump(void 0, _6);
+    cfb2._fc = _6, cfb2._fe = _9, cfb2._err1 = a;
+    return cfb2.jump(void 0, _5, _12);
   }
 
   function _12(cfb2, a) {
-    cfb2._fc = _6, cfb2._fe = _10, cfb2._err1 = a;
-    return cfb2.jump(void 0, _5, _11);
+    cfb2._ex = a;
+    return cfb2.jump(void 0, _6);
   }
 }
 
@@ -1056,7 +1079,7 @@ function cfb3() {
     }
 
     cfb3._fc = _5, cfb3._fe = _11;
-    return cfb3.yld(`a${cfb3._i}`, _4, _11);
+    return cfb3.yld(`a${cfb3._i}`, _4, _13);
   }
 
   function _4(cfb3) {
@@ -1097,7 +1120,12 @@ function cfb3() {
 
   function _12(cfb3, a) {
     cfb3._fc = _6, cfb3._fe = _10, cfb3._err1 = a;
-    return cfb3.jump(void 0, _4, _11);
+    return cfb3.jump(void 0, _4, _13);
+  }
+
+  function _13(cfb3, a) {
+    cfb3._ex = a;
+    return cfb3.jump(void 0, _6);
   }
 }
 
@@ -1131,12 +1159,12 @@ function cfb2() {
 
   function _1(cfb2) {
     cfb2._i = 0;
-    return cfb2.jump(void 0, _2, _10);
+    return cfb2.jump(void 0, _2, _9);
   }
 
   function _2(cfb2) {
-    cfb2._fc = _6, cfb2._fe = _8;
-    return cfb2.yld(`c:${cfb2._i++}`, _3, _9);
+    cfb2._fc = _6, cfb2._fe = _7;
+    return cfb2.yld(`c:${cfb2._i++}`, _3, _10);
   }
 
   function _3(cfb2) {
@@ -1151,29 +1179,29 @@ function cfb2() {
   }
 
   function _5(cfb2) {
-    return cfb2.yld(`e:${cfb2._i++}`, _7, _8);
+    return cfb2.yld(`e:${cfb2._i++}`, _8);
   }
 
   function _6(cfb2) {
     return cfb2.pure();
   }
 
-  function _7(cfb2) {
-    return cfb2.pure();
-  }
-
-  function _8(cfb2, e) {
+  function _7(cfb2, e) {
     return cfb2.raise(e);
   }
 
+  function _8(cfb2) {
+    return cfb2.pure();
+  }
+
   function _9(cfb2, a) {
-    cfb2._ex = a;
-    return cfb2.jump(void 0, _4);
+    cfb2._fc = _4, cfb2._fe = _7, cfb2._err1 = a;
+    return cfb2.jump(void 0, _3, _10);
   }
 
   function _10(cfb2, a) {
-    cfb2._fc = _4, cfb2._fe = _8, cfb2._err1 = a;
-    return cfb2.jump(void 0, _3, _9);
+    cfb2._ex = a;
+    return cfb2.jump(void 0, _4);
   }
 }
 
@@ -1182,7 +1210,7 @@ function cfb6() {
   return cfb6.scope(_1, _9);
 
   function _1(cfb6) {
-    cfb6._fc = _5, cfb6._fe = _7;
+    cfb6._fc = _5, cfb6._fe = _6;
     return cfb6.yld(1, _4);
   }
 
@@ -1193,7 +1221,7 @@ function cfb6() {
   }
 
   function _3(cfb6) {
-    cfb6._fc = _6, cfb6._fe = _7, cfb6._r = 3;
+    cfb6._fc = _7, cfb6._fe = _6, cfb6._r = 3;
     return cfb6.jump(void 0, _4);
   }
 
@@ -1205,12 +1233,12 @@ function cfb6() {
     return cfb6.pure(cfb6._r);
   }
 
-  function _6(cfb6) {
-    return cfb6.pure(cfb6._r);
+  function _6(cfb6, e) {
+    return cfb6.raise(e);
   }
 
-  function _7(cfb6, e) {
-    return cfb6.raise(e);
+  function _7(cfb6) {
+    return cfb6.pure(cfb6._r);
   }
 
   function _8(cfb6) {
@@ -1223,7 +1251,7 @@ function cfb6() {
   }
 
   function _10(cfb6, a) {
-    cfb6._fc = _8, cfb6._fe = _7, cfb6._err1 = a;
+    cfb6._fc = _8, cfb6._fe = _6, cfb6._err1 = a;
     return cfb6.jump(void 0, _4);
   }
 }
@@ -1245,7 +1273,7 @@ function fb4() {
 
   function _3(fb4, a) {
     if (a === 3) {
-      fb4._fc = _6, fb4._fe = _7, fb4._r = fb4._i;
+      fb4._fc = _7, fb4._fe = _6, fb4._r = fb4._i;
       return fb4.jump(void 0, _4);
     } else {
       return fb4.jump(void 0, _2, _9);
@@ -1260,12 +1288,12 @@ function fb4() {
     return fb4.yld(fb4._i, fb4._fc, fb4._fe);
   }
 
-  function _6(fb4) {
-    return fb4.pure(fb4._r);
+  function _6(fb4, e) {
+    return fb4.raise(e);
   }
 
-  function _7(fb4, e) {
-    return fb4.raise(e);
+  function _7(fb4) {
+    return fb4.pure(fb4._r);
   }
 
   function _8(fb4) {
@@ -1273,7 +1301,7 @@ function fb4() {
   }
 
   function _9(fb4, a) {
-    fb4._fc = _8, fb4._fe = _7, fb4._err1 = a;
+    fb4._fc = _8, fb4._fe = _6, fb4._err1 = a;
     return fb4.jump(void 0, _4);
   }
 }
@@ -1372,109 +1400,103 @@ function c1() {
 }
 
 function c2() {
-  var inner = function _inner() {
-    var inner = M.context();
+  let i = 0;
 
-    inner._a = function a1() {
-      var _a = M.context();
+  function inner() {
+    var a = function a() {
+      var b, r;
+      return M.scope(_1);
 
-      _a._c2 = c2;
-      return _a.scope(_1);
-
-      function _1(_a) {
-        _a._ = _a._c2._i;
-        return _a.yld(`a:${_a._c2._i}`, _2);
+      function _1() {
+        b = i;
+        return M.yldStar(M.yld(`a:${i}`), _2);
       }
 
-      function _2(_a, b) {
+      function _2(c) {
         var a;
-        a = _a._c2._i = _a._ + b;
-        return _a.pure(a);
+        a = i = b + c;
+        return M.pure(a);
       }
-    };
+    },
+        b,
+        k,
+        f,
+        j,
+        loop,
+        fc,
+        fe,
+        r,
+        err;
 
-    return inner.scope(_1);
+    return M.scope(_1);
 
-    function _1(inner) {
-      var b;
-
+    function _1() {
       b = () => {
-        var j,
-            ctx = {},
-            _c2 = c2;
-
-        ctx._a = function a() {
-          var _c2 = c2;
-          _c2._i += 2;
-          return _c2._i;
-        };
-
-        ctx._b = function b() {
-          var _c2 = c2;
-          _c2._i += j;
-        };
+        function a() {
+          i += 2;
+          return i;
+        }
 
         {
-          j = 10;
-          _c2._i++;
+          let j = 10;
+
+          function b() {
+            i += j;
+          }
+
+          i++;
           return function z() {
-            var _z = M.context();
+            var d,
+                c = function c() {
+              return i += this.something;
+            },
+                r;
 
-            _z._c = function c() {
-              var _c2 = c2;
-              return _c2._i += this.something;
-            };
+            return M.scope(_1);
 
-            return _z.scope(_1);
-
-            function _1(_z) {
-              _z._d = function z(j) {
-                var _c2 = c2;
-                return _c2._i += j;
+            function _1() {
+              d = function z(j) {
+                return i += j;
               };
 
-              return _z.yldStar(_z._c(), _2);
+              return M.yldStar(c(), _2);
             }
 
-            function _2(_z, a) {
-              return _z.yldStar(_z._d(a), _3);
+            function _2(a) {
+              return M.yldStar(d(a), _3);
             }
 
-            function _3(_z, a) {
-              return _z.yldStar(a, _4);
+            function _3(a) {
+              return M.yldStar(M.yldStar(a), _4);
             }
 
-            function _4(_z, a) {
-              return _z.yld(`b:${a}`, _5);
+            function _4(a) {
+              return M.yldStar(M.yld(`b:${a}`), _5);
             }
 
-            function _5(_z) {
-              return _z.pure(function z(j) {
-                var _z = M.context();
+            function _5() {
+              return M.pure(function z(j) {
+                var c, d, r;
+                return M.scope(_1);
 
-                _z._c2 = c2;
-                _z._f = ctx;
-                _z._j = j;
-                return _z.scope(_1);
-
-                function _1(_z) {
-                  var a;
-                  _z._ = _z._c2._i;
-                  a = _z._f._a;
-                  return _z.yldStar(a(), _2);
+                function _1() {
+                  var b;
+                  c = i;
+                  b = a;
+                  return M.yldStar(b(), _2);
                 }
 
-                function _2(_z, b) {
+                function _2(c) {
                   var a;
-                  _z._1 = b;
-                  a = _z._f._b;
-                  return _z.yldStar(a(), _3);
+                  d = c;
+                  a = b;
+                  return M.yldStar(a(), _3);
                 }
 
-                function _3(_z, b) {
+                function _3(b) {
                   var a;
-                  a = _z._c2._i = _z._ + (_z._j + _z._1 + b);
-                  return _z.pure(a);
+                  a = i = c + (j + d + b);
+                  return M.pure(a);
                 }
               });
             }
@@ -1482,261 +1504,248 @@ function c2() {
         }
       };
 
-      inner._k = 1;
-      return inner.yldStar(b(), _2);
+      k = 1;
+      return M.yldStar(b(), _2);
     }
 
-    function _2(inner, a) {
-      var f;
-      f = [inner._a, a];
-      inner._loop = inner.iterator(f);
-      return inner.jump(void 0, _3, _10);
+    function _2(b) {
+      f = [a, b];
+      loop = M.iterator(f);
+      return M.jump(void 0, _3, _10);
     }
 
-    function _3(inner) {
-      var j;
-
-      if (!(inner._loop = inner._loop.step()).done) {
-        j = inner._loop.value;
-        return inner.yldStar(j(), _4, _10);
+    function _3() {
+      if (!(loop = loop.step()).done) {
+        j = loop.value;
+        return M.yldStar(j(), _4, _10);
       } else {
-        inner._fc = _7, inner._fe = _8;
-        return inner.jump(void 0, _6);
+        fc = _7, fe = _8;
+        return M.jump(void 0, _6);
       }
     }
 
-    function _4(inner, a) {
-      return inner.yldStar(a, _5, _10);
+    function _4(a) {
+      return M.yldStar(M.yldStar(a), _5, _10);
     }
 
-    function _5(inner, a) {
-      inner._k += a;
-      return inner.jump(void 0, _3, _10);
+    function _5(a) {
+      k += a;
+      return M.jump(void 0, _3, _10);
     }
 
-    function _6(inner) {
-      if (inner._loop.exit) {
-        inner._loop.exit();
+    function _6() {
+      if (loop.exit) {
+        loop.exit();
       }
 
-      return inner.jump(void 0, inner._fc, inner._fe);
+      return M.jump(void 0, fc, fe);
     }
 
-    function _7(inner) {
-      return inner.pure(inner._k);
+    function _7() {
+      return M.pure(k);
     }
 
-    function _8(inner, e) {
-      return inner.raise(e);
+    function _8(e) {
+      return M.raise(e);
     }
 
-    function _9(inner) {
-      return inner.raise(inner._err1);
+    function _9() {
+      return M.raise(err);
     }
 
-    function _10(inner, a) {
-      inner._fc = _9, inner._fe = _8, inner._err1 = a;
-      return inner.jump(void 0, _6);
+    function _10(a) {
+      fc = _9, fe = _8, err = a;
+      return M.jump(void 0, _6);
     }
-  },
-      c2 = {};
+  }
 
-  c2._i = 0;
   return inner;
 }
 
 function c1() {
-  var c1 = M.context();
-  return c1.scope(_1);
+  var i, r;
+  return M.scope(_1);
 
-  function _1(c1) {
-    var i;
+  function _1() {
     i = 0;
-    return c1.yld(`a:${i}`, c1.pure);
+    return M.yldStar(M.yld(`a:${i}`), _2);
+  }
+
+  function _2(a) {
+    return M.pure(a);
   }
 }
 
 function c2() {
-  var c2 = M.context();
-  return c2.scope(_1);
+  var i, r;
+  return M.scope(_1);
 
-  function _1(c2) {
-    c2._i = 0;
-    return c2.yld(`a:${c2._i}`, _2);
+  function _1() {
+    i = 0;
+    return M.yldStar(M.yld(`a:${i}`), _2);
   }
 
-  function _2(c2, b) {
+  function _2(b) {
     var a;
-    a = c2._i += b;
-    return c2.pure(a);
+    a = i += b;
+    return M.pure(a);
   }
 }
 
 function forOf() {
-  var forOf = M.context();
-  return forOf.scope(_1);
+  var i, loop, fc, fe, err;
+  return M.scope(_1);
 
-  function _1(forOf) {
-    forOf._loop = forOf.iterator([1, 2, 3]);
-    return forOf.jump(void 0, _2, _7);
+  function _1() {
+    loop = M.iterator([1, 2, 3]);
+    return M.jump(void 0, _2, _7);
   }
 
-  function _2(forOf) {
-    var i;
-
-    if (!(forOf._loop = forOf._loop.step()).done) {
-      i = forOf._loop.value;
-      return forOf.yld(i, _2, _7);
+  function _2() {
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
+      return M.yldStar(M.yld(i), _2, _7);
     } else {
-      forOf._fc = _4, forOf._fe = _5;
-      return forOf.jump(void 0, _3);
+      fc = _4, fe = _5;
+      return M.jump(void 0, _3);
     }
   }
 
-  function _3(forOf) {
-    if (forOf._loop.exit) {
-      forOf._loop.exit();
+  function _3() {
+    if (loop.exit) {
+      loop.exit();
     }
 
-    return forOf.jump(void 0, forOf._fc, forOf._fe);
+    return M.jump(void 0, fc, fe);
   }
 
-  function _4(forOf) {
-    return forOf.pure();
+  function _4() {
+    return M.pure();
   }
 
-  function _5(forOf, e) {
-    return forOf.raise(e);
+  function _5(e) {
+    return M.raise(e);
   }
 
-  function _6(forOf) {
-    return forOf.raise(forOf._err1);
+  function _6() {
+    return M.raise(err);
   }
 
-  function _7(forOf, a) {
-    forOf._fc = _6, forOf._fe = _5, forOf._err1 = a;
-    return forOf.jump(void 0, _3);
+  function _7(a) {
+    fc = _6, fe = _5, err = a;
+    return M.jump(void 0, _3);
   }
 }
 
 const objMethods = {
   a() {
-    var ctx = M.context();
-    return ctx.scope(_1);
+    return M.scope(_1);
 
-    function _1(ctx) {
-      return ctx.yld(10, _2);
+    function _1() {
+      return M.yldStar(M.yld(10), _2);
     }
 
-    function _2(ctx) {
-      return ctx.pure();
+    function _2() {
+      return M.pure();
     }
   },
 
   b() {
-    var ctx = M.context();
-    ctx.__this = this;
-    ctx.__args = arguments;
-    return ctx.scope(_1);
+    var _this = this,
+        _args = arguments;
 
-    function _1(ctx) {
-      return ctx.yld(1, _2);
+    return M.scope(_1);
+
+    function _1() {
+      return M.yldStar(M.yld(1), _2);
     }
 
-    function _2(ctx) {
-      return ctx.yld(ctx.__this, _3);
+    function _2() {
+      return M.yldStar(M.yld(_this), _3);
     }
 
-    function _3(ctx) {
-      return ctx.yld(ctx.__args, _4);
+    function _3() {
+      return M.yldStar(M.yld(_args), _4);
     }
 
-    function _4(ctx) {
-      return ctx.pure();
+    function _4() {
+      return M.pure();
     }
   }
 
 };
 const objM = {
   objMethod() {
-    var ctx = M.context();
-    return ctx.scope(_1);
+    return M.scope(_1);
 
-    function _1(ctx) {
-      return ctx.yld(1, _2);
+    function _1() {
+      return M.yldStar(M.yld(1), _2);
     }
 
-    function _2(ctx) {
-      return ctx.pure();
+    function _2() {
+      return M.pure();
     }
   }
 
 };
 
 function objMethodsClosure() {
-  var objMethodsClosure = M.context();
-  return objMethodsClosure.scope(_1);
+  var i, k, m, r;
+  return M.scope(_1);
 
-  function _1(objMethodsClosure) {
-    var k;
-    objMethodsClosure._i = 0;
+  function _1() {
+    i = 0;
     k = 0;
-    objMethodsClosure._m = 0;
-    return objMethodsClosure.pure({
+    m = 0;
+    return M.pure({
       objMethod1(k) {
-        var ctx = M.context();
-        ctx._objMethodsClosure = objMethodsClosure;
-        ctx._k = k;
-        return ctx.scope(_1);
+        var j, r;
+        return M.scope(_1);
 
-        function _1(ctx) {
+        function _1() {
           var a;
-          ctx._j = 0;
-          a = ctx._objMethodsClosure._i++;
-          return ctx.yld(a, _2);
+          j = 0;
+          a = i++;
+          return M.yldStar(M.yld(a), _2);
         }
 
-        function _2(ctx) {
+        function _2() {
           var a;
-          a = ctx._k++;
-          return ctx.yld(a, _3);
+          a = k++;
+          return M.yldStar(M.yld(a), _3);
         }
 
-        function _3(ctx) {
+        function _3() {
           var a;
-          a = ctx._objMethodsClosure._m++;
-          return ctx.yld(a, _4);
+          a = m++;
+          return M.yldStar(M.yld(a), _4);
         }
 
-        function _4(ctx) {
-          return ctx.pure({
+        function _4() {
+          return M.pure({
             objMethod2(m) {
-              var _ctx = M.context();
+              return M.scope(_1);
 
-              _ctx._f = ctx;
-              _ctx._m = m;
-              return _ctx.scope(_1);
-
-              function _1(_ctx) {
+              function _1() {
                 var a;
-                a = _ctx._f._j++;
-                return _ctx.yld(a, _2);
+                a = j++;
+                return M.yldStar(M.yld(a), _2);
               }
 
-              function _2(_ctx) {
+              function _2() {
                 var a;
-                a = _ctx._f._k++;
-                return _ctx.yld(a, _3);
+                a = k++;
+                return M.yldStar(M.yld(a), _3);
               }
 
-              function _3(_ctx) {
+              function _3() {
                 var a;
-                a = _ctx._m++;
-                return _ctx.yld(a, _4);
+                a = m++;
+                return M.yldStar(M.yld(a), _4);
               }
 
-              function _4(_ctx) {
-                return _ctx.pure();
+              function _4() {
+                return M.pure();
               }
             }
 
@@ -1750,27 +1759,27 @@ function objMethodsClosure() {
 
 const objMThis = {
   [objMethod(a)]() {
-    var ctx = M.context();
-    ctx.__this = this;
-    ctx.__args = arguments;
-    return ctx.scope(_1);
+    var _this = this,
+        _args = arguments;
 
-    function _1(ctx) {
-      return ctx.yld(ctx.__this, _2);
+    return M.scope(_1);
+
+    function _1() {
+      return M.yldStar(M.yld(_this), _2);
     }
 
-    function _2(ctx) {
-      return ctx.yld(ctx.__this, _3);
+    function _2() {
+      return M.yldStar(M.yld(_this), _3);
     }
 
-    function _3(ctx) {
+    function _3() {
       var a;
-      a = ctx.__args[0];
-      return ctx.yld(a, _4);
+      a = _args[0];
+      return M.yldStar(M.yld(a), _4);
     }
 
-    function _4(ctx) {
-      return ctx.pure();
+    function _4() {
+      return M.pure();
     }
   }
 
@@ -1778,26 +1787,25 @@ const objMThis = {
 
 class SomeClass {
   f(i) {
-    var ctx = M.context();
-    ctx.__this = this;
-    ctx.__args = arguments;
-    ctx._i = i;
-    return ctx.scope(_1);
+    var _this = this,
+        _args = arguments;
 
-    function _1(ctx) {
-      return ctx.yld(ctx._i, _2);
+    return M.scope(_1);
+
+    function _1() {
+      return M.yldStar(M.yld(i), _2);
     }
 
-    function _2(ctx) {
-      return ctx.yld(ctx.__args, _3);
+    function _2() {
+      return M.yldStar(M.yld(_args), _3);
     }
 
-    function _3(ctx) {
-      return ctx.yld(ctx.__this, _4);
+    function _3() {
+      return M.yldStar(M.yld(_this), _4);
     }
 
-    function _4(ctx) {
-      return ctx.pure();
+    function _4() {
+      return M.pure();
     }
   }
 
@@ -1805,409 +1813,368 @@ class SomeClass {
 
 class SomeChild extends SomeClass {
   f(i) {
-    var ctx = M.context();
-    ctx.__this = this;
-    ctx.__args = arguments;
-    ctx._i = i;
-    return ctx.scope(_1);
+    var _this = this,
+        _args = arguments;
 
-    function _1(ctx) {
-      return ctx.yld(ctx._i, _2);
+    return M.scope(_1);
+
+    function _1() {
+      return M.yldStar(M.yld(i), _2);
     }
 
-    function _2(ctx) {
-      return ctx.yld(ctx.__args, _3);
+    function _2() {
+      return M.yldStar(M.yld(_args), _3);
     }
 
-    function _3(ctx) {
+    function _3() {
       var a;
-      a = Object.getPrototypeOf(SomeChild.prototype)[ctx._i].call(ctx.__this, ctx._i);
-      return ctx.yldStar(a, _4);
+      a = Object.getPrototypeOf(SomeChild.prototype)[i].call(_this, i);
+      return M.yldStar(M.yldStar(a), _4);
     }
 
-    function _4(ctx) {
-      return ctx.pure();
+    function _4() {
+      return M.pure();
     }
   }
 
   static f(i) {
-    var ctx = M.context();
-    ctx.__this = this;
-    ctx._i = i;
-    return ctx.scope(_1);
+    var _this = this;
 
-    function _1(ctx) {
+    return M.scope(_1);
+
+    function _1() {
       var a;
-      a = Object.getPrototypeOf(SomeChild.prototype)[ctx._i].call(ctx.__this, ctx._i);
-      return ctx.yldStar(a, _2);
+      a = Object.getPrototypeOf(SomeChild.prototype)[i].call(_this, i);
+      return M.yldStar(M.yldStar(a), _2);
     }
 
-    function _2(ctx) {
-      return ctx.pure();
+    function _2() {
+      return M.pure();
     }
   }
 
 }
 
 function clasClosure(A) {
-  var clasClosure = M.context();
-  clasClosure._B = class B extends clasClosure._A {
+  var cnt,
+      B = class B extends A {
     constructor() {
-      var _clasClosure = clasClosure;
-      _clasClosure._cnt++;
+      cnt++;
     }
 
     static f() {
-      var ctx = M.context();
-      return ctx.scope(_1);
+      return M.scope(_1);
 
-      function _1(ctx) {
-        return ctx.yld(1, _2);
+      function _1() {
+        return M.yldStar(M.yld(1), _2);
       }
 
-      function _2(ctx) {
-        return ctx.pure();
+      function _2() {
+        return M.pure();
       }
     }
 
-  };
-  clasClosure._B1 = class _B extends clasClosure._A {
+  },
+      _B = class _B extends A {
     constructor() {
-      var _clasClosure = clasClosure;
-      _clasClosure._cnt += 2;
+      cnt += 2;
     }
 
     static f() {
-      var ctx = M.context();
-      ctx._clasClosure = clasClosure;
-      return ctx.scope(_1);
+      return M.scope(_1);
 
-      function _1(ctx) {
+      function _1() {
         var a;
-        a = ctx._clasClosure._cnt += 2;
-        return ctx.yld(a, _2);
+        a = cnt += 2;
+        return M.yldStar(M.yld(a), _2);
       }
 
-      function _2(ctx) {
-        return ctx.pure();
+      function _2() {
+        return M.pure();
       }
     }
 
-  };
-  clasClosure._A = A;
-  return clasClosure.scope(_1);
+  },
+      C;
 
-  function _1(clasClosure) {
+  return M.scope(_1);
+
+  function _1() {
     var a;
-    clasClosure._cnt = 0;
-    a = clasClosure._cnt++;
-    return clasClosure.yld(a, _2);
+    cnt = 0;
+    a = cnt++;
+    return M.yldStar(M.yld(a), _2);
   }
 
-  function _2(clasClosure) {
+  function _2() {
     var a;
-    a = clasClosure._B.f();
-    return clasClosure.yldStar(a, _3);
+    a = B.f();
+    return M.yldStar(M.yldStar(a), _3);
   }
 
-  function _3(clasClosure) {
+  function _3() {
     var a;
-    clasClosure._C = class extends clasClosure._A {
+    C = class extends A {
       static f() {
-        var ctx = M.context();
-        ctx._clasClosure = clasClosure;
-        return ctx.scope(_1);
+        return M.scope(_1);
 
-        function _1(ctx) {
+        function _1() {
           var a;
-          a = ctx._clasClosure._cnt += 3;
-          return ctx.yld(a, _2);
+          a = cnt += 3;
+          return M.yldStar(M.yld(a), _2);
         }
 
-        function _2(ctx) {
+        function _2() {
           var a;
-          a = ctx._clasClosure._B1.f();
-          return ctx.yldStar(a, _3);
+          a = _B.f();
+          return M.yldStar(M.yldStar(a), _3);
         }
 
-        function _3(ctx) {
-          return ctx.pure();
+        function _3() {
+          return M.pure();
         }
       }
 
     };
-    a = clasClosure._cnt += 3;
-    return clasClosure.yld(a, _4);
+    a = cnt += 3;
+    return M.yldStar(M.yld(a), _4);
   }
 
-  function _4(clasClosure) {
+  function _4() {
     var a;
-    a = clasClosure._C.f();
-    return clasClosure.yldStar(a, _5);
+    a = C.f();
+    return M.yldStar(M.yldStar(a), _5);
   }
 
-  function _5(clasClosure) {
+  function _5() {
     var a;
-    a = clasClosure._B1.f();
-    return clasClosure.yldStar(a, _6);
+    a = _B.f();
+    return M.yldStar(M.yldStar(a), _6);
   }
 
-  function _6(clasClosure) {
-    return clasClosure.pure();
+  function _6() {
+    return M.pure();
   }
 }
 
 function c2() {
-  var c2 = M.context();
+  var i,
+      closure1_a = function closure1_a() {
+    var a, r;
+    return M.scope(_1);
 
-  c2._closure1_a = function _closure1_a() {
-    var closure1_a = M.context();
-    closure1_a._c2 = c2;
-    return closure1_a.scope(_1);
-
-    function _1(closure1_a) {
-      closure1_a._ = closure1_a._c2._i;
-      return closure1_a.yld(`a`, _2);
+    function _1() {
+      a = i;
+      return M.yldStar(M.yld(`a`), _2);
     }
 
-    function _2(closure1_a, b) {
-      var a;
-      a = closure1_a._c2._i = closure1_a._ + b;
-      return closure1_a.pure(a);
+    function _2(c) {
+      var b;
+      b = i = a + c;
+      return M.pure(b);
     }
-  };
+  },
+      closure1_b = function closure1_b() {
+    i++;
 
-  c2._closure1_b = function closure1_b() {
-    var closure1_c = function closure1_c() {
-      var _c2 = c2;
-      _c2._i += 2;
-      return _c2._i;
-    },
-        closure1_d = function closure1_d() {
+    function closure1_c() {
+      i += 2;
+      return i;
+    }
+
+    function closure1_d() {
       return closure1_c();
-    },
-        _c2 = c2;
+    }
 
-    _c2._i++;
     return closure1_c;
-  };
+  },
+      r;
 
-  return c2.scope(_1);
+  return M.scope(_1);
 
-  function _1(c2) {
-    c2._i = 0;
-    return c2.pure(c2._closure1_b()());
+  function _1() {
+    i = 0;
+    return M.pure(closure1_b()());
   }
 }
 
 function loopCapt1() {
-  var loopCapt1 = M.context();
-  return loopCapt1.scope(_1);
+  var i;
+  return M.scope(_1);
 
-  function _1(loopCapt1) {
-    var i;
-
+  function _1() {
     for (i = 0; i < 3; i++) {
       (i => {
-        var ctx = {};
-        ctx._i = i;
-        ctx._j = 0;
+        let j = 0;
         funs(function iter() {
-          var _iter = M.context();
+          return M.scope(_1);
 
-          _iter._f = ctx;
-          return _iter.scope(_1);
-
-          function _1(_iter) {
-            return _iter.yld(`${_iter._f._i} ${_iter._f._j++}`, _2);
+          function _1() {
+            return M.yldStar(M.yld(`${i} ${j++}`), _2);
           }
 
-          function _2(_iter) {
-            return _iter.pure();
+          function _2() {
+            return M.pure();
           }
         });
       })(i);
     }
 
-    return loopCapt1.pure();
+    return M.pure();
   }
 }
 
 function loopCapt2() {
-  var loopCapt2 = M.context();
-  return loopCapt2.scope(_1);
+  var i;
+  return M.scope(_1);
 
-  function _1(loopCapt2) {
-    loopCapt2._i = 0;
-    return loopCapt2.jump(void 0, _2);
+  function _1() {
+    i = 0;
+    return M.jump(void 0, _2);
   }
 
-  function _2(loopCapt2) {
+  function _2() {
     var a;
 
-    if (loopCapt2._i < 3) {
+    if (i < 3) {
       a = (i => {
-        var ctx = M.context();
-        ctx._i = i;
-        return ctx.scope(_1);
+        var j;
+        return M.scope(_1);
 
-        function _1(ctx) {
-          return ctx.yld(ctx._i, _2);
+        function _1() {
+          return M.yldStar(M.yld(i), _2);
         }
 
-        function _2(ctx) {
-          ctx._j = ctx._i + 1;
+        function _2() {
+          j = i + 1;
           funs(function iter() {
-            var _iter = M.context();
+            return M.scope(_1);
 
-            _iter._f = ctx;
-            return _iter.scope(_1);
-
-            function _1(_iter) {
-              return _iter.yld(_iter._f._j + _iter._f._i, _2);
+            function _1() {
+              return M.yldStar(M.yld(j + i), _2);
             }
 
-            function _2(_iter) {
-              return _iter.pure();
+            function _2() {
+              return M.pure();
             }
           });
-          return ctx.pure();
+          return M.pure();
         }
-      })(loopCapt2._i);
+      })(i);
 
-      return loopCapt2.yldStar(a, _3);
+      return M.yldStar(M.yldStar(a), _3);
     } else {
-      return loopCapt2.yld("f", _4);
+      return M.yldStar(M.yld("f"), _4);
     }
   }
 
-  function _3(loopCapt2) {
-    loopCapt2._i++;
-    return loopCapt2.jump(void 0, _2);
+  function _3() {
+    i++;
+    return M.jump(void 0, _2);
   }
 
-  function _4(loopCapt2) {
-    return loopCapt2.pure();
+  function _4() {
+    return M.pure();
   }
 }
 
 function loopCapt3() {
-  var loopCapt3 = M.context();
-  return loopCapt3.scope(_1);
+  var i, j;
+  return M.scope(_1);
 
-  function _1(loopCapt3) {
-    loopCapt3._i = 0;
-    return loopCapt3.jump(void 0, _2);
+  function _1() {
+    i = 0;
+    return M.jump(void 0, _2);
   }
 
-  function _2(loopCapt3) {
+  function _2() {
     var a;
 
-    if (loopCapt3._i < 3) {
+    if (i < 3) {
       a = (i => {
-        var ctx = M.context();
-        ctx._i = i;
-        return ctx.scope(_1);
+        var j;
+        return M.scope(_1);
 
-        function _1(ctx) {
-          return ctx.yld(ctx._i, _2);
+        function _1() {
+          return M.yldStar(M.yld(i), _2);
         }
 
-        function _2(ctx) {
-          ctx._j = 0;
-          return ctx.jump(void 0, _3);
+        function _2() {
+          j = 0;
+          return M.jump(void 0, _3);
         }
 
-        function _3(ctx) {
+        function _3() {
           var a;
 
-          if (ctx._j < 3) {
+          if (j < 3) {
             a = (j => {
-              var _ctx = M.context();
+              return M.scope(_1);
 
-              _ctx._j = j;
-              return _ctx.scope(_1);
-
-              function _1(_ctx) {
+              function _1() {
                 var a;
-                a = _ctx._j;
-                return _ctx.yld(a, _2);
+                a = j;
+                return M.yldStar(M.yld(a), _2);
               }
 
-              function _2(_ctx) {
+              function _2() {
                 funs(function iter() {
-                  var _iter = M.context();
+                  return M.scope(_1);
 
-                  _iter._f = ctx;
-                  _iter._f1 = _ctx;
-                  return _iter.scope(_1);
-
-                  function _1(_iter) {
-                    return _iter.yld(`${_iter._f._i} ${_iter._f1._j++}`, _2);
+                  function _1() {
+                    return M.yldStar(M.yld(`${i} ${j++}`), _2);
                   }
 
-                  function _2(_iter) {
-                    return _iter.pure();
+                  function _2() {
+                    return M.pure();
                   }
                 });
-                return _ctx.pure();
+                return M.pure();
               }
-            })(ctx._j);
+            })(j);
 
-            return ctx.yldStar(a, _4);
+            return M.yldStar(M.yldStar(a), _4);
           } else {
-            return ctx.pure();
+            return M.pure();
           }
         }
 
-        function _4(ctx) {
-          ctx._j++;
-          return ctx.jump(void 0, _3);
+        function _4() {
+          j++;
+          return M.jump(void 0, _3);
         }
-      })(loopCapt3._i);
+      })(i);
 
-      return loopCapt3.yldStar(a, _3);
+      return M.yldStar(M.yldStar(a), _3);
     } else {
-      return loopCapt3.pure();
+      return M.pure();
     }
   }
 
-  function _3(loopCapt3) {
-    loopCapt3._i++;
-    return loopCapt3.jump(void 0, _2);
+  function _3() {
+    i++;
+    return M.jump(void 0, _2);
   }
 }
 
 function loopCapt4() {
-  var loopCapt4 = M.context();
-  return loopCapt4.scope(_1);
+  var i, j;
+  return M.scope(_1);
 
-  function _1(loopCapt4) {
-    var i;
-
+  function _1() {
     for (i = 0; i < 3; i++) {
       (i => {
-        var j,
-            ctx = {};
-        ctx._i = i;
-
-        for (j = 0; j < 3; j++) {
+        for (let j = 0; j < 3; j++) {
           (j => {
-            var _ctx = {};
-            _ctx._j = j;
             funs(function iter() {
-              var _iter = M.context();
+              return M.scope(_1);
 
-              _iter._f = ctx;
-              _iter._f1 = _ctx;
-              return _iter.scope(_1);
-
-              function _1(_iter) {
-                return _iter.yld(`${_iter._f._i} ${_iter._f1._j++}`, _2);
+              function _1() {
+                return M.yldStar(M.yld(`${i} ${j++}`), _2);
               }
 
-              function _2(_iter) {
-                return _iter.pure();
+              function _2() {
+                return M.pure();
               }
             });
           })(j);
@@ -2215,150 +2182,127 @@ function loopCapt4() {
       })(i);
     }
 
-    return loopCapt4.pure();
+    return M.pure();
   }
 }
 
 function forOfCapt1() {
-  var forOfCapt1 = M.context();
-  return forOfCapt1.scope(_1);
+  var i;
+  return M.scope(_1);
 
-  function _1(forOfCapt1) {
-    var i;
-
+  function _1() {
     for (i of a) {
       (i => {
-        var ctx = {};
-        ctx._i = i;
-        ctx._j = 0;
+        let j = 0;
         funs(function iter() {
-          var _iter = M.context();
+          return M.scope(_1);
 
-          _iter._f = ctx;
-          return _iter.scope(_1);
-
-          function _1(_iter) {
-            return _iter.yld(`${_iter._f._i} ${_iter._f._j++}`, _2);
+          function _1() {
+            return M.yldStar(M.yld(`${i} ${j++}`), _2);
           }
 
-          function _2(_iter) {
-            return _iter.pure();
+          function _2() {
+            return M.pure();
           }
         });
       })(i);
     }
 
-    return forOfCapt1.pure();
+    return M.pure();
   }
 }
 
 function forOfCapt2() {
-  var forOfCapt2 = M.context();
-  return forOfCapt2.scope(_1);
+  var i, loop, fc, fe, err;
+  return M.scope(_1);
 
-  function _1(forOfCapt2) {
-    forOfCapt2._loop = forOfCapt2.iterator(a);
-    return forOfCapt2.jump(void 0, _2, _7);
+  function _1() {
+    loop = M.iterator(a);
+    return M.jump(void 0, _2, _7);
   }
 
-  function _2(forOfCapt2) {
-    var i, a;
+  function _2() {
+    var a;
 
-    if (!(forOfCapt2._loop = forOfCapt2._loop.step()).done) {
-      i = forOfCapt2._loop.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
-        var ctx = M.context();
-        ctx._i = i;
-        return ctx.scope(_1);
+        var j;
+        return M.scope(_1);
 
-        function _1(ctx) {
-          ctx._j = 0;
-          return ctx.yld(ctx._i, _2);
+        function _1() {
+          j = 0;
+          return M.yldStar(M.yld(i), _2);
         }
 
-        function _2(ctx) {
+        function _2() {
           funs(function iter() {
-            var _iter = M.context();
+            return M.scope(_1);
 
-            _iter._f = ctx;
-            return _iter.scope(_1);
-
-            function _1(_iter) {
-              return _iter.yld(`${_iter._f._i} ${_iter._f._j++}`, _2);
+            function _1() {
+              return M.yldStar(M.yld(`${i} ${j++}`), _2);
             }
 
-            function _2(_iter) {
-              return _iter.pure();
+            function _2() {
+              return M.pure();
             }
           });
-          return ctx.pure();
+          return M.pure();
         }
       })(i);
 
-      return forOfCapt2.yldStar(a, _2, _7);
+      return M.yldStar(M.yldStar(a), _2, _7);
     } else {
-      forOfCapt2._fc = _4, forOfCapt2._fe = _5;
-      return forOfCapt2.jump(void 0, _3);
+      fc = _4, fe = _5;
+      return M.jump(void 0, _3);
     }
   }
 
-  function _3(forOfCapt2) {
-    if (forOfCapt2._loop.exit) {
-      forOfCapt2._loop.exit();
+  function _3() {
+    if (loop.exit) {
+      loop.exit();
     }
 
-    return forOfCapt2.jump(void 0, forOfCapt2._fc, forOfCapt2._fe);
+    return M.jump(void 0, fc, fe);
   }
 
-  function _4(forOfCapt2) {
-    return forOfCapt2.pure();
+  function _4() {
+    return M.pure();
   }
 
-  function _5(forOfCapt2, e) {
-    return forOfCapt2.raise(e);
+  function _5(e) {
+    return M.raise(e);
   }
 
-  function _6(forOfCapt2) {
-    return forOfCapt2.raise(forOfCapt2._err1);
+  function _6() {
+    return M.raise(err);
   }
 
-  function _7(forOfCapt2, a) {
-    forOfCapt2._fc = _6, forOfCapt2._fe = _5, forOfCapt2._err1 = a;
-    return forOfCapt2.jump(void 0, _3);
+  function _7(a) {
+    fc = _6, fe = _5, err = a;
+    return M.jump(void 0, _3);
   }
 }
 
 function forOfCapt3() {
-  var forOfCapt3 = M.context();
-  return forOfCapt3.scope(_1);
+  var i, j;
+  return M.scope(_1);
 
-  function _1(forOfCapt3) {
-    var i;
-
+  function _1() {
     for (i of a) {
       (i => {
-        var j,
-            ctx = {};
-        ctx._i = i;
-
-        for (j of b) {
+        for (const j of b) {
           (j => {
-            var _ctx = {};
-            _ctx._j = j;
             funs(function iter() {
-              var _iter = M.context();
+              return M.scope(_1);
 
-              _iter._f = ctx;
-              _iter._f1 = _ctx;
-              return _iter.scope(_1);
-
-              function _1(_iter) {
-                return _iter.yld(`${_iter._f._i} ${_iter._f1._j++}`, _2);
+              function _1() {
+                return M.yldStar(M.yld(`${i} ${j++}`), _2);
               }
 
-              function _2(_iter) {
-                return _iter.pure();
+              function _2() {
+                return M.pure();
               }
             });
           })(j);
@@ -2366,509 +2310,477 @@ function forOfCapt3() {
       })(i);
     }
 
-    return forOfCapt3.pure();
+    return M.pure();
   }
 }
 
 function forOfCapt4() {
-  var forOfCapt4 = M.context();
-  return forOfCapt4.scope(_1);
+  var i, j, loop, fc, fe, err;
+  return M.scope(_1);
 
-  function _1(forOfCapt4) {
-    forOfCapt4._loop = forOfCapt4.iterator(a);
-    return forOfCapt4.jump(void 0, _2, _7);
+  function _1() {
+    loop = M.iterator(a);
+    return M.jump(void 0, _2, _7);
   }
 
-  function _2(forOfCapt4) {
-    var i, a;
+  function _2() {
+    var a;
 
-    if (!(forOfCapt4._loop = forOfCapt4._loop.step()).done) {
-      i = forOfCapt4._loop.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
-        var ctx = M.context();
-        ctx._i = i;
-        return ctx.scope(_1);
+        var j, loop, fc, fe, err;
+        return M.scope(_1);
 
-        function _1(ctx) {
-          ctx._loop = ctx.iterator(b);
-          return ctx.jump(void 0, _2, _7);
+        function _1() {
+          loop = M.iterator(b);
+          return M.jump(void 0, _2, _7);
         }
 
-        function _2(ctx) {
-          var j, a;
+        function _2() {
+          var a;
 
-          if (!(ctx._loop = ctx._loop.step()).done) {
-            j = ctx._loop.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
-              var _ctx = M.context();
+              return M.scope(_1);
 
-              _ctx._j = j;
-              return _ctx.scope(_1);
-
-              function _1(_ctx) {
+              function _1() {
                 var a;
-                a = _ctx._j;
-                return _ctx.yld(a, _2);
+                a = j;
+                return M.yldStar(M.yld(a), _2);
               }
 
-              function _2(_ctx) {
+              function _2() {
                 funs(function iter() {
-                  var _iter = M.context();
+                  return M.scope(_1);
 
-                  _iter._f = ctx;
-                  _iter._f1 = _ctx;
-                  return _iter.scope(_1);
-
-                  function _1(_iter) {
-                    return _iter.yld(`${_iter._f._i} ${_iter._f1._j++}`, _2);
+                  function _1() {
+                    return M.yldStar(M.yld(`${i} ${j++}`), _2);
                   }
 
-                  function _2(_iter) {
-                    return _iter.pure();
+                  function _2() {
+                    return M.pure();
                   }
                 });
-                return _ctx.pure();
+                return M.pure();
               }
             })(j);
 
-            return ctx.yldStar(a, _2, _7);
+            return M.yldStar(M.yldStar(a), _2, _7);
           } else {
-            ctx._fc = _4, ctx._fe = _5;
-            return ctx.jump(void 0, _3);
+            fc = _4, fe = _5;
+            return M.jump(void 0, _3);
           }
         }
 
-        function _3(ctx) {
-          if (ctx._loop.exit) {
-            ctx._loop.exit();
+        function _3() {
+          if (loop.exit) {
+            loop.exit();
           }
 
-          return ctx.jump(void 0, ctx._fc, ctx._fe);
+          return M.jump(void 0, fc, fe);
         }
 
-        function _4(ctx) {
-          return ctx.pure();
+        function _4() {
+          return M.pure();
         }
 
-        function _5(ctx, e) {
-          return ctx.raise(e);
+        function _5(e) {
+          return M.raise(e);
         }
 
-        function _6(ctx) {
-          return ctx.raise(ctx._err1);
+        function _6() {
+          return M.raise(err);
         }
 
-        function _7(ctx, a) {
-          ctx._fc = _6, ctx._fe = _5, ctx._err1 = a;
-          return ctx.jump(void 0, _3);
+        function _7(a) {
+          fc = _6, fe = _5, err = a;
+          return M.jump(void 0, _3);
         }
       })(i);
 
-      return forOfCapt4.yldStar(a, _2, _7);
+      return M.yldStar(M.yldStar(a), _2, _7);
     } else {
-      forOfCapt4._fc = _4, forOfCapt4._fe = _5;
-      return forOfCapt4.jump(void 0, _3);
+      fc = _4, fe = _5;
+      return M.jump(void 0, _3);
     }
   }
 
-  function _3(forOfCapt4) {
-    if (forOfCapt4._loop.exit) {
-      forOfCapt4._loop.exit();
+  function _3() {
+    if (loop.exit) {
+      loop.exit();
     }
 
-    return forOfCapt4.jump(void 0, forOfCapt4._fc, forOfCapt4._fe);
+    return M.jump(void 0, fc, fe);
   }
 
-  function _4(forOfCapt4) {
-    return forOfCapt4.pure();
+  function _4() {
+    return M.pure();
   }
 
-  function _5(forOfCapt4, e) {
-    return forOfCapt4.raise(e);
+  function _5(e) {
+    return M.raise(e);
   }
 
-  function _6(forOfCapt4) {
-    return forOfCapt4.raise(forOfCapt4._err1);
+  function _6() {
+    return M.raise(err);
   }
 
-  function _7(forOfCapt4, a) {
-    forOfCapt4._fc = _6, forOfCapt4._fe = _5, forOfCapt4._err1 = a;
-    return forOfCapt4.jump(void 0, _3);
+  function _7(a) {
+    fc = _6, fe = _5, err = a;
+    return M.jump(void 0, _3);
   }
 }
 
 function forOfCapt5() {
-  var forOfCapt5 = M.context();
-  return forOfCapt5.scope(_1);
+  var i, j, loop, fc, fe, err;
+  return M.scope(_1);
 
-  function _1(forOfCapt5) {
-    forOfCapt5._loop = forOfCapt5.iterator(a);
-    return forOfCapt5.jump(void 0, _2, _7);
+  function _1() {
+    loop = M.iterator(a);
+    return M.jump(void 0, _2, _7);
   }
 
-  function _2(forOfCapt5) {
-    var i, a;
+  function _2() {
+    var a;
 
-    if (!(forOfCapt5._loop = forOfCapt5._loop.step()).done) {
-      i = forOfCapt5._loop.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
-        var ctx = M.context();
-        ctx._i = i;
-        return ctx.scope(_1);
+        var j;
+        return M.scope(_1);
 
-        function _1(ctx) {
-          return ctx.yld(ctx._i, _2);
+        function _1() {
+          return M.yldStar(M.yld(i), _2);
         }
 
-        function _2(ctx) {
-          var j;
-
+        function _2() {
           for (j of b) {
             (j => {
-              var _ctx = {};
-              _ctx._j = j;
               funs(function iter() {
-                var _iter = M.context();
+                return M.scope(_1);
 
-                _iter._f = ctx;
-                _iter._f1 = _ctx;
-                return _iter.scope(_1);
-
-                function _1(_iter) {
-                  return _iter.yld(`${_iter._f._i} ${_iter._f1._j++}`, _2);
+                function _1() {
+                  return M.yldStar(M.yld(`${i} ${j++}`), _2);
                 }
 
-                function _2(_iter) {
-                  return _iter.pure();
+                function _2() {
+                  return M.pure();
                 }
               });
             })(j);
           }
 
-          return ctx.pure();
+          return M.pure();
         }
       })(i);
 
-      return forOfCapt5.yldStar(a, _2, _7);
+      return M.yldStar(M.yldStar(a), _2, _7);
     } else {
-      forOfCapt5._fc = _4, forOfCapt5._fe = _5;
-      return forOfCapt5.jump(void 0, _3);
+      fc = _4, fe = _5;
+      return M.jump(void 0, _3);
     }
   }
 
-  function _3(forOfCapt5) {
-    if (forOfCapt5._loop.exit) {
-      forOfCapt5._loop.exit();
+  function _3() {
+    if (loop.exit) {
+      loop.exit();
     }
 
-    return forOfCapt5.jump(void 0, forOfCapt5._fc, forOfCapt5._fe);
+    return M.jump(void 0, fc, fe);
   }
 
-  function _4(forOfCapt5) {
-    return forOfCapt5.pure();
+  function _4() {
+    return M.pure();
   }
 
-  function _5(forOfCapt5, e) {
-    return forOfCapt5.raise(e);
+  function _5(e) {
+    return M.raise(e);
   }
 
-  function _6(forOfCapt5) {
-    return forOfCapt5.raise(forOfCapt5._err1);
+  function _6() {
+    return M.raise(err);
   }
 
-  function _7(forOfCapt5, a) {
-    forOfCapt5._fc = _6, forOfCapt5._fe = _5, forOfCapt5._err1 = a;
-    return forOfCapt5.jump(void 0, _3);
+  function _7(a) {
+    fc = _6, fe = _5, err = a;
+    return M.jump(void 0, _3);
   }
 }
 
 function forOfCapt6() {
-  var forOfCapt6 = M.context();
-  return forOfCapt6.scope(_1);
+  var i, j, loop, fc, fe, err;
+  return M.scope(_1);
 
-  function _1(forOfCapt6) {
-    forOfCapt6._loop = forOfCapt6.iterator(a);
-    return forOfCapt6.jump(void 0, _2, _7);
+  function _1() {
+    loop = M.iterator(a);
+    return M.jump(void 0, _2, _7);
   }
 
-  function _2(forOfCapt6) {
-    var i, a;
+  function _2() {
+    var a;
 
-    if (!(forOfCapt6._loop = forOfCapt6._loop.step()).done) {
-      i = forOfCapt6._loop.value;
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
 
       a = (i => {
-        var ctx = M.context();
-        ctx._i = i;
-        return ctx.scope(_1);
+        var j, loop, fc, fe, err;
+        return M.scope(_1);
 
-        function _1(ctx) {
-          return ctx.yld(ctx._i, _2);
+        function _1() {
+          return M.yldStar(M.yld(i), _2);
         }
 
-        function _2(ctx) {
-          ctx._loop = ctx.iterator(b);
-          return ctx.jump(void 0, _3, _8);
+        function _2() {
+          loop = M.iterator(b);
+          return M.jump(void 0, _3, _8);
         }
 
-        function _3(ctx) {
-          var j, a;
+        function _3() {
+          var a;
 
-          if (!(ctx._loop = ctx._loop.step()).done) {
-            j = ctx._loop.value;
+          if (!(loop = loop.step()).done) {
+            j = loop.value;
 
             a = (j => {
-              var _ctx = M.context();
+              return M.scope(_1);
 
-              _ctx._f = ctx;
-              _ctx._j = j;
-              return _ctx.scope(_1);
-
-              function _1(_ctx) {
-                return _ctx.yld(_ctx._f._i, _2);
+              function _1() {
+                return M.yldStar(M.yld(i), _2);
               }
 
-              function _2(_ctx) {
+              function _2() {
                 funs(function iter() {
-                  var _iter = M.context();
+                  return M.scope(_1);
 
-                  _iter._f = ctx;
-                  _iter._f1 = _ctx;
-                  return _iter.scope(_1);
-
-                  function _1(_iter) {
-                    return _iter.yld(`${_iter._f._i} ${_iter._f1._j++}`, _2);
+                  function _1() {
+                    return M.yldStar(M.yld(`${i} ${j++}`), _2);
                   }
 
-                  function _2(_iter) {
-                    return _iter.pure();
+                  function _2() {
+                    return M.pure();
                   }
                 });
-                return _ctx.pure();
+                return M.pure();
               }
             })(j);
 
-            return ctx.yldStar(a, _3, _8);
+            return M.yldStar(M.yldStar(a), _3, _8);
           } else {
-            ctx._fc = _5, ctx._fe = _6;
-            return ctx.jump(void 0, _4);
+            fc = _5, fe = _6;
+            return M.jump(void 0, _4);
           }
         }
 
-        function _4(ctx) {
-          if (ctx._loop.exit) {
-            ctx._loop.exit();
+        function _4() {
+          if (loop.exit) {
+            loop.exit();
           }
 
-          return ctx.jump(void 0, ctx._fc, ctx._fe);
+          return M.jump(void 0, fc, fe);
         }
 
-        function _5(ctx) {
-          return ctx.pure();
+        function _5() {
+          return M.pure();
         }
 
-        function _6(ctx, e) {
-          return ctx.raise(e);
+        function _6(e) {
+          return M.raise(e);
         }
 
-        function _7(ctx) {
-          return ctx.raise(ctx._err1);
+        function _7() {
+          return M.raise(err);
         }
 
-        function _8(ctx, a) {
-          ctx._fc = _7, ctx._fe = _6, ctx._err1 = a;
-          return ctx.jump(void 0, _4);
+        function _8(a) {
+          fc = _7, fe = _6, err = a;
+          return M.jump(void 0, _4);
         }
       })(i);
 
-      return forOfCapt6.yldStar(a, _2, _7);
+      return M.yldStar(M.yldStar(a), _2, _7);
     } else {
-      forOfCapt6._fc = _4, forOfCapt6._fe = _5;
-      return forOfCapt6.jump(void 0, _3);
+      fc = _4, fe = _5;
+      return M.jump(void 0, _3);
     }
   }
 
-  function _3(forOfCapt6) {
-    if (forOfCapt6._loop.exit) {
-      forOfCapt6._loop.exit();
+  function _3() {
+    if (loop.exit) {
+      loop.exit();
     }
 
-    return forOfCapt6.jump(void 0, forOfCapt6._fc, forOfCapt6._fe);
+    return M.jump(void 0, fc, fe);
   }
 
-  function _4(forOfCapt6) {
-    return forOfCapt6.pure();
+  function _4() {
+    return M.pure();
   }
 
-  function _5(forOfCapt6, e) {
-    return forOfCapt6.raise(e);
+  function _5(e) {
+    return M.raise(e);
   }
 
-  function _6(forOfCapt6) {
-    return forOfCapt6.raise(forOfCapt6._err1);
+  function _6() {
+    return M.raise(err);
   }
 
-  function _7(forOfCapt6, a) {
-    forOfCapt6._fc = _6, forOfCapt6._fe = _5, forOfCapt6._err1 = a;
-    return forOfCapt6.jump(void 0, _3);
+  function _7(a) {
+    fc = _6, fe = _5, err = a;
+    return M.jump(void 0, _3);
   }
 }
 
 function forIn() {
-  var forIn = M.context();
-  return forIn.scope(_1);
+  var i, loop;
+  return M.scope(_1);
 
-  function _1(forIn) {
-    forIn._loop = forIn.forInIterator({
+  function _1() {
+    loop = M.forInIterator({
       a: 1
     });
-    return forIn.jump(void 0, _2);
+    return M.jump(void 0, _2);
   }
 
-  function _2(forIn) {
-    var i;
-
-    if (!(forIn._loop = forIn._loop.step()).done) {
-      i = forIn._loop.value;
-      return forIn.yld(i, _2);
+  function _2() {
+    if (!(loop = loop.step()).done) {
+      i = loop.value;
+      return M.yldStar(M.yld(i), _2);
     } else {
-      return forIn.pure();
+      return M.pure();
     }
   }
 }
 
 function while1() {
-  var while1 = M.context();
-  return while1.scope(_1);
+  var i;
+  return M.scope(_1);
 
-  function _1(while1) {
-    while1._i = 0;
-    return while1.jump(void 0, _2);
+  function _1() {
+    i = 0;
+    return M.jump(void 0, _2);
   }
 
-  function _2(while1) {
+  function _2() {
     var a;
-    a = while1._i++;
-    return while1.yld(a, _3);
+    a = i++;
+    return M.yldStar(M.yld(a), _3);
   }
 
-  function _3(while1, a) {
+  function _3(a) {
     var b;
 
     if (a < 3) {
-      b = while1._i++;
-      return while1.yld(b, _2);
+      b = i++;
+      return M.yldStar(M.yld(b), _2);
     } else {
-      while1._i = 0;
-      return while1.pure();
+      i = 0;
+      return M.pure();
     }
   }
 }
 
 function catchBlock2() {
-  var catchBlock2 = M.context();
-  return catchBlock2.scope(_1);
+  var i, e, ex, r;
+  return M.scope(_1);
 
-  function _1(catchBlock2) {
-    catchBlock2._i = 0;
-    return catchBlock2.jump(void 0, _2, _8);
+  function _1() {
+    i = 0;
+    return M.jump(void 0, _2, _8);
   }
 
-  function _2(catchBlock2) {
-    return catchBlock2.yld(catchBlock2._i === 3, _3, _8);
+  function _2() {
+    return M.yldStar(M.yld(i === 3), _3, _8);
   }
 
-  function _3(catchBlock2, a) {
+  function _3(a) {
     if (a) {
-      throw new Error(`AAAAAAAAA${catchBlock2._i++}`);
+      throw new Error(`AAAAAAAAA${i++}`);
     }
 
-    return catchBlock2.yld(`a${catchBlock2._i}`, _7);
+    return M.yldStar(M.yld(`a${i}`), _7);
   }
 
-  function _4(catchBlock2) {
-    catchBlock2._e = catchBlock2._ex;
-    return catchBlock2.yld(`e${catchBlock2._i}`, _5);
+  function _4() {
+    e = ex;
+    return M.yldStar(M.yld(`e${i}`), _5);
   }
 
-  function _5(catchBlock2) {
-    return catchBlock2.yld(catchBlock2._e, _6);
+  function _5() {
+    return M.yldStar(M.yld(e), _6);
   }
 
-  function _6(catchBlock2) {
-    return catchBlock2.pure(catchBlock2._i);
+  function _6() {
+    return M.pure(i);
   }
 
-  function _7(catchBlock2) {
-    catchBlock2._i++;
-    return catchBlock2.jump(void 0, _2, _8);
+  function _7() {
+    i++;
+    return M.jump(void 0, _2, _8);
   }
 
-  function _8(catchBlock2, a) {
-    catchBlock2._ex = a;
-    return catchBlock2.jump(void 0, _4);
+  function _8(a) {
+    ex = a;
+    return M.jump(void 0, _4);
   }
 }
 
 function closure2() {
-  var closure2 = M.context();
-  return closure2.scope(_1);
+  var k, j, m, r;
+  return M.scope(_1);
 
-  function _1(closure2) {
-    var k;
+  function _1() {
     k = 0;
-    closure2._j = 1;
-    closure2._m = 0;
-    return closure2.yld(k++ + closure2._j + closure2._m++, _2);
+    j = 1;
+    m = 0;
+    return M.yldStar(M.yld(k++ + j + m++), _2);
   }
 
-  function _2(closure2) {
+  function _2() {
     var a;
-    a = closure2._m++;
-    return closure2.yld(a, _3);
+    a = m++;
+    return M.yldStar(M.yld(a), _3);
   }
 
-  function _3(closure2) {
-    return closure2.pure(function sub(k) {
-      var _sub = M.context();
+  function _3() {
+    return M.pure(function sub(k) {
+      return M.scope(_1);
 
-      _sub._closure2 = closure2;
-      _sub._k = k;
-      return _sub.scope(_1);
-
-      function _1(_sub) {
+      function _1() {
         var a;
-        a = _sub._k++;
-        return _sub.yld(a, _2);
+        a = k++;
+        return M.yldStar(M.yld(a), _2);
       }
 
-      function _2(_sub, a) {
-        a, _sub._closure2._j;
-        return _sub.pure();
+      function _2(a) {
+        a, j;
+        return M.pure();
       }
     });
   }
 }
 
 function switches() {
-  var switches = M.context();
-  return switches.scope(_1);
+  var i, _i, i1, i2, i3, i4, i5, i6, i7, i8, j, loop, _loop, loop1, loop2, loop3, loop4, loop5, loop6, fc, fe, _fc, _fe, fc1, fe1, fc2, fe2, fc3, fe3, fc4, fe4, fc5, fe5, fc6, fe6, err, _err, err1, err2, err3, err4, err5, err6;
 
-  function _1(switches) {
+  return M.scope(_1);
+
+  function _1() {
     if (a) {
-      return switches.yld(1, _2);
+      return M.yldStar(M.yld(1), _2);
     } else {
-      return switches.jump(void 0, _2);
+      return M.jump(void 0, _2);
     }
   }
 
-  function _2(switches) {
+  function _2() {
     switch (a) {
       case 1:
-        return switches.yld(2, _3);
+        return M.yldStar(M.yld(2), _3);
 
       case 2:
         {
@@ -2876,16 +2788,15 @@ function switches() {
         }
 
       default:
-        return switches.jump(void 0, _4);
+        return M.jump(void 0, _4);
     }
   }
 
-  function _3(switches) {
-    return switches.yld(3, _4);
+  function _3() {
+    return M.yldStar(M.yld(3), _4);
   }
 
-  function _4(switches) {
-    var i;
+  function _4() {
     console.log(4);
 
     f1: for (i = 0;; i++) {
@@ -2897,17 +2808,15 @@ function switches() {
       }
     }
 
-    switches._i = 0;
-    return switches.jump(void 0, _5);
+    _i = 0;
+    return M.jump(void 0, _5);
   }
 
-  function _5(switches) {
-    var i;
-
-    switch (switches._i) {
+  function _5() {
+    switch (_i) {
       case 3:
-        l1: for (i of gen()) {
-          switch (i) {
+        l1: for (i1 of gen()) {
+          switch (i1) {
             case 3:
               {
                 break l1;
@@ -2915,457 +2824,454 @@ function switches() {
           }
         }
 
-        switches._loop = switches.iterator(gen());
-        return switches.jump(void 0, _7, _48);
+        loop = M.iterator(gen());
+        return M.jump(void 0, _7, _48);
 
       default:
-        return switches.yld(`f2-${switches._i}`, _6);
+        return M.yldStar(M.yld(`f2-${_i}`), _6);
     }
   }
 
-  function _6(switches) {
-    switches._i++;
-    return switches.jump(void 0, _5);
+  function _6() {
+    _i++;
+    return M.jump(void 0, _5);
   }
 
-  function _7(switches) {
-    var i;
+  function _7() {
+    if (!(loop = loop.step()).done) {
+      i2 = loop.value;
 
-    if (!(switches._loop = switches._loop.step()).done) {
-      i = switches._loop.value;
-
-      switch (i) {
+      switch (i2) {
         case 3:
-          return switches.yld(`l2-${i}`, _8, _48);
+          return M.yldStar(M.yld(`l2-${i2}`), _8, _48);
 
         default:
-          return switches.jump(void 0, _7, _48);
+          return M.jump(void 0, _7, _48);
       }
     } else {
-      switches._fc = _10, switches._fe = _39;
-      return switches.jump(void 0, _9);
+      fc = _10, fe = _39;
+      return M.jump(void 0, _9);
     }
   }
 
-  function _8(switches) {
-    switches._fc = _10, switches._fe = _39;
-    return switches.jump(void 0, _9);
+  function _8() {
+    fc = _10, fe = _39;
+    return M.jump(void 0, _9);
   }
 
-  function _9(switches) {
-    if (switches._loop.exit) {
-      switches._loop.exit();
+  function _9() {
+    if (loop.exit) {
+      loop.exit();
     }
 
-    return switches.jump(void 0, switches._fc, switches._fe);
+    return M.jump(void 0, fc, fe);
   }
 
-  function _10(switches) {
-    switches._loop1 = switches.iterator(gen());
-    return switches.jump(void 0, _11, _49);
+  function _10() {
+    _loop = M.iterator(gen());
+    return M.jump(void 0, _11, _49);
   }
 
-  function _11(switches) {
-    var i;
+  function _11() {
+    if (!(_loop = _loop.step()).done) {
+      i3 = _loop.value;
 
-    if (!(switches._loop1 = switches._loop1.step()).done) {
-      i = switches._loop1.value;
-
-      switch (i) {
+      switch (i3) {
         case 3:
-          switches._fc1 = _13, switches._fe1 = _39;
-          return switches.jump(void 0, _12);
+          _fc = _13, _fe = _39;
+          return M.jump(void 0, _12);
 
         default:
-          return switches.yld(`l3-${i}`, _11, _49);
+          return M.yldStar(M.yld(`l3-${i3}`), _11, _49);
       }
     } else {
-      switches._fc1 = _13, switches._fe1 = _39;
-      return switches.jump(void 0, _12);
+      _fc = _13, _fe = _39;
+      return M.jump(void 0, _12);
     }
   }
 
-  function _12(switches) {
-    if (switches._loop1.exit) {
-      switches._loop1.exit();
+  function _12() {
+    if (_loop.exit) {
+      _loop.exit();
     }
 
-    return switches.jump(void 0, switches._fc1, switches._fe1);
+    return M.jump(void 0, _fc, _fe);
   }
 
-  function _13(switches) {
-    switches._loop2 = switches.iterator(gen());
-    return switches.jump(void 0, _14, _50);
+  function _13() {
+    loop1 = M.iterator(gen());
+    return M.jump(void 0, _14, _50);
   }
 
-  function _14(switches) {
-    var i;
+  function _14() {
+    if (!(loop1 = loop1.step()).done) {
+      i4 = loop1.value;
 
-    if (!(switches._loop2 = switches._loop2.step()).done) {
-      i = switches._loop2.value;
-
-      switch (i) {
+      switch (i4) {
         case 3:
-          switches._fc2 = _16, switches._fe2 = _39;
-          return switches.jump(void 0, _15);
+          fc1 = _16, fe1 = _39;
+          return M.jump(void 0, _15);
 
         default:
-          return switches.yld(`l4-${i}`, _14, _50);
+          return M.yldStar(M.yld(`l4-${i4}`), _14, _50);
       }
     } else {
-      switches._fc2 = _16, switches._fe2 = _39;
-      return switches.jump(void 0, _15);
+      fc1 = _16, fe1 = _39;
+      return M.jump(void 0, _15);
     }
   }
 
-  function _15(switches) {
-    if (switches._loop2.exit) {
-      switches._loop2.exit();
+  function _15() {
+    if (loop1.exit) {
+      loop1.exit();
     }
 
-    return switches.jump(void 0, switches._fc2, switches._fe2);
+    return M.jump(void 0, fc1, fe1);
   }
 
-  function _16(switches) {
-    switches._loop3 = switches.iterator(gen());
-    return switches.jump(void 0, _17, _51);
+  function _16() {
+    loop2 = M.iterator(gen());
+    return M.jump(void 0, _17, _51);
   }
 
-  function _17(switches) {
-    if (!(switches._loop3 = switches._loop3.step()).done) {
-      switches._i1 = switches._loop3.value;
-      return switches.yld(`l5-${switches._i1}`, _18, _51);
+  function _17() {
+    if (!(loop2 = loop2.step()).done) {
+      i5 = loop2.value;
+      return M.yldStar(M.yld(`l5-${i5}`), _18, _51);
     } else {
-      switches._fc3 = _20, switches._fe3 = _39;
-      return switches.jump(void 0, _19);
+      fc2 = _20, fe2 = _39;
+      return M.jump(void 0, _19);
     }
   }
 
-  function _18(switches) {
-    switch (switches._i1) {
+  function _18() {
+    switch (i5) {
       case 3:
-        switches._fc3 = _20, switches._fe3 = _39;
-        return switches.jump(void 0, _19);
+        fc2 = _20, fe2 = _39;
+        return M.jump(void 0, _19);
 
       default:
-        return switches.jump(void 0, _17, _51);
+        return M.jump(void 0, _17, _51);
     }
   }
 
-  function _19(switches) {
-    if (switches._loop3.exit) {
-      switches._loop3.exit();
+  function _19() {
+    if (loop2.exit) {
+      loop2.exit();
     }
 
-    return switches.jump(void 0, switches._fc3, switches._fe3);
+    return M.jump(void 0, fc2, fe2);
   }
 
-  function _20(switches) {
-    switches._loop4 = switches.iterator(gen());
-    return switches.jump(void 0, _21, _52);
+  function _20() {
+    loop3 = M.iterator(gen());
+    return M.jump(void 0, _21, _52);
   }
 
-  function _21(switches) {
-    var i;
+  function _21() {
+    if (!(loop3 = loop3.step()).done) {
+      i6 = loop3.value;
 
-    if (!(switches._loop4 = switches._loop4.step()).done) {
-      i = switches._loop4.value;
-
-      switch (i) {
+      switch (i6) {
         case 3:
-          return switches.yld(`l6-1-${i}`, _22, _52);
+          return M.yldStar(M.yld(`l6-1-${i6}`), _22, _52);
 
         default:
-          return switches.yld(`l6-2-${i}`, _21, _52);
+          return M.yldStar(M.yld(`l6-2-${i6}`), _21, _52);
       }
     } else {
-      switches._fc4 = _24, switches._fe4 = _39;
-      return switches.jump(void 0, _23);
+      fc3 = _24, fe3 = _39;
+      return M.jump(void 0, _23);
     }
   }
 
-  function _22(switches) {
-    switches._fc4 = _24, switches._fe4 = _39;
-    return switches.jump(void 0, _23);
+  function _22() {
+    fc3 = _24, fe3 = _39;
+    return M.jump(void 0, _23);
   }
 
-  function _23(switches) {
-    if (switches._loop4.exit) {
-      switches._loop4.exit();
+  function _23() {
+    if (loop3.exit) {
+      loop3.exit();
     }
 
-    return switches.jump(void 0, switches._fc4, switches._fe4);
+    return M.jump(void 0, fc3, fe3);
   }
 
-  function _24(switches) {
-    switches._loop5 = switches.iterator(gen());
-    return switches.jump(void 0, _25, _53);
+  function _24() {
+    loop4 = M.iterator(gen());
+    return M.jump(void 0, _25, _53);
   }
 
-  function _25(switches) {
-    if (!(switches._loop5 = switches._loop5.step()).done) {
-      switches._i2 = switches._loop5.value;
+  function _25() {
+    if (!(loop4 = loop4.step()).done) {
+      i7 = loop4.value;
 
-      switch (switches._i2) {
+      switch (i7) {
         case 0:
-          return switches.jump(void 0, _25, _53);
+          return M.jump(void 0, _25, _53);
 
         case 1:
         case 2:
-          return switches.yld(`l7-1-${switches._i2}`, _25, _53);
+          return M.yldStar(M.yld(`l7-1-${i7}`), _25, _53);
 
         case 3:
-          return switches.jump(void 0, _25, _53);
+          return M.jump(void 0, _25, _53);
 
         case 4:
-          return switches.yld(`l7-2-${switches._i2}`, _25, _53);
+          return M.yldStar(M.yld(`l7-2-${i7}`), _25, _53);
 
         case 5:
-          return switches.yld(`l7-3-${switches._i2}`, _27, _53);
+          return M.yldStar(M.yld(`l7-3-${i7}`), _27, _53);
 
         case 6:
-          return switches.jump(void 0, _25, _53);
+          return M.jump(void 0, _25, _53);
 
         case 7:
-          return switches.yld(`l7-4-${switches._i2}`, _26, _53);
+          return M.yldStar(M.yld(`l7-4-${i7}`), _26, _53);
 
         default:
-          return switches.yld(`l7-5-${switches._i2}`, _27, _53);
+          return M.yldStar(M.yld(`l7-5-${i7}`), _27, _53);
       }
     } else {
-      switches._fc5 = _29, switches._fe5 = _39;
-      return switches.jump(void 0, _28);
+      fc4 = _29, fe4 = _39;
+      return M.jump(void 0, _28);
     }
   }
 
-  function _26(switches) {
-    switches._fc5 = _29, switches._fe5 = _39;
-    return switches.jump(void 0, _28);
+  function _26() {
+    fc4 = _29, fe4 = _39;
+    return M.jump(void 0, _28);
   }
 
-  function _27(switches) {
-    return switches.yld(`l7-6-${switches._i2}`, _25, _53);
+  function _27() {
+    return M.yldStar(M.yld(`l7-6-${i7}`), _25, _53);
   }
 
-  function _28(switches) {
-    if (switches._loop5.exit) {
-      switches._loop5.exit();
+  function _28() {
+    if (loop4.exit) {
+      loop4.exit();
     }
 
-    return switches.jump(void 0, switches._fc5, switches._fe5);
+    return M.jump(void 0, fc4, fe4);
   }
 
-  function _29(switches) {
-    switches._loop6 = switches.iterator(gen());
-    return switches.jump(void 0, _30, _54);
+  function _29() {
+    loop5 = M.iterator(gen());
+    return M.jump(void 0, _30, _54);
   }
 
-  function _30(switches) {
-    if (!(switches._loop6 = switches._loop6.step()).done) {
-      switches._i3 = switches._loop6.value;
-      switches._loop7 = switches.iterator(gen());
-      return switches.jump(void 0, _31, _55);
+  function _30() {
+    if (!(loop5 = loop5.step()).done) {
+      i8 = loop5.value;
+      loop6 = M.iterator(gen());
+      return M.jump(void 0, _31, _55);
     } else {
-      switches._fc7 = _38, switches._fe7 = _39;
-      return switches.jump(void 0, _37);
+      fc6 = _38, fe6 = _39;
+      return M.jump(void 0, _37);
     }
   }
 
-  function _31(switches) {
-    if (!(switches._loop7 = switches._loop7.step()).done) {
-      switches._j = switches._loop7.value;
+  function _31() {
+    if (!(loop6 = loop6.step()).done) {
+      j = loop6.value;
 
-      switch (switches._i3) {
+      switch (i8) {
         case 0:
         case 1:
         case 2:
-          return switches.yld(`s1:${switches._i3},${switches._j}`, _32, _55);
+          return M.yldStar(M.yld(`s1:${i8},${j}`), _32, _55);
 
         case 3:
-          switch (switches._j) {
+          switch (j) {
             case 2:
             case 3:
-              return switches.yld(`s2:${switches._i3},${switches._j}`, _31, _55);
+              return M.yldStar(M.yld(`s2:${i8},${j}`), _31, _55);
 
             case 5:
-              return switches.yld(`s3:${switches._i3},${switches._j}`, _31, _55);
+              return M.yldStar(M.yld(`s3:${i8},${j}`), _31, _55);
 
             case 7:
-              return switches.yld(`s4:${switches._i3},${switches._j}`, _31, _55);
+              return M.yldStar(M.yld(`s4:${i8},${j}`), _31, _55);
 
             case 8:
-              return switches.yld(`s5:${switches._i3},${switches._j}`, _31, _55);
+              return M.yldStar(M.yld(`s5:${i8},${j}`), _31, _55);
 
             case 9:
-              return switches.yld(`s6:${switches._i3},${switches._j}`, _33, _55);
+              return M.yldStar(M.yld(`s6:${i8},${j}`), _33, _55);
 
             default:
-              return switches.jump(void 0, _31, _55);
+              return M.jump(void 0, _31, _55);
           }
 
         case 4:
-          switch (switches._j) {
+          switch (j) {
             case 2:
             case 3:
-              return switches.yld(`s7:${switches._i3},${switches._j}`, _35, _55);
+              return M.yldStar(M.yld(`s7:${i8},${j}`), _35, _55);
 
             case 5:
-              return switches.yld(`s8:${switches._i3},${switches._j}`, _31, _55);
+              return M.yldStar(M.yld(`s8:${i8},${j}`), _31, _55);
 
             case 6:
-              switches._fc6 = _30, switches._fe6 = _54;
-              return switches.jump(void 0, _36, _54);
+              fc5 = _30, fe5 = _54;
+              return M.jump(void 0, _36, _56);
 
             case 7:
-              return switches.yld(`s9:${switches._i3},${switches._j}`, _35, _55);
+              return M.yldStar(M.yld(`s9:${i8},${j}`), _35, _55);
 
             case 8:
-              return switches.yld(`s10:${switches._i3},${switches._j}`, _31, _55);
+              return M.yldStar(M.yld(`s10:${i8},${j}`), _31, _55);
 
             case 9:
-              return switches.yld(`s11:${switches._i3},${switches._j}`, _34, _55);
+              return M.yldStar(M.yld(`s11:${i8},${j}`), _34, _55);
 
             default:
-              return switches.yld(`s12:${switches._i3},${switches._j}`, _35, _55);
+              return M.yldStar(M.yld(`s12:${i8},${j}`), _35, _55);
           }
 
         case 5:
-          switch (switches._j) {
+          switch (j) {
             case 2:
             case 3:
-              switches._fc6 = _37, switches._fe6 = _39, switches._fc7 = _38, switches._fe7 = _39;
-              return switches.jump(void 0, _36, _54);
+              fc5 = _37, fe5 = _39, fc6 = _38, fe6 = _39;
+              return M.jump(void 0, _36, _56);
 
             default:
-              return switches.jump(void 0, _31, _55);
+              return M.jump(void 0, _31, _55);
           }
 
         default:
-          return switches.jump(void 0, _31, _55);
+          return M.jump(void 0, _31, _55);
       }
     } else {
-      switches._fc6 = _30, switches._fe6 = _54;
-      return switches.jump(void 0, _36, _54);
+      fc5 = _30, fe5 = _54;
+      return M.jump(void 0, _36, _56);
     }
   }
 
-  function _32(switches) {
-    if (switches._j > 3) {
-      switches._fc6 = _30, switches._fe6 = _54;
-      return switches.jump(void 0, _36, _54);
+  function _32() {
+    if (j > 3) {
+      fc5 = _30, fe5 = _54;
+      return M.jump(void 0, _36, _56);
     } else {
-      return switches.jump(void 0, _31, _55);
+      return M.jump(void 0, _31, _55);
     }
   }
 
-  function _33(switches) {
-    switches._fc6 = _30, switches._fe6 = _54;
-    return switches.jump(void 0, _36, _54);
+  function _33() {
+    fc5 = _30, fe5 = _54;
+    return M.jump(void 0, _36, _56);
   }
 
-  function _34(switches) {
-    switches._fc6 = _37, switches._fe6 = _39, switches._fc7 = _38, switches._fe7 = _39;
-    return switches.jump(void 0, _36, _54);
+  function _34() {
+    fc5 = _37, fe5 = _39, fc6 = _38, fe6 = _39;
+    return M.jump(void 0, _36, _56);
   }
 
-  function _35(switches) {
-    return switches.yld(`s13:${switches._i3},${switches._j}`, _31, _55);
+  function _35() {
+    return M.yldStar(M.yld(`s13:${i8},${j}`), _31, _55);
   }
 
-  function _36(switches) {
-    if (switches._loop7.exit) {
-      switches._loop7.exit();
+  function _36() {
+    if (loop6.exit) {
+      loop6.exit();
     }
 
-    switches._err7 = switches._err8;
-    return switches.jump(void 0, switches._fc6, switches._fe6);
+    err5 = err6;
+    return M.jump(void 0, fc5, fe5);
   }
 
-  function _37(switches) {
-    if (switches._loop6.exit) {
-      switches._loop6.exit();
+  function _37() {
+    if (loop5.exit) {
+      loop5.exit();
     }
 
-    return switches.jump(void 0, switches._fc7, switches._fe7);
+    return M.jump(void 0, fc6, fe6);
   }
 
-  function _38(switches) {
-    return switches.pure();
+  function _38() {
+    return M.pure();
   }
 
-  function _39(switches, e) {
-    return switches.raise(e);
+  function _39(e) {
+    return M.raise(e);
   }
 
-  function _40(switches) {
-    return switches.raise(switches._err1);
+  function _40() {
+    return M.raise(err);
   }
 
-  function _41(switches) {
-    return switches.raise(switches._err2);
+  function _41() {
+    return M.raise(_err);
   }
 
-  function _42(switches) {
-    return switches.raise(switches._err3);
+  function _42() {
+    return M.raise(err1);
   }
 
-  function _43(switches) {
-    return switches.raise(switches._err4);
+  function _43() {
+    return M.raise(err2);
   }
 
-  function _44(switches) {
-    return switches.raise(switches._err5);
+  function _44() {
+    return M.raise(err3);
   }
 
-  function _45(switches) {
-    return switches.raise(switches._err6);
+  function _45() {
+    return M.raise(err4);
   }
 
-  function _46(switches) {
-    return switches.raise(switches._err7);
+  function _46() {
+    return M.raise(err5);
   }
 
-  function _47(switches) {
-    return switches.raise(switches._err8);
+  function _47() {
+    return M.raise(err6);
   }
 
-  function _48(switches, a) {
-    switches._fc = _40, switches._fe = _39, switches._err1 = a;
-    return switches.jump(void 0, _9);
+  function _48(a) {
+    fc = _40, fe = _39, err = a;
+    return M.jump(void 0, _9);
   }
 
-  function _49(switches, a) {
-    switches._fc1 = _41, switches._fe1 = _39, switches._err2 = a;
-    return switches.jump(void 0, _12);
+  function _49(a) {
+    _fc = _41, _fe = _39, _err = a;
+    return M.jump(void 0, _12);
   }
 
-  function _50(switches, a) {
-    switches._fc2 = _42, switches._fe2 = _39, switches._err3 = a;
-    return switches.jump(void 0, _15);
+  function _50(a) {
+    fc1 = _42, fe1 = _39, err1 = a;
+    return M.jump(void 0, _15);
   }
 
-  function _51(switches, a) {
-    switches._fc3 = _43, switches._fe3 = _39, switches._err4 = a;
-    return switches.jump(void 0, _19);
+  function _51(a) {
+    fc2 = _43, fe2 = _39, err2 = a;
+    return M.jump(void 0, _19);
   }
 
-  function _52(switches, a) {
-    switches._fc4 = _44, switches._fe4 = _39, switches._err5 = a;
-    return switches.jump(void 0, _23);
+  function _52(a) {
+    fc3 = _44, fe3 = _39, err3 = a;
+    return M.jump(void 0, _23);
   }
 
-  function _53(switches, a) {
-    switches._fc5 = _45, switches._fe5 = _39, switches._err6 = a;
-    return switches.jump(void 0, _28);
+  function _53(a) {
+    fc4 = _45, fe4 = _39, err4 = a;
+    return M.jump(void 0, _28);
   }
 
-  function _54(switches, a) {
-    switches._fc7 = _46, switches._fe7 = _39, switches._err7 = a;
-    return switches.jump(void 0, _37);
+  function _54(a) {
+    fc6 = _46, fe6 = _39, err5 = a;
+    return M.jump(void 0, _37);
   }
 
-  function _55(switches, a) {
-    switches._fc6 = _37, switches._fe6 = _39, switches._fc7 = _47, switches._fe7 = _39, switches._err8 = a;
-    return switches.jump(void 0, _36, _54);
+  function _55(a) {
+    fc5 = _37, fe5 = _39, fc6 = _47, fe6 = _39, err6 = a;
+    return M.jump(void 0, _36, _56);
+  }
+
+  function _56(a) {
+    fc6 = _46, fe6 = _39, err5 = a;
+    return M.jump(void 0, _37);
   }
 }

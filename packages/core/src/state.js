@@ -46,15 +46,15 @@ export const saveDecls = Kit.pipe(
             continue
           case Tag.TryStatement:
             if (!i.value.eff) {
-	            yield i
-	            yield* _saveDecls(true)
+	      yield i
+	      yield* _saveDecls(true)
               continue
             }
             break
           case Tag.CatchClause:
-	          if (sl.cur().pos === Tag.param) {
-	            if (pureTry) {
-		            yield i
+	    if (sl.cur().pos === Tag.param) {
+	      if (pureTry) {
+		yield i
                 for(const k of sl.one()) {
                   yield k
                   if (k.enter && k.type === Tag.Identifier
@@ -62,9 +62,9 @@ export const saveDecls = Kit.pipe(
                     k.value.sym.interpr = null
                   }
                 }
-	            } else {
-		            const ids = []
-		            for(const j of sl.one()) {
+	      } else {
+		const ids = []
+		for(const j of sl.one()) {
                   if (j.enter && j.type === Tag.Identifier && j.value.decl) {
                     decls.set(j.value.sym, {raw:null})
                     j.value.lhs = true
@@ -72,25 +72,25 @@ export const saveDecls = Kit.pipe(
                     j.value.decl = false
                   }
                   ids.push(j)
-		            }
-		            const sym = Bind.tempVarSym(top.value,"ex")
-		            const lab = sl.label()
-		            yield sl.peel(i)
-		            yield sl.tok(Tag.param, Tag.Identifier, {sym})
-		            yield sl.peel()
-		            yield* sl.peelTo(Tag.body)
-		            const blab = sl.label()
-		            yield sl.enter(Tag.push, Tag.ExpressionStatement)
-		            yield sl.enter(Tag.expression, Tag.AssignmentExpression,
+		}
+		const sym = Bind.tempVarSym(top.value,"ex")
+		const lab = sl.label()
+		yield sl.peel(i)
+		yield sl.tok(Tag.param, Tag.Identifier, {sym})
+		yield sl.peel()
+		yield* sl.peelTo(Tag.body)
+		const blab = sl.label()
+		yield sl.enter(Tag.push, Tag.ExpressionStatement)
+		yield sl.enter(Tag.expression, Tag.AssignmentExpression,
                                {node:{operator:"="}})
-		            yield* Kit.reposOne(ids, Tag.left)
-		            yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
-		            yield* blab()
-		            yield* _saveDecls()
-		            yield* lab()
+		yield* Kit.reposOne(ids, Tag.left)
+		yield sl.tok(Tag.right,Tag.Identifier,{sym,lhs:false,rhs:true,decl:false})
+		yield* blab()
+		yield* _saveDecls()
+		yield* lab()
               }
-	            continue
-	          }
+	      continue
+	    }
             break
           case Tag.VariableDeclaration:
             const kind = i.value.node.kind
@@ -299,42 +299,6 @@ export function* restoreDecls(s) {
   }
 }
 
-function calcRefKindZ(si) {
-  const s = Kit.auto(si)
-  function* walk(declLhs) {
-    for(const i of s.sub()) {
-      yield i
-      if (i.enter) {
-        switch(i.type) {
-        case Tag.AssignmentExpression:
-          for(const j of s.one()) {
-            yield j
-            if (j.enter && j.type === Tag.Identifier && j.value.sym) {
-              j.value.lhs = true
-              j.value.rhs = i.value.node.operator !== "="
-            }
-          }
-          break
-        case Tag.UpdateExpression:
-          const j = s.cur()
-          if (j.type === Tag.Identifier) {
-            j.value.lhs = true
-            j.value.rhs = true
-            yield* s.one()
-          }
-          break
-        case Tag.Identifier:
-          if (i.value.sym) {
-            i.value.lhs = i.value.decl
-            i.value.rhs = !i.value.decl
-          }
-          break
-        }
-      }
-    }
-  }
-  return walk()
-}
 /** calculates for each Identifier lhs/rhs fields */
 function* calcRefKind(si) {
   for(const i of Kit.resetFieldInfo(si)) {
@@ -656,62 +620,7 @@ export function reorderVarUsages(si) {
   return walk(s)
 }
 
-/** adds captured variables arguments of local functions to their calls */
-function localCalls(si) {
-  const s = Kit.auto(si)
-  function* walk() {
-    for(const i of s.sub()) {
-      yield i
-      if (i.enter && i.pos === Tag.callee && i.value.localFuncRef) {
-        const sc = i.value.localFuncRef.scopeCapt
-        if (sc) {
-          if (!i.leave) {
-            yield* walk()
-            yield s.close(i)
-          }
-          const j = s.take()
-          yield j
-          assert.equal(j.type, Tag.Array)
-          assert.equal(j.pos, Tag.arguments)
-          for(const sym of sc)
-            if (sym.byVal)
-              yield s.tok(Tag.push,Tag.Identifier,{sym})
-        }
-      }
-    }
-  }
-  return walk()
-}
-
-/** adds captured variables parameters to local functions */
-function* localFuncDecls(si) {
-  const s = Kit.auto(si)
-  for(const i of s) {
-    yield i
-    if (i.enter) {
-      if (!i.leave && i.value.func && i.value.isLocal && i.value.scopeCapt) {
-        yield* s.till(j => j.enter && j.pos === Tag.params)
-        for(const sym of i.value.scopeCapt)
-          if (sym.byVal)
-            yield s.tok(Tag.push,Tag.Identifier,{sym})
-      }
-    }
-  }
-}
-
-/** adds captured variables parameters/arguments of functions and calls */
-export const locals = Kit.pipe(localFuncDecls, localCalls)
-
-/** 
- * calculates states reads and writes into 
- *
- *  type FrameVal = FrameVal & { 
- *     r: Set<Sym>, // vars read by the frame 
- *     w: Set<Sym>, // written in the frame
- *     c: Set<Sym>  // variable is updated
- *     }
- */
-export function calcFrameStateVars(si) {
+export function cleanScopeVars(si) {
   const sa = Kit.toArray(si)
   const root = sa[0].value
   // removing useless variable declarations in top level
@@ -724,158 +633,220 @@ export function calcFrameStateVars(si) {
       }
     }
   }
-  root.pureExitFrame.stateVars = {r:emptySet, w:emptySet, c:emptySet}
-  let first = {r:new Set(),w:new Set(),c:new Set()}
+  if (root.cfg.length)
+    return sa
+  let first = root.cfg[0].stateVars
   if (root.paramSyms)
     root.paramSyms.forEach(Set.prototype.add,first.w)
   for(const [sym,{raw,init}] of root.savedDecls) {
     if (init)
       first.w.add(sym)
   }
-  const s = Kit.auto(Branch.mark(reorderVarUsages(sa)))
   const functionSentSym = root.functionSentSym
-  function walk(sw,fork) {
-    let frame
-    function addPat(p) {
-      for(const j of p) {
-        if (j.enter && j.type === Tag.Identifier
-            && j.value.sym)
-          sw.w.add(j.value.sym)
+  
+}
+
+/** 
+ * calculates states reads and writes into 
+ *
+ *  type FrameVal = FrameVal & {
+ *     stateVars: {
+ *       r: Set<Sym>, // vars read by the frame 
+ *       w: Set<Sym>, // written in the frame
+ *       c: Set<Sym>, // variable is updated
+ *       s: Set<Sym>  // variable is re-set in this
+ *       }
+ *
+ */
+export function calcFrameStateVars(si) {
+  const sa = Kit.toArray(si)
+  const root = sa[0].value
+  root.pureExitFrame.stateVars = {r:emptySet, w:emptySet, c:emptySet}
+  const frames = root.cfg
+  if (!frames.length)
+    return sa
+  for(const frame of frames)
+    frame.stateVars = {r:new Set(),w:new Set(),c:new Set(),s:new Set()}
+  const first = frames[0].stateVars
+  for(const i of root.scopeDecls) {
+    if (i.interpr && i.interpr !== Bind.closureVar) {
+      const sd = root.savedDecls.get(i)
+      if (sd) {
+        if (!sd.raw && !(sd.init && sd.init.length))
+          root.savedDecls.delete(i)
       }
     }
-    for(const i of s.sub()) {
+  }
+  if (root.paramSyms) {
+    for(const i of root.paramSyms) {
+      first.w.add(i)
+      first.s.add(i)
+    }
+  }
+  for(const [sym,{raw,init}] of root.savedDecls) {
+    if (init) {
+      first.w.add(sym)
+      first.s.add(sym)
+    }
+  }
+  const functionSentSym = root.functionSentSym
+  for(const frame of frames) {
+    const {w,r,c,s} = frame.stateVars
+    if (frame.patSym) {
+      w.add(frame.patSym)
+      s.add(frame.patSym)
+    }
+    if (frame.errSym) {
+      w.add(frame.errSym)
+      s.add(frame.errSym)
+    }
+    if (functionSentSym && frame.wfsent) {
+      w.add(functionSentSym)
+      s.add(functionSentSym)
+    }
+    for(const i of frame.steps) {
+      const sW = i.stepW = new Set()
+      const sR = i.stepR = new Set()
+      const sS = i.stepSet = new Set()
+      const {content} = i
+      const sub = Kit.share(content)
+      for(const j of sub) {
+        if (j.enter) {
+          switch(j.type) {
+          /**
+           * TODO: It is a very pessimistic version, number of variables 
+           * to copy and read can be greatly reduced by forming CFG like 
+           * for effectful frames, this requires converting the whole code
+           * into CFG though
+           * here trying to handle at least some simple cases
+           */
+          case Tag.AssignmentExpression:
+            if (j.value.node.operator === "=") {
+              const lhs = new Set()
+              for(const k of Kit.single(sub)) {
+                if (k.enter) {
+                  switch(k.type) {
+                  case Tag.Identifier:
+                    if (k.value.sym && k.value.sym.interpr) {
+                      if (k.value.lhs) {
+                        if (!sR.has(k.value.sym))
+                          lhs.add(k.value.sym)
+                        sW.add(k.value.sym)
+                      } else {
+                        if (!sS.has(k.value.sym))
+                          sR.add(k.value.sym)
+                      }
+                    }
+                    break
+                  case Block.bindPat:
+                    if (!sS.has(k.value.sym))
+                      sR.add(k.value.sym)
+                  }
+                }
+              }
+              const subR = new Set()
+              _inner(Kit.single(sub),sW,subR,sS,frame)
+              for(const k of subR) {
+                sR.add(k)
+                lhs.delete(k)
+              }
+              lhs.forEach(sS.add,sS)
+              break
+            }
+            _inner(Kit.tillVal(j.value,sub),sW,sR,sS,frame)
+            break
+          case Block.letStmt:
+            if (!j.value.eff) {
+              if (j.value.sym) {
+                if (!sR.has(j.value.sym))
+                  sS.add(j.value.sym)
+                sW.add(j.value.sym)
+              }
+              break
+            }
+          case Ctrl.jump:
+            _jump(j.value,sW,sR,sS)
+            break
+          case Tag.SequenceExpression:
+          case Tag.Array:
+          case Tag.ExpressionStatement:
+            break
+          case Tag.BlockStatement:
+            if (j.value.labs && j.value.labs.length)
+              break
+          default:
+            _inner(Kit.cons(j,Kit.tillVal(j.value,sub)),sW,sR,sS,frame)
+          }
+        }
+      }
+      sW.forEach(w.add,w)
+      for(const j of sR)
+        if (!s.has(j))
+          r.add(j)
+      sS.forEach(s.add,s)
+    }
+    for(const j of Kit.concat(w,r)) {
+      if (j.interpr === Bind.ctxField && j.declScope !== root)
+        r.add(j)
+    }
+  }
+  function _jump(v,w,r,s) {
+    const {goto,frameArgs} = v
+    if (goto && goto.dynamicJump) {
+      if (goto.declSym.interpr)
+        r.add(goto.declSym)
+      if (goto.catchContRedir && goto.catchContRedir.declSym.interpr)
+        r.add(goto.catchContRedir.declSym)
+      if (goto.resultContRedir && goto.resultContRedir.declSym.interpr)
+        r.add(goto.resultContRedir.declSym)
+    }
+    if (frameArgs)
+      for(const f of frameArgs.values()) {
+        if (f.interpr && !s.has(f))
+          r.add(f)
+      }
+    if (functionSentSym
+        && (v.bindName === "yld" || v.bindName === "scope")) {
+      for(const j of v.gotoDests)
+        j.wfsent = true
+    }
+  }
+  function _inner(iter,sW,sR,sS,frame) {
+    for(const i of iter) {
       if (i.enter) {
         switch(i.type) {
-        case Block.frame:
-          if (first) {
-            first = undefined
-          } else {
-            sw = {r:new Set(),w:new Set(),c:new Set()}
-          }
-          i.value.stateVars = sw
-          frame = i.value
-          if (i.value.patSym)
-            sw.w.add(i.value.patSym)
-          if (i.value.errSym)
-            sw.w.add(i.value.errSym)
-          for(const j of Kit.concat(sw.w,sw.r)) {
-            if (j.interpr === Bind.ctxField && j.declScope !== root)
-              sw.r.add(j)
-          }
-          if (functionSentSym && i.value.wfsent)
-            sw.w.add(functionSentSym)
-          continue
-        case Branch.fork:
-          const threads = []
-          walk(sw,threads)
-          let len = threads.length
-          const allW = new Map()
-          for(const j of threads) {
-            for(const k of j.w)
-              if (!sw.w.has(k))
-                allW.set(k, (allW.get(k) || 0) + 1)
-            for(const k of j.r)
-              if (!sw.w.has(k))
-                sw.r.add(k)
-            for(const k of j.c)
-              if (!sw.w.has(k))
-                sw.c.add(k)
-          }
-          // if (!threads[len-1].alt)
-          //  len++
-          for(const [sym,num] of allW) {
-            // not each branch resets the symbol
-            // so it needs to read it to pass further
-            // e.g.
-            //
-            //     let a
-            //  --- f1
-            //     if (something)
-            //       a = 3
-            //  --- f2
-            //     console.log(a)
-            // it the same like reading `a` in `f1` to pass it further to `f2` 
-            if (num === len)
-              sw.w.add(sym)
-            else
-              sw.c.add(sym)
-          }
-          break
-        case Branch.thread:
-          const nxt = {r:new Set(),w:new Set(),c:new Set()}
-          walk(nxt)
-          fork.push(nxt)
-          break
-        case Block.letStmt:
-          if (!i.value.eff) {
-            if (i.value.sym)
-              sw.w.add(i.value.sym)
-            break
-          }
-        case Ctrl.jump:
-          const {goto,frameArgs} = i.value
-          if (goto && goto.dynamicJump) {
-            if (goto.declSym.interpr)
-              sw.r.add(goto.declSym)
-            if (goto.catchContRedir && goto.catchContRedir.declSym.interpr)
-              sw.r.add(goto.catchContRedir.declSym)
-            if (goto.resultContRedir && goto.resultContRedir.declSym.interpr)
-              sw.r.add(goto.resultContRedir.declSym)
-          }
-          if (frameArgs)
-            for(const j of frameArgs.values()) {
-              if (j.interpr && !sw.w.has(j))
-                sw.r.add(j)
+        case Tag.Identifier:
+          if (i.value.sym && i.value.sym.interpr) {
+            if (i.value.sym === functionSentSym) {
+              if (frame.stateVars.w.has(functionSentSym)) {
+                // used in same frame, it may be simply replaced with bind var
+                i.value.sym = frame.patSym || frame.commonPatSym
+                  || (frame.patSym = Kit.scope.newSym("p"))
+                i.value.sym.dummy = false
+                i.value.sym.bound = true
+              }
             }
-          if (functionSentSym
-              && (i.value.bindName === "yld" || i.value.bindName === "scope")) {
-            for(const j of i.value.gotoDests)
-              j.wfsent = true
+            if (i.value.lhs)
+              sW.add(i.value.sym)
+            if (i.value.rhs && !sS.has(i.value.sym))
+              sR.add(i.value.sym)
           }
           break
         case Block.bindPat:
-          assert.ok(sw)
-          if (i.value.sym.interpr && !sw.w.has(i.value.sym))
-            sw.r.add(i.value.sym)
+          if (!sS.has(i.value.sym))
+            sR.add(i.value.sym)
           break
-        case Tag.Identifier:
-          let {sym} = i.value
-          if (sw != null && sym != null) {
-            if (sym === functionSentSym) {
-              sw.rfsent = true
-              if (sw.w.has(functionSentSym)) {
-                // used in same frame, it may be simply replaced with bind var
-                i.value.sym = sym = frame.patSym || frame.commonPatSym
-                  || (frame.patSym = Kit.scope.newSym("p"))
-                sym.dummy = false
-                sym.bound = true
-              }
-            }
-            if (sym.interpr) {
-              if (i.value.rhs && !sw.w.has(sym))
-                sw.r.add(sym)
-              if (i.value.lhs)
-                sw.w.add(sym)
-            }
-          }
-          break
-        }
-        if (sw != null && i.pos === Tag.callee) {
-          const fun = i.value.localFuncRef
-          if (fun) {
-            for(const sym of fun.scopeCapt)
-              if (sym.byVal && !sw.w.has(sym))
-                sw.r.add(sym)
-            for(const sym of fun.scopeCaptMod)
-              if (sym.byVal)
-                sw.w.add(sym)
-          }
+        case Block.letStmt:
+          if (i.value.sym && i.value.sym.interpr)
+            sW.add(i.value.sym)
+          if (!i.value.eff)
+            break
+        case Ctrl.jump:
+          _jump(i.value,sW,sR,sS)
         }
       }
     }
   }
-  walk(first)
-  return sa
 }
 
 /** to be called in the beginning of the transformation */
@@ -893,7 +864,7 @@ function resolveFrameParams(cfg) {
     const exits = i.exits
     const patSym = i.errSym || i.patSym
     if (sw != null) {
-      for(const i of Kit.concat(sw.r,sw.c))
+      for(const i of sw.r)
         params.add(i)
       if (exits != null) {
         for(const j of sw.w) {
@@ -1097,7 +1068,7 @@ export function handleSpecVars(si) {
   return walk()
 }
 
-/** if variable is used only in 1 frame no needs to store it in context */
+/** if variable is used only in 1 frame no needs to store it in a context */
 function prepareContextVars(root, cfg) {
   const ctxSyms = []
   const resSym = root.resSym
@@ -1112,8 +1083,9 @@ function prepareContextVars(root, cfg) {
       const sw = i.stateVars
       if (!sw)
         continue
-      for(const j of sw.r)
+      for(const j of sw.r) {
         j.hasReads = true
+      }
     }
     for(const i of cfg) {
       if (i === first)
@@ -1121,14 +1093,15 @@ function prepareContextVars(root, cfg) {
       const sw = i.stateVars
       if (!sw)
         continue
-      for(const j of Kit.concat(sw.w,sw.c)) {
-        if (!j.hasReads && j !== i.patSym && j !== i.errSym && j !== resSym)
-          (j.writeFrames || (j.writeFrames = new Set())).add(i)
+      for(const j of sw.w) {
+        if (j.hasReads || j === i.patSym || j === i.errSym || j === resSym)
+          continue
+        (j.writeFrames || (j.writeFrames = new Set())).add(i)
       }
     }
   }
   for(const i of root.scopeDecls) {
-    if (opt && !i.closCapt &&  !i.hasReads && i.writeFrames) {
+    if (opt && !i.closCapt && i.writeFrames) {
       i.interpr = null
       i.fieldName = null
       root.savedDecls.delete(i)

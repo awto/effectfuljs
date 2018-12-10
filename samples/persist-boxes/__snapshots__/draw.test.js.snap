@@ -163,14 +163,11 @@ Object {
 
 exports[`collectBoxes 4`] = `
 Object {
-  "type": "ROOT",
+  "key": 1,
+  "type": "BOX",
   "value": <div
-    id="root"
-  >
-    <div
-      id="box-2"
-    />
-  </div>,
+    id="box-1"
+  />,
 }
 `;
 
@@ -186,102 +183,41 @@ Object {
 
 exports[`collectBoxes 6`] = `
 Object {
-  "key": 1,
+  "key": 3,
   "type": "BOX",
   "value": <div
-    id="box-1"
+    id="box-3"
   />,
 }
 `;
 
 exports[`collectBoxes 7`] = `
 Object {
-  "type": "ROOT",
+  "key": 3,
+  "type": "BOX",
   "value": <div
-    id="root"
-  >
-    <div
-      id="box-1"
-    />
-    <div
-      id="box-2"
-    />
-  </div>,
+    id="box-3"
+  />,
 }
 `;
 
 exports[`collectBoxes 8`] = `
 Object {
-  "key": 3,
-  "type": "BOX",
+  "key": 2,
+  "type": "DELETE",
   "value": <div
-    id="box-3"
+    id="box-1"
   />,
 }
 `;
 
 exports[`collectBoxes 9`] = `
 Object {
-  "key": 3,
-  "type": "BOX",
-  "value": <div
-    id="box-3"
-  />,
-}
-`;
-
-exports[`collectBoxes 10`] = `
-Object {
-  "type": "ROOT",
-  "value": <div
-    id="root"
-  >
-    <div
-      id="box-1"
-    />
-    <div
-      id="box-2"
-    />
-    <div
-      id="box-3"
-    />
-  </div>,
-}
-`;
-
-exports[`collectBoxes 11`] = `
-Object {
   "key": 2,
   "type": "DELETE",
   "value": <div
     id="box-1"
   />,
-}
-`;
-
-exports[`collectBoxes 12`] = `
-Object {
-  "key": 2,
-  "type": "DELETE",
-  "value": <div
-    id="box-1"
-  />,
-}
-`;
-
-exports[`collectBoxes 13`] = `
-Object {
-  "type": "ROOT",
-  "value": <div
-    id="root"
-  >
-    <div
-      id="box-1"
-    />
-    <div
-      id="box-3"
-    />
-  </div>,
 }
 `;
 

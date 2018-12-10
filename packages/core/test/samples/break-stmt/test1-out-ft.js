@@ -84,26 +84,34 @@ function f_31(ctx, a) {
   if (a) {
     return M.chain(eff("a"), f_41);
   } else {
-    return M.chain(eff(4), f_51);
+    return M.chain(eff(4), f_61);
   }
 }
 
 function f_41(ctx) {
-  return eff("b");
+  return M.chain(eff("b"), f_51);
 }
 
-function f_51(ctx) {
-  return M.chain(eff(5), f_61);
+function f_51(ctx, a) {
+  return a;
 }
 
 function f_61(ctx) {
+  return M.chain(eff(5), f_7);
+}
+
+function f_7(ctx) {
   return ctx._r;
 }
 
 function a_1(a) {
   if (e) {
-    return eff("b");
+    return M.chain(eff("b"), a_2);
   } else {
     return a._r;
   }
+}
+
+function a_2(a, b) {
+  return b;
 }

@@ -7,7 +7,7 @@ import {share} from "./kit"
 jest.mock("react-dom")
 
 test("collectBoxes", async () => {
-  expect.assertions(13)
+  expect.assertions(9)
   for await(const i of D.collectBoxes(share([
     {type:"ROOT", value:<div id="root"/>},
     {type:"BOX", key:2, value:<div id="box-2"/>},

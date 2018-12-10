@@ -33,18 +33,34 @@ function f() {
 
 function a_1(a) {
   if (true) {
-    return eff(1);
+    return M.chain(eff(1), a_2);
   } else {
-    return eff(2);
+    return M.chain(eff(2), a_3);
   }
+}
+
+function a_2(a, b) {
+  return b;
+}
+
+function a_3(a, b) {
+  return b;
 }
 
 function b_1(b) {
   if (true) {
-    return eff(1);
+    return M.chain(eff(1), b_2);
   } else {
-    return eff(2);
+    return M.chain(eff(2), b_3);
   }
+}
+
+function b_2(b, a) {
+  return a;
+}
+
+function b_3(b, a) {
+  return a;
 }
 
 function c_1(c) {

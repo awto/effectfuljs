@@ -38,13 +38,13 @@ function f_12(_ctx) {
     a = _ctx._done;
     return M.chain(a.async(), f_22);
   } else {
-    return M.jump(void 0, _f_3);
+    return M.jump(void 0, f_31);
   }
 }
 
 function f_22(_ctx, a) {
   _ctx._done = a;
-  return M.jump(void 0, _f_3);
+  return M.jump(void 0, f_31);
 }
 
 function _f_1(ctx) {
@@ -93,17 +93,21 @@ function f_7(_ctx, a) {
 }
 
 function _f_2(ctx, a) {
-  return a.mapply(function ($dm$b) {
+  return M.chain(a.mapply(function ($dm$b) {
     var _ctx = M.context();
 
     _ctx._f = ctx._f;
     _ctx._f1 = ctx;
     _ctx._$dm$b = $dm$b;
     return M.scope(f_1);
-  });
+  }), _f_3);
 }
 
-function _f_3(_ctx) {
+function _f_3(ctx, a) {
+  return a;
+}
+
+function f_31(_ctx) {
   return M.chain(M.run(QM, function () {
     var ctx = M.context();
     ctx._f = _ctx;
@@ -126,7 +130,7 @@ function f_112(ctx) {
 
     _ctx._done = done;
     return M.scope(f_12);
-  }), f_211);
+  }), f_212);
 }
 
 function throwErrorLater_1(throwErrorLater) {
@@ -136,10 +140,10 @@ function throwErrorLater_1(throwErrorLater) {
 function f_17(ctx) {
   var a;
   a = ctx._throwErrorLater._deferred;
-  return M.chain(a.reject(new Error("promise rejected")), f_26);
+  return M.chain(a.reject(new Error("promise rejected")), f_27);
 }
 
-function f_26(ctx) {}
+function f_27(ctx) {}
 
 function throwErrorLater_2(throwErrorLater, a) {
   throwErrorLater._deferred = a;
@@ -156,15 +160,15 @@ function f_18(ctx) {
 
   if (ctx._done.async) {
     a = ctx._done;
-    return M.chain(a.async(), f_27);
+    return M.chain(a.async(), f_28);
   } else {
-    return M.jump(void 0, f_33);
+    return M.jump(void 0, f_34);
   }
 }
 
-function f_27(ctx, a) {
+function f_28(ctx, a) {
   ctx._done = a;
-  return M.jump(void 0, f_33);
+  return M.jump(void 0, f_34);
 }
 
 function f_15(ctx) {
@@ -177,16 +181,16 @@ function f_13(_ctx) {
   var a;
   a = _ctx._err.message;
   _ctx._err = null;
-  return M.chain(expect(a), f_23, _f_6);
+  return M.chain(expect(a), f_23, _f_7);
 }
 
 function f_23(_ctx, b) {
   var a;
   a = b.to;
-  return M.chain(a.equal("promise rejected"), f_31, _f_6);
+  return M.chain(a.equal("promise rejected"), f_32, _f_7);
 }
 
-function f_31(_ctx) {
+function f_32(_ctx) {
   var a;
   a = _ctx._f._done;
   return M.chain(a(), _f_5);
@@ -201,10 +205,14 @@ function f_41(_ctx) {
 }
 
 function _f_5(_ctx) {
-  return _ctx._f1._$dm$root.brk();
+  return M.chain(_ctx._f1._$dm$root.brk(), _f_6);
 }
 
 function _f_6(_ctx, a) {
+  return a;
+}
+
+function _f_7(_ctx, a) {
   _ctx._ex = a;
   return M.jump(void 0, f_41);
 }
@@ -216,8 +224,8 @@ function f_25(ctx, a) {
     _ctx._f = ctx._f;
     _ctx._f1 = ctx;
     _ctx._err = err;
-    return M.scope(f_13, _f_6);
-  }), f_32);
+    return M.scope(f_13, _f_7);
+  }), f_33);
 }
 
 function f_14(_ctx) {
@@ -228,36 +236,44 @@ function f_14(_ctx) {
 
 function f_24(_ctx) {}
 
-function f_32(ctx, a) {
-  return a.mapply(function () {
+function f_33(ctx, a) {
+  return M.chain(a.mapply(function () {
     var _ctx = M.context();
 
     _ctx._f = ctx._f;
     return M.scope(f_14);
-  });
+  }), f_42);
+}
+
+function f_42(ctx, a) {
+  return a;
 }
 
 function f_16(_ctx) {
-  return M.scope(function ($dm$root) {
+  return M.chain(M.scope(function ($dm$root) {
     var ctx = M.context();
     ctx._f = _ctx._f;
     ctx._$dm$root = $dm$root;
     return M.scope(f_15);
-  });
+  }), f_26);
 }
 
-function f_33(ctx) {
+function f_26(_ctx, a) {
+  return a;
+}
+
+function f_34(ctx) {
   return M.chain(M.run(QM, function () {
     var _ctx = M.context();
 
     _ctx._f = ctx;
     return M.scope(f_16);
-  }), f_42);
+  }), f_43);
 }
 
-function f_42(ctx) {}
+function f_43(ctx) {}
 
-function f_211(ctx) {
+function f_212(ctx) {
   return M.chain(it("should throw reasons from rejected promises into fiber", function (done) {
     var ctx = M.context();
 
@@ -268,7 +284,7 @@ function f_211(ctx) {
 
     ctx._done = done;
     return M.scope(f_18);
-  }), f_36);
+  }), f_38);
 }
 
 function f_111(_ctx) {
@@ -276,40 +292,40 @@ function f_111(_ctx) {
 
   if (_ctx._done.async) {
     a = _ctx._done;
-    return M.chain(a.async(), f_210);
+    return M.chain(a.async(), f_211);
   } else {
-    return M.jump(void 0, f_35);
+    return M.jump(void 0, f_37);
   }
 }
 
-function f_210(_ctx, a) {
+function f_211(_ctx, a) {
   _ctx._done = a;
-  return M.jump(void 0, f_35);
+  return M.jump(void 0, f_37);
 }
 
 function f_110(ctx) {
-  return M.chain(1 + 2, f_29);
+  return M.chain(1 + 2, f_210);
 }
 
 function f_19(_ctx) {
   _ctx._f1._result = _ctx._$dm$b;
   _ctx._$dm$b = null;
-  return M.jump(void 0, f_28, _f_7);
+  return M.jump(void 0, f_29, f_71);
 }
 
-function f_28(_ctx) {
+function f_29(_ctx) {
   var a;
   a = _ctx._f1._result;
-  return M.chain(expect(a), f_34, _f_7);
+  return M.chain(expect(a), f_35, f_71);
 }
 
-function f_34(_ctx, b) {
+function f_35(_ctx, b) {
   var a;
   a = b.to;
-  return M.chain(a.equal(3), f_43, _f_7);
+  return M.chain(a.equal(3), f_44, f_71);
 }
 
-function f_43(_ctx) {
+function f_44(_ctx) {
   var a;
   a = _ctx._f._done;
   return M.chain(a(), f_61);
@@ -325,39 +341,43 @@ function f_51(_ctx) {
 
 function f_61(_ctx) {}
 
-function _f_7(_ctx, a) {
+function f_71(_ctx, a) {
   _ctx._ex = a;
   return M.jump(void 0, f_51);
 }
 
-function f_29(ctx, a) {
-  return a.mapply(function ($dm$b) {
+function f_210(ctx, a) {
+  return M.chain(a.mapply(function ($dm$b) {
     var _ctx = M.context();
 
     _ctx._f = ctx._f;
     _ctx._f1 = ctx;
     _ctx._$dm$b = $dm$b;
     return M.scope(f_19);
-  });
+  }), f_36);
 }
 
-function f_35(_ctx) {
+function f_36(ctx, a) {
+  return a;
+}
+
+function f_37(_ctx) {
   return M.chain(M.run(QM, function () {
     var ctx = M.context();
     ctx._f = _ctx;
     return M.scope(f_110);
-  }), f_44);
+  }), f_45);
 }
 
-function f_44(_ctx) {}
+function f_45(_ctx) {}
 
-function f_36(ctx) {
+function f_38(ctx) {
   return M.chain(it("should work just fine with passed a value instead of a promise", function (done) {
     var _ctx = M.context();
 
     _ctx._done = done;
     return M.scope(f_111);
-  }), f_45);
+  }), f_46);
 }
 
-function f_45(ctx) {}
+function f_46(ctx) {}
