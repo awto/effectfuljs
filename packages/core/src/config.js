@@ -368,7 +368,8 @@ export default {
   parScopeConstructor: null,
   // same as `wrapFunction` but for functions with implicit threads
   // default to the value of `wrapFunction`
-  parWrapFunction: null
-  
+  parWrapFunction: null,
+  // wrap each JSX element with coerce expression
+  jsxCoerce: false
 }
 

@@ -9,6 +9,8 @@ export const expr = symbol("coerceExpr","ctrl")
 export const block = symbol("coerceBlock","ctrl")
 
 export const coerceSym = Kit.sysId("coerce")
+export const coerceJsxSym = Kit.sysId("el")
+export const coerceJsxManySym = Kit.sysId("els")
 export const coerceSymNs = Kit.sysId("coerceNS")
 coerceSymNs.nsDefault = true
 
@@ -193,3 +195,70 @@ export function cleanPureJumps(si) {
     }
   }
 }
+
+/**
+ * Wraps each react element with specified in `opSym`/`bindName` operation
+ */
+export function jsx(si) {
+  const s = Kit.auto(si)
+  if (!s.opts.jsxCoerce)
+    return s
+  return _jsxCoerce(false)
+  function* _emitCoerce(i, jsx, pos = i.pos, sym = coerceJsxSym) {
+    if (jsx) {
+      yield s.enter(pos,Tag.JSXExpressionContainer)
+      pos = Tag.expression
+    }
+    yield s.enter(pos,Tag.CallExpression,{bind:true})
+    yield s.tok(Tag.callee,Tag.Identifier,{sym})
+    yield s.enter(Tag.arguments, Tag.Array)
+  }
+  function* _jsxCoerce(jsx) {
+    for(const i of s.sub()) {
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.JSXSpreadChild:
+          yield i
+          const slab = s.label()
+          yield* _emitCoerce(i, false, Tag.expression, coerceJsxManySym)
+          yield* Kit.reposOne(_jsxCoerce(false),Tag.push)
+          yield* slab()
+          continue
+        case Tag.JSXExpressionContainer:
+          yield i
+          if (i.pos === Tag.push) {
+            const lab = s.label()
+            yield* _emitCoerce(i, false, Tag.expression)
+            yield* Kit.reposOne(_jsxCoerce(false),Tag.push)
+            yield* lab()
+            continue
+          }
+          yield* _jsxCoerce(false)
+          continue
+        case Tag.JSXElement:
+          const lab = s.label()
+          const {name} = i.value.node.openingElement
+          if (name.type === "JSXMemberExpression"
+              || name.type === "JSXIdentifier"
+              && name.name[0].toUpperCase() === name.name[0]) {
+            yield* _emitCoerce(i, jsx)
+            yield s.peel(Kit.setPos(i,Tag.push))
+            yield* _jsxCoerce(true)
+            yield* lab()
+            continue
+          }
+          yield i
+          yield* _jsxCoerce(true)
+          continue
+        case Tag.JSXFragment:
+        case Tag.JSX:
+          yield i
+          yield* _jsxCoerce(true)
+          continue
+        }
+      }
+      yield i
+    }
+  }
+}
+
