@@ -16,7 +16,9 @@
   "keywords": [
     "continuations",
     "monad",
-    "effectful"
+    "effectful",
+    "babel-plugin",
+    "babel-plugin-macros"
   ],
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",

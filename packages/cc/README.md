@@ -5,78 +5,6 @@ Runtime library for multi-prompt delimited continuations with
 
 [API documentation](api/README.md)
 
-## Usage
-
-For single level syntax and activating by import:
-
-```
-$ npm install --save-dev @effectful/js
-$ npm install --save @effectful/cc
-```
-
-In .babelrc:
-
-For two-level syntax with `async/await` overloading:
-
-```json
-{
-  "presets": "@effectful/cc/transform-async-do"
-}
-```
-
-NOTE: If you need another babel presets, add `"passPerPreset":true`, e.g.
-
-```json
-{
-  "passPerPreset": true,
-  "presets": ["@effectful/cc/transform-async-do", "env"]
-}
-```
-
-
-In JS files to transpile:
-
-```javascript
-import * as CC from "@effectful/cc"
-```
-
-or
-
-```javascript
-var CC = require("@effectful/cc")
-
-```
-
-All async functions in files with the imports will be transpiled into delimited
-continuations functions.
-
-For single-level:
-
-```json
-{
-  "presets": "@effectful/cc/transform"
-}
-```
-
-After in files importing "@effectful/cc" use directives:
-
-```javascript
-import * as CC from "@effectful/cc"
-
-// ... all functions here won't be modified
-
-CC.profile("defaultFull")
-
-// ... all functions here are transpiled treating any function call as effectful
-
-CC.profile("disabled")
-
-// ... all functions here aren't modified again
-
-```
-
-To get effectful value in single-level mode use `CC.reify` function.
-
 ## Description
 
 It is the most generic effects API implementation, and it can be
@@ -152,6 +80,128 @@ generic? Becuase of performance, no indirection layer, and another
 effects API may be inlined.  The compiler is also able to derive more
 efficient combinators, for example, implicit parallelism (Applicative
 function API).
+
+## Usage
+
+### babel plugin
+
+For single level syntax and activating by import:
+
+```
+$ npm install --save-dev @effectful/js
+$ npm install --save @effectful/cc
+```
+
+In .babelrc:
+
+For two-level syntax with `async/await` overloading:
+
+```json
+{
+  "plugins": "@effectful/cc/transform-async-do"
+}
+```
+
+Or
+
+```
+$ babel --plugins @effectful/cc/transform-async-do index.js
+```
+
+In JS files to transpile:
+
+```javascript
+import * as CC from "@effectful/cc"
+```
+
+or
+
+```javascript
+var CC = require("@effectful/cc")
+
+```
+
+All async functions in files with the imports will be transpiled into delimited
+continuations functions.
+
+### Zero configuration transform
+
+Zero-configuration using
+[babel-plugin-macros](https://github.com/kentcdodds/babel-plugin-macros),
+or any other tool where it is enabled by default (such as 
+[Create Reat App](https://github.com/facebook/create-react-app) since v2).
+
+Import corresponding macro definition in the module to transpile:
+
+```javascript
+
+import "@effectful/cc/async-do.macro"
+
+```
+
+### List of available profiles
+
+EffectfulJS offers quite a few options, there are groups of them called
+profiles.  Different profiles may be enabled either by calling pre-processing
+function `CC.profile("name")` in code, or using corresponding babel plugin or
+macros.
+
+ * "asyncDo" - transpile
+    only async functions treating await expression as effectful expressions
+    mark - double levels syntax. Babel plugin module is "@effectful/cc/transform-async-do" 
+    and macro module is "@effectful/cc/async-do.macro" 
+ * "defaultFull" - transpiles all sub-functions treating all function calls as effectful. 
+    It is a single level syntax. Babel plugin module is "@effectful/cc/transform-full" 
+    and macro module is "@effectful/cc/full.macro".
+ * "defaultMinimal" - transpiles all functions but considers as effectful only
+    expressions wrapped with imported namespace call , e.g. `CC(expr)`. Babel plugin
+    module is "@effectful/cc/transform-minimal" and macro module is
+    "@effectful/cc/minimal.macro".
+ * "disabled" - nothing is transpilied, use compile time directives to specify
+   needed profiles in the code.  Babel plugin module is "@effectful/cc/transform" and
+   macro module is "@effectful/cc/macro".
+
+For example, here is a module switching different profiles but nothing enabled
+by default:
+
+```javascript
+import CC from "@effectful/cc"
+import "@effectful/cc/macro"
+
+// not transpiled
+function notEffectful() {
+}
+
+CC.profile("defaultFull")
+
+// transpiled, both `something and `somethingElse` are effectful
+function effectful() {
+  return something() + somethingElse()
+}
+
+CC.profile("minimal")
+
+// transpiled, only `somethingElse` is effectful
+function effectful() {
+  return something() + CC(somethingElse)
+}
+
+CC.profile("disabled")
+
+// not transpiled
+async function justAsyncFunction() {
+  await something
+}
+
+CC.profile("asyncDo")
+
+// transpiled, only `somethingElse` is effectful
+async function effectful() {
+  return something() + await somethingElse
+}
+```
+
+To get effectful value in single-level mode use `CC.reify` function.
 
 ## References
 

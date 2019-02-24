@@ -1,13 +1,19 @@
 module.exports = require("@effectful/js")
-  .options({detectRT:"@effectful/cc",
-            scopePrefix:true,
-            contextMethodOps:true,
-            contextBy:"parameter",
-            scopeContext:true,
-            static:true,
-            coerce:false,
-            state:false,
+  .options({name:"@effectful/cc",
+            detectRT:"@effectful/cc",
             shortFrameNames:false,
-            markRepeat:true
+            markRepeat:true,
+            defunct:false,
+            inlineJsExceptions:false,
+            inlinePureJumps:null,
+            keepLastPure:false,
+            keepLastRaise:false,
+            par:false,
+            storeCont:null,
+            static:false,
+            scopePrefix:false,
+            scopeContext:false,
+            contextBy:"parameter",
+            defunct:false
            })
 
