@@ -29,7 +29,5 @@ If there are other babel presets, add `"passPerPreset":true`.
 
 ## License
 
-Copyright © 2018 Vitaliy Akimov
-
 Distributed under the terms of the [The MIT License (MIT)](LICENSE). 
 

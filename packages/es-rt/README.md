@@ -40,7 +40,5 @@ TODO: SOON
 
 ## LICENSE
 
-Copyright © 2017-2018 Vitaliy Akimov
-
 Distributed under the terms of The MIT License (MIT).
 

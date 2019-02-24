@@ -5,6 +5,4 @@ Pre-built version of
 
 ## LICENSE
 
-Copyright © 2016-2018 Vitaliy Akimov
-
 Distributed under the terms of The MIT License (MIT).

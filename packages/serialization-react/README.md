@@ -28,7 +28,5 @@ After the import is executed react elements are serializable.
 
 ## LICENSE
 
-Copyright © 2016-2018 Vitaliy Akimov
-
 Distributed under the terms of The MIT License (MIT).
 

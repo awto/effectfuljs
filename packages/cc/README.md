@@ -165,7 +165,5 @@ paper.
 
 ## License
 
-Copyright © 2016-2018 Vitaliy Akimov
-
 Distributed under the terms of the [The MIT License (MIT)](LICENSE). 
 

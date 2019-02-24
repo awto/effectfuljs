@@ -346,7 +346,7 @@ both options.
 
 ## Usage
 
-There are babel presets in separate packages.
+There are babel plugins and macros in separate packages.
 
  * [@effectful/js](https://github.com/awto/effectfuljs/tree/master/packages/js)
   compiles to the most abstract code, single or double level depending
@@ -359,15 +359,13 @@ There are babel presets in separate packages.
   A shortcut for [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
   with concrete ECMAScript effects implementations.
 
-All the presets are just shortcuts to
+All the plugins and macros are just shortcuts to
 [@effectful/core](https://github.com/awto/effectfuljs/tree/master/packages/es)
 setting needed lower level options described in
 [config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js)
 thus generated code uses different runtime interfaces.
 
 ## LICENSE
-
-Copyright © 2016-2018 Vitaliy Akimov
 
 Distributed under the terms of The MIT License (MIT).
 

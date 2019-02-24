@@ -322,6 +322,4 @@ object's member access. It is an overhead, but modern engines handle it well.
 
 ## License
 
-Copyright © 2018 Vitaliy Akimov
-
 Distributed under the terms of the [The MIT License (MIT)](LICENSE). 
