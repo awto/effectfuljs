@@ -484,6 +484,17 @@ const SymbolDescriptor = regDescriptor({
   name:"Symbol"
 })
 
+let BigIntDescriptor = typeof BigInt === "function"
+    && regDescriptor({
+      write(ctx, value) {
+        return {"#int":value.toString()}
+      },
+      read(ctx, value) {
+        return BigInt(value["#int"])
+      },
+      name:"BigInt"
+    })
+
 function getValueDescriptor(value) {
   switch(typeof value) {
   case "number":
@@ -509,6 +520,9 @@ function getValueDescriptor(value) {
   case "symbol":
     if (Symbol.keyFor(value))
       return SymbolDescriptor
+    break
+  case "bigint":
+    return BigIntDescriptor
   }
   return descriptorByValue.get(value)
 }
@@ -531,6 +545,8 @@ function getJsonDescriptor(json) {
     return lookupDescriptor(json["#oid"])
   if ("#type" in json)
     return lookupDescriptor(json["#type"])
+  if ("#int" in json)
+    return BigIntDescriptor
   return PojsoDescriptor
 }
 

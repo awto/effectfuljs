@@ -318,3 +318,13 @@ describe("bind function arguments", function() {
     assert.strictEqual(a3, ra3)
   })
 })
+
+describe("BigInt", function() {
+  it("should be serializable", function() {
+    const num = 2n**10000n
+    const doc = Lib.write({num})
+    assert.ok(doc.num["#int"].substr)
+    assert.equal(doc.num["#int"].length, 3011)
+    assert.strictEqual(Lib.read(doc).num,num)
+  })
+})
