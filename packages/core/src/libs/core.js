@@ -20,7 +20,10 @@ const postproc = Kit.pipe(
     Policy.directives,
     Policy.configDiffPass,
     Policy.applyProfiles,
-    Policy.configDiffPass)))
+    Policy.configDiffPass)),
+  Policy.propagateBlockDirs,
+  Policy.propagateOpts
+)
 
 export default Kit.pipe(
   function* init(si) {
@@ -114,7 +117,8 @@ export default Kit.pipe(
             yield* generators()
             yield* asyncGeneratorsDo()
             yield* asyncDo()
-            return Kit.pipe(Policy.applySubAndOne,Policy.configDiffPass)
+            return Kit.pipe(Policy.applySubAndOne,
+                            Policy.configDiffPass)
           }
         }
       }
@@ -129,6 +133,3 @@ export default Kit.pipe(
     yield* s
   },
   postproc)
-
-
-

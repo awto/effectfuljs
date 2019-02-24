@@ -1,6 +1,4 @@
 var dirs = [
   "default",
-  "topLevel",
-  "defunct",
-  "defunctTopLevel"
+  "topLevel"
 ].forEach(require("./links").target)

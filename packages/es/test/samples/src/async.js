@@ -1,30 +1,30 @@
-exports.a1 = async function emptyBody() {
+exports.a01 = async function emptyBody() {
 }
 
-exports.a2 = async function pureReturn() {
+exports.a02 = async function pureReturn() {
   return "a2"
 }
 
-exports.a3 = async function singleAwait() {
+exports.a03 = async function singleAwait() {
   return await delay(1);
 }
 
-exports.a4 = async function asyncExprBind() {
+exports.a04 = async function asyncExprBind() {
   return await (await delay(1));
 }
 
-exports.a5 = async function asyncExprBind2() {
+exports.a05 = async function asyncExprBind2() {
   return await await await delay(1);
 }
 
-exports.a6 = async function asyncAssign() {
+exports.a06 = async function asyncAssign() {
   let i = 0
   i = await delay(i + 1)
   i = await delay(i++)
   return i
 }
 
-exports.a7 = async function forOf() {
+exports.a07 = async function forOf() {
   let res = 0
   for(const i of [1,2,3]) {
     res += await delay(i)
@@ -32,7 +32,7 @@ exports.a7 = async function forOf() {
   return res
 }
 
-exports.a8 = async function forIn() {
+exports.a08 = async function forIn() {
   let res = 0
   const obj = {"a":1,"b":2,"c":3}
   for(const i in obj) {
@@ -41,7 +41,7 @@ exports.a8 = async function forIn() {
   return res
 }
 
-exports.a9 = async function simpleThrow() {
+exports.a09 = async function simpleThrow() {
   throw new Error("1")
 }
 

@@ -21,7 +21,7 @@ function* opts() {
                         all:{
                           wrapFunction:null
                         }
-                       }],["",{}]]
+                       }]]
                 ])
 }
 

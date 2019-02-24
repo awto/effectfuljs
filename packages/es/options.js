@@ -23,13 +23,11 @@ const rebind = {
     markResultCont: false,
     scopeContext:true,
     scopePrefix:true,
-    scopePostfix:true,
     contextState:false,
-    defunct: false,
-    topLevel: false,
+    defunct:false,
+    topLevel:false,
     static:true,
     combineOps:true,
-    scopePrefix:true,
     coerce:false,
     contextBy:"this",
     shortFrameNames:false,
@@ -37,12 +35,12 @@ const rebind = {
     keepLastRaise:true,
     inlineRaiseOp:null,
     inlineScopeOp:null,
-    inlinePureJumps:null,
     esForAwaitOf:true,
+    defunctStateDiscriminant:false,
     contextMethodOpsSpec: {
-      iterator: false,
-      iteratorM: false,
-      forInIterator: false
+      iterator:false,
+      iteratorM:false,
+      forInIterator:false
     }
   },
   generators: {
@@ -58,7 +56,8 @@ const rebind = {
     bindName:"chain",
     scopeConstructor:"async",
     ops:{AwaitExpression: true},
-    wrapFunction: "asyncFunction"
+    scopePostfix:false,
+    wrapFunction:"asyncFunction"
   },
   asyncGenerators: {
     bindName:"chain",
@@ -76,8 +75,6 @@ const rebind = {
 const inline = {
   effectful: {
     contextBy:"reference",
-    inlineJsExceptions:true,
-    inlinePureJumps:"call",
     inlineScopeOp:"context",
     markRepeat:true,
     keepLastPure:true,
@@ -94,7 +91,8 @@ const inline = {
     inlineYieldStarOp:"iterator",
     inlineReentryCheck:true,
     inlinePureOp: "iterator",
-    inlineRaiseOp:"throw"
+    inlineRaiseOp:"throw",
+    inlineFork:"unsupported"
   },
   async: {
     storeCont:false ,
@@ -104,18 +102,18 @@ const inline = {
     inlineContAssign:false,
     scopeContext:false,
     scopePrefix:false,
-    inlinePureOp:"promise",
     inlineScopeOp:null,
     inlineChainOp:"promise",
     storeResultCont:false,
     inlineRaiseOp:"promise",
-    inlinePureOp: "promise"
+    inlinePureOp:"promise",
+    inlineFork:"promise"
   },
   asyncGenerators: {
     inlineResultContAssign:true,
     inlineErrorContAssign:true,
     inlineContAssign:true,
-    inlineScopeOp:"unwrap",
+    inlineScopeOp:"context",
     storeCont:"$step",
     storeErrorCont:"$handle",
     storeResultCont:"$exit",
@@ -123,7 +121,8 @@ const inline = {
     inlineYieldStarOp:"iterator",
     inlineChainOp:"promise",
     inlinePureOp: "iterator",
-    inlineRaiseOp:"promise"
+    inlineRaiseOp:"promise",
+    inlineFork:"unsupported"
   }
 }
 
@@ -144,22 +143,31 @@ const defunct = {
 const defunctInline = {
   effectful: {
     markRepeat:false,
-    defunctStateDiscriminant:"field",
+    defunctStateDiscriminant:false,
     storeCont:"$step",
+    storeRunningCont:"$cur",
     storeHandler:"step",
+    storeResultCont:false,
+    storeErrorCont:false,
     inlinePureJumps:"tail",
-    storeResultCont:"$exit",
-    storeErrorCont:"$handle",
-    inlineResultContAssign:true,
-    inlineErrorContAssign:true,
-    inlineContAssign:true,
-    scopePrefix:true
+    inlineContAssign:true
   },
   async: {
     inlineScopeOp:"call"
   },
   asyncGenerators: {
-    storeHandler:"next"
+    storeHandler:"$run"
+  }
+}
+
+const leftAssoc = {
+  async: {
+    leftChain: true,
+    storeErrorCont:false,
+    inlineErrorContAssign:false,
+    storeResultCont:false,
+    inlineResultContAssign:false,
+    contextBy: "closure"
   }
 }
 
@@ -185,6 +193,9 @@ const topLevel = {
     topLevel:true,
     contextBy: "this",
     contextState:true
+  },
+  effectful: {
+    parThreadState:"context"
   }
 }
 
@@ -213,10 +224,12 @@ const disabled = {
 
 module.exports = function esProfile(opts={}) {
   let importRT = opts.importRT
+  if (opts.persist)
+    opts.topLevel = true
+  if (opts.defunct === false && importRT == null)
+    throw new Error("no default runtime for `defunct:false`")
   if (importRT == null) {
     const p = []
-    if (opts.defunct === false)
-      p.push("funct")
     if (opts.loose)
       p.push("loose")
     else if (opts.inline)
@@ -236,14 +249,44 @@ module.exports = function esProfile(opts={}) {
   const async = Object.assign({},config,rebind.all,rebind.effectful,rebind.async)
   const asyncGenerators = Object.assign({},config,rebind.all,rebind.effectful,
                                         rebind.asyncGenerators)
+  if (opts.left && !opts.defunct)
+    console.error("`left` is ignored without `defunct`")
+  if (opts.left && !opts.inline)
+    console.error("`left` is ignored without `inline`")
+  if (opts.topLevel && opts.inline) {
+    opts.topLevel = false
+    console.error("`inline` assumes `topLevel:false`")
+  }
+  if (opts.asyncClosure === false && opts.left) {
+    opts.asyncClosure = true
+    console.error("`asyncClosure:false` is ignored with `left:true`")
+  }
+  if (opts.asyncClosure === false && opts.topLevel) {
+    opts.asyncClosure = true
+    console.error("`asyncClosure:false` is ignored with `topLevel:true`")
+  }
+  if (opts.asyncClosure === false && opts.par !== false) {
+    opts.par = false
+    console.error("`par` is ignored with `asyncClosure:false`")
+  }
+  if (opts.topLevel && opts.par !== false) {
+    opts.par = false
+    console.error("`par` is ignored with `topLevel:true` (WIP)")
+  }
   if (opts.loose)
     opts.inline = true
+  if (opts.inline && opts.par !== false) {
+    opts.par = false
+    console.error("`par` is ignored with `inline:true` (WIP)")
+  }
   if (opts.inline) {
     Object.assign(generators,inline.all,
                   inline.effectful,inline.generators)
     Object.assign(async,inline.all,inline.effectful,inline.async)
     Object.assign(asyncGenerators,inline.all,inline.effectful,
                   inline.asyncGenerators)
+    if (opts.asyncClosure !== false)
+      async.contextBy = "closure"
   }
   if (opts.defunct !== false) {
     Object.assign(generators,defunct.effectful)
@@ -253,6 +296,9 @@ module.exports = function esProfile(opts={}) {
       Object.assign(generators,defunctInline.effectful)
       Object.assign(async,defunctInline.effectful,defunctInline.async)
       Object.assign(asyncGenerators,defunctInline.effectful,defunctInline.asyncGenerators)
+    }
+    if (opts.left !== false && !opts.topLevel && opts.inline) {
+      Object.assign(async,leftAssoc.async)
     }
   }
   if (opts.loose) {
@@ -274,22 +320,15 @@ module.exports = function esProfile(opts={}) {
       Object.assign(asyncGenerators,topLevelDefunct.effectful,topLevelDefunct.asyncGenerators)
     }
   }
-  if (opts.par) {
+  if (opts.par === false) {
+    async.par = false
+  } else {
     const newOpts = {
-      par:true,
-      parRegion:false,
-      blockDirectives: {
-        par: {
-          parRegion: true
-        },
-        seq: {
-          parRegion: false
-        }
-      }
+      par:true
     }
     Object.assign(file, newOpts)
     Object.assign(async, newOpts)
-    Object.assign(asyncGenerators, newOpts)
+    // Object.assign(asyncGenerators, newOpts)
   }
   Object.assign(pure,opts.all,opts.pure,
                 {generator:false,async:false,transform:false})

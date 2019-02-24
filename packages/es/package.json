@@ -2,7 +2,7 @@
   "name": "@effectful/es",
   "version": "1.0.4",
   "description": "Standard JavaScript effects using @effectful/core (abstract interface)",
-  "main": "preset.js",
+  "main": "transform.js",
   "scripts": {
     "test": "mocha",
     "test-opt": "cross-env env-cmd $EJS_ENV mocha",

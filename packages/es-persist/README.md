@@ -6,7 +6,8 @@ state. The state can be clonable and serializable.
 This enables:
   * universal apps, time traveling, hot reloading
   * custom jobs scheduling
-  * long-running workflows (storing state in DB, e.g. while awaiting users e-mail confirmation)
+  * long-running workflows (storing state in DB, e.g. while awaiting users
+    e-mail confirmation)
   * various control manipulation operators
 
 ## Demo
@@ -21,6 +22,8 @@ It uses this library to implement:
 
 ## Usage
 
+### babel plugin
+
 ```
 $ npm install --save-dev @effectful/es
 $ npm install --save @effectful/es-persist
@@ -30,12 +33,10 @@ In .babelrc:
 
 ```json
 {
-  "presets": ["@effectful/es-persist/transform"]
+  "plugins": ["@effectful/es-persist/transform"]
 }
 
 ```
-
-If there are other babel presets, add `"passPerPreset":true`.
 
 Import it in your module:
 
@@ -48,6 +49,21 @@ import * as R from "@effectful/es-persist"
 async function main() {
   await say("hello world")
 }
+
+```
+
+### Zero-configuration transform
+
+Zero-configuration using
+[babel-plugin-macros](https://github.com/kentcdodds/babel-plugin-macros),
+or any other tool where it is enabled by default (such as 
+[Create Reat App](https://github.com/facebook/create-react-app) since v2). 
+
+Just import "@effectful/es-persist/macro" in the module to transpile:
+
+```javascript
+
+import "@effectful/es-persist/macro"
 
 ```
 

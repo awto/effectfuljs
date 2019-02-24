@@ -1,9 +1,13 @@
 const run = require("./templates/async")
 
 describe("async/await using context passing runtime", function() {
-  run("with default options", require("./default/links/async"))
-  run("with top level handlers", require("./topLevel/links/async"))
-  run("with single frame function",require("./defunct/links/async"))
-  run("with top level single frame function",
-      require("./defunctTopLevel/links/async"))
+  describe("with default options", function() {
+    run("comparing",require("./default/links/async"))
+    require("./default/links/asyncTest")
+  })
+  describe("with top level handlers", function() {
+    run("comparing",require("./topLevel/links/async"))
+    // require("./topLevel/links/asyncTest")
+  })
 })
+

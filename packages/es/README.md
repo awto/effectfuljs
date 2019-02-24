@@ -3,12 +3,12 @@
 The two-level syntax for effects based on ECMAScript async, generator and
 async generator functions syntax overloading.
 
-The project is a babel preset for integrating new custom computational effects
+The project is a babel plugin for integrating new custom computational effects
 into JavaScript.
 
 The first level is plain JavaScript constructs, and the second level
-is async, generators and async generators function syntax. By means of the presets
-default implementations for the effectful(second) level can be overloaded.
+is async, generators and async generators function syntax. By means of the plugin
+default implementations for the effectful(second) level syntax can be overloaded.
 
 As a proof of concept, there are default implementations of corresponding ECMAScript
 standard effects.
@@ -35,16 +35,18 @@ $ npm install --save-dev @effectful/es
 $ npm install --save @effectful/es-rt
 ```
 
-The preset doesn't use babel's transformation framework, so it requires
-`passPerPreset` argument, if there are other presets.
-
 For example:
 
 ```json
 {
-  "passPerPreset": true,
-  "presets": ["@effectful/es/preset","@babel/preset-env"]
+  "plugins": ["@effectful/es/transform"]
 }
+```
+
+Or:
+
+```
+$ babel --plugins @effectful/es/transform index.js
 ```
 
 By default it injects imports for
@@ -58,9 +60,19 @@ implementations libraries.
 
 ```json
 {
-  "presets": [["@effectful/es/preset",{"importRT":"my-custom-effects"}]]
+  "plugins": [["@effectful/es/transform",{"importRT":"my-custom-effects"}]]
 }
 ```
+
+
+### Zero-config transformation
+
+Zero-configuration using
+[babel-plugin-macros](https://github.com/kentcdodds/babel-plugin-macros),
+or any other tool where it is enabled by default (such as 
+[Create Reat App](https://github.com/facebook/create-react-app) since v2).
+
+Just import "@effectful/es/macro" module in the module you want to transpile.
 
 ### Inlined concrete implementation
 
@@ -73,7 +85,7 @@ This .babelrc
 
 ```json
 {
-  "presets": [["@effectful/es/preset",{"inline":true}]]
+  "plugins": [["@effectful/es/transform",{"inline":true}]]
 }
 ```
 
@@ -96,19 +108,17 @@ There are quite a few of lower level options described in
 [config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js).
 
 Their values can be provided using `all`, `file`, `pure`, `effectful`, `generators`, `async`,
-`asyncGenerators` fields in the preset options. For example, to use CommonJS modules instead
+`asyncGenerators` fields in the plugin options. For example, to use CommonJS modules instead
 of defaulting ES for runtime injection use:
 
 ```json
 {
-  "presets": [["@effectful/es/preset",{"file":{"modules":"commonjs"}}]]
+  "plugins": [["@effectful/es/transform",{"file":{"modules":"commonjs"}}]]
 }
 ```
 
 More docs will be available soon...
 
 ## LICENSE
-
-Copyright © 2016-2018 Vitaliy Akimov
 
 Distributed under the terms of The MIT License (MIT).

@@ -1,7 +1,10 @@
 {
   "sourceType": "script",
-  "presets": [
-    ["../../preset",{"topLevel":false,
-                     "modules":"commonjs",
-                     "defunct":false}]]
+  "plugins": [["../../transform",
+               {"topLevel":false,
+                "defunct":true,
+                "contextState":true,
+                "contextBy":"this",
+                "modules":"commonjs"}]]
 }
+

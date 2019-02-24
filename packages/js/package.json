@@ -2,7 +2,7 @@
   "name": "@effectful/js",
   "version": "1.0.4",
   "description": "Single level computation effects syntax",
-  "main": "preset.js",
+  "main": "transform.js",
   "scripts": {
     "test": "echo FINE!"
   },

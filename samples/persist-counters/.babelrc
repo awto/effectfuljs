@@ -1,17 +1,15 @@
 {
   "env": {
     "development": {
-      "passPerPreset": true,
       "presets": ["@babel/preset-react",
-                  "@effectful/es-persist-serialization/transform",
-                  {"plugins":["@babel/plugin-syntax-async-generators",
+                  {"plugins":["@effectful/es-persist-serialization/transform",
+                              "@babel/plugin-syntax-async-generators",
                               "@babel/plugin-proposal-object-rest-spread"]}]
     },
     "production": {
-      "passPerPreset": true,
       "presets": ["@babel/preset-react",
-                  "@effectful/es-persist-serialization/transform",
-                  {"plugins":["@babel/plugin-syntax-async-generators",
+                  {"plugins":["@effectful/es-persist-serialization/transform",
+                              "@babel/plugin-syntax-async-generators",
                               "@babel/plugin-proposal-object-rest-spread"]}]
     },
     "es": {
@@ -20,10 +18,9 @@
                  "@babel/plugin-syntax-async-generators"]
     },
     "test": {
-      "passPerPreset": true,
       "presets": ["@babel/preset-react",
-                  "@effectful/es-persist-serialization/transform",
-                  {"plugins":["@babel/plugin-syntax-async-generators",
+                  {"plugins":["@effectful/es-persist-serialization/transform",
+                              "@babel/plugin-syntax-async-generators",
                               "@babel/plugin-transform-modules-commonjs",
                               "@babel/plugin-proposal-object-rest-spread"]}]
     },

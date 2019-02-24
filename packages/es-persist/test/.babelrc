@@ -1,10 +1,7 @@
 {
-  "passPerPreset": true,
-  "presets": [["../transform", {"importRT":"../index"}],
-              {
-                "plugins":[
-                  ["@babel/plugin-transform-modules-commonjs",
-                   {strict:false,loose:true}]]
-              }]
+  "plugins":[
+    ["../transform", {"importRT":"../index"}],
+    ["@babel/plugin-transform-modules-commonjs",
+     {strict:false,loose:true}]]
 }
 

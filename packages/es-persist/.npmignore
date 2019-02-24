@@ -1,4 +1,5 @@
 node_modules
+rollup.config.js
 src
 test
 .tern*
