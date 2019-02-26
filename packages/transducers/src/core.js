@@ -289,7 +289,7 @@ for(const i in VISITOR_KEYS) {
       assert.equal(enumValues.filter(v => v.substr == null).length,0)
     }
     const expr = nt.has(Tag.Expression),
-          lval = nt.has(Tag.LVal) || pos === Tag.local
+          lval = nt.has(Tag.LVal) || nt.has(Tag.PatternLike) || pos === Tag.local
     return {
       atomicType,nodeTypes:nt,nillable,enumValues,expr,
       stmt: nt.has(Tag.Statement),
@@ -339,20 +339,6 @@ function setComputed(sym,prop) {
 }
 
 setComputed(Tag.ObjectProperty,Tag.key)
-
-// TODO: remove in babel 7
-/*
-{
-  symInfo(Tag.ObjectMethod).fieldsMap
-    .set(Tag.params,symInfo(Tag.FunctionExpression).fieldsMap.get(Tag.params))
-  symInfo(Tag.ClassMethod).fieldsMap
-    .set(Tag.params,symInfo(Tag.FunctionExpression).fieldsMap.get(Tag.params))
-  const keyProp = symInfo(Tag.ObjectProperty).fieldsMap.get(Tag.key)
-  symInfo(Tag.ObjectMethod).fieldsMap.set(Tag.key,keyProp)
-  symInfo(Tag.ClassMethod).fieldsMap.set(Tag.key,keyProp)
-  symInfo(Tag.ClassProperty).fieldsMap.set(Tag.key,keyProp)
-}
-*/
 
 symInfo(Tag.CatchClause).fieldsMap.get(Tag.param).declVar = true
 {
@@ -448,6 +434,10 @@ export function tok(pos,type,value) {
   return {enter:true,leave:true,pos,type,value}
 }
 
+/** 
+ * converts AST `node` into a stream of tokens with initial position `pos`
+ * and intial tag's value - `value`
+ */
 export function* produce(node,pos,value) {
   function* _produce(node,pos,value) {
     value.node = node
@@ -477,6 +467,9 @@ export function* produce(node,pos,value) {
   yield* _produce(node, pos || Tag.top, value || {})
 }
 
+/** 
+ * if iterable `s` isn't array applies reads it into an array 
+ */
 export function toArray(s) {
   if (Array.isArray(s))
     return s
@@ -514,6 +507,9 @@ function* reproduce(s) {
   return res
 }
 
+/**
+ * converts stream of tokens into AST node
+ */
 export function consume(s) {
   const stack = [{}]
   for (const i of s) {
@@ -564,6 +560,10 @@ export function* reproduceNodes(s) {
   }
 }
 
+/**
+ * Resets `fieldInfo` field in each `value`.
+ * The field descripts AST node context.
+ */
 export function* resetFieldInfo(s) {
   const stack = []
   for(const i of s) {
@@ -621,6 +621,7 @@ export function* resetFieldInfo(s) {
   }
 }
 
+/** interprets `Tag.Null` tokens by changing AST accordingly */
 export function* removeNulls(s) {
   const stack = []
   for(const i of s) {

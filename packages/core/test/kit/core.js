@@ -25,7 +25,9 @@ const defaultParseOpts = {
   plugins: ["asyncGenerators",
             "doExpressions",
             "functionBind",
-            "functionSent"]
+            "functionSent",
+            "jsx"
+           ]
 }
 
 export function prettyBlock(f,opts = {}) {
@@ -39,14 +41,27 @@ export const runExpr = Kit.curry(function(opts, f) {
   return run(opts, `(${f.toString()});`)
 })
 
+function* prepareJsx(s) {
+  for(const i of s) {
+    if (i.enter && i.type === Tag.JSXElement) {
+      const {name} = i.value.node.openingElement
+      if (name.type === "JSXIdentifier" && name.name.startsWith("Eff")) {
+        i.value.wrapBindName = "el"
+      }
+    }
+    yield i
+  }
+}
+
 export const run = Kit.curryN(2,Kit.optsScopeLift(function run(opts,f) {
   Kit.setOpts(Object.assign({},
                             defaultOpts,
                             {importRT:"@effectful/core",
-                             ns:"M",override:opts},
+                             contextMethodOpsSpec:{},
+                             ns:"M"},
                             opts))
   const ast = parse(f.toString(),opts.parser || defaultParseOpts)
-  const orig = Kit.pipe(Kit.produce,Array.from)(ast)
+  const orig = Kit.pipe(Kit.produce,prepareJsx,Array.from)(ast)
   Transform.run(orig)
   return prettyBlock(
     generate(ast,
@@ -93,8 +108,7 @@ export const transformBlock = Kit.curryN(2,Kit.optsScopeLift(
     Kit.setOpts(Object.assign({},
                               defaultOpts,
                               {preset:"@effectful/core",
-                               ns:"M",
-                               override:opts},
+                               ns:"M"},
                               opts))
     const ast = parse(src.toString(),defaultParseOpts)
     const s = Kit.pipe(Kit.produce,Array.from,scopes)(ast)

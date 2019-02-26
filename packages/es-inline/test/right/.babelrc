@@ -1,0 +1,4 @@
+{
+  "sourceType": "script",
+  "plugins": [["../../transform",{"modules":"commonjs","left":false}]]
+}

@@ -12,7 +12,7 @@ export function inlineFrames(si) {
   const sa = Kit.toArray(si)
   const root = sa[0].value
   const {resFrame,resFrameRedir,pureExitFrame,errFrameRedir} = root
-  const {scopePostfix,staticPure,coerce} = root.opts
+  const {staticPure,inlineReflectedOps} = root.opts
   Ctrl.convolveFrames(sa)
   const res = Kit.toArray(_inlineJumps(sa))
   return Kit.toArray(Block.cleanup(res))  
@@ -35,10 +35,6 @@ export function inlineFrames(si) {
     }
     function* _runInlineJumps(frame,tmpVar) {
       const decls = frame.savedDecls
-      const noHandlers
-            = (!frame.catchContRedir || frame.catchContRedir === errFrameRedir)
-            && (!frame.resultContRedir
-                || frame.resultContRedir === resFrameRedir)
       for(const {content} of frame.steps) {
         for(let i = 0, len = content.length;i<len;++i) {
           const j = content[i]
@@ -48,46 +44,13 @@ export function inlineFrames(si) {
               if (!j.value.eff || j.value.opSym && j.value.opSym !== Block.chainId)
                 break
             case Ctrl.jump:
+              if (j.value.tmpVar && !inlineReflectedOps)
+                break
               if (tmpVar && !j.value.reflected) {
                 j.value.tmpVar = tmpVar
                 j.value.reflected = true
               }
               const {goto} = j.value
-              if ((!scopePostfix && noHandlers || j.type === Ctrl.jump)
-                  && (!goto || goto === resFrameRedir || goto === pureExitFrame)) {
-                const lab = s.label()
-                const inner = []
-                if (!j.leave) {
-                  ++i
-                  for(;i<len;++i) {
-                    const v = content[i]
-                    if (v.value === j.value)
-                      break
-                    inner.push(v)
-                  }
-                }
-                
-                if (j.value.frameArgs) {
-                  for(const [l,r] of j.value.frameArgs) {
-                    yield s.enter(Tag.push,Tag.AssignmentExpression,{node:{operator:"="}})
-                    yield s.tok(Tag.left,Tag.Identifier,{sym:l,lhs:true,rhs:false,decl:false})
-                    if (r === Block.argSym) {
-                      assert.ok(inner.length)
-                      yield* Kit.reposOneArr(inner,Tag.right)
-                      inner.length = 0
-                    } else
-                      yield s.tok(Tag.right,Tag.Identifier,{sym:r,lhs:false,rhs:true,decl:false})
-                    yield* s.leave()
-                  }
-                }
-                yield s.enter(Tag.push,Block.effExpr,{
-                  tmpVar:j.value.tmpVar,reflected:j.value.reflected})
-                if (!coerce && j.type === Ctrl.jump)
-                  yield s.enter(Block.app,{sym:Block.pureId})
-                yield* inner
-                yield* lab()
-                continue
-              }
               if (j.type === Block.letStmt || j.value.rec
                   || j.value.indirJumps && j.value.indirJumps.size
                   || j.value.frameArgs && j.value.frameArgs.size)
@@ -101,7 +64,7 @@ export function inlineFrames(si) {
                 break
               if (goto.resContRedir &&
                   !(goto.resContRedir === frame.resContRedir
-                    || j.value.tmpVar && (goto.resContRedir === resFrameRedir)))
+                    || j.value.tmpVar && goto.resContRedir === resFrameRedir))
                 break
               goto.removed = true
               const cont = j.value.content
@@ -111,9 +74,8 @@ export function inlineFrames(si) {
                 yield* s.leave()
               }
               yield* _runInlineJumps(goto,j.value.tmpVar || tmpVar)
-              for(const [n,v] of goto.savedDecls) {
+              for(const [n,v] of goto.savedDecls)
                 decls.set(n,v)
-              }
               if (!j.leave) {
                 do {
                   ++i
@@ -130,8 +92,78 @@ export function inlineFrames(si) {
 }
 
 /**
- * removes frames with only 1 jump as its content
+ * replacing jumps to pure with just effExpr
  */
+export function inlinePureCont(si) {
+  const s = Kit.auto(si)
+  if (s.opts.keepLastPure)
+    return s
+  const root = s.first.value
+  const {errFrameRedir,resFrameRedir,pureExitFrame} = root
+  const {defunct,coerce,scopePostfix} = s.opts
+  resFrameRedir.removed = !defunct
+  pureExitFrame.removed = !defunct
+  return defunct ? _inlinePureCont() : Block.cleanup(Kit.toArray(_inlinePureCont()))
+  function* _inlinePureCont() {
+    for(const i of s) {
+      if (i.enter) {
+        switch(i.type) {
+        case Block.letStmt:
+          if (!i.value.eff || i.value.opSym && i.value.opSym !== Block.chainId)
+            break
+        case Ctrl.jump:
+          const frame = i.value.ref
+          const noHandlers
+                = (!frame.catchContRedir || frame.catchContRedir === errFrameRedir)
+                && (!frame.resultContRedir
+                    || frame.resultContRedir === resFrameRedir)
+          const {goto} = i.value
+          if ((!scopePostfix && noHandlers || i.type === Ctrl.jump)
+              && (!goto || goto === resFrameRedir || goto === pureExitFrame)) {
+            const lab = s.label()
+            const inner = []
+            if (!i.leave)
+              inner.push(...s.sub())
+            if (i.value.frameArgs) {
+              for(const [l,r] of i.value.frameArgs) {
+                if (!l.bound)
+                  continue
+              yield s.enter(Tag.push,Tag.AssignmentExpression,
+                            {node:{operator:"="}})
+                yield s.tok(Tag.left,Tag.Identifier,
+                            {sym:l,lhs:true,rhs:false,decl:false})
+                if (r === Block.argSym) {
+                  if (inner.length)
+                    yield* Kit.reposOneArr(inner,Tag.right)
+                  else
+                    yield s.tok(Tag.right,Tag.Identifier,
+                                {sym:Kit.scope.undefinedSym})
+                  inner.length = 0
+                } else
+                  yield s.tok(Tag.right,Tag.Identifier,
+                              {sym:r,lhs:false,rhs:true,decl:false})
+                yield* s.leave()
+              }
+            }
+            yield s.enter(Tag.push,Block.effExpr,{
+              tmpVar:i.value.tmpVar,reflected:i.value.reflected})
+            if (!coerce && i.type === Ctrl.jump)
+              yield s.enter(Tag.push,Block.app,{sym:Block.pureId})
+            yield* inner
+            yield* lab()
+            s.close(i)
+            continue
+          }
+          frame.removed = false
+      }
+      }
+      yield i
+    }
+  }
+}
+  /**
+   * removes frames with only 1 jump as its content
+   */
 export function removeSingleJumps(si) {
   const sa = Kit.toArray(si)
   const root = sa[0].value

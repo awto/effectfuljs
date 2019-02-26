@@ -89,11 +89,12 @@ export function collectUsages(s) {
   const mods = root.injectRT || emptyMap
   const ctxns = root.opts.transform
         && root.opts.contextMethodOps && root.contextSym
+  const spec = root.opts.contextMethodOpsSpec || {}
   for(const i of sa) {
     if (i.enter && i.type === Tag.Identifier
         && i.value.sym && i.value.sym.lib) {
       let ns = i.value.ns
-      if (ns == null)
+      if (ns == null && spec[i.value.sym.orig] !== false)
         ns = ctxns
       ns = ns || rootNs
       i.value.ns = ns
@@ -139,7 +140,6 @@ export function interpretLibSyms(si) {
     return s
   const root = s.first.value
   const ns = root.$ns
-  const nsStatic = s.opts.nsStatic
   return _interpretLibSyms()
   function* _interpretLibSyms() {
     for(const i of s) {
@@ -151,7 +151,7 @@ export function interpretLibSyms(si) {
           yield s.tok(i.pos,Tag.Identifier,{sym:ns})
         } else if (ns) {
           yield s.enter(i.pos,Tag.MemberExpression,{origSym:sym})
-          yield s.tok(Tag.object,Tag.Identifier,{sym:ns})
+          yield s.tok(Tag.object,Tag.Identifier,{sym:ns,origOp:i.value.origOp})
           yield s.tok(Tag.property,Tag.Identifier,{sym,node:{name:sym.name}})
           yield* s.leave()
           s.close(i)

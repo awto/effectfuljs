@@ -1,0 +1,17 @@
+node_modules
+src
+test
+.tern*
+.babelrc
+.DS_Store
+.git
+tmp-*
+*.orig
+*.log
+*~
+*.map
+npm-debug.log
+.gitignore
+.env
+.eslintrc
+.eslintignore

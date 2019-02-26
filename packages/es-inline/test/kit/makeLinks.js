@@ -1,10 +1,5 @@
 var dirs = [
   "default",
-  "defunct",
-  "defunctTopLevel",
-  "loose",
-  "looseDefunct",
-  "looseDefunctTop",
-  "minimal",
-  "minimalDefunct"
+  "right",
+  "loose"
 ].forEach(require("@effectful/es/test/kit/links").target)

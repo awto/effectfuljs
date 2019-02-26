@@ -297,7 +297,9 @@ describe('normalize `for`', function() {
         print(`function () /*BS|B*/{
           /*BS|E*/{
             /*FS|E*/for (;;) /*BS|E*/{
-              /*ES|e*/ /*CE|B*/eff(1);
+              /*BS|E*/{
+                /*ES|e*/ /*CE|B*/eff(1);
+              }
             }
           }
         }`))

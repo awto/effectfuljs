@@ -9,6 +9,10 @@ function aa() {
       function _1() {
         return M.pure("from A");
       }
+
+      function _2(r) {
+        return M.pure(r);
+      }
     }
 
     static smethod() {
@@ -17,6 +21,10 @@ function aa() {
 
       function _1() {
         return M.pure("static from A");
+      }
+
+      function _2(r) {
+        return M.pure(r);
       }
     }
 
@@ -37,6 +45,10 @@ function aa() {
       function _2(a) {
         return M.pure("from B " + a);
       }
+
+      function _3(r) {
+        return M.pure(r);
+      }
     }
 
     static smethod() {
@@ -54,12 +66,21 @@ function aa() {
       function _2(a) {
         return M.pure("static from B " + a);
       }
+
+      function _3(r) {
+        return M.pure(r);
+      }
     }
 
-  };
+  },
+      r;
   return M.scope(_1);
 
   function _1() {
     return M.pure();
+  }
+
+  function _2(r) {
+    return M.pure(r);
   }
 }

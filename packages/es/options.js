@@ -76,6 +76,7 @@ const inline = {
   effectful: {
     contextBy:"reference",
     inlineScopeOp:"context",
+    inlineJsExceptions:true,
     markRepeat:true,
     keepLastPure:true,
     keepLastRaise:true
@@ -266,18 +267,21 @@ module.exports = function esProfile(opts={}) {
     console.error("`asyncClosure:false` is ignored with `topLevel:true`")
   }
   if (opts.asyncClosure === false && opts.par !== false) {
+    if (opts.par === true)
+      console.error("`par` is ignored with `asyncClosure:false`")
     opts.par = false
-    console.error("`par` is ignored with `asyncClosure:false`")
   }
   if (opts.topLevel && opts.par !== false) {
+    if (opts.par === true)
+      console.error("`par` is ignored with `topLevel:true` (WIP)")
     opts.par = false
-    console.error("`par` is ignored with `topLevel:true` (WIP)")
   }
   if (opts.loose)
     opts.inline = true
   if (opts.inline && opts.par !== false) {
+    if (opts.par === true)
+      console.error("`par` is ignored with `inline:true` (WIP)")
     opts.par = false
-    console.error("`par` is ignored with `inline:true` (WIP)")
   }
   if (opts.inline) {
     Object.assign(generators,inline.all,

@@ -1,9 +1,0 @@
-{
-  "sourceType": "script",
-  "presets": [["../../preset",
-               {"topLevel":true,
-                "defunct":true,
-                "loose":true,
-                "modules":"commonjs",
-                "all": {"removeAsserts":false}}]]
-}

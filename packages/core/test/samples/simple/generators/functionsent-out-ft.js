@@ -30,3 +30,7 @@ function fSent_5(fSent, a) {
   console.log(a);
   return M.pure();
 }
+
+function fSent_6(fSent, r) {
+  return M.pure(r);
+}

@@ -11,18 +11,10 @@ const reentryCont = 3
 export const pureFrameSym = Kit.scope.newSym("pure")
 pureFrameSym.numConst = 0
 
-/** prepares vars for storing current state and bind */
-export function* prepare(si) {
+/** initialize variables needed for next passes before `prepare` */
+export function init(si) {
   const s = Kit.auto(si)
   const root = s.first.value
-  const contSym = root.contSym || s.opts.storeCont
-        && s.opts.contextMethodOps
-        && (root.contSym = Kit.sysId(s.opts.storeCont))
-  if (!contSym)
-    throw s.error(
-      "`defunct:true` requires stored control state (e.g. \"storeCont\":\"$cont\")")
-  if (!root.contextSym)
-    throw s.error("`defunct:true` requires context object")
   root.implFrame = Kit.enter(
     Tag.push,Block.frame,{
       declSym:Kit.scope.newSym("_"),
@@ -30,6 +22,21 @@ export function* prepare(si) {
       savedDecls:new Map(),
       root
     })
+  return s
+}
+
+/** prepares vars for storing current state and bind */
+export function* prepare(si) {
+  const s = Kit.auto(si)
+  const root = s.first.value
+  const contSym = root.contSym || s.opts.storeCont
+        && s.opts.contextMethodOps
+        && (root.contSym = Kit.sysId(s.opts.storeCont))
+  if (!contSym && s.opts.defunctStateDiscriminant !== "arg")
+    throw s.error("`defunct:true` requires stored control state"
+                  +" or `defunctStateDiscriminant:\"arg\"`")
+  if (!root.contextSym)
+    throw s.error("`defunct:true` requires context object")
   const errMap = root.errMap = !s.opts.storeErrorCont && new Map()
   const resMap = root.resMap = !s.opts.storeResultCont && new Map()
   const errFrame = root.errFrameRedir
@@ -87,18 +94,25 @@ export function assignHandlers(si) {
   }
   const root = s.first.value
   const contextSym = root.contextSym
+  const closureCtx = s.opts.contextBy === "closure"
   return _assignHandlers()
   function* _assignHandlers() {
     const f = yield* s.till(i => i.type === Block.frame)
-    if (root.closureHandler)
-      yield* s.toks(Tag.push,`$I = $I()`,
-                    root.handlerSym,root.closureHandler)
-    else
-      yield* s.toks(Tag.push,`$I = $I`,
-                    root.handlerSym,root.implFrame.value.declSym)
+    if (!closureCtx) {
+      if (root.closureHandler) {
+        const lab = s.label()
+        yield* s.template(Tag.push,`$I = $I($E,{})`,
+                          root.handlerSym,root.closureHandler.funcId)
+        yield s.enter(Tag.push,Tag.ObjectExpression)
+        yield s.enter(Tag.properties,Tag.Array)
+        yield* lab()
+      } else
+        yield* s.toks(Tag.push,`$I = $I`,
+                      root.handlerSym,root.implFrame.value.declSym)
+    }
     if (!s.opts.defunctHandlerInProto) {
       if (root.errMapSym && root.errHandlerSym)
-        yield* s.toks(Tag.push,`$I = $I`,root.errHandlerSym,root.errMapSym)
+          yield* s.toks(Tag.push,`$I = $I`,root.errHandlerSym,root.errMapSym)
       if (root.resMapSym && root.resHandlerSym)
         yield* s.toks(Tag.push,`$I = $I`,root.resHandlerSym,root.resMapSym)
     }
@@ -177,15 +191,21 @@ export function inlineExceptions(si) {
   const root = s.first.value
   const errMap = root.errMap
   const contextSym = root.contextSym
-  if (!errMap.size && !s.opts.keepLastRaise)
+  if (!errMap.size
+      && (!s.opts.keepLastRaise || s.opts.inlineRaiseOp === "promise"))
     return s
   if (s.opts.inlinePureJumps !== "tail")
     throw s.error(
       "inlineJsExceptions && defunct requires inlinePureJumps:'tail'")
+  if (!s.opts.keepLastRaise)
+    throw s.error(
+      "inlineJsExceptions && defunct requires keepLastPure:'tail'")
   const {contSym,errContSym,commonPatSym} = root
-  assert.ok(contSym && commonPatSym)
   const fieldSym = Kit.sysId(s.opts.contFieldName)
   const implFrame = root.implFrame.value
+  const {discrimSym} = implFrame
+  const stateSym = contSym || discrimSym
+  assert.ok((contSym || discrimSym) && commonPatSym)
   const errFrame = root.errFrameRedir
   return walk()
   function* walk() {
@@ -196,7 +216,7 @@ export function inlineExceptions(si) {
     }
     if (s.opts.inlineReentryCheck)
       yield* s.toks(Tag.push, `if ($I === ${reentryCont}) $I()`,
-                    root.contSym,Block.alreadyRunningSym)
+                    stateSym,Block.alreadyRunningSym)
     yield s.enter(Tag.push,Tag.TryStatement)
     const tlab = s.label()
     yield s.enter(Tag.block,Tag.BlockStatement)
@@ -211,23 +231,27 @@ export function inlineExceptions(si) {
     if (s.opts.inlineRaiseOp === "promise") {
       if (s.opts.storeErrorCont) {
         yield* s.toks(Tag.push, `=$I = $I, $I = $I`,
-                      contSym,errContSym,commonPatSym,ex)
+                      stateSym,errContSym,commonPatSym,ex)
       } else if (root.errMapSym) {
-        yield* s.toks(Tag.push, `=$I = $I($I)`,
-                      contSym,root.errMapSym,implFrame.discrimSym)
+        yield* s.toks(Tag.push, `=$I = $I, $I = $I($I)`,
+                      commonPatSym,ex,stateSym,
+                      root.errMapSym,discrimSym||contSym)
       }
     } else {
-      yield s.enter(Tag.push,Tag.IfStatement)
-      if (s.opts.storeErrorCont) {
-        yield* s.toks(Tag.test, `=($I = $I, $I = $I) !== $I`,
-                      commonPatSym,ex,contSym,errContSym,errFrame.declSym)
-      } else if (root.errMapSym) {
-        yield* s.toks(Tag.test, `=($I = $I, $I = $I($I)) !== $I`,
-                      commonPatSym,ex,contSym,root.errMapSym,
-                      implFrame.discrimSym,errFrame.declSym)
+      if (s.opts.storeErrorCont || root.errMapSym) {
+        yield s.enter(Tag.push,Tag.IfStatement)
+        if (s.opts.storeErrorCont) {
+          yield* s.toks(Tag.test, `=($I = $I, $I = $I) !== $I`,
+                        commonPatSym,ex,stateSym,errContSym,errFrame.declSym)
+        } else if (root.errMapSym) {
+          yield* s.toks(Tag.test, `=($I = $I, $I = $I($I)) !== $I`,
+                        commonPatSym,ex,stateSym,root.errMapSym,
+                        implFrame.discrimSym||contSym,
+                        errFrame.declSym)
+        }
+        yield s.tok(Tag.consequent, Tag.ContinueStatement)
+        yield* s.leave()
       }
-      yield s.tok(Tag.consequent, Tag.ContinueStatement)
-      yield* s.leave()
       yield s.enter(Tag.push,Block.app,{sym:Except.raiseId,result:true})
       yield s.tok(Tag.push,Tag.Identifier,{sym:ex})
     }
@@ -246,7 +270,6 @@ export function* frames(si) {
   const {contextSym,contSym,errFrameRedir} = root
   const inlineJumps = s.opts.inlinePureJumps === "tail"
   assert.ok(contextSym)
-  assert.ok(contSym)
   const impl = root.implFrame.value
   const decls = impl.savedDecls
   const reuseTemps = s.opts.reuseTempVars !== false
@@ -261,24 +284,32 @@ export function* frames(si) {
   const lab = s.label()
   yield s.enter(Tag.push,Tag.SwitchStatement)
   if (discrimArg) {
-    if (s.opts.inlineReentryCheck)
+    if (s.opts.inlineReentryCheck) {
+      if (!contSym)
+        throw new Error("`inlineReentryCheck` requires `storeCont`")
       yield* s.toks(Tag.discriminant,`=$2 = ${reentryCont}, $1`,
                     discrimArg,contSym)
-    else
+    } else if (root.runningContSym) {
+      yield* s.toks(Tag.discriminant,`=$I=$I`,
+                    root.runningContSym,discrimArg)
+    } else {      
       yield s.tok(Tag.discriminant, Tag.Identifier, {sym:discrimArg})
+    }
     impl.discrimSym = discrimArg
-  } else if (s.opts.defunctStateDiscriminant === false) {
-    yield s.tok(Tag.discriminant,Tag.Identifier,{sym:contSym})
   } else {
-    const sym = Kit.scope.newSym("s")
-    impl.savedDecls.set(sym,{})
-    if (s.opts.inlineReentryCheck)
-      yield* s.toks(Tag.discriminant,`=$1=$2, $2 = ${reentryCont}, $1`,
-                    sym,contSym)
-    else
-      yield* s.toks(Tag.discriminant,`=$1=$2, $1`,
-                    sym,contSym)
-    impl.discrimSym = sym
+    if (!contSym)
+      throw new Error("this configuration requires `storeCont`")
+    if (root.runningContSym) {
+      if (s.opts.inlineReentryCheck)
+        yield* s.toks(Tag.discriminant,`=$1=$2, $2 = ${reentryCont}, $1`,
+                      root.runningContSym,contSym)
+      else
+        yield* s.toks(Tag.discriminant,`=$1=$2`,
+                      root.runningContSym,contSym)
+      impl.discrimSym = root.runningContSym
+    } else {
+      yield s.tok(Tag.discriminant,Tag.Identifier,{sym:contSym})
+    }
   }
   yield s.enter(Tag.cases,Tag.Array)
   const clab = s.label()
@@ -310,7 +341,8 @@ export function* frames(si) {
       }
       if (inlineJumps) {
         for(const j of s.sub()) {
-          if (j.enter && j.type === Ctrl.jump && j.value.goto) {
+          if (j.enter && j.type === Ctrl.jump
+              && j.value.goto && !j.value.reflected) {
             j.value.ctrlArg = j.value.goto.declSym
             j.value.goto = impl
             hasJumps = true
@@ -359,6 +391,34 @@ export function* frames(si) {
   yield* s
 }
 
+/** Wraps Init frame with try/catch if it is inlined */
+export function wrapFirstFrame(si) {
+  const s = Kit.auto(si)
+  if (!s.opts.defunct || s.opts.scopePrefix || !s.opts.inlineJsExceptions)
+    return s
+  return _wrapFirstFrame()
+  function* _wrapFirstFrame() {
+    for(const i of s) {
+      yield i
+      if (i.type === Block.frame)
+        break
+    }
+    const sym = Kit.scope.newSym("e")
+    yield* s.template(Tag.push,"try { $_ } catch($I) { $_ }",sym)
+    yield* s.sub()
+    yield* s.refocus()
+    if (s.opts.inlineRaiseOp === "promiseRight") {
+      yield* s.toks(Tag.push,"=Promise.reject($I)",{result:true},sym)
+    } else {
+      yield s.enter(Tag.push,Block.app,{sym:Except.raiseId})
+      yield s.tok(Tag.push,Tag.Identifier,{sym})
+      yield* s.leave()
+    }
+    yield* s.leave()
+    yield* s
+  }
+}
+
 /** changes state symbols to numbers */
 export function* substSymConsts(si) {
   for(const i of si) {
@@ -382,10 +442,10 @@ export function tailJumps(si) {
     return s
   if (!s.opts.defunct) 
     throw s.error("`inlinePureJumps:'tail'` requires `defunct:true`")
+  const implFrame = root.implFrame.value
+  let contSym = !root.contSym && implFrame.discrimSym
   return walk()
-  //TODO: make a marking pass
   function* walk() {
-    const implFrame = root.implFrame.value
     for(const i of s.sub()) {
       yield i
       if (i.enter && i.value === implFrame)
@@ -398,7 +458,10 @@ export function tailJumps(si) {
       yield s.enter(Tag.body,Tag.Array)
     }
     for(const i of s.sub()) {
-      if (i.enter && i.type === Ctrl.jump && !i.value.bindName) {
+      if (i.enter && i.type === Ctrl.jump
+          && !i.value.bindName && !i.value.reflected) {
+        if (contSym)
+          yield* s.toks(Tag.push,"=$I = $I", contSym, i.value.gotoSym)
         const j = s.curLev()
         if (j) {
           if (j.type === Block.bindPat && i.value.sym === root.commonPatSym) {
@@ -427,6 +490,7 @@ export const convert = Kit.pipe(
   stateMappings,
   Kit.toArray,
   assignHandlers,
+  wrapFirstFrame,
   inlineExceptions,
   Kit.toArray,
   tailJumps)

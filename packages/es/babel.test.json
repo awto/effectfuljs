@@ -1,4 +1,5 @@
 {
   "plugins": ["@babel/syntax-async-generators",
-              "@babel/syntax-function-sent"]
+              "@babel/syntax-function-sent",
+              "@babel/plugin-syntax-jsx"]
 }

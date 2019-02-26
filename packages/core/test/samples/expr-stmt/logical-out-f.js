@@ -744,4 +744,8 @@ function a1() {
   function _32(a) {
     return M.pure(a);
   }
+
+  function _33(r) {
+    return M.pure(r);
+  }
 }

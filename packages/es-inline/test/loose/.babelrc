@@ -1,8 +1,9 @@
 {
   "sourceType": "script",
-  "presets": [["../../preset",
-               {"loose":true,"defunct":false,
+  "plugins": [["../../transform",
+               {"topLevel":false,
+                "defunct":true,
+                "loose":true,
                 "modules":"commonjs",
                 "all":{"removeAsserts":false}}]]
 }
-

@@ -34,28 +34,32 @@ function d(i) {
   function _5(a) {
     return M.pure(a);
   }
+
+  function _6(r) {
+    return M.pure(r);
+  }
 }
 
 function a4() {
-  var e, ex, a, fc, fe, err;
-  return M.yld(1, _1, _13);
+  var e, ex, a, fc, fe, r, err;
+  return M.yld(1, _1, _14);
 
   function _1() {
-    return M.yld(2, _2, _13);
+    return M.yld(2, _2, _14);
   }
 
   function _2() {
-    fc = _7, fe = _10;
+    fc = _7, fe = _12;
     return M.yld(3, _5);
   }
 
   function _3() {
     e = ex;
-    return M.yld("excep", _4, _14);
+    return M.yld("excep", _4, _15);
   }
 
   function _4() {
-    fc = _7, fe = _10;
+    fc = _7, fe = _12;
     return M.yld(e, _5);
   }
 
@@ -83,43 +87,47 @@ function a4() {
   function _9(c) {
     var b;
     b = a1(a, c);
-    return M.yld(b, _11);
+    return M.yld(b, _10);
   }
 
-  function _10(e) {
-    return M.raise(e);
-  }
-
-  function _11() {
+  function _10() {
     return M.pure();
   }
 
-  function _12() {
+  function _11(r) {
+    return M.pure(r);
+  }
+
+  function _12(e) {
+    return M.raise(e);
+  }
+
+  function _13() {
     return M.raise(err);
   }
 
-  function _13(a) {
+  function _14(a) {
     ex = a;
-    return M.jump(void 0, _3, _14);
+    return M.jump(void 0, _3, _15);
   }
 
-  function _14(a) {
-    fc = _12, fe = _10, err = a;
+  function _15(a) {
+    fc = _13, fe = _12, err = a;
     return M.jump(void 0, _5);
   }
 }
 
 function a5() {
-  var i, loop, fc, fe, err;
+  var i, loop, fc, fe, r, err;
   loop = M.iterator(a4());
-  return M.jump(void 0, _1, _6);
+  return M.jump(void 0, _1, _7);
 
   function _1() {
     if (!(loop = loop.step()).done) {
       i = loop.value;
-      return M.yld(i, _1, _6);
+      return M.yld(i, _1, _7);
     } else {
-      fc = _3, fe = _4;
+      fc = _3, fe = _5;
       return M.jump(void 0, _2);
     }
   }
@@ -136,16 +144,20 @@ function a5() {
     return M.pure();
   }
 
-  function _4(e) {
+  function _4(r) {
+    return M.pure(r);
+  }
+
+  function _5(e) {
     return M.raise(e);
   }
 
-  function _5() {
+  function _6() {
     return M.raise(err);
   }
 
-  function _6(a) {
-    fc = _5, fe = _4, err = a;
+  function _7(a) {
+    fc = _6, fe = _5, err = a;
     return M.jump(void 0, _2);
   }
 }

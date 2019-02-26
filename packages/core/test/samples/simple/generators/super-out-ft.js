@@ -37,32 +37,52 @@ function method_1(ctx) {
   return M.pure("from A");
 }
 
+function method_2(ctx, r) {
+  return M.pure(r);
+}
+
 function smethod_1(ctx) {
   return M.pure("static from A");
+}
+
+function smethod_2(ctx, r) {
+  return M.pure(r);
 }
 
 function _method_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
   ctx.__this = null;
-  return M.chain(a, method_2);
+  return M.chain(a, _method_2);
 }
 
-function method_2(ctx, a) {
+function _method_2(ctx, a) {
   return M.pure("from B " + a);
+}
+
+function method_3(ctx, r) {
+  return M.pure(r);
 }
 
 function _smethod_1(ctx) {
   var a;
   a = Object.getPrototypeOf(ctx._aa._B.prototype).method.call(ctx.__this);
   ctx.__this = null;
-  return M.chain(a, smethod_2);
+  return M.chain(a, _smethod_2);
 }
 
-function smethod_2(ctx, a) {
+function _smethod_2(ctx, a) {
   return M.pure("static from B " + a);
+}
+
+function smethod_3(ctx, r) {
+  return M.pure(r);
 }
 
 function aa_1(aa) {
   return M.pure();
+}
+
+function aa_2(aa, r) {
+  return M.pure(r);
 }

@@ -55,7 +55,9 @@ export function interpretApp(s) {
           } else {
             yield sl.enter(Tag.callee,Tag.MemberExpression,{bind:true})
             yield* Kit.reposOne(walk(sl.one()),Tag.object)
-            yield sl.tok(Tag.property,Tag.Identifier,{sym:i.value.sym})
+            // yield sl.tok(Tag.property,Tag.Identifier,{sym:i.value.sym})
+            yield sl.tok(Tag.property,Tag.Identifier,
+                         {node:{name:i.value.sym.orig},origSym:i.value.sym})
             yield* sl.leave()
             yield sl.enter(Tag.arguments,Tag.Array)
           }
@@ -189,10 +191,7 @@ export const interpretCasts = Kit.pipe(
               if (j) {
                 j.value.result = result
                 yield* Kit.reposOne(walk(), i.pos)
-              } /* else {
-                yield sl.tok(i.pos, Tag.Identifier,
-                             {sym:Kit.scope.undefinedSym,result:true})
-              }*/
+              }
             }
           }
           break
@@ -384,5 +383,48 @@ export function* cleanup(si) {
         yield* s.copy(i)
     } else
       yield i
+  }
+}
+
+/**
+ * Sets 
+ *  * `ignoreResult:true` - value for expressions where its result isn't needed
+ *  * `lastSeqExpr:true` - for the last expression in `SequenceExpression`
+ */
+export function applyIgnoreResult(si) {
+  const sa = Kit.toArray(si)
+  function _markLastSeqExpr() {
+    for(let x = 0, len = sa.length; x < len; ++x) {
+      const i = sa[x]
+      i.value.lastSeqExpr = false
+      if (i.leave && i.type === Tag.SequenceExpression)
+        sa[x-2].value.lastSeqExpr = true
+    }
+  }
+  const s = Kit.auto(sa)
+  _applyIgnoreResult(s,false)
+  return sa
+  function _applyIgnoreResult(sw,ignore) {
+    for(const i of sw) {
+      if (i.enter) {
+        i.value.ignoreResult = ignore || i.pos === Tag.update
+        switch(i.type) {
+        case letStmt:
+          if (!i.value.sym || !i.value.sym.bound)
+            _applyIgnoreResult(s.sub(),true)
+          break
+        case Tag.SequenceExpression:
+          s.take()
+          for(let j;(j = s.curLev()) != null;)
+            _applyIgnoreResult(s.one(),ignore || !j.value.last)
+          break
+        case Tag.ExpressionStatement:
+          _applyIgnoreResult(s.sub(),true)
+          break
+        default:
+          ignore = false
+        }
+      }
+    }
   }
 }

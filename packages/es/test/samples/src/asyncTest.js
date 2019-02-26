@@ -8,7 +8,7 @@ const copy = {}
 let send, sendErr, evaluate
 {
   const stop = {}
-  let output  = []
+  let output  = null
   let res
   let t = 0
   const doneJobs = []
@@ -16,15 +16,25 @@ let send, sendErr, evaluate
   const cancelJobs = []
   let cont
   let done
-  readLoop()
+  let former
   evaluate = async function(promise) {
+    if (output) {
+      console.error("parallel call",former)
+      throw new Error("simultaneous `evaluate` call")
+    }
+    former = new Error()
+    done = false
+    output = []
+    const loop = readLoop()
     const r = await promise
     done = true
-    send(stop)
-    const res = output
-    output = []
-    t = 0
-    return res
+    await loop
+    try {
+      t = 0
+      return output
+    } finally {
+      output = null
+    }
   }
   function wrapCancel(data,p) {
     p[ES.cancelSymbol] = () => (data.canceled = true, cancelJobs.push(data.arg))
@@ -56,7 +66,7 @@ let send, sendErr, evaluate
     return j
   }
   async function readLoop() {
-    for(;;) {
+    do {
       await new Promise(c => setTimeout(c,0))
       let tup = []
       if (cancelJobs.length)
@@ -78,7 +88,8 @@ let send, sendErr, evaluate
         }
       }
       cont = null
-    }
+    } while(!done || doneJobs.length
+            || scheduleJobs.length || cancelJobs.length)
   }
 }
 
@@ -238,11 +249,11 @@ describe("implicitly parallel async function", function() {
             await send(`E:${e.message}`)
           }
         }
-        console.log(await evaluate(a()))
         assert.deepEqual(
           await evaluate(a()),
           ["> a,error,d,g@0", "< a@10", "> b@10", "< d@12", "> e@12",
-           "< error@15", "! b,e@15", "> E:error/?@15", "< E:error/?@15"])
+           "< error@15", "! b,e,g@15", "> E:error/?@15", "< E:error/?@15"
+           , "<! g@20", "<! b@20", "<! e@22"])
       })
     })
   })
@@ -295,8 +306,8 @@ describe("implicitly parallel async function", function() {
              await send(`b_1-${i}-${await send("a_1:" + i,1)}`,10)
              i++
              await send(`b_2-${i}-${await send("a_2:" + i,5)}`,1)
-           }()),["> a_1:0,a_2:1@0", "< a_1:0@1", "> b_1-1-1@1",
-                 "< a_2:1@5", "> b_2-1-5@5", "< b_2-1-5@6", "< b_1-1-1@11"])
+           }()),["> a_1:0,a_2:1@0", "< a_1:0@1", "> b_1-0-1@1",
+                 "< a_2:1@5", "> b_2-1-5@5", "< b_2-1-5@6", "< b_1-0-1@11"])
        })
   })
   context("with loops", function() {
@@ -534,12 +545,6 @@ describe("implicitly parallel async function", function() {
               "> a_1:2/0,a_2:2/1@10", "< a_1:2/0@20", "< a_2:2/1@20",
               "< sa:1@100", "< sb:1@100", "> a_1:1/20,a_2:1/21@100",
               "< a_1:1/20@200", "< a_2:1/21@200"])
-           console.log(
-             await evaluate(a(1,0,100,100,100,100,10,10,10,10)),
-             ["> sa:1,sb:1,sa:2,sb:2@0", "< sa:2@10", "< sb:2@10",
-              "> a_1:2/0,a_2:2/1@10", "< a_1:2/0@20", "< a_2:2/1@20",
-              "< sa:1@100", "< sb:1@100", "> a_1:1/10,a_2:1/11@100",
-              "< a_1:1/10@200", "< a_2:1/11@200"])
            assert.deepEqual(
              await evaluate(a(1,2,100,100,100,100,10,10,10,10)),
              ["> sa:1,sb:1,sa:2,sb:2@0", "< sa:2@10", "< sb:2@10",

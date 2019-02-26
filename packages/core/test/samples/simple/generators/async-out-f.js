@@ -7,6 +7,10 @@ function a1() {
   function _1(a1) {
     return a1.pure();
   }
+
+  function _2(a1, r) {
+    return a1.pure(r);
+  }
 }
 
 function a2() {
@@ -21,6 +25,10 @@ function a2() {
 
   function _2(a2) {
     return a2.pure();
+  }
+
+  function _3(a2, r) {
+    return a2.pure(r);
   }
 }
 
@@ -37,6 +45,10 @@ function a3() {
   function _2(a3, a) {
     return a3.pure(a);
   }
+
+  function _3(a3, r) {
+    return a3.pure(r);
+  }
 }
 
 function g2() {
@@ -52,6 +64,10 @@ function g2() {
   function _2(g2) {
     return g2.pure();
   }
+
+  function _3(g2, r) {
+    return g2.pure(r);
+  }
 }
 
 function g3() {
@@ -66,6 +82,10 @@ function g3() {
 
   function _2(g3, a) {
     return g3.pure(a);
+  }
+
+  function _3(g3, r) {
+    return g3.pure(r);
   }
 }
 
@@ -85,6 +105,10 @@ function a4() {
 
   function _3(a4) {
     return a4.pure();
+  }
+
+  function _4(a4, r) {
+    return a4.pure(r);
   }
 }
 
@@ -109,6 +133,10 @@ function a5() {
   function _4(a5) {
     return a5.pure();
   }
+
+  function _5(a5, r) {
+    return a5.pure(r);
+  }
 }
 
 function ag1() {
@@ -121,6 +149,10 @@ function ag1() {
 
   function _2(ag1) {
     return ag1.pure();
+  }
+
+  function _3(ag1, r) {
+    return ag1.pure(r);
   }
 }
 
@@ -161,6 +193,10 @@ function ag2() {
   function _7(ag2) {
     return ag2.pure();
   }
+
+  function _8(ag2, r) {
+    return ag2.pure(r);
+  }
 }
 
 function ag3() {
@@ -169,11 +205,11 @@ function ag3() {
 
   function _1(ag3) {
     ag3._loop = ag3.iteratorM(f());
-    return ag3.jump(void 0, _2, _10);
+    return ag3.jump(void 0, _2, _11);
   }
 
   function _2(ag3) {
-    return ag3.chain(ag3._loop.step(), _3, _10);
+    return ag3.chain(ag3._loop.step(), _3, _11);
   }
 
   function _3(ag3, c) {
@@ -184,19 +220,19 @@ function ag3() {
     if (!a) {
       ag3._i = ag3._loop.value;
       d = delay(ag3._i);
-      return ag3.chain(d, _4, _10);
+      return ag3.chain(d, _4, _11);
     } else {
-      ag3._fc = _7, ag3._fe = _8;
+      ag3._fc = _7, ag3._fe = _9;
       return ag3.jump(void 0, _6);
     }
   }
 
   function _4(ag3, a) {
-    return ag3.yld(a, _5, _10);
+    return ag3.yld(a, _5, _11);
   }
 
   function _5(ag3) {
-    return ag3.yld(ag3._i, _2, _10);
+    return ag3.yld(ag3._i, _2, _11);
   }
 
   function _6(ag3) {
@@ -211,16 +247,20 @@ function ag3() {
     return ag3.pure();
   }
 
-  function _8(ag3, e) {
+  function _8(ag3, r) {
+    return ag3.pure(r);
+  }
+
+  function _9(ag3, e) {
     return ag3.raise(e);
   }
 
-  function _9(ag3) {
+  function _10(ag3) {
     return ag3.raise(ag3._err1);
   }
 
-  function _10(ag3, a) {
-    ag3._fc = _9, ag3._fe = _8, ag3._err1 = a;
+  function _11(ag3, a) {
+    ag3._fc = _10, ag3._fe = _9, ag3._err1 = a;
     return ag3.jump(void 0, _6);
   }
 }
@@ -231,11 +271,11 @@ function switches() {
 
   function _1(switches) {
     switches._loop = switches.iteratorM(gen());
-    return switches.jump(void 0, _2, _55);
+    return switches.jump(void 0, _2, _56);
   }
 
   function _2(switches) {
-    return switches.chain(switches._loop.step(), _3, _55);
+    return switches.chain(switches._loop.step(), _3, _56);
   }
 
   function _3(switches, c) {
@@ -248,14 +288,14 @@ function switches() {
 
       switch (switches._i) {
         case 3:
-          switches._fc = _5, switches._fe = _45;
+          switches._fc = _5, switches._fe = _46;
           return switches.jump(void 0, _4);
 
         default:
-          return switches.jump(void 0, _2, _55);
+          return switches.jump(void 0, _2, _56);
       }
     } else {
-      switches._fc = _5, switches._fe = _45;
+      switches._fc = _5, switches._fe = _46;
       return switches.jump(void 0, _4);
     }
   }
@@ -270,11 +310,11 @@ function switches() {
 
   function _5(switches) {
     switches._loop1 = switches.iteratorM(gen());
-    return switches.jump(void 0, _6, _56);
+    return switches.jump(void 0, _6, _57);
   }
 
   function _6(switches) {
-    return switches.chain(switches._loop1.step(), _7, _56);
+    return switches.chain(switches._loop1.step(), _7, _57);
   }
 
   function _7(switches, c) {
@@ -287,19 +327,19 @@ function switches() {
 
       switch (switches._i1) {
         case 3:
-          return switches.yld(`l2-${switches._i1}`, _8, _56);
+          return switches.yld(`l2-${switches._i1}`, _8, _57);
 
         default:
-          return switches.jump(void 0, _6, _56);
+          return switches.jump(void 0, _6, _57);
       }
     } else {
-      switches._fc1 = _10, switches._fe1 = _45;
+      switches._fc1 = _10, switches._fe1 = _46;
       return switches.jump(void 0, _9);
     }
   }
 
   function _8(switches) {
-    switches._fc1 = _10, switches._fe1 = _45;
+    switches._fc1 = _10, switches._fe1 = _46;
     return switches.jump(void 0, _9);
   }
 
@@ -313,11 +353,11 @@ function switches() {
 
   function _10(switches) {
     switches._loop2 = switches.iteratorM(gen());
-    return switches.jump(void 0, _11, _57);
+    return switches.jump(void 0, _11, _58);
   }
 
   function _11(switches) {
-    return switches.chain(switches._loop2.step(), _12, _57);
+    return switches.chain(switches._loop2.step(), _12, _58);
   }
 
   function _12(switches, c) {
@@ -330,14 +370,14 @@ function switches() {
 
       switch (switches._i2) {
         case 3:
-          switches._fc2 = _14, switches._fe2 = _45;
+          switches._fc2 = _14, switches._fe2 = _46;
           return switches.jump(void 0, _13);
 
         default:
-          return switches.yld(`l3-${switches._i2}`, _11, _57);
+          return switches.yld(`l3-${switches._i2}`, _11, _58);
       }
     } else {
-      switches._fc2 = _14, switches._fe2 = _45;
+      switches._fc2 = _14, switches._fe2 = _46;
       return switches.jump(void 0, _13);
     }
   }
@@ -352,11 +392,11 @@ function switches() {
 
   function _14(switches) {
     switches._loop3 = switches.iteratorM(gen());
-    return switches.jump(void 0, _15, _58);
+    return switches.jump(void 0, _15, _59);
   }
 
   function _15(switches) {
-    return switches.chain(switches._loop3.step(), _16, _58);
+    return switches.chain(switches._loop3.step(), _16, _59);
   }
 
   function _16(switches, c) {
@@ -369,14 +409,14 @@ function switches() {
 
       switch (switches._i3) {
         case 3:
-          switches._fc3 = _18, switches._fe3 = _45;
+          switches._fc3 = _18, switches._fe3 = _46;
           return switches.jump(void 0, _17);
 
         default:
-          return switches.yld(`l4-${switches._i3}`, _15, _58);
+          return switches.yld(`l4-${switches._i3}`, _15, _59);
       }
     } else {
-      switches._fc3 = _18, switches._fe3 = _45;
+      switches._fc3 = _18, switches._fe3 = _46;
       return switches.jump(void 0, _17);
     }
   }
@@ -391,11 +431,11 @@ function switches() {
 
   function _18(switches) {
     switches._loop4 = switches.iteratorM(gen());
-    return switches.jump(void 0, _19, _59);
+    return switches.jump(void 0, _19, _60);
   }
 
   function _19(switches) {
-    return switches.chain(switches._loop4.step(), _20, _59);
+    return switches.chain(switches._loop4.step(), _20, _60);
   }
 
   function _20(switches, c) {
@@ -405,9 +445,9 @@ function switches() {
 
     if (!a) {
       switches._i4 = switches._loop4.value;
-      return switches.yld(`l5-${switches._i4}`, _21, _59);
+      return switches.yld(`l5-${switches._i4}`, _21, _60);
     } else {
-      switches._fc4 = _23, switches._fe4 = _45;
+      switches._fc4 = _23, switches._fe4 = _46;
       return switches.jump(void 0, _22);
     }
   }
@@ -415,11 +455,11 @@ function switches() {
   function _21(switches) {
     switch (switches._i4) {
       case 3:
-        switches._fc4 = _23, switches._fe4 = _45;
+        switches._fc4 = _23, switches._fe4 = _46;
         return switches.jump(void 0, _22);
 
       default:
-        return switches.jump(void 0, _19, _59);
+        return switches.jump(void 0, _19, _60);
     }
   }
 
@@ -433,11 +473,11 @@ function switches() {
 
   function _23(switches) {
     switches._loop5 = switches.iteratorM(gen());
-    return switches.jump(void 0, _24, _60);
+    return switches.jump(void 0, _24, _61);
   }
 
   function _24(switches) {
-    return switches.chain(switches._loop5.step(), _25, _60);
+    return switches.chain(switches._loop5.step(), _25, _61);
   }
 
   function _25(switches, c) {
@@ -450,19 +490,19 @@ function switches() {
 
       switch (switches._i5) {
         case 3:
-          return switches.yld(`l6-1-${switches._i5}`, _26, _60);
+          return switches.yld(`l6-1-${switches._i5}`, _26, _61);
 
         default:
-          return switches.yld(`l6-2-${switches._i5}`, _24, _60);
+          return switches.yld(`l6-2-${switches._i5}`, _24, _61);
       }
     } else {
-      switches._fc5 = _28, switches._fe5 = _45;
+      switches._fc5 = _28, switches._fe5 = _46;
       return switches.jump(void 0, _27);
     }
   }
 
   function _26(switches) {
-    switches._fc5 = _28, switches._fe5 = _45;
+    switches._fc5 = _28, switches._fe5 = _46;
     return switches.jump(void 0, _27);
   }
 
@@ -476,11 +516,11 @@ function switches() {
 
   function _28(switches) {
     switches._loop6 = switches.iteratorM(gen());
-    return switches.jump(void 0, _29, _61);
+    return switches.jump(void 0, _29, _62);
   }
 
   function _29(switches) {
-    return switches.chain(switches._loop6.step(), _30, _61);
+    return switches.chain(switches._loop6.step(), _30, _62);
   }
 
   function _30(switches, c) {
@@ -493,43 +533,43 @@ function switches() {
 
       switch (switches._i6) {
         case 0:
-          return switches.jump(void 0, _29, _61);
+          return switches.jump(void 0, _29, _62);
 
         case 1:
         case 2:
-          return switches.yld(`l7-1-${switches._i6}`, _29, _61);
+          return switches.yld(`l7-1-${switches._i6}`, _29, _62);
 
         case 3:
-          return switches.jump(void 0, _29, _61);
+          return switches.jump(void 0, _29, _62);
 
         case 4:
-          return switches.yld(`l7-2-${switches._i6}`, _29, _61);
+          return switches.yld(`l7-2-${switches._i6}`, _29, _62);
 
         case 5:
-          return switches.yld(`l7-3-${switches._i6}`, _32, _61);
+          return switches.yld(`l7-3-${switches._i6}`, _32, _62);
 
         case 6:
-          return switches.jump(void 0, _29, _61);
+          return switches.jump(void 0, _29, _62);
 
         case 7:
-          return switches.yld(`l7-4-${switches._i6}`, _31, _61);
+          return switches.yld(`l7-4-${switches._i6}`, _31, _62);
 
         default:
-          return switches.yld(`l7-5-${switches._i6}`, _32, _61);
+          return switches.yld(`l7-5-${switches._i6}`, _32, _62);
       }
     } else {
-      switches._fc6 = _34, switches._fe6 = _45;
+      switches._fc6 = _34, switches._fe6 = _46;
       return switches.jump(void 0, _33);
     }
   }
 
   function _31(switches) {
-    switches._fc6 = _34, switches._fe6 = _45;
+    switches._fc6 = _34, switches._fe6 = _46;
     return switches.jump(void 0, _33);
   }
 
   function _32(switches) {
-    return switches.yld(`l7-6-${switches._i6}`, _29, _61);
+    return switches.yld(`l7-6-${switches._i6}`, _29, _62);
   }
 
   function _33(switches) {
@@ -542,11 +582,11 @@ function switches() {
 
   function _34(switches) {
     switches._loop7 = switches.iteratorM(gen());
-    return switches.jump(void 0, _35, _62);
+    return switches.jump(void 0, _35, _63);
   }
 
   function _35(switches) {
-    return switches.chain(switches._loop7.step(), _36, _62);
+    return switches.chain(switches._loop7.step(), _36, _63);
   }
 
   function _36(switches, c) {
@@ -557,9 +597,9 @@ function switches() {
     if (!a) {
       switches._i7 = switches._loop7.value;
       switches._loop8 = switches.iterator(gen());
-      return switches.jump(void 0, _37, _63);
+      return switches.jump(void 0, _37, _64);
     } else {
-      switches._fc8 = _44, switches._fe8 = _45;
+      switches._fc8 = _44, switches._fe8 = _46;
       return switches.jump(void 0, _43);
     }
   }
@@ -572,97 +612,97 @@ function switches() {
         case 0:
         case 1:
         case 2:
-          return switches.yld(`s1:${switches._i7},${switches._j}`, _38, _63);
+          return switches.yld(`s1:${switches._i7},${switches._j}`, _38, _64);
 
         case 3:
           switch (switches._j) {
             case 2:
             case 3:
-              return switches.yld(`s2:${switches._i7},${switches._j}`, _37, _63);
+              return switches.yld(`s2:${switches._i7},${switches._j}`, _37, _64);
 
             case 5:
-              return switches.yld(`s3:${switches._i7},${switches._j}`, _37, _63);
+              return switches.yld(`s3:${switches._i7},${switches._j}`, _37, _64);
 
             case 7:
-              return switches.yld(`s4:${switches._i7},${switches._j}`, _37, _63);
+              return switches.yld(`s4:${switches._i7},${switches._j}`, _37, _64);
 
             case 8:
-              return switches.yld(`s5:${switches._i7},${switches._j}`, _37, _63);
+              return switches.yld(`s5:${switches._i7},${switches._j}`, _37, _64);
 
             case 9:
-              return switches.yld(`s6:${switches._i7},${switches._j}`, _39, _63);
+              return switches.yld(`s6:${switches._i7},${switches._j}`, _39, _64);
 
             default:
-              return switches.jump(void 0, _37, _63);
+              return switches.jump(void 0, _37, _64);
           }
 
         case 4:
           switch (switches._j) {
             case 2:
             case 3:
-              return switches.yld(`s7:${switches._i7},${switches._j}`, _41, _63);
+              return switches.yld(`s7:${switches._i7},${switches._j}`, _41, _64);
 
             case 5:
-              return switches.yld(`s8:${switches._i7},${switches._j}`, _37, _63);
+              return switches.yld(`s8:${switches._i7},${switches._j}`, _37, _64);
 
             case 6:
-              switches._fc7 = _35, switches._fe7 = _62;
-              return switches.jump(void 0, _42, _64);
+              switches._fc7 = _35, switches._fe7 = _63;
+              return switches.jump(void 0, _42, _65);
 
             case 7:
-              return switches.yld(`s9:${switches._i7},${switches._j}`, _41, _63);
+              return switches.yld(`s9:${switches._i7},${switches._j}`, _41, _64);
 
             case 8:
-              return switches.yld(`s10:${switches._i7},${switches._j}`, _37, _63);
+              return switches.yld(`s10:${switches._i7},${switches._j}`, _37, _64);
 
             case 9:
-              return switches.yld(`s11:${switches._i7},${switches._j}`, _40, _63);
+              return switches.yld(`s11:${switches._i7},${switches._j}`, _40, _64);
 
             default:
-              return switches.yld(`s12:${switches._i7},${switches._j}`, _41, _63);
+              return switches.yld(`s12:${switches._i7},${switches._j}`, _41, _64);
           }
 
         case 5:
           switch (switches._j) {
             case 2:
             case 3:
-              switches._fc7 = _43, switches._fe7 = _45, switches._fc8 = _44, switches._fe8 = _45;
-              return switches.jump(void 0, _42, _64);
+              switches._fc7 = _43, switches._fe7 = _46, switches._fc8 = _44, switches._fe8 = _46;
+              return switches.jump(void 0, _42, _65);
 
             default:
-              return switches.jump(void 0, _37, _63);
+              return switches.jump(void 0, _37, _64);
           }
 
         default:
-          return switches.jump(void 0, _37, _63);
+          return switches.jump(void 0, _37, _64);
       }
     } else {
-      switches._fc7 = _35, switches._fe7 = _62;
-      return switches.jump(void 0, _42, _64);
+      switches._fc7 = _35, switches._fe7 = _63;
+      return switches.jump(void 0, _42, _65);
     }
   }
 
   function _38(switches) {
     if (switches._j > 3) {
-      switches._fc7 = _35, switches._fe7 = _62;
-      return switches.jump(void 0, _42, _64);
+      switches._fc7 = _35, switches._fe7 = _63;
+      return switches.jump(void 0, _42, _65);
     } else {
-      return switches.jump(void 0, _37, _63);
+      return switches.jump(void 0, _37, _64);
     }
   }
 
   function _39(switches) {
-    switches._fc7 = _35, switches._fe7 = _62;
-    return switches.jump(void 0, _42, _64);
+    switches._fc7 = _35, switches._fe7 = _63;
+    return switches.jump(void 0, _42, _65);
   }
 
   function _40(switches) {
-    switches._fc7 = _43, switches._fe7 = _45, switches._fc8 = _44, switches._fe8 = _45;
-    return switches.jump(void 0, _42, _64);
+    switches._fc7 = _43, switches._fe7 = _46, switches._fc8 = _44, switches._fe8 = _46;
+    return switches.jump(void 0, _42, _65);
   }
 
   function _41(switches) {
-    return switches.yld(`s13:${switches._i7},${switches._j}`, _37, _63);
+    return switches.yld(`s13:${switches._i7},${switches._j}`, _37, _64);
   }
 
   function _42(switches) {
@@ -686,93 +726,97 @@ function switches() {
     return switches.pure();
   }
 
-  function _45(switches, e) {
+  function _45(switches, r) {
+    return switches.pure(r);
+  }
+
+  function _46(switches, e) {
     return switches.raise(e);
   }
 
-  function _46(switches) {
+  function _47(switches) {
     return switches.raise(switches._err1);
   }
 
-  function _47(switches) {
+  function _48(switches) {
     return switches.raise(switches._err2);
   }
 
-  function _48(switches) {
+  function _49(switches) {
     return switches.raise(switches._err3);
   }
 
-  function _49(switches) {
+  function _50(switches) {
     return switches.raise(switches._err4);
   }
 
-  function _50(switches) {
+  function _51(switches) {
     return switches.raise(switches._err5);
   }
 
-  function _51(switches) {
+  function _52(switches) {
     return switches.raise(switches._err6);
   }
 
-  function _52(switches) {
+  function _53(switches) {
     return switches.raise(switches._err7);
   }
 
-  function _53(switches) {
+  function _54(switches) {
     return switches.raise(switches._err8);
   }
 
-  function _54(switches) {
+  function _55(switches) {
     return switches.raise(switches._err9);
   }
 
-  function _55(switches, a) {
-    switches._fc = _46, switches._fe = _45, switches._err1 = a;
+  function _56(switches, a) {
+    switches._fc = _47, switches._fe = _46, switches._err1 = a;
     return switches.jump(void 0, _4);
   }
 
-  function _56(switches, a) {
-    switches._fc1 = _47, switches._fe1 = _45, switches._err2 = a;
+  function _57(switches, a) {
+    switches._fc1 = _48, switches._fe1 = _46, switches._err2 = a;
     return switches.jump(void 0, _9);
   }
 
-  function _57(switches, a) {
-    switches._fc2 = _48, switches._fe2 = _45, switches._err3 = a;
+  function _58(switches, a) {
+    switches._fc2 = _49, switches._fe2 = _46, switches._err3 = a;
     return switches.jump(void 0, _13);
   }
 
-  function _58(switches, a) {
-    switches._fc3 = _49, switches._fe3 = _45, switches._err4 = a;
+  function _59(switches, a) {
+    switches._fc3 = _50, switches._fe3 = _46, switches._err4 = a;
     return switches.jump(void 0, _17);
   }
 
-  function _59(switches, a) {
-    switches._fc4 = _50, switches._fe4 = _45, switches._err5 = a;
+  function _60(switches, a) {
+    switches._fc4 = _51, switches._fe4 = _46, switches._err5 = a;
     return switches.jump(void 0, _22);
   }
 
-  function _60(switches, a) {
-    switches._fc5 = _51, switches._fe5 = _45, switches._err6 = a;
+  function _61(switches, a) {
+    switches._fc5 = _52, switches._fe5 = _46, switches._err6 = a;
     return switches.jump(void 0, _27);
   }
 
-  function _61(switches, a) {
-    switches._fc6 = _52, switches._fe6 = _45, switches._err7 = a;
+  function _62(switches, a) {
+    switches._fc6 = _53, switches._fe6 = _46, switches._err7 = a;
     return switches.jump(void 0, _33);
   }
 
-  function _62(switches, a) {
-    switches._fc8 = _53, switches._fe8 = _45, switches._err8 = a;
+  function _63(switches, a) {
+    switches._fc8 = _54, switches._fe8 = _46, switches._err8 = a;
     return switches.jump(void 0, _43);
   }
 
-  function _63(switches, a) {
-    switches._fc7 = _43, switches._fe7 = _45, switches._fc8 = _54, switches._fe8 = _45, switches._err9 = a;
-    return switches.jump(void 0, _42, _64);
+  function _64(switches, a) {
+    switches._fc7 = _43, switches._fe7 = _46, switches._fc8 = _55, switches._fe8 = _46, switches._err9 = a;
+    return switches.jump(void 0, _42, _65);
   }
 
-  function _64(switches, a) {
-    switches._fc8 = _53, switches._fe8 = _45, switches._err8 = a;
+  function _65(switches, a) {
+    switches._fc8 = _54, switches._fe8 = _46, switches._err8 = a;
     return switches.jump(void 0, _43);
   }
 }
@@ -787,22 +831,22 @@ function c() {
 
   function _2(c) {
     c._loop = c.iterator(somethng);
-    return c.jump(void 0, _3, _15);
+    return c.jump(void 0, _3, _16);
   }
 
   function _3(c) {
     if (!(c._loop = c._loop.step()).done) {
       c._i = c._loop.value;
       c._loop1 = c.iteratorM(somethingElse);
-      return c.jump(void 0, _4, _16);
+      return c.jump(void 0, _4, _17);
     } else {
-      c._fc1 = _10, c._fe1 = _11;
+      c._fc1 = _10, c._fe1 = _12;
       return c.jump(void 0, _9);
     }
   }
 
   function _4(c) {
-    return c.chain(c._loop1.step(), _5, _16);
+    return c.chain(c._loop1.step(), _5, _17);
   }
 
   function _5(c, d) {
@@ -812,41 +856,41 @@ function c() {
 
     if (!a) {
       j = c._loop1.value;
-      return c.yld(c._i, _6, _16);
+      return c.yld(c._i, _6, _17);
     } else {
-      c._fc = _3, c._fe = _15;
-      return c.jump(void 0, _8, _17);
+      c._fc = _3, c._fe = _16;
+      return c.jump(void 0, _8, _18);
     }
   }
 
   function _6(c, a) {
     switch (a) {
       case 1:
-        c._fc = _9, c._fe = _11, c._fc1 = _12, c._fe1 = _11, c._r = 10;
-        return c.jump(void 0, _8, _17);
+        c._fc = _9, c._fe = _12, c._fc1 = _13, c._fe1 = _12, c._r = 10;
+        return c.jump(void 0, _8, _18);
 
       case 2:
-        return c.jump(void 0, _7, _16);
+        return c.jump(void 0, _7, _17);
 
       case 3:
-        return c.jump(void 0, _4, _16);
+        return c.jump(void 0, _4, _17);
 
       case 5:
-        c._fc = _3, c._fe = _15;
-        return c.jump(void 0, _8, _17);
+        c._fc = _3, c._fe = _16;
+        return c.jump(void 0, _8, _18);
 
       case 6:
-        c._fc = _9, c._fe = _11, c._fc1 = _10, c._fe1 = _11;
-        return c.jump(void 0, _8, _17);
+        c._fc = _9, c._fe = _12, c._fc1 = _10, c._fe1 = _12;
+        return c.jump(void 0, _8, _18);
 
       default:
-        return c.jump(void 0, _7, _16);
+        return c.jump(void 0, _7, _17);
     }
   }
 
   function _7(c) {
-    c._fc = _3, c._fe = _15;
-    return c.jump(void 0, _8, _17);
+    c._fc = _3, c._fe = _16;
+    return c.jump(void 0, _8, _18);
   }
 
   function _8(c) {
@@ -868,37 +912,41 @@ function c() {
   }
 
   function _10(c) {
-    return c.pure(c._r);
+    return c.pure();
   }
 
-  function _11(c, e) {
+  function _11(c, r) {
+    return c.pure(r);
+  }
+
+  function _12(c, e) {
     return c.raise(e);
   }
 
-  function _12(c) {
-    return c.pure(c._r);
-  }
-
   function _13(c) {
-    return c.raise(c._err1);
+    return c.jump(c._r, _11);
   }
 
   function _14(c) {
+    return c.raise(c._err1);
+  }
+
+  function _15(c) {
     return c.raise(c._err2);
   }
 
-  function _15(c, a) {
-    c._fc1 = _13, c._fe1 = _11, c._err1 = a;
+  function _16(c, a) {
+    c._fc1 = _14, c._fe1 = _12, c._err1 = a;
     return c.jump(void 0, _9);
   }
 
-  function _16(c, a) {
-    c._fc = _9, c._fe = _11, c._fc1 = _14, c._fe1 = _11, c._err2 = a;
-    return c.jump(void 0, _8, _17);
+  function _17(c, a) {
+    c._fc = _9, c._fe = _12, c._fc1 = _15, c._fe1 = _12, c._err2 = a;
+    return c.jump(void 0, _8, _18);
   }
 
-  function _17(c, a) {
-    c._fc1 = _13, c._fe1 = _11, c._err1 = a;
+  function _18(c, a) {
+    c._fc1 = _14, c._fe1 = _12, c._err1 = a;
     return c.jump(void 0, _9);
   }
 }
@@ -915,6 +963,10 @@ class A {
     function _2(ctx) {
       return ctx.pure();
     }
+
+    function _3(ctx, r) {
+      return ctx.pure(r);
+    }
   }
 
   static method() {
@@ -928,12 +980,17 @@ class A {
     function _2(ctx) {
       return ctx.pure();
     }
+
+    function _3(ctx, r) {
+      return ctx.pure(r);
+    }
   }
 
 }
 
 var b = new class {
   method() {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -943,11 +1000,16 @@ var b = new class {
     function _2() {
       return M.pure();
     }
+
+    function _3(r) {
+      return M.pure(r);
+    }
   }
 
   static m1() {
     var A = class A {
       m2() {
+        var r;
         return M.scope(_1);
 
         function _1() {
@@ -957,9 +1019,14 @@ var b = new class {
         function _2() {
           return M.pure();
         }
+
+        function _3(r) {
+          return M.pure(r);
+        }
       }
 
-    };
+    },
+        r;
     return M.scope(_1);
 
     function _1() {
@@ -969,11 +1036,16 @@ var b = new class {
     function _2() {
       return M.pure();
     }
+
+    function _3(r) {
+      return M.pure(r);
+    }
   }
 
 }();
 var c = new class C {
   [getName()]() {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -983,9 +1055,14 @@ var c = new class C {
     function _2() {
       return M.pure();
     }
+
+    function _3(r) {
+      return M.pure(r);
+    }
   }
 
   static [Symbol.iterator]() {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -994,6 +1071,10 @@ var c = new class C {
 
     function _2() {
       return M.pure();
+    }
+
+    function _3(r) {
+      return M.pure(r);
     }
   }
 
@@ -1008,10 +1089,14 @@ var c = new class C {
   function _2(a) {
     return M.pure(a);
   }
+
+  function _3(r) {
+    return M.pure(r);
+  }
 })(10);
 
 (function (i) {
-  var f;
+  var f, r;
   return M.scope(_1);
 
   function _1() {
@@ -1022,9 +1107,14 @@ var c = new class C {
     f = a;
     return M.pure();
   }
+
+  function _3(r) {
+    return M.pure(r);
+  }
 })(10);
 
 (function zz(i) {
+  var r;
   return M.scope(_1);
 
   function _1() {
@@ -1033,5 +1123,9 @@ var c = new class C {
 
   function _2() {
     return M.pure();
+  }
+
+  function _3(r) {
+    return M.pure(r);
   }
 })(10);

@@ -137,6 +137,20 @@ function* replaceGlobalNsName(si) {
   }
 }
 
+/** for each values without `opts` fields assigns its parent `opts` field */
+export function* resetOpts(s) {
+  const stack = []
+  for(const i of s) {
+    if (!i.value.opts)
+      i.value.opts = stack[stack.length-1].opts
+    if (i.enter)
+      stack.push(i.value)
+    if (i.leave)
+      stack.pop(i.value)
+    yield i
+  }
+}
+
 /** handles config `aliases` field */
 function aliases(s) {
   s = Kit.auto(s)
@@ -516,11 +530,23 @@ export function setQNames(si) {
       yield* _setQNames(s.one())
     }
   }
-  function* _setQNames(sw) {
+  function* _setQNames(sw, cnst) {
     for(const i of sw) {
       yield i
       if (i.enter) {
         switch(i.type) {
+        case Tag.FunctionDeclaration:
+        case Tag.FunctionExpression:
+        case Tag.ObjectMethod:
+        case Tag.ClassMethod:
+        case Tag.ClassPrivateMethod:
+          const id = s.curLev()
+          if (id && id.type === Tag.Identifier)
+            i.value.scopeName = id.value.node.name
+          break
+        case Tag.VariableDeclaration:
+          yield* _setQNames(s.sub(), i.value.node.kind === "const")
+          break
         case Tag.CallExpression:
           yield* getQName(i.value.qname = [])
           break
@@ -531,7 +557,17 @@ export function setQNames(si) {
           const j = s.curLev()
           if (j != null) {
             j.lqname = cqn
-            yield* _setQNames(s.sub())
+            yield* _setQNames(s.one())
+          }
+          if (i.type === Tag.VariableDeclarator && cnst) {
+            const j = s.curLev()
+            if (!j)
+              break
+            switch(j.type) {
+            case Tag.FunctionExpression:
+            case Tag.ArrowFunctionExpression:
+              j.value.scopeName = cqn[0]
+            }
           }
           break
         }
@@ -649,9 +685,11 @@ export function* propagateConfigDiff(s) {
     if (i.enter) {
       if (cur.level === level) {
         if (cur.merge) 
-          i.value.optsDiff = Object.assign({},cur.merge,i.value.optsDiff)
+          i.value.optsDiff =
+            Object.assign(i.value.optsDiff||{},cur.merge,i.value.optsDiff)
         if (cur.assign) {
-          i.value.optsAssign = Object.assign({},cur.assign,i.value.optsAssign)
+          i.value.optsAssign =
+            Object.assign(i.value.optsAssign||{},cur.assign,i.value.optsAssign)
         }
       }
       level++

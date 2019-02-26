@@ -80,15 +80,13 @@ export const convert = Kit.pipe(
           switch(i.type) {
           case Tag.ReturnStatement:
             const cur = s.curLev()
-            if (cur) {
-              if (cur.value.eff) {
-                cur.value.result = true
-                yield* Kit.reposOne(s.sub(), i.pos)
-              } else {
-                yield s.enter(i.pos, Block.pure, {result:true})
-                yield* Kit.reposOne(s.sub(), Tag.push)
-                yield* s.leave()
-              }
+            if (cur && cur.value.eff) {
+              cur.value.result = true
+              yield* Kit.reposOne(s.sub(), i.pos)
+            } else if (cur || s.opts.keepLastPure) {
+              yield s.enter(i.pos, Block.pure, {result:true})
+              yield* Kit.reposOne(s.sub(), Tag.push)
+              yield* s.leave()
             }
             s.close(i)
             continue
@@ -439,7 +437,7 @@ export const convert = Kit.pipe(
                           {declSym:Kit.scope.newSym("_"),
                            root,result:false})
     yield frame
-    if (s.opts.scopePrefix) 
+    if (root.opts.scopePrefix)
       yield s.tok(Tag.push, Block.letStmt,
                   {goto:first,ref:frame.value,eff:true,op:null,
                    opSym:scopeSym,bindName:"scope",bindJump:true,init:true})
@@ -826,7 +824,7 @@ function* copyFrameVars(si) {
     const vars = new Set()
     if (sw) {
       sw.w.forEach(vars.add,vars)
-      sw.c.forEach(vars.add,vars)
+      // sw.c.forEach(vars.add,vars)
       sw.r.forEach(vars.add,vars)
     }
     const patSym = frame.errSym || frame.patSym
@@ -929,7 +927,7 @@ function* copyFrameVars(si) {
           }
           assign.sort(byNumFst)
           let inner = i.leave ? null : Kit.toArray(substPatSym())
-          if (assignArg && inner) {
+          if (assignArg && inner && inner.length) {
             assign.push([assignArg,Kit.reposOneArr(inner,Tag.right)])
             inner = null
           }
@@ -1221,6 +1219,7 @@ function calcVarDeps(si) {
   Ctrl.convolveFrames(sa)
   sa = Kit.toArray(cleanup(sa))
   State.calcFlatCfg(root.cfg,sa)
+  // if (!root.opts.keep
   return sa
 }
 
@@ -1360,8 +1359,19 @@ function cleanup(si) {
   function markGoto(value) {
     if (!value)
       return
-    if (value.goto)
-      value.goto.removed = false
+    if (value.frameArgs) {
+      for(const i of value.frameArgs.keys()) {
+        if (!i.bound)
+          value.frameArgs.delete(i)
+      }
+    }
+    if (value.goto) {
+      value.goto.removed = false 
+      if (value.goto.dynamicJump) {
+        for(const i of value.goto.instances)
+          i.removed = false
+      }
+    }
     if (value.indirJumps) {
       for(const i of value.indirJumps.keys())
         i.removed = false
@@ -1567,9 +1577,11 @@ export const interpret = Kit.pipe(
   Opt.removeSingleJumps,
   Opt.inlineFrames,
   calcVarDeps,
+  ifDefunct(Defunct.init),
+  Par.postproc,
+  Opt.inlinePureCont,
   Inline.storeContinuations,
   ifDefunct(Defunct.prepare),
-  Par.interpret,
   Gens.functionSentAssign,
   Bind.interpretPureLet,
   copyFrameVars,

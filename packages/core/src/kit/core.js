@@ -281,13 +281,14 @@ export function* concatArraysPass(s) {
 const sysSyms = new Map()
 
 /** returns Symbol marked with lib=true field */
-export function sysId(name) {
+export function sysId(name,scoped) {
   let res = sysSyms.get(name)
   if (res != null)
     return res
   sysSyms.set(name, res = scope.newSym(name,true))
   res.lib = true
   res.nsDefault = false
+  res.scoped = scoped
   return res
 }
 
@@ -499,8 +500,7 @@ export const prepare =
           stack.shift()
       }
     },
-    resetLevel
-  )
+    resetLevel)
 
 
 export function produce(ast, pos) {
@@ -585,8 +585,8 @@ export function* strip(s) {
 function ctor(pos,type,value) {
   [pos,type,value] = guessType(pos,type,value)
   value = tagValue(pos,type,value)
-  if (this != null && value.opts == null)
-    value.opts = this.opts
+  // if (this != null && value.opts == null)
+  // value.opts = this.opts
   return [pos,type,value]
 }
 
@@ -602,3 +602,4 @@ export function auto(i) {
     return i
   return new CtorWrap(i)
 }
+

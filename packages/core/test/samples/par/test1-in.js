@@ -3,7 +3,8 @@ M.profile("es")
 M.option({combineOps:true,
           scopeContext:true,
           scopePrefix:true,
-          contextState:true,
+          contextState:false,
+          topLevel:false,
           contextMethodOps:true,
           cleanupFrameVars:false,
           par:true,
@@ -11,286 +12,280 @@ M.option({combineOps:true,
           defunct:true,
           storeCont:"$state",
           storeHandler:"$run",
-          parRegion:true,
           reuseTempVars:true
          })
 
-async function p0(a,b) {
-  await g_1(await f_3, await f_4)
-}
+{
+  "par"
 
-async function p1(a,b) {
-  const x = await f_3
-  const y = await f_4
-  await g_1(x, y)
-}
-
-async function p2() {
-  await k_1(await a_1)
-  await k_2(await a_2)
-}
-
-async function p3() {
-  await f_2
-  await g_1(await f_3, await f_4)
-  await f_5
-}
-
-async function p4() {
-  await f_2(await a_1)
-  await g_1(await f_3, await f_4)
-  await f_5
-}
-
-async function p5() {
-  if (await f0) 
-    await e0(await f2)
-  else
-    await f1
-  await f_2
-}
-
-async function p6() {
-  await f8(await f3, await f9(await f5))
-  await g2(await g3, await g4)
-  await f_3
-}
-
-async function p7() {
-  await f_3
-  await f8(await f3, await f9(await f5))
-  await g2(await g3, await g4)
-}
-
-async function p8() {
-  await k_0
-  if (await f0) 
-    await e0(await f2)
-  else
-    await f1
-  await f_2
-  await f_3
-  await f8(await f3, await f9(await f5))
-  await g2(await g3, await g4)
-}
-
-async function p9(a,b) {
-  await m_1((await g_1(await f_3, await f_4)), await k_1)
-}
-
-async function p9_a(a,b) {
-  await m_1(await k_1, (await g_1(await f_3, await f_4)))
-}
-
-async function p10() {
-  const va = await a_1
-  const vb = await a_2
-  await k_1(va)
-  await k_2(vb)
-}
-
-async function p11() {
-  const i = await f_1()
-  const x = await g_1(i)
-  const y = await f_2()
-  await k_1(x, y)
-}
-
-async function p12() {
-  const i = await f_1()
-  const x = await g_1(i)
-  const y = await f_2()
-  return await k_1(x, y)
-}
-
-async function p13() {
-  const i = await f_1()
-  const x = await g_1(i)
-  const y = await f_2()
-  const z = await k_1(x, y)
-  return await fi_1(z)
-}
-
-async function p14() {
-  let j,k
-  const i = await init
-  var a1 = await k_1(await a_1(i++), k+=await m2), a2 = await k_2(await a_2)
-  j++
-  await g(a1,a2)
-  await f(a1,j,k)
-  await f2(a2,j,k)
-}
-
-async function p15(a,b) {
-  const x = await f_3(a)
-  const y = await f_4(b)
-  await g_1(x, y)
-}
-
-async function p16(a,b) {
-  await g_1(await f_3(a), await f_4(b))
-}
-
-async function p17() {
-  let j,k
-  const w = await wery
-  let i = await init(w)
-  var a1 = await k_1(await a_1(i++,w), k+=await m2(w), w), a2 = await k_2(w, await a_2(w))
-  return await g(a1,a2,w)
-}
-
-async function p18() {
-  let j,k
-  const w = await wery
-  const i = await init(w)
-  var a1 = await k_1(await a_1(i++,w), k+=await m2(w), w), a2 = await k_2(w, await a_2(w))
-  j+= await m_1(w)
-  await g(a1,a2,w)
-}
-
-async function p19() {
-  let j,k
-  const w = await wery
-  const i = await init(w)
-  var a1 = await k_1(await a_1(i++,w), k+=await m2(w), w), a2 = await k_2(w, await a_2(w))
-  j+= await m_1(w)
-  await g(a1,a2,w)
-  await f(a1,j,k,w)
-  await f2(a2,j,k,w)
-}
-
-async function p20() {
-  let j,k
-  const i = await init()
-  var a1 = await k_1(await a_1(i++), k+=await m2()), a2 = await k_2(await a_2())
-  j+= await m_1()
-  await g(a1,a2)
-  await f(a1,j,k)
-  await f2(a2,j,k)
-}
-
-async function p21() {
-  let j,k
-  const i = await init()
-  j = await g(i)
-  k = await f(i)
-  await m(j,k)
-}
-
-async function p22() {
-  let j,k
-  const i = await init()
-  j = await g(i)
-  jj = await j
-  k = await f(i)
-  await m(jj,k)
-}
-
-async function p23() {
-  const i = await f_1()
-  const x = await g_1(i)
-  const y = await f_2()
-  await k_1(x, y)
-}
-
-async function p24() {
-  const i = await f_1()
-  const x = await g_1(i)
-  const y = await f_2()
-  await k_1(x, y)
-}
-
-
-async function p25() {
-  const i = await f_1()
-  const x = await g_1(i)
-  const y = await f_2()
-  const z = await k_1(x, y)
-  return await fi_1(z)
-}
-
-async function p26() {
-  const x = await f_1()
-  const y = await f_2()
-  const z = await f_3()
-  const a = await g_1(x, y)
-  const b = await g_2(x, z)
-  await k_1(a, b)
-}
-
-async function p27() {
-  let j,k, jj, z, x
-  z = await pre
-  x = await mu
-  jj = await bu(z,x)
-  const i = await init()
-  j = await g(i)
-  k = await f(i)
-  await m(jj,k,j)
-}
-
-async function p28() {
-  let j,k, jj, z
-  jj = await pre
-  const i = await init()
-  j = await g(i)
-  k = await f(i)
-  await m(jj,k,j)
-}
-
-async function p29() {
-  const x = await init_x()
-  const y = await init_y()
-  await f_1(x, y)
-  const y2 = await f_2(y)
-  const y3 = await f_3(y)
-  await f_4(y2, y3)
-}
-
-async function p30() {
-  const i = await init()
-  const x = await f_1()
-  const y = await f_2()
-  const y2 = await f_2_2(i, y)
-  const z = await f_3()
-  const a = await g_1(x, y)
-  const b = await g_2(y, z)
-  const b1 = await g_2_b1(b)
-  const b2 = await g_2_b2(b)
-  const c = await g_3(x, z)
-  const d = await g_4(z, x)
-  const m = await k_1(i, y, a, b, c, d, y2)
-  const n = await k_2(i, y, a, b1, b2, c)
-  await m_1(m, n)
-}
-
-async function p31() {
-  let j,k, z, x
-  z = await pre
-  x = await mu
-  await bu(z,x)
-  const i = await init()
-  j = await g(i)
-  k = await f(i)
-  await m(k,j)
-}
-
-M.option({
-  parRegion:false,
-  blockDirectives: {
-    par: { parRegion:true },
-    seq: { parRegion:false }
+  async function p0(a,b) {
+    await g_1(await f_3, await f_4)
   }
-})
+  
+  async function p1(a,b) {
+    const x = await f_3
+    const y = await f_4
+    await g_1(x, y)
+  }
+  
+  async function p2() {
+    await k_1(await a_1)
+    await k_2(await a_2)
+  }
+  
+  async function p3() {
+    await f_2
+    await g_1(await f_3, await f_4)
+    await f_5
+  }
+  
+  async function p4() {
+    await f_2(await a_1)
+    await g_1(await f_3, await f_4)
+    await f_5
+  }
+  
+  async function p5() {
+    if (await f0) 
+      await e0(await f2)
+    else
+      await f1
+    await f_2
+  }
+  
+  async function p6() {
+    await f8(await f3, await f9(await f5))
+    await g2(await g3, await g4)
+    await f_3
+  }
+  
+  async function p7() {
+    await f_3
+    await f8(await f3, await f9(await f5))
+    await g2(await g3, await g4)
+  }
+  
+  async function p8() {
+    await k_0
+    if (await f0) 
+      await e0(await f2)
+    else
+      await f1
+    await f_2
+    await f_3
+    await f8(await f3, await f9(await f5))
+    await g2(await g3, await g4)
+  }
+  
+  async function p9(a,b) {
+    await m_1((await g_1(await f_3, await f_4)), await k_1)
+  }
+  
+  async function p9_a(a,b) {
+    await m_1(await k_1, (await g_1(await f_3, await f_4)))
+  }
+  
+  async function p10() {
+    const va = await a_1
+    const vb = await a_2
+    await k_1(va)
+    await k_2(vb)
+  }
+  
+  async function p11() {
+    const i = await f_1()
+    const x = await g_1(i)
+    const y = await f_2()
+    await k_1(x, y)
+  }
+  
+  async function p12() {
+    const i = await f_1()
+    const x = await g_1(i)
+    const y = await f_2()
+    return await k_1(x, y)
+  }
+  
+  async function p13() {
+    const i = await f_1()
+    const x = await g_1(i)
+    const y = await f_2()
+    const z = await k_1(x, y)
+    return await fi_1(z)
+  }
+  
+  async function p14() {
+    let j,k
+    const i = await init
+    var a1 = await k_1(await a_1(i++), k+=await m2), a2 = await k_2(await a_2)
+    j++
+    await g(a1,a2)
+    await f(a1,j,k)
+    await f2(a2,j,k)
+  }
+  
+  async function p15(a,b) {
+    const x = await f_3(a)
+    const y = await f_4(b)
+    await g_1(x, y)
+  }
+
+  async function p16(a,b) {
+    await g_1(await f_3(a), await f_4(b))
+  }
+  
+  async function p17() {
+    let j,k
+    const w = await wery
+    let i = await init(w)
+    var a1 = await k_1(await a_1(i++,w), k+=await m2(w), w), a2 = await k_2(w, await a_2(w))
+    return await g(a1,a2,w)
+  }
+  
+  async function p18() {
+    let j,k
+    const w = await wery
+    const i = await init(w)
+    var a1 = await k_1(await a_1(i++,w), k+=await m2(w), w), a2 = await k_2(w, await a_2(w))
+    j+= await m_1(w)
+    await g(a1,a2,w)
+  }
+  
+  async function p19() {
+    let j,k
+    const w = await wery
+    const i = await init(w)
+    var a1 = await k_1(await a_1(i++,w), k+=await m2(w), w), a2 = await k_2(w, await a_2(w))
+    j+= await m_1(w)
+    await g(a1,a2,w)
+    await f(a1,j,k,w)
+    await f2(a2,j,k,w)
+  }
+  
+  async function p20() {
+    let j,k
+    const i = await init()
+    var a1 = await k_1(await a_1(i++), k+=await m2()), a2 = await k_2(await a_2())
+    j+= await m_1()
+    await g(a1,a2)
+    await f(a1,j,k)
+    await f2(a2,j,k)
+  }
+  
+  async function p21() {
+    let j,k
+    const i = await init()
+    j = await g(i)
+    k = await f(i)
+    await m(j,k)
+  }
+  
+  async function p22() {
+    let j,k
+    const i = await init()
+    j = await g(i)
+    jj = await j
+    k = await f(i)
+    await m(jj,k)
+  }
+
+  async function p23() {
+    const i = await f_1()
+    const x = await g_1(i)
+    const y = await f_2()
+    await k_1(x, y)
+  }
+  
+  async function p24() {
+    const i = await f_1()
+    const x = await g_1(i)
+    const y = await f_2()
+    await k_1(x, y)
+  }
+
+  async function p25() {
+    const i = await f_1()
+    const x = await g_1(i)
+    const y = await f_2()
+    const z = await k_1(x, y)
+    return await fi_1(z)
+  }
+  
+  async function p26() {
+    const x = await f_1()
+    const y = await f_2()
+    const z = await f_3()
+    const a = await g_1(x, y)
+    const b = await g_2(x, z)
+    await k_1(a, b)
+  }
+  
+  async function p27() {
+    let j,k, jj, z, x
+    z = await pre
+    x = await mu
+    jj = await bu(z,x)
+    const i = await init()
+    j = await g(i)
+    k = await f(i)
+    await m(jj,k,j)
+  }
+
+  async function p28() {
+    let j,k, jj, z
+    jj = await pre
+    const i = await init()
+    j = await g(i)
+    k = await f(i)
+    await m(jj,k,j)
+  }
+
+  async function p29() {
+    const x = await init_x()
+    const y = await init_y()
+    await f_1(x, y)
+    const y2 = await f_2(y)
+    const y3 = await f_3(y)
+    await f_4(y2, y3)
+  }
+  
+  async function p30() {
+    const i = await init()
+    const x = await f_1()
+    const y = await f_2()
+    const y2 = await f_2_2(i, y)
+    const z = await f_3()
+    const a = await g_1(x, y)
+    const b = await g_2(y, z)
+    const b1 = await g_2_b1(b)
+    const b2 = await g_2_b2(b)
+    const c = await g_3(x, z)
+    const d = await g_4(z, x)
+    const m = await k_1(i, y, a, b, c, d, y2)
+    const n = await k_2(i, y, a, b1, b2, c)
+    await m_1(m, n)
+  }
+  
+  async function p31() {
+    let j,k, z, x
+    z = await pre
+    x = await mu
+    await bu(z,x)
+    const i = await init()
+    j = await g(i)
+    k = await f(i)
+    await m(k,j)
+  }
+}
 
 async function p32() {
   await init
   {
-    "par";
+    "par"
     await op_a
     await op_b
     {
-      "seq";
+      "seq"
       await op_sa
       await op_sb
       }
@@ -1585,3 +1580,908 @@ async function r16() {
   await s_1
 }
 
+async function r17() {
+  "par"
+  try {
+    await send("a_1")
+    await send("a_2")
+  } finally {
+    await send("f_1")
+  }
+}
+
+async function r18(k) {
+  "par"
+  let i = 0, j = 0
+  await t_1(k)
+  await t_2(k)
+  for(;somethingElse;) {
+    await o_1(j)
+    await o_2(j)
+    j = 2
+    await o_3(await o_4(j),j)
+    for(;something;) {
+      await a_1(i)
+      await a_2(i)
+      i = 1
+      await a_3(i)
+      await a_4(i)
+      {
+        "seq"
+        await s_1(i)
+        {
+          "par"
+          i = 1
+          await p_2(await p_1(i),i,j,k)
+          i = 2, k = 2
+          await p_3(await p_4(i,j,k),i,j,k)
+          await p_5(i)
+        }
+      }
+      await a_5(i)
+      i = 4
+      await a_7(await a_6(i),i)
+    }
+    j = 3
+    await o_5(j,i)
+    await o_6(j,k)
+  }
+  k = 3
+  await t_3(k)
+}
+
+async function r19() {
+  "par"
+  let i = 0, j = 0
+  try {
+    await e_1(i)
+    i = await e_2(i)
+    await e_3(i)
+    i = await e_4(i)
+    await e_5(i)
+    await e_6(i)
+    j = 10
+    await a_7(j)
+    await a_8(j)
+  } finally {
+    await f_1(i)
+  }
+}
+
+async function r20(i) {
+  "par"
+  try {
+    await f_1(await e_1(i),i)
+    await f_2(await e_2(i),i)
+  } finally {}
+  i = 10
+  try {
+    try {
+      await f_2(await e_2(i),i)
+      i -= await f_3(await e_3(i),i)
+    } finally {
+      console.log(i)
+    }
+  } finally {}
+}
+
+async function r21(i) {
+  try {
+    {
+      "par"
+      for(;;) {
+        await e_1(i)
+        try {
+          await e_2(i)
+        } finally {
+          await f_i
+        }
+        i = await i_1(await i_2(i))
+        await e_3(i)
+        await e_4(i)
+        i = 20
+        await e_5(i)
+        await e_6(i)
+      }
+    }
+    await s_1
+  } finally {
+    await f_1
+  }
+}
+
+async function r22() {
+  "par"
+  let i = 0
+  await e_1(i)
+  await e_2(i)
+  if (something)
+    i = 10
+  await e_3(i)
+  await e_4(i)
+  if (somethingElse)
+    i = 20
+  await e_5(i)
+  await e_6(i)  
+}
+
+async function r23(i) {
+  try {
+    {
+      "par"
+      for(;;) {
+        // TODO: make e_1 parallel
+        // it ignore first rec-frame because it usually contains the if,
+        // though, maybe it shouldn't
+        await e_1(i)
+        try {
+          await e_2(i)
+        } finally {
+          await f_i
+        }
+        i = await i_1(await i_2(i))
+        await e_3(i)
+        await e_4(i)
+        i = 20
+        await e_5(i)
+        await e_6(i)
+      }
+    }
+    await s_1
+  } finally {
+    await f_1
+  }
+}
+
+async function r24(i) {
+  "par"
+  for(;;) {
+    await e_1(i)
+    try {
+      await e_2(i)
+    } finally {
+      await f_i
+    }
+    i = await i_1(await i_2(i))
+    await e_3(i)
+    await e_4(i)
+    i = 20
+    await e_5(i)
+    await e_6(i)
+  }
+}
+
+async function r25() {
+  "par"
+  for(let i = 0;something;) {
+    i += await e_2(await e_1(i), i)
+    await i_1(i)
+    i = 2
+    await e_4(await e_3(i),i)
+  }
+}
+
+async function r26(){
+  let i,j,k
+  {
+    "par"
+    {
+      "seq"
+      if (await a_1())
+        i = "a"
+    }
+    for(;something;) {
+      {
+        "seq"
+        if (await a_2())
+          j = "b"
+      }
+      for(;somethingElse;) {
+        {
+          "seq"
+          if (await a_3())
+            k = "c"
+        }
+        {
+          "seq"
+          if (await a_4())
+            k = "d"
+        }
+      }
+      {
+        "seq"
+        if (await a_5())
+          j = "e"
+      }
+    }
+    {
+      "seq"
+      if (await a_6())
+        i = "f"
+    }
+  }
+  await f_1(i,j,k)
+}
+
+async function r27(){
+  let i
+  {
+    "par"
+    {
+      "seq"
+      if (await a_1())
+        i = "a"
+    }
+    for(;something;) {
+      {
+        "seq"
+        if (await a_2())
+          i = "b"
+      }
+      for(;somethingElse;) {
+        {
+          "seq"
+          if (await a_3())
+            i = "c"
+        }
+        {
+          "seq"
+          if (await a_4())
+            i = "d"
+        }
+      }
+      {
+        "seq"
+        if (await a_5())
+          i = "e"
+      }
+    }
+    {
+      "seq"
+      if (await a_6())
+        i = "f"
+    }
+  }
+  await f_1(i)
+}
+
+async function r28() {
+  "par"
+  let i = "I"
+  {
+    "seq"
+    if (something)
+      i = "a"
+    {
+      "par"
+      await a_1_2(await a_1_1(i),i)
+    }
+  }
+  {
+    "seq"
+    if (somethingElse)
+      i = "b"
+    await a_2_1
+  }
+  {
+    "par"
+    {
+      "seq"
+      await f_1(i)
+      if (someF)
+        i = "B"
+      {
+        "par"
+        await g_1(i)
+        await g_2(i)
+      }
+    }
+    {
+      "seq"
+      i = "G"
+      await g_1(i)
+    }
+  }
+  {
+    "seq"
+    i = "c"
+    {
+      "par"
+      await a_3_1(await a_3_2(i),i)
+    }
+  }
+}
+
+async function r29() {
+  "par"
+  let {i} = "I", j = "J"
+  {
+    "seq"
+    if (something)
+      i = "a"
+    {
+      "par"
+      await a_1_2(await a_1_1(i),i)
+    }
+  }
+  {
+    "seq"
+    if (somethingElse)
+      console.log([i] = "b")
+    await a_2_1
+  }
+  {
+    "seq"
+    await f_1(i)
+    if (someF) {
+      console.log(i++)
+      i++
+    }
+    await f_2(i)
+  }
+  {
+    "seq"
+    i = "c"
+    {
+      "par"
+      await a_3_1(await a_3_2(i,j),i,j)
+    }
+  }
+}
+
+async function r30(){
+  let i = 0, j = 0, k = 0
+  {
+    "par"
+    {
+      "seq"
+      if (await a_1())
+        i = 1
+    }
+    {
+      "seq"
+      if (await a_6())
+        i = 6
+    }
+  }
+  await f_1(i,j,j)
+}
+
+async function r31(){
+  let i
+  {
+    "par"
+    for(;something;) {
+      {
+        "seq"
+        if (await a_3())
+          i = "a"
+      }
+      {
+        "seq"
+        if (await a_4())
+          i = "b"
+      }
+    }
+  }
+  await f_1(i)
+}
+
+async function r32(){
+  let i = 0
+  {
+    "par"
+    {
+      "seq"
+      if (await a_1())
+        i = 1
+    }
+    {
+      "seq"
+      {
+        "par"
+        {
+          "seq"
+          if (await a_2())
+            i = 2
+        }
+        {
+          "seq"
+          if (await a_3())
+            i = 3
+        }
+      }
+      await f_0(i)
+    }
+    await a_4(i)
+    {
+      "seq"
+      if (await a_5())
+        i = 4
+    }
+  }
+  await f_1(i)
+}
+
+async function r33() {
+  "par"
+  let {i} = "I"
+  for(;something(i);) {
+    let j = "J"
+    {
+      "seq"
+      if (await something)
+        i = "a"
+      {
+        "par"
+        await a_1_2(await a_1_1(i),i)
+      }
+    }
+    {
+      "seq"
+      if (await somethingElse)
+        console.log([i] = "b")
+      await a_2_1
+    }
+    {
+      "seq"
+      await f_1(i)
+      if (someF) {
+        console.log(i++)
+        i++
+      }
+      await f_2(i)
+    }
+    {
+      "seq"
+      i = "c"
+      {
+        "par"
+        await a_3_1(await a_3_2(i,j),i,j)
+      }
+    }
+  }
+}
+
+async function r34() {
+  "par"
+  let i
+  for(;something;) {
+    {
+      "seq"
+      i = 0
+      {
+        "par"
+        i+=await eff_1(i)
+        await eff_2(i)
+        await eff_3(i)
+        i = await eff_4()
+        await eff_5(i)
+        await eff_6(i)
+      }
+    }
+    {
+      "seq"
+      i = 1
+      {
+        "par"
+        i-=await efg_1(i)
+        await efg_2(i)
+        await efg_3(i)
+        i = i + await eff_4(i)
+        await efg_5(i)
+        await efg_6(i)
+      }
+    }
+  }
+}
+
+async function r35() {
+  "par"
+  let i
+  i+=await eff_1(i)
+  await eff_2(i)
+  await eff_3(i)
+  i = await eff_4()
+  await eff_5(i)
+  await eff_6(i)
+}
+
+async function r36(i) {
+  "par"
+  i+=await eff_1(i)
+  await eff_2(i)
+  await eff_3(i)
+}
+
+async function r37() {
+  "par"
+  let {i} = "I"
+  for(;something(i);) {
+    i = await f_1(await f_2(i))
+    await f_4(await f_3(i))
+    await f_6(await f_5(i))
+    i += await f_8(await f_7(i))
+  }
+}
+
+async function r38() {
+  "par"
+  let {i} = "I"
+  await g_1(await g_2(i))
+  i = await f_1(await f_2(i))
+  await f_4(await f_3(i))
+  await f_6(await f_5(i))
+  i += await f_8(await f_7(i))
+}
+
+async function r39() {
+  "par"
+  let i
+  await g_1(await g_2(i))
+  i = await f_1(await f_2(i))
+  await f_4(await f_3(i))
+  await f_6(await f_5(i))
+  i += await f_8(await f_7(i))
+}
+
+async function r40() {
+  "par"
+  let i
+  await init
+  for(i = 0;i<10;i++) {
+    let j = i
+    await gu_0(i,j)
+    j = await gu_1(i,j)
+    i += await gu_2(i,j)
+    await gu_3(i,j)
+    await gu_4(i,j)
+  }
+  await fin_1
+}
+
+async function r41() {
+  "par"
+  let i
+  for(let k = 0;k<10;k++) {
+    for(let m = 0;m<10;m++) {
+      await init
+      for(i = 0;i<10;i++) {
+        const j = i
+        await gu_1(j,k,m)
+        await gu_2(j,k)
+      }
+      await fin_1
+    }
+  }
+}
+
+async function r42() {
+  "par"
+  let i
+  for(let k = 0;k<10;k++) {
+    for(let m = 0;m<10;m++) {
+      await init
+      for(i = 0;i<10;i++) {
+        const j = i
+        await gu_1(j,k,m)
+        k = await gu_2(j,k)
+        await gu_3(k)
+      }
+      await fin_1
+    }
+  }
+}
+
+async function r43() {
+  {
+    "par"
+    let j = 10
+    await a_1(j)
+    j = 20
+    await a_2(j)
+    j = 30
+    await a_3(j)
+  }
+  let k
+  {
+    "par"
+    for(const i of something_1) {
+      for(const j of something_2) {
+        for(k of something_3) {
+          await a_1(i,j,k)
+          j = 20
+          await a_2(i,j,k)
+          j = 30
+          await a_3(i,j,k)
+        }
+      }
+    }
+  }
+  {
+    "par"
+    for(const i of something_1) {
+      for(const j of something_2) {
+        for(const k of something_3) {
+          for(const l of something_4) {
+            let m = 0
+            await a_1(i,j,k,l,m)
+            m = 200
+            await a_2(i,j,k,l,m)
+            m = 300
+            await a_3(i,j,k,l,m)
+          }
+          await a_4
+        }
+        await a_5
+      }
+    }
+    await a_6
+  }
+  {
+    "par"
+    let j
+    for(const i of something_1) {
+      for(j of something_2) {
+        await a_1(i,j)
+        j = 20
+        await a_2(i,j)
+        j = 30
+        await a_3(i,j)
+      }
+    }
+  }
+  {
+    "par"
+    for(const i of something_1) {
+      await a_1(i)
+    }
+  }
+  {
+    "par"
+    for(;something_1;) {
+      "seq"
+      await a_1
+      await a_2
+    }
+  }
+  {
+    M.option({parRegion:true})
+    for(;something_1;) {
+      for(;something_2;) {
+        if (a) {
+          await a_1
+          continue
+        }
+        await a_2
+      }
+    }
+  }
+  {
+    "par"
+    for(;something_1;) {
+      "seq"
+      {
+        "par"
+        for(const j of something_2) {
+          await a_1
+        }
+      }
+      await a_2
+    }
+  }
+  await a_last(k)
+}
+
+async function r44() {
+  {
+    "par"
+    for(const i of something_1) {
+      await a_1
+    }
+  }
+  {
+    "par"
+    for(const i of something_1) {
+      for(const j of somethingElse_1) {
+        await b_1
+      }
+    }
+  }
+  {
+    "par"
+    for(;something_2;) {
+      if (await a_2)
+        break
+    }
+  }
+  {
+    "par"
+    for(;something_3;) {
+      await a_3
+      if (await a_4)
+        break
+      await a_5
+    }
+  }
+  {
+    "par"
+    up_1: for(;something_4;) {
+      await a_6
+      for(;something_5;) {
+        if (await a_7)
+          break up_1
+      }
+    }
+  }
+  {
+    "par"
+    for(;await something_4;) {
+      for(;await something_5;) {
+        await a_5
+      }
+    }
+  }
+  {
+    "par"
+    for(;something_4;) {
+      for(;something_5;) {
+        await a_5
+      }
+    }
+  }
+}
+
+async function r45() {
+  "par"
+  for(;something_1;) {
+    await a_1
+  }
+  for(;await somethingElse_1;) {
+    await b_1
+  }
+  for(;something_2;) {
+    for(;something_3;) {
+      await a_2
+      await a_3
+    }
+  }
+  for(;await something_4;) {
+    for(;await something_5;) {
+      await a_4
+      await a_5
+    }
+  }
+  for(;await something_6;) {
+    await a_6
+    for(;await something_7;) {
+      await a_7
+      await a_8
+    }
+  }
+  for(;await something_8;) {
+    for(;await something_9;) {
+      await a_9
+      await a_10
+    }
+    await a_11
+  }
+  for(;await something_10;) {
+    await a_11
+    for(;await something_11;) {
+      await a_12
+      await a_13
+    }
+    await a_14
+  }
+  for(;something_12;) {
+    for(;something_13;) {
+      for(;something_14;) {
+        await a_15
+        await a_16
+      }
+    }
+  }
+}
+
+async function r46() {
+  "par"
+  let k
+  for(;something_1;) {
+    up: for(let i = 0;await check_1(i);i++) {
+      for(let j = 0;await check_2(j);) {
+        if (something1) {
+          await send(`k-a-${j}`)
+          if (something2) {
+            await send(`k-b-${j}`)
+            continue
+          }
+          continue
+        }
+        if (something3) {
+          if (somethin4) {
+            await send(`k-c-${j}`)
+            continue
+          }
+          await send(`k-d-${j}`)
+          continue
+        }
+        k = await send(`k-e-${j}`)
+      }
+      k = await send(`up-${i,j}`)
+    }
+  }
+  await send(`${k}-fin`)
+  lo: for(;;) {
+    for(;;) {
+      if (something)
+        continue lo
+      else if (sometingElse)
+        break lo
+      await send(`lo`)
+    }
+  }
+}
+
+async function r47() {
+  "par"
+  for(const i1 of [10,20]) {
+    for(const i2 of [1,2]) {
+      for(const i3 of ["A","B"]) {
+        let j = 0
+        if (await send(`sa:${i1}/${i2}/${i3}/${j}`,(30-i1)/i2,t))
+          j = 10
+        if (await send(`sb:${i1}/${i2}/${i3}`,(30-i1)/i2+2,t))
+          j = 20
+        await send(`ta:${i1}/${i2}/${i3}/${j}`,15)
+        j++
+        await send(`tb:${i1}/${i2}/${i3}/${j}`,10)
+      }
+    }
+  }
+}
+
+async function r48() {
+  "par"
+  let i = 0
+  await send(`a:${await send("b:" + i,10)}:${i}`,10)
+  i++
+  await send(`c:${await send("d:" + i,5)}:${i}`,5)
+}
+
+async function r49() {
+  "par"
+  let i = 0
+  await send(`a:${await send("b:"+i,15)}/${i}`,15)
+  i++
+  await send(`c:${await send("d:"+i,10)}/${i}`,10)
+  i++
+  await send(`e:${await send("f:"+i,5)}/${i}`,5)
+}
+
+async function r50() {
+  let i = 0
+  {
+    "par"
+    {
+      "seq"
+      if (await something_1)
+        i = 1
+    }
+    {
+      "seq"
+      if (await something_2)
+        i = 2
+    }
+    {
+      "seq"
+      await a_1(i)
+      await a_2(i)
+    }
+    {
+      "seq"
+      if (await something_3)
+        i = 3
+    }
+  }
+}

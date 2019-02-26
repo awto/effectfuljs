@@ -12,7 +12,11 @@ export var iterator = process.env.EJS_LOCAL_SYMBOLS
 if (!process.env.EJS_NO_ES_ITERATORS && !Symbol.asyncIterator)
   Symbol.asyncIterator = Symbol.for("Symbol.asyncIterator")
 
+export var cancel = process.env.EJS_LOCAL_SYMBOLS
+  ? Symbol("Effectful.cancel")
+  : Symbol.for("Effectful.cancel")
+
 if (!process.env.EJS_LOCAL_SYMBOLS) {
   Symbol.effectfulIterator = iterator
+  Symbol.effectfulCancel = cancel
 }
- 

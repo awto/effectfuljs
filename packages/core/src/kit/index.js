@@ -6,7 +6,7 @@ const {toArray,result,tillLevel,till,clone,withOpts,
        adjustFieldType,adjustFieldTypeSimple,select,
        cons,la,enableIf,output,repos,reposOne,reposOneArr,
        reverse,pack,unpack,packed,flatMap,map,forEach,filter,
-       cleanEmptyExprs,mapAdd,mapPush,group,groupUniq,concat,
+       cleanEmptyExprs,mapAdd,mapPush,mapArr,group,groupUniq,concat,
        stage,curryN,curry,pipe,time,timeEnd,prepend,tillVal,single
       } = kit
 export {toArray,result,tillLevel,till,clone,withOpts,
@@ -17,7 +17,7 @@ export {toArray,result,tillLevel,till,clone,withOpts,
         varScope,select,cons,la,enableIf,output,
         repos,reposOneArr,reposOne,reverse,pack,unpack,
         packed,flatMap,map,forEach,filter,cleanEmptyExprs,
-        mapAdd,mapPush,group,groupUniq,concat,stage,
+        mapAdd,mapPush,mapArr,group,groupUniq,concat,stage,
         curryN,curry,pipe,time,timeEnd,prepend,tillVal,single
        }
 
@@ -28,11 +28,11 @@ export {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
         typeInfo,resetFieldInfo}
 import {packId,auto,autoBlock,autoBlockPass,rmEmpty,removeNulls,
         enter,leave,tok,repeat,complete,Any,completeAny,finalize,
-        strip,swap,swapTok,produce,consume,tagValue,idTok,
+        strip,swap,swapTok,produce,consume,tagValue,idTok,applyIgnoreResult,
         lookahead,rsub,prepare,resetLevel,sysId,coerceId} from "./core"
 export {packId,auto,autoBlock,autoBlockPass,rmEmpty,removeNulls,
         enter,leave,tok,repeat,complete,Any,completeAny,finalize,
-        strip,swap,swapTok,produce,consume,tagValue,idTok,
+        strip,swap,swapTok,produce,consume,tagValue,idTok,applyIgnoreResult,
         lookahead,rsub,prepare,resetLevel,sysId,coerceId}
 export const globalOpts = kit.getOpts
 

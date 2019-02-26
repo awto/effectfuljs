@@ -94,12 +94,14 @@ export const stage0 = Kit.pipe(
     Gens.functionSentPrepare,
     Control.injectExplicitRet,
     Ops.inject,
+    Coerce.jsx,
     Policy.stage("normalize"),
     Kit.toArray,
     Control.removeLabeledStatement,
     Loops.toBlocks,
     Loops.whileStmt,
     Loops.forOfStmt,
+    Policy.resetOpts,
     Loops.doWhileStmt,
     Prop.recalcEff,
     Branch.normilizeSwitch,
@@ -133,7 +135,6 @@ const stage1 = Kit.pipe(
     Policy.stage("interpret"),
     Ops.interpret,
     Flat.interpret,
-    Par.injectThread,
     Inline.ops,
     Coerce.inject,
     Block.interpretApp,
@@ -146,7 +147,6 @@ const stage1 = Kit.pipe(
     substSym,
     Closure.substContextIds,
     Block.ctxMethods,
-    Par.cloneContext,
     Rt.collectUsages,
     Simplify.main,
     Kit.toArray
@@ -164,11 +164,10 @@ export function* substSym(si) {
   }
 }
 
-
 export function pass(s) {
   let sa = Kit.toArray(Rt.collectImports(s))
   const root = sa[0].value
-  let opts = Kit.globalOpts()
+  let opts = root.opts || Kit.globalOpts()
   if (opts.detectRT) {
     if (!root.imports.has(opts.detectRT))
       return null
@@ -227,7 +226,7 @@ export function pass(s) {
       value.injectRT = inject
       value.$ns = root.$ns
       any = true
-      if (f.transform && value.topEff)
+      if ((value.transform || f.transform) && value.topEff)
         transform.push(i)
       else
         normalize.push(i)
@@ -270,7 +269,6 @@ export function main(ast,opts = {}) {
     return ast
   })
 }
-
 export function applyPass(ast,pass,opts = {}) {
   return Kit.optsScope(function applyPass(f) {
     Kit.setOpts(opts)

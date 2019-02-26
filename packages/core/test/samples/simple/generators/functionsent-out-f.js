@@ -1,7 +1,7 @@
 import * as M from "@effectful/core";
 
 function fSent() {
-  var s, sent;
+  var s, sent, r;
   return M.scope(_1);
 
   function _1(a) {
@@ -27,5 +27,9 @@ function fSent() {
   function _5(a) {
     console.log(a);
     return M.pure();
+  }
+
+  function _6(r) {
+    return M.pure(r);
   }
 }

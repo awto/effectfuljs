@@ -3,7 +3,8 @@ export {forInIterator} from "./forInIterator"
 export {iterator} from "./leanIterator"
 export {generatorFunction,Generator,generator} from "./generator"
 export {asyncFunction,async,Async} from "./async"
-export {iteratorM} from "./leanAsyncIterator"
+export {iterator as leanIteratorSymbol, cancel as cancelSymbol} from "./symbol"
+export {iteratorM,cancel} from "./leanAsyncIterator"
 export {asyncGenerator,AsyncGenerator,asyncGeneratorFunction,esAsyncIterator}
   from "./asyncGenerator"
 
@@ -15,7 +16,6 @@ export var opts = {
   checkRunning: !process.env.EJS_NO_ES_CHECK_GENERATOR_RUNNING,
   unwrapAsync: !process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR,
   localSymbols: !!process.env.EJS_LOCAL_SYMBOLS,
-  defunct: !!process.env.EJS_DEFUNCT,
   delegateForOf: !!process.env.EJS_DELEGATE_FOR_OF,
   delegateYieldStar: !!process.env.EJS_DELEGATE_YIELD_STAR
 }

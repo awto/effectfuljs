@@ -162,7 +162,9 @@ describe("yop", function () {
                 }
 
                 function _5() {
-                  return M.chain($dm$root.brk(), _6);
+                  var a;
+                  a = $dm$root;
+                  return M.chain(a.brk(), _6);
                 }
 
                 function _6(a) {

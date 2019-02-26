@@ -45,34 +45,38 @@ function d(i) {
   }
 
   function _7() {
+    return M.pure();
+  }
+
+  function _8(r) {
     return M.pure(r);
   }
 }
 
 function a4() {
-  var e, ex, fc, fe, err;
+  var e, ex, fc, fe, r, err;
   return M.scope(_1);
 
   function _1() {
-    return M.yldStar(M.yld(1), _2, _13);
+    return M.yldStar(M.yld(1), _2, _14);
   }
 
   function _2() {
-    return M.yldStar(M.yld(2), _3, _13);
+    return M.yldStar(M.yld(2), _3, _14);
   }
 
   function _3() {
-    fc = _8, fe = _10;
+    fc = _8, fe = _12;
     return M.yldStar(M.yld(3), _6);
   }
 
   function _4() {
     e = ex;
-    return M.yldStar(M.yld("excep"), _5, _14);
+    return M.yldStar(M.yld("excep"), _5, _15);
   }
 
   function _5() {
-    fc = _8, fe = _10;
+    fc = _8, fe = _12;
     return M.yldStar(M.yld(e), _6);
   }
 
@@ -91,47 +95,51 @@ function a4() {
   }
 
   function _9(a) {
-    return M.yldStar(M.yld(a), _11);
+    return M.yldStar(M.yld(a), _10);
   }
 
-  function _10(e) {
-    return M.raise(e);
-  }
-
-  function _11() {
+  function _10() {
     return M.pure();
   }
 
-  function _12() {
+  function _11(r) {
+    return M.pure(r);
+  }
+
+  function _12(e) {
+    return M.raise(e);
+  }
+
+  function _13() {
     return M.raise(err);
   }
 
-  function _13(a) {
+  function _14(a) {
     ex = a;
-    return M.jump(void 0, _4, _14);
+    return M.jump(void 0, _4, _15);
   }
 
-  function _14(a) {
-    fc = _12, fe = _10, err = a;
+  function _15(a) {
+    fc = _13, fe = _12, err = a;
     return M.jump(void 0, _6);
   }
 }
 
 function a5() {
-  var i, loop, fc, fe, err;
+  var i, loop, fc, fe, r, err;
   return M.scope(_1);
 
   function _1() {
     loop = M.iterator(a4());
-    return M.jump(void 0, _2, _7);
+    return M.jump(void 0, _2, _8);
   }
 
   function _2() {
     if (!(loop = loop.step()).done) {
       i = loop.value;
-      return M.yldStar(M.yld(i), _2, _7);
+      return M.yldStar(M.yld(i), _2, _8);
     } else {
-      fc = _4, fe = _5;
+      fc = _4, fe = _6;
       return M.jump(void 0, _3);
     }
   }
@@ -148,16 +156,20 @@ function a5() {
     return M.pure();
   }
 
-  function _5(e) {
+  function _5(r) {
+    return M.pure(r);
+  }
+
+  function _6(e) {
     return M.raise(e);
   }
 
-  function _6() {
+  function _7() {
     return M.raise(err);
   }
 
-  function _7(a) {
-    fc = _6, fe = _5, err = a;
+  function _8(a) {
+    fc = _7, fe = _6, err = a;
     return M.jump(void 0, _3);
   }
 }
@@ -168,11 +180,11 @@ function cfb1() {
 
   function _1() {
     i = 0;
-    return M.jump(void 0, _2, _12);
+    return M.jump(void 0, _2, _13);
   }
 
   function _2() {
-    return M.yldStar(M.yld(i === 3), _3, _12);
+    return M.yldStar(M.yld(i === 3), _3, _13);
   }
 
   function _3(a) {
@@ -180,8 +192,8 @@ function cfb1() {
       throw new Error(`AAAAAAAAA${i++}`);
     }
 
-    fc = _5, fe = _11;
-    return M.yldStar(M.yld(`a${i}`), _4, _13);
+    fc = _5, fe = _12;
+    return M.yldStar(M.yld(`a${i}`), _4, _14);
   }
 
   function _4() {
@@ -208,30 +220,35 @@ function cfb1() {
 
   function _9() {
     i++;
-    return M.jump(void 0, _2, _12);
+    return M.jump(void 0, _2, _13);
   }
 
-  function _10(e) {
+  function _10(r) {
+    return M.pure(r);
+  }
+
+  function _11(e) {
     return M.raise(e);
   }
 
-  function _11(a) {
+  function _12(a) {
     ex = a;
     return M.jump(void 0, _6);
   }
 
-  function _12(a) {
-    fc = _6, fe = _10, err = a;
-    return M.jump(void 0, _4, _13);
+  function _13(a) {
+    fc = _6, fe = _11, err = a;
+    return M.jump(void 0, _4, _14);
   }
 
-  function _13(a) {
+  function _14(a) {
     ex = a;
     return M.jump(void 0, _6);
   }
 }
 
 function c() {
+  var r;
   return M.scope(_1);
 
   function _1() {
@@ -240,6 +257,10 @@ function c() {
 
   function _2() {
     return M.pure();
+  }
+
+  function _3(r) {
+    return M.pure(r);
   }
 }
 
@@ -254,10 +275,15 @@ const v = v => {
   function _2(a) {
     return M.pure(a);
   }
+
+  function _3(r) {
+    return M.pure(r);
+  }
 };
 
 const obj = {
   a1: function () {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -267,8 +293,13 @@ const obj = {
     function _2() {
       return M.pure();
     }
+
+    function _3(r) {
+      return M.pure(r);
+    }
   },
   a2: function (a) {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -277,10 +308,15 @@ const obj = {
 
     function _2() {
       return M.pure();
+    }
+
+    function _3(r) {
+      return M.pure(r);
     }
   },
 
   a3(a, b) {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -289,6 +325,10 @@ const obj = {
 
     function _2() {
       return M.pure();
+    }
+
+    function _3(r) {
+      return M.pure(r);
     }
   }
 
@@ -296,6 +336,7 @@ const obj = {
 
 class A {
   static a(b) {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -305,9 +346,14 @@ class A {
     function _2() {
       return M.pure();
     }
+
+    function _3(r) {
+      return M.pure(r);
+    }
   }
 
   b(a) {
+    var r;
     return M.scope(_1);
 
     function _1() {
@@ -316,6 +362,10 @@ class A {
 
     function _2() {
       return M.pure();
+    }
+
+    function _3(r) {
+      return M.pure(r);
     }
   }
 

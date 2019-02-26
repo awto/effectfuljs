@@ -9,12 +9,13 @@ const a = w => function mfs(s) {
     k = void 0;
     return M.pure(function kk(k) {
       return function vv(ww) {
-        var id;
+        var id, r;
         return M.scope(_1);
 
         function _1() {
           id = void 0;
           return M.yldStar(M.yld(function nn(mm) {
+            var r;
             return M.scope(_1);
 
             function _1() {
@@ -32,18 +33,31 @@ const a = w => function mfs(s) {
             function _3() {
               return M.pure();
             }
+
+            function _4(r) {
+              return M.pure(r);
+            }
           }), _2);
         }
 
         function _2() {
           return M.pure();
         }
+
+        function _3(r) {
+          return M.pure(r);
+        }
       };
     });
+  }
+
+  function _2(r) {
+    return M.pure(r);
   }
 };
 
 function e1(k) {
+  var r;
   return M.scope(_1);
 
   function _1() {
@@ -55,6 +69,7 @@ function e1(k) {
   function _2() {
     return M.yldStar(M.yld(function p1(m) {
       return function e2(l) {
+        var r;
         return M.scope(_1);
 
         function _1() {
@@ -66,6 +81,10 @@ function e1(k) {
         function _2() {
           return M.pure();
         }
+
+        function _3(r) {
+          return M.pure(r);
+        }
       };
     }), _3);
   }
@@ -73,9 +92,14 @@ function e1(k) {
   function _3() {
     return M.pure();
   }
+
+  function _4(r) {
+    return M.pure(r);
+  }
 }
 
 function e1(k) {
+  var r;
   return M.scope(_1);
 
   function _1() {
@@ -86,10 +110,12 @@ function e1(k) {
 
   function _2() {
     return M.yldStar(M.yld(function e2(m) {
+      var r;
       return M.scope(_1);
 
       function _1() {
         return M.yldStar(M.yld(function e3(l) {
+          var r;
           return M.scope(_1);
 
           function _1() {
@@ -101,16 +127,28 @@ function e1(k) {
           function _2() {
             return M.pure();
           }
+
+          function _3(r) {
+            return M.pure(r);
+          }
         }), _2);
       }
 
       function _2() {
         return M.pure();
       }
+
+      function _3(r) {
+        return M.pure(r);
+      }
     }), _3);
   }
 
   function _3() {
     return M.pure();
+  }
+
+  function _4(r) {
+    return M.pure(r);
   }
 }

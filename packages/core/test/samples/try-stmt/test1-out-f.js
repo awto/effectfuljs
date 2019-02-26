@@ -1150,32 +1150,36 @@ function a18() {
 
 function a19() {
   var fc, fe, err;
-  return M.jump(void 0, _1);
+  return M.jump(void 0, _2);
 
   function _1() {
-    return M.chain(eff(1), _2, _6);
+    return M.jump(void 0, _2);
   }
 
   function _2() {
-    fc = _1, fe = _4;
-    return M.chain(eff(2), _3);
+    return M.chain(eff(1), _3, _7);
   }
 
   function _3() {
+    fc = _1, fe = _5;
+    return M.chain(eff(2), _4);
+  }
+
+  function _4() {
     return M.chain(effF(3), fc, fe);
   }
 
-  function _4(e) {
+  function _5(e) {
     return M.raise(e);
   }
 
-  function _5() {
+  function _6() {
     return M.raise(err);
   }
 
-  function _6(a) {
-    fc = _5, fe = _4, err = a;
-    return M.jump(void 0, _3);
+  function _7(a) {
+    fc = _6, fe = _5, err = a;
+    return M.jump(void 0, _4);
   }
 }
 

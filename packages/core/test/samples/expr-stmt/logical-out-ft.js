@@ -878,3 +878,7 @@ function a1_31(a1, a) {
 function a1_32(a1, a) {
   return M.pure(a);
 }
+
+function a1_33(a1, r) {
+  return M.pure(r);
+}

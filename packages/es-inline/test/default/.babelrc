@@ -1,7 +1,4 @@
 {
   "sourceType": "script",
-  "presets": [
-    ["../../preset",{"defunct":false,
-                     "modules":"commonjs"}]]
+  "plugins": [["../../transform",{"modules":"commonjs"}]]
 }
-

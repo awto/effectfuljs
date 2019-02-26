@@ -84,6 +84,11 @@ export const resetSym = Kit.pipe(
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
+          case Tag.JSXIdentifier:
+            const name = i.value.node.name
+            if (i.value.sym)
+              id(i.value,blockScope)
+            break
           case Tag.Identifier:
             id(i.value,blockScope)
             break
@@ -399,8 +404,7 @@ export const assignSym = Kit.pipe(
                 sloppy = true
               else if (st === "module")
                 sloppy = false
-              if (j.value.blockDirs
-                  && j.value.blockDirs.indexOf("use strict") !== -1)
+              if (j.value.blockDirs && j.value.blockDirs.has("use strict"))
                 sloppy = false
               i.value.sloppy = sloppy
               j.value.root = true
@@ -444,6 +448,9 @@ export const assignSym = Kit.pipe(
               checkScope(i.value,nextSyms)
             }
             break
+          case Tag.JSXIdentifier:
+            i.value.decl = false
+            break
           case Tag.Identifier:
             const fi = i.value.fieldInfo
             if (fi.declVar) {
@@ -466,6 +473,10 @@ export const assignSym = Kit.pipe(
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
+          case Tag.JSXIdentifier:
+            const name = i.value.node.name
+            if (i.pos !== Tag.property && name[0].toLowerCase() === name[0])
+              break
           case Tag.Identifier:
             let {sym} = i.value
             if (i.value.decl === true) {
@@ -524,6 +535,32 @@ export const assignSym = Kit.pipe(
     decls(s,s.first.value,new Map(),new Map())
     return sa
   })
+
+/** assigns field `body` for each function pointing to its `Tag.body` value */
+export function assignBody(si) {
+  const sa = Kit.toArray(si)
+  const s = Kit.auto(sa)
+  for(const i of s) {
+    if (i.enter) {
+      switch(i.type) {
+      case Tag.FunctionDeclaration:
+      case Tag.Program:
+      case Tag.FunctionExpression:
+      case Tag.ObjectMethod:
+      case Tag.ClassMethod:
+      case Tag.ClassPrivateMethod:
+      case Tag.ArrowFunctionExpression:
+        for(const j of s) {
+          if (j.enter && j.pos === Tag.body) {
+            i.value.body = j.value
+            break
+          }
+        }
+      }
+    }
+  }
+  return sa
+}
 
 /** 
  * for each variable sets its usages scope (list of functions where the 
@@ -854,10 +891,14 @@ export function collectBlockDirectives(si) {
         switch(i.type) {
         case Tag.Program:
         case Tag.BlockStatement:
-          _collectDirectives(i.value.blockDirs = [])
+          _collectDirectives(i.value.blockDirs = new Set())
           break
         case Tag.DirectiveLiteral:
-          dirs.push(i.value.node.value)
+          dirs.add(i.value.node.value)
+          break
+        case Tag.ExpressionStatement:
+          if (s.cur().type === Tag.StringLiteral)
+            dirs.add(i,s.cur().value.node.value)
           break
         }
       }

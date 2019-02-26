@@ -13,6 +13,12 @@ const emptyArr = []
 const emptySet = new Set()
 const emptyMap = new Map()
 
+//TODO:
+export const hoistDecls = (pred) => function* hoistDecls(s) {
+  const sl = Kit.auto(s)
+  
+}
+
 /** 
  * moves all variable declarations in decls field of a root Val
  *
@@ -653,8 +659,7 @@ export function cleanScopeVars(si) {
  *     stateVars: {
  *       r: Set<Sym>, // vars read by the frame 
  *       w: Set<Sym>, // written in the frame
- *       c: Set<Sym>, // variable is updated
- *       s: Set<Sym>  // variable is re-set in this
+ *       s: Set<Sym>  // variable is re-set in this (write without first read)
  *       }
  *
  */
@@ -666,7 +671,7 @@ export function calcFrameStateVars(si) {
   if (!frames.length)
     return sa
   for(const frame of frames)
-    frame.stateVars = {r:new Set(),w:new Set(),c:new Set(),s:new Set()}
+    frame.stateVars = {r:new Set(),w:new Set(),s:new Set()}
   const first = frames[0].stateVars
   for(const i of root.scopeDecls) {
     if (i.interpr && i.interpr !== Bind.closureVar) {
@@ -691,7 +696,7 @@ export function calcFrameStateVars(si) {
   }
   const functionSentSym = root.functionSentSym
   for(const frame of frames) {
-    const {w,r,c,s} = frame.stateVars
+    const {w,r,s} = frame.stateVars
     if (frame.patSym) {
       w.add(frame.patSym)
       s.add(frame.patSym)
@@ -938,11 +943,10 @@ function propagateArgs(cfg) {
     return res
   }
   // propagating transitive closure of each frame's parameter
-  // each frame needs to receive all vars it needs plus all the
-  // frames which could be next in control flow
-  for (const i of Kit.reverse(cfg)) {
+  // each frame needs to receive all vars it needs,
+  // plus all the frames which could be next in control flow
+  for (const i of Kit.reverse(cfg))
     i.frameParamsClos = allReads(i,new Set())
-  }
 }
 
 /** 

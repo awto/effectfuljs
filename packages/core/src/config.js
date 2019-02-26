@@ -21,11 +21,6 @@ export default {
   // pure jump to another frame operation name
   pureBindName: "jump",
 
-  // max number of arguments threaded from op's arguments to callbacks
-  // if more they are packed into array
-  // this applies only for state: true, contextState: false
-  unpackMax: 5,
-
   // uses number representation for effectful frames, and emit dispatching
   // switch statements
   defunct: false,
@@ -34,9 +29,8 @@ export default {
   defunctGuardInvalidState: true,
 
   // defunct `switch` statement discriminant source
-  // "field" - ctx.$step field
-  // "argument" - handler's function argument
-  defunctStateDiscriminant: "field",
+  // "arg" - handler's function argument
+  defunctStateDiscriminant: false,
 
   // creates a context object for each effectul function's call
   scopeContext: false,
@@ -50,9 +44,6 @@ export default {
 
   // adds extra last frame, e.g. to extract some effectful data from context
   scopePostfix: false,
-
-  // pure operation is static
-  staticPure: false,
 
   // name of a function to construct context object
   scopeConstructor: "context",
@@ -86,6 +77,8 @@ export default {
   // * this - context is bound to this argument in each frame
   // * parameter - context is a first argument
   // * reference - as a closure captured variable - incompatible with topLevel
+  // * closure - context is the function closure, no other object is created
+  //           - works only with `inline***: "promise"`
   contextBy: "parameter",
 
   // handles JavaScript exceptions, by adding corresponding try-catch
@@ -154,9 +147,9 @@ export default {
   // stores control flow continuation in the field's name of context object
   storeCont: null,
 
-  // keep single defunctHandler in a prototype
-  defunctHandlerInProto: false,
-  
+  // stores currently applied continuation
+  storeRunningCont: null,
+
   // stores result continuation in the field's name of context object
   storeResultCont: null,
 
@@ -166,17 +159,25 @@ export default {
   // name of a handler function for defunct: true
   storeHandler: "$run",
 
+  // keep single defunctHandler in a prototype
+  defunctHandlerInProto: false,
+  
   // some named templates for some operations (mostly for ES compatibility):
   inlineChainOp: null, // "promise" | null
   inlineScopeOp: null, // "unwrap" | "call" | "context" | null
   inlineYieldOp: null, // "iterator" | "iteratorResult" | "iteratorResultPromise" | null
   inlineYieldStarOp: null, // "iterator" | null
-  inlinePureOp: null,   // "noop" | "iterator" | "promise" | null
+  inlinePureOp: null,   // "asis" | "iterator" | "promise" | null
   inlineRaiseOp: null,  // "throw" | "promise" | null
 
-  // creates a copy of context with each variable copied on each suspendable op
-  // TODO: not yet implemented
-  inlineContextClone: false,
+  // compose `chain` operator at its left(first) argument
+  // by default they are composed on its right(second)
+  // e.g. `f(g(k))` is converted to equivalent of `chain(k,x => chain(f(x), k))`
+  // with `leftChain: true` it will be like `chain(chain(k,g),f)`
+  // both options should be equivalent if monadic laws hold, but
+  // some may have better performance
+  // now the option is implemented only for `inlineChainOp:"promise"`
+  leftChain: false,
 
   // inlines try-catch statements with redirect to handle continuation
   inlineJsExceptions: false,
@@ -245,8 +246,8 @@ export default {
   // babel-generator options (not used if executed using babel tools)
   printer: {},
 
-  // effectful operations to be called as method of
-  // first argument effectful object, this is applied only of static: false
+  // effectful operations to be called as method of its first argument object
+  // this is applied only for `static: false`
   methodOps: {
     chain: true,
     map: true
@@ -280,7 +281,10 @@ export default {
 
   // converts JS block directives into options assignment
   // string value or true for keys means profile assignment (same name if `true`)
-  blockDirectives: false,
+  blockDirectives:  {
+    par: { parRegion:true },
+    seq: { parRegion:false }
+  },
   // defines call expressions to treat as effectful
   // {
   //    byNs: {[name:string]:boolen},   // ns names i.e. console
@@ -351,13 +355,13 @@ export default {
   // for functions with `par` specifies which parts of code should
   // be parallel or sequential (usually changed with "par", "seq" block directives)
   parRegion: false,
-  // if `true` fill assume any variable reference (LHS or RHS) as dependency
-  // otherwise only RHS positions are dependent on LHS positions only
-  parAllLocals: false,
   
   // where to store thread's local variables
   // "closure" | "context"
   parThreadState: "closure",
+
+  /** inject `share` operations for shared effectful values */
+  parShare: true,
 
   // context's field name for storing thread local variables
   // for `parThreadState:"context"

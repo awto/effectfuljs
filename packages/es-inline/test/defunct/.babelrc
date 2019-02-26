@@ -1,9 +1,0 @@
-{
-  "sourceType": "script",
-  "presets": [["../../preset",
-               {"topLevel":false,
-                "defunct":true,
-                "contextState":true,
-                "modules":"commonjs",
-                "contextBy":"this"}]]
-}

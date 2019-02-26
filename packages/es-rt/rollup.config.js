@@ -4,8 +4,6 @@ let file = "index.js"
 
 if (process.env.EJS_OPT) {
   const opts = []
-  if (!process.env.EJS_DEFUNCT)
-    opts.push("funct")
   if (process.env.EJS_LOOSE)
     opts.push("loose")
   if (process.env.EJS_INLINE && !process.env.EJS_LOOSE)

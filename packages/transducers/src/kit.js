@@ -6,6 +6,7 @@ import * as T from "@babel/types"
 import {parse as babelParse} from "@babel/parser"
 
 const BROWSER_DEBUG = typeof window !== "undefined" && window.chrome
+      || process.env.EFFECTUL_DEBUG
 let _opts = {}
 
 let leanWrap
@@ -185,7 +186,7 @@ export function skip(s) {
   let pos = node && (node.loc || node._loc)
   const babel = _opts.babel
   const name = i.value.value.stageName
-  if (!babel || _opts.debug) {
+  if (!babel || _opts.debug || BROWSER_DEBUG) {
     for(;!(i = i.step()).done;) {}
   } else {
     try {
@@ -305,7 +306,7 @@ export function result(s,buf) {
   const babel = _opts.babel
   // for debugging purposes,
   // let the debugger catch the exception in browser
-  if (!babel || _opts.debug) {
+  if (!babel || _opts.debug || BROWSER_DEBUG) {
     for(;!(i = i.step()).done;)
       buf.push(i.value)
     return i.value
@@ -558,12 +559,13 @@ export const babelBridge = curry(function babelBridge(pass,path,state) {
                          file:Object.assign(state.file.opts),
                          babel:{root:path,state}},
                         _opts)
-  if (_opts.debug) {
+  if (_opts.debug || BROWSER_DEBUG) {
     pass(produce({type:"File",program:path.node}))
   } else {
     try {
       pass(produce({type:"File",program:path.node}))
     } catch(e) {
+      console.log(e)
       throw path.hub.file.buildCodeFrameError(e.esNode, e.message)
     }
   }
@@ -977,7 +979,7 @@ export function reverse(arr) {
   }
 }
 
-/** 
+/**
  * adds value `v` to an Array in a map `m` value by `k`
  * creates the Array if needed 
  */
@@ -986,6 +988,17 @@ export function mapPush(m, k, v) {
   if (l == null)
     m.set(k, l = [])
   l.push(v)
+}
+
+/**
+ * Returns Map's `m` value by `k` if it doesn't exist inserts an empty array, 
+ * and returns it.
+ */
+export function mapArr(m, k) {
+  let l = m.get(k)
+  if (l == null)
+    m.set(k, l = [])
+  return l
 }
 
 /** 
@@ -1112,6 +1125,8 @@ export const cleanEmptyExprs = pipe(
  */
 export function pipe() {
   var args = arguments
+  if ((BROWSER_DEBUG || _opts.debug) && ![...args].every(Boolean))
+    throw new Error(`pipe with an empty function`)
   return function pipeImpl(cur) {
     for(let i = 0, len = args.length; i < len; ++i)
       cur = args[i](cur)
@@ -1639,3 +1654,4 @@ AFp.tillLevel = function(level) {
 export function auto(cont) {
   return new Wrapper(cont)
 }
+

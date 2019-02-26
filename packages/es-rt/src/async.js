@@ -1,7 +1,8 @@
 /** runtime for ES async/await */
 
+import {cancel as cancelSym} from "./symbol"
 import {iterator} from "./leanIterator"
-import {iteratorM} from "./leanAsyncIterator"
+import {iteratorM,cancel,ignore} from "./leanAsyncIterator"
 import {forInIterator} from "./forInIterator"
 
 /**
@@ -23,19 +24,30 @@ export function async(caller) {
     ctx.constructor.call(ctx)
   if (process.env.EJS_INLINE) {
     ctx.$resolve = function(v) {
-      return process.env.EJS_DEFUNCT
-        ? (process.env.EJS_INLINE ? ctx.step(v) : ctx.$run(ctx.$step,v))
-        : res.$step(v)
+      return ctx.step(v)
     }
     ctx.$reject = function(v) {
-      return process.env.EJS_DEFUNCT
-        ? (process.env.EJS_INLINE
-           ? (ctx.$step = ctx.$handle, ctx.step(v))
-           : ctx.$run(ctx.$handle,v))
-        : ctx.$handle(v)
+      return ctx.$step = ctx.$err(ctx.$cur), ctx.step(v)
     }
   }
+  if (!process.env.EJS_NO_PAR)
+    ctx.$caller = caller
   return ctx
+}
+
+function id(v) { return v }
+
+export function par(threads) {
+  var promise = Promise.all(threads)
+      .then(id,function parErr(err) {
+        return Promise.all(threads.map(cancel))
+          .then(function() { throw err },
+                function() { throw err })
+      })
+  promise[cancelSym] = function() {
+    return Promise.all(threads.map(cancel))
+  }
+  return promise
 }
 
 if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
@@ -45,118 +57,114 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   AsyncFunction.prototype = AsyncFunctionPrototype;
   Ap.constructor = AsyncFunctionPrototype.constructor = AsyncFunction;
   AsyncFunctionPrototype[Symbol.toStringTag] =
-    AsyncFunction.displayName = "AsyncFunction";
-  asyncFunction = function asyncFunction(fun,handler,err) {
+    AsyncFunction.displayName = "AsyncFunction"
+  asyncFunction = function asyncFunction(fun,handler,err,fin) {
     Object.setPrototypeOf(fun, AsyncFunctionPrototype)
     fun.prototype = Object.create(Ap)
-    if (process.env.EJS_DEFUNCT) {
-      if (handler) {
-        if (process.env.EJS_INLINE)
-          fun.prototype.step = handler
-        else
-          fun.prototype.$run = handler
-      }
-      if (!process.env.EJS_INLINE)
-        if (err)
-          fun.prototype.$err = err
+    if (handler) {
+      if (process.env.EJS_INLINE)
+        fun.prototype.step = handler
+      else
+        fun.prototype.$run = handler
     }
+    if (err)
+      fun.prototype.$err = err
+    if (fin)
+      fun.prototype.$fin = fin
     return fun
   }
 } else {
-  asyncFunction = function asyncFunction(fun,handler,err) {
+  asyncFunction = function asyncFunction(fun,handler,err,fin) {
     fun.prototype = Object.create(Ap)
     fun.prototype.constructor = fun
-    if (process.env.EJS_DEFUNCT) {
-      if (handler) {
-        if (process.env.EJS_INLINE)
-          fun.prototype.step = handler
-        else
-          fun.prototype.$run = handler
-      }
-      if (!process.env.EJS_INLINE)
-        if (err)
-          fun.prototype.$err = err
+    if (handler) {
+      if (process.env.EJS_INLINE)
+        fun.prototype.step = handler
+      else
+        fun.prototype.$run = handler
     }
+    if (err)
+      fun.prototype.$err = err
+    if (fin)
+      fun.prototype.$fin = fin
     return fun
   }
 }
 
+Ap.$err = function() { return 1 }
+Ap.$fin = function() { return 0 }
+
 if (!process.env.EJS_INLINE) {
-  if (process.env.EJS_DEFUNCT) {
-    Ap.scope = function scope(step) {
-      try {
-        this.$step = step
-        return this.$run(this.$step)
-      } catch(e) {
-        return this.$run(this.$step = this.$err(this.$step),e)
-      }
-    }
-    Ap.chain = function chain(p, step) {
-      const ctx = this
-      return Promise.resolve(p)
-            .then(
-              function(v) {
-                ctx.$step = step
-                try {
-                  return ctx.$run(ctx.$step,v)
-                } catch(e) {
-                  return ctx.$run(ctx.$step = ctx.$err(ctx.$step),e)
-                }
-              },
-              function(e) {
-                return ctx.$run(ctx.$step = ctx.$err(ctx.$step),e)
-              })
-    }
-    Ap.jump = function jump(value, step) {
+  Ap.scope = function scope(step) {
+    var res
+    try {
       this.$step = step
-      try {
-        return this.$run(this.$step, value)
-      } catch(e) {
-        return this.$run(this.$step = this.$err(this.$step),e)
-      }
+      res = this.$run(this.$step)
+    } catch(e) {
+      res = this.$run(this.$step = this.$err(this.$step),e)
     }
-    Ap.$err = function() { return 1 }
-  } else {
-    Ap.scope = function scope(step, handle) {
-      try {
-        this.$handle = handle
-        this.$step = step
-        return this.$step()
-      } catch(e) {
-        return this.$handle ? this.$handle(e) : this.raise(e)
-      }
-    }
-    Ap.chain = function chain(p, step, handle) {
-      const ctx = this
-      return Promise.resolve(p)
-            .then(
-              function(v) {
-                ctx.$handle = handle
-                ctx.$step = step
-                try {
-                  return ctx.$step(v)
-                } catch(e) {
-                  return ctx.$handle(e)
-                }
-              },
-              function(e) {
-                return ctx.$handle(e)
-              })
-    }
-    Ap.jump = function jump(value, step, handle) {
-      this.$handle = handle
-      this.$step = step
-      try {
-        return this.$step(value)
-      } catch(e) {
-        return this.$handle(e)
-      }
+    if (!process.env.EJS_NO_CANCEL) {
+      return wrapCancel(this,res)
+    } else {
+      return res
     }
   }
-
+  Ap.chain = function chain(arg, step) {
+    var ctx = this
+    return (Promise.resolve(ctx.$await = arg)).then(
+      function(v) {
+        if (ctx.$await !== arg)
+          return
+        ctx.$await = null
+        ctx.$step = step
+        try {
+          return ctx.$run(ctx.$step,v)
+        } catch(e) {
+          return ctx.$run(ctx.$step = ctx.$err(ctx.$step),e)
+        }
+      },
+      function(e) {
+        if (ctx.$await !== arg)
+          return
+        ctx.$await = null
+        return ctx.$run(ctx.$step = ctx.$err(ctx.$step),e)
+      })
+  }
+  Ap.jump = function jump(value, step) {
+    this.$step = step
+    try {
+      return this.$run(this.$step, value)
+    } catch(e) {
+      return this.$run(this.$step = this.$err(this.$step),e)
+    }
+  }
   Ap.pure = function pure(v) { return Promise.resolve(v) }
   Ap.raise = function raise(ex) { return Promise.reject(ex) }
-  
+  Ap.share = function(v) { return v }
+  if (!process.env.EJS_NO_PAR) {
+    function clone(src,tls) {
+      var ctx = Object.assign(async(src.$caller), src)
+      ctx.$tls = tls
+      return ctx
+    }
+    Ap.fork = function fork(tls,step) {
+      var ctx = clone(this, tls)
+      return wrapCancel(ctx,ctx.jump(null,step))
+    }
+    Ap.chainFork = function chainFork(tls,p,step) {
+      var ctx = clone(this, tls)
+      return wrapCancel(ctx,ctx.chain(p,step))
+    }
+  }
+  Ap.join = par
+  function wrapCancel(ctx,promise) {
+    if (promise)
+      promise[cancelSym] = function() { return ctx.cancel() }
+    return promise
+  }
+  Ap.cancel = function() {
+    return this.chain(ignore(cancel(this.$await)), this.$fin(this.$step))
+  }
 }
 
 if (process.env.EJS_LEAN_METHOD_ITERATORS) {

@@ -17,8 +17,8 @@ export const effIteratorId = Kit.sysId("iteratorM")
  */
 export function* whileStmt(s) {
   for(const i of s) {
-    yield i.type === Tag.WhileStatement && (i.value.eff
-                                            || i.value.opts.normPureWhile)
+    yield i.type === Tag.WhileStatement
+      && (i.value.eff || i.value.opts.normPureWhile)
       ? Kit.setType(i,Tag.ForStatement)
       : i
   }
@@ -438,15 +438,20 @@ export const normalizeFor = Kit.pipe(
                   yield sl.enter(Tag.body,Tag.Array)
                   yield sl.enter(Tag.push,repeat,{stmt:true,origLoop:i.value})
                   i.value.node.init = i.value.node.test = i.value.node.update = null
-                  yield sl.peel(Kit.setPos(j,Tag.push))
+                  // yield sl.peel(Kit.setPos(j,Tag.push))
+                  yield sl.enter(Tag.push,Tag.BlockStatement)
                   yield* sl.peelTo(Tag.body)
                   const llab = sl.label()
                   if (test != null) {
                     yield sl.enter(Tag.push,Tag.IfStatement)
                     yield* test
-                    yield sl.enter(Tag.consequent,Tag.BlockStatement)
-                    yield sl.enter(Tag.body,Tag.Array)
-                  }
+                    // yield sl.enter(Tag.consequent,Tag.BlockStatement,j.value)
+                    yield sl.peel(Kit.setPos(j,Tag.consequent))
+                  } else
+                    /** keeping options stored in this block statement */
+                    yield sl.peel(Kit.setPos(j,Tag.push))
+                  // yield sl.enter(Tag.push,Tag.BlockStatement,j.value)
+                  yield sl.enter(Tag.body,Tag.Array)
                   yield* walk()
                   if (upd != null) {
                     yield sl.enter(Tag.push,Tag.ExpressionStatement)

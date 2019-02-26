@@ -52,9 +52,7 @@ async function af2() {
 }
 
 function a_1(a, p) {
-  var s;
-
-  switch (s = a.$cont, s) {
+  switch (a.$cont) {
     case 4:
       a.$cont = 5;
       return M.yldStar(M.yld(1));
@@ -63,11 +61,11 @@ function a_1(a, p) {
       a.$cont = 6;
       return M.yldStar(M.yld(2));
 
-    case 0:
-      return M.pure(p);
-
     case 6:
       return M.pure();
+
+    case 0:
+      return M.pure(p);
 
     case 2:
       return M.$redir(p);
@@ -88,9 +86,9 @@ function b_err(s) {
 }
 
 function b_1(b, p) {
-  var e, s;
+  var e;
 
-  switch (s = b.$cont, s) {
+  switch (b.$cont) {
     case 4:
       b.$cont = 5;
       return M.yldStar(M.yld(1));
@@ -105,11 +103,11 @@ function b_1(b, p) {
       b._ex = null;
       return M.yldStar(M.yld(e));
 
-    case 0:
-      return M.pure(p);
-
     case 7:
       return M.pure();
+
+    case 0:
+      return M.pure(p);
 
     case 8:
       b.$cont = 6;
@@ -149,9 +147,9 @@ function c_fin(s) {
 }
 
 function c_1(c, p) {
-  var e, s;
+  var e;
 
-  switch (s = c.$cont, s) {
+  switch (c.$cont) {
     case 4:
       c.$cont = 5;
       return M.yldStar(M.yld(1));
@@ -173,13 +171,15 @@ function c_1(c, p) {
       return M.yldStar(M.yld("F"));
 
     case 8:
-      return M.pure(c._r);
+      return M.pure();
 
     case 0:
       return M.pure(p);
 
     case 9:
-      return M.pure(c._r);
+      c.$cont = 0;
+      e = c._r, c._r = null;
+      return M.jump(e);
 
     case 10:
       return M.raise(c._err1);
@@ -230,9 +230,9 @@ function d_fin(s) {
 }
 
 function d_1(d, p) {
-  var a, _s;
+  var a;
 
-  switch (_s = d.$cont, _s) {
+  switch (d.$cont) {
     case 4:
       d._loop = M.iterator(s);
       d.$cont = 5;
@@ -263,13 +263,15 @@ function d_1(d, p) {
       return M.jump();
 
     case 8:
-      return M.pure(d._r);
+      return M.pure();
 
     case 0:
       return M.pure(p);
 
     case 9:
-      return M.pure(d._r);
+      d.$cont = 0;
+      a = d._r, d._r = null;
+      return M.jump(a);
 
     case 10:
       return M.raise(d._err1);
@@ -303,9 +305,9 @@ function b2_err(s) {
 }
 
 function b2_1(b2, p) {
-  var e, s;
+  var e;
 
-  switch (s = b2.$cont, s) {
+  switch (b2.$cont) {
     case 4:
       b2.$cont = 5;
       return M.yldStar(M.yld(1));
@@ -320,11 +322,11 @@ function b2_1(b2, p) {
       b2._ex = null;
       return M.yldStar(M.yld(e));
 
-    case 0:
-      return M.pure(p);
-
     case 7:
       return M.pure();
+
+    case 0:
+      return M.pure(p);
 
     case 8:
       b2.$cont = 6;
