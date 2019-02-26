@@ -1,6 +1,6 @@
 {
   "name": "@effectful/js",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Single level computation effects syntax",
   "main": "transform.js",
   "scripts": {
@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "dependencies": {
-    "@effectful/core": "^1.0.4"
+    "@effectful/core": "^1.1.0"
   }
 }
