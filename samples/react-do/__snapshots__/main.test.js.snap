@@ -1,0 +1,592 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Suspense/> several <Suspense> tags 1`] = `null`;
+
+exports[`<Suspense/> several <Suspense> tags 2`] = `
+<h1>
+  <div>
+    Loading 1...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> several <Suspense> tags 3`] = `
+<h1>
+  <div>
+    Loading 1...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> several <Suspense> tags 4`] = `
+<h1>
+  <div>
+    Loading 1...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> several <Suspense> tags 5`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+  <div>
+    Loading 3...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> several <Suspense> tags 6`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+  <p>
+    <i>
+      there
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> several async children 1`] = `null`;
+
+exports[`<Suspense/> several async children 2`] = `null`;
+
+exports[`<Suspense/> several async children 3`] = `
+<h1>
+  <div>
+    Loading...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> several async children 4`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+  <p>
+    <i>
+      there
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> several async children 5`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+  <p>
+    <i>
+      there
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> several async children 6`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+  <p>
+    <i>
+      there
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available after \`maxDuration\` 1`] = `null`;
+
+exports[`<Suspense/> with a nested async child the child is available after \`maxDuration\` 2`] = `
+<h1>
+  <div>
+    Loading...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available after \`maxDuration\` 3`] = `
+<h1>
+  <div>
+    Loading...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available after \`maxDuration\` 4`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available after \`maxDuration\` 5`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available after \`maxDuration\` 6`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available before \`maxDuration\` 1`] = `null`;
+
+exports[`<Suspense/> with a nested async child the child is available before \`maxDuration\` 2`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available before \`maxDuration\` 3`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available before \`maxDuration\` 4`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available before \`maxDuration\` 5`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with a nested async child the child is available before \`maxDuration\` 6`] = `
+<h1>
+  <p>
+    <i>
+      hi
+    </i>
+  </p>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available after \`maxDuration\` 1`] = `null`;
+
+exports[`<Suspense/> with only a single async child the child is available after \`maxDuration\` 2`] = `
+<h1>
+  <div>
+    Loading...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available after \`maxDuration\` 3`] = `
+<h1>
+  <div>
+    Loading...
+  </div>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available after \`maxDuration\` 4`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available after \`maxDuration\` 5`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available after \`maxDuration\` 6`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available before \`maxDuration\` 1`] = `null`;
+
+exports[`<Suspense/> with only a single async child the child is available before \`maxDuration\` 2`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available before \`maxDuration\` 3`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available before \`maxDuration\` 4`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available before \`maxDuration\` 5`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with only a single async child the child is available before \`maxDuration\` 6`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`<Suspense/> with pure child 1`] = `
+<h1>
+  <i>
+    hi
+  </i>
+</h1>
+`;
+
+exports[`errors handling 1`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <p>
+    P1: 
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2: 
+    <i>
+      Normal2
+    </i>
+  </p>
+</div>
+`;
+
+exports[`errors handling 2`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <p>
+    P1: 
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2: 
+    <i>
+      Normal2
+    </i>
+  </p>
+</div>
+`;
+
+exports[`errors handling 3`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error2
+  </b>
+</div>
+`;
+
+exports[`errors handling 4`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error2
+  </b>
+</div>
+`;
+
+exports[`errors handling 5`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 6`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 7`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 8`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 9`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 10`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error2
+  </b>
+</div>
+`;
+
+exports[`errors handling 11`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error2
+  </b>
+</div>
+`;
+
+exports[`errors handling 12`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <p>
+    P1: 
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2: 
+    <i>
+      Normal2
+    </i>
+  </p>
+</div>
+`;
+
+exports[`errors handling 13`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <p>
+    P1: 
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2: 
+    <i>
+      Normal2
+    </i>
+  </p>
+</div>
+`;
+
+exports[`errors handling 14`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <p>
+    P1: 
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2: 
+    <i>
+      Normal2
+    </i>
+  </p>
+</div>
+`;
+
+exports[`errors handling 15`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 16`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 17`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 18`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 19`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
+</div>
+`;
+
+exports[`errors handling 20`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <p>
+    P1: 
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2: 
+    <i>
+      Normal2
+    </i>
+  </p>
+</div>
+`;

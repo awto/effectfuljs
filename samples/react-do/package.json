@@ -1,0 +1,34 @@
+{
+  "name": "@effectful/react-do",
+  "version": "1.0.0",
+  "description": "Applicative and Monadic do-notation as a replacement for React Suspense and Hooks",
+  "main": "index.js",
+  "module": "main.js",
+  "jsnext:main": "main.js",
+  "repository": "https://github.com/awto/effectfuljs.git",
+  "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "prepare": "babel main.js --out-file index.js"
+  },
+  "dependencies": {
+    "react": "^16.8.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.3",
+    "@babel/generator": "^7.3.3",
+    "@babel/parser": "^7.3.3",
+    "@babel/preset-react": "^7.0.0",
+    "@effectful/core": "^1.0.4",
+    "babel-jest": "^24.1.0",
+    "babel-plugin-macros": "^2.5.0",
+    "jest": "^24.1.0",
+    "react-dom": "^16.8.3",
+    "react-test-renderer": "^16.8.3"
+  },
+  "peerDependencies": {
+    "@effectful/core": "^1.0.4"
+  }
+}
