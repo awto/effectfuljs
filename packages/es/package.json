@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Standard JavaScript effects using @effectful/core (abstract interface)",
   "main": "transform.js",
   "scripts": {
@@ -40,7 +40,7 @@
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
-    "@effectful/core": "^1.1.0"
+    "@effectful/core": "^1.1.1"
   },
   "publishConfig": {
     "access": "public"
