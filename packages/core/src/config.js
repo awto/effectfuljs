@@ -374,6 +374,8 @@ export default {
   // default to the value of `wrapFunction`
   parWrapFunction: null,
   // wrap each JSX element with coerce expression
-  jsxCoerce: false
+  jsxCoerce: false,
+  // name of a function to replace block-level directives
+  blockDirsFunc: false
 }
 

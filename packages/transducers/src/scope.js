@@ -885,13 +885,14 @@ export function collectBlockDirectives(si) {
   const s = Kit.auto(sa)
   _collectDirectives()
   return sa
-  function _collectDirectives(dirs)  {
+  function _collectDirectives(block, dirs)  {
     for(const i of s.sub()) {
       if (i.enter) {
+        i.value.parentBlock = block
         switch(i.type) {
         case Tag.Program:
         case Tag.BlockStatement:
-          _collectDirectives(i.value.blockDirs = new Set())
+          _collectDirectives(i.value,i.value.blockDirs = new Set())
           break
         case Tag.DirectiveLiteral:
           dirs.add(i.value.node.value)

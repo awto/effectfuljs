@@ -654,6 +654,7 @@ export function blockScoping(sa) {
             const clab = s.label()
             const func = s.enter(Tag.callee,Tag.ArrowFunctionExpression,
                                  {node:{params:[]},
+                                  opts:root.opts,
                                   coerce:true,
                                   topEff:i.value.eff,scopeDecls:new Set(),
                                   savedDecls:new Map()})

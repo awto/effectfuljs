@@ -192,6 +192,75 @@ function aliases(s) {
 }
 
 /** 
+ * detects all member expressions with the library's namespace as an object 
+ */
+function nsProps(si) {
+  const s = Kit.auto(si)
+  const ns = s.first.value.$ns
+  for(const i of s) {
+    if (i.enter && i.pos === Tag.callee
+        && i.type === Tag.MemberExpression
+        && !i.value.node.computed) {
+      const obj = s.cur()
+      if (obj.type === Tag.Identifier && obj.value.sym === ns) {
+        Kit.skip(s.one())
+        const prop = s.cur()
+        if (prop.type === Tag.Identifier)
+          i.value.nsProp = prop.value.node.name
+      }
+    }
+  }
+}
+
+/** 
+ * Convert function `blockDirFunc` into a block directive,
+ * otherwise ESLint complains about unused expressions
+ */
+export function callToBlockDirs(si) {
+  const sa = Kit.toArray(si)
+  const func = sa[0].value.opts.blockDirsFunc
+  if (!func)
+    return sa
+  const s = Kit.auto(Kit.scope.prepare(si))
+  nsProps(sa)
+  const root = s.first.value
+  const imps = root.rtSyms.get(s.opts.blockDirsFunc)
+  const impsSet = imps && new Set(imps)
+  const ns = root.$ns
+  return _callToBlockDirs()
+
+  function* _callToBlockDirs() {
+    for(const i of s) {
+      if (i.enter) {
+        switch(i.type) {
+        case Tag.CallExpression:
+          const callee = s.cur()
+          if (impsSet && callee.type === Tag.Identifier
+              && callee.value.sym && impsSet.has(callee.value.sym)
+              || callee.type === Tag.MemberExpression &&
+              callee.value.nsProp === func) {
+            for(const j of s)
+              if (j.pos === Tag.arguments)
+                break
+            const param = s.cur()
+            if (param.type !== Tag.StringLiteral)
+              throw s.error(`${func} expects string a literal argument`)
+            i.value.parentBlock.blockDirs.add(param.value.node.value)
+            yield* Kit.reposOne(s.one(),i.pos)
+            for(const j of s)
+              if (j.value === i.value)
+                break
+            continue
+          }
+          break
+        }
+      }
+      yield i
+    }
+  }
+}
+
+/** 
  * checks imports in the input and apply compile time handlers 
  * if they are available  
  */
@@ -215,13 +284,23 @@ function namespaces(si) {
   }
   const libs = s.opts.libs
   const namespaces = root.namespaces = new Map()
+  const rtSyms = root.rtSyms = new Map()
   for(const [lib,imps] of imports) {
-    for(const {ns} of imps) {
-      if (!ns)
+    for(const {ns,locals} of imps) {
+      if (ns) {
+        if (libs[lib])
+          s.opts.importRT = imp = lib
+        namespaces.set(lib,ns.sym)
         continue
-      if (libs[lib])
-        s.opts.importRT = imp = lib
-      namespaces.set(lib,ns.sym)
+      }
+      if (locals && lib === imp) {
+        for(const [n,v] of locals) {
+          let locs = rtSyms.get(n)
+          if (!locs)
+            rtSyms.set(n, locs = [])
+          locs.push(v.sym)
+        }
+      }
     }
   }
   let $ns
@@ -600,7 +679,7 @@ export function assignBindCalls(s) {
   function* _assignBindCalls() {
     const {$ns} = s.first.value
     for(const i of s) {
-      if (i.type === Tag.CallExpression && i.value.opts.transform
+      if (i.type === Tag.CallExpression && s.opts.transform
           && i.value.bind == null) {
         const prof = s.opts.bindCalls
         if (prof) {
@@ -708,7 +787,30 @@ export function* propagateConfigDiff(s) {
 export const prepare =
   Kit.pipe(
     aliases,
-    namespaces)
+    namespaces,
+    callToBlockDirs,
+    function(si) {
+      const sa = Kit.toArray(si)
+      let s = Kit.auto(sa)
+      const {configure,preproc} = s.opts
+      if (configure || preproc)
+        s = Kit.auto(preprocConfig(s))
+      if (configure) {
+        configure(s)
+        s = Kit.auto(propagateOpts(sa))
+      }
+      if (preproc)
+        return propagateOpts(preproc(Kit.auto(sa)))
+      return s
+
+      function preprocConfig(s) {
+        s = Kit.scope.assignBody(s)
+        s = setQNames(s)
+        return Kit.toArray(s)
+      }
+    },
+    propagateBlockDirs
+  )
 
 /** for `ns` function application marks inner expression to be effectful */
 export function unwrapNs(si) {
@@ -719,7 +821,7 @@ export function unwrapNs(si) {
   function* _unwrapNs() {
     for(const i of s.sub()) {
       if (i.enter) {
-        if (i.type === Tag.CallExpression && s.opts.transform) {
+        if (i.type === Tag.CallExpression) {
           const j = s.cur()
           if (j.type === Tag.Identifier && j.value.sym === $ns) {
             const def = s.opts.bindCalls
@@ -774,14 +876,17 @@ export const setFuncOpts = function setFuncOpts(opts) {
  */
 export function propagateBlockDirs(si) {
   const s = Kit.auto(si)
-  const {blockDirectives} = s.first.value.opts
+  const {blockDirectives} = s.opts
   if (!blockDirectives)
     return s
-  return _propagateBlockDirs()
+  let any = false
+  const r = Kit.toArray(_propagateBlockDirs())
+  return any ? propagateOpts(r) : r
   function* _propagateBlockDirs(value) {
     function dir(i,name) {
       const descr = blockDirectives[name]
       if (descr) {
+        any = true
         value.optsAssign = Object.assign(value.optsAssign || {}, descr)
         Kit.skip(s.copy(i))
         return true

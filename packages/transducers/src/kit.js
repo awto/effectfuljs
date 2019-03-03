@@ -1073,6 +1073,9 @@ export const cleanEmptyExprs = pipe(
       for(const i of sw) {
         if (i.enter) {
           switch(i.type) {
+          case Tag.NullLiteral:
+            i.value.canIgnore = ignore
+            break
           case Tag.SequenceExpression:
             const j = s.take()
             const buf = []
@@ -1181,6 +1184,7 @@ export const timeEnd = curry(function*(name, s) {
 export function Wrapper(cont) {
   this.value = void 0
   this._cont = cont
+  this.context = []
   if (cont) {
     const iter = this._inner = (leanWrap(cont)).step()
     const i = iter.value
@@ -1204,18 +1208,25 @@ AFp.cur = function cur() { return this._inner.value }
 AFp.step = function() {
   if (this._inner.done)
     return this.pure()
+  const cur = this.value
   const t = this.value = this._inner.value
-  if (t.value) {
-    if (t.value.opts) 
-      this.opts = t.value.opts
-    else if (t.value)
-      t.value.opts = this.opts
-  }
   this._inner = this._inner.step()
-  if (t.enter)
-    this.level++
-  if (t.leave)
-    this.level--
+  const tvalue = t.value
+  if (t.enter) {
+    ++this.level
+    const parent = tvalue.parent
+          = cur && (cur.leave ? cur.value.parent : cur.value)
+    if (tvalue.opts)
+      this.opts = t.value.opts
+    else if (parent)
+      this.opts = tvalue.opts = parent.opts
+    else
+      tvalue.opts = this.opts
+  } 
+  if (t.leave) {
+    this.opts = tvalue.opts
+    --this.level
+  }
   return this
 }
 

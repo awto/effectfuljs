@@ -1,6 +1,6 @@
 import * as assert from "assert"
 import * as Kit from "./kit"
-import {Tag,produce,consume,enter,leave,tok,varScope} from "./kit"
+import {Tag,consume,varScope} from "./kit"
 import * as Loops from "./loops"
 import * as State from "./state"
 import * as Control from "./control"

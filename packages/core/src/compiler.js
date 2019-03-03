@@ -3,7 +3,7 @@ import * as Kit from "./kit"
 import * as path from "path"
 import * as T from "./transform"
 import * as Policy from "./policy"
-import * as RT from "./policy"
+import * as RT from "./rt"
 import defunctPreset from "./presets/defunct"
 
 export const config = defaults
@@ -83,30 +83,7 @@ export function babelPreset(transform) {
 }
 
 function getHandler(opts) {
-  return function(s) {
-    if (opts.configure || opts.preproc)
-      s = preprocConfig(s)
-    if (opts.configure) {
-      opts.configure(Kit.auto(s))
-      if (s[0].value.transform === false)
-        return
-      Policy.propagateOpts(s)
-    }
-    s = opts.preproc ? opts.preproc(Kit.auto(s)) : defaultPreproc(s)
-    s = Policy.propagateOpts(s)
-    opts.main ? opts.main(s) : T.run(s)
-    return
-  }
-  function defaultPreproc(s) {
-    s = Policy.propagateBlockDirs(s)
-    return s
-  }
-  function preprocConfig(s) {
-    s = Kit.scope.assignBody(s)
-    s = Policy.setQNames(s)
-    s = Kit.scope.collectBlockDirectives(s)
-    return Kit.toArray(s)
-  }
+  return opts.main ? opts.main : T.run
 }
 
 /** 
@@ -116,11 +93,11 @@ function getHandler(opts) {
  */
 function babelMacro(plugin) {
   const {createMacro,MacroError} = require("babel-plugin-macros")
-  const opts = plugin.opts || {}
+  const popts = plugin.opts || {}
   const configName = plugin.name
   return createMacro(
     function effectfulMacro({references, state, babel, config}) {
-      let opts = {...config}
+      let opts = {...config,...popts}
       if (references.default && references.default.length)
         opts.preprocNS = references.default[0].node.name
       opts = plugin.transform(opts,helpers)
@@ -136,7 +113,7 @@ function babelMacro(plugin) {
           if (eopts.preprocNS)
             eopts.ns = eopts.preprocNS
         }
-        Kit.setOpts({...defaults,...eopts})
+        Kit.setOpts({...opts,...defaults,...eopts})
         Kit.babelBridge(Kit.pipe(Kit.prepare,getHandler(opts)),path,state)
         babel.traverse.cache.clearScope()
         babel.traverse.clearNode(path.node)
@@ -149,7 +126,7 @@ function babelMacro(plugin) {
 /** applies transform description to `ast` from babylon */
 export const run = (ast, descr) =>
   T.applyPass(ast, getHandler(descr),
-              Object.assign({},defaults,descr.options))
+              {...descr,...defaults,...descr.options})
 
 /** default always transforming transform with `options: Config` */
 export const defaultTransform = options =>
