@@ -24,10 +24,11 @@ const setAdd = Set.prototype.add
  *
  *  type Node = Node & {rv:Set<Sym>, wv:Set<Sym>, sv: Set<Sym>} 
  */
-function nodeVars(node) {
+function nodeVars(node,position) {
   const rv = node.rv = new Set()
   const wv = node.wv = new Set()
   const sv = node.sv = new Set()
+  node.position = position
   if (node.block) {
     for(const i of node.value) {
       i._nodeVarsVisited = false
@@ -359,18 +360,55 @@ function deriveBlocks(graph, s, root) {
    */
   for(const i of threads) {
     const eleft = []
-    for(const j of i.left) {
+    for(const j of Kit.reverse(i.left)) {
       if (j.reff || j.rc !== 1) {
-        eleft.push(j)
+        eleft.unshift(j)
       } else {
         i.right.unshift(...j.right)
-        eleft.push(...j.left)
+        eleft.unshift(...j.left)
         j.removed = true
       }
     }
     i.left = eleft
   }
   threads = threads.filter(notRemoved)
+  /**
+   * ### pure threads with same `left` are combined into one
+   */
+  const pureMemo = new Map()
+  const effMemo = new Map()
+  for(const i of threads) {
+    i.rc = 0
+    const hash = i.left.map(getId).join()
+    if (i.reff) {
+      if (!effMemo.has(hash))
+        effMemo.set(hash,i)
+      continue
+    }
+    let threads = pureMemo.get(hash)
+    if (!threads)
+      pureMemo.set(hash,threads = [])
+    threads.push(i)
+  }
+  for(const i of pureMemo.values()) {
+    if (i.length < 2)
+      continue
+    const [h,...t] = i
+    for(const j of t) {
+      h.right.push(...j.right)
+      j.replaceBy = h
+      j.removed = true
+    }
+  }
+  threads = threads.filter(notRemoved)
+  for(const i of threads) {
+    const nleft = new Set()
+    for(const j of i.left)
+      nleft.add(j.replaceBy || j)
+    i.left = [...nleft]
+    for(const j of i.left)
+      j.rc++
+  }
   /**
    * ### merging serialized threads (running sequentially anyway)
    */
@@ -405,6 +443,8 @@ function deriveBlocks(graph, s, root) {
   /** ## nothing to run in parallel here (giving up) */
   if (threads.length === 1)
     return false
+  for(const i of threads)
+    i.right.sort(({position:a},{position:b}) => a - b)
   /** ## cleaning removed single jumps */
   for(const i of removedOps)
     i.ref.removed = true
@@ -2155,7 +2195,9 @@ function contextThreading(si) {
     yield* s.leave()
   }
   function* _assignLoc(ctxFork,inst) {
-    for(const sinst of inst.locSucc) {
+    const locInsts = new Set()
+    _flatten(inst)
+    for(const sinst of locInsts) {
       if (!sinst.copy)
         continue
       const lab = s.label()
@@ -2166,7 +2208,12 @@ function contextThreading(si) {
       yield* _cref(Tag.left, sinst, sinst.fork)
       yield* _cref(Tag.right, inst, inst.fork)
       yield* lab()
-      yield* _assignLoc(ctxFork,sinst)
+    }
+    function _flatten(inst) {
+      for(const i of inst.locSucc) {
+        locInsts.add(i)
+        _flatten(i)
+      }
     }
   }
   /** # emits assignment for each variable change */
@@ -2236,6 +2283,7 @@ const emptyMap = new Map()
 
 function notSingle(chain) { return chain.length > 1 }
 function notRemoved(i) { return !i.removed }
+function getId({id}) { return id }
 
 function subsetOf(u, s) {
   for(const i of u)

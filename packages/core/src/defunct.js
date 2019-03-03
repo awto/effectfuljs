@@ -200,6 +200,9 @@ export function inlineExceptions(si) {
   if (!s.opts.keepLastRaise)
     throw s.error(
       "inlineJsExceptions && defunct requires keepLastPure:'tail'")
+  if (!s.opts.storeCont && !s.opts.storeErrorCont
+      && !root.errMapSym && !s.opts.inlineRaiseOp === "promise")
+    return s
   const {contSym,errContSym,commonPatSym} = root
   const fieldSym = Kit.sysId(s.opts.contFieldName)
   const implFrame = root.implFrame.value

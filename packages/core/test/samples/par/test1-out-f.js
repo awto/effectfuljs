@@ -1057,10 +1057,10 @@ import * as M from "@effectful/core";
           return p14.jump(void 0, 0);
 
         case 10:
+          k = void 0;
           return p14.chain(m2, 11);
 
         case 11:
-          k = void 0;
           b = k += p;
           return p14.jump(void 0, 0);
 
@@ -1417,11 +1417,11 @@ import * as M from "@effectful/core";
           return p18.jump(void 0, 0);
 
         case 19:
+          j = void 0;
           c = m_1(w);
           return p18.chain(c, 20);
 
         case 20:
-          j = void 0;
           j += p;
           return p18.jump(void 0, 0);
 
@@ -1499,11 +1499,11 @@ import * as M from "@effectful/core";
           return p19.jump(void 0, 0);
 
         case 12:
+          k = void 0;
           c = m2(w);
           return p19.chain(c, 13);
 
         case 13:
-          k = void 0;
           b = k += p;
           return p19.jump(void 0, 0);
 
@@ -1528,11 +1528,11 @@ import * as M from "@effectful/core";
           return p19.jump(void 0, 0);
 
         case 19:
+          j = void 0;
           c = m_1(w);
           return p19.chain(c, 20);
 
         case 20:
-          j = void 0;
           j += p;
           return p19.jump(void 0, 0);
 
@@ -1609,11 +1609,11 @@ import * as M from "@effectful/core";
           return p20.jump(void 0, 0);
 
         case 10:
+          k = void 0;
           c = m2();
           return p20.chain(c, 11);
 
         case 11:
-          k = void 0;
           b = k += p;
           return p20.jump(void 0, 0);
 
@@ -1638,11 +1638,11 @@ import * as M from "@effectful/core";
           return p20.jump(void 0, 0);
 
         case 17:
+          j = void 0;
           c = m_1();
           return p20.chain(c, 18);
 
         case 18:
-          j = void 0;
           j += p;
           return p20.jump(void 0, 0);
 
@@ -1684,7 +1684,7 @@ import * as M from "@effectful/core";
     return p21.scope(6);
 
     function _1(p21, p) {
-      var a, b, c, d, e, h, n;
+      var a, b, c, d, e, h;
 
       switch (p21.$state) {
         case 0:
@@ -1702,53 +1702,49 @@ import * as M from "@effectful/core";
           k$$ = 0;
           k$ = _k$ = k;
           a = p21.fork(null, 7);
-          b = p21.fork(null, 8);
-          c = p21.share(p21.fork(null, 9));
-          d = p21.chainFork(null, c, 11);
-          e = p21.chainFork(null, c, 13);
-          h = p21.chainFork(null, p21.join([d, e]), 15);
-          n = p21.fork(null, 16);
-          return p21.chain(p21.join([a, b, h, n]), 5);
+          b = p21.share(p21.fork(null, 8));
+          c = p21.chainFork(null, b, 10);
+          d = p21.chainFork(null, b, 12);
+          e = p21.chainFork(null, p21.join([c, d]), 14);
+          h = p21.fork(null, 15);
+          return p21.chain(p21.join([a, e, h]), 5);
 
         case 7:
           j$ = void 0, j$$ > 0 || (j$$ = 0, j = j$);
-          return p21.jump(void 0, 0);
-
-        case 8:
           k$ = void 0, k$$ > 0 || (k$$ = 0, k = k$);
           return p21.jump(void 0, 0);
 
-        case 9:
+        case 8:
           a = init();
-          return p21.chain(a, 10);
+          return p21.chain(a, 9);
 
-        case 10:
+        case 9:
           i = p;
           return p21.jump(void 0, 0);
 
-        case 11:
+        case 10:
           a = g(i);
-          return p21.chain(a, 12);
+          return p21.chain(a, 11);
 
-        case 12:
+        case 11:
           j = p;
           return p21.jump(void 0, 0);
 
-        case 13:
+        case 12:
           a = f(i);
-          return p21.chain(a, 14);
+          return p21.chain(a, 13);
 
-        case 14:
+        case 13:
           k = p;
           return p21.jump(void 0, 0);
 
-        case 15:
-          k$$ > 1 || (k$$ = 1, k = _k$);
+        case 14:
           j$$ > 1 || (j$$ = 1, j = _j$);
+          k$$ > 1 || (k$$ = 1, k = _k$);
           a = m(_j$, _k$);
           return p21.chain(a, 0);
 
-        case 16:
+        case 15:
           return p21.jump(void 0, 0);
 
         default:
@@ -1774,7 +1770,7 @@ import * as M from "@effectful/core";
     return p22.scope(6);
 
     function _1(p22, p) {
-      var a, b, c, d, e, h;
+      var a, b, c, d, e;
 
       switch (p22.$state) {
         case 0:
@@ -1792,51 +1788,47 @@ import * as M from "@effectful/core";
           k$$ = 0;
           k$ = _k$ = k;
           a = p22.fork(null, 7);
-          b = p22.fork(null, 8);
-          c = p22.share(p22.fork(null, 9));
-          d = p22.chainFork(null, c, 11);
-          e = p22.chainFork(null, c, 14);
-          h = p22.fork(null, 16);
-          return p22.chain(p22.join([a, b, d, e, h]), 5);
+          b = p22.share(p22.fork(null, 8));
+          c = p22.chainFork(null, b, 10);
+          d = p22.chainFork(null, b, 13);
+          e = p22.fork(null, 15);
+          return p22.chain(p22.join([a, c, d, e]), 5);
 
         case 7:
           j$ = void 0, j$$ > 0 || (j$$ = 0, j = j$);
-          return p22.jump(void 0, 0);
-
-        case 8:
           k$ = void 0, k$$ > 0 || (k$$ = 0, k = k$);
           return p22.jump(void 0, 0);
 
-        case 9:
+        case 8:
           a = init();
-          return p22.chain(a, 10);
+          return p22.chain(a, 9);
 
-        case 10:
+        case 9:
           i = p;
           return p22.jump(void 0, 0);
 
-        case 11:
+        case 10:
           a = g(i);
-          return p22.chain(a, 12);
+          return p22.chain(a, 11);
+
+        case 11:
+          _j$ = p, j$$ > 1 || (j$$ = 1, j = _j$);
+          return p22.chain(_j$, 12);
 
         case 12:
-          _j$ = p, j$$ > 1 || (j$$ = 1, j = _j$);
-          return p22.chain(_j$, 13);
-
-        case 13:
           jj = p;
           return p22.jump(void 0, 0);
 
-        case 14:
+        case 13:
           a = f(i);
-          return p22.chain(a, 15);
+          return p22.chain(a, 14);
 
-        case 15:
+        case 14:
           _k$ = p, k$$ > 1 || (k$$ = 1, k = _k$);
           a = m(jj, _k$);
           return p22.chain(a, 0);
 
-        case 16:
+        case 15:
           return p22.jump(void 0, 0);
 
         default:
@@ -2136,16 +2128,16 @@ import * as M from "@effectful/core";
         i,
         p27 = M.context(),
         r,
-        j$$,
-        j$,
-        k$$,
-        k$,
-        jj$$,
-        jj$,
         z$$,
         z$,
         x$$,
         x$,
+        jj$$,
+        jj$,
+        j$$,
+        j$,
+        k$$,
+        k$,
         _z$,
         _x$,
         _j$,
@@ -2156,7 +2148,7 @@ import * as M from "@effectful/core";
     return p27.scope(6);
 
     function _1(p27, p) {
-      var a, b, c, d, e, h, n, y, a1, b1, c1, d1, e1;
+      var a, b, c, d, e, h, n, y, a1;
 
       switch (p27.$state) {
         case 0:
@@ -2169,107 +2161,91 @@ import * as M from "@effectful/core";
           return p27.jump(r, 0);
 
         case 6:
-          j$$ = 0;
-          j$ = _j$ = j;
-          k$$ = 0;
-          k$ = _k$ = k;
-          jj$$ = 0;
-          jj$ = _jj$ = jj;
           z$$ = 0;
           z$ = _z$ = z;
           x$$ = 0;
           x$ = _x$ = x;
+          jj$$ = 0;
+          jj$ = _jj$ = jj;
+          j$$ = 0;
+          j$ = _j$ = j;
+          k$$ = 0;
+          k$ = _k$ = k;
           a = p27.fork(null, 7);
           b = p27.fork(null, 8);
-          c = p27.fork(null, 9);
-          d = p27.fork(null, 10);
-          e = p27.fork(null, 11);
-          h = p27.fork(null, 12);
-          n = p27.fork(null, 14);
-          y = p27.chainFork(null, p27.join([h, n]), 16);
-          a1 = p27.share(p27.fork(null, 18));
-          b1 = p27.chainFork(null, a1, 20);
-          c1 = p27.chainFork(null, a1, 22);
-          d1 = p27.chainFork(null, p27.join([y, b1, c1]), 24);
-          e1 = p27.fork(null, 25);
-          return p27.chain(p27.join([a, b, c, d, e, d1, e1]), 5);
+          c = p27.fork(null, 10);
+          d = p27.chainFork(null, p27.join([b, c]), 12);
+          e = p27.share(p27.fork(null, 14));
+          h = p27.chainFork(null, e, 16);
+          n = p27.chainFork(null, e, 18);
+          y = p27.chainFork(null, p27.join([d, h, n]), 20);
+          a1 = p27.fork(null, 21);
+          return p27.chain(p27.join([a, y, a1]), 5);
 
         case 7:
           j$ = void 0, j$$ > 0 || (j$$ = 0, j = j$);
-          return p27.jump(void 0, 0);
-
-        case 8:
           k$ = void 0, k$$ > 0 || (k$$ = 0, k = k$);
-          return p27.jump(void 0, 0);
-
-        case 9:
           jj$ = void 0, jj$$ > 0 || (jj$$ = 0, jj = jj$);
-          return p27.jump(void 0, 0);
-
-        case 10:
           z$ = void 0, z$$ > 0 || (z$$ = 0, z = z$);
-          return p27.jump(void 0, 0);
-
-        case 11:
           x$ = void 0, x$$ > 0 || (x$$ = 0, x = x$);
           return p27.jump(void 0, 0);
 
-        case 12:
-          return p27.chain(pre, 13);
+        case 8:
+          return p27.chain(pre, 9);
 
-        case 13:
+        case 9:
           z = p;
           return p27.jump(void 0, 0);
 
-        case 14:
-          return p27.chain(mu, 15);
+        case 10:
+          return p27.chain(mu, 11);
 
-        case 15:
+        case 11:
           x = p;
           return p27.jump(void 0, 0);
 
-        case 16:
-          x$$ > 1 || (x$$ = 1, x = _x$);
+        case 12:
           z$$ > 1 || (z$$ = 1, z = _z$);
+          x$$ > 1 || (x$$ = 1, x = _x$);
           a = bu(_z$, _x$);
-          return p27.chain(a, 17);
+          return p27.chain(a, 13);
 
-        case 17:
+        case 13:
           jj = p;
           return p27.jump(void 0, 0);
 
-        case 18:
+        case 14:
           a = init();
-          return p27.chain(a, 19);
+          return p27.chain(a, 15);
 
-        case 19:
+        case 15:
           i = p;
           return p27.jump(void 0, 0);
 
-        case 20:
+        case 16:
           a = g(i);
-          return p27.chain(a, 21);
+          return p27.chain(a, 17);
 
-        case 21:
+        case 17:
           j = p;
           return p27.jump(void 0, 0);
 
-        case 22:
+        case 18:
           a = f(i);
-          return p27.chain(a, 23);
+          return p27.chain(a, 19);
 
-        case 23:
+        case 19:
           k = p;
           return p27.jump(void 0, 0);
 
-        case 24:
-          k$$ > 1 || (k$$ = 1, k = _k$);
-          j$$ > 1 || (j$$ = 1, j = _j$);
+        case 20:
           jj$$ > 1 || (jj$$ = 1, jj = _jj$);
+          j$$ > 1 || (j$$ = 1, j = _j$);
+          k$$ > 1 || (k$$ = 1, k = _k$);
           a = m(_jj$, _k$, _j$);
           return p27.chain(a, 0);
 
-        case 25:
+        case 21:
           return p27.jump(void 0, 0);
 
         default:
@@ -2286,12 +2262,12 @@ import * as M from "@effectful/core";
         i,
         p28 = M.context(),
         r,
+        jj$$,
+        jj$,
         j$$,
         j$,
         k$$,
         k$,
-        jj$$,
-        jj$,
         _j$,
         _k$,
         _jj$;
@@ -2300,7 +2276,7 @@ import * as M from "@effectful/core";
     return p28.scope(6);
 
     function _1(p28, p) {
-      var a, b, c, d, e, h, n, x, y, a1;
+      var a, b, c, d, e, h, n;
 
       switch (p28.$state) {
         case 0:
@@ -2313,79 +2289,67 @@ import * as M from "@effectful/core";
           return p28.jump(r, 0);
 
         case 6:
+          jj$$ = 0;
+          jj$ = _jj$ = jj;
           j$$ = 0;
           j$ = _j$ = j;
           k$$ = 0;
           k$ = _k$ = k;
-          jj$$ = 0;
-          jj$ = _jj$ = jj;
           a = p28.fork(null, 7);
           b = p28.fork(null, 8);
-          c = p28.fork(null, 9);
-          d = p28.fork(null, 10);
-          e = p28.fork(null, 11);
-          h = p28.share(p28.fork(null, 13));
-          n = p28.chainFork(null, h, 15);
-          x = p28.chainFork(null, h, 17);
-          y = p28.chainFork(null, p28.join([e, n, x]), 19);
-          a1 = p28.fork(null, 20);
-          return p28.chain(p28.join([a, b, c, d, y, a1]), 5);
+          c = p28.share(p28.fork(null, 10));
+          d = p28.chainFork(null, c, 12);
+          e = p28.chainFork(null, c, 14);
+          h = p28.chainFork(null, p28.join([b, d, e]), 16);
+          n = p28.fork(null, 17);
+          return p28.chain(p28.join([a, h, n]), 5);
 
         case 7:
           j$ = void 0, j$$ > 0 || (j$$ = 0, j = j$);
-          return p28.jump(void 0, 0);
-
-        case 8:
           k$ = void 0, k$$ > 0 || (k$$ = 0, k = k$);
-          return p28.jump(void 0, 0);
-
-        case 9:
           jj$ = void 0, jj$$ > 0 || (jj$$ = 0, jj = jj$);
-          return p28.jump(void 0, 0);
-
-        case 10:
           z = void 0;
           return p28.jump(void 0, 0);
 
-        case 11:
-          return p28.chain(pre, 12);
+        case 8:
+          return p28.chain(pre, 9);
 
-        case 12:
+        case 9:
           jj = p;
           return p28.jump(void 0, 0);
 
-        case 13:
+        case 10:
           a = init();
-          return p28.chain(a, 14);
+          return p28.chain(a, 11);
 
-        case 14:
+        case 11:
           i = p;
           return p28.jump(void 0, 0);
 
-        case 15:
+        case 12:
           a = g(i);
-          return p28.chain(a, 16);
+          return p28.chain(a, 13);
 
-        case 16:
+        case 13:
           j = p;
           return p28.jump(void 0, 0);
 
-        case 17:
+        case 14:
           a = f(i);
-          return p28.chain(a, 18);
+          return p28.chain(a, 15);
 
-        case 18:
+        case 15:
           k = p;
           return p28.jump(void 0, 0);
 
-        case 19:
-          k$$ > 1 || (k$$ = 1, k = _k$);
-          j$$ > 1 || (j$$ = 1, j = _j$);
+        case 16:
           jj$$ > 1 || (jj$$ = 1, jj = _jj$);
+          j$$ > 1 || (j$$ = 1, j = _j$);
+          k$$ > 1 || (k$$ = 1, k = _k$);
           a = m(_jj$, _k$, _j$);
           return p28.chain(a, 0);
 
-        case 20:
+        case 17:
           return p28.jump(void 0, 0);
 
         default:
@@ -2651,14 +2615,14 @@ import * as M from "@effectful/core";
         i,
         p31 = M.context(),
         r,
-        j$$,
-        j$,
-        k$$,
-        k$,
         z$$,
         z$,
         x$$,
         x$,
+        j$$,
+        j$,
+        k$$,
+        k$,
         _z$,
         _x$,
         _j$,
@@ -2668,7 +2632,7 @@ import * as M from "@effectful/core";
     return p31.scope(6);
 
     function _1(p31, p) {
-      var a, b, c, d, e, h, n, y, a1, b1, c1, d1;
+      var a, b, c, d, e, h, n, y, a1;
 
       switch (p31.$state) {
         case 0:
@@ -2681,95 +2645,83 @@ import * as M from "@effectful/core";
           return p31.jump(r, 0);
 
         case 6:
-          j$$ = 0;
-          j$ = _j$ = j;
-          k$$ = 0;
-          k$ = _k$ = k;
           z$$ = 0;
           z$ = _z$ = z;
           x$$ = 0;
           x$ = _x$ = x;
+          j$$ = 0;
+          j$ = _j$ = j;
+          k$$ = 0;
+          k$ = _k$ = k;
           a = p31.fork(null, 7);
           b = p31.fork(null, 8);
-          c = p31.fork(null, 9);
-          d = p31.fork(null, 10);
-          e = p31.fork(null, 11);
-          h = p31.fork(null, 13);
-          n = p31.chainFork(null, p31.join([e, h]), 15);
-          y = p31.share(p31.fork(null, 16));
-          a1 = p31.chainFork(null, y, 18);
-          b1 = p31.chainFork(null, y, 20);
-          c1 = p31.chainFork(null, p31.join([a1, b1]), 22);
-          d1 = p31.fork(null, 23);
-          return p31.chain(p31.join([a, b, c, d, n, c1, d1]), 5);
+          c = p31.fork(null, 10);
+          d = p31.chainFork(null, p31.join([b, c]), 12);
+          e = p31.share(p31.fork(null, 13));
+          h = p31.chainFork(null, e, 15);
+          n = p31.chainFork(null, e, 17);
+          y = p31.chainFork(null, p31.join([h, n]), 19);
+          a1 = p31.fork(null, 20);
+          return p31.chain(p31.join([a, d, y, a1]), 5);
 
         case 7:
           j$ = void 0, j$$ > 0 || (j$$ = 0, j = j$);
-          return p31.jump(void 0, 0);
-
-        case 8:
           k$ = void 0, k$$ > 0 || (k$$ = 0, k = k$);
-          return p31.jump(void 0, 0);
-
-        case 9:
           z$ = void 0, z$$ > 0 || (z$$ = 0, z = z$);
-          return p31.jump(void 0, 0);
-
-        case 10:
           x$ = void 0, x$$ > 0 || (x$$ = 0, x = x$);
           return p31.jump(void 0, 0);
 
-        case 11:
-          return p31.chain(pre, 12);
+        case 8:
+          return p31.chain(pre, 9);
 
-        case 12:
+        case 9:
           z = p;
           return p31.jump(void 0, 0);
 
-        case 13:
-          return p31.chain(mu, 14);
+        case 10:
+          return p31.chain(mu, 11);
 
-        case 14:
+        case 11:
           x = p;
           return p31.jump(void 0, 0);
 
-        case 15:
-          x$$ > 1 || (x$$ = 1, x = _x$);
+        case 12:
           z$$ > 1 || (z$$ = 1, z = _z$);
+          x$$ > 1 || (x$$ = 1, x = _x$);
           a = bu(_z$, _x$);
           return p31.chain(a, 0);
 
-        case 16:
+        case 13:
           a = init();
-          return p31.chain(a, 17);
+          return p31.chain(a, 14);
 
-        case 17:
+        case 14:
           i = p;
           return p31.jump(void 0, 0);
 
-        case 18:
+        case 15:
           a = g(i);
-          return p31.chain(a, 19);
+          return p31.chain(a, 16);
 
-        case 19:
+        case 16:
           j = p;
           return p31.jump(void 0, 0);
 
-        case 20:
+        case 17:
           a = f(i);
-          return p31.chain(a, 21);
+          return p31.chain(a, 18);
 
-        case 21:
+        case 18:
           k = p;
           return p31.jump(void 0, 0);
 
-        case 22:
-          k$$ > 1 || (k$$ = 1, k = _k$);
+        case 19:
           j$$ > 1 || (j$$ = 1, j = _j$);
+          k$$ > 1 || (k$$ = 1, k = _k$);
           a = m(_k$, _j$);
           return p31.chain(a, 0);
 
-        case 23:
+        case 20:
           return p31.jump(void 0, 0);
 
         default:
@@ -11518,6 +11470,33 @@ function r50() {
   }
 
   function _7(r) {
+    return M.pure(r);
+  }
+}
+
+let incr1, incr2;
+
+function r51() {
+  var value1, value2, r;
+  return M.scope(_1);
+
+  function _1() {
+    value1 = void 0;
+    value2 = void 0;
+    return M.chain(e_1, _2);
+  }
+
+  function _2(a) {
+    [value1, incr1] = a;
+    return M.chain(e_2, _3);
+  }
+
+  function _3(a) {
+    [value2, incr2] = a;
+    return M.pure([value1, value2]);
+  }
+
+  function _4(r) {
     return M.pure(r);
   }
 }

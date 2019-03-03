@@ -459,7 +459,7 @@ describe("implicitly parallel async function", function() {
       })
     })
   context("with variable values withing same fork", function() {
-    it("should have variable values like in sequential execution",
+    it("should set variable values like in sequential execution",
        async function() {
          async function a(v1,v2,t1,t2,t3,t4) {
            "par"
@@ -516,7 +516,7 @@ describe("implicitly parallel async function", function() {
             "< b:0@15", "> a:15/0@15", "< c:10/1@20", "< a:15/0@30"])
        })
     context("with loops", function() {
-      it("should have variable values like in sequential execution",
+      it("should set variable values like in sequential execution",
          async function() {
            async function a(v1,v2,t1,t2,t3,t4,t5,t6,t7,t8) {
              "par"
@@ -572,7 +572,7 @@ describe("implicitly parallel async function", function() {
          })
     })
     context("with nested loops", function() {
-      it("should have variable values like in sequential execution",
+      it("should set variable values like in sequential execution",
          async function() {
            async function a(t) {
              "par"

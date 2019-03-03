@@ -2485,3 +2485,13 @@ async function r50() {
     }
   }
 }
+
+let incr1, incr2
+
+async function r51() {
+  "par"
+  let value1, value2;
+  [value1, incr1] = await e_1;
+  [value2, incr2] = await e_2
+  return [value1,value2]
+}
