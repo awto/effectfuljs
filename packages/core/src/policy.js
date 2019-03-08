@@ -1,7 +1,7 @@
 import * as Kit from "./kit"
 import {Tag,symbol,symInfo,invariant} from "./kit"
 import * as Match from "@effectful/transducers/match"
-import {sync as resolve} from "resolve"
+// import {sync as resolve} from "resolve"
 import * as path from "path"
 
 /** token type for signaling config object changes */
@@ -27,11 +27,15 @@ export function postproc(f) {
 function resolveImport(name,opts,optional = false) {
   let r = opts.libs[name]
   if (r == null) {
+    if (!optional)
+      throw new Error("not implemented: resolving imports")
+    /*
     try {
+      
       const cp = resolve(name, {
         basedir: path.dirname(opts.file.filename)
       })
-      r = require(/* webpackIgnore: true */cp)
+      r = require(/ * webpackIgnore: true * /cp)
     } catch(e) {
       if (optional) {
         if (opts.resolveTrace)
@@ -40,6 +44,7 @@ function resolveImport(name,opts,optional = false) {
         throw new SyntaxError(`couldn't resolve ${name} (${e.message})`)
       }
     }
+    */
   }
   return r
 }

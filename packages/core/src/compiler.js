@@ -86,13 +86,38 @@ function getHandler(opts) {
   return opts.main ? opts.main : T.run
 }
 
+/** copied from "babel-plugin-macros" to remove it as a dependency */
+function createMacro(macro, options = {}) {
+  if (options.configName === 'options') {
+    throw new Error(
+      `You cannot use the configName "options". It is reserved for babel-plugin-macros.`)
+  }
+  macroWrapper.isBabelMacro = true
+  macroWrapper.options = options
+  return macroWrapper
+
+  function macroWrapper(args) {
+    const {source, isBabelMacrosCall} = args
+    if (!isBabelMacrosCall) {
+      throw new Error(
+        `The macro you imported from "${source}" is being executed outside the context of compilation with babel-plugin-macros. ` +
+          `This indicates that you don't have the babel plugin "babel-plugin-macros" configured correctly. ` +
+          `Please see the documentation for how to configure babel-plugin-macros properly: ` +
+          'https://github.com/kentcdodds/babel-plugin-macros/blob/master/other/docs/user.md'
+      )
+    }
+    return macro(args)
+  }
+}
+
+
 /** 
  * returns "babel-plugin-macros" default export for given transform,
  * it transforms the result of `babelPreset` into a function suitable
  * for supplying to "babel-plugin-macros" `createMacro` call
  */
 function babelMacro(plugin) {
-  const {createMacro,MacroError} = require("babel-plugin-macros")
+  // const {createMacro} = require("babel-plugin-macros")
   const popts = plugin.opts || {}
   const configName = plugin.name
   return createMacro(
