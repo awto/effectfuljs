@@ -43,3 +43,7 @@ import "@effectful/cc/async-do.macro"
 
 ```
 
+  * [transform.js](tranform.js) - transpiler's configuration
+  * [main.js](main.js) - runtime implementation
+
+

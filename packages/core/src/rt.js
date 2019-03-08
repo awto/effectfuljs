@@ -63,7 +63,7 @@ export function collectImports(si) {
                 locals = new Map()
               const loc = s.take()
               s.close(loc)
-              locals.set(s.cur().value.node.name,loc.value)
+              locals.set(loc.value,s.cur().value.node.name)
               break
             }
           }

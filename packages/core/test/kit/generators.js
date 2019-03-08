@@ -16,7 +16,6 @@ export function toStream(files) {
       if (v.substr != null) {
         yield {type:"file", path, value: v}
       } else {
-        // yield {type:"dir", id: x++, path}
         yield* walk(path,v)
       }
     }

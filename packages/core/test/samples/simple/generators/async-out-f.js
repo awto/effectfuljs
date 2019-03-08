@@ -990,142 +990,147 @@ class A {
 
 var b = new class {
   method() {
-    var r;
-    return M.scope(_1);
+    var ctx = M.context();
+    return ctx.scope(_1);
 
-    function _1() {
-      return M.chain(something, _2);
+    function _1(ctx) {
+      return ctx.chain(something, _2);
     }
 
-    function _2() {
-      return M.pure();
+    function _2(ctx) {
+      return ctx.pure();
     }
 
-    function _3(r) {
-      return M.pure(r);
+    function _3(ctx, r) {
+      return ctx.pure(r);
     }
   }
 
   static m1() {
-    var A = class A {
+    var ctx = M.context();
+    ctx._A = class A {
       m2() {
-        var r;
-        return M.scope(_1);
+        var ctx = M.context();
+        return ctx.scope(_1);
 
-        function _1() {
-          return M.chain(something, _2);
+        function _1(ctx) {
+          return ctx.chain(something, _2);
         }
 
-        function _2() {
-          return M.pure();
+        function _2(ctx) {
+          return ctx.pure();
         }
 
-        function _3(r) {
-          return M.pure(r);
+        function _3(ctx, r) {
+          return ctx.pure(r);
         }
       }
 
-    },
-        r;
-    return M.scope(_1);
+    };
+    return ctx.scope(_1);
 
-    function _1() {
-      return M.chain(somethingElse, _2);
+    function _1(ctx) {
+      return ctx.chain(somethingElse, _2);
     }
 
-    function _2() {
-      return M.pure();
+    function _2(ctx) {
+      return ctx.pure();
     }
 
-    function _3(r) {
-      return M.pure(r);
+    function _3(ctx, r) {
+      return ctx.pure(r);
     }
   }
 
 }();
 var c = new class C {
   [getName()]() {
-    var r;
-    return M.scope(_1);
+    var ctx = M.context();
+    return ctx.scope(_1);
 
-    function _1() {
-      return M.chain(something, _2);
+    function _1(ctx) {
+      return ctx.chain(something, _2);
     }
 
-    function _2() {
-      return M.pure();
+    function _2(ctx) {
+      return ctx.pure();
     }
 
-    function _3(r) {
-      return M.pure(r);
+    function _3(ctx, r) {
+      return ctx.pure(r);
     }
   }
 
   static [Symbol.iterator]() {
-    var r;
-    return M.scope(_1);
+    var ctx = M.context();
+    return ctx.scope(_1);
 
-    function _1() {
-      return M.chain(somethingElse, _2);
+    function _1(ctx) {
+      return ctx.chain(somethingElse, _2);
     }
 
-    function _2() {
-      return M.pure();
+    function _2(ctx) {
+      return ctx.pure();
     }
 
-    function _3(r) {
-      return M.pure(r);
+    function _3(ctx, r) {
+      return ctx.pure(r);
     }
   }
 
 }()(i => {
-  var r;
-  return M.scope(_1);
+  var ctx = M.context();
+  ctx._i = i;
+  return ctx.scope(_1);
 
-  function _1() {
-    return M.chain(i, _2);
+  function _1(ctx) {
+    return ctx.chain(ctx._i, _2);
   }
 
-  function _2(a) {
-    return M.pure(a);
+  function _2(ctx, a) {
+    return ctx.pure(a);
   }
 
-  function _3(r) {
-    return M.pure(r);
+  function _3(ctx, r) {
+    return ctx.pure(r);
   }
 })(10);
 
 (function (i) {
-  var f, r;
-  return M.scope(_1);
+  var ctx = M.context();
+  ctx._i = i;
+  return ctx.scope(_1);
 
-  function _1() {
-    return M.chain(i, _2);
+  function _1(ctx) {
+    return ctx.chain(ctx._i, _2);
   }
 
-  function _2(a) {
+  function _2(ctx, a) {
+    var f;
     f = a;
-    return M.pure();
+    return ctx.pure();
   }
 
-  function _3(r) {
-    return M.pure(r);
+  function _3(ctx, r) {
+    return ctx.pure(r);
   }
 })(10);
 
 (function zz(i) {
-  var r;
-  return M.scope(_1);
+  var _zz = M.context();
 
-  function _1() {
-    return M.chain(i, _2);
+  _zz._i = i;
+  return _zz.scope(_1);
+
+  function _1(_zz) {
+    return _zz.chain(_zz._i, _2);
   }
 
-  function _2() {
-    return M.pure();
+  function _2(_zz) {
+    return _zz.pure();
   }
 
-  function _3(r) {
-    return M.pure(r);
+  function _3(_zz, r) {
+    return _zz.pure(r);
   }
 })(10);

@@ -286,10 +286,8 @@ export const use = v => v
 /** React.Suspense replacement */
 export const Suspense = ({fallback, maxDuration = 5000, effChildren}) =>
   toReactElement(make((rs,rj) => {
-    const timer = setTimeout(
-      () => rs(fallback),maxDuration)
-    effChildren(
-      children => (clearTimeout(timer), rs(children)))}))
+    const timer = setTimeout(() => rs(fallback),maxDuration)
+    effChildren(children => (clearTimeout(timer), rs(children)))}))
 
 Suspense[classSym] = Effectful
 

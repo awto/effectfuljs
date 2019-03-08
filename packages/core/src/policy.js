@@ -68,6 +68,8 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
   return Kit.pipe(...post)
 })
 
+let deb_nu = 0
+
 /** 
  * Recalculates `opts` field, by propagating parent opts fields to children.
  * Following fields are propagated: 
@@ -82,6 +84,7 @@ export function propagateOpts(si) {
   const stack = []
   const assignStack = [{}]
   const mergeStack = [{}]
+  const deb_id = deb_nu++
   for(const i of sa) {
     const {optsDiff:diff,optsAssign:assign,optsSet:set} = i.value
     if (diff != null || assign != null || set != null) {
@@ -91,23 +94,30 @@ export function propagateOpts(si) {
           cur = set
         if (assign)
           assignStack.unshift(Object.assign({},assignStack[0],assign))
-        if (diff != null)
+        if (diff)
           mergeStack.unshift(merge(clone(mergeStack[0]),diff))
         if (assignStack.length > 1 || mergeStack.length > 1) {
+          const oldCur = cur.par
           cur = clone(cur)
-          if (assignStack.length > 1)
+          if (assignStack.length > 1) {
+            const oldCur = cur.par
             Object.assign(cur,assignStack[0])
-          if (mergeStack.length > 1)
+          }
+          if (mergeStack.length > 1) {
+            const oldCur = cur.par
             merge(cur,mergeStack[0])
+          }
         }
       }
       i.value.opts = cur
       if (i.leave) {
+        const oldCur = cur.par
         cur = stack.pop()
         if (assign)
           assignStack.shift()
-        if (merge)
+        if (diff) {
           mergeStack.shift()
+        }
       }
     } else 
       i.value.opts = cur
@@ -274,6 +284,7 @@ function namespaces(si) {
   const patStr = s.opts.presetsImportPattern
   const pat = patStr && patStr.substr && new RegExp(patStr)
   let imp = s.opts.importRT
+  const preset = s.opts.preset
   const presets = new Set()
   if (s.opts.preset) {
     if (Array.isArray(s.opts.preset)) {
@@ -293,13 +304,9 @@ function namespaces(si) {
         namespaces.set(lib,ns.sym)
         continue
       }
-      if (locals && lib === imp) {
-        for(const [n,v] of locals) {
-          let locs = rtSyms.get(n)
-          if (!locs)
-            rtSyms.set(n, locs = [])
-          locs.push(v.sym)
-        }
+      if (locals && (lib === imp || lib === preset)) {
+        for(const [local,libName] of locals)
+          Kit.mapPush(rtSyms,libName,local.sym)
       }
     }
   }
@@ -761,15 +768,17 @@ export function* propagateConfigDiff(s) {
       }
       continue
     }
+    
     if (i.enter) {
       if (cur.level === level) {
-        if (cur.merge) 
+        if (cur.merge)  {
           i.value.optsDiff =
             Object.assign(i.value.optsDiff||{},cur.merge,i.value.optsDiff)
-        if (cur.assign) {
-          i.value.optsAssign =
-            Object.assign(i.value.optsAssign||{},cur.assign,i.value.optsAssign)
         }
+        if (cur.assign)
+          i.value.optsAssign =
+          Object.assign(i.value.optsAssign||{},cur.assign,i.value.optsAssign)
+        
       }
       level++
     }
@@ -809,8 +818,7 @@ export const prepare =
         return Kit.toArray(s)
       }
     },
-    propagateBlockDirs
-  )
+    propagateBlockDirs)
 
 /** for `ns` function application marks inner expression to be effectful */
 export function unwrapNs(si) {

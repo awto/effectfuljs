@@ -76,7 +76,7 @@ class A {
 var b = new class {
   method() {
     var ctx = M.context();
-    return M.scope(method_11);
+    return ctx.scope(method_11);
   }
 
   static m1() {
@@ -84,42 +84,42 @@ var b = new class {
     ctx._A = class A {
       m2() {
         var ctx = M.context();
-        return M.scope(m2_1);
+        return ctx.scope(m2_1);
       }
 
     };
-    return M.scope(m1_1);
+    return ctx.scope(m1_1);
   }
 
 }();
 var c = new class C {
   [getName()]() {
     var ctx = M.context();
-    return M.scope(f_1);
+    return ctx.scope(f_1);
   }
 
   static [Symbol.iterator]() {
     var ctx = M.context();
-    return M.scope(_f_1);
+    return ctx.scope(_f_1);
   }
 
 }()(i => {
   var ctx = M.context();
   ctx._i = i;
-  return M.scope(f_11);
+  return ctx.scope(f_11);
 })(10);
 
 (function (i) {
   var ctx = M.context();
   ctx._i = i;
-  return M.scope(f_12);
+  return ctx.scope(f_12);
 })(10);
 
 (function zz(i) {
   var _zz = M.context();
 
   _zz._i = i;
-  return M.scope(zz_1);
+  return _zz.scope(zz_1);
 })(10);
 
 function a1_1(a1) {
@@ -1110,105 +1110,105 @@ function _method_3(ctx, r) {
 }
 
 function method_11(ctx) {
-  return M.chain(something, method_21);
+  return ctx.chain(something, method_21);
 }
 
 function method_21(ctx) {
-  return M.pure();
+  return ctx.pure();
 }
 
 function method_31(ctx, r) {
-  return M.pure(r);
+  return ctx.pure(r);
 }
 
 function m2_1(ctx) {
-  return M.chain(something, m2_2);
+  return ctx.chain(something, m2_2);
 }
 
 function m2_2(ctx) {
-  return M.pure();
+  return ctx.pure();
 }
 
 function m2_3(ctx, r) {
-  return M.pure(r);
+  return ctx.pure(r);
 }
 
 function m1_1(ctx) {
-  return M.chain(somethingElse, m1_2);
+  return ctx.chain(somethingElse, m1_2);
 }
 
 function m1_2(ctx) {
-  return M.pure();
+  return ctx.pure();
 }
 
 function m1_3(ctx, r) {
-  return M.pure(r);
+  return ctx.pure(r);
 }
 
 function f_1(ctx) {
-  return M.chain(something, f_2);
+  return ctx.chain(something, f_2);
 }
 
 function f_2(ctx) {
-  return M.pure();
+  return ctx.pure();
 }
 
 function f_3(ctx, r) {
-  return M.pure(r);
+  return ctx.pure(r);
 }
 
 function _f_1(ctx) {
-  return M.chain(somethingElse, _f_2);
+  return ctx.chain(somethingElse, _f_2);
 }
 
 function _f_2(ctx) {
-  return M.pure();
+  return ctx.pure();
 }
 
 function _f_3(ctx, r) {
-  return M.pure(r);
+  return ctx.pure(r);
 }
 
 function f_11(ctx) {
   var a;
   a = ctx._i, ctx._i = null;
-  return M.chain(a, f_21);
+  return ctx.chain(a, f_21);
 }
 
 function f_21(ctx, a) {
-  return M.pure(a);
+  return ctx.pure(a);
 }
 
 function f_31(ctx, r) {
-  return M.pure(r);
+  return ctx.pure(r);
 }
 
 function f_12(ctx) {
   var a;
   a = ctx._i, ctx._i = null;
-  return M.chain(a, f_22);
+  return ctx.chain(a, f_22);
 }
 
 function f_22(ctx, a) {
   var f;
   f = a;
-  return M.pure();
+  return ctx.pure();
 }
 
 function f_32(ctx, r) {
-  return M.pure(r);
+  return ctx.pure(r);
 }
 
 function zz_1(_zz) {
   var a;
   a = _zz._i, _zz._i = null;
-  return M.chain(a, zz_2);
+  return _zz.chain(a, zz_2);
 }
 
 function zz_2(_zz) {
-  return M.pure();
+  return _zz.pure();
 }
 
 function zz_3(_zz, r) {
-  return M.pure(r);
+  return _zz.pure(r);
 }

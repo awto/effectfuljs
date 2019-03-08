@@ -229,7 +229,7 @@ describe("<Suspense/>", function() {
     }
     expect(renderer.create(<Component1/>).toJSON()).toMatchSnapshot()
   })
-  describe("with only a single async child", async function() {
+  describe("with only a single async child", function() {
     test("the child is available after `maxDuration`", async function() {
       function Component2() {
         "component"
@@ -253,7 +253,7 @@ describe("<Suspense/>", function() {
       await exec(renderer.create(<Component3/>))
     })
   })
-  describe("with a nested async child", async function() {
+  describe("with a nested async child", function() {
     test("the child is available after `maxDuration`", async function() {
       function Component4() {
         "component"

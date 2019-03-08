@@ -28,7 +28,7 @@ const postproc = Kit.pipe(
 export default Kit.pipe(
   function* init(si) {
     const s = Kit.auto(si)
-    const defaults = s.opts.effectful
+    const defaults = {...s.opts.effectful}
     const disabled = Policy.injectFuncOpts(disabledOpts)
     const generators = Policy.injectFuncOpts(Object.assign({
       generator:true,
@@ -127,8 +127,8 @@ export default Kit.pipe(
     if (profile != null) {
       if (!Array.isArray(profile))
         profile = [profile]
-    for(const i of profile)
-      yield Kit.tok(Policy.profile,{node:{name:i}})
+      for(const i of profile)
+        yield Kit.tok(Policy.profile,{node:{name:i}})
     }
     yield* s
   },

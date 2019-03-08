@@ -954,7 +954,7 @@ function emitForkApp(si) {
  *   type ICFGNode = {
  *     frame: FrameVal | null, // null is for `try` blocks
  *     exits,nonRecExits,enters,
- *     nonRecEnters,recEnters,tryExits: Set<CfgNode>,
+ *     nonRecEnters,recEnters
  *     // depth-first traversal enter order
  *     beg: number,
  *     // depth-first traversal exit order
@@ -1015,7 +1015,8 @@ export function calcCfg(frames) {
         for(const hgoto of dest) {
           const start = enode.tryWrap = _tryNode(goto,hgoto);
           _nonRecCon(start,enode)
-          _nonRecCon(start,_node(hgoto))
+          const tryDest = _node(hgoto)
+          _nonRecCon(start,tryDest)
           enode = start          
         }
       }
@@ -1093,8 +1094,8 @@ export function calcCfg(frames) {
                   exits:new Set(),enters:new Set(),
                   recEnters:new Set(),
                   nonRecExits:new Set(),nonRecEnters:new Set(),
-                  tryExits:new Set(),loops:null,
-                  loop:null,loopExits:null,tryWrap:null}
+                  loops:null,
+                  loop:null,loopExits:null,tryWrap:null,tryHender:null}
     nodes.push(node)
     return node
   }
@@ -1102,13 +1103,6 @@ export function calcCfg(frames) {
     const node = _makeNode(frame,false)
     jobs.push({start:true,node})
     return node
-  }
-  function _tryDests(js, fs, dest) {
-    for(let i = 0, len = js.length; i < len; ++i) {
-      const hgoto = js[i]
-      if (fs[i] !== hgoto)
-        dest.push(hgoto)
-    }
   }
   function _node(frame) {
     return frame.parCfgNode || (frame.parCfgNode = _schedNode(frame))
@@ -1164,12 +1158,17 @@ export function frameThreads(root,icfg) {
           break
         }
       }
-      if (node.handled /* && !node.recHandled*/) {
+      if (node.handled) {
         schedule.add(node)
         if (node.block.loopExit && chain.length
             && subsetOf(node.recEnters,block)) {
-          chain.push(node.block)
-          node.block.loopEnter = node
+          /** 
+           * avoiding unconstrained loops, otherwise it will produce infinite `join`  
+           */
+          if (node.block !== chain[0]) {
+            chain.push(node.block)
+            node.block.loopEnter = node
+          }
         }
         break
       }

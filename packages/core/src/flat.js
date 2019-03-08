@@ -437,11 +437,13 @@ export const convert = Kit.pipe(
                           {declSym:Kit.scope.newSym("_"),
                            root,result:false})
     yield frame
-    if (root.opts.scopePrefix)
+    if (root.opts.scopePrefix) {
+      const name = root.opts.scopePrefix.substr
+            ? root.opts.scopePrefix : "scope"
       yield s.tok(Tag.push, Block.letStmt,
                   {goto:first,ref:frame.value,eff:true,op:null,
-                   opSym:scopeSym,bindName:"scope",bindJump:true,init:true})
-    else
+                   opSym:Kit.sysId(name),bindName:name,bindJump:true,init:true})
+    } else
       yield s.tok(Tag.push, Ctrl.jump,
                   {goto:first,ref:frame.value,eff:true,op:null,
                    opSym:scopeSym,bindJump:false,init:true})
@@ -696,6 +698,8 @@ export const convert = Kit.pipe(
         const resCont = frame.resultCont = result.resultRedir = {errSym:resSym}
         preComposeFrame(resCont,frame.preCompose)
         redirFrames.push(...makeRedir(resCont,resFrame))
+        if (resCont.goto)
+          resCont.goto.noInline = true
         return resCont
       }
       if (catchCont) {
@@ -708,6 +712,8 @@ export const convert = Kit.pipe(
           catchCont.composed = true
         }
         i.value.catchContRedir = catchCont.redir
+        if (catchCont.goto)
+          catchCont.goto.noInline = true
       } else
         i.value.catchContRedir = errFrameRedir
       yield i
