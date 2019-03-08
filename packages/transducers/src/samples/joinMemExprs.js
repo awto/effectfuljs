@@ -1,7 +1,6 @@
 import {produce,consume,Tag} from "../core"
 import * as Kit from "../kit"
 import * as T from "@babel/types"
-import * as assert from "assert"
 
 function collectFuncDecls(s) {
   const sa = Kit.toArray(s)

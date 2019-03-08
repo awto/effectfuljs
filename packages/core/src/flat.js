@@ -4,8 +4,7 @@
  * [ANF](https://en.wikipedia.org/wiki/A-normal_form)
  */
 import * as Kit from "./kit"
-import {Tag} from "./kit"
-import * as assert from "assert"
+import {Tag, invariant} from "./kit"
 import * as Block from "./block"
 import * as Ctrl from "./control"
 import * as Coerce from "./coerce"
@@ -151,7 +150,7 @@ export const convert = Kit.pipe(
           case Tag.IfStatement:
             yield i
             yield* s.one()
-            assert.ok(!cur.length)
+            invariant(!cur.length)
             cur.push(...yield* _convert(s.one(),[],chain))
             if (s.curLev() != null)
               cur.push(...yield* _convert(s.one(),[],chain))
@@ -198,7 +197,7 @@ export const convert = Kit.pipe(
             continue
           case Block.app:
             if (i.value.eff) {
-              assert.ok(!cur.length)
+              invariant(!cur.length)
               let fl = frames.length
               const bodyJumps = yield* _convert(s.one(),cur,chain)
               const j = s.curLev()
@@ -500,7 +499,7 @@ export const convert = Kit.pipe(
             errPreCompose.shift()
             s.close(i)
             const fh = s.take()
-            assert.ok(fh.type === handleBlock)
+            invariant(fh.type === handleBlock)
             const args = cont.args || (cont.args = new Map())
             addArg(args,cc.errSym,errSym)
             yield* walk({goto:cc.goto,errSym:cc.errSym,
@@ -514,7 +513,7 @@ export const convert = Kit.pipe(
                          stack:[...cc.stack,i.value.handle],hstack:cc.hstack})
             s.close(i)
             const ch = s.take()
-            assert.ok(ch.type === handleBlock)
+            invariant(ch.type === handleBlock)
             yield* walk({goto:cc.goto,errSym:cc.errSym,
                          preCompose:cc.preCompose,
                          stack:cc.stack,hstack:[...cc.hstack,i.value.handle]})
@@ -985,7 +984,7 @@ function* copyFrameVars(si) {
             assign.push(...delList)
           }
           const lab = s.label()
-          assert.ok(i.pos === Tag.push)
+          invariant(i.pos === Tag.push)
           i.value.gotoSym = gotoSym
           i.value.catchContSym = catchContSym
           i.value.resultContSym = resultContSym
@@ -1175,7 +1174,7 @@ export function interpretJumps(si) {
             if (passCont)
               appVal.hasCont = true            
             yield s.enter(pos,Block.app,appVal)
-            assert.ok(goto)
+            invariant(goto)
             if (s.curLev())
               yield* _interpretJumps()
             else if (appVal.hasBindVal)

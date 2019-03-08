@@ -1,5 +1,4 @@
-import * as assert from "assert"
-import {produce,consume,Tag,enter,resetFieldInfo,
+import {produce,consume,Tag,enter,resetFieldInfo,invariant,
         leave,tok,symbol,symInfo,typeInfo,removeNulls,isSymbol,
        } from "./core"
 import * as T from "@babel/types"
@@ -109,19 +108,17 @@ export function* toks(pos,s,...syms) {
         js = s.slice(1)
       }
       const b = parse(js)
-      assert.equal(b.type, "File")
-      assert.equal(b.program.type, "Program")
       if (!mod === "*")
-        assert.equal(b.program.body.length, 1)
+        invariant(b.program.body.length === 1)
       switch(mod) {
       case "=":
-        assert.equal(b.program.body[0].type, "ExpressionStatement")
+        invariant(b.program.body[0].type === "ExpressionStatement")
         r = b.program.body[0].expression
         break
       case ">":
-        assert.equal(b.program.body[0].type, "ExpressionStatement")
+        invariant(b.program.body[0].type === "ExpressionStatement")
         const s = b.program.body[0].expression
-        assert.equal(s.type,"AssignmentExpression")
+        invariant(s.type === "AssignmentExpression")
         r = T.variableDeclarator(s.left,s.right)
         break
       case "*":
@@ -157,7 +154,7 @@ export function* toks(pos,s,...syms) {
             node.name = rest
             break
           case "I":
-            assert.ok(syms.length > 0)
+            invariant(syms.length > 0)
             i.value.node.name = (i.value.sym = syms.shift()).name
             break
           default:
@@ -270,7 +267,7 @@ export function* completeSubst(s) {
     for(const i of sl.sub()) {
       if (i.type === Subst) {
         if (i.enter) {
-          assert.ok(!i.leave)
+          invariant(!i.leave)
           yield* subst(i.pos)
         }
       } else
@@ -795,7 +792,7 @@ function* adjustFieldTypeImpl(s) {
               yield* subst(Tag.expression,i)
             }
           } else {
-            assert.ok(ti.stmt)
+            invariant(ti.stmt)
             yield* subst(Tag.push,i)
           }
           yield* lab()
@@ -1188,7 +1185,7 @@ export function Wrapper(cont) {
   if (cont) {
     const iter = this._inner = (leanWrap(cont)).step()
     const i = iter.value
-    assert.ok(!iter.done,"input iterator should be not-empty")
+    invariant(!iter.done)
     this.done = iter.done
     this.first = i
     this.opts = i.value && i.value.opts || _opts
@@ -1302,7 +1299,7 @@ AFp.valCtor = function(pos,type,value) {
         type = pos
     }
   }
-  assert.ok(type,"couldn't guess type")
+  invariant(type)
   if (node == null) {
     value.node = node =
       type === Tag.Array ? [] : type === Tag.Null ? null : {}
@@ -1333,7 +1330,7 @@ const vCloseTag = {$:ctrlTok,run() {},t:"close"}
 /** outputs opening tag */
 AFp.enter = function(p,t,v) {
   const [pos,type,value] = this.valCtor(p,t,v)
-  assert.ok(pos && type && value)
+  invariant(pos && type && value)
   const res = {enter:true,leave:false,pos,type,value}
   this._stack.unshift({$:storedTok,
                        tok:{enter:false,leave:true,
@@ -1447,7 +1444,7 @@ AFp.untilPos = function*(pos) {
 /** same as `findPos` but also outputs the found tag */
 AFp.toPos = function*(pos) {
   const p = yield* this.findPos(pos)
-  assert.ok(p)
+  invariant(p)
   yield p
   return p
 }
@@ -1460,7 +1457,7 @@ AFp.toPos = function*(pos) {
 AFp.peel = function(i) {
   if (i == null) 
     i = this.take()
-  assert.ok(i.enter)
+  invariant(i.enter)
   const res = this.enter(i.pos,i.type,i.value)
   this._stack.unshift(i.leave ? vCloseTag : skipTag)
   return res
@@ -1471,9 +1468,9 @@ AFp.peel = function(i) {
  * also output its peel
  */
 AFp.peelTo = function*(pos) {
-  assert.notEqual(this._stack[0],vCloseTag)
+  invariant(this._stack[0] !== vCloseTag)
   const i = yield *this.findPos(pos)
-      assert.ok(i);
+  invariant(i);
   yield this.peel(i);
   return i
 }
@@ -1531,7 +1528,7 @@ AFp.copy = function*(i) {
   if (!i.leave) {
     yield* this.sub()
     const j = this.take()
-    assert.ok(i.value === j.value)
+    invariant(i.value === j.value)
     j.type = i.type
     j.pos = i.pos
     yield j
@@ -1577,7 +1574,7 @@ export function* single(iter) {
 AFp.close = function(i) {
   if (!i.leave) {
     const j = this.take()
-    assert.ok(i.value === j.value)
+    invariant(i.value === j.value)
     return j
   }
   return null

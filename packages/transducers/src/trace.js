@@ -1,7 +1,6 @@
-import * as assert from "assert"
 import generate from "@babel/generator"
 import * as T from "@babel/types"
-import {Tag,symKind,symInfo,typeInfo,symName,resetFieldInfo} from "./core"
+import {Tag,symKind,symInfo,typeInfo,symName,resetFieldInfo,invariant} from "./core"
 
 const MAX_TRACE_CODE_LEN = 40
 const TYPE_SIZE = 20
@@ -57,30 +56,30 @@ if (BROWSER_DEBUG) {
 export function* verify(s) {
   const stack = []
   for(const i of resetFieldInfo(s)) {
-    assert.ok(i.enter != null, "`enter` isn't defined")
-    assert.ok(i.leave != null, "`leave` isn't defined")
-    assert.ok(i.pos != null, "`pos` isn't defined")
-    assert.ok(i.type != null, "`type` isn't defined")
-    assert.ok(i.value != null, "`value` isn't defined")
+    invariant(i.enter != null)
+    invariant(i.leave != null)
+    invariant(i.pos != null)
+    invariant(i.type != null)
+    invariant(i.value != null)
     const ti = typeInfo(i)
     const ctrlPos = symInfo(i.pos).kind === "ctrl"
     if (i.enter && stack.length) {
       const [f,keys] = stack[stack.length-1]
       if (f.type === Tag.Array) {
         if (!ctrlPos)
-          assert.equal(i.pos, Tag.push, "expected array's element")
+         invariant(i.pos === Tag.push)
       } else if (keys != null && !ctrlPos) {
         let k
         while((k = keys.shift()) != null) {
           if (Tag[k] === i.pos)
             break
         }
-        assert.ok(k,"field name exists")
+        invariant(k)
       }
     }
     if (i.enter && i.value.fieldInfo != null) {
       if (i.type === Tag.Array) {
-        assert.ok(i.value.fieldInfo.array,"expected array field")
+        invariant(i.value.fieldInfo.array)
       } else if (ti.kind === "node") {
       }
     }
@@ -90,15 +89,15 @@ export function* verify(s) {
     }
     if (!i.enter && i.leave) {
       const [f] = stack.pop()
-      assert.ok(f != null, "no open tag")
+      invariant(f != null)
       if (ti.kind !== "ctrl")
-        assert.equal(f.type,i.type, "mismatched `type`")
-      assert.equal(f.pos,i.pos, "mismatched `pos`")
-      assert.ok(f.value === i.value, "mismatched `value`")
+        invariant(f.type === i.type)
+      invariant(f.pos === i.pos)
+      invariant(f.value === i.value)
     }
     yield i
   }
-  assert.equal(stack.length,0,"no closing tags")
+  invariant(stack.length === 0)
 }
 
 function pad(s) {

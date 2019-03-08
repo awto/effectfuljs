@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import {Tag,enter,leave,tok,symbol} from "./core"
-import * as assert from "assert"
+import {Tag,enter,leave,tok,symbol,invariant} from "./core"
 import * as Trace from "./trace"
 import dump from "./dump"
 
@@ -46,7 +45,7 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
   const starts = pats.map((i,x) => i[0].type)
   const plen = pats.length
   const plens = pats.map(i => i.length)
-  assert.equal(plens.filter(v => v === 0).length,0)
+  invariant(plens.filter(v => v === 0).length === 0)
   const s = Kit.auto(si)
   const activePos = []
   const activeTok = []
@@ -89,9 +88,9 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
                       = {v,level,name:k.value.node.name.substr(1)}
                 yield enter(i.pos,Placeholder,ph)
                 x++
-                assert.equal(pat[x].value,k.value)
+                invariant(pat[x].value === k.value)
                 x++
-                assert.equal(pat[x].value,j.value)
+                invariant(pat[x].value === j.value)
                 x++
                 activePos[p] = x
                 continue
@@ -107,7 +106,7 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
                     = {v,level,name:name.substr(1)}
               yield enter(i.pos,Placeholder,ph)
               if (!j.leave) {
-                assert.equal(pat[x].value,j.value)
+                invariant(pat[x].value === j.value)
                 x++
               }
               activePos[p] = x
@@ -126,7 +125,7 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
           continue
         }
         if (i.enter) {
-          assert.ok(j.enter)
+          invariant(j.enter)
           if (i.leave && !j.leave) {
             if (pat[x++].value !== j.value) {
               activePos[p] = -1

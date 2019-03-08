@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import {Tag,symbol} from "./kit"
-import * as assert from "assert"
+import {Tag,symbol,invariant} from "./kit"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
 import * as Ctrl from "./control"
@@ -288,7 +287,7 @@ function forOfStmtImpl(loose, s) {
           yield s.tok(Tag.property,Tag.Identifier,{node:{name:"done"}})
           yield* flab()
           const body = s.curLev()
-          assert.equal(body.pos, Tag.body)
+          invariant(body.pos === Tag.body)
           if (body.type === Tag.BlockStatement) {
             yield s.peel()
             yield* s.peelTo(Tag.body)
@@ -403,11 +402,11 @@ export const normalizeFor = Kit.pipe(
               if (i.enter)
                 yield* sl.sub()
             } else {
-              assert.ok(i.enter)
-              assert.equal(i.pos,Tag.push)
+              invariant(i.enter)
+              invariant(i.pos === Tag.push)
               let upd = null, test = null, hasBody = false
               for(const j of sl.sub()) {
-                assert.ok(j.enter)
+                invariant(j.enter)
                 switch(j.pos) {
                 case Tag.init:
                   const ilab = sl.label()
@@ -430,8 +429,8 @@ export const normalizeFor = Kit.pipe(
                          ...sl.sub(),...sl.leave()]
                   break
                 case Tag.body:
-                  assert.ok(j.enter)
-                  assert.equal(j.type,Tag.BlockStatement)
+                  invariant(j.enter)
+                  invariant(j.type === Tag.BlockStatement)
                   hasBody = true
                   const blab = sl.label()
                   yield sl.enter(i.pos,Tag.BlockStatement,i.value)
@@ -473,10 +472,10 @@ export const normalizeFor = Kit.pipe(
                   sl.close(i)
                   break
                 default:
-                assert.fail()
+                  invariant(false)
                 }
               }
-              assert.ok(hasBody)
+              invariant(hasBody)
             }
             break
           default:

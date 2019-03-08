@@ -1,13 +1,11 @@
 import * as Kit from "./kit"
-import {Tag,produce,consume,symbol,scope} from "@effectful/transducers"
+import {Tag,produce,consume,symbol,scope,invariant} from "@effectful/transducers"
 const {enter,leave,tok} = Kit
 import * as Block from "./block"
 import * as Bind from "./bind"
 import * as Branch from "./branch"
 import * as Loop  from "./loops"
 import * as Ctrl  from "./control"
-
-import * as assert from "assert"
 
 const emptyArr = []
 const emptySet = new Set()
@@ -106,8 +104,8 @@ export const saveDecls = Kit.pipe(
             sl.peel(i)
             sl.peel()
             for(const j of sl.sub()) {
-              assert.ok(j.enter)
-              assert.equal(j.type,Tag.VariableDeclarator)
+              invariant(j.enter)
+              invariant(j.type === Tag.VariableDeclarator)
               let hasInit = false
               const asgn = []
               const id = [...sl.one()]
@@ -216,7 +214,6 @@ export function* restoreDecls(s) {
   const {ctxDeps,savedDecls:saved} = root
   if (ctxDeps && ctxDeps.size) {
     for(const [f,{copy,fld,ctx}] of ctxDeps) {
-      //  assert.ok(!fld || fld.fieldName)
       saved.set(
         copy,
         {raw:null,
@@ -1017,7 +1014,7 @@ export function handleSpecVars(si) {
       if (i.enter) {
         switch(i.type) {
         case Tag.ThisExpression:
-          assert.ok(thisSym)
+          invariant(thisSym)
           Kit.skip(s.copy(i))
           yield s.tok(i.pos, Tag.Identifier,
                       {sym:thisSym,lhs:false,rhs:true,decl:false})
@@ -1058,7 +1055,7 @@ export function handleSpecVars(si) {
           continue
         case Tag.Identifier:
           if (i.value.sym === Kit.scope.argumentsSym) {
-            assert.ok(argsSym)
+            invariant(argsSym)
             Kit.skip(s.copy(i))
             yield s.tok(i.pos, Tag.Identifier,
                         {sym:argsSym,lhs:false,rhs:true,decl:false})

@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import {Tag,symbol} from "./kit"
-import * as assert from "assert"
+import {Tag,symbol,invariant} from "./kit"
 import * as Prop from "./propagate"
 
 /** 
@@ -209,7 +208,7 @@ export const splitEffBlock = Kit.pipe(
   function* splitEffBlock(s) {
     const sl = Kit.auto(s)
     function* block(i) {
-      assert.ok(i.enter)
+      invariant(i.enter)
       const exit = sl.level-1
       const lab = sl.label()
       yield sl.peel(i)
@@ -318,7 +317,7 @@ export function saveFrameLet(si) {
           break
         case letStmt:
           if (i.value.eff) {
-            assert.ok(f)
+            invariant(f)
             f.effLet = i.value
             f = null
           }

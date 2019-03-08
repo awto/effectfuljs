@@ -1,10 +1,8 @@
 import * as Kit from "./kit"
-import {Tag,symbol,symInfo} from "./kit"
+import {Tag,symbol,symInfo,invariant} from "./kit"
 import * as Match from "@effectful/transducers/match"
 import {sync as resolve} from "resolve"
 import * as path from "path"
-
-import * as assert from "assert"
 
 /** token type for signaling config object changes */
 export const config = symbol("config")
@@ -407,7 +405,7 @@ export const directives = Kit.pipe(
           switch(j.type) {
           case Tag.ObjectProperty:
             const k = s.cur()
-            assert.equal(k.pos, Tag.key)
+            invariant(k.pos === Tag.key)
             if (k.type !== Tag.Identifier)
               throw s.error("not supported object key")
             Kit.skip(s.copy())
@@ -509,11 +507,11 @@ export function applySubAndOne(s) {
       if (i.enter) {
         switch(i.type) {
         case sub:
-          assert.ok(i.leave)
+          invariant(i.leave)
           yield* _applySubAndOne(i.value.run(s.sub()))
           continue
         case one:
-          assert.ok(i.leave)
+          invariant(i.leave)
           yield* _applySubAndOne(i.value.run(s.one()))
           continue
         }

@@ -4,8 +4,6 @@ import * as Block from "./block"
 import * as State from "./state"
 import * as Prop from "./propagate"
 
-import * as assert from "assert"
-
 const op = Block.op
 
 const opNamesMap = new Map()
@@ -99,7 +97,7 @@ function getOpName(i) {
   if (res != null)
     return res
   res = Kit.sysId(Kit.symName(i.type).match(/[A-Z]/g).join(""))
-  assert.ok(!opNamesReserved.has(res))
+  Kit.invariant(!opNamesReserved.has(res))
   opNamesMap.set(i.type,res)
   return res
 }

@@ -1,6 +1,5 @@
-import {Tag,symInfo,enter,leave,tok} from "./kit"
+import {Tag,symInfo,enter,leave,tok,invariant} from "./kit"
 import * as Kit from "./kit"
-import * as assert from "assert"
 import * as Block from "./block"
 
 /**
@@ -195,7 +194,7 @@ export function restore(root,scopes) {
     else
       m.set(value,i)
   }
-  assert.ok(start)
+  invariant(start)
   return restoreMethods(_restore(start,Tag.top))
   function* _restore(si,pos,type) {
     const s = Kit.toArray(si)
@@ -203,9 +202,9 @@ export function restore(root,scopes) {
     if (!type)
       type = first.type
     yield Kit.enter(pos,type,first.value)
-    assert.equal(s[0].pos, Tag.top)
-    assert.equal(s[s.length-1].pos, Tag.top)
-    assert.equal(s[s.length-1].value, s[0].value)
+    invariant(s[0].pos === Tag.top)
+    invariant(s[s.length-1].pos === Tag.top)
+    invariant(s[s.length-1].value === s[0].value)
     for(const i of s.slice(1,s.length-1)) {
       if (i.value.func) {
         const sub = m.get(i.value)
@@ -301,7 +300,7 @@ export function funcWraps(si) {
               let slab
               if (decl) {
                 sym = s.cur().value.sym
-                assert.ok(sym)
+                invariant(sym)
                 if (i.pos !== Tag.push) {
                   yield s.enter(i.pos,Tag.BlockStatement)
                   yield s.enter(Tag.body,Tag.Array)

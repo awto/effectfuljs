@@ -1,5 +1,4 @@
 import {VISITOR_KEYS,NODE_FIELDS,ALIAS_KEYS,BUILDER_KEYS} from "@babel/types"
-import * as assert from "assert"
 
 const SYMBOLS_IMPL = "sym"
 
@@ -117,7 +116,7 @@ export const symbolDefFor = OBJ_SYMBOLS
         sym.esType = name
       sym.sym = sym
     } else {
-      assert.equal(kind, sym.kind, `for ${name}`)
+      invariant(kind === sym.kind)
     }
     return sym
   } : NUM_SYMBOLS ? function symbolDefFor(name, kind) {
@@ -133,8 +132,8 @@ export const symbolDefFor = OBJ_SYMBOLS
       symbols[sym] = def
     } else {
       def = symInfo(sym)
-      assert.ok(def)
-      assert.equal(kind, def.kind, `for ${name}`)
+      invariant(def)
+      invariant(kind === def.kind)
     }
     return def
   } : function symbolDefFor(name, kind) {
@@ -150,8 +149,8 @@ export const symbolDefFor = OBJ_SYMBOLS
       symbols.set(sym,def)
     } else {
       def = symInfo(sym)
-      assert.ok(def)
-      assert.equal(kind, def.kind, `for ${name}`)
+      invariant(def)
+      invariant(kind === def.kind)
     }
     return def
   }
@@ -242,7 +241,7 @@ for(const i in VISITOR_KEYS) {
             fieldsMap: new Map([[Tag.push,elem]])
           }
         } else if (chain[0].type === "string") {
-          assert.ok(chain[1].oneOf)
+          invariant(chain[1].oneOf)
           enumValues = chain[1].oneOf
           atomicType = "string"
           ty = null
@@ -257,7 +256,7 @@ for(const i in VISITOR_KEYS) {
       } else if (ty.oneOfNodeTypes != null) {
         for(const k of ty.oneOfNodeTypes) {
           const p = Tag[k]
-          assert.ok(p)
+          invariant(p)
           nt.add(p)
         }
       } else if (ty.oneOf != null) {
@@ -275,7 +274,7 @@ for(const i in VISITOR_KEYS) {
             nillable = true
           } else {
             const p = Tag[k]
-            assert.ok(p,`no such type ${k}, ${Object.keys(Tag)}`)
+            invariant(p)
             nt.add(p)
           }
         }
@@ -286,7 +285,7 @@ for(const i in VISITOR_KEYS) {
     if (enumValues != null) {
       nillable = nillable || enumValues.indexOf(null) !== -1
       enumValues = enumValues.filter(i => i != null)
-      assert.equal(enumValues.filter(v => v.substr == null).length,0)
+      invariant(enumValues.filter(v => v.substr == null).length === 0)
     }
     const expr = nt.has(Tag.Expression),
           lval = nt.has(Tag.LVal) || nt.has(Tag.PatternLike) || pos === Tag.local
@@ -422,7 +421,7 @@ function isNode(node) {
 }
 
 export function enter(pos,type,value) {
-  assert.ok(pos && type && value)
+  invariant(pos && type && value)
   return {enter:true,leave:false,pos,type,value}
 }
 
@@ -531,7 +530,7 @@ export function consume(s) {
           if (ti.fields)
             Object.assign(i.value.node,ti.fields)
         }
-        assert.ok(i.value.node.type)
+        invariant(i.value.node.type)
         stack.unshift(i.value.node)
       }
     }
@@ -645,4 +644,9 @@ export function isSynthetic(node) {
 }
 
 defaultSymbol = symbolDefFor("unkn","ctrl")
+
+export function invariant(value) {
+  if (!value)
+    throw new Error("INTERNAL: invariant")
+}
 

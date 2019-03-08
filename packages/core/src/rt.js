@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
 import * as RT from "@effectful/transducers/rt"
-import * as assert from "assert"
 
 const {Tag} = Kit
 
@@ -69,7 +68,7 @@ export function collectImports(si) {
           }
         }
         const src = s.cur()
-        assert.ok(src.type === Tag.StringLiteral)
+        Kit.invariant(src.type === Tag.StringLiteral)
         reg(src.value.node.value,ns,locals)
         break
       case Tag.BlockStatement:

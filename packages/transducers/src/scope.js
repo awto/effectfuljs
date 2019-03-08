@@ -1,7 +1,6 @@
 import * as Kit from "./kit"
-import {Tag,TypeInfo as TI,symbol,enter,leave,
+import {Tag,TypeInfo as TI,symbol,enter,leave,invariant,
         tok,resetFieldInfo,symInfo} from "./core"
-import * as assert from "assert"
 import * as Trace from "./trace"
 
 let symNum = 0
@@ -143,7 +142,7 @@ function reorderVarDecl(si) {
           if (i.value.node.kind !== "var") {
             const id = [...walk(s.one())]
             if (s.curLev() != null) {
-              assert.equal(s.curLev().pos,Tag.init)
+              invariant(s.curLev().pos === Tag.init)
               yield* walk(s.one())
             }
             yield* id
@@ -339,7 +338,7 @@ export const assignSym = Kit.pipe(
           case Tag.ArrowFunctionExpression:
             if (!i.leave && s.curLev()) {
               const nextSyms = []
-              assert.ok(s.cur().pos, Tag.params)
+              invariant(s.cur().pos === Tag.params)
               const params = []
               for(const j of s.one()) {
                 if (j.enter)
@@ -365,7 +364,7 @@ export const assignSym = Kit.pipe(
           case Tag.ClassMethod:
           case Tag.ObjectMethod:
             const k = s.take()
-            assert.equal(k.pos, Tag.key)
+            invariant(k.pos === Tag.key)
             if (!k.leave) {
               _collectDecls(func,block,funcSyms,funcVars,blockSyms,loop)
               s.close(k)
@@ -385,7 +384,7 @@ export const assignSym = Kit.pipe(
                    ? func.sloppy ? funcSyms : blockSyms
                    : nextSyms,
                    fd)
-                assert.ok(j.value.sym)
+                invariant(j.value.sym)
                 Kit.skip(s.one())
                 Kit.skip(s.leave())
                 funcId = j.value.sym
@@ -397,7 +396,7 @@ export const assignSym = Kit.pipe(
                 Kit.skip(s.leave())
                 j = s.peel()
               }
-              assert.ok(j.pos === Tag.body || j.pos === Tag.program)
+              invariant(j.pos === Tag.body || j.pos === Tag.program)
               let sloppy = func && func.sloppy
               const st = j.value.node.sourceType
               if (st === "script")
@@ -788,7 +787,7 @@ export const resolve = Kit.pipe(
 
 /** emits `void 0` at `pos` */
 export function* emitUndefined(pos) {
-  assert.ok(pos)
+  invariant(pos)
   const value = {node:{operator:"void",prefix:true}}
   yield enter(pos,Tag.UnaryExpression,value)
   yield tok(Tag.argument,Tag.NumericLiteral,{node:{value:"0"}})

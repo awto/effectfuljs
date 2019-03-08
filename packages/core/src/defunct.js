@@ -1,9 +1,8 @@
 import * as Kit from "./kit"
-import {Tag} from "./kit"
+import {Tag,invariant} from "./kit"
 import * as Block from "./block"
 import * as Bind from "./bind"
 import * as Ctrl from "./control"
-import * as assert from "assert"
 import * as Except from "./exceptions"
 
 const reentryCont = 3
@@ -208,7 +207,7 @@ export function inlineExceptions(si) {
   const implFrame = root.implFrame.value
   const {discrimSym} = implFrame
   const stateSym = contSym || discrimSym
-  assert.ok((contSym || discrimSym) && commonPatSym)
+  invariant((contSym || discrimSym) && commonPatSym)
   const errFrame = root.errFrameRedir
   return walk()
   function* walk() {
@@ -272,7 +271,7 @@ export function* frames(si) {
   const root = s.first.value
   const {contextSym,contSym,errFrameRedir} = root
   const inlineJumps = s.opts.inlinePureJumps === "tail"
-  assert.ok(contextSym)
+  invariant(contextSym)
   const impl = root.implFrame.value
   const decls = impl.savedDecls
   const reuseTemps = s.opts.reuseTempVars !== false
@@ -329,8 +328,8 @@ export function* frames(si) {
       if (i.value.savedDecls) {
         let poolPos = 0
         for(const [sym,{raw,init}] of i.value.savedDecls) {
-          assert.ok(!raw)
-          assert.ok(!init)
+          invariant(!raw)
+          invariant(!init)
           if (varsPool && poolPos != null && varsPool.length > poolPos) {
             sym.substSym = varsPool[poolPos++]
           } else {

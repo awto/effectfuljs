@@ -1,9 +1,8 @@
 import * as Kit from "./kit"
-import {Tag} from "./kit"
+import {Tag,invariant} from "./kit"
 import * as Block from "./block"
 import * as Bind from "./bind"
 import * as Ctrl from "./control"
-import * as assert from "assert"
 import * as Except from "./exceptions"
 import * as Branch from "./branch"
 import * as Loop from "./loops"
@@ -1120,9 +1119,9 @@ export function invertForOf(si) {
             yield* s.one()
             const call = s.take()
             yield call
-            assert.ok(call.type === Tag.CallExpression)
+            invariant(call.type === Tag.CallExpression)
             const iterSym = s.take()
-            assert.ok(iterSym.value.sym === Loop.iteratorId)
+            invariant(iterSym.value.sym === Loop.iteratorId)
             iterSym.value.sym = Block.delegateSym
             yield* s.copy(iterSym)
             yield s.peel()

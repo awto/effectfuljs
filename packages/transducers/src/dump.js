@@ -4,7 +4,6 @@ import * as Trace from "./trace"
 import {Tag,produce,symName,consume,symInfo,
         resetFieldInfo,typeInfo,removeNulls} from "./core"
 import generate from "@babel/generator"
-import * as assert from "assert"
 import * as T from "@babel/types"
 
 const BROWSER_DEBUG = Trace.BROWSER_DEBUG

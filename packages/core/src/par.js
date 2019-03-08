@@ -3,10 +3,9 @@
  * detecting and injecting Applicative functor based combinators
  */
 import * as Kit from "./kit"
-import {Tag} from "./kit"
+import {Tag,invariant} from "./kit"
 import * as Block from "./block"
 import * as Bind from "./bind"
-import * as assert from "assert"
 import * as Ctrl from "./control"
 import * as State from "./state"
 
@@ -665,7 +664,7 @@ function deriveBlocks(graph, s, root) {
     }
     const tup = []
     for(const j of i.left) {
-      assert.ok(j.expr)
+      invariant(j.expr)
       tup.push(j.expr)
       ++j.expr.rc
     }
@@ -705,7 +704,7 @@ function deriveBlocks(graph, s, root) {
   }
   /** sets destination for fork expression */
   function* emitFork(tup,joinFrame,tmpVar,parThread) {
-    assert.ok(joinFrame)
+    invariant(joinFrame)
     const res = s.enter(Tag.push,Block.letStmt,{
       eff:true,reflected:tmpVar != null,
       goto:joinFrame,ref:head,tmpVar,parDefs:defs,parThread})
@@ -912,7 +911,7 @@ function emitForkApp(si) {
           if (i.value.sym === joinId) {
             const vars = []
             for(const {tmpVar:j} of i.value.tup) {
-              assert.ok(j)
+              invariant(j)
               if (j.emptyThread)
                 root.hasEmptyThreads = true
               else
@@ -1385,12 +1384,12 @@ function unfoldLinks(chain) {
       for(const j of i.value) {
         for(const k of j.exits) {
           if (!avail.has(k.frame)) {
-            assert.ok(join == null || join === k.frame)
+            invariant(join == null || join === k.frame)
             join = k.frame
           }
         }
       }
-      assert.ok(!i.value.loopExit || i.value.loopExit.frame === join)
+      invariant(!i.value.loopExit || i.value.loopExit.frame === join)
       for(const j of i.value) {
         for(const k of j.frame.exits) {
           const {goto} = k
@@ -1410,7 +1409,7 @@ function unfoldLinks(chain) {
                 if (!dest) {
                   indirDest.set(dyn.declSym, cont)
                 } else {
-                  assert.ok(dest === cont)
+                  invariant(dest === cont)
                 }
               }
             }
@@ -2038,10 +2037,10 @@ function contextThreading(si) {
   }
   /** reference to a variable stored in TLS of `varFork` in `ctxFork` */
   function* _tlsRef(pos, varFork, ctxFork, name) {
-    assert.ok(name)
-    assert.ok(varFork.loopLevel >= 0)
+    invariant(name)
+    invariant(varFork.loopLevel >= 0)
     const loops = ctxFork.loopLevel - varFork.loopLevel
-    assert.ok(loops >= 0)
+    invariant(loops >= 0)
     const lab = s.label()
     yield s.enter(pos, Tag.MemberExpression)
     for(let i = 0; i < loops; ++i)
@@ -2128,12 +2127,12 @@ function contextThreading(si) {
         if (i.locMask)
           yield* _prop(i.locMask.fieldName,Tag.NumericLiteral,{node:{value:0}})
         yield s.enter(Tag.push,Tag.ObjectProperty)
-        assert.ok(i.copy.fieldName)
+        invariant(i.copy.fieldName)
         yield s.tok(Tag.key,Tag.Identifier,{node:{name:i.copy.fieldName}})
         if (copy && info.mask) {
           yield s.enter(Tag.value,Tag.MemberExpression)
           yield s.tok(Tag.object,Tag.Identifier,{sym:tlsSym})
-          assert.ok(i.copy.fieldName)
+          invariant(i.copy.fieldName)
           yield s.tok(Tag.property,Tag.Identifier,
                       {node:{name:i.copy.fieldName}})
           yield* s.leave()
@@ -2236,7 +2235,7 @@ function contextThreading(si) {
     }
   }
   function* _prop(name, type, value) {
-    assert.ok(name)
+    invariant(name)
     yield s.enter(Tag.push, Tag.ObjectProperty)
     yield s.tok(Tag.key, Tag.Identifier, {node:{name}})
     yield s.tok(Tag.value, type, value)

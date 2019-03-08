@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import * as assert from "assert"
-import {Tag} from "./kit"
+import {Tag,invariant} from "./kit"
 import {recalcEff} from "./propagate"
 import * as Block from "./block"
 
@@ -18,7 +17,7 @@ export function* inject(s) {
         case Tag.TryStatement:
           if (i.enter) {
             const body = sl.cur()
-            assert.equal(body.pos,Tag.block)
+            invariant(body.pos === Tag.block)
             const buf = [...walk(sl.one())]
             let handle = null
             let handlePat = null
@@ -26,13 +25,13 @@ export function* inject(s) {
             let j = sl.curLev()
             if (j != null && j.pos === Tag.handler) {
               const k = sl.peel()
-              assert.equal(k.type,Tag.CatchClause)
+              invariant(k.type === Tag.CatchClause)
               if (sl.curLev().pos === Tag.param) {
                 handlePat = [...sl.one()]
                 handlePat[0].pos = handlePat[handlePat.length-1].pos = Tag.push
               }
               handle = [...walk(sl.one())]
-              assert.equal(handle[0].pos,Tag.body)
+              invariant(handle[0].pos === Tag.body)
               Kit.skip(sl.leave())
               j = sl.curLev()
             }

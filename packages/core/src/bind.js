@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import {Tag,symbol,tok} from "./kit"
-import * as assert from "assert"
+import {Tag,symbol,tok,invariant} from "./kit"
 import * as Block from "./block"
 import * as Ctrl from "./control"
 import * as Prop from "./propagate"
@@ -16,7 +15,7 @@ export function interpretPureLet(si) {
         const lab = s.label()
         let pos = i.pos
         if (i.value.sym && i.value.sym.bound) {
-          assert.equal(i.pos,Tag.push)
+          invariant(i.pos === Tag.push)
           yield s.enter(Tag.push,Tag.ExpressionStatement)
           yield s.enter(Tag.expression,Tag.AssignmentExpression,
                         {node:{operator:"="}})

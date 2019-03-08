@@ -1,7 +1,6 @@
 import * as Kit from "./kit"
 import * as Scope from "./scope"
 import {produce,Tag,TypeInfo as TI,symbol,tok,resetFieldInfo} from "./core"
-import * as assert from "assert"
 
 /** 
  * injects ES6 `import` or commonjs `require` 

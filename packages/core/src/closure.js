@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import {Tag} from "./kit"
-import * as assert from "assert"
+import {Tag,invariant} from "./kit"
 import * as State from "./state"
 import * as Block from "./block"
 import * as Loop from "./loops"
@@ -109,14 +108,14 @@ export function substContextIds(si) {
     }
   }
   function* id(pos,sym) {
-    assert.ok(sym.fieldName)
+    invariant(sym.fieldName)
     yield s.enter(pos,Tag.MemberExpression,{origSym:sym})
     if (ctxDeps && sym.declScope !== root) {
       const info = ctxDeps.get(sym.declScope)
-      assert.ok(info)
+      invariant(info)
       const {copy} = info
       if (copy.interpr === Bind.ctxField) {
-        assert.ok(copy.fieldName)
+        invariant(copy.fieldName)
         yield s.enter(Tag.object,Tag.MemberExpression,{origSym:copy})
         yield* emitSubField(copy.subField || closSubField)
         yield s.tok(Tag.property,Tag.Identifier,

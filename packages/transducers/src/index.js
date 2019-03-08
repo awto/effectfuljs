@@ -2,12 +2,12 @@ import {
   symInfo,isSymbol,typeInfo,symName,newSymbol,
   symbol,enter,leave,tok,produce,toArray,Tag,
   reproduce,consume,reproduceNodes,resetFieldInfo,
-  removeNulls,isSynthetic} from "./core"
+  removeNulls,isSynthetic,invariant} from "./core"
 
 export {symInfo,isSymbol,typeInfo,symName,newSymbol,
         symbol,enter,leave,tok,produce,toArray,Tag,
         reproduce,consume,reproduceNodes,resetFieldInfo,
-        removeNulls,isSynthetic}
+        removeNulls,isSynthetic,invariant}
 
 import * as kit from "./kit"
 export { kit }

@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import * as assert from "assert"
-import {Tag,symbol,symInfo} from "./kit"
+import {Tag,symbol,symInfo,invariant} from "./kit"
 import * as Block from "./block"
 import * as Bind from "./bind"
 import * as Prop from "./propagate"
@@ -149,7 +148,7 @@ export function normilizeSwitch(si) {
                 yield* Kit.repos(walk(),Tag.body)
               } else {
                 const conseq = s.take()
-                assert.equal(conseq.pos,Tag.consequent)
+                invariant(conseq.pos === Tag.consequent)
                 yield* walk()
                 s.close(conseq)
               }

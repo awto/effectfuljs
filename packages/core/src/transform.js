@@ -1,4 +1,3 @@
-import * as assert from "assert"
 import * as Kit from "./kit"
 import {Tag,consume,varScope} from "./kit"
 import * as Loops from "./loops"

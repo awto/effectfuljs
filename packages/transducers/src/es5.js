@@ -5,7 +5,6 @@
  */
 import * as Kit from "./kit"
 import {Tag,symInfo,symbol} from "./core"
-import * as assert from "assert"
 import * as Trace from "./trace"
 import * as Scope from "./scope"
 

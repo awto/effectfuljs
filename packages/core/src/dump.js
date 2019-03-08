@@ -3,7 +3,6 @@ import {Tag,produce,consume,symName} from "./kit"
 import * as Trace from "./kit/trace"
 import * as fs from "fs"
 import generate from "@babel/generator"
-import * as assert from "assert"
 
 const isNode = typeof window === "undefined"
 
@@ -113,7 +112,7 @@ export function toStr(s) {
 }
 
 export function copyComment(f,t) {
-  assert.ok(t.enter)
+  Kit.invariant(t.enter)
   if (f.value.comments != null) {
     if (t.value.comments == null)
       t.value.comments = []

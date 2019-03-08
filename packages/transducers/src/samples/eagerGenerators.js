@@ -1,7 +1,6 @@
 import {produce,consume,Tag,symbol} from "../core"
 import * as Kit from "../kit"
 import * as T from "@babel/types"
-import * as assert from "assert"
 import * as Trace from "../trace"
 
 const SpecVars = symbol("SpecVars","ctrl")
@@ -12,7 +11,6 @@ const specNames = {
 
 export default Kit.pipe(
   Kit.wrap("eager-generators-transform",function* transform(s) {
-//    s = Kit.auto(s)
     function* make(i) {
       i.value.node.generator = false
       const lab = s.label()

@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
 import {Tag} from "./kit"
-import * as assert from "assert"
 
 export function propagateEff(s) {
   const sa = Kit.toArray(s)

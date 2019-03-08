@@ -1,7 +1,6 @@
 import {Tag} from "../core"
 import * as Kit from "../kit"
 import * as Trace from "../trace"
-import * as assert from "assert"
 
 export default Kit.pipe(
   Kit.wrap("instrumentation",function (s) {

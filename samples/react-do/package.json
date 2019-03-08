@@ -30,5 +30,6 @@
   },
   "peerDependencies": {
     "@effectful/core": "^1.0.4"
-  }
+  },
+  "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }

@@ -22,10 +22,10 @@ export {toArray,result,tillLevel,till,clone,withOpts,
        }
 
 import {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
-        typeInfo,resetFieldInfo}
+        typeInfo,resetFieldInfo,invariant}
         from "@effectful/transducers"
 export {Tag,symbol,symName,symKind,symInfo,dump,trace,scope,
-        typeInfo,resetFieldInfo}
+        typeInfo,resetFieldInfo,invariant}
 import {packId,auto,autoBlock,autoBlockPass,rmEmpty,removeNulls,
         enter,leave,tok,repeat,complete,Any,completeAny,finalize,
         strip,swap,swapTok,produce,consume,tagValue,idTok,applyIgnoreResult,

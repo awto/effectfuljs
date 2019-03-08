@@ -1,9 +1,8 @@
-import {Tag,produce as esproduce,symbol,toArray,isSymbol,
+import {Tag,produce as esproduce,symbol,toArray,isSymbol,invariant,
         symName,symInfo,consume as esconsume,
         scope} from "@effectful/transducers"
 import {pipe,curry,Wrapper,getOpts} from "@effectful/transducers/kit"
 import * as T from "@babel/types"
-import * as assert from "assert"
 
 let curId = 0
 
@@ -111,7 +110,7 @@ export function tok(pos,type,value) {
 
 export function enter() {
   let [pos,type,value] = guessType.apply(null, arguments)
-  assert.ok(pos && type && value)
+  invariant(pos && type && value)
   value = tagValue(pos,type,value)
   return {enter:true,leave:false,type,pos,value}
 }
@@ -220,7 +219,7 @@ export function* completeSubst(s) {
     for(const i of sl.sub()) {
       if (i.type === Subst) {
         if (i.enter) {
-          assert.ok(!i.leave)
+          invariant(!i.leave)
           yield* subst(i.pos)
         }
       } else
@@ -385,7 +384,7 @@ export function* until(pred,s) {
 
 export function* nextLevel(s) {
   const i = s.take()
-  assert.ok(i.enter)
+  invariant(i.enter)
   yield i
   if (!i.leave) {
     yield* tillLevel(i.level,s)
@@ -602,4 +601,3 @@ export function auto(i) {
     return i
   return new CtorWrap(i)
 }
-

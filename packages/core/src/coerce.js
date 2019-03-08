@@ -1,6 +1,5 @@
 import * as Kit from "./kit"
-import * as assert from "assert"
-import {Tag,symbol} from "./kit"
+import {Tag,symbol,invariant} from "./kit"
 import * as Block from "./block"
 import * as Branch from "./branch"
 import * as Ctrl from "./control"
@@ -59,7 +58,7 @@ export function lift(s) {
             } else {
               yield sl.peel()
               const k = sl.peel()
-              assert.equal(k.type,Tag.BlockStatement)
+              invariant(k.type === Tag.BlockStatement)
               k.value.eff = true
               yield k
               yield* walk()
@@ -80,7 +79,7 @@ export function lift(s) {
               case Tag.block:
               case Tag.finalizer:
               case Tag.body:
-                assert.equal(j.type,Tag.BlockStatement)
+                invariant(j.type === Tag.BlockStatement)
                 j.value.eff = true
                 yield* walk()
               }
