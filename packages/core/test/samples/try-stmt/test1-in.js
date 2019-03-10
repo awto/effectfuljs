@@ -4,8 +4,8 @@ function a01() {
     console.log("inner");
     eff("inner");
   } catch (e) {
-    console.log("exception", e)
-    eff("exception",e);
+    console.log("exception", e);
+    eff("exception", e);
   }
   console.log("out");
   eff("out");
@@ -17,45 +17,45 @@ function a02() {
     eff("inner");
     console.log("inner");
   } catch (e) {
-    eff("exception",e);
-    console.log("exception", e)
+    eff("exception", e);
+    console.log("exception", e);
   }
   eff("out");
   console.log("out");
 }
 
 function a03() {
-  let i, j, ex
-  console.log("in",i++, j+=2);
-  eff(i++,j)
+  let i, j, ex;
+  console.log("in", i++, (j += 2));
+  eff(i++, j);
   try {
-    eff("inner",i++,j);
+    eff("inner", i++, j);
     console.log("inner");
   } catch (e) {
-    ex  = e;
-    eff("exception",e,j++);
-    console.log("exception", e)
+    ex = e;
+    eff("exception", e, j++);
+    console.log("exception", e);
   }
-  eff("out",ex,i);
+  eff("out", ex, i);
   console.log("out");
 }
 
-
 function a04() {
-  var i = 0, j;
-  eff(1,i++,j = 0);
-  eff(2,i++,j = j + 1);
+  var i = 0,
+    j;
+  eff(1, i++, (j = 0));
+  eff(2, i++, (j = j + 1));
   l1: {
-    eff(3,i,j)
+    eff(3, i, j);
     try {
       eff(4);
       l2: {
         try {
-          eff(5,i);
+          eff(5, i);
           if (something) {
             break l2;
           } else if (something2) {
-            break l1
+            break l1;
           } else if (something3) {
             return;
           } else if (something4) {
@@ -66,15 +66,13 @@ function a04() {
           eff(7);
           try {
             try {
-              if (something5)
-                eff(8,j)
-              else
-                break l1;
+              if (something5) eff(8, j);
+              else break l1;
             } finally {
               console.log("i");
             }
           } finally {
-            eff(9,j = j + 1);
+            eff(9, (j = j + 1));
             eff(10);
             console.log(j);
           }
@@ -84,15 +82,13 @@ function a04() {
       }
       eff(12);
     } finally {
-      eff(13,i = i + 1);
+      eff(13, (i = i + 1));
       eff(14);
     }
-    eff(15,i)
+    eff(15, i);
   }
-  eff(16); 
+  eff(16);
 }
-
-
 
 function a05() {
   eff(1);
@@ -106,7 +102,6 @@ function a05() {
   eff(6);
 }
 
-
 function a06() {
   eff(1);
   try {
@@ -119,14 +114,12 @@ function a06() {
   console.log(6);
 }
 
-
 function a07() {
   eff(1);
   loo: {
     try {
       eff(2);
-      if (eff(3))
-        break loo;
+      if (eff(3)) break loo;
       eff(4);
     } finally {
       eff(5);
@@ -142,8 +135,7 @@ function a08() {
   loo: {
     try {
       eff(2);
-      if (eff(3))
-        break loo;
+      if (eff(3)) break loo;
       eff(4);
     } finally {
       eff(5);
@@ -151,11 +143,9 @@ function a08() {
     }
     eff(7);
   }
-  if (a)
-    return 10;
+  if (a) return 10;
   console.log(8);
 }
-
 
 function a09() {
   eff(1);
@@ -163,18 +153,16 @@ function a09() {
     try {
       eff(2);
       const a = eff(3);
-      if (a === 1)
-        break loo;
-      if (a === 2)  {
+      if (a === 1) break loo;
+      if (a === 2) {
         eff(4);
         return 10;
       }
       try {
         eff(5);
         const a = eff(6);
-        if (a === 1)
-          break loo;
-        if (a === 2)  {
+        if (a === 1) break loo;
+        if (a === 2) {
           return 10;
         }
         eff(7);
@@ -192,15 +180,13 @@ function a09() {
   return eff(14);
 }
 
-
 function a10() {
   try {
     eff(2);
     try {
       eff(5);
       const a = eff(6);
-      if (a)
-        return eff(3);
+      if (a) return eff(3);
     } finally {
       eff(8);
       eff(9);
@@ -229,8 +215,7 @@ function a11() {
 function a12() {
   try {
     try {
-      if(eff(1))
-        return 10;
+      if (eff(1)) return 10;
     } finally {
       eff(2);
     }
@@ -245,8 +230,7 @@ function a13() {
   loo: {
     try {
       try {
-        if (eff(1))
-          break loo;
+        if (eff(1)) break loo;
       } finally {
         eff(2);
         eff("2");
@@ -261,20 +245,15 @@ function a13() {
 
 function a14() {
   try {
-    for(;;) {
+    for (;;) {
       try {
         const a = eff(1);
-        if (a === 1)
-          break;
-        else if (a === 2)
-          continue;
-        else if (a === 3)
-          return 1;
-        else if (a === 4)
-          return;
-        else if (a === 5)
-          return eff("REZ");
-        eff(2)
+        if (a === 1) break;
+        else if (a === 2) continue;
+        else if (a === 3) return 1;
+        else if (a === 4) return;
+        else if (a === 5) return eff("REZ");
+        eff(2);
       } finally {
         eff(3);
         eff(4);
@@ -289,77 +268,68 @@ function a14() {
 }
 
 function a15() {
-  for(;;) {
+  for (;;) {
     console.log("a");
-    for(;;) {
+    for (;;) {
       const a = eff(1);
-      if (a === 1)
-        break;
+      if (a === 1) break;
       eff(2);
     }
-    if (a)
-      break
+    if (a) break;
   }
   eff(8);
 }
 
 function a15a() {
-  if (a === 1)
-    return;
+  if (a === 1) return;
   eff(2);
 }
 
 function a16() {
   eff(0);
-  for(;;) {
+  for (;;) {
     console.log("a");
-    for(;;) {
+    for (;;) {
       const a = eff(1);
-      if (a === 1)
-        break;
+      if (a === 1) break;
       eff(2);
     }
-    if (a)
-      break
+    if (a) break;
   }
   eff(8);
 }
 
 function a17() {
-  for(;;) {
-    for(;;) {
+  for (;;) {
+    for (;;) {
       const a = eff(1);
-      if (a === 1)
-        break;
+      if (a === 1) break;
       eff(2);
     }
-    if (b)
-      break
+    if (b) break;
   }
   eff(8);
 }
 
 function a18() {
-  for(;;) {
-    for(;;) {
+  for (;;) {
+    for (;;) {
       try {
         const a = eff(1);
-        if (a === 1)
-          break;
+        if (a === 1) break;
         eff(2);
       } finally {
-        effF(3)
-        effF(4)
+        effF(3);
+        effF(4);
       }
     }
-    if (b)
-      break
+    if (b) break;
   }
   eff(8);
 }
 
 function a19() {
-  for(;;) {
+  for (;;) {
     eff(1);
     try {
       eff(2);
@@ -370,7 +340,7 @@ function a19() {
 }
 
 function a20() {
-  for(;;) {
+  for (;;) {
     try {
       eff(2);
     } finally {
@@ -380,18 +350,15 @@ function a20() {
 }
 
 function a21() {
-  for(;;) {
+  for (;;) {
     try {
       eff(2);
     } finally {
       try {
-        if (a1)
-          continue
-        if (a2)
-          break
-        if (a3)
-          return
-        effF(3)
+        if (a1) continue;
+        if (a2) break;
+        if (a3) return;
+        effF(3);
       } finally {
         effFF(4);
       }
@@ -400,7 +367,7 @@ function a21() {
 }
 
 function a22() {
-  for(;;) {
+  for (;;) {
     try {
       eff(2);
     } finally {
@@ -411,10 +378,9 @@ function a22() {
 
 function a23() {
   try {
-    for(;;) {
+    for (;;) {
       try {
-        if (a1)
-          break;
+        if (a1) break;
         eff(2);
       } finally {
         effFF(4);
@@ -426,14 +392,11 @@ function a23() {
   eff(6);
 }
 
-
-
 function a24() {
   try {
-    for(;;) {
+    for (;;) {
       try {
-        if (a1)
-          break;
+        if (a1) break;
         eff(2);
       } finally {
         effFF(4);
@@ -445,14 +408,13 @@ function a24() {
 }
 
 function a25() {
-  for(;;) {
+  for (;;) {
     try {
-      if (a1)
-        break;
+      if (a1) break;
       eff(2);
     } finally {
       try {
-        break
+        break;
       } finally {
         effFF(4);
       }
@@ -461,14 +423,13 @@ function a25() {
 }
 
 function a26() {
-  for(;;) {
+  for (;;) {
     try {
-      if (a1)
-        break;
+      if (a1) break;
       eff(2);
     } finally {
       try {
-        break
+        break;
       } finally {
         effFF(4);
       }
@@ -477,14 +438,13 @@ function a26() {
 }
 
 function a27() {
-  for(;;) {
+  for (;;) {
     try {
-      if (a1)
-        break;
+      if (a1) break;
       eff(2);
     } finally {
       try {
-        break
+        break;
       } finally {
         effFF(4);
       }
@@ -493,34 +453,30 @@ function a27() {
   eff(5);
 }
 
-
 function a28() {
   l1: {
     try {
       l2: {
         try {
-          if (a1)
-            break l1;
+          if (a1) break l1;
           eff(2);
         } finally {
-          eff(3)
+          eff(3);
           try {
-            if (a2)
-              break l2;
+            if (a2) break l2;
             eff(4);
           } finally {
             eff(5);
           }
         }
       }
-      eff(6)
+      eff(6);
     } finally {
-      eff(7)
+      eff(7);
     }
   }
   eff(8);
 }
-
 
 function a29() {
   l1: {
@@ -530,7 +486,7 @@ function a29() {
           break l1;
           eff(2);
         } finally {
-          eff(3)
+          eff(3);
           try {
             break l2;
             eff(4);
@@ -539,66 +495,63 @@ function a29() {
           }
         }
       }
-      eff(6)
+      eff(6);
     } finally {
-      eff(7)
+      eff(7);
     }
   }
   eff(8);
 }
 
-function a30(a1,a2) {
+function a30(a1, a2) {
   l1: {
     try {
       l2: {
         try {
-          if (a1)
-            break l1;
+          if (a1) break l1;
           eff(2);
         } finally {
-          eff(3)
+          eff(3);
           try {
-            if (a2)
-              break l2;
+            if (a2) break l2;
             eff(4);
           } finally {
             eff(5);
           }
         }
       }
-      eff(6)
+      eff(6);
     } finally {
-      eff(7)
+      eff(7);
     }
   }
   eff(8);
 }
-
 
 function a31() {
   try {
     console.log("hi");
     eff(1);
     eff(2);
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     eff(3);
   }
   eff(4);
 }
 
-function a32(a1,a2) {
+function a32(a1, a2) {
   try {
     try {
-      console.log("hi",a1);
+      console.log("hi", a1);
       eff(1);
       eff(2);
-    } catch(e) {
+    } catch (e) {
       console.log(e);
       eff(3);
     }
-  } catch(ee) {
-    eff(4)
+  } catch (ee) {
+    eff(4);
   }
   eff(5);
 }
@@ -608,12 +561,12 @@ function a33() {
     console.log("hi");
     eff(1);
     eff(2);
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     eff(3);
   } finally {
-    eff(4)
-  } 
+    eff(4);
+  }
   eff(5);
 }
 
@@ -626,11 +579,11 @@ function a34() {
       eff(2);
     }
     eff(3);
-  } catch(e) {
+  } catch (e) {
     eff(e);
   } finally {
-    eff(4)
-  } 
+    eff(4);
+  }
   eff(5);
 }
 
@@ -643,37 +596,33 @@ function a35() {
       eff("try>try>finally");
     }
     eff("try>body");
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     eff("try>catch");
-  } 
+  }
   eff("last");
 }
 
 function a36(a1) {
   try {
-    if (a1)
-      return;
+    if (a1) return;
     eff("body");
   } finally {
     eff("finally");
   }
 }
 
-
-function a37(a1,a2) {
+function a37(a1, a2) {
   l1: {
     try {
       l2: {
         try {
-          if (a1)
-            break l1;
+          if (a1) break l1;
           eff("l1>try-body>l2>try-body");
         } finally {
           eff("l1>try-body>l2>try-finally");
           try {
-            if (a2)
-              break l2;
+            if (a2) break l2;
             eff("l1>try-body>l2>try-finally>try-body");
           } finally {
             eff("l1>try-body>l2>try-finally>try-finally");
@@ -689,63 +638,58 @@ function a37(a1,a2) {
 }
 
 function a38(a1) {
-  var i = 0, j = 0
-  eff("pref",i,j);
+  var i = 0,
+    j = 0;
+  eff("pref", i, j);
   try {
-    i+=1, j += 2;
-    if (i > 10)
-      return 10;
-    eff("body",i,j);
+    (i += 1), (j += 2);
+    if (i > 10) return 10;
+    eff("body", i, j);
   } finally {
-    eff("finally",i);
+    eff("finally", i);
   }
 }
 
 function a39(a1) {
-  var i = 0, j = 0
-  eff("pref",i,j);
+  var i = 0,
+    j = 0;
+  eff("pref", i, j);
   try {
-    i+=1, j += 2;
-    if (i > 10)
-      return 10;
-    eff("body",i,j);
+    (i += 1), (j += 2);
+    if (i > 10) return 10;
+    eff("body", i, j);
   } finally {
-    eff("finally",i);
+    eff("finally", i);
   }
-  eff("exit",j);
+  eff("exit", j);
 }
 
-
-
 function a40(a1) {
-  var i = 0, j = 0
-  eff("pref",i,j);
+  var i = 0,
+    j = 0;
+  eff("pref", i, j);
   try {
     l1: {
       eff("l1", i, j++);
       try {
-        i+=1;
-        if (i > 10)
-          return 10;
-        if (j > 10)
-          break l1;
-        eff("l1 > body",i,j);
+        i += 1;
+        if (i > 10) return 10;
+        if (j > 10) break l1;
+        eff("l1 > body", i, j);
       } finally {
-        eff("l1 > finally",i);
+        eff("l1 > finally", i);
       }
-      eff("l1 > exit", j)
+      eff("l1 > exit", j);
     }
   } finally {
-    eff("body > finally",i)
+    eff("body > finally", i);
   }
-  eff("exit",j);
+  eff("exit", j);
 }
 
 function a41(a1) {
-  if (a1 === 1)
-    return 10;
-  else if (a1 === 2)
-    return eff(11);
+  if (a1 === 1) return 10;
+  else if (a1 === 2) return eff(11);
   else if (a1 === 3) {
     eff(12);
     return;
@@ -755,41 +699,37 @@ function a41(a1) {
 
 function a42(a1) {
   try {
-    if (a1 === 1)
-      return 10;
-    else if (a1 === 2)
-      return eff(11);
+    if (a1 === 1) return 10;
+    else if (a1 === 2) return eff(11);
     else if (a1 === 3) {
       eff(12);
       return;
     }
   } finally {
-    eff("finally")
+    eff("finally");
   }
   eff("exit");
 }
 
-
 function a43(a1) {
-  var i = 0, j = 0
-  eff("pref",i,j);
+  var i = 0,
+    j = 0;
+  eff("pref", i, j);
   try {
     l1: {
       eff("l1", i, j++);
       try {
-        i+=1;
-        if (i > 10)
-          return 10;
-        if (j > 10)
-          break l1;
-        eff("l1 > body",i,j);
+        i += 1;
+        if (i > 10) return 10;
+        if (j > 10) break l1;
+        eff("l1 > body", i, j);
       } finally {
-        eff("l1 > finally",i);
+        eff("l1 > finally", i);
       }
-      eff("l1 > exit", j)
+      eff("l1 > exit", j);
     }
   } finally {
-    eff("body > finally",i)
+    eff("body > finally", i);
   }
-  eff("exit",j);
+  eff("exit", j);
 }

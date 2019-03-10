@@ -1,17 +1,22 @@
-import {produce,consume,Tag} from ".."
-import {parse} from "@babel/parser"
-import generate from "@babel/generator"
-import * as Kit from "../kit"
-import eagerGenerators from "../samples/eagerGenerators"
-import joinMemExprs from "../samples/joinMemExprs"
-import looseForOf from "../samples/looseForOf"
-import instrumentation from "../samples/instrumentation"
-import closConv from "../samples/closConvPass"
-import * as RT from "../rt"
-import * as Trace from "../trace"
+import { produce, consume, Tag } from "..";
+import { parse } from "@babel/parser";
+import generate from "@babel/generator";
+import * as Kit from "../kit";
+import eagerGenerators from "../samples/eagerGenerators";
+import joinMemExprs from "../samples/joinMemExprs";
+import looseForOf from "../samples/looseForOf";
+import instrumentation from "../samples/instrumentation";
+import closConv from "../samples/closConvPass";
+import * as RT from "../rt";
+import * as Trace from "../trace";
 
-const gen = ast => generate(ast,{retainLines:false,concise:true},"").code
-const pretty = Kit.pipe(v => v.toString(),parse,gen)
+const gen = ast =>
+  generate(ast, { retainLines: false, concise: true }, "").code;
+const pretty = Kit.pipe(
+  v => v.toString(),
+  parse,
+  gen
+);
 
 describe("join member expression", function() {
   const run = Kit.pipe(
@@ -21,9 +26,11 @@ describe("join member expression", function() {
     joinMemExprs,
     consume,
     v => v.top,
-    gen)
+    gen
+  );
   it("sample1", function() {
-    expect(run(`function a() {
+    expect(
+      run(`function a() {
       const a = create(), b = create(), /*@PACK*/d = create(), e = cr()
       d.a = 10
       console.log(a.a,a.c,b.a,e.c,d.c)
@@ -32,7 +39,9 @@ describe("join member expression", function() {
         let d = create(e)
         console.log(a.a,a.c,b.a,d)
       }
-    }`)).to.equal(pretty(`function a() {
+    }`)
+    ).to.equal(
+      pretty(`function a() {
       const a = create(), b = create(), /*@PACK*/ d = create(), e = cr();
       let a$a = a && a.a;
       let a$c = a && a.c;
@@ -46,9 +55,10 @@ describe("join member expression", function() {
         let d = create(e);
         console.log(a$a, a$c, b$a, d);
       }
-    }`))
-  })
-})
+    }`)
+    );
+  });
+});
 
 describe("instrumentation", function() {
   const run = Kit.pipe(
@@ -58,9 +68,11 @@ describe("instrumentation", function() {
     instrumentation,
     consume,
     v => v.top,
-    gen)
+    gen
+  );
   it("sample1", function() {
-    expect(run(`function a() {
+    expect(
+      run(`function a() {
       function* b() {
         console.log("1")
       }
@@ -76,7 +88,9 @@ describe("instrumentation", function() {
       c(v => v + 1, 
         v => {return v + 1},
         function(v) { return v + 1 })
-    }`)).to.equal(pretty(`function a() {
+    }`)
+    ).to.equal(
+      pretty(`function a() {
       return e$y$prof("a@?", "1[0]",
                       function () {
                         function b() {
@@ -106,11 +120,13 @@ describe("instrumentation", function() {
                                             function () { return v + 1; }); }
                         );
                       });
-    }`))
-  })
-  context('with `this` or `arguments`', function() {
+    }`)
+    );
+  });
+  context("with `this` or `arguments`", function() {
     it("sample2", function() {
-      expect(run(`function a() {
+      expect(
+        run(`function a() {
       function* b() {
         console.log("1",this,arguments)
       }
@@ -122,8 +138,10 @@ describe("instrumentation", function() {
       c(v => v + this.id + arguments[0], 
         v => {return v + this.id + arguments[0]},
         function x(v) {return v + this.id + arguments[0]})
-    }`)).to.equal(pretty(
-      `function a() {
+    }`)
+      ).to.equal(
+        pretty(
+          `function a() {
         return e$y$prof("a@?", "1[0]",
                         function () {
                           function b() {
@@ -168,10 +186,12 @@ describe("instrumentation", function() {
                                               });
                             });
                         });
-      }`))
-    })
-  })
-})
+      }`
+        )
+      );
+    });
+  });
+});
 
 describe("eager generators", function() {
   const run = Kit.pipe(
@@ -181,9 +201,11 @@ describe("eager generators", function() {
     eagerGenerators,
     consume,
     v => v.top,
-    gen)
+    gen
+  );
   it("sample1", function() {
-    expect(run(`
+    expect(
+      run(`
       function* a() {
         function* b() {
           yield* arguments
@@ -199,8 +221,10 @@ describe("eager generators", function() {
         }
         yield* b()
       }
-    `)).to.equal(pretty(
-      `function a() {
+    `)
+    ).to.equal(
+      pretty(
+        `function a() {
         return e$y$make(e$y$buf => {
           function b() {
             var e$y$arguments = arguments;
@@ -218,10 +242,12 @@ describe("eager generators", function() {
           yield 10;
         }
         yield* b();
-      }`))
-  })
-})
-  
+      }`
+      )
+    );
+  });
+});
+
 describe("extra loose for-ofs", function() {
   const run = Kit.pipe(
     v => v.toString(),
@@ -230,13 +256,17 @@ describe("extra loose for-ofs", function() {
     looseForOf,
     consume,
     v => v.top,
-    gen)
+    gen
+  );
   it("sample1", function() {
-    expect(run(`function a() {
+    expect(
+      run(`function a() {
       for(const i of a) {
         zzz
       }
-    }`)).to.equal(pretty(`function a() {
+    }`)
+    ).to.equal(
+      pretty(`function a() {
       {
         const _e = a;
         const _arr = e$y$arr(_e);
@@ -254,13 +284,17 @@ describe("extra loose for-ofs", function() {
           }
         }
       }
-    }`))
-  })
+    }`)
+    );
+  });
   it("sample2", function() {
-    expect(run(`function a() {
+    expect(
+      run(`function a() {
       for(const i of a)
         zzz
-    }`)).to.equal(pretty(`function a() {
+    }`)
+    ).to.equal(
+      pretty(`function a() {
       {
         const _e = a;
         const _arr = e$y$arr(_e);
@@ -278,14 +312,18 @@ describe("extra loose for-ofs", function() {
           }
         }
       }
-    }`))
-  })
+    }`)
+    );
+  });
   it("sample3", function() {
-    expect(run(`function a() {
+    expect(
+      run(`function a() {
       var i
       for(i of a)
         zzz
-    }`)).to.equal(pretty(`function a() {
+    }`)
+    ).to.equal(
+      pretty(`function a() {
       var i
       {
         const _e = a;
@@ -304,16 +342,20 @@ describe("extra loose for-ofs", function() {
           }
         }
       }
-    }`))
-  })
+    }`)
+    );
+  });
   it("sample4", function() {
-    expect(run(`function a() {
+    expect(
+      run(`function a() {
       var i
       for(i of a)
         for(const j of b) {
           zzz
         }
-    }`)).to.equal(pretty(`function a() {
+    }`)
+    ).to.equal(
+      pretty(`function a() {
       var i;
       {
         const _e = a;
@@ -364,14 +406,18 @@ describe("extra loose for-ofs", function() {
           }
         }
       }
-    }`))
-  })
+    }`)
+    );
+  });
   it("sample5", function() {
-    expect(run(`function a() {
+    expect(
+      run(`function a() {
       var i
       loo: for(i of a)
         zzz
-    }`)).to.equal(pretty(`function a() {
+    }`)
+    ).to.equal(
+      pretty(`function a() {
       var i
       {
         const _e = a;
@@ -390,13 +436,13 @@ describe("extra loose for-ofs", function() {
           }
         }
       }
-    }`))
-  })
-  
-})
+    }`)
+    );
+  });
+});
 
 describe("closure conversion", function() {
-  Kit.setOpts({noRT:true})
+  Kit.setOpts({ noRT: true });
   const run = Kit.pipe(
     v => v.toString(),
     parse,
@@ -404,9 +450,11 @@ describe("closure conversion", function() {
     closConv,
     consume,
     v => v.top,
-    gen)
+    gen
+  );
   it("sample1", function() {
-    expect(run(`
+    expect(
+      run(`
       function apply() {
         return new ff(10);
       }
@@ -426,7 +474,9 @@ describe("closure conversion", function() {
         }
         gg(j).kk(1);
         new gg(0);
-      }`)).to.equal(pretty(`
+      }`)
+    ).to.equal(
+      pretty(`
         var g = {};
         var apply;
         function _apply(fn) {
@@ -470,11 +520,12 @@ describe("closure conversion", function() {
           gg.constr(0);
         });
         g.ff = new ff();
-      `));
-    
-  })
+      `)
+    );
+  });
   it("sample2", function() {
-    expect(run(`
+    expect(
+      run(`
       var i = 0;
       function a(j) {
         i+=j;
@@ -496,8 +547,9 @@ describe("closure conversion", function() {
       console.timeEnd("R")
       console.log("E", res)
       
-      console.log([{num:2},{num:1},{num:3}].sort(function(a, b) { return a.num - b.num; }))`
-              )).to.equal(pretty(`
+      console.log([{num:2},{num:1},{num:3}].sort(function(a, b) { return a.num - b.num; }))`)
+    ).to.equal(
+      pretty(`
         var g = {};
         var a, res, i, k, j, temp;
 
@@ -549,7 +601,7 @@ describe("closure conversion", function() {
         console.log.call(console, "E", res);
         
         console.log.call(console, (temp = [{ num: 2 }, { num: 1 }, { num: 3 }]).sort.call(temp, new fn()));
-        `))
-  })
-})
-       
+        `)
+    );
+  });
+});

@@ -1,7 +1,6 @@
-M.option({scopePrefix:"otherScope"})
+M.option({ scopePrefix: "otherScope" });
 
 function scope() {
-  eff_1()
-  eff_2()
+  eff_1();
+  eff_2();
 }
-

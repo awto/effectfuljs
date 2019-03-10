@@ -5,35 +5,25 @@ function f1() {
   return M.scope(f1_1);
 }
 
-;
-
 function f2() {
   var f2 = M.context();
   return M.scope(f2_1);
 }
-
-;
 
 function f3() {
   var f3 = M.context();
   return M.scope(f3_1);
 }
 
-;
-
 function f4() {
   var f4 = M.context();
   return M.scope(f4_1);
 }
 
-;
-
 function f5() {
   var f5 = M.context();
   return M.scope(f5_1);
 }
-
-;
 
 function f1_1(f1) {
   f1._ref = [1, 2, 3];

@@ -1,77 +1,82 @@
-import * as Kit from "../kit"
-import {consumeScope,
-        debDumbBindStmt,
-        removeEmptyBinds} from "../transform"
-import {parse} from "@babel/parser"
-import * as assert from "assert"
-import {equal,print,transformExpr} from "./kit/core"
-import {recalcEff} from "../propagate"
-import * as Trace from "../kit/trace"
-import * as Block from "../block"
-import * as Bind from "../bind"
-import * as Debug from "../debug"
-import * as State from "../state"
-import * as Scope from "../scope"
-import * as Branch from "../branch"
-import * as Coerce from "../coerce"
-import * as Policy from "../policy"
+import * as Kit from "../kit";
+import { consumeScope, debDumbBindStmt, removeEmptyBinds } from "../transform";
+import { parse } from "@babel/parser";
+import * as assert from "assert";
+import { equal, print, transformExpr } from "./kit/core";
+import { recalcEff } from "../propagate";
+import * as Trace from "../kit/trace";
+import * as Block from "../block";
+import * as Bind from "../bind";
+import * as Debug from "../debug";
+import * as State from "../state";
+import * as Scope from "../scope";
+import * as Branch from "../branch";
+import * as Coerce from "../coerce";
+import * as Policy from "../policy";
 
-const runImpl = (pass) => transformExpr(Kit.pipe(
-  Branch.toBlocks,
-  recalcEff,
-  Bind.flatten,
-  Block.splitEffBlock,
-  State.prepare,
-  Debug.mark,
-  consumeScope
-))
+const runImpl = pass =>
+  transformExpr(
+    Kit.pipe(
+      Branch.toBlocks,
+      recalcEff,
+      Bind.flatten,
+      Block.splitEffBlock,
+      State.prepare,
+      Debug.mark,
+      consumeScope
+    )
+  );
 
-const runInterp = (opts = {}) =>
-      (t) => transformExpr(Kit.pipe(
-        Branch.toBlocks,
-        recalcEff,
-        Coerce.lift,
-        State.saveDecls,
-        Block.flatten,
-        Array.from,
-        Block.splitEffBlock,
-        Block.calcVarDeps(false),
-        State.prepare,
-        opts.clos ? State.closureReGroup : Block.groupDeps,
-        recalcEff,
-        Block.calcVarDeps(true),
-        Block.groupBindDeps,
-        recalcEff,
-        State.calcFrameStateVars,
-        Block.factorEffSeq,
-        recalcEff,
-        opts.clos ? State.closure : State.calcFrameHierPath,
-        // Block.propagateBindVars,
-        State.inject,
-        recalcEff,
-        Block.lassoc,
-        Block.cleanPureFrames,
-        // Block.propagateBindVars,
-        State.interpret,
-        recalcEff,
-        Block.cleanupEffSeq,
-        Block.interpretParEffSeq,
-        Block.interpretBinEffSeq,
-        Coerce.inject,
-        Coerce.liftFuncs,
-        Block.interpretPure,
-        Block.interpretApp,
-        Block.interpretBindFrame,
-        Coerce.interpret,
-        Block.interpretCasts,
-        State.restoreDecls,
-        Branch.clean,
-        Kit.scope.resolve,
-        consumeScope
-      ),t,{ns:"M",coerce:opts.coerce,state:true,closure:true})
+const runInterp = (opts = {}) => t =>
+  transformExpr(
+    Kit.pipe(
+      Branch.toBlocks,
+      recalcEff,
+      Coerce.lift,
+      State.saveDecls,
+      Block.flatten,
+      Array.from,
+      Block.splitEffBlock,
+      Block.calcVarDeps(false),
+      State.prepare,
+      opts.clos ? State.closureReGroup : Block.groupDeps,
+      recalcEff,
+      Block.calcVarDeps(true),
+      Block.groupBindDeps,
+      recalcEff,
+      State.calcFrameStateVars,
+      Block.factorEffSeq,
+      recalcEff,
+      opts.clos ? State.closure : State.calcFrameHierPath,
+      // Block.propagateBindVars,
+      State.inject,
+      recalcEff,
+      Block.lassoc,
+      Block.cleanPureFrames,
+      // Block.propagateBindVars,
+      State.interpret,
+      recalcEff,
+      Block.cleanupEffSeq,
+      Block.interpretParEffSeq,
+      Block.interpretBinEffSeq,
+      Coerce.inject,
+      Coerce.liftFuncs,
+      Block.interpretPure,
+      Block.interpretApp,
+      Block.interpretBindFrame,
+      Coerce.interpret,
+      Block.interpretCasts,
+      State.restoreDecls,
+      Branch.clean,
+      Kit.scope.resolve,
+      consumeScope
+    ),
+    t,
+    { ns: "M", coerce: opts.coerce, state: true, closure: true }
+  );
 
 describe.skip("mark state operations", function() {
-  const run = runImpl(v => v)
+  const run = runImpl(v => v);
   it("should inject reads/writes accordingly", function() {
     equal(
       run(`function() {
@@ -131,9 +136,10 @@ describe.skip("mark state operations", function() {
           /*ES|r[i]*/ /*AE|r[i]*/ /*I|r[i]+*/i = /*NL|w[i]r[i]*/10;
           /*ES|S|w[i]W[i]|E*/ /*CE|B*/ /*I|r[i]*/eff( /*I|-*/i);
         }
-      }`))
-  })
-  context("with `if` statement",function() {
+      }`)
+    );
+  });
+  context("with `if` statement", function() {
     context("with pure blocks", function() {
       it("injects write", function() {
         equal(
@@ -183,9 +189,10 @@ describe.skip("mark state operations", function() {
             /*BS|#|R[i,k]U[i,j,k]|E*/{
               /*ES|S|U[i,j,k]|E*/ /*CE|B*/eff( /*I|i:R*/i, /*I|k:R*/k);
             }
-          }`))
-      })
-    })
+          }`)
+        );
+      });
+    });
     context("in the last statement", function() {
       it("should not write anything in any branch", function() {
         equal(
@@ -222,9 +229,10 @@ describe.skip("mark state operations", function() {
                 }
               }
             }
-          }`))
-      })
-    })
+          }`)
+        );
+      });
+    });
     it("should have write on each branch", function() {
       equal(
         run(`function() {
@@ -264,9 +272,10 @@ describe.skip("mark state operations", function() {
           /*BS|#|R[i]U[i]|E*/{
             /*ES|S|U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
           }
-        }`))
-    })
-  })
+        }`)
+      );
+    });
+  });
   context("with `for` statement", function() {
     context("in the last statement", function() {
       it("should still have writes in the end of the body", function() {
@@ -288,9 +297,10 @@ describe.skip("mark state operations", function() {
                 }
               }
             }
-          }`))
-      })
-    })
+          }`)
+        );
+      });
+    });
     it("should read initial value in body", function() {
       equal(
         run(`function() {
@@ -314,9 +324,8 @@ describe.skip("mark state operations", function() {
           /*BS|#|R[i]U[i]|E*/{
             /*ES|S|U[i]|E*/ /*CE|B*/eff( /*I|i:R*/i);
           }
-        }`))
-    })
-    
-  })
-})
-
+        }`)
+      );
+    });
+  });
+});

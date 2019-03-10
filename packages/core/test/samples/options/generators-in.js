@@ -1,6 +1,6 @@
 // *- DEFAULT
 import * as G from "@effectful/es";
 
-function *c() {
-    yield* z;
+function* c() {
+  yield* z;
 }

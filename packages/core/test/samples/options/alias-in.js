@@ -1,23 +1,22 @@
 // *- SKIP
-M.option(
-  {
-    minimal: {
-      ExpressionStatement: {
-        select: "cases(property('expression.name'))",
-        cases: {
-          begin: { next: "full" }
-        },
-      }
-    },
-    full: {
-      ExpressionStatement: {
-        select: "cases(property('expression.name'))",
-        cases: {
-          end: { next: "minimal" }
-        }
+M.option({
+  minimal: {
+    ExpressionStatement: {
+      select: "cases(property('expression.name'))",
+      cases: {
+        begin: { next: "full" }
       }
     }
-  });
+  },
+  full: {
+    ExpressionStatement: {
+      select: "cases(property('expression.name'))",
+      cases: {
+        end: { next: "minimal" }
+      }
+    }
+  }
+});
 
 M.profile("defaultMinimal");
 
@@ -53,5 +52,3 @@ function c() {
   eff(5);
   eff(6);
 }
-
-

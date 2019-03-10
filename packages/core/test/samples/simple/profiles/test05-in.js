@@ -3,9 +3,9 @@ function a() {
   p1();
   p2();
   function a() {
-    console.log('hi')
-    e1()
-    e2()
+    console.log("hi");
+    e1();
+    e2();
   }
   M.profile("defaultMinimal");
   p2();

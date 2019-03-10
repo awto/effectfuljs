@@ -1,5 +1,5 @@
 function a() {
-  var i = 0
+  var i = 0;
   eff0(i);
   i++;
   eff1(i);

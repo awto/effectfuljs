@@ -1,22 +1,54 @@
 import {
-  symInfo,isSymbol,typeInfo,symName,newSymbol,
-  symbol,enter,leave,tok,produce,toArray,Tag,
-  reproduce,consume,reproduceNodes,resetFieldInfo,
-  removeNulls,isSynthetic,invariant} from "./core"
+  symInfo,
+  isSymbol,
+  typeInfo,
+  symName,
+  newSymbol,
+  symbol,
+  enter,
+  leave,
+  tok,
+  produce,
+  toArray,
+  Tag,
+  reproduce,
+  consume,
+  reproduceNodes,
+  resetFieldInfo,
+  removeNulls,
+  isSynthetic,
+  invariant
+} from "./core";
 
-export {symInfo,isSymbol,typeInfo,symName,newSymbol,
-        symbol,enter,leave,tok,produce,toArray,Tag,
-        reproduce,consume,reproduceNodes,resetFieldInfo,
-        removeNulls,isSynthetic,invariant}
+export {
+  symInfo,
+  isSymbol,
+  typeInfo,
+  symName,
+  newSymbol,
+  symbol,
+  enter,
+  leave,
+  tok,
+  produce,
+  toArray,
+  Tag,
+  reproduce,
+  consume,
+  reproduceNodes,
+  resetFieldInfo,
+  removeNulls,
+  isSynthetic,
+  invariant
+};
 
-import * as kit from "./kit"
-export { kit }
-import * as trace from "./trace"
-export { trace }
-import * as dump from "./dump"
-export { dump }
-import * as match from "./match"
-export { match }
-import * as scope from "./scope"
-export { scope }
-
+import * as kit from "./kit";
+export { kit };
+import * as trace from "./trace";
+export { trace };
+import * as dump from "./dump";
+export { dump };
+import * as match from "./match";
+export { match };
+import * as scope from "./scope";
+export { scope };

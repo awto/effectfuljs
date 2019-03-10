@@ -161,8 +161,6 @@ function a() {
   function _4() {}
 }
 
-;
-
 function a1() {
   var i, j;
   return M.chain(eff("b"), _1);

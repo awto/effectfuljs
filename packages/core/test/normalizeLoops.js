@@ -1,32 +1,36 @@
-import * as Kit from "../kit"
-import {prepareScopes,consumeScope} from "../transform"
-import {parse} from "@babel/parser"
-import * as Loops from "../loops"
-import * as assert from "assert"
-import {equal,print,transformExpr,restore} from "./kit/core"
-import {recalcEff} from "../propagate"
-import * as Debug from "../debug"
-import * as Branch from "../branch"
-import * as Ctrl from "../control"
-import * as Block from "../block"
-import * as Rt from "../rt"
+import * as Kit from "../kit";
+import { prepareScopes, consumeScope } from "../transform";
+import { parse } from "@babel/parser";
+import * as Loops from "../loops";
+import * as assert from "assert";
+import { equal, print, transformExpr, restore } from "./kit/core";
+import { recalcEff } from "../propagate";
+import * as Debug from "../debug";
+import * as Branch from "../branch";
+import * as Ctrl from "../control";
+import * as Block from "../block";
+import * as Rt from "../rt";
 
-const runImpl = (pass) => transformExpr(Kit.pipe(
-  Ctrl.removeLabeledStatement,
-  Loops.toBlocks,
-  Branch.toBlocks,
-  pass,
-  restore,
-  recalcEff,
-  Rt.interpretLibSyms,
-  Branch.clean,
-  Debug.mark,
-  consumeScope))
+const runImpl = pass =>
+  transformExpr(
+    Kit.pipe(
+      Ctrl.removeLabeledStatement,
+      Loops.toBlocks,
+      Branch.toBlocks,
+      pass,
+      restore,
+      recalcEff,
+      Rt.interpretLibSyms,
+      Branch.clean,
+      Debug.mark,
+      consumeScope
+    )
+  );
 
-describe('prepare loops pass', function() {
-  const run = runImpl(v => v)
-  context('with single statement in body', function() {
-    it('should convert bodies to blocks', function() {
+describe("prepare loops pass", function() {
+  const run = runImpl(v => v);
+  context("with single statement in body", function() {
+    it("should convert bodies to blocks", function() {
       equal(
         run(`function() {
           for(var i of s)
@@ -36,12 +40,13 @@ describe('prepare loops pass', function() {
           /*FOS|E*/for (var i of s) /*BS|E*/{
             /*ES|e*/ /*CE|B*/ eff(1);
           }
-        }`))
-    })
-  })
-  context('with no statements in body', function() {
-    context('with effect in update', function() {
-      it('should add empty bock body', function() {
+        }`)
+      );
+    });
+  });
+  context("with no statements in body", function() {
+    context("with effect in update", function() {
+      it("should add empty bock body", function() {
         equal(
           run(`function() {
             for(var i = 0; i < 10; i = eff());
@@ -50,11 +55,12 @@ describe('prepare loops pass', function() {
             /*FS|E*/for (var i = 0;i < 10;
                          /*AE|E*/i = /*CE|B*/eff()) {
             }
-          }`))
-      })
-    })
-    context('with effect in init', function() {
-      it('should keep the body as is', function() {
+          }`)
+        );
+      });
+    });
+    context("with effect in init", function() {
+      it("should keep the body as is", function() {
         equal(
           run(`function() {
             for(var i = eff(); i < 10; upd);
@@ -62,12 +68,13 @@ describe('prepare loops pass', function() {
           print(`function () /*BS|B*/{
             /*FS|e*/for ( /*VD|E*/var /*VD|E*/i = /*CE|B*/eff();
               i < 10; upd) {}
-          }`))
-      })
-    })
-  })
-  context('with block statement in body', function() {
-    it('should keep the body unchanged', function() {
+          }`)
+        );
+      });
+    });
+  });
+  context("with block statement in body", function() {
+    it("should keep the body unchanged", function() {
       equal(
         run(`function() {
           for(var i of s) {
@@ -78,16 +85,17 @@ describe('prepare loops pass', function() {
           /*FOS|E*/for (var i of s) /*BS|E*/{
             /*ES|e*/ /*CE|B*/eff(1);
           }
-        }`))
-    })
-  })
-})
+        }`)
+      );
+    });
+  });
+});
 
-describe('normlize `for-of`', function() {
-  const run = runImpl(Loops.forOfStmt)
-  context('with effect in its body', function() {
-    context('with single statement in body', function() {
-      it('should be `for` with the effect in body 1', function() {
+describe("normlize `for-of`", function() {
+  const run = runImpl(Loops.forOfStmt);
+  context("with effect in its body", function() {
+    context("with single statement in body", function() {
+      it("should be `for` with the effect in body 1", function() {
         equal(
           run(`function() {
             for(const i of s)
@@ -105,10 +113,11 @@ describe('normlize `for-of`', function() {
 		/*CE|P*/loop.exit();
 	      }
 	    }
-	  }`))
-      })
-    })
-    it('should be `for` with the effect in body 2', function() {
+	  }`)
+        );
+      });
+    });
+    it("should be `for` with the effect in body 2", function() {
       equal(
         run(`function() {
           for(const i of s) {
@@ -127,11 +136,12 @@ describe('normlize `for-of`', function() {
 	      /*CE|P*/loop.exit();
 	    }
 	  }
-	}`))
-    })
-  })
-  context('with embedded `for-of`', function() {
-    it('should be `for` with the effect in body 3', function() {
+	}`)
+      );
+    });
+  });
+  context("with embedded `for-of`", function() {
+    it("should be `for` with the effect in body 3", function() {
       equal(
         run(`function() {
           for(const i of s)
@@ -160,30 +170,31 @@ describe('normlize `for-of`', function() {
 	      /*CE|P*/loop.exit();
 	    }
 	  }
-	}`))
-    })
-  })
-  context('with effect on the right but not in its body', function() {
-    it('should extract the effect into former step and keep for-of',
-       function() {
-         equal(
-           run(`function() {
+	}`)
+      );
+    });
+  });
+  context("with effect on the right but not in its body", function() {
+    it("should extract the effect into former step and keep for-of", function() {
+      equal(
+        run(`function() {
              for(const i of eff(1)) {
                2+2;
              }
            }`),
-           print(`function () /*BS|B*/{
+        print(`function () /*BS|B*/{
              /*FOS|e*/for (const i of /*CE|B*/ eff(1)) {
                2 + 2;
              }
-           }`))
-       })
-  })
-})
+           }`)
+      );
+    });
+  });
+});
 
-describe('normalize `for-in`', function() {
-  const run = runImpl(Loops.forOfStmt)
-  it('simple block', function() {
+describe("normalize `for-in`", function() {
+  const run = runImpl(Loops.forOfStmt);
+  it("simple block", function() {
     equal(
       run(`function() {
         for(const i in s) {
@@ -196,13 +207,14 @@ describe('normalize `for-in`', function() {
           const i = loop.value;
           /*ES|e*/ /*CE|B*/eff(1);
         }
-      }`))
-  })
-})
+      }`)
+    );
+  });
+});
 
-describe('normalize `do-while`', function() {
-  const run = runImpl(Loops.doWhileStmt)
-  it('simple block', function() {
+describe("normalize `do-while`", function() {
+  const run = runImpl(Loops.doWhileStmt);
+  it("simple block", function() {
     equal(
       run(`function() {
         do {
@@ -217,9 +229,10 @@ describe('normalize `do-while`', function() {
             /*BS|B*/break;
           }
         }
-      }`))
-  })
-  it('simple statement', function() {
+      }`)
+    );
+  });
+  it("simple statement", function() {
     equal(
       run(`function() {
         do
@@ -234,9 +247,10 @@ describe('normalize `do-while`', function() {
             /*BS|B*/break;
           }
         }
-      }`))
-  })
-  it('embedded', function() {
+      }`)
+    );
+  });
+  it("embedded", function() {
     equal(
       run(`function() {
         do
@@ -278,17 +292,18 @@ describe('normalize `do-while`', function() {
             /*BS|B*/break;
           }
         }
-      }`))
-  })
-})
+      }`)
+    );
+  });
+});
 
-describe('normalize `for`', function() {
+describe("normalize `for`", function() {
   const run = runImpl(i => {
-    const [v] = [...Loops.normalizeFor([i])]
-    return v
-  })
-  context('with non-block in body', function() {
-    it('should keep effect in the body', function() {
+    const [v] = [...Loops.normalizeFor([i])];
+    return v;
+  });
+  context("with non-block in body", function() {
+    it("should keep effect in the body", function() {
       equal(
         run(`function() {
           for(;;)
@@ -302,11 +317,12 @@ describe('normalize `for`', function() {
               }
             }
           }
-        }`))
-    })
-  })
-  context('with effects in init/update/test', function() {
-    it('should keep effect in update/test', function() {
+        }`)
+      );
+    });
+  });
+  context("with effects in init/update/test", function() {
+    it("should keep effect in update/test", function() {
       equal(
         run(`function() {
           for(let i = init();check() === true;upd()) {
@@ -325,11 +341,12 @@ describe('normalize `for`', function() {
               }
             }
           }
-        }`))
-    })
-  })
-  context('with `continue`', function() {
-    it('should add update part', function() {
+        }`)
+      );
+    });
+  });
+  context("with `continue`", function() {
+    it("should add update part", function() {
       equal(
         run(`function() {
           for(var i = init();check() === true;upd()) {
@@ -358,11 +375,12 @@ describe('normalize `for`', function() {
               }
             }
           }
-        }`))
-    })
-  })
-  context('without blocks', function() {
-    it('should create block statements 1', function() {
+        }`)
+      );
+    });
+  });
+  context("without blocks", function() {
+    it("should create block statements 1", function() {
       equal(
         run(`function() {
           for(var i = init();check() === true;upd())
@@ -381,10 +399,11 @@ describe('normalize `for`', function() {
               }
             }
           }
-        }`))
-    })
-    context('with embedded loop', function() {
-      it('should create block statements 2', function() {
+        }`)
+      );
+    });
+    context("with embedded loop", function() {
+      it("should create block statements 2", function() {
         equal(
           run(`function() {
             for(var i = init();check() === true;upd())
@@ -413,11 +432,12 @@ describe('normalize `for`', function() {
                 }
               }
             }
-          }`))
-      })
-    })
-    context('with `continue`', function() {
-      it('should create block statements 3', function() {
+          }`)
+        );
+      });
+    });
+    context("with `continue`", function() {
+      it("should create block statements 3", function() {
         equal(
           run(`function() {
             for(let i = init();check() === true;upd())
@@ -441,10 +461,11 @@ describe('normalize `for`', function() {
                 }
               }
             }
-          }`))
-      })
-      context('with embedded loop', function() {
-        it('should create block statements 4', function() {
+          }`)
+        );
+      });
+      context("with embedded loop", function() {
+        it("should create block statements 4", function() {
           equal(
             run(`function() {
               loo: for(let i = init();check() === true;upd())
@@ -482,20 +503,24 @@ describe('normalize `for`', function() {
                   }
                 }
               }
-            }`))
-        })
-      })
-    })
-  })
-})
+            }`)
+          );
+        });
+      });
+    });
+  });
+});
 
-
-describe('normalize `for`', function() {
-  const run = transformExpr(Kit.pipe(Loops.looseForOf,
-                                     restore,
-                                     Kit.scope.resolve,
-                                     consumeScope))
-  it('should convert `for-of` to loose iterators `for`', function() {
+describe("normalize `for`", function() {
+  const run = transformExpr(
+    Kit.pipe(
+      Loops.looseForOf,
+      restore,
+      Kit.scope.resolve,
+      consumeScope
+    )
+  );
+  it("should convert `for-of` to loose iterators `for`", function() {
     equal(
       run(`function() {
           for(const i of a)
@@ -563,6 +588,7 @@ describe('normalize `for`', function() {
 	    loop3.exit();
 	  }
 	}
-      }`))
-  })
-})
+      }`)
+    );
+  });
+});

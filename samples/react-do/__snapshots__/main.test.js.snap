@@ -309,13 +309,15 @@ exports[`errors handling 1`] = `
     May Throw
   </h1>
   <p>
-    P1: 
+    P1:
+     
     <b>
       Normal1
     </b>
   </p>
   <p>
-    P2: 
+    P2:
+     
     <i>
       Normal2
     </i>
@@ -329,13 +331,15 @@ exports[`errors handling 2`] = `
     May Throw
   </h1>
   <p>
-    P1: 
+    P1:
+     
     <b>
       Normal1
     </b>
   </p>
   <p>
-    P2: 
+    P2:
+     
     <i>
       Normal2
     </i>
@@ -457,13 +461,15 @@ exports[`errors handling 12`] = `
     May Throw
   </h1>
   <p>
-    P1: 
+    P1:
+     
     <b>
       Normal1
     </b>
   </p>
   <p>
-    P2: 
+    P2:
+     
     <i>
       Normal2
     </i>
@@ -477,13 +483,15 @@ exports[`errors handling 13`] = `
     May Throw
   </h1>
   <p>
-    P1: 
+    P1:
+     
     <b>
       Normal1
     </b>
   </p>
   <p>
-    P2: 
+    P2:
+     
     <i>
       Normal2
     </i>
@@ -497,13 +505,15 @@ exports[`errors handling 14`] = `
     May Throw
   </h1>
   <p>
-    P1: 
+    P1:
+     
     <b>
       Normal1
     </b>
   </p>
   <p>
-    P2: 
+    P2:
+     
     <i>
       Normal2
     </i>
@@ -577,13 +587,15 @@ exports[`errors handling 20`] = `
     May Throw
   </h1>
   <p>
-    P1: 
+    P1:
+     
     <b>
       Normal1
     </b>
   </p>
   <p>
-    P2: 
+    P2:
+     
     <i>
       Normal2
     </i>

@@ -1,4 +1,4 @@
-M.profile("es")
+M.profile("es");
 
 async function aa() {
   class A {
@@ -9,7 +9,7 @@ async function aa() {
       return "static from A";
     }
   }
-  
+
   class B extends A {
     async method() {
       return "from B " + (await super.method());

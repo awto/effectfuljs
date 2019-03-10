@@ -1,1 +1,1 @@
-module.exports = require("@effectful/core").babelPlugin(require("./options"))
+module.exports = require("@effectful/core").babelPlugin(require("./options"));

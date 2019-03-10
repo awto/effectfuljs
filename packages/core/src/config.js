@@ -1,5 +1,5 @@
-import core from "./libs/core"
-import es from "./libs/es"
+import core from "./libs/core";
+import es from "./libs/es";
 
 export default {
   // adds runtime checks in runtime if values to bind is effectful, and makes
@@ -35,7 +35,7 @@ export default {
   // creates a context object for each effectul function's call
   scopeContext: false,
 
-  // pass context to operations (as their first argument) 
+  // pass context to operations (as their first argument)
   threadContext: false,
 
   // adds extra first frame, e.g. to make the effectful result object suspended
@@ -68,7 +68,7 @@ export default {
   // use ECMAScript iteration protocol for for-ofs
   esForOf: false,
   esForAwaitOf: false,
-  
+
   // name of a function to call for each effectful function
   // it may change something in object's protocol for that function
   wrapFunction: null,
@@ -99,7 +99,7 @@ export default {
   // override `contextMethodOps` for specific operations
   // now overrides only `true`, otherwise not checked
   contextMethodOpsSpec: {},
-  
+
   // marks operation binding some value with "B" character
   // otherwise every operation is marked
   markBindValue: false,
@@ -123,7 +123,7 @@ export default {
 
   // calls `exit` for `for-of` iterators if control exits
   // them before the iterator is done
-  finalizeForOf:true,
+  finalizeForOf: true,
 
   // moves frames out of function's body to the module top level
   topLevel: false,
@@ -131,7 +131,7 @@ export default {
   // detects import matching the pattern to apply compile-time options
   // true - means only pre-defined embedded libs are checked
   presetsImportPattern: true,
-  
+
   // injects runtime from provided module
   importRT: null,
 
@@ -161,14 +161,14 @@ export default {
 
   // keep single defunctHandler in a prototype
   defunctHandlerInProto: false,
-  
+
   // some named templates for some operations (mostly for ES compatibility):
   inlineChainOp: null, // "promise" | null
   inlineScopeOp: null, // "unwrap" | "call" | "context" | null
   inlineYieldOp: null, // "iterator" | "iteratorResult" | "iteratorResultPromise" | null
   inlineYieldStarOp: null, // "iterator" | null
-  inlinePureOp: null,   // "asis" | "iterator" | "promise" | null
-  inlineRaiseOp: null,  // "throw" | "promise" | null
+  inlinePureOp: null, // "asis" | "iterator" | "promise" | null
+  inlineRaiseOp: null, // "throw" | "promise" | null
 
   // compose `chain` operator at its left(first) argument
   // by default they are composed on its right(second)
@@ -201,21 +201,21 @@ export default {
   reuseTempVars: true,
 
   // always calls `pure` operation at return
-  keepLastPure:false,
+  keepLastPure: false,
 
   // always calls `raise` operation at function's exit by exception
-  keepLastRaise:false,
-  
+  keepLastRaise: false,
+
   // inline assigning of error and result continuations into context
   // specifies name of a context's field to assign it to
   inlineResultContAssign: false,
   inlineErrorContAssign: false,
   // assign contination to context field before any jumps
   inlineContAssign: false,
-  
+
   // resets normal continuation to type error to conform ES
   inlineReentryCheck: null,
-  
+
   // wrap `value` field of async iterator with additional implicit await
   // the option applies only for inlining transform
   wrapAsyncIteratorValue: true,
@@ -252,7 +252,7 @@ export default {
     chain: true,
     map: true
   },
-  
+
   // inline effectful value coercing if coerce: true
   inlineCoerce: false,
 
@@ -281,9 +281,9 @@ export default {
 
   // converts JS block directives into options assignment
   // string value or true for keys means profile assignment (same name if `true`)
-  blockDirectives:  {
-    par: { parRegion:true },
-    seq: { parRegion:false }
+  blockDirectives: {
+    par: { parRegion: true },
+    seq: { parRegion: false }
   },
   // defines call expressions to treat as effectful
   // {
@@ -307,7 +307,7 @@ export default {
   // By default, say, variable `x` will be stored in `context._x` field
   // Then this option is enabled it will be `context.${stateStorageField}._x`
   enableSubFields: false,
-  
+
   // Name of a context's field to store continuations and compuation values.
   // By default stored directly in context if not defined.
   // Requires `contextState:true`
@@ -318,7 +318,7 @@ export default {
   // Requires `contextState:true`
   // NOT IMPLEMENTED
   closureStorageField: null,
-  
+
   // name of a context's field to store local variables
   // stored directly in context if not defined
   // handled only with `contextState:true`
@@ -331,7 +331,7 @@ export default {
   // dictionary of hooks to apply before named stage in transforms pipline
   // the hook is a token stream transducer function
   before: null,
-  
+
   // dictionary of hooks to apply after named stage in transforms pipline
   after: null,
 
@@ -341,7 +341,7 @@ export default {
   normPureWhile: false,
   normPureForIn: false,
   normPureBlocks: false,
-  
+
   // * null  - leave everything sequential
   // * false - sequential by default, but will check for another options
   //           within the function
@@ -350,12 +350,12 @@ export default {
   // to be parallelized immediately, only parts with `parActive:true` will
   // be considered, use `"par"` or `"seq"` block directives to amend
   // the variable
-  
+
   par: false,
   // for functions with `par` specifies which parts of code should
   // be parallel or sequential (usually changed with "par", "seq" block directives)
   parRegion: false,
-  
+
   // where to store thread's local variables
   // "closure" | "context"
   parThreadState: "closure",
@@ -365,7 +365,7 @@ export default {
 
   // context's field name for storing thread local variables
   // for `parThreadState:"context"
-  threadStorageField:"tls",
+  threadStorageField: "tls",
 
   // same as `scopeConstructor` but for function with implicit threads
   // default to the value of `scopeConstructor`
@@ -377,5 +377,4 @@ export default {
   jsxCoerce: false,
   // name of a function to replace block-level directives
   blockDirsFunc: false
-}
-
+};

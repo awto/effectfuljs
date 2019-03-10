@@ -1,5 +1,4 @@
 function a() {
-  if (true)
-    return 2;
-  return 3
+  if (true) return 2;
+  return 3;
 }

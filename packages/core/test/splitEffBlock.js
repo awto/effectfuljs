@@ -1,27 +1,31 @@
-import * as Kit from "../kit"
-import {parse} from "@babel/parser"
-import * as assert from "assert"
-import {equal,print,transformExpr} from "./kit/core"
-import {recalcEff} from "../propagate"
-import * as Block from "../block"
-import * as Scope from "../scope"
-import * as Branch from "../branch"
-import * as Bind from "../bind"
-import * as Debug from "../debug"
+import * as Kit from "../kit";
+import { parse } from "@babel/parser";
+import * as assert from "assert";
+import { equal, print, transformExpr } from "./kit/core";
+import { recalcEff } from "../propagate";
+import * as Block from "../block";
+import * as Scope from "../scope";
+import * as Branch from "../branch";
+import * as Bind from "../bind";
+import * as Debug from "../debug";
 
-const runImpl = (pass) =>
-      transformExpr(Kit.pipe(
-        recalcEff,
-        Array.from,
-        Bind.flatten,
-        recalcEff,
-        Block.splitEffBlock,
-        pass,
-        Array.from,
-        // Bind.propagateBindVars,
-        Debug.mark,
-        Kit.consume))
+const runImpl = pass =>
+  transformExpr(
+    Kit.pipe(
+      recalcEff,
+      Array.from,
+      Bind.flatten,
+      recalcEff,
+      Block.splitEffBlock,
+      pass,
+      Array.from,
+      // Bind.propagateBindVars,
+      Debug.mark,
+      Kit.consume
+    )
+  );
 
+// prettier-ignore
 describe('split block', function() {
   const run = runImpl(v => v)
   it('split block simple 1', function() {
@@ -190,4 +194,3 @@ describe('split block', function() {
     })
   })
 })
-

@@ -1,9 +1,9 @@
 /**
  * @file A few common bits and pieces
  */
-import * as R from "@effectful/es-persist-serialization"
-import "@effectful/serialization-react"
-import ReactDOM from "react-dom"
+import * as R from "@effectful/es-persist-serialization";
+import "@effectful/serialization-react";
+import ReactDOM from "react-dom";
 
 /**
  * @typedef Message
@@ -12,11 +12,11 @@ import ReactDOM from "react-dom"
  * @property {?number} index - for some message a relative position of its value
  * @property {?number} key - for some messages defines thread id
  */
-/** 
+/**
  * @callback Dispatch
  * @param {Message} message
  */
-/** 
+/**
  * @typedef {AsyncIterable.<Message>} Producer - source of messages
  * @property {Dispatch} dispatch - a function to send the messages
  */
@@ -27,25 +27,23 @@ import ReactDOM from "react-dom"
  * @returns {AsyncIterable.<Message>}     - output stream
  */
 
-/** 
- * Collects all message's `value` field with `type` from `keys` into 
- * an object with field names/values are the `type`/`value` fields of 
+/**
+ * Collects all message's `value` field with `type` from `keys` into
+ * an object with field names/values are the `type`/`value` fields of
  * input actions
  *
  * @param {string[]|object} keys - types to collect
  */
 export function collect(keys) {
   return async function* collect(input) {
-    const keySet = new Set(Object.values(keys))
-    const value = {}
-    for await(const i of input) {
-      if (keySet.has(i.type))
-        value[i.type] = i.value
-      if (i.type === "FLUSH")
-        yield {type:"COLLECTION", value}
-      yield i
+    const keySet = new Set(Object.values(keys));
+    const value = {};
+    for await (const i of input) {
+      if (keySet.has(i.type)) value[i.type] = i.value;
+      if (i.type === "FLUSH") yield { type: "COLLECTION", value };
+      yield i;
     }
-  }
+  };
 }
 
 /**
@@ -55,10 +53,9 @@ export function collect(keys) {
  * @returns {Transducer}
  */
 export function map(fun) {
-  return async function* map(input,dispatch) {
-    for await(const i of input)
-      yield fun(i,dispatch)
-  }
+  return async function* map(input, dispatch) {
+    for await (const i of input) yield fun(i, dispatch);
+  };
 }
 
 /**
@@ -68,18 +65,17 @@ export function map(fun) {
  * @returns {Transducer}
  */
 export function pipe(...args) {
-  return function(input,dispatch) {
-    for(const f of args)
-      input = f(input,dispatch)
-    return input
-  }
+  return function(input, dispatch) {
+    for (const f of args) input = f(input, dispatch);
+    return input;
+  };
 }
 
 function resend(action) {
-  return this.send(action)
+  return this.send(action);
 }
 
-R.regOpaqueObject(resend)
+R.regOpaqueObject(resend);
 
 /**
  * Creates a producer, an `AsyncIterable` with `dispatch` field to send messages
@@ -87,34 +83,35 @@ R.regOpaqueObject(resend)
  * @returns {Producer}
  */
 export function createProducer() {
-  const producer = R.producer()
-  producer.dispatch = R.bind(resend, producer)
-  return producer
+  const producer = R.producer();
+  producer.dispatch = R.bind(resend, producer);
+  return producer;
 }
 
 /**
- * The main loop for the transducers passed as input. 
+ * The main loop for the transducers passed as input.
  * It just reads all values from `main` output until it's done
  *
  * @param {Transducer} main
  */
 export async function run(main) {
-  R.regOpaqueObject(main)
+  R.regOpaqueObject(main);
   try {
-    const producer = createProducer()
-    for await(const i of main(producer,producer.dispatch)) {}
-  } catch(e) {
-    console.error(e)
+    const producer = createProducer();
+    for await (const i of main(producer, producer.dispatch)) {
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
 
-function _signal(dispatch,type,value) {
-  return dispatch({type,...value})
+function _signal(dispatch, type, value) {
+  return dispatch({ type, ...value });
 }
 
-R.regOpaqueObject(_signal)
+R.regOpaqueObject(_signal);
 
-/** 
+/**
  * Helper function for binding message dispatching into components event handlers
  *
  * @param {Dispatch} dispatch
@@ -122,7 +119,7 @@ R.regOpaqueObject(_signal)
  * @param {any} value
  */
 export function signal(dispatch, type, value) {
-  return R.bind(_signal,null,dispatch,type,value)
+  return R.bind(_signal, null, dispatch, type, value);
 }
 
 /**
@@ -131,10 +128,10 @@ export function signal(dispatch, type, value) {
  * @type {Transducer}
  */
 export async function* flushing(input) {
-  yield {type:"FLUSH"}
-  for await(const i of input) {
-    yield i
-    yield {type:"FLUSH"}
+  yield { type: "FLUSH" };
+  for await (const i of input) {
+    yield i;
+    yield { type: "FLUSH" };
   }
 }
 
@@ -144,17 +141,16 @@ export async function* flushing(input) {
  *
  * @type {Transducer}
  */
-export const render = (el) => async function* render(input) {
-  R.regOpaqueObject(el)
-  let control
-  for await(const i of input) {
-    if (i.type === "CONTROL")
-      control = i.value
-    else if (i.type === "FLUSH" && control) {
-      ReactDOM.render(control,el)
-      control = null
+export const render = el =>
+  async function* render(input) {
+    R.regOpaqueObject(el);
+    let control;
+    for await (const i of input) {
+      if (i.type === "CONTROL") control = i.value;
+      else if (i.type === "FLUSH" && control) {
+        ReactDOM.render(control, el);
+        control = null;
+      }
+      yield i;
     }
-    yield i
-  }
-}
-
+  };

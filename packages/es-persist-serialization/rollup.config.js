@@ -1,12 +1,9 @@
-import resolve from "rollup-plugin-node-resolve"
+import resolve from "rollup-plugin-node-resolve";
 export default {
-  input: 'main.js',
+  input: "main.js",
   output: {
-    file: 'index.js',
-    format: 'cjs'
+    file: "index.js",
+    format: "cjs"
   },
-  plugins: [
-    resolve()
-  ]
-}
-
+  plugins: [resolve()]
+};

@@ -1,12 +1,19 @@
-import "./arrayIterator"
-export {forInIterator} from "./forInIterator"
-export {iterator} from "./leanIterator"
-export {generatorFunction,Generator,generator} from "./generator"
-export {asyncFunction,async,Async} from "./async"
-export {iterator as leanIteratorSymbol, cancel as cancelSymbol} from "./symbol"
-export {iteratorM,cancel} from "./leanAsyncIterator"
-export {asyncGenerator,AsyncGenerator,asyncGeneratorFunction,esAsyncIterator}
-  from "./asyncGenerator"
+import "./arrayIterator";
+export { forInIterator } from "./forInIterator";
+export { iterator } from "./leanIterator";
+export { generatorFunction, Generator, generator } from "./generator";
+export { asyncFunction, async, Async } from "./async";
+export {
+  iterator as leanIteratorSymbol,
+  cancel as cancelSymbol
+} from "./symbol";
+export { iteratorM, cancel } from "./leanAsyncIterator";
+export {
+  asyncGenerator,
+  AsyncGenerator,
+  asyncGeneratorFunction,
+  esAsyncIterator
+} from "./asyncGenerator";
 
 // TODO: move to (info) file
 export var opts = {
@@ -18,5 +25,4 @@ export var opts = {
   localSymbols: !!process.env.EJS_LOCAL_SYMBOLS,
   delegateForOf: !!process.env.EJS_DELEGATE_FOR_OF,
   delegateYieldStar: !!process.env.EJS_DELEGATE_YIELD_STAR
-}
-
+};

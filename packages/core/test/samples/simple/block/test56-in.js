@@ -6,7 +6,6 @@ function a() {
     eff(3);
     c;
     eff(4);
-  } else 
-    eff(5);
-        eff(6);
+  } else eff(5);
+  eff(6);
 }

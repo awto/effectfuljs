@@ -1,8 +1,7 @@
 // *- SKIP
 
 M.profile("generatorsDo");
-function* a() {
-}
+function* a() {}
 
 function* b() {
   return 1;
@@ -20,16 +19,13 @@ function* e() {
   yield [2];
 }
 
-
 function* f() {
   yield* eff(1);
 }
-
 
 function* g() {
   yield* eff(1);
   yield* eff(2);
 }
 
-(function* () {
-}).some();
+(function*() {}.some());

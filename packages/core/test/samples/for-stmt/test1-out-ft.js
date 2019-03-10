@@ -25,8 +25,6 @@ function a() {
   return M.scope(a_1);
 }
 
-;
-
 function a1() {
   var a1 = M.context();
   return M.scope(a1_1);

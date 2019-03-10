@@ -1,16 +1,16 @@
-const C = require("@effectful/core")
-const T = C.Transform
+const C = require("@effectful/core");
+const T = C.Transform;
 
-module.exports = function jsProfile(pOpts={}) {
+module.exports = function jsProfile(pOpts = {}) {
   const opts = Object.assign(
     {},
     C.config,
-    {preset:"@effectful/js",modules:"esDefault"},
-    pOpts)
+    { preset: "@effectful/js", modules: "esDefault" },
+    pOpts
+  );
   return {
-    syntaxPlugins:[],
+    syntaxPlugins: [],
     options: opts,
     main: T.run
-  }
-}
-
+  };
+};

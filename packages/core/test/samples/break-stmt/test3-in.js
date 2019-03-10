@@ -1,7 +1,7 @@
-(function () {
-    lab: {
-      eff(2); 
-      break lab;
-    }
-    eff(4);
+(function() {
+  lab: {
+    eff(2);
+    break lab;
+  }
+  eff(4);
 });

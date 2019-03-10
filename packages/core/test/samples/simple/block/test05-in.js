@@ -5,13 +5,12 @@ function a() {
   eff1(i);
   if (t) {
     eff2(i);
-    i++
-    eff4(i)
+    i++;
+    eff4(i);
   } else {
     eff5(i);
-    i++
-    eff6(i)
+    i++;
+    eff6(i);
   }
   eff7(i);
 }
-

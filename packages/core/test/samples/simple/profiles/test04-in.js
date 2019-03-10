@@ -1,7 +1,7 @@
 function a() {
-  console.log("hi")
-  e1()
-  e2()
+  console.log("hi");
+  e1();
+  e2();
   M.profile("minimal");
   p1();
   console.profile("minimal");

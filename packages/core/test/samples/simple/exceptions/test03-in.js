@@ -1,24 +1,24 @@
 function a() {
   var e, error;
   try {
-    console.log('1');
+    console.log("1");
     eff(1);
   } catch (error) {
     e = error;
-    console.log('2');
+    console.log("2");
   }
-  eff(e)
+  eff(e);
 }
 
 function a() {
   var e, error;
   try {
-    console.log('1');
+    console.log("1");
     eff(1);
   } catch (error) {
     e = error;
-    console.log('2');
+    console.log("2");
     error = null;
   }
-  eff(e)
+  eff(e);
 }

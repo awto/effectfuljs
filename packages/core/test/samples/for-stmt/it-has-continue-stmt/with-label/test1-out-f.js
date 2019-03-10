@@ -49,8 +49,6 @@ function f1() {
   }
 }
 
-;
-
 function f2() {
   var i, j, len, ref;
   ref = [1, 2, 3];
@@ -104,8 +102,6 @@ function f2() {
   }
 }
 
-;
-
 function f3() {
   var i, j, len, ref;
   ref = [1, 2, 3];
@@ -153,8 +149,6 @@ function f3() {
   function _6() {}
 }
 
-;
-
 function f4() {
   var i, j, len, ref;
   ref = [1, 2, 3];
@@ -183,8 +177,6 @@ function f4() {
     return M.jump(void 0, _1);
   }
 }
-
-;
 
 function f5() {
   var j, len;
@@ -216,5 +208,3 @@ function f5() {
 
   function _4() {}
 }
-
-;

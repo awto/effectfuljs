@@ -1,28 +1,28 @@
 function a() {
   {
-    eff1()
+    eff1();
     if (a1) {
-      eff2()
+      eff2();
     }
   }
-  M.option({coerce:false})
+  M.option({ coerce: false });
   {
-    eff3()
+    eff3();
     if (a2) {
-      eff4()
+      eff4();
     }
   }
   {
-    M.option({coerce:true})
-    eff5()
+    M.option({ coerce: true });
+    eff5();
     if (a3) {
-      eff6()
+      eff6();
     }
   }
   {
-    eff7()
+    eff7();
     if (a4) {
-      eff8()
+      eff8();
     }
   }
 }

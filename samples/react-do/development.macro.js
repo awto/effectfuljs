@@ -1,2 +1,4 @@
 /** macro for running tests */
-module.exports = require("./transform").options({importRT:"./main"}).macro()
+module.exports = require("./transform")
+  .options({ importRT: "./main" })
+  .macro();

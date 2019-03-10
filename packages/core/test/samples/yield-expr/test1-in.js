@@ -23,7 +23,7 @@ function* c() {
   i = 0;
   eff(1);
   i++;
-  eff(i)
+  eff(i);
   yield i;
   i++;
   eff(i);
@@ -46,7 +46,3 @@ function f() {
   M.answer();
   M.answer(3);
 }
-
-
-
-

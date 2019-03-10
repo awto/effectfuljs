@@ -1,23 +1,29 @@
-import * as Kit from "../kit"
-import {flatten,prepareScopes,consumeScope} from "../transform"
-import {parse} from "@babel/parser"
-import {doWhileStmt,forOfStmt} from "../loops"
-import {removeEmptyBinds} from "../transform"
-import * as assert from "assert"
-import {restore,equal,print,transformExpr} from "./kit/core"
-import * as Debug from "../debug"
-import * as Dump from "../dump"
-import * as State from "../state"
-import * as Block from "../block"
+import * as Kit from "../kit";
+import { flatten, prepareScopes, consumeScope } from "../transform";
+import { parse } from "@babel/parser";
+import { doWhileStmt, forOfStmt } from "../loops";
+import { removeEmptyBinds } from "../transform";
+import * as assert from "assert";
+import { restore, equal, print, transformExpr } from "./kit/core";
+import * as Debug from "../debug";
+import * as Dump from "../dump";
+import * as State from "../state";
+import * as Block from "../block";
 
-const run = (src) => transformExpr(Kit.pipe(
-  State.saveDecls,
-  restore,
-  State.restoreDecls,
-  Debug.mark,
-  consumeScope),src,{state:false,profile:"full"})
+const run = src =>
+  transformExpr(
+    Kit.pipe(
+      State.saveDecls,
+      restore,
+      State.restoreDecls,
+      Debug.mark,
+      consumeScope
+    ),
+    src,
+    { state: false, profile: "full" }
+  );
 
-describe("var decls",function() {
+describe("var decls", function() {
   it("should be moved to start of the function", function() {
     equal(
       run(`function() {
@@ -43,9 +49,10 @@ describe("var decls",function() {
         }
         
         /*ES|e*/ /*CE|B*/eff(4);
-      }`))
-  })
-  context('in for init', function() {
+      }`)
+    );
+  });
+  context("in for init", function() {
     it("should be moved to start of the function", function() {
       equal(
         run(`function() {
@@ -64,10 +71,11 @@ describe("var decls",function() {
           /*ES|e*/ /*CE|B*/eff(2);
           /*FS|E*/for (;k < 10;k++) /*ES|e*/ /*CE|B*/
           eff(3);
-        }`))
-    })
-  })
-  context('with destrs', function() {
+        }`)
+      );
+    });
+  });
+  context("with destrs", function() {
     it("should be moved to start of the function", function() {
       equal(
         run(`function() {
@@ -89,7 +97,8 @@ describe("var decls",function() {
             /*CE|B*/eff(_a, _b, _c, f, e))
           /*ES|e*/ /*CE|B*/ eff(_a, _b, _c,
              f, e, g);
-        }`))
-    })
-  })
-})
+        }`)
+      );
+    });
+  });
+});

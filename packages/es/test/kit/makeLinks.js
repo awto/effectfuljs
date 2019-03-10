@@ -1,4 +1,1 @@
-var dirs = [
-  "default",
-  "topLevel"
-].forEach(require("./links").target)
+var dirs = ["default", "topLevel"].forEach(require("./links").target);

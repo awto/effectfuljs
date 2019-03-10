@@ -1,23 +1,27 @@
-import * as Kit from "../kit"
-import {flatten,prepareScopes,consumeScope} from "../transform"
-import {parse} from "@babel/parser"
-import {doWhileStmt,forOfStmt} from "../loops"
-import {removeEmptyBinds} from "../transform"
-import * as assert from "assert"
-import {equal,print,transformExpr} from "./kit/core"
-import * as Prop from "../propagate"
-import * as Branch from "../branch"
-import * as Debug from "../debug"
-import * as Dump from "../dump"
-import * as Block from "../block"
-import * as Bind from "../bind"
+import * as Kit from "../kit";
+import { flatten, prepareScopes, consumeScope } from "../transform";
+import { parse } from "@babel/parser";
+import { doWhileStmt, forOfStmt } from "../loops";
+import { removeEmptyBinds } from "../transform";
+import * as assert from "assert";
+import { equal, print, transformExpr } from "./kit/core";
+import * as Prop from "../propagate";
+import * as Branch from "../branch";
+import * as Debug from "../debug";
+import * as Dump from "../dump";
+import * as Block from "../block";
+import * as Bind from "../bind";
 
-const run = transformExpr(Kit.pipe(
-  Bind.flatten,
-  Prop.recalcEff,
-  Debug.mark,
-  consumeScope))
+const run = transformExpr(
+  Kit.pipe(
+    Bind.flatten,
+    Prop.recalcEff,
+    Debug.mark,
+    consumeScope
+  )
+);
 
+// prettier-ignore
 describe('flatten expressions', function() {
   context('with logical sub expression', function() {
     it('should not let effect to escape 1', function() {
@@ -132,6 +136,7 @@ describe('flatten expressions', function() {
   })
 })
 
+// prettier-ignore
 describe('flatten `for-of`', function() {
   context('with effect in body', function() {
     it('should keep effect in body', function() {
@@ -168,6 +173,7 @@ describe('flatten `for-of`', function() {
   })
 })
 
+// prettier-ignore
 describe('flatten `for`', function() {
   context('with non-block in body', function() {
     it('should keep effect in the body', function() {
@@ -202,5 +208,3 @@ describe('flatten `for`', function() {
     })
   })
 })
-
-

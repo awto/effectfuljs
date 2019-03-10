@@ -1,4 +1,3 @@
-
 module.exports = {
   abstract: require("../default/links/generatorsBenchmarks"),
   abstractDefunct: require("../defunct/links/generatorsBenchmarks"),
@@ -14,4 +13,4 @@ module.exports = {
   minimal: require("../../../es-inline/test/minimal/links/generatorsBenchmarks"),
   minimalDefunct: require("../../../es-inline/test/minimalDefunct/links/generatorsBenchmarks"),
   minimalDelegate: require("../../../es-inline/test/minimalDelegate/links/generatorsBenchmarks")
-}
+};

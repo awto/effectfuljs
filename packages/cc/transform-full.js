@@ -1,1 +1,1 @@
-module.exports = require("./transform").options({profile:"defaultFull"})
+module.exports = require("./transform").options({ profile: "defaultFull" });

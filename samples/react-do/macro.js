@@ -1,1 +1,1 @@
-module.exports = require("./transform").macro()
+module.exports = require("./transform").macro();
