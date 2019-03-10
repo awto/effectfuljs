@@ -1,18 +1,16 @@
+/* eslint-disable no-console */
 import * as Kit from "./kit";
 import { tempNames } from "./scope";
 import * as Trace from "./trace";
 import {
   Tag,
-  produce,
   symName,
   consume,
-  symInfo,
   resetFieldInfo,
   typeInfo,
   removeNulls
 } from "./core";
 import generate from "@babel/generator";
-import * as T from "@babel/types";
 
 const BROWSER_DEBUG = Trace.BROWSER_DEBUG;
 
@@ -56,7 +54,6 @@ export const convertCtrl = Kit.pipe(
           if (ti.kind === "ctrl") {
             s.peel(i);
             const lab = s.label();
-            const nm = ti.name;
             const stmt = !fld.expr;
             yield s.enter(
               i.pos,
@@ -65,7 +62,7 @@ export const convertCtrl = Kit.pipe(
             );
             yield s.enter(stmt ? Tag.body : Tag.expressions, Tag.Array);
             if (!i.leave) {
-              for (let j; (j = s.curLev()) != null; ) {
+              while (s.curLev() != null) {
                 yield s.enter(Tag.push, Kit.Subst);
                 yield* walk(s.one());
                 yield* s.leave();

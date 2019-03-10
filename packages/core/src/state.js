@@ -1,28 +1,12 @@
 import * as Kit from "./kit";
-import {
-  Tag,
-  produce,
-  consume,
-  symbol,
-  scope,
-  invariant
-} from "@effectful/transducers";
-const { enter, leave, tok } = Kit;
+import { Tag, symbol, invariant } from "@effectful/transducers";
 import * as Block from "./block";
 import * as Bind from "./bind";
-import * as Branch from "./branch";
 import * as Loop from "./loops";
 import * as Ctrl from "./control";
 
 const emptyArr = [];
 const emptySet = new Set();
-const emptyMap = new Map();
-
-//TODO:
-export const hoistDecls = pred =>
-  function* hoistDecls(s) {
-    const sl = Kit.auto(s);
-  };
 
 /**
  * moves all variable declarations in decls field of a root Val
@@ -242,7 +226,7 @@ export function* restoreDecls(s) {
   const root = sl.first.value;
   const { ctxDeps, savedDecls: saved } = root;
   if (ctxDeps && ctxDeps.size) {
-    for (const [f, { copy, fld, ctx }] of ctxDeps) {
+    for (const { copy, fld, ctx } of ctxDeps.values()) {
       saved.set(copy, {
         raw: null,
         init: fld
@@ -276,7 +260,6 @@ export function* restoreDecls(s) {
               (a, b) => a[0].num - b[0].num
             );
             const vars = [];
-            const funs = [];
             const raw = [];
             const assigns = [];
             for (const [k, v] of decls) {
@@ -476,7 +459,7 @@ export function calcRefScopes(si) {
           case Tag.Identifier:
             const si = i.value.sym;
             if (si != null) {
-              const { lhs, rhs } = i.value;
+              const { lhs } = i.value;
               const symRoot = si.declScope;
               if (!symRoot) break;
               if (i.value.decl) {
@@ -511,7 +494,7 @@ export function calcRefScopes(si) {
   }
   collectScopes(s.first.value);
   // propagating function needs transformation flag
-  up: for (const i of funcs) {
+  for (const i of funcs) {
     if (i.opts.transform && i.topEff) {
       for (const j of i.scopeDecls) {
         j.track = true;
@@ -683,10 +666,9 @@ export function cleanScopeVars(si) {
   if (root.cfg.length) return sa;
   let first = root.cfg[0].stateVars;
   if (root.paramSyms) root.paramSyms.forEach(Set.prototype.add, first.w);
-  for (const [sym, { raw, init }] of root.savedDecls) {
+  for (const [sym, { init }] of root.savedDecls) {
     if (init) first.w.add(sym);
   }
-  const functionSentSym = root.functionSentSym;
 }
 
 /**
@@ -723,7 +705,7 @@ export function calcFrameStateVars(si) {
       first.s.add(i);
     }
   }
-  for (const [sym, { raw, init }] of root.savedDecls) {
+  for (const [sym, { init }] of root.savedDecls) {
     if (init) {
       first.w.add(sym);
       first.s.add(sym);
@@ -927,7 +909,6 @@ function localsDecls(cfg) {
 function propagateArgs(cfg) {
   // propagating writes in fact rarely needed, only if there are some
   // uninitialized variables
-  const dyn = [];
   function allReads(frame, seen) {
     if (frame.frameParamsClos != null) return frame.frameParamsClos;
     if (seen.has(frame)) return emptySet;
@@ -966,6 +947,7 @@ export function allUniqFields(syms, pref = "", postf = "") {
   const names = new Set();
   for (const sym of syms) {
     let name = `${pref}${sym.orig}${postf}`;
+    /* eslint-disable no-empty */
     for (
       let cnt = 0;
       names.has(name);

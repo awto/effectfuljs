@@ -2,10 +2,8 @@ import {
   produce,
   consume,
   Tag,
-  enter,
   resetFieldInfo,
   invariant,
-  leave,
   tok,
   symbol,
   symInfo,
@@ -141,11 +139,12 @@ export function* toks(pos, s, ...syms) {
         default:
           r = b.program.body[0];
       }
-      if (mod === "=" || mod === ">") {
-      } else if (mod === "*") {
-        r = b.program.body;
-      } else {
-        r = b.program.body[0];
+      if (mod !== "=" && mod !== ">") {
+        if (mod === "*") {
+          r = b.program.body;
+        } else {
+          r = b.program.body[0];
+        }
       }
       memo.set(s, r);
     }
@@ -191,10 +190,9 @@ export function skip(s) {
   let i = leanWrap(s).step();
   if (i.done) return i.value;
   let node = i.value.node;
-  let pos = node && (node.loc || node._loc);
   const babel = _opts.babel;
-  const name = i.value.value.stageName;
   if (!babel || _opts.debug || BROWSER_DEBUG) {
+    /* eslint-disable no-empty */
     for (; !(i = i.step()).done; ) {}
   } else {
     try {
@@ -324,6 +322,7 @@ export function result(s, buf) {
         }
       }
     } else e.esNode = node;
+    e.message = msg;
     throw e;
   }
   return i.value;
@@ -346,6 +345,7 @@ export function* toBlockBody(s) {
   if (i.type === Tag.BlockStatement) {
     s.peel();
     skip(s.peelTo(Tag.body));
+    /* eslint-disable require-yield */
     return function*() {
       skip(lab());
     };
@@ -457,11 +457,11 @@ export function share(s) {
       return this;
     },
     next(v) {
-      i = i.step();
+      i = i.step(v);
       return { value: i.value, done: i.done };
     },
     take(v) {
-      i = i.step();
+      i = i.step(v);
       return i.done ? null : i.value;
     }
   };
@@ -556,6 +556,7 @@ export const babelBridge = curry(function babelBridge(pass, path, state) {
     try {
       pass(produce({ type: "File", program: path.node }));
     } catch (e) {
+      /* eslint-disable no-console */
       console.log(e);
       throw path.hub.file.buildCodeFrameError(e.esNode, e.message);
     }
@@ -566,7 +567,7 @@ export const babelBridge = curry(function babelBridge(pass, path, state) {
 export function babelPreset(pass) {
   return {
     plugins: [
-      function(t) {
+      function() {
         return {
           visitor: {
             Program(path, state) {
@@ -1118,7 +1119,7 @@ export function pipe() {
  * similar to Ramda.curryN, likely less efficient,
  * but Ramda dependency can be dropped
  */
-export function curryN(num, fun, trace) {
+export function curryN(num, fun) {
   function step(args) {
     return function curryStep() {
       const next = args.concat(Array.from(arguments));
@@ -1457,8 +1458,6 @@ AFp.peelOpt = function() {
   if (!v || !v.enter) return null;
   return this.peel();
 };
-
-function* empty() {}
 
 /**
  * returns an iterator, if next tag is opening the iterator will

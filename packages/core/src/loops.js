@@ -1,7 +1,6 @@
 import * as Kit from "./kit";
 import { Tag, symbol, invariant } from "./kit";
 import { recalcEff } from "./propagate";
-import * as Block from "./block";
 import * as Ctrl from "./control";
 import * as Bind from "./bind";
 
@@ -168,7 +167,6 @@ function forOfStmtImpl(loose, s) {
       yield* lab();
     }
   }
-  let loopnum = 0;
   function* exit(loop, forOfExit) {
     const lab = s.label();
     const bind = loop.bindIter;
@@ -503,7 +501,6 @@ export const normalizeFor = Kit.pipe(
                         // yield sl.peel(Kit.setPos(j,Tag.push))
                         yield sl.enter(Tag.push, Tag.BlockStatement);
                         yield* sl.peelTo(Tag.body);
-                        const llab = sl.label();
                         if (test != null) {
                           yield sl.enter(Tag.push, Tag.IfStatement);
                           yield* test;
@@ -558,13 +555,11 @@ export const normalizeFor = Kit.pipe(
 
 export const repeat = symbol("repeat", "ctrl");
 
-const emptyArr = [];
-
 /** loops block scoping for ES5 output implementation */
 export function blockScoping(sa) {
   const s = Kit.auto(sa);
   let topRoot = s.first.value;
-  function* enterCase(value, stmt) {
+  function* enterCase(value) {
     yield s.enter(Tag.push, Tag.SwitchCase);
     yield s.tok(Tag.test, Tag.NumericLiteral, { node: { value } });
     yield s.enter(Tag.consequent, Tag.Array);
@@ -656,7 +651,6 @@ export function blockScoping(sa) {
             }
             break;
           case Tag.Identifier:
-            let nsym;
             const { sym } = i.value;
             // TODO: capture can be avoided:
             // if the body is not effectful

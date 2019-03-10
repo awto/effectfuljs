@@ -1,7 +1,6 @@
+/* eslint-disable no-console */
 import * as Kit from "./kit";
-import { Tag, produce, consume, symName } from "./kit";
-import * as Trace from "./kit/trace";
-import * as fs from "fs";
+import { Tag, consume, symName } from "./kit";
 import generate from "@babel/generator";
 
 const isNode = typeof window === "undefined";

@@ -4,9 +4,7 @@ import * as Block from "./block";
 import * as Bind from "./bind";
 import * as Ctrl from "./control";
 import * as Except from "./exceptions";
-import * as Branch from "./branch";
 import * as Loop from "./loops";
-import * as Par from "./par";
 
 /** marks frames with only jump in its payload, so no needs to check reentry */
 export function markSimpleRedir(si) {
@@ -107,8 +105,7 @@ export function storeContinuations(si) {
       if (i.enter && i.type === Block.frame) {
         const f = i.value;
         let assignResult = false,
-          assignError = false,
-          assignCont = false;
+          assignError = false;
         const rframe = f.resultContRedir;
         const eframe = f.catchContRedir;
         if (f.enters && f.enters.size) {
@@ -198,7 +195,6 @@ function generatorsYield(si) {
   const inlineYieldStar = inlineYieldStarOp === "iterator";
   const inlineScopeUnwrap = inlineScopeOp === "unwrap";
   const inlineScopeRetCtx = inlineScopeOp === "context";
-  const cont = s.opts.storeCont;
   if (
     !inlineYieldStar &&
     !inlineYield &&
@@ -209,7 +205,6 @@ function generatorsYield(si) {
   )
     return s;
   const { contextSym } = s.first.value;
-  const root = s.first.value;
   if (!contextSym)
     throw s.error(
       "inlineYieldOp: 'iterator' can be used only with scope context"
@@ -314,8 +309,6 @@ export function promises(si) {
   const { contextBy, defunct } = s.opts;
   if (s.opts.inlineChainOp !== "promise") return s;
   const root = s.first.value;
-  const { errFrameRedir, resFrameRedir, contextSym } = root;
-  const ctxRef = contextBy === "reference";
   const left = s.opts.leftChain;
   let localResolve = resolveSym;
   let localReject = rejectSym;
@@ -343,7 +336,6 @@ export function promises(si) {
               i.value.reflected
             )
               break;
-            const errCnt = i.value.ref.catchContRedir;
             const lab = s.label();
             yield s.enter(i.pos, Block.effExpr, i.value);
             yield* localReject
@@ -379,7 +371,7 @@ export function promisesClosure(si) {
     return s;
   const root = s.first.value;
   const left = s.opts.leftChain;
-  const { errFrameRedir, resFrameRedir, contextSym, savedDecls } = root;
+  const { savedDecls } = root;
   if (!s.opts.defunct)
     throw s.error(`'inlineChainOp:"leftChain"' requires 'defunct'`);
   const decls = savedDecls;
@@ -467,7 +459,6 @@ export function promisesClosure(si) {
       yield i;
     }
     const lab = s.label();
-    const threadPat = Kit.scope.newSym();
     if (left) {
       yield* localReject
         ? s.toks(
@@ -631,7 +622,6 @@ export function jumpOps(si) {
     root.handlerSym || (s.opts.inlineContAssign && root.contSym);
   const refCtx = contextBy === "reference" || contextBy === "closure";
   const paramCtx = contextBy === "parameter";
-  const thisCtx = contextBy === "this";
   const noResult = s.opts.returnContext === false;
   return Kit.toArray(_jumpOps());
   function* _jumpOps() {
@@ -783,7 +773,6 @@ export function jsExceptions(si) {
       if (i.enter && i.type === Block.frame) {
         i.value.hasTryWrap = false;
         const { catchContRedir: goto } = i.value;
-        const node = {};
         if (
           !goto ||
           i.value === errFrameRedir ||
@@ -797,7 +786,6 @@ export function jsExceptions(si) {
         yield s.enter(Tag.push, Tag.TryStatement);
         yield s.enter(Tag.block, Tag.BlockStatement);
         yield s.enter(Tag.body, Tag.Array);
-        let exits, exitLabSym;
         if (tailJumps) {
           yield* s.sub();
         } else {
@@ -858,7 +846,6 @@ export function pureOp(si) {
   const field = s.opts.storeCont,
     exitField = s.opts.storeResultCont;
   const exitCont = s.opts.defunct ? "0" : `$1.${exitField}`;
-  const root = s.first.value;
   return _pureOp();
   function* _pureOp() {
     for (const i of s) {
@@ -962,7 +949,6 @@ export function raiseOp(si) {
     throw new Error(`unknown 'inlineRaiseOp' option ${s.opts.inlineRaiseOp}`);
   const { resContSym, contSym } = s.first.value;
   const { defunct } = s.opts;
-  const noResult = s.opts.returnContext === false;
   const root = s.first.value;
   return _raiseOp();
   function* _raiseOp() {
@@ -1024,7 +1010,6 @@ export function raiseOp(si) {
 export function throwStatements(si) {
   const s = Kit.auto(si);
   if (!s.opts.inlineThrow) return s;
-  const { errFrameRedir } = s.first.value;
   return _throwStatements();
   function* _throwStatements() {
     for (const i of s) {
@@ -1066,42 +1051,13 @@ export function inlinePar(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
   if (s.opts.inlineFork !== "promise" || !root.hasPar) return s;
-  if (!s.opts.defunct)
-    throw s.error(`inlineFor:"promise" requires "defunct":true`);
   throw s.error("Not Implemented: `par` with `inline`");
-  return _inlinePar();
-  function* _inlinePar() {
-    for (const i of s.sub()) {
-      if (i.enter && i.type === Block.app) {
-        const { sym } = i.value;
-        if (sym === Par.shareId) {
-          const next = s.cur().value;
-          next.tmpVar = i.value.tmpVar;
-          next.reflected = i.value.reflected;
-          yield* _inlinePar();
-          s.close(i);
-          continue;
-        }
-        if (sym === Par.forkId) {
-          yield s.enter(i.pos, Block.effExpr, i.value);
-          yield* s.template(Tag.push, "=Promise.all($E)");
-          yield* s.sub();
-          yield* s.leave();
-          yield* s.leave();
-          s.close(i);
-          continue;
-        }
-      }
-      yield i;
-    }
-  }
 }
 
 /** coerce checks inlining (`inlineCoerce:true`) */
 export function coerce(si) {
   const s = Kit.auto(si);
   if (!s.opts.coerce || !s.opts.inlineCoerce) return s;
-  const root = s.first.value;
   const { bindName, inlineCoerceCheckIsFunc: checkIsFunc } = s.opts;
   return _coerce();
   function needsCoerce(n) {
@@ -1166,13 +1122,11 @@ export function invertForOf(si) {
   const root = sa[0].value;
   if (!root.opts.invertForOf || !root.hasForOf || !root.opts.inlineYieldStar)
     return sa;
-  const jumpsExit = root.opts.inlinePureJumps === "exit";
-  const dirCall = root.opts.storeCont === "step";
   return inject();
   function inject() {
     const s = Kit.auto(sa);
     const ctx = root.contextSym;
-    const { storeResultCont, storeCont: cont } = s.opts;
+    const { storeCont: cont } = s.opts;
     if (!ctx)
       throw s.error("not implemented: `invertForOf` without context object");
     if (s.opts.state)
@@ -1185,7 +1139,6 @@ export function invertForOf(si) {
       throw s.error("not implemented: `invertForOf` without `markRepeat`");
     if (s.opts.defunct)
       throw s.error("not implemented: `invertForOf` with `defunct`");
-    const paramCtx = s.opts.contextBy === "parameter";
     const frames = [];
     const res = Kit.toArray(_inject(s));
     return res;
@@ -1215,8 +1168,6 @@ export function invertForOf(si) {
               i.value.declSym.forOfInfo = i.value.forOfInfo;
               if (i.value.forOfFin) {
                 const cur = i.value.forOfFin;
-                const exit = cur.exit.goto;
-                const up = cur.up;
                 yield i;
                 Kit.skip(s.sub());
                 yield* s.toks(
@@ -1274,7 +1225,7 @@ export function invertForOf(si) {
               const j = s.cur();
               if (j.type !== Tag.Identifier || !j.value.forOfInfo) break;
               const { forOfInfo } = j.value;
-              let exit, up;
+              let up;
               if (forOfInfo.exit.indirJumps) {
                 for (const [dst, redir] of forOfInfo.exit.indirJumps) {
                   if (redir === forOfInfo.fin.goto) {
@@ -1350,7 +1301,6 @@ function replaceContextByClosure(si) {
   const root = s.first.value;
   const ctx = root.contextSym;
   const decls = root.savedDecls;
-  const contSym = root.contSym;
   decls.delete(ctx);
   const syms = new Map();
   return _replaceCtx();
@@ -1374,8 +1324,6 @@ function replaceContextByClosure(si) {
     }
   }
 }
-
-const yldId = Kit.sysId("yld");
 
 /** runs after `Flat.interpretJumps` */
 export const control = jumpOps;

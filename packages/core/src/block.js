@@ -221,7 +221,6 @@ export const splitEffBlock = Kit.pipe(
     const sl = Kit.auto(s);
     function* block(i) {
       invariant(i.enter);
-      const exit = sl.level - 1;
       const lab = sl.label();
       yield sl.peel(i);
       let r = sl.enter(Tag.push, frame);
@@ -408,14 +407,6 @@ export function* cleanup(si) {
  */
 export function applyIgnoreResult(si) {
   const sa = Kit.toArray(si);
-  function _markLastSeqExpr() {
-    for (let x = 0, len = sa.length; x < len; ++x) {
-      const i = sa[x];
-      i.value.lastSeqExpr = false;
-      if (i.leave && i.type === Tag.SequenceExpression)
-        sa[x - 2].value.lastSeqExpr = true;
-    }
-  }
   const s = Kit.auto(sa);
   _applyIgnoreResult(s, false);
   return sa;

@@ -233,7 +233,7 @@ export const Tag = {
 };
 
 for (const i in VISITOR_KEYS) {
-  const def = (TypeInfo[i] = symbolDefFor(i, "node"));
+  TypeInfo[i] = symbolDefFor(i, "node");
   for (const j of VISITOR_KEYS[i]) symbolDefFor(j, "pos").visitor = true;
   for (const j of BUILDER_KEYS[i]) symbolDefFor(j, "pos").builder = true;
 }
@@ -557,34 +557,6 @@ export function* produce(node, pos, value) {
 export function toArray(s) {
   if (Array.isArray(s)) return s;
   return [...s];
-}
-
-/**
- * same as consume but returns token's sequence with all fields
- * reset in its values
- */
-function* reproduce(s) {
-  const stack = [{}];
-  const res = [];
-  for (const i of s) {
-    res.push(i);
-    if (i.type == null || !Tag[Symbol.keyFor(i.type)]) continue;
-    if (i.enter) {
-      if (i.type === Tag.Array) {
-        stack.unshift((i.value.node = []));
-      } else {
-        if (i.value != null) i.value.type = symName(i.type);
-        stack.unshift(i.value.node);
-      }
-    }
-    if (i.leave) {
-      const value = stack.shift();
-      if (i.pos === Tag.push) {
-        stack[0].push(value);
-      } else stack[0][Symbol.keyFor(i.pos)] = value;
-    }
-  }
-  return res;
 }
 
 /**

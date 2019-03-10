@@ -28,6 +28,7 @@ const includes = glob("*.js", { cwd: harnessDir }).map(i =>
   fs.readFileSync(path.join(harnessDir, i), "utf-8")
 );
 
+/*
 mochaBDD(
   `language/
           expressions/
@@ -43,6 +44,7 @@ mochaBDD(
           /*.js`.replace(/\s/g, ""),
   "statements"
 );
+*/
 
 /**
  * converts files returned by glob `pat` and `opts` into mocha BDD test case

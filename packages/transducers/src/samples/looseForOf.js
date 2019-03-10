@@ -1,4 +1,4 @@
-import { produce, consume, Tag } from "../core";
+import { Tag } from "../core";
 import * as Kit from "../kit";
 import * as T from "@babel/types";
 import * as Match from "../match";
@@ -40,7 +40,6 @@ export default Kit.pipe(
               Kit.skip(s.till(v => v.enter && v.type === Match.Placeholder));
               const init = [...s.sub()];
               Kit.skip(s.till(v => v.enter && v.type === Match.Placeholder));
-              const blab = s.label();
               const body = [...Kit.inBlockBody(s, walk())];
               Kit.skip(s.till(v => v.leave && v.type === Match.Root));
               const lab = s.label();

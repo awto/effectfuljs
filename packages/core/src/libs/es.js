@@ -45,7 +45,6 @@ export default function options(si) {
           bindName: "chain",
           scopePrefix: true,
           scopeConstructor: "async",
-          static: true,
           combineOps: true,
           ops,
           wrapFunction: "asyncFunction"
@@ -64,7 +63,6 @@ export default function options(si) {
           bindName: "chain",
           scopePrefix: true,
           scopeConstructor: "asyncGenerator",
-          static: true,
           combineOps: true,
           ops,
           scopePostfix: true,

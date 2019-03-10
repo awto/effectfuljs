@@ -1,7 +1,6 @@
 import * as Kit from "./kit";
-import { Tag, symbol, tok, invariant } from "./kit";
+import { Tag, invariant } from "./kit";
 import * as Block from "./block";
-import * as Ctrl from "./control";
 import * as Prop from "./propagate";
 
 /**
@@ -35,7 +34,7 @@ export function interpretPureLet(si) {
 /**
  * Generates temporal local variable
  */
-export function tempVarSym(top, pat, byVal = top.opts.state) {
+export function tempVarSym(top, pat) {
   const sym = Kit.scope.newSym(pat);
   top.scopeDecls.add(sym);
   sym.track = true;
@@ -393,7 +392,6 @@ export function setSymInterpr(si) {
 
 /** removes redundant temp variables for JS effects binds */
 export function optimizePureLets(si) {
-  let curBind = null;
   const s = Kit.auto(si);
   function* collect() {
     const cur = [];

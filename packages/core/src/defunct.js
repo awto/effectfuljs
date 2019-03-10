@@ -1,7 +1,6 @@
 import * as Kit from "./kit";
 import { Tag, invariant } from "./kit";
 import * as Block from "./block";
-import * as Bind from "./bind";
 import * as Ctrl from "./control";
 import * as Except from "./exceptions";
 
@@ -49,7 +48,7 @@ export function* prepare(si) {
   // needs already running check
   if (!s.opts.loose) num++;
   let hasYldStar = false;
-  const first = (yield* s.till(i => i.type === Block.frame && i.leave)).value;
+  yield* s.till(i => i.type === Block.frame && i.leave);
   for (const i of s) {
     if (i.enter) {
       if (i.type === Block.frame) {
@@ -89,11 +88,10 @@ export function assignHandlers(si) {
     return s;
   }
   const root = s.first.value;
-  const contextSym = root.contextSym;
   const closureCtx = s.opts.contextBy === "closure";
   return _assignHandlers();
   function* _assignHandlers() {
-    const f = yield* s.till(i => i.type === Block.frame);
+    yield* s.till(i => i.type === Block.frame);
     if (!closureCtx) {
       if (root.closureHandler) {
         const lab = s.label();
@@ -129,7 +127,6 @@ export function stateMappings(si) {
   const root = s.first.value;
   const module = root.module;
   if (!root.errMap && !root.resMap) return s;
-  const implFrame = root.implFrame.value;
   return _stateMappings();
   function* _stateMappings() {
     for (const i of s) {
@@ -191,7 +188,6 @@ export function inlineExceptions(si) {
   if (!s.opts.inlineJsExceptions) return s;
   const root = s.first.value;
   const errMap = root.errMap;
-  const contextSym = root.contextSym;
   if (
     !errMap.size &&
     (!s.opts.keepLastRaise || s.opts.inlineRaiseOp === "promise")
@@ -211,7 +207,6 @@ export function inlineExceptions(si) {
   )
     return s;
   const { contSym, errContSym, commonPatSym } = root;
-  const fieldSym = Kit.sysId(s.opts.contFieldName);
   const implFrame = root.implFrame.value;
   const { discrimSym } = implFrame;
   const stateSym = contSym || discrimSym;
@@ -361,7 +356,6 @@ export function* frames(si) {
   yield s.enter(Tag.cases, Tag.Array);
   const clab = s.label();
   let hasJumps = false;
-  const noResult = s.opts.returnContext === false;
   for (const i of s.sub()) {
     if (i.enter && i.type === Block.frame) {
       if (i.value.catchContRedir !== errFrameRedir) hasJumps = true;

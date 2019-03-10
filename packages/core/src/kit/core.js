@@ -2,7 +2,6 @@ import {
   Tag,
   produce as esproduce,
   symbol,
-  toArray,
   isSymbol,
   invariant,
   symName,
@@ -10,7 +9,7 @@ import {
   consume as esconsume,
   scope
 } from "@effectful/transducers";
-import { pipe, curry, Wrapper, getOpts } from "@effectful/transducers/kit";
+import { pipe, curry, Wrapper } from "@effectful/transducers/kit";
 import * as T from "@babel/types";
 
 let curId = 0;

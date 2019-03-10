@@ -1,6 +1,5 @@
 import * as Kit from "./kit";
 import { Tag, invariant } from "./kit";
-import { recalcEff } from "./propagate";
 import * as Block from "./block";
 
 export const handleId = Kit.sysId("handle");

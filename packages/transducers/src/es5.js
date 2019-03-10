@@ -4,22 +4,13 @@
  * for simplification. They change synthesized nodes.
  */
 import * as Kit from "./kit";
-import { Tag, symInfo, symbol } from "./core";
-import * as Trace from "./trace";
+import { Tag, symInfo, newSymbol } from "./core";
 import * as Scope from "./scope";
 
 /** is to be converted into variable declaration if its `sym` is ever used */
-export const tempAssign = newSym("tempAssign");
+export const tempAssign = newSymbol("tempAssign");
 
-function isSynth(value) {}
-
-/**
- * if generated function uses `arguments` variable it will be aliased
- * to the closest not-generated function's ancestor
- */
-export function resolveArgumentsVar() {
-  const s = Kit.auto(si);
-}
+function isSynth() {}
 
 export function downArrowFunctions(si) {
   const s = Kit.auto(si);

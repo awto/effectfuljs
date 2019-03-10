@@ -1,8 +1,7 @@
 import * as Kit from "./kit";
-import { Tag, symbol, symInfo, invariant } from "./kit";
+import { Tag, symbol, invariant } from "./kit";
 import * as Match from "@effectful/transducers/match";
 // import {sync as resolve} from "resolve"
-import * as path from "path";
 
 /** token type for signaling config object changes */
 export const config = symbol("config");
@@ -16,8 +15,9 @@ export const ctImport = symbol("ctImport");
 export function postproc(f) {
   return function postprocRun(s) {
     let nxt = [];
+    /* eslint-disable no-empty */
     for (
-      let p, cur = s, curf = f;
+      let cur = s, curf = f;
       (curf = Kit.result(curf(cur), nxt)) != null;
       cur = nxt, nxt = []
     ) {}
@@ -53,7 +53,6 @@ function resolveImport(name, opts, optional = false) {
 /** applies `ctImport` from the stream */
 export const ctImportPass = postproc(function* ctImportPass(s) {
   s = Kit.auto(s);
-  let needInject = false;
   const post = [];
   for (const i of s) {
     if (i.type === ctImport) {
@@ -71,8 +70,6 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
   return Kit.pipe(...post);
 });
 
-let deb_nu = 0;
-
 /**
  * Recalculates `opts` field, by propagating parent opts fields to children.
  * Following fields are propagated:
@@ -87,7 +84,6 @@ export function propagateOpts(si) {
   const stack = [];
   const assignStack = [{}];
   const mergeStack = [{}];
-  const deb_id = deb_nu++;
   for (const i of sa) {
     const { optsDiff: diff, optsAssign: assign, optsSet: set } = i.value;
     if (diff != null || assign != null || set != null) {
@@ -98,21 +94,13 @@ export function propagateOpts(si) {
           assignStack.unshift(Object.assign({}, assignStack[0], assign));
         if (diff) mergeStack.unshift(merge(clone(mergeStack[0]), diff));
         if (assignStack.length > 1 || mergeStack.length > 1) {
-          const oldCur = cur.par;
           cur = clone(cur);
-          if (assignStack.length > 1) {
-            const oldCur = cur.par;
-            Object.assign(cur, assignStack[0]);
-          }
-          if (mergeStack.length > 1) {
-            const oldCur = cur.par;
-            merge(cur, mergeStack[0]);
-          }
+          if (assignStack.length > 1) Object.assign(cur, assignStack[0]);
+          if (mergeStack.length > 1) merge(cur, mergeStack[0]);
         }
       }
       i.value.opts = cur;
       if (i.leave) {
-        const oldCur = cur.par;
         cur = stack.pop();
         if (assign) assignStack.shift();
         if (diff) {
@@ -166,7 +154,7 @@ function aliases(s) {
   s = Kit.auto(s);
   const aliases = s.opts.moduleAliases;
   if (!aliases) return s;
-  return _aliases(s);
+  return _aliases();
   function* subst(j) {
     const alias = aliases[j.value.node.value];
     if (!alias) {
@@ -176,7 +164,7 @@ function aliases(s) {
     yield s.tok(j.pos, Tag.StringLiteral, { node: { value: alias } });
     Kit.skip(s.copy(j));
   }
-  function* _aliases(sw) {
+  function* _aliases() {
     for (const i of s) {
       if (i.enter) {
         if (i.pos === Tag.source && i.type === Tag.StringLiteral) {
@@ -240,7 +228,6 @@ export function callToBlockDirs(si) {
   const root = s.first.value;
   const imps = root.rtSyms.get(s.opts.blockDirsFunc);
   const impsSet = imps && new Set(imps);
-  const ns = root.$ns;
   return _callToBlockDirs();
 
   function* _callToBlockDirs() {
@@ -284,8 +271,6 @@ function namespaces(si) {
   const imports = root.imports;
   const verbose = s.opts.verbose;
   if (!imports) return s;
-  const patStr = s.opts.presetsImportPattern;
-  const pat = patStr && patStr.substr && new RegExp(patStr);
   let imp = s.opts.importRT;
   const preset = s.opts.preset;
   const presets = new Set();
@@ -330,6 +315,7 @@ function namespaces(si) {
   }
   for (const i of presets) cur = applyLib(i, false, cur);
   function applyLib(lib, optional, si) {
+    /* eslint-disable no-console */
     if (verbose)
       console.log(
         `${optional ? "trying to apply" : "applying"} presets from ${lib}...`
@@ -425,7 +411,6 @@ export const directives = Kit.pipe(
           throw s.error("not supported static expression");
       }
     }
-    let any = false;
     for (const i of s.sub()) {
       switch (i.type) {
         case Match.Root:
@@ -443,13 +428,11 @@ export const directives = Kit.pipe(
               yield s.tok(profile, { ns: j.value.node.name, node: { name } });
             } else {
               Kit.skip(s.till(j => j.enter && j.type === Match.Placeholder));
-              const j = s.cur();
               Kit.skip(s.till(j => j.enter && j.type === Match.Placeholder));
               yield s.tok(i.pos, configDiff, {
                 node: getConst(),
                 alg: "merge"
               });
-              any = true;
               Kit.skip(s.till(j => j.leave && j.type === Match.Root));
             }
           }
@@ -695,7 +678,6 @@ export function assignBindCalls(s) {
       ) {
         const prof = s.opts.bindCalls;
         if (prof) {
-          const j = s.cur();
           const q = i.value.qname;
           if (q != null) {
             let v = null;
@@ -933,7 +915,7 @@ export function propagateBlockDirs(si) {
  * `x => Object.assign(x, opts)`
  */
 export const injectOpts = opts =>
-  function* injectOpts(s) {
+  function* injectOpts() {
     yield Kit.tok(configDiff, { node: opts, alg: "assign" });
   };
 

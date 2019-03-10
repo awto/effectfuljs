@@ -35,8 +35,7 @@ Array.prototype.filter = function filter(fn, thisArg) {
 };
 
 Array.prototype.findIndex = function findIndex(fn, thisArg) {
-  var res = [],
-    i,
+  var i,
     len = this.length;
   for (i = 0; i < len; ++i) {
     if (fn.call(thisArg, this[i], i, this)) return i;
@@ -45,8 +44,7 @@ Array.prototype.findIndex = function findIndex(fn, thisArg) {
 };
 
 Array.prototype.find = function find(fn, thisArg) {
-  var res = [],
-    i,
+  var i,
     len = this.length,
     v;
   for (i = 0; i < len; ++i) {

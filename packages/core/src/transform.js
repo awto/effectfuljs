@@ -11,7 +11,6 @@ import * as Branch from "./branch";
 import * as Exceptions from "./exceptions";
 import * as Coerce from "./coerce";
 import * as Policy from "./policy";
-import * as Placeholder from "./placeholder";
 import * as Gens from "./generators";
 import * as Rt from "./rt";
 import * as Ops from "./operations";
@@ -68,12 +67,6 @@ const finalize = Kit.pipe(
   Rt.inject,
   Closure.depsToTop
 );
-
-const ifEff = Kit.enableIf(i => i.topEff);
-const ifTrack = (t, e) =>
-  function*(s) {
-    for (const i of s) yield Kit.enableIf(i => i.track, t, e);
-  };
 
 export const normalizeOnlyStage0 = Kit.map(
   Kit.pipe(
@@ -194,15 +187,12 @@ export function pass(s) {
   }
   sa = Kit.toArray(preproc(sa));
   if (!sa[0].value.$ns) return;
-  const transformMap = new Map();
   const inp = Kit.toArray(Scope.splitScopes(sa));
   let scopeNum = 0;
   const len = inp.length;
   const inject = (root.injectRT = new Map());
-  const namespaces = root.namespaces;
   opts = root.opts;
   if (!opts) return null;
-  let any = false;
   if (opts.importRT && !root.nsImported)
     inject.set(root.$ns, {
       module: opts.importRT,
@@ -243,7 +233,6 @@ export function pass(s) {
     if (value.track) {
       value.injectRT = inject;
       value.$ns = root.$ns;
-      any = true;
       if ((value.transform || f.transform) && value.topEff) transform.push(i);
       else normalize.push(i);
     } else others.push(i);
@@ -279,14 +268,14 @@ export function run(s) {
 }
 
 export function main(ast, opts = {}) {
-  return Kit.optsScope(function main(f) {
+  return Kit.optsScope(function main() {
     Kit.setOpts(opts);
     run(Kit.produce(ast));
     return ast;
   });
 }
 export function applyPass(ast, pass, opts = {}) {
-  return Kit.optsScope(function applyPass(f) {
+  return Kit.optsScope(function applyPass() {
     Kit.setOpts(opts);
     pass(Kit.produce(ast));
     return ast;

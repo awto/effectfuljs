@@ -1,15 +1,10 @@
 import { Tag } from "../core";
 import * as Kit from "../kit";
-import * as Trace from "../trace";
-import dump from "../dump";
 import * as Scope from "../scope";
 import * as RT from "../rt";
 
-import { symbol, produce } from "../core";
-
 const path = require("path");
 
-const thisSym = Scope.newSym("this", true);
 const globals = Scope.newSym("g");
 
 /** calculates captured vars dependencies */
@@ -29,9 +24,7 @@ function calcClosCapt(si) {
   }
   function walk(root, sw) {
     const decls = (root.clDecls = []);
-    const sym = (root.closSym = Scope.newSym(
-      (root.node.id && root.node.id.name) || "fn"
-    ));
+    root.closSym = Scope.newSym((root.node.id && root.node.id.name) || "fn");
     if (!root.ctxSym) root.ctxSym = Scope.newSym("loc"); // thisSym
     const closDeps = (root.closDepsSet = new Set());
     function id(i) {
@@ -143,12 +136,10 @@ function replaceCalls(si) {
 function* functToObj(si) {
   const s = Kit.auto(si);
   const hoisted = [];
-  const rtSym = Scope.newSym("RT");
   const closureSym = s.first.value.closureSym;
   const dpref = s.opts.closDepPrefix || "";
   const dpost = s.opts.closDepPostfix || "";
   const noThis = s.opts.noClosThis;
-  const root = s.first.value;
   function* walk(sw, root, blockHoisted) {
     const selfSym = (root.selfSym = !noThis && Scope.newSym("self"));
     function* func(i, pos) {

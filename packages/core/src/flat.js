@@ -20,8 +20,6 @@ import * as Inline from "./inline";
 import * as Par from "./par";
 import * as Opt from "./optimization";
 
-const undefinedSym = Kit.scope.undefinedSym;
-
 function byNumFst(a, b) {
   return a[0].num - b[0].num;
 }
@@ -138,9 +136,7 @@ export const convert = Kit.pipe(
       !s.opts.defunct &&
       !s.opts.inlineResultContAssign &&
       s.opts.storeResultCont;
-    const root = s.first.value;
     const frames = [];
-    let finContNum = 0;
     function setGoto(jumps, value) {
       for (const i of jumps) if (i.goto == null) i.goto = value;
     }
@@ -183,14 +179,13 @@ export const convert = Kit.pipe(
               /** the frame should be present in final output */
               i.value.noInline = false;
               i.value.chain = chain;
-              const declSym = (i.value.declSym = Kit.scope.newSym("_"));
+              i.value.declSym = Kit.scope.newSym("_");
               const inner = [i];
               frames.push(inner);
               cur = Kit.result(
                 Kit.repos(_convert(s.sub(), [], chain), Tag.push),
                 inner
               );
-              const last = inner[inner.length - 1];
               if (!i.value.eff && inner[inner.length - 1].type !== Ctrl.jump) {
                 const j = s.tok(Tag.push, Ctrl.jump);
                 inner.push(j);
@@ -341,7 +336,6 @@ export const convert = Kit.pipe(
   // sets a few useful fields
   function postproc(sa) {
     const s = Kit.auto(sa);
-    const root = s.first.value;
     const bindName = s.opts.bindName || "chain";
     _postproc();
     return sa;
@@ -456,7 +450,6 @@ export const convert = Kit.pipe(
       yield* s.leave();
       return [sym, f.value, fr.value, er.value];
     }
-    const lab = s.label();
     const frame = s.enter(Tag.push, Block.frame, {
       declSym: Kit.scope.newSym("_"),
       root,
@@ -519,7 +512,6 @@ export const convert = Kit.pipe(
     const preCompose = root.preCompose || [];
     preCompose.unshift(resFrame);
     const errPreCompose = [];
-    const resCont = root.resCont;
     const errSym = unboundTempVar(root, "err");
     return Kit.toArray(
       walk({ goto: null, errSym, preCompose: [], stack: [], hstack: [] })
@@ -724,7 +716,7 @@ export const convert = Kit.pipe(
         jump.goto = chain[0];
       }
     }
-    function* makeRedir(cont, finFrame) {
+    function* makeRedir(cont) {
       if (cont.goto && cont.goto.throwSym) {
         cont.redir = errFrameRedir;
         return;
@@ -762,7 +754,7 @@ export const convert = Kit.pipe(
           errSym: resSym
         });
         preComposeFrame(resCont, frame.preCompose);
-        redirFrames.push(...makeRedir(resCont, resFrame));
+        redirFrames.push(...makeRedir(resCont));
         if (resCont.goto) resCont.goto.noInline = true;
         return resCont;
       }
@@ -773,7 +765,7 @@ export const convert = Kit.pipe(
             catchCont.goto && catchCont.goto.errPreCompose
           );
           preComposeFrame(catchCont, chain);
-          redirFrames.push(...makeRedir(catchCont, frame));
+          redirFrames.push(...makeRedir(catchCont));
           catchCont.composed = true;
         }
         i.value.catchContRedir = catchCont.redir;
@@ -864,8 +856,7 @@ function* copyFrameVars(si) {
   const s = Kit.auto(si);
   const frame = yield* s.till(i => i.enter && i.type === Block.frame);
   const root = s.first.value;
-  const ctxSym = root.contextSym;
-  const rootDecls = root.savedDecls || (root.savedDecls = new Map());
+  if (!root.savedDecls) root.savedDecls = new Map();
   const reuseTemps = s.opts.reuseTempVars !== false;
   const commonPatSym = root.commonPatSym;
   yield* frameContent(frame.value);
@@ -880,7 +871,6 @@ function* copyFrameVars(si) {
     const first = frame === root.first;
     const decls = frame.savedDecls;
     const sw = frame.stateVars;
-    const subst = new Map();
     const vars = new Set();
     if (sw) {
       sw.w.forEach(vars.add, vars);
@@ -1075,7 +1065,6 @@ function* copyFrameVars(si) {
 
 export function interpretFrames(si) {
   const s = Kit.auto(si);
-  const unpackMax = s.opts.unpackMax;
   const root = s.first.value;
   const rootName = root.rootName;
   const top = !!s.opts.topLevel;
@@ -1158,16 +1147,12 @@ export function interpretFrames(si) {
 
 export function interpretJumps(si) {
   const s = Kit.auto(si);
-  const packAsObj = s.opts.packArgs === "object";
-  const { bindName, pureBindName, unpackMax } = s.opts;
+  const { bindName, pureBindName } = s.opts;
   const root = s.first.value;
-  const ctxSym = root.contextSym;
   const passCont = !s.opts.inlineContAssign;
   const passCatchCont = !s.opts.defunct && !s.opts.inlineErrorContAssign;
   const passResultCont = !s.opts.defunct && !s.opts.inlineResultContAssign;
-  const threadContext = s.opts.threadContext && [[ctxSym, ctxSym]];
   const { markRepeat, keepLastPure } = s.opts;
-  const { resFrameRedir } = root;
   return _interpretJumps();
   function* _interpretJumps() {
     for (const i of s.sub()) {
@@ -1180,10 +1165,9 @@ export function interpretJumps(si) {
             const pure = i.type === Ctrl.jump;
             const insideCtx = !frame.first;
             const lab = s.label();
-            const { goto, gotoDests, ref, delegateCtx } = i.value;
+            const { goto, gotoDests, delegateCtx } = i.value;
             let rec = pure && markRepeat && i.value.rec;
             const pos = i.pos;
-            const ctx = ctxSym;
             const defaultName = pure ? pureBindName : bindName;
             let name = i.value.bindName || defaultName;
             const st = s.opts.static || !s.opts.methodOps[name];
@@ -1205,7 +1189,6 @@ export function interpretJumps(si) {
                   });
               if (!i.leave) yield* _interpretJumps();
             } else {
-              const { sym: patSym } = i.value;
               let catchCont, resCont;
               if (goto) {
                 if (passCatchCont && i.value.catchContSym)
@@ -1425,7 +1408,6 @@ function cleanup(si) {
   } = root;
   const needResultCont = s.opts.keepLastPure || s.opts.storeResultCont;
   const needErrorCont = s.opts.keepLastRaise || s.opts.storeErrorCont;
-  const [resJump] = resFrame.exits;
   if (contextSym.bound === false) root.contextSym = null;
   const ns = s.opts.contextMethodOps && root.contextSym;
   for (const i of savedDecls.keys())

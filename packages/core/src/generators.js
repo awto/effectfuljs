@@ -1,13 +1,11 @@
 import * as Kit from "./kit";
 import { Tag } from "./kit";
-import { scope, jump } from "./control";
 import * as Bind from "./bind";
 import * as Block from "./block";
 
 /** marks ES syntax extensions as effectful operations  */
 export function prepare(si) {
   const s = Kit.auto(si);
-  const root = s.first.value;
   function* skip() {
     for (const i of s.sub()) {
       yield i;

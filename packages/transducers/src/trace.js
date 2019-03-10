@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import generate from "@babel/generator";
 import * as T from "@babel/types";
 import {
@@ -11,7 +12,6 @@ import {
 } from "./core";
 
 const MAX_TRACE_CODE_LEN = 40;
-const TYPE_SIZE = 20;
 export const BROWSER_DEBUG = typeof window !== "undefined" && window.chrome;
 const enterStyles = "background: #222; color: #bada55;font-size:1.5em";
 const leaveStyles = "color: #ee5757; background: black";
@@ -89,7 +89,6 @@ export function* verify(s) {
     if (i.enter && i.value.fieldInfo != null) {
       if (i.type === Tag.Array) {
         invariant(i.value.fieldInfo.array);
-      } else if (ti.kind === "node") {
       }
     }
     if (i.enter && !i.leave) {
@@ -136,10 +135,6 @@ function* traceNodeImpl(prefix, s) {
     let commentsTxt = "";
     const t = [].concat(i.value.comments || [], i.value.tcomments || []);
     if (t.length) {
-      for (const j of t) {
-        let c = j.txt;
-        c = i.enter ? j.txt : chalk.dim(j.txt);
-      }
       if (comments.length)
         commentsTxt = chalk.bold("[") + comments.join(" ") + chalk.bold("]");
     }
@@ -235,7 +230,6 @@ function* browserTraceImpl(prefix, s) {
     const { node } = i.value;
     const comments = [];
     let commentsTxt = "";
-    const commentsStyle = [];
     const t = [].concat(i.value.comments || [], i.value.tcomments || []);
     if (t.length) {
       const pstyle = "color:green;font-size:large";

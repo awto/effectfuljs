@@ -1,7 +1,5 @@
 import * as Kit from "./kit";
 import { Tag, enter, leave, tok, symbol, invariant } from "./core";
-import * as Trace from "./trace";
-import dump from "./dump";
 
 export const Root = symbol("match.root", "ctrl");
 export const Placeholder = symbol("match.placeholder", "ctrl");
@@ -9,7 +7,6 @@ export const Placeholder = symbol("match.placeholder", "ctrl");
 export const commit = Kit.pipe(
   Array.from,
   function*(s) {
-    const buf = [];
     for (let i of s) {
       switch (i.type) {
         case Root:
@@ -42,7 +39,7 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
   const pats = (Array.isArray(pattern) ? pattern : [pattern]).map(i =>
     Kit.toArray(Kit.toks(Tag.top, i))
   );
-  const starts = pats.map((i, x) => i[0].type);
+  const starts = pats.map(i => i[0].type);
   const plen = pats.length;
   const plens = pats.map(i => i.length);
   invariant(plens.filter(v => v === 0).length === 0);
@@ -62,7 +59,6 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
       const pat = activePat[p];
       const plen = pat.length;
       const v = activeTok[p];
-      const ph = activePh[p];
       if (x !== plen && x !== -1 && activePh[p] == null) {
         let j = pat[x++];
         //during generation we may neglect emitting empty arrays
@@ -86,7 +82,6 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
             case Tag.ExpressionStatement:
               const k = pat[x];
               if (k.type === Tag.Identifier) {
-                let block = false;
                 if (k.value.node.name[0] === "$") {
                   const ph = (activePh[p] = {
                     v,
@@ -106,7 +101,6 @@ export const inject = Kit.curry(function* matchInject(pattern, si) {
               break;
             case Tag.Identifier:
             case Tag.StringLiteral:
-              let block = false;
               const name = j.value.node.name || j.value.node.value;
               if (name[0] === "$") {
                 const ph = (activePh[p] = { v, level, name: name.substr(1) });

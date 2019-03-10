@@ -1,7 +1,6 @@
 import * as Kit from "./kit";
 import { Tag, symbol, invariant } from "./kit";
 import * as Block from "./block";
-import * as Branch from "./branch";
 import * as Ctrl from "./control";
 
 export const expr = symbol("coerceExpr", "ctrl");
@@ -18,12 +17,10 @@ coerceSymNs.nsDefault = true;
  */
 export function lift(s) {
   const sl = Kit.auto(s);
-  const coerce = false; // sl.opts.coerce
   function* walk() {
     for (const i of sl.sub()) {
       yield i;
       if (i.enter && i.value.eff) {
-        let alt = false;
         switch (i.type) {
           case Tag.IfStatement:
             if (!i.value.eff) {

@@ -1,4 +1,4 @@
-import { produce, consume, Tag } from "../core";
+import { Tag } from "../core";
 import * as Kit from "../kit";
 import * as T from "@babel/types";
 
@@ -148,10 +148,7 @@ export default Kit.pipe(
                     break;
                   }
                   Kit.skip(sl.one());
-                  const path = (i.value.path = [
-                    o.value.node.name,
-                    p.value.node.name
-                  ]);
+                  i.value.path = [o.value.node.name, p.value.node.name];
                   i.value.varInfo = info;
                   info.used.add(p.value.node.name);
                 }

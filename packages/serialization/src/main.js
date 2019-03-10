@@ -1,3 +1,4 @@
+/* global BigInt */
 /**
  * # Serialization library for @effectful toolchain
  */
@@ -107,7 +108,7 @@ export function parse(json) {
 export function bind(func, self, ...args) {
   const bind = (...rest) => func.apply(self, [...args, ...rest]);
   bind[descriptorSymbol] = {
-    write(ctx, value) {
+    write(ctx) {
       return {
         "#type": BindDescriptor.name,
         "#data": ctx.step({ func, self, args })
@@ -339,6 +340,7 @@ export function regDescriptor(descriptor) {
   const name = guessDescriptorName(descriptor);
   let uniq = name,
     i = 0;
+  /* eslint-disable no-empty */
   for (; descriptorByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
   descriptor = { ...descriptor, name: uniq };
   descriptorByName.set(descriptor.name, descriptor);
@@ -474,7 +476,7 @@ const OpaqueDescriptor = {
     if (!res) throw new Error(`not found object ${json["#oid"]}`);
     return this.value;
   },
-  write(ctx, value) {
+  write() {
     return { "#oid": this.name };
   }
 };

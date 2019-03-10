@@ -10,7 +10,7 @@
   "homepage": "https://github.com/awto/effectfuljs/tree/master/packages/es",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "eslint src && mocha",
     "build": "babel src --out-dir=.",
     "prepare": "npm run build"
   },
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "cross-env": "^5.1.1",
+    "eslint": "^5.15.1",
     "mocha": "^5.0.0"
   },
   "publishConfig": {

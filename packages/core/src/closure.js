@@ -1,14 +1,9 @@
 import * as Kit from "./kit";
 import { Tag, invariant } from "./kit";
 import * as State from "./state";
-import * as Block from "./block";
-import * as Loop from "./loops";
 import * as Bind from "./bind";
-import * as Ctrl from "./control";
 
 const emptyArr = [];
-const emptyMap = new Map();
-const emptySet = new Set();
 
 /** moves frame steps to top level of JS module */
 export function depsToTop(si) {
@@ -92,7 +87,7 @@ export const contextDecls = Kit.map(function contextDecls(si) {
 export function substContextIds(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
-  const { opts, contextSym, ctxDeps, savedDecls: saved } = root;
+  const { opts, contextSym, ctxDeps } = root;
   const subFieldsEnabled = opts.enableSubFields || root.hasPar;
   const varsSubField = subFieldsEnabled && opts.stateStorageField;
   const closSubField =

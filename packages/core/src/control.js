@@ -1,11 +1,5 @@
 import * as Kit from "./kit";
-import {
-  Tag,
-  produce,
-  consume,
-  symbol,
-  scope as vars
-} from "@effectful/transducers";
+import { Tag, symbol } from "@effectful/transducers";
 import * as Block from "./block";
 
 export const blockId = Kit.sysId("block");
@@ -19,7 +13,6 @@ export function assignLabels(s) {
   const sa = Kit.toArray(s);
   const sl = Kit.auto(sa);
   function scope(top) {
-    let labels = [];
     function walk(labs, map, brkLab) {
       for (const i of sl.sub()) {
         if (i.enter) {
@@ -204,11 +197,6 @@ export const injectBlock = Kit.pipe(
     Kit.pipe(
       function* injectScopeRefs(s) {
         const sl = Kit.auto(s);
-        function labName(i) {
-          let n = i.value.ctrl;
-          if (n[0] === "#") return "label";
-          return n;
-        }
         const root = sl.first.value;
         function* walk() {
           for (const i of sl.sub()) {
@@ -249,8 +237,6 @@ export const injectBlock = Kit.pipe(
   Array.from,
   Kit.map(function* injectJumps(si) {
     const s = Kit.auto(si);
-    const root = s.first.value;
-    const ctxDeps = root.ctxDeps;
     for (const i of s) {
       if (i.enter) {
         switch (i.type) {
@@ -414,7 +400,6 @@ export function instantiateJumps(frames) {
               break;
             case 1:
               j.goto = dests[0];
-              const { contArg } = j.ref;
               dst.declSym.bound = false;
               if (dst.catchContRedir) dst.catchContRedir.declSym.bound = false;
               if (dst.resultContRedir)

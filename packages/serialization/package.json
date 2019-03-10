@@ -13,7 +13,7 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "mocha",
+    "test": "eslint src && mocha",
     "build-module": "babel --env-name build src --out-dir .",
     "build-node": "babel --config-file ../es/babel.cjs.json -o index.js main.js",
     "build": "npm run build-module && npm run build-node",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/plugin-syntax-bigint": "^7.2.0",
+    "eslint": "^5.15.1",
     "mocha": "^5.1.0"
   }
 }

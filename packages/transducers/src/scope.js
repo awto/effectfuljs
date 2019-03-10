@@ -1,7 +1,6 @@
 import * as Kit from "./kit";
 import {
   Tag,
-  TypeInfo as TI,
   symbol,
   enter,
   leave,
@@ -10,7 +9,6 @@ import {
   resetFieldInfo,
   symInfo
 } from "./core";
-import * as Trace from "./trace";
 
 let symNum = 0;
 let curSymId = 0;
@@ -98,7 +96,6 @@ export const resetSym = Kit.pipe(
         if (i.enter) {
           switch (i.type) {
             case Tag.JSXIdentifier:
-              const name = i.value.node.name;
               if (i.value.sym) id(i.value, blockScope);
               break;
             case Tag.Identifier:
@@ -143,46 +140,6 @@ export const resetSym = Kit.pipe(
     return sa;
   }
 );
-
-/** puts init field before id in VariableDeclarator and for-of, for-in */
-function reorderVarDecl(si) {
-  const s = Kit.auto(si);
-  function* walk(sw) {
-    for (const i of sw) {
-      yield i;
-      if (i.enter) {
-        switch (i.type) {
-          case Tag.VariableDeclarator:
-            if (i.value.node.kind !== "var") {
-              const id = [...walk(s.one())];
-              if (s.curLev() != null) {
-                invariant(s.curLev().pos === Tag.init);
-                yield* walk(s.one());
-              }
-              yield* id;
-            }
-            break;
-          case Tag.AssignmentPattern:
-            const left = [...walk(s.one())];
-            yield* s.one();
-            yield* left;
-            break;
-          case Tag.ForAwaitStatement:
-          case Tag.ForOfStatement:
-          case Tag.ForInStatement:
-            const j = s.curLev();
-            if (j.type === Tag.VariableDeclaration) {
-              const left = [...walk(s.one())];
-              yield* s.one();
-              yield* left;
-            }
-            break;
-        }
-      }
-    }
-  }
-  return walk(s);
-}
 
 export function cloneSym(sym) {
   const res = newSym(sym.orig);
@@ -526,7 +483,6 @@ export const assignSym = Kit.pipe(
   function assignSym(si) {
     const sa = Kit.toArray(si);
     const s = Kit.auto(sa);
-    const root = s.first.value;
     function decls(sw, func, scope) {
       for (const i of sw) {
         if (i.enter) {
@@ -733,7 +689,6 @@ const reserved = new Map([["arguments", "args"]]);
  */
 function solve(si) {
   const sa = Kit.toArray(si);
-  const root = sa[0].value;
   const allIds = new Set();
   const idToks = [];
   const decls = new Set();
@@ -797,7 +752,7 @@ function solve(si) {
       for (const tup of rawSets) {
         tup.sort(byNum);
         let pos = 0;
-        tup: for (const i of tup) {
+        for (const i of tup) {
           if (i.name != null) continue;
           let result = i.orig;
           let nameScopes;
@@ -823,6 +778,7 @@ function solve(si) {
   for (const j of allIds) {
     if (!j.hasDecl && !j.strict && !j.global) {
       j.name = `${j.name}_UNDECL_${j.num}`;
+      /* eslint-disable no-console */
       console.warn(
         `INTERNAL ERROR: not declared generated symbol name ${j.name}`
       );

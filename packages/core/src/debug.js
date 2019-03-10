@@ -1,10 +1,8 @@
+/* eslint-disable no-console */
 import * as Kit from "./kit";
 import * as Trace from "./kit/trace";
 import {
   Tag,
-  produce,
-  consume,
-  symbol,
   symName,
   symInfo,
   dump as D,
@@ -99,12 +97,6 @@ export const traceOld = Kit.curry((prefix, s) => {
   )(s);
 });
 
-function varsPat(vars) {
-  vars.map(v => v.type || (v.type = "Identifier"));
-  if (vars.length === 1) return vars[0];
-  return { type: "ArrayPattern", elements: vars };
-}
-
 function hl(t, e, style) {
   return D.setComment(e, t, style || "large");
 }
@@ -136,7 +128,6 @@ export const dumbBindStmt = Kit.pipe(
         case "letStmt":
           const hasBind = i.value.sym != null;
           if (i.enter) {
-            let s = null;
             if (hasBind) {
               yield D.copyComment(
                 i,
@@ -653,7 +644,6 @@ function* markFrameSyms(s) {
     return res;
   }
   for (let i of s) {
-    const comment = [];
     if (i.enter) {
       if (i.pos === Tag.top) {
         let txt = "";

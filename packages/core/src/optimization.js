@@ -10,8 +10,8 @@ import * as Ctrl from "./control";
 export function inlineFrames(si) {
   const sa = Kit.toArray(si);
   const root = sa[0].value;
-  const { resFrame, resFrameRedir, pureExitFrame, errFrameRedir } = root;
-  const { staticPure, inlineReflectedOps } = root.opts;
+  const { resFrame, resFrameRedir, errFrameRedir } = root;
+  const { inlineReflectedOps } = root.opts;
   Ctrl.convolveFrames(sa);
   const res = Kit.toArray(_inlineJumps(sa));
   return Kit.toArray(Block.cleanup(res));
@@ -198,8 +198,8 @@ export function inlinePureCont(si) {
 export function removeSingleJumps(si) {
   const sa = Kit.toArray(si);
   const root = sa[0].value;
-  const { resFrame, resFrameRedir, pureExitFrame, errFrameRedir } = root;
-  const { scopePostfix, staticPure, coerce } = root.opts;
+  const { resFrame, resFrameRedir } = root;
+  const { scopePostfix } = root.opts;
   if (scopePostfix) {
     resFrame.noInline = true;
     resFrameRedir.noInline = true;
@@ -211,10 +211,7 @@ export function removeSingleJumps(si) {
   for (const i of cfgT) {
     const goto = _singleJump(i);
     if (!goto) continue;
-    const {
-      enters,
-      exits: [exit]
-    } = i;
+    const { enters } = i;
     for (const j of enters) {
       if (j.goto.dynamicJump) continue;
       j.goto = goto;
@@ -236,7 +233,7 @@ export function removeSingleJumps(si) {
   }
   return Kit.toArray(Block.cleanup(res));
 
-  function _singleJump(frame, cc, rc) {
+  function _singleJump(frame) {
     if (frame.noInline) return false;
     if (frame.savedDecls && frame.savedDecls.size) return false;
     const { steps } = frame;
@@ -276,7 +273,7 @@ export function removeUnreachable(cfg) {
         break;
       }
     }
-    const skipFirst = (i.noInline = i.noInline || i.first || i.last);
+    i.noInline = i.noInline || i.first || i.last;
   }
 
   const first = cfg[0];

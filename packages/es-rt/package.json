@@ -10,7 +10,7 @@
     "url": "git+https://github.com/awto/effectfuljs.git"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "eslint src && mocha",
     "test-opt": "cross-env-shell env-cmd $EJS_ENV mocha",
     "configure": "env-cmd configure,default babel src --out-dir .",
     "configure-opt": "cross-env-shell env-cmd $EJS_ENV babel src --out-dir .",
@@ -38,7 +38,7 @@
     "@babel/cli": "^7.0.0",
     "cross-env": "^5.1.1",
     "env-cmd": "^8.0.2",
-    "eslint": "^5.6.1",
+    "eslint": "^5.15.1",
     "mocha": "^5.2.0",
     "rollup": "^0.66.6"
   },

@@ -1,6 +1,5 @@
 import defaults from "./config";
 import * as Kit from "./kit";
-import * as path from "path";
 import * as T from "./transform";
 import * as Policy from "./policy";
 import * as RT from "./rt";
@@ -33,7 +32,7 @@ export function makePlugin(transform) {
       visitor: {
         Program(path, state) {
           state.file.scope.path.traverse(rescopeVisitor);
-          Kit.optsScope(function effectfulPreset(f) {
+          Kit.optsScope(function effectfulPreset() {
             Kit.setOpts({ ...defaults, ...descr.options });
             Kit.babelBridge(
               Kit.pipe(
@@ -142,7 +141,7 @@ function babelMacro(plugin) {
         opts.preprocNS = references.default[0].node.name;
       opts = plugin.transform(opts, helpers);
       const path = state.file.path;
-      Kit.optsScope(function effectfulMacroRun(f) {
+      Kit.optsScope(function effectfulMacroRun() {
         const eopts = opts.options;
         if (eopts.macroAdapt !== false) {
           if (eopts.detectRT) {

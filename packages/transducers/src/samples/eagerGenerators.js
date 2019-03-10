@@ -1,7 +1,6 @@
-import { produce, consume, Tag, symbol } from "../core";
+import { Tag, symbol } from "../core";
 import * as Kit from "../kit";
 import * as T from "@babel/types";
-import * as Trace from "../trace";
 
 const SpecVars = symbol("SpecVars", "ctrl");
 

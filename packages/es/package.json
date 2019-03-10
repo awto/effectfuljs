@@ -4,7 +4,7 @@
   "description": "Standard JavaScript effects using @effectful/core (abstract interface)",
   "main": "transform.js",
   "scripts": {
-    "test": "mocha",
+    "test": "eslint options.js && mocha",
     "test-opt": "cross-env env-cmd $EJS_ENV mocha",
     "test-deps": "git submodule update --remote --init --recursive --depth 1",
     "build-test262": "node ./test/kit/test262 default",
@@ -33,7 +33,7 @@
     "benchmark": "^2.1.4",
     "cross-env": "^5.1.1",
     "env-cmd": "^8.0.2",
-    "eslint": "^5.6.1",
+    "eslint": "^5.15.1",
     "glob": "^7.1.2",
     "mocha": "^5.2.0",
     "promise": "^8.0.1",

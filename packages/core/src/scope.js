@@ -1,6 +1,5 @@
-import { Tag, symInfo, enter, leave, tok, invariant } from "./kit";
+import { Tag, invariant } from "./kit";
 import * as Kit from "./kit";
-import * as Block from "./block";
 
 /**
  * unfortunately ObjectMethod type in babylon AST doesn't fit the split
@@ -255,7 +254,6 @@ export function funcWraps(si) {
   const ns = root.$ns;
   const mods = root.injectRT || emptyMap;
   const rootDefs = mods.get(ns);
-  let any = false;
   return hoist(_funcWraps(s));
   function sysId(name) {
     const sym = Kit.sysId(name);
@@ -296,7 +294,7 @@ export function funcWraps(si) {
     const s = Kit.auto(Kit.toArray(si));
     let nsFound = !root.nsImported;
     return _hoist(s);
-    function* _hoist(sw, subst, buf) {
+    function* _hoist(sw, subst) {
       for (const i of sw) {
         if (i.enter) {
           switch (i.type) {
@@ -475,7 +473,6 @@ export function funcWraps(si) {
             continue;
           case Tag.ObjectMethod:
             if (check(i)) {
-              let j;
               const lab = s.label();
               yield s.peel(Kit.setType(i, Tag.ObjectProperty));
               yield* s.one();

@@ -1,5 +1,5 @@
 import * as Kit from "./kit";
-import { enter, leave, tok, symKind, Tag } from "./kit";
+import { Tag } from "./kit";
 import * as Match from "@effectful/transducers/match";
 
 /** removing useless IIFE */

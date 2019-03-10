@@ -5,7 +5,6 @@
 import * as Kit from "./kit";
 import { Tag, invariant } from "./kit";
 import * as Block from "./block";
-import * as Bind from "./bind";
 import * as Ctrl from "./control";
 import * as State from "./state";
 
@@ -281,10 +280,9 @@ function buildGraph(nodes, edges) {
  *
  */
 function deriveBlocks(graph, s, root) {
-  const nodes = [];
   let threads = []; //: Thread[]
   let id = 0;
-  const { errFrameRedir, resFrameRedir, resFrame, pureExitFrame } = root;
+  const { errFrameRedir, resFrameRedir, pureExitFrame } = root;
   // here the last block may be recursive - if the former has a mark
   /** first letStmt stays in same frame, other frames are rebuilt */
   const first = graph[0][0];
@@ -419,7 +417,6 @@ function deriveBlocks(graph, s, root) {
   /** ## saving last step exit to assign it into the last join jump */
   let exitGoto, exitIndirGoto;
   if (last.block) {
-    const indirConts = last.ret.conts || emptySet;
     for (const i of last.ret.jumps) {
       const { jump, dynFrame } = i;
       const { indirJumps, frameArgs } = jump;
@@ -587,7 +584,6 @@ function deriveBlocks(graph, s, root) {
   for (const i of threads) {
     const steps = i.steps;
     for (const j of steps) {
-      const f = j.frame;
       if (j.toks) {
         for (const k of j.toks) {
           if (!k.block && k.ref) k.ref.removed = true;
@@ -855,7 +851,6 @@ function emitForkApp(si) {
   const root = s.first.value;
   root.hasEmptyThreads = false;
   if (!root.hasPar) return s;
-  const { resFrameRedir, pureExitFrame, forkTmpVar } = root;
   return _emitFork();
   function* _emitFork() {
     for (const i of s.sub()) {
@@ -954,8 +949,6 @@ function emitForkApp(si) {
  *   }
  */
 export function calcCfg(frames) {
-  const root = frames[0].root;
-  const { errFrameRedir, resFrameRedir } = root;
   const nodes = [];
   const jobs = [];
   for (const i of frames) {
@@ -1110,8 +1103,6 @@ export function calcCfg(frames) {
  */
 export function frameThreads(root, icfg) {
   const icfchains = [];
-  const iter = 0;
-  const len = icfg.length;
   const { pureExitFrame } = root;
   for (const i of icfg) {
     i.recHandled = i.available = i.handled = false;
@@ -1124,7 +1115,7 @@ export function frameThreads(root, icfg) {
   return icfchains.filter(notSingle);
   function _flow(node, block, schedule, loopExits) {
     const chain = [];
-    const chainNum = icfchains.push(chain);
+    icfchains.push(chain);
     trav: for (;;) {
       if (!node) {
         schedule.add(pureExitFrame);
@@ -1172,7 +1163,6 @@ export function frameThreads(root, icfg) {
         const subBlock = new Set();
         subBlock.add(node);
         const residual = new Set();
-        const loop = node.recEnters.size > 0;
         let blockNode = {
           block: true,
           loop: node.recEnters.size > 0,
@@ -1199,7 +1189,7 @@ export function frameThreads(root, icfg) {
           if (!i.exits.size) hasJoins = false;
           if (i.exits.size) {
             const threadBlock = new Set();
-            const subChain = _flow(i, threadBlock, residual, subLoopExits);
+            _flow(i, threadBlock, residual, subLoopExits);
             threadBlock.forEach(setAdd, subBlock);
             residual.delete(node);
             for (const i of residual) {
@@ -1260,7 +1250,6 @@ export function frameThreads(root, icfg) {
           chain.push({ block: false, value: node, rec: false });
         block.add(node);
       }
-      const prev = node;
       [node] = node.exits;
     }
     return chain;
@@ -1290,7 +1279,7 @@ function splitByRegion(fchain) {
   let [cur, ...rest] = fchain;
   let path = cur.first.region;
   const chains = new Array(path.length + 1);
-  const chain = (chains[path.length - 1] = [cur]);
+  chains[path.length - 1] = [cur];
   const res = [];
   for (const i of rest) {
     const next = i.first.region;
@@ -1362,10 +1351,8 @@ function unfoldLinks(chain) {
     if (i.block) {
       res.push(i);
       const avail = new Set(i.value.map(i => i.frame));
-      let dest;
       const indirDest = new Map();
       const jumps = [];
-      const indir = new Map();
       const conts = new Set();
       let join;
       for (const j of i.value) {
@@ -1435,17 +1422,13 @@ export function convert(si) {
   const root = s.first.value;
   root.hasPar = false;
   if (!root.hasParRegions) return sa;
-  let hasAny = false;
   State.calcFrameStateVars(sa);
-  const chains = [];
-  const inits = new Set();
   if (s.opts.cleanupFrameVars)
     throw new Error("NOT IMPLEMENTED: `par` with `cleanupFrameVars:true`");
   if (!s.opts.keepLastPure)
     throw new Error("`par` requires `keepLastPure:true`");
   Ctrl.convolveFrames(sa);
   const frames = root.cfg;
-  const [initJump] = root.first.exits;
   const icfg = calcCfg(frames);
   /** preventing continuation assignment inlining */
   if (root.opts.scopePrefix) {
@@ -1649,9 +1632,7 @@ function contextThreading(si) {
     throw new Error(
       'Invalid value for "parThreadState": "${opts.parThreadState}"'
     );
-  const vars = new Set();
-  let cnt = 0;
-  const { errFrameRedir, resFrameRedir, savedDecls, implFrame } = root;
+  const { savedDecls, implFrame } = root;
   const tempSavedDecls = implFrame ? implFrame.value.savedDecls : savedDecls;
   /** detecting conflicting variables writes */
   for (const fork of root.parDefs) {
@@ -1705,9 +1686,8 @@ function contextThreading(si) {
     }
     const forkConfls = (fork.confl = new Map());
     /** # calculating threads read/write conflicts */
-    const rec = fork.loop && fork.threads[fork.threads.length - 1];
     for (const thread of fork.threads) {
-      const { parThreads, left, use, confl } = thread;
+      const { parThreads, use, confl } = thread;
       for (const i of parThreads) {
         for (const sym of i.set) {
           if (use.has(sym) && !confl.has(sym)) {
@@ -1734,7 +1714,6 @@ function contextThreading(si) {
             }
             const id = ++info.num;
             const copy = Kit.scope.newSym(`${sym.orig}$`);
-            const { mask } = info;
             const inst = {
               sym,
               id,
@@ -1952,7 +1931,6 @@ function contextThreading(si) {
               Kit.skip(s.one());
               insts.push(inst);
             } else {
-              const op = i.value.node.operator;
               buf = [];
               for (const j of s.one()) {
                 if (j.enter && j.type === Tag.Identifier && j.value.lhs) {
@@ -2027,7 +2005,6 @@ function contextThreading(si) {
     invariant(varFork.loopLevel >= 0);
     const loops = ctxFork.loopLevel - varFork.loopLevel;
     invariant(loops >= 0);
-    const lab = s.label();
     yield s.enter(pos, Tag.MemberExpression);
     for (let i = 0; i < loops; ++i)
       yield s.enter(Tag.object, Tag.MemberExpression);
@@ -2104,7 +2081,7 @@ function contextThreading(si) {
       }
       yield* s.leave();
     }
-    for (const [sym, info] of fork.confl) {
+    for (const info of fork.confl.values()) {
       if (info.mask)
         yield* _prop(info.mask.fieldName, Tag.NumericLiteral, {
           node: { value: 0 }
@@ -2138,8 +2115,7 @@ function contextThreading(si) {
   }
   /** initializes non-loop fork TLS */
   function* _init(fork) {
-    for (const [sym, info] of fork.confl) {
-      let needsMaskInit = !!info.mask;
+    for (const info of fork.confl.values()) {
       const lab = s.label();
       yield s.enter(Tag.push, Tag.AssignmentExpression, {
         node: { operator: "=" }
@@ -2276,9 +2252,6 @@ function setIndirGoto(jump, newGoto) {
     jump.frameArgs.set(dyn.declSym, newGoto.declSym);
   }
 }
-
-const emptySet = new Set();
-const emptyMap = new Map();
 
 function notSingle(chain) {
   return chain.length > 1;

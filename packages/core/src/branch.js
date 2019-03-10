@@ -1,8 +1,6 @@
 import * as Kit from "./kit";
 import { Tag, symbol, symInfo, invariant } from "./kit";
-import * as Block from "./block";
 import * as Bind from "./bind";
-import * as Prop from "./propagate";
 
 export const fork = symbol("branch.fork");
 export const thread = symbol("branch.thread");

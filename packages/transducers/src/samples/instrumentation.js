@@ -1,6 +1,5 @@
 import { Tag } from "../core";
 import * as Kit from "../kit";
-import * as Trace from "../trace";
 
 export default Kit.pipe(
   Kit.wrap("instrumentation", function(s) {
@@ -111,7 +110,7 @@ export default Kit.pipe(
   Array.from,
   //TODO: common pass
   Kit.wrap("instrumentation-spec-vars", function(s) {
-    function* walk(e) {
+    function* walk() {
       for (const i of s.sub()) {
         yield i;
         if (i.enter) {

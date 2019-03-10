@@ -113,7 +113,7 @@ export function inject(si) {
   const mods = root.injectRT;
   if (!mods || !mods.size) return s;
   const rt = (root.rt = { importSyms: [], importNs: [], inlineSyms: [] });
-  for (const [ns, def] of mods) {
+  for (const def of mods.values()) {
     if (!def.usages.size) continue;
     if (def.content)
       rt.inlineSyms.push({ syms: def.usages, content: def.content });

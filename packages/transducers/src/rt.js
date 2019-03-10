@@ -1,13 +1,6 @@
 import * as Kit from "./kit";
 import * as Scope from "./scope";
-import {
-  produce,
-  Tag,
-  TypeInfo as TI,
-  symbol,
-  tok,
-  resetFieldInfo
-} from "./core";
+import { produce, Tag } from "./core";
 
 /**
  * injects ES6 `import` or commonjs `require`
@@ -27,7 +20,7 @@ export function* importSyms(si) {
   yield* Kit.fileBody(s);
   const commonjs = s.opts.modules === "commonjs" || s.opts.modules === "cjs";
   const esDefault = s.opts.modules === "esDefault";
-  for (const { syms, ns, module } of rt.importSyms) {
+  for (const { ns, module } of rt.importSyms) {
     yield* s.toks(
       Tag.push,
       commonjs

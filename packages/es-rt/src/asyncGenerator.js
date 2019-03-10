@@ -1,7 +1,5 @@
-import { iterator } from "./leanIterator";
 import { forInIterator } from "./forInIterator";
 import { iteratorM, AsyncIterator, cancel, ignore } from "./leanAsyncIterator";
-import { Async } from "./async";
 import { cancel as cancelSym } from "./symbol";
 
 export var asyncGeneratorFunction;
@@ -54,7 +52,6 @@ var runImpl;
 var DELEGATE_RESUME = 3;
 
 if (!process.env.EJS_INLINE) {
-  var Ap = Async.prototype;
   AGp.scope = function(step) {
     this.$cur = this.$step = step;
     return this;
@@ -142,20 +139,14 @@ function proceed(ctx) {
 }
 
 function redirCancel(ctx) {
-  console.log("canceling", ctx.$await, ctx.$run.name);
   return ctx.chain(ignore(cancel(ctx.$await)), ctx.$fin(ctx.$step)).then(
     function(v) {
-      var i;
-      console.log("continue 2", ctx.$run.name);
-      // ctx.$resolveCont(v)
       while (ctx.$q.length) ctx.$q.shift().cont(v);
       ctx.$q.length = 0;
       ctx.$busy = null;
       return v;
     },
     function(e) {
-      var i;
-      // ctx.$rejectCont(e)
       while (ctx.$q.length) ctx.$q.shift().errCont(e);
       ctx.$q.length = 0;
       ctx.$busy = null;
@@ -168,19 +159,17 @@ function nop() {}
 
 AGp.next = function next(value) {
   var ctx = this,
-    res,
-    i;
+    res;
   if (process.env.EJS_NO_ASYNC_ITERATOR_QUEUE) {
     res = Promise.resolve(runImpl(this, value));
   } else {
     if (ctx.$busy) {
       res = new Promise(function(cont, errCont) {
-        ctx.$q.push((i = { value: value, cont: cont, errCont: errCont }));
+        ctx.$q.push({ value: value, cont: cont, errCont: errCont });
       });
     } else {
       res = Promise.resolve(runImpl(this, value));
       ctx.$busy = true;
-      // ctx.$busy = res.then(ctx.$proceed,ctx.$proceed)
     }
   }
   if (!process.env.EJS_NO_UNWRAP_ASYNC_ITERATOR) {

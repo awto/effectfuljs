@@ -548,7 +548,7 @@ Producer.prototype[Symbol.asyncIterator] = function() {
   return this;
 };
 
-Producer.prototype.next = function(value) {
+Producer.prototype.next = function() {
   var res = new Residual();
   if (this.oq.length) res.resume(this.oq.shift());
   else this.iq.push(res);

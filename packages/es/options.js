@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const C = require("@effectful/core");
 const config = C.config;
 const Policy = C.Policy;
@@ -21,7 +22,6 @@ const rebind = {
     markArgNum: false,
     markErrorCont: false,
     markResultCont: false,
-    scopeContext: true,
     scopePrefix: true,
     contextState: false,
     defunct: false,
@@ -216,13 +216,6 @@ const topLevelDefunct = {
   }
 };
 
-const disabled = {
-  pure: { transform: false, loose: false, importRT: null },
-  generators: { transform: false, loose: false, importRT: null },
-  async: { transform: false, loose: false, importRT: null },
-  asyncGenerators: { transform: false, loose: false, importRT: null }
-};
-
 module.exports = function esProfile(opts = {}) {
   let importRT = opts.importRT;
   if (opts.persist) opts.topLevel = true;
@@ -388,7 +381,6 @@ module.exports = function esProfile(opts = {}) {
     opts.asyncGenerators,
     { generator: true, async: true, transform: true }
   );
-  let any = false;
   return {
     syntaxPlugins: ["asyncGenerators", "functionSent"],
     options: file,

@@ -1,8 +1,6 @@
-import { Tag, symbol } from "./kit";
+import { Tag } from "./kit";
 import * as Kit from "./kit";
 import * as Block from "./block";
-import * as State from "./state";
-import * as Prop from "./propagate";
 
 const op = Block.op;
 

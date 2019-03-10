@@ -45,7 +45,7 @@ ALIp.exit = function exit() {
   return this;
 };
 
-ALIp.handle = function handle(e) {
+ALIp.handle = function handle() {
   return this.exit();
 };
 

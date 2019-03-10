@@ -66,7 +66,6 @@ Gp.handle = function handle(value) {
 Gp.exit = function exit(value) {
   if (this.$step === delegateCont) {
     try {
-      var iter = this.$sub;
       this.$resume = this.$fin(this.$resumeCur);
       return this.$redirResult(this.$sub.exit(value));
     } catch (e) {
@@ -135,7 +134,7 @@ if (!process.env.EJS_INLINE) {
     return this;
   };
 
-  Gp.yldStar = function yldStar(iter, step, handle, exit) {
+  Gp.yldStar = function yldStar(iter, step) {
     this.$resumeCur = this.$cur;
     this.$step = delegateCont;
     this.$resume = step;
@@ -143,7 +142,7 @@ if (!process.env.EJS_INLINE) {
     return this.$redir(void 0);
   };
 
-  Gp.jump = Gp.jumpR = function jump(value, step, handle, exit) {
+  Gp.jump = Gp.jumpR = function jump(value, step) {
     try {
       this.$step = step;
       if (process.env.EJS_NO_TRAMPOLINE) return this.step(value);
@@ -157,7 +156,7 @@ if (!process.env.EJS_INLINE) {
     }
   };
 
-  Gp.scope = function scope(step, handle, exit) {
+  Gp.scope = function scope(step) {
     this.$cur = this.$step = step;
     return this;
   };
