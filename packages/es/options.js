@@ -37,6 +37,7 @@ const rebind = {
     inlineScopeOp:null,
     esForAwaitOf:true,
     defunctStateDiscriminant:false,
+    blockDirsFunc:"profile",
     contextMethodOpsSpec: {
       iterator:false,
       iteratorM:false,

@@ -100,9 +100,8 @@ Other options are:
   function callback
   * `topLevel` - if `true` moves state transition functions outside original
   function's body
-  * `par` - enables implicit parallelism - enables `"par"`/`"seq:` JavaScript 
-  directives, it is default to `true` but the generated code will be still the 
-  same as if it is `false` if you don't use `"par"` directives.
+  * `par` - enables implicit parallelism. It doesn't yet work with 
+  "inline", "loose" and "topLevel"
 
 There are quite a few of lower level options described in
 [config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js).
@@ -117,7 +116,52 @@ of defaulting ES for runtime injection use:
 }
 ```
 
-More docs will be available soon...
+## Implicit parallelism
+
+If enabled the compiler will locate "par" and "seq" in the beginning
+of the block to switch between parallel and sequential mode resp.
+
+For example:
+
+```javascript
+async function parDemo() {
+  "par";
+  const a = await A;
+  const b = await B(a);
+  const c = await C;
+}
+```
+
+ESLint complains about not used expressions, so as an alternative to
+the directives there is `profile` function which expects a single
+string literal parameter ("par" or "seq"):
+
+
+```javascript
+import * as M from "@effectful/es"
+
+async function parDemo() {
+  M.pofile("par");
+  const a = await A;
+  {
+    M.profile("seq")
+    const b = await B;
+    const c = await C;
+  }
+}
+```
+
+## Cancelation
+
+By default, the runtime also adds `M.cancelSymbol` property to each
+returned Promise.  It is a function and it tries to stop the execution
+of the corresponding async function.  The cancelation is propagated to
+`await` expressions if they have this method, but it isn't propagated
+to children.
+
+There is also a helper function `M.cancel` which simply calls
+`promise[M.cancelSymbol]()` if it exists.
+
 
 ## LICENSE
 

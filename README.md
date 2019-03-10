@@ -16,12 +16,12 @@ There are such libraries for:
      * Concrete API -
        [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es),
        the best performance
-     * Implicit parallelism - Docs SOON
+     * Implicit parallelism
      * Deriving program's static graphs for analysis and conversion to other
-       languages - SOON
+       languages - WIP
  * Multi-prompt delimited continuations -
    [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/cc)
- * Logical programming - SOON [Old version](https://github.com/awto/mfjs-logic)
+ * Logical programming - WIP [Old version](https://github.com/awto/mfjs-logic)
 
 Not yet implemented:
   * probabilistic programming
@@ -103,7 +103,7 @@ some interesting part.
 Check [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/es) for 
 more details.
 
-## Implicit parallelism (WIP)
+## Implicit parallelism
 
 Async functions considerably simplify asynchronous source code. But it
 serializes operation execution. Next operation executes only after the current
