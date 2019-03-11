@@ -111,58 +111,6 @@ function restoreMethods(si) {
 }
 
 /**
- * adds variables generated after assignSymbolDecls into ctx
- */
-export function recalcLocals(sl) {
-  const sa = Kit.toArray(sl);
-  const s = Kit.auto(sa);
-  const root = s.take().value;
-  const ctx = root.ctx;
-  const { locs, vars, refs } = ctx;
-  Kit.skip(s.untilPos(Tag.body));
-  _recalcLocals(vars);
-  return sa;
-  function _recalcLocals(vars, block) {
-    for (const i of s.sub()) {
-      if (i.enter) {
-        switch (i.type) {
-          case Tag.BlockStatement:
-            _recalcLocals((i.value.blockVars = Object.create(vars)), i.value);
-            break;
-          case Tag.Identifier:
-            const info = vars[i.value.node.name];
-            if (info != null) {
-              i.value.sym = info.sym;
-              refs.set(info.sym, info);
-              if (info.root !== root)
-                (info.capt || (info.capt = new Set())).add(root);
-            }
-            break;
-          case Tag.VariableDeclarator:
-            for (const j of s.one()) {
-              if (j.enter && j.type === Tag.Identifier && j.value.sym == null) {
-                const { name } = j.value.node;
-                const sym = (j.value.sym = Symbol(name));
-                const info = {
-                  sym,
-                  name,
-                  param: false,
-                  root,
-                  block,
-                  value: i.value
-                };
-                locs.set(sym, info);
-                vars[name] = info;
-              }
-            }
-            break;
-        }
-      }
-    }
-  }
-}
-
-/**
  * takes a stream of tokens and split it into an array of streams
  * with each element representing a function from the original stream
  */

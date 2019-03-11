@@ -87,92 +87,6 @@ export function interpretApp(s) {
   }
   return walk(sl);
 }
-/**
- * for each `frame` adds its index in `chain` and for each `chain`
- * total number of frames
- */
-function* countEffSeqFramesImpl(s) {
-  const stack = [];
-  let level = 0;
-  for (const i of s) {
-    yield i;
-    if (i.enter) {
-      const f = stack[stack.length - 1];
-      if (f != null && f.l === level) i.value.index = f.c++;
-      level++;
-      if (i.type === chain) stack.push({ l: level, c: 0 });
-    }
-    if (i.leave) {
-      level--;
-      if (i.type === chain) {
-        const f = stack.pop();
-        i.value.count = f.c;
-      }
-    }
-  }
-}
-
-/** eager `countEffSeqFramesImpl` */
-const countEffSeqFrames = Kit.pipe(
-  countEffSeqFramesImpl,
-  Array.from
-);
-
-/** removes useless pure frames */
-export const cleanPureFrames = Kit.pipe(
-  countEffSeqFramesImpl,
-  //TODO: use matcher
-  function* markPureFrame(s) {
-    const sl = Kit.auto(s);
-    for (const i of sl) {
-      yield i;
-      if (i.enter && i.type === frame) {
-        const j = sl.take();
-        yield j;
-        if (j.type !== letStmt) {
-          continue;
-        }
-        const k = sl.curLev();
-        i.value.pureFrame = k != null && k.type === pure;
-      }
-      //TODO: check argument
-    }
-  },
-  Array.from,
-  function*(s) {
-    const sl = Kit.auto(s);
-    for (const i of sl) {
-      if (i.type === frame && i.value.pureFrame && i.value.index > 0) {
-        if (i.enter) Kit.skip(sl.sub());
-      } else {
-        yield i;
-      }
-    }
-  }
-);
-
-/** removes empty and single length chain tags */
-
-export const cleanupEffSeq = Kit.pipe(
-  countEffSeqFrames,
-  function* cleanupEffSeq(s) {
-    const sl = Kit.auto(s);
-    function* walk() {
-      for (const i of sl.sub()) {
-        if (i.enter && i.type === chain && i.value.count < 2) {
-          yield sl.enter(i.pos, Kit.Subst);
-          yield* walk();
-          yield* sl.leave();
-          sl.take();
-          continue;
-        }
-        yield i;
-      }
-    }
-    yield* walk();
-  },
-  Kit.completeSubst
-);
 
 /** corrects JS AST nodes types to match specification */
 export const interpretCasts = Kit.pipe(
@@ -304,37 +218,6 @@ export function* cleanPureEff(s) {
     }
     yield i;
   }
-}
-
-/**
- * for frames ending with effectful let adds its reference to `effLet` field
- *
- *     type Value = Value & { effLet?: Value }
- *
- * for `Block.frame`
- */
-export function saveFrameLet(si) {
-  const sa = Kit.toArray(si);
-  const s = Kit.auto(sa);
-  function walk(f) {
-    for (const i of s) {
-      if (i.enter) {
-        switch (i.type) {
-          case frame:
-            if (i.value.eff) walk(i.value);
-            break;
-          case letStmt:
-            if (i.value.eff) {
-              invariant(f);
-              f.effLet = i.value;
-              f = null;
-            }
-        }
-      }
-    }
-  }
-  walk();
-  return sa;
 }
 
 /** adds contextSym namespace to library symbols

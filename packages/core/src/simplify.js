@@ -1,27 +1,5 @@
 import * as Kit from "./kit";
 import { Tag } from "./kit";
-import * as Match from "@effectful/transducers/match";
-
-/** removing useless IIFE */
-export const iife = Kit.pipe(
-  Match.run("=(() => { return $$; })()"),
-  function(s) {
-    s = Kit.auto(s);
-    function* walk() {
-      for (const i of s.sub()) {
-        if (i.type === Match.Root) {
-          if (i.enter) {
-            for (const j of s.sub()) {
-              if (j.enter && j.type === Match.Placeholder)
-                yield* Kit.reposeOn(walk(), i.pos);
-            }
-          }
-        } else yield i;
-      }
-    }
-    return walk();
-  }
-);
 
 /**
  * simply replaces all `const`/`let` with `var`

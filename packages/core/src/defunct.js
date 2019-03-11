@@ -93,24 +93,12 @@ export function assignHandlers(si) {
   function* _assignHandlers() {
     yield* s.till(i => i.type === Block.frame);
     if (!closureCtx) {
-      if (root.closureHandler) {
-        const lab = s.label();
-        yield* s.template(
-          Tag.push,
-          `$I = $I($E,{})`,
-          root.handlerSym,
-          root.closureHandler.funcId
-        );
-        yield s.enter(Tag.push, Tag.ObjectExpression);
-        yield s.enter(Tag.properties, Tag.Array);
-        yield* lab();
-      } else
-        yield* s.toks(
-          Tag.push,
-          `$I = $I`,
-          root.handlerSym,
-          root.implFrame.value.declSym
-        );
+      yield* s.toks(
+        Tag.push,
+        `$I = $I`,
+        root.handlerSym,
+        root.implFrame.value.declSym
+      );
     }
     if (!s.opts.defunctHandlerInProto) {
       if (root.errMapSym && root.errHandlerSym)

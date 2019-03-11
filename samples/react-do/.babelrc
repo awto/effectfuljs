@@ -3,8 +3,7 @@
   "env": {
     "test": {
       "presets": ["@babel/preset-react"],
-      "plugins": ["babel-plugin-macros",
-                  "@babel/plugin-transform-modules-commonjs"]
+      "plugins": ["babel-plugin-macros"]
     }
   }
 }

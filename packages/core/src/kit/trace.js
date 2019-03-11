@@ -172,7 +172,7 @@ export function* complete(s) {
     console.log(
       msg,
       i.prefixStyle || "",
-      i.levelStyle || "",
+      i.leveltyle || "",
       i.dirStyle || "font-size:x-large;font-weight:bolder",
       i.tyStyle || "",
       "",
