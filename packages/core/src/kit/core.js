@@ -549,6 +549,7 @@ export function* strip(s) {
         case Tag.Array:
           i.value.node = [];
           break;
+        case Tag.Empty:
         case Tag.Null:
           i.value.node = null;
           break;

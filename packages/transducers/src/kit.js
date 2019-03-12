@@ -1277,7 +1277,12 @@ AFp.valCtor = function(pos, type, value) {
   }
   invariant(type);
   if (node == null) {
-    value.node = node = type === Tag.Array ? [] : type === Tag.Null ? null : {};
+    value.node = node =
+      type === Tag.Array
+        ? []
+        : type === Tag.Null || type === Tag.Empty
+        ? null
+        : {};
   }
   if (!value.opts) value.opts = this.opts;
   return [pos, type, value];

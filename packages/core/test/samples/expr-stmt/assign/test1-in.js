@@ -83,3 +83,16 @@ function e2() {
   }
   eff(7, cc);
 }
+
+function es6() {
+  let [, a, b, ...arr1] = eff_1();
+  let {
+    m: [e, { b: f, m, ...obj }, ...arr2]
+  } = eff(2);
+  [, a, b] = eff_1()(
+    ({
+      m: [e, { b: f, m, ...obj }]
+    } = eff(2))
+  );
+  [a, ...arr1] = eff_4();
+}

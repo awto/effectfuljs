@@ -53,6 +53,11 @@ function e2() {
   return M.scope(e2_1);
 }
 
+function es6() {
+  var es6 = M.context();
+  return M.scope(es6_1);
+}
+
 function aS_1(aS) {
   return M.chain(eff(1), aS_2);
 }
@@ -343,3 +348,54 @@ function e2_7(e2) {
 }
 
 function e2_8(e2) {}
+
+function es6_1(es6) {
+  return M.chain(eff_1(), es6_2);
+}
+
+function es6_2(es6, c) {
+  var a, b, arr1;
+  [, a, b, ...arr1] = c;
+  return M.chain(eff(2), es6_3);
+}
+
+function es6_3(es6, a) {
+  var e, f, m, obj, arr2;
+  ({
+    m: [e, {
+      b: f,
+      m,
+      ...obj
+    }, ...arr2]
+  } = a);
+  return M.chain(eff_1(), es6_4);
+}
+
+function es6_4(es6, a) {
+  es6._ = a;
+  return M.chain(eff(2), es6_5);
+}
+
+function es6_5(es6, b) {
+  var e, f, m, obj, a, c;
+  a = ({
+    m: [e, {
+      b: f,
+      m,
+      ...obj
+    }]
+  } = b);
+  c = es6._, es6._ = null;
+  return M.chain(c(a), es6_6);
+}
+
+function es6_6(es6, c) {
+  var a, b;
+  [, a, b] = c;
+  return M.chain(eff_4(), es6_7);
+}
+
+function es6_7(es6, b) {
+  var a, arr1;
+  [a, ...arr1] = b;
+}

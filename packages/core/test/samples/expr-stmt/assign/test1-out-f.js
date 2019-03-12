@@ -260,3 +260,50 @@ function e2() {
 
   function _7() {}
 }
+
+function es6() {
+  var a, b, arr1, e, f, m, obj, arr2, c;
+  return M.chain(eff_1(), _1);
+
+  function _1(c) {
+    [, a, b, ...arr1] = c;
+    return M.chain(eff(2), _2);
+  }
+
+  function _2(a) {
+    ({
+      m: [e, {
+        b: f,
+        m,
+        ...obj
+      }, ...arr2]
+    } = a);
+    return M.chain(eff_1(), _3);
+  }
+
+  function _3(a) {
+    c = a;
+    return M.chain(eff(2), _4);
+  }
+
+  function _4(b) {
+    var a;
+    a = ({
+      m: [e, {
+        b: f,
+        m,
+        ...obj
+      }]
+    } = b);
+    return M.chain(c(a), _5);
+  }
+
+  function _5(c) {
+    [, a, b] = c;
+    return M.chain(eff_4(), _6);
+  }
+
+  function _6(b) {
+    [a, ...arr1] = b;
+  }
+}

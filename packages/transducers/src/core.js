@@ -229,7 +229,8 @@ export const Tag = {
   top: symbol("top", "pos"),
   Array: symbol("Array", "array"),
   Node: symbol("Node", "node"),
-  Null: symbol("Null", "null")
+  Null: symbol("Null", "null"),
+  Empty: symbol("Empty", "empty")
 };
 
 for (const i in VISITOR_KEYS) {
@@ -488,18 +489,18 @@ const arrayPattern = Object.assign({}, arrayAssignmentPattern, {
     Object.assign({}, prop, { elem, fieldsMap: new Map([[Tag.push, elem]]) })
   );
 }
+const patField = symInfo(Tag.VariableDeclarator).fieldsMap.get(Tag.id);
 {
   assignmentPattern.fieldsMap.get(Tag.left).declVar = true;
-  const patField = symInfo(Tag.VariableDeclarator).fieldsMap.get(Tag.id);
   assignmentProperty.esType = "ObjectProperty";
   assignmentProperty.fieldsMap = new Map(objectProperty.fieldsMap);
   assignmentProperty.fieldsMap.set(Tag.value, patField);
-  // TODO: Babel 7 has no RestProperty (remove the ifs)
-  if (Tag.RestElement)
-    symInfo(Tag.RestElement).fieldsMap.set(Tag.argument, patField);
-  if (Tag.RestProperty)
-    symInfo(Tag.RestProperty).fieldsMap.set(Tag.argument, patField);
 }
+const restElementAssignment = symInfo(Tag.RestElement);
+const restElement = Object.assign({}, restElementAssignment, {
+  fieldsMap: new Map(restElementAssignment.fieldsMap)
+});
+restElement.fieldsMap.set(Tag.argument, patField);
 
 function isNode(node) {
   if (node == null) return false;
@@ -526,7 +527,9 @@ export function tok(pos, type, value) {
 export function* produce(node, pos, value) {
   function* _produce(node, pos, value) {
     value.node = node;
-    if (Array.isArray(node)) {
+    if (node == null) {
+      if (pos === Tag.push) yield tok(pos, Tag.Empty, { node: null });
+    } else if (Array.isArray(node)) {
       yield enter(pos, Tag.Array, value);
       for (const i of node) yield* _produce(i, Tag.push, {});
       yield leave(pos, Tag.Array, value);
@@ -578,8 +581,9 @@ export function consume(s) {
           if (ti.esType != null) i.value.node.type = ti.esType;
           if (ti.fields) Object.assign(i.value.node, ti.fields);
         }
-        invariant(i.value.node.type);
-        stack.unshift(i.value.node);
+        const node = i.type === Tag.Empty ? null : i.value.node;
+        invariant(!node || node.type);
+        stack.unshift(node);
       }
     }
     if (i.leave) {
@@ -632,6 +636,9 @@ export function* resetFieldInfo(s) {
             case Tag.ObjectPattern:
               ti = f && f.declVar ? objectPattern : objectAssignmentPattern;
               break;
+            case Tag.RestElement:
+              ti = f && f.declVar ? restElement : restElementAssignment;
+              break;
             case Tag.AssignmentExpression:
               ti =
                 i.value.node.operator === "="
@@ -668,9 +675,9 @@ export function* resetFieldInfo(s) {
 export function* removeNulls(s) {
   const stack = [];
   for (const i of s) {
-    if (i.type === Tag.Null) {
+    if (i.type === Tag.Null && i.pos !== Tag.push) {
       if (i.enter && stack[0]) {
-        if (i.pos != Tag.push) stack[0][symName(i.pos)] = null;
+        stack[0][symName(i.pos)] = null;
       }
       continue;
     }
