@@ -177,6 +177,11 @@ export function* substSym(si) {
   }
 }
 
+const dryRun = Kit.pipe(
+  Control.removeLabeledStatement,
+  Kit.toArray
+);
+
 export function pass(s) {
   let sa = Kit.toArray(Rt.collectImports(s));
   const root = sa[0].value;
@@ -221,13 +226,10 @@ export function pass(s) {
       }
     }
   }
-  for (let x = 0; x < len; ++x) {
+  let file = inp[len - 1];
+  for (let x = 0; x < len - 1; ++x) {
     let i = inp[x];
     const { value } = i[0];
-    if (value === root) {
-      others.push(i);
-      continue;
-    }
     value.scopeNum = scopeNum++;
     const f = value.opts;
     if (value.track) {
@@ -241,20 +243,28 @@ export function pass(s) {
     /** no transforms, but it may need to erase some directives */
     return ifLoose(loose)(sa);
   }
+  if (opts.topLevel) {
+    /**
+     * some functions may be defined in sub blocks in module's scope
+     * this makes variables defined there invisible, so converting them to `var`
+     */
+    file = Kit.pipe(
+      State.saveDecls,
+      State.restoreDecls,
+      Kit.toArray
+    )(file);
+  }
   const s0 = [...stage0(transform)];
   const n0 = [...normalizeOnlyStage0(normalize)];
   const s1 = [...Closure.contextDecls(s0)];
   const n1 = [...Closure.contextDecls(n0)];
-  /** loops for ofs requires no labeled statements */
-  const l1 = opts.loose
-    ? others.map(
-        Kit.pipe(
-          Control.removeLabeledStatement,
-          Kit.toArray
-        )
-      )
-    : others;
-  const res = [...l1, ...stage1(s1), ...normalizeOnlyStage1(n1)];
+  /** loops for ofs-requires no labeled statements */
+  let l1 = others;
+  if (opts.loose) {
+    l1 = l1.map(dryRun);
+    file = dryRun(file);
+  }
+  const res = [...l1, ...stage1(s1), ...normalizeOnlyStage1(n1), file];
   return finalize([...Scope.restore(root, res)]);
 }
 
