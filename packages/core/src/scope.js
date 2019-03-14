@@ -406,7 +406,7 @@ export function funcWraps(si) {
         s.enter(Tag.push, Tag.VariableDeclaration, { node: { kind: "var" } }),
         s.enter(Tag.declarations, Tag.Array),
         s.enter(Tag.push, Tag.VariableDeclarator),
-        s.tok(Tag.id, Tag.Identifier, { sym })
+        s.tok(Tag.id, Tag.Identifier, { sym, decl: true })
       );
       block.push(...lab());
       return sym;
@@ -500,7 +500,10 @@ export function funcWraps(si) {
                 }),
                 s.enter(Tag.declarations, Tag.Array),
                 s.enter(Tag.push, Tag.VariableDeclarator),
-                s.tok(Tag.id, Tag.Identifier, { sym: i.value.wrapId }),
+                s.tok(Tag.id, Tag.Identifier, {
+                  sym: i.value.wrapId,
+                  decl: true
+                }),
                 s.enter(Tag.init, Tag.CallExpression),
                 s.tok(Tag.callee, Tag.Identifier, {
                   ns: i.value.$ns,

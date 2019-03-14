@@ -32,14 +32,19 @@ const defaultParseOpts = {
 };
 
 export function prettyBlock(f, opts = {}) {
-  const ast = parse(f.toString(), opts.parser || defaultParseOpts);
-  const orig = Kit.pipe(
-    Kit.produce,
-    Kit.strip
-  )(ast);
-  consume(orig);
-  return generate(ast, { quotes: "single", retainFunctionParens: true }, "")
-    .code;
+  try {
+    const ast = parse(f.toString(), opts.parser || defaultParseOpts);
+    const orig = Kit.pipe(
+      Kit.produce,
+      Kit.strip
+    )(ast);
+    consume(orig);
+    return generate(ast, { quotes: "single", retainFunctionParens: true }, "")
+      .code;
+  } catch (e) {
+    console.error("pretty-block-error:", e);
+    console.log(f);
+  }
 }
 
 export const runExpr = Kit.curry(function(opts, f) {

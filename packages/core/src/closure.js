@@ -11,7 +11,9 @@ export function depsToTop(si) {
   const root = s.first.value;
   const top = [];
   if (!root.hasTop) return s;
-  return _depsToTop();
+  let t = _depsToTop();
+  if (s.opts.topLevel) t = _topModuleVars(t);
+  return t;
   function* _depsToTop() {
     yield* s.till(i => i.pos === Tag.body && i.type === Tag.Array);
     while (s.cur().type === Tag.ImportDeclaration) yield* s.one();
@@ -27,6 +29,132 @@ export function depsToTop(si) {
         top.push([i, ...collect(), s.close(i)]);
       } else yield i;
     }
+  }
+  /** for module-level definitions we need to re-arrange its
+   * declarations so they are visible from handlers
+   */
+  function* _topModuleVars(si) {
+    const s = Kit.auto(si);
+    for (const i of s) {
+      yield i;
+      if (i.pos === Tag.body) break;
+    }
+    const vars = [];
+    for (const i of s.sub()) {
+      if (i.enter) {
+        switch (i.type) {
+          case Tag.ExportNamedDeclaration:
+          case Tag.ExportDefaultDeclaration:
+          case Tag.ExportAllDeclaration:
+          case Tag.ImportDeclaration:
+          case Tag.FunctionDeclaration:
+          case Tag.ClassDeclaration:
+          case Tag.VariableDeclaration:
+          case Tag.ExpressionStatement:
+            yield* s.copy(i);
+            break;
+          default:
+            yield i;
+            for (const j of s.sub()) {
+              if (j.enter) {
+                switch (j.type) {
+                  case Tag.ExpressionStatement:
+                  case Tag.FunctionExpression:
+                  case Tag.ClassExpression:
+                  case Tag.ObjectExpression:
+                  case Tag.ArrowFunctionExpression:
+                    yield* s.copy(j);
+                    continue;
+                  case Tag.ClassDeclaration:
+                  case Tag.FunctionDeclaration:
+                    const id = s.cur().value;
+                    vars.push(id);
+                    const lab = s.label();
+                    yield s.enter(i.pos, Tag.ExpressionStatement);
+                    yield s.enter(Tag.expression, Tag.AssignmentExpression, {
+                      node: { operator: "=" }
+                    });
+                    yield s.tok(Tag.left, Tag.Identifier, {
+                      sym: id.sym,
+                      node: id.node
+                    });
+                    yield s.peel(
+                      Kit.setType(
+                        Kit.setPos(j, Tag.right),
+                        j.type === Tag.ClassDeclaration
+                          ? Tag.ClassExpression
+                          : Tag.FunctionExpression
+                      )
+                    );
+                    yield* s.sub();
+                    yield* lab();
+                    continue;
+                  case Tag.VariableDeclaration:
+                    let any = false;
+                    const vlab = s.label();
+                    for (const j of s.sub()) {
+                      if (j.enter && j.type === Tag.VariableDeclarator) {
+                        const pat = [];
+                        for (const k of s.one()) {
+                          if (
+                            k.enter &&
+                            k.type === Tag.Identifier &&
+                            k.value.decl
+                          ) {
+                            vars.push(k.value);
+                            pat.push(
+                              s.tok(k.pos, Tag.Identifier, {
+                                sym: k.value.sym,
+                                node: k.value.node
+                              })
+                            );
+                            s.close(k);
+                          } else pat.push(k);
+                        }
+                        if (s.curLev()) {
+                          if (!any) {
+                            yield s.enter(i.pos, Tag.ExpressionStatement);
+                            yield s.enter(
+                              Tag.expression,
+                              Tag.SequenceExpression
+                            );
+                            yield s.enter(Tag.expressions, Tag.Array);
+                            any = true;
+                          }
+                          yield s.enter(Tag.push, Tag.AssignmentExpression, {
+                            node: { operator: "=" }
+                          });
+                          yield* Kit.reposOne(pat, Tag.left);
+                          yield* Kit.reposOne(s.one(), Tag.right);
+                          yield* s.leave();
+                        }
+                      }
+                    }
+                    s.close(j);
+                    yield* vlab();
+                    continue;
+                }
+              }
+              yield j;
+            }
+            yield s.close(i);
+        }
+      }
+    }
+    if (vars.length) {
+      yield s.enter(Tag.push, Tag.VariableDeclaration, {
+        node: { kind: "var" }
+      });
+      yield s.enter(Tag.declarations, Tag.Array);
+      for (const i of vars) {
+        yield s.enter(Tag.push, Tag.VariableDeclarator);
+        yield s.tok(Tag.id, Tag.Identifier, { sym: i.sym, node: i.node });
+        yield* s.leave();
+      }
+      yield* s.leave();
+      yield* s.leave();
+    }
+    yield* s;
   }
 }
 

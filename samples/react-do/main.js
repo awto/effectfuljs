@@ -1,5 +1,5 @@
 /**
- * Double-barrel continuations Monad
+ * Double-barrelled continuations Monad
  *
  * It is very similar to Promise's Thenable interface except:
  *   - instead of an object with single `then` method it is a function

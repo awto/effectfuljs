@@ -243,17 +243,6 @@ export function pass(s) {
     /** no transforms, but it may need to erase some directives */
     return ifLoose(loose)(sa);
   }
-  if (opts.topLevel) {
-    /**
-     * some functions may be defined in sub blocks in module's scope
-     * this makes variables defined there invisible, so converting them to `var`
-     */
-    file = Kit.pipe(
-      State.saveDecls,
-      State.restoreDecls,
-      Kit.toArray
-    )(file);
-  }
   const s0 = [...stage0(transform)];
   const n0 = [...normalizeOnlyStage0(normalize)];
   const s1 = [...Closure.contextDecls(s0)];

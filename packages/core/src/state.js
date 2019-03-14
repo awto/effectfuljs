@@ -18,27 +18,11 @@ export const saveDecls = Kit.pipe(
     const sl = Kit.auto(s);
     const top = sl.peel();
     const decls = top.value.savedDecls || (top.value.savedDecls = new Map());
-    const nestedOnly =
-      top.type === Tag.File &&
-      function(i) {
-        const parent = i.value.parent;
-        if (
-          parent.origType === Tag.ExportNamedDeclaration ||
-          parent.origType === Tag.ExportDefaultDeclaration
-        )
-          return true;
-        if (
-          parent.origType === Tag.Array &&
-          parent.parent.origType === Tag.Program
-        )
-          return true;
-      };
     function* _saveDecls(pureTry) {
       for (const i of sl.sub()) {
         if (i.enter) {
           switch (i.type) {
             case Tag.ClassDeclaration:
-              if (nestedOnly && nestedOnly(i)) break;
               const id = sl.cur().value.sym;
               decls.set(id, {
                 raw: null,
@@ -50,7 +34,6 @@ export const saveDecls = Kit.pipe(
               });
               continue;
             case Tag.FunctionDeclaration:
-              if (nestedOnly && nestedOnly(i)) break;
               decls.set(i.value.funcId, {
                 raw: null,
                 init: [
@@ -120,7 +103,6 @@ export const saveDecls = Kit.pipe(
               }
               break;
             case Tag.VariableDeclaration:
-              if (nestedOnly && nestedOnly(i)) break;
               const kind = i.value.node.kind;
               i.value.node.kind = "var";
               const declarators = [];
