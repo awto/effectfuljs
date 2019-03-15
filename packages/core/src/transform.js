@@ -42,6 +42,9 @@ export const preproc = Kit.pipe(
 /* default transform for all functions if loose mode is set */
 export const loose = ifLoose(
   Kit.pipe(
+    Kit.scope.prepare,
+    Control.assignLabels,
+    Policy.prepare,
     Policy.stage("prepareLoose"),
     Control.removeLabeledStatement,
     Loops.looseForOf,
@@ -183,13 +186,15 @@ const dryRun = Kit.pipe(
 );
 
 export function pass(s) {
-  let sa = Kit.toArray(Rt.collectImports(s));
+  const orig = Kit.toArray(s);
+  let sa = Kit.toArray(Closure.topToIIFE(Rt.collectImports(orig)));
   const root = sa[0].value;
   let opts = root.opts || Kit.globalOpts();
   if (opts.detectRT) {
     if (!root.imports.has(opts.detectRT)) return null;
     opts.importRT = opts.detectRT;
   }
+
   sa = Kit.toArray(preproc(sa));
   if (!sa[0].value.$ns) return;
   const inp = Kit.toArray(Scope.splitScopes(sa));
@@ -241,8 +246,10 @@ export function pass(s) {
   }
   if (!transform.length) {
     /** no transforms, but it may need to erase some directives */
-    return ifLoose(loose)(sa);
+    return ifLoose(loose)(orig);
   }
+  if (root.opts.topIIFE && root.hasESM)
+    throw new Error("`topIIFE:true` is incompatible with ES modules");
   const s0 = [...stage0(transform)];
   const n0 = [...normalizeOnlyStage0(normalize)];
   const s1 = [...Closure.contextDecls(s0)];

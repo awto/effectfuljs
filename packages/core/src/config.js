@@ -342,15 +342,10 @@ export default {
   normPureForIn: false,
   normPureBlocks: false,
 
-  // * null  - leave everything sequential
-  // * false - sequential by default, but will check for another options
-  //           within the function
-  // * true  - tries to parallelize effects frames if possible
+  // tries to parallelize effects frames if possible
   // it is a function's level option, if it is set to `true` it isn't going
   // to be parallelized immediately, only parts with `parActive:true` will
-  // be considered, use `"par"` or `"seq"` block directives to amend
-  // the variable
-
+  // be considered, use `"par"` or `"seq"` block directives to amend `parActive`
   par: false,
   // for functions with `par` specifies which parts of code should
   // be parallel or sequential (usually changed with "par", "seq" block directives)
@@ -370,11 +365,19 @@ export default {
   // same as `scopeConstructor` but for function with implicit threads
   // default to the value of `scopeConstructor`
   parScopeConstructor: null,
+
   // same as `wrapFunction` but for functions with implicit threads
   // default to the value of `wrapFunction`
   parWrapFunction: null,
+
   // wrap each JSX element with coerce expression
   jsxCoerce: false,
+
   // name of a function to replace block-level directives
-  blockDirsFunc: false
+  blockDirsFunc: false,
+
+  // wraps top level of each module into IIFE, thus module's topLevel can have effects
+  // this works only for commonjs imports, each require returns an effectful value
+  // and must be bound
+  topIIFE: false
 };

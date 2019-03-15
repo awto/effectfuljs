@@ -293,3 +293,37 @@ export function substContextIds(si) {
     }
   }
 }
+
+/** convert's a module's top level block into an export of IIFE */
+export function topToIIFE(si) {
+  const s = Kit.auto(si);
+  if (!s.opts.topIIFE) return s;
+  const module = s.first.value;
+  module.hasEsImports = false;
+  return _topToIIFE();
+  function* _topToIIFE() {
+    for (const i of s) {
+      yield i;
+      if (i.pos === Tag.body) break;
+    }
+    const lab = s.label();
+    yield* s.template(Tag.push, `$E({},{})`);
+    yield s.enter(Tag.callee, Tag.FunctionExpression, {
+      opts: module.opts,
+      func: true,
+      transform: module.transform,
+      topEff: module.topEff
+    });
+    module.transform = false;
+    module.topEff = false;
+    yield s.enter(Tag.params, Tag.Array);
+    yield* s.leave();
+    yield s.enter(Tag.body, Tag.BlockStatement);
+    yield s.enter(Tag.body, Tag.Array);
+    yield* s.toks(Tag.push, "module.exports = exports");
+    yield* s.sub();
+    yield* s.toks(Tag.push, "=module.exports", { result: true });
+    yield* lab();
+    yield* s;
+  }
+}

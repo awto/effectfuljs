@@ -16,6 +16,7 @@ export function collectImports(si) {
   const sa = Kit.toArray(si);
   const root = sa[0].value;
   const s = Kit.auto(sa);
+  root.hasESM = false;
   const imports = (root.imports = new Map());
   function reg(path, ns, locals) {
     let mods = imports.get(path);
@@ -44,8 +45,14 @@ export function collectImports(si) {
           if (mod.type !== Tag.StringLiteral) break;
           reg(mod.value.node.value, pat.value);
           break;
+        case Tag.ExportNamedDeclaration:
+        case Tag.ExportDefaultDeclaration:
+        case Tag.ExportAllDeclaration:
+          root.hasESM = true;
+          break;
         case Tag.ImportDeclaration:
           let ns, locals;
+          root.hasESM = true;
           for (const i of s.one()) {
             if (i.enter) {
               switch (i.type) {
