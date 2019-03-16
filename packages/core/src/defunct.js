@@ -191,7 +191,7 @@ export function inlineExceptions(si) {
     !s.opts.storeCont &&
     !s.opts.storeErrorCont &&
     !root.errMapSym &&
-    !s.opts.inlineRaiseOp === "promise"
+    s.opts.inlineRaiseOp !== "promise"
   )
     return s;
   const { contSym, errContSym, commonPatSym } = root;

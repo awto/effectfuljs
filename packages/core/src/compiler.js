@@ -12,6 +12,7 @@ export const Tag = Kit.Tag;
 
 const helpers = {
   Tag,
+  Kit,
   Policy,
   Transform: T,
   RT,

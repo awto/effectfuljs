@@ -1,0 +1,286 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`default transpiler 1`] = `
+"\\"use strict\\";
+
+var M = require(\\"@effectful/debugger\\");
+
+M.fun(function f() {
+  var _Cl;
+
+  var ctx = M.context(f);
+  ctx._C = M.fun(function _C(a) {
+    var C = M.context(_C);
+    C._f = ctx;
+    C._a = a;
+    C.$run = C_1;
+    C.$err = C_err;
+    return C.scope(5);
+  });
+  ctx._Cl = (_Cl = class Cl {
+    constructor() {
+      not_traced();
+    }
+
+    get prop1() {
+      not_traced();
+    }
+
+    set prop1(value) {
+      not_traced();
+    }
+
+    func() {
+      var ctx = M.context(_Cl.prototype.func);
+      ctx.$run = func_1;
+      return ctx.scope(5);
+    }
+
+    func() {
+      var ctx = M.context(_Cl.prototype.func);
+      ctx.$run = _func_1;
+      return ctx.scope(5);
+    }
+
+  }, M.fun(_Cl.prototype.func), M.fun(_Cl.prototype.func), _Cl);
+  ctx.$run = _f_1;
+  return ctx.scope(5);
+})({}, {});
+
+function C_err(s) {
+  switch (s) {
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+      return 14;
+
+    default:
+      return 1;
+  }
+}
+
+function C_1(s, p) {
+  var C = this,
+      a;
+
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          return C.chain(C.stmt(\\"4:2-9:3\\"), 6);
+
+        case 6:
+          return C.chain(C.stmt(\\"5:4-5:26\\"), 7);
+
+        case 7:
+          a = C._f._mod.fn1(C._a);
+          return C.chain(C.call(a, \\"5:14-5:24\\"), 8);
+
+        case 8:
+          a = C._f._mod.proc1(p);
+          return C.chain(C.call(a, \\"5:4-5:25\\"), 9);
+
+        case 9:
+          return C.chain(C.stmt(\\"6:4-6:16\\"), 10);
+
+        case 10:
+          a = C._f._mod.proc2();
+          return C.chain(C.call(a, \\"6:4-6:15\\"), 13);
+
+        case 11:
+          C._e = C._ex;
+          return C.chain(C.stmt(\\"8:4-8:17\\"), 12);
+
+        case 12:
+          a = C._f._mod.proc3(C._e);
+          return C.chain(C.call(a, \\"8:4-8:16\\"), 13);
+
+        case 13:
+          return C.pure();
+
+        case 0:
+          return C.pure(p);
+
+        case 1:
+          throw p;
+
+        case 14:
+          C._ex = p;
+          s = 11;
+          continue;
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      if ((p = ex, s = C_err(s)) !== 1) continue;
+      throw ex;
+    }
+  }
+}
+
+function func_1(s, p) {
+  var ctx = this,
+      a;
+
+  switch (s) {
+    case 5:
+      return ctx.chain(ctx.stmt(\\"23:4-23:17\\"), 6);
+
+    case 6:
+      a = not_traced();
+      return ctx.chain(ctx.call(a, \\"23:4-23:16\\"), 7);
+
+    case 7:
+      return ctx.pure();
+
+    case 0:
+      return ctx.pure(p);
+
+    case 1:
+      throw p;
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}
+
+function f_1(s, p) {
+  var ctx = this,
+      a;
+
+  switch (s) {
+    case 5:
+      a = traced(1);
+      return ctx.chain(ctx.call(a, \\"26:21-26:30\\"), 6);
+
+    case 6:
+      ctx._ = p;
+      a = traced(2);
+      return ctx.chain(ctx.call(a, \\"26:33-26:42\\"), 7);
+
+    case 7:
+      return ctx.pure(ctx._ + p);
+
+    case 0:
+      return ctx.pure(p);
+
+    case 1:
+      throw p;
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}
+
+function _func_1(s, p) {
+  var f;
+  var ctx = this,
+      a;
+
+  switch (s) {
+    case 5:
+      return ctx.chain(ctx.stmt(\\"26:4-26:44\\"), 6);
+
+    case 6:
+      a = not_traced(f = M.fun(() => {
+        var ctx = M.context(f);
+        ctx.$run = f_1;
+        return ctx.scope(5);
+      }));
+      return ctx.chain(ctx.call(a, \\"26:4-26:43\\"), 7);
+
+    case 7:
+      return ctx.pure();
+
+    case 0:
+      return ctx.pure(p);
+
+    case 1:
+      throw p;
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}
+
+function fn1_1(s, p) {
+  var _fn1 = this,
+      a,
+      b,
+      c;
+
+  switch (s) {
+    case 5:
+      return _fn1.chain(_fn1.stmt(\\"31:2-31:49\\"), 6);
+
+    case 6:
+      c = _fn1._f._mod.f2();
+      return _fn1.chain(_fn1.call(c, \\"31:23-31:31\\"), 7);
+
+    case 7:
+      c = _fn1.constr([_fn1.constr(new _fn1._f._C(), \\"31:37-31:44\\")], \\"31:36-31:45\\");
+      b = _fn1.constr({
+        a: p,
+        b: c
+      }, \\"31:18-31:47\\");
+      a = _fn1._f._mod.some(b);
+      return _fn1.chain(_fn1.call(a, \\"31:9-31:48\\"), 8);
+
+    case 8:
+      return _fn1.pure(p);
+
+    case 0:
+      return _fn1.pure(p);
+
+    case 1:
+      throw p;
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}
+
+function _f_1(s, p) {
+  var ctx = this,
+      a;
+
+  switch (s) {
+    case 5:
+      module.exports = exports;
+      return ctx.chain(ctx.stmt(\\"1:0-1:31\\"), 6);
+
+    case 6:
+      a = require(\\"mod\\");
+      return ctx.chain(ctx.call(a, \\"1:16-1:30\\"), 7);
+
+    case 7:
+      ({
+        mod: ctx._mod
+      } = p);
+      return ctx.chain(ctx.stmt(\\"30:0-32:2\\"), 8);
+
+    case 8:
+      exports.fn2 = M.fun(function fn1() {
+        var _fn1 = M.context(fn1);
+
+        _fn1._f = ctx;
+        _fn1.$run = fn1_1;
+        return _fn1.scope(5);
+      });
+      return module.exports;
+      return ctx.pure();
+
+    case 0:
+      return ctx.pure(p);
+
+    case 1:
+      throw p;
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}"
+`;

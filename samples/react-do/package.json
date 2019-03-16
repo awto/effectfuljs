@@ -12,6 +12,12 @@
     "test": "jest",
     "prepare": "babel main.js --out-file index.js"
   },
+  "keywords": [
+    "effectful",
+    "react",
+    "babel-plugin",
+    "babel-plugin-macros"
+  ],
   "dependencies": {
     "react": "^16.8.2"
   },
