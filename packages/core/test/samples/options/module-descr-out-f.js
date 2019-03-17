@@ -57,7 +57,7 @@ class Cl {
 
 }
 
-M.eff(Cl.prototype.func), M.eff(Cl.prototype.func);
+M.eff(Cl.prototype.func, $module), M.eff(Cl.prototype.func, $module);
 const obj1 = {
   objFn(a) {
     new Cl().fn(a);

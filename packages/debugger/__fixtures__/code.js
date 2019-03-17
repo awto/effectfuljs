@@ -8,10 +8,13 @@ function C(a) {
     const v2 = 11;
     var v3;
     mod.proc1(mod.fn1(a), v0, v1, v2, v3);
-    mod.proc2();
+    for (const i of something) {
+      mod.proc2(i);
+    }
+    for (var i of something) mod.proc3(i);
     var v4 = 100;
   } catch (e) {
-    mod.proc3(e, v4);
+    mod.proc4(e, v4, i);
   }
 }
 

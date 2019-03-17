@@ -28,18 +28,18 @@ class Cl {
   }
 
   func() {
-    var ctx = M.context(Cl.prototype.func);
+    var ctx = M.context(Cl.prototype.func, $module);
     return M.scope(func_1);
   }
 
   func() {
-    var ctx = M.context(Cl.prototype.func);
+    var ctx = M.context(Cl.prototype.func, $module);
     return M.scope(_func_1);
   }
 
 }
 
-M.eff(Cl.prototype.func), M.eff(Cl.prototype.func);
+M.eff(Cl.prototype.func, $module), M.eff(Cl.prototype.func, $module);
 const obj1 = {
   objFn(a) {
     new Cl().fn(a);

@@ -1,6 +1,6 @@
 import * as M from "@effectful/core";
 
-(function () {
+module.exports = function () {
   var other,
       b2,
       somethingElse = function _somethingElse() {
@@ -34,7 +34,7 @@ import * as M from "@effectful/core";
     [, other, b2] = ctx._Some;
   }
   return module.exports;
-})({}, {});
+}({}, {});
 
 function zz_1(_zz) {
   var a;

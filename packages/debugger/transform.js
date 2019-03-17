@@ -12,12 +12,22 @@ module.exports = require("@effectful/core").babelPlugin(
         contextState: true,
         inlinePureJumps: "tail",
         inlineJsExceptions: true,
+        inlineRaiseOp: "throw",
         modules: "commonjs",
         wrapFunction: "fun",
         injectModuleDescr: "module",
         defunctHandlerInProto: true,
+        esForOf: true,
+        esForAwaitOf: true,
         before: {
           finalize: injectScopeDescr
+        },
+        contextMethodOpsSpec: {
+          constr: false,
+          call: false,
+          stmt: false,
+          iterator: false,
+          asyncIterator: false
         },
         ...opts
       },
@@ -35,6 +45,8 @@ module.exports = require("@effectful/core").babelPlugin(
             for (const i of s.sub()) {
               if (i.enter && s.opts.transform) {
                 switch (i.type) {
+                  case Tag.VariableDeclaration:
+                    if (i.pos === Tag.left) break;
                   case Tag.ReturnStatement:
                   case Tag.BreakStatement:
                   case Tag.ContinueStatement:
@@ -45,7 +57,7 @@ module.exports = require("@effectful/core").babelPlugin(
                   case Tag.WhileStatement:
                   case Tag.DoWhileStatement:
                   case Tag.ForStatement:
-                  case Tag.VariableDeclaration:
+                  case Tag.ForOfStatement:
                   case Tag.ExpressionStatement:
                   case Tag.WithStatement:
                     const lab = s.label();
@@ -53,13 +65,13 @@ module.exports = require("@effectful/core").babelPlugin(
                       yield s.enter(i.pos, Tag.BlockStatement);
                       yield s.enter(Tag.body, Tag.Array);
                     }
-                    yield* brkStmt(i, stmtbrk);
+                    yield* brkStmt(Tag.push, i, stmtbrk);
                     yield s.peel(Kit.setPos(i, Tag.push));
                     if (!i.leave) yield* _insertBreaks();
                     yield* lab();
                     continue;
                   case Tag.DebuggerStatement:
-                    yield* brkStmt(i, debbrk);
+                    yield* brkStmt(i.pos, i, debbrk);
                     s.close(i);
                     continue;
                   case Tag.CallExpression:
@@ -75,15 +87,20 @@ module.exports = require("@effectful/core").babelPlugin(
               yield i;
             }
           }
-          function* brkStmt(i, sym) {
-            yield s.enter(i.pos, Tag.ExpressionStatement);
-            yield* s.template(Tag.expression, "=$I($E)", { bind: true }, sym);
+          function* brkStmt(pos, i, sym) {
+            yield s.enter(pos, Tag.ExpressionStatement);
+            yield* s.template(
+              Tag.expression,
+              "=$I($E)",
+              { bind: true, expr: true },
+              sym
+            );
             yield* position(i.value.node.loc);
             yield* s.leave();
             yield* s.leave();
           }
           function* wrap(i, bind, sym) {
-            yield* s.template(i.pos, "=$I($E)", { bind }, sym);
+            yield* s.template(i.pos, "=$I($E)", { bind, expr: true }, sym);
             yield s.peel(Kit.setPos(i, Tag.push));
             yield* _insertBreaks();
             yield* s.leave();

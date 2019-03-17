@@ -307,7 +307,7 @@ export function topToIIFE(si) {
       if (i.pos === Tag.body) break;
     }
     const lab = s.label();
-    yield* s.template(Tag.push, `$E({},{})`);
+    yield* s.template(Tag.push, `module.exports = $E({},{})`);
     yield s.enter(Tag.callee, Tag.FunctionExpression, {
       opts: module.opts,
       func: true,

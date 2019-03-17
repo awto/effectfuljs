@@ -1,6 +1,6 @@
 import * as M from "@effectful/core";
 
-(function () {
+module.exports = function () {
   var a1 = function a1() {},
       Some = class Some {
     a() {
@@ -80,4 +80,4 @@ import * as M from "@effectful/core";
     [, other, b2] = Some;
   }
   return module.exports;
-})({}, {});
+}({}, {});
