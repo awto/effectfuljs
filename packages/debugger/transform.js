@@ -15,6 +15,7 @@ module.exports = require("@effectful/core").babelPlugin(
         modules: "commonjs",
         wrapFunction: "fun",
         injectModuleDescr: "module",
+        defunctHandlerInProto: true,
         before: {
           finalize: injectScopeDescr
         },

@@ -31,10 +31,8 @@ M.fun(function f() {
     var C = M.context(_C);
     C._f = ctx;
     C._a = a;
-    C.$run = C_1;
-    C.$err = C_err;
     return C.scope(5);
-  }, scope$C, $module);
+  }, scope$C, $module, C_1, C_err);
   ctx._Cl = (_Cl = class Cl {
     constructor() {
       var v4,
@@ -51,23 +49,20 @@ M.fun(function f() {
     }
 
     funcAsync() {
-      var _ctx = M.context(_Cl.prototype.funcAsync);
+      var _ctx = M.context(_Cl.prototype.funcAsync, scope$funcAsync, $module, funcAsync_1);
 
       _ctx._f = ctx;
-      _ctx.$run = funcAsync_1;
       return _ctx.scope(5);
     }
 
     func() {
-      var ctx = M.context(_Cl.prototype.func);
-      ctx.$run = func_1;
+      var ctx = M.context(_Cl.prototype.func, scope$func, $module, func_1);
       return ctx.scope(5);
     }
 
-  }, M.fun(_Cl.prototype.funcAsync), M.fun(_Cl.prototype.func), _Cl);
-  ctx.$run = _f_1;
+  }, M.fun(_Cl.prototype.funcAsync, scope$funcAsync, $module, funcAsync_1), M.fun(_Cl.prototype.func, scope$func, $module, func_1), _Cl);
   return ctx.scope(5);
-}, scope$f, $module)({}, {});
+}, scope$f, $module, _f_1)({}, {});
 
 function C_err(s) {
   switch (s) {
@@ -232,9 +227,8 @@ function func_1(s, p) {
     case 6:
       a = not_traced(f = M.fun(() => {
         var ctx = M.context(f);
-        ctx.$run = f_1;
         return ctx.scope(5);
-      }, scope$f2, $module));
+      }, scope$f2, $module, f_1));
       return ctx.chain(ctx.call(a, \\"33:4-33:43\\"), 7);
 
     case 7:
@@ -348,9 +342,8 @@ function _f_1(s, p) {
         var _fn1 = M.context(fn1);
 
         _fn1._f = ctx;
-        _fn1.$run = fn1_1;
         return _fn1.scope(5);
-      }, scope$fn1, $module);
+      }, scope$fn1, $module, fn1_1);
       return ctx.chain(ctx.stmt(\\"42:0-46:2\\"), 10);
 
     case 10:
@@ -360,9 +353,8 @@ function _f_1(s, p) {
 
           _ctx._f = ctx;
           _ctx._a = a;
-          _ctx.$run = objFn_1;
           return _ctx.scope(5);
-        }, scope$objFn, $module)
+        }, scope$objFn, $module, objFn_1)
       }, \\"42:13-46:1\\");
       a = module.exports;
       return ctx.pure(a);

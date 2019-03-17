@@ -252,6 +252,7 @@ export function funcWraps(si) {
     return false;
   }
   function* implFrame(root) {
+    if (root.wrapArgs) yield* root.wrapArgs;
     if (!root.opts.defunctHandlerInProto) return;
     if (!root.opts.defunct)
       throw s.error("`defunctHandlerInProto` requires `defunct`");
@@ -471,7 +472,6 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
-              if (i.value.wrapArgs) yield* i.value.wrapArgs;
               yield* lab();
               continue;
             }
@@ -550,7 +550,6 @@ export function funcWraps(si) {
                 s.enter(Tag.arguments, Tag.Array),
                 s.tok(Tag.push, Tag.Identifier, { sym: i.value.funcId }),
                 ...implFrame(i.value),
-                ...(i.value.wrapArgs || []),
                 ...lab()
               ];
               if (i.pos === Tag.push || i.pos === Tag.declaration) {
@@ -586,7 +585,6 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
-              if (i.value.wrapArgs) yield* i.value.wrapArgs;
               yield* lab();
               continue;
             }
@@ -609,7 +607,6 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
-              if (i.value.wrapArgs) yield* i.value.wrapArgs;
               yield* lab();
               continue;
             }
