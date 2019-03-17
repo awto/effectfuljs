@@ -1,0 +1,9 @@
+{
+  "preset": "@effectful/core",
+  "importRT": "@effectful/core",
+  "profile": "es",
+  "injectModuleDescr": "module",
+  "wrapFunction": "eff"
+}
+
+

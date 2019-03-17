@@ -79,5 +79,5 @@ import * as M from "@effectful/core";
     b = a;
     [, other, b2] = Some;
   }
-  module.exports;
+  return module.exports;
 })({}, {});

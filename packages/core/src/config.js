@@ -379,5 +379,9 @@ export default {
   // wraps top level of each module into IIFE, thus module's topLevel can have effects
   // this works only for commonjs imports, each require returns an effectful value
   // and must be bound
-  topIIFE: false
+  topIIFE: false,
+
+  // name of a function to call for each module with effectful functions
+  // the resulting value will be added arguments of `wrapFunction` calls
+  injectModuleDescr: null
 };

@@ -1,6 +1,6 @@
 
 * [core](core) - code transformation routines
-* [transducers](transducers) - utility library for code transformation with Visitors replaced by async generators
+* [transducers](transducers) - utility library for code transformation with Visitors replaced by generators
 * [core-loose](core-loose) - [core](core) library built with [es-inline](es-inline) plugin
 * [transducers-loose](transducers-loose) - [trasnducers](transducers) library built with [es-inline](es-inline) plugin
 * [es](es) - babel plugin for ECMAScript compatible async, generator and async generator functions with abstract runtime
@@ -12,3 +12,5 @@
 * [serialization](serialization) - reference and prototype inheritance aware serialization library, for using with [es-persist](es-persist)  
 * [es-persist-serialization](es-persist-serialization) - [es-persist](es-persist) with [serialization](serialization) short cut
 * [serialization-react](serialization-react) - adding support of ReactJS elements into [serialization](serialization) library
+* [dubugger](debugger) - a toolset to build debuggers
+

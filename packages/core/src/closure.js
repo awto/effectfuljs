@@ -322,7 +322,8 @@ export function topToIIFE(si) {
     yield s.enter(Tag.body, Tag.Array);
     yield* s.toks(Tag.push, "module.exports = exports");
     yield* s.sub();
-    yield* s.toks(Tag.push, "=module.exports", { result: true });
+    yield s.enter(Tag.push, Tag.ReturnStatement);
+    yield* s.toks(Tag.argument, "=module.exports");
     yield* lab();
     yield* s;
   }

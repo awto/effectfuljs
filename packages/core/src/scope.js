@@ -191,13 +191,45 @@ export const subScopes = Kit.curry(function(pass, s) {
 
 const emptyMap = new Map();
 
+function injectModuleDescr(si) {
+  const s = Kit.auto(si);
+  const root = s.first.value;
+  if (!s.opts.injectModuleDescr || !root.hasEff) return s;
+  const sym = (root.modDescrSym = Kit.scope.newSym("mod"));
+  const name = s.opts.injectModuleDescr.substr
+    ? s.opts.injectModuleDescr
+    : "module";
+  return _injectModuleDescr();
+  function* _injectModuleDescr() {
+    for (const i of s) {
+      yield i;
+      if (i.enter && i.pos === Tag.body) break;
+    }
+    yield* s.template(Tag.push, `var $I = $I.${name}($E)`, sym, root.$ns);
+    let module = "*";
+    const { file } = s.opts;
+    if (file) {
+      const root = file.root || file.cwd;
+      module = file.filename;
+      if (module.startsWith(root)) module = module.substr(root.length);
+    }
+    if (s.opts.moduleNamePrefix)
+      module = `${s.opts.moduleNamePrefix}@${module}`;
+    yield s.tok(Tag.push, Tag.StringLiteral, { node: { value: module } });
+    yield* s.leave();
+    const args = root.wrapArgs || (root.wrapArgs = []);
+    args.push(s.tok(Tag.push, Tag.Identifier, { sym }));
+    yield* s;
+  }
+}
+
 /**
  * if `wrapFunction` is set for a function expression or declaration
  * it will be wrapped with the call to runtime function with name
  * from the argument value
  */
 export function funcWraps(si) {
-  const s = Kit.auto(si);
+  const s = Kit.auto(injectModuleDescr(si));
   const root = s.first.value;
   const ns = root.$ns;
   const mods = root.injectRT || emptyMap;
@@ -322,6 +354,7 @@ export function funcWraps(si) {
                   yield s.enter(Tag.expression, Tag.SequenceExpression);
                   yield s.enter(Tag.expressions, Tag.Array);
                 }
+                const elab = s.label();
                 for (const { name, ns, buf } of i.value.wraps) {
                   yield s.enter(Tag.push, Tag.CallExpression);
                   yield s.tok(Tag.callee, Tag.Identifier, {
@@ -330,7 +363,7 @@ export function funcWraps(si) {
                   });
                   yield s.enter(Tag.arguments, Tag.Array);
                   yield* buf;
-                  yield* slab();
+                  yield* elab();
                 }
                 if (!decl) yield s.tok(Tag.push, Tag.Identifier, { sym });
                 yield* lab();
@@ -435,6 +468,7 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
+              if (root.wrapArgs) yield* root.wrapArgs;
               yield* lab();
               continue;
             }
@@ -443,6 +477,7 @@ export function funcWraps(si) {
           case Tag.ClassMethod:
           case Tag.ClassProperty:
           case Tag.ClassPrivateProperty:
+            if (!check(i)) break;
             yield i;
             let key = Kit.toArray(_funcWraps(s.one(), block));
             yield* key;
@@ -512,6 +547,7 @@ export function funcWraps(si) {
                 s.enter(Tag.arguments, Tag.Array),
                 s.tok(Tag.push, Tag.Identifier, { sym: i.value.funcId }),
                 ...implFrame(i.value),
+                ...(root.wrapArgs || []),
                 ...lab()
               ];
               if (i.pos === Tag.push || i.pos === Tag.declaration) {
@@ -547,6 +583,7 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
+              if (root.wrapArgs) yield* root.wrapArgs;
               yield* lab();
               continue;
             }
@@ -569,6 +606,7 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
+              if (root.wrapArgs) yield* root.wrapArgs;
               yield* lab();
               continue;
             }

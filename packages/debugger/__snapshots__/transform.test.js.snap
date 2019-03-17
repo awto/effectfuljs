@@ -5,6 +5,7 @@ exports[`default transpiler 1`] = `
 
 var M = require(\\"@effectful/debugger\\");
 
+var mod = M.module(\\"/__fixtures__/code.js\\");
 M.fun(function f() {
   var _Cl;
 
@@ -16,7 +17,7 @@ M.fun(function f() {
     C.$run = C_1;
     C.$err = C_err;
     return C.scope(5);
-  });
+  }, mod);
   ctx._Cl = (_Cl = class Cl {
     constructor() {
       not_traced();
@@ -45,7 +46,7 @@ M.fun(function f() {
   }, M.fun(_Cl.prototype.func), M.fun(_Cl.prototype.func), _Cl);
   ctx.$run = _f_1;
   return ctx.scope(5);
-})({}, {});
+}, mod)({}, {});
 
 function C_err(s) {
   switch (s) {
@@ -189,7 +190,7 @@ function _func_1(s, p) {
         var ctx = M.context(f);
         ctx.$run = f_1;
         return ctx.scope(5);
-      }));
+      }, mod));
       return ctx.chain(ctx.call(a, \\"26:4-26:43\\"), 7);
 
     case 7:
@@ -269,9 +270,9 @@ function _f_1(s, p) {
         _fn1._f = ctx;
         _fn1.$run = fn1_1;
         return _fn1.scope(5);
-      });
-      return module.exports;
-      return ctx.pure();
+      }, mod);
+      a = module.exports;
+      return ctx.pure(a);
 
     case 0:
       return ctx.pure(p);

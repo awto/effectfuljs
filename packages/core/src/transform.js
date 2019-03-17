@@ -244,7 +244,8 @@ export function pass(s) {
       else normalize.push(i);
     } else others.push(i);
   }
-  if (!transform.length) {
+  const hasEff = (root.hasEff = transform.length !== 0);
+  if (!hasEff) {
     /** no transforms, but it may need to erase some directives */
     return ifLoose(loose)(orig);
   }

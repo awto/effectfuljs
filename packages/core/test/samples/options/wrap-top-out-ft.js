@@ -33,7 +33,7 @@ import * as M from "@effectful/core";
     ctx._b = a;
     [, other, b2] = ctx._Some;
   }
-  module.exports;
+  return module.exports;
 })({}, {});
 
 function zz_1(_zz) {

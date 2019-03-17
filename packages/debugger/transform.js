@@ -13,6 +13,7 @@ module.exports = require("@effectful/core").babelPlugin(
       inlineJsExceptions: true,
       modules: "commonjs",
       wrapFunction: "fun",
+      injectModuleDescr: "module",
       ...opts
     },
     main(input) {
