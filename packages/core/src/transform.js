@@ -60,11 +60,12 @@ export const loose = ifLoose(
 );
 
 const finalize = Kit.pipe(
+  Policy.stage("finalize"),
   Scope.funcWraps,
   Simplify.main,
   ifLoose(Loops.looseForOf),
   Control.restoreLabeledStatements,
-  Policy.stage("finalize"),
+  Policy.stage("symbols"),
   Rt.interpretLibSyms,
   Kit.toArray,
   Rt.inject,

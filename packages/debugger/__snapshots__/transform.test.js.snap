@@ -5,7 +5,24 @@ exports[`default transpiler 1`] = `
 
 var M = require(\\"@effectful/debugger\\");
 
-var mod = M.module(\\"/__fixtures__/code.js\\");
+var $module = M.module(\\"/__fixtures__/code.js\\");
+var scope$f = {},
+    scope$C = {
+  _v1: [\\"v1\\", \\"6:6-6:8\\", \\"5:14-16:1\\"],
+  _v2: [\\"v2\\", \\"8:10-8:12\\", \\"7:6-13:3\\"],
+  _v3: [\\"v3\\", \\"9:8-9:10\\", \\"5:0-16:1\\"],
+  _v4: [\\"v4\\", \\"12:8-12:10\\", \\"5:0-16:1\\"],
+  _e: [\\"e\\", \\"13:11-13:12\\", \\"5:14-16:1\\"]
+},
+    _scope$f = {},
+    scope$f1 = {},
+    scope$funcAsync = {},
+    scope$func = {},
+    scope$f2 = {},
+    scope$fn1 = {
+  _v5: [\\"v5\\", \\"38:8-38:10\\", \\"37:29-40:1\\"]
+},
+    scope$objFn = {};
 M.fun(function f() {
   var _Cl;
 
@@ -17,10 +34,12 @@ M.fun(function f() {
     C.$run = C_1;
     C.$err = C_err;
     return C.scope(5);
-  }, mod);
+  }, scope$C, $module);
   ctx._Cl = (_Cl = class Cl {
     constructor() {
-      not_traced();
+      var v4,
+          f = ctx;
+      not_traced(f._v0, v4);
     }
 
     get prop1() {
@@ -31,31 +50,37 @@ M.fun(function f() {
       not_traced();
     }
 
+    funcAsync() {
+      var _ctx = M.context(_Cl.prototype.funcAsync);
+
+      _ctx._f = ctx;
+      _ctx.$run = funcAsync_1;
+      return _ctx.scope(5);
+    }
+
     func() {
       var ctx = M.context(_Cl.prototype.func);
       ctx.$run = func_1;
       return ctx.scope(5);
     }
 
-    func() {
-      var ctx = M.context(_Cl.prototype.func);
-      ctx.$run = _func_1;
-      return ctx.scope(5);
-    }
-
-  }, M.fun(_Cl.prototype.func), M.fun(_Cl.prototype.func), _Cl);
+  }, M.fun(_Cl.prototype.funcAsync), M.fun(_Cl.prototype.func), _Cl);
   ctx.$run = _f_1;
   return ctx.scope(5);
-}, mod)({}, {});
+}, scope$f, $module)({}, {});
 
 function C_err(s) {
   switch (s) {
-    case 6:
     case 7:
     case 8:
     case 9:
     case 10:
-      return 14;
+    case 11:
+    case 12:
+    case 13:
+    case 14:
+    case 15:
+      return 19;
 
     default:
       return 1;
@@ -70,35 +95,54 @@ function C_1(s, p) {
     try {
       switch (s) {
         case 5:
-          return C.chain(C.stmt(\\"4:2-9:3\\"), 6);
+          return C.chain(C.stmt(\\"6:2-6:14\\"), 6);
 
         case 6:
-          return C.chain(C.stmt(\\"5:4-5:26\\"), 7);
+          C._v1 = 10;
+          return C.chain(C.stmt(\\"7:2-15:3\\"), 7);
 
         case 7:
-          a = C._f._mod.fn1(C._a);
-          return C.chain(C.call(a, \\"5:14-5:24\\"), 8);
+          return C.chain(C.stmt(\\"8:4-8:18\\"), 8);
 
         case 8:
-          a = C._f._mod.proc1(p);
-          return C.chain(C.call(a, \\"5:4-5:25\\"), 9);
+          C._v2 = 11;
+          return C.chain(C.stmt(\\"9:4-9:11\\"), 9);
 
         case 9:
-          return C.chain(C.stmt(\\"6:4-6:16\\"), 10);
+          return C.chain(C.stmt(\\"10:4-10:42\\"), 10);
 
         case 10:
-          a = C._f._mod.proc2();
-          return C.chain(C.call(a, \\"6:4-6:15\\"), 13);
+          a = C._f._mod.fn1(C._a);
+          return C.chain(C.call(a, \\"10:14-10:24\\"), 11);
 
         case 11:
-          C._e = C._ex;
-          return C.chain(C.stmt(\\"8:4-8:17\\"), 12);
+          a = C._f._mod.proc1(p, C._f._v0, C._v1, C._v2, C._v3);
+          return C.chain(C.call(a, \\"10:4-10:41\\"), 12);
 
         case 12:
-          a = C._f._mod.proc3(C._e);
-          return C.chain(C.call(a, \\"8:4-8:16\\"), 13);
+          return C.chain(C.stmt(\\"11:4-11:16\\"), 13);
 
         case 13:
+          a = C._f._mod.proc2();
+          return C.chain(C.call(a, \\"11:4-11:15\\"), 14);
+
+        case 14:
+          return C.chain(C.stmt(\\"12:4-12:17\\"), 15);
+
+        case 15:
+          C._v4 = 100;
+          s = 18;
+          continue;
+
+        case 16:
+          C._e = C._ex;
+          return C.chain(C.stmt(\\"14:4-14:21\\"), 17);
+
+        case 17:
+          a = C._f._mod.proc3(C._e, C._v4);
+          return C.chain(C.call(a, \\"14:4-14:20\\"), 18);
+
+        case 18:
           return C.pure();
 
         case 0:
@@ -107,9 +151,9 @@ function C_1(s, p) {
         case 1:
           throw p;
 
-        case 14:
+        case 19:
           C._ex = p;
-          s = 11;
+          s = 16;
           continue;
 
         default:
@@ -122,23 +166,23 @@ function C_1(s, p) {
   }
 }
 
-function func_1(s, p) {
-  var ctx = this,
+function funcAsync_1(s, p) {
+  var _ctx = this,
       a;
 
   switch (s) {
     case 5:
-      return ctx.chain(ctx.stmt(\\"23:4-23:17\\"), 6);
+      return _ctx.chain(_ctx.stmt(\\"30:4-30:19\\"), 6);
 
     case 6:
-      a = not_traced();
-      return ctx.chain(ctx.call(a, \\"23:4-23:16\\"), 7);
+      a = not_traced(_ctx._f._v0);
+      return _ctx.chain(_ctx.call(a, \\"30:4-30:18\\"), 7);
 
     case 7:
-      return ctx.pure();
+      return _ctx.pure();
 
     case 0:
-      return ctx.pure(p);
+      return _ctx.pure(p);
 
     case 1:
       throw p;
@@ -155,12 +199,12 @@ function f_1(s, p) {
   switch (s) {
     case 5:
       a = traced(1);
-      return ctx.chain(ctx.call(a, \\"26:21-26:30\\"), 6);
+      return ctx.chain(ctx.call(a, \\"33:21-33:30\\"), 6);
 
     case 6:
       ctx._ = p;
       a = traced(2);
-      return ctx.chain(ctx.call(a, \\"26:33-26:42\\"), 7);
+      return ctx.chain(ctx.call(a, \\"33:33-33:42\\"), 7);
 
     case 7:
       return ctx.pure(ctx._ + p);
@@ -176,22 +220,22 @@ function f_1(s, p) {
   }
 }
 
-function _func_1(s, p) {
+function func_1(s, p) {
   var f;
   var ctx = this,
       a;
 
   switch (s) {
     case 5:
-      return ctx.chain(ctx.stmt(\\"26:4-26:44\\"), 6);
+      return ctx.chain(ctx.stmt(\\"33:4-33:44\\"), 6);
 
     case 6:
       a = not_traced(f = M.fun(() => {
         var ctx = M.context(f);
         ctx.$run = f_1;
         return ctx.scope(5);
-      }, mod));
-      return ctx.chain(ctx.call(a, \\"26:4-26:43\\"), 7);
+      }, scope$f2, $module));
+      return ctx.chain(ctx.call(a, \\"33:4-33:43\\"), 7);
 
     case 7:
       return ctx.pure();
@@ -215,22 +259,26 @@ function fn1_1(s, p) {
 
   switch (s) {
     case 5:
-      return _fn1.chain(_fn1.stmt(\\"31:2-31:49\\"), 6);
+      return _fn1.chain(_fn1.stmt(\\"38:2-38:16\\"), 6);
 
     case 6:
-      c = _fn1._f._mod.f2();
-      return _fn1.chain(_fn1.call(c, \\"31:23-31:31\\"), 7);
+      _fn1._v5 = 10;
+      return _fn1.chain(_fn1.stmt(\\"39:2-39:55\\"), 7);
 
     case 7:
-      c = _fn1.constr([_fn1.constr(new _fn1._f._C(), \\"31:37-31:44\\")], \\"31:36-31:45\\");
+      c = _fn1._f._mod.f2();
+      return _fn1.chain(_fn1.call(c, \\"39:23-39:31\\"), 8);
+
+    case 8:
+      c = _fn1.constr([_fn1.constr(new _fn1._f._C(_fn1._f._v0, _fn1._v5), \\"39:37-39:50\\")], \\"39:36-39:51\\");
       b = _fn1.constr({
         a: p,
         b: c
-      }, \\"31:18-31:47\\");
+      }, \\"39:18-39:53\\");
       a = _fn1._f._mod.some(b);
-      return _fn1.chain(_fn1.call(a, \\"31:9-31:48\\"), 8);
+      return _fn1.chain(_fn1.call(a, \\"39:9-39:54\\"), 9);
 
-    case 8:
+    case 9:
       return _fn1.pure(p);
 
     case 0:
@@ -244,8 +292,36 @@ function fn1_1(s, p) {
   }
 }
 
+function objFn_1(s, p) {
+  var _ctx = this,
+      a;
+
+  switch (s) {
+    case 5:
+      return _ctx.chain(_ctx.stmt(\\"44:4-44:31\\"), 6);
+
+    case 6:
+      a = _ctx.constr(new _ctx._f._Cl(), \\"44:12-44:20\\").fn(_ctx._a, _ctx._f._v0);
+      return _ctx.chain(_ctx.call(a, \\"44:12-44:30\\"), 7);
+
+    case 7:
+      a = p;
+      return _ctx.pure();
+
+    case 0:
+      return _ctx.pure(p);
+
+    case 1:
+      throw p;
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}
+
 function _f_1(s, p) {
-  var ctx = this,
+  var obj1,
+      ctx = this,
       a;
 
   switch (s) {
@@ -261,16 +337,33 @@ function _f_1(s, p) {
       ({
         mod: ctx._mod
       } = p);
-      return ctx.chain(ctx.stmt(\\"30:0-32:2\\"), 8);
+      return ctx.chain(ctx.stmt(\\"3:0-3:12\\"), 8);
 
     case 8:
+      ctx._v0 = 10;
+      return ctx.chain(ctx.stmt(\\"37:0-40:2\\"), 9);
+
+    case 9:
       exports.fn2 = M.fun(function fn1() {
         var _fn1 = M.context(fn1);
 
         _fn1._f = ctx;
         _fn1.$run = fn1_1;
         return _fn1.scope(5);
-      }, mod);
+      }, scope$fn1, $module);
+      return ctx.chain(ctx.stmt(\\"42:0-46:2\\"), 10);
+
+    case 10:
+      obj1 = ctx.constr({
+        objFn: M.fun(function objFn(a) {
+          var _ctx = M.context(objFn);
+
+          _ctx._f = ctx;
+          _ctx._a = a;
+          _ctx.$run = objFn_1;
+          return _ctx.scope(5);
+        }, scope$objFn, $module)
+      }, \\"42:13-46:1\\");
       a = module.exports;
       return ctx.pure(a);
 

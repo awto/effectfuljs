@@ -943,7 +943,7 @@ export const stage = Kit.curry(function(name, si) {
   let s = Kit.auto(si);
   const origStage = s.opts.stageName;
   if (origStage && s.opts.after) {
-    let hook = s.opts.afterStage[origStage];
+    let hook = s.opts.after[origStage];
     if (hook) s = Kit.auto(hook(s));
   }
   if (s.opts.before) {

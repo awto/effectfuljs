@@ -257,6 +257,7 @@ export const assignSym = Kit.pipe(
           sym.declScope = func;
           sym.declBlock = block;
           sym.captLoop = sym.declLoop = unordered ? null : loop;
+          sym.declRange = unordered ? func : block;
           sym.param = null;
           sym.func = null;
           sym.decl = i;

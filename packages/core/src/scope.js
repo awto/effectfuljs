@@ -134,6 +134,7 @@ export function splitScopes(si) {
               ? i.value.funcId
               : Kit.scope.newSym(i.value.funcId.orig);
         }
+        i.value.wrapArgs = [];
         yield s.tok(i.pos, i.type, i.value);
         continue;
       }
@@ -195,7 +196,7 @@ function injectModuleDescr(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
   if (!s.opts.injectModuleDescr || !root.hasEff) return s;
-  const sym = (root.modDescrSym = Kit.scope.newSym("mod"));
+  const sym = (root.modDescrSym = Kit.scope.newSym("$module"));
   const name = s.opts.injectModuleDescr.substr
     ? s.opts.injectModuleDescr
     : "module";
@@ -217,9 +218,11 @@ function injectModuleDescr(si) {
       module = `${s.opts.moduleNamePrefix}@${module}`;
     yield s.tok(Tag.push, Tag.StringLiteral, { node: { value: module } });
     yield* s.leave();
-    const args = root.wrapArgs || (root.wrapArgs = []);
-    args.push(s.tok(Tag.push, Tag.Identifier, { sym }));
-    yield* s;
+    for (const i of s) {
+      if (i.enter && i.value.func && i.value.wrapArgs)
+        i.value.wrapArgs.push(s.tok(Tag.push, Tag.Identifier, { sym }));
+      yield i;
+    }
   }
 }
 
@@ -468,7 +471,7 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
-              if (root.wrapArgs) yield* root.wrapArgs;
+              if (i.value.wrapArgs) yield* i.value.wrapArgs;
               yield* lab();
               continue;
             }
@@ -547,7 +550,7 @@ export function funcWraps(si) {
                 s.enter(Tag.arguments, Tag.Array),
                 s.tok(Tag.push, Tag.Identifier, { sym: i.value.funcId }),
                 ...implFrame(i.value),
-                ...(root.wrapArgs || []),
+                ...(i.value.wrapArgs || []),
                 ...lab()
               ];
               if (i.pos === Tag.push || i.pos === Tag.declaration) {
@@ -583,7 +586,7 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
-              if (root.wrapArgs) yield* root.wrapArgs;
+              if (i.value.wrapArgs) yield* i.value.wrapArgs;
               yield* lab();
               continue;
             }
@@ -606,7 +609,7 @@ export function funcWraps(si) {
               yield* _funcWraps(s.sub(), block);
               yield* s.leave();
               yield* implFrame(i.value);
-              if (root.wrapArgs) yield* root.wrapArgs;
+              if (i.value.wrapArgs) yield* i.value.wrapArgs;
               yield* lab();
               continue;
             }

@@ -1,6 +1,5 @@
 import * as M from "@effectful/core";
-
-var _mod = M.module("*");
+var $module = M.module("*");
 
 const {
   mod

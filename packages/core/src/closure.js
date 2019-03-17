@@ -312,13 +312,16 @@ export function topToIIFE(si) {
       opts: module.opts,
       func: true,
       transform: module.transform,
-      topEff: module.topEff
+      topEff: module.topEff,
+      node: { loc: module.node.loc }
     });
     module.transform = false;
     module.topEff = false;
     yield s.enter(Tag.params, Tag.Array);
     yield* s.leave();
-    yield s.enter(Tag.body, Tag.BlockStatement);
+    yield s.enter(Tag.body, Tag.BlockStatement, {
+      node: { loc: module.node.loc }
+    });
     yield s.enter(Tag.body, Tag.Array);
     yield* s.toks(Tag.push, "module.exports = exports");
     yield* s.sub();
