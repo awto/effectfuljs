@@ -1,6 +1,6 @@
 import * as M from "@effectful/core";
 
-module.exports = function () {
+module.exports = function (module, exports) {
   var a1 = function a1() {},
       Some = class Some {
     a() {

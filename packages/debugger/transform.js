@@ -12,20 +12,20 @@ module.exports = require("@effectful/core").babelPlugin(
         contextState: true,
         inlinePureJumps: "tail",
         inlineJsExceptions: true,
-        inlineRaiseOp: "throw",
         modules: "commonjs",
+        scopeConstructor: "instance",
         wrapFunction: "fun",
         injectModuleDescr: "module",
         defunctHandlerInProto: true,
         esForOf: true,
         esForAwaitOf: true,
+        // contextBy: "parameter",
         before: {
           finalize: injectScopeDescr
         },
         contextMethodOpsSpec: {
           constr: false,
-          call: false,
-          stmt: false,
+          brk: false,
           iterator: false,
           asyncIterator: false
         },
@@ -33,10 +33,9 @@ module.exports = require("@effectful/core").babelPlugin(
       },
       main(input) {
         const s = Kit.auto(input);
-        const stmtbrk = Kit.sysId("stmt");
-        const debbrk = Kit.sysId("debugger");
-        const callBrk = Kit.sysId("call");
+        // const callBrk = Kit.sysId("invoke");
         const objWrap = Kit.sysId("constr");
+        const brk = Kit.sysId("brk");
         T.run(insertBreaks(P.propagateOpts(configure())));
         function insertBreaks(si) {
           const s = Kit.auto(si);
@@ -65,21 +64,28 @@ module.exports = require("@effectful/core").babelPlugin(
                       yield s.enter(i.pos, Tag.BlockStatement);
                       yield s.enter(Tag.body, Tag.Array);
                     }
-                    yield* brkStmt(Tag.push, i, stmtbrk);
+                    if (i.value.node.loc)
+                      yield* brkStmt(Tag.push, i, "statement");
                     yield s.peel(Kit.setPos(i, Tag.push));
                     if (!i.leave) yield* _insertBreaks();
                     yield* lab();
                     continue;
                   case Tag.DebuggerStatement:
-                    yield* brkStmt(i.pos, i, debbrk);
+                    yield* brkStmt(i.pos, i, "debugger");
                     s.close(i);
                     continue;
                   case Tag.CallExpression:
-                    yield* wrap(i, true, callBrk);
-                    continue;
+                    if (s.opts.wrapCalls) {
+                      if (!i.value.node.loc) break;
+                      yield* wrap(i, true, "after-call");
+                      continue;
+                    }
+                    i.value.bind = true;
+                    break;
+                  case Tag.NewExpression:
+                    i.value.bind = true;
                   case Tag.ObjectExpression:
                   case Tag.ArrayExpression:
-                  case Tag.NewExpression:
                     yield* wrap(i, false, objWrap);
                     continue;
                 }
@@ -87,14 +93,17 @@ module.exports = require("@effectful/core").babelPlugin(
               yield i;
             }
           }
-          function* brkStmt(pos, i, sym) {
+          function* brkStmt(pos, i, name) {
             yield s.enter(pos, Tag.ExpressionStatement);
             yield* s.template(
               Tag.expression,
               "=$I($E)",
               { bind: true, expr: true },
-              sym
+              brk
             );
+            yield s.tok(Tag.push, Tag.StringLiteral, {
+              node: { value: name }
+            });
             yield* position(i.value.node.loc);
             yield* s.leave();
             yield* s.leave();
@@ -135,6 +144,10 @@ module.exports = require("@effectful/core").babelPlugin(
       }
     };
     function* position(loc) {
+      if (!loc) {
+        yield Kit.tok(Tag.push, Tag.NullLiteral);
+        return;
+      }
       const { start: f, end: l } = loc;
       const value = `${f.line}:${f.column}-${l.line}:${l.column}`;
       yield Kit.tok(Tag.push, Tag.StringLiteral, { node: { value } });

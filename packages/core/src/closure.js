@@ -318,6 +318,8 @@ export function topToIIFE(si) {
     module.transform = false;
     module.topEff = false;
     yield s.enter(Tag.params, Tag.Array);
+    yield s.tok(Tag.push, Tag.Identifier, { node: { name: "module" } });
+    yield s.tok(Tag.push, Tag.Identifier, { node: { name: "exports" } });
     yield* s.leave();
     yield s.enter(Tag.body, Tag.BlockStatement, {
       node: { loc: module.node.loc }

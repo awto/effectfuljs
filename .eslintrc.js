@@ -12,6 +12,7 @@ module.exports = {
   rules: {
     "no-inner-declarations": "off",
     "no-case-declarations": "off",
-    "no-fallthrough": "off"
+    "no-fallthrough": "off",
+    "no-empty": "off"
   }
 };

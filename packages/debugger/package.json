@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "prepare": "babel main.js --out-file index.js"
+    "build": "babel main.js --out-file index.js"
   },
   "peerDependencies": {
     "@effectful/core": "^1.1.4"
