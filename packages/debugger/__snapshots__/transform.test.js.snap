@@ -5,41 +5,42 @@ exports[`default transpiler 1`] = `
 
 var M = require(\\"../main\\");
 
-var $module = M.module(\\"/__fixtures__/code.js\\");
-var scope$f = {},
-    scope$C = {
-  _v1: [\\"v1\\", \\"6:6-6:8\\", \\"5:14-19:1\\"],
-  _v2: [\\"v2\\", \\"8:10-8:12\\", \\"7:6-16:3\\"],
-  _v3: [\\"v3\\", \\"9:8-9:10\\", \\"5:0-19:1\\"],
-  _i: [\\"i\\", \\"11:15-11:16\\", \\"11:4-13:5\\"],
-  _i1: [\\"i\\", \\"14:13-14:14\\", \\"5:0-19:1\\"],
-  _v4: [\\"v4\\", \\"15:8-15:10\\", \\"5:0-19:1\\"],
-  _e: [\\"e\\", \\"16:11-16:12\\", \\"5:14-19:1\\"]
-},
-    _scope$f = {},
-    scope$f1 = {},
-    scope$funcAsync = {},
-    scope$func = {},
-    scope$f2 = {},
-    scope$fn1 = {
-  _v5: [\\"v5\\", \\"41:8-41:10\\", \\"40:29-43:1\\"]
-},
-    scope$objFn = {};
+var $module = M.module(\\"/__fixtures__/code.js\\"),
+    meta$f3 = M.meta($module, {}),
+    meta$objFn = M.meta($module, {}),
+    meta$fn1 = M.meta($module, {
+  v5: [\\"v5\\", \\"41:8-41:10\\", \\"40:29-43:1\\"]
+}),
+    meta$func = M.meta($module, {}),
+    meta$f2 = M.meta($module, {}),
+    meta$funcAsync = M.meta($module, {}),
+    meta$f1 = M.meta($module, {}),
+    _meta$f = M.meta($module),
+    meta$f = M.meta($module, {}),
+    meta$C = M.meta($module, {
+  v1: [\\"v1\\", \\"6:6-6:8\\", \\"5:14-19:1\\"],
+  v2: [\\"v2\\", \\"8:10-8:12\\", \\"7:6-16:3\\"],
+  v3: [\\"v3\\", \\"9:8-9:10\\", \\"5:0-19:1\\"],
+  i: [\\"i\\", \\"11:15-11:16\\", \\"11:4-13:5\\"],
+  i1: [\\"i\\", \\"14:13-14:14\\", \\"5:0-19:1\\"],
+  v4: [\\"v4\\", \\"15:8-15:10\\", \\"5:0-19:1\\"],
+  e: [\\"e\\", \\"16:11-16:12\\", \\"5:14-19:1\\"]
+});
+
 module.exports = M.fun(function f(module, exports) {
   var _Cl;
 
   var ctx = M.instance(f);
-  ctx._C = M.fun(function _C(a) {
+  ctx.$.C = M.fun(function _C(a) {
     var C = M.instance(_C);
-    C._f = ctx;
-    C._a = a;
+    C.$$.f = ctx.$;
+    C.$.a = a;
     return C.scope(5);
-  }, scope$C, $module, C_1, C_err, C_fin);
-  ctx._Cl = (_Cl = class Cl {
+  }, meta$C, C_1, C_err, C_fin);
+  ctx.$.Cl = (_Cl = class Cl {
     constructor() {
-      var v4,
-          f = ctx;
-      not_traced(f._v0, v4);
+      var v4, f;
+      not_traced(f.v0, v4);
     }
 
     get prop1() {
@@ -51,22 +52,22 @@ module.exports = M.fun(function f(module, exports) {
     }
 
     funcAsync() {
-      var _ctx = M.instance(_Cl.prototype.funcAsync, scope$funcAsync, $module, funcAsync_1);
+      var _ctx = M.instance(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1);
 
-      _ctx._f = ctx;
+      _ctx.$$.f = ctx.$;
       return _ctx.scope(5);
     }
 
     func() {
-      var ctx = M.instance(_Cl.prototype.func, scope$func, $module, func_1);
+      var ctx = M.instance(_Cl.prototype.func, meta$func, func_1);
       return ctx.scope(5);
     }
 
-  }, M.fun(_Cl.prototype.funcAsync, scope$funcAsync, $module, funcAsync_1), M.fun(_Cl.prototype.func, scope$func, $module, func_1), _Cl);
-  ctx._module = module;
-  ctx._exports = exports;
+  }, M.fun(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1), M.fun(_Cl.prototype.func, meta$func, func_1), _Cl);
+  ctx.$.module = module;
+  ctx.$.exports = exports;
   return ctx.scope(5);
-}, scope$f, $module, _f_1)({}, {});
+}, meta$f3, _f_1)({}, {});
 
 function C_err(s) {
   switch (s) {
@@ -127,99 +128,99 @@ function C_1(s, p) {
           return C.chain(M.brk(\\"statement\\", \\"6:2-6:14\\"), 6);
 
         case 6:
-          C._v1 = 10;
+          C.$.v1 = 10;
           return C.chain(M.brk(\\"statement\\", \\"7:2-18:3\\"), 7);
 
         case 7:
           return C.chain(M.brk(\\"statement\\", \\"8:4-8:18\\"), 8);
 
         case 8:
-          C._v2 = 11;
+          C.$.v2 = 11;
           return C.chain(M.brk(\\"statement\\", \\"9:4-9:11\\"), 9);
 
         case 9:
           return C.chain(M.brk(\\"statement\\", \\"10:4-10:42\\"), 10);
 
         case 10:
-          return C.chain(C._f._mod.fn1(C._a), 11);
+          return C.chain(C.$$.f.mod.fn1(C.$.a), 11);
 
         case 11:
-          return C.chain(C._f._mod.proc1(p, C._f._v0, C._v1, C._v2, C._v3), 12);
+          return C.chain(C.$$.f.mod.proc1(p, C.$$.f.v0, C.$.v1, C.$.v2, C.$.v3), 12);
 
         case 12:
           return C.chain(M.brk(\\"statement\\", \\"11:4-13:5\\"), 13);
 
         case 13:
-          C._loop = M.iterator(something);
+          C.$.loop = M.iterator(something);
           s = 14;
           continue;
 
         case 14:
-          if (!(C._i2 = C._loop.next()).done) {
-            C._i = C._i2.value;
+          if (!(C.$.i2 = C.$.loop.next()).done) {
+            C.$.i = C.$.i2.value;
             return C.chain(M.brk(\\"statement\\", \\"12:6-12:19\\"), 15);
           } else {
-            C._fc = 17;
+            C.$.fc = 17;
             s = 16;
             continue;
           }
 
         case 15:
-          return C.chain(C._f._mod.proc2(C._i), 14);
+          return C.chain(C.$$.f.mod.proc2(C.$.i), 14);
 
         case 16:
-          if (C._loop.return) {
-            C._loop.return();
+          if (C.$.loop.return) {
+            C.$.loop.return();
           }
 
-          C._ex = C._err1;
-          s = C._fc;
+          C.$.ex = C.$.err1;
+          s = C.$.fc;
           continue;
 
         case 17:
           return C.chain(M.brk(\\"statement\\", \\"14:4-14:42\\"), 18);
 
         case 18:
-          C._loop1 = M.iterator(something);
+          C.$.loop1 = M.iterator(something);
           s = 19;
           continue;
 
         case 19:
-          if (!(C._i3 = C._loop1.next()).done) {
-            C._i1 = C._i3.value;
+          if (!(C.$.i3 = C.$.loop1.next()).done) {
+            C.$.i1 = C.$.i3.value;
             return C.chain(M.brk(\\"statement\\", \\"14:29-14:42\\"), 20);
           } else {
-            C._fc1 = 22;
+            C.$.fc1 = 22;
             s = 21;
             continue;
           }
 
         case 20:
-          return C.chain(C._f._mod.proc3(C._i1), 19);
+          return C.chain(C.$$.f.mod.proc3(C.$.i1), 19);
 
         case 21:
-          if (C._loop1.return) {
-            C._loop1.return();
+          if (C.$.loop1.return) {
+            C.$.loop1.return();
           }
 
-          C._ex = C._err2;
-          s = C._fc1;
+          C.$.ex = C.$.err2;
+          s = C.$.fc1;
           continue;
 
         case 22:
           return C.chain(M.brk(\\"statement\\", \\"15:4-15:17\\"), 23);
 
         case 23:
-          C._v4 = 100;
+          C.$.v4 = 100;
           s = 26;
           continue;
 
         case 24:
-          C._e = C._ex;
+          C.$.e = C.$.ex;
           return C.chain(M.brk(\\"statement\\", \\"17:4-17:24\\"), 25);
 
         case 25:
-          return C.chain(C._f._mod.proc4(C._e, C._v4, C._i1), 26);
+          return C.chain(C.$$.f.mod.proc4(C.$.e, C.$.v4, C.$.i1), 26);
 
         case 26:
           return C.pure();
@@ -232,41 +233,41 @@ function C_1(s, p) {
 
         case 27:
           s = 0;
-          p = C._r;
+          p = C.$.r;
           continue;
 
         case 28:
-          C._ex = p;
+          C.$.ex = p;
           s = 24;
           continue;
 
         case 29:
-          C._fc = 24, C._err1 = p;
+          C.$.fc = 24, C.$.err1 = p;
           s = 16;
           continue;
 
         case 30:
-          C._fc = 27, C._r = p;
+          C.$.fc = 27, C.$.r = p;
           s = 16;
           continue;
 
         case 31:
-          C._ex = p;
+          C.$.ex = p;
           s = 24;
           continue;
 
         case 32:
-          C._fc1 = 24, C._err2 = p;
+          C.$.fc1 = 24, C.$.err2 = p;
           s = 21;
           continue;
 
         case 33:
-          C._fc1 = 27, C._r = p;
+          C.$.fc1 = 27, C.$.r = p;
           s = 21;
           continue;
 
         case 34:
-          C._ex = p;
+          C.$.ex = p;
           s = 24;
           continue;
 
@@ -288,7 +289,7 @@ function funcAsync_1(s, p) {
       return _ctx.chain(M.brk(\\"statement\\", \\"33:4-33:19\\"), 6);
 
     case 6:
-      return _ctx.chain(not_traced(_ctx._f._v0), 7);
+      return _ctx.chain(not_traced(_ctx.$$.f.v0), 7);
 
     case 7:
       return _ctx.pure();
@@ -312,11 +313,11 @@ function f_1(s, p) {
       return ctx.chain(traced(1), 6);
 
     case 6:
-      ctx._ = p;
+      ctx.$._ = p;
       return ctx.chain(traced(2), 7);
 
     case 7:
-      return ctx.pure(ctx._ + p);
+      return ctx.pure(ctx.$._ + p);
 
     case 0:
       return ctx.pure(p);
@@ -341,7 +342,7 @@ function func_1(s, p) {
       return ctx.chain(not_traced(f = M.fun(() => {
         var ctx = M.instance(f);
         return ctx.scope(5);
-      }, scope$f2, $module, f_1)), 7);
+      }, meta$f2, f_1)), 7);
 
     case 7:
       return ctx.pure();
@@ -368,25 +369,25 @@ function fn1_1(s, p) {
       return _fn1.chain(M.brk(\\"statement\\", \\"41:2-41:16\\"), 6);
 
     case 6:
-      _fn1._v5 = 10;
+      _fn1.$.v5 = 10;
       return _fn1.chain(M.brk(\\"statement\\", \\"42:2-42:55\\"), 7);
 
     case 7:
-      return _fn1.chain(_fn1._f._mod.f2(), 8);
+      return _fn1.chain(_fn1.$$.f.mod.f2(), 8);
 
     case 8:
-      _fn1._ = p;
-      c = _fn1._f._C;
-      return _fn1.chain(new c(_fn1._f._v0, _fn1._v5), 9);
+      _fn1.$._ = p;
+      c = _fn1.$$.f.C;
+      return _fn1.chain(new c(_fn1.$$.f.v0, _fn1.$.v5), 9);
 
     case 9:
       c = M.constr(p, \\"42:37-42:50\\");
       b = M.constr([c], \\"42:36-42:51\\");
       a = M.constr({
-        a: _fn1._,
+        a: _fn1.$._,
         b: b
       }, \\"42:18-42:53\\");
-      return _fn1.chain(_fn1._f._mod.some(a), 10);
+      return _fn1.chain(_fn1.$$.f.mod.some(a), 10);
 
     case 10:
       return _fn1.pure(p);
@@ -411,12 +412,12 @@ function objFn_1(s, p) {
       return _ctx.chain(M.brk(\\"statement\\", \\"47:4-47:31\\"), 6);
 
     case 6:
-      a = _ctx._f._Cl;
+      a = _ctx.$$.f.Cl;
       return _ctx.chain(new a(), 7);
 
     case 7:
       a = M.constr(p, \\"47:12-47:20\\");
-      return _ctx.chain(a.fn(_ctx._a, _ctx._f._v0), 8);
+      return _ctx.chain(a.fn(_ctx.$.a, _ctx.$$.f.v0), 8);
 
     case 8:
       a = p;
@@ -440,7 +441,7 @@ function _f_1(s, p) {
 
   switch (s) {
     case 5:
-      ctx._module.exports = ctx._exports;
+      ctx.$.module.exports = ctx.$.exports;
       return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:31\\"), 6);
 
     case 6:
@@ -448,21 +449,21 @@ function _f_1(s, p) {
 
     case 7:
       ({
-        mod: ctx._mod
+        mod: ctx.$.mod
       } = p);
       return ctx.chain(M.brk(\\"statement\\", \\"3:0-3:12\\"), 8);
 
     case 8:
-      ctx._v0 = 10;
+      ctx.$.v0 = 10;
       return ctx.chain(M.brk(\\"statement\\", \\"40:0-43:2\\"), 9);
 
     case 9:
-      ctx._exports.fn2 = M.fun(function fn1() {
+      ctx.$.exports.fn2 = M.fun(function fn1() {
         var _fn1 = M.instance(fn1);
 
-        _fn1._f = ctx;
+        _fn1.$$.f = ctx.$;
         return _fn1.scope(5);
-      }, scope$fn1, $module, fn1_1);
+      }, meta$fn1, fn1_1);
       return ctx.chain(M.brk(\\"statement\\", \\"45:0-49:2\\"), 10);
 
     case 10:
@@ -470,12 +471,12 @@ function _f_1(s, p) {
         objFn: M.fun(function objFn(a) {
           var _ctx = M.instance(objFn);
 
-          _ctx._f = ctx;
-          _ctx._a = a;
+          _ctx.$$.f = ctx.$;
+          _ctx.$.a = a;
           return _ctx.scope(5);
-        }, scope$objFn, $module, objFn_1)
+        }, meta$objFn, objFn_1)
       }, \\"45:13-49:1\\");
-      a = ctx._module.exports;
+      a = ctx.$.module.exports;
       return ctx.pure(a);
 
     case 0:
@@ -495,21 +496,21 @@ exports[`default transpiler 2`] = `
 
 var M = require(\\"../main\\");
 
-var $module = M.module(\\"/__fixtures__/mod1.js\\");
-var scope$f = {},
-    scope$run = {};
+var $module = M.module(\\"/__fixtures__/mod1.js\\"),
+    meta$f = M.meta($module, {}),
+    meta$run = M.meta($module, {});
 module.exports = M.fun(function f(module, exports) {
   var ctx = M.instance(f);
-  ctx._run = M.fun(function _run(i = 1) {
+  ctx.$.run = M.fun(function _run(i = 1) {
     var run = M.instance(_run);
-    run._f = ctx;
-    run._i = i;
+    run.$$.f = ctx.$;
+    run.$.i = i;
     return run.scope(5);
-  }, scope$run, $module, run_1);
-  ctx._module = module;
-  ctx._exports = exports;
+  }, meta$run, run_1);
+  ctx.$.module = module;
+  ctx.$.exports = exports;
   return ctx.scope(5);
-}, scope$f, $module, f_1)({}, {});
+}, meta$f, f_1)({}, {});
 
 function run_1(s, p) {
   var run = this,
@@ -520,25 +521,25 @@ function run_1(s, p) {
       return run.chain(M.brk(\\"statement\\", \\"6:2-6:9\\"), 6);
 
     case 6:
-      run._f._j += run._i;
+      run.$$.f.j += run.$.i;
       return run.chain(M.brk(\\"statement\\", \\"7:2-7:23\\"), 7);
 
     case 7:
-      a = run._i++;
-      return run.chain(run._f._M2.f1(a), 8);
+      a = run.$.i++;
+      return run.chain(run.$$.f.M2.f1(a), 8);
 
     case 8:
-      return run.chain(run._f._M2.f2(p, run._i), 9);
+      return run.chain(run.$$.f.M2.f2(p, run.$.i), 9);
 
     case 9:
       return run.chain(M.brk(\\"statement\\", \\"8:2-8:9\\"), 10);
 
     case 10:
-      run._f._j += run._i;
+      run.$$.f.j += run.$.i;
       return run.chain(M.brk(\\"statement\\", \\"9:2-9:31\\"), 11);
 
     case 11:
-      return run.chain(console.log(\`i:\${run._i},j:\${run._f._j}\`), 12);
+      return run.chain(console.log(\`i:\${run.$.i},j:\${run.$$.f.j}\`), 12);
 
     case 12:
       return run.pure();
@@ -560,31 +561,31 @@ function f_1(s, p) {
 
   switch (s) {
     case 5:
-      ctx._module.exports = ctx._exports;
+      ctx.$.module.exports = ctx.$.exports;
       return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:29\\"), 6);
 
     case 6:
       return ctx.chain(require(\\"./mod2\\"), 7);
 
     case 7:
-      ctx._M2 = p;
+      ctx.$.M2 = p;
       return ctx.chain(M.brk(\\"statement\\", \\"3:0-3:10\\"), 8);
 
     case 8:
-      ctx._j = 0;
+      ctx.$.j = 0;
       return ctx.chain(M.brk(\\"statement\\", \\"12:0-12:6\\"), 9);
 
     case 9:
-      return ctx.chain(ctx._run(), 10);
+      return ctx.chain(ctx.$.run(), 10);
 
     case 10:
       return ctx.chain(M.brk(\\"statement\\", \\"13:0-13:6\\"), 11);
 
     case 11:
-      return ctx.chain(ctx._run(), 12);
+      return ctx.chain(ctx.$.run(), 12);
 
     case 12:
-      a = ctx._module.exports;
+      a = ctx.$.module.exports;
       return ctx.pure(a);
 
     case 0:
@@ -604,28 +605,28 @@ exports[`default transpiler 3`] = `
 
 var M = require(\\"../main\\");
 
-var $module = M.module(\\"/__fixtures__/mod2.js\\");
-var scope$f = {},
-    scope$f1 = {},
-    scope$f2 = {};
+var $module = M.module(\\"/__fixtures__/mod2.js\\"),
+    meta$f = M.meta($module, {}),
+    meta$f2 = M.meta($module, {}),
+    meta$f1 = M.meta($module, {});
 module.exports = M.fun(function f(module, exports) {
   var ctx = M.instance(f);
-  ctx._f1 = M.fun(function _f1(i) {
+  ctx.$.f1 = M.fun(function _f1(i) {
     var f1 = M.instance(_f1);
-    f1._f = ctx;
-    f1._i = i;
+    f1.$$.f = ctx.$;
+    f1.$.i = i;
     return f1.scope(5);
-  }, scope$f1, $module, f1_1);
-  ctx._f2 = M.fun(function _f2(i) {
+  }, meta$f1, f1_1);
+  ctx.$.f2 = M.fun(function _f2(i) {
     var f2 = M.instance(_f2);
-    f2._f = ctx;
-    f2._i = i;
+    f2.$$.f = ctx.$;
+    f2.$.i = i;
     return f2.scope(5);
-  }, scope$f2, $module, f2_1);
-  ctx._module = module;
-  ctx._exports = exports;
+  }, meta$f2, f2_1);
+  ctx.$.module = module;
+  ctx.$.exports = exports;
   return ctx.scope(5);
-}, scope$f, $module, f_1)({}, {});
+}, meta$f, f_1)({}, {});
 
 function f1_1(s, p) {
   var f1 = this;
@@ -635,17 +636,17 @@ function f1_1(s, p) {
       return f1.chain(M.brk(\\"statement\\", \\"4:2-4:8\\"), 6);
 
     case 6:
-      f1._f._cnt++;
+      f1.$$.f.cnt++;
       return f1.chain(M.brk(\\"statement\\", \\"5:2-5:32\\"), 7);
 
     case 7:
-      return f1.chain(console.log(\`f1:\${f1._i}@\${f1._f._cnt}\`), 8);
+      return f1.chain(console.log(\`f1:\${f1.$.i}@\${f1.$$.f.cnt}\`), 8);
 
     case 8:
       return f1.chain(M.brk(\\"statement\\", \\"6:2-6:13\\"), 9);
 
     case 9:
-      return f1.pure(f1._f._cnt);
+      return f1.pure(f1.$$.f.cnt);
 
     case 0:
       return f1.pure(p);
@@ -666,11 +667,11 @@ function f2_1(s, p) {
       return f2.chain(M.brk(\\"statement\\", \\"10:2-10:8\\"), 6);
 
     case 6:
-      f2._f._cnt++;
+      f2.$$.f.cnt++;
       return f2.chain(M.brk(\\"statement\\", \\"11:2-11:32\\"), 7);
 
     case 7:
-      return f2.chain(console.log(\`f2:\${f2._i}@\${f2._f._cnt}\`), 8);
+      return f2.chain(console.log(\`f2:\${f2.$.i}@\${f2.$$.f.cnt}\`), 8);
 
     case 8:
       return f2.pure();
@@ -692,15 +693,15 @@ function f_1(s, p) {
 
   switch (s) {
     case 5:
-      ctx._module.exports = ctx._exports;
-      ctx._exports.__esModule = true;
-      ctx._exports.f1 = ctx._f1;
-      ctx._exports.f2 = ctx._f2;
+      ctx.$.module.exports = ctx.$.exports;
+      ctx.$.exports.__esModule = true;
+      ctx.$.exports.f1 = ctx.$.f1;
+      ctx.$.exports.f2 = ctx.$.f2;
       return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:12\\"), 6);
 
     case 6:
-      ctx._cnt = 0;
-      a = ctx._module.exports;
+      ctx.$.cnt = 0;
+      a = ctx.$.module.exports;
       return ctx.pure(a);
 
     case 0:

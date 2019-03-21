@@ -6,7 +6,9 @@ function trace() {
     const x = Debugger.context;
     console.log(`Step #${num++}@${x.brk}`, x.value);
     for (const j of x.stack) {
-      console.log(`  ${j.constructor.name}@${j.$module.name}:${j.location}`);
+      console.log(
+        `  ${j.constructor.name}@${j.$meta.module.name}:${j.location}`
+      );
     }
   }
 }

@@ -16,6 +16,7 @@ module.exports = require("@effectful/core").babelPlugin(
         scopeConstructor: "instance",
         wrapFunction: "fun",
         injectModuleDescr: "module",
+        injectMetaInfo: "meta",
         defunctHandlerInProto: true,
         esForOf: true,
         esForAwaitOf: true,
@@ -24,7 +25,7 @@ module.exports = require("@effectful/core").babelPlugin(
         closVarPrefix: "",
         closVarPostfix: "",
         before: {
-          finalize: injectScopeDescr
+          meta: injectScopeDescr
         },
         contextMethodOpsSpec: {
           constr: false,
@@ -155,66 +156,44 @@ module.exports = require("@effectful/core").babelPlugin(
       const value = `${f.line}:${f.column}-${l.line}:${l.column}`;
       yield Kit.tok(Tag.push, Tag.StringLiteral, { node: { value } });
     }
-    function* injectScopeDescr(si) {
-      const s = Kit.auto(si);
-      const buf = [];
+    function injectScopeDescr(si) {
+      const sa = Kit.toArray(si);
+      const s = Kit.auto(sa);
       for (const i of s) {
-        yield i;
-        if (i.enter && i.pos === Tag.body) break;
-      }
-      const inner = Kit.toArray(_inject());
-      if (buf.length) {
-        yield s.enter(Tag.push, Tag.VariableDeclaration, {
-          node: { kind: "var" }
-        });
-        yield s.enter(Tag.declarations, Tag.Array);
-        yield* buf;
-        yield* s.leave();
-        yield* s.leave();
-      }
-      yield* inner;
-      yield* s;
-      function* _inject() {
-        for (const i of s.sub()) {
-          if (
-            i.enter &&
-            i.value.wrapId &&
-            i.value.scopeDecls &&
-            i.value.scopeDecls.size
-          ) {
-            const sym = Kit.scope.newSym(`scope$${i.value.wrapId.orig}`);
-            const args = i.value.wrapArgs || (i.value.wrapArgs = []);
-            args.push(s.tok(Tag.push, Tag.Identifier, { sym }));
-            const lab = s.label();
-            buf.push(
-              s.enter(Tag.push, Tag.VariableDeclarator),
-              s.tok(Tag.id, Tag.Identifier, { sym }),
-              s.enter(Tag.init, Tag.ObjectExpression),
-              s.enter(Tag.properties, Tag.Array)
+        if (
+          i.enter &&
+          i.value.wrapId &&
+          i.value.scopeDecls &&
+          i.value.scopeDecls.size
+        ) {
+          const args = i.value.metaArgs;
+          const lab = s.label();
+          args.push(
+            s.enter(Tag.push, Tag.ObjectExpression),
+            s.enter(Tag.properties, Tag.Array)
+          );
+          const flab = s.label();
+          for (const j of i.value.scopeDecls) {
+            if (!j.decl || !j.decl.value.node.loc || !j.fieldName) continue;
+            let block = j.declRange;
+            if (!block || !block.node.loc) continue;
+            args.push(
+              s.enter(Tag.push, Tag.ObjectProperty),
+              s.tok(Tag.key, Tag.Identifier, { node: { name: j.fieldName } }),
+              s.enter(Tag.value, Tag.ArrayExpression),
+              s.enter(Tag.elements, Tag.Array),
+              s.tok(Tag.push, Tag.StringLiteral, {
+                node: { value: j.orig }
+              }),
+              ...position(j.decl.value.node.loc),
+              ...position(block.node.loc),
+              ...flab()
             );
-            const flab = s.label();
-            for (const j of i.value.scopeDecls) {
-              if (!j.decl || !j.decl.value.node.loc || !j.fieldName) continue;
-              let block = j.declRange;
-              if (!block || !block.node.loc) continue;
-              buf.push(
-                s.enter(Tag.push, Tag.ObjectProperty),
-                s.tok(Tag.key, Tag.Identifier, { node: { name: j.fieldName } }),
-                s.enter(Tag.value, Tag.ArrayExpression),
-                s.enter(Tag.elements, Tag.Array),
-                s.tok(Tag.push, Tag.StringLiteral, {
-                  node: { value: j.orig }
-                }),
-                ...position(j.decl.value.node.loc),
-                ...position(block.node.loc),
-                ...flab()
-              );
-            }
-            buf.push(...lab());
           }
-          yield i;
+          args.push(...lab());
         }
       }
+      return sa;
     }
   }
 );

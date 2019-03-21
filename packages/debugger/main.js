@@ -15,6 +15,12 @@ export function module(name) {
   return (context.modules[name] = { functions: [], name });
 }
 
+export function meta(module, scope) {
+  const info = { module, scope };
+  module.functions.push(info);
+  return info;
+}
+
 export function step() {
   do {
     if (!context.stack.length) {
@@ -83,20 +89,21 @@ function defaultErrHandler() {
   return 1;
 }
 
-export function fun(func, scope, module, handler, errHandler) {
+export function fun(func, meta, handler, errHandler) {
   const proto = Object.create(new Instance());
   proto.$run = handler;
   proto.constructor = func;
-  proto.$module = module;
+  proto.$meta = meta;
   proto.$err = errHandler || defaultErrHandler;
-  proto.$scope = scope;
   func.$proto = proto;
-  module.functions.push(proto);
   return func;
 }
 
 export function instance(fun) {
-  return constr(Object.create(fun.$proto));
+  const res = Object.create(fun.$proto);
+  res.$ = {};
+  res.$$ = {};
+  return res;
 }
 
 export function constr(v) {

@@ -966,6 +966,7 @@ export function allUniqFields(syms, pref = "", postf = "") {
       cnt++, name = `${pref}${sym.orig}${cnt}${postf}`
     ) {}
     names.add(name);
+    if (!name.length) name = "_";
     sym.fieldName = name;
   }
 }

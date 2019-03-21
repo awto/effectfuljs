@@ -369,5 +369,12 @@ export default {
 
   // name of a function to call for each module with effectful functions
   // the resulting value will be added arguments of `wrapFunction` calls
-  injectModuleDescr: null
+  injectModuleDescr: null,
+
+  // add some meta-information for each function as an argument of `wrapFunction`
+  // the meta-information content is specific to libraries
+  injectMetaInfo: null,
+
+  // adds parent a reference to parent's closure in the meta-info
+  metaParentClosure: false
 };

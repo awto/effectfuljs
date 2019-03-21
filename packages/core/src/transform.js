@@ -62,6 +62,8 @@ export const loose = ifLoose(
 const finalize = Kit.pipe(
   Policy.stage("finalize"),
   Scope.funcWraps,
+  Policy.stage("meta"),
+  Scope.injectMeta,
   Simplify.main,
   ifLoose(Loops.looseForOf),
   Control.restoreLabeledStatements,

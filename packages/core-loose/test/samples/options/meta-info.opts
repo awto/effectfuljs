@@ -1,0 +1,5 @@
+{
+  "injectMetaInfo": "meta",
+  "wrapFunction": "wrap",
+  "metaParentClosure": true
+}

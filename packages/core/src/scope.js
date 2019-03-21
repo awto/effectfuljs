@@ -117,24 +117,45 @@ function restoreMethods(si) {
 export function splitScopes(si) {
   const s = Kit.auto(methodsHack(si));
   const module = s.first.value;
+  const scopes = (module.scopes = []);
   const frames = [];
   frames.push([..._splitScopes(s.take())]);
+  if (module.opts.metaParentClosure) {
+    for (const i of scopes) {
+      let sym = null;
+      for (let j = i.parentScope; j && (sym = j.metaId); j = j.parentScope)
+        break;
+      i.metaArgs.push(
+        sym
+          ? s.tok(Tag.push, Tag.Identifier, { sym })
+          : s.tok(Tag.push, Tag.NullLiteral)
+      );
+    }
+  }
   return frames;
   function* _splitScopes(p) {
     yield s.enter(Tag.top, p.type, p.value);
     for (const i of s.sub()) {
       if (i.enter && !i.leave && s.curLev() != null && i.value.func) {
         frames.push([..._splitScopes(i)]);
+        // reversing to make closure parents go first
+        scopes.unshift(i.value);
         i.value.parScope = p.value;
         i.value.module = module;
         if (!i.value.funcId) i.value.funcId = Kit.scope.newSym("fn");
-        if (i.value.opts.wrapFunction) {
+        if (i.value.opts.wrapFunction)
           i.value.wrapId =
             i.type === Tag.FunctionExpression
               ? i.value.funcId
               : Kit.scope.newSym(i.value.funcId.orig);
-        }
         i.value.wrapArgs = [];
+        if (i.value.opts.injectMetaInfo) {
+          i.value.metaId = Kit.scope.newSym(`meta$${i.value.funcId.orig}`);
+          i.value.metaArgs = [];
+          i.value.wrapArgs.push(
+            s.tok(Tag.push, Tag.Identifier, { sym: i.value.metaId })
+          );
+        } else i.value.metaArgs = i.value.wrapArgs;
         yield s.tok(i.pos, i.type, i.value);
         continue;
       }
@@ -142,6 +163,33 @@ export function splitScopes(si) {
     }
     yield* s.leave();
     s.close(p);
+  }
+}
+
+export function injectMeta(si) {
+  const s = Kit.auto(si);
+  const name = s.opts.injectMetaInfo;
+  const module = s.first.value;
+  if (!name || !module.scopes.length) return s;
+  const sym = Kit.sysId(name);
+  return _injectMeta();
+  function* _injectMeta() {
+    for (const i of s) {
+      yield i;
+      if (i.pos === Tag.declarations) break;
+    }
+    yield* s.sub();
+    const lab = s.label();
+    for (const i of module.scopes) {
+      yield s.enter(Tag.push, Tag.VariableDeclarator);
+      yield s.tok(Tag.id, Tag.Identifier, { sym: i.metaId });
+      yield s.enter(Tag.init, Tag.CallExpression);
+      yield s.tok(Tag.callee, Tag.Identifier, { sym });
+      yield s.enter(Tag.arguments, Tag.Array);
+      yield* i.metaArgs;
+      yield* lab();
+    }
+    yield* s;
   }
 }
 
@@ -195,18 +243,26 @@ const emptyMap = new Map();
 function injectModuleDescr(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
-  if (!s.opts.injectModuleDescr || !root.hasEff) return s;
+  if (!(s.opts.injectMetaInfo || s.opts.injectModuleDescr) || !root.hasEff)
+    return s;
   const sym = (root.modDescrSym = Kit.scope.newSym("$module"));
-  const name = s.opts.injectModuleDescr.substr
-    ? s.opts.injectModuleDescr
-    : "module";
+  const name =
+    s.opts.injectModuleDescr && s.opts.injectModuleDescr.substr
+      ? s.opts.injectModuleDescr
+      : "module";
   return _injectModuleDescr();
   function* _injectModuleDescr() {
     for (const i of s) {
       yield i;
       if (i.enter && i.pos === Tag.body) break;
     }
-    yield* s.template(Tag.push, `var $I = $I.${name}($E)`, sym, root.$ns);
+    yield* s.template(
+      Tag.push,
+      `var $I = $I.${name}($E)`,
+      { metaInfo: true },
+      sym,
+      root.$ns
+    );
     let module = "*";
     const { file } = s.opts;
     if (file) {
@@ -219,8 +275,8 @@ function injectModuleDescr(si) {
     yield s.tok(Tag.push, Tag.StringLiteral, { node: { value: module } });
     yield* s.leave();
     for (const i of s) {
-      if (i.enter && i.value.func && i.value.wrapArgs)
-        i.value.wrapArgs.push(s.tok(Tag.push, Tag.Identifier, { sym }));
+      if (i.enter && i.value.func && i.value.metaArgs)
+        i.value.metaArgs.push(s.tok(Tag.push, Tag.Identifier, { sym }));
       yield i;
     }
   }
