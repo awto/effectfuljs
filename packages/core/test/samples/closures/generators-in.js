@@ -23,10 +23,10 @@ function* e1(k) {
   };
 }
 
-function* e1(k) {
+function* e2(k) {
   yield k;
-  yield function* e2(m) {
-    yield function* e3(l) {
+  yield function* e3(m) {
+    yield function* e4(l) {
       yield (k += l);
     };
   };

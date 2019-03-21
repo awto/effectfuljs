@@ -27,7 +27,7 @@ function* a2() {
   yield 1;
 }
 
-function* a() {
+function* a_1() {
   yield 1;
   try {
     yield 2;
@@ -68,7 +68,7 @@ function* a4() {
 function* a5() {
   for (const i of a4()) yield i;
 }
-function* a6() {
+function* a6_1() {
   yield 1;
   try {
     yield 2;
@@ -84,17 +84,17 @@ function* a6() {
   yield 5;
 }
 
-function* a1() {
+function* a1_2() {
   yield 1;
   return 2;
 }
 
-function* a2() {
+function* a2_1() {
   for (const i of a4()) yield i;
   yield 10;
 }
 
-function* a3() {
+function* a3_1() {
   for (const i of a4()) yield i;
 }
 
@@ -173,7 +173,7 @@ function* cfb() {
   }
 }
 
-function* cfb1() {
+function* cfb1_1() {
   let i = 0;
   try {
     yield i;
@@ -195,7 +195,7 @@ function* cfb1() {
   }
 }
 
-function* cfb2() {
+function* cfb2_1() {
   let i = 0;
   try {
     try {
@@ -287,7 +287,7 @@ function* for2() {
   }
 }
 
-function c1() {
+function c1_1() {
   let i = 0;
   function* a() {
     function* b() {
@@ -300,7 +300,7 @@ function c1() {
   }
 }
 
-function c2() {
+function c2_1() {
   let i = 0;
   function* inner() {
     function* a() {
@@ -346,7 +346,7 @@ function* c1() {
   return yield `a:${i}`;
 }
 
-function* c2() {
+function* c2_2() {
   let i = 0;
   return (i += yield `a:${i}`);
 }

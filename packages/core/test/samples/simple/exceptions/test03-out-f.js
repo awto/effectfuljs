@@ -29,7 +29,7 @@ function a() {
   }
 }
 
-function a() {
+function b() {
   var e, error, _error, ex;
 
   return M.jump(void 0, _1, _5);

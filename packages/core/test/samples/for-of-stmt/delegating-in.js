@@ -172,7 +172,7 @@ function* a5_2(i) {
   }
 }
 
-function* a5_2(i) {
+function* a5_2_1(i) {
   up: for (const i of some) {
     lo: for (const j of i) {
       try {

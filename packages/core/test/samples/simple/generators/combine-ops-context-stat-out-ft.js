@@ -2,7 +2,7 @@ import * as M from "@effectful/core";
 
 function a() {
   var a = M.context();
-  return a.scope(a_1);
+  return a.scope(_a_1);
 }
 
 function a1() {
@@ -12,17 +12,17 @@ function a1() {
 
 function a3() {
   var a3 = M.context();
-  return a3.scope(a3_1);
+  return a3.scope(_a3_1);
 }
 
 function a2() {
   var a2 = M.context();
-  return a2.scope(a2_1);
+  return a2.scope(_a2_1);
 }
 
-function a() {
-  var a = M.context();
-  return a.scope(_a_1);
+function a_1() {
+  var a_1 = M.context();
+  return a_1.scope(a_1_1);
 }
 
 function d(i) {
@@ -47,24 +47,24 @@ function a5() {
   return a5.scope(a5_1);
 }
 
-function a6() {
-  var a6 = M.context();
-  return a6.scope(a6_1);
+function a6_1() {
+  var a6_1 = M.context();
+  return a6_1.scope(a6_1_1);
 }
 
-function a1() {
-  var a1 = M.context();
-  return a1.scope(_a1_1);
+function a1_2() {
+  var a1_2 = M.context();
+  return a1_2.scope(a1_2_1);
 }
 
-function a2() {
-  var a2 = M.context();
-  return a2.scope(_a2_1);
+function a2_1() {
+  var a2_1 = M.context();
+  return a2_1.scope(a2_1_1);
 }
 
-function a3() {
-  var a3 = M.context();
-  return a3.scope(_a3_1);
+function a3_1() {
+  var a3_1 = M.context();
+  return a3_1.scope(a3_1_1);
 }
 
 function a6() {
@@ -122,9 +122,9 @@ function cfb() {
   return cfb.scope(cfb_1);
 }
 
-function cfb1() {
-  var cfb1 = M.context();
-  return cfb1.scope(cfb1_1);
+function cfb1_1() {
+  var cfb1_1 = M.context();
+  return cfb1_1.scope(cfb1_1_1);
 }
 
 function cfb1() {
@@ -132,9 +132,9 @@ function cfb1() {
   return cfb1.scope(_cfb1_1);
 }
 
-function cfb2() {
-  var cfb2 = M.context();
-  return cfb2.scope(cfb2_1);
+function cfb2_1() {
+  var cfb2_1 = M.context();
+  return cfb2_1.scope(cfb2_1_1);
 }
 
 function cfb3() {
@@ -172,51 +172,51 @@ function for2() {
   return for2.scope(for2_1);
 }
 
-function c1() {
+function c1_1() {
   var a = function _a() {
     var a = M.context();
 
     a._b = function _b() {
       var b = M.context();
-      b._c1 = a._c1;
+      b._c1_1 = a._c1_1;
       return b.scope(b_1);
     };
 
-    a._c1 = c1;
+    a._c1_1 = c1_1;
     return a.scope(a_11);
   },
-      c1 = {};
+      c1_1 = {};
 
-  c1._i = 0;
+  c1_1._i = 0;
 }
 
-function c2() {
+function c2_1() {
   var inner = function _inner() {
     var inner = M.context();
 
     inner._a = function _a() {
       var a = M.context();
-      a._c2 = inner._c2;
+      a._c2_1 = inner._c2_1;
       return a.scope(a_12);
     };
 
-    inner._c2 = c2;
+    inner._c2_1 = c2_1;
     return inner.scope(inner_1);
   },
-      c2 = {};
+      c2_1 = {};
 
-  c2._i = 0;
+  c2_1._i = 0;
   return inner;
 }
 
 function c1() {
   var c1 = M.context();
-  return c1.scope(c1_1);
+  return c1.scope(_c1_1);
 }
 
-function c2() {
-  var c2 = M.context();
-  return c2.scope(c2_1);
+function c2_2() {
+  var c2_2 = M.context();
+  return c2_2.scope(c2_2_1);
 }
 
 function forOf() {
@@ -423,7 +423,7 @@ function switches() {
   return switches.scope(switches_1);
 }
 
-function a_1(a) {
+function _a_1(a) {
   return a.pure();
 }
 
@@ -432,10 +432,10 @@ function a_2(a, r) {
 }
 
 function a1_1(a1) {
-  return a1.yld(void 0, a1_2);
+  return a1.yld(void 0, _a1_2);
 }
 
-function a1_2(a1) {
+function _a1_2(a1) {
   return a1.pure();
 }
 
@@ -443,7 +443,7 @@ function a1_3(a1, r) {
   return a1.pure(r);
 }
 
-function a3_1(a3) {
+function _a3_1(a3) {
   return a3.yld(void 0, a3_2);
 }
 
@@ -455,7 +455,7 @@ function a3_3(a3, r) {
   return a3.pure(r);
 }
 
-function a2_1(a2) {
+function _a2_1(a2) {
   return a2.yld(1, a2_2);
 }
 
@@ -467,32 +467,32 @@ function a2_3(a2, r) {
   return a2.pure(r);
 }
 
-function _a_1(a) {
-  return a.yld(1, _a_2, a_6);
+function a_1_1(a_1) {
+  return a_1.yld(1, a_1_2, a_1_6);
 }
 
-function _a_2(a) {
-  return a.yld(2, a_4);
+function a_1_2(a_1) {
+  return a_1.yld(2, a_1_4);
 }
 
-function a_3(a) {
+function a_1_3(a_1) {
   var e;
-  e = a._ex;
-  a._ex = null;
-  return a.yld(e, a_4);
+  e = a_1._ex;
+  a_1._ex = null;
+  return a_1.yld(e, a_1_4);
 }
 
-function a_4(a) {
-  return a.pure();
+function a_1_4(a_1) {
+  return a_1.pure();
 }
 
-function a_5(a, r) {
-  return a.pure(r);
+function a_1_5(a_1, r) {
+  return a_1.pure(r);
 }
 
-function a_6(a, b) {
-  a._ex = b;
-  return a.jump(void 0, a_3);
+function a_1_6(a_1, a) {
+  a_1._ex = a;
+  return a_1.jump(void 0, a_1_3);
 }
 
 function d_1(d) {
@@ -705,214 +705,214 @@ function a5_8(a5, a) {
   return a5.jump(void 0, a5_3);
 }
 
-function a6_1(a6) {
-  return a6.yld(1, a6_2, a6_14);
+function a6_1_1(a6_1) {
+  return a6_1.yld(1, a6_1_2, a6_1_14);
 }
 
-function a6_2(a6) {
-  return a6.yld(2, a6_3, a6_15);
+function a6_1_2(a6_1) {
+  return a6_1.yld(2, a6_1_3, a6_1_15);
 }
 
-function a6_3(a6) {
-  return a6.yld(3, a6_4, a6_15);
+function a6_1_3(a6_1) {
+  return a6_1.yld(3, a6_1_4, a6_1_15);
 }
 
-function a6_4(a6, a) {
+function a6_1_4(a6_1, a) {
   if (a) {
-    a6._fc1 = a6_11, a6._fe1 = a6_10, a6._r = 10;
-    return a6.jump(void 0, a6_5, a6_16);
+    a6_1._fc1 = a6_1_11, a6_1._fe1 = a6_1_10, a6_1._r = 10;
+    return a6_1.jump(void 0, a6_1_5, a6_1_16);
   } else {
-    a6._fc1 = a6_7, a6._fe1 = a6_10;
-    return a6.yld(4, a6_5, a6_16);
+    a6_1._fc1 = a6_1_7, a6_1._fe1 = a6_1_10;
+    return a6_1.yld(4, a6_1_5, a6_1_16);
   }
 }
 
-function a6_5(a6) {
-  a6._err1 = a6._err2;
-  return a6.yld("f1", a6_6);
+function a6_1_5(a6_1) {
+  a6_1._err1 = a6_1._err2;
+  return a6_1.yld("f1", a6_1_6);
 }
 
-function a6_6(a6) {
+function a6_1_6(a6_1) {
   var a, b;
-  a = a6._fc1, b = a6._fe1, a6._fc1 = null, a6._fe1 = null;
-  return a6.yld("f2", a, b);
+  a = a6_1._fc1, b = a6_1._fe1, a6_1._fc1 = null, a6_1._fe1 = null;
+  return a6_1.yld("f2", a, b);
 }
 
-function a6_7(a6) {
-  return a6.yld(5, a6_8);
+function a6_1_7(a6_1) {
+  return a6_1.yld(5, a6_1_8);
 }
 
-function a6_8(a6) {
-  return a6.pure();
+function a6_1_8(a6_1) {
+  return a6_1.pure();
 }
 
-function a6_9(a6, r) {
-  return a6.pure(r);
+function a6_1_9(a6_1, r) {
+  return a6_1.pure(r);
 }
 
-function a6_10(a6, e) {
-  return a6.raise(e);
+function a6_1_10(a6_1, e) {
+  return a6_1.raise(e);
 }
 
-function a6_11(a6) {
+function a6_1_11(a6_1) {
   var a;
-  a = a6._r, a6._r = null;
-  return a6.jump(a, a6_9);
+  a = a6_1._r, a6_1._r = null;
+  return a6_1.jump(a, a6_1_9);
 }
 
-function a6_12(a6) {
-  return a6.raise(a6._err1);
+function a6_1_12(a6_1) {
+  return a6_1.raise(a6_1._err1);
 }
 
-function a6_13(a6) {
-  return a6.raise(a6._err2);
+function a6_1_13(a6_1) {
+  return a6_1.raise(a6_1._err2);
 }
 
-function a6_14(a6, a) {
-  a6._fc1 = a6_12, a6._fe1 = a6_10, a6._err1 = a;
-  return a6.jump(void 0, a6_6);
+function a6_1_14(a6_1, a) {
+  a6_1._fc1 = a6_1_12, a6_1._fe1 = a6_1_10, a6_1._err1 = a;
+  return a6_1.jump(void 0, a6_1_6);
 }
 
-function a6_15(a6, a) {
-  a6._fc1 = a6_13, a6._fe1 = a6_10, a6._err2 = a;
-  return a6.jump(void 0, a6_5, a6_16);
+function a6_1_15(a6_1, a) {
+  a6_1._fc1 = a6_1_13, a6_1._fe1 = a6_1_10, a6_1._err2 = a;
+  return a6_1.jump(void 0, a6_1_5, a6_1_16);
 }
 
-function a6_16(a6, a) {
-  a6._fc1 = a6_12, a6._fe1 = a6_10, a6._err1 = a;
-  return a6.jump(void 0, a6_6);
+function a6_1_16(a6_1, a) {
+  a6_1._fc1 = a6_1_12, a6_1._fe1 = a6_1_10, a6_1._err1 = a;
+  return a6_1.jump(void 0, a6_1_6);
 }
 
-function _a1_1(a1) {
-  return a1.yld(1, _a1_2);
+function a1_2_1(a1_2) {
+  return a1_2.yld(1, a1_2_2);
 }
 
-function _a1_2(a1) {
-  return a1.pure(2);
+function a1_2_2(a1_2) {
+  return a1_2.pure(2);
 }
 
-function _a1_3(a1, r) {
-  return a1.pure(r);
+function a1_2_3(a1_2, r) {
+  return a1_2.pure(r);
 }
 
-function _a2_1(a2) {
-  a2._loop = a2.iterator(a4());
-  return a2.jump(void 0, _a2_2, a2_9);
+function a2_1_1(a2_1) {
+  a2_1._loop = a2_1.iterator(a4());
+  return a2_1.jump(void 0, a2_1_2, a2_1_9);
 }
 
-function _a2_2(a2) {
-  if (!(a2._loop = a2._loop.step()).done) {
-    a2._i = a2._loop.value;
-    return a2.yld(a2._i, _a2_2, a2_9);
+function a2_1_2(a2_1) {
+  if (!(a2_1._loop = a2_1._loop.step()).done) {
+    a2_1._i = a2_1._loop.value;
+    return a2_1.yld(a2_1._i, a2_1_2, a2_1_9);
   } else {
-    a2._fc = a2_4, a2._fe = a2_7, a2._i = null;
-    return a2.jump(void 0, _a2_3);
+    a2_1._fc = a2_1_4, a2_1._fe = a2_1_7, a2_1._i = null;
+    return a2_1.jump(void 0, a2_1_3);
   }
 }
 
-function _a2_3(a2) {
+function a2_1_3(a2_1) {
   var a, b;
 
-  if (a2._loop.exit) {
-    a2._loop.exit();
+  if (a2_1._loop.exit) {
+    a2_1._loop.exit();
   }
 
-  a = a2._fc, b = a2._fe, a2._loop = null, a2._fc = null, a2._fe = null;
-  return a2.jump(void 0, a, b);
+  a = a2_1._fc, b = a2_1._fe, a2_1._loop = null, a2_1._fc = null, a2_1._fe = null;
+  return a2_1.jump(void 0, a, b);
 }
 
-function a2_4(a2) {
-  return a2.yld(10, a2_5);
+function a2_1_4(a2_1) {
+  return a2_1.yld(10, a2_1_5);
 }
 
-function a2_5(a2) {
-  return a2.pure();
+function a2_1_5(a2_1) {
+  return a2_1.pure();
 }
 
-function a2_6(a2, r) {
-  return a2.pure(r);
+function a2_1_6(a2_1, r) {
+  return a2_1.pure(r);
 }
 
-function a2_7(a2, e) {
-  return a2.raise(e);
+function a2_1_7(a2_1, e) {
+  return a2_1.raise(e);
 }
 
-function a2_8(a2) {
-  return a2.raise(a2._err1);
+function a2_1_8(a2_1) {
+  return a2_1.raise(a2_1._err1);
 }
 
-function a2_9(a2, a) {
-  a2._fc = a2_8, a2._fe = a2_7, a2._err1 = a;
-  return a2.jump(void 0, _a2_3);
+function a2_1_9(a2_1, a) {
+  a2_1._fc = a2_1_8, a2_1._fe = a2_1_7, a2_1._err1 = a;
+  return a2_1.jump(void 0, a2_1_3);
 }
 
-function _a3_1(a3) {
-  a3._loop = a3.iterator(a4());
-  return a3.jump(void 0, _a3_2, a3_8);
+function a3_1_1(a3_1) {
+  a3_1._loop = a3_1.iterator(a4());
+  return a3_1.jump(void 0, a3_1_2, a3_1_8);
 }
 
-function _a3_2(a3) {
-  if (!(a3._loop = a3._loop.step()).done) {
-    a3._i = a3._loop.value;
-    return a3.yld(a3._i, _a3_2, a3_8);
+function a3_1_2(a3_1) {
+  if (!(a3_1._loop = a3_1._loop.step()).done) {
+    a3_1._i = a3_1._loop.value;
+    return a3_1.yld(a3_1._i, a3_1_2, a3_1_8);
   } else {
-    a3._fc = a3_4, a3._fe = a3_6, a3._i = null;
-    return a3.jump(void 0, _a3_3);
+    a3_1._fc = a3_1_4, a3_1._fe = a3_1_6, a3_1._i = null;
+    return a3_1.jump(void 0, a3_1_3);
   }
 }
 
-function _a3_3(a3) {
+function a3_1_3(a3_1) {
   var a, b;
 
-  if (a3._loop.exit) {
-    a3._loop.exit();
+  if (a3_1._loop.exit) {
+    a3_1._loop.exit();
   }
 
-  a = a3._fc, b = a3._fe, a3._loop = null, a3._fc = null, a3._fe = null;
-  return a3.jump(void 0, a, b);
+  a = a3_1._fc, b = a3_1._fe, a3_1._loop = null, a3_1._fc = null, a3_1._fe = null;
+  return a3_1.jump(void 0, a, b);
 }
 
-function a3_4(a3) {
-  return a3.pure();
+function a3_1_4(a3_1) {
+  return a3_1.pure();
 }
 
-function a3_5(a3, r) {
-  return a3.pure(r);
+function a3_1_5(a3_1, r) {
+  return a3_1.pure(r);
 }
 
-function a3_6(a3, e) {
-  return a3.raise(e);
+function a3_1_6(a3_1, e) {
+  return a3_1.raise(e);
 }
 
-function a3_7(a3) {
-  return a3.raise(a3._err1);
+function a3_1_7(a3_1) {
+  return a3_1.raise(a3_1._err1);
 }
 
-function a3_8(a3, a) {
-  a3._fc = a3_7, a3._fe = a3_6, a3._err1 = a;
-  return a3.jump(void 0, _a3_3);
+function a3_1_8(a3_1, a) {
+  a3_1._fc = a3_1_7, a3_1._fe = a3_1_6, a3_1._err1 = a;
+  return a3_1.jump(void 0, a3_1_3);
 }
 
 function _a6_1(a6) {
   a6._i = 0;
-  return a6.jump(void 0, _a6_2);
+  return a6.jump(void 0, a6_2);
 }
 
-function _a6_2(a6) {
+function a6_2(a6) {
   var a;
   a = a6._i++;
-  return a6.yld(a, _a6_3);
+  return a6.yld(a, a6_3);
 }
 
-function _a6_3(a6, a) {
+function a6_3(a6, a) {
   if (a === "exit") {
     return a6.pure(100);
   } else {
-    return a6.jump(void 0, _a6_2);
+    return a6.jump(void 0, a6_2);
   }
 }
 
-function _a6_4(a6, r) {
+function a6_4(a6, r) {
   return a6.pure(r);
 }
 
@@ -1382,154 +1382,154 @@ function cfb_14(cfb, a) {
   return cfb.jump(void 0, cfb_7);
 }
 
-function cfb1_1(cfb1) {
+function cfb1_1_1(cfb1_1) {
+  cfb1_1._i = 0;
+  return cfb1_1.jump(void 0, cfb1_1_2, cfb1_1_11);
+}
+
+function cfb1_1_2(cfb1_1) {
+  return cfb1_1.yld(cfb1_1._i, cfb1_1_3, cfb1_1_11);
+}
+
+function cfb1_1_3(cfb1_1) {
+  throw new Error(`AAAAAAAAA${cfb1_1._i++}`);
+}
+
+function cfb1_1_4(cfb1_1) {
+  var e;
+  e = cfb1_1._ex;
+  cfb1_1._fc = cfb1_1_9, cfb1_1._fe = cfb1_1_8, cfb1_1._r = cfb1_1._i++, cfb1_1._ex = null;
+  return cfb1_1.jump(void 0, cfb1_1_5);
+}
+
+function cfb1_1_5(cfb1_1) {
+  var a, b;
+  console.log(`f${cfb1_1._i}`);
+  a = cfb1_1._fc, b = cfb1_1._fe, cfb1_1._i = null, cfb1_1._fc = null, cfb1_1._fe = null;
+  return cfb1_1.jump(void 0, a, b);
+}
+
+function cfb1_1_6(cfb1_1) {
+  return cfb1_1.pure();
+}
+
+function cfb1_1_7(cfb1_1, r) {
+  return cfb1_1.pure(r);
+}
+
+function cfb1_1_8(cfb1_1, e) {
+  return cfb1_1.raise(e);
+}
+
+function cfb1_1_9(cfb1_1) {
+  var a;
+  a = cfb1_1._r, cfb1_1._r = null;
+  return cfb1_1.jump(a, cfb1_1_7);
+}
+
+function cfb1_1_10(cfb1_1) {
+  return cfb1_1.raise(cfb1_1._err1);
+}
+
+function cfb1_1_11(cfb1_1, a) {
+  cfb1_1._ex = a;
+  return cfb1_1.jump(void 0, cfb1_1_4, cfb1_1_12);
+}
+
+function cfb1_1_12(cfb1_1, a) {
+  cfb1_1._fc = cfb1_1_10, cfb1_1._fe = cfb1_1_8, cfb1_1._err1 = a;
+  return cfb1_1.jump(void 0, cfb1_1_5);
+}
+
+function _cfb1_1(cfb1) {
   cfb1._i = 0;
-  return cfb1.jump(void 0, cfb1_2, cfb1_11);
+  return cfb1.jump(void 0, cfb1_2, cfb1_7);
 }
 
 function cfb1_2(cfb1) {
-  return cfb1.yld(cfb1._i, cfb1_3, cfb1_11);
+  return cfb1.yld(cfb1._i, cfb1_3, cfb1_7);
 }
 
 function cfb1_3(cfb1) {
-  throw new Error(`AAAAAAAAA${cfb1._i++}`);
+  return cfb1.yld(5, cfb1_5);
 }
 
 function cfb1_4(cfb1) {
   var e;
   e = cfb1._ex;
-  cfb1._fc = cfb1_9, cfb1._fe = cfb1_8, cfb1._r = cfb1._i++, cfb1._ex = null;
-  return cfb1.jump(void 0, cfb1_5);
-}
-
-function cfb1_5(cfb1) {
-  var a, b;
-  console.log(`f${cfb1._i}`);
-  a = cfb1._fc, b = cfb1._fe, cfb1._i = null, cfb1._fc = null, cfb1._fe = null;
-  return cfb1.jump(void 0, a, b);
-}
-
-function cfb1_6(cfb1) {
-  return cfb1.pure();
-}
-
-function cfb1_7(cfb1, r) {
-  return cfb1.pure(r);
-}
-
-function cfb1_8(cfb1, e) {
-  return cfb1.raise(e);
-}
-
-function cfb1_9(cfb1) {
-  var a;
-  a = cfb1._r, cfb1._r = null;
-  return cfb1.jump(a, cfb1_7);
-}
-
-function cfb1_10(cfb1) {
-  return cfb1.raise(cfb1._err1);
-}
-
-function cfb1_11(cfb1, a) {
-  cfb1._ex = a;
-  return cfb1.jump(void 0, cfb1_4, cfb1_12);
-}
-
-function cfb1_12(cfb1, a) {
-  cfb1._fc = cfb1_10, cfb1._fe = cfb1_8, cfb1._err1 = a;
-  return cfb1.jump(void 0, cfb1_5);
-}
-
-function _cfb1_1(cfb1) {
-  cfb1._i = 0;
-  return cfb1.jump(void 0, _cfb1_2, _cfb1_7);
-}
-
-function _cfb1_2(cfb1) {
-  return cfb1.yld(cfb1._i, _cfb1_3, _cfb1_7);
-}
-
-function _cfb1_3(cfb1) {
-  return cfb1.yld(5, _cfb1_5);
-}
-
-function _cfb1_4(cfb1) {
-  var e;
-  e = cfb1._ex;
   return cfb1.pure(cfb1._i++);
 }
 
-function _cfb1_5(cfb1) {
+function cfb1_5(cfb1) {
   return cfb1.pure();
 }
 
-function _cfb1_6(cfb1, r) {
+function cfb1_6(cfb1, r) {
   return cfb1.pure(r);
 }
 
-function _cfb1_7(cfb1, a) {
+function cfb1_7(cfb1, a) {
   cfb1._ex = a;
-  return cfb1.jump(void 0, _cfb1_4);
+  return cfb1.jump(void 0, cfb1_4);
 }
 
-function cfb2_1(cfb2) {
-  cfb2._i = 0;
-  return cfb2.jump(void 0, cfb2_2, cfb2_11);
+function cfb2_1_1(cfb2_1) {
+  cfb2_1._i = 0;
+  return cfb2_1.jump(void 0, cfb2_1_2, cfb2_1_11);
 }
 
-function cfb2_2(cfb2) {
-  return cfb2.yld(`a:${cfb2._i++}`, cfb2_3, cfb2_11);
+function cfb2_1_2(cfb2_1) {
+  return cfb2_1.yld(`a:${cfb2_1._i++}`, cfb2_1_3, cfb2_1_11);
 }
 
-function cfb2_3(cfb2) {
-  return cfb2.yld(`b:${cfb2._i++}`, cfb2_4, cfb2_11);
+function cfb2_1_3(cfb2_1) {
+  return cfb2_1.yld(`b:${cfb2_1._i++}`, cfb2_1_4, cfb2_1_11);
 }
 
-function cfb2_4(cfb2) {
-  cfb2._fc = cfb2_8, cfb2._fe = cfb2_10;
-  return cfb2.yld(`c:${cfb2._i++}`, cfb2_5, cfb2_12);
+function cfb2_1_4(cfb2_1) {
+  cfb2_1._fc = cfb2_1_8, cfb2_1._fe = cfb2_1_10;
+  return cfb2_1.yld(`c:${cfb2_1._i++}`, cfb2_1_5, cfb2_1_12);
 }
 
-function cfb2_5(cfb2) {
+function cfb2_1_5(cfb2_1) {
   var a, b;
-  cfb2._ex = cfb2._err1, a = cfb2._fc, b = cfb2._fe, cfb2._fc = null, cfb2._fe = null, cfb2._err1 = null;
-  return cfb2.yld(`f:${cfb2._i++}`, a, b);
+  cfb2_1._ex = cfb2_1._err1, a = cfb2_1._fc, b = cfb2_1._fe, cfb2_1._fc = null, cfb2_1._fe = null, cfb2_1._err1 = null;
+  return cfb2_1.yld(`f:${cfb2_1._i++}`, a, b);
 }
 
-function cfb2_6(cfb2) {
+function cfb2_1_6(cfb2_1) {
   var e;
-  e = cfb2._ex;
-  cfb2._ex = null;
-  return cfb2.yld(e, cfb2_7);
+  e = cfb2_1._ex;
+  cfb2_1._ex = null;
+  return cfb2_1.yld(e, cfb2_1_7);
 }
 
-function cfb2_7(cfb2) {
+function cfb2_1_7(cfb2_1) {
   var a;
-  a = cfb2._i, cfb2._i = null;
-  return cfb2.yld(`e:${a++}`, cfb2_8);
+  a = cfb2_1._i, cfb2_1._i = null;
+  return cfb2_1.yld(`e:${a++}`, cfb2_1_8);
 }
 
-function cfb2_8(cfb2) {
-  return cfb2.pure();
+function cfb2_1_8(cfb2_1) {
+  return cfb2_1.pure();
 }
 
-function cfb2_9(cfb2, r) {
-  return cfb2.pure(r);
+function cfb2_1_9(cfb2_1, r) {
+  return cfb2_1.pure(r);
 }
 
-function cfb2_10(cfb2, e) {
-  return cfb2.raise(e);
+function cfb2_1_10(cfb2_1, e) {
+  return cfb2_1.raise(e);
 }
 
-function cfb2_11(cfb2, a) {
-  cfb2._fc = cfb2_6, cfb2._fe = cfb2_10, cfb2._err1 = a;
-  return cfb2.jump(void 0, cfb2_5, cfb2_12);
+function cfb2_1_11(cfb2_1, a) {
+  cfb2_1._fc = cfb2_1_6, cfb2_1._fe = cfb2_1_10, cfb2_1._err1 = a;
+  return cfb2_1.jump(void 0, cfb2_1_5, cfb2_1_12);
 }
 
-function cfb2_12(cfb2, a) {
-  cfb2._ex = a;
-  return cfb2.jump(void 0, cfb2_6);
+function cfb2_1_12(cfb2_1, a) {
+  cfb2_1._ex = a;
+  return cfb2_1.jump(void 0, cfb2_1_6);
 }
 
 function cfb3_1(cfb3) {
@@ -1629,53 +1629,53 @@ function cfb4_5(cfb4, a) {
 
 function _cfb2_1(cfb2) {
   cfb2._i = 0;
-  return cfb2.jump(void 0, _cfb2_2, _cfb2_9);
+  return cfb2.jump(void 0, cfb2_2, cfb2_9);
 }
 
-function _cfb2_2(cfb2) {
-  cfb2._fc = _cfb2_6, cfb2._fe = _cfb2_8;
-  return cfb2.yld(`c:${cfb2._i++}`, _cfb2_3, _cfb2_10);
+function cfb2_2(cfb2) {
+  cfb2._fc = cfb2_6, cfb2._fe = cfb2_8;
+  return cfb2.yld(`c:${cfb2._i++}`, cfb2_3, cfb2_10);
 }
 
-function _cfb2_3(cfb2) {
+function cfb2_3(cfb2) {
   var a, b;
   cfb2._ex = cfb2._err1, a = cfb2._fc, b = cfb2._fe, cfb2._fc = null, cfb2._fe = null, cfb2._err1 = null;
   return cfb2.yld(`f:${cfb2._i++}`, a, b);
 }
 
-function _cfb2_4(cfb2) {
+function cfb2_4(cfb2) {
   var e;
   e = cfb2._ex;
   cfb2._ex = null;
-  return cfb2.yld(e, _cfb2_5);
+  return cfb2.yld(e, cfb2_5);
 }
 
-function _cfb2_5(cfb2) {
+function cfb2_5(cfb2) {
   var a;
   a = cfb2._i, cfb2._i = null;
-  return cfb2.yld(`e:${a++}`, _cfb2_6);
+  return cfb2.yld(`e:${a++}`, cfb2_6);
 }
 
-function _cfb2_6(cfb2) {
+function cfb2_6(cfb2) {
   return cfb2.pure();
 }
 
-function _cfb2_7(cfb2, r) {
+function cfb2_7(cfb2, r) {
   return cfb2.pure(r);
 }
 
-function _cfb2_8(cfb2, e) {
+function cfb2_8(cfb2, e) {
   return cfb2.raise(e);
 }
 
-function _cfb2_9(cfb2, a) {
-  cfb2._fc = _cfb2_4, cfb2._fe = _cfb2_8, cfb2._err1 = a;
-  return cfb2.jump(void 0, _cfb2_3, _cfb2_10);
+function cfb2_9(cfb2, a) {
+  cfb2._fc = cfb2_4, cfb2._fe = cfb2_8, cfb2._err1 = a;
+  return cfb2.jump(void 0, cfb2_3, cfb2_10);
 }
 
-function _cfb2_10(cfb2, a) {
+function cfb2_10(cfb2, a) {
   cfb2._ex = a;
-  return cfb2.jump(void 0, _cfb2_4);
+  return cfb2.jump(void 0, cfb2_4);
 }
 
 function cfb6_1(cfb6) {
@@ -1843,7 +1843,7 @@ function for2_6(for2, r) {
 }
 
 function c_1(_c) {
-  _c._c1._i++;
+  _c._c1_1._i++;
   return _c.pure();
 }
 
@@ -1855,7 +1855,7 @@ function b_1(b) {
   return b.pure(function c() {
     var _c = M.context();
 
-    _c._c1 = b._c1;
+    _c._c1_1 = b._c1_1;
     return _c.scope(c_1);
   });
 }
@@ -1868,22 +1868,22 @@ function a_11(a) {
   return a.pure();
 }
 
-function a_21(a, r) {
+function _a_2(a, r) {
   return a.pure(r);
 }
 
 function a_12(a) {
-  a._ = a._c2._i;
-  return a.yld(`a:${a._c2._i}`, a_22);
+  a._ = a._c2_1._i;
+  return a.yld(`a:${a._c2_1._i}`, a_21);
 }
 
-function a_22(a, c) {
+function a_21(a, c) {
   var b;
-  b = a._c2._i = a._ + c;
+  b = a._c2_1._i = a._ + c;
   return a.pure(b);
 }
 
-function _a_3(a, r) {
+function a_3(a, r) {
   return a.pure(r);
 }
 
@@ -1891,8 +1891,8 @@ function _z_1(_z) {
   var a;
 
   _z._d = function z(j) {
-    var c2 = _z._c2;
-    return c2._i += j;
+    var c2_1 = _z._c2_1;
+    return c2_1._i += j;
   };
 
   a = _z._c, _z._c = null;
@@ -1915,7 +1915,7 @@ function _z_4(_z, a) {
 
 function z_1(z1) {
   var a;
-  z1._ = z1._c2._i;
+  z1._ = z1._c2_1._i;
   a = z1._f._a;
   return z1.yldStar(a(), z_2);
 }
@@ -1929,7 +1929,7 @@ function z_2(z1, b) {
 
 function z_3(z1, b) {
   var a;
-  a = z1._c2._i = z1._ + (z1._j + z1._1 + b);
+  a = z1._c2_1._i = z1._ + (z1._j + z1._1 + b);
   return z1.pure(a);
 }
 
@@ -1940,7 +1940,7 @@ function z_4(z1, r) {
 function z_5(_z) {
   return _z.pure(function z(j) {
     var z1 = M.context();
-    z1._c2 = _z._c2;
+    z1._c2_1 = _z._c2_1;
     z1._f = _z._f;
     z1._j = j;
     return z1.scope(z_1);
@@ -1957,31 +1957,31 @@ function inner_1(inner) {
   b = () => {
     var j,
         ctx = {},
-        c2 = inner._c2;
+        c2_1 = inner._c2_1;
 
     ctx._a = function a() {
-      var c2 = inner._c2;
-      c2._i += 2;
-      return c2._i;
+      var c2_1 = inner._c2_1;
+      c2_1._i += 2;
+      return c2_1._i;
     };
 
     ctx._b = function b() {
-      var c2 = inner._c2;
-      c2._i += j;
+      var c2_1 = inner._c2_1;
+      c2_1._i += j;
     };
 
     {
       j = 10;
-      c2._i++;
+      c2_1._i++;
       return function z() {
         var _z = M.context();
 
         _z._c = function c() {
-          var c2 = _z._c2;
-          return c2._i += this.something;
+          var c2_1 = _z._c2_1;
+          return c2_1._i += this.something;
         };
 
-        _z._c2 = inner._c2;
+        _z._c2_1 = inner._c2_1;
         _z._f = ctx;
         return _z.scope(_z_1);
       };
@@ -2051,7 +2051,7 @@ function inner_11(inner, a) {
   return inner.jump(void 0, inner_6);
 }
 
-function c1_1(c1) {
+function _c1_1(c1) {
   var i;
   i = 0;
   return c1.yld(`a:${i}`, c1_2);
@@ -2065,19 +2065,19 @@ function c1_3(c1, r) {
   return c1.pure(r);
 }
 
-function c2_1(c2) {
-  c2._i = 0;
-  return c2.yld(`a:${c2._i}`, c2_2);
+function c2_2_1(c2_2) {
+  c2_2._i = 0;
+  return c2_2.yld(`a:${c2_2._i}`, c2_2_2);
 }
 
-function c2_2(c2, b) {
+function c2_2_2(c2_2, b) {
   var a;
-  a = c2._i += b;
-  return c2.pure(a);
+  a = c2_2._i += b;
+  return c2_2.pure(a);
 }
 
-function c2_3(c2, r) {
-  return c2.pure(r);
+function c2_2_3(c2_2, r) {
+  return c2_2.pure(r);
 }
 
 function forOf_1(forOf) {
@@ -2128,14 +2128,14 @@ function forOf_8(forOf, a) {
 }
 
 function a_13(ctx) {
-  return ctx.yld(10, a_23);
+  return ctx.yld(10, a_22);
 }
 
-function a_23(ctx) {
+function a_22(ctx) {
   return ctx.pure();
 }
 
-function a_31(ctx, r) {
+function _a_3(ctx, r) {
   return ctx.pure(r);
 }
 

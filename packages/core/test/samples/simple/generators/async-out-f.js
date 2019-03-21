@@ -1043,7 +1043,7 @@ var b = new class {
   }
 
 }();
-var c = new class C {
+var c1 = new class C {
   [getName()]() {
     var ctx = M.context();
     return ctx.scope(_1);

@@ -547,7 +547,7 @@ async function p55() {
   await fin_1(i);
 }
 
-async function p55() {
+async function p55_1() {
   "par";
   await init;
   let i = 0;

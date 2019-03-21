@@ -8,7 +8,7 @@ function a(z) {
   }
   eff(3);
 }
-function a(z) {
+function a_1(z) {
   switch (z) {
     case 1:
       eff(1);

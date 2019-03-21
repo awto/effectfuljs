@@ -241,7 +241,7 @@ var b = new class {
   }
 }();
 
-var c = new class C {
+var c1 = new class C {
   async [getName()]() {
     await something;
   }

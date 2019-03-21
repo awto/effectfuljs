@@ -10,7 +10,7 @@ function a() {
   eff(e);
 }
 
-function a() {
+function b() {
   var e, error;
   try {
     console.log("1");

@@ -116,7 +116,7 @@ function l1() {
 
 M.profile("generators");
 
-function* a1() {
+function* z1() {
   var i;
   (yield "a1") ? yield "a2" : yield "a3";
   yield (yield "b1") % 2 ? "b2" : "b3";

@@ -112,7 +112,7 @@ function c2() {
   }
   eff(result);
 }
-function c2() {
+function c3() {
   let result = [];
   for (let i = 0; i < 10; ) {
     result[i] = eff(

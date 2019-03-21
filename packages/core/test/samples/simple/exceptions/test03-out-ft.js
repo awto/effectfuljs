@@ -5,9 +5,9 @@ function a() {
   return M.scope(a_1, a_5);
 }
 
-function a() {
-  var a = M.context();
-  return M.scope(_a_1, _a_5);
+function b() {
+  var b = M.context();
+  return M.scope(b_1, b_5);
 }
 
 function a_1(a) {
@@ -37,30 +37,30 @@ function a_5(a, b) {
   return M.jump(void 0, a_2);
 }
 
-function _a_1(a) {
+function b_1(b) {
   console.log("1");
-  return M.chain(eff(1), _a_3);
+  return M.chain(eff(1), b_3);
 }
 
-function _a_2(a) {
+function b_2(b) {
   var error;
-  error = a._ex;
-  a._e = error;
+  error = b._ex;
+  b._e = error;
   console.log("2");
   error = null;
-  a._ex = null;
-  return M.jump(void 0, _a_3);
+  b._ex = null;
+  return M.jump(void 0, b_3);
 }
 
-function _a_3(a) {
-  var b;
-  b = a._e, a._e = null;
-  return M.chain(eff(b), _a_4);
+function b_3(b) {
+  var a;
+  a = b._e, b._e = null;
+  return M.chain(eff(a), b_4);
 }
 
-function _a_4(a) {}
+function b_4(b) {}
 
-function _a_5(a, b) {
-  a._ex = b;
-  return M.jump(void 0, _a_2);
+function b_5(b, a) {
+  b._ex = a;
+  return M.jump(void 0, b_2);
 }

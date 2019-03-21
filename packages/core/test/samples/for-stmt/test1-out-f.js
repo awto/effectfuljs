@@ -346,7 +346,7 @@ function c2() {
   function _2() {}
 }
 
-function c2() {
+function c3() {
   var result, i;
   result = [];
   i = 0;

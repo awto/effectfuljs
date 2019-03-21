@@ -65,9 +65,9 @@ function c2() {
   return M.scope(c2_1);
 }
 
-function c2() {
-  var c2 = M.context();
-  return M.scope(_c2_1);
+function c3() {
+  var c3 = M.context();
+  return M.scope(c3_1);
 }
 
 function f_1(ctx) {
@@ -454,15 +454,15 @@ function c2_2(c2) {
 
 function c2_3(c2) {}
 
-function _c2_1(c2) {
-  c2._result = [];
-  c2._i = 0;
-  return M.jump(void 0, _c2_2);
+function c3_1(c3) {
+  c3._result = [];
+  c3._i = 0;
+  return M.jump(void 0, c3_2);
 }
 
 function cc_11(_cc) {
   var a;
-  a = _cc._c2._result += _cc._f._i += _cc._j;
+  a = _cc._c3._result += _cc._f._i += _cc._j;
   _cc._j = null;
   return M.chain(eff(a), cc_21);
 }
@@ -471,13 +471,13 @@ function cc_21(_cc) {}
 
 function f_15(ctx) {
   var a;
-  ctx._ = ctx._c2._result;
+  ctx._ = ctx._c3._result;
   ctx._1 = ctx._i;
   a = ctx._i++;
   return M.chain(function cc(j) {
     var _cc = M.context();
 
-    _cc._c2 = ctx._c2;
+    _cc._c3 = ctx._c3;
     _cc._f = ctx;
     _cc._j = j;
     return M.scope(cc_11);
@@ -492,21 +492,21 @@ function f_34(ctx, a) {
   ctx._[ctx._1] = a;
 }
 
-function _c2_2(c2) {
+function c3_2(c3) {
   var a;
 
-  if (c2._i < 10) {
+  if (c3._i < 10) {
     return M.chain((i => {
       var ctx = M.context();
-      ctx._c2 = c2;
+      ctx._c3 = c3;
       ctx._i = i;
       return M.scope(f_15);
-    })(c2._i), _c2_2);
+    })(c3._i), c3_2);
   } else {
-    a = c2._result;
-    c2._i = null;
-    return M.chain(eff(a), _c2_3);
+    a = c3._result;
+    c3._i = null;
+    return M.chain(eff(a), c3_3);
   }
 }
 
-function _c2_3(c2) {}
+function c3_3(c3) {}

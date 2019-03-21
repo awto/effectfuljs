@@ -3,13 +3,13 @@ import * as M from "@effectful/core";
 function a(z) {
   var a = M.context();
   a._z = z;
-  return M.scope(a_1);
+  return M.scope(_a_1);
 }
 
-function a(z) {
-  var a = M.context();
-  a._z = z;
-  return M.scope(_a_1);
+function a_1(z) {
+  var a_1 = M.context();
+  a_1._z = z;
+  return M.scope(a_1_1);
 }
 
 function c(z) {
@@ -24,7 +24,7 @@ function d(z) {
   return M.scope(d_1);
 }
 
-function a_1(a) {
+function _a_1(a) {
   switch (a._z) {
     case 1:
       a._z = null;
@@ -42,29 +42,29 @@ function a_2(a) {
 
 function a_3(a) {}
 
-function _a_1(a) {
-  switch (a._z) {
+function a_1_1(a_1) {
+  switch (a_1._z) {
     case 1:
-      a._z = null;
-      return M.chain(eff(1), _a_2);
+      a_1._z = null;
+      return M.chain(eff(1), a_1_2);
 
     case 2:
       console.log("1");
-      a._z = null;
-      return M.jump(void 0, _a_2);
+      a_1._z = null;
+      return M.jump(void 0, a_1_2);
 
     default:
       console.log("2");
-      a._z = null;
-      return M.jump(void 0, _a_2);
+      a_1._z = null;
+      return M.jump(void 0, a_1_2);
   }
 }
 
-function _a_2(a) {
-  return M.chain(eff(3), _a_3);
+function a_1_2(a_1) {
+  return M.chain(eff(3), a_1_3);
 }
 
-function _a_3(a) {}
+function a_1_3(a_1) {}
 
 function c_1(c) {
   switch (c._z) {
