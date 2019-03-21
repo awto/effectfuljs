@@ -301,28 +301,14 @@ export default {
   // target JS engine has tail calls
   jsTailCalls: false,
 
-  // Enbles storing variables in context fields sub objects.
-  // By default stored directly in context if not defined.
-  // Requres `contextState:true`
-  // By default, say, variable `x` will be stored in `context._x` field
-  // Then this option is enabled it will be `context.${stateStorageField}._x`
-  enableSubFields: false,
-
-  // Name of a context's field to store continuations and compuation values.
-  // By default stored directly in context if not defined.
-  // Requires `contextState:true`
-  stateStorageField: null,
-
   // Name of a context's field to store captured closures.
-  // By default stored directly in context or `stateStorageField`
+  // By default stored directly in context
   // Requires `contextState:true`
-  // NOT IMPLEMENTED
   closureStorageField: null,
 
   // name of a context's field to store local variables
   // stored directly in context if not defined
   // handled only with `contextState:true`
-  // NOT IMPLEMENTED
   varStorageField: null,
 
   // don't use function name in frame's name (ignored in with topLevel)

@@ -19,7 +19,10 @@ module.exports = require("@effectful/core").babelPlugin(
         defunctHandlerInProto: true,
         esForOf: true,
         esForAwaitOf: true,
-        // contextBy: "parameter",
+        varStorageField: "$",
+        closureStorageField: "$$",
+        closVarPrefix: "",
+        closVarPostfix: "",
         before: {
           finalize: injectScopeDescr
         },

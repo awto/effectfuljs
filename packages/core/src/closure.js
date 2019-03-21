@@ -216,10 +216,8 @@ export function substContextIds(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
   const { opts, contextSym, ctxDeps } = root;
-  const subFieldsEnabled = opts.enableSubFields || root.hasPar;
-  const varsSubField = subFieldsEnabled && opts.stateStorageField;
-  const closSubField =
-    subFieldsEnabled && (opts.closureStorageField || varsSubField);
+  const varsSubField = opts.varStorageField;
+  const closSubField = opts.closureStorageField || varsSubField;
   if (!contextSym) return s;
   return walk();
   function* emitSubField(subField) {
@@ -232,8 +230,9 @@ export function substContextIds(si) {
         decl: false
       });
       yield s.tok(Tag.property, Tag.Identifier, {
-        node: { name: closSubField }
+        node: { name: subField }
       });
+      yield* s.leave();
     } else {
       yield s.tok(Tag.object, Tag.Identifier, {
         sym: contextSym,

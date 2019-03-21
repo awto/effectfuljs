@@ -227,21 +227,31 @@ export function* restoreDecls(s) {
   const { ctxDeps, savedDecls: saved } = root;
   if (ctxDeps && ctxDeps.size) {
     for (const { copy, fld, ctx } of ctxDeps.values()) {
-      saved.set(copy, {
-        raw: null,
-        init: fld
-          ? fld.interpr === Bind.ctxField
-            ? [
-                sl.enter(Tag.init, Tag.MemberExpression),
-                sl.tok(Tag.object, Tag.Identifier, { sym: ctx }),
-                sl.tok(Tag.property, Tag.Identifier, {
-                  node: { name: fld.fieldName }
-                }),
-                ...sl.leave()
-              ]
-            : [sl.tok(Tag.init, Tag.Identifier, { sym: fld })]
-          : [sl.tok(Tag.init, Tag.Identifier, { sym: ctx })]
-      });
+      const init = [];
+      const varField = root.opts.varStorageField;
+      const pos = varField ? Tag.object : Tag.init;
+      if (fld) {
+        if (fld.interpr === Bind.ctxField)
+          init.push(
+            sl.enter(pos, Tag.MemberExpression),
+            sl.tok(Tag.object, Tag.Identifier, { sym: ctx }),
+            sl.tok(Tag.property, Tag.Identifier, {
+              node: { name: fld.fieldName }
+            }),
+            ...sl.leave()
+          );
+        else init.push(sl.tok(pos, Tag.Identifier, { sym: fld }));
+      } else init.push(sl.tok(pos, Tag.Identifier, { sym: ctx }));
+      if (varField) {
+        init.unshift(sl.enter(pos, Tag.MemberExpression));
+        init.push(
+          sl.tok(Tag.property, Tag.Identifier, {
+            node: { name: root.opts.varStorageField }
+          }),
+          ...sl.leave()
+        );
+      }
+      saved.set(copy, { raw: null, init });
     }
   }
   for (const i of sl) {
@@ -593,6 +603,8 @@ export function calcRefScopes(si) {
     if (i.ctxDeps) {
       for (const j of i.ctxDeps.values()) {
         j.copy = Bind.tempVarSym(i, j.fid);
+        if (i.opts.closureStorageField)
+          j.copy.subField = i.opts.closureStorageField;
         j.fld = j.ref && j.ref.ctxDeps.get(j.decl).copy;
       }
     }

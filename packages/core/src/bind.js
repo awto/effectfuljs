@@ -384,7 +384,6 @@ export function setSymInterpr(si) {
     if (!transform) return topLevel && capt ? ctxField : undefined;
     if (byVal) return paramThread;
     if (topLevel) return ctxField;
-    // return capt ? closureVar : undefined
     return closureVar;
   }
   si.interpr = calc();

@@ -48,9 +48,9 @@ export function storeContinuations(si) {
         '`storeCont`+`contextBy:"closure"` needs `inlineContAssign`'
       );
   }
-  function makeSym(name, pat, threadLocal) {
+  function makeSym(name, pat) {
     if (!name) return false;
-    if (contextStore) return Kit.sysId(name, true, threadLocal);
+    if (contextStore) return Kit.sysId(name, true);
     const res = Bind.tempVarSym(root, pat);
     res.fieldName = name;
     return res;
@@ -285,19 +285,12 @@ function generatorsYield(si) {
 
 /** resolve handler for promises */
 const resolveSym = Kit.sysId("$resolve", true);
-resolveSym.threadLocal = true;
 /** promise rejection handler */
 const rejectSym = Kit.sysId("$reject", true);
-rejectSym.threadLocal = true;
-/** cancelation handler for moving state */
-const cancelSym = Kit.sysId("$cancel", true);
-cancelSym.threadLocal = true;
 /** resulting promise resolving callback */
 const onResolveSym = Kit.sysId("$rs", true);
-onResolveSym.threadLocal = true;
 /** resulting promise rejection callback */
 const onRejectSym = Kit.sysId("$rj", true);
-onRejectSym.threadLocal = true;
 
 /**
  * inline chain operation as ES Promise operation
