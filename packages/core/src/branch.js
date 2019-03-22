@@ -144,7 +144,7 @@ export function toBlocks(si) {
               yield i;
               continue;
             } else {
-              if (i.type !== Tag.BlockStatement) {
+              if (i.type !== Tag.BlockStatement || i.value.ctrl) {
                 yield s.enter(i.pos, Tag.BlockStatement);
                 yield s.enter(Tag.body, Tag.Array);
                 yield s.peel(Kit.setPos(i, Tag.push));

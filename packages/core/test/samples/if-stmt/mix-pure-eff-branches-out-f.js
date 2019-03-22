@@ -163,3 +163,55 @@ function j() {
     console.log("3");
   }
 }
+
+function a1(a, b, c, d) {
+  var e, f, r;
+  e = void 0;
+  f = void 0;
+
+  if (nb) {
+    b: {
+      switch (a) {
+        case "compositionstart":
+          {
+            e = sb.compositionStart;
+            break b;
+          }
+
+        case "compositionend":
+          {
+            e = sb.compositionEnd;
+            break b;
+          }
+
+        case "compositionupdate":
+          {
+            e = sb.compositionUpdate;
+            break b;
+          }
+      }
+
+      e = void 0;
+    }
+
+    return M.jump(void 0, _2);
+  } else {
+    if (wb) {
+      return M.chain(ub(a, c), _1);
+    } else {
+      "keydown" === a && 229 === c.keyCode && (e = sb.compositionStart);
+      return M.jump(void 0, _2);
+    }
+  }
+
+  function _1(a) {
+    var b;
+    b = e = sb.compositionEnd;
+    a && b;
+    return M.jump(void 0, _2);
+  }
+
+  function _2() {
+    return null === f ? b : null === b ? f : [f, b];
+  }
+}

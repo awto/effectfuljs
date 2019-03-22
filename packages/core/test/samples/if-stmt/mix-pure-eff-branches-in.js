@@ -55,3 +55,29 @@ function j() {
   eff(2);
   console.log("3");
 }
+
+function a1(a, b, c, d) {
+  var e = void 0;
+  var f = void 0;
+  if (nb)
+    b: {
+      switch (a) {
+        case "compositionstart":
+          e = sb.compositionStart;
+          break b;
+        case "compositionend":
+          e = sb.compositionEnd;
+          break b;
+        case "compositionupdate":
+          e = sb.compositionUpdate;
+          break b;
+      }
+      e = void 0;
+    }
+  else {
+    wb
+      ? ub(a, c) && (e = sb.compositionEnd)
+      : "keydown" === a && 229 === c.keyCode && (e = sb.compositionStart);
+  }
+  return null === f ? b : null === b ? f : [f, b];
+}

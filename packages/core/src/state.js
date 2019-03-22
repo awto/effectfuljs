@@ -957,13 +957,14 @@ function propagateArgs(cfg) {
  */
 export function allUniqFields(syms, pref = "", postf = "") {
   const names = new Set();
+  const epref = pref ? "" : "_";
   for (const sym of syms) {
     let name = `${pref}${sym.orig}${postf}`;
     /* eslint-disable no-empty */
     for (
       let cnt = 0;
       names.has(name);
-      cnt++, name = `${pref}${sym.orig}${cnt}${postf}`
+      cnt++, name = `${pref}${sym.orig || epref}${cnt}${postf}`
     ) {}
     names.add(name);
     if (!name.length) name = "_";

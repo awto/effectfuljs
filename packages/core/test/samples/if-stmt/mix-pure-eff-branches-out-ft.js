@@ -51,6 +51,15 @@ function j() {
   return M.scope(j_1);
 }
 
+function a1(a, b, c, d) {
+  var a1 = M.context();
+  a1._a = a;
+  a1._b = b;
+  a1._c = c;
+  a1._d = d;
+  return M.scope(a1_1);
+}
+
 function a_1(a) {
   if (true) {
     return M.chain(eff(1), a_2);
@@ -207,4 +216,59 @@ function j_2(j, a) {
 
 function j_3(j) {
   console.log("3");
+}
+
+function a1_1(a1) {
+  var e, a, b;
+  e = void 0;
+  a1._f = void 0;
+
+  if (nb) {
+    b: {
+      switch (a1._a) {
+        case "compositionstart":
+          {
+            e = sb.compositionStart;
+            break b;
+          }
+
+        case "compositionend":
+          {
+            e = sb.compositionEnd;
+            break b;
+          }
+
+        case "compositionupdate":
+          {
+            e = sb.compositionUpdate;
+            break b;
+          }
+      }
+
+      e = void 0;
+    }
+
+    a1._a = null, a1._c = null;
+    return M.jump(void 0, a1_3);
+  } else {
+    if (wb) {
+      a = a1._a, b = a1._c, a1._a = null, a1._c = null;
+      return M.chain(ub(a, b), a1_2);
+    } else {
+      "keydown" === a1._a && 229 === a1._c.keyCode && (e = sb.compositionStart);
+      a1._a = null, a1._c = null;
+      return M.jump(void 0, a1_3);
+    }
+  }
+}
+
+function a1_2(a1, a) {
+  var e, b;
+  b = e = sb.compositionEnd;
+  a && b;
+  return M.jump(void 0, a1_3);
+}
+
+function a1_3(a1) {
+  return null === a1._f ? a1._b : null === a1._b ? a1._f : [a1._f, a1._b];
 }
