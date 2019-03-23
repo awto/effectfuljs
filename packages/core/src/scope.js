@@ -149,7 +149,7 @@ export function splitScopes(si) {
               ? i.value.funcId
               : Kit.scope.newSym(i.value.funcId.orig);
         i.value.wrapArgs = [];
-        if (i.value.opts.injectMetaInfo) {
+        if (i.value.opts.injectFuncMeta) {
           i.value.metaId = Kit.scope.newSym(`meta$${i.value.funcId.orig}`);
           i.value.metaArgs = [];
           i.value.wrapArgs.push(
@@ -168,7 +168,7 @@ export function splitScopes(si) {
 
 export function injectMeta(si) {
   const s = Kit.auto(si);
-  const name = s.opts.injectMetaInfo;
+  const name = s.opts.injectFuncMeta;
   const module = s.first.value;
   if (!name || !module.scopes.length) return s;
   const sym = Kit.sysId(name);
@@ -243,7 +243,7 @@ const emptyMap = new Map();
 function injectModuleDescr(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
-  if (!(s.opts.injectMetaInfo || s.opts.injectModuleDescr) || !root.hasEff)
+  if (!(s.opts.injectFuncMeta || s.opts.injectModuleMeta) || !root.hasEff)
     return s;
   const sym = (root.modDescrSym = Kit.scope.newSym("$module"));
   const name =

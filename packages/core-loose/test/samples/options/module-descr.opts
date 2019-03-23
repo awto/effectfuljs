@@ -2,7 +2,7 @@
   "preset": "@effectful/core",
   "importRT": "@effectful/core",
   "profile": "es",
-  "injectModuleDescr": "module",
+  "injectModuleMeta": "module",
   "wrapFunction": "eff"
 }
 

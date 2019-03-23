@@ -341,7 +341,7 @@ export default {
   // "closure" | "context"
   parThreadState: "closure",
 
-  /** inject `share` operations for shared effectful values */
+  // inject `share` operations for shared effectful values
   parShare: true,
 
   // context's field name for storing thread local variables
@@ -369,11 +369,11 @@ export default {
 
   // name of a function to call for each module with effectful functions
   // the resulting value will be added arguments of `wrapFunction` calls
-  injectModuleDescr: null,
+  injectModuleMeta: null,
 
-  // add some meta-information for each function as an argument of `wrapFunction`
+  // add meta-information object for each function as an argument of `wrapFunction`
   // the meta-information content is specific to libraries
-  injectMetaInfo: null,
+  injectFuncMeta: null,
 
   // adds parent a reference to parent's closure in the meta-info
   metaParentClosure: false
