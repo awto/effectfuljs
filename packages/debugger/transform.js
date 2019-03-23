@@ -13,10 +13,10 @@ module.exports = require("@effectful/core").babelPlugin(
         inlinePureJumps: "tail",
         inlineJsExceptions: true,
         modules: "commonjs",
-        scopeConstructor: "instance",
-        wrapFunction: "fun",
-        injectModuleDescr: "module",
-        injectMetaInfo: "meta",
+        scopeConstructor: "frame",
+        wrapFunction: "func",
+        injectModuleMeta: "module",
+        injectFuncMeta: "meta",
         defunctHandlerInProto: true,
         esForOf: true,
         esForAwaitOf: true,
@@ -24,6 +24,8 @@ module.exports = require("@effectful/core").babelPlugin(
         closureStorageField: "$$",
         closVarPrefix: "",
         closVarPostfix: "",
+        inlineRaiseOp: null,
+        passNewTarget: true,
         before: {
           meta: injectScopeDescr
         },
@@ -31,13 +33,13 @@ module.exports = require("@effectful/core").babelPlugin(
           constr: false,
           brk: false,
           iterator: false,
-          asyncIterator: false
+          asyncIterator: false,
+          forInIterator: false
         },
         ...opts
       },
       main(input) {
         const s = Kit.auto(input);
-        // const callBrk = Kit.sysId("invoke");
         const objWrap = Kit.sysId("constr");
         const brk = Kit.sysId("brk");
         T.run(insertBreaks(P.propagateOpts(configure())));
@@ -63,6 +65,7 @@ module.exports = require("@effectful/core").babelPlugin(
                   case Tag.ForOfStatement:
                   case Tag.ExpressionStatement:
                   case Tag.WithStatement:
+                    if (opts.blackbox) break;
                     const lab = s.label();
                     if (i.pos !== Tag.push) {
                       yield s.enter(i.pos, Tag.BlockStatement);
@@ -75,6 +78,7 @@ module.exports = require("@effectful/core").babelPlugin(
                     yield* lab();
                     continue;
                   case Tag.DebuggerStatement:
+                    if (opts.blackbox) break;
                     yield* brkStmt(i.pos, i, "debugger");
                     s.close(i);
                     continue;
@@ -157,6 +161,7 @@ module.exports = require("@effectful/core").babelPlugin(
       yield Kit.tok(Tag.push, Tag.StringLiteral, { node: { value } });
     }
     function injectScopeDescr(si) {
+      if (opts.blackbox) return si;
       const sa = Kit.toArray(si);
       const s = Kit.auto(sa);
       for (const i of s) {

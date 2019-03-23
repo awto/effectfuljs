@@ -27,15 +27,15 @@ var $module = M.module(\\"/__fixtures__/code.js\\"),
   e: [\\"e\\", \\"16:11-16:12\\", \\"5:14-19:1\\"]
 });
 
-module.exports = M.fun(function f(module, exports) {
+module.exports = M.func(function f(module, exports) {
   var _Cl;
 
-  var ctx = M.instance(f);
-  ctx.$.C = M.fun(function _C(a) {
-    var C = M.instance(_C);
+  var ctx = M.frame(f);
+  ctx.$.C = M.func(function _C(a) {
+    var C = M.frame(_C);
     C.$$.f = ctx.$;
     C.$.a = a;
-    return C.scope(5);
+    return C.scope(this, new.target, 5);
   }, meta$C, C_1, C_err, C_fin);
   ctx.$.Cl = (_Cl = class Cl {
     constructor() {
@@ -52,21 +52,21 @@ module.exports = M.fun(function f(module, exports) {
     }
 
     funcAsync() {
-      var _ctx = M.instance(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1);
+      var _ctx = M.frame(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1);
 
       _ctx.$$.f = ctx.$;
-      return _ctx.scope(5);
+      return _ctx.scope(this, new.target, 5);
     }
 
     func() {
-      var ctx = M.instance(_Cl.prototype.func, meta$func, func_1);
-      return ctx.scope(5);
+      var ctx = M.frame(_Cl.prototype.func, meta$func, func_1);
+      return ctx.scope(this, new.target, 5);
     }
 
-  }, M.fun(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1), M.fun(_Cl.prototype.func, meta$func, func_1), _Cl);
+  }, M.func(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1), M.func(_Cl.prototype.func, meta$func, func_1), _Cl);
   ctx.$.module = module;
   ctx.$.exports = exports;
-  return ctx.scope(5);
+  return ctx.scope(this, new.target, 5);
 }, meta$f3, _f_1)({}, {});
 
 function C_err(s) {
@@ -229,7 +229,7 @@ function C_1(s, p) {
           return C.pure(p);
 
         case 1:
-          throw p;
+          return C.raise(p);
 
         case 27:
           s = 0;
@@ -276,7 +276,7 @@ function C_1(s, p) {
       }
     } catch (ex) {
       if ((p = ex, s = C_err(s)) !== 1) continue;
-      throw ex;
+      return C.raise(ex);
     }
   }
 }
@@ -298,7 +298,7 @@ function funcAsync_1(s, p) {
       return _ctx.pure(p);
 
     case 1:
-      throw p;
+      return _ctx.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -323,7 +323,7 @@ function f_1(s, p) {
       return ctx.pure(p);
 
     case 1:
-      throw p;
+      return ctx.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -339,9 +339,9 @@ function func_1(s, p) {
       return ctx.chain(M.brk(\\"statement\\", \\"36:4-36:44\\"), 6);
 
     case 6:
-      return ctx.chain(not_traced(f = M.fun(() => {
-        var ctx = M.instance(f);
-        return ctx.scope(5);
+      return ctx.chain(not_traced(f = M.func(() => {
+        var ctx = M.frame(f);
+        return ctx.scope(this, new.target, 5);
       }, meta$f2, f_1)), 7);
 
     case 7:
@@ -351,7 +351,7 @@ function func_1(s, p) {
       return ctx.pure(p);
 
     case 1:
-      throw p;
+      return ctx.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -396,7 +396,7 @@ function fn1_1(s, p) {
       return _fn1.pure(p);
 
     case 1:
-      throw p;
+      return _fn1.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -427,7 +427,7 @@ function objFn_1(s, p) {
       return _ctx.pure(p);
 
     case 1:
-      throw p;
+      return _ctx.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -458,22 +458,22 @@ function _f_1(s, p) {
       return ctx.chain(M.brk(\\"statement\\", \\"40:0-43:2\\"), 9);
 
     case 9:
-      ctx.$.exports.fn2 = M.fun(function fn1() {
-        var _fn1 = M.instance(fn1);
+      ctx.$.exports.fn2 = M.func(function fn1() {
+        var _fn1 = M.frame(fn1);
 
         _fn1.$$.f = ctx.$;
-        return _fn1.scope(5);
+        return _fn1.scope(this, new.target, 5);
       }, meta$fn1, fn1_1);
       return ctx.chain(M.brk(\\"statement\\", \\"45:0-49:2\\"), 10);
 
     case 10:
       obj1 = M.constr({
-        objFn: M.fun(function objFn(a) {
-          var _ctx = M.instance(objFn);
+        objFn: M.func(function objFn(a) {
+          var _ctx = M.frame(objFn);
 
           _ctx.$$.f = ctx.$;
           _ctx.$.a = a;
-          return _ctx.scope(5);
+          return _ctx.scope(this, new.target, 5);
         }, meta$objFn, objFn_1)
       }, \\"45:13-49:1\\");
       a = ctx.$.module.exports;
@@ -483,7 +483,7 @@ function _f_1(s, p) {
       return ctx.pure(p);
 
     case 1:
-      throw p;
+      return ctx.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -499,17 +499,17 @@ var M = require(\\"../main\\");
 var $module = M.module(\\"/__fixtures__/mod1.js\\"),
     meta$f = M.meta($module, {}),
     meta$run = M.meta($module, {});
-module.exports = M.fun(function f(module, exports) {
-  var ctx = M.instance(f);
-  ctx.$.run = M.fun(function _run(i = 1) {
-    var run = M.instance(_run);
+module.exports = M.func(function f(module, exports) {
+  var ctx = M.frame(f);
+  ctx.$.run = M.func(function _run(i = 1) {
+    var run = M.frame(_run);
     run.$$.f = ctx.$;
     run.$.i = i;
-    return run.scope(5);
+    return run.scope(this, new.target, 5);
   }, meta$run, run_1);
   ctx.$.module = module;
   ctx.$.exports = exports;
-  return ctx.scope(5);
+  return ctx.scope(this, new.target, 5);
 }, meta$f, f_1)({}, {});
 
 function run_1(s, p) {
@@ -548,7 +548,7 @@ function run_1(s, p) {
       return run.pure(p);
 
     case 1:
-      throw p;
+      return run.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -592,7 +592,7 @@ function f_1(s, p) {
       return ctx.pure(p);
 
     case 1:
-      throw p;
+      return ctx.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -608,51 +608,147 @@ var M = require(\\"../main\\");
 var $module = M.module(\\"/__fixtures__/mod2.js\\"),
     meta$f = M.meta($module, {}),
     meta$f2 = M.meta($module, {}),
-    meta$f1 = M.meta($module, {});
-module.exports = M.fun(function f(module, exports) {
-  var ctx = M.instance(f);
-  ctx.$.f1 = M.fun(function _f1(i) {
-    var f1 = M.instance(_f1);
+    meta$f1 = M.meta($module, {
+  a: [\\"a\\", \\"16:8-16:9\\", \\"13:22-19:1\\"]
+}),
+    meta$B = M.meta($module, {}),
+    meta$A = M.meta($module, {});
+module.exports = M.func(function f(module, exports) {
+  var ctx = M.frame(f);
+  ctx.$.A = M.func(function _A(i) {
+    var A = M.frame(_A);
+    A.$$.f = ctx.$;
+    A.$._this = this;
+    A.$.i = i;
+    return A.scope(this, new.target, 5);
+  }, meta$A, A_1);
+  ctx.$.B = M.func(function _B(i) {
+    var B = M.frame(_B);
+    B.$$.f = ctx.$;
+    B.$._this = this;
+    B.$.i = i;
+    return B.scope(this, new.target, 5);
+  }, meta$B, B_1);
+  ctx.$.f1 = M.func(function _f1(i) {
+    var f1 = M.frame(_f1);
     f1.$$.f = ctx.$;
     f1.$.i = i;
-    return f1.scope(5);
+    return f1.scope(this, new.target, 5);
   }, meta$f1, f1_1);
-  ctx.$.f2 = M.fun(function _f2(i) {
-    var f2 = M.instance(_f2);
+  ctx.$.f2 = M.func(function _f2(i) {
+    var f2 = M.frame(_f2);
     f2.$$.f = ctx.$;
     f2.$.i = i;
-    return f2.scope(5);
+    return f2.scope(this, new.target, 5);
   }, meta$f2, f2_1);
   ctx.$.module = module;
   ctx.$.exports = exports;
-  return ctx.scope(5);
+  return ctx.scope(this, new.target, 5);
 }, meta$f, f_1)({}, {});
 
-function f1_1(s, p) {
-  var f1 = this;
+function A_1(s, p) {
+  var A = this,
+      a;
 
   switch (s) {
     case 5:
-      return f1.chain(M.brk(\\"statement\\", \\"4:2-4:8\\"), 6);
+      return A.chain(M.brk(\\"statement\\", \\"4:2-4:24\\"), 6);
+
+    case 6:
+      A.$._this.i = A.$.i * 10 + A.$$.f.cnt;
+      return A.chain(M.brk(\\"statement\\", \\"5:2-5:22\\"), 7);
+
+    case 7:
+      a = A.$$.f.B;
+      return A.chain(new a(100), 8);
+
+    case 8:
+      a = M.constr(p, \\"5:11-5:21\\");
+      A.$._this.b = a;
+      return A.pure();
+
+    case 0:
+      return A.pure(p);
+
+    case 1:
+      return A.raise(p);
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}
+
+function B_1(s, p) {
+  var B = this;
+
+  switch (s) {
+    case 5:
+      return B.chain(M.brk(\\"statement\\", \\"9:2-9:13\\"), 6);
+
+    case 6:
+      B.$._this.i = B.$.i;
+      return B.chain(M.brk(\\"statement\\", \\"10:2-10:26\\"), 7);
+
+    case 7:
+      return B.pure(M.constr({
+        b: B.$._this,
+        cnt: B.$$.f.cnt
+      }, \\"10:9-10:25\\"));
+
+    case 0:
+      return B.pure(p);
+
+    case 1:
+      return B.raise(p);
+
+    default:
+      throw new Error(\\"invalid state\\");
+  }
+}
+
+function f1_1(s, p) {
+  var f1 = this,
+      a,
+      b;
+
+  switch (s) {
+    case 5:
+      return f1.chain(M.brk(\\"statement\\", \\"14:2-14:8\\"), 6);
 
     case 6:
       f1.$$.f.cnt++;
-      return f1.chain(M.brk(\\"statement\\", \\"5:2-5:32\\"), 7);
+      return f1.chain(M.brk(\\"statement\\", \\"15:2-15:32\\"), 7);
 
     case 7:
       return f1.chain(console.log(\`f1:\${f1.$.i}@\${f1.$$.f.cnt}\`), 8);
 
     case 8:
-      return f1.chain(M.brk(\\"statement\\", \\"6:2-6:13\\"), 9);
+      return f1.chain(M.brk(\\"statement\\", \\"16:2-16:23\\"), 9);
 
     case 9:
+      a = f1.$$.f.A;
+      b = f1.$$.f.cnt;
+      return f1.chain(new a(b), 10);
+
+    case 10:
+      a = M.constr(p, \\"16:12-16:22\\");
+      f1.$.a = a;
+      return f1.chain(M.brk(\\"statement\\", \\"17:2-17:23\\"), 11);
+
+    case 11:
+      return f1.chain(console.log(\\"A:\\", f1.$.a), 12);
+
+    case 12:
+      return f1.chain(M.brk(\\"statement\\", \\"18:2-18:13\\"), 13);
+
+    case 13:
       return f1.pure(f1.$$.f.cnt);
 
     case 0:
       return f1.pure(p);
 
     case 1:
-      throw p;
+      return f1.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -664,11 +760,11 @@ function f2_1(s, p) {
 
   switch (s) {
     case 5:
-      return f2.chain(M.brk(\\"statement\\", \\"10:2-10:8\\"), 6);
+      return f2.chain(M.brk(\\"statement\\", \\"22:2-22:8\\"), 6);
 
     case 6:
       f2.$$.f.cnt++;
-      return f2.chain(M.brk(\\"statement\\", \\"11:2-11:32\\"), 7);
+      return f2.chain(M.brk(\\"statement\\", \\"23:2-23:32\\"), 7);
 
     case 7:
       return f2.chain(console.log(\`f2:\${f2.$.i}@\${f2.$$.f.cnt}\`), 8);
@@ -680,7 +776,7 @@ function f2_1(s, p) {
       return f2.pure(p);
 
     case 1:
-      throw p;
+      return f2.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");
@@ -708,7 +804,7 @@ function f_1(s, p) {
       return ctx.pure(p);
 
     case 1:
-      throw p;
+      return ctx.raise(p);
 
     default:
       throw new Error(\\"invalid state\\");

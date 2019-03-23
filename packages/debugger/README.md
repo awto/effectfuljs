@@ -15,7 +15,7 @@ program's state from some savepoints and other diagnostics tools.
 
 ## Not yet implemented
 
- * stepping into setters and constructors
+ * stepping into setters, getters, proxy traps etc
  * stepping into runtime called callbacks
  * async/generator functions
 

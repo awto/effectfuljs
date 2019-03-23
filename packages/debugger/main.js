@@ -46,13 +46,14 @@ export function stepOver() {
   for (let len = context.stack.length; context.stack.length > len; step()) {}
 }
 
-class Instance {
-  scope(dest) {
+class Frame {
+  scope(self, newTarget, dest) {
     this.$state = dest;
+    this.$inNew = newTarget !== void 0;
+    this.$self = self;
     this.$cont = (ctx, value) => this.step(ctx, value);
     context.stack.unshift(this);
     context.value = void 0;
-    // this.resume();
     return effectToken;
   }
   chain(eff, dest) {
@@ -63,6 +64,8 @@ class Instance {
     return effectToken;
   }
   pure(value) {
+    if (this.$inNew && (!value || typeof value !== "object"))
+      value = this.$self;
     context.stack.shift();
     context.brk = "return";
     context.value = value;
@@ -72,13 +75,14 @@ class Instance {
     context.stack.shift();
     context.value = error;
     context.brk = "throw";
-    const callee = context.state[0];
+    const callee = context.stack[0];
     if (callee) callee.$state = callee.$err(callee.$cur);
   }
   resume(value) {
     try {
       this.$run((this.$cur = this.$state), value);
     } catch (e) {
+      this.$state = this.$err(this.$cur);
       context.brk = "throw";
       context.value = e;
     }
@@ -89,8 +93,8 @@ function defaultErrHandler() {
   return 1;
 }
 
-export function fun(func, meta, handler, errHandler) {
-  const proto = Object.create(new Instance());
+export function func(func, meta, handler, errHandler) {
+  const proto = Object.create(new Frame());
   proto.$run = handler;
   proto.constructor = func;
   proto.$meta = meta;
@@ -99,7 +103,7 @@ export function fun(func, meta, handler, errHandler) {
   return func;
 }
 
-export function instance(fun) {
+export function frame(fun) {
   const res = Object.create(fun.$proto);
   res.$ = {};
   res.$$ = {};
@@ -122,4 +126,10 @@ export function iterator(v) {
 
 export function asyncIterator(v) {
   return v[Symbol.asyncIterator]();
+}
+
+export function forInIterator(obj) {
+  return (function*() {
+    for (const i in obj) yield i;
+  })()[Symbol.iterator]();
 }
