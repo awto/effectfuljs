@@ -376,5 +376,9 @@ export default {
   injectFuncMeta: null,
 
   // adds parent a reference to parent's closure in the meta-info
-  metaParentClosure: false
+  metaParentClosure: false,
+
+  // adds `new.target` as an argument of `scope` function
+  // this way the context can handle `new` operator
+  passNewTarget: false
 };

@@ -460,7 +460,7 @@ export const convert = Kit.pipe(
       const name = root.opts.scopePrefix.substr
         ? root.opts.scopePrefix
         : "scope";
-      yield s.tok(Tag.push, Block.letStmt, {
+      yield s.enter(Tag.push, Block.letStmt, {
         goto: first,
         ref: frame.value,
         eff: true,
@@ -470,8 +470,8 @@ export const convert = Kit.pipe(
         bindJump: true,
         init: true
       });
-    } else
-      yield s.tok(Tag.push, Ctrl.jump, {
+    } else {
+      yield s.enter(Tag.push, Ctrl.jump, {
         goto: first,
         ref: frame.value,
         eff: true,
@@ -480,6 +480,15 @@ export const convert = Kit.pipe(
         bindJump: false,
         init: true
       });
+    }
+    if (root.opts.passNewTarget) {
+      yield s.tok(Tag.push, Tag.ThisExpression);
+      yield s.enter(Tag.push, Tag.MemberExpression);
+      yield s.tok(Tag.object, Tag.Identifier, { node: { name: "new" } });
+      yield s.tok(Tag.property, Tag.Identifier, { node: { name: "target" } });
+      yield* s.leave();
+    }
+    yield* s.leave();
     yield* s.leave();
     const resFrameCont = Kit.toArray(ctrlFrames());
     yield* s.sub();
