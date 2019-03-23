@@ -289,6 +289,7 @@ export function* frames(si) {
   const root = s.first.value;
   const { contextSym, contSym, errFrameRedir } = root;
   const inlineJumps = s.opts.inlinePureJumps === "tail";
+  const inlineTailCoerce = !!s.opts.inlineTailCoerce;
   invariant(contextSym);
   const impl = root.implFrame.value;
   const decls = impl.savedDecls;
@@ -369,15 +370,19 @@ export function* frames(si) {
       }
       if (inlineJumps) {
         for (const j of s.sub()) {
-          if (
-            j.enter &&
-            j.type === Ctrl.jump &&
-            j.value.goto &&
-            !j.value.reflected
-          ) {
-            j.value.ctrlArg = j.value.goto.declSym;
-            j.value.goto = impl;
-            hasJumps = true;
+          if (j.enter) {
+            if (j.type === Ctrl.jump && j.value.goto && !j.value.reflected) {
+              j.value.ctrlArg = j.value.goto.declSym;
+              j.value.goto = impl;
+              hasJumps = true;
+            } else if (
+              inlineTailCoerce &&
+              j.type === Block.letStmt &&
+              j.value.eff &&
+              !j.value.reflecte
+            ) {
+              hasJumps = true;
+            }
           }
           yield j;
         }
@@ -493,10 +498,35 @@ export function* substSymConsts(si) {
 export function tailJumps(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
-  if (s.opts.inlinePureJumps !== "tail") return s;
+  const { inlinePureJumps, inlineTailCoerce } = root.opts;
+  if (inlinePureJumps !== "tail") {
+    if (inlineTailCoerce)
+      throw s.error(
+        '`inlineTailCoerce:true` requires `inlinePureJunps:"tail"`'
+      );
+    return s;
+  }
   if (!s.opts.defunct)
     throw s.error("`inlinePureJumps:'tail'` requires `defunct:true`");
   const implFrame = root.implFrame.value;
+  let tailCoerceExpr;
+  let tailCoerceArg;
+  if (inlineTailCoerce) {
+    if (inlineTailCoerce.substr) {
+      tailCoerceExpr = "=$2($1)";
+      tailCoerceArg = Kit.sysId(inlineTailCoerce);
+    } else if (inlineTailCoerce.singelton) {
+      tailCoerceExpr = "=$1 === $2";
+      tailCoerceArg = Kit.sysId(inlineTailCoerce.singelton);
+    } else if (inlineTailCoerce.symbol) {
+      tailCoerceExpr = "=$1 && $1[$2]";
+      tailCoerceArg = Kit.sysId(inlineTailCoerce.symbol);
+    } else {
+      tailCoerceExpr = "=$2($1)";
+      tailCoerceArg = Kit.sysId("isEff");
+    }
+  }
+  const pat = root.commonPatSym;
   let contSym = !root.contSym && implFrame.discrimSym;
   return walk();
   function* walk() {
@@ -511,30 +541,47 @@ export function tailJumps(si) {
       yield s.enter(Tag.body, Tag.Array);
     }
     for (const i of s.sub()) {
-      if (
-        i.enter &&
-        i.type === Ctrl.jump &&
-        !i.value.bindName &&
-        !i.value.reflected
-      ) {
-        if (contSym)
-          yield* s.toks(Tag.push, "=$I = $I", contSym, i.value.gotoSym);
-        const j = s.curLev();
-        if (j) {
-          if (j.type === Block.bindPat && i.value.sym === root.commonPatSym) {
-            Kit.skip(s.sub());
-          } else {
-            yield s.enter(Tag.push, Tag.AssignmentExpression, {
-              node: { operator: "=" }
-            });
-            yield s.tok(Tag.left, Tag.Identifier, { sym: root.commonPatSym });
-            yield* Kit.reposOne(s.sub(), Tag.right);
-            yield* s.leave();
-          }
+      if (i.enter) {
+        if (
+          tailCoerceExpr &&
+          i.type === Block.letStmt &&
+          i.value.eff &&
+          !i.value.reflected
+        ) {
+          i.value.reflected = true;
+          i.value.tmpVar = pat;
+          yield* s.copy(i);
+          yield s.enter(Tag.push, Tag.IfStatement);
+          yield* s.toks(Tag.test, tailCoerceExpr, pat, tailCoerceArg);
+          yield s.enter(Tag.consequent, Tag.ReturnStatement);
+          yield s.tok(Tag.argument, Tag.Identifier, { sym: pat });
+          yield* s.leave();
+          yield s.tok(Tag.alternate, Tag.ContinueStatement);
+          yield* s.leave();
+          continue;
         }
-        s.close(i);
-        yield s.tok(Tag.push, Tag.ContinueStatement);
-      } else yield i;
+        if (i.type === Ctrl.jump && !i.value.bindName && !i.value.reflected) {
+          if (contSym)
+            yield* s.toks(Tag.push, "=$I = $I", contSym, i.value.gotoSym);
+          const j = s.curLev();
+          if (j) {
+            if (j.type === Block.bindPat && i.value.sym === pat) {
+              Kit.skip(s.sub());
+            } else {
+              yield s.enter(Tag.push, Tag.AssignmentExpression, {
+                node: { operator: "=" }
+              });
+              yield s.tok(Tag.left, Tag.Identifier, { sym: pat });
+              yield* Kit.reposOne(s.sub(), Tag.right);
+              yield* s.leave();
+            }
+          }
+          s.close(i);
+          yield s.tok(Tag.push, Tag.ContinueStatement);
+          continue;
+        }
+      }
+      yield i;
     }
     yield* lab();
     yield* s;

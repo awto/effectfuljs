@@ -193,6 +193,16 @@ export default {
   // * 'exit' - same tail calls but managed on generator (requires inlineContAssign)
   inlinePureJumps: null,
 
+  // this inlines check and if an operation returns pure value
+  // does a tail jump to the next frame
+  // possible values
+  // * falsy - nothing is injected
+  // * true - the check is a call of `isEff`
+  // * string - name of a function to call for checking
+  // * { singelton: string } - name of a runtime value with which it will be compared
+  // * { symbol: string } - will check if this (computed) property isn't falsy
+  inlineTailCoerce: null,
+
   // unsets variables if their values are not used after in control flow,
   // to avoid possible leaks if effectful computation is suspended for long
   cleanupFrameVars: false,

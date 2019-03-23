@@ -346,7 +346,7 @@ export const configDiffPass = Kit.pipe(
 /** marks profile change calls in the code */
 export const directives = Kit.pipe(
   replaceGlobalNsName,
-  Match.inject(["*$M.profile($$)", "*$M.option($$)"]),
+  Match.inject(["*$M.profile($$)", "*$M.option($$)", "*$M.assignOption($$)"]),
   Kit.toArray, //TODO: remove
   function* matchNs(s) {
     s = Kit.auto(s);
@@ -431,7 +431,7 @@ export const directives = Kit.pipe(
               Kit.skip(s.till(j => j.enter && j.type === Match.Placeholder));
               yield s.tok(i.pos, configDiff, {
                 node: getConst(),
-                alg: "merge"
+                alg: i.value.index === 1 ? "merge" : "assign"
               });
               Kit.skip(s.till(j => j.leave && j.type === Match.Root));
             }
