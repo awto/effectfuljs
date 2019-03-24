@@ -1,1 +1,5 @@
-index.js
+/*.js
+!transform.js
+!*.test.js
+/instr
+

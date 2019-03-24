@@ -16,4 +16,6 @@ npm-debug.log
 .eslintrc
 .eslintignore
 *.test.js
-fixtures
+__fixtures__
+__snapshots__
+src

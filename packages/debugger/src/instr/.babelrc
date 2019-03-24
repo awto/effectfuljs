@@ -1,0 +1,20 @@
+{
+  "presets": [
+    {
+      "plugins": [
+        [
+          "@babel/transform-modules-commonjs",
+          { "loose": true, "noInterop": true }
+        ]
+      ]
+    },
+    {
+      "plugins": [
+        [
+          "../../transform",
+          { "blackbox": true, "pureModule": true, "importRT": "../kit" }
+        ]
+      ]
+    }
+  ]
+}

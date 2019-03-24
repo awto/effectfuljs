@@ -2,18 +2,17 @@
   "name": "@effectful/debugger",
   "version": "1.0.0",
   "description": "User space debugging",
-  "main": "index.js",
-  "module": "main.js",
-  "jsnext:main": "main.js",
+  "main": "main.js",
   "repository": "https://github.com/awto/effectfuljs.git",
   "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "babel main.js --out-file index.js"
+    "build": "babel src --out-dir ."
   },
   "peerDependencies": {
-    "@effectful/core": "^1.1.4"
+    "@effectful/core": "^1.1.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

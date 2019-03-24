@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`tracing 1`] = `
+exports[`modules tracing 1`] = `
 Array [
   Array [
     "Step #0@statement",
@@ -20,7 +20,7 @@ Array [
     "  f@/__fixtures__/mod1.js:1:0-1:29",
   ],
   Array [
-    "Step #2@return",
+    "Step #2@statement",
     Object {
       "__esModule": true,
       "f1": [Function],
@@ -28,49 +28,71 @@ Array [
     },
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:1:0-1:29",
+    "  f@/__fixtures__/mod1.js:2:0-2:34",
   ],
   Array [
     "Step #3@statement",
     Object {
       "__esModule": true,
-      "f1": [Function],
-      "f2": [Function],
+      "arraySort": [Function],
+      "every": [Function],
+      "filter": [Function],
+      "find": [Function],
+      "findIndex": [Function],
+      "flatMap": [Function],
+      "forEach": [Function],
+      "iterForEach": [Function],
+      "map": [Function],
+      "reduce": [Function],
+      "reduceRight": [Function],
+      "some": [Function],
+      "typedArraySort": [Function],
     },
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:3:0-3:10",
+    "  f@/__fixtures__/mod1.js:4:0-4:10",
   ],
   Array [
     "Step #4@statement",
     Object {
       "__esModule": true,
-      "f1": [Function],
-      "f2": [Function],
+      "arraySort": [Function],
+      "every": [Function],
+      "filter": [Function],
+      "find": [Function],
+      "findIndex": [Function],
+      "flatMap": [Function],
+      "forEach": [Function],
+      "iterForEach": [Function],
+      "map": [Function],
+      "reduce": [Function],
+      "reduceRight": [Function],
+      "some": [Function],
+      "typedArraySort": [Function],
     },
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #5@statement",
     undefined,
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:6:2-6:9",
+    "  _run@/__fixtures__/mod1.js:7:2-7:9",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #6@statement",
     undefined,
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #7@statement",
@@ -80,10 +102,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:14:2-14:8",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #8@statement",
@@ -93,10 +115,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:15:2-15:32",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "f1:1@1",
@@ -109,10 +131,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #10@statement",
@@ -125,10 +147,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #11@statement",
@@ -141,10 +163,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #12@statement",
@@ -160,10 +182,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "Step #13@statement",
@@ -179,55 +201,13 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
-    "Step #14@return",
-    Object {
-      "b": _B {
-        "i": 100,
-      },
-      "cnt": 1,
-    },
-  ],
-  Array [
-    "  _A@/__fixtures__/mod2.js:5:2-5:22",
-  ],
-  Array [
-    "  _f1@/__fixtures__/mod2.js:16:2-16:23",
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
-  ],
-  Array [
-    "Step #15@return",
-    _A {
-      "b": Object {
-        "b": _B {
-          "i": 100,
-        },
-        "cnt": 1,
-      },
-      "i": 11,
-    },
-  ],
-  Array [
-    "  _f1@/__fixtures__/mod2.js:16:2-16:23",
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
-  ],
-  Array [
-    "Step #16@statement",
+    "Step #14@statement",
     _A {
       "b": Object {
         "b": _B {
@@ -242,10 +222,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:17:2-17:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "A:",
@@ -260,168 +240,141 @@ Array [
     },
   ],
   Array [
-    "Step #17@statement",
+    "Step #15@statement",
     undefined,
   ],
   Array [
     "  _f1@/__fixtures__/mod2.js:18:2-18:13",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
-    "Step #18@return",
-    1,
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
-  ],
-  Array [
-    "Step #19@statement",
+    "Step #16@statement",
     undefined,
   ],
   Array [
     "  _f2@/__fixtures__/mod2.js:22:2-22:8",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
-    "Step #20@statement",
+    "Step #17@statement",
     undefined,
   ],
   Array [
     "  _f2@/__fixtures__/mod2.js:23:2-23:32",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
     "f2:1@2",
   ],
   Array [
-    "Step #21@return",
+    "Step #18@statement",
     undefined,
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:9:2-9:9",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "Step #19@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:10:2-10:31",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "i:2,j:3",
+  ],
+  Array [
+    "Step #20@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
+  ],
+  Array [
+    "Step #21@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:7:2-7:9",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
     "Step #22@statement",
     undefined,
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:8:2-8:9",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
     "Step #23@statement",
     undefined,
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:9:2-9:31",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
-  ],
-  Array [
-    "i:2,j:3",
-  ],
-  Array [
-    "Step #24@return",
-    undefined,
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:12:0-12:6",
-  ],
-  Array [
-    "Step #25@statement",
-    undefined,
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
-  ],
-  Array [
-    "Step #26@statement",
-    undefined,
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:6:2-6:9",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
-  ],
-  Array [
-    "Step #27@statement",
-    undefined,
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
-  ],
-  Array [
-    "Step #28@statement",
-    undefined,
-  ],
-  Array [
     "  _f1@/__fixtures__/mod2.js:14:2-14:8",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #29@statement",
+    "Step #24@statement",
     undefined,
   ],
   Array [
     "  _f1@/__fixtures__/mod2.js:15:2-15:32",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
     "f1:1@3",
   ],
   Array [
-    "Step #30@statement",
+    "Step #25@statement",
     undefined,
   ],
   Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #31@statement",
+    "Step #26@statement",
     undefined,
   ],
   Array [
@@ -431,13 +384,13 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #32@statement",
+    "Step #27@statement",
     undefined,
   ],
   Array [
@@ -447,13 +400,13 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #33@statement",
+    "Step #28@statement",
     undefined,
   ],
   Array [
@@ -466,13 +419,13 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #34@statement",
+    "Step #29@statement",
     undefined,
   ],
   Array [
@@ -485,55 +438,13 @@ Array [
     "  _f1@/__fixtures__/mod2.js:16:2-16:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #35@return",
-    Object {
-      "b": _B {
-        "i": 100,
-      },
-      "cnt": 3,
-    },
-  ],
-  Array [
-    "  _A@/__fixtures__/mod2.js:5:2-5:22",
-  ],
-  Array [
-    "  _f1@/__fixtures__/mod2.js:16:2-16:23",
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
-  ],
-  Array [
-    "Step #36@return",
-    _A {
-      "b": Object {
-        "b": _B {
-          "i": 100,
-        },
-        "cnt": 3,
-      },
-      "i": 33,
-    },
-  ],
-  Array [
-    "  _f1@/__fixtures__/mod2.js:16:2-16:23",
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
-  ],
-  Array [
-    "Step #37@statement",
+    "Step #30@statement",
     _A {
       "b": Object {
         "b": _B {
@@ -548,10 +459,10 @@ Array [
     "  _f1@/__fixtures__/mod2.js:17:2-17:23",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
     "A:",
@@ -566,100 +477,2701 @@ Array [
     },
   ],
   Array [
-    "Step #38@statement",
+    "Step #31@statement",
     undefined,
   ],
   Array [
     "  _f1@/__fixtures__/mod2.js:18:2-18:13",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #39@return",
-    3,
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
-  ],
-  Array [
-    "Step #40@statement",
+    "Step #32@statement",
     undefined,
   ],
   Array [
     "  _f2@/__fixtures__/mod2.js:22:2-22:8",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #41@statement",
+    "Step #33@statement",
     undefined,
   ],
   Array [
     "  _f2@/__fixtures__/mod2.js:23:2-23:32",
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:8:2-8:23",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
     "f2:3@4",
   ],
   Array [
-    "Step #42@return",
+    "Step #34@statement",
     undefined,
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:7:2-7:23",
+    "  _run@/__fixtures__/mod1.js:9:2-9:9",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
-    "Step #43@statement",
+    "Step #35@statement",
     undefined,
   ],
   Array [
-    "  _run@/__fixtures__/mod1.js:8:2-8:9",
+    "  _run@/__fixtures__/mod1.js:10:2-10:31",
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
-  ],
-  Array [
-    "Step #44@statement",
-    undefined,
-  ],
-  Array [
-    "  _run@/__fixtures__/mod1.js:9:2-9:31",
-  ],
-  Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
     "i:2,j:6",
   ],
   Array [
-    "Step #45@return",
+    Object {
+      "__esModule": true,
+      "arraySortTest": [Function],
+      "everyTest": [Function],
+      "filterTest": [Function],
+      "findIndexTest": [Function],
+      "flatMapTest": [Function],
+      "forEachTest": [Function],
+      "mapTest": [Function],
+      "reduceRightTest": [Function],
+      "reduceTest": [Function],
+      "someTest": [Function],
+      "typedArraySortTest": [Function],
+    },
+  ],
+  Array [
+    "Step #0@statement",
+    Object {
+      "__esModule": true,
+      "arraySortTest": [Function],
+      "everyTest": [Function],
+      "filterTest": [Function],
+      "findIndexTest": [Function],
+      "flatMapTest": [Function],
+      "forEachTest": [Function],
+      "mapTest": [Function],
+      "reduceRightTest": [Function],
+      "reduceTest": [Function],
+      "someTest": [Function],
+      "typedArraySortTest": [Function],
+    },
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:17:2-17:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Object {
+      "__esModule": true,
+      "arraySortTest": [Function],
+      "everyTest": [Function],
+      "filterTest": [Function],
+      "findIndexTest": [Function],
+      "flatMapTest": [Function],
+      "forEachTest": [Function],
+      "mapTest": [Function],
+      "reduceRightTest": [Function],
+      "reduceTest": [Function],
+      "someTest": [Function],
+      "typedArraySortTest": [Function],
+    },
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:18:2-18:18",
+  ],
+  Array [
+    "Step #2@statement",
+    Object {
+      "__esModule": true,
+      "arraySortTest": [Function],
+      "everyTest": [Function],
+      "filterTest": [Function],
+      "findIndexTest": [Function],
+      "flatMapTest": [Function],
+      "forEachTest": [Function],
+      "mapTest": [Function],
+      "reduceRightTest": [Function],
+      "reduceTest": [Function],
+      "someTest": [Function],
+      "typedArraySortTest": [Function],
+    },
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "Step #3@statement",
     undefined,
   ],
   Array [
-    "  f@/__fixtures__/mod1.js:13:0-13:6",
+    "  f@/__fixtures__/mod1.js:22:6-22:69",
   ],
   Array [
-    "Step #46@return",
-    Object {},
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "map@1[0]:true/true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:23:6-23:19",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:22:6-22:69",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "map@2[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:23:6-23:19",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:22:6-22:69",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "map@3[2]:true/true",
+    3,
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:23:6-23:19",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "> map:Array",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:17:2-17:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:18:2-18:18",
+  ],
+  Array [
+    "Step #2@statement",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:22:6-22:69",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "map@1[0]:true/true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:23:6-23:19",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:22:6-22:69",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "map@2[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:23:6-23:19",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:22:6-22:69",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "map@3[2]:true/true",
+    3,
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:23:6-23:19",
+  ],
+  Array [
+    "  map@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _mapTest@/__fixtures__/mod1.js:19:2-26:4",
+  ],
+  Array [
+    "> map:TypedArray",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:43:2-43:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:44:2-44:18",
+  ],
+  Array [
+    "Step #2@statement",
+    Array [
+      2,
+      4,
+      6,
+    ],
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:48:6-48:72",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "filter@0[0]:true/true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:49:6-49:21",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:48:6-48:72",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "filter@1[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:49:6-49:21",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:48:6-48:72",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "filter@2[2]:true/true",
+    3,
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:49:6-49:21",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "> filter:Array",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:43:2-43:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:44:2-44:18",
+  ],
+  Array [
+    "Step #2@statement",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:48:6-48:72",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "filter@0[0]:true/true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:49:6-49:21",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:48:6-48:72",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "filter@1[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:49:6-49:21",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:48:6-48:72",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "filter@2[2]:true/true",
+    3,
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:49:6-49:21",
+  ],
+  Array [
+    "  filter@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _filterTest@/__fixtures__/mod1.js:45:2-52:4",
+  ],
+  Array [
+    "> filter:TypedArray",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:56:2-56:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:57:2-57:18",
+  ],
+  Array [
+    "Step #2@statement",
+    Array [
+      1,
+      3,
+    ],
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:61:6-61:75",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "findIndex@0[0]:true/true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:62:6-62:21",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:61:6-61:75",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "findIndex@1[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:62:6-62:21",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "> findIndex:Array",
+    2,
+  ],
+  Array [
+    "Step #0@statement",
+    2,
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:56:2-56:8",
+  ],
+  Array [
+    "Step #1@statement",
+    2,
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:57:2-57:18",
+  ],
+  Array [
+    "Step #2@statement",
+    2,
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:61:6-61:75",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "findIndex@0[0]:true/true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:62:6-62:21",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:61:6-61:75",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "findIndex@1[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:62:6-62:21",
+  ],
+  Array [
+    "  findIndex@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _findIndexTest@/__fixtures__/mod1.js:58:2-65:4",
+  ],
+  Array [
+    "> findIndex:TypedArray",
+    2,
+  ],
+  Array [
+    "Step #0@statement",
+    2,
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:30:2-30:8",
+  ],
+  Array [
+    "Step #1@statement",
+    2,
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:31:2-31:18",
+  ],
+  Array [
+    "Step #2@statement",
+    2,
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "Step #3@statement",
+    Array [
+      Object {
+        "_effectToken": true,
+      },
+      Object {
+        "_effectToken": true,
+      },
+      Object {
+        "_effectToken": true,
+      },
+    ],
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "flatMap@2[0]:true/true",
+    3,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:36:6-36:27",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "flatMap@1[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:36:6-36:27",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "flatMap@0[2]:true/true",
+    1,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:36:6-36:27",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "> flatMap:Array",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:30:2-30:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:31:2-31:18",
+  ],
+  Array [
+    "Step #2@statement",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "Step #3@statement",
+    Int8Array [
+      0,
+      0,
+      0,
+    ],
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "flatMap@2[0]:true/true",
+    3,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:36:6-36:27",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "flatMap@1[1]:true/true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:36:6-36:27",
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:35:6-35:73",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "flatMap@0[2]:true/true",
+    1,
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:36:6-36:27",
+  ],
+  Array [
+    "  flatMap@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _flatMapTest@/__fixtures__/mod1.js:32:2-39:4",
+  ],
+  Array [
+    "> flatMap:TypedArray",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:69:2-69:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:70:2-70:18",
+  ],
+  Array [
+    "Step #2@statement",
+    Array [
+      1,
+      0,
+      1,
+    ],
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@0[0]:true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@1[1]:true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@2[2]:true",
+    3,
+  ],
+  Array [
+    "> forEach:Array",
+    undefined,
+  ],
+  Array [
+    "Step #0@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:69:2-69:8",
+  ],
+  Array [
+    "Step #1@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:70:2-70:18",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@0[0]:true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@1[1]:true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@2[2]:true",
+    3,
+  ],
+  Array [
+    "> forEach:TypedArray",
+    undefined,
+  ],
+  Array [
+    "Step #0@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:69:2-69:8",
+  ],
+  Array [
+    "Step #1@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:70:2-70:18",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@0[0]:true",
+    1,
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@1[1]:true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@2[2]:true",
+    3,
+  ],
+  Array [
+    "> forEach:Set",
+    undefined,
+  ],
+  Array [
+    "Step #0@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:69:2-69:8",
+  ],
+  Array [
+    "Step #1@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:70:2-70:18",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@0[0]:true",
+    Array [
+      1,
+      "a",
+    ],
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@1[1]:true",
+    Array [
+      2,
+      "b",
+    ],
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:74:6-74:60",
+  ],
+  Array [
+    "  forEach@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _forEachTest@/__fixtures__/mod1.js:71:2-77:4",
+  ],
+  Array [
+    "forEachTest@2[2]:true",
+    Array [
+      3,
+      "c",
+    ],
+  ],
+  Array [
+    "> forEach:Map",
+    undefined,
+  ],
+  Array [
+    "Step #0@statement",
+    undefined,
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:81:2-81:8",
+  ],
+  Array [
+    "Step #1@statement",
+    undefined,
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:~@0[0]:true",
+    "a",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:~/a@1[1]:true",
+    "b",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:~/a/b@2[2]:true",
+    "c",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:a@1[3]:true",
+    "b",
+  ],
+  Array [
+    "Step #9@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #10@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:a/b@2[4]:true",
+    "c",
+  ],
+  Array [
+    "Step #11@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "> reduce:Array",
+    Array [
+      "~/a/b/c",
+      "a/b/c",
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      "~/a/b/c",
+      "a/b/c",
+    ],
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:81:2-81:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      "~/a/b/c",
+      "a/b/c",
+    ],
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:~@0[0]:true",
+    1,
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:~/1@1[1]:true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:~/1/2@2[2]:true",
+    3,
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:1@1[3]:true",
+    2,
+  ],
+  Array [
+    "Step #9@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "Step #10@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:84:4-84:60",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "reduce:1/2@2[4]:true",
+    3,
+  ],
+  Array [
+    "Step #11@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:85:4-85:25",
+  ],
+  Array [
+    "  reduce@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceTest@/__fixtures__/mod1.js:82:2-82:63",
+  ],
+  Array [
+    "> reduce:TypedArray",
+    Array [
+      "~/1/2/3",
+      "1/2/3",
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      "~/1/2/3",
+      "1/2/3",
+    ],
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:90:2-90:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      "~/1/2/3",
+      "1/2/3",
+    ],
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:~@2[0]:true",
+    "c",
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:~/c@1[1]:true",
+    "b",
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:~/c/b@0[2]:true",
+    "a",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:c@1[3]:true",
+    "b",
+  ],
+  Array [
+    "Step #9@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #10@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:c/b@0[4]:true",
+    "a",
+  ],
+  Array [
+    "Step #11@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "> reduceRight:Array",
+    Array [
+      "~/c/b/a",
+      "c/b/a",
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      "~/c/b/a",
+      "c/b/a",
+    ],
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:90:2-90:8",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      "~/c/b/a",
+      "c/b/a",
+    ],
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:~@2[0]:true",
+    3,
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:~/3@1[1]:true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:~/3/2@0[2]:true",
+    1,
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:3@1[3]:true",
+    2,
+  ],
+  Array [
+    "Step #9@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "Step #10@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:93:4-93:65",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "reduceRight:3/2@0[4]:true",
+    1,
+  ],
+  Array [
+    "Step #11@statement",
+    undefined,
+  ],
+  Array [
+    "  _run@/__fixtures__/mod1.js:94:4-94:25",
+  ],
+  Array [
+    "  reduceRight@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _reduceRightTest@/__fixtures__/mod1.js:91:2-91:73",
+  ],
+  Array [
+    "> reduceRight:TypedArray",
+    Array [
+      "~/3/2/1",
+      "3/2/1",
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      "~/3/2/1",
+      "3/2/1",
+    ],
+  ],
+  Array [
+    "  _arraySortTest@/__fixtures__/mod1.js:99:2-99:40",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      1,
+      2,
+      3,
+    ],
+  ],
+  Array [
+    "  _arraySortTest@/__fixtures__/mod1.js:100:2-100:23",
+  ],
+  Array [
+    "Step #2@statement",
+    Array [
+      "a",
+      "b",
+      "c",
+    ],
+  ],
+  Array [
+    "  _arraySortTest@/__fixtures__/mod1.js:101:2-101:16",
+  ],
+  Array [
+    "> sort:Array",
+    Array [
+      Array [
+        1,
+        2,
+        3,
+      ],
+      Array [
+        "a",
+        "b",
+        "c",
+      ],
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      Array [
+        1,
+        2,
+        3,
+      ],
+      Array [
+        "a",
+        "b",
+        "c",
+      ],
+    ],
+  ],
+  Array [
+    "  _typedArraySortTest@/__fixtures__/mod1.js:105:2-105:45",
+  ],
+  Array [
+    "Step #1@statement",
+    Int8Array [
+      1,
+      2,
+      3,
+    ],
+  ],
+  Array [
+    "  _typedArraySortTest@/__fixtures__/mod1.js:106:2-106:28",
+  ],
+  Array [
+    "Step #2@statement",
+    Int8Array [
+      1,
+      2,
+      3,
+    ],
+  ],
+  Array [
+    "  _typedArraySortTest@/__fixtures__/mod1.js:107:2-107:16",
+  ],
+  Array [
+    "> sort:TypedArray",
+    Array [
+      Int8Array [
+        1,
+        2,
+        3,
+      ],
+      Int8Array [
+        1,
+        2,
+        3,
+      ],
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      Int8Array [
+        1,
+        2,
+        3,
+      ],
+      Int8Array [
+        1,
+        2,
+        3,
+      ],
+    ],
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:111:2-111:18",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      Int8Array [
+        1,
+        2,
+        3,
+      ],
+      Int8Array [
+        1,
+        2,
+        3,
+      ],
+    ],
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:116:8-116:72",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "some@0[5]:true/true",
+    1,
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:117:8-117:23",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:116:8-116:72",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "some@1[6]:true/true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:117:8-117:23",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:124:8-124:21",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:124:8-124:21",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:124:8-124:21",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "> some:Array",
+    Array [
+      true,
+      false,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      true,
+      false,
+    ],
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:111:2-111:18",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      true,
+      false,
+    ],
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:116:8-116:72",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "some@0[7]:true/true",
+    1,
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:117:8-117:23",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:116:8-116:72",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "some@1[8]:true/true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:117:8-117:23",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:124:8-124:21",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:124:8-124:21",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:124:8-124:21",
+  ],
+  Array [
+    "  some@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _someTest@/__fixtures__/mod1.js:112:2-128:4",
+  ],
+  Array [
+    "> some:TypedArray",
+    Array [
+      true,
+      false,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      true,
+      false,
+    ],
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:132:2-132:18",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      true,
+      false,
+    ],
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:137:8-137:73",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "every@0[9]:true/true",
+    1,
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:138:8-138:23",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:137:8-137:73",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "every@1[10]:true/true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:138:8-138:23",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:145:8-145:20",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:145:8-145:20",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:145:8-145:20",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "> every:Array",
+    Array [
+      false,
+      true,
+    ],
+  ],
+  Array [
+    "Step #0@statement",
+    Array [
+      false,
+      true,
+    ],
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:132:2-132:18",
+  ],
+  Array [
+    "Step #1@statement",
+    Array [
+      false,
+      true,
+    ],
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #2@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:137:8-137:73",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "every@0[11]:true/true",
+    1,
+  ],
+  Array [
+    "Step #3@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:138:8-138:23",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #4@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:137:8-137:73",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "every@1[12]:true/true",
+    2,
+  ],
+  Array [
+    "Step #5@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:138:8-138:23",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #6@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:145:8-145:20",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #7@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:145:8-145:20",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "Step #8@statement",
+    undefined,
+  ],
+  Array [
+    "  f@/__fixtures__/mod1.js:145:8-145:20",
+  ],
+  Array [
+    "  every@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "  _everyTest@/__fixtures__/mod1.js:133:2-149:4",
+  ],
+  Array [
+    "> every:TypedArray",
+    Array [
+      false,
+      true,
+    ],
   ],
 ]
 `;
