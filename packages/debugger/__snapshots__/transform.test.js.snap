@@ -27,7 +27,7 @@ var $module = M.module(\\"/__fixtures__/code.js\\"),
   e: [\\"e\\", \\"16:11-16:12\\", \\"5:14-19:1\\"]
 });
 
-module.exports = M.func(function f(module, exports) {
+module.exports = M.exports(M.func(function f(module, exports) {
   var _Cl;
 
   var ctx = M.frame(f);
@@ -68,7 +68,7 @@ module.exports = M.func(function f(module, exports) {
   ctx.module = module;
   ctx.exports = exports;
   return ctx.scope(this, new.target, 5);
-}, meta$f3, _f_1)({}, {});
+}, meta$f3, _f_1));
 
 function C_err(s) {
   switch (s) {
@@ -436,17 +436,16 @@ function objFn_1(s, p) {
 }
 
 function _f_1(s, p) {
-  var obj1,
-      ctx = this,
+  var ctx = this,
       a;
 
   switch (s) {
     case 5:
-      ctx.module.exports = ctx.exports;
       return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:31\\"), 6);
 
     case 6:
-      return ctx.chain(require(\\"mod\\"), 7);
+      a = require(\\"mod\\");
+      return ctx.chain(M.unwrap(a, \\"1:16-1:30\\"), 7);
 
     case 7:
       ({
@@ -468,7 +467,7 @@ function _f_1(s, p) {
       return ctx.chain(M.brk(\\"statement\\", \\"45:0-49:2\\"), 10);
 
     case 10:
-      obj1 = M.constr({
+      a = M.constr({
         objFn: M.func(function objFn(a) {
           var _ctx = M.frame(objFn);
 
@@ -477,8 +476,7 @@ function _f_1(s, p) {
           return _ctx.scope(this, new.target, 5);
         }, meta$objFn, objFn_1)
       }, \\"45:13-49:1\\");
-      a = ctx.module.exports;
-      return ctx.pure(a);
+      return ctx.pure();
 
     case 0:
       return ctx.pure(p);
@@ -595,7 +593,7 @@ var $module = M.module(\\"/__fixtures__/mod1.js\\"),
 }),
     meta$run = M.meta($module, {});
 
-module.exports = M.func(function f(module, exports) {
+module.exports = M.exports(M.func(function f(module, exports) {
   var ctx = M.frame(f);
   ctx.run = M.func(function _run(i = 1) {
     var run = M.frame(_run);
@@ -694,7 +692,7 @@ module.exports = M.func(function f(module, exports) {
   ctx.module = module;
   ctx.exports = exports;
   return ctx.scope(this, new.target, 5);
-}, meta$f10, f_110)({}, {});
+}, meta$f10, f_110));
 
 function run_1(s, p) {
   var run = this,
@@ -1557,7 +1555,6 @@ function f_110(s, p) {
 
   switch (s) {
     case 5:
-      ctx.module.exports = ctx.exports;
       ctx.exports.__esModule = true;
       ctx.exports.mapTest = ctx.mapTest;
       ctx.exports.flatMapTest = ctx.flatMapTest;
@@ -1573,14 +1570,16 @@ function f_110(s, p) {
       return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:29\\"), 6);
 
     case 6:
-      return ctx.chain(require(\\"./mod2\\"), 7);
+      a = require(\\"./mod2\\");
+      return ctx.chain(M.unwrap(a, null), 7);
 
     case 7:
       ctx.M2 = p;
       return ctx.chain(M.brk(\\"statement\\", \\"2:0-2:34\\"), 8);
 
     case 8:
-      return ctx.chain(require(\\"../instr/rt\\"), 9);
+      a = require(\\"../instr/rt\\");
+      return ctx.chain(M.unwrap(a, null), 9);
 
     case 9:
       ctx.rt = p;
@@ -1600,8 +1599,7 @@ function f_110(s, p) {
       return ctx.chain(ctx.run(), 14);
 
     case 14:
-      a = ctx.module.exports;
-      return ctx.pure(a);
+      return ctx.pure();
 
     case 0:
       return ctx.pure(p);
@@ -1628,7 +1626,7 @@ var $module = M.module(\\"/__fixtures__/mod2.js\\"),
 }),
     meta$B = M.meta($module, {}),
     meta$A = M.meta($module, {});
-module.exports = M.func(function f(module, exports) {
+module.exports = M.exports(M.func(function f(module, exports) {
   var ctx = M.frame(f);
   ctx.A = M.func(function _A(i) {
     var A = M.frame(_A);
@@ -1659,7 +1657,7 @@ module.exports = M.func(function f(module, exports) {
   ctx.module = module;
   ctx.exports = exports;
   return ctx.scope(this, new.target, 5);
-}, meta$f, f_1)({}, {});
+}, meta$f, f_1));
 
 function A_1(s, p) {
   var A = this,
@@ -1799,12 +1797,10 @@ function f2_1(s, p) {
 }
 
 function f_1(s, p) {
-  var ctx = this,
-      a;
+  var ctx = this;
 
   switch (s) {
     case 5:
-      ctx.module.exports = ctx.exports;
       ctx.exports.__esModule = true;
       ctx.exports.f1 = ctx.f1;
       ctx.exports.f2 = ctx.f2;
@@ -1812,8 +1808,7 @@ function f_1(s, p) {
 
     case 6:
       ctx.cnt = 0;
-      a = ctx.module.exports;
-      return ctx.pure(a);
+      return ctx.pure();
 
     case 0:
       return ctx.pure(p);

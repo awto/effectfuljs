@@ -298,6 +298,7 @@ export function topToIIFE(si) {
   const s = Kit.auto(si);
   if (!s.opts.topIIFE) return s;
   const module = s.first.value;
+  const exportsSym = Kit.sysId("exports");
   module.hasEsImports = false;
   return _topToIIFE();
   function* _topToIIFE() {
@@ -306,8 +307,8 @@ export function topToIIFE(si) {
       if (i.pos === Tag.body) break;
     }
     const lab = s.label();
-    yield* s.template(Tag.push, `module.exports = $E({},{})`);
-    yield s.enter(Tag.callee, Tag.FunctionExpression, {
+    yield* s.template(Tag.push, `module.exports = $I($E)`, exportsSym);
+    yield s.enter(Tag.push, Tag.FunctionExpression, {
       opts: module.opts,
       func: true,
       transform: module.transform,
@@ -324,10 +325,7 @@ export function topToIIFE(si) {
       node: { loc: module.node.loc }
     });
     yield s.enter(Tag.body, Tag.Array);
-    yield* s.toks(Tag.push, "module.exports = exports");
     yield* s.sub();
-    yield s.enter(Tag.push, Tag.ReturnStatement);
-    yield* s.toks(Tag.argument, "=module.exports");
     yield* lab();
     yield* s;
   }

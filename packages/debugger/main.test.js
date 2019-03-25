@@ -21,9 +21,15 @@ function trace() {
 global.console = { log: jest.fn() };
 
 test("modules tracing", function() {
-  require("./__fixtures__/mod1");
+  Debugger.unwrap(require("./__fixtures__/mod1"));
   const mod = trace();
-  console.log(mod);
+  console.log("> M:", mod);
+  Debugger.unwrap(require("./__fixtures__/mod1"));
+  const mod1 = trace();
+  console.log("> M1:", mod1);
+  Debugger.unwrap(require("./__fixtures__/mod2"));
+  const mod2 = trace();
+  console.log("> M2:", mod2);
 
   mod.mapTest([1, 2, 3]);
   console.log("> map:Array", trace());

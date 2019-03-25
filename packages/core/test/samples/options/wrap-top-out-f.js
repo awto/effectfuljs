@@ -1,6 +1,5 @@
 import * as M from "@effectful/core";
-
-module.exports = function (module, exports) {
+module.exports = M.exports(function (module, exports) {
   var a1 = function a1() {},
       Some = class Some {
     a() {
@@ -74,10 +73,8 @@ module.exports = function (module, exports) {
     }
   };
 
-  module.exports = exports;
   {
     b = a;
     [, other, b2] = Some;
   }
-  return module.exports;
-}({}, {});
+});

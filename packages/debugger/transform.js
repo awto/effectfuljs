@@ -32,6 +32,7 @@ module.exports = require("@effectful/core").babelPlugin(
         contextMethodOpsSpec: {
           constr: false,
           brk: false,
+          unwrap: false,
           iterator: false,
           asyncIterator: false,
           forInIterator: false
@@ -42,6 +43,7 @@ module.exports = require("@effectful/core").babelPlugin(
         const s = Kit.auto(input);
         const objWrap = Kit.sysId("constr");
         const brk = Kit.sysId("brk");
+        const unwrapSym = Kit.sysId("unwrap");
         T.run(insertBreaks(P.propagateOpts(configure())));
         function insertBreaks(si) {
           const s = Kit.auto(si);
@@ -83,9 +85,12 @@ module.exports = require("@effectful/core").babelPlugin(
                     s.close(i);
                     continue;
                   case Tag.CallExpression:
-                    if (s.opts.wrapCalls) {
-                      if (!i.value.node.loc) break;
-                      yield* wrap(i, true, "after-call");
+                    const la = s.cur();
+                    if (
+                      la.type === Tag.Identifier &&
+                      la.value.node.name === "require"
+                    ) {
+                      yield* wrap(i, true, unwrapSym);
                       continue;
                     }
                     i.value.bind = true;
@@ -140,8 +145,21 @@ module.exports = require("@effectful/core").babelPlugin(
                 case Tag.FunctionExpression:
                 case Tag.ArrowFunctionExpression:
                 case Tag.ObjectMethod:
+                  const body = i.value.node.body || i.value.node.program;
+                  let transform = true;
+                  if (body && body.directives) {
+                    for (const j of body.directives) {
+                      if (j.value && j.value.value === "nodebug") {
+                        transform = false;
+                        break;
+                      }
+                    }
+                  }
                   i.value.optsAssign = {
-                    transform: !i.value.node.async && !i.value.node.generator
+                    transform:
+                      transform &&
+                      !i.value.node.async &&
+                      !i.value.node.generator
                   };
                   break;
               }

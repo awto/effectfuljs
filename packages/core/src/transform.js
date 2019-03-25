@@ -197,7 +197,6 @@ export function pass(s) {
     if (!root.imports.has(opts.detectRT)) return null;
     opts.importRT = opts.detectRT;
   }
-
   sa = Kit.toArray(preproc(sa));
   if (!sa[0].value.$ns) return;
   const inp = Kit.toArray(Scope.splitScopes(sa));

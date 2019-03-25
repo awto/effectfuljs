@@ -1,2 +1,2 @@
 export * from "./kit.js";
-import "./instr/rt.js";
+export { exports } from "./instr/rt.js";

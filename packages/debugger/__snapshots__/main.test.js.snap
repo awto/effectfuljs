@@ -10,6 +10,9 @@ Array [
     "  f@/__fixtures__/mod1.js:1:0-1:29",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #1@statement",
     undefined,
   ],
@@ -17,7 +20,13 @@ Array [
     "  f@/__fixtures__/mod2.js:1:0-1:12",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "  f@/__fixtures__/mod1.js:1:0-1:29",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #2@statement",
@@ -31,11 +40,15 @@ Array [
     "  f@/__fixtures__/mod1.js:2:0-2:34",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #3@statement",
     Object {
       "__esModule": true,
       "arraySort": [Function],
       "every": [Function],
+      "exports": [Function],
       "filter": [Function],
       "find": [Function],
       "findIndex": [Function],
@@ -53,11 +66,15 @@ Array [
     "  f@/__fixtures__/mod1.js:4:0-4:10",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #4@statement",
     Object {
       "__esModule": true,
       "arraySort": [Function],
       "every": [Function],
+      "exports": [Function],
       "filter": [Function],
       "find": [Function],
       "findIndex": [Function],
@@ -75,6 +92,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #5@statement",
     undefined,
   ],
@@ -85,6 +105,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #6@statement",
     undefined,
   ],
@@ -93,6 +116,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #7@statement",
@@ -108,6 +134,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #8@statement",
     undefined,
   ],
@@ -119,6 +148,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "f1:1@1",
@@ -137,6 +169,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #10@statement",
     undefined,
   ],
@@ -153,6 +188,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #11@statement",
     undefined,
   ],
@@ -167,6 +205,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #12@statement",
@@ -188,6 +229,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #13@statement",
     undefined,
   ],
@@ -205,6 +249,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #14@statement",
@@ -226,6 +273,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "A:",
@@ -253,6 +303,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #16@statement",
     undefined,
   ],
@@ -264,6 +317,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #17@statement",
@@ -279,6 +335,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "f2:1@2",
   ],
   Array [
@@ -292,6 +351,9 @@ Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #19@statement",
     undefined,
   ],
@@ -300,6 +362,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:13:0-13:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "i:2,j:3",
@@ -312,6 +377,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #21@statement",
     undefined,
   ],
@@ -322,6 +390,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #22@statement",
     undefined,
   ],
@@ -330,6 +401,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #23@statement",
@@ -345,6 +419,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #24@statement",
     undefined,
   ],
@@ -356,6 +433,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "f1:1@3",
@@ -374,6 +454,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #26@statement",
     undefined,
   ],
@@ -390,6 +473,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #27@statement",
     undefined,
   ],
@@ -404,6 +490,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #28@statement",
@@ -425,6 +514,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #29@statement",
     undefined,
   ],
@@ -442,6 +534,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #30@statement",
@@ -463,6 +558,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "A:",
@@ -490,6 +588,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #32@statement",
     undefined,
   ],
@@ -501,6 +602,9 @@ Array [
   ],
   Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
     "Step #33@statement",
@@ -516,6 +620,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "f2:3@4",
   ],
   Array [
@@ -529,6 +636,9 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "Step #35@statement",
     undefined,
   ],
@@ -539,9 +649,13 @@ Array [
     "  f@/__fixtures__/mod1.js:14:0-14:6",
   ],
   Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "i:2,j:6",
   ],
   Array [
+    "> M:",
     Object {
       "__esModule": true,
       "arraySortTest": [Function],
@@ -558,7 +672,7 @@ Array [
     },
   ],
   Array [
-    "Step #0@statement",
+    "> M1:",
     Object {
       "__esModule": true,
       "arraySortTest": [Function],
@@ -572,6 +686,22 @@ Array [
       "reduceTest": [Function],
       "someTest": [Function],
       "typedArraySortTest": [Function],
+    },
+  ],
+  Array [
+    "> M2:",
+    Object {
+      "__esModule": true,
+      "f1": [Function],
+      "f2": [Function],
+    },
+  ],
+  Array [
+    "Step #0@statement",
+    Object {
+      "__esModule": true,
+      "f1": [Function],
+      "f2": [Function],
     },
   ],
   Array [
@@ -581,17 +711,8 @@ Array [
     "Step #1@statement",
     Object {
       "__esModule": true,
-      "arraySortTest": [Function],
-      "everyTest": [Function],
-      "filterTest": [Function],
-      "findIndexTest": [Function],
-      "flatMapTest": [Function],
-      "forEachTest": [Function],
-      "mapTest": [Function],
-      "reduceRightTest": [Function],
-      "reduceTest": [Function],
-      "someTest": [Function],
-      "typedArraySortTest": [Function],
+      "f1": [Function],
+      "f2": [Function],
     },
   ],
   Array [
@@ -601,17 +722,8 @@ Array [
     "Step #2@statement",
     Object {
       "__esModule": true,
-      "arraySortTest": [Function],
-      "everyTest": [Function],
-      "filterTest": [Function],
-      "findIndexTest": [Function],
-      "flatMapTest": [Function],
-      "forEachTest": [Function],
-      "mapTest": [Function],
-      "reduceRightTest": [Function],
-      "reduceTest": [Function],
-      "someTest": [Function],
-      "typedArraySortTest": [Function],
+      "f1": [Function],
+      "f2": [Function],
     },
   ],
   Array [

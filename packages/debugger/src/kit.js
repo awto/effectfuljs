@@ -163,3 +163,17 @@ export function forInIterator(obj) {
     for (const i in obj) yield i;
   })()[Symbol.iterator]();
 }
+
+/**
+ * marks functions represeting a lazy value, the value is result
+ * of the function's call
+ */
+export const thunkSymbol = Symbol("@effectful/debugger/thunk");
+
+/**
+ * if `value` is a lazy thunk it is executed and its result is returned
+ * otherwise `value` is returned as is
+ */
+export function unwrap(value) {
+  return value && value[thunkSymbol] ? value() : value;
+}

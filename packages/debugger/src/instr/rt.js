@@ -121,3 +121,21 @@ if (config.replaceRT) {
   Tp.some = Ap.some = some;
   Tp.every = Ap.every = every;
 }
+
+/**
+ * wraps a top module's export, returns a function which on each call
+ * returns `exports` object, but the value is memoized on its first call
+ */
+export function exports(top) {
+  "nodebug";
+  let mod;
+  const res = function exports() {
+    if (!mod) {
+      mod = {};
+      top(mod, (mod.exports = {}));
+    }
+    return mod.exports;
+  };
+  res[Kit.thunkSymbol] = true;
+  return res;
+}
