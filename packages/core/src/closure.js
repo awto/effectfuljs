@@ -203,12 +203,29 @@ export const contextDecls = Kit.map(function contextDecls(si) {
           ]
         : [
             s.enter(Tag.init, Tag.ObjectExpression),
-            s.tok(Tag.properties, Tag.Array),
+            s.enter(Tag.properties, Tag.Array),
+            ...prop(s.opts.varStorageField),
+            ...prop(
+              s.opts.closureStorageField !== s.opts.varStorageField &&
+                s.opts.closureStorageField
+            ),
+            ...s.leave(),
             ...s.leave()
           ]
     });
   }
   return s;
+
+  function* prop(name) {
+    if (name) {
+      yield s.enter(Tag.push, Tag.ObjectProperty);
+      yield s.tok(Tag.key, Tag.Identifier, { node: { name } });
+      yield s.enter(Tag.value, Tag.ObjectExpression);
+      yield s.tok(Tag.properties, Tag.Array);
+      yield* s.leave();
+      yield* s.leave();
+    }
+  }
 });
 
 /** converts context fields identifier to JS member expression */

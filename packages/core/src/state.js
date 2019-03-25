@@ -231,25 +231,36 @@ export function* restoreDecls(s) {
       const varField = root.opts.varStorageField;
       const pos = varField ? Tag.object : Tag.init;
       if (fld) {
-        if (fld.interpr === Bind.ctxField)
+        if (fld.interpr === Bind.ctxField) {
+          init.push(sl.enter(pos, Tag.MemberExpression));
+          if (fld.subField) {
+            init.push(
+              sl.enter(Tag.object, Tag.MemberExpression),
+              sl.tok(Tag.object, Tag.Identifier, { sym: ctx }),
+              sl.tok(Tag.property, Tag.Identifier, {
+                node: { name: fld.subField }
+              }),
+              ...sl.leave()
+            );
+          } else init.push(sl.tok(Tag.object, Tag.Identifier, { sym: ctx }));
           init.push(
-            sl.enter(pos, Tag.MemberExpression),
-            sl.tok(Tag.object, Tag.Identifier, { sym: ctx }),
             sl.tok(Tag.property, Tag.Identifier, {
               node: { name: fld.fieldName }
             }),
             ...sl.leave()
           );
-        else init.push(sl.tok(pos, Tag.Identifier, { sym: fld }));
-      } else init.push(sl.tok(pos, Tag.Identifier, { sym: ctx }));
-      if (varField) {
-        init.unshift(sl.enter(pos, Tag.MemberExpression));
-        init.push(
-          sl.tok(Tag.property, Tag.Identifier, {
-            node: { name: root.opts.varStorageField }
-          }),
-          ...sl.leave()
-        );
+        } else init.push(sl.tok(pos, Tag.Identifier, { sym: fld }));
+      } else {
+        init.push(sl.tok(pos, Tag.Identifier, { sym: ctx }));
+        if (varField) {
+          init.unshift(sl.enter(pos, Tag.MemberExpression));
+          init.push(
+            sl.tok(Tag.property, Tag.Identifier, {
+              node: { name: root.opts.varStorageField }
+            }),
+            ...sl.leave()
+          );
+        }
       }
       saved.set(copy, { raw: null, init });
     }

@@ -43,3 +43,24 @@ function a2() {
     return a;
   }
 }
+
+function oii() {
+  let ii = 0;
+
+  function oj() {
+    let j = 0;
+
+    function mapTest() {
+      var v, self, r;
+      v = [1, 2, 3];
+      self = {};
+      return M.chain(v.map((i, x, t) => {
+        return `${i}@${x}[${j++}/${ii++}]:${t === v}/${self === this}`;
+      }, self), _1);
+
+      function _1(a) {
+        return a;
+      }
+    }
+  }
+}

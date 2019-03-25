@@ -27,3 +27,18 @@ function a2() {
   }
   return eff_2();
 }
+
+function oii() {
+  let ii = 0;
+  function oj() {
+    let j = 0;
+    function mapTest() {
+      const v = [1, 2, 3];
+      const self = {};
+      return v.map(
+        (i, x, t) => `${i}@${x}[${j++}/${ii++}]:${t === v}/${self === this}`,
+        self
+      );
+    }
+  }
+}

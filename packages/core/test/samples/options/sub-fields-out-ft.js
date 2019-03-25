@@ -26,6 +26,30 @@ function a2() {
   return M.scope(a2_1);
 }
 
+function oii() {
+  var oj = function _oj() {
+    var mapTest = function _mapTest() {
+      var mapTest = M.context();
+      mapTest.VV.$oii$$ = _oii;
+      mapTest.VV.$oj$$ = oj.V;
+      return M.scope(mapTest_1);
+    },
+        oj = {
+      V: {},
+      VV: {}
+    },
+        _oii;
+
+    oj.V.$j$$ = 0;
+  },
+      oii = {
+    V: {},
+    VV: {}
+  };
+
+  oii.V.$ii$$ = 0;
+}
+
 function b_1(b) {
   var k;
   k = b.V.j + b.V.a1.i;
@@ -65,5 +89,25 @@ function a2_1(a2) {
 }
 
 function a2_2(a2, a) {
+  return a;
+}
+
+function mapTest_1(mapTest) {
+  mapTest.V.$v$$ = [1, 2, 3];
+  mapTest.V.$self$$ = {};
+  return M.chain(mapTest.V.$v$$.map((i, x, t) => {
+    var ctx = {
+      V: {},
+      VV: {}
+    },
+        oii,
+        oj,
+        _mapTest;
+
+    return `${i}@${x}[${oj.$j$$++}/${oii.$ii$$++}]:${t === _mapTest.$v$$}/${_mapTest.$self$$ === this}`;
+  }, mapTest.V.$self$$), mapTest_2);
+}
+
+function mapTest_2(mapTest, a) {
   return a;
 }
