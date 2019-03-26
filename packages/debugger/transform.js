@@ -12,6 +12,8 @@ module.exports = require("@effectful/core").babelPlugin(
         contextState: true,
         inlinePureJumps: "tail",
         inlineJsExceptions: true,
+        inlineTailCoerce: { singelton: "token" },
+        inlineContAssign: false,
         modules: "commonjs",
         scopeConstructor: "frame",
         wrapFunction: "func",
@@ -26,6 +28,7 @@ module.exports = require("@effectful/core").babelPlugin(
         closVarPostfix: "",
         inlineRaiseOp: null,
         passNewTarget: true,
+        storeCont: "$state",
         before: {
           meta: injectScopeDescr
         },
@@ -35,7 +38,8 @@ module.exports = require("@effectful/core").babelPlugin(
           unwrap: false,
           iterator: false,
           asyncIterator: false,
-          forInIterator: false
+          forInIterator: false,
+          token: false
         },
         ...opts
       },

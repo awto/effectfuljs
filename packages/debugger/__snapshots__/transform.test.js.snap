@@ -125,30 +125,80 @@ function C_1(s, p) {
     try {
       switch (s) {
         case 5:
-          return C.chain(M.brk(\\"statement\\", \\"6:2-6:14\\"), 6);
+          if ((p = M.brk(\\"statement\\", \\"6:2-6:14\\")) === M.token) {
+            C.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
         case 6:
           C.$.v1 = 10;
-          return C.chain(M.brk(\\"statement\\", \\"7:2-18:3\\"), 7);
+
+          if ((p = M.brk(\\"statement\\", \\"7:2-18:3\\")) === M.token) {
+            C.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
         case 7:
-          return C.chain(M.brk(\\"statement\\", \\"8:4-8:18\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"8:4-8:18\\")) === M.token) {
+            C.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
         case 8:
           C.$.v2 = 11;
-          return C.chain(M.brk(\\"statement\\", \\"9:4-9:11\\"), 9);
+
+          if ((p = M.brk(\\"statement\\", \\"9:4-9:11\\")) === M.token) {
+            C.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
         case 9:
-          return C.chain(M.brk(\\"statement\\", \\"10:4-10:42\\"), 10);
+          if ((p = M.brk(\\"statement\\", \\"10:4-10:42\\")) === M.token) {
+            C.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
         case 10:
-          return C.chain(C.$$.f.mod.fn1(C.$.a), 11);
+          if ((p = C.$$.f.mod.fn1(C.$.a)) === M.token) {
+            C.$state = 11;
+            return p;
+          } else {
+            s = 11;
+            continue;
+          }
 
         case 11:
-          return C.chain(C.$$.f.mod.proc1(p, C.$$.f.v0, C.$.v1, C.$.v2, C.$.v3), 12);
+          if ((p = C.$$.f.mod.proc1(p, C.$$.f.v0, C.$.v1, C.$.v2, C.$.v3)) === M.token) {
+            C.$state = 12;
+            return p;
+          } else {
+            s = 12;
+            continue;
+          }
 
         case 12:
-          return C.chain(M.brk(\\"statement\\", \\"11:4-13:5\\"), 13);
+          if ((p = M.brk(\\"statement\\", \\"11:4-13:5\\")) === M.token) {
+            C.$state = 13;
+            return p;
+          } else {
+            s = 13;
+            continue;
+          }
 
         case 13:
           C.$.loop = M.iterator(something);
@@ -158,7 +208,14 @@ function C_1(s, p) {
         case 14:
           if (!(C.$.i2 = C.$.loop.next()).done) {
             C.$.i = C.$.i2.value;
-            return C.chain(M.brk(\\"statement\\", \\"12:6-12:19\\"), 15);
+
+            if ((p = M.brk(\\"statement\\", \\"12:6-12:19\\")) === M.token) {
+              C.$state = 15;
+              return p;
+            } else {
+              s = 15;
+              continue;
+            }
           } else {
             C.$.fc = 17;
             s = 16;
@@ -166,7 +223,13 @@ function C_1(s, p) {
           }
 
         case 15:
-          return C.chain(C.$$.f.mod.proc2(C.$.i), 14);
+          if ((p = C.$$.f.mod.proc2(C.$.i)) === M.token) {
+            C.$state = 14;
+            return p;
+          } else {
+            s = 14;
+            continue;
+          }
 
         case 16:
           if (C.$.loop.return) {
@@ -178,7 +241,13 @@ function C_1(s, p) {
           continue;
 
         case 17:
-          return C.chain(M.brk(\\"statement\\", \\"14:4-14:42\\"), 18);
+          if ((p = M.brk(\\"statement\\", \\"14:4-14:42\\")) === M.token) {
+            C.$state = 18;
+            return p;
+          } else {
+            s = 18;
+            continue;
+          }
 
         case 18:
           C.$.loop1 = M.iterator(something);
@@ -188,7 +257,14 @@ function C_1(s, p) {
         case 19:
           if (!(C.$.i3 = C.$.loop1.next()).done) {
             C.$.i1 = C.$.i3.value;
-            return C.chain(M.brk(\\"statement\\", \\"14:29-14:42\\"), 20);
+
+            if ((p = M.brk(\\"statement\\", \\"14:29-14:42\\")) === M.token) {
+              C.$state = 20;
+              return p;
+            } else {
+              s = 20;
+              continue;
+            }
           } else {
             C.$.fc1 = 22;
             s = 21;
@@ -196,7 +272,13 @@ function C_1(s, p) {
           }
 
         case 20:
-          return C.chain(C.$$.f.mod.proc3(C.$.i1), 19);
+          if ((p = C.$$.f.mod.proc3(C.$.i1)) === M.token) {
+            C.$state = 19;
+            return p;
+          } else {
+            s = 19;
+            continue;
+          }
 
         case 21:
           if (C.$.loop1.return) {
@@ -208,7 +290,13 @@ function C_1(s, p) {
           continue;
 
         case 22:
-          return C.chain(M.brk(\\"statement\\", \\"15:4-15:17\\"), 23);
+          if ((p = M.brk(\\"statement\\", \\"15:4-15:17\\")) === M.token) {
+            C.$state = 23;
+            return p;
+          } else {
+            s = 23;
+            continue;
+          }
 
         case 23:
           C.$.v4 = 100;
@@ -217,10 +305,23 @@ function C_1(s, p) {
 
         case 24:
           C.$.e = C.$.ex;
-          return C.chain(M.brk(\\"statement\\", \\"17:4-17:24\\"), 25);
+
+          if ((p = M.brk(\\"statement\\", \\"17:4-17:24\\")) === M.token) {
+            C.$state = 25;
+            return p;
+          } else {
+            s = 25;
+            continue;
+          }
 
         case 25:
-          return C.chain(C.$$.f.mod.proc4(C.$.e, C.$.v4, C.$.i1), 26);
+          if ((p = C.$$.f.mod.proc4(C.$.e, C.$.v4, C.$.i1)) === M.token) {
+            C.$state = 26;
+            return p;
+          } else {
+            s = 26;
+            continue;
+          }
 
         case 26:
           return C.pure();
@@ -275,7 +376,7 @@ function C_1(s, p) {
           throw new Error(\\"invalid state\\");
       }
     } catch (ex) {
-      if ((p = ex, s = C_err(s)) !== 1) continue;
+      if ((p = ex, C.$state = C_err(s)) !== 1) continue;
       return C.raise(ex);
     }
   }
@@ -284,77 +385,133 @@ function C_1(s, p) {
 function funcAsync_1(s, p) {
   var _ctx = this;
 
-  switch (s) {
-    case 5:
-      return _ctx.chain(M.brk(\\"statement\\", \\"33:4-33:19\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"33:4-33:19\\")) === M.token) {
+            _ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return _ctx.chain(not_traced(_ctx.$$.f.v0), 7);
+        case 6:
+          if ((p = not_traced(_ctx.$$.f.v0)) === M.token) {
+            _ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return _ctx.pure();
+        case 7:
+          return _ctx.pure();
 
-    case 0:
-      return _ctx.pure(p);
+        case 0:
+          return _ctx.pure(p);
 
-    case 1:
-      return _ctx.raise(p);
+        case 1:
+          return _ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return _ctx.raise(ex);
+    }
   }
 }
 
 function f_1(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(traced(1), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = traced(1)) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      ctx.$._ = p;
-      return ctx.chain(traced(2), 7);
+        case 6:
+          ctx.$._ = p;
 
-    case 7:
-      return ctx.pure(ctx.$._ + p);
+          if ((p = traced(2)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 0:
-      return ctx.pure(p);
+        case 7:
+          return ctx.pure(ctx.$._ + p);
 
-    case 1:
-      return ctx.raise(p);
+        case 0:
+          return ctx.pure(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
 function func_1(s, p) {
-  var f;
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"36:4-36:44\\"), 6);
+  for (;;) {
+    try {
+      var f;
 
-    case 6:
-      return ctx.chain(not_traced(f = M.func(() => {
-        var ctx = M.frame(f);
-        return ctx.scope(this, new.target, 5);
-      }, meta$f2, f_1)), 7);
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"36:4-36:44\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 7:
-      return ctx.pure();
+        case 6:
+          if ((p = not_traced(f = M.func(() => {
+            var ctx = M.frame(f);
+            return ctx.scope(this, new.target, 5);
+          }, meta$f2, f_1))) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 0:
-      return ctx.pure(p);
+        case 7:
+          return ctx.pure();
 
-    case 1:
-      return ctx.raise(p);
+        case 0:
+          return ctx.pure(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -364,42 +521,81 @@ function fn1_1(s, p) {
       b,
       c;
 
-  switch (s) {
-    case 5:
-      return _fn1.chain(M.brk(\\"statement\\", \\"41:2-41:16\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"41:2-41:16\\")) === M.token) {
+            _fn1.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      _fn1.$.v5 = 10;
-      return _fn1.chain(M.brk(\\"statement\\", \\"42:2-42:55\\"), 7);
+        case 6:
+          _fn1.$.v5 = 10;
 
-    case 7:
-      return _fn1.chain(_fn1.$$.f.mod.f2(), 8);
+          if ((p = M.brk(\\"statement\\", \\"42:2-42:55\\")) === M.token) {
+            _fn1.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      _fn1.$._ = p;
-      c = _fn1.$$.f.C;
-      return _fn1.chain(new c(_fn1.$$.f.v0, _fn1.$.v5), 9);
+        case 7:
+          if ((p = _fn1.$$.f.mod.f2()) === M.token) {
+            _fn1.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 9:
-      c = M.constr(p, \\"42:37-42:50\\");
-      b = M.constr([c], \\"42:36-42:51\\");
-      a = M.constr({
-        a: _fn1.$._,
-        b: b
-      }, \\"42:18-42:53\\");
-      return _fn1.chain(_fn1.$$.f.mod.some(a), 10);
+        case 8:
+          _fn1.$._ = p;
+          c = _fn1.$$.f.C;
 
-    case 10:
-      return _fn1.pure(p);
+          if ((p = new c(_fn1.$$.f.v0, _fn1.$.v5)) === M.token) {
+            _fn1.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    case 0:
-      return _fn1.pure(p);
+        case 9:
+          c = M.constr(p, \\"42:37-42:50\\");
+          b = M.constr([c], \\"42:36-42:51\\");
+          a = M.constr({
+            a: _fn1.$._,
+            b: b
+          }, \\"42:18-42:53\\");
 
-    case 1:
-      return _fn1.raise(p);
+          if ((p = _fn1.$$.f.mod.some(a)) === M.token) {
+            _fn1.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 10:
+          return _fn1.pure(p);
+
+        case 0:
+          return _fn1.pure(p);
+
+        case 1:
+          return _fn1.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return _fn1.raise(ex);
+    }
   }
 }
 
@@ -407,30 +603,56 @@ function objFn_1(s, p) {
   var _ctx = this,
       a;
 
-  switch (s) {
-    case 5:
-      return _ctx.chain(M.brk(\\"statement\\", \\"47:4-47:31\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"47:4-47:31\\")) === M.token) {
+            _ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      a = _ctx.$$.f.Cl;
-      return _ctx.chain(new a(), 7);
+        case 6:
+          a = _ctx.$$.f.Cl;
 
-    case 7:
-      a = M.constr(p, \\"47:12-47:20\\");
-      return _ctx.chain(a.fn(_ctx.$.a, _ctx.$$.f.v0), 8);
+          if ((p = new a()) === M.token) {
+            _ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      a = p;
-      return _ctx.pure();
+        case 7:
+          a = M.constr(p, \\"47:12-47:20\\");
 
-    case 0:
-      return _ctx.pure(p);
+          if ((p = a.fn(_ctx.$.a, _ctx.$$.f.v0)) === M.token) {
+            _ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 1:
-      return _ctx.raise(p);
+        case 8:
+          a = p;
+          return _ctx.pure();
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 0:
+          return _ctx.pure(p);
+
+        case 1:
+          return _ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return _ctx.raise(ex);
+    }
   }
 }
 
@@ -438,53 +660,93 @@ function _f_1(s, p) {
   var ctx = this,
       a;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:31\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"1:0-1:31\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      a = require(\\"mod\\");
-      return ctx.chain(M.unwrap(a, \\"1:16-1:30\\"), 7);
+        case 6:
+          a = require(\\"mod\\");
 
-    case 7:
-      ({
-        mod: ctx.$.mod
-      } = p);
-      return ctx.chain(M.brk(\\"statement\\", \\"3:0-3:12\\"), 8);
+          if ((p = M.unwrap(a, \\"1:16-1:30\\")) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      ctx.$.v0 = 10;
-      return ctx.chain(M.brk(\\"statement\\", \\"40:0-43:2\\"), 9);
+        case 7:
+          ({
+            mod: ctx.$.mod
+          } = p);
 
-    case 9:
-      ctx.$.exports.fn2 = M.func(function fn1() {
-        var _fn1 = M.frame(fn1);
+          if ((p = M.brk(\\"statement\\", \\"3:0-3:12\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-        _fn1.$$.f = ctx.$;
-        return _fn1.scope(this, new.target, 5);
-      }, meta$fn1, fn1_1);
-      return ctx.chain(M.brk(\\"statement\\", \\"45:0-49:2\\"), 10);
+        case 8:
+          ctx.$.v0 = 10;
 
-    case 10:
-      a = M.constr({
-        objFn: M.func(function objFn(a) {
-          var _ctx = M.frame(objFn);
+          if ((p = M.brk(\\"statement\\", \\"40:0-43:2\\")) === M.token) {
+            ctx.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-          _ctx.$$.f = ctx.$;
-          _ctx.$.a = a;
-          return _ctx.scope(this, new.target, 5);
-        }, meta$objFn, objFn_1)
-      }, \\"45:13-49:1\\");
-      return ctx.pure();
+        case 9:
+          ctx.$.exports.fn2 = M.func(function fn1() {
+            var _fn1 = M.frame(fn1);
 
-    case 0:
-      return ctx.pure(p);
+            _fn1.$$.f = ctx.$;
+            return _fn1.scope(this, new.target, 5);
+          }, meta$fn1, fn1_1);
 
-    case 1:
-      return ctx.raise(p);
+          if ((p = M.brk(\\"statement\\", \\"45:0-49:2\\")) === M.token) {
+            ctx.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 10:
+          a = M.constr({
+            objFn: M.func(function objFn(a) {
+              var _ctx = M.frame(objFn);
+
+              _ctx.$$.f = ctx.$;
+              _ctx.$.a = a;
+              return _ctx.scope(this, new.target, 5);
+            }, meta$objFn, objFn_1)
+          }, \\"45:13-49:1\\");
+          return ctx.pure();
+
+        case 0:
+          return ctx.pure(p);
+
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }"
 `;
@@ -697,69 +959,144 @@ function run_1(s, p) {
   var run = this,
       a;
 
-  switch (s) {
-    case 5:
-      return run.chain(M.brk(\\"statement\\", \\"7:2-7:9\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"7:2-7:9\\")) === M.token) {
+            run.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      run.$$.f.j += run.$.i;
-      return run.chain(M.brk(\\"statement\\", \\"8:2-8:23\\"), 7);
+        case 6:
+          run.$$.f.j += run.$.i;
 
-    case 7:
-      a = run.$.i++;
-      return run.chain(run.$$.f.M2.f1(a), 8);
+          if ((p = M.brk(\\"statement\\", \\"8:2-8:23\\")) === M.token) {
+            run.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      return run.chain(run.$$.f.M2.f2(p, run.$.i), 9);
+        case 7:
+          a = run.$.i++;
 
-    case 9:
-      return run.chain(M.brk(\\"statement\\", \\"9:2-9:9\\"), 10);
+          if ((p = run.$$.f.M2.f1(a)) === M.token) {
+            run.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 10:
-      run.$$.f.j += run.$.i;
-      return run.chain(M.brk(\\"statement\\", \\"10:2-10:31\\"), 11);
+        case 8:
+          if ((p = run.$$.f.M2.f2(p, run.$.i)) === M.token) {
+            run.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    case 11:
-      return run.chain(console.log(\`i:\${run.$.i},j:\${run.$$.f.j}\`), 12);
+        case 9:
+          if ((p = M.brk(\\"statement\\", \\"9:2-9:9\\")) === M.token) {
+            run.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
-    case 12:
-      return run.pure();
+        case 10:
+          run.$$.f.j += run.$.i;
 
-    case 0:
-      return run.pure(p);
+          if ((p = M.brk(\\"statement\\", \\"10:2-10:31\\")) === M.token) {
+            run.$state = 11;
+            return p;
+          } else {
+            s = 11;
+            continue;
+          }
 
-    case 1:
-      return run.raise(p);
+        case 11:
+          if ((p = console.log(\`i:\${run.$.i},j:\${run.$$.f.j}\`)) === M.token) {
+            run.$state = 12;
+            return p;
+          } else {
+            s = 12;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 12:
+          return run.pure();
+
+        case 0:
+          return run.pure(p);
+
+        case 1:
+          return run.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return run.raise(ex);
+    }
   }
 }
 
 function f_1(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"22:6-22:69\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"22:6-22:69\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.chain(console.log(\`map@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.mapTest.v}/\${ctx.$$.mapTest.self === ctx.$._this}\`, ctx.$.i), 7);
+        case 6:
+          if ((p = console.log(\`map@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.mapTest.v}/\${ctx.$$.mapTest.self === ctx.$._this}\`, ctx.$.i)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return ctx.chain(M.brk(\\"statement\\", \\"23:6-23:19\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"23:6-23:19\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return ctx.pure(ctx.$.i + ctx.$.x);
+        case 8:
+          return ctx.pure(ctx.$.i + ctx.$.x);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -768,70 +1105,127 @@ function mapTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return mapTest.chain(M.brk(\\"statement\\", \\"17:2-17:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"17:2-17:8\\")) === M.token) {
+            mapTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      mapTest.$$.f.j = 0;
-      return mapTest.chain(M.brk(\\"statement\\", \\"18:2-18:18\\"), 7);
+        case 6:
+          mapTest.$$.f.j = 0;
 
-    case 7:
-      mapTest.$.self = M.constr({}, \\"18:15-18:17\\");
-      return mapTest.chain(M.brk(\\"statement\\", \\"19:2-26:4\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"18:2-18:18\\")) === M.token) {
+            mapTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      a = mapTest.$$.f.rt.map;
-      b = mapTest.$.v;
-      return mapTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$$.f = mapTest.$$.f;
-        ctx.$$.mapTest = mapTest.$;
-        ctx.$._this = this;
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f, f_1), mapTest.$.self), 9);
+        case 7:
+          mapTest.$.self = M.constr({}, \\"18:15-18:17\\");
 
-    case 9:
-      return mapTest.pure(p);
+          if ((p = M.brk(\\"statement\\", \\"19:2-26:4\\")) === M.token) {
+            mapTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return mapTest.pure(p);
+        case 8:
+          a = mapTest.$$.f.rt.map;
+          b = mapTest.$.v;
 
-    case 1:
-      return mapTest.raise(p);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$$.f = mapTest.$$.f;
+            ctx.$$.mapTest = mapTest.$;
+            ctx.$._this = this;
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f, f_1), mapTest.$.self)) === M.token) {
+            mapTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          return mapTest.pure(p);
+
+        case 0:
+          return mapTest.pure(p);
+
+        case 1:
+          return mapTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return mapTest.raise(ex);
+    }
   }
 }
 
 function _f_1(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"35:6-35:73\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"35:6-35:73\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.chain(console.log(\`flatMap@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.flatMapTest.v}/\${ctx.$$.flatMapTest.self === ctx.$._this}\`, ctx.$.i), 7);
+        case 6:
+          if ((p = console.log(\`flatMap@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.flatMapTest.v}/\${ctx.$$.flatMapTest.self === ctx.$._this}\`, ctx.$.i)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return ctx.chain(M.brk(\\"statement\\", \\"36:6-36:27\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"36:6-36:27\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return ctx.pure(M.constr([ctx.$.i, ctx.$.x, ctx.$.i + ctx.$.x], \\"36:13-36:26\\"));
+        case 8:
+          return ctx.pure(M.constr([ctx.$.i, ctx.$.x, ctx.$.i + ctx.$.x], \\"36:13-36:26\\"));
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -840,70 +1234,127 @@ function flatMapTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return flatMapTest.chain(M.brk(\\"statement\\", \\"30:2-30:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"30:2-30:8\\")) === M.token) {
+            flatMapTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      flatMapTest.$$.f.j = 0;
-      return flatMapTest.chain(M.brk(\\"statement\\", \\"31:2-31:18\\"), 7);
+        case 6:
+          flatMapTest.$$.f.j = 0;
 
-    case 7:
-      flatMapTest.$.self = M.constr({}, \\"31:15-31:17\\");
-      return flatMapTest.chain(M.brk(\\"statement\\", \\"32:2-39:4\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"31:2-31:18\\")) === M.token) {
+            flatMapTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      a = flatMapTest.$$.f.rt.flatMap;
-      b = flatMapTest.$.v;
-      return flatMapTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$$.f = flatMapTest.$$.f;
-        ctx.$$.flatMapTest = flatMapTest.$;
-        ctx.$._this = this;
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, _meta$f, _f_1), flatMapTest.$.self), 9);
+        case 7:
+          flatMapTest.$.self = M.constr({}, \\"31:15-31:17\\");
 
-    case 9:
-      return flatMapTest.pure(p);
+          if ((p = M.brk(\\"statement\\", \\"32:2-39:4\\")) === M.token) {
+            flatMapTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return flatMapTest.pure(p);
+        case 8:
+          a = flatMapTest.$$.f.rt.flatMap;
+          b = flatMapTest.$.v;
 
-    case 1:
-      return flatMapTest.raise(p);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$$.f = flatMapTest.$$.f;
+            ctx.$$.flatMapTest = flatMapTest.$;
+            ctx.$._this = this;
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, _meta$f, _f_1), flatMapTest.$.self)) === M.token) {
+            flatMapTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          return flatMapTest.pure(p);
+
+        case 0:
+          return flatMapTest.pure(p);
+
+        case 1:
+          return flatMapTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return flatMapTest.raise(ex);
+    }
   }
 }
 
 function f_11(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"48:6-48:72\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"48:6-48:72\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.chain(console.log(\`filter@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.filterTest.v}/\${ctx.$$.filterTest.self === ctx.$._this}\`, ctx.$.i), 7);
+        case 6:
+          if ((p = console.log(\`filter@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.filterTest.v}/\${ctx.$$.filterTest.self === ctx.$._this}\`, ctx.$.i)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return ctx.chain(M.brk(\\"statement\\", \\"49:6-49:21\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"49:6-49:21\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return ctx.pure(ctx.$.i !== 2);
+        case 8:
+          return ctx.pure(ctx.$.i !== 2);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -912,70 +1363,127 @@ function filterTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return filterTest.chain(M.brk(\\"statement\\", \\"43:2-43:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"43:2-43:8\\")) === M.token) {
+            filterTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      filterTest.$$.f.j = 0;
-      return filterTest.chain(M.brk(\\"statement\\", \\"44:2-44:18\\"), 7);
+        case 6:
+          filterTest.$$.f.j = 0;
 
-    case 7:
-      filterTest.$.self = M.constr({}, \\"44:15-44:17\\");
-      return filterTest.chain(M.brk(\\"statement\\", \\"45:2-52:4\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"44:2-44:18\\")) === M.token) {
+            filterTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      a = filterTest.$$.f.rt.filter;
-      b = filterTest.$.v;
-      return filterTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$$.f = filterTest.$$.f;
-        ctx.$$.filterTest = filterTest.$;
-        ctx.$._this = this;
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f1, f_11), filterTest.$.self), 9);
+        case 7:
+          filterTest.$.self = M.constr({}, \\"44:15-44:17\\");
 
-    case 9:
-      return filterTest.pure(p);
+          if ((p = M.brk(\\"statement\\", \\"45:2-52:4\\")) === M.token) {
+            filterTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return filterTest.pure(p);
+        case 8:
+          a = filterTest.$$.f.rt.filter;
+          b = filterTest.$.v;
 
-    case 1:
-      return filterTest.raise(p);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$$.f = filterTest.$$.f;
+            ctx.$$.filterTest = filterTest.$;
+            ctx.$._this = this;
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f1, f_11), filterTest.$.self)) === M.token) {
+            filterTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          return filterTest.pure(p);
+
+        case 0:
+          return filterTest.pure(p);
+
+        case 1:
+          return filterTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return filterTest.raise(ex);
+    }
   }
 }
 
 function f_12(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"61:6-61:75\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"61:6-61:75\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.chain(console.log(\`findIndex@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.findIndexTest.v}/\${ctx.$$.findIndexTest.self === ctx.$._this}\`, ctx.$.i), 7);
+        case 6:
+          if ((p = console.log(\`findIndex@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.findIndexTest.v}/\${ctx.$$.findIndexTest.self === ctx.$._this}\`, ctx.$.i)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return ctx.chain(M.brk(\\"statement\\", \\"62:6-62:21\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"62:6-62:21\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return ctx.pure(ctx.$.i === 2);
+        case 8:
+          return ctx.pure(ctx.$.i === 2);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -984,67 +1492,118 @@ function findIndexTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return findIndexTest.chain(M.brk(\\"statement\\", \\"56:2-56:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"56:2-56:8\\")) === M.token) {
+            findIndexTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      findIndexTest.$$.f.j = 0;
-      return findIndexTest.chain(M.brk(\\"statement\\", \\"57:2-57:18\\"), 7);
+        case 6:
+          findIndexTest.$$.f.j = 0;
 
-    case 7:
-      findIndexTest.$.self = M.constr({}, \\"57:15-57:17\\");
-      return findIndexTest.chain(M.brk(\\"statement\\", \\"58:2-65:4\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"57:2-57:18\\")) === M.token) {
+            findIndexTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      a = findIndexTest.$$.f.rt.findIndex;
-      b = findIndexTest.$.v;
-      return findIndexTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$$.f = findIndexTest.$$.f;
-        ctx.$$.findIndexTest = findIndexTest.$;
-        ctx.$._this = this;
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f2, f_12), findIndexTest.$.self), 9);
+        case 7:
+          findIndexTest.$.self = M.constr({}, \\"57:15-57:17\\");
 
-    case 9:
-      return findIndexTest.pure(p);
+          if ((p = M.brk(\\"statement\\", \\"58:2-65:4\\")) === M.token) {
+            findIndexTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return findIndexTest.pure(p);
+        case 8:
+          a = findIndexTest.$$.f.rt.findIndex;
+          b = findIndexTest.$.v;
 
-    case 1:
-      return findIndexTest.raise(p);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$$.f = findIndexTest.$$.f;
+            ctx.$$.findIndexTest = findIndexTest.$;
+            ctx.$._this = this;
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f2, f_12), findIndexTest.$.self)) === M.token) {
+            findIndexTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          return findIndexTest.pure(p);
+
+        case 0:
+          return findIndexTest.pure(p);
+
+        case 1:
+          return findIndexTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return findIndexTest.raise(ex);
+    }
   }
 }
 
 function f_13(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"74:6-74:60\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"74:6-74:60\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.chain(console.log(\`forEachTest@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.forEachTest.v}\`, ctx.$.i), 7);
+        case 6:
+          if ((p = console.log(\`forEachTest@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.forEachTest.v}\`, ctx.$.i)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return ctx.pure();
+        case 7:
+          return ctx.pure();
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -1053,69 +1612,126 @@ function forEachTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return forEachTest.chain(M.brk(\\"statement\\", \\"69:2-69:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"69:2-69:8\\")) === M.token) {
+            forEachTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      forEachTest.$$.f.j = 0;
-      return forEachTest.chain(M.brk(\\"statement\\", \\"70:2-70:18\\"), 7);
+        case 6:
+          forEachTest.$$.f.j = 0;
 
-    case 7:
-      forEachTest.$.self = M.constr({}, \\"70:15-70:17\\");
-      return forEachTest.chain(M.brk(\\"statement\\", \\"71:2-77:4\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"70:2-70:18\\")) === M.token) {
+            forEachTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      a = forEachTest.$$.f.rt.forEach;
-      b = forEachTest.$.v;
-      return forEachTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$$.f = forEachTest.$$.f;
-        ctx.$$.forEachTest = forEachTest.$;
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f3, f_13), forEachTest.$.self), 9);
+        case 7:
+          forEachTest.$.self = M.constr({}, \\"70:15-70:17\\");
 
-    case 9:
-      return forEachTest.pure(p);
+          if ((p = M.brk(\\"statement\\", \\"71:2-77:4\\")) === M.token) {
+            forEachTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return forEachTest.pure(p);
+        case 8:
+          a = forEachTest.$$.f.rt.forEach;
+          b = forEachTest.$.v;
 
-    case 1:
-      return forEachTest.raise(p);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$$.f = forEachTest.$$.f;
+            ctx.$$.forEachTest = forEachTest.$;
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f3, f_13), forEachTest.$.self)) === M.token) {
+            forEachTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          return forEachTest.pure(p);
+
+        case 0:
+          return forEachTest.pure(p);
+
+        case 1:
+          return forEachTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return forEachTest.raise(ex);
+    }
   }
 }
 
 function _run_1(s, p) {
   var run = this;
 
-  switch (s) {
-    case 5:
-      return run.chain(M.brk(\\"statement\\", \\"84:4-84:60\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"84:4-84:60\\")) === M.token) {
+            run.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return run.chain(console.log(\`reduce:\${run.$.acc}@\${run.$.x}[\${run.$$.f.j++}]:\${run.$.t === run.$$.reduceTest.v}\`, run.$.i), 7);
+        case 6:
+          if ((p = console.log(\`reduce:\${run.$.acc}@\${run.$.x}[\${run.$$.f.j++}]:\${run.$.t === run.$$.reduceTest.v}\`, run.$.i)) === M.token) {
+            run.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return run.chain(M.brk(\\"statement\\", \\"85:4-85:25\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"85:4-85:25\\")) === M.token) {
+            run.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return run.pure(\`\${run.$.acc}/\${run.$.i}\`);
+        case 8:
+          return run.pure(\`\${run.$.acc}/\${run.$.i}\`);
 
-    case 0:
-      return run.pure(p);
+        case 0:
+          return run.pure(p);
 
-    case 1:
-      return run.raise(p);
+        case 1:
+          return run.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return run.raise(ex);
+    }
   }
 }
 
@@ -1124,64 +1740,121 @@ function reduceTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return reduceTest.chain(M.brk(\\"statement\\", \\"81:2-81:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"81:2-81:8\\")) === M.token) {
+            reduceTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      reduceTest.$$.f.j = 0;
-      return reduceTest.chain(M.brk(\\"statement\\", \\"82:2-82:63\\"), 7);
+        case 6:
+          reduceTest.$$.f.j = 0;
 
-    case 7:
-      a = reduceTest.$$.f.rt.reduce;
-      b = reduceTest.$.v;
-      return reduceTest.chain(a.call(b, reduceTest.$.run, \\"~\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"82:2-82:63\\")) === M.token) {
+            reduceTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      reduceTest.$._ = p;
-      a = reduceTest.$$.f.rt.reduce;
-      b = reduceTest.$.v;
-      return reduceTest.chain(a.call(b, reduceTest.$.run), 9);
+        case 7:
+          a = reduceTest.$$.f.rt.reduce;
+          b = reduceTest.$.v;
 
-    case 9:
-      a = M.constr([reduceTest.$._, p], \\"82:9-82:62\\");
-      return reduceTest.pure(a);
+          if ((p = a.call(b, reduceTest.$.run, \\"~\\")) === M.token) {
+            reduceTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return reduceTest.pure(p);
+        case 8:
+          reduceTest.$._ = p;
+          a = reduceTest.$$.f.rt.reduce;
+          b = reduceTest.$.v;
 
-    case 1:
-      return reduceTest.raise(p);
+          if ((p = a.call(b, reduceTest.$.run)) === M.token) {
+            reduceTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          a = M.constr([reduceTest.$._, p], \\"82:9-82:62\\");
+          return reduceTest.pure(a);
+
+        case 0:
+          return reduceTest.pure(p);
+
+        case 1:
+          return reduceTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return reduceTest.raise(ex);
+    }
   }
 }
 
 function run_11(s, p) {
   var run = this;
 
-  switch (s) {
-    case 5:
-      return run.chain(M.brk(\\"statement\\", \\"93:4-93:65\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"93:4-93:65\\")) === M.token) {
+            run.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return run.chain(console.log(\`reduceRight:\${run.$.acc}@\${run.$.x}[\${run.$$.f.j++}]:\${run.$.t === run.$$.reduceRightTest.v}\`, run.$.i), 7);
+        case 6:
+          if ((p = console.log(\`reduceRight:\${run.$.acc}@\${run.$.x}[\${run.$$.f.j++}]:\${run.$.t === run.$$.reduceRightTest.v}\`, run.$.i)) === M.token) {
+            run.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return run.chain(M.brk(\\"statement\\", \\"94:4-94:25\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"94:4-94:25\\")) === M.token) {
+            run.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return run.pure(\`\${run.$.acc}/\${run.$.i}\`);
+        case 8:
+          return run.pure(\`\${run.$.acc}/\${run.$.i}\`);
 
-    case 0:
-      return run.pure(p);
+        case 0:
+          return run.pure(p);
 
-    case 1:
-      return run.raise(p);
+        case 1:
+          return run.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return run.raise(ex);
+    }
   }
 }
 
@@ -1190,205 +1863,364 @@ function reduceRightTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return reduceRightTest.chain(M.brk(\\"statement\\", \\"90:2-90:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"90:2-90:8\\")) === M.token) {
+            reduceRightTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      reduceRightTest.$$.f.j = 0;
-      return reduceRightTest.chain(M.brk(\\"statement\\", \\"91:2-91:73\\"), 7);
+        case 6:
+          reduceRightTest.$$.f.j = 0;
 
-    case 7:
-      a = reduceRightTest.$$.f.rt.reduceRight;
-      b = reduceRightTest.$.v;
-      return reduceRightTest.chain(a.call(b, reduceRightTest.$.run, \\"~\\"), 8);
+          if ((p = M.brk(\\"statement\\", \\"91:2-91:73\\")) === M.token) {
+            reduceRightTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      reduceRightTest.$._ = p;
-      a = reduceRightTest.$$.f.rt.reduceRight;
-      b = reduceRightTest.$.v;
-      return reduceRightTest.chain(a.call(b, reduceRightTest.$.run), 9);
+        case 7:
+          a = reduceRightTest.$$.f.rt.reduceRight;
+          b = reduceRightTest.$.v;
 
-    case 9:
-      a = M.constr([reduceRightTest.$._, p], \\"91:9-91:72\\");
-      return reduceRightTest.pure(a);
+          if ((p = a.call(b, reduceRightTest.$.run, \\"~\\")) === M.token) {
+            reduceRightTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return reduceRightTest.pure(p);
+        case 8:
+          reduceRightTest.$._ = p;
+          a = reduceRightTest.$$.f.rt.reduceRight;
+          b = reduceRightTest.$.v;
 
-    case 1:
-      return reduceRightTest.raise(p);
+          if ((p = a.call(b, reduceRightTest.$.run)) === M.token) {
+            reduceRightTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          a = M.constr([reduceRightTest.$._, p], \\"91:9-91:72\\");
+          return reduceRightTest.pure(a);
+
+        case 0:
+          return reduceRightTest.pure(p);
+
+        case 1:
+          return reduceRightTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return reduceRightTest.raise(ex);
+    }
   }
 }
 
 function f_14(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.pure(ctx.$.a - ctx.$.b);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          return ctx.pure(ctx.$.a - ctx.$.b);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
 function arraySortTest_1(s, p) {
-  var f;
   var arraySortTest = this,
       a;
 
-  switch (s) {
-    case 5:
-      return arraySortTest.chain(M.brk(\\"statement\\", \\"99:2-99:40\\"), 6);
+  for (;;) {
+    try {
+      var f;
 
-    case 6:
-      a = arraySortTest.$$.f.rt.arraySort;
-      return arraySortTest.chain(a.call(arraySortTest.$.v, f = M.func((a, b) => {
-        var ctx = M.frame(f);
-        ctx.$.a = a;
-        ctx.$.b = b;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f4, f_14)), 7);
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"99:2-99:40\\")) === M.token) {
+            arraySortTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 7:
-      return arraySortTest.chain(M.brk(\\"statement\\", \\"100:2-100:23\\"), 8);
+        case 6:
+          a = arraySortTest.$$.f.rt.arraySort;
 
-    case 8:
-      a = arraySortTest.$$.f.rt.arraySort;
-      return arraySortTest.chain(a.call(arraySortTest.$.w), 9);
+          if ((p = a.call(arraySortTest.$.v, f = M.func((a, b) => {
+            var ctx = M.frame(f);
+            ctx.$.a = a;
+            ctx.$.b = b;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f4, f_14))) === M.token) {
+            arraySortTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 9:
-      return arraySortTest.chain(M.brk(\\"statement\\", \\"101:2-101:16\\"), 10);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"100:2-100:23\\")) === M.token) {
+            arraySortTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 10:
-      return arraySortTest.pure(M.constr([arraySortTest.$.v, arraySortTest.$.w], \\"101:9-101:15\\"));
+        case 8:
+          a = arraySortTest.$$.f.rt.arraySort;
 
-    case 0:
-      return arraySortTest.pure(p);
+          if ((p = a.call(arraySortTest.$.w)) === M.token) {
+            arraySortTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    case 1:
-      return arraySortTest.raise(p);
+        case 9:
+          if ((p = M.brk(\\"statement\\", \\"101:2-101:16\\")) === M.token) {
+            arraySortTest.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 10:
+          return arraySortTest.pure(M.constr([arraySortTest.$.v, arraySortTest.$.w], \\"101:9-101:15\\"));
+
+        case 0:
+          return arraySortTest.pure(p);
+
+        case 1:
+          return arraySortTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return arraySortTest.raise(ex);
+    }
   }
 }
 
 function f_15(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.pure(ctx.$.a - ctx.$.b);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          return ctx.pure(ctx.$.a - ctx.$.b);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
 function typedArraySortTest_1(s, p) {
-  var f;
   var typedArraySortTest = this,
       a;
 
-  switch (s) {
-    case 5:
-      return typedArraySortTest.chain(M.brk(\\"statement\\", \\"105:2-105:45\\"), 6);
+  for (;;) {
+    try {
+      var f;
 
-    case 6:
-      a = typedArraySortTest.$$.f.rt.typedArraySort;
-      return typedArraySortTest.chain(a.call(typedArraySortTest.$.v, f = M.func((a, b) => {
-        var ctx = M.frame(f);
-        ctx.$.a = a;
-        ctx.$.b = b;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f5, f_15)), 7);
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"105:2-105:45\\")) === M.token) {
+            typedArraySortTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 7:
-      return typedArraySortTest.chain(M.brk(\\"statement\\", \\"106:2-106:28\\"), 8);
+        case 6:
+          a = typedArraySortTest.$$.f.rt.typedArraySort;
 
-    case 8:
-      a = typedArraySortTest.$$.f.rt.typedArraySort;
-      return typedArraySortTest.chain(a.call(typedArraySortTest.$.w), 9);
+          if ((p = a.call(typedArraySortTest.$.v, f = M.func((a, b) => {
+            var ctx = M.frame(f);
+            ctx.$.a = a;
+            ctx.$.b = b;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f5, f_15))) === M.token) {
+            typedArraySortTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 9:
-      return typedArraySortTest.chain(M.brk(\\"statement\\", \\"107:2-107:16\\"), 10);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"106:2-106:28\\")) === M.token) {
+            typedArraySortTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 10:
-      return typedArraySortTest.pure(M.constr([typedArraySortTest.$.v, typedArraySortTest.$.w], \\"107:9-107:15\\"));
+        case 8:
+          a = typedArraySortTest.$$.f.rt.typedArraySort;
 
-    case 0:
-      return typedArraySortTest.pure(p);
+          if ((p = a.call(typedArraySortTest.$.w)) === M.token) {
+            typedArraySortTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    case 1:
-      return typedArraySortTest.raise(p);
+        case 9:
+          if ((p = M.brk(\\"statement\\", \\"107:2-107:16\\")) === M.token) {
+            typedArraySortTest.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 10:
+          return typedArraySortTest.pure(M.constr([typedArraySortTest.$.v, typedArraySortTest.$.w], \\"107:9-107:15\\"));
+
+        case 0:
+          return typedArraySortTest.pure(p);
+
+        case 1:
+          return typedArraySortTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return typedArraySortTest.raise(ex);
+    }
   }
 }
 
 function f_16(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"116:8-116:72\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"116:8-116:72\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.chain(console.log(\`some@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.someTest.v}/\${ctx.$$.someTest.self === ctx.$._this}\`, ctx.$.i), 7);
+        case 6:
+          if ((p = console.log(\`some@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.someTest.v}/\${ctx.$$.someTest.self === ctx.$._this}\`, ctx.$.i)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return ctx.chain(M.brk(\\"statement\\", \\"117:8-117:23\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"117:8-117:23\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return ctx.pure(ctx.$.i === 2);
+        case 8:
+          return ctx.pure(ctx.$.i === 2);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
 function f_17(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"124:8-124:21\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"124:8-124:21\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.pure(false);
+        case 6:
+          return ctx.pure(false);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -1397,100 +2229,169 @@ function someTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return someTest.chain(M.brk(\\"statement\\", \\"111:2-111:18\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"111:2-111:18\\")) === M.token) {
+            someTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      someTest.$.self = M.constr({}, \\"111:15-111:17\\");
-      return someTest.chain(M.brk(\\"statement\\", \\"112:2-128:4\\"), 7);
+        case 6:
+          someTest.$.self = M.constr({}, \\"111:15-111:17\\");
 
-    case 7:
-      a = someTest.$$.f.rt.some;
-      b = someTest.$.v;
-      return someTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$$.f = someTest.$$.f;
-        ctx.$$.someTest = someTest.$;
-        ctx.$._this = this;
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f6, f_16), someTest.$.self), 8);
+          if ((p = M.brk(\\"statement\\", \\"112:2-128:4\\")) === M.token) {
+            someTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      someTest.$._ = p;
-      a = someTest.$$.f.rt.some;
-      b = someTest.$.v;
-      return someTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f7, f_17), someTest.$.self), 9);
+        case 7:
+          a = someTest.$$.f.rt.some;
+          b = someTest.$.v;
 
-    case 9:
-      a = M.constr([someTest.$._, p], \\"112:9-128:3\\");
-      return someTest.pure(a);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$$.f = someTest.$$.f;
+            ctx.$$.someTest = someTest.$;
+            ctx.$._this = this;
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f6, f_16), someTest.$.self)) === M.token) {
+            someTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return someTest.pure(p);
+        case 8:
+          someTest.$._ = p;
+          a = someTest.$$.f.rt.some;
+          b = someTest.$.v;
 
-    case 1:
-      return someTest.raise(p);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f7, f_17), someTest.$.self)) === M.token) {
+            someTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          a = M.constr([someTest.$._, p], \\"112:9-128:3\\");
+          return someTest.pure(a);
+
+        case 0:
+          return someTest.pure(p);
+
+        case 1:
+          return someTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return someTest.raise(ex);
+    }
   }
 }
 
 function f_18(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"137:8-137:73\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"137:8-137:73\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.chain(console.log(\`every@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.everyTest.v}/\${ctx.$$.everyTest.self === ctx.$._this}\`, ctx.$.i), 7);
+        case 6:
+          if ((p = console.log(\`every@\${ctx.$.x}[\${ctx.$$.f.j++}]:\${ctx.$.t === ctx.$$.everyTest.v}/\${ctx.$$.everyTest.self === ctx.$._this}\`, ctx.$.i)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 7:
-      return ctx.chain(M.brk(\\"statement\\", \\"138:8-138:23\\"), 8);
+        case 7:
+          if ((p = M.brk(\\"statement\\", \\"138:8-138:23\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 8:
-      return ctx.pure(ctx.$.i !== 2);
+        case 8:
+          return ctx.pure(ctx.$.i !== 2);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
 function f_19(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      return ctx.chain(M.brk(\\"statement\\", \\"145:8-145:20\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"145:8-145:20\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      return ctx.pure(true);
+        case 6:
+          return ctx.pure(true);
 
-    case 0:
-      return ctx.pure(p);
+        case 0:
+          return ctx.pure(p);
 
-    case 1:
-      return ctx.raise(p);
+        case 1:
+          return ctx.raise(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }
 
@@ -1499,52 +2400,85 @@ function everyTest_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return everyTest.chain(M.brk(\\"statement\\", \\"132:2-132:18\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"132:2-132:18\\")) === M.token) {
+            everyTest.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      everyTest.$.self = M.constr({}, \\"132:15-132:17\\");
-      return everyTest.chain(M.brk(\\"statement\\", \\"133:2-149:4\\"), 7);
+        case 6:
+          everyTest.$.self = M.constr({}, \\"132:15-132:17\\");
 
-    case 7:
-      a = everyTest.$$.f.rt.every;
-      b = everyTest.$.v;
-      return everyTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$$.f = everyTest.$$.f;
-        ctx.$$.everyTest = everyTest.$;
-        ctx.$._this = this;
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f8, f_18), everyTest.$.self), 8);
+          if ((p = M.brk(\\"statement\\", \\"133:2-149:4\\")) === M.token) {
+            everyTest.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      everyTest.$._ = p;
-      a = everyTest.$$.f.rt.every;
-      b = everyTest.$.v;
-      return everyTest.chain(a.call(b, M.func(function f(i, x, t) {
-        var ctx = M.frame(f);
-        ctx.$.i = i;
-        ctx.$.x = x;
-        ctx.$.t = t;
-        return ctx.scope(this, new.target, 5);
-      }, meta$f9, f_19), everyTest.$.self), 9);
+        case 7:
+          a = everyTest.$$.f.rt.every;
+          b = everyTest.$.v;
 
-    case 9:
-      a = M.constr([everyTest.$._, p], \\"133:9-149:3\\");
-      return everyTest.pure(a);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$$.f = everyTest.$$.f;
+            ctx.$$.everyTest = everyTest.$;
+            ctx.$._this = this;
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f8, f_18), everyTest.$.self)) === M.token) {
+            everyTest.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return everyTest.pure(p);
+        case 8:
+          everyTest.$._ = p;
+          a = everyTest.$$.f.rt.every;
+          b = everyTest.$.v;
 
-    case 1:
-      return everyTest.raise(p);
+          if ((p = a.call(b, M.func(function f(i, x, t) {
+            var ctx = M.frame(f);
+            ctx.$.i = i;
+            ctx.$.x = x;
+            ctx.$.t = t;
+            return ctx.scope(this, new.target, 5);
+          }, meta$f9, f_19), everyTest.$.self)) === M.token) {
+            everyTest.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 9:
+          a = M.constr([everyTest.$._, p], \\"133:9-149:3\\");
+          return everyTest.pure(a);
+
+        case 0:
+          return everyTest.pure(p);
+
+        case 1:
+          return everyTest.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return everyTest.raise(ex);
+    }
   }
 }
 
@@ -1552,62 +2486,128 @@ function f_110(s, p) {
   var ctx = this,
       a;
 
-  switch (s) {
-    case 5:
-      ctx.$.exports.__esModule = true;
-      ctx.$.exports.mapTest = ctx.$.mapTest;
-      ctx.$.exports.flatMapTest = ctx.$.flatMapTest;
-      ctx.$.exports.filterTest = ctx.$.filterTest;
-      ctx.$.exports.findIndexTest = ctx.$.findIndexTest;
-      ctx.$.exports.forEachTest = ctx.$.forEachTest;
-      ctx.$.exports.reduceTest = ctx.$.reduceTest;
-      ctx.$.exports.reduceRightTest = ctx.$.reduceRightTest;
-      ctx.$.exports.arraySortTest = ctx.$.arraySortTest;
-      ctx.$.exports.typedArraySortTest = ctx.$.typedArraySortTest;
-      ctx.$.exports.someTest = ctx.$.someTest;
-      ctx.$.exports.everyTest = ctx.$.everyTest;
-      return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:29\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          ctx.$.exports.__esModule = true;
+          ctx.$.exports.mapTest = ctx.$.mapTest;
+          ctx.$.exports.flatMapTest = ctx.$.flatMapTest;
+          ctx.$.exports.filterTest = ctx.$.filterTest;
+          ctx.$.exports.findIndexTest = ctx.$.findIndexTest;
+          ctx.$.exports.forEachTest = ctx.$.forEachTest;
+          ctx.$.exports.reduceTest = ctx.$.reduceTest;
+          ctx.$.exports.reduceRightTest = ctx.$.reduceRightTest;
+          ctx.$.exports.arraySortTest = ctx.$.arraySortTest;
+          ctx.$.exports.typedArraySortTest = ctx.$.typedArraySortTest;
+          ctx.$.exports.someTest = ctx.$.someTest;
+          ctx.$.exports.everyTest = ctx.$.everyTest;
 
-    case 6:
-      a = require(\\"./mod2\\");
-      return ctx.chain(M.unwrap(a, null), 7);
+          if ((p = M.brk(\\"statement\\", \\"1:0-1:29\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 7:
-      ctx.$.M2 = p;
-      return ctx.chain(M.brk(\\"statement\\", \\"2:0-2:34\\"), 8);
+        case 6:
+          a = require(\\"./mod2\\");
 
-    case 8:
-      a = require(\\"../instr/rt\\");
-      return ctx.chain(M.unwrap(a, null), 9);
+          if ((p = M.unwrap(a, null)) === M.token) {
+            ctx.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 9:
-      ctx.$.rt = p;
-      return ctx.chain(M.brk(\\"statement\\", \\"4:0-4:10\\"), 10);
+        case 7:
+          ctx.$.M2 = p;
 
-    case 10:
-      ctx.$.j = 0;
-      return ctx.chain(M.brk(\\"statement\\", \\"13:0-13:6\\"), 11);
+          if ((p = M.brk(\\"statement\\", \\"2:0-2:34\\")) === M.token) {
+            ctx.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 11:
-      return ctx.chain(ctx.$.run(), 12);
+        case 8:
+          a = require(\\"../instr/rt\\");
 
-    case 12:
-      return ctx.chain(M.brk(\\"statement\\", \\"14:0-14:6\\"), 13);
+          if ((p = M.unwrap(a, null)) === M.token) {
+            ctx.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    case 13:
-      return ctx.chain(ctx.$.run(), 14);
+        case 9:
+          ctx.$.rt = p;
 
-    case 14:
-      return ctx.pure();
+          if ((p = M.brk(\\"statement\\", \\"4:0-4:10\\")) === M.token) {
+            ctx.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
-    case 0:
-      return ctx.pure(p);
+        case 10:
+          ctx.$.j = 0;
 
-    case 1:
-      return ctx.raise(p);
+          if ((p = M.brk(\\"statement\\", \\"13:0-13:6\\")) === M.token) {
+            ctx.$state = 11;
+            return p;
+          } else {
+            s = 11;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 11:
+          if ((p = ctx.$.run()) === M.token) {
+            ctx.$state = 12;
+            return p;
+          } else {
+            s = 12;
+            continue;
+          }
+
+        case 12:
+          if ((p = M.brk(\\"statement\\", \\"14:0-14:6\\")) === M.token) {
+            ctx.$state = 13;
+            return p;
+          } else {
+            s = 13;
+            continue;
+          }
+
+        case 13:
+          if ((p = ctx.$.run()) === M.token) {
+            ctx.$state = 14;
+            return p;
+          } else {
+            s = 14;
+            continue;
+          }
+
+        case 14:
+          return ctx.pure();
+
+        case 0:
+          return ctx.pure(p);
+
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }"
 `;
@@ -1662,59 +2662,104 @@ function A_1(s, p) {
   var A = this,
       a;
 
-  switch (s) {
-    case 5:
-      return A.chain(M.brk(\\"statement\\", \\"4:2-4:24\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"4:2-4:24\\")) === M.token) {
+            A.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      A.$._this.i = A.$.i * 10 + A.$$.f.cnt;
-      return A.chain(M.brk(\\"statement\\", \\"5:2-5:22\\"), 7);
+        case 6:
+          A.$._this.i = A.$.i * 10 + A.$$.f.cnt;
 
-    case 7:
-      a = A.$$.f.B;
-      return A.chain(new a(100), 8);
+          if ((p = M.brk(\\"statement\\", \\"5:2-5:22\\")) === M.token) {
+            A.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      a = M.constr(p, \\"5:11-5:21\\");
-      A.$._this.b = a;
-      return A.pure();
+        case 7:
+          a = A.$$.f.B;
 
-    case 0:
-      return A.pure(p);
+          if ((p = new a(100)) === M.token) {
+            A.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 1:
-      return A.raise(p);
+        case 8:
+          a = M.constr(p, \\"5:11-5:21\\");
+          A.$._this.b = a;
+          return A.pure();
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 0:
+          return A.pure(p);
+
+        case 1:
+          return A.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return A.raise(ex);
+    }
   }
 }
 
 function B_1(s, p) {
   var B = this;
 
-  switch (s) {
-    case 5:
-      return B.chain(M.brk(\\"statement\\", \\"9:2-9:13\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"9:2-9:13\\")) === M.token) {
+            B.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      B.$._this.i = B.$.i;
-      return B.chain(M.brk(\\"statement\\", \\"10:2-10:26\\"), 7);
+        case 6:
+          B.$._this.i = B.$.i;
 
-    case 7:
-      return B.pure(M.constr({
-        b: B.$._this,
-        cnt: B.$$.f.cnt
-      }, \\"10:9-10:25\\"));
+          if ((p = M.brk(\\"statement\\", \\"10:2-10:26\\")) === M.token) {
+            B.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 0:
-      return B.pure(p);
+        case 7:
+          return B.pure(M.constr({
+            b: B.$._this,
+            cnt: B.$$.f.cnt
+          }, \\"10:9-10:25\\"));
 
-    case 1:
-      return B.raise(p);
+        case 0:
+          return B.pure(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 1:
+          return B.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return B.raise(ex);
+    }
   }
 }
 
@@ -1723,100 +2768,195 @@ function f1_1(s, p) {
       a,
       b;
 
-  switch (s) {
-    case 5:
-      return f1.chain(M.brk(\\"statement\\", \\"14:2-14:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"14:2-14:8\\")) === M.token) {
+            f1.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      f1.$$.f.cnt++;
-      return f1.chain(M.brk(\\"statement\\", \\"15:2-15:32\\"), 7);
+        case 6:
+          f1.$$.f.cnt++;
 
-    case 7:
-      return f1.chain(console.log(\`f1:\${f1.$.i}@\${f1.$$.f.cnt}\`), 8);
+          if ((p = M.brk(\\"statement\\", \\"15:2-15:32\\")) === M.token) {
+            f1.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      return f1.chain(M.brk(\\"statement\\", \\"16:2-16:23\\"), 9);
+        case 7:
+          if ((p = console.log(\`f1:\${f1.$.i}@\${f1.$$.f.cnt}\`)) === M.token) {
+            f1.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 9:
-      a = f1.$$.f.A;
-      b = f1.$$.f.cnt;
-      return f1.chain(new a(b), 10);
+        case 8:
+          if ((p = M.brk(\\"statement\\", \\"16:2-16:23\\")) === M.token) {
+            f1.$state = 9;
+            return p;
+          } else {
+            s = 9;
+            continue;
+          }
 
-    case 10:
-      a = M.constr(p, \\"16:12-16:22\\");
-      f1.$.a = a;
-      return f1.chain(M.brk(\\"statement\\", \\"17:2-17:23\\"), 11);
+        case 9:
+          a = f1.$$.f.A;
+          b = f1.$$.f.cnt;
 
-    case 11:
-      return f1.chain(console.log(\\"A:\\", f1.$.a), 12);
+          if ((p = new a(b)) === M.token) {
+            f1.$state = 10;
+            return p;
+          } else {
+            s = 10;
+            continue;
+          }
 
-    case 12:
-      return f1.chain(M.brk(\\"statement\\", \\"18:2-18:13\\"), 13);
+        case 10:
+          a = M.constr(p, \\"16:12-16:22\\");
+          f1.$.a = a;
 
-    case 13:
-      return f1.pure(f1.$$.f.cnt);
+          if ((p = M.brk(\\"statement\\", \\"17:2-17:23\\")) === M.token) {
+            f1.$state = 11;
+            return p;
+          } else {
+            s = 11;
+            continue;
+          }
 
-    case 0:
-      return f1.pure(p);
+        case 11:
+          if ((p = console.log(\\"A:\\", f1.$.a)) === M.token) {
+            f1.$state = 12;
+            return p;
+          } else {
+            s = 12;
+            continue;
+          }
 
-    case 1:
-      return f1.raise(p);
+        case 12:
+          if ((p = M.brk(\\"statement\\", \\"18:2-18:13\\")) === M.token) {
+            f1.$state = 13;
+            return p;
+          } else {
+            s = 13;
+            continue;
+          }
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 13:
+          return f1.pure(f1.$$.f.cnt);
+
+        case 0:
+          return f1.pure(p);
+
+        case 1:
+          return f1.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return f1.raise(ex);
+    }
   }
 }
 
 function f2_1(s, p) {
   var f2 = this;
 
-  switch (s) {
-    case 5:
-      return f2.chain(M.brk(\\"statement\\", \\"22:2-22:8\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          if ((p = M.brk(\\"statement\\", \\"22:2-22:8\\")) === M.token) {
+            f2.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 6:
-      f2.$$.f.cnt++;
-      return f2.chain(M.brk(\\"statement\\", \\"23:2-23:32\\"), 7);
+        case 6:
+          f2.$$.f.cnt++;
 
-    case 7:
-      return f2.chain(console.log(\`f2:\${f2.$.i}@\${f2.$$.f.cnt}\`), 8);
+          if ((p = M.brk(\\"statement\\", \\"23:2-23:32\\")) === M.token) {
+            f2.$state = 7;
+            return p;
+          } else {
+            s = 7;
+            continue;
+          }
 
-    case 8:
-      return f2.pure();
+        case 7:
+          if ((p = console.log(\`f2:\${f2.$.i}@\${f2.$$.f.cnt}\`)) === M.token) {
+            f2.$state = 8;
+            return p;
+          } else {
+            s = 8;
+            continue;
+          }
 
-    case 0:
-      return f2.pure(p);
+        case 8:
+          return f2.pure();
 
-    case 1:
-      return f2.raise(p);
+        case 0:
+          return f2.pure(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 1:
+          return f2.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return f2.raise(ex);
+    }
   }
 }
 
 function f_1(s, p) {
   var ctx = this;
 
-  switch (s) {
-    case 5:
-      ctx.$.exports.__esModule = true;
-      ctx.$.exports.f1 = ctx.$.f1;
-      ctx.$.exports.f2 = ctx.$.f2;
-      return ctx.chain(M.brk(\\"statement\\", \\"1:0-1:12\\"), 6);
+  for (;;) {
+    try {
+      switch (s) {
+        case 5:
+          ctx.$.exports.__esModule = true;
+          ctx.$.exports.f1 = ctx.$.f1;
+          ctx.$.exports.f2 = ctx.$.f2;
 
-    case 6:
-      ctx.$.cnt = 0;
-      return ctx.pure();
+          if ((p = M.brk(\\"statement\\", \\"1:0-1:12\\")) === M.token) {
+            ctx.$state = 6;
+            return p;
+          } else {
+            s = 6;
+            continue;
+          }
 
-    case 0:
-      return ctx.pure(p);
+        case 6:
+          ctx.$.cnt = 0;
+          return ctx.pure();
 
-    case 1:
-      return ctx.raise(p);
+        case 0:
+          return ctx.pure(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
   }
 }"
 `;

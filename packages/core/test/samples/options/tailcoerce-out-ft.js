@@ -115,12 +115,22 @@ function a4_1(a4, p) {
   for (;;) {
     switch (a4.true) {
       case 5:
-        p = M.chain(bb(), 6);
-        if (p === M.token) return p;else continue;
+        if ((p = bb()) === M.token) {
+          a4.true = 6;
+          return p;
+        } else {
+          a4.true = 6;
+          continue;
+        }
 
       case 6:
-        p = M.chain(cc(), 7);
-        if (p === M.token) return p;else continue;
+        if ((p = cc()) === M.token) {
+          a4.true = 7;
+          return p;
+        } else {
+          a4.true = 7;
+          continue;
+        }
 
       case 0:
         return p;
@@ -136,12 +146,22 @@ function a5_1(a5, p) {
   for (;;) {
     switch (a5.true) {
       case 5:
-        p = M.chain(bb(), 6);
-        if (p === M.token) return p;else continue;
+        if ((p = bb()) === M.token) {
+          a5.true = 6;
+          return p;
+        } else {
+          a5.true = 6;
+          continue;
+        }
 
       case 6:
-        p = M.chain(cc(), 7);
-        if (p === M.token) return p;else continue;
+        if ((p = cc()) === M.token) {
+          a5.true = 7;
+          return p;
+        } else {
+          a5.true = 7;
+          continue;
+        }
 
       case 0:
         return p;

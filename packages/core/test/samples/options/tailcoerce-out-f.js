@@ -93,8 +93,13 @@ function a4(a, b, c, d) {
     for (;;) {
       switch (a4.true) {
         case 5:
-          p = M.chain(cc(), 6);
-          if (p === M.token) return p;else continue;
+          if ((p = cc()) === M.token) {
+            a4.true = 6;
+            return p;
+          } else {
+            a4.true = 6;
+            continue;
+          }
 
         case 0:
           return p;
@@ -120,8 +125,13 @@ function a5(a, b, c, d) {
     for (;;) {
       switch (a5.true) {
         case 5:
-          p = M.chain(cc(), 6);
-          if (p === M.token) return p;else continue;
+          if ((p = cc()) === M.token) {
+            a5.true = 6;
+            return p;
+          } else {
+            a5.true = 6;
+            continue;
+          }
 
         case 0:
           return p;

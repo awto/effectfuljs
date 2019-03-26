@@ -511,12 +511,20 @@ export function tailJumps(si) {
   const implFrame = root.implFrame.value;
   let tailCoerceExpr;
   let tailCoerceArg;
+  let eraseChain;
+  const { discrimSym } = implFrame;
+  const contStoreSym = root.contSym;
+  let contSym = !contStoreSym && discrimSym;
   if (inlineTailCoerce) {
     if (inlineTailCoerce.substr) {
       tailCoerceExpr = "=$2($1)";
       tailCoerceArg = Kit.sysId(inlineTailCoerce);
     } else if (inlineTailCoerce.singelton) {
-      tailCoerceExpr = "=$1 === $2";
+      if (!contStoreSym)
+        throw s.error(
+          `inlineTailCoerce:{singelton} require a continuation storage`
+        );
+      eraseChain = true;
       tailCoerceArg = Kit.sysId(inlineTailCoerce.singelton);
     } else if (inlineTailCoerce.symbol) {
       tailCoerceExpr = "=$1 && $1[$2]";
@@ -527,7 +535,6 @@ export function tailJumps(si) {
     }
   }
   const pat = root.commonPatSym;
-  let contSym = !root.contSym && implFrame.discrimSym;
   return walk();
   function* walk() {
     for (const i of s.sub()) {
@@ -543,11 +550,32 @@ export function tailJumps(si) {
     for (const i of s.sub()) {
       if (i.enter) {
         if (
-          tailCoerceExpr &&
+          tailCoerceArg &&
           i.type === Block.letStmt &&
           i.value.eff &&
           !i.value.reflected
         ) {
+          if (eraseChain) {
+            yield* s.template(
+              Tag.push,
+              "if(($1=$E) === $2) { $3 = $4; $_; } else {$5 = $4;  $_}",
+              pat,
+              tailCoerceArg,
+              contStoreSym,
+              i.value.gotoSym,
+              discrimSym || contStoreSym
+            );
+            yield* Kit.reposOne(s.one(), Tag.right);
+            yield* s.refocus();
+            yield s.enter(Tag.push, Tag.ReturnStatement);
+            yield s.tok(Tag.argument, Tag.Identifier, { sym: pat });
+            yield* s.leave();
+            yield* s.refocus();
+            yield s.tok(Tag.push, Tag.ContinueStatement);
+            yield* s.leave();
+            Kit.skip(s.copy(i));
+            continue;
+          }
           i.value.reflected = true;
           i.value.tmpVar = pat;
           yield* s.copy(i);
@@ -561,8 +589,12 @@ export function tailJumps(si) {
           continue;
         }
         if (i.type === Ctrl.jump && !i.value.bindName && !i.value.reflected) {
-          if (contSym)
-            yield* s.toks(Tag.push, "=$I = $I", contSym, i.value.gotoSym);
+          yield* s.toks(
+            Tag.push,
+            "=$I = $I",
+            discrimSym || contStoreSym,
+            i.value.gotoSym
+          );
           const j = s.curLev();
           if (j) {
             if (j.type === Block.bindPat && i.value.sym === pat) {

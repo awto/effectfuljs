@@ -138,9 +138,14 @@ export function storeContinuations(si) {
           if (j.enter) {
             switch (j.type) {
               case Block.letStmt:
-                if (!j.value.eff || !inlineConts) break;
+                if (!j.value.eff) break;
               case Ctrl.jump:
-                if (j.value.reflected || j.value.cloneCtx != null) break;
+                if (
+                  j.value.reflected ||
+                  j.value.cloneCtx != null ||
+                  !inlineConts
+                )
+                  break;
                 if (
                   (noPureJumpsStore &&
                     j.type === Ctrl.jump &&

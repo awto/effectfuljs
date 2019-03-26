@@ -88,20 +88,17 @@ const FramePrototype = {
     context.startThread(this);
     return token;
   },
-  chain(eff, dest) {
-    this.$state = dest;
-    if (eff !== token) context.value = eff;
-    return token;
-  },
   pure(value) {
     if (this.$inNew && (!value || typeof value !== "object"))
       value = this.$self;
+    this.$state = 0;
     context.stack.shift();
     context.brk = null;
     context.value = value;
     return token;
   },
   raise(error) {
+    this.$state = 0;
     context.stack.shift();
     context.value = error;
     context.brk = "throw";
@@ -115,6 +112,7 @@ const FramePrototype = {
       this.$state = this.$err(this.$cur);
       context.brk = "throw";
       context.value = e;
+      return token;
     }
   }
 };
