@@ -59,7 +59,7 @@ export function step() {
     }
     const top = context.stack[0];
     context.brk = null;
-    top.resume(context.value);
+    top.resume();
   } while (context.brk == null);
   return token;
 }
@@ -83,9 +83,15 @@ const FramePrototype = {
     this.$self = self;
     if (context.stack) {
       context.stack.unshift(this);
-      return this.resume((context.value = void 0));
+      context.value = void 0;
+      return this.resume();
     }
     context.startThread(this);
+    return token;
+  },
+  chain(eff, dest) {
+    this.$state = dest;
+    if (eff !== token) context.value = eff;
     return token;
   },
   pure(value) {
@@ -103,13 +109,15 @@ const FramePrototype = {
     context.value = error;
     context.brk = "throw";
     const callee = context.stack[0];
-    if (callee) callee.$state = callee.$err(callee.$cur);
+    if (callee) callee.$state = callee.$err(callee.$state);
   },
-  resume(value) {
+  resume() {
     try {
-      return this.$run((this.$cur = this.$state), value);
+      const arg = context.value;
+      context.value = void 0;
+      return this.$run(arg);
     } catch (e) {
-      this.$state = this.$err(this.$cur);
+      this.$state = this.$err(this.$state);
       context.brk = "throw";
       context.value = e;
       return token;

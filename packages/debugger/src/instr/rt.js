@@ -41,7 +41,7 @@ export function findIndex(callback, self) {
 }
 
 export function flatMap(callback, self) {
-  return this.map(callback, self).flat();
+  return map.call(this, callback, self).flat();
 }
 
 export function forEach(callback, self) {

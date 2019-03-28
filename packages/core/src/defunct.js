@@ -512,9 +512,8 @@ export function tailJumps(si) {
   let tailCoerceExpr;
   let tailCoerceArg;
   let eraseChain;
-  const { discrimSym } = implFrame;
+  const { ctrlParam } = implFrame;
   const contStoreSym = root.contSym;
-  let contSym = !contStoreSym && discrimSym;
   if (inlineTailCoerce) {
     if (inlineTailCoerce.substr) {
       tailCoerceExpr = "=$2($1)";
@@ -563,7 +562,7 @@ export function tailJumps(si) {
               tailCoerceArg,
               contStoreSym,
               i.value.gotoSym,
-              discrimSym || contStoreSym
+              ctrlParam || contStoreSym
             );
             yield* Kit.reposOne(s.one(), Tag.right);
             yield* s.refocus();
@@ -592,7 +591,7 @@ export function tailJumps(si) {
           yield* s.toks(
             Tag.push,
             "=$I = $I",
-            discrimSym || contStoreSym,
+            ctrlParam || contStoreSym,
             i.value.gotoSym
           );
           const j = s.curLev();

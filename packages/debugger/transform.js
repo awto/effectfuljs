@@ -27,6 +27,7 @@ module.exports = require("@effectful/core").babelPlugin(
         closVarPrefix: "",
         closVarPostfix: "",
         inlineRaiseOp: null,
+        defunctStateDiscriminant: false,
         passNewTarget: true,
         storeCont: "$state",
         before: {
