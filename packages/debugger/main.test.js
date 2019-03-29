@@ -1,10 +1,10 @@
 // otherwise jest won't work
-require("./kit").config.replaceRT = false;
+require("./config").default.replaceRT = false;
 const Debugger = require("./main");
 
 function trace() {
   let num = 0;
-  Debugger.context.stack = Debugger.context.threads.pop();
+  Debugger.context.stack = [Debugger.context.threads.pop()];
   let f;
   while ((f = Debugger.step()) === Debugger.token) {
     const x = Debugger.context;

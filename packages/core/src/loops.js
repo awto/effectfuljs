@@ -428,6 +428,7 @@ export const normalizeFor = Kit.pipe(
               case Tag.ContinueStatement:
                 if (i.enter) {
                   const { cntBlock } = i.value.block;
+                  if (!cntBlock) throw sl.error("wrong `continue` label");
                   const brk = sl.tok(i.pos, Tag.BreakStatement, {
                     node: {
                       label: { type: "Identifier", name: cntBlock.ctrl }

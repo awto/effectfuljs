@@ -58,7 +58,7 @@ module.exports = require("@effectful/core").babelPlugin(
               if (i.enter && s.opts.transform) {
                 switch (i.type) {
                   case Tag.VariableDeclaration:
-                    if (i.pos === Tag.left) break;
+                    if (i.pos === Tag.left || i.pos === Tag.init) break;
                   case Tag.ReturnStatement:
                   case Tag.BreakStatement:
                   case Tag.ContinueStatement:
@@ -72,6 +72,7 @@ module.exports = require("@effectful/core").babelPlugin(
                   case Tag.ForOfStatement:
                   case Tag.ExpressionStatement:
                   case Tag.WithStatement:
+                  case Tag.LabeledStatement:
                     if (opts.blackbox) break;
                     const lab = s.label();
                     if (i.pos !== Tag.push) {
@@ -81,6 +82,14 @@ module.exports = require("@effectful/core").babelPlugin(
                     if (i.value.node.loc)
                       yield* brkStmt(Tag.push, i, "statement");
                     yield s.peel(Kit.setPos(i, Tag.push));
+                    // we don't want to break loop's labels (and there can be a few of them)
+                    if (i.type === Tag.LabeledStatement) {
+                      for (;;) {
+                        const j = s.peel();
+                        yield j;
+                        if (j.type !== Tag.LabeledStatement) break;
+                      }
+                    }
                     if (!i.leave) yield* _insertBreaks();
                     yield* lab();
                     continue;

@@ -1,42 +1,49 @@
-export const config = {
-  /** replace standard runtime functions with their instrumented equivalents */
-  replaceRT: true
-};
-
 /**
  * Functions called from code generated
  * by @effectful/debugger/transform preset
  */
+
+import config from "./config";
 
 export const context = {
   stack: null,
   brk: "loaded",
   modules: {},
   threads: [],
+  sync: false,
   startThread(first) {
-    this.threads.push([first]);
+    if (this.sync) return runSync(first);
+    this.threads.push(first);
+    return token;
   }
 };
 
 /**
- * converts a possibly instrumented function into a plain JS function,
- * by running it ignoring all breakpoints
+ * converts a function into another function doing the same, but all
+ * callbacks executed within this function will be invoked synchronously
  */
-export const lift = func => (...args) => {
-  const { stack: saved } = context;
-  try {
-    context.stack = null;
-    let res = func(...args);
-    if (res !== token) return res;
-    context.stack = context.threads.pop();
-    do {
-      res = step();
-    } while (res === token);
-    return res;
-  } finally {
-    context.stack = saved;
-  }
-};
+export const region = func =>
+  function(...args) {
+    const { stack: saved, rec: recSaved } = context;
+    try {
+      context.stack = null;
+      context.sync = true;
+      return func.apply(this, args);
+    } finally {
+      context.sync = recSaved;
+      context.stack = saved;
+    }
+  };
+
+/** executes a thread starting from the `first` frame */
+export function runSync(first) {
+  let res;
+  context.stack = [first];
+  do {
+    res = step();
+  } while (res === token);
+  return res;
+}
 
 export const token = { _effectToken: true };
 
@@ -86,8 +93,7 @@ const FramePrototype = {
       context.value = void 0;
       return this.resume();
     }
-    context.startThread(this);
-    return token;
+    return context.startThread(this);
   },
   chain(eff, dest) {
     this.$state = dest;
@@ -182,4 +188,18 @@ export const thunkSymbol = Symbol("@effectful/debugger/thunk");
  */
 export function unwrap(value) {
   return value && value[thunkSymbol] ? value() : value;
+}
+
+if (config.replaceRT) {
+  EventTarget.prototype.dispatchEvent = region(
+    // TODO: this can be traceable
+    EventTarget.prototype.dispatchEvent
+  );
+  const { defineProperty } = Object;
+  Object.defineProperty = function definePropert(obj, prop, descr) {
+    const copy = { ...descr };
+    if (copy.set) copy.set = region(copy.set);
+    if (copy.get) copy.get = region(copy.get);
+    return defineProperty(obj, prop, descr);
+  };
 }

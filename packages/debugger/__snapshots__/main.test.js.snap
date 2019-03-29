@@ -2580,7 +2580,7 @@ Array [
   ],
   Array [
     "Step #1@statement",
-    undefined,
+    -1,
   ],
   Array [
     "  _arraySortTest@/__fixtures__/mod1.js:100:2-100:23",
@@ -2616,7 +2616,7 @@ Array [
   ],
   Array [
     "Step #1@statement",
-    undefined,
+    1,
   ],
   Array [
     "  _typedArraySortTest@/__fixtures__/mod1.js:106:2-106:28",

@@ -11,8 +11,8 @@
     "build": "babel src --out-dir ."
   },
   "peerDependencies": {
-    "@effectful/core": "^1.1.4",
-    "@babel/plugin-transform-modules-commonjs": "^7.0.0"
+    "@babel/plugin-transform-modules-commonjs": "^7.0.0",
+    "@effectful/core": "^1.1.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

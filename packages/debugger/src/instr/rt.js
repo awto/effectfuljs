@@ -7,8 +7,8 @@
  * TODO: transpile core-js instead
  */
 
+import config from "../config";
 import * as Kit from "../kit";
-const config = Kit.config;
 
 const Ap = Array.prototype;
 const Tp = Object.getPrototypeOf(Int8Array.prototype);
@@ -76,19 +76,8 @@ export function reduceRight(callback, initial) {
   return acc;
 }
 
-const savedApSort = Array.prototype.sort;
-export function arraySort(compare) {
-  let wrappedCompare;
-  if (compare) wrappedCompare = Kit.lift(compare);
-  return savedApSort.call(this, wrappedCompare);
-}
-
-const savedTpSort = Tp.sort;
-export function typedArraySort(compare) {
-  let wrappedCompare;
-  if (compare) wrappedCompare = Kit.lift(compare);
-  return savedTpSort.call(this, wrappedCompare);
-}
+export const arraySort = Kit.region(Ap.sort);
+export const typedArraySort = Kit.region(Tp.sort);
 
 export function some(callback, self) {
   let x = 0;
