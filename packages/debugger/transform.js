@@ -1,5 +1,11 @@
 module.exports = require("@effectful/core").babelPlugin(
   (opts, { Tag, Kit, Transform: T, Policy: P, presets }) => {
+    let moduleAliases;
+    if (opts.preInstrumentedLibs && !opts.pureModule) {
+      moduleAliases = {};
+      for (const i in require("./libs.json"))
+        moduleAliases[i] = `@effectful/debugger/libs/${i.replace("/", "-")}`;
+    }
     return {
       options: {
         ...presets.defunct,
@@ -42,10 +48,12 @@ module.exports = require("@effectful/core").babelPlugin(
           forInIterator: false,
           token: false
         },
+        moduleAliases,
         ...opts
       },
       main(input) {
         const s = Kit.auto(input);
+        const opts = s.opts;
         const objWrap = Kit.sysId("constr");
         const brk = Kit.sysId("brk");
         const unwrapSym = Kit.sysId("unwrap");
@@ -101,6 +109,7 @@ module.exports = require("@effectful/core").babelPlugin(
                   case Tag.CallExpression:
                     const la = s.cur();
                     if (
+                      !opts.pureModule &&
                       la.type === Tag.Identifier &&
                       la.value.node.name === "require"
                     ) {
@@ -154,8 +163,9 @@ module.exports = require("@effectful/core").babelPlugin(
                     transform: i.value.node.kind === "method"
                   };
                   break;
-                case Tag.FunctionDeclaration:
                 case Tag.File:
+                  if (opts.pureModule) break;
+                case Tag.FunctionDeclaration:
                 case Tag.FunctionExpression:
                 case Tag.ArrowFunctionExpression:
                 case Tag.ObjectMethod:

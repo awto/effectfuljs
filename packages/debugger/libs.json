@@ -1,0 +1,6 @@
+{
+  "react": "react/cjs/react.development.js",
+  "react-dom": "react-dom/cjs/react-dom.development.js",
+  "scheduler": "scheduler/cjs/scheduler.development.js",
+  "scheduler/tracing": "scheduler/cjs/scheduler-tracing.development.js"
+}

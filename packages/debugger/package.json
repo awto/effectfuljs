@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "babel src --out-dir ."
+    "build": "babel src --out-dir .",
+    "build-loose": "node ./buildLibs"
   },
   "peerDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.0.0",
@@ -18,6 +19,8 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
     "@effectful/core": "^1.1.4",
-    "jest": "^24.5.0"
+    "jest": "^24.5.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }

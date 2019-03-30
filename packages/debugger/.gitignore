@@ -2,4 +2,6 @@
 !transform.js
 !*.test.js
 /instr
+!thirdparty.js
+/libs
 
