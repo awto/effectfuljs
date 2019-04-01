@@ -3,5 +3,6 @@
 !*.test.js
 /instr
 !thirdparty.js
+!preset-react.js
 /libs
 
