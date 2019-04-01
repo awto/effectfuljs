@@ -1008,25 +1008,6 @@ var b = new class {
 
   static m1() {
     var ctx = M.context();
-    ctx._A = class A {
-      m2() {
-        var ctx = M.context();
-        return ctx.scope(_1);
-
-        function _1(ctx) {
-          return ctx.chain(something, _2);
-        }
-
-        function _2(ctx) {
-          return ctx.pure();
-        }
-
-        function _3(ctx, r) {
-          return ctx.pure(r);
-        }
-      }
-
-    };
     return ctx.scope(_1);
 
     function _1(ctx) {
@@ -1034,6 +1015,25 @@ var b = new class {
     }
 
     function _2(ctx) {
+      ctx._A = class A {
+        m2() {
+          var ctx = M.context();
+          return ctx.scope(_1);
+
+          function _1(ctx) {
+            return ctx.chain(something, _2);
+          }
+
+          function _2(ctx) {
+            return ctx.pure();
+          }
+
+          function _3(ctx, r) {
+            return ctx.pure(r);
+          }
+        }
+
+      };
       return ctx.pure();
     }
 

@@ -24,14 +24,17 @@ export const saveDecls = Kit.pipe(
           switch (i.type) {
             case Tag.ClassDeclaration:
               const id = sl.cur().value.sym;
-              decls.set(id, {
-                raw: null,
-                init: [
-                  ...sl.copy(
-                    Kit.setType(Kit.setPos(i, Tag.init), Tag.ClassExpression)
-                  )
-                ]
+              decls.set(id, { raw: null });
+              yield sl.enter(i.pos, Tag.ExpressionStatement);
+              yield sl.enter(Tag.expression, Tag.AssignmentExpression, {
+                node: { operator: "=" }
               });
+              yield sl.tok(Tag.left, Tag.Identifier, { sym: id });
+              yield* sl.copy(
+                Kit.setType(Kit.setPos(i, Tag.right), Tag.ClassExpression)
+              );
+              yield* sl.leave();
+              yield* sl.leave();
               continue;
             case Tag.FunctionDeclaration:
               decls.set(i.value.funcId, {
@@ -229,10 +232,9 @@ export function* restoreDecls(s) {
     for (const { copy, fld, ctx } of ctxDeps.values()) {
       const init = [];
       const varField = root.opts.varStorageField;
-      const pos = varField ? Tag.object : Tag.init;
       if (fld) {
         if (fld.interpr === Bind.ctxField) {
-          init.push(sl.enter(pos, Tag.MemberExpression));
+          init.push(sl.enter(Tag.init, Tag.MemberExpression));
           if (fld.subField) {
             init.push(
               sl.enter(Tag.object, Tag.MemberExpression),
@@ -249,11 +251,12 @@ export function* restoreDecls(s) {
             }),
             ...sl.leave()
           );
-        } else init.push(sl.tok(pos, Tag.Identifier, { sym: fld }));
+        } else init.push(sl.tok(Tag.init, Tag.Identifier, { sym: fld }));
       } else {
+        const pos = varField ? Tag.object : Tag.init;
         init.push(sl.tok(pos, Tag.Identifier, { sym: ctx }));
         if (varField) {
-          init.unshift(sl.enter(pos, Tag.MemberExpression));
+          init.unshift(sl.enter(Tag.init, Tag.MemberExpression));
           init.push(
             sl.tok(Tag.property, Tag.Identifier, {
               node: { name: root.opts.varStorageField }

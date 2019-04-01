@@ -292,31 +292,6 @@ class SomeChild extends SomeClass {
 
 function clasClosure(A) {
   var clasClosure = M.context();
-  clasClosure._B = class B extends clasClosure._A {
-    constructor() {
-      var _clasClosure = clasClosure;
-      _clasClosure._cnt++;
-    }
-
-    static f() {
-      var ctx = M.context();
-      return ctx.scope(f_13);
-    }
-
-  };
-  clasClosure._B1 = class _B extends clasClosure._A {
-    constructor() {
-      var _clasClosure = clasClosure;
-      _clasClosure._cnt += 2;
-    }
-
-    static f() {
-      var ctx = M.context();
-      ctx._clasClosure = clasClosure;
-      return ctx.scope(f_14);
-    }
-
-  };
   clasClosure._A = A;
   return clasClosure.scope(clasClosure_1);
 }
@@ -2349,6 +2324,13 @@ function f_32(ctx, r) {
   return ctx.pure(r);
 }
 
+function clasClosure_1(clasClosure) {
+  var a;
+  clasClosure._cnt = 0;
+  a = clasClosure._cnt++;
+  return clasClosure.yld(a, clasClosure_2);
+}
+
 function f_13(ctx) {
   return ctx.yld(1, f_23);
 }
@@ -2359,6 +2341,25 @@ function f_23(ctx) {
 
 function f_33(ctx, r) {
   return ctx.pure(r);
+}
+
+function clasClosure_2(clasClosure) {
+  var a;
+  clasClosure._B = class B extends clasClosure._A {
+    constructor() {
+      var _clasClosure = clasClosure;
+      _clasClosure._cnt++;
+    }
+
+    static f() {
+      var ctx = M.context();
+      return ctx.scope(f_13);
+    }
+
+  };
+  a = clasClosure._B.f();
+  clasClosure._B = null;
+  return clasClosure.yldStar(a, clasClosure_3);
 }
 
 function f_14(ctx) {
@@ -2373,20 +2374,6 @@ function f_24(ctx) {
 
 function f_34(ctx, r) {
   return ctx.pure(r);
-}
-
-function clasClosure_1(clasClosure) {
-  var a;
-  clasClosure._cnt = 0;
-  a = clasClosure._cnt++;
-  return clasClosure.yld(a, clasClosure_2);
-}
-
-function clasClosure_2(clasClosure) {
-  var a;
-  a = clasClosure._B.f();
-  clasClosure._B = null;
-  return clasClosure.yldStar(a, clasClosure_3);
 }
 
 function f_15(ctx) {
@@ -2411,6 +2398,19 @@ function f_42(ctx, r) {
 
 function clasClosure_3(clasClosure) {
   var a;
+  clasClosure._B1 = class B extends clasClosure._A {
+    constructor() {
+      var _clasClosure = clasClosure;
+      _clasClosure._cnt += 2;
+    }
+
+    static f() {
+      var ctx = M.context();
+      ctx._clasClosure = clasClosure;
+      return ctx.scope(f_14);
+    }
+
+  };
   clasClosure._C = class extends clasClosure._A {
     static f() {
       var ctx = M.context();

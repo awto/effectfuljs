@@ -38,7 +38,7 @@ function oii() {
       V: {},
       VV: {}
     },
-        _oii;
+        _oii = oii.V;
 
     oj.V.$j$$ = 0;
   },
@@ -100,10 +100,9 @@ function mapTest_1(mapTest) {
       V: {},
       VV: {}
     },
-        oii,
-        oj,
-        _mapTest;
-
+        oii = mapTest.VV.$oii$$,
+        oj = mapTest.VV.$oj$$,
+        _mapTest = mapTest.V;
     return `${i}@${x}[${oj.$j$$++}/${oii.$ii$$++}]:${t === _mapTest.$v$$}/${_mapTest.$self$$ === this}`;
   }, mapTest.V.$self$$), mapTest_2);
 }

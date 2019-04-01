@@ -2,34 +2,6 @@ import * as M from "@effectful/core";
 
 function aa() {
   var aa = M.context();
-  aa._A = class A {
-    method() {
-      var ctx = M.context();
-      return M.scope(method_1);
-    }
-
-    static smethod() {
-      var ctx = M.context();
-      return M.scope(smethod_1);
-    }
-
-  };
-  aa._B = class B extends aa._A {
-    method() {
-      var ctx = M.context();
-      ctx._aa = aa;
-      ctx.__this = this;
-      return M.scope(_method_1);
-    }
-
-    static smethod() {
-      var ctx = M.context();
-      ctx._aa = aa;
-      ctx.__this = this;
-      return M.scope(_smethod_1);
-    }
-
-  };
   return M.scope(aa_1);
 }
 
@@ -80,6 +52,34 @@ function smethod_3(ctx, r) {
 }
 
 function aa_1(aa) {
+  aa._A = class A {
+    method() {
+      var ctx = M.context();
+      return M.scope(method_1);
+    }
+
+    static smethod() {
+      var ctx = M.context();
+      return M.scope(smethod_1);
+    }
+
+  };
+  aa._B = class B extends aa._A {
+    method() {
+      var ctx = M.context();
+      ctx._aa = aa;
+      ctx.__this = this;
+      return M.scope(_method_1);
+    }
+
+    static smethod() {
+      var ctx = M.context();
+      ctx._aa = aa;
+      ctx.__this = this;
+      return M.scope(_smethod_1);
+    }
+
+  };
   return M.pure();
 }
 

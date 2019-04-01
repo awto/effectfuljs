@@ -81,13 +81,6 @@ var b = new class {
 
   static m1() {
     var ctx = M.context();
-    ctx._A = class A {
-      m2() {
-        var ctx = M.context();
-        return ctx.scope(m2_1);
-      }
-
-    };
     return ctx.scope(m1_1);
   }
 
@@ -1121,6 +1114,10 @@ function method_31(ctx, r) {
   return ctx.pure(r);
 }
 
+function m1_1(ctx) {
+  return ctx.chain(somethingElse, m1_2);
+}
+
 function m2_1(ctx) {
   return ctx.chain(something, m2_2);
 }
@@ -1133,11 +1130,14 @@ function m2_3(ctx, r) {
   return ctx.pure(r);
 }
 
-function m1_1(ctx) {
-  return ctx.chain(somethingElse, m1_2);
-}
-
 function m1_2(ctx) {
+  ctx._A = class A {
+    m2() {
+      var ctx = M.context();
+      return ctx.scope(m2_1);
+    }
+
+  };
   return ctx.pure();
 }
 
