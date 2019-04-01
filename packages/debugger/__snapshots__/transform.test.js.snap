@@ -28,8 +28,6 @@ var $module = M.module(\\"/__fixtures__/code.js\\"),
 });
 
 module.exports = M.exports(M.func(function f(module, exports) {
-  var _Cl;
-
   var ctx = M.frame(f);
   ctx.$.C = M.func(function _C(a) {
     var C = M.frame(_C);
@@ -37,33 +35,6 @@ module.exports = M.exports(M.func(function f(module, exports) {
     C.$.a = a;
     return C.scope(this, new.target, 5);
   }, meta$C, C_1, C_err, C_fin);
-  ctx.$.Cl = (_Cl = class Cl {
-    constructor() {
-      var v4, f;
-      not_traced(f.v0, v4);
-    }
-
-    get prop1() {
-      not_traced();
-    }
-
-    set prop1(value) {
-      not_traced();
-    }
-
-    funcAsync() {
-      var _ctx = M.frame(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1);
-
-      _ctx.$$.f = ctx.$;
-      return _ctx.scope(this, new.target, 5);
-    }
-
-    func() {
-      var ctx = M.frame(_Cl.prototype.func, meta$func, func_1);
-      return ctx.scope(this, new.target, 5);
-    }
-
-  }, M.func(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1), M.func(_Cl.prototype.func, meta$func, func_1), _Cl);
   ctx.$.module = module;
   ctx.$.exports = exports;
   return ctx.scope(this, new.target, 5);
@@ -662,6 +633,8 @@ function _f_1(p) {
 
   for (;;) {
     try {
+      var _Cl;
+
       switch (ctx.$state) {
         case 5:
           if ((p = M.brk(\\"statement\\", \\"1:0-1:31\\")) === M.token) {
@@ -698,6 +671,34 @@ function _f_1(p) {
 
         case 8:
           ctx.$.v0 = 10;
+          ctx.$.Cl = (_Cl = class Cl {
+            constructor() {
+              var v4,
+                  f = ctx.$;
+              not_traced(f.v0, v4);
+            }
+
+            get prop1() {
+              not_traced();
+            }
+
+            set prop1(value) {
+              not_traced();
+            }
+
+            funcAsync() {
+              var _ctx = M.frame(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1);
+
+              _ctx.$$.f = ctx.$;
+              return _ctx.scope(this, new.target, 5);
+            }
+
+            func() {
+              var ctx = M.frame(_Cl.prototype.func, meta$func, func_1);
+              return ctx.scope(this, new.target, 5);
+            }
+
+          }, M.func(_Cl.prototype.funcAsync, meta$funcAsync, funcAsync_1), M.func(_Cl.prototype.func, meta$func, func_1), _Cl);
 
           if ((p = M.brk(\\"statement\\", \\"40:0-43:2\\")) === M.token) {
             ctx.$state = 9;

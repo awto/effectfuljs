@@ -1,7 +1,7 @@
 module.exports = require("@effectful/core").babelPlugin(
   (opts, { Tag, Kit, Transform: T, Policy: P, presets }) => {
     let moduleAliases;
-    if (opts.preInstrumentedLibs && !opts.pureModule) {
+    if (opts.preInstrumentedLibs) {
       moduleAliases = {};
       for (const i in require("./libs.json"))
         moduleAliases[i] = `@effectful/debugger/libs/${i.replace("/", "-")}`;
@@ -54,6 +54,12 @@ module.exports = require("@effectful/core").babelPlugin(
       main(input) {
         const s = Kit.auto(input);
         const opts = s.opts;
+        // TODO: parcel doesn't allow exclude etc, make an own option
+        if (opts.file && opts.file.filename && opts.file.filename) {
+          const name = opts.file.filename;
+          const ext = name.substr(name.lastIndexOf("."));
+          if (ext === ".css") return s;
+        }
         const objWrap = Kit.sysId("constr");
         const brk = Kit.sysId("brk");
         const unwrapSym = Kit.sysId("unwrap");

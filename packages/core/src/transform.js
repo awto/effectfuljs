@@ -252,7 +252,10 @@ export function pass(s) {
     return ifLoose(loose)(orig);
   }
   if (root.opts.topIIFE && root.hasESM)
-    throw new Error("`topIIFE:true` is incompatible with ES modules");
+    throw new Error(
+      "`topIIFE:true` is incompatible with ES modules " +
+        '(use "@babel/plugin-transform-modules-commonjs")'
+    );
   const s0 = [...stage0(transform)];
   const n0 = [...normalizeOnlyStage0(normalize)];
   const s1 = [...Closure.contextDecls(s0)];
