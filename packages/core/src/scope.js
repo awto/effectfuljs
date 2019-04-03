@@ -302,8 +302,10 @@ export function funcWraps(si) {
   function check(i) {
     if (i.value.topEff && i.value.opts.transform) {
       if (i.value.opts.wrapFunction) return true;
-      if (i.value.opts.defunctHandlerInProto)
-        throw s.error("`defunctHandlerInProto` requires `wrapFunction`");
+      if (i.value.opts.defunctHandlerInProto && !i.value.opts.closConv)
+        throw s.error(
+          "`defunctHandlerInProto` requires `wrapFunction` or `closConv`"
+        );
     }
     return false;
   }

@@ -15,7 +15,7 @@ var $module = M.module(\\"/__fixtures__/code.js\\"),
     meta$f2 = M.meta($module, {}),
     meta$funcAsync = M.meta($module, {}),
     meta$f1 = M.meta($module, {}),
-    _meta$f = M.meta($module),
+    _meta$f = M.meta($module, {}),
     meta$f = M.meta($module, {}),
     meta$C = M.meta($module, {
   v1: [\\"v1\\", \\"6:6-6:8\\", \\"5:14-19:1\\"],

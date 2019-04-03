@@ -62,6 +62,7 @@ export const loose = ifLoose(
 const finalize = Kit.pipe(
   Policy.stage("finalize"),
   Scope.funcWraps,
+  Closure.closConv,
   Policy.stage("meta"),
   Scope.injectMeta,
   Simplify.main,

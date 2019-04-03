@@ -390,5 +390,9 @@ export default {
 
   // adds `new.target` as an argument of `scope` function
   // this way the context can handle `new` operator
-  passNewTarget: false
+  passNewTarget: false,
+
+  // moves all closures to top level
+  // requires `topLevel` and `injectFuncMeta`
+  closConv: false
 };

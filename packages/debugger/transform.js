@@ -22,7 +22,8 @@ module.exports = require("@effectful/core").babelPlugin(
         inlineContAssign: false,
         modules: "commonjs",
         scopeConstructor: "frame",
-        wrapFunction: "func",
+        wrapFunction: opts.closure ? null : "func",
+        closConv: opts.closure,
         injectModuleMeta: "module",
         injectFuncMeta: "meta",
         defunctHandlerInProto: true,
@@ -210,43 +211,35 @@ module.exports = require("@effectful/core").babelPlugin(
     }
     function injectScopeDescr(si) {
       if (opts.blackbox) return si;
-      const sa = Kit.toArray(si);
-      const s = Kit.auto(sa);
-      for (const i of s) {
-        if (
-          i.enter &&
-          i.value.wrapId &&
-          i.value.scopeDecls &&
-          i.value.scopeDecls.size
-        ) {
-          const args = i.value.metaArgs;
-          const lab = s.label();
+      const s = Kit.auto(si);
+      for (const i of s.first.value.scopes) {
+        const args = i.metaArgs;
+        const lab = s.label();
+        args.push(
+          s.enter(Tag.push, Tag.ObjectExpression),
+          s.enter(Tag.properties, Tag.Array)
+        );
+        const flab = s.label();
+        for (const j of i.scopeDecls) {
+          if (!j.decl || !j.decl.value.node.loc || !j.fieldName) continue;
+          let block = j.declRange;
+          if (!block || !block.node.loc) continue;
           args.push(
-            s.enter(Tag.push, Tag.ObjectExpression),
-            s.enter(Tag.properties, Tag.Array)
+            s.enter(Tag.push, Tag.ObjectProperty),
+            s.tok(Tag.key, Tag.Identifier, { node: { name: j.fieldName } }),
+            s.enter(Tag.value, Tag.ArrayExpression),
+            s.enter(Tag.elements, Tag.Array),
+            s.tok(Tag.push, Tag.StringLiteral, {
+              node: { value: j.orig }
+            }),
+            ...position(j.decl.value.node.loc),
+            ...position(block.node.loc),
+            ...flab()
           );
-          const flab = s.label();
-          for (const j of i.value.scopeDecls) {
-            if (!j.decl || !j.decl.value.node.loc || !j.fieldName) continue;
-            let block = j.declRange;
-            if (!block || !block.node.loc) continue;
-            args.push(
-              s.enter(Tag.push, Tag.ObjectProperty),
-              s.tok(Tag.key, Tag.Identifier, { node: { name: j.fieldName } }),
-              s.enter(Tag.value, Tag.ArrayExpression),
-              s.enter(Tag.elements, Tag.Array),
-              s.tok(Tag.push, Tag.StringLiteral, {
-                node: { value: j.orig }
-              }),
-              ...position(j.decl.value.node.loc),
-              ...position(block.node.loc),
-              ...flab()
-            );
-          }
-          args.push(...lab());
         }
+        args.push(...lab());
       }
-      return sa;
+      return s;
     }
   }
 );

@@ -158,6 +158,66 @@ export function depsToTop(si) {
   }
 }
 
+/** moves function constructors to meta constructors */
+export function closConv(si) {
+  const s = Kit.auto(si);
+  const { opts } = s.first.value;
+  if (!opts.closConv) return s;
+  if (!opts.topLevel) throw s.error("`closConv` requires `topLevel`");
+  if (!opts.injectFuncMeta)
+    throw s.error("`closConv` requires `injectFuncMeta`");
+  if (opts.wrapFunction)
+    throw s.error("`closConv` doesn't work with `wrapFunction`");
+  return Kit.toArray(_closConv());
+  function* _closConv() {
+    for (const i of s.sub()) {
+      if (i.enter) {
+        switch (i.type) {
+          case Tag.FunctionExpression:
+            if (!i.value.metaId) break;
+            const lab = s.label();
+            i.value.metaArgs.push(
+              s.enter(Tag.push, Tag.FunctionExpression),
+              s.enter(Tag.params, Tag.Array),
+              s.tok(Tag.push, Tag.Identifier, { sym: i.value.closureArgSym }),
+              ...s.leave(),
+              s.enter(Tag.body, Tag.BlockStatement),
+              s.enter(Tag.body, Tag.Array),
+              s.enter(Tag.push, Tag.ReturnStatement),
+              s.peel(Kit.setPos(i, Tag.argument)),
+              ..._closConv(),
+              ...lab()
+            );
+            if (i.value.implFrame)
+              i.value.metaArgs.push(
+                s.tok(Tag.push, Tag.Identifier, {
+                  sym: i.value.implFrame.value.declSym
+                })
+              );
+            yield s.enter(i.pos, Tag.CallExpression);
+            yield s.tok(Tag.callee, Tag.Identifier, { sym: i.value.metaId });
+            yield s.enter(Tag.arguments, Tag.Array);
+            if (i.value.closSavedDecls && i.value.closSavedDecls.size) {
+              yield s.enter(Tag.push, Tag.ObjectExpression);
+              yield s.enter(Tag.properties, Tag.Array);
+              for (const [key, { init }] of i.value.closSavedDecls) {
+                yield s.enter(Tag.push, Tag.ObjectProperty);
+                yield s.tok(Tag.key, Tag.Identifier, {
+                  node: { name: key.fieldName || key.orig }
+                });
+                yield* Kit.reposOne(init, Tag.value);
+                yield* s.leave();
+              }
+            }
+            yield* lab();
+            continue;
+        }
+      }
+      yield i;
+    }
+  }
+}
+
 /**
  * adds declarations and constructions for context objects
  */
@@ -238,7 +298,7 @@ export function substContextIds(si) {
   if (!contextSym) return s;
   return walk();
   function* emitSubField(subField) {
-    if (subField) {
+    if (subField && subField !== true) {
       yield s.enter(Tag.object, Tag.MemberExpression);
       yield s.tok(Tag.object, Tag.Identifier, {
         sym: contextSym,

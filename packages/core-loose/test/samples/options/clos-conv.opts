@@ -1,0 +1,8 @@
+{
+  "injectFuncMeta": "meta",
+  "metaParentClosure": true,
+  "topLevel": true,
+  "topIIFE": true,
+  "closConv": true,
+  "contextState": true
+}

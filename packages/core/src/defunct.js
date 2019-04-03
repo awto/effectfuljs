@@ -83,8 +83,10 @@ export function* prepare(si) {
 export function assignHandlers(si) {
   const s = Kit.auto(si);
   if (s.opts.defunctHandlerInProto && s.opts.topLevel) {
-    if (!s.opts.wrapFunction)
-      throw s.error("`defunctHandlerInProto` requires `wrapFunction`");
+    if (!s.opts.wrapFunction && !s.opts.closConv)
+      throw s.error(
+        "`defunctHandlerInProto` requires `wrapFunction` or `closConv`"
+      );
     return s;
   }
   const root = s.first.value;

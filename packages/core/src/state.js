@@ -228,10 +228,19 @@ export function* restoreDecls(s) {
   }
   const root = sl.first.value;
   const { ctxDeps, savedDecls: saved } = root;
+  let closures = saved;
+  let closArg;
+  const { closConv } = root.opts;
+  if (closConv) {
+    closures = root.closSavedDecls = new Map();
+    closArg = root.closureArgSym = Kit.scope.newSym("$$");
+  }
   if (ctxDeps && ctxDeps.size) {
+    const varField = root.opts.varStorageField;
+    const closField = root.opts.closureStorageField;
+
     for (const { copy, fld, ctx } of ctxDeps.values()) {
       const init = [];
-      const varField = root.opts.varStorageField;
       if (fld) {
         if (fld.interpr === Bind.ctxField) {
           init.push(sl.enter(Tag.init, Tag.MemberExpression));
@@ -265,7 +274,29 @@ export function* restoreDecls(s) {
           );
         }
       }
-      saved.set(copy, { raw: null, init });
+      if (closConv && !closField) {
+        saved.set(copy, {
+          raw: null,
+          init: [
+            sl.enter(Tag.init, Tag.MemberExpression),
+            sl.tok(Tag.object, Tag.Identifier, { sym: closArg }),
+            sl.tok(Tag.property, Tag.Identifier, {
+              node: { name: copy.fieldName || copy.orig }
+            }),
+            ...sl.leave()
+          ]
+        });
+      }
+      closures.set(copy, { raw: null, init });
+    }
+    if (closConv && closField) {
+      const sym = Bind.tempVarSym(root, varField);
+      sym.fieldName = closField;
+      sym.subField = true;
+      saved.set(sym, {
+        raw: null,
+        init: [sl.tok(Tag.init, Tag.Identifier, { sym: closArg })]
+      });
     }
   }
   for (const i of sl) {
