@@ -13,13 +13,17 @@ test("persist", () => {
   };
   R.regOpaqueObject(exit, "persistExit");
   (async () => {
-    if (!(await R.managed)) return;
-    expect.assertions(2);
-    let i = "hi";
-    const s = await Persist.save();
-    expect(s).toMatchSnapshot();
-    if (s && s.resume) await Persist.load(s, "there");
-    i += ", there";
+    try {
+      if (!(await R.managed)) return;
+      expect.assertions(2);
+      let i = "hi";
+      const s = await Persist.save();
+      expect(s).toMatchSnapshot();
+      if (s && s.resume) await Persist.load(s, "there");
+      i += ", there";
+    } catch (e) {
+      console.error(e);
+    }
   })()[R.awaitSymbol](exit);
   return new Promise((r, e) => ((cb = r), (ce = e)));
 });

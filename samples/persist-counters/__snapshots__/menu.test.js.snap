@@ -2,268 +2,276 @@
 
 exports[`menu 1`] = `
 Object {
-  "type": "MENU",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "type": "MENU",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         Object {
-          "#data": Object {
-            "children": Array [
-              "Menu3",
-            ],
-            "props": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu3",
+          ],
+          "props": Object {
+            "d": Object {
               "children": undefined,
               "key": ".$3",
               "onClick": Object {
-                "#data": Object {
-                  "args": Array [
-                    Object {
-                      "#oid": "menuDispatch",
-                    },
-                    "Menu3",
-                    Object {
+                "$": "Bind",
+                "args": Array [
+                  Object {
+                    "i": "menuDispatch",
+                  },
+                  "Menu3",
+                  Object {
+                    "d": Object {
                       "type": "Menu3",
                     },
-                  ],
-                  "func": Object {
-                    "#oid": "_signal",
                   },
-                  "self": null,
+                ],
+                "func": Object {
+                  "i": "_signal",
                 },
-                "#type": "Bind",
+                "self": null,
               },
             },
-            "type": "button",
           },
-          "#type": "ReactElement",
+          "type": "button",
         },
       ],
       "props": Object {
-        "children": undefined,
+        "d": Object {
+          "children": undefined,
+        },
       },
       "type": Object {
-        "#type": "Symbol",
-        "name": "react.fragment",
+        "$": "Symbol",
+        "d": "react.fragment",
       },
     },
-    "#type": "ReactElement",
   },
 }
 `;
 
 exports[`menu 2`] = `
 Object {
-  "#shared": Object {
-    "0": Object {
-      "#oid": "_signal",
-    },
-    "1": Object {
-      "#oid": "menuDispatch",
-    },
-  },
-  "type": "MENU",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "type": "MENU",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         Object {
-          "#data": Object {
-            "children": Array [
-              "Menu1",
-            ],
-            "props": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu1",
+          ],
+          "props": Object {
+            "d": Object {
               "children": undefined,
               "key": ".$1",
               "onClick": Object {
-                "#data": Object {
-                  "args": Array [
-                    Object {
-                      "#ref": 1,
-                    },
-                    "Menu1",
-                    Object {
+                "$": "Bind",
+                "args": Array [
+                  Object {
+                    "r": 1,
+                  },
+                  "Menu1",
+                  Object {
+                    "d": Object {
                       "type": "Menu1",
                     },
-                  ],
-                  "func": Object {
-                    "#ref": 0,
                   },
-                  "self": null,
+                ],
+                "func": Object {
+                  "r": 0,
                 },
-                "#type": "Bind",
+                "self": null,
               },
             },
-            "type": "button",
           },
-          "#type": "ReactElement",
+          "type": "button",
         },
         Object {
-          "#data": Object {
-            "children": Array [
-              "Menu3",
-            ],
-            "props": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu3",
+          ],
+          "props": Object {
+            "d": Object {
               "children": undefined,
               "key": ".$3",
               "onClick": Object {
-                "#data": Object {
-                  "args": Array [
-                    Object {
-                      "#ref": 1,
-                    },
-                    "Menu3",
-                    Object {
+                "$": "Bind",
+                "args": Array [
+                  Object {
+                    "r": 1,
+                  },
+                  "Menu3",
+                  Object {
+                    "d": Object {
                       "type": "Menu3",
                     },
-                  ],
-                  "func": Object {
-                    "#ref": 0,
                   },
-                  "self": null,
+                ],
+                "func": Object {
+                  "r": 0,
                 },
-                "#type": "Bind",
+                "self": null,
               },
             },
-            "type": "button",
           },
-          "#type": "ReactElement",
+          "type": "button",
         },
       ],
       "props": Object {
-        "children": undefined,
+        "d": Object {
+          "children": undefined,
+        },
       },
       "type": Object {
-        "#type": "Symbol",
-        "name": "react.fragment",
+        "$": "Symbol",
+        "d": "react.fragment",
       },
     },
-    "#type": "ReactElement",
+  },
+  "x": Object {
+    "0": Object {
+      "i": "_signal",
+    },
+    "1": Object {
+      "i": "menuDispatch",
+    },
   },
 }
 `;
 
 exports[`menu 3`] = `
 Object {
-  "#shared": Object {
-    "0": Object {
-      "#oid": "_signal",
-    },
-    "1": Object {
-      "#oid": "menuDispatch",
-    },
-  },
-  "type": "MENU",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "type": "MENU",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         Object {
-          "#data": Object {
-            "children": Array [
-              "Menu1",
-            ],
-            "props": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu1",
+          ],
+          "props": Object {
+            "d": Object {
               "children": undefined,
               "key": ".$1",
               "onClick": Object {
-                "#data": Object {
-                  "args": Array [
-                    Object {
-                      "#ref": 1,
-                    },
-                    "Menu1",
-                    Object {
+                "$": "Bind",
+                "args": Array [
+                  Object {
+                    "r": 1,
+                  },
+                  "Menu1",
+                  Object {
+                    "d": Object {
                       "type": "Menu1",
                     },
-                  ],
-                  "func": Object {
-                    "#ref": 0,
                   },
-                  "self": null,
+                ],
+                "func": Object {
+                  "r": 0,
                 },
-                "#type": "Bind",
+                "self": null,
               },
             },
-            "type": "button",
           },
-          "#type": "ReactElement",
+          "type": "button",
         },
         Object {
-          "#data": Object {
-            "children": Array [
-              "Menu2",
-            ],
-            "props": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu2",
+          ],
+          "props": Object {
+            "d": Object {
               "children": undefined,
               "key": ".$2",
               "onClick": Object {
-                "#data": Object {
-                  "args": Array [
-                    Object {
-                      "#ref": 1,
-                    },
-                    "Menu2",
-                    Object {
+                "$": "Bind",
+                "args": Array [
+                  Object {
+                    "r": 1,
+                  },
+                  "Menu2",
+                  Object {
+                    "d": Object {
                       "type": "Menu2",
                     },
-                  ],
-                  "func": Object {
-                    "#ref": 0,
                   },
-                  "self": null,
+                ],
+                "func": Object {
+                  "r": 0,
                 },
-                "#type": "Bind",
+                "self": null,
               },
             },
-            "type": "button",
           },
-          "#type": "ReactElement",
+          "type": "button",
         },
         Object {
-          "#data": Object {
-            "children": Array [
-              "Menu3",
-            ],
-            "props": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu3",
+          ],
+          "props": Object {
+            "d": Object {
               "children": undefined,
               "key": ".$3",
               "onClick": Object {
-                "#data": Object {
-                  "args": Array [
-                    Object {
-                      "#ref": 1,
-                    },
-                    "Menu3",
-                    Object {
+                "$": "Bind",
+                "args": Array [
+                  Object {
+                    "r": 1,
+                  },
+                  "Menu3",
+                  Object {
+                    "d": Object {
                       "type": "Menu3",
                     },
-                  ],
-                  "func": Object {
-                    "#ref": 0,
                   },
-                  "self": null,
+                ],
+                "func": Object {
+                  "r": 0,
                 },
-                "#type": "Bind",
+                "self": null,
               },
             },
-            "type": "button",
           },
-          "#type": "ReactElement",
+          "type": "button",
         },
       ],
       "props": Object {
-        "children": undefined,
+        "d": Object {
+          "children": undefined,
+        },
       },
       "type": Object {
-        "#type": "Symbol",
-        "name": "react.fragment",
+        "$": "Symbol",
+        "d": "react.fragment",
       },
     },
-    "#type": "ReactElement",
+  },
+  "x": Object {
+    "0": Object {
+      "i": "_signal",
+    },
+    "1": Object {
+      "i": "menuDispatch",
+    },
   },
 }
 `;
 
 exports[`menu 4`] = `
 Object {
-  "type": "FLUSH",
+  "d": Object {
+    "type": "FLUSH",
+  },
 }
 `;

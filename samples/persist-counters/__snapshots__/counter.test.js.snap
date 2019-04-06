@@ -118,129 +118,149 @@ Array [
 
 exports[`prepControl 1`] = `
 Object {
-  "type": "MENU",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "type": "MENU",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         "Menu",
       ],
       "props": Object {
-        "children": undefined,
+        "d": Object {
+          "children": undefined,
+        },
       },
       "type": "span",
     },
-    "#type": "ReactElement",
   },
 }
 `;
 
 exports[`prepControl 2`] = `
 Object {
-  "type": "VALUE",
-  "value": 10,
+  "d": Object {
+    "type": "VALUE",
+    "value": 10,
+  },
 }
 `;
 
 exports[`prepControl 3`] = `
 Object {
-  "type": "CONTROL",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "type": "CONTROL",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         "Control",
       ],
       "props": Object {
-        "children": undefined,
+        "d": Object {
+          "children": undefined,
+        },
       },
       "type": "span",
     },
-    "#type": "ReactElement",
   },
 }
 `;
 
 exports[`prepControl 4`] = `
 Object {
-  "type": "COLLECTION",
-  "value": Object {
-    "CONTROL": Object {
-      "#data": Object {
-        "children": Array [
-          "Control",
-        ],
-        "props": Object {
-          "children": undefined,
+  "d": Object {
+    "type": "COLLECTION",
+    "value": Object {
+      "d": Object {
+        "CONTROL": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Control",
+          ],
+          "props": Object {
+            "d": Object {
+              "children": undefined,
+            },
+          },
+          "type": "span",
         },
-        "type": "span",
-      },
-      "#type": "ReactElement",
-    },
-    "MENU": Object {
-      "#data": Object {
-        "children": Array [
-          "Menu",
-        ],
-        "props": Object {
-          "children": undefined,
+        "MENU": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu",
+          ],
+          "props": Object {
+            "d": Object {
+              "children": undefined,
+            },
+          },
+          "type": "span",
         },
-        "type": "span",
+        "VALUE": 10,
       },
-      "#type": "ReactElement",
     },
-    "VALUE": 10,
   },
 }
 `;
 
 exports[`prepControl 5`] = `
 Object {
-  "type": "FLUSH",
+  "d": Object {
+    "type": "FLUSH",
+  },
 }
 `;
 
 exports[`prepControl 6`] = `
 Object {
-  "type": "VALUE",
-  "value": 11,
+  "d": Object {
+    "type": "VALUE",
+    "value": 11,
+  },
 }
 `;
 
 exports[`prepControl 7`] = `
 Object {
-  "type": "COLLECTION",
-  "value": Object {
-    "CONTROL": Object {
-      "#data": Object {
-        "children": Array [
-          "Control",
-        ],
-        "props": Object {
-          "children": undefined,
+  "d": Object {
+    "type": "COLLECTION",
+    "value": Object {
+      "d": Object {
+        "CONTROL": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Control",
+          ],
+          "props": Object {
+            "d": Object {
+              "children": undefined,
+            },
+          },
+          "type": "span",
         },
-        "type": "span",
-      },
-      "#type": "ReactElement",
-    },
-    "MENU": Object {
-      "#data": Object {
-        "children": Array [
-          "Menu",
-        ],
-        "props": Object {
-          "children": undefined,
+        "MENU": Object {
+          "$": "ReactElement",
+          "children": Array [
+            "Menu",
+          ],
+          "props": Object {
+            "d": Object {
+              "children": undefined,
+            },
+          },
+          "type": "span",
         },
-        "type": "span",
+        "VALUE": 11,
       },
-      "#type": "ReactElement",
     },
-    "VALUE": 11,
   },
 }
 `;
 
 exports[`prepControl 8`] = `
 Object {
-  "type": "FLUSH",
+  "d": Object {
+    "type": "FLUSH",
+  },
 }
 `;
 

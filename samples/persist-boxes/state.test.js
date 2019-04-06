@@ -28,10 +28,15 @@ test("saveLocal", () => {
   R.regOpaqueObject(data, "saveLocalData");
   (async () => {
     if (!(await R.managed)) return;
-    for await (const i of saveLocal(data()))
-      expect(R.write(i)).toMatchSnapshot();
-    expect(getItem).toHaveBeenLastCalledWith("boxes");
-    expect(setItem.mock.calls).toMatchSnapshot();
+    try {
+      for await (const i of saveLocal(data())) {
+        expect(R.write(i)).toMatchSnapshot();
+      }
+      expect(getItem).toHaveBeenLastCalledWith("boxes");
+      expect(setItem.mock.calls).toMatchSnapshot();
+    } catch (e) {
+      console.error(e);
+    }
   })()[R.awaitSymbol](exit);
   return res;
 });

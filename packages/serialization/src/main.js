@@ -40,10 +40,10 @@ export function write(value, opts) {
       let id = 0;
       const dict = {};
       for (const i of refs) {
-        dict[(i.ref["#ref"] = id++)] = i.data;
+        dict[(i.ref.r = id++)] = i.data;
         i.parent[i.index] = i.ref;
       }
-      return { ...res[0], "#shared": dict };
+      return { ...res[0], x: dict };
     }
   }
   return res[0];
@@ -64,11 +64,11 @@ export function read(json) {
     throw new TypeError("root value must be Object");
   const ctx = new ReadContext();
   const vals = (ctx.shared = new Map());
-  const { "#shared": shared } = json;
+  const { x } = json;
   const tasks = [];
-  if (shared) {
-    for (const i of Object.keys(shared)) {
-      const json = shared[i];
+  if (x) {
+    for (const i of Object.keys(x)) {
+      const json = x[i];
       const descriptor = getJsonDescriptor(json);
       const value = descriptor.create(ctx, json);
       vals.set(+i, value);
@@ -97,6 +97,21 @@ export function parse(json) {
   return read(JSON.parse(json));
 }
 
+const BindDescriptor = regDescriptor({
+  name: "Bind",
+  read(ctx, json) {
+    return bind(
+      ctx.step(json.func),
+      ctx.step(json.self),
+      ...ctx.step(json.args)
+    );
+  },
+  create(ctx, json) {
+    return this.read(ctx, json);
+  },
+  readContent() {}
+});
+
 /**
  * like `Function.prototype.bind` but returs serializable object if all
  * arguments are serializable
@@ -107,29 +122,19 @@ export function parse(json) {
  */
 export function bind(func, self, ...args) {
   const bind = (...rest) => func.apply(self, [...args, ...rest]);
-  bind[descriptorSymbol] = {
-    write(ctx) {
-      return {
-        "#type": BindDescriptor.name,
-        "#data": ctx.step({ func, self, args })
-      };
-    }
-  };
+  bind[descriptorSymbol] = refAwareDescriptor(
+    keysDescriptor({
+      write(ctx) {
+        const res = { $: BindDescriptor.name };
+        res.func = ctx.step(func, res, "func");
+        res.self = ctx.step(self, res, "self");
+        res.args = ctx.step(args, res, "args");
+        return res;
+      }
+    })
+  );
   return bind;
 }
-
-const BindDescriptor = regObjectDescriptor({
-  name: "Bind",
-  read(ctx, json) {
-    const data = ctx.step(json["#data"]);
-    return bind(data.func, data.self, ...data.args);
-  },
-  create(ctx, json) {
-    const data = ctx.step(json["#data"]);
-    return bind(data.func, data.self, ...data.args);
-  },
-  readContent() {}
-});
 
 /**
  * ## Extension
@@ -215,26 +220,6 @@ class ReadContext {
 }
 
 /**
- * if property name starts with `#` char it will double it
- * @private
- * @param {String} name
- * @returns {String}
- */
-function escape(name) {
-  return name[0] === "#" ? "#" + name : name;
-}
-
-/**
- * referce of `escape`
- * @private
- * @param {String} name
- * @returns {String}
- */
-function unescape(name) {
-  return name[0] === "#" ? (name[1] !== "#" ? null : name.substr(1)) : name;
-}
-
-/**
  * Helper for {@link Descriptor} implementation for Objects
  * @class ObjectDescriptor
  * @extends Descriptor
@@ -259,32 +244,30 @@ function unescape(name) {
  * default implementaiton of {@link ObjectDescriptor}
  * @implements ObjectDescriptor
  */
-const objectDescriptor = {
+const descriptorTemplate = {
   read(ctx, json) {
     const value = this.create(ctx, json);
     this.readContent(ctx, json, value);
     return value;
   },
   write(ctx, value) {
-    const parts = {};
-    for (const i of Object.keys(value))
-      parts[escape(i)] = ctx.step(value[i], parts, i);
-    if (this.valuePrototype !== void 0) parts["#type"] = this.name;
-    return parts;
+    const json = {};
+    if (value.constructor === Object) return json;
+    if (this.valuePrototype !== void 0) json.$ = this.name;
+    else {
+      json.p = ctx.step(Object.getPrototypeOf(value), json, "p");
+    }
+    return json;
   },
-  create() {
+  create(ctx, json) {
     if (this.valueConstructor) return new this.valueConstructor();
     if (this.valuePrototype !== void 0)
       return Object.create(this.valuePrototype);
+    const protoJson = json.p;
+    if (protoJson) return Object.create(ctx.step(protoJson));
     return {};
   },
-  readContent(ctx, json, value) {
-    for (const i in json) {
-      let name = unescape(i);
-      if (name == null) continue;
-      value[name] = ctx.step(json[i]);
-    }
-  }
+  readContent() {}
 };
 
 /**
@@ -296,34 +279,36 @@ const objectDescriptor = {
  * @returns {Descriptor}
  */
 export function refAwareDescriptor(descriptor) {
-  return descriptor.noRefs
-    ? descriptor
-    : {
-        ...descriptor,
-        read(ctx, json) {
-          const ref = json["#ref"];
-          if (ref != null) return ctx.shared.get(ref);
-          return this.readNoRef(ctx, json);
-        },
-        write(ctx, value, parent, index) {
-          let info = ctx.sharedRefs.get(value);
-          if (info == null) {
-            ctx.sharedRefs.set(
-              value,
-              (info = { ref: null, parent, index, descriptor })
-            );
-            if (this.always && parent) info.ref = {};
-            info.data = this.writeNoRef(ctx, value, parent, index);
-            ctx.refs.push(info);
-            return info.data;
-          }
-          if (info.ref == null) info.ref = {};
-          return info.ref;
-        },
-        writeNoRef: descriptor.write,
-        readNoRef: descriptor.read,
-        noRefs: descriptor
-      };
+  return {
+    read(ctx, json) {
+      const ref = json.r;
+      if (ref != null) return ctx.shared.get(ref);
+      return descriptor.read(ctx, json);
+    },
+    write(ctx, value, parent, index) {
+      let info = ctx.sharedRefs.get(value);
+      if (info == null) {
+        ctx.sharedRefs.set(
+          value,
+          (info = { ref: null, parent, index, descriptor })
+        );
+        if (this.always && parent) info.ref = {};
+        info.data = descriptor.write(ctx, value, parent, index);
+        ctx.refs.push(info);
+        return info.data;
+      }
+      if (info.ref == null) info.ref = {};
+      return info.ref;
+    },
+    create(ctx, json) {
+      return descriptor.create(ctx, json);
+    },
+    readContent(ctx, json, value) {
+      return descriptor.readContent(ctx, json, value);
+    },
+    noRefs: descriptor,
+    always: false
+  };
 }
 
 /**
@@ -333,7 +318,7 @@ export function refAwareDescriptor(descriptor) {
  * The name will be changed to a unique value if some other descriptor with the
  * same name is already registered.
  *
- * @param {Descriptor}
+ * @param {Descriptor} descriptor
  * @returns {Descriptor}
  */
 export function regDescriptor(descriptor) {
@@ -342,11 +327,13 @@ export function regDescriptor(descriptor) {
     i = 0;
   /* eslint-disable no-empty */
   for (; descriptorByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
-  descriptor = { ...descriptor, name: uniq };
-  descriptorByName.set(descriptor.name, descriptor);
+  let final = { ...descriptor, name: uniq };
+  if (descriptor.keys !== false) final = keysDescriptor(final);
+  if (descriptor.refAware !== false) final = refAwareDescriptor(final);
+  descriptorByName.set(uniq, final);
   if (descriptor.typeofTag)
-    descriptorByTypeOfProp.set(descriptor.typeofTag, descriptor);
-  return descriptor;
+    descriptorByTypeOfProp.set(descriptor.typeofTag, final);
+  return { ...final, name: uniq };
 }
 
 /**
@@ -385,16 +372,7 @@ function guessDescriptorName(descriptor) {
 }
 
 /**
- * Same as `regDescriptor` but ensures `descriptor` is references aware
- * @param {ObjectDescriptor} descriptor
- * @returns {Descriptor}
- */
-export function regObjectDescriptor(descriptor) {
-  return regDescriptor(refAwareDescriptor(descriptor));
-}
-
-/**
- * The function registers `value` as opaque. The library outputs names instead
+ * This function registers `value` as opaque. The library outputs names instead
  * of stored data for them. The values should be registered with the same name
  * on writing and reading sides. Adds `[descriptorSymbol]` property to the
  * value.
@@ -405,7 +383,7 @@ export function regObjectDescriptor(descriptor) {
  */
 export function regOpaqueObject(value, name = guessObjectName(value)) {
   if (value.hasOwnProperty(descriptorSymbol)) return value[descriptorSymbol];
-  return (value[descriptorSymbol] = regObjectDescriptor({
+  return (value[descriptorSymbol] = regDescriptor({
     ...OpaqueDescriptor,
     name,
     value
@@ -423,7 +401,12 @@ export function regOpaqueObject(value, name = guessObjectName(value)) {
 export function regOpaquePrim(value, name) {
   let descriptor;
   if ((descriptor = descriptorByValue.get(value))) return descriptor;
-  descriptor = regDescriptor({ ...OpaqueDescriptor, name, value });
+  descriptor = regDescriptor({
+    ...OpaqueDescriptor,
+    name,
+    value,
+    refAware: false
+  });
   descriptorByValue.set(value, descriptor);
   return descriptor;
 }
@@ -438,69 +421,108 @@ export function regOpaquePrim(value, name) {
  * @param {?Descriptor} descriptor
  * @returns {Descriptor}
  */
-export function regConstructor(constr, descriptor = objectDescriptor) {
+export function regConstructor(constr, descriptor = descriptorTemplate) {
   const prototype = constr.prototype;
-  return (prototype[descriptorSymbol] = regDescriptor(
-    refAwareDescriptor({
-      ...descriptor,
-      valuePrototype: prototype,
-      name: constr.name
-    })
-  ));
+  return (prototype[descriptorSymbol] = regDescriptor({
+    valuePrototype: prototype,
+    name: constr.name,
+    ...descriptor
+  }));
 }
 
-const PojsoDescriptor = regObjectDescriptor(objectDescriptor);
+/** same as `regConstructor` but it also uses `constr` with new to build the object */
+export function regNewConstructor(constr, descriptor = descriptorTemplate) {
+  return regConstructor(constr, { valueConstructor: constr, ...descriptor });
+}
+
+const PojsoDescriptor = regDescriptor(descriptorTemplate);
 
 const PrimDescriptor = {
+  read(ctx, json) {
+    return json;
+  },
   write(ctx, value) {
     return value;
   },
-  read(ctx, json) {
-    return json;
-  }
+  refAware: false,
+  keys: false
 };
 
 const RefDescriptor = {
   read(ctx, json) {
-    return ctx.shared.get(json["#ref"]);
+    return ctx.shared.get(json.r);
   }
 };
+
+/** wraps descriptor by adding its own property into the saved dictionary */
+function keysDescriptor(descriptor) {
+  return {
+    write(ctx, value) {
+      const json = descriptor.write(ctx, value);
+      const keys = Object.keys(value);
+      if (!keys.length) return json;
+      const props = (json.d = {});
+      for (const i of keys) props[i] = ctx.step(value[i], props, i);
+      return json;
+    },
+    read(ctx, json) {
+      const value = descriptor.read(ctx, json);
+      const props = json.d;
+      if (!props) return value;
+      for (const i in props) value[i] = ctx.step(props[i]);
+      return value;
+    },
+    readContent(ctx, json, value) {
+      descriptor.readContent(ctx, json, value);
+      const props = json.d;
+      if (props) for (const i in props) value[i] = ctx.step(props[i]);
+    },
+    create(ctx, json) {
+      return descriptor.create(ctx, json);
+    }
+  };
+}
 
 const OpaqueDescriptor = {
   read(ctx, json) {
     return this.create(ctx, json);
   },
+  write() {
+    return { i: this.name };
+  },
   readContent() {},
   create(ctx, json) {
-    const res = descriptorByName.get(json["#oid"]);
-    if (!res) throw new Error(`not found object ${json["#oid"]}`);
+    const res = descriptorByName.get(json.i);
+    if (!res) throw new Error(`not found object ${json.i}`);
     return this.value;
   },
-  write() {
-    return { "#oid": this.name };
-  }
+  keys: false
 };
 
 const SymbolDescriptor = regDescriptor({
   write(ctx, value) {
-    return { "#type": "Symbol", name: Symbol.keyFor(value) };
+    return { $: "Symbol", d: Symbol.keyFor(value) };
   },
   read(ctx, value) {
-    return Symbol.for(value.name);
+    return Symbol.for(value.d);
   },
-  name: "Symbol"
+  name: "Symbol",
+  refAware: false,
+  keys: false
 });
 
 let BigIntDescriptor =
   typeof BigInt === "function" &&
   regDescriptor({
-    write(ctx, value) {
-      return { "#int": value.toString() };
-    },
     read(ctx, value) {
-      return BigInt(value["#int"]);
+      return BigInt(value.int);
     },
-    name: "BigInt"
+    write(ctx, value) {
+      return { int: value.toString() };
+    },
+    name: "BigInt",
+    refAware: false,
+    keys: false
   });
 
 function getValueDescriptor(value) {
@@ -540,50 +562,54 @@ function lookupDescriptor(typeName) {
 function getJsonDescriptor(json) {
   if (!json || typeof json !== "object") return PrimDescriptor;
   if (Array.isArray(json)) return ArrayDescriptor;
-  if ("#ref" in json) return RefDescriptor;
-  if ("#oid" in json) return lookupDescriptor(json["#oid"]);
-  if ("#type" in json) return lookupDescriptor(json["#type"]);
-  if ("#int" in json) return BigIntDescriptor;
+  if ("r" in json) return RefDescriptor;
+  if ("i" in json) return lookupDescriptor(json.i);
+  if ("$" in json) return lookupDescriptor(json.$);
+  if ("int" in json) return BigIntDescriptor;
   return PojsoDescriptor;
 }
 
-const ArrayDescriptor = regConstructor(Array, {
-  ...objectDescriptor,
-  write(ctx, value) {
-    const res = [];
-    for (const i of value) res.push(ctx.step(i, res, res.length));
-    return res;
-  },
-  valueConstructor: Array,
-  name: "Array",
-  readContent(ctx, json, value) {
-    for (const i of json) value.push(ctx.step(i));
-  }
-});
-
-const IterableDescriptor = {
-  ...objectDescriptor,
+const ArrayDescriptor = regNewConstructor(Array, {
+  ...descriptorTemplate,
   write(ctx, value) {
     const json = [];
     for (const i of value) json.push(ctx.step(i, json, json.length));
-    return { "#type": this.name, "#data": json };
+    return json;
   },
   readContent(ctx, json, value) {
-    for (const i of json["#data"]) value.add(ctx.step(i));
+    for (const i of json) value.push(ctx.step(i));
+  },
+  keys: false
+});
+
+const IterableDescriptor = {
+  ...descriptorTemplate,
+  write(ctx, value) {
+    const json = [];
+    for (const i of value) json.push(ctx.step(i, json, json.length));
+    return { $: this.name, l: json };
+  },
+  readContent(ctx, json, value) {
+    for (const i of json.l) value.add(ctx.step(i));
   }
 };
 
-regConstructor(Set, {
-  ...IterableDescriptor,
-  valueConstructor: Set,
-  name: "Set"
-});
+regNewConstructor(Set, IterableDescriptor);
 
-regConstructor(Map, {
+regNewConstructor(Map, {
   ...IterableDescriptor,
-  valueConstructor: Map,
-  name: "Map",
+  write(ctx, value) {
+    const k = [];
+    const v = [];
+    for (const [ki, vi] of value) {
+      k.push(ctx.step(ki, k, k.length));
+      v.push(ctx.step(vi, v, v.length));
+    }
+    return { $: this.name, k, v };
+  },
   readContent(ctx, json, value) {
-    for (const [k, v] of json["#data"]) value.set(ctx.step(k), ctx.step(v));
+    const { k, v } = json;
+    for (let i = 0, len = k.length; i < len; ++i)
+      value.set(ctx.step(k[i]), ctx.step(v[i]));
   }
 });

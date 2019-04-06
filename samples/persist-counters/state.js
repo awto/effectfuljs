@@ -11,8 +11,9 @@ import * as R from "@effectful/es-persist-serialization";
  */
 export async function save() {
   const resume = await R.idle;
-  if (resume && resume.resume)
-    return R.write({ running: R.context().running, resume });
+  if (resume && resume.resume) {
+    return { resume: R.write({ running: R.context().running, resume }) };
+  }
   return resume;
 }
 
@@ -28,7 +29,7 @@ export async function save() {
  */
 export async function load(from, param) {
   if (!from) return;
-  const state = R.read(from);
+  const state = R.read(from.resume);
   R.context().running = state.running;
   state.resume.resume(param);
   await R.abort;

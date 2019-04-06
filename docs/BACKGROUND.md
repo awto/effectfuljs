@@ -45,9 +45,6 @@ Continuations based implementation doesn't allow detecting and automatically
 generating Applicative combinators instead of Monadic ones, for more efficient
 code (this is going to be implemented SOON).
 
-There are also concrete side effects compilers with single level syntax,
-for example flapjax and webppl.
-
 There are a few languages now with direct style effects operations using type 
 system extensions - Algebraic Effects. E.g. [koka](https://github.com/koka-lang/koka)
 or [eff](https://github.com/matijapretnar/eff). Types provide additional safety 

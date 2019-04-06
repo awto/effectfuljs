@@ -7,23 +7,14 @@ describe("plain object output", function() {
       const obj1 = { a: 1, b: "b", c: true };
       const res = Lib.write(obj1);
       assert.notStrictEqual(res, obj1);
-      assert.deepStrictEqual(res, obj1);
-      assert.equal(Lib.stringify(obj1), JSON.stringify(obj1));
+      assert.deepStrictEqual(res, { d: obj1 });
+      assert.equal(Lib.stringify(obj1), JSON.stringify({ d: obj1 }));
       const obj2 = { obj1 };
-      assert.deepStrictEqual(Lib.write(obj2), obj2);
-      assert.equal(Lib.stringify(obj2), JSON.stringify(obj2));
-    });
-  });
-  context("for objects with `#` prefix in props", function() {
-    it("should escape the props", function() {
-      const obj1 = { "#a": 1 };
-      const res1 = Lib.write(obj1);
-      assert.notStrictEqual(res1, obj1);
-      assert.deepStrictEqual(res1, { "##a": 1 });
-      const obj2 = { obj1 };
-      const res2 = Lib.write(obj2);
-      assert.notStrictEqual(res2, obj2);
-      assert.deepStrictEqual(res2, { obj1: { "##a": 1 } });
+      assert.deepStrictEqual(Lib.write(obj2), { d: { obj1: { d: obj1 } } });
+      assert.equal(
+        Lib.stringify(obj2),
+        JSON.stringify({ d: { obj1: { d: obj1 } } })
+      );
     });
   });
   it("should have correct format for shared values", function() {
@@ -31,16 +22,20 @@ describe("plain object output", function() {
     root.rec1 = { obj1: root, obj2: root, obj3: { obj: root } };
     root.rec2 = root;
     assert.deepStrictEqual(Lib.write(root), {
-      "#ref": 0,
-      "#shared": {
+      r: 0,
+      x: {
         0: {
-          val: "hi",
-          rec1: {
-            obj1: { "#ref": 0 },
-            obj2: { "#ref": 0 },
-            obj3: { obj: { "#ref": 0 } }
-          },
-          rec2: { "#ref": 0 }
+          d: {
+            val: "hi",
+            rec1: {
+              d: {
+                obj1: { r: 0 },
+                obj2: { r: 0 },
+                obj3: { d: { obj: { r: 0 } } }
+              }
+            },
+            rec2: { r: 0 }
+          }
         }
       }
     });
@@ -48,35 +43,22 @@ describe("plain object output", function() {
 });
 
 describe("reading plain object", function() {
-  context("for `JSON.stringify` serializable objects", function() {
-    it("should produce same result as `JSON.parse`", function() {
-      const obj1 = { a: 1, b: "b", c: true };
-      const str = JSON.stringify(obj1);
-      assert.deepStrictEqual(Lib.parse(str), obj1);
-      const obj2 = { obj1 };
-      assert.deepStrictEqual(Lib.read(obj2), obj2);
-    });
-  });
-  context("for objects with `#` prefix in props", function() {
-    it("should un-escape the props", function() {
-      const obj1 = { "##a": 1 };
-      assert.deepStrictEqual(Lib.read(obj1), { "#a": 1 });
-      const obj2 = { obj1 };
-      assert.deepStrictEqual(Lib.read(obj2), { obj1: { "#a": 1 } });
-    });
-  });
   it("should correctly assign shared values", function() {
     const obj = Lib.read({
-      "#ref": 0,
-      "#shared": {
+      r: 0,
+      x: {
         0: {
-          val: "hi",
-          rec1: {
-            obj1: { "#ref": 0 },
-            obj2: { "#ref": 0 },
-            obj3: { obj: { "#ref": 0 } }
-          },
-          rec2: { "#ref": 0 }
+          d: {
+            val: "hi",
+            rec1: {
+              d: {
+                obj1: { r: 0 },
+                obj2: { r: 0 },
+                obj3: { d: { obj: { r: 0 } } }
+              }
+            },
+            rec2: { r: 0 }
+          }
         }
       }
     });
@@ -113,25 +95,29 @@ describe("object with parent", function() {
     this.c = true;
   }
   Lib.regConstructor(MyObj);
-  it("should output `#type` attribute", function() {
+  it("should output `t` attribute", function() {
     const obj1 = new MyObj();
     assert.deepEqual(Lib.write(obj1), {
-      "#type": "MyObj",
-      a: 1,
-      b: "b",
-      c: true
+      $: "MyObj",
+      d: {
+        a: 1,
+        b: "b",
+        c: true
+      }
     });
     function Object() {
       this.a = obj1;
     }
     Lib.regConstructor(Object);
     assert.deepEqual(Lib.write(new Object()), {
-      "#type": "Object_1",
-      a: { "#type": "MyObj", a: 1, b: "b", c: true }
+      $: "Object_1",
+      d: {
+        a: { $: "MyObj", d: { a: 1, b: "b", c: true } }
+      }
     });
   });
-  it("should use `#type` attribute to resolve prototype on read", function() {
-    const obj1 = Lib.read({ "#type": "MyObj", a: 1, b: "b", c: true });
+  it("should use `t` attribute to resolve prototype on read", function() {
+    const obj1 = Lib.read({ $: "MyObj", d: { a: 1, b: "b", c: true } });
     assert.strictEqual(obj1.constructor, MyObj);
     assert.equal(
       Object.keys(obj1)
@@ -146,29 +132,33 @@ describe("object with parent", function() {
   context("for shared values", function() {
     function Obj2() {}
     Lib.regConstructor(Obj2);
-    it("should write shared values in `#shared` map", function() {
+    it("should write shared values in `shared` map", function() {
       const root = new Obj2();
       root.l1 = new Obj2();
       root.l1.back = root.l1;
       assert.deepStrictEqual(Lib.write(root), {
-        "#type": "Obj2",
-        l1: { "#ref": 0 },
-        "#shared": {
+        $: "Obj2",
+        d: {
+          l1: { r: 0 }
+        },
+        x: {
           0: {
-            "#type": "Obj2",
-            back: { "#ref": 0 }
+            $: "Obj2",
+            d: {
+              back: { r: 0 }
+            }
           }
         }
       });
     });
     it("should use `#shared` keys to resolve prototypes on read", function() {
       const obj1 = Lib.read({
-        "#type": "Obj2",
-        l1: { "#ref": 0 },
-        "#shared": {
+        $: "Obj2",
+        d: { l1: { r: 0 } },
+        x: {
           0: {
-            "#type": "Obj2",
-            back: { "#ref": 0 }
+            $: "Obj2",
+            d: { back: { r: 0 } }
           }
         }
       });
@@ -186,10 +176,10 @@ describe("arrays serialization", function() {
     it("should be similar to `JSON.stringify`/`JSON.parse`", function() {
       const obj = { arr: [1, "a", [true, [false, null]], undefined] };
       const res = Lib.write(obj);
-      assert.notStrictEqual(res, obj);
-      assert.deepStrictEqual(res, obj);
+      assert.notStrictEqual(res.d, obj);
+      assert.deepStrictEqual(res, { d: obj });
       const back = Lib.read(res);
-      assert.notStrictEqual(res, back);
+      assert.notStrictEqual(res.d, back);
       assert.deepStrictEqual(obj, back);
     });
     it("doesn't support Array as root", function() {
@@ -202,9 +192,9 @@ describe("arrays serialization", function() {
     const res = Lib.write(obj);
     assert.notStrictEqual(res, obj);
     assert.deepStrictEqual(res, {
-      arr: { "#ref": 0 },
-      "#shared": {
-        0: [1, "a", [true, [false, null]], undefined, { "#ref": 0 }]
+      d: { arr: { r: 0 } },
+      x: {
+        0: [1, "a", [true, [false, null]], undefined, { r: 0 }]
       }
     });
     const back = Lib.read(res);
@@ -218,11 +208,20 @@ describe("`Set` serialization", function() {
     it("should output `JSON.stringify` serializable object", function() {
       const arr = [1, "a", [true, [false, null]], undefined];
       const obj = { set: new Set(arr) };
+      obj.set.someNum = 100;
+      obj.set.self = obj.set;
       const res = Lib.write(obj);
       assert.deepStrictEqual(res, {
-        set: {
-          "#type": "Set",
-          "#data": arr
+        d: { set: { r: 0 } },
+        x: {
+          "0": {
+            $: "Set",
+            l: [1, "a", [true, [false, null]], undefined],
+            d: {
+              someNum: 100,
+              self: { r: 0 }
+            }
+          }
         }
       });
       const back = Lib.read(res);
@@ -235,11 +234,11 @@ describe("`Set` serialization", function() {
     const res = Lib.write(obj);
     assert.notStrictEqual(res, obj);
     assert.deepStrictEqual(res, {
-      "#ref": 0,
-      "#shared": {
+      r: 0,
+      x: {
         0: {
-          "#type": "Set",
-          "#data": [1, "a", [true, [false, null]], undefined, { "#ref": 0 }]
+          $: "Set",
+          l: [1, "a", [true, [false, null]], undefined, { r: 0 }]
         }
       }
     });
@@ -256,9 +255,12 @@ describe("`Map` serialization", function() {
       const obj = { map: new Map(arr) };
       const res = Lib.write(obj);
       assert.deepStrictEqual(res, {
-        map: {
-          "#type": "Map",
-          "#data": [[1, "a"], [true, [false, null]], [undefined, undefined]]
+        d: {
+          map: {
+            $: "Map",
+            k: [1, true, undefined],
+            v: ["a", [false, null], undefined]
+          }
         }
       });
       const back = Lib.read(res);
@@ -271,16 +273,12 @@ describe("`Map` serialization", function() {
     const res = Lib.write(obj);
     assert.notStrictEqual(res, obj);
     assert.deepStrictEqual(res, {
-      "#ref": 0,
-      "#shared": {
+      r: 0,
+      x: {
         0: {
-          "#type": "Map",
-          "#data": [
-            [1, "a"],
-            [true, [false, null]],
-            [undefined, undefined],
-            [{ "#ref": 0 }, { "#ref": 0 }]
-          ]
+          $: "Map",
+          k: [1, true, undefined, { r: 0 }],
+          v: ["a", [false, null], undefined, { r: 0 }]
         }
       }
     });
@@ -298,20 +296,20 @@ describe("opaque objects serialization", function() {
   it("should not throw if `ignore:true`", function() {
     function a() {}
     assert.deepStrictEqual(Lib.write({ a }, { ignore: true }), {
-      a: undefined
+      d: { a: undefined }
     });
   });
   it("should output object's name if registered", function() {
     function a() {}
     Lib.regOpaqueObject(a);
-    assert.deepStrictEqual(Lib.write({ a }), { a: { "#oid": "a" } });
+    assert.deepStrictEqual(Lib.write({ a }), { d: { a: { i: "a" } } });
     Lib.regOpaqueObject(a);
-    assert.deepStrictEqual(Lib.read({ a: { "#oid": "a" } }), { a });
+    assert.deepStrictEqual(Lib.read({ d: { a: { i: "a" } } }), { a });
     (function() {
       function a() {}
       Lib.regOpaqueObject(a);
-      assert.deepStrictEqual(Lib.write({ a }), { a: { "#oid": "a_1" } });
-      assert.deepStrictEqual(Lib.read({ a: { "#oid": "a_1" } }), { a });
+      assert.deepStrictEqual(Lib.write({ a }), { d: { a: { i: "a_1" } } });
+      assert.deepStrictEqual(Lib.read({ d: { a: { i: "a_1" } } }), { a });
     })();
   });
 });
@@ -321,14 +319,14 @@ describe("opaque primitive value serialization", function() {
     const a = Symbol("a");
     Lib.regOpaquePrim(a, "sa");
     assert.ok(!a[Lib.descriptorSymbol]);
-    assert.deepStrictEqual(Lib.write({ a }), { a: { "#oid": "sa" } });
+    assert.deepStrictEqual(Lib.write({ a }), { d: { a: { i: "sa" } } });
     Lib.regOpaquePrim(a, "sb");
-    assert.deepStrictEqual(Lib.read({ a: { "#oid": "sa" } }), { a });
+    assert.deepStrictEqual(Lib.read({ d: { a: { i: "sa" } } }), { a });
     (function() {
       const a = Symbol("a");
       Lib.regOpaquePrim(a, "sa");
-      assert.deepStrictEqual(Lib.write({ a }), { a: { "#oid": "sa_1" } });
-      assert.deepStrictEqual(Lib.read({ a: { "#oid": "sa_1" } }), { a });
+      assert.deepStrictEqual(Lib.write({ a }), { d: { a: { i: "sa_1" } } });
+      assert.deepStrictEqual(Lib.read({ d: { a: { i: "sa_1" } } }), { a });
     })();
   });
 });
@@ -341,14 +339,15 @@ describe("type with `$$typeof` attribute", function() {
       return { $$typeof: 100 };
     },
     write(ctx, value) {
-      return { "#type": "hundred" };
-    }
+      return { $: "hundred" };
+    },
+    keys: false
   });
   it("should use overriden methods", function() {
     assert.deepStrictEqual(Lib.write({ $$typeof: 100 }), {
-      "#type": "hundred"
+      $: "hundred"
     });
-    assert.deepStrictEqual(Lib.read({ "#type": "hundred" }), { $$typeof: 100 });
+    assert.deepStrictEqual(Lib.read({ $: "hundred" }), { $$typeof: 100 });
   });
 });
 
@@ -365,14 +364,22 @@ describe("bind function arguments", function() {
     Lib.regOpaqueObject(f1);
     Lib.regOpaqueObject(a1, "arg");
     Lib.regOpaqueObject(a2, "arg");
-    const fjson = Lib.write({ f: Lib.bind(f1, obj, a1, a2) });
+    const bind = Lib.bind(f1, obj, a1, a2);
+    bind.someNum = 100;
+    bind.self = bind;
+    const fjson = Lib.write({ f: bind });
     assert.deepStrictEqual(fjson, {
-      f: {
-        "#type": "Bind",
-        "#data": {
-          func: { "#oid": "f1" },
-          self: { "#oid": "obj" },
-          args: [{ "#oid": "arg" }, { "#oid": "arg_1" }]
+      d: { f: { r: 0 } },
+      x: {
+        "0": {
+          $: "Bind",
+          func: { i: "f1" },
+          self: { i: "obj" },
+          args: [{ i: "arg" }, { i: "arg_1" }],
+          d: {
+            someNum: 100,
+            self: { r: 0 }
+          }
         }
       }
     });
@@ -392,8 +399,8 @@ describe("BigInt", function() {
   it("should be serializable", function() {
     const num = 2n ** 10000n;
     const doc = Lib.write({ num });
-    assert.ok(doc.num["#int"].substr);
-    assert.equal(doc.num["#int"].length, 3011);
+    assert.ok(doc.d.num.int.substr);
+    assert.equal(doc.d.num["int"].length, 3011);
     assert.strictEqual(Lib.read(doc).num, num);
   });
 });

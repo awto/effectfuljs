@@ -2,57 +2,69 @@
 
 exports[`persist 1`] = `
 Object {
-  "#shared": Object {
-    "0": Object {
-      "#type": "Async$1",
-      "$last": 6,
-      "$step": 7,
-      "_i": "hi",
-      "cont": Object {
-        "#type": "Residual",
-        "dest": Array [
-          Object {
-            "#oid": "persistExit",
-          },
-        ],
-        "state": 0,
-      },
-      "dest": Array [],
-      "state": 0,
-      "value": undefined,
-    },
-    "1": Object {
-      "#type": "save",
-      "$arg": undefined,
-      "$last": 6,
-      "$step": 6,
-      "cont": Object {
-        "#type": "Residual",
-        "dest": Array [
-          Object {
-            "#ref": 0,
-          },
-        ],
-        "state": 0,
-      },
-      "dest": Array [],
-      "state": 0,
-      "value": undefined,
-    },
-  },
   "resume": Object {
-    "#ref": 1,
-  },
-  "running": Object {
-    "#data": Array [
-      Object {
-        "#ref": 0,
+    "d": Object {
+      "resume": Object {
+        "r": 1,
       },
-      Object {
-        "#ref": 1,
+      "running": Object {
+        "$": "Set",
+        "l": Array [
+          Object {
+            "r": 0,
+          },
+          Object {
+            "r": 1,
+          },
+        ],
       },
-    ],
-    "#type": "Set",
+    },
+    "x": Object {
+      "0": Object {
+        "$": "Async$1",
+        "d": Object {
+          "$last": 6,
+          "$step": 7,
+          "_i": "hi",
+          "cont": Object {
+            "$": "Residual",
+            "d": Object {
+              "dest": Array [
+                Object {
+                  "i": "persistExit",
+                },
+              ],
+              "state": 0,
+            },
+          },
+          "dest": Array [],
+          "state": 0,
+          "value": undefined,
+        },
+      },
+      "1": Object {
+        "$": "save",
+        "d": Object {
+          "$arg": undefined,
+          "$last": 6,
+          "$step": 6,
+          "cont": Object {
+            "$": "Residual",
+            "d": Object {
+              "dest": Array [
+                Object {
+                  "r": 0,
+                },
+              ],
+              "state": 0,
+            },
+          },
+          "dest": Array [],
+          "state": 0,
+          "value": undefined,
+        },
+      },
+    },
   },
 }
 `;

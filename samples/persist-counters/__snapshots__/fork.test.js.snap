@@ -2,70 +2,98 @@
 
 exports[`fork 1`] = `
 Object {
-  "key": 1,
-  "type": "ITEM",
-  "value": Object {
-    "type": "BAR",
+  "d": Object {
+    "key": 1,
+    "type": "ITEM",
+    "value": Object {
+      "d": Object {
+        "type": "BAR",
+      },
+    },
   },
 }
 `;
 
 exports[`fork 2`] = `
 Object {
-  "key": 2,
-  "type": "ITEM",
-  "value": Object {
-    "type": "BAR",
+  "d": Object {
+    "key": 2,
+    "type": "ITEM",
+    "value": Object {
+      "d": Object {
+        "type": "BAR",
+      },
+    },
   },
 }
 `;
 
 exports[`fork 3`] = `
 Object {
-  "key": 2,
-  "type": "ITEM",
-  "value": Object {
-    "type": "BAR2",
+  "d": Object {
+    "key": 2,
+    "type": "ITEM",
+    "value": Object {
+      "d": Object {
+        "type": "BAR2",
+      },
+    },
   },
 }
 `;
 
 exports[`fork 4`] = `
 Object {
-  "key": 1,
-  "type": "ITEM",
-  "value": Object {
-    "type": "DELETE",
+  "d": Object {
+    "key": 1,
+    "type": "ITEM",
+    "value": Object {
+      "d": Object {
+        "type": "DELETE",
+      },
+    },
   },
 }
 `;
 
 exports[`fork 5`] = `
 Object {
-  "key": 2,
-  "type": "ITEM",
-  "value": Object {
-    "type": "BAR",
+  "d": Object {
+    "key": 2,
+    "type": "ITEM",
+    "value": Object {
+      "d": Object {
+        "type": "BAR",
+      },
+    },
   },
 }
 `;
 
 exports[`fork 6`] = `
 Object {
-  "key": 2,
-  "type": "ITEM",
-  "value": Object {
-    "type": "BAR2",
+  "d": Object {
+    "key": 2,
+    "type": "ITEM",
+    "value": Object {
+      "d": Object {
+        "type": "BAR2",
+      },
+    },
   },
 }
 `;
 
 exports[`fork 7`] = `
 Object {
-  "key": 2,
-  "type": "ITEM",
-  "value": Object {
-    "type": "DELETE",
+  "d": Object {
+    "key": 2,
+    "type": "ITEM",
+    "value": Object {
+      "d": Object {
+        "type": "DELETE",
+      },
+    },
   },
 }
 `;

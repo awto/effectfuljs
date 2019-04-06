@@ -1,5 +1,5 @@
 const Lib = require("@effectful/serialization");
-Lib.regDescriptor(require("../src/main"));
+require("../src/main");
 
 const assert = require("assert");
 const React = require("react");
@@ -11,21 +11,27 @@ describe("serializable react element", function() {
         hi
       </div>
     );
-    const elJson = Lib.write(el);
+    const elJson = Lib.write({ el });
     assert.deepStrictEqual(elJson, {
-      "#type": "ReactElement",
-      "#data": {
-        props: {
-          class: "myClass",
-          style: { paddingLeft: 10 },
-          children: void 0
-        },
-        children: ["hi"],
-        type: "div"
+      d: {
+        el: {
+          $: "ReactElement",
+          props: {
+            d: {
+              class: "myClass",
+              style: {
+                d: { paddingLeft: 10 }
+              },
+              children: undefined
+            }
+          },
+          children: ["hi"],
+          type: "div"
+        }
       }
     });
     const rel = Lib.read(elJson);
-    assert.notStrictEqual(el, rel);
-    assert.deepStrictEqual(el, rel);
+    assert.notStrictEqual(el, rel.el);
+    assert.deepStrictEqual(el, rel.el);
   });
 });

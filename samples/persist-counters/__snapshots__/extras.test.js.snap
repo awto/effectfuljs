@@ -2,90 +2,92 @@
 
 exports[`incrementAsync 1`] = `
 Object {
-  "index": 300,
-  "type": "MENU_ITEM",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "index": 300,
+    "type": "MENU_ITEM",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         "Increment Async",
       ],
       "props": Object {
-        "children": undefined,
-        "onClick": Object {
-          "#data": Object {
+        "d": Object {
+          "children": undefined,
+          "onClick": Object {
+            "$": "Bind",
             "args": Array [
               Object {
-                "#oid": "extrasDispatch",
+                "i": "extrasDispatch",
               },
             ],
             "func": Object {
-              "#oid": "runIncrementAsync",
+              "i": "runIncrementAsync",
             },
             "self": undefined,
           },
-          "#type": "Bind",
         },
       },
       "type": "button",
     },
-    "#type": "ReactElement",
   },
 }
 `;
 
 exports[`incrementIfOdd 1`] = `
 Object {
-  "index": 400,
-  "type": "MENU_ITEM",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "index": 400,
+    "type": "MENU_ITEM",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         "Increment if odd",
       ],
       "props": Object {
-        "children": undefined,
-        "onClick": Object {
-          "#data": Object {
+        "d": Object {
+          "children": undefined,
+          "onClick": Object {
+            "$": "Bind",
             "args": Array [
               Object {
-                "#oid": "extrasDispatch",
+                "i": "extrasDispatch",
               },
               "INCREMENT",
               undefined,
             ],
             "func": Object {
-              "#oid": "_signal",
+              "i": "_signal",
             },
             "self": null,
           },
-          "#type": "Bind",
         },
       },
       "type": "button",
     },
-    "#type": "ReactElement",
   },
 }
 `;
 
 exports[`incrementIfOdd 2`] = `
 Object {
-  "index": 400,
-  "type": "MENU_ITEM",
-  "value": Object {
-    "#data": Object {
+  "d": Object {
+    "index": 400,
+    "type": "MENU_ITEM",
+    "value": Object {
+      "$": "ReactElement",
       "children": Array [
         "Increment if odd",
       ],
       "props": Object {
-        "children": undefined,
-        "onClick": Object {
-          "#oid": "nop",
+        "d": Object {
+          "children": undefined,
+          "onClick": Object {
+            "i": "nop",
+          },
         },
       },
       "type": "button",
     },
-    "#type": "ReactElement",
   },
 }
 `;
