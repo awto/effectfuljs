@@ -1,8 +1,10 @@
 # JavaScript embedded effects compiler
 
-This is a JavaScript to JavaScript transpiler. It extends JavaScript
-language with various computation effects by means of runtime
-libraries.
+[![Build Status](https://travis-ci.org/awto/effectfuljs.svg?branch=master)](https://travis-ci.org/awto/effectfuljs)
+
+This is a tool to build JavaScript to JavaScript transpilers(babel plugins) 
+along with a few predefined ones. It extends JavaScript language with
+various computation effects by means of runtime libraries but without any syntax extension.
 
 There are such libraries for:
 
@@ -14,7 +16,7 @@ There are such libraries for:
      * Persistent state -
        [@effectful/es-persist](https://github.com/awto/effectfuljs/tree/master/packages/es-persist)
      * Concrete API -
-       [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es),
+       [@effectful/es-inline](https://github.com/awto/effectfuljs/tree/master/packages/es-inline),
        the best performance
      * Implicit parallelism
      * Deriving program's static graphs for analysis and conversion to other
@@ -37,6 +39,34 @@ Observables.
 The compiler converts ES2018 to ES2018 and doesn't need any syntax
 extensions.  So it may be applied to results of other compilers
 targeting JS such as CoffeeScript, TypeScript etc.
+
+## Usage
+
+EffectfulJS is a tool to build transpilers. There are many packaging
+options and usages, but typically the follow next
+pattern. Transformations usually contain a babel plugin (and/or macro)
+along with some runtime. They can be in a single package, with
+Effectful to be a peer dependency (along with a dev dependency). This
+way the transpiler can be installed with:
+
+```
+$ npm install --save <lib name>
+$ npm install --save-dev @effectful/core
+```
+
+If the babel plugin is in `transform.js`  of `<lib name>` package,  `.babelrc` can be:
+
+```
+{
+   "plugins": [<lib name>/transform]
+}
+```
+
+The package can also contain `macro.js` file for zero-configuration using
+[babel-plugin-macros](https://github.com/kentcdodds/babel-plugin-macros). This works also for
+[Create Reat App](https://github.com/facebook/create-react-app)) where `.babelrc` is disabled.
+
+See libraries documentation for exact details.
 
 ## Examples
 
