@@ -2,18 +2,22 @@
   "env": {
     "build": {
       "plugins": [
-        ["@babel/plugin-transform-for-of", {"loose": true}],
-        ["@babel/plugin-proposal-object-rest-spread", { "loose": true, "useBuiltIns": true }],
-        ["@babel/plugin-transform-spread", {"loose": true}],
-        ["@babel/plugin-transform-destructuring",{"useBuiltIns":true}],
-        ["@babel/plugin-transform-block-scoping",{"throwIfClosureRequired":true}],
-        "@babel/plugin-transform-shorthand-properties",
-        "@babel/plugin-transform-arrow-functions"
+        [
+          "@babel/proposal-object-rest-spread",
+          { "loose": true, "useBuiltIns": true }
+        ],
+        ["@babel/transform-spread", { "loose": true }],
+        ["@babel/transform-destructuring", { "useBuiltIns": true }],
+        ["@babel/transform-block-scoping", { "throwIfClosureRequired": true }],
+        "@babel/transform-shorthand-properties",
+        "@babel/transform-arrow-functions"
       ]
     },
     "development": {
-      "plugins": ["@babel/plugin-proposal-object-rest-spread",
-                  "@babel/transform-modules-commonjs"]
+      "plugins": [
+        "@babel/proposal-object-rest-spread",
+        "@babel/transform-modules-commonjs"
+      ]
     }
   }
 }

@@ -195,10 +195,18 @@ class WriteContext {
    *                               or number index if it is an array
    */
   step(value, parent, key) {
-    const descriptor = getValueDescriptor(value);
+    let descriptor = getValueDescriptor(value);
     if (!descriptor) {
-      if (this.ignore) return void 0;
-      throw new TypeError(`not writable value ${value} at ${key} of ${parent}`);
+      if (this.ignore === true) return void 0;
+      if (this.ignore === "opaque") {
+        descriptor =
+          typeof value === "object"
+            ? regOpaqueObject(value)
+            : regOpaquePrim(value);
+      } else
+        throw new TypeError(
+          `not writable value ${value} at ${key} of ${parent}`
+        );
     }
     return descriptor.write(this, value, parent, key);
   }
@@ -253,8 +261,7 @@ const descriptorTemplate = {
   write(ctx, value) {
     const json = {};
     if (value.constructor === Object) return json;
-    if (this.valuePrototype !== void 0) json.$ = this.name;
-    else {
+    else if (!this.valuePrototype) {
       json.p = ctx.step(Object.getPrototypeOf(value), json, "p");
     }
     return json;
@@ -278,7 +285,7 @@ const descriptorTemplate = {
  * @param {Descriptor}
  * @returns {Descriptor}
  */
-export function refAwareDescriptor(descriptor) {
+function refAwareDescriptor(descriptor) {
   return {
     read(ctx, json) {
       const ref = json.r;
@@ -322,6 +329,17 @@ export function refAwareDescriptor(descriptor) {
  * @returns {Descriptor}
  */
 export function regDescriptor(descriptor) {
+  if (!descriptor.read) {
+    if (descriptor.create) {
+      descriptor.read = descriptor.readContent
+        ? function(ctx, json) {
+            const value = this.create(ctx, json);
+            this.readContent(ctx, json, value);
+            return value;
+          }
+        : descriptor.create;
+    }
+  }
   const name = guessDescriptorName(descriptor);
   let uniq = name,
     i = 0;
@@ -329,11 +347,34 @@ export function regDescriptor(descriptor) {
   for (; descriptorByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
   let final = { ...descriptor, name: uniq };
   if (descriptor.keys !== false) final = keysDescriptor(final);
+  if (descriptor.default$ !== false) {
+    const saved = final;
+    final = {
+      ...final,
+      write(ctx, value, parent, index) {
+        const json = saved.write(ctx, value, parent, index);
+        if (
+          json.constructor === Object &&
+          value &&
+          value.constructor !== Object &&
+          !json.$
+        )
+          json.$ = uniq;
+        return json;
+      }
+    };
+  }
   if (descriptor.refAware !== false) final = refAwareDescriptor(final);
   descriptorByName.set(uniq, final);
   if (descriptor.typeofTag)
     descriptorByTypeOfProp.set(descriptor.typeofTag, final);
-  return { ...final, name: uniq };
+  return {
+    name: uniq,
+    read: final.read,
+    write: final.write,
+    readContent: final.readContent,
+    create: final.create
+  };
 }
 
 /**
@@ -398,7 +439,7 @@ export function regOpaqueObject(value, name = guessObjectName(value)) {
  * @param {!string} name
  * @returns {Descriptor}
  */
-export function regOpaquePrim(value, name) {
+export function regOpaquePrim(value, name = String(value)) {
   let descriptor;
   if ((descriptor = descriptorByValue.get(value))) return descriptor;
   descriptor = regDescriptor({
@@ -445,7 +486,8 @@ const PrimDescriptor = {
     return value;
   },
   refAware: false,
-  keys: false
+  keys: false,
+  default$: false
 };
 
 const RefDescriptor = {
@@ -456,10 +498,11 @@ const RefDescriptor = {
 
 /** wraps descriptor by adding its own property into the saved dictionary */
 function keysDescriptor(descriptor) {
+  const getKeys = descriptor.getNames || Object.keys;
   return {
-    write(ctx, value) {
-      const json = descriptor.write(ctx, value);
-      const keys = Object.keys(value);
+    write(ctx, value, parent, index) {
+      const json = descriptor.write(ctx, value, parent, index);
+      const keys = getKeys(value);
       if (!keys.length) return json;
       const props = (json.d = {});
       for (const i of keys) props[i] = ctx.step(value[i], props, i);
@@ -496,7 +539,8 @@ const OpaqueDescriptor = {
     if (!res) throw new Error(`not found object ${json.i}`);
     return this.value;
   },
-  keys: false
+  keys: false,
+  default$: false
 };
 
 const SymbolDescriptor = regDescriptor({
@@ -508,7 +552,8 @@ const SymbolDescriptor = regDescriptor({
   },
   name: "Symbol",
   refAware: false,
-  keys: false
+  keys: false,
+  default$: false
 });
 
 let BigIntDescriptor =
@@ -522,7 +567,8 @@ let BigIntDescriptor =
     },
     name: "BigInt",
     refAware: false,
-    keys: false
+    keys: false,
+    default$: false
   });
 
 function getValueDescriptor(value) {
@@ -579,7 +625,8 @@ const ArrayDescriptor = regNewConstructor(Array, {
   readContent(ctx, json, value) {
     for (const i of json) value.push(ctx.step(i));
   },
-  keys: false
+  keys: false,
+  default$: false
 });
 
 const IterableDescriptor = {

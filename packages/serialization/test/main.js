@@ -95,7 +95,7 @@ describe("object with parent", function() {
     this.c = true;
   }
   Lib.regConstructor(MyObj);
-  it("should output `t` attribute", function() {
+  it("should output `$` attribute", function() {
     const obj1 = new MyObj();
     assert.deepEqual(Lib.write(obj1), {
       $: "MyObj",
@@ -116,7 +116,7 @@ describe("object with parent", function() {
       }
     });
   });
-  it("should use `t` attribute to resolve prototype on read", function() {
+  it("should use `$` attribute to resolve prototype on read", function() {
     const obj1 = Lib.read({ $: "MyObj", d: { a: 1, b: "b", c: true } });
     assert.strictEqual(obj1.constructor, MyObj);
     assert.equal(
