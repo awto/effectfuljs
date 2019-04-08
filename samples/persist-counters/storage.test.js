@@ -27,7 +27,9 @@ test("saveLocal", () => {
     for await (const i of saveLocal(data()))
       expect(R.write(i)).toMatchSnapshot();
     expect(getItem).toHaveBeenLastCalledWith("counters");
-    expect(setItem.mock.calls).toMatchSnapshot();
+    expect(
+      setItem.mock.calls.map(([k, v]) => [k, JSON.parse(v)])
+    ).toMatchSnapshot();
   })()[R.awaitSymbol](exit);
   return new Promise((r, e) => ((cb = r), (ce = e)));
 });

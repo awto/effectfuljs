@@ -17,7 +17,7 @@ test("saveLocal", () => {
     }
   };
   const res = new Promise((r, e) => ((cb = r), (ce = e)));
-  expect.assertions(8);
+  expect.assertions(9);
   async function* data() {
     yield { type: "START" };
     yield { type: "DONE" };
@@ -30,11 +30,12 @@ test("saveLocal", () => {
     if (!(await R.managed)) return;
     try {
       for await (const i of saveLocal(data())) {
-        expect(JSON.stringify(R.write(i))).toMatchSnapshot();
+        expect(R.write(i)).toMatchSnapshot();
       }
       expect(getItem).toHaveBeenLastCalledWith("boxes");
-      // TODO: not deterministic JSON on travis
-      // expect(setItem.mock.calls).toMatchSnapshot();
+      expect(
+        setItem.mock.calls.map(([k, v]) => [k, JSON.parse(v)])
+      ).toMatchSnapshot();
     } catch (e) {
       console.error(e);
     }
