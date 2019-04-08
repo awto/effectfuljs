@@ -252,7 +252,7 @@ describe("scope diagnostics", function() {
       }
       // TODO: expect.to (get rid of qunit-bdd)
       expect(err && err.message).to.equal(
-        "Identifier a has already been declared"
+        "Identifier 'a' has already been declared (2:16)"
       );
       expect(convert(`function a({a,b}) { var {a,c} = b }`)).to.equal(
         `function a({ a, b }) { var { a: _a, c } = b; }`
@@ -269,7 +269,7 @@ describe("scope diagnostics", function() {
         err = e;
       }
       expect(err && err.message).to.equal(
-        "Identifier a has already been declared"
+        "Identifier 'a' has already been declared (3:15)"
       );
     });
   });

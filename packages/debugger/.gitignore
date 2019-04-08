@@ -2,7 +2,6 @@
 !transform.js
 !*.test.js
 /instr
-!thirdparty.js
+!buildLibs.js
 !preset-react.js
 /libs
-

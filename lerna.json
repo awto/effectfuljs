@@ -1,11 +1,7 @@
 {
   "lerna": "2.4.0",
-  "packages": [
-    "packages/*",
-    "samples/*"
-  ],
+  "packages": ["packages/*", "samples/*"],
   "version": "1.1.6",
-  "npmClientArgs": [
-    "--no-package-lock"
-  ]
+  "npmClient": "yarn",
+  "npmClientArgs": ["--no-package-lock"]
 }
