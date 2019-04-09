@@ -41,7 +41,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -98,7 +98,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -155,7 +155,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -237,7 +237,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -324,7 +324,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -411,7 +411,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -473,7 +473,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -555,7 +555,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -617,7 +617,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },
@@ -699,7 +699,7 @@ Object {
       },
       "type": Object {
         "$": "Symbol",
-        "d": "react.fragment",
+        "key": "react.fragment",
       },
     },
   },

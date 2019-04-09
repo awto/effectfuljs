@@ -331,6 +331,45 @@ describe("opaque primitive value serialization", function() {
   });
 });
 
+describe("Symbols serialization", function() {
+  it("should keep values", function() {
+    const a1 = Symbol("a");
+    const a2 = Symbol("a");
+    const b = Symbol("b");
+    const g = Symbol.for("g");
+    const opts = {};
+    const res = Lib.write({ a1, a2, b1: b, b2: b, g }, opts);
+    assert.deepStrictEqual(res, {
+      d: {
+        a1: { $: "Symbol", name: "a" },
+        a2: { $: "Symbol", name: "a", id: 1 },
+        b1: { $: "Symbol", name: "b" },
+        b2: { $: "Symbol", name: "b" },
+        g: { $: "Symbol", key: "g" }
+      }
+    });
+    const { a1: ra1, a2: ra2, b1: rb1, b2: rb2, g: rg } = Lib.read(res, opts);
+    assert.strictEqual(a1, ra1);
+    assert.strictEqual(a2, ra2);
+    assert.strictEqual(b, rb1);
+    assert.strictEqual(b, rb2);
+    assert.strictEqual(rg, g);
+    const { a1: la1, a2: la2, b1: lb1, b2: lb2, g: lg } = Lib.read(res, {
+      ignore: true
+    });
+    assert.notStrictEqual(a1, la1);
+    assert.notStrictEqual(a2, la2);
+    assert.notStrictEqual(lb1, b);
+    assert.notStrictEqual(lb2, b);
+    assert.strictEqual(lg, g);
+    assert.strictEqual(lb1, lb2);
+    assert.equal(String(la1), "Symbol(a)");
+    assert.equal(String(la2), "Symbol(a)");
+    assert.equal(String(lb1), "Symbol(b)");
+    assert.equal(String(lb2), "Symbol(b)");
+  });
+});
+
 describe("type with `$$typeof` attribute", function() {
   Lib.regDescriptor({
     name: "hundred",

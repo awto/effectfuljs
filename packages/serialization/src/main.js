@@ -28,10 +28,15 @@ const descriptorByTypeOfProp = new Map();
  * @param {Object} value - original object
  * @param {WriteOptions} opts - options
  */
-export function write(value, opts) {
+export function write(value, opts = {}) {
   if (typeof value !== "object" || Array.isArray(value))
     throw new TypeError("wrong argument type");
-  const ctx = new WriteContext(opts);
+  const ctx = new WriteContext();
+  ctx.sharedRefs = opts.sharedRefs || (opts.sharedRefs = new Map());
+  ctx.refs = [];
+  ctx.ignore = !!opts.ignore;
+  ctx.symsByName = opts.symsByName || (opts.symsByName = new Map());
+  ctx.knownSyms = opts.knownSyms || (opts.knownSyms = new Map());
   const res = [];
   res.push(ctx.step(value, res, 0));
   if (ctx.refs.length) {
@@ -59,11 +64,16 @@ export function write(value, opts) {
  *
  * @param {Object} json - object to read
  */
-export function read(json) {
+export function read(json, opts = {}) {
   if (typeof json !== "object")
     throw new TypeError("root value must be Object");
   const ctx = new ReadContext();
-  const vals = (ctx.shared = new Map());
+  ctx.knownSyms = opts.knownSyms;
+  ctx.symsByName = opts.symsByName;
+  if (opts.ignore && !ctx.symsByName)
+    ctx.symsByName = opts.symsByName = new Map();
+  ctx.ignore = !!opts.ignore;
+  const vals = (ctx.shared = opts.shared || (opts.shared = new Map()));
   const { x } = json;
   const tasks = [];
   if (x) {
@@ -181,11 +191,6 @@ export const descriptorSymbol = Symbol("@effectful/serialization/descriptor");
  * invocation for nested values
  */
 class WriteContext {
-  constructor(opts) {
-    this.sharedRefs = new Map();
-    this.refs = [];
-    this.ignore = opts && opts.ignore;
-  }
   /**
    * Invokes write recursively for nested values
    * @param {any} value - value to write
@@ -544,11 +549,49 @@ const OpaqueDescriptor = {
 };
 
 const SymbolDescriptor = regDescriptor({
-  write(ctx, value) {
-    return { $: "Symbol", d: Symbol.keyFor(value) };
+  write(ctx, value, parent, index) {
+    const key = Symbol.keyFor(value);
+    if (key) return { $: "Symbol", key };
+    const global = descriptorByValue.get(value);
+    if (global) return global.write(ctx, value, parent, index);
+    if (ctx.knownSyms) {
+      let descr = ctx.knownSyms.get(value);
+      if (!descr) {
+        const text = String(value);
+        const name = text.substring(7 /*"Symbol("*/, text.length - 1);
+        let tup = ctx.symsByName.get(name);
+        if (!tup) ctx.symsByName.set(name, (tup = []));
+        descr = { name, id: tup.length, value };
+        tup.push(descr);
+        ctx.knownSyms.set(value, descr);
+      }
+      const res = { $: "Symbol", name: descr.name };
+      if (descr.id) res.id = descr.id;
+      return res;
+    }
+    if (!ctx.ignore) throw new Error(`couldn't write "${value}"`);
+    return void 0;
   },
-  read(ctx, value) {
-    return Symbol.for(value.d);
+  read(ctx, json) {
+    if (json.key) return Symbol.for(json.key);
+    const { name } = json;
+    if (name && ctx.symsByName) {
+      let local = ctx.symsByName.get(name);
+      const id = json.id || 0;
+      if (local) {
+        const descr = local[id];
+        if (descr) return descr.value;
+      }
+      if (ctx.ignore) {
+        const descr = { name, id, value: Symbol(json.name) };
+        if (!local) ctx.symsByName.set(name, (local = []));
+        local[id] = descr;
+        if (ctx.knownSyms) ctx.knownSyms.set(descr.value, descr);
+        return descr.value;
+      }
+    }
+    if (!ctx.ignore) throw new Error(`couldn't read "${JSON.stringify(json)}"`);
+    return null;
   },
   name: "Symbol",
   refAware: false,
@@ -591,8 +634,7 @@ function getValueDescriptor(value) {
     case "function":
       return value[descriptorSymbol] || null;
     case "symbol":
-      if (Symbol.keyFor(value)) return SymbolDescriptor;
-      break;
+      return SymbolDescriptor;
     case "bigint":
       return BigIntDescriptor;
   }
