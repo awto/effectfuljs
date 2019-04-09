@@ -10,18 +10,51 @@
  * function and read back with `JSON.parse`.
  */
 
+/** Options to amend `write` behavior */
+interface WriteOptions {
+  /** don't throw exception if there is any writting error */
+  ignore?: boolean;
+  /** 
+   * current reference's id assignment state, 
+   * this can be copied between writes to keep same refs ids
+   */
+  sharedRefs?: any;
+  /**
+   * holds information about seen local Symbols, it can be copied between runs
+   */
+  symsByName?: any;
+  /**
+   * holds information about seen local Symbols, it can be copied between runs
+   */
+  knownSyms?: any;
+}
+
+/** Options to amend `write` behavior */
+interface ReadOptions {
+  /** don't throw exception if there is any writting error */
+  ignore?: boolean;
+  /**
+   * holds information about seen local Symbols, it can be copied between runs
+   */
+  symsByName?: any;
+  /**
+   * holds information about seen local Symbols, it can be copied between runs
+   */
+  knownSyms?: any;
+}
+
 /**
  * Converts JS Plain Object into JSON Object.
  *
  * It supports only plain objects as root value. To serialize anything else
  * just wrap it, e.g. `write({arr:[1]})`
  */
-declare function write(value: Object): JSONObject;
+declare function write(value: Object, opts?:WriteOptions): JSONObject;
 
 /**
  * Converts JSON Object returned by `read` back to JS Object
  */
-declare function read(json: JSONObject): Object;
+declare function read(json: JSONObject, opts?:ReadOptions): Object;
 
 /** `JSON.stringify` serializable value */
 type JSONValue = boolean | number | string | JSONObject | JSONArray;
@@ -97,6 +130,19 @@ interface Descriptor {
    * @returns     - resulting JS value
    */
   read(ctx: ReadContext, json: JSONValue): any;
+  /**
+   * If !== false, the descriptor recognizes shared objects and uses only references for them
+   */
+  refAware?:boolean;
+  /**
+   * If !== false the descriptor will traverse own properties too 
+   */
+  keys:boolean;
+  /**
+   * If !== false the descriptor will add property `$` equal to `name` by default 
+   */
+  default$?:boolean;
+  
 }
 
 /** name of a property to specify `Descriptor` for JS value */
@@ -126,12 +172,6 @@ interface ReadContext {
  * the same name is already registered.
  */
 declare function regDescriptor(descriptor: Descriptor): Descriptor;
-
-/** Adds references checks */
-declare function refAwareDescriptor(descriptor: Descriptor): Descriptor;
-
-/** Same as `regDescriptor` but ensures `descriptor` is references aware */
-declare function regObjectDescriptor(descriptor: Descriptor): Descriptor;
 
 /**
  * The function registers `value` as opaque. The library outputs names instead
