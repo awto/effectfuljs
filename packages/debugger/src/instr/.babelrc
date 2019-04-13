@@ -1,18 +1,19 @@
 {
+  "passPerPreset": true,
   "presets": [
     {
       "plugins": [
         [
-          "@babel/transform-modules-commonjs",
-          { "loose": true, "noInterop": true }
+          "../../transform",
+          { "blackbox": true, "pureModule": true, "importRT": "../kit" }
         ]
       ]
     },
     {
       "plugins": [
         [
-          "../../transform",
-          { "blackbox": true, "pureModule": true, "importRT": "../kit" }
+          "@babel/transform-modules-commonjs",
+          { "loose": true, "noInterop": true }
         ]
       ]
     }

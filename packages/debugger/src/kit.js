@@ -4,6 +4,7 @@
  */
 
 import config from "./config";
+import * as S from "@effectful/serialization";
 
 export const context = {
   stack: null,
@@ -17,6 +18,8 @@ export const context = {
     return token;
   }
 };
+
+S.regOpaqueObject(context, "#");
 
 /**
  * converts a function into another function doing the same, but all
@@ -48,13 +51,62 @@ export function runSync(first) {
 export const token = { _effectToken: true };
 
 export function module(name) {
-  return (context.modules[name] = { functions: [], name });
+  const module = { functions: [], name };
+  S.regOpaqueObject(module, `module#${name}`);
+  return (context.modules[name] = module);
 }
 
-export function meta(module, scope) {
-  const info = { module, scope };
+export const functionSymbol = Symbol("@effectful/debugger/function");
+
+export function syncMeta(module, func) {
+  const wrap = function($$) {
+    return func({ $$ });
+  };
+  return wrap;
+}
+
+export function meta(
+  module,
+  func,
+  handler,
+  errHandler,
+  finHandler,
+  name,
+  loc,
+  parent,
+  scope
+) {
+  if (!name) name = "*";
+  const info = {
+    module,
+    func,
+    handler,
+    errHandler,
+    finHandler,
+    name,
+    loc,
+    parent,
+    scope
+  };
+  const wrap = wrapMeta(info);
+  S.regOpaqueObject(wrap, `proto#${module.name}#${name}`);
+  S.regOpaqueObject(info, `info#${module.name}#${name}`);
+  wrap[functionSymbol] = info;
   module.functions.push(info);
-  return info;
+  return wrap;
+}
+
+function wrapMeta(info) {
+  return function($$) {
+    const proto = Object.create(FramePrototype);
+    proto.$run = info.handler;
+    proto.$meta = info;
+    proto.$err = info.errHandler || defaultErrHandler;
+    proto.$$ = $$;
+    const res = info.func(proto);
+    proto.constructor = res;
+    return res;
+  };
 }
 
 export function step() {
@@ -135,20 +187,9 @@ function defaultErrHandler() {
   return 1;
 }
 
-export function func(func, meta, handler, errHandler) {
-  const proto = Object.create(FramePrototype);
-  proto.$run = handler;
-  proto.constructor = func;
-  proto.$meta = meta;
-  proto.$err = errHandler || defaultErrHandler;
-  func.$proto = proto;
-  return func;
-}
-
-export function frame(fun) {
-  const res = Object.create(fun.$proto);
+export function frame(proto) {
+  const res = Object.create(proto);
   res.$ = {};
-  res.$$ = {};
   return res;
 }
 

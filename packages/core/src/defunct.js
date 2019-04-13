@@ -349,7 +349,8 @@ export function* frames(si) {
   let hasJumps = false;
   for (const i of s.sub()) {
     if (i.enter && i.type === Block.frame) {
-      if (i.value.catchContRedir !== errFrameRedir) hasJumps = true;
+      if (i.value.catchContRedir && i.value.catchContRedir !== errFrameRedir)
+        hasJumps = true;
       yield s.enter(Tag.push, Tag.SwitchCase, i.value);
       yield s.tok(Tag.test, Tag.NumericLiteral, {
         node: { value: i.value.stateId }

@@ -175,7 +175,8 @@ import {
   prepare,
   resetLevel,
   sysId,
-  coerceId
+  coerceId,
+  skipTillFileBeg
 } from "./core";
 export {
   packId,
@@ -205,6 +206,7 @@ export {
   prepare,
   resetLevel,
   sysId,
-  coerceId
+  coerceId,
+  skipTillFileBeg
 };
 export const globalOpts = kit.getOpts;

@@ -17,7 +17,13 @@ export const saveDecls = Kit.pipe(
   function* saveDecls(s) {
     const sl = Kit.auto(s);
     const top = sl.peel();
+    const root = top.value;
     const decls = top.value.savedDecls || (top.value.savedDecls = new Map());
+    const { closConv } = root.opts;
+    if (closConv) {
+      root.closSavedDecls = new Map();
+      root.closureArgSym = Kit.scope.newSym("x");
+    }
     function* _saveDecls(pureTry) {
       for (const i of sl.sub()) {
         if (i.enter) {
@@ -232,8 +238,8 @@ export function* restoreDecls(s) {
   let closArg;
   const { closConv } = root.opts;
   if (closConv) {
-    closures = root.closSavedDecls = new Map();
-    closArg = root.closureArgSym = Kit.scope.newSym("$$");
+    closures = root.closSavedDecls;
+    closArg = root.closureArgSym;
   }
   if (ctxDeps && ctxDeps.size) {
     const varField = root.opts.varStorageField;
@@ -289,34 +295,26 @@ export function* restoreDecls(s) {
       }
       closures.set(copy, { raw: null, init });
     }
-    if (closConv && closField) {
-      const sym = Bind.tempVarSym(root, varField);
-      sym.fieldName = closField;
-      sym.subField = true;
-      saved.set(sym, {
-        raw: null,
-        init: [sl.tok(Tag.init, Tag.Identifier, { sym: closArg })]
-      });
-    }
   }
   for (const i of sl) {
     yield i;
     if (i.enter) {
       if (
-        i.value.savedDecls != null &&
-        i.value.savedDecls.size &&
+        ((i.value.savedDecls != null && i.value.savedDecls.size) ||
+          (i.value.paramSyms && i.value.paramSyms.length)) &&
         !i.leave &&
         sl.curLev()
       ) {
         for (const j of sl.sub()) {
           yield j;
           if (j.enter && j.type === Tag.Array && j.pos === Tag.body) {
-            const decls = [...i.value.savedDecls].sort(
-              (a, b) => a[0].num - b[0].num
+            const assigns = [];
+            const decls = [];
+            decls.push(
+              ...[...i.value.savedDecls].sort((a, b) => a[0].num - b[0].num)
             );
             const vars = [];
             const raw = [];
-            const assigns = [];
             for (const [k, v] of decls) {
               if (k.removed) continue;
               if (v.raw) raw.push(v);
@@ -345,6 +343,7 @@ export function* restoreDecls(s) {
               }
               yield* lab();
             }
+
             if (i.value.paramSyms) {
               for (const sym of i.value.paramSyms) {
                 if (sym.interpr === Bind.ctxField) {

@@ -1,11 +1,10 @@
 import * as M from "@effectful/core";
-
-var _a2 = M.wrap(a2, meta$a2),
+var $module = M.module("*"),
     meta$a2 = M.meta(null, $module),
     meta$c = M.meta(meta$a2, $module),
     meta$b = M.meta(meta$c, $module);
 
-var $module = M.module("*");
+var _a2 = M.wrap(a2, meta$a2);
 
 function a2() {
   var a2 = M.context(_a2);

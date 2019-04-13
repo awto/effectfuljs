@@ -168,10 +168,8 @@ export function splitScopes(si) {
 
 export function injectMeta(si) {
   const s = Kit.auto(si);
-  const name = s.opts.injectFuncMeta;
   const module = s.first.value;
-  if (!name || !module.scopes.length) return s;
-  const sym = Kit.sysId(name);
+  if (!module.scopes.length) return s;
   return _injectMeta();
   function* _injectMeta() {
     for (const i of s) {
@@ -181,6 +179,9 @@ export function injectMeta(si) {
     yield* s.sub();
     const lab = s.label();
     for (const i of module.scopes) {
+      const name = i.opts.injectFuncMeta;
+      if (!name) continue;
+      const sym = Kit.sysId(name);
       yield s.enter(Tag.push, Tag.VariableDeclarator);
       yield s.tok(Tag.id, Tag.Identifier, { sym: i.metaId });
       yield s.enter(Tag.init, Tag.CallExpression);
@@ -469,8 +470,9 @@ export function funcWraps(si) {
                 const lab = s.label();
                 yield s.peel(i);
                 yield* s.peelTo(Tag.body);
+
                 while (s.curLev() && !nsFound) yield* _hoist(s.one(), subst);
-                while (s.cur().type === Tag.ImportDeclaration) yield* s.one();
+                yield* Kit.skipTillFileBeg(s);
                 yield* i.value.wraps;
                 yield* _hoist(s.sub(), subst);
                 yield* lab();

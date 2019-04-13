@@ -51,21 +51,19 @@ function a5(a, b, c, d) {
 }
 
 function a1_1(a1, p) {
-  for (;;) {
-    switch (a1.true) {
-      case 5:
-        return M.chain(bb(), 6);
+  switch (a1.true) {
+    case 5:
+      return M.chain(bb(), 6);
 
-      case 6:
-        return M.chain(cc(), 7);
+    case 6:
+      return M.chain(cc(), 7);
 
-      case 0:
-        return p;
+    case 0:
+      return p;
 
-      case 7:
-      default:
-        throw new Error("invalid state");
-    }
+    case 7:
+    default:
+      throw new Error("invalid state");
   }
 }
 

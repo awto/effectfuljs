@@ -15955,6 +15955,8 @@ function r51() {
   }
 }
 
+var p0, p1, _p2, p3, p4, p5, p6, p7, p8, p9, p9_a, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p34, p35;
+
 function _err(s) {
   switch (s) {
     case 13:
@@ -17506,5 +17508,3 @@ function _fin38(s) {
       return 0;
   }
 }
-
-var p0, p1, _p2, p3, p4, p5, p6, p7, p8, p9, p9_a, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p34, p35;

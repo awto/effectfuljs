@@ -18,32 +18,7 @@ function C(a) {
   }
 }
 
-class Cl {
-  constructor() {
-    var v4;
-    not_traced(v0, v4);
-  }
-  get prop1() {
-    not_traced();
-  }
-  set prop1(value) {
-    not_traced();
-  }
-  async funcAsync() {
-    not_traced(v0);
-  }
-  *func() {
-    not_traced(() => traced(1) + traced(2));
-  }
-}
-
 exports.fn2 = function fn1() {
   const v5 = 10;
   return mod.some({ a: mod.f2(), b: [new C(v0, v5)] });
-};
-
-const obj1 = {
-  objFn(a) {
-    var k = new Cl().fn(a, v0);
-  }
 };

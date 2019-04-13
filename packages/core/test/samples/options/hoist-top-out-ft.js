@@ -22,6 +22,8 @@ function a1() {}
   };
 }
 
+var Some, _b, other, b2, somethingElse;
+
 function a_1(ctx) {
   return M.chain(b_1, a_2);
 }
@@ -65,5 +67,3 @@ function somethingElse_1(_somethingElse) {
 function somethingElse_2(_somethingElse, r) {
   return M.pure(r);
 }
-
-var Some, _b, other, b2, somethingElse;

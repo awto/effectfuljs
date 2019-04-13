@@ -61,6 +61,8 @@ export const loose = ifLoose(
 
 const finalize = Kit.pipe(
   Policy.stage("finalize"),
+  Closure.flattenModuleDecls,
+  Closure.depsToTop,
   Scope.funcWraps,
   Closure.closConv,
   Policy.stage("meta"),
@@ -71,8 +73,7 @@ const finalize = Kit.pipe(
   Policy.stage("symbols"),
   Rt.interpretLibSyms,
   Kit.toArray,
-  Rt.inject,
-  Closure.depsToTop
+  Rt.inject
 );
 
 export const normalizeOnlyStage0 = Kit.map(
@@ -257,6 +258,8 @@ export function pass(s) {
       "`topIIFE:true` is incompatible with ES modules " +
         '(use "@babel/plugin-transform-modules-commonjs")'
     );
+  if (normalize.length && root.opts.closConv)
+    throw new Error("`closConv:true` requires all functions to be transformed");
   const s0 = [...stage0(transform)];
   const n0 = [...normalizeOnlyStage0(normalize)];
   const s1 = [...Closure.contextDecls(s0)];

@@ -3,11 +3,13 @@ import * as Kit from "./kit";
 import * as T from "./transform";
 import * as Policy from "./policy";
 import * as RT from "./rt";
+import * as Block from "./block";
+import * as Ctrl from "./control";
 import defunctPreset from "./presets/defunct";
 
 export const config = defaults;
 
-export { Policy, T as Transform, Kit, RT };
+export { Policy, T as Transform, Kit, RT, Ctrl, Block };
 export const Tag = Kit.Tag;
 
 const helpers = {
@@ -16,6 +18,8 @@ const helpers = {
   Policy,
   Transform: T,
   RT,
+  Ctrl,
+  Block,
   presets: { defunct: defunctPreset }
 };
 

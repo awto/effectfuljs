@@ -5,34 +5,40 @@ import * as Bind from "./bind";
 
 const emptyArr = [];
 
-/** moves frame steps to top level of JS module */
-export function depsToTop(si) {
+/** for module-level definitions we need to re-arrange its
+ * declarations so they are visible from handlers
+ */
+export function flattenModuleDecls(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
-  const top = [];
-  if (!root.hasTop) return s;
-  let t = _depsToTop();
-  if (s.opts.topLevel) t = _topModuleVars(t);
-  return t;
-  function* _depsToTop() {
-    yield* s.till(i => i.pos === Tag.body && i.type === Tag.Array);
-    while (s.cur().type === Tag.ImportDeclaration) yield* s.one();
-    yield* collect();
-    for (const i of top) {
-      yield* i;
-    }
-    yield* s;
+  if (!s.opts.topLevel || !root.hasTop) return s;
+  const closConv = s.opts.closConv;
+  return _topModuleVars(s);
+
+  function* toExpr(i, j, vars) {
+    const id = s.cur().value;
+    vars.push(id);
+    const lab = s.label();
+    yield s.enter(i.pos, Tag.ExpressionStatement);
+    yield s.enter(Tag.expression, Tag.AssignmentExpression, {
+      node: { operator: "=" }
+    });
+    yield s.tok(Tag.left, Tag.Identifier, {
+      sym: id.sym,
+      node: id.node
+    });
+    yield s.peel(
+      Kit.setType(
+        Kit.setPos(j, Tag.right),
+        j.type === Tag.ClassDeclaration
+          ? Tag.ClassExpression
+          : Tag.FunctionExpression
+      )
+    );
+    yield* s.sub();
+    yield* lab();
   }
-  function* collect() {
-    for (const i of s.sub()) {
-      if (i.enter && i.type === Tag.FunctionDeclaration && i.value.moveToTop) {
-        top.push([i, ...collect(), s.close(i)]);
-      } else yield i;
-    }
-  }
-  /** for module-level definitions we need to re-arrange its
-   * declarations so they are visible from handlers
-   */
+
   function* _topModuleVars(si) {
     const s = Kit.auto(si);
     for (const i of s) {
@@ -43,12 +49,38 @@ export function depsToTop(si) {
     for (const i of s.sub()) {
       if (i.enter) {
         switch (i.type) {
+          case Tag.ClassDeclaration:
+          case Tag.FunctionDeclaration:
+            if (closConv) {
+              yield* toExpr(i, i, vars);
+              break;
+            }
           case Tag.ExportNamedDeclaration:
           case Tag.ExportDefaultDeclaration:
           case Tag.ExportAllDeclaration:
+            if (closConv) {
+              const la = s.cur();
+              if (la.type === Tag.FunctionDeclaration) {
+                yield i;
+                const lab = s.label();
+                yield s.enter(la.pos, Tag.VariableDeclaration, {
+                  node: { kind: "var" }
+                });
+                yield s.enter(Tag.declarations, Tag.Array);
+                yield s.enter(Tag.push, Tag.VariableDeclarator);
+                const f = s.take();
+                Kit.invariant(s.cur().pos === Tag.id);
+                yield* s.one();
+                yield s.enter(Tag.init, Tag.FunctionExpression, la.value);
+                yield* s.sub();
+                yield* lab();
+                s.close(f);
+                yield* s.sub();
+                yield s.close(i);
+                continue;
+              }
+            }
           case Tag.ImportDeclaration:
-          case Tag.FunctionDeclaration:
-          case Tag.ClassDeclaration:
           case Tag.VariableDeclaration:
           case Tag.ExpressionStatement:
             yield* s.copy(i);
@@ -67,27 +99,7 @@ export function depsToTop(si) {
                     continue;
                   case Tag.ClassDeclaration:
                   case Tag.FunctionDeclaration:
-                    const id = s.cur().value;
-                    vars.push(id);
-                    const lab = s.label();
-                    yield s.enter(i.pos, Tag.ExpressionStatement);
-                    yield s.enter(Tag.expression, Tag.AssignmentExpression, {
-                      node: { operator: "=" }
-                    });
-                    yield s.tok(Tag.left, Tag.Identifier, {
-                      sym: id.sym,
-                      node: id.node
-                    });
-                    yield s.peel(
-                      Kit.setType(
-                        Kit.setPos(j, Tag.right),
-                        j.type === Tag.ClassDeclaration
-                          ? Tag.ClassExpression
-                          : Tag.FunctionExpression
-                      )
-                    );
-                    yield* s.sub();
-                    yield* lab();
+                    yield* toExpr(i, j, vars);
                     continue;
                   case Tag.VariableDeclaration:
                     let any = false;
@@ -158,14 +170,40 @@ export function depsToTop(si) {
   }
 }
 
+/** moves frame steps to top level of JS module */
+export function depsToTop(si) {
+  const s = Kit.auto(si);
+  const root = s.first.value;
+  const top = [];
+  if (!root.hasTop) return s;
+  return _depsToTop();
+  function* _depsToTop() {
+    for (const i of s) {
+      yield i;
+      if (i.pos === Tag.body && i.type === Tag.Array) break;
+    }
+    yield* Kit.skipTillFileBeg(s);
+    yield* collect();
+    for (const i of top) {
+      yield* i;
+    }
+    yield* s;
+  }
+  function* collect() {
+    for (const i of s.sub()) {
+      if (i.enter && i.type === Tag.FunctionDeclaration && i.value.moveToTop) {
+        top.push([i, ...collect(), s.close(i)]);
+      } else yield i;
+    }
+  }
+}
+
 /** moves function constructors to meta constructors */
 export function closConv(si) {
   const s = Kit.auto(si);
   const { opts } = s.first.value;
   if (!opts.closConv) return s;
   if (!opts.topLevel) throw s.error("`closConv` requires `topLevel`");
-  if (!opts.injectFuncMeta)
-    throw s.error("`closConv` requires `injectFuncMeta`");
   if (opts.wrapFunction)
     throw s.error("`closConv` doesn't work with `wrapFunction`");
   return Kit.toArray(_closConv());
@@ -173,8 +211,21 @@ export function closConv(si) {
     for (const i of s.sub()) {
       if (i.enter) {
         switch (i.type) {
+          case Tag.ClassExpression:
+          case Tag.ClassDeclaration:
+            throw s.error("ES classes aren't yet supported with `closConv`");
+          case Tag.ObjectMethod:
+            throw s.error(
+              "object methods aren't yet supported with `closConv`"
+            );
+          case Tag.ArrowFunctionExpression:
+            throw s.error(
+              "arrow functions aren't yet supported with `closConv`"
+            );
           case Tag.FunctionExpression:
             if (!i.value.metaId) break;
+            if (!i.value.opts.injectFuncMeta)
+              throw s.error("`closConv` requires `injectFuncMeta`");
             const lab = s.label();
             i.value.metaArgs.push(
               s.enter(Tag.push, Tag.FunctionExpression),
@@ -194,6 +245,16 @@ export function closConv(si) {
                   sym: i.value.implFrame.value.declSym
                 })
               );
+            i.value.metaArgs.push(
+              s.tok(Tag.push, Tag.Identifier, {
+                sym: i.value.errMapSym || Kit.scope.undefinedSym
+              })
+            );
+            i.value.metaArgs.push(
+              s.tok(Tag.push, Tag.Identifier, {
+                sym: i.value.resMapSym || Kit.scope.undefinedSym
+              })
+            );
             yield s.enter(i.pos, Tag.CallExpression);
             yield s.tok(Tag.callee, Tag.Identifier, { sym: i.value.metaId });
             yield s.enter(Tag.arguments, Tag.Array);
@@ -243,6 +304,7 @@ export const contextDecls = Kit.map(function contextDecls(si) {
       ? s.opts.scopeConstructor
       : s.opts.pureScopeConstructor;
     const constrSym = (root.constrSym = constr && Kit.sysId(constr));
+    const wrapId = root.wrapId || root.closureArgSym;
     saved.set(contextSym, {
       raw: null,
       init: constr
@@ -250,10 +312,10 @@ export const contextDecls = Kit.map(function contextDecls(si) {
             s.enter(Tag.init, Tag.CallExpression),
             s.tok(Tag.callee, Tag.Identifier, { sym: constrSym, ns: false }),
             s.enter(Tag.arguments, Tag.Array),
-            ...(root.wrapId
+            ...(wrapId
               ? [
                   s.tok(Tag.push, Tag.Identifier, {
-                    sym: root.wrapId,
+                    sym: wrapId,
                     keepClos: true
                   })
                 ]

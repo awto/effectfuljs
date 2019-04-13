@@ -1,5 +1,5 @@
 module.exports = require("@effectful/core").babelPlugin(
-  (opts, { Tag, Kit, Transform: T, Policy: P, presets }) => {
+  (opts, { Tag, Kit, Transform: T, Policy: P, presets, Block }) => {
     let moduleAliases;
     if (opts.preInstrumentedLibs) {
       moduleAliases = {};
@@ -21,12 +21,12 @@ module.exports = require("@effectful/core").babelPlugin(
         inlineTailCoerce: { singelton: "token" },
         inlineContAssign: false,
         modules: "commonjs",
-        scopeConstructor: "frame",
-        wrapFunction: opts.closure ? null : "func",
-        closConv: opts.closure,
+        wrapFunction: opts.closure !== false ? null : "func",
+        closConv: opts.closure !== false,
         injectModuleMeta: "module",
-        injectFuncMeta: "meta",
         defunctHandlerInProto: true,
+        scopeConstructor: "frame",
+        // injectFuncMeta: "meta",
         esForOf: true,
         esForAwaitOf: true,
         varStorageField: "$",
@@ -38,7 +38,8 @@ module.exports = require("@effectful/core").babelPlugin(
         passNewTarget: true,
         storeCont: "$state",
         before: {
-          meta: injectScopeDescr
+          meta: injectScopeDescr,
+          interpret: collectStmtsLoc
         },
         contextMethodOpsSpec: {
           constr: false,
@@ -70,7 +71,7 @@ module.exports = require("@effectful/core").babelPlugin(
           return _insertBreaks();
           function* _insertBreaks() {
             for (const i of s.sub()) {
-              if (i.enter && s.opts.transform) {
+              if (i.enter && !s.opts.nodebug) {
                 switch (i.type) {
                   case Tag.VariableDeclaration:
                     if (i.pos === Tag.left || i.pos === Tag.init) break;
@@ -94,8 +95,7 @@ module.exports = require("@effectful/core").babelPlugin(
                       yield s.enter(i.pos, Tag.BlockStatement);
                       yield s.enter(Tag.body, Tag.Array);
                     }
-                    if (i.value.node.loc)
-                      yield* brkStmt(Tag.push, i, "statement");
+                    if (i.value.node.loc) yield* brkStmt(Tag.push, i, "s");
                     yield s.peel(Kit.setPos(i, Tag.push));
                     // we don't want to break loop's labels (and there can be a few of them)
                     if (i.type === Tag.LabeledStatement) {
@@ -110,7 +110,7 @@ module.exports = require("@effectful/core").babelPlugin(
                     continue;
                   case Tag.DebuggerStatement:
                     if (opts.blackbox) break;
-                    yield* brkStmt(i.pos, i, "debugger");
+                    yield* brkStmt(i.pos, i, "d");
                     s.close(i);
                     continue;
                   case Tag.CallExpression:
@@ -141,9 +141,23 @@ module.exports = require("@effectful/core").babelPlugin(
             yield* s.template(
               Tag.expression,
               "=$I($E)",
-              { bind: true, expr: true },
+              {
+                bind: true,
+                expr: true,
+                brkDescr: i.value.node.loc,
+                brkName: name
+              },
               brk
             );
+            /*
+            yield s.enter(Block.op, {
+              sym: brk,
+              bindName: "brk",
+              bind: true,
+              brkDescr: i.value.node.loc,
+              brkName: name
+            });
+            */
             yield s.tok(Tag.push, Tag.StringLiteral, {
               node: { value: name }
             });
@@ -164,34 +178,52 @@ module.exports = require("@effectful/core").babelPlugin(
           for (const i of s) {
             if (i.enter) {
               switch (i.type) {
-                case Tag.ClassMethod:
-                case Tag.ClassPrivateMethod:
-                  i.value.optsAssign = {
-                    transform: i.value.node.kind === "method"
-                  };
-                  break;
                 case Tag.File:
                   if (opts.pureModule) break;
+                case Tag.ClassMethod:
+                case Tag.ClassPrivateMethod:
                 case Tag.FunctionDeclaration:
                 case Tag.FunctionExpression:
                 case Tag.ArrowFunctionExpression:
                 case Tag.ObjectMethod:
                   const body = i.value.node.body || i.value.node.program;
-                  let transform = true;
+                  let nodebug = false;
                   if (body && body.directives) {
                     for (const j of body.directives) {
                       if (j.value && j.value.value === "nodebug") {
-                        transform = false;
+                        nodebug = true;
                         break;
                       }
                     }
                   }
                   i.value.optsAssign = {
-                    transform:
-                      transform &&
-                      !i.value.node.async &&
-                      !i.value.node.generator
+                    transform: true,
+                    nodebug,
+                    scopePrefix: true,
+                    keepLastPure: "tail",
+                    keepLastRaise: true,
+                    inlinePureJumps: "tail",
+                    inlineJsExceptions: true,
+                    inlineTailCoerce: { singelton: "token" },
+                    inlineContAssign: false,
+                    injectFuncMeta: "meta",
+                    inlinePureOp: false
                   };
+                  if (nodebug)
+                    Object.assign(i.value.optsAssign, {
+                      scopePrefix: false,
+                      inlinePureJumps: false,
+                      inlineJsExceptions: false,
+                      inlineTailCoerce: false,
+                      injectFuncMeta: "syncMeta",
+                      keepLastPure: false,
+                      keepLastRaise: false,
+                      inlinePureOp: "asis"
+                    });
+                  if (i.value.node.async || i.value.node.generator)
+                    throw s.error(
+                      "async and generator functions aren't supported yet"
+                    );
                   break;
               }
             }
@@ -209,6 +241,26 @@ module.exports = require("@effectful/core").babelPlugin(
       const value = `${f.line}:${f.column}-${l.line}:${l.column}`;
       yield Kit.tok(Tag.push, Tag.StringLiteral, { node: { value } });
     }
+    function collectStmtsLoc(si) {
+      if (opts.blackbox) return si;
+      const sa = Kit.toArray(si);
+      const s = Kit.auto(sa);
+      const root = s.first.value;
+      const brks = (root.brksInfo = []);
+      for (const i of s) {
+        if (
+          i.enter &&
+          i.type === Block.letStmt &&
+          i.value.eff &&
+          i.value.goto
+        ) {
+          const la = s.cur().value;
+          if (la.brkDescr)
+            brks.push([la.brkName, la.brkDescr, i.value.goto.declSym]);
+        }
+      }
+      return sa;
+    }
     function injectScopeDescr(si) {
       if (opts.blackbox) return si;
       const s = Kit.auto(si);
@@ -216,6 +268,17 @@ module.exports = require("@effectful/core").babelPlugin(
         const args = i.metaArgs;
         const lab = s.label();
         args.push(
+          i.funcId && i.funcId.strict
+            ? s.tok(Tag.push, Tag.StringLiteral, {
+                node: { value: i.funcId.orig }
+              })
+            : s.tok(Tag.push, Tag.NullLiteral),
+          ...(i.node && i.node.loc
+            ? position(i.node.loc)
+            : [s.tok(Tag.push, Tag.NullLiteral)]),
+          i.parentScope && i.parentScope.metaId
+            ? s.tok(Tag.push, Tag.Identifier, { sym: i.parentScope.metaId })
+            : s.tok(Tag.push, Tag.NullLiteral),
           s.enter(Tag.push, Tag.ObjectExpression),
           s.enter(Tag.properties, Tag.Array)
         );
@@ -236,6 +299,26 @@ module.exports = require("@effectful/core").babelPlugin(
             ...position(block.node.loc),
             ...flab()
           );
+        }
+        args.push(...lab());
+        if (i.brksInfo) {
+          args.push(
+            s.enter(Tag.push, Tag.ArrayExpression),
+            s.enter(Tag.elements, Tag.Array)
+          );
+          for (const [name, loc, dest] of i.brksInfo) {
+            args.push(
+              s.enter(Tag.push, Tag.ArrayExpression),
+              s.enter(Tag.elements, Tag.Array),
+              s.tok(Tag.push, Tag.StringLiteral, { node: { value: name } }),
+              ...position(loc),
+              s.tok(Tag.push, Tag.NumericLiteral, {
+                node: { value: dest.numConst }
+              }),
+              ...s.leave(),
+              ...s.leave()
+            );
+          }
         }
         args.push(...lab());
       }

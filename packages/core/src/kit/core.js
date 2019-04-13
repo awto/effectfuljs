@@ -590,3 +590,19 @@ export function auto(i) {
   if (i.valCtor) return i;
   return new CtorWrap(i);
 }
+
+export function* skipTillFileBeg(s) {
+  for (let la; (la = s.cur()) != null; ) {
+    switch (la.type) {
+      case Tag.ImportDeclaration:
+        yield* s.one();
+        continue;
+      case Tag.VariableDeclaration:
+        if (la.value.metaInfo) {
+          yield* s.one();
+          continue;
+        }
+    }
+    break;
+  }
+}

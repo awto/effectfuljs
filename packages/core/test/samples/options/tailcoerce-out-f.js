@@ -10,18 +10,16 @@ function a1(a, b, c, d) {
   return M.chain(bb(), 5);
 
   function _1(a1, p) {
-    for (;;) {
-      switch (a1.true) {
-        case 5:
-          return M.chain(cc(), 6);
+    switch (a1.true) {
+      case 5:
+        return M.chain(cc(), 6);
 
-        case 0:
-          return p;
+      case 0:
+        return p;
 
-        case 6:
-        default:
-          throw new Error("invalid state");
-      }
+      case 6:
+      default:
+        throw new Error("invalid state");
     }
   }
 }

@@ -1,9 +1,10 @@
 let i;
+eff_top();
 function yh(a) {
   let j = (i += a);
   eff();
   return function eh() {
-    i += j;
+    eff((i += j));
   };
 }
 
