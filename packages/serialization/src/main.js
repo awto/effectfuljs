@@ -39,17 +39,15 @@ export function write(value, opts = {}) {
   ctx.knownSyms = opts.knownSyms || (opts.knownSyms = new Map());
   const res = [];
   res.push(ctx.step(value, res, 0));
-  if (ctx.refs.length) {
-    const refs = ctx.refs.filter(i => i.ref != null);
-    if (refs.length) {
-      let id = 0;
-      const dict = {};
-      for (const i of refs) {
-        dict[(i.ref.r = id++)] = i.data;
-        i.parent[i.index] = i.ref;
-      }
-      return { ...res[0], x: dict };
+  const { refs } = ctx;
+  if (refs.length) {
+    let id = 0;
+    const dict = {};
+    for (const i of refs) {
+      dict[(i.ref.r = id++)] = i.data;
+      i.parent[i.index] = i.ref;
     }
+    return { ...res[0], x: dict };
   }
   return res[0];
 }
@@ -208,10 +206,11 @@ class WriteContext {
           typeof value === "object"
             ? regOpaqueObject(value)
             : regOpaquePrim(value);
-      } else
+      } else {
         throw new TypeError(
           `not writable value ${value} at ${key} of ${parent}`
         );
+      }
     }
     return descriptor.write(this, value, parent, key);
   }
@@ -276,6 +275,7 @@ const descriptorTemplate = {
     if (this.valuePrototype !== void 0)
       return Object.create(this.valuePrototype);
     const protoJson = json.p;
+    if (protoJson === null) return Object.create(null);
     if (protoJson) return Object.create(ctx.step(protoJson));
     return {};
   },
@@ -306,10 +306,12 @@ function refAwareDescriptor(descriptor) {
         );
         if (this.always && parent) info.ref = {};
         info.data = descriptor.write(ctx, value, parent, index);
-        ctx.refs.push(info);
         return info.data;
       }
-      if (info.ref == null) info.ref = {};
+      if (info.ref == null) {
+        ctx.refs.push(info);
+        info.ref = {};
+      }
       return info.ref;
     },
     create(ctx, json) {
@@ -330,6 +332,12 @@ function refAwareDescriptor(descriptor) {
  * The name will be changed to a unique value if some other descriptor with the
  * same name is already registered.
  *
+ * Adds missed functionality into the descriptor. This includes:
+ *  - This includes reference awareness (if `descriptor.refAware !== false`)
+ *  - Saving `Object.keys` (if `descriptor.keys !== false`)
+ *  - Default methods (`read` from `create` and `readContent`)
+ *  - Adding "$" property (if `descriptor.default$ !== false`)
+ *
  * @param {Descriptor} descriptor
  * @returns {Descriptor}
  */
@@ -345,6 +353,7 @@ export function regDescriptor(descriptor) {
         : descriptor.create;
     }
   }
+  if (!descriptor.readContent) descriptor.readContent = function() {};
   const name = guessDescriptorName(descriptor);
   let uniq = name,
     i = 0;
@@ -625,12 +634,8 @@ function getValueDescriptor(value) {
       if (!value) return PrimDescriptor;
       const descriptor = value[descriptorSymbol];
       if (descriptor) return descriptor;
-      const proto = Object.getPrototypeOf(value);
-      if (proto == null || proto === Object.prototype) {
-        if (value.$$typeof) return descriptorByTypeOfProp.get(value.$$typeof);
-        return PojsoDescriptor;
-      }
-      break;
+      if (value.$$typeof) return descriptorByTypeOfProp.get(value.$$typeof);
+      return PojsoDescriptor;
     case "function":
       return value[descriptorSymbol] || null;
     case "symbol":

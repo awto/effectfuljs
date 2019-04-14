@@ -19,14 +19,37 @@ export const context = {
   }
 };
 
-S.regOpaqueObject(context, "#");
+/**
+ * Returns `JSON.stringify` serializable object with the whole
+ * current execution state
+ */
+export function capture() {
+  return S.write({
+    stack: context.stack,
+    threads: context.threads,
+    sync: context.sync,
+    brk: context.brk
+  });
+}
+
+/**
+ * Restores execution state from an object previously returned by
+ * `capture` the current state is discarded
+ */
+export function restore(json) {
+  const { brk, threads, sync, stack } = S.read(json);
+  context.brk = brk;
+  context.threads = threads;
+  context.sync = sync;
+  context.stack = stack;
+}
 
 /**
  * converts a function into another function doing the same, but all
  * callbacks executed within this function will be invoked synchronously
  */
-export const region = func =>
-  function(...args) {
+export const region = func => {
+  const ret = function(...args) {
     const { stack: saved, rec: recSaved } = context;
     try {
       context.stack = null;
@@ -37,6 +60,9 @@ export const region = func =>
       context.stack = saved;
     }
   };
+  S.regOpaqueObject(ret, `region${func.name || "?"}`);
+  return ret;
+};
 
 /** executes a thread starting from the `first` frame */
 export function runSync(first) {
@@ -56,7 +82,7 @@ export function module(name) {
   return (context.modules[name] = module);
 }
 
-export const functionSymbol = Symbol("@effectful/debugger/function");
+export const metaDataSymbol = Symbol("@effectful/debugger/metaData");
 
 export function syncMeta(module, func) {
   const wrap = function($$) {
@@ -77,6 +103,7 @@ export function meta(
   scope
 ) {
   if (!name) name = "*";
+  if (!errHandler) errHandler = defaultErrHandler;
   const info = {
     module,
     func,
@@ -89,24 +116,58 @@ export function meta(
     scope
   };
   const wrap = wrapMeta(info);
-  S.regOpaqueObject(wrap, `proto#${module.name}#${name}`);
-  S.regOpaqueObject(info, `info#${module.name}#${name}`);
-  wrap[functionSymbol] = info;
+  S.regOpaqueObject(info, `i#${info.module.name}#${info.name}`);
   module.functions.push(info);
   return wrap;
 }
 
 function wrapMeta(info) {
-  return function($$) {
+  const funcDescr = S.regDescriptor({
+    name: `p#${info.module.name}#${info.name}`,
+    create() {
+      return constr();
+    },
+    readContent(ctx, json, value) {
+      value[metaDataSymbol].$$ = ctx.step(json.$$);
+    },
+    write(ctx, value) {
+      const json = {};
+      const proto = value[metaDataSymbol];
+      json.$$ = ctx.step(proto.$$, json, "$$");
+      return json;
+    }
+  });
+  const frameDescr = S.regDescriptor({
+    name: `f@${info.module.name}#${info.name}`,
+    readContent(ctx, json, value) {
+      value.$ = ctx.step(json.$);
+    },
+    create(ctx, json) {
+      const closure = ctx.step(json.constr);
+      const proto = closure[metaDataSymbol];
+      return Object.create(proto);
+    },
+    write(ctx, value) {
+      const json = {};
+      json.constr = ctx.step(value.constructor, json, "constr");
+      return json;
+    }
+  });
+  const constr = function($$) {
     const proto = Object.create(FramePrototype);
-    proto.$run = info.handler;
     proto.$meta = info;
-    proto.$err = info.errHandler || defaultErrHandler;
     proto.$$ = $$;
-    const res = info.func(proto);
-    proto.constructor = res;
-    return res;
+    proto.$run = info.handler;
+    proto.$err = info.errHandler;
+    const closure = info.func(proto);
+    closure[metaDataSymbol] = proto;
+    closure[S.descriptorSymbol] = funcDescr;
+    proto[S.descriptorSymbol] = frameDescr;
+    proto.constructor = closure;
+    return closure;
   };
+  S.regOpaqueObject(constr, `c#${info.module.name}#${info.name}`);
+  return constr;
 }
 
 export function step() {
@@ -232,10 +293,12 @@ export function unwrap(value) {
 }
 
 if (config.replaceRT) {
-  EventTarget.prototype.dispatchEvent = region(
-    // TODO: this can be traceable
-    EventTarget.prototype.dispatchEvent
-  );
+  if (typeof EventTarget !== "undefined") {
+    EventTarget.prototype.dispatchEvent = region(
+      // TODO: this can be traceable
+      EventTarget.prototype.dispatchEvent
+    );
+  }
   const { defineProperty } = Object;
   Object.defineProperty = function definePropert(obj, prop, descr) {
     const copy = { ...descr };

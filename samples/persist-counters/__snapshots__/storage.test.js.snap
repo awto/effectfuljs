@@ -22,13 +22,13 @@ Array [
             "$": "Set",
             "l": Array [
               Object {
-                "r": 3,
-              },
-              Object {
                 "r": 0,
               },
               Object {
                 "r": 2,
+              },
+              Object {
+                "r": 3,
               },
               Object {
                 "r": 4,
@@ -38,46 +38,6 @@ Array [
         },
         "x": Object {
           "0": Object {
-            "$": "_data",
-            "d": Object {
-              "$last": 5,
-              "$step": 6,
-              "queue": Array [],
-            },
-          },
-          "1": Object {
-            "d": Object {
-              "type": "FLUSH",
-            },
-          },
-          "2": Object {
-            "$": "saveLocal",
-            "d": Object {
-              "$last": 12,
-              "$step": 13,
-              "_i": Object {
-                "r": 1,
-              },
-              "_input": null,
-              "_loop": Object {
-                "r": 0,
-              },
-              "queue": Array [
-                Object {
-                  "$": "Residual",
-                  "d": Object {
-                    "dest": Array [
-                      Object {
-                        "r": 3,
-                      },
-                    ],
-                    "state": 0,
-                  },
-                },
-              ],
-            },
-          },
-          "3": Object {
             "$": "Async$1",
             "d": Object {
               "$last": 7,
@@ -93,7 +53,7 @@ Array [
                 "r": 1,
               },
               "_loop": Object {
-                "r": 2,
+                "r": 3,
               },
               "cont": Object {
                 "$": "Residual",
@@ -110,6 +70,46 @@ Array [
               "state": 0,
             },
           },
+          "1": Object {
+            "d": Object {
+              "type": "FLUSH",
+            },
+          },
+          "2": Object {
+            "$": "_data",
+            "d": Object {
+              "$last": 5,
+              "$step": 6,
+              "queue": Array [],
+            },
+          },
+          "3": Object {
+            "$": "saveLocal",
+            "d": Object {
+              "$last": 12,
+              "$step": 13,
+              "_i": Object {
+                "r": 1,
+              },
+              "_input": null,
+              "_loop": Object {
+                "r": 2,
+              },
+              "queue": Array [
+                Object {
+                  "$": "Residual",
+                  "d": Object {
+                    "dest": Array [
+                      Object {
+                        "r": 0,
+                      },
+                    ],
+                    "state": 0,
+                  },
+                },
+              ],
+            },
+          },
           "4": Object {
             "$": "save",
             "d": Object {
@@ -120,7 +120,7 @@ Array [
                 "d": Object {
                   "dest": Array [
                     Object {
-                      "r": 2,
+                      "r": 3,
                     },
                   ],
                   "state": 0,

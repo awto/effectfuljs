@@ -32,7 +32,6 @@ export {
   parse,
   stringify,
   regDescriptor,
-  regObjectDescriptor,
   regOpaquePrim
 } from "@effectful/serialization";
 

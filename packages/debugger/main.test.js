@@ -1,10 +1,10 @@
 // otherwise jest won't work
 require("./config").default.replaceRT = false;
 const Debugger = require("./main");
+const S = require("@effectful/serialization");
 
-function trace() {
+function traceCont() {
   let num = 0;
-  Debugger.context.stack = [Debugger.context.threads.pop()];
   let f;
   while ((f = Debugger.step()) === Debugger.token) {
     const x = Debugger.context;
@@ -18,9 +18,13 @@ function trace() {
   return f;
 }
 
-global.console = { log: jest.fn() };
+function trace() {
+  Debugger.context.stack = [Debugger.context.threads.pop()];
+  return traceCont();
+}
 
 test("modules tracing", function() {
+  global.console = { log: jest.fn() };
   Debugger.unwrap(require("./__fixtures__/mod1"));
   const mod = trace();
   console.log("> M:", mod);
@@ -85,5 +89,20 @@ test("modules tracing", function() {
   mod.everyTest(new Int8Array([1, 2, 3]));
   console.log("> every:TypedArray", trace());
 
+  expect(console.log.mock.calls).toMatchSnapshot();
+});
+
+test("persistent state", function() {
+  global.console = { log: jest.fn() };
+  Debugger.unwrap(require("./__fixtures__/counters"));
+  const mod = trace();
+  S.regOpaqueObject(mod, "countersMod");
+  mod.runCounters();
+  const [counter1, s1] = trace();
+  console.log(counter1, s1);
+  Debugger.restore(s1);
+  const [counter2, s2] = traceCont();
+  console.log(counter2, s2);
+  expect(s1).toEqual(s2);
   expect(console.log.mock.calls).toMatchSnapshot();
 });

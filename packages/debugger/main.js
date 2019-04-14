@@ -6,14 +6,31 @@ var _exportNames = {
 };
 exports.exports = void 0;
 
-var _kit = require("./kit.js");
+var S = require("@effectful/serialization");
 
-Object.keys(_kit).forEach(function (key) {
+var Kit = require("./kit.js");
+
+Object.keys(Kit).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  exports[key] = _kit[key];
+  exports[key] = Kit[key];
 });
 
-var _rt = require("./instr/rt.js");
+var RT = require("./instr/rt.js");
 
-exports.exports = _rt.exports;
+for (const i in Kit) {
+  const v = Kit[i];
+  if (typeof v === "object" || typeof v === "function") S.regOpaqueObject(v, `@effectful/debugger/kit/${i}`);
+}
+
+S.regOpaqueObject(Kit.context.startThread, "@effectful/debugger/defaultStartThread");
+
+for (const i in RT) {
+  const v = RT[i];
+  if (typeof v === "object" || typeof v === "function") S.regOpaqueObject(v, `@effectful/debugger/rt/${i}`);
+}
+
+const _exports = RT.exports;
+exports.exports = _exports;
+S.regOpaquePrim(Kit.metaDataSymbol, "@effectful/debugger/metaData");
+S.regOpaquePrim(Kit.thunkSymbol, "@effectful/debugger/thunk");

@@ -3125,3 +3125,508 @@ Array [
   ],
 ]
 `;
+
+exports[`persistent state 1`] = `
+Array [
+  Array [
+    "Step #0@s",
+    undefined,
+  ],
+  Array [
+    "  @/__fixtures__/counters.js:1:0-1:30",
+  ],
+  Array [
+    "  exports@/src/instr/rt.js:undefined",
+  ],
+  Array [
+    "Step #0@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:11:2-11:25",
+  ],
+  Array [
+    "Step #1@s",
+    undefined,
+  ],
+  Array [
+    "  _getCounter@/__fixtures__/counters.js:4:2-4:12",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:11:2-11:25",
+  ],
+  Array [
+    "Step #2@s",
+    undefined,
+  ],
+  Array [
+    "  _getCounter@/__fixtures__/counters.js:5:2-7:4",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:11:2-11:25",
+  ],
+  Array [
+    "Step #3@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:12:2-12:26",
+  ],
+  Array [
+    "Step #4@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:12:2-12:26",
+  ],
+  Array [
+    "C1:",
+    0,
+  ],
+  Array [
+    "Step #5@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:13:2-13:26",
+  ],
+  Array [
+    "Step #6@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:13:2-13:26",
+  ],
+  Array [
+    "C2:",
+    1,
+  ],
+  Array [
+    "Step #7@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:14:2-14:30",
+  ],
+  Array [
+    "Step #8@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:15:2-15:26",
+  ],
+  Array [
+    "Step #9@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:15:2-15:26",
+  ],
+  Array [
+    "C3:",
+    2,
+  ],
+  Array [
+    "Step #10@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:16:2-16:26",
+  ],
+  Array [
+    "Step #11@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:16:2-16:26",
+  ],
+  Array [
+    "C4:",
+    3,
+  ],
+  Array [
+    "Step #12@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:17:2-17:22",
+  ],
+  Array [
+    "Step #13@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:17:2-17:22",
+  ],
+  Array [
+    4,
+    Object {
+      "d": Object {
+        "brk": null,
+        "stack": Array [
+          Object {
+            "$": "f@/__fixtures__/counters.js#runCounters",
+            "constr": Object {
+              "r": 0,
+            },
+            "d": Object {
+              "$": Object {
+                "d": Object {
+                  "c": Object {
+                    "$": "p#/__fixtures__/counters.js#counter",
+                    "$$": Object {
+                      "d": Object {
+                        "getCounter": Object {
+                          "d": Object {
+                            "i": 2,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              "$inNew": false,
+              "$self": Object {
+                "r": 1,
+              },
+              "$state": 14,
+              "location": "14:2-14:30",
+            },
+          },
+        ],
+        "sync": undefined,
+        "threads": Array [],
+      },
+      "x": Object {
+        "0": Object {
+          "$": "p#/__fixtures__/counters.js#runCounters",
+          "$$": Object {
+            "d": Object {
+              "f": Object {
+                "d": Object {
+                  "Kit": Object {
+                    "$": "Object",
+                    "d": Object {
+                      "__esModule": true,
+                      "asyncIterator": Object {
+                        "i": "@effectful/debugger/kit/asyncIterator",
+                      },
+                      "brk": Object {
+                        "i": "@effectful/debugger/kit/brk",
+                      },
+                      "capture": Object {
+                        "i": "@effectful/debugger/kit/capture",
+                      },
+                      "constr": Object {
+                        "i": "@effectful/debugger/kit/constr",
+                      },
+                      "context": Object {
+                        "i": "@effectful/debugger/kit/context",
+                      },
+                      "forInIterator": Object {
+                        "i": "@effectful/debugger/kit/forInIterator",
+                      },
+                      "frame": Object {
+                        "i": "@effectful/debugger/kit/frame",
+                      },
+                      "iterator": Object {
+                        "i": "@effectful/debugger/kit/iterator",
+                      },
+                      "meta": Object {
+                        "i": "@effectful/debugger/kit/meta",
+                      },
+                      "metaDataSymbol": Object {
+                        "i": "@effectful/debugger/metaData",
+                      },
+                      "module": Object {
+                        "i": "@effectful/debugger/kit/module",
+                      },
+                      "region": Object {
+                        "i": "@effectful/debugger/kit/region",
+                      },
+                      "restore": Object {
+                        "i": "@effectful/debugger/kit/restore",
+                      },
+                      "runSync": Object {
+                        "i": "@effectful/debugger/kit/runSync",
+                      },
+                      "step": Object {
+                        "i": "@effectful/debugger/kit/step",
+                      },
+                      "stepOut": Object {
+                        "i": "@effectful/debugger/kit/stepOut",
+                      },
+                      "stepOver": Object {
+                        "i": "@effectful/debugger/kit/stepOver",
+                      },
+                      "syncMeta": Object {
+                        "i": "@effectful/debugger/kit/syncMeta",
+                      },
+                      "thunkSymbol": Object {
+                        "i": "@effectful/debugger/thunk",
+                      },
+                      "token": Object {
+                        "i": "@effectful/debugger/kit/token",
+                      },
+                      "unwrap": Object {
+                        "i": "@effectful/debugger/kit/unwrap",
+                      },
+                    },
+                    "p": Object {
+                      "$": "Object",
+                      "p": null,
+                    },
+                  },
+                  "exports": Object {
+                    "r": 1,
+                  },
+                  "getCounter": Object {
+                    "$": "p#/__fixtures__/counters.js#getCounter",
+                    "$$": undefined,
+                  },
+                  "module": Object {
+                    "d": Object {
+                      "exports": Object {
+                        "r": 1,
+                      },
+                    },
+                  },
+                  "runCounters": Object {
+                    "r": 0,
+                  },
+                },
+              },
+            },
+          },
+        },
+        "1": Object {
+          "i": "countersMod",
+        },
+      },
+    },
+  ],
+  Array [
+    "Step #0@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:15:2-15:26",
+  ],
+  Array [
+    "Step #1@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:15:2-15:26",
+  ],
+  Array [
+    "C3:",
+    2,
+  ],
+  Array [
+    "Step #2@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:16:2-16:26",
+  ],
+  Array [
+    "Step #3@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:16:2-16:26",
+  ],
+  Array [
+    "C4:",
+    3,
+  ],
+  Array [
+    "Step #4@s",
+    undefined,
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:17:2-17:22",
+  ],
+  Array [
+    "Step #5@s",
+    undefined,
+  ],
+  Array [
+    "  counter@/__fixtures__/counters.js:6:4-6:15",
+  ],
+  Array [
+    "  _runCounters@/__fixtures__/counters.js:17:2-17:22",
+  ],
+  Array [
+    4,
+    Object {
+      "d": Object {
+        "brk": null,
+        "stack": Array [
+          Object {
+            "$": "f@/__fixtures__/counters.js#runCounters",
+            "constr": Object {
+              "r": 0,
+            },
+            "d": Object {
+              "$": Object {
+                "d": Object {
+                  "c": Object {
+                    "$": "p#/__fixtures__/counters.js#counter",
+                    "$$": Object {
+                      "d": Object {
+                        "getCounter": Object {
+                          "d": Object {
+                            "i": 2,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              "$inNew": false,
+              "$self": Object {
+                "r": 1,
+              },
+              "$state": 14,
+              "location": "14:2-14:30",
+            },
+          },
+        ],
+        "sync": undefined,
+        "threads": Array [],
+      },
+      "x": Object {
+        "0": Object {
+          "$": "p#/__fixtures__/counters.js#runCounters",
+          "$$": Object {
+            "d": Object {
+              "f": Object {
+                "d": Object {
+                  "Kit": Object {
+                    "$": "Object",
+                    "d": Object {
+                      "__esModule": true,
+                      "asyncIterator": Object {
+                        "i": "@effectful/debugger/kit/asyncIterator",
+                      },
+                      "brk": Object {
+                        "i": "@effectful/debugger/kit/brk",
+                      },
+                      "capture": Object {
+                        "i": "@effectful/debugger/kit/capture",
+                      },
+                      "constr": Object {
+                        "i": "@effectful/debugger/kit/constr",
+                      },
+                      "context": Object {
+                        "i": "@effectful/debugger/kit/context",
+                      },
+                      "forInIterator": Object {
+                        "i": "@effectful/debugger/kit/forInIterator",
+                      },
+                      "frame": Object {
+                        "i": "@effectful/debugger/kit/frame",
+                      },
+                      "iterator": Object {
+                        "i": "@effectful/debugger/kit/iterator",
+                      },
+                      "meta": Object {
+                        "i": "@effectful/debugger/kit/meta",
+                      },
+                      "metaDataSymbol": Object {
+                        "i": "@effectful/debugger/metaData",
+                      },
+                      "module": Object {
+                        "i": "@effectful/debugger/kit/module",
+                      },
+                      "region": Object {
+                        "i": "@effectful/debugger/kit/region",
+                      },
+                      "restore": Object {
+                        "i": "@effectful/debugger/kit/restore",
+                      },
+                      "runSync": Object {
+                        "i": "@effectful/debugger/kit/runSync",
+                      },
+                      "step": Object {
+                        "i": "@effectful/debugger/kit/step",
+                      },
+                      "stepOut": Object {
+                        "i": "@effectful/debugger/kit/stepOut",
+                      },
+                      "stepOver": Object {
+                        "i": "@effectful/debugger/kit/stepOver",
+                      },
+                      "syncMeta": Object {
+                        "i": "@effectful/debugger/kit/syncMeta",
+                      },
+                      "thunkSymbol": Object {
+                        "i": "@effectful/debugger/thunk",
+                      },
+                      "token": Object {
+                        "i": "@effectful/debugger/kit/token",
+                      },
+                      "unwrap": Object {
+                        "i": "@effectful/debugger/kit/unwrap",
+                      },
+                    },
+                    "p": Object {
+                      "$": "Object",
+                      "p": null,
+                    },
+                  },
+                  "exports": Object {
+                    "r": 1,
+                  },
+                  "getCounter": Object {
+                    "$": "p#/__fixtures__/counters.js#getCounter",
+                    "$$": undefined,
+                  },
+                  "module": Object {
+                    "d": Object {
+                      "exports": Object {
+                        "r": 1,
+                      },
+                    },
+                  },
+                  "runCounters": Object {
+                    "r": 0,
+                  },
+                },
+              },
+            },
+          },
+        },
+        "1": Object {
+          "i": "countersMod",
+        },
+      },
+    },
+  ],
+]
+`;
