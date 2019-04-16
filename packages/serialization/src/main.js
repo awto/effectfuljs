@@ -45,7 +45,7 @@ export function write(value, opts = {}) {
     const dict = {};
     for (const i of refs) {
       dict[(i.ref.r = id++)] = i.data;
-      i.parent[i.index] = i.ref;
+      if (i.parent) i.parent[i.index] = i.ref;
     }
     return { ...res[0], x: dict };
   }
@@ -214,6 +214,22 @@ class WriteContext {
     }
     return descriptor.write(this, value, parent, key);
   }
+  /**
+   * Register `data` to be a serialized representation of value,
+   * returns an object with `ref` and `data` fields representing a reference
+   * to the value and the value itself
+
+   * @param {any} value - value to write
+   * @returns {{ref:JSONObject,data:JSONObject}} - a reference
+   */
+  ref(value) {
+    const info = this.sharedRefs.get(value);
+    if (!info.ref) {
+      info.ref = {};
+      this.refs.push(info);
+    }
+    return info;
+  }
 }
 
 /**
@@ -304,7 +320,6 @@ function refAwareDescriptor(descriptor) {
           value,
           (info = { ref: null, parent, index, descriptor })
         );
-        if (this.always && parent) info.ref = {};
         info.data = descriptor.write(ctx, value, parent, index);
         return info.data;
       }
@@ -320,8 +335,7 @@ function refAwareDescriptor(descriptor) {
     readContent(ctx, json, value) {
       return descriptor.readContent(ctx, json, value);
     },
-    noRefs: descriptor,
-    always: false
+    noRefs: descriptor
   };
 }
 
@@ -634,7 +648,10 @@ function getValueDescriptor(value) {
       if (!value) return PrimDescriptor;
       const descriptor = value[descriptorSymbol];
       if (descriptor) return descriptor;
-      if (value.$$typeof) return descriptorByTypeOfProp.get(value.$$typeof);
+      if (value.$$typeof) {
+        const res = descriptorByTypeOfProp.get(value.$$typeof);
+        if (res) return res;
+      }
       return PojsoDescriptor;
     case "function":
       return value[descriptorSymbol] || null;
