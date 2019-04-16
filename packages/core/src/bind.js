@@ -100,6 +100,21 @@ export const flatten = Kit.pipe(
       ]);
       return s.tok(i.pos, Block.bindPat, { sym });
     }
+    function bindOne(i, buf, sym) {
+      if (!sym) sym = tempVarSym(root);
+      sym.bound = false;
+      buf.push([
+        ...(function*() {
+          yield s.enter(Tag.push, Block.letStmt, { sym });
+          yield* Kit.reposOne(
+            i.value.eff ? walk(buf, s.one(), true) : s.one(),
+            Tag.expression
+          );
+          yield* s.leave();
+        })()
+      ]);
+      return s.tok(i.pos, Block.bindPat, { sym });
+    }
     function* walk(buf, sw, expr) {
       for (const i of sw) {
         if (i.enter) {
@@ -206,10 +221,10 @@ export const flatten = Kit.pipe(
                   yield* walk(buf, s.one(), true);
                   const cbuf = [];
                   const abuf = [];
-                  const c = s.take();
+                  const c = s.cur();
                   sym = tempVarSym(root);
                   sym.bound = false;
-                  bind(c, cbuf, sym);
+                  bindOne(c, cbuf, sym);
                   /**
                    * this is always letStmt with `sym` === `psym` in the last step
                    * but is it effectful or not isn't yet known
@@ -217,9 +232,9 @@ export const flatten = Kit.pipe(
                   const cl = cbuf[cbuf.length - 1];
                   /** however it's enough to check if there is any `bind` there */
                   const cleff = cl.some(isBindTrue);
-                  const a = s.take();
+                  const a = s.cur();
                   const eff = a.value.eff || c.value.eff;
-                  bind(a, abuf, sym);
+                  bindOne(a, abuf, sym);
                   const al = abuf[abuf.length - 1];
                   const aleff = al.some(isBindTrue);
                   /**
@@ -260,7 +275,7 @@ export const flatten = Kit.pipe(
                 continue;
               }
               const or = i.value.node.operator === "||";
-              const left = s.take();
+              const left = s.cur();
               let rpat;
               buf.push([
                 ...(function*() {
@@ -273,18 +288,18 @@ export const flatten = Kit.pipe(
                     yield s.enter(Tag.test, Tag.UnaryExpression, {
                       node: { operator: "!" }
                     });
-                    yield bind(Kit.setPos(left, Tag.argument), buf, lsym);
+                    yield bindOne(Kit.setPos(left, Tag.argument), buf, lsym);
                     yield* s.leave();
                   } else {
-                    yield bind(Kit.setPos(left, Tag.test), buf, lsym);
+                    yield bindOne(Kit.setPos(left, Tag.test), buf, lsym);
                   }
-                  const right = s.take();
+                  const right = s.cur();
                   const subBuf = [];
                   if (right.value.eff) {
                     yield s.enter(Tag.consequent, Block.chain);
                     const rsym = tempVarSym(root);
                     rsym.bound = false;
-                    rpat = bind(Kit.setPos(right, i.pos), subBuf, rsym);
+                    rpat = bindOne(Kit.setPos(right, i.pos), subBuf, rsym);
                     for (const i of subBuf) yield* i;
                     yield* ilab();
                     yield s.enter(Tag.alternate, Block.chain);
@@ -302,7 +317,7 @@ export const flatten = Kit.pipe(
                     yield s.enter(Tag.consequent, Tag.BlockStatement);
                     yield s.enter(Tag.body, Tag.Array);
                     rpat = s.tok(i.pos, Block.bindPat, { sym: lsym });
-                    bind(right, subBuf, lsym);
+                    bindOne(right, subBuf, lsym);
                     for (const j of subBuf) yield* j;
                   }
                   yield* lab();

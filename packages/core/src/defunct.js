@@ -187,6 +187,7 @@ export function inlineExceptions(si) {
     throw s.error(
       "inlineJsExceptions && defunct requires inlinePureJumps:'tail'"
     );
+  // assigned in another pass
   if (!s.opts.keepLastRaise)
     throw s.error("inlineJsExceptions && defunct requires keepLastPure:'tail'");
   if (
@@ -515,6 +516,7 @@ export function tailJumps(si) {
   let tailCoerceExpr;
   let tailCoerceArg;
   let eraseChain;
+  const assignCont = s.opts.inlineContAssign === false;
   const { ctrlParam } = implFrame;
   const contStoreSym = root.contSym;
   if (inlineTailCoerce) {
@@ -591,23 +593,29 @@ export function tailJumps(si) {
           continue;
         }
         if (i.type === Ctrl.jump && !i.value.bindName && !i.value.reflected) {
-          yield* s.toks(
-            Tag.push,
-            "=$I = $I",
-            ctrlParam || contStoreSym,
-            i.value.gotoSym
-          );
+          if (assignCont)
+            yield* s.toks(
+              Tag.push,
+              "=$I = $I",
+              ctrlParam || contStoreSym,
+              i.value.gotoSym
+            );
           const j = s.curLev();
           if (j) {
             if (j.type === Block.bindPat && i.value.sym === pat) {
               Kit.skip(s.sub());
             } else {
-              yield s.enter(Tag.push, Tag.AssignmentExpression, {
-                node: { operator: "=" }
-              });
-              yield s.tok(Tag.left, Tag.Identifier, { sym: pat });
-              yield* Kit.reposOne(s.sub(), Tag.right);
-              yield* s.leave();
+              if (i.value.sym && i.value.sym.bound === false) {
+                yield* Kit.reposOne(s.sub(), i.pos);
+              } else {
+                const sym = i.value.sym || pat;
+                yield s.enter(Tag.push, Tag.AssignmentExpression, {
+                  node: { operator: "=" }
+                });
+                yield s.tok(Tag.left, Tag.Identifier, { sym });
+                yield* Kit.reposOne(s.sub(), Tag.right);
+                yield* s.leave();
+              }
             }
           }
           s.close(i);

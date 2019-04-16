@@ -30,13 +30,15 @@ describe('flatten expressions', function() {
           eff(1) || (eff(2) + eff3());
         }),
         print(function () /*BS|..|B*/{
-          /*VD|S|E*/var a = /*CE|B*/eff(1);
+          /*VD|S|E*/var b = /*CE|B*/eff(1);
+          /*VD|S*/
+          var a = b;
           /*IS|E*/if (!a) /*BS|..|E*/{
-            /*VD|S|E*/var c = /*CE|B*/eff(2);
-            /*VD|S|E*/var d = /*CE|B*/eff3();
-            /*VD|S*/var b = c + d;
+            /*VD|S|E*/var d = /*CE|B*/eff(2);
+            /*VD|S|E*/var e = /*CE|B*/eff3();
+            /*VD|S*/var c = d + e;
           } else /*BS|..*/{
-            /*VD|S*/var b = a;
+            /*VD|S*/var c = a;
           }
         }))
     })
@@ -65,13 +67,17 @@ describe('flatten expressions', function() {
           var a = eff(1) || eff(2);
         }),
         print(function () /*BS|..|B*/{
-          /*VD|S|E*/var b = /*CE|B*/eff(1);
+          /*VD|S|E*/var c = /*CE|B*/eff(1);
+          /*VD|S*/
+          var b = c;
           /*IS|E*/if (!b) /*BS|..|E*/{
-            /*VD|S|E*/var c = /*CE|B*/eff(2);
+            /*VD|S|E*/var e = /*CE|B*/eff(2);
+            /*VD|S*/
+            var d = e;
           } else /*BS|..|E*/{
-            /*VD|S|E*/var c = /*CE|..|B*/pure(b);
+            /*VD|S|E*/var d = /*CE|..|B*/pure(b);
           }
-          var a = c;
+          var a = d;
         }))
     })
   })
@@ -81,11 +87,16 @@ describe('flatten expressions', function() {
         eff(1) || eff(2);
       }),
       print(function () /*BS|..|B*/{
-        /*VD|S|E*/var a = /*CE|B*/eff(1);
+        /*VD|S|E*/var b = /*CE|B*/eff(1);
+        /*VD|S*/
+        var a = b;
         /*IS|E*/if (!a) /*BS|..|E*/{
-          /*VD|S|E*/var b = /*CE|B*/eff(2);
+          /*VD|S|E*/var d = /*CE|B*/eff(2);
+          
+          /*VD|S*/
+          var c = d;
         } else /*BS|..|E*/{
-          /*VD|S|E*/var b = /*CE|..|B*/pure(a);
+          /*VD|S|E*/var c = /*CE|..|B*/pure(a);
         }
       }))
   })

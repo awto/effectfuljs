@@ -262,10 +262,15 @@ function a1_1(a1) {
   }
 }
 
-function a1_2(a1, a) {
-  var e, b;
-  b = e = sb.compositionEnd;
-  a && b;
+function a1_2(a1, b) {
+  var e, a;
+  a = b;
+
+  if (a) {
+    a = e = sb.compositionEnd;
+  }
+
+  a;
   return M.jump(void 0, a1_3);
 }
 

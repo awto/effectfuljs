@@ -909,8 +909,11 @@ function* copyFrameVars(si) {
       patCopy = commonPatSym;
     }
     if (patCopy) {
-      if (frame.errSym) frame.errSym = patCopy;
-      else frame.patSym = patCopy;
+      if (frame.errSym) {
+        // for (const i of frame.enters)
+        //  if (i.sym === frame.errSym) i.sym = patCopy;
+        frame.errSym = patCopy;
+      } else frame.patSym = patCopy;
     }
     const tempVars = [];
     const substPatSym =

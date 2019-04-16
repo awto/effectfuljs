@@ -133,3 +133,8 @@ function* z1() {
   yield "o3l" && (yield "o3r");
   return (yield "o4l") && (yield "o4r");
 }
+
+function z2() {
+  check_1 ? (check_2 ? eff2() : check_3 ? efff_1(1) : pure_4) : eff_5();
+  ef_1() || ef_2() || ef_3();
+}

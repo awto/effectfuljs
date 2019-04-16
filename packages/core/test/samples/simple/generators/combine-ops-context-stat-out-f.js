@@ -551,43 +551,74 @@ function a7() {
     if (a) {
       return a7.yld("A", _3);
     } else {
-      return a7.yld("c", _5);
+      return a7.yld("c", _6);
     }
   }
 
-  function _3(a7, a) {
-    a7._1 = a;
-    return a7.yld("b", _4);
+  function _3(a7, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7.yld("b", _4);
+    } else {
+      return a7.jump(a, _5);
+    }
   }
 
   function _4(a7, a) {
-    a7._ = a7._1 && a;
-    return a7.jump(void 0, _8);
+    a7._1 = a;
+    return a7.jump(void 0, _5);
   }
 
-  function _5(a7, a) {
-    a7._2 = a;
-    return a7.yld("d", _6);
+  function _5(a7) {
+    a7._ = a7._1;
+    return a7.jump(void 0, _11);
   }
 
-  function _6(a7, a) {
-    if (a) {
-      return a7.yld("e", _7);
+  function _6(a7, b) {
+    var a;
+    a = b;
+
+    if (!a) {
+      return a7.yld("d", _7);
     } else {
-      return a7.jump(a, _7);
+      a7._2 = a;
+      return a7.jump(void 0, _10);
     }
   }
 
-  function _7(a7, a) {
-    a7._ = a7._2 || a;
-    return a7.jump(void 0, _8);
+  function _7(a7, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7.yld("e", _8);
+    } else {
+      return a7.jump(a, _9);
+    }
   }
 
-  function _8(a7) {
+  function _8(a7, a) {
+    a7._3 = a;
+    return a7.jump(void 0, _9);
+  }
+
+  function _9(a7) {
+    a7._2 = a7._3;
+    return a7.jump(void 0, _10);
+  }
+
+  function _10(a7) {
+    a7._ = a7._2;
+    return a7.jump(void 0, _11);
+  }
+
+  function _11(a7) {
     return a7.pure(a7._);
   }
 
-  function _9(a7, r) {
+  function _12(a7, r) {
     return a7.pure(r);
   }
 }
@@ -604,51 +635,82 @@ function a7_1() {
     if (a) {
       return a7_1.yld("A", _3);
     } else {
-      return a7_1.yld("c", _5);
+      return a7_1.yld("c", _6);
     }
   }
 
-  function _3(a7_1, a) {
-    a7_1._1 = a;
-    return a7_1.yld("b", _4);
+  function _3(a7_1, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7_1.yld("b", _4);
+    } else {
+      return a7_1.jump(a, _5);
+    }
   }
 
   function _4(a7_1, a) {
-    a7_1._ = a7_1._1 && a;
-    return a7_1.jump(void 0, _8);
+    a7_1._1 = a;
+    return a7_1.jump(void 0, _5);
   }
 
-  function _5(a7_1, a) {
-    a7_1._2 = a;
-    return a7_1.yld("d", _6);
+  function _5(a7_1) {
+    a7_1._ = a7_1._1;
+    return a7_1.jump(void 0, _11);
   }
 
-  function _6(a7_1, a) {
-    if (a) {
-      return a7_1.yld("e", _7);
+  function _6(a7_1, b) {
+    var a;
+    a = b;
+
+    if (!a) {
+      return a7_1.yld("d", _7);
     } else {
-      return a7_1.jump(a, _7);
+      a7_1._2 = a;
+      return a7_1.jump(void 0, _10);
     }
   }
 
-  function _7(a7_1, a) {
-    a7_1._ = a7_1._2 || a;
-    return a7_1.jump(void 0, _8);
+  function _7(a7_1, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7_1.yld("e", _8);
+    } else {
+      return a7_1.jump(a, _9);
+    }
   }
 
-  function _8(a7_1) {
-    return a7_1.yld(2, _9);
+  function _8(a7_1, a) {
+    a7_1._3 = a;
+    return a7_1.jump(void 0, _9);
   }
 
-  function _9(a7_1, a) {
-    return a7_1.yld(a7_1._ + a, _10);
+  function _9(a7_1) {
+    a7_1._2 = a7_1._3;
+    return a7_1.jump(void 0, _10);
   }
 
-  function _10(a7_1, a) {
+  function _10(a7_1) {
+    a7_1._ = a7_1._2;
+    return a7_1.jump(void 0, _11);
+  }
+
+  function _11(a7_1) {
+    return a7_1.yld(2, _12);
+  }
+
+  function _12(a7_1, a) {
+    return a7_1.yld(a7_1._ + a, _13);
+  }
+
+  function _13(a7_1, a) {
     return a7_1.pure(a);
   }
 
-  function _11(a7_1, r) {
+  function _14(a7_1, r) {
     return a7_1.pure(r);
   }
 }
@@ -665,55 +727,86 @@ function a7_2() {
     if (a) {
       return a7_2.yld("A", _3);
     } else {
-      return a7_2.yld("c", _5);
+      return a7_2.yld("c", _6);
     }
   }
 
-  function _3(a7_2, a) {
-    a7_2._1 = a;
-    return a7_2.yld("b", _4);
+  function _3(a7_2, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7_2.yld("b", _4);
+    } else {
+      return a7_2.jump(a, _5);
+    }
   }
 
   function _4(a7_2, a) {
-    a7_2._ = a7_2._1 && a;
-    return a7_2.jump(void 0, _8);
+    a7_2._1 = a;
+    return a7_2.jump(void 0, _5);
   }
 
-  function _5(a7_2, a) {
-    a7_2._2 = a;
-    return a7_2.yld("d", _6);
+  function _5(a7_2) {
+    a7_2._ = a7_2._1;
+    return a7_2.jump(void 0, _11);
   }
 
-  function _6(a7_2, a) {
-    if (a) {
-      return a7_2.yld("e", _7);
+  function _6(a7_2, b) {
+    var a;
+    a = b;
+
+    if (!a) {
+      return a7_2.yld("d", _7);
     } else {
-      return a7_2.jump(a, _7);
+      a7_2._2 = a;
+      return a7_2.jump(void 0, _10);
     }
   }
 
-  function _7(a7_2, a) {
-    a7_2._ = a7_2._2 || a;
-    return a7_2.jump(void 0, _8);
+  function _7(a7_2, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7_2.yld("e", _8);
+    } else {
+      return a7_2.jump(a, _9);
+    }
   }
 
-  function _8(a7_2) {
-    return a7_2.yld(2, _9);
+  function _8(a7_2, a) {
+    a7_2._3 = a;
+    return a7_2.jump(void 0, _9);
   }
 
-  function _9(a7_2, a) {
-    return a7_2.yld(a7_2._ + a, _10);
+  function _9(a7_2) {
+    a7_2._2 = a7_2._3;
+    return a7_2.jump(void 0, _10);
   }
 
   function _10(a7_2) {
-    return a7_2.yld("ex", _11);
+    a7_2._ = a7_2._2;
+    return a7_2.jump(void 0, _11);
   }
 
   function _11(a7_2) {
+    return a7_2.yld(2, _12);
+  }
+
+  function _12(a7_2, a) {
+    return a7_2.yld(a7_2._ + a, _13);
+  }
+
+  function _13(a7_2) {
+    return a7_2.yld("ex", _14);
+  }
+
+  function _14(a7_2) {
     return a7_2.pure();
   }
 
-  function _12(a7_2, r) {
+  function _15(a7_2, r) {
     return a7_2.pure(r);
   }
 }
@@ -730,28 +823,45 @@ function a7_3() {
     if (a % 2) {
       return a7_3.yld("A", _3);
     } else {
-      return a7_3.yld("c", _5);
+      return a7_3.yld("c", _6);
     }
   }
 
-  function _3(a7_3, a) {
-    a7_3._ = a;
-    return a7_3.yld("b", _4);
+  function _3(a7_3, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7_3.yld("b", _4);
+    } else {
+      return a7_3.jump(a, _5);
+    }
   }
 
   function _4(a7_3, a) {
-    return a7_3.jump(a7_3._ && a, _5);
+    a7_3._ = a;
+    return a7_3.jump(void 0, _5);
   }
 
   function _5(a7_3) {
-    return a7_3.yld(2, _6);
+    a7_3._;
+    return a7_3.jump(void 0, _7);
   }
 
-  function _6(a7_3) {
+  function _6(a7_3, a) {
+    a;
+    return a7_3.jump(void 0, _7);
+  }
+
+  function _7(a7_3) {
+    return a7_3.yld(2, _8);
+  }
+
+  function _8(a7_3) {
     return a7_3.pure();
   }
 
-  function _7(a7_3, r) {
+  function _9(a7_3, r) {
     return a7_3.pure(r);
   }
 }
@@ -762,34 +872,40 @@ function a7_4() {
 
   function _1(a7_4) {
     if (1) {
-      return a7_4.yld(2, _4);
+      return a7_4.yld(2, _2);
     } else {
-      return a7_4.yld(3, _2);
+      return a7_4.yld(3, _3);
     }
   }
 
   function _2(a7_4, a) {
     a7_4._ = a;
-    return a7_4.yld(4, _3);
+    return a7_4.jump(void 0, _5);
   }
 
   function _3(a7_4, a) {
-    return a7_4.jump((a7_4._, a), _4);
+    a7_4._1 = a;
+    return a7_4.yld(4, _4);
   }
 
   function _4(a7_4, a) {
-    return a7_4.yld(a, _5);
+    a7_4._ = (a7_4._1, a);
+    return a7_4.jump(void 0, _5);
   }
 
-  function _5(a7_4, a) {
-    return a7_4.yld(a, _6);
+  function _5(a7_4) {
+    return a7_4.yld(a7_4._, _6);
   }
 
   function _6(a7_4, a) {
+    return a7_4.yld(a, _7);
+  }
+
+  function _7(a7_4, a) {
     return a7_4.pure(a);
   }
 
-  function _7(a7_4, r) {
+  function _8(a7_4, r) {
     return a7_4.pure(r);
   }
 }
@@ -806,19 +922,29 @@ function a7_5() {
     if (a) {
       return a7_5.yld(2, _3);
     } else {
-      return a7_5.yld(3, _3);
+      return a7_5.yld(3, _4);
     }
   }
 
   function _3(a7_5, a) {
-    return a7_5.yld(a, _4);
+    a7_5._ = a;
+    return a7_5.jump(void 0, _5);
   }
 
   function _4(a7_5, a) {
+    a7_5._ = a;
+    return a7_5.jump(void 0, _5);
+  }
+
+  function _5(a7_5) {
+    return a7_5.yld(a7_5._, _6);
+  }
+
+  function _6(a7_5, a) {
     return a7_5.pure(a);
   }
 
-  function _5(a7_5, r) {
+  function _7(a7_5, r) {
     return a7_5.pure(r);
   }
 }
@@ -836,29 +962,40 @@ function a7_6() {
       return a7_6.yld("A", _3);
     } else {
       a7_6._ = 1;
-      return a7_6.jump(void 0, _5);
+      return a7_6.jump(void 0, _6);
     }
   }
 
-  function _3(a7_6, a) {
-    a7_6._1 = a;
-    return a7_6.yld("b", _4);
+  function _3(a7_6, b) {
+    var a;
+    a = b;
+
+    if (a) {
+      return a7_6.yld("b", _4);
+    } else {
+      return a7_6.jump(a, _5);
+    }
   }
 
   function _4(a7_6, a) {
-    a7_6._ = a7_6._1 && a;
+    a7_6._1 = a;
     return a7_6.jump(void 0, _5);
   }
 
   function _5(a7_6) {
-    return a7_6.yld(a7_6._, _6);
+    a7_6._ = a7_6._1;
+    return a7_6.jump(void 0, _6);
   }
 
-  function _6(a7_6, a) {
+  function _6(a7_6) {
+    return a7_6.yld(a7_6._, _7);
+  }
+
+  function _7(a7_6, a) {
     return a7_6.pure(a);
   }
 
-  function _7(a7_6, r) {
+  function _8(a7_6, r) {
     return a7_6.pure(r);
   }
 }

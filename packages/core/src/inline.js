@@ -1022,7 +1022,7 @@ export function throwStatements(si) {
             yield s.enter(j.pos, Ctrl.jump, {
               ref: j.value,
               goto,
-              sym: goto.errSym,
+              // sym: goto.errSym,
               gotoDests: [goto]
             });
             if (!j.leave) yield* s.sub();
