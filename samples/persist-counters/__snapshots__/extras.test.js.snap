@@ -2,92 +2,191 @@
 
 exports[`incrementAsync 1`] = `
 Object {
-  "d": Object {
-    "index": 300,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        "Increment Async",
-      ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-          "onClick": Object {
-            "$": "Bind",
-            "args": Array [
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      300,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          "Increment Async",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "onClick",
               Object {
-                "i": "extrasDispatch",
+                "r": 0,
               },
             ],
-            "func": Object {
-              "i": "runIncrementAsync",
-            },
-            "self": undefined,
-          },
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": "button",
       },
-      "type": "button",
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "extrasDispatch",
+        },
+      ],
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 0,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "$": "runIncrementAsync",
+      },
+      "self": Object {
+        "$": "undefined",
+      },
     },
-  },
+  ],
 }
 `;
 
 exports[`incrementIfOdd 1`] = `
 Object {
-  "d": Object {
-    "index": 400,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        "Increment if odd",
-      ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-          "onClick": Object {
-            "$": "Bind",
-            "args": Array [
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      400,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          "Increment if odd",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "onClick",
               Object {
-                "i": "extrasDispatch",
+                "r": 0,
               },
-              "INCREMENT",
-              undefined,
             ],
-            "func": Object {
-              "i": "_signal",
-            },
-            "self": null,
-          },
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": "button",
       },
-      "type": "button",
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "extrasDispatch",
+        },
+        "INCREMENT",
+        Object {
+          "$": "undefined",
+        },
+      ],
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 0,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "$": "_signal",
+      },
+      "self": null,
     },
-  },
+  ],
 }
 `;
 
 exports[`incrementIfOdd 2`] = `
 Object {
-  "d": Object {
-    "index": 400,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        "Increment if odd",
-      ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-          "onClick": Object {
-            "i": "nop",
-          },
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      400,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          "Increment if odd",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "onClick",
+              Object {
+                "$": "nop",
+              },
+            ],
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": "button",
       },
-      "type": "button",
-    },
-  },
+    ],
+  ],
 }
 `;

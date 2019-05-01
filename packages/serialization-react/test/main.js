@@ -13,22 +13,23 @@ describe("serializable react element", function() {
     );
     const elJson = Lib.write({ el });
     assert.deepStrictEqual(elJson, {
-      d: {
-        el: {
-          $: "ReactElement",
-          props: {
-            d: {
-              class: "myClass",
-              style: {
-                d: { paddingLeft: 10 }
-              },
-              children: undefined
-            }
-          },
-          children: ["hi"],
-          type: "div"
-        }
-      }
+      f: [
+        [
+          "el",
+          {
+            $: "ReactElement",
+            props: {
+              f: [
+                ["class", "myClass"],
+                ["style", { f: [["paddingLeft", 10]] }],
+                ["children", { $: "undefined" }]
+              ]
+            },
+            children: ["hi"],
+            type: "div"
+          }
+        ]
+      ]
     });
     const rel = Lib.read(elJson);
     assert.notStrictEqual(el, rel.el);

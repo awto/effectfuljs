@@ -3,68 +3,134 @@
 exports[`persist 1`] = `
 Object {
   "resume": Object {
-    "d": Object {
-      "resume": Object {
-        "r": 1,
-      },
-      "running": Object {
-        "$": "Set",
-        "l": Array [
-          Object {
-            "r": 0,
-          },
-          Object {
-            "r": 1,
-          },
+    "f": Array [
+      Array [
+        "running",
+        Object {
+          "$": "Set",
+          "l": Array [
+            Object {
+              "r": 0,
+            },
+            Object {
+              "r": 1,
+            },
+          ],
+        },
+      ],
+      Array [
+        "resume",
+        Object {
+          "r": 1,
+        },
+      ],
+    ],
+    "x": Array [
+      Object {
+        "$": "Async$1",
+        "f": Array [
+          Array [
+            "dest",
+            Array [],
+          ],
+          Array [
+            "state",
+            0,
+          ],
+          Array [
+            "value",
+            Object {
+              "$": "undefined",
+            },
+          ],
+          Array [
+            "$step",
+            7,
+          ],
+          Array [
+            "cont",
+            Object {
+              "$": "Residual",
+              "f": Array [
+                Array [
+                  "dest",
+                  Array [
+                    Object {
+                      "$": "persistExit",
+                    },
+                  ],
+                ],
+                Array [
+                  "state",
+                  0,
+                ],
+              ],
+            },
+          ],
+          Array [
+            "$last",
+            6,
+          ],
+          Array [
+            "_i",
+            "hi",
+          ],
         ],
       },
-    },
-    "x": Object {
-      "0": Object {
-        "$": "Async$1",
-        "d": Object {
-          "$last": 6,
-          "$step": 7,
-          "_i": "hi",
-          "cont": Object {
-            "$": "Residual",
-            "d": Object {
-              "dest": Array [
-                Object {
-                  "i": "persistExit",
-                },
-              ],
-              "state": 0,
-            },
-          },
-          "dest": Array [],
-          "state": 0,
-          "value": undefined,
-        },
-      },
-      "1": Object {
+      Object {
         "$": "save",
-        "d": Object {
-          "$arg": undefined,
-          "$last": 6,
-          "$step": 6,
-          "cont": Object {
-            "$": "Residual",
-            "d": Object {
-              "dest": Array [
-                Object {
-                  "r": 0,
-                },
-              ],
-              "state": 0,
+        "f": Array [
+          Array [
+            "dest",
+            Array [],
+          ],
+          Array [
+            "state",
+            0,
+          ],
+          Array [
+            "value",
+            Object {
+              "$": "undefined",
             },
-          },
-          "dest": Array [],
-          "state": 0,
-          "value": undefined,
-        },
+          ],
+          Array [
+            "$step",
+            6,
+          ],
+          Array [
+            "cont",
+            Object {
+              "$": "Residual",
+              "f": Array [
+                Array [
+                  "dest",
+                  Array [
+                    Object {
+                      "r": 0,
+                    },
+                  ],
+                ],
+                Array [
+                  "state",
+                  0,
+                ],
+              ],
+            },
+          ],
+          Array [
+            "$last",
+            6,
+          ],
+          Array [
+            "$arg",
+            Object {
+              "$": "undefined",
+            },
+          ],
+        ],
       },
-    },
+    ],
   },
 }
 `;

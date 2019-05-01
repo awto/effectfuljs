@@ -117,32 +117,56 @@ interface Descriptor {
    * @param index  - either name of a field if parent is an object
    *                 or number index if it is an array
    */
-  write(
+  write?: (
     ctx: WriteContext,
     value: any,
     parent: JSONObject | JSONArray,
     index: number | string
-  );
+  ) => void;
   /**
    * Reads value from `json` value
    * @param ctx  - recursive reads handling for sub-values
    * @param json - input JSON
    * @returns     - resulting JS value
    */
-  read(ctx: ReadContext, json: JSONValue): any;
+  read?: (ctx: ReadContext, json: JSONValue) => any;
   /**
-   * If !== false, the descriptor recognizes shared objects and uses only references for them
+   * The first part of `read`, just creates a corresponding value without traversing into children.
+   * This is needed to avoid infinite loops on recursive values.
+   * @param ctx  - recursive reads handling for sub-values
+   * @param json - input JSON
+   * @returns - resulting JS value
+   */
+  create?: (ctx: ReadContext, json: JSONValue) => any;
+  /**
+   * The second part of `read`, creates children and sets them into `value`.
+   * This is needed to avoid infinite loops on recursive values.
+   * @param ctx  - recursive reads handling for sub-values
+   * @param json - input JSON
+   * @param value - resulting JS value
+   */
+  readContent?: (ctx: ReadContext, json: JSONValue, value: any) => void;
+  /**
+   * If !== false, the descriptor recognizes shared objects and uses only references for them.
+   * The default is `true`.
    */
   refAware?:boolean;
   /**
    * If !== false the descriptor will traverse own properties too 
    */
-  keys:boolean;
+  props:boolean;
   /**
    * If !== false the descriptor will add property `$` equal to `name` by default 
    */
   default$?:boolean;
-  
+  /**
+   * `typeof value` for the values this serializes
+   */
+  typeofHint?: string;
+  /**
+   * if `props !== false` this is a predicate to specify which properties should be output.
+   */
+  overrideProps?: Object;
 }
 
 /** name of a property to specify `Descriptor` for JS value */
@@ -153,7 +177,14 @@ declare const descriptorSymbol: Symbol;
  * invocation for nested values
  */
 interface WriteContext {
+  /** Invokes write recursively for nested values */
   step(value: any, parent: JSONObject | JSONArray, key: string | number): void;
+  /**
+   * Register `data` to be a serialized representation of value,
+   * returns an object with `ref` and `data` fields representing a reference
+   * to the value and the value itself.
+   */
+  ref(value: any): {ref: JSONObject, data?:JSONObject | JSONArray | false };
 }
 
 /**
@@ -161,6 +192,7 @@ interface WriteContext {
  * for nested-values
  */
 interface ReadContext {
+  /** Invokes reads recursively for nested values */
   step(json: JSONValue): any;
 }
 

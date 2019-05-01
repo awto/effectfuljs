@@ -2,720 +2,1455 @@
 
 exports[`undoRedo 1`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 0,
+                  },
                 ],
-                "func": Object {
-                  "i": "_signal",
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
+        },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-        },
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 0,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "$": "_signal",
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 2`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 1,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      1,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 3`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 0,
+                  },
                 ],
-                "func": Object {
-                  "i": "_signal",
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
+        },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-        },
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 0,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "$": "_signal",
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 4`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 2,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 5`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 0,
+                  },
                 ],
-                "func": Object {
-                  "i": "_signal",
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
+        },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-        },
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 0,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "$": "_signal",
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 6`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 3,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      3,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 7`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 1,
+                  },
                 ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Redo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 2,
+                  },
+                ],
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".1",
+                ],
+              ],
+            },
+            "type": "button",
+          },
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "_signal",
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
         Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Redo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".1",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "REDO",
-                  undefined,
-                ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
-            },
-          },
-          "type": "button",
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 1,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
+      },
+      "self": null,
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
         },
+        "REDO",
+        Object {
+          "$": "undefined",
+        },
+      ],
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 2,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
-  "x": Object {
-    "0": Object {
-      "i": "_signal",
-    },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 8`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 2,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 9`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 1,
+                  },
                 ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Redo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 2,
+                  },
+                ],
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".1",
+                ],
+              ],
+            },
+            "type": "button",
+          },
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "_signal",
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
         Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Redo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".1",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "REDO",
-                  undefined,
-                ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
-            },
-          },
-          "type": "button",
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 1,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
+      },
+      "self": null,
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
         },
+        "REDO",
+        Object {
+          "$": "undefined",
+        },
+      ],
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 2,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
-  "x": Object {
-    "0": Object {
-      "i": "_signal",
-    },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 10`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 1,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      1,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 11`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 1,
+                  },
                 ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Redo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 2,
+                  },
+                ],
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".1",
+                ],
+              ],
+            },
+            "type": "button",
+          },
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "_signal",
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
         Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Redo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".1",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "REDO",
-                  undefined,
-                ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
-            },
-          },
-          "type": "button",
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 1,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
+      },
+      "self": null,
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
         },
+        "REDO",
+        Object {
+          "$": "undefined",
+        },
+      ],
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 2,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
-  "x": Object {
-    "0": Object {
-      "i": "_signal",
-    },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 12`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 2,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 13`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 0,
+                  },
                 ],
-                "func": Object {
-                  "i": "_signal",
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
+        },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-        },
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 0,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "$": "_signal",
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 14`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 3,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      3,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 15`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 1,
+                  },
                 ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Redo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 2,
+                  },
+                ],
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".1",
+                ],
+              ],
+            },
+            "type": "button",
+          },
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "_signal",
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
         Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Redo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".1",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "REDO",
-                  undefined,
-                ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
-            },
-          },
-          "type": "button",
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 1,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
+      },
+      "self": null,
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
         },
+        "REDO",
+        Object {
+          "$": "undefined",
+        },
+      ],
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 2,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
-  "x": Object {
-    "0": Object {
-      "i": "_signal",
-    },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 16`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 2,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 17`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 0,
+                  },
                 ],
-                "func": Object {
-                  "i": "_signal",
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
+        },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
-        },
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 0,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "$": "_signal",
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 18`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 3,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      3,
+    ],
+  ],
 }
 `;
 
 exports[`undoRedo 19`] = `
 Object {
-  "d": Object {
-    "index": 200,
-    "type": "MENU_ITEM",
-    "value": Object {
-      "$": "ReactElement",
-      "children": Array [
-        Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Undo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".0",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "UNDO",
-                  undefined,
+  "f": Array [
+    Array [
+      "type",
+      "MENU_ITEM",
+    ],
+    Array [
+      "index",
+      200,
+    ],
+    Array [
+      "value",
+      Object {
+        "$": "ReactElement",
+        "children": Array [
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Undo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 1,
+                  },
                 ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".0",
+                ],
+              ],
             },
+            "type": "button",
           },
-          "type": "button",
+          Object {
+            "$": "ReactElement",
+            "children": Array [
+              "Redo",
+            ],
+            "props": Object {
+              "f": Array [
+                Array [
+                  "onClick",
+                  Object {
+                    "r": 2,
+                  },
+                ],
+                Array [
+                  "children",
+                  Object {
+                    "$": "undefined",
+                  },
+                ],
+                Array [
+                  "key",
+                  ".1",
+                ],
+              ],
+            },
+            "type": "button",
+          },
+        ],
+        "props": Object {
+          "f": Array [
+            Array [
+              "children",
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
+        "type": Object {
+          "$": "Symbol",
+          "key": "react.fragment",
+        },
+      },
+    ],
+  ],
+  "x": Array [
+    Object {
+      "$": "_signal",
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
         Object {
-          "$": "ReactElement",
-          "children": Array [
-            "Redo",
-          ],
-          "props": Object {
-            "d": Object {
-              "children": undefined,
-              "key": ".1",
-              "onClick": Object {
-                "$": "Bind",
-                "args": Array [
-                  undefined,
-                  "REDO",
-                  undefined,
-                ],
-                "func": Object {
-                  "r": 0,
-                },
-                "self": null,
-              },
-            },
-          },
-          "type": "button",
+          "$": "undefined",
+        },
+        "UNDO",
+        Object {
+          "$": "undefined",
         },
       ],
-      "props": Object {
-        "d": Object {
-          "children": undefined,
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 1,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
+      },
+      "self": null,
+    },
+    Object {
+      "$": "Bind",
+      "args": Array [
+        Object {
+          "$": "undefined",
         },
+        "REDO",
+        Object {
+          "$": "undefined",
+        },
+      ],
+      "f": Array [
+        Array [
+          "prototype",
+          Object {
+            "f": Array [
+              Array [
+                "constructor",
+                Object {
+                  "r": 2,
+                },
+                2,
+              ],
+            ],
+          },
+          3,
+        ],
+      ],
+      "func": Object {
+        "r": 0,
       },
-      "type": Object {
-        "$": "Symbol",
-        "key": "react.fragment",
-      },
+      "self": null,
     },
-  },
-  "x": Object {
-    "0": Object {
-      "i": "_signal",
-    },
-  },
+  ],
 }
 `;
 
 exports[`undoRedo 20`] = `
 Object {
-  "d": Object {
-    "type": "VALUE",
-    "value": 2,
-  },
+  "f": Array [
+    Array [
+      "type",
+      "VALUE",
+    ],
+    Array [
+      "value",
+      2,
+    ],
+  ],
 }
 `;

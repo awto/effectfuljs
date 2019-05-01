@@ -12,6 +12,24 @@ const descriptorByValue = new Map();
 const descriptorByTypeOfProp = new Map();
 
 /**
+ * name of a property to specify `Descriptor` for JS value
+ *
+ * @type {Symbol}
+ */
+export const descriptorSymbol = Symbol("@effectful/serialization/descriptor");
+
+const defaultOverrideProps = {
+  [descriptorSymbol]: false
+};
+
+const funcOverrideProps = {
+  length: false,
+  name: false,
+  arguments: false,
+  caller: false
+};
+
+/**
  * ## Top level API
  *
  * Conversion between JSON values and JS values. JSON values set a subset of JS
@@ -41,13 +59,13 @@ export function write(value, opts = {}) {
   res.push(ctx.step(value, res, 0));
   const { refs } = ctx;
   if (refs.length) {
-    let id = 0;
-    const dict = {};
-    for (const i of refs) {
-      dict[(i.ref.r = id++)] = i.data;
-      if (i.parent) i.parent[i.index] = i.ref;
-    }
-    return { ...res[0], x: dict };
+    const x = [];
+    for (const info of refs)
+      if (info.ref) {
+        info.ref.r = x.push(info.data) - 1;
+        if (info.parent) info.parent[info.index] = info.ref;
+      }
+    if (x.length) return { ...res[0], x };
   }
   return res[0];
 }
@@ -71,15 +89,16 @@ export function read(json, opts = {}) {
   if (opts.ignore && !ctx.symsByName)
     ctx.symsByName = opts.symsByName = new Map();
   ctx.ignore = !!opts.ignore;
-  const vals = (ctx.shared = opts.shared || (opts.shared = new Map()));
   const { x } = json;
+  const len = x ? x.length : 0;
+  const vals = (ctx.shared = opts.shared || (opts.shared = new Array(len)));
   const tasks = [];
-  if (x) {
-    for (const i of Object.keys(x)) {
+  if (len) {
+    for (let i = 0; i < len; ++i) {
       const json = x[i];
       const descriptor = getJsonDescriptor(json);
       const value = descriptor.create(ctx, json);
-      vals.set(+i, value);
+      vals[i] = value;
       tasks.push({ json, value, descriptor });
     }
   }
@@ -105,19 +124,35 @@ export function parse(json) {
   return read(JSON.parse(json));
 }
 
+function makeBind() {
+  function bind(...rest) {
+    const { func, self, args } = bind[descriptorSymbol];
+    return func.apply(self, [...args, ...rest]);
+  }
+  bind[descriptorSymbol] = { ...BindDescriptor };
+  return bind;
+}
+
 const BindDescriptor = regDescriptor({
   name: "Bind",
-  read(ctx, json) {
-    return bind(
-      ctx.step(json.func),
-      ctx.step(json.self),
-      ...ctx.step(json.args)
-    );
+  readContent(ctx, json, value) {
+    const descr = value[descriptorSymbol];
+    descr.func = ctx.step(json.func);
+    descr.self = ctx.step(json.self);
+    descr.args = ctx.step(json.args);
   },
-  create(ctx, json) {
-    return this.read(ctx, json);
+  create() {
+    return makeBind();
   },
-  readContent() {}
+  typeofHint: "function",
+  write(ctx, value) {
+    const { func, self, args } = value[descriptorSymbol];
+    const res = { $: BindDescriptor.name };
+    res.func = ctx.step(func, res, "func");
+    res.self = ctx.step(self, res, "self");
+    res.args = ctx.step(args, res, "args");
+    return res;
+  }
 });
 
 /**
@@ -129,19 +164,12 @@ const BindDescriptor = regDescriptor({
  * @param {...any} args - bound arguments
  */
 export function bind(func, self, ...args) {
-  const bind = (...rest) => func.apply(self, [...args, ...rest]);
-  bind[descriptorSymbol] = refAwareDescriptor(
-    keysDescriptor({
-      write(ctx) {
-        const res = { $: BindDescriptor.name };
-        res.func = ctx.step(func, res, "func");
-        res.self = ctx.step(self, res, "self");
-        res.args = ctx.step(args, res, "args");
-        return res;
-      }
-    })
-  );
-  return bind;
+  const res = makeBind();
+  const descr = res[descriptorSymbol];
+  descr.func = func;
+  descr.self = self;
+  descr.args = args;
+  return res;
 }
 
 /**
@@ -176,13 +204,6 @@ export function bind(func, self, ...args) {
  * @name Descriptor#typeofTag
  * @type ?Symbol
  */
-
-/**
- * name of a property to specify `Descriptor` for JS value
- *
- * @type {Symbol}
- */
-export const descriptorSymbol = Symbol("@effectful/serialization/descriptor");
 
 /**
  * An object passed to Descript's `write` method to support recursive
@@ -224,10 +245,14 @@ class WriteContext {
    */
   ref(value) {
     const info = this.sharedRefs.get(value);
-    if (!info.ref) {
-      info.ref = {};
+    if (info == null) {
+      const ref = {};
+      const info = { ref, data: {} };
       this.refs.push(info);
+      this.sharedRefs.set(value, info);
+      return info;
     }
+    if (!info.ref) info.ref = {};
     return info;
   }
 }
@@ -273,17 +298,14 @@ class ReadContext {
  * @implements ObjectDescriptor
  */
 const descriptorTemplate = {
-  read(ctx, json) {
-    const value = this.create(ctx, json);
-    this.readContent(ctx, json, value);
-    return value;
-  },
+  read: defaultRead,
   write(ctx, value) {
     const json = {};
-    if (value.constructor === Object) return json;
-    else if (!this.valuePrototype) {
-      json.p = ctx.step(Object.getPrototypeOf(value), json, "p");
-    }
+    if (this.valuePrototype) return json;
+    const proto = Object.getPrototypeOf(value);
+    if (proto === null || proto === Object.prototype) return json;
+    // ensuring prototype reference is ahead
+    json.p = ctx.step(proto, json, "p");
     return json;
   },
   create(ctx, json) {
@@ -291,11 +313,21 @@ const descriptorTemplate = {
     if (this.valuePrototype !== void 0)
       return Object.create(this.valuePrototype);
     const protoJson = json.p;
-    if (protoJson === null) return Object.create(null);
-    if (protoJson) return Object.create(ctx.step(protoJson));
-    return {};
+    if (protoJson === void 0) return {};
+    if (protoJson === null) return Object.createPrototype(null);
+    let protoValue;
+    // TODO: since prototypes cannot be cyclic it could ensure this
+    // on proper ordering objects in `r`, this way there are no needs
+    // for `Object.setPrototype`
+    if (protoJson.r != null) protoValue = ctx.shared[protoJson.r];
+    else if (protoJson.$ && !protoJson.f) protoValue = ctx.step(protoJson);
+    return Object.create(protoValue || null);
   },
-  readContent() {}
+  readContent(ctx, json, value) {
+    if (json.p && Object.getPrototypeOf(value) === null) {
+      Object.setPrototypeOf(value, ctx.step(json.p));
+    }
+  }
 };
 
 /**
@@ -310,7 +342,7 @@ function refAwareDescriptor(descriptor) {
   return {
     read(ctx, json) {
       const ref = json.r;
-      if (ref != null) return ctx.shared.get(ref);
+      if (ref != null) return ctx.shared[ref];
       return descriptor.read(ctx, json);
     },
     write(ctx, value, parent, index) {
@@ -318,15 +350,14 @@ function refAwareDescriptor(descriptor) {
       if (info == null) {
         ctx.sharedRefs.set(
           value,
-          (info = { ref: null, parent, index, descriptor })
+          (info = { ref: null, empty: false, parent, index, descriptor })
         );
         info.data = descriptor.write(ctx, value, parent, index);
+        ctx.refs.push(info);
+        info.dep_id = ctx.refs.length;
         return info.data;
       }
-      if (info.ref == null) {
-        ctx.refs.push(info);
-        info.ref = {};
-      }
+      if (info.ref == null) info.ref = {};
       return info.ref;
     },
     create(ctx, json) {
@@ -334,8 +365,7 @@ function refAwareDescriptor(descriptor) {
     },
     readContent(ctx, json, value) {
       return descriptor.readContent(ctx, json, value);
-    },
-    noRefs: descriptor
+    }
   };
 }
 
@@ -348,7 +378,7 @@ function refAwareDescriptor(descriptor) {
  *
  * Adds missed functionality into the descriptor. This includes:
  *  - This includes reference awareness (if `descriptor.refAware !== false`)
- *  - Saving `Object.keys` (if `descriptor.keys !== false`)
+ *  - Saving object's properties (if `descriptor.keys !== false`)
  *  - Default methods (`read` from `create` and `readContent`)
  *  - Adding "$" property (if `descriptor.default$ !== false`)
  *
@@ -359,14 +389,16 @@ export function regDescriptor(descriptor) {
   if (!descriptor.read) {
     if (descriptor.create) {
       descriptor.read = descriptor.readContent
-        ? function(ctx, json) {
-            const value = this.create(ctx, json);
-            this.readContent(ctx, json, value);
-            return value;
-          }
+        ? defaultRead
         : descriptor.create;
     }
   }
+  descriptor.overrideProps = Object.assign(
+    {},
+    defaultOverrideProps,
+    descriptor.typeofHint === "function" && funcOverrideProps,
+    descriptor.overrideProps
+  );
   if (!descriptor.readContent) descriptor.readContent = function() {};
   const name = guessDescriptorName(descriptor);
   let uniq = name,
@@ -374,34 +406,32 @@ export function regDescriptor(descriptor) {
   /* eslint-disable no-empty */
   for (; descriptorByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
   let final = { ...descriptor, name: uniq };
-  if (descriptor.keys !== false) final = keysDescriptor(final);
-  if (descriptor.default$ !== false) {
+  if (descriptor.props !== false) final = propsDescriptor(final);
+  if (descriptor.default$ !== false && uniq !== "Object") {
     const saved = final;
     final = {
       ...final,
       write(ctx, value, parent, index) {
         const json = saved.write(ctx, value, parent, index);
-        if (
-          json.constructor === Object &&
-          value &&
-          value.constructor !== Object &&
-          !json.$
-        )
-          json.$ = uniq;
+        if (!json.$) json.$ = uniq;
         return json;
       }
     };
   }
-  if (descriptor.refAware !== false) final = refAwareDescriptor(final);
-  descriptorByName.set(uniq, final);
+  const noRefs = final;
+  descriptorByName.set(uniq, noRefs);
   if (descriptor.typeofTag)
-    descriptorByTypeOfProp.set(descriptor.typeofTag, final);
+    descriptorByTypeOfProp.set(descriptor.typeofTag, noRefs);
+  if (descriptor.refAware !== false) final = refAwareDescriptor(final);
   return {
     name: uniq,
     read: final.read,
     write: final.write,
     readContent: final.readContent,
-    create: final.create
+    create: final.create,
+    overrideProps: descriptor.overrideProps,
+    value: descriptor.value,
+    noRefs
   };
 }
 
@@ -440,6 +470,8 @@ function guessDescriptorName(descriptor) {
   return "Object";
 }
 
+const PojsoPropsDescriptor = propsDescriptor(descriptorTemplate);
+
 /**
  * This function registers `value` as opaque. The library outputs names instead
  * of stored data for them. The values should be registered with the same name
@@ -448,14 +480,21 @@ function guessDescriptorName(descriptor) {
  *
  * @param {any} value
  * @param {?string} name
+ * @param {?boolean} props - should the properties of the object be output too
  * @returns {Descriptor}
  */
-export function regOpaqueObject(value, name = guessObjectName(value)) {
+export function regOpaqueObject(
+  value,
+  name = guessObjectName(value),
+  props = false
+) {
   if (value.hasOwnProperty(descriptorSymbol)) return value[descriptorSymbol];
   return (value[descriptorSymbol] = regDescriptor({
     ...OpaqueDescriptor,
     name,
-    value
+    value,
+    props,
+    typeofHint: typeof value
   }));
 }
 
@@ -510,43 +549,83 @@ const PrimDescriptor = {
   read(ctx, json) {
     return json;
   },
+  create(ctx, json) {
+    return json;
+  },
   write(ctx, value) {
     return value;
   },
   refAware: false,
-  keys: false,
+  props: false,
   default$: false
 };
 
 const RefDescriptor = {
   read(ctx, json) {
-    return ctx.shared.get(json.r);
+    return ctx.shared[json.r];
   }
 };
 
 /** wraps descriptor by adding its own property into the saved dictionary */
-function keysDescriptor(descriptor) {
-  const getKeys = descriptor.getNames || Object.keys;
+function propsDescriptor(descriptor) {
+  const pred = descriptor.overrideProps || defaultOverrideProps;
+  function writeProp(ctx, info, descr) {
+    let flags = 0;
+    if (!descr.configurable) flags = flags | 1;
+    if (!descr.enumerable) flags = flags | 2;
+    if (!descr.writable) flags = flags | 4;
+    if ("value" in descr) {
+      info.push(ctx.step(descr.value, info, 1));
+    } else {
+      info.push(null);
+      flags = flags | 8;
+    }
+    if (flags || descr.set || descr.get) info.push(flags);
+    if (descr.get) info[3] = ctx.step(descr.get, info, 3);
+    if (descr.set) info[4] = ctx.step(descr.set, info, 4);
+    return info;
+  }
   return {
     write(ctx, value, parent, index) {
       const json = descriptor.write(ctx, value, parent, index);
-      const keys = getKeys(value);
-      if (!keys.length) return json;
-      const props = (json.d = {});
-      for (const i of keys) props[i] = ctx.step(value[i], props, i);
+      const descrs = Object.getOwnPropertyDescriptors(value);
+      const props = [];
+      for (const name in descrs) {
+        if (pred[name] === false) continue;
+        props.push(writeProp(ctx, [name], descrs[name], value));
+      }
+      for (const name of Object.getOwnPropertySymbols(descrs)) {
+        if (pred[name] === false) continue;
+        props.push(writeProp(ctx, [writeSym(ctx, name)], descrs[name], value));
+      }
+      if (props.length) json.f = props;
       return json;
     },
-    read(ctx, json) {
-      const value = descriptor.read(ctx, json);
-      const props = json.d;
-      if (!props) return value;
-      for (const i in props) value[i] = ctx.step(props[i]);
-      return value;
-    },
+    read: defaultRead,
     readContent(ctx, json, value) {
       descriptor.readContent(ctx, json, value);
-      const props = json.d;
-      if (props) for (const i in props) value[i] = ctx.step(props[i]);
+      const props = json.f;
+      if (props) {
+        for (const [key, pjson, flags, get, set] of props) {
+          const name = key.substr
+            ? key
+            : key.$
+            ? descriptorByName.get(key.$)
+            : readSym(ctx, key);
+          if (flags != null) {
+            const pdescr = {};
+            pdescr.configurable = (flags & 1) === 0;
+            pdescr.enumerable = (flags & 2) === 0;
+            if ((flags & 4) === 0) pdescr.writable = true;
+            if ((flags & 8) === 0) pdescr.value = ctx.step(pjson);
+            if (get) pdescr.get = ctx.step(get);
+            if (set) pdescr.set = ctx.step(set);
+            Object.defineProperty(value, name, pdescr);
+          } else {
+            value[name] = ctx.step(pjson);
+          }
+        }
+      }
     },
     create(ctx, json) {
       return descriptor.create(ctx, json);
@@ -554,72 +633,94 @@ function keysDescriptor(descriptor) {
   };
 }
 
+function defaultRead(ctx, json) {
+  const value = this.create(ctx, json);
+  this.readContent(ctx, json, value);
+  return value;
+}
+
 const OpaqueDescriptor = {
-  read(ctx, json) {
-    return this.create(ctx, json);
+  write(ctx, value) {
+    if (value !== this.value) {
+      return PojsoPropsDescriptor.write(ctx, value);
+    }
+    return { $: this.name };
   },
-  write() {
-    return { i: this.name };
-  },
-  readContent() {},
-  create(ctx, json) {
-    const res = descriptorByName.get(json.i);
-    if (!res) throw new Error(`not found object ${json.i}`);
+  create() {
     return this.value;
   },
-  keys: false,
   default$: false
 };
 
+function writeSym(ctx, sym) {
+  const key = Symbol.keyFor(sym);
+  if (key) return { key };
+  const global = descriptorByValue.get(sym);
+  if (global) return global.write(ctx, sym);
+  if (ctx.knownSyms) {
+    let descr = ctx.knownSyms.get(sym);
+    if (!descr) {
+      const text = String(sym);
+      const name = text.substring(7 /*"Symbol("*/, text.length - 1);
+      let tup = ctx.symsByName.get(name);
+      if (!tup) ctx.symsByName.set(name, (tup = []));
+      descr = { name, id: tup.length, value: sym };
+      tup.push(descr);
+      ctx.knownSyms.set(sym, descr);
+    }
+    const res = { name: descr.name };
+    if (descr.id) res.id = descr.id;
+    return res;
+  }
+  if (!ctx.ignore) throw new Error(`couldn't write "${sym}"`);
+}
+
+function readSym(ctx, json) {
+  if (json.key) return Symbol.for(json.key);
+  const { name } = json;
+  if (name && ctx.symsByName) {
+    let local = ctx.symsByName.get(name);
+    const id = json.id || 0;
+    if (local) {
+      const descr = local[id];
+      if (descr) return descr.value;
+    }
+    if (ctx.ignore) {
+      const descr = { name, id, value: Symbol(json.name) };
+      if (!local) ctx.symsByName.set(name, (local = []));
+      local[id] = descr;
+      if (ctx.knownSyms) ctx.knownSyms.set(descr.value, descr);
+      return descr.value;
+    }
+  }
+  if (!ctx.ignore) throw new Error(`couldn't read "${JSON.stringify(json)}"`);
+  return null;
+}
+
+function specValueDescriptor(name, value) {
+  return regDescriptor({
+    name,
+    write() {
+      return { $: name };
+    },
+    create() {
+      return value;
+    },
+    refAware: false,
+    props: false,
+    default$: false
+  });
+}
+
+const NaNDescriptor = specValueDescriptor("NaN", NaN);
+const UndefDescriptor = specValueDescriptor("undefined");
+
 const SymbolDescriptor = regDescriptor({
-  write(ctx, value, parent, index) {
-    const key = Symbol.keyFor(value);
-    if (key) return { $: "Symbol", key };
-    const global = descriptorByValue.get(value);
-    if (global) return global.write(ctx, value, parent, index);
-    if (ctx.knownSyms) {
-      let descr = ctx.knownSyms.get(value);
-      if (!descr) {
-        const text = String(value);
-        const name = text.substring(7 /*"Symbol("*/, text.length - 1);
-        let tup = ctx.symsByName.get(name);
-        if (!tup) ctx.symsByName.set(name, (tup = []));
-        descr = { name, id: tup.length, value };
-        tup.push(descr);
-        ctx.knownSyms.set(value, descr);
-      }
-      const res = { $: "Symbol", name: descr.name };
-      if (descr.id) res.id = descr.id;
-      return res;
-    }
-    if (!ctx.ignore) throw new Error(`couldn't write "${value}"`);
-    return void 0;
-  },
-  read(ctx, json) {
-    if (json.key) return Symbol.for(json.key);
-    const { name } = json;
-    if (name && ctx.symsByName) {
-      let local = ctx.symsByName.get(name);
-      const id = json.id || 0;
-      if (local) {
-        const descr = local[id];
-        if (descr) return descr.value;
-      }
-      if (ctx.ignore) {
-        const descr = { name, id, value: Symbol(json.name) };
-        if (!local) ctx.symsByName.set(name, (local = []));
-        local[id] = descr;
-        if (ctx.knownSyms) ctx.knownSyms.set(descr.value, descr);
-        return descr.value;
-      }
-    }
-    if (!ctx.ignore) throw new Error(`couldn't read "${JSON.stringify(json)}"`);
-    return null;
-  },
+  write: writeSym,
+  read: readSym,
   name: "Symbol",
   refAware: false,
-  keys: false,
-  default$: false
+  props: false
 });
 
 let BigIntDescriptor =
@@ -631,28 +732,33 @@ let BigIntDescriptor =
     write(ctx, value) {
       return { int: value.toString() };
     },
-    name: "BigInt",
+    name: "Int",
     refAware: false,
-    keys: false,
-    default$: false
+    props: false
   });
 
+function getObjectDescriptor(value) {
+  const descriptor = value[descriptorSymbol];
+  if (descriptor) return descriptor;
+  if (value.$$typeof) {
+    const res = descriptorByTypeOfProp.get(value.$$typeof);
+    if (res) return res;
+  }
+  return PojsoDescriptor;
+}
+
 function getValueDescriptor(value) {
+  if (value === void 0) return UndefDescriptor;
   switch (typeof value) {
     case "number":
+      if (isNaN(value)) return NaNDescriptor;
     case "undefined":
     case "boolean":
     case "string":
       return PrimDescriptor;
     case "object":
       if (!value) return PrimDescriptor;
-      const descriptor = value[descriptorSymbol];
-      if (descriptor) return descriptor;
-      if (value.$$typeof) {
-        const res = descriptorByTypeOfProp.get(value.$$typeof);
-        if (res) return res;
-      }
-      return PojsoDescriptor;
+      return getObjectDescriptor(value);
     case "function":
       return value[descriptorSymbol] || null;
     case "symbol":
@@ -670,12 +776,10 @@ function lookupDescriptor(typeName) {
 }
 
 function getJsonDescriptor(json) {
-  if (!json || typeof json !== "object") return PrimDescriptor;
+  if (typeof json !== "object" || json === null) return PrimDescriptor;
   if (Array.isArray(json)) return ArrayDescriptor;
-  if ("r" in json) return RefDescriptor;
-  if ("i" in json) return lookupDescriptor(json.i);
   if ("$" in json) return lookupDescriptor(json.$);
-  if ("int" in json) return BigIntDescriptor;
+  if ("r" in json) return RefDescriptor;
   return PojsoDescriptor;
 }
 
@@ -689,7 +793,7 @@ const ArrayDescriptor = regNewConstructor(Array, {
   readContent(ctx, json, value) {
     for (const i of json) value.push(ctx.step(i));
   },
-  keys: false,
+  props: false,
   default$: false
 });
 
@@ -723,4 +827,19 @@ regNewConstructor(Map, {
     for (let i = 0, len = k.length; i < len; ++i)
       value.set(ctx.step(k[i]), ctx.step(v[i]));
   }
+});
+
+regNewConstructor(RegExp, {
+  write(ctx, value) {
+    const json = { src: value.source, flags: value.flags };
+    if (value.lastIndex) json.last = value.lastIndex;
+    return json;
+  },
+  create(ctx, json) {
+    const value = new RegExp(json.src, json.flags);
+    if (json.last) value.lastIndex = json.last;
+    return value;
+  },
+  props: false,
+  refAware: false
 });

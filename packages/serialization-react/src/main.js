@@ -34,6 +34,6 @@ export default regDescriptor({
   create(ctx, json) {
     return this.read(ctx, json);
   },
-  keys: false,
+  props: false,
   refAware: false
 });

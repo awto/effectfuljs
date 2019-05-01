@@ -2,61 +2,97 @@
 
 exports[`pipe 1`] = `
 Object {
-  "d": Object {
-    "type": "FOO",
-    "value": "f1--s-foo",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "FOO",
+    ],
+    Array [
+      "value",
+      "f1--s-foo",
+    ],
+  ],
 }
 `;
 
 exports[`pipe 2`] = `
 Object {
-  "d": Object {
-    "type": "BAR",
-    "value": "f1--s-bar",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "BAR",
+    ],
+    Array [
+      "value",
+      "f1--s-bar",
+    ],
+  ],
 }
 `;
 
 exports[`pipe 3`] = `
 Object {
-  "d": Object {
-    "type": "FOO",
-    "value": "f2--s-foo",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "FOO",
+    ],
+    Array [
+      "value",
+      "f2--s-foo",
+    ],
+  ],
 }
 `;
 
 exports[`pipe 4`] = `
 Object {
-  "d": Object {
-    "type": "BAR",
-    "value": "f1--s-bar",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "BAR",
+    ],
+    Array [
+      "value",
+      "f1--s-bar",
+    ],
+  ],
 }
 `;
 
 exports[`pipe 5`] = `
 Object {
-  "d": Object {
-    "type": "FLUSH",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "FLUSH",
+    ],
+  ],
 }
 `;
 
 exports[`pipe 6`] = `
 Object {
-  "d": Object {
-    "type": "BAR",
-    "value": "f1--s-bar",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "BAR",
+    ],
+    Array [
+      "value",
+      "f1--s-bar",
+    ],
+  ],
 }
 `;
 
 exports[`pipe 7`] = `
 Object {
-  "d": Object {
-    "type": "FLUSH",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "FLUSH",
+    ],
+  ],
 }
 `;

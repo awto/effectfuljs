@@ -2,9 +2,12 @@
 
 exports[`saveLocal 1`] = `
 Object {
-  "d": Object {
-    "type": "FLUSH",
-  },
+  "f": Array [
+    Array [
+      "type",
+      "FLUSH",
+    ],
+  ],
 }
 `;
 
@@ -14,123 +17,255 @@ Array [
     "counters",
     Object {
       "resume": Object {
-        "d": Object {
-          "resume": Object {
-            "r": 4,
-          },
-          "running": Object {
-            "$": "Set",
-            "l": Array [
-              Object {
-                "r": 0,
-              },
-              Object {
-                "r": 2,
-              },
-              Object {
-                "r": 3,
-              },
-              Object {
-                "r": 4,
-              },
-            ],
-          },
-        },
-        "x": Object {
-          "0": Object {
-            "$": "Async$1",
-            "d": Object {
-              "$last": 7,
-              "$step": 8,
-              "_f": Object {
-                "d": Object {
-                  "_data": Object {
-                    "i": "saveLocalIter",
-                  },
-                },
-              },
-              "_i": Object {
-                "r": 1,
-              },
-              "_loop": Object {
-                "r": 3,
-              },
-              "cont": Object {
-                "$": "Residual",
-                "d": Object {
-                  "dest": Array [
-                    Object {
-                      "i": "saveLocalExit",
-                    },
-                  ],
-                  "state": 0,
-                },
-              },
-              "dest": Array [],
-              "state": 0,
-            },
-          },
-          "1": Object {
-            "d": Object {
-              "type": "FLUSH",
-            },
-          },
-          "2": Object {
-            "$": "_data",
-            "d": Object {
-              "$last": 5,
-              "$step": 6,
-              "queue": Array [],
-            },
-          },
-          "3": Object {
-            "$": "saveLocal",
-            "d": Object {
-              "$last": 12,
-              "$step": 13,
-              "_i": Object {
-                "r": 1,
-              },
-              "_input": null,
-              "_loop": Object {
-                "r": 2,
-              },
-              "queue": Array [
+        "f": Array [
+          Array [
+            "running",
+            Object {
+              "$": "Set",
+              "l": Array [
                 Object {
-                  "$": "Residual",
-                  "d": Object {
-                    "dest": Array [
-                      Object {
-                        "r": 0,
-                      },
-                    ],
-                    "state": 0,
-                  },
+                  "r": 3,
+                },
+                Object {
+                  "r": 0,
+                },
+                Object {
+                  "r": 2,
+                },
+                Object {
+                  "r": 4,
                 },
               ],
             },
-          },
-          "4": Object {
-            "$": "save",
-            "d": Object {
-              "$last": 6,
-              "$step": 6,
-              "cont": Object {
-                "$": "Residual",
-                "d": Object {
-                  "dest": Array [
-                    Object {
-                      "r": 3,
-                    },
-                  ],
-                  "state": 0,
-                },
-              },
-              "dest": Array [],
-              "state": 0,
+          ],
+          Array [
+            "resume",
+            Object {
+              "r": 4,
             },
+          ],
+        ],
+        "x": Array [
+          Object {
+            "$": "_data",
+            "f": Array [
+              Array [
+                "queue",
+                Array [],
+              ],
+              Array [
+                "$step",
+                6,
+              ],
+              Array [
+                "$last",
+                5,
+              ],
+              Array [
+                "$arg",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+            ],
           },
-        },
+          Object {
+            "f": Array [
+              Array [
+                "type",
+                "FLUSH",
+              ],
+            ],
+          },
+          Object {
+            "$": "saveLocal",
+            "f": Array [
+              Array [
+                "queue",
+                Array [
+                  Object {
+                    "$": "Residual",
+                    "f": Array [
+                      Array [
+                        "dest",
+                        Array [
+                          Object {
+                            "r": 3,
+                          },
+                        ],
+                      ],
+                      Array [
+                        "state",
+                        0,
+                      ],
+                    ],
+                  },
+                ],
+              ],
+              Array [
+                "_input",
+                null,
+              ],
+              Array [
+                "$step",
+                13,
+              ],
+              Array [
+                "$last",
+                12,
+              ],
+              Array [
+                "$arg",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+              Array [
+                "_loop",
+                Object {
+                  "r": 0,
+                },
+              ],
+              Array [
+                "_i",
+                Object {
+                  "r": 1,
+                },
+              ],
+            ],
+          },
+          Object {
+            "$": "Async$1",
+            "f": Array [
+              Array [
+                "dest",
+                Array [],
+              ],
+              Array [
+                "state",
+                0,
+              ],
+              Array [
+                "value",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+              Array [
+                "_f",
+                Object {
+                  "f": Array [
+                    Array [
+                      "_data",
+                      Object {
+                        "$": "saveLocalIter",
+                      },
+                    ],
+                  ],
+                },
+              ],
+              Array [
+                "$step",
+                8,
+              ],
+              Array [
+                "cont",
+                Object {
+                  "$": "Residual",
+                  "f": Array [
+                    Array [
+                      "dest",
+                      Array [
+                        Object {
+                          "$": "saveLocalExit",
+                        },
+                      ],
+                    ],
+                    Array [
+                      "state",
+                      0,
+                    ],
+                  ],
+                },
+              ],
+              Array [
+                "$last",
+                7,
+              ],
+              Array [
+                "_loop",
+                Object {
+                  "r": 2,
+                },
+              ],
+              Array [
+                "$arg",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+              Array [
+                "_i",
+                Object {
+                  "r": 1,
+                },
+              ],
+            ],
+          },
+          Object {
+            "$": "save",
+            "f": Array [
+              Array [
+                "dest",
+                Array [],
+              ],
+              Array [
+                "state",
+                0,
+              ],
+              Array [
+                "value",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+              Array [
+                "$step",
+                6,
+              ],
+              Array [
+                "cont",
+                Object {
+                  "$": "Residual",
+                  "f": Array [
+                    Array [
+                      "dest",
+                      Array [
+                        Object {
+                          "r": 2,
+                        },
+                      ],
+                    ],
+                    Array [
+                      "state",
+                      0,
+                    ],
+                  ],
+                },
+              ],
+              Array [
+                "$last",
+                6,
+              ],
+              Array [
+                "$arg",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+            ],
+          },
+        ],
       },
     },
   ],

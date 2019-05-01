@@ -2,98 +2,182 @@
 
 exports[`fork 1`] = `
 Object {
-  "d": Object {
-    "key": 1,
-    "type": "ITEM",
-    "value": Object {
-      "d": Object {
-        "type": "BAR",
+  "f": Array [
+    Array [
+      "type",
+      "ITEM",
+    ],
+    Array [
+      "value",
+      Object {
+        "f": Array [
+          Array [
+            "type",
+            "BAR",
+          ],
+        ],
       },
-    },
-  },
+    ],
+    Array [
+      "key",
+      1,
+    ],
+  ],
 }
 `;
 
 exports[`fork 2`] = `
 Object {
-  "d": Object {
-    "key": 2,
-    "type": "ITEM",
-    "value": Object {
-      "d": Object {
-        "type": "BAR",
+  "f": Array [
+    Array [
+      "type",
+      "ITEM",
+    ],
+    Array [
+      "value",
+      Object {
+        "f": Array [
+          Array [
+            "type",
+            "BAR",
+          ],
+        ],
       },
-    },
-  },
+    ],
+    Array [
+      "key",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`fork 3`] = `
 Object {
-  "d": Object {
-    "key": 2,
-    "type": "ITEM",
-    "value": Object {
-      "d": Object {
-        "type": "BAR2",
+  "f": Array [
+    Array [
+      "type",
+      "ITEM",
+    ],
+    Array [
+      "value",
+      Object {
+        "f": Array [
+          Array [
+            "type",
+            "BAR2",
+          ],
+        ],
       },
-    },
-  },
+    ],
+    Array [
+      "key",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`fork 4`] = `
 Object {
-  "d": Object {
-    "key": 1,
-    "type": "ITEM",
-    "value": Object {
-      "d": Object {
-        "type": "DELETE",
+  "f": Array [
+    Array [
+      "type",
+      "ITEM",
+    ],
+    Array [
+      "value",
+      Object {
+        "f": Array [
+          Array [
+            "type",
+            "DELETE",
+          ],
+        ],
       },
-    },
-  },
+    ],
+    Array [
+      "key",
+      1,
+    ],
+  ],
 }
 `;
 
 exports[`fork 5`] = `
 Object {
-  "d": Object {
-    "key": 2,
-    "type": "ITEM",
-    "value": Object {
-      "d": Object {
-        "type": "BAR",
+  "f": Array [
+    Array [
+      "type",
+      "ITEM",
+    ],
+    Array [
+      "value",
+      Object {
+        "f": Array [
+          Array [
+            "type",
+            "BAR",
+          ],
+        ],
       },
-    },
-  },
+    ],
+    Array [
+      "key",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`fork 6`] = `
 Object {
-  "d": Object {
-    "key": 2,
-    "type": "ITEM",
-    "value": Object {
-      "d": Object {
-        "type": "BAR2",
+  "f": Array [
+    Array [
+      "type",
+      "ITEM",
+    ],
+    Array [
+      "value",
+      Object {
+        "f": Array [
+          Array [
+            "type",
+            "BAR2",
+          ],
+        ],
       },
-    },
-  },
+    ],
+    Array [
+      "key",
+      2,
+    ],
+  ],
 }
 `;
 
 exports[`fork 7`] = `
 Object {
-  "d": Object {
-    "key": 2,
-    "type": "ITEM",
-    "value": Object {
-      "d": Object {
-        "type": "DELETE",
+  "f": Array [
+    Array [
+      "type",
+      "ITEM",
+    ],
+    Array [
+      "value",
+      Object {
+        "f": Array [
+          Array [
+            "type",
+            "DELETE",
+          ],
+        ],
       },
-    },
-  },
+    ],
+    Array [
+      "key",
+      2,
+    ],
+  ],
 }
 `;
