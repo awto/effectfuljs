@@ -1059,7 +1059,16 @@ export function handleSpecVars(si) {
   if (argsSym) {
     decls.set(argsSym, {
       raw: null,
-      init: [s.tok(Tag.init, Tag.Identifier, { sym: Kit.scope.argumentsSym })]
+      init: root.opts.wrapArguments
+        ? [
+            ...s.toks(
+              Tag.init,
+              "$I($I)",
+              Kit.sysId(root.opts.wrapArguments),
+              Kit.scope.argumentsSym
+            )
+          ]
+        : [s.tok(Tag.init, Tag.Identifier, { sym: Kit.scope.argumentsSym })]
     });
     root.scopeDecls.add(argsSym);
   }

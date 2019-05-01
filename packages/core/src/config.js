@@ -394,5 +394,7 @@ export default {
 
   // moves all closures to top level
   // requires `topLevel` and `injectFuncMeta`
-  closConv: false
+  closConv: false,
+  // when storing `arguments` wrap it by the function call
+  wrapArguments: false
 };
