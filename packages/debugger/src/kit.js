@@ -12,6 +12,8 @@ export const context = {
   modules: {},
   threads: [],
   sync: false,
+  syncStack: [],
+  error: false,
   startThread(first) {
     if (this.sync) return runSync(first);
     this.threads.push(first);
@@ -39,6 +41,7 @@ export function capture() {
 export function restore(json) {
   const { brk, threads, sync, stack } = S.read(json);
   context.brk = brk;
+  context.error = false;
   context.threads = threads;
   context.sync = sync;
   context.stack = stack;
@@ -50,14 +53,13 @@ export function restore(json) {
  */
 export const region = func => {
   const ret = function(...args) {
-    const { stack: saved, rec: recSaved } = context;
     try {
+      context.syncStack.push([context.stack, context.sync]);
       context.stack = null;
       context.sync = true;
       return func.apply(this, args);
     } finally {
-      context.sync = recSaved;
-      context.stack = saved;
+      [context.stack, context.sync] = context.syncStack.pop();
     }
   };
   S.regOpaqueObject(ret, `region${func.name || "?"}`);
@@ -72,6 +74,10 @@ export function runSync(first) {
     res = step();
   } while (res === token);
   return res;
+}
+
+export function args(value) {
+  return Array.from(value);
 }
 
 export const token = { _effectToken: true };
@@ -135,7 +141,9 @@ function wrapMeta(info) {
       const proto = value[metaDataSymbol];
       json.$$ = ctx.step(proto.$$, json, "$$");
       return json;
-    }
+    },
+    overrideProps: { [metaDataSymbol]: false },
+    typeofHint: "function"
   });
   const frameDescr = S.regDescriptor({
     name: `f@${info.module.name}#${info.name}`,
@@ -149,11 +157,11 @@ function wrapMeta(info) {
     },
     write(ctx, value) {
       const json = {};
-      json.constr = ctx.step(value.constructor, json, "constr");
+      // json.constr = ctx.step(value.constructor, json, "constr");
       return json;
     }
   });
-  const constr = function($$) {
+  function constr($$) {
     const proto = Object.create(FramePrototype);
     proto.$meta = info;
     proto.$$ = $$;
@@ -162,11 +170,14 @@ function wrapMeta(info) {
     const closure = info.func(proto);
     closure[metaDataSymbol] = proto;
     closure[S.descriptorSymbol] = funcDescr;
-    proto[S.descriptorSymbol] = frameDescr;
+    // proto[S.descriptorSymbol] = frameDescr;
     proto.constructor = closure;
     return closure;
-  };
+  }
   S.regOpaqueObject(constr, `c#${info.module.name}#${info.name}`);
+  S.regOpaqueObject(info.handler, `h#${info.module.name}#${info.name}`);
+  if (info.errHandler)
+    S.regOpaqueObject(info.errHandler, `eh#${info.module.name}#${info.name}`);
   return constr;
 }
 
@@ -174,11 +185,12 @@ export function step() {
   do {
     if (!context.stack.length) {
       context.stack = null;
-      if (context.state === "raise") throw context.value;
+      if (context.error) throw context.value;
       return context.value;
     }
     const top = context.stack[0];
     context.brk = null;
+    context.error = false;
     top.resume();
   } while (context.brk == null);
   return token;
@@ -199,7 +211,7 @@ export function stepOver() {
 const FramePrototype = {
   scope(self, newTarget, dest) {
     this.$state = dest;
-    this.$inNew = newTarget !== void 0;
+    this.newTarget = newTarget !== void 0;
     this.$self = self;
     if (context.stack) {
       context.stack.unshift(this);
@@ -214,7 +226,7 @@ const FramePrototype = {
     return token;
   },
   pure(value) {
-    if (this.$inNew && (!value || typeof value !== "object"))
+    if (this.newTarget && (!value || typeof value !== "object"))
       value = this.$self;
     this.$state = 0;
     context.stack.shift();
@@ -227,6 +239,7 @@ const FramePrototype = {
     context.stack.shift();
     context.value = error;
     context.brk = "throw";
+    context.error = true;
     const callee = context.stack[0];
     if (callee) callee.$state = callee.$err(callee.$state);
   },
@@ -238,11 +251,14 @@ const FramePrototype = {
     } catch (e) {
       this.$state = this.$err(this.$state);
       context.brk = "throw";
+      context.error = true;
       context.value = e;
       return token;
     }
   }
 };
+
+S.regOpaqueObject(FramePrototype, "debugger#frame");
 
 function defaultErrHandler() {
   return 1;
@@ -292,18 +308,41 @@ export function unwrap(value) {
   return value && value[thunkSymbol] ? value() : value;
 }
 
-if (config.replaceRT) {
-  if (typeof EventTarget !== "undefined") {
-    EventTarget.prototype.dispatchEvent = region(
-      // TODO: this can be traceable
-      EventTarget.prototype.dispatchEvent
-    );
+export function imports(value, name) {
+  if (!value) return value;
+  if (value[thunkSymbol]) {
+    value = value();
+    if (!value) return value;
   }
+  if (!value[S.descriptorSymbol]) regModule(value, name);
+  return value;
+}
+
+export function regModule(exp, name) {
+  if (exp[S.descriptorSymbol]) return;
+  if (!name) name = "?";
+  if (typeof exp === "object" || typeof exp === "function")
+    S.regOpaqueObject(exp, `module#${name}`);
+  for (const i in exp) {
+    const f = exp[i];
+    if (!f) continue;
+    const ty = typeof f;
+    if (ty === "function" || ty === "object")
+      S.regOpaqueObject(f, `export#${name}#${i}`);
+    else if (ty === "symbol" && !Symbol.keyFor(f))
+      S.regOpaquePrim(f, `export#${name}#${i}`);
+  }
+}
+
+if (config.replaceRT) {
   const { defineProperty } = Object;
   Object.defineProperty = function definePropert(obj, prop, descr) {
     const copy = { ...descr };
     if (copy.set) copy.set = region(copy.set);
     if (copy.get) copy.get = region(copy.get);
     return defineProperty(obj, prop, descr);
+  };
+  Function.prototype.bind = function bind(self, ...args) {
+    return S.bind(this, self, ...args);
   };
 }

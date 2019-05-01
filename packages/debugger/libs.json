@@ -1,6 +1,8 @@
 {
-  "react": "react/cjs/react.development.js",
-  "react-dom": "react-dom/cjs/react-dom.development.js",
-  "scheduler": "scheduler/cjs/scheduler.development.js",
-  "scheduler/tracing": "scheduler/cjs/scheduler-tracing.development.js"
+  "react": "react/cjs/react.production.min.js",
+  "react-dom": "react-dom/cjs/react-dom.production.min.js",
+  "scheduler": "scheduler/cjs/scheduler.production.min.js",
+  "scheduler/tracing": "scheduler/cjs/scheduler-tracing.production.min.js",
+  "object-assign": "object-assign/index.js",
+  "react-is": "react-is/cjs/react-is.production.min.js"
 }

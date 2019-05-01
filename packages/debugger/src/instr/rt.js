@@ -128,3 +128,21 @@ export function exports(top) {
   res[Kit.thunkSymbol] = true;
   return res;
 }
+
+export function imports(value, name) {
+  if (!value) return value;
+  if (value[Kit.thunkSymbol]) {
+    value = value();
+    if (!value) return value;
+  }
+  Kit.regModule(value, name);
+  return value;
+}
+
+function reify(v) {
+  return v;
+}
+
+export function chainM(arg, func) {
+  return func(reify(arg));
+}

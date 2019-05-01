@@ -1,4 +1,4 @@
-module.exports = (api, opts) => ({
+module.exports = (api, opts = { preInstrumentedLibs: true }) => ({
   passPerPreset: true,
   presets: [
     {
@@ -7,7 +7,7 @@ module.exports = (api, opts) => ({
       ]
     },
     {
-      plugins: [[require("./transform"), { blackbox: opts.blackbox }]]
+      plugins: [[require("./transform"), opts]]
     }
   ]
 });

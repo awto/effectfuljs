@@ -7,7 +7,12 @@ const fs = require("fs");
 const babel = require("@babel/core");
 
 const opts = {
-  plugins: [["./transform", { blackbox: true, preInstrumentedLibs: true }]],
+  plugins: [
+    [
+      "./transform",
+      { blackbox: true, preInstrumentedLibs: "..", importRT: "../main" }
+    ]
+  ],
   compact: false
 };
 

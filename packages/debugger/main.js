@@ -2,9 +2,12 @@
 
 exports.__esModule = true;
 var _exportNames = {
-  exports: true
+  exports: true,
+  imports: true,
+  chainM: true,
+  Serialization: true
 };
-exports.exports = void 0;
+exports.Serialization = exports.chainM = exports.imports = exports.exports = void 0;
 
 var S = require("@effectful/serialization");
 
@@ -18,19 +21,21 @@ Object.keys(Kit).forEach(function (key) {
 
 var RT = require("./instr/rt.js");
 
-for (const i in Kit) {
-  const v = Kit[i];
-  if (typeof v === "object" || typeof v === "function") S.regOpaqueObject(v, `@effectful/debugger/kit/${i}`);
-}
-
+Kit.regModule(Kit, "@effectful/debugger/kit");
 S.regOpaqueObject(Kit.context.startThread, "@effectful/debugger/defaultStartThread");
-
-for (const i in RT) {
-  const v = RT[i];
-  if (typeof v === "object" || typeof v === "function") S.regOpaqueObject(v, `@effectful/debugger/rt/${i}`);
-}
-
+Kit.regModule(RT, "@effectful/debugger/rt");
 const _exports = RT.exports;
 exports.exports = _exports;
+const imports = RT.imports;
+exports.imports = imports;
+const chainM = RT.chainM;
+exports.chainM = chainM;
+const Serialization = S;
+exports.Serialization = Serialization;
 S.regOpaquePrim(Kit.metaDataSymbol, "@effectful/debugger/metaData");
 S.regOpaquePrim(Kit.thunkSymbol, "@effectful/debugger/thunk");
+S.regOpaqueObject(Symbol.for, "Symbol.for");
+S.regOpaqueObject(Symbol.keyFor, "Symbol.keyFor");
+S.regOpaquePrim(Symbol.iterator, "SymbolStatic.iterator");
+S.regOpaquePrim(Symbol.asyncIterator, "SymbolStatic.asyncIterator");
+S.regOpaquePrim(Symbol.toStringTag, "SymbolStatic.asyncIterator");
