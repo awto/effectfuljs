@@ -23,6 +23,9 @@ Array [
     "  exports@/src/instr/rt.js:undefined",
   ],
   Array [
+    "  imports@/src/instr/rt.js:undefined",
+  ],
+  Array [
     "  @/__fixtures__/mod1.js:1:0-1:29",
   ],
   Array [
@@ -642,6 +645,31 @@ Array [
       "__esModule": true,
       "f1": [Function],
       "f2": [Function],
+      Symbol(@effectful/serialization/descriptor): Object {
+        "create": [Function],
+        "name": "module#./mod2",
+        "noRefs": Object {
+          "create": [Function],
+          "default$": false,
+          "name": "module#./mod2",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "props": false,
+          "read": [Function],
+          "readContent": [Function],
+          "typeofHint": "object",
+          "value": [Circular],
+          "write": [Function],
+        },
+        "overrideProps": Object {
+          Symbol(@effectful/serialization/descriptor): false,
+        },
+        "read": [Function],
+        "readContent": [Function],
+        "value": [Circular],
+        "write": [Function],
+      },
     },
   ],
   Array [
@@ -3276,149 +3304,231 @@ Array [
   Array [
     4,
     Object {
-      "d": Object {
-        "brk": null,
-        "stack": Array [
-          Object {
-            "$": "f@/__fixtures__/counters.js#runCounters",
-            "constr": Object {
-              "r": 0,
-            },
-            "d": Object {
-              "$": Object {
-                "d": Object {
-                  "c": Object {
-                    "$": "p#/__fixtures__/counters.js#counter",
-                    "$$": Object {
-                      "d": Object {
-                        "getCounter": Object {
-                          "d": Object {
-                            "i": 2,
-                          },
+      "f": Array [
+        Array [
+          "stack",
+          Array [
+            Object {
+              "f": Array [
+                Array [
+                  "$",
+                  Object {
+                    "f": Array [
+                      Array [
+                        "c",
+                        Object {
+                          "r": 4,
                         },
-                      },
-                    },
+                      ],
+                    ],
                   },
+                ],
+                Array [
+                  "$state",
+                  14,
+                ],
+                Array [
+                  "newTarget",
+                  false,
+                ],
+                Array [
+                  "$self",
+                  Object {
+                    "r": 2,
+                  },
+                ],
+                Array [
+                  "location",
+                  "14:2-14:30",
+                ],
+              ],
+              "p": Object {
+                "f": Array [
+                  Array [
+                    "$meta",
+                    Object {
+                      "$": "i#/__fixtures__/counters.js#runCounters",
+                    },
+                  ],
+                  Array [
+                    "$$",
+                    Object {
+                      "r": 3,
+                    },
+                  ],
+                  Array [
+                    "$run",
+                    Object {
+                      "$": "h#/__fixtures__/counters.js#runCounters",
+                    },
+                  ],
+                  Array [
+                    "$err",
+                    Object {
+                      "$": "eh#/src/instr/rt.js#*",
+                    },
+                  ],
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 1,
+                    },
+                  ],
+                ],
+                "p": Object {
+                  "$": "debugger#frame",
                 },
               },
-              "$inNew": false,
-              "$self": Object {
-                "r": 1,
-              },
-              "$state": 14,
-              "location": "14:2-14:30",
             },
-          },
+          ],
         ],
-        "sync": undefined,
-        "threads": Array [],
-      },
-      "x": Object {
-        "0": Object {
+        Array [
+          "threads",
+          Array [],
+        ],
+        Array [
+          "sync",
+          false,
+        ],
+        Array [
+          "brk",
+          null,
+        ],
+      ],
+      "x": Array [
+        Object {
+          "$": "p#/__fixtures__/counters.js#getCounter",
+          "$$": Object {
+            "$": "undefined",
+          },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 0,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+          ],
+        },
+        Object {
           "$": "p#/__fixtures__/counters.js#runCounters",
           "$$": Object {
-            "d": Object {
-              "f": Object {
-                "d": Object {
-                  "Kit": Object {
-                    "$": "Object",
-                    "d": Object {
-                      "__esModule": true,
-                      "asyncIterator": Object {
-                        "i": "@effectful/debugger/kit/asyncIterator",
-                      },
-                      "brk": Object {
-                        "i": "@effectful/debugger/kit/brk",
-                      },
-                      "capture": Object {
-                        "i": "@effectful/debugger/kit/capture",
-                      },
-                      "constr": Object {
-                        "i": "@effectful/debugger/kit/constr",
-                      },
-                      "context": Object {
-                        "i": "@effectful/debugger/kit/context",
-                      },
-                      "forInIterator": Object {
-                        "i": "@effectful/debugger/kit/forInIterator",
-                      },
-                      "frame": Object {
-                        "i": "@effectful/debugger/kit/frame",
-                      },
-                      "iterator": Object {
-                        "i": "@effectful/debugger/kit/iterator",
-                      },
-                      "meta": Object {
-                        "i": "@effectful/debugger/kit/meta",
-                      },
-                      "metaDataSymbol": Object {
-                        "i": "@effectful/debugger/metaData",
-                      },
-                      "module": Object {
-                        "i": "@effectful/debugger/kit/module",
-                      },
-                      "region": Object {
-                        "i": "@effectful/debugger/kit/region",
-                      },
-                      "restore": Object {
-                        "i": "@effectful/debugger/kit/restore",
-                      },
-                      "runSync": Object {
-                        "i": "@effectful/debugger/kit/runSync",
-                      },
-                      "step": Object {
-                        "i": "@effectful/debugger/kit/step",
-                      },
-                      "stepOut": Object {
-                        "i": "@effectful/debugger/kit/stepOut",
-                      },
-                      "stepOver": Object {
-                        "i": "@effectful/debugger/kit/stepOver",
-                      },
-                      "syncMeta": Object {
-                        "i": "@effectful/debugger/kit/syncMeta",
-                      },
-                      "thunkSymbol": Object {
-                        "i": "@effectful/debugger/thunk",
-                      },
-                      "token": Object {
-                        "i": "@effectful/debugger/kit/token",
-                      },
-                      "unwrap": Object {
-                        "i": "@effectful/debugger/kit/unwrap",
-                      },
-                    },
-                    "p": Object {
-                      "$": "Object",
-                      "p": null,
-                    },
-                  },
-                  "exports": Object {
-                    "r": 1,
-                  },
-                  "getCounter": Object {
-                    "$": "p#/__fixtures__/counters.js#getCounter",
-                    "$$": undefined,
-                  },
-                  "module": Object {
-                    "d": Object {
-                      "exports": Object {
-                        "r": 1,
-                      },
-                    },
-                  },
-                  "runCounters": Object {
-                    "r": 0,
-                  },
-                },
-              },
-            },
+            "r": 3,
           },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 1,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+          ],
         },
-        "1": Object {
-          "i": "countersMod",
+        Object {
+          "$": "countersMod",
         },
-      },
+        Object {
+          "f": Array [
+            Array [
+              "f",
+              Object {
+                "f": Array [
+                  Array [
+                    "getCounter",
+                    Object {
+                      "r": 0,
+                    },
+                  ],
+                  Array [
+                    "runCounters",
+                    Object {
+                      "r": 1,
+                    },
+                  ],
+                  Array [
+                    "module",
+                    Object {
+                      "f": Array [
+                        Array [
+                          "exports",
+                          Object {
+                            "r": 2,
+                          },
+                        ],
+                      ],
+                    },
+                  ],
+                  Array [
+                    "exports",
+                    Object {
+                      "r": 2,
+                    },
+                  ],
+                  Array [
+                    "Kit",
+                    Object {
+                      "$": "module#@effectful/debugger/kit",
+                    },
+                  ],
+                ],
+              },
+            ],
+          ],
+        },
+        Object {
+          "$": "p#/__fixtures__/counters.js#counter",
+          "$$": Object {
+            "f": Array [
+              Array [
+                "getCounter",
+                Object {
+                  "f": Array [
+                    Array [
+                      "i",
+                      2,
+                    ],
+                  ],
+                },
+              ],
+            ],
+          },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 4,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+          ],
+        },
+      ],
     },
   ],
   Array [
@@ -3483,149 +3593,231 @@ Array [
   Array [
     4,
     Object {
-      "d": Object {
-        "brk": null,
-        "stack": Array [
-          Object {
-            "$": "f@/__fixtures__/counters.js#runCounters",
-            "constr": Object {
-              "r": 0,
-            },
-            "d": Object {
-              "$": Object {
-                "d": Object {
-                  "c": Object {
-                    "$": "p#/__fixtures__/counters.js#counter",
-                    "$$": Object {
-                      "d": Object {
-                        "getCounter": Object {
-                          "d": Object {
-                            "i": 2,
-                          },
+      "f": Array [
+        Array [
+          "stack",
+          Array [
+            Object {
+              "f": Array [
+                Array [
+                  "$",
+                  Object {
+                    "f": Array [
+                      Array [
+                        "c",
+                        Object {
+                          "r": 4,
                         },
-                      },
-                    },
+                      ],
+                    ],
                   },
+                ],
+                Array [
+                  "$state",
+                  14,
+                ],
+                Array [
+                  "newTarget",
+                  false,
+                ],
+                Array [
+                  "$self",
+                  Object {
+                    "r": 2,
+                  },
+                ],
+                Array [
+                  "location",
+                  "14:2-14:30",
+                ],
+              ],
+              "p": Object {
+                "f": Array [
+                  Array [
+                    "$meta",
+                    Object {
+                      "$": "i#/__fixtures__/counters.js#runCounters",
+                    },
+                  ],
+                  Array [
+                    "$$",
+                    Object {
+                      "r": 3,
+                    },
+                  ],
+                  Array [
+                    "$run",
+                    Object {
+                      "$": "h#/__fixtures__/counters.js#runCounters",
+                    },
+                  ],
+                  Array [
+                    "$err",
+                    Object {
+                      "$": "eh#/src/instr/rt.js#*",
+                    },
+                  ],
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 1,
+                    },
+                  ],
+                ],
+                "p": Object {
+                  "$": "debugger#frame",
                 },
               },
-              "$inNew": false,
-              "$self": Object {
-                "r": 1,
-              },
-              "$state": 14,
-              "location": "14:2-14:30",
             },
-          },
+          ],
         ],
-        "sync": undefined,
-        "threads": Array [],
-      },
-      "x": Object {
-        "0": Object {
+        Array [
+          "threads",
+          Array [],
+        ],
+        Array [
+          "sync",
+          false,
+        ],
+        Array [
+          "brk",
+          null,
+        ],
+      ],
+      "x": Array [
+        Object {
+          "$": "p#/__fixtures__/counters.js#getCounter",
+          "$$": Object {
+            "$": "undefined",
+          },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 0,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+          ],
+        },
+        Object {
           "$": "p#/__fixtures__/counters.js#runCounters",
           "$$": Object {
-            "d": Object {
-              "f": Object {
-                "d": Object {
-                  "Kit": Object {
-                    "$": "Object",
-                    "d": Object {
-                      "__esModule": true,
-                      "asyncIterator": Object {
-                        "i": "@effectful/debugger/kit/asyncIterator",
-                      },
-                      "brk": Object {
-                        "i": "@effectful/debugger/kit/brk",
-                      },
-                      "capture": Object {
-                        "i": "@effectful/debugger/kit/capture",
-                      },
-                      "constr": Object {
-                        "i": "@effectful/debugger/kit/constr",
-                      },
-                      "context": Object {
-                        "i": "@effectful/debugger/kit/context",
-                      },
-                      "forInIterator": Object {
-                        "i": "@effectful/debugger/kit/forInIterator",
-                      },
-                      "frame": Object {
-                        "i": "@effectful/debugger/kit/frame",
-                      },
-                      "iterator": Object {
-                        "i": "@effectful/debugger/kit/iterator",
-                      },
-                      "meta": Object {
-                        "i": "@effectful/debugger/kit/meta",
-                      },
-                      "metaDataSymbol": Object {
-                        "i": "@effectful/debugger/metaData",
-                      },
-                      "module": Object {
-                        "i": "@effectful/debugger/kit/module",
-                      },
-                      "region": Object {
-                        "i": "@effectful/debugger/kit/region",
-                      },
-                      "restore": Object {
-                        "i": "@effectful/debugger/kit/restore",
-                      },
-                      "runSync": Object {
-                        "i": "@effectful/debugger/kit/runSync",
-                      },
-                      "step": Object {
-                        "i": "@effectful/debugger/kit/step",
-                      },
-                      "stepOut": Object {
-                        "i": "@effectful/debugger/kit/stepOut",
-                      },
-                      "stepOver": Object {
-                        "i": "@effectful/debugger/kit/stepOver",
-                      },
-                      "syncMeta": Object {
-                        "i": "@effectful/debugger/kit/syncMeta",
-                      },
-                      "thunkSymbol": Object {
-                        "i": "@effectful/debugger/thunk",
-                      },
-                      "token": Object {
-                        "i": "@effectful/debugger/kit/token",
-                      },
-                      "unwrap": Object {
-                        "i": "@effectful/debugger/kit/unwrap",
-                      },
-                    },
-                    "p": Object {
-                      "$": "Object",
-                      "p": null,
-                    },
-                  },
-                  "exports": Object {
-                    "r": 1,
-                  },
-                  "getCounter": Object {
-                    "$": "p#/__fixtures__/counters.js#getCounter",
-                    "$$": undefined,
-                  },
-                  "module": Object {
-                    "d": Object {
-                      "exports": Object {
-                        "r": 1,
-                      },
-                    },
-                  },
-                  "runCounters": Object {
-                    "r": 0,
-                  },
-                },
-              },
-            },
+            "r": 3,
           },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 1,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+          ],
         },
-        "1": Object {
-          "i": "countersMod",
+        Object {
+          "$": "countersMod",
         },
-      },
+        Object {
+          "f": Array [
+            Array [
+              "f",
+              Object {
+                "f": Array [
+                  Array [
+                    "getCounter",
+                    Object {
+                      "r": 0,
+                    },
+                  ],
+                  Array [
+                    "runCounters",
+                    Object {
+                      "r": 1,
+                    },
+                  ],
+                  Array [
+                    "module",
+                    Object {
+                      "f": Array [
+                        Array [
+                          "exports",
+                          Object {
+                            "r": 2,
+                          },
+                        ],
+                      ],
+                    },
+                  ],
+                  Array [
+                    "exports",
+                    Object {
+                      "r": 2,
+                    },
+                  ],
+                  Array [
+                    "Kit",
+                    Object {
+                      "$": "module#@effectful/debugger/kit",
+                    },
+                  ],
+                ],
+              },
+            ],
+          ],
+        },
+        Object {
+          "$": "p#/__fixtures__/counters.js#counter",
+          "$$": Object {
+            "f": Array [
+              Array [
+                "getCounter",
+                Object {
+                  "f": Array [
+                    Array [
+                      "i",
+                      2,
+                    ],
+                  ],
+                },
+              ],
+            ],
+          },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 4,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+          ],
+        },
+      ],
     },
   ],
 ]

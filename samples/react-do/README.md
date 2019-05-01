@@ -62,7 +62,7 @@ expressions.
 
 ## Example
 
-```
+```javascript
 import React from "react";
 import ReactDOM from "react-dom";
 import "@effectful/react-do/macro";
@@ -134,7 +134,7 @@ Here is how
 [ErrorBoundary](https://reactjs.org/docs/error-boundaries.html) can be
 implemented:
 
-```
+```javascript
 export function ErrorBoundary({effChildren}) {
   "component"
   try {

@@ -459,7 +459,7 @@ function f_1(p) {
         case 6:
           a = require(\\"mod\\");
 
-          if ((p = M.unwrap(a, \\"1:16-1:30\\")) === M.token) {
+          if ((p = M.imports(a, \\"mod\\")) === M.token) {
             ctx.$state = 7;
             return p;
           } else {
@@ -2345,7 +2345,7 @@ function f_110(p) {
         case 6:
           a = require(\\"./mod2\\");
 
-          if ((p = M.unwrap(a, null)) === M.token) {
+          if ((p = M.imports(a, \\"./mod2\\")) === M.token) {
             ctx.$state = 7;
             return p;
           } else {
@@ -2367,7 +2367,7 @@ function f_110(p) {
         case 8:
           a = require(\\"../instr/rt\\");
 
-          if ((p = M.unwrap(a, null)) === M.token) {
+          if ((p = M.imports(a, \\"../instr/rt\\")) === M.token) {
             ctx.$state = 9;
             return p;
           } else {

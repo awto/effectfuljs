@@ -1,16 +1,21 @@
 module.exports = require("@effectful/core").babelPlugin(
   (opts, { Tag, Kit, Transform: T, Policy: P, presets, Block }) => {
-    let moduleAliases;
+    const moduleAliases = {};
+    const importRT = opts.importRT || "@effectful/debugger";
     if (opts.preInstrumentedLibs) {
-      moduleAliases = {};
-      for (const i in require("./libs.json"))
-        moduleAliases[i] = `@effectful/debugger/libs/${i.replace("/", "-")}`;
+      const root = opts.preInstrumentedLibs.substr
+        ? opts.preInstrumentedLibs
+        : "@effectful/debugger";
+      for (const i in require("./libs.json")) {
+        moduleAliases[i] = `${root}/libs/${i.replace("/", "-")}`;
+      }
     }
+    Object.assign(moduleAliases, opts.moduleAliases);
     return {
       options: {
         ...presets.defunct,
         name: "@effectful/debugger",
-        importRT: opts.importRT || "@effectful/debugger",
+        importRT,
         contextBy: "this",
         par: false,
         topLevel: true,
@@ -37,6 +42,7 @@ module.exports = require("@effectful/core").babelPlugin(
         defunctStateDiscriminant: false,
         passNewTarget: true,
         storeCont: "$state",
+        wrapArguments: "args",
         before: {
           meta: injectScopeDescr,
           interpret: collectStmtsLoc
@@ -44,11 +50,12 @@ module.exports = require("@effectful/core").babelPlugin(
         contextMethodOpsSpec: {
           constr: false,
           brk: false,
-          unwrap: false,
+          imports: false,
           iterator: false,
           asyncIterator: false,
           forInIterator: false,
-          token: false
+          token: false,
+          args: false
         },
         moduleAliases,
         ...opts
@@ -57,14 +64,16 @@ module.exports = require("@effectful/core").babelPlugin(
         const s = Kit.auto(input);
         const opts = s.opts;
         // TODO: parcel doesn't allow exclude etc, make an own option
-        if (opts.file && opts.file.filename && opts.file.filename) {
+        /*
+        if (opts.file && opts.file.filename) {
           const name = opts.file.filename;
           const ext = name.substr(name.lastIndexOf("."));
           if (ext === ".css") return s;
         }
+        */
         const objWrap = Kit.sysId("constr");
         const brk = Kit.sysId("brk");
-        const unwrapSym = Kit.sysId("unwrap");
+        const unwrapSym = Kit.sysId("imports");
         T.run(insertBreaks(P.propagateOpts(configure())));
         function insertBreaks(si) {
           const s = Kit.auto(si);
@@ -109,10 +118,13 @@ module.exports = require("@effectful/core").babelPlugin(
                     yield* lab();
                     continue;
                   case Tag.DebuggerStatement:
+                    break;
+                  /*
                     if (opts.blackbox) break;
                     yield* brkStmt(i.pos, i, "d");
                     s.close(i);
                     continue;
+                  */
                   case Tag.CallExpression:
                     const la = s.cur();
                     if (
@@ -120,7 +132,22 @@ module.exports = require("@effectful/core").babelPlugin(
                       la.type === Tag.Identifier &&
                       la.value.node.name === "require"
                     ) {
-                      yield* wrap(i, true, unwrapSym);
+                      for (const j of s.sub())
+                        if (j.pos === Tag.arguments) break;
+                      const arg = [...s.one()];
+                      // TODO: this requires a temp var
+                      // since it may duplicate some side effects
+                      yield* s.template(
+                        i.pos,
+                        "=$I(require($E),$E)",
+                        { bind: true, expr: true },
+                        unwrapSym
+                      );
+                      yield* arg;
+                      yield* s.refocus();
+                      yield* Kit.clone(arg);
+                      yield* s.leave();
+                      for (const j of s) if (j.value === i.value) break;
                       continue;
                     }
                     i.value.bind = true;
