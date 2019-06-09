@@ -222,12 +222,9 @@ describe("normalize `do-while`", function() {
         } while(check(1))
       }`),
       print(`function () /*BS|B*/{
-        /*FS|E*/for (;;) /*BS|E*/{
+        /*FS|E*/for (var a = true; a;
+        /*AE|E*/ a = /*CE|B*/check(1))/*BS|E*/{
           /*ES|e*/ /*CE|B*/eff(1);
-          
-          /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
-            /*BS|B*/break;
-          }
         }
       }`)
     );
@@ -240,12 +237,8 @@ describe("normalize `do-while`", function() {
         while(check(1))
       }`),
       print(`function () /*BS|B*/{
-        /*FS|E*/for (;;) /*BS|E*/{
+        /*FS|E*/for (var a = true; a; /*AE|E*/ a = /*CE|B*/check(1))/*BS|E*/{
           /*ES|e*/ /*CE|B*/eff(1);
-          
-          /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
-            /*BS|B*/break;
-          }
         }
       }`)
     );
@@ -265,31 +258,15 @@ describe("normalize `do-while`", function() {
         while(check(4))
       }`),
       print(`function () /*BS|B*/{
-        /*FS|E*/for (;;) /*BS|E*/{
-          /*FS|E*/for (;;) /*BS|E*/{
-            /*FS|E*/for (;;) /*BS|E*/{
+        /*FS|E*/for (var a = true; a;/*AE|E*/a = /*CE|B*/check(4))/*BS|E*/{
+          /*FS|E*/for (var b = true; b;/*AE|E*/b = /*CE|B*/check(3))/*BS|E*/{
+            /*FS|E*/for (var c = true; c;/*AE|E*/c = /*CE|B*/check(2))/*BS|E*/{
               /*ES|e*/ /*CE|B*/eff(1);
 
-              /*FS|E*/for (;;) /*BS|E*/{
+              /*FS|E*/for (var d = true; d;/*AE|E*/d = /*CE|B*/check(1))/*BS|E*/{
                 /*ES|e*/ /*CE|B*/eff(2);
-                
-                /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(1)) /*BS|E*/{
-                  /*BS|B*/break;
-                }
-              }
-              
-              /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(2)) /*BS|E*/{
-                /*BS|B*/break;
               }
             }
-            
-            /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(3)) /*BS|E*/{
-              /*BS|B*/break;
-            }
-          }
-          
-          /*IS|E*/if ( /*UE|E*/! /*CE|B*/check(4)) /*BS|E*/{
-            /*BS|B*/break;
           }
         }
       }`)

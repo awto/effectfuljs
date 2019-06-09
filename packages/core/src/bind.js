@@ -34,7 +34,7 @@ export function interpretPureLet(si) {
 /**
  * Generates temporal local variable
  */
-export function tempVarSym(top, pat) {
+export function tempVarSym(top, pat, hasDecl) {
   const sym = Kit.scope.newSym(pat);
   top.scopeDecls.add(sym);
   sym.track = true;
@@ -44,7 +44,7 @@ export function tempVarSym(top, pat) {
   sym.optional = false;
   sym.local = true;
   setSymInterpr(sym);
-  if (sym.interpr === closureVar && top.savedDecls)
+  if (!hasDecl && sym.interpr === closureVar && top.savedDecls)
     top.savedDecls.set(sym, { raw: null });
   return sym;
 }

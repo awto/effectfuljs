@@ -89,46 +89,56 @@ export const toBlocks = Kit.pipe(
   }
 );
 
-export const doWhileStmt = Kit.pipe(
-  function doWhileStmt(s) {
-    s = Kit.auto(s);
-    const { normPureDoWhile } = s.opts;
-    function* walk() {
-      for (const i of s.sub()) {
-        if (
-          (normPureDoWhile || i.value.eff) &&
-          i.type === Tag.DoWhileStatement
-        ) {
-          const lab = s.label();
-          yield s.peel(Kit.setType(i, Tag.ForStatement));
-          i.value.node.test = null;
-          const test = Array.from(s.one());
-          yield s.peel();
-          yield* s.peelTo(Tag.body);
-          yield* walk();
-          yield s.enter(Tag.push, Tag.IfStatement);
-          yield s.enter(Tag.test, Tag.UnaryExpression, {
-            node: { operator: "!" }
-          });
-          yield s.enter(Tag.argument, Kit.Subst);
-          yield* test;
-          yield* s.leave();
-          yield* s.leave();
-          yield s.enter(Tag.consequent, Tag.BlockStatement);
-          yield s.enter(Tag.body, Tag.Array);
-          yield s.tok(Tag.push, Tag.BreakStatement, {
-            block: i.value,
-            eff: true,
-            bind: true
-          });
-          yield* lab();
-        } else yield i;
-      }
+export function doWhileStmt(s) {
+  s = Kit.auto(s);
+  const { normPureDoWhile } = s.opts;
+  return _doWhileStmt(s);
+  function* _doWhileStmt(sw) {
+    for (const i of sw) {
+      if ((normPureDoWhile || i.value.eff) && i.type === Tag.DoWhileStatement) {
+        const lab = s.label();
+        const sym = Bind.tempVarSym(s.first.value, null, false);
+        yield s.peel(Kit.setType(i, Tag.ForStatement));
+        i.value.node.test = null;
+        const ilab = s.label();
+        yield s.enter(Tag.init, Tag.VariableDeclaration, {
+          node: { kind: "var" }
+        });
+        yield s.enter(Tag.declarations, Tag.Array);
+        yield s.enter(Tag.push, Tag.VariableDeclarator);
+        yield s.tok(Tag.id, Tag.Identifier, {
+          sym,
+          decl: true,
+          lhs: true,
+          rhs: false
+        });
+        yield s.tok(Tag.init, Tag.BooleanLiteral, { node: { value: true } });
+        yield* ilab();
+        yield s.tok(Tag.test, Tag.Identifier, {
+          sym,
+          decl: false,
+          lhs: false,
+          rhs: true
+        });
+        yield s.enter(Tag.update, Tag.AssignmentExpression, {
+          node: { operator: "=" }
+        });
+        yield s.tok(Tag.left, Tag.Identifier, {
+          sym,
+          decl: false,
+          lhs: true,
+          rhs: false
+        });
+        const test = s.cur();
+        yield* Kit.repos(s.one(), Tag.right);
+        sym.type = test.value.type;
+        yield* ilab();
+        yield* _doWhileStmt(s.sub());
+        yield* lab();
+      } else yield i;
     }
-    return walk();
-  },
-  Kit.completeSubst
-);
+  }
+}
 
 function forOfStmtImpl(loose, s) {
   s = Kit.auto(s);
