@@ -1,8 +1,8 @@
 import * as M from "@effectful/core";
-var $module = M.module("*"),
-    meta$a2 = M.meta(null, $module),
-    meta$c = M.meta(meta$a2, $module),
-    meta$b = M.meta(meta$c, $module);
+var $module = M.module("*", module),
+    meta$a2 = M.meta($module, null),
+    meta$c = M.meta($module, meta$a2),
+    meta$b = M.meta($module, meta$c);
 
 var _a2 = M.wrap(a2, meta$a2);
 

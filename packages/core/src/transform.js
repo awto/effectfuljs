@@ -20,11 +20,14 @@ import * as Inline from "./inline";
 import * as Simplify from "./simplify";
 import { ifLoose } from "./options";
 import * as Par from "./par";
+import * as Eval from "./eval";
 
 export const consumeScope = consume;
 
 export const preproc = Kit.pipe(
   Kit.scope.prepare,
+  Policy.stage("scope"),
+  Eval.substVars,
   Prop.prepare,
   Policy.prepare,
   Policy.stage("prepare"),
@@ -36,7 +39,8 @@ export const preproc = Kit.pipe(
   Policy.stage("propagate"),
   Control.assignLabels,
   Prop.propagateEff,
-  State.prepare
+  State.prepare,
+  Eval.prepare
 );
 
 /* default transform for all functions if loose mode is set */
@@ -66,6 +70,7 @@ const finalize = Kit.pipe(
   Scope.funcWraps,
   Closure.closConv,
   Policy.stage("meta"),
+  Eval.injectMeta,
   Scope.injectMeta,
   Simplify.main,
   ifLoose(Loops.looseForOf),
@@ -138,6 +143,8 @@ export const stage0 = Kit.pipe(
       Exceptions.inject,
       Prop.recalcEff,
       Block.splitEffBlock,
+      Rt.replaceGlobals,
+      Eval.wrap,
       Ops.combine,
       Flat.convert,
       Inline.jsExceptions
@@ -207,7 +214,7 @@ export function pass(s) {
   const inject = (root.injectRT = new Map());
   opts = root.opts;
   if (!opts) return null;
-  if (opts.importRT && !root.nsImported)
+  if (opts.importRT && (opts.detectRT === false || !root.nsImported))
     inject.set(root.$ns, {
       module: opts.importRT,
       content: opts.inlineRT,

@@ -5,20 +5,35 @@
 
 import config from "./config";
 import * as S from "@effectful/serialization";
+import * as T from "./transform";
+import * as path from "path";
+import { parse as babelParse } from "@babel/parser";
+import babelGenerate from "@babel/generator";
+const sysConsole = console;
 
 export const context = {
-  stack: null,
-  brk: "loaded",
+  /** it will stop on break points */
+  debug: true,
+  /** everything is done */
+  terminated: false,
+  /** the engine now runs a function */
+  running: false,
+  /** current execution stack */
+  stack: [],
+  /** current breakpoint id */
+  brk: null,
+  /** loaded modules */
   modules: {},
-  threads: [],
+  /** specifies next function needs to be executed synchronously */
   sync: false,
+  /** saved context for synchronous functions */
   syncStack: [],
+  /** in error state */
   error: false,
-  startThread(first) {
-    if (this.sync) return runSync(first);
-    this.threads.push(first);
-    return token;
-  }
+  /** next functions to run */
+  queue: [],
+  /** a current value to be passed into the top of `stack` (or an exception if `error:true`) */
+  value: void 0
 };
 
 /**
@@ -28,9 +43,7 @@ export const context = {
 export function capture() {
   return S.write({
     stack: context.stack,
-    threads: context.threads,
-    sync: context.sync,
-    brk: context.brk
+    queue: context.queue
   });
 }
 
@@ -39,12 +52,9 @@ export function capture() {
  * `capture` the current state is discarded
  */
 export function restore(json) {
-  const { brk, threads, sync, stack } = S.read(json);
-  context.brk = brk;
-  context.error = false;
-  context.threads = threads;
-  context.sync = sync;
-  context.stack = stack;
+  ({ brk: context.brk, stack: context.stack, queue: context.queue } = S.read(
+    json
+  ));
 }
 
 /**
@@ -55,7 +65,7 @@ export const region = func => {
   const ret = function(...args) {
     try {
       context.syncStack.push([context.stack, context.sync]);
-      context.stack = null;
+      context.stack = [];
       context.sync = true;
       return func.apply(this, args);
     } finally {
@@ -67,14 +77,45 @@ export const region = func => {
 };
 
 /** executes a thread starting from the `first` frame */
-export function runSync(first) {
-  let res;
-  context.stack = [first];
-  do {
-    res = step();
-  } while (res === token);
-  return res;
-}
+export const runSync = config.expTCExceptions
+  ? function runSync(first) {
+      const { stack, debug, value, brk } = context;
+      context.stack = [first];
+      context.debug = false;
+      context.brk = null;
+      try {
+        while (!context.terminated) {
+          try {
+            return step();
+          } catch (e) {
+            if (e !== token) throw e;
+          }
+        }
+      } finally {
+        context.stack = stack;
+        context.debug = debug;
+        context.value = value;
+        context.brk = brk;
+      }
+    }
+  : function runSync(first) {
+      let res;
+      const { stack, debug, value, brk } = context;
+      context.stack = [first];
+      context.debug = false;
+      context.brk = null;
+      try {
+        do {
+          res = step();
+        } while (res === token);
+        return res;
+      } finally {
+        context.stack = stack;
+        context.debug = debug;
+        context.value = value;
+        context.brk = brk;
+      }
+    };
 
 export function args(value) {
   return Array.from(value);
@@ -82,13 +123,24 @@ export function args(value) {
 
 export const token = { _effectToken: true };
 
-export function module(name) {
-  const module = { functions: [], name };
-  S.regOpaqueObject(module, `module#${name}`);
-  return (context.modules[name] = module);
+export function module(name, module) {
+  let info = context.modules[name];
+  if (module && module.hot) module.hot.accept();
+  if (info) {
+    if (context.onUpdate) context.onUpdate(info);
+    return info;
+  }
+  info = { name, functions: {}, version: 0 };
+  if (!name) name = "console";
+  S.regOpaqueObject(info, `module#${name}`);
+  return (context.modules[name] = info);
 }
 
+/** function's meta-data property name */
 export const metaDataSymbol = Symbol("@effectful/debugger/metaData");
+
+/** module's meta-data property name */
+export const moduleSymbol = Symbol("@effectful/debugger/module");
 
 export function syncMeta(module, func) {
   const wrap = function($$) {
@@ -97,39 +149,109 @@ export function syncMeta(module, func) {
   return wrap;
 }
 
+let metaCount = 0;
+
 export function meta(
   module,
   func,
   handler,
   errHandler,
   finHandler,
+  states,
   name,
   loc,
-  parent,
-  scope
+  parent
 ) {
+  let info = module.functions[handler.name];
+  if (!info) info = module.functions[handler.name] = {};
   if (!name) name = "*";
   if (!errHandler) errHandler = defaultErrHandler;
-  const info = {
-    module,
-    func,
-    handler,
-    errHandler,
-    finHandler,
-    name,
-    loc,
-    parent,
-    scope
-  };
-  const wrap = wrapMeta(info);
-  S.regOpaqueObject(info, `i#${info.module.name}#${info.name}`);
-  module.functions.push(info);
-  return wrap;
+  const names = [name];
+  for (let p = parent; p; p = p.parent) names.unshift(p.name);
+  const fullName = `${path.basename(module.name)}:${names.join(".")}@${loc}`;
+  const memo = [];
+  let scopeId = 0;
+  const prevStates = info.states;
+  let prevStatesPos = 0;
+  let stateId = 0;
+  for (const [scope, kind, loc] of states) {
+    let info;
+    const [line, column, endLine, endColumn] = location(loc);
+    if (prevStates) {
+      while ((info = prevStates[prevStatesPos]).line < line) {
+        prevStatesPos++;
+      }
+      if (info.line !== line && info.kind !== kind) info = null;
+      else prevStatesPos++;
+    }
+    if (info == null) info = { kind, id: memo.length, func };
+    else if (info.breakpoint && info.breakpoint.signal) {
+      info.breakpoint.signal();
+    }
+    info.line = line;
+    info.column = column;
+    info.endLine = endLine;
+    info.endColumn = endColumn;
+    info.exit = false;
+    S.regOpaqueObject(info, `s#${module.name}#${handler.name}#${stateId++}`);
+    memo.push(info);
+    if (scope.length === 4) info.scope = scope[2];
+    else {
+      info.scope = buildScope(scope);
+      scope.push(scopeId++);
+    }
+    info.scopeId = scope[3];
+  }
+  const blackbox = (info.blackbox = loc == null);
+  info.module = module;
+  info.func = func;
+  info.handler = handler;
+  info.errHandler = errHandler;
+  info.finHandler = finHandler;
+  info.name = name;
+  info.fullName = fullName;
+  info.parent = parent;
+  info.uniqName = `${info.module.name}#${info.handler.name}`;
+  if (info.canSki == null) info.canSkip = false;
+  if (info.id == null) info.id = metaCount++;
+  info.states = memo;
+  [info.line, info.column, info.endLine, info.endColumn] = location(loc);
+  if (!blackbox) {
+    memo.push(
+      (info.exitBreakpoint = {
+        kind: "exit",
+        id: memo.length,
+        func: info,
+        scope: memo.length ? memo[0].scope : {},
+        line: info.endLine,
+        column: info.endColumn,
+        endLine: info.endLine,
+        endColumn: info.endColumn,
+        exit: true
+      })
+    );
+  } else info.exitBreakpoint = null;
+  return info.constr || (info.constr = wrapMeta(info));
+}
+
+function buildScope(scope) {
+  if (scope == null) return {};
+  if (scope.length === 3) return scope[2];
+  const [vars, par] = scope;
+  const scopeInfo = {};
+  scope.push(scopeInfo);
+  const parScope = buildScope(par);
+  for (const i in parScope) {
+    const [field, depth] = parScope[i];
+    scopeInfo[i] = [field, depth + 1];
+  }
+  for (const i in vars) scopeInfo[i] = [vars[i], 0];
+  return scopeInfo;
 }
 
 function wrapMeta(info) {
   const funcDescr = S.regDescriptor({
-    name: `p#${info.module.name}#${info.name}`,
+    name: `p#${info.uniqName}`,
     create() {
       return constr();
     },
@@ -143,10 +265,11 @@ function wrapMeta(info) {
       return json;
     },
     overrideProps: { [metaDataSymbol]: false },
-    typeofHint: "function"
+    typeofHint: "function",
+    strictName: true
   });
-  const frameDescr = S.regDescriptor({
-    name: `f@${info.module.name}#${info.name}`,
+  S.regDescriptor({
+    name: `f@${info.uniqName}`,
     readContent(ctx, json, value) {
       value.$ = ctx.step(json.$);
     },
@@ -155,108 +278,271 @@ function wrapMeta(info) {
       const proto = closure[metaDataSymbol];
       return Object.create(proto);
     },
-    write(ctx, value) {
+    write() {
+      return {};
+      /*
       const json = {};
       // json.constr = ctx.step(value.constructor, json, "constr");
       return json;
-    }
+      */
+    },
+    strictName: true
   });
   function constr($$) {
-    const proto = Object.create(FramePrototype);
+    const proto = new Frame();
     proto.$meta = info;
     proto.$$ = $$;
-    proto.$run = info.handler;
-    proto.$err = info.errHandler;
     const closure = info.func(proto);
     closure[metaDataSymbol] = proto;
     closure[S.descriptorSymbol] = funcDescr;
-    // proto[S.descriptorSymbol] = frameDescr;
     proto.constructor = closure;
     return closure;
   }
+  constr[metaDataSymbol] = info;
   S.regOpaqueObject(constr, `c#${info.module.name}#${info.name}`);
+  S.regOpaqueObject(info, `i#${info.module.name}#${info.name}`);
   S.regOpaqueObject(info.handler, `h#${info.module.name}#${info.name}`);
   if (info.errHandler)
     S.regOpaqueObject(info.errHandler, `eh#${info.module.name}#${info.name}`);
   return constr;
 }
 
-export function step() {
-  do {
-    if (!context.stack.length) {
-      context.stack = null;
-      if (context.error) throw context.value;
-      return context.value;
+let queueCb;
+let newThread = false;
+
+/** an async iterable signaling start of each new sync thread */
+export const threads = {
+  [Symbol.asyncIterator]() {
+    return this;
+  },
+  return() {
+    context.terminated = true;
+    if (queueCb) queueCb();
+  },
+  async next() {
+    while (!context.terminated) {
+      if (newThread) {
+        newThread = false;
+        return { done: false };
+      }
+      if (context.stack.length === 0) {
+        while (context.queue.length !== 0) {
+          const init = context.queue.shift();
+          /* this is already in the stack, but we still need to signal it */
+          if (init) {
+            context.stack.push(init);
+            /* this may be a simple function without breakpoints, 
+             avoiding bothering the client for them  */
+            step();
+          }
+          if (context.stack.length !== 0) return { done: false };
+        }
+      }
+      await new Promise(i => (queueCb = i));
+      queueCb = null;
     }
-    const top = context.stack[0];
-    context.brk = null;
-    context.error = false;
-    top.resume();
-  } while (context.brk == null);
-  return token;
-}
+    return { done: true };
+  }
+};
 
-export function stepOut() {
-  for (
-    let len = context.stack.length - 1;
-    context.stack.length > len;
-    step()
-  ) {}
-}
+/**
+ * runs a computation until it encounters some breakpoint (returns `token)
+ * or finishes the whole computation (returns the resulting value or throws an exception)
+ */
+export const step = config.expTCExceptions
+  ? function step() {
+      const savedRunning = context.running;
+      try {
+        context.running = true;
+        const { stack } = context;
+        while (!context.terminated) {
+          if (!stack.length) {
+            if (queueCb) queueCb();
+            if (context.error) throw context.value;
+            return context.value;
+          }
+          const top = stack[0];
+          if (top.brk && top.brk.exit) {
+            stack.shift();
+            continue;
+          }
+          context.error = false;
+          context.brk = null;
+          try {
+            top.resume();
+          } catch (e) {
+            if (e === token) {
+              if (context.brk && context.debug) break;
+              continue;
+            }
+            throw e;
+          }
+          if (context.brk && context.debug) break;
+        }
+      } finally {
+        context.running = savedRunning;
+      }
+      return token;
+    }
+  : function step() {
+      const savedRunning = context.running;
+      try {
+        context.running = true;
+        const { stack } = context;
+        while (!context.terminated) {
+          if (!stack.length) {
+            if (queueCb) queueCb();
+            if (context.error) throw context.value;
+            return context.value;
+          }
+          const top = stack[0];
+          if (top.brk && top.brk.exit) {
+            stack.shift();
+            continue;
+          }
+          context.error = false;
+          context.brk = null;
+          top.resume();
+          if (context.brk && context.debug) break;
+        }
+      } finally {
+        context.running = savedRunning;
+      }
+      return token;
+    };
 
-export function stepOver() {
-  for (let len = context.stack.length; context.stack.length > len; step()) {}
-}
+function Frame() {}
 
-const FramePrototype = {
+const eff = config.expTCExceptions
+  ? function() {
+      throw token;
+    }
+  : function() {
+      return token;
+    };
+
+const FramePrototype = (Frame.prototype = {
   scope(self, newTarget, dest) {
+    if (newTarget) Trace.unwrapPrototype(self);
     this.$state = dest;
     this.newTarget = newTarget !== void 0;
     this.$self = self;
-    if (context.stack) {
-      context.stack.unshift(this);
-      context.value = void 0;
-      return this.resume();
+    if (context.sync) return runSync(this);
+    /* some function is called not via `step` - this may be some event handler */
+    const len = context.stack.length;
+    if (!context.running) {
+      /* if we can run it immediately */
+      if (len === 0 && context.queue.length === 0) {
+        context.stack.unshift(this);
+        const res = step();
+        if (res === token) {
+          newThread = true;
+          if (queueCb) queueCb();
+        }
+        return res;
+      } else if (this.canSkip) {
+        /*
+         * some monkey-patched function is called not from within debugger's context
+         * this may be webpack HMR or some test framework
+         * WARNING! this however changes semantics, as this makes some sync code
+         * to run before some other sync code is finished
+         */
+        return runSync(this);
+      }
+      /* something is already running, saving this for some next iteration */
+      if (queueCb) queueCb();
+      context.queue.push(this);
+      return eff();
     }
-    return context.startThread(this);
-  },
-  chain(eff, dest) {
-    this.$state = dest;
-    if (eff !== token) context.value = eff;
-    return token;
+    context.stack.unshift(this);
+    this.resume();
+    /* a shortcut for functions without breakpoints */
+    if (context.stack.length === len) {
+      if (context.error) throw context.value;
+      return context.value;
+    }
+    return eff();
   },
   pure(value) {
     if (this.newTarget && (!value || typeof value !== "object"))
       value = this.$self;
+    const brk =
+      context.debug && (context.brk = this.brk = this.$meta.exitBreakpoint);
     this.$state = 0;
-    context.stack.shift();
-    context.brk = null;
+    if (!brk) context.stack.shift();
     context.value = value;
-    return token;
   },
   raise(error) {
+    const callee = context.stack[1];
+    if (config.verbose) sysConsole.error(error);
     this.$state = 0;
-    context.stack.shift();
     context.value = error;
-    context.brk = "throw";
+    const brk =
+      context.debug && (context.brk = this.brk = this.$meta.exitBreakpoint);
     context.error = true;
-    const callee = context.stack[0];
-    if (callee) callee.$state = callee.$err(callee.$state);
+    if (!brk) context.stack.shift();
+    if (callee) callee.$state = callee.$meta.errHandler(callee.$state);
   },
   resume() {
+    if (context.terminated) throw terminatedToken;
     try {
       const arg = context.value;
       context.value = void 0;
-      return this.$run(arg);
+      context.error = false;
+      this.$meta.handler(this, arg);
     } catch (e) {
-      this.$state = this.$err(this.$state);
-      context.brk = "throw";
+      if (e === token) throw e;
+      this.$state = this.$meta.errHandler(this.$state);
+      if (config.verbose) sysConsole.error(e);
       context.error = true;
       context.value = e;
-      return token;
     }
+  },
+  eval(src, id) {
+    return compileEval(src, this, this.$meta.states[id])(this);
   }
-};
+});
+
+const locationRE = /^(\d+):(\d+)-(\d+):(\d+)$/;
+
+/** parses location string into a tuple with a line, a column, a last last and a last column */
+export function location(str) {
+  const res = [];
+  if (!str) return res;
+  const re = locationRE.exec(str);
+  if (!re || re.length < 5) return res;
+  for (let i = 1; i < 5; i++) res.push(+re[i]);
+  return res;
+}
+
+export function compileEval(code, func, state, blackbox) {
+  const meta = func.$meta;
+  const memo = meta.evalMemo || (meta.evalMemo = new Map());
+  const key = `${code}@${state.scopeId}/${!!blackbox}`;
+  let res = memo.get(key);
+  if (res) return res;
+  const wcode = `return function eval($$) { ${code} }`;
+  const ast = babelParse(wcode, { allowReturnOutsideFunction: true });
+  const body = ast.program.body[0].argument.body.body;
+  if (body.length === 1 && body[0].type === "ExpressionStatement")
+    body[0] = { type: "ReturnStatement", argument: body[0].expression };
+  blackbox = blackbox || meta.blackbox || !context.debug;
+  const tgt = babelGenerate(
+    T.run(ast, {
+      preInstrumentedLibs: true,
+      blackbox,
+      pureModule: true,
+      evalCtx: state.scope,
+      importRT: false,
+      ns: "$effectful$debugger$lib$"
+    }),
+    { compact: true }
+  ).code;
+  res = new Function("$effectful$debugger$lib$", tgt)(exports);
+  if (blackbox) res = region(res);
+  memo.set(key, res);
+  return res;
+}
 
 S.regOpaqueObject(FramePrototype, "debugger#frame");
 
@@ -266,18 +552,16 @@ function defaultErrHandler() {
 
 export function frame(proto) {
   const res = Object.create(proto);
-  res.$ = {};
-  return res;
-}
 
 export function constr(v) {
   return v;
 }
 
-export function brk(name, descr) {
-  context.brk = name;
-  context.stack[0].location = descr;
-  return token;
+export function brk(id) {
+  if (context.debug === false) return;
+  const top = context.stack[0];
+  top.brk = context.brk = top.$meta.states[id];
+  return eff();
 }
 
 export function iterator(v) {

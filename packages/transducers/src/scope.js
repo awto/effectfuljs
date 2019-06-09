@@ -16,6 +16,10 @@ let curSymId = 0;
 symInfo(Tag.ClassDeclaration).funDecl = true;
 symInfo(Tag.FunctionDeclaration).funDecl = true;
 
+function* emitSym(pos) {
+  yield tok(pos, Tag.Identifier, { node: {}, sym: this });
+}
+
 // String -> Sym
 export function newSym(name, strict = false, decl) {
   if (!name) name = "";
@@ -26,7 +30,8 @@ export function newSym(name, strict = false, decl) {
     strict,
     decl,
     num: symNum++,
-    type: null
+    type: null,
+    emitConstMethod: emitSym
   };
 }
 

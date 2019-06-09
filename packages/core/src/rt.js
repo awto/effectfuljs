@@ -167,3 +167,30 @@ export function interpretLibSyms(si) {
     }
   }
 }
+
+/**
+ * Replaces global `eval` with `eval` RT operation
+ */
+export function replaceGlobals(si) {
+  const s = Kit.auto(si);
+  const { replaceGlobals: map } = s.opts;
+  if (!map) return s;
+  return _replace();
+  function* _replace() {
+    for (const i of s) {
+      yield i;
+      if (
+        i.enter &&
+        i.pos === Tag.callee &&
+        i.type === Tag.Identifier &&
+        i.value.sym &&
+        !i.value.sym.declScope
+      ) {
+        let name = map[i.value.sym.orig];
+        if (!name) continue;
+        if (name === true) name = i.value.sym.orig;
+        i.value.sym = Kit.sysId(name);
+      }
+    }
+  }
+}

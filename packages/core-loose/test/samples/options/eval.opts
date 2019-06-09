@@ -1,0 +1,14 @@
+{
+  "contextState": true,
+  "closureShortcuts": false,
+  "closureStorageField": "C",
+  "varStorageField": "V",
+  "evalCtx": {
+    "a": ["_a", 0],
+    "b": ["_b", 1],
+    "c": ["_c", 2]
+  },
+  "contextMethodOps":true,
+  "injectEvalCtx":true,
+  "injectFuncMeta": "meta"
+}

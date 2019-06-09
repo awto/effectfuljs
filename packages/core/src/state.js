@@ -241,10 +241,9 @@ export function* restoreDecls(s) {
     closures = root.closSavedDecls;
     closArg = root.closureArgSym;
   }
-  if (ctxDeps && ctxDeps.size) {
+  if (ctxDeps && ctxDeps.size && root.opts.closureShortcuts !== false) {
     const varField = root.opts.varStorageField;
     const closField = root.opts.closureStorageField;
-
     for (const { copy, fld, ctx } of ctxDeps.values()) {
       const init = [];
       if (fld) {
@@ -466,7 +465,7 @@ function calcVarsHandling(si) {
  *         -- captured by the scope but declared in some upper scope
  *         scopeCapt: Set<Sym>,
  *         -- scope objects (closure captured) to be used in this function
- *         ctxDeps: Map<ScopeVal,{copy:Sym,src:ScopeVal?}>
+ *         ctxDeps: Map<ScopeVal,{copy?:Sym,src?:ScopeVal,distance:number}>
  *         }
  *     type IdValue = IdValue & { localFuncRef?: FuncValue }
  *     type LoopValue = LoopValue & { captureRefs: Set<Sym> }
@@ -605,6 +604,8 @@ export function calcRefScopes(si) {
       );
     if (opts.contextState && !i.ctxDeps && !i.global) i.ctxDeps = new Map();
     if (!i.funcId) i.funcId = Kit.scope.newSym("f");
+    if (i.captureParent == null) i.captureParent = false;
+    if (i.captureInChildren == null) i.captureInChildren = true;
   }
   for (const i of allDecls) {
     const si = i.sym;
@@ -613,8 +614,21 @@ export function calcRefScopes(si) {
     const decl = si.declScope;
     if (si.refScopes && si.track && !decl.global && !si.global) {
       for (const j of si.refScopes) {
-        if (j.ctxDeps) {
-          if (decl !== j && !j.ctxDeps.has(decl)) {
+        if (j.ctxDeps && decl !== j && !j.ctxDeps.has(decl)) {
+          j.captureParent = true;
+          if (j.opts.closureShortcuts === false) {
+            for (
+              let distance = 1, k = j.parentScope, f = j;
+              k;
+              k = k.parentScope, ++distance
+            ) {
+              if (k === decl) {
+                f.ctxDeps.set(decl, { decl, distance });
+                break;
+              }
+              k.captureParent = true;
+            }
+          } else {
             const fid = decl.funcId ? decl.funcId.name : "ctx";
             for (let k = j.parentScope, f = j; k; k = k.parentScope) {
               if (k === decl) {
@@ -639,12 +653,12 @@ export function calcRefScopes(si) {
       const p = i.parentScope;
       if (p && p.opts.transform && p.opts.topLevel && !ctxDeps.has(p)) {
         const fid = p.funcId ? p.funcId.name : "ctx";
-        ctxDeps.set(p, { decl: p, fid, ctx: p.contextSym });
+        ctxDeps.set(p, { decl: p, fid, ctx: p.contextSym, distance: 1 });
       }
     }
   }
   for (const i of funcs) {
-    if (i.ctxDeps) {
+    if (i.ctxDeps && i.opts.closureShortcuts !== false) {
       for (const j of i.ctxDeps.values()) {
         j.copy = Bind.tempVarSym(i, j.fid);
         if (i.opts.closureStorageField)
@@ -705,26 +719,6 @@ export function reorderVarUsages(si) {
     }
   }
   return walk(s);
-}
-
-export function cleanScopeVars(si) {
-  const sa = Kit.toArray(si);
-  const root = sa[0].value;
-  // removing useless variable declarations in top level
-  for (const i of root.scopeDecls) {
-    if (i.interpr && i.interpr !== Bind.closureVar) {
-      const sd = root.savedDecls.get(i);
-      if (sd) {
-        if (!sd.raw && !(sd.init && sd.init.length)) root.savedDecls.delete(i);
-      }
-    }
-  }
-  if (root.cfg.length) return sa;
-  let first = root.cfg[0].stateVars;
-  if (root.paramSyms) root.paramSyms.forEach(Set.prototype.add, first.w);
-  for (const [sym, { init }] of root.savedDecls) {
-    if (init) first.w.add(sym);
-  }
 }
 
 /**
@@ -1004,12 +998,11 @@ export function allUniqFields(syms, pref = "", postf = "") {
   const epref = pref ? "" : "_";
   for (const sym of syms) {
     let name = `${pref}${sym.orig}${postf}`;
-    /* eslint-disable no-empty */
     for (
       let cnt = 0;
       names.has(name);
       cnt++, name = `${pref}${sym.orig || epref}${cnt}${postf}`
-    ) {}
+    ) {} // eslint-disable-line no-empty
     names.add(name);
     if (!name.length) name = "_";
     sym.fieldName = name;
@@ -1153,7 +1146,7 @@ function prepareContextVars(root, cfg) {
   const opt = root.opts.optimizeContextVars !== false;
   if (opt) {
     const first = cfg[0];
-    for (const i of root.ctxDeps.values()) i.copy.hasReads = true;
+    for (const i of root.ctxDeps.values()) if (i.copy) i.copy.hasReads = true;
     for (const i of cfg) {
       if (i === first) continue;
       const sw = i.stateVars;

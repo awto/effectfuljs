@@ -85,6 +85,7 @@ const memo = new Map();
 export function parse(jsCode) {
   return babelParse(jsCode, {
     sourceType: "module",
+    allowReturnOutsideFunction: true,
     plugins: ["dynamicImport"]
   });
 }

@@ -115,7 +115,7 @@ if (config.replaceRT) {
  * wraps a top module's export, returns a function which on each call
  * returns `exports` object, but the value is memoized on its first call
  */
-export function exports(top) {
+export function exports(top, descr) {
   "nodebug";
   let mod;
   const res = function exports() {
@@ -126,6 +126,7 @@ export function exports(top) {
     return mod.exports;
   };
   res[Kit.thunkSymbol] = true;
+  res[Kit.moduleSymbol] = descr;
   return res;
 }
 

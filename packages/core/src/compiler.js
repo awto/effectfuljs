@@ -25,9 +25,9 @@ const helpers = {
 
 const rescopeVisitor = { Identifier() {} };
 
-export function makePlugin(transform) {
+export function makePlugin(transform, initOpts) {
   return function effectfulPlugin(babel, opts) {
-    const descr = transform(opts, helpers);
+    const descr = transform({ ...initOpts, ...opts }, helpers);
     return {
       name: descr.name || "effectful",
       manipulateOptions(mopts, parserOpts) {
@@ -70,6 +70,8 @@ export function babelPlugin(transform) {
   res.modify = map => babelPlugin(opts => transform(map(opts), helpers));
   res.transform = transform;
   res.macro = () => babelMacro(res);
+  res.run = (ast, opts) =>
+    run(ast, transform({ ...transform.opts, ...opts }, helpers));
   return res;
 }
 

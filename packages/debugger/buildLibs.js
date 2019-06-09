@@ -10,7 +10,12 @@ const opts = {
   plugins: [
     [
       "./transform",
-      { blackbox: true, preInstrumentedLibs: "..", importRT: "../main" }
+      {
+        blackbox: true,
+        preInstrumentedLibs: "..",
+        importRT: "../main",
+        expTCExceptions: false
+      }
     ]
   ],
   compact: false

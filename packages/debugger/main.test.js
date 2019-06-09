@@ -89,6 +89,9 @@ test("modules tracing", function() {
   mod.everyTest(new Int8Array([1, 2, 3]));
   console.log("> every:TypedArray", trace());
 
+  mod.runEval();
+  console.log("> eval", trace());
+
   expect(console.log.mock.calls).toMatchSnapshot();
 });
 

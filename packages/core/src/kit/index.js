@@ -132,7 +132,8 @@ import {
   scope,
   typeInfo,
   resetFieldInfo,
-  invariant
+  invariant,
+  emitConst
 } from "@effectful/transducers";
 export {
   Tag,
@@ -145,7 +146,8 @@ export {
   scope,
   typeInfo,
   resetFieldInfo,
-  invariant
+  invariant,
+  emitConst
 };
 import {
   packId,

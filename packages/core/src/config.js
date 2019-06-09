@@ -197,7 +197,7 @@ export default {
   // does a tail jump to the next frame
   // possible values
   // * falsy - nothing is injected
-  // * true - the check is a call of `isEff`
+  // * true - everything is treated as jump (assumes exceptions suspend the control)
   // * string - name of a function to call for checking
   // * { singelton: string } - name of a runtime value with which it will be compared
   // * { symbol: string } - will check if this (computed) property isn't falsy
@@ -316,6 +316,9 @@ export default {
   // Requires `contextState:true`
   closureStorageField: null,
 
+  // store all references to closure ancestors contexts
+  closureShortcuts: true,
+
   // name of a context's field to store local variables
   // stored directly in context if not defined
   // handled only with `contextState:true`
@@ -381,11 +384,15 @@ export default {
   // the resulting value will be added arguments of `wrapFunction` calls
   injectModuleMeta: null,
 
+  // path to sources root (will be use for making relative module paths)
+  // if `=== true` the babel's root will be used
+  srcRoot: null,
+
   // add meta-information object for each function as an argument of `wrapFunction`
   // the meta-information content is specific to libraries
   injectFuncMeta: null,
 
-  // adds parent a reference to parent's closure in the meta-info
+  // adds a reference to a parent's scope description in the meta-info
   metaParentClosure: false,
 
   // adds `new.target` as an argument of `scope` function
@@ -395,6 +402,16 @@ export default {
   // moves all closures to top level
   // requires `topLevel` and `injectFuncMeta`
   closConv: false,
+
   // when storing `arguments` wrap it by the function call
-  wrapArguments: false
+  wrapArguments: false,
+
+  // replace global identifiers in callees to RT operation if the matched name is in the map
+  replaceGlobals: null,
+
+  // an operation to wrap an eval's argument
+  evalWrapArg: null,
+
+  // injects scope description parameter for `eval` functions
+  injectEvalCtx: false
 };

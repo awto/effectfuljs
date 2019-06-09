@@ -65,7 +65,7 @@ function a3(a, b, c, d) {
       switch (a3.true) {
         case 5:
           p = M.chain(cc(), 6);
-          if (M.isEff(p)) return p;else continue;
+          continue;
 
         case 0:
           return p;

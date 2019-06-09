@@ -15,12 +15,11 @@ export const ctImport = symbol("ctImport");
 export function postproc(f) {
   return function postprocRun(s) {
     let nxt = [];
-    /* eslint-disable no-empty */
     for (
       let cur = s, curf = f;
       (curf = Kit.result(curf(cur), nxt)) != null;
       cur = nxt, nxt = []
-    ) {}
+    ) {} // eslint-disable-line no-empty
     return nxt;
   };
 }
@@ -32,7 +31,6 @@ function resolveImport(name, opts, optional = false) {
     if (!optional) throw new Error("not implemented: resolving imports");
     /*
     try {
-      
       const cp = resolve(name, {
         basedir: path.dirname(opts.file.filename)
       })
@@ -315,16 +313,18 @@ function namespaces(si) {
   }
   for (const i of presets) cur = applyLib(i, false, cur);
   function applyLib(lib, optional, si) {
-    /* eslint-disable no-console */
     if (verbose)
+      // eslint-disable-next-line no-console
       console.log(
         `${optional ? "trying to apply" : "applying"} presets from ${lib}...`
       );
+
     const s = Kit.auto(si);
     const r = resolveImport(lib, s.opts, optional);
     if (r != null) {
       return r(s);
     } else if (verbose) {
+      // eslint-disable-next-line no-console
       console.log(`no preset ${lib} found, that's probably ok`);
     }
     return s;

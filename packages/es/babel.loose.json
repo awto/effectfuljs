@@ -1,20 +1,25 @@
 {
   "plugins": [
-    ["./transform",{"loose":true,
-                    "all": {
-                      "jsExceptions":false,
-                      "inlineJsExceptions":false,
-                      "inlineThrow":true,
-                      "loopBlockScoping":false,
-                      "moduleAliases": {
-                        "@effectful/transducers":"@effectful/transducers-loose",
-                        "@effectful/transducers/kit":"@effectful/transducers-loose/kit",
-                        "@effectful/transducers/rt":"@effectful/transducers-loose/rt",
-                        "@effectful/transducers/dump":"@effectful/transducers-loose/dump",
-                        "@effectful/transducers/match":"@effectful/transducers-loose/match"
-                      }
-                    }}],
-    ["@babel/transform-modules-commonjs",
-     {"loose":true,"noInterop":true}]]
+    [
+      "./transform",
+      {
+        "loose": true,
+        "all": {
+          "jsExceptions": false,
+          "inlineJsExceptions": false,
+          "inlineThrow": true,
+          "loopBlockScoping": false,
+          "moduleAliases": {
+            "@effectful/transducers": "@effectful/transducers-loose",
+            "@effectful/transducers/kit": "@effectful/transducers-loose/kit",
+            "@effectful/transducers/rt": "@effectful/transducers-loose/rt",
+            "@effectful/transducers/dump": "@effectful/transducers-loose/dump",
+            "@effectful/transducers/trace": "@effectful/transducers-loose/trace",
+            "@effectful/transducers/match": "@effectful/transducers-loose/match"
+          }
+        }
+      }
+    ],
+    ["@babel/transform-modules-commonjs", { "loose": true, "noInterop": true }]
+  ]
 }
-

@@ -696,3 +696,57 @@ defaultSymbol = symbolDefFor("unkn", "ctrl");
 export function invariant(value) {
   if (!value) throw new Error("INTERNAL: invariant");
 }
+
+/** converts compile time constant into a list of tokens */
+export function* emitConst(pos, ...args) {
+  for (const value of args) {
+    switch (typeof value) {
+      case "number":
+        yield tok(pos, Tag.NumericLiteral, { node: { value } });
+        continue;
+      case "string":
+        yield tok(pos, Tag.StringLiteral, { node: { value } });
+        continue;
+      case "boolean":
+        yield tok(pos, Tag.BooleanLiteral, { node: { value } });
+        continue;
+      case "object":
+        if (value === null) {
+          yield tok(pos, Tag.NullLiteral, { node: {} });
+          continue;
+        }
+        if (value.emitConstMethod) {
+          yield* value.emitConstMethod(pos);
+          continue;
+        }
+        if (Array.isArray(value)) {
+          const ival = { node: {} };
+          const aval = { node: [] };
+          yield enter(pos, Tag.ArrayExpression, ival);
+          yield enter(Tag.elements, Tag.Array, aval);
+          for (const j of value) yield* emitConst(Tag.push, j);
+          yield leave(Tag.elements, Tag.Array, aval);
+          yield leave(pos, Tag.ArrayExpression, ival);
+          continue;
+        }
+        const ival = { node: {} };
+        const aval = { node: [] };
+        yield enter(pos, Tag.ObjectExpression, ival);
+        yield enter(Tag.properties, Tag.Array, aval);
+        for (const name in value) {
+          const pval = { node: {} };
+          yield enter(Tag.push, Tag.ObjectProperty, pval);
+          yield tok(Tag.key, Tag.Identifier, { node: { name } });
+          yield* emitConst(Tag.value, value[name]);
+          yield leave(Tag.push, Tag.ObjectProperty, pval);
+        }
+        yield leave(Tag.properties, Tag.Array, aval);
+        yield leave(pos, Tag.ObjectExpression, ival);
+        continue;
+    }
+    const val = { node: { operator: "void" } };
+    yield enter(pos, Tag.UnaryExpression, val);
+    yield tok(Tag.argument, Tag.NumericLiteral, { node: { value: "0" } });
+    yield leave(pos, Tag.UnaryExpression, val);
+  }
+}

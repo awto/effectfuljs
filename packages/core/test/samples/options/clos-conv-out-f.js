@@ -1,7 +1,7 @@
 import * as M from "@effectful/core";
 
-var $module = M.module("*"),
-    meta$f = M.meta(null, $module, function (x) {
+var $module = M.module("*", module),
+    meta$f = M.meta($module, null, function (x) {
   return function (module, exports) {
     var ctx = M.context(x);
     ctx._yh = meta$yh({
@@ -16,7 +16,7 @@ var $module = M.module("*"),
     return M.chain(eff_top(), f_1);
   };
 }),
-    meta$yh2 = M.meta(meta$f, $module, function (x) {
+    meta$yh2 = M.meta($module, meta$f, function (x) {
   return function _yh2(a) {
     var yh2 = M.context(x);
     yh2.$._a = a;
@@ -24,7 +24,7 @@ var $module = M.module("*"),
     return M.chain(eff(), yh2_1);
   };
 }),
-    _meta$eh = M.meta(meta$yh2, $module, function (x) {
+    _meta$eh = M.meta($module, meta$yh2, function (x) {
   return function eh() {
     var _eh = M.context(x),
         a;
@@ -33,7 +33,7 @@ var $module = M.module("*"),
     return M.chain(eff(a), _eh_1);
   };
 }),
-    meta$yh = M.meta(meta$f, $module, function (x) {
+    meta$yh = M.meta($module, meta$f, function (x) {
   return function _yh(a) {
     var yh = M.context(x);
     yh._f = x._f;
@@ -42,7 +42,7 @@ var $module = M.module("*"),
     return M.chain(eff(), yh_1);
   };
 }),
-    meta$eh = M.meta(meta$yh, $module, function (x) {
+    meta$eh = M.meta($module, meta$yh, function (x) {
   return function eh() {
     var _eh = M.context(x),
         a;

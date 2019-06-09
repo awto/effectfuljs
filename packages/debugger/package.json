@@ -12,23 +12,13 @@
     "build-loose": "node ./buildLibs"
   },
   "peerDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/plugin-transform-classes": "^7.4.0",
-    "@babel/plugin-transform-arrow-functions": "^7.2.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.4.0",
     "@babel/preset-react": "^7.0.0",
-    "@effectful/core": "^1.1.4",
     "@effectful/serialization": "^1.1.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/plugin-transform-arrow-functions": "^7.2.0",
-    "@babel/plugin-transform-classes": "^7.4.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.4.0",
     "@babel/preset-react": "^7.0.0",
-    "@effectful/core": "^1.1.5",
     "@effectful/serialization": "^1.1.5",
     "jest": "^24.5.0",
     "prop-types": "^15.7.2",
@@ -36,5 +26,14 @@
     "react-dom": "^16.8.6",
     "react-is": "^16.8.6"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@babel/generator": "^7.4.4",
+    "@babel/parser": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-transform-arrow-functions": "^7.2.0",
+    "@babel/plugin-transform-classes": "^7.4.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.4.0",
+    "@babel/standalone": "^7.4.4",
+    "@effectful/core": "^1.1.4"
+  }
 }

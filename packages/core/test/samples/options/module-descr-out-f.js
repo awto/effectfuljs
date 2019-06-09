@@ -1,5 +1,5 @@
 import * as M from "@effectful/core";
-var $module = M.module("*");
+var $module = M.module("*", module);
 
 const {
   mod
@@ -57,7 +57,7 @@ class Cl {
 
 }
 
-M.eff(Cl.prototype.func, $module), M.eff(Cl.prototype.func, $module);
+M.eff(Cl.prototype.func), M.eff(Cl.prototype.func);
 const obj1 = {
   objFn(a) {
     new Cl().fn(a);

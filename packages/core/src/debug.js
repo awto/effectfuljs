@@ -1,14 +1,9 @@
 /* eslint-disable no-console */
 import * as Kit from "./kit";
 import * as Trace from "./kit/trace";
-import {
-  Tag,
-  symName,
-  symInfo,
-  dump as D,
-  trace as T,
-  scope
-} from "@effectful/transducers";
+import { Tag, symName, symInfo, scope } from "@effectful/transducers";
+import * as D from "@effectful/transducers/dump";
+import * as T from "@effectful/transducers/trace";
 
 function isBindTok(v) {
   return isIf(v) || symInfo(v.type).kind === "ctrl";

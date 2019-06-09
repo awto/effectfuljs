@@ -292,7 +292,7 @@ export function* frames(si) {
   const root = s.first.value;
   const { contextSym, contSym, errFrameRedir } = root;
   const inlineJumps = s.opts.inlinePureJumps === "tail";
-  const inlineTailCoerce = !!s.opts.inlineTailCoerce;
+  const inlineTailCoerce = s.opts.inlineTailCoerce != null;
   invariant(contextSym);
   const impl = root.implFrame.value;
   const decls = impl.savedDecls;
@@ -504,7 +504,7 @@ export function tailJumps(si) {
   const root = s.first.value;
   const { inlinePureJumps, inlineTailCoerce } = root.opts;
   if (inlinePureJumps !== "tail") {
-    if (inlineTailCoerce)
+    if (inlineTailCoerce != null)
       throw s.error(
         '`inlineTailCoerce:true` requires `inlinePureJunps:"tail"`'
       );
@@ -519,7 +519,7 @@ export function tailJumps(si) {
   const assignCont = s.opts.inlineContAssign === false;
   const { ctrlParam } = implFrame;
   const contStoreSym = root.contSym;
-  if (inlineTailCoerce) {
+  if (inlineTailCoerce != null) {
     if (inlineTailCoerce.substr) {
       tailCoerceExpr = "=$2($1)";
       tailCoerceArg = Kit.sysId(inlineTailCoerce);
@@ -533,9 +533,6 @@ export function tailJumps(si) {
     } else if (inlineTailCoerce.symbol) {
       tailCoerceExpr = "=$1 && $1[$2]";
       tailCoerceArg = Kit.sysId(inlineTailCoerce.symbol);
-    } else {
-      tailCoerceExpr = "=$2($1)";
-      tailCoerceArg = Kit.sysId("isEff");
     }
   }
   const pat = root.commonPatSym;
@@ -554,11 +551,22 @@ export function tailJumps(si) {
     for (const i of s.sub()) {
       if (i.enter) {
         if (
-          tailCoerceArg &&
+          inlineTailCoerce != null &&
           i.type === Block.letStmt &&
           i.value.eff &&
           !i.value.reflected
         ) {
+          if (inlineTailCoerce === true) {
+            i.value.reflected = true;
+            yield s.enter(Tag.push, Tag.AssignmentExpression, {
+              node: { operator: "=" }
+            });
+            yield s.tok(Tag.left, Tag.Identifier, { sym: pat });
+            yield* Kit.reposOne(s.copy(i), Tag.right);
+            yield* s.leave();
+            yield s.tok(Tag.push, Tag.ContinueStatement);
+            continue;
+          }
           if (eraseChain) {
             yield* s.template(
               Tag.push,

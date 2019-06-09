@@ -87,6 +87,7 @@ export function flattenModuleDecls(si) {
             break;
           default:
             yield i;
+            if (i.leave) continue;
             for (const j of s.sub()) {
               if (j.enter) {
                 switch (j.type) {
@@ -201,8 +202,10 @@ export function depsToTop(si) {
 /** moves function constructors to meta constructors */
 export function closConv(si) {
   const s = Kit.auto(si);
-  const { opts } = s.first.value;
+  const root = s.first.value;
+  const { opts } = root;
   if (!opts.closConv) return s;
+  const { closureShortcuts } = opts;
   if (!opts.topLevel) throw s.error("`closConv` requires `topLevel`");
   if (opts.wrapFunction)
     throw s.error("`closConv` doesn't work with `wrapFunction`");
@@ -227,7 +230,9 @@ export function closConv(si) {
             if (!i.value.opts.injectFuncMeta)
               throw s.error("`closConv` requires `injectFuncMeta`");
             const lab = s.label();
-            i.value.metaArgs.push(
+            const args = [];
+            i.value.metaArgs[30] = args;
+            args.push(
               s.enter(Tag.push, Tag.FunctionExpression),
               s.enter(Tag.params, Tag.Array),
               s.tok(Tag.push, Tag.Identifier, { sym: i.value.closureArgSym }),
@@ -240,17 +245,17 @@ export function closConv(si) {
               ...lab()
             );
             if (i.value.implFrame)
-              i.value.metaArgs.push(
+              args.push(
                 s.tok(Tag.push, Tag.Identifier, {
                   sym: i.value.implFrame.value.declSym
                 })
               );
-            i.value.metaArgs.push(
+            args.push(
               s.tok(Tag.push, Tag.Identifier, {
                 sym: i.value.errMapSym || Kit.scope.undefinedSym
               })
             );
-            i.value.metaArgs.push(
+            args.push(
               s.tok(Tag.push, Tag.Identifier, {
                 sym: i.value.resMapSym || Kit.scope.undefinedSym
               })
@@ -258,16 +263,29 @@ export function closConv(si) {
             yield s.enter(i.pos, Tag.CallExpression);
             yield s.tok(Tag.callee, Tag.Identifier, { sym: i.value.metaId });
             yield s.enter(Tag.arguments, Tag.Array);
-            if (i.value.closSavedDecls && i.value.closSavedDecls.size) {
-              yield s.enter(Tag.push, Tag.ObjectExpression);
-              yield s.enter(Tag.properties, Tag.Array);
-              for (const [key, { init }] of i.value.closSavedDecls) {
-                yield s.enter(Tag.push, Tag.ObjectProperty);
-                yield s.tok(Tag.key, Tag.Identifier, {
-                  node: { name: key.fieldName || key.orig }
+            if (closureShortcuts === false) {
+              if (
+                i.value.captureParent &&
+                i.value.parScope &&
+                i.value.parScope.captureInChildren !== false &&
+                i.value.parScope.contextSym
+              )
+                yield s.tok(Tag.push, Tag.Identifier, {
+                  sym: i.value.parScope.contextSym
                 });
-                yield* Kit.reposOne(init, Tag.value);
-                yield* s.leave();
+              else yield s.tok(Tag.push, Tag.NullLiteral);
+            } else {
+              if (i.value.closSavedDecls && i.value.closSavedDecls.size) {
+                yield s.enter(Tag.push, Tag.ObjectExpression);
+                yield s.enter(Tag.properties, Tag.Array);
+                for (const [key, { init }] of i.value.closSavedDecls) {
+                  yield s.enter(Tag.push, Tag.ObjectProperty);
+                  yield s.tok(Tag.key, Tag.Identifier, {
+                    node: { name: key.fieldName || key.orig }
+                  });
+                  yield* Kit.reposOne(init, Tag.value);
+                  yield* s.leave();
+                }
               }
             }
             yield* lab();
@@ -355,6 +373,7 @@ export function substContextIds(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
   const { opts, contextSym, ctxDeps } = root;
+  const { closureShortcuts } = opts;
   const varsSubField = opts.varStorageField;
   const closSubField = opts.closureStorageField || varsSubField;
   if (!contextSym) return s;
@@ -387,22 +406,52 @@ export function substContextIds(si) {
     if (ctxDeps && sym.declScope !== root) {
       const info = ctxDeps.get(sym.declScope);
       invariant(info);
-      const { copy } = info;
-      if (copy.interpr === Bind.ctxField) {
-        invariant(copy.fieldName);
-        yield s.enter(Tag.object, Tag.MemberExpression, { origSym: copy });
-        yield* emitSubField(copy.subField || closSubField);
-        yield s.tok(Tag.property, Tag.Identifier, {
-          node: { name: copy.fieldName }
-        });
-        yield* s.leave();
-      } else {
+      if (closureShortcuts === false) {
+        if (!closSubField)
+          throw s.error(
+            `"closureShortcuts:false" requires "closureStorageField"`
+          );
+        const { distance } = info;
+        invariant(distance > 0);
+        if (varsSubField) yield s.enter(Tag.object, Tag.MemberExpression);
+        for (let i = 0; i < distance; i++)
+          yield s.enter(Tag.object, Tag.MemberExpression);
         yield s.tok(Tag.object, Tag.Identifier, {
-          sym: copy,
+          sym: contextSym,
           lhs: false,
           rhs: true,
           decl: false
         });
+        for (let i = 0; i < distance; i++) {
+          yield s.tok(Tag.property, Tag.Identifier, {
+            node: { name: closSubField }
+          });
+          yield* s.leave();
+        }
+        if (varsSubField) {
+          yield s.tok(Tag.property, Tag.Identifier, {
+            node: { name: varsSubField }
+          });
+          yield* s.leave();
+        }
+      } else {
+        const { copy } = info;
+        if (copy.interpr === Bind.ctxField) {
+          invariant(copy.fieldName);
+          yield s.enter(Tag.object, Tag.MemberExpression, { origSym: copy });
+          yield* emitSubField(copy.subField || closSubField);
+          yield s.tok(Tag.property, Tag.Identifier, {
+            node: { name: copy.fieldName }
+          });
+          yield* s.leave();
+        } else {
+          yield s.tok(Tag.object, Tag.Identifier, {
+            sym: copy,
+            lhs: false,
+            rhs: true,
+            decl: false
+          });
+        }
       }
     } else {
       yield* emitSubField(sym.subField || varsSubField);
@@ -435,24 +484,27 @@ export function substContextIds(si) {
 /** convert's a module's top level block into an export of IIFE */
 export function topToIIFE(si) {
   const s = Kit.auto(si);
+  const modSym = (s.first.value.modDescrSym = Kit.scope.newSym("$module"));
   if (!s.opts.topIIFE) return s;
   const module = s.first.value;
   const exportsSym = Kit.sysId("exports");
   module.hasEsImports = false;
   return _topToIIFE();
   function* _topToIIFE() {
+    let prog;
     for (const i of s) {
       yield i;
+      if (i.type === Tag.Program) prog = i.value;
       if (i.pos === Tag.body) break;
     }
-    const lab = s.label();
     yield* s.template(Tag.push, `module.exports = $I($E)`, exportsSym);
+    const lab = s.label();
     yield s.enter(Tag.push, Tag.FunctionExpression, {
       opts: module.opts,
       func: true,
       transform: module.transform,
       topEff: module.topEff,
-      node: { loc: module.node.loc }
+      node: { loc: prog.node.loc }
     });
     module.transform = false;
     module.topEff = false;
@@ -461,11 +513,14 @@ export function topToIIFE(si) {
     yield s.tok(Tag.push, Tag.Identifier, { node: { name: "exports" } });
     yield* s.leave();
     yield s.enter(Tag.body, Tag.BlockStatement, {
-      node: { loc: module.node.loc }
+      node: { loc: prog.node.loc }
     });
     yield s.enter(Tag.body, Tag.Array);
     yield* s.sub();
     yield* lab();
+    if (s.opts.injectModuleDescr)
+      yield s.tok(Tag.push, Tag.Identifier, { sym: modSym });
+    yield* s.leave();
     yield* s;
   }
 }

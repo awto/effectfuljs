@@ -125,11 +125,11 @@ export function splitScopes(si) {
       let sym = null;
       for (let j = i.parentScope; j && (sym = j.metaId); j = j.parentScope)
         break;
-      i.metaArgs.push(
+      i.metaArgs[20] = [
         sym
           ? s.tok(Tag.push, Tag.Identifier, { sym })
           : s.tok(Tag.push, Tag.NullLiteral)
-      );
+      ];
     }
   }
   return frames;
@@ -151,11 +151,11 @@ export function splitScopes(si) {
         i.value.wrapArgs = [];
         if (i.value.opts.injectFuncMeta) {
           i.value.metaId = Kit.scope.newSym(`meta$${i.value.funcId.orig}`);
-          i.value.metaArgs = [];
+          i.value.metaArgs = {};
           i.value.wrapArgs.push(
             s.tok(Tag.push, Tag.Identifier, { sym: i.value.metaId })
           );
-        } else i.value.metaArgs = i.value.wrapArgs;
+        }
         yield s.tok(i.pos, i.type, i.value);
         continue;
       }
@@ -178,6 +178,14 @@ export function injectMeta(si) {
     }
     yield* s.sub();
     const lab = s.label();
+    if (module.memoVars && module.memoVars.size) {
+      for (const [sym, init] of module.memoVars) {
+        yield s.enter(Tag.push, Tag.VariableDeclarator);
+        yield s.tok(Tag.id, Tag.Identifier, { sym });
+        yield* init;
+        yield* s.leave();
+      }
+    }
     for (const i of module.scopes) {
       const name = i.opts.injectFuncMeta;
       if (!name) continue;
@@ -187,7 +195,7 @@ export function injectMeta(si) {
       yield s.enter(Tag.init, Tag.CallExpression);
       yield s.tok(Tag.callee, Tag.Identifier, { sym });
       yield s.enter(Tag.arguments, Tag.Array);
-      yield* i.metaArgs;
+      for (const j in i.metaArgs) yield* i.metaArgs[j];
       yield* lab();
     }
     yield* s;
@@ -246,7 +254,8 @@ function injectModuleDescr(si) {
   const root = s.first.value;
   if (!(s.opts.injectFuncMeta || s.opts.injectModuleMeta) || !root.hasEff)
     return s;
-  const sym = (root.modDescrSym = Kit.scope.newSym("$module"));
+  const sym = root.modDescrSym;
+  const postfix = s.opts.evalCtx ? "" : ",module";
   const name =
     s.opts.injectModuleDescr && s.opts.injectModuleDescr.substr
       ? s.opts.injectModuleDescr
@@ -259,7 +268,7 @@ function injectModuleDescr(si) {
     }
     yield* s.template(
       Tag.push,
-      `var $I = $I.${name}($E)`,
+      `var $I = $I.${name}($E${postfix})`,
       { metaInfo: true },
       sym,
       root.$ns
@@ -267,9 +276,12 @@ function injectModuleDescr(si) {
     let module = "*";
     const { file } = s.opts;
     if (file) {
-      const root = file.root || file.cwd;
       module = file.filename;
-      if (module.startsWith(root)) module = module.substr(root.length);
+      if (s.opts.srcRoot) {
+        const root =
+          s.opts.srcRoot === true ? s.opts.srcRoot : file.root || file.cwd;
+        if (module.startsWith(root)) module = module.substr(root.length);
+      }
     }
     if (s.opts.moduleNamePrefix)
       module = `${s.opts.moduleNamePrefix}@${module}`;
@@ -277,7 +289,7 @@ function injectModuleDescr(si) {
     yield* s.leave();
     for (const i of s) {
       if (i.enter && i.value.func && i.value.metaArgs)
-        i.value.metaArgs.push(s.tok(Tag.push, Tag.Identifier, { sym }));
+        i.value.metaArgs[10] = [s.tok(Tag.push, Tag.Identifier, { sym })];
       yield i;
     }
   }
@@ -317,15 +329,8 @@ export function funcWraps(si) {
       throw s.error("`defunctHandlerInProto` requires `defunct`");
     const sym = root.implFrame && root.implFrame.value.declSym;
     if (!sym) return;
-    if (root.opts.topLevel) {
-      if (root.closureHandler) {
-        yield* s.toks(Tag.push, `=$I()`, root.closureHandler);
-      } else {
-        yield s.tok(Tag.push, Tag.Identifier, { sym });
-      }
-    } else {
-      yield s.tok(Tag.push, Tag.Identifier, { sym: Kit.scope.undefinedSym });
-    }
+    if (root.opts.topLevel) yield s.tok(Tag.push, Tag.Identifier, { sym });
+    else yield s.tok(Tag.push, Tag.Identifier, { sym: Kit.scope.undefinedSym });
     yield s.tok(Tag.push, Tag.Identifier, {
       sym: root.errMapSym || Kit.scope.undefinedSym
     });

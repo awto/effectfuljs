@@ -93,11 +93,11 @@ function a3_1(a3, p) {
     switch (a3.true) {
       case 5:
         p = M.chain(bb(), 6);
-        if (M.isEff(p)) return p;else continue;
+        continue;
 
       case 6:
         p = M.chain(cc(), 7);
-        if (M.isEff(p)) return p;else continue;
+        continue;
 
       case 0:
         return p;
