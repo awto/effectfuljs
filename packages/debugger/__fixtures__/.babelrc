@@ -10,6 +10,8 @@
         "@babel/transform-arrow-functions"
       ]
     },
-    { "plugins": [["../transform", { "importRT": "../main" }]] }
+    {
+      "plugins": [["../transform", { "importRT": "../main", "srcRoot": true }]]
+    }
   ]
 }

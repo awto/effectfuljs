@@ -279,7 +279,7 @@ function injectModuleDescr(si) {
       module = file.filename;
       if (s.opts.srcRoot) {
         const root =
-          s.opts.srcRoot === true ? s.opts.srcRoot : file.root || file.cwd;
+          s.opts.srcRoot === true ? file.root || file.cwd : s.opts.srcRoot;
         if (module.startsWith(root)) module = module.substr(root.length);
       }
     }

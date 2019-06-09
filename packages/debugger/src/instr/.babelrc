@@ -5,7 +5,12 @@
       "plugins": [
         [
           "../../transform",
-          { "blackbox": true, "pureModule": true, "importRT": "../kit" }
+          {
+            "blackbox": true,
+            "pureModule": true,
+            "importRT": "../kit",
+            "srcRoot": true
+          }
         ]
       ]
     },

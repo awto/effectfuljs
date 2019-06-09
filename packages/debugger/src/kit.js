@@ -2,14 +2,19 @@
  * Functions called from code generated
  * by @effectful/debugger/transform preset
  */
-
 import config from "./config";
 import * as S from "@effectful/serialization";
 import * as T from "./transform";
 import * as path from "path";
 import { parse as babelParse } from "@babel/parser";
 import babelGenerate from "@babel/generator";
+import * as Trace from "./trace";
+
+export const terminatedToken = new Error("Terminated");
+
 const sysConsole = console;
+
+export const constr = Trace.wrap;
 
 export const context = {
   /** it will stop on break points */
@@ -552,9 +557,9 @@ function defaultErrHandler() {
 
 export function frame(proto) {
   const res = Object.create(proto);
-
-export function constr(v) {
-  return v;
+  res.$ = constr({});
+  res.brk = null;
+  return constr(res);
 }
 
 export function brk(id) {

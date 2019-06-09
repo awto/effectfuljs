@@ -5,7 +5,7 @@ exports[`default transpiler 1`] = `
 
 var M = require(\\"../main\\");
 
-var $module = M.module(\\"/Users/vx/work/src/mfjs/eff/packages/debugger/__fixtures__/code.js\\", module),
+var $module = M.module(\\"/__fixtures__/code.js\\", module),
     v_1 = [{
   mod: \\"mod\\",
   v0: \\"v0\\",
@@ -532,7 +532,7 @@ exports[`default transpiler 2`] = `
 
 var M = require(\\"../main\\");
 
-var $module = M.module(\\"/Users/vx/work/src/mfjs/eff/packages/debugger/__fixtures__/mod1.js\\", module),
+var $module = M.module(\\"/__fixtures__/mod1.js\\", module),
     v_1 = [{
   j: \\"j\\",
   run: \\"run\\",
@@ -2615,7 +2615,7 @@ exports[`default transpiler 3`] = `
 
 var M = require(\\"../main\\");
 
-var $module = M.module(\\"/Users/vx/work/src/mfjs/eff/packages/debugger/__fixtures__/mod2.js\\", module),
+var $module = M.module(\\"/__fixtures__/mod2.js\\", module),
     v_1 = [{
   cnt: \\"cnt\\",
   A: \\"A\\",

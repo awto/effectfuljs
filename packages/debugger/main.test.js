@@ -2,25 +2,23 @@
 require("./config").default.replaceRT = false;
 const Debugger = require("./main");
 const S = require("@effectful/serialization");
+const path = require("path");
 
-function traceCont() {
+function trace() {
   let num = 0;
   let f;
   while ((f = Debugger.step()) === Debugger.token) {
     const x = Debugger.context;
-    console.log(`Step #${num++}@${x.brk}`, x.value);
+    console.log(`Step #${num++}@${x.brk.kind}`, x.value);
     for (const j of x.stack) {
-      console.log(
-        `  ${j.constructor.name}@${j.$meta.module.name}:${j.location}`
-      );
+      const brk = j.brk;
+      const pos = brk
+        ? `${brk.line}:${brk.column}-${brk.endLine}:${brk.endColumn}`
+        : "?";
+      console.log(`  ${j.constructor.name}@${j.$meta.module.name}-${pos}`);
     }
   }
   return f;
-}
-
-function trace() {
-  Debugger.context.stack = [Debugger.context.threads.pop()];
-  return traceCont();
 }
 
 test("modules tracing", function() {
@@ -104,7 +102,7 @@ test("persistent state", function() {
   const [counter1, s1] = trace();
   console.log(counter1, s1);
   Debugger.restore(s1);
-  const [counter2, s2] = traceCont();
+  const [counter2, s2] = trace();
   console.log(counter2, s2);
   expect(s1).toEqual(s2);
   expect(console.log.mock.calls).toMatchSnapshot();

@@ -314,7 +314,7 @@ const descriptorTemplate = {
       return Object.create(this.valuePrototype);
     const protoJson = json.p;
     if (protoJson === void 0) return {};
-    if (protoJson === null) return Object.createPrototype(null);
+    if (protoJson === null) return Object.create(null);
     let protoValue;
     // TODO: since prototypes cannot be cyclic it could ensure this
     // on proper ordering objects in `r`, this way there are no needs
@@ -378,7 +378,7 @@ function refAwareDescriptor(descriptor) {
  *
  * Adds missed functionality into the descriptor. This includes:
  *  - This includes reference awareness (if `descriptor.refAware !== false`)
- *  - Saving object's properties (if `descriptor.keys !== false`)
+ *  - Saving object's properties (if `descriptor.props !== false`)
  *  - Default methods (`read` from `create` and `readContent`)
  *  - Adding "$" property (if `descriptor.default$ !== false`)
  *
@@ -403,8 +403,12 @@ export function regDescriptor(descriptor) {
   const name = guessDescriptorName(descriptor);
   let uniq = name,
     i = 0;
-  /* eslint-disable no-empty */
-  for (; descriptorByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
+  if (!descriptor.strictName)
+    for (
+      ;
+      descriptorByName.get(uniq) != null;
+      uniq = `${name}_${++i}`
+    ) {} /* eslint-disable-line no-empty */
   let final = { ...descriptor, name: uniq };
   if (descriptor.props !== false) final = propsDescriptor(final);
   if (descriptor.default$ !== false && uniq !== "Object") {
@@ -538,6 +542,21 @@ export function regConstructor(constr, descriptor = descriptorTemplate) {
   }));
 }
 
+export const NotSerializableDescriptor = regDescriptor({
+  name: "NotSerializable",
+  read() {
+    throw new Error("INTERNAL: trying to read not serializable value");
+  },
+  create() {},
+  readContent() {},
+  write() {
+    return NotSerializableToken;
+  },
+  props: false,
+  refAware: false,
+  default$: false
+});
+
 /** same as `regConstructor` but it also uses `constr` with new to build the object */
 export function regNewConstructor(constr, descriptor = descriptorTemplate) {
   return regConstructor(constr, { valueConstructor: constr, ...descriptor });
@@ -566,20 +585,24 @@ const RefDescriptor = {
   }
 };
 
+export const NotSerializableToken = { _notSerializable: true };
+
 /** wraps descriptor by adding its own property into the saved dictionary */
 function propsDescriptor(descriptor) {
   const pred = descriptor.overrideProps || defaultOverrideProps;
   function writeProp(ctx, info, descr) {
     let flags = 0;
-    if (!descr.configurable) flags = flags | 1;
-    if (!descr.enumerable) flags = flags | 2;
-    if (!descr.writable) flags = flags | 4;
     if ("value" in descr) {
-      info.push(ctx.step(descr.value, info, 1));
+      const valueJson = ctx.step(descr.value, info, 1);
+      if (valueJson === NotSerializableToken) return;
+      info.push(valueJson);
     } else {
       info.push(null);
       flags = flags | 8;
     }
+    if (!descr.configurable) flags = flags | 1;
+    if (!descr.enumerable) flags = flags | 2;
+    if (!descr.writable) flags = flags | 4;
     if (flags || descr.set || descr.get) info.push(flags);
     if (descr.get) info[3] = ctx.step(descr.get, info, 3);
     if (descr.set) info[4] = ctx.step(descr.set, info, 4);
@@ -592,11 +615,17 @@ function propsDescriptor(descriptor) {
       const props = [];
       for (const name in descrs) {
         if (pred[name] === false) continue;
-        props.push(writeProp(ctx, [name], descrs[name], value));
+        const propInfo = writeProp(ctx, [name], descrs[name], value);
+        if (propInfo) props.push(propInfo);
       }
       for (const name of Object.getOwnPropertySymbols(descrs)) {
         if (pred[name] === false) continue;
-        props.push(writeProp(ctx, [writeSym(ctx, name)], descrs[name], value));
+        const json = [];
+        writeProp(ctx, json, descrs[name], value);
+        if (json.length) {
+          json.unshift(writeSym(ctx, name));
+          props.push(json);
+        }
       }
       if (props.length) json.f = props;
       return json;
