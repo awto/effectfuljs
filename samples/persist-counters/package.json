@@ -1,6 +1,6 @@
 {
   "name": "persist-counters",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "description": "@effectful/es-persist with @effectful/es-serialization demo",
   "main": "index.html",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
@@ -22,7 +22,7 @@
     "@babel/plugin-syntax-async-generators": "^7.0.0-beta.49",
     "@babel/plugin-transform-modules-commonjs": "^7.0.0-beta.49",
     "@babel/preset-react": "^7.0.0-beta.49",
-    "@effectful/es": "^1.1.5",
+    "@effectful/es": "^1.1.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "babel-loader": "^8.0.0-beta",
@@ -33,9 +33,9 @@
     "webpack-serve": "^1.0.4"
   },
   "dependencies": {
-    "@effectful/es-persist-serialization": "^1.1.5",
-    "@effectful/serialization": "^1.1.5",
-    "@effectful/serialization-react": "^1.1.5",
+    "@effectful/es-persist-serialization": "^1.1.7",
+    "@effectful/serialization": "^1.1.7",
+    "@effectful/serialization-react": "^1.1.7",
     "react": "^16.4.0",
     "react-dom": "^16.4.0"
   }
