@@ -348,6 +348,7 @@ export function* frames(si) {
   yield s.enter(Tag.cases, Tag.Array);
   const clab = s.label();
   let hasJumps = false;
+  const seenSyms = new Set();
   for (const i of s.sub()) {
     if (i.enter && i.type === Block.frame) {
       if (i.value.catchContRedir && i.value.catchContRedir !== errFrameRedir)
@@ -362,6 +363,8 @@ export function* frames(si) {
         for (const [sym, { raw, init }] of i.value.savedDecls) {
           invariant(!raw);
           invariant(!init);
+          if (seenSyms.has(sym)) continue;
+          seenSyms.add(sym);
           if (varsPool && poolPos != null && varsPool.length > poolPos) {
             sym.substSym = varsPool[poolPos++];
           } else {

@@ -335,6 +335,7 @@ export function* restoreDecls(s) {
               });
               yield sl.enter(Tag.declarations, Tag.Array);
               for (const { sym, init } of vars) {
+                if (sym.substSym) continue;
                 yield sl.enter(Tag.push, Tag.VariableDeclarator);
                 yield sl.tok(Tag.id, Tag.Identifier, { sym, decl: true });
                 if (init) yield* init;
