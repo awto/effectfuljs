@@ -1,6 +1,6 @@
 {
   "name": "@effectful/debugger",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "User space debugging",
   "main": "main.js",
   "repository": "https://github.com/awto/effectfuljs.git",
@@ -34,6 +34,6 @@
     "@babel/plugin-transform-classes": "^7.4.0",
     "@babel/plugin-transform-modules-commonjs": "^7.4.0",
     "@babel/standalone": "^7.4.4",
-    "@effectful/core": "^1.1.7"
+    "@effectful/core": "^1.1.8"
   }
 }
