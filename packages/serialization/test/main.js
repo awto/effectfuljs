@@ -465,9 +465,7 @@ describe("opaque objects serialization", function() {
   });
   it("should not throw if `ignore:true`", function() {
     function a() {}
-    assert.deepStrictEqual(Lib.write({ a }, { ignore: true }), {
-      f: [["a", undefined]]
-    });
+    assert.deepStrictEqual(Lib.write({ a }, { ignore: true }), {});
   });
   it("should output object's name if registered", function() {
     function a() {}

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "es2015",
+    "lib": ["esnext"],
+    "outDir": ".",
+    "strict": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": false
+  },
+  "files": ["src/main.ts"]
+}

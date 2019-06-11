@@ -13,17 +13,19 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "eslint src && mocha",
-    "build-module": "babel --env-name build src --out-dir .",
-    "build-node": "babel --config-file ../es/babel.cjs.json -o index.js main.js",
-    "build": "npm run build-module && npm run build-node",
-    "docs": "markdox src/main.js -o api.md"
+    "test": "tslint --project . && mocha",
+    "build-es": "tsc",
+    "build": "npm run build-es && babel --config-file ../es/babel.cjs.json -o index.js main.js",
+    "docs": "typedoc --mode file --out api --theme markdown --excludePrivate src --readme none"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.4.3",
     "@babel/plugin-syntax-bigint": "^7.2.0",
-    "eslint": "^5.15.1",
-    "mocha": "^5.1.0"
+    "@babel/plugin-transform-typescript": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "mocha": "^5.1.0",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.1"
   }
 }

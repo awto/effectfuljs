@@ -73,20 +73,6 @@ Array [
       Symbol(@effectful/serialization/descriptor): Object {
         "create": [Function],
         "name": "module#@effectful/debugger/rt",
-        "noRefs": Object {
-          "create": [Function],
-          "default$": false,
-          "name": "module#@effectful/debugger/rt",
-          "overrideProps": Object {
-            Symbol(@effectful/serialization/descriptor): false,
-          },
-          "props": false,
-          "read": [Function],
-          "readContent": [Function],
-          "typeofHint": "object",
-          "value": [Circular],
-          "write": [Function],
-        },
         "overrideProps": Object {
           Symbol(@effectful/serialization/descriptor): false,
         },
@@ -920,20 +906,6 @@ Array [
       Symbol(@effectful/serialization/descriptor): Object {
         "create": [Function],
         "name": "module#./mod2",
-        "noRefs": Object {
-          "create": [Function],
-          "default$": false,
-          "name": "module#./mod2",
-          "overrideProps": Object {
-            Symbol(@effectful/serialization/descriptor): false,
-          },
-          "props": false,
-          "read": [Function],
-          "readContent": [Function],
-          "typeofHint": "object",
-          "value": [Circular],
-          "write": [Function],
-        },
         "overrideProps": Object {
           Symbol(@effectful/serialization/descriptor): false,
         },
