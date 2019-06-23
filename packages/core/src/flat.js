@@ -215,7 +215,7 @@ export const convert = Kit.pipe(
                 handle.tryBody = frames[fl][0].value;
                 switch (i.value.sym) {
                   case Except.handleId:
-                    const errSym = params[0].value.sym;
+                    const errSym = params.length && params[0].value.sym;
                     onOpen.unshift(
                       s.enter(Tag.push, catchBlock, { handle: handle, errSym })
                     );

@@ -27,7 +27,8 @@ const defaultParseOpts = {
     "doExpressions",
     "functionBind",
     "functionSent",
-    "jsx"
+    "jsx",
+    "optionalCatchBinding"
   ]
 };
 
