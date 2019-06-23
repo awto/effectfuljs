@@ -47,7 +47,7 @@ var $module = M.module("*", module),
   };
 });
 
-module.exports = M.exports(meta$f());
+module.exports = M.wrapExport(meta$f());
 
 function yh_1(yh) {
   yh._j = yh._f._i += yh._a;

@@ -1,0 +1,3561 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`modules tracing 1`] = `
+Array [
+  Array [
+    "Step #0@s",
+    undefined,
+  ],
+  Array [
+    "  @/test/__fixtures__/mod2.js-1:0-1:12",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "A": [Function],
+      "B": [Function],
+      "cnt": 4,
+      "exports": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "f1": [Function],
+      "f2": [Function],
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "f1": [Function],
+          "f2": [Function],
+          Symbol(@effectful/serialization/descriptor): Object {
+            "create": [Function],
+            "name": "./mod2#exports",
+            "overrideProps": Object {
+              Symbol(@effectful/serialization/descriptor): false,
+            },
+            "read": [Function],
+            "readContent": [Function],
+            "value": [Circular],
+            "write": [Function],
+          },
+        },
+      },
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "  unwrapImport@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "name": "./mod2",
+      "value": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-1:0-1:29",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #1@exit",
+    undefined,
+  ],
+  Array [
+    "  @/test/__fixtures__/mod2.js-25:0-25:0",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "A": [Function],
+      "B": [Function],
+      "cnt": 4,
+      "exports": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "f1": [Function],
+      "f2": [Function],
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "f1": [Function],
+          "f2": [Function],
+          Symbol(@effectful/serialization/descriptor): Object {
+            "create": [Function],
+            "name": "./mod2#exports",
+            "overrideProps": Object {
+              Symbol(@effectful/serialization/descriptor): false,
+            },
+            "read": [Function],
+            "readContent": [Function],
+            "value": [Circular],
+            "write": [Function],
+          },
+        },
+      },
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "  unwrapImport@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "name": "./mod2",
+      "value": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-1:0-1:29",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #2@s",
+    undefined,
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-3:0-3:10",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #3@s",
+    undefined,
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #4@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-6:2-6:9",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #5@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #6@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-14:2-14:8",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #7@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-15:2-15:32",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "f1:1@1",
+  ],
+  Array [
+    "Step #8@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #9@s",
+    undefined,
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-4:2-4:24",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #10@s",
+    undefined,
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #11@s",
+    undefined,
+  ],
+  Array [
+    "  _B@/test/__fixtures__/mod2.js-9:2-9:13",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _B {
+        "i": 100,
+      },
+      "i": 100,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #12@s",
+    undefined,
+  ],
+  Array [
+    "  _B@/test/__fixtures__/mod2.js-10:2-10:26",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _B {
+        "i": 100,
+      },
+      "i": 100,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #13@exit",
+    Object {
+      "b": _B {
+        "i": 100,
+      },
+      "cnt": 1,
+    },
+  ],
+  Array [
+    "  _B@/test/__fixtures__/mod2.js-11:1-11:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _B {
+        "i": 100,
+      },
+      "i": 100,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #14@exit",
+    _A {
+      "b": Object {
+        "b": _B {
+          "i": 100,
+        },
+        "cnt": 1,
+      },
+      "i": 11,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-6:1-6:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #15@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-17:2-17:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "A:",
+    _A {
+      "b": Object {
+        "b": _B {
+          "i": 100,
+        },
+        "cnt": 1,
+      },
+      "i": 11,
+    },
+  ],
+  Array [
+    "Step #16@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-18:2-18:13",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #17@exit",
+    1,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-19:1-19:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 1,
+        },
+        "i": 11,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #18@s",
+    undefined,
+  ],
+  Array [
+    "  _f2@/test/__fixtures__/mod2.js-22:2-22:8",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #19@s",
+    undefined,
+  ],
+  Array [
+    "  _f2@/test/__fixtures__/mod2.js-23:2-23:32",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "f2:1@2",
+  ],
+  Array [
+    "Step #20@exit",
+    undefined,
+  ],
+  Array [
+    "  _f2@/test/__fixtures__/mod2.js-24:1-24:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #21@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-8:2-8:9",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #22@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-9:2-9:31",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "i:2,j:3",
+  ],
+  Array [
+    "Step #23@exit",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-10:1-10:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-12:0-12:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #24@s",
+    undefined,
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #25@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-6:2-6:9",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #26@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #27@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-14:2-14:8",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #28@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-15:2-15:32",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "f1:1@3",
+  ],
+  Array [
+    "Step #29@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #30@s",
+    undefined,
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-4:2-4:24",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #31@s",
+    undefined,
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #32@s",
+    undefined,
+  ],
+  Array [
+    "  _B@/test/__fixtures__/mod2.js-9:2-9:13",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _B {
+        "i": 100,
+      },
+      "i": 100,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #33@s",
+    undefined,
+  ],
+  Array [
+    "  _B@/test/__fixtures__/mod2.js-10:2-10:26",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _B {
+        "i": 100,
+      },
+      "i": 100,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #34@exit",
+    Object {
+      "b": _B {
+        "i": 100,
+      },
+      "cnt": 3,
+    },
+  ],
+  Array [
+    "  _B@/test/__fixtures__/mod2.js-11:1-11:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _B {
+        "i": 100,
+      },
+      "i": 100,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-5:2-5:22",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #35@exit",
+    _A {
+      "b": Object {
+        "b": _B {
+          "i": 100,
+        },
+        "cnt": 3,
+      },
+      "i": 33,
+    },
+  ],
+  Array [
+    "  _A@/test/__fixtures__/mod2.js-6:1-6:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "_this": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-16:2-16:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #36@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-17:2-17:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "A:",
+    _A {
+      "b": Object {
+        "b": _B {
+          "i": 100,
+        },
+        "cnt": 3,
+      },
+      "i": 33,
+    },
+  ],
+  Array [
+    "Step #37@s",
+    undefined,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-18:2-18:13",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #38@exit",
+    3,
+  ],
+  Array [
+    "  _f1@/test/__fixtures__/mod2.js-19:1-19:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "a": _A {
+        "b": Object {
+          "b": _B {
+            "i": 100,
+          },
+          "cnt": 3,
+        },
+        "i": 33,
+      },
+      "i": 1,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #39@s",
+    undefined,
+  ],
+  Array [
+    "  _f2@/test/__fixtures__/mod2.js-22:2-22:8",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #40@s",
+    undefined,
+  ],
+  Array [
+    "  _f2@/test/__fixtures__/mod2.js-23:2-23:32",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "f2:3@4",
+  ],
+  Array [
+    "Step #41@exit",
+    undefined,
+  ],
+  Array [
+    "  _f2@/test/__fixtures__/mod2.js-24:1-24:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 3,
+    },
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-7:2-7:23",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #42@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-8:2-8:9",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #43@s",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-9:2-9:31",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "i:2,j:6",
+  ],
+  Array [
+    "Step #44@exit",
+    undefined,
+  ],
+  Array [
+    "  _run@/test/__fixtures__/mod1.js-10:1-10:1",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "i": 2,
+    },
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-13:0-13:6",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "Step #45@exit",
+    undefined,
+  ],
+  Array [
+    "  @/test/__fixtures__/mod1.js-14:0-14:0",
+  ],
+  Array [
+    " Vars: ",
+    Object {
+      "M2": Object {
+        "__esModule": true,
+        "f1": [Function],
+        "f2": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "name": "./mod2#exports",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "exports": Object {
+        "__esModule": true,
+        "run": [Function],
+      },
+      "j": 6,
+      "module": Object {
+        "exports": Object {
+          "__esModule": true,
+          "run": [Function],
+        },
+      },
+      "run": [Function],
+    },
+  ],
+  Array [
+    "  exportsThunk@/src/instr/rt.ts-?",
+  ],
+  Array [
+    " Vars: ",
+    Object {},
+  ],
+  Array [
+    "> M:",
+    Object {
+      "__esModule": true,
+      "run": [Function],
+    },
+  ],
+  Array [
+    "> M1:",
+    Object {
+      "__esModule": true,
+      "run": [Function],
+    },
+  ],
+  Array [
+    "> M2:",
+    Object {
+      "__esModule": true,
+      "f1": [Function],
+      "f2": [Function],
+      Symbol(@effectful/serialization/descriptor): Object {
+        "create": [Function],
+        "name": "./mod2#exports",
+        "overrideProps": Object {
+          Symbol(@effectful/serialization/descriptor): false,
+        },
+        "read": [Function],
+        "readContent": [Function],
+        "value": [Circular],
+        "write": [Function],
+      },
+    },
+  ],
+]
+`;

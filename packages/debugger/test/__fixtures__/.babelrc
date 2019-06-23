@@ -11,7 +11,9 @@
       ]
     },
     {
-      "plugins": [["../transform", { "importRT": "../main", "srcRoot": true }]]
+      "plugins": [
+        ["../../transform", { "importRT": "../../api", "srcRoot": true }]
+      ]
     }
   ]
 }

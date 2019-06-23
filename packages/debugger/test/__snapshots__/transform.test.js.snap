@@ -1,0 +1,1113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`default transpiler 1`] = `
+"\\"use strict\\";
+
+var M = require(\\"../../api\\");
+
+var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
+    v_1 = [{
+  mod: \\"mod\\",
+  v0: \\"v0\\",
+  C: \\"C\\"
+}, null],
+    v_4 = [{
+  fn1: \\"fn1\\",
+  v5: \\"v5\\"
+}, v_1],
+    v_2 = [{
+  a: \\"a\\",
+  v3: \\"v3\\",
+  i: \\"i1\\",
+  v4: \\"v4\\",
+  v1: \\"v1\\",
+  e: \\"e\\"
+}, v_1],
+    v_3 = [{
+  a: \\"a\\",
+  v3: \\"v3\\",
+  i: \\"i1\\",
+  v4: \\"v4\\",
+  v1: \\"v1\\",
+  e: \\"e\\",
+  v2: \\"v2\\"
+}, v_1],
+    meta$f = M.meta($module, function (x) {
+  return function (module, exports) {
+    var ctx = M.frame(x);
+    ctx.$.C = meta$C(ctx);
+    ctx.$.module = module;
+    ctx.$.exports = exports;
+    return ctx.scope(this, new.target, 5);
+  };
+}, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:31\\"], [v_1, \\"s\\", \\"3:0-3:12\\"], [v_1, \\"s\\", \\"21:0-24:2\\"]], null, \\"1:0-25:0\\", null),
+    meta$fn1 = M.meta($module, function (x) {
+  return function fn1() {
+    var _fn1 = M.frame(x);
+
+    return _fn1.scope(this, new.target, 5);
+  };
+}, fn1_1, void 0, void 0, [[v_4, \\"s\\", \\"22:2-22:16\\"], [v_4, \\"s\\", \\"23:2-23:55\\"]], \\"fn1\\", \\"21:14-24:1\\", meta$f),
+    meta$C = M.meta($module, function (x) {
+  return function _C(a) {
+    var C = M.frame(x);
+    C.$.a = a;
+    return C.scope(this, new.target, 5);
+  };
+}, C_1, C_err, C_fin, [[v_2, \\"s\\", \\"6:2-6:14\\"], [v_2, \\"s\\", \\"7:2-18:3\\"], [v_3, \\"s\\", \\"8:4-8:18\\"], [v_3, \\"s\\", \\"9:4-9:11\\"], [v_3, \\"s\\", \\"10:4-10:42\\"], [v_3, \\"s\\", \\"11:4-13:5\\"], [[{
+  a: \\"a\\",
+  v3: \\"v3\\",
+  i: \\"i\\",
+  v4: \\"v4\\",
+  v1: \\"v1\\",
+  e: \\"e\\",
+  v2: \\"v2\\"
+}, v_1], \\"s\\", \\"12:6-12:19\\"], [v_3, \\"s\\", \\"14:4-14:42\\"], [v_3, \\"s\\", \\"14:29-14:42\\"], [v_3, \\"s\\", \\"15:4-15:17\\"], [v_2, \\"s\\", \\"17:4-17:24\\"]], \\"C\\", \\"5:0-19:1\\", meta$f);
+module.exports = M.wrapExport(meta$f(null));
+
+function C_err(s) {
+  switch (s) {
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+    case 13:
+    case 17:
+    case 18:
+    case 22:
+    case 23:
+      return 28;
+
+    case 14:
+    case 15:
+      return 29;
+
+    case 16:
+      return 31;
+
+    case 19:
+    case 20:
+      return 32;
+
+    case 21:
+      return 34;
+
+    default:
+      return 1;
+  }
+}
+
+function C_fin(s) {
+  switch (s) {
+    case 14:
+    case 15:
+      return 30;
+
+    case 19:
+    case 20:
+      return 33;
+
+    default:
+      return 0;
+  }
+}
+
+function C_1(C, p) {
+  for (;;) {
+    try {
+      switch (C.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            C.state = 6;
+            return p;
+          } else {
+            C.state = 6;
+            continue;
+          }
+
+        case 6:
+          C.$.v1 = 10;
+
+          if ((p = M.brk(1)) === M.token) {
+            C.state = 7;
+            return p;
+          } else {
+            C.state = 7;
+            continue;
+          }
+
+        case 7:
+          if ((p = M.brk(2)) === M.token) {
+            C.state = 8;
+            return p;
+          } else {
+            C.state = 8;
+            continue;
+          }
+
+        case 8:
+          C.$.v2 = 11;
+
+          if ((p = M.brk(3)) === M.token) {
+            C.state = 9;
+            return p;
+          } else {
+            C.state = 9;
+            continue;
+          }
+
+        case 9:
+          if ((p = M.brk(4)) === M.token) {
+            C.state = 10;
+            return p;
+          } else {
+            C.state = 10;
+            continue;
+          }
+
+        case 10:
+          if ((p = C.$$.$.mod.fn1(C.$.a)) === M.token) {
+            C.state = 11;
+            return p;
+          } else {
+            C.state = 11;
+            continue;
+          }
+
+        case 11:
+          if ((p = C.$$.$.mod.proc1(p, C.$$.$.v0, C.$.v1, C.$.v2, C.$.v3)) === M.token) {
+            C.state = 12;
+            return p;
+          } else {
+            C.state = 12;
+            continue;
+          }
+
+        case 12:
+          if ((p = M.brk(5)) === M.token) {
+            C.state = 13;
+            return p;
+          } else {
+            C.state = 13;
+            continue;
+          }
+
+        case 13:
+          C.$.loop = M.iterator(something);
+          C.state = 14;
+          continue;
+
+        case 14:
+          if (!(C.$.i2 = C.$.loop.next()).done) {
+            C.$.i = C.$.i2.value;
+
+            if ((p = M.brk(6)) === M.token) {
+              C.state = 15;
+              return p;
+            } else {
+              C.state = 15;
+              continue;
+            }
+          } else {
+            C.$.fc = 17;
+            C.state = 16;
+            continue;
+          }
+
+        case 15:
+          if ((p = C.$$.$.mod.proc2(C.$.i)) === M.token) {
+            C.state = 14;
+            return p;
+          } else {
+            C.state = 14;
+            continue;
+          }
+
+        case 16:
+          if (C.$.loop.return) {
+            C.$.loop.return();
+          }
+
+          C.$.ex = C.$.err1;
+          C.state = C.$.fc;
+          continue;
+
+        case 17:
+          if ((p = M.brk(7)) === M.token) {
+            C.state = 18;
+            return p;
+          } else {
+            C.state = 18;
+            continue;
+          }
+
+        case 18:
+          C.$.loop1 = M.iterator(something);
+          C.state = 19;
+          continue;
+
+        case 19:
+          if (!(C.$.i3 = C.$.loop1.next()).done) {
+            C.$.i1 = C.$.i3.value;
+
+            if ((p = M.brk(8)) === M.token) {
+              C.state = 20;
+              return p;
+            } else {
+              C.state = 20;
+              continue;
+            }
+          } else {
+            C.$.fc1 = 22;
+            C.state = 21;
+            continue;
+          }
+
+        case 20:
+          if ((p = C.$$.$.mod.proc3(C.$.i1)) === M.token) {
+            C.state = 19;
+            return p;
+          } else {
+            C.state = 19;
+            continue;
+          }
+
+        case 21:
+          if (C.$.loop1.return) {
+            C.$.loop1.return();
+          }
+
+          C.$.ex = C.$.err2;
+          C.state = C.$.fc1;
+          continue;
+
+        case 22:
+          if ((p = M.brk(9)) === M.token) {
+            C.state = 23;
+            return p;
+          } else {
+            C.state = 23;
+            continue;
+          }
+
+        case 23:
+          C.$.v4 = 100;
+          C.state = 26;
+          continue;
+
+        case 24:
+          C.$.e = C.$.ex;
+
+          if ((p = M.brk(10)) === M.token) {
+            C.state = 25;
+            return p;
+          } else {
+            C.state = 25;
+            continue;
+          }
+
+        case 25:
+          if ((p = C.$$.$.mod.proc4(C.$.e, C.$.v4, C.$.i1)) === M.token) {
+            C.state = 26;
+            return p;
+          } else {
+            C.state = 26;
+            continue;
+          }
+
+        case 26:
+          return C.pure();
+
+        case 0:
+          return C.pure(p);
+
+        case 1:
+          return C.raise(p);
+
+        case 27:
+          C.state = 0;
+          p = C.$.r;
+          continue;
+
+        case 28:
+          C.$.ex = p;
+          C.state = 24;
+          continue;
+
+        case 29:
+          C.$.fc = 24, C.$.err1 = p;
+          C.state = 16;
+          continue;
+
+        case 30:
+          C.$.fc = 27, C.$.r = p;
+          C.state = 16;
+          continue;
+
+        case 31:
+          C.$.ex = p;
+          C.state = 24;
+          continue;
+
+        case 32:
+          C.$.fc1 = 24, C.$.err2 = p;
+          C.state = 21;
+          continue;
+
+        case 33:
+          C.$.fc1 = 27, C.$.r = p;
+          C.state = 21;
+          continue;
+
+        case 34:
+          C.$.ex = p;
+          C.state = 24;
+          continue;
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      if ((p = ex, C.state = C_err(C.state)) !== 1) continue;
+      return C.raise(ex);
+    }
+  }
+}
+
+function fn1_1(_fn1, p) {
+  var a, b, c;
+
+  for (;;) {
+    try {
+      switch (_fn1.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            _fn1.state = 6;
+            return p;
+          } else {
+            _fn1.state = 6;
+            continue;
+          }
+
+        case 6:
+          _fn1.$.v5 = 10;
+
+          if ((p = M.brk(1)) === M.token) {
+            _fn1.state = 7;
+            return p;
+          } else {
+            _fn1.state = 7;
+            continue;
+          }
+
+        case 7:
+          if ((p = _fn1.$$.$.mod.f2()) === M.token) {
+            _fn1.state = 8;
+            return p;
+          } else {
+            _fn1.state = 8;
+            continue;
+          }
+
+        case 8:
+          _fn1.$._ = p;
+          c = _fn1.$$.$.C;
+
+          if ((p = new c(_fn1.$$.$.v0, _fn1.$.v5)) === M.token) {
+            _fn1.state = 9;
+            return p;
+          } else {
+            _fn1.state = 9;
+            continue;
+          }
+
+        case 9:
+          c = M.wrap(p);
+          b = M.wrap([c]);
+          a = M.wrap({
+            a: _fn1.$._,
+            b: b
+          });
+
+          if ((p = _fn1.$$.$.mod.some(a)) === M.token) {
+            _fn1.state = 10;
+            return p;
+          } else {
+            _fn1.state = 10;
+            continue;
+          }
+
+        case 10:
+          return _fn1.pure(p);
+
+        case 0:
+          return _fn1.pure(p);
+
+        case 1:
+          return _fn1.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return _fn1.raise(ex);
+    }
+  }
+}
+
+function f_1(ctx, p) {
+  var a;
+
+  for (;;) {
+    try {
+      switch (ctx.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            ctx.state = 6;
+            return p;
+          } else {
+            ctx.state = 6;
+            continue;
+          }
+
+        case 6:
+          a = require(\\"mod\\");
+
+          if ((p = M.unwrapImport(a, \\"mod\\")) === M.token) {
+            ctx.state = 7;
+            return p;
+          } else {
+            ctx.state = 7;
+            continue;
+          }
+
+        case 7:
+          ({
+            mod: ctx.$.mod
+          } = p);
+
+          if ((p = M.brk(1)) === M.token) {
+            ctx.state = 8;
+            return p;
+          } else {
+            ctx.state = 8;
+            continue;
+          }
+
+        case 8:
+          ctx.$.v0 = 10;
+
+          if ((p = M.brk(2)) === M.token) {
+            ctx.state = 9;
+            return p;
+          } else {
+            ctx.state = 9;
+            continue;
+          }
+
+        case 9:
+          ctx.$.exports.fn2 = meta$fn1(ctx);
+          return ctx.pure();
+
+        case 0:
+          return ctx.pure(p);
+
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
+  }
+}"
+`;
+
+exports[`default transpiler 2`] = `
+"\\"use strict\\";
+
+var M = require(\\"../../api\\");
+
+var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
+    v_1 = [{
+  j: \\"j\\",
+  run: \\"run\\"
+}, null],
+    v_2 = [{
+  i: \\"i\\"
+}, v_1],
+    meta$f = M.meta($module, function (x) {
+  return function (module, exports) {
+    var ctx = M.frame(x);
+    ctx.$.run = meta$run(ctx);
+    ctx.$.module = module;
+    ctx.$.exports = exports;
+    return ctx.scope(this, new.target, 5);
+  };
+}, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:29\\"], [v_1, \\"s\\", \\"3:0-3:10\\"], [v_1, \\"s\\", \\"12:0-12:6\\"], [v_1, \\"s\\", \\"13:0-13:6\\"]], null, \\"1:0-14:0\\", null),
+    meta$run = M.meta($module, function (x) {
+  return function _run(i = 1) {
+    var run = M.frame(x);
+    run.$.i = i;
+    return run.scope(this, new.target, 5);
+  };
+}, run_1, void 0, void 0, [[v_2, \\"s\\", \\"6:2-6:9\\"], [v_2, \\"s\\", \\"7:2-7:23\\"], [v_2, \\"s\\", \\"8:2-8:9\\"], [v_2, \\"s\\", \\"9:2-9:31\\"]], \\"run\\", \\"5:7-10:1\\", meta$f);
+module.exports = M.wrapExport(meta$f(null));
+
+function run_1(run, p) {
+  var a;
+
+  for (;;) {
+    try {
+      switch (run.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            run.state = 6;
+            return p;
+          } else {
+            run.state = 6;
+            continue;
+          }
+
+        case 6:
+          run.$$.$.j += run.$.i;
+
+          if ((p = M.brk(1)) === M.token) {
+            run.state = 7;
+            return p;
+          } else {
+            run.state = 7;
+            continue;
+          }
+
+        case 7:
+          a = run.$.i++;
+
+          if ((p = run.$$.$.M2.f1(a)) === M.token) {
+            run.state = 8;
+            return p;
+          } else {
+            run.state = 8;
+            continue;
+          }
+
+        case 8:
+          if ((p = run.$$.$.M2.f2(p, run.$.i)) === M.token) {
+            run.state = 9;
+            return p;
+          } else {
+            run.state = 9;
+            continue;
+          }
+
+        case 9:
+          if ((p = M.brk(2)) === M.token) {
+            run.state = 10;
+            return p;
+          } else {
+            run.state = 10;
+            continue;
+          }
+
+        case 10:
+          run.$$.$.j += run.$.i;
+
+          if ((p = M.brk(3)) === M.token) {
+            run.state = 11;
+            return p;
+          } else {
+            run.state = 11;
+            continue;
+          }
+
+        case 11:
+          if ((p = console.log(\`i:\${run.$.i},j:\${run.$$.$.j}\`)) === M.token) {
+            run.state = 12;
+            return p;
+          } else {
+            run.state = 12;
+            continue;
+          }
+
+        case 12:
+          return run.pure();
+
+        case 0:
+          return run.pure(p);
+
+        case 1:
+          return run.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return run.raise(ex);
+    }
+  }
+}
+
+function f_1(ctx, p) {
+  var a;
+
+  for (;;) {
+    try {
+      switch (ctx.state) {
+        case 5:
+          ctx.$.exports.__esModule = true;
+          ctx.$.exports.run = ctx.$.run;
+
+          if ((p = M.brk(0)) === M.token) {
+            ctx.state = 6;
+            return p;
+          } else {
+            ctx.state = 6;
+            continue;
+          }
+
+        case 6:
+          a = require(\\"./mod2\\");
+
+          if ((p = M.unwrapImport(a, \\"./mod2\\")) === M.token) {
+            ctx.state = 7;
+            return p;
+          } else {
+            ctx.state = 7;
+            continue;
+          }
+
+        case 7:
+          ctx.$.M2 = p;
+
+          if ((p = M.brk(1)) === M.token) {
+            ctx.state = 8;
+            return p;
+          } else {
+            ctx.state = 8;
+            continue;
+          }
+
+        case 8:
+          ctx.$.j = 0;
+
+          if ((p = M.brk(2)) === M.token) {
+            ctx.state = 9;
+            return p;
+          } else {
+            ctx.state = 9;
+            continue;
+          }
+
+        case 9:
+          if ((p = ctx.$.run()) === M.token) {
+            ctx.state = 10;
+            return p;
+          } else {
+            ctx.state = 10;
+            continue;
+          }
+
+        case 10:
+          if ((p = M.brk(3)) === M.token) {
+            ctx.state = 11;
+            return p;
+          } else {
+            ctx.state = 11;
+            continue;
+          }
+
+        case 11:
+          if ((p = ctx.$.run()) === M.token) {
+            ctx.state = 12;
+            return p;
+          } else {
+            ctx.state = 12;
+            continue;
+          }
+
+        case 12:
+          return ctx.pure();
+
+        case 0:
+          return ctx.pure(p);
+
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
+  }
+}"
+`;
+
+exports[`default transpiler 3`] = `
+"\\"use strict\\";
+
+var M = require(\\"../../api\\");
+
+var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
+    v_1 = [{
+  cnt: \\"cnt\\",
+  A: \\"A\\",
+  B: \\"B\\",
+  f1: \\"f1\\",
+  f2: \\"f2\\"
+}, null],
+    v_5 = [{
+  i: \\"i\\"
+}, v_1],
+    v_4 = [{
+  i: \\"i\\",
+  a: \\"a\\"
+}, v_1],
+    v_3 = [{
+  i: \\"i\\"
+}, v_1],
+    v_2 = [{
+  i: \\"i\\"
+}, v_1],
+    meta$f = M.meta($module, function (x) {
+  return function (module, exports) {
+    var ctx = M.frame(x);
+    ctx.$.A = meta$A(ctx);
+    ctx.$.B = meta$B(ctx);
+    ctx.$.f1 = meta$f1(ctx);
+    ctx.$.f2 = meta$f2(ctx);
+    ctx.$.module = module;
+    ctx.$.exports = exports;
+    return ctx.scope(this, new.target, 5);
+  };
+}, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:12\\"]], null, \\"1:0-25:0\\", null),
+    meta$f2 = M.meta($module, function (x) {
+  return function _f2(i) {
+    var f2 = M.frame(x);
+    f2.$.i = i;
+    return f2.scope(this, new.target, 5);
+  };
+}, f2_1, void 0, void 0, [[v_5, \\"s\\", \\"22:2-22:8\\"], [v_5, \\"s\\", \\"23:2-23:32\\"]], \\"f2\\", \\"21:7-24:1\\", meta$f),
+    meta$f1 = M.meta($module, function (x) {
+  return function _f1(i) {
+    var f1 = M.frame(x);
+    f1.$.i = i;
+    return f1.scope(this, new.target, 5);
+  };
+}, f1_1, void 0, void 0, [[v_4, \\"s\\", \\"14:2-14:8\\"], [v_4, \\"s\\", \\"15:2-15:32\\"], [v_4, \\"s\\", \\"16:2-16:23\\"], [v_4, \\"s\\", \\"17:2-17:23\\"], [v_4, \\"s\\", \\"18:2-18:13\\"]], \\"f1\\", \\"13:7-19:1\\", meta$f),
+    meta$B = M.meta($module, function (x) {
+  return function _B(i) {
+    var B = M.frame(x);
+    B.$._this = this;
+    B.$.i = i;
+    return B.scope(this, new.target, 5);
+  };
+}, B_1, void 0, void 0, [[v_3, \\"s\\", \\"9:2-9:13\\"], [v_3, \\"s\\", \\"10:2-10:26\\"]], \\"B\\", \\"8:0-11:1\\", meta$f),
+    meta$A = M.meta($module, function (x) {
+  return function _A(i) {
+    var A = M.frame(x);
+    A.$._this = this;
+    A.$.i = i;
+    return A.scope(this, new.target, 5);
+  };
+}, A_1, void 0, void 0, [[v_2, \\"s\\", \\"4:2-4:24\\"], [v_2, \\"s\\", \\"5:2-5:22\\"]], \\"A\\", \\"3:0-6:1\\", meta$f);
+module.exports = M.wrapExport(meta$f(null));
+
+function A_1(A, p) {
+  var a;
+
+  for (;;) {
+    try {
+      switch (A.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            A.state = 6;
+            return p;
+          } else {
+            A.state = 6;
+            continue;
+          }
+
+        case 6:
+          A.$._this.i = A.$.i * 10 + A.$$.$.cnt;
+
+          if ((p = M.brk(1)) === M.token) {
+            A.state = 7;
+            return p;
+          } else {
+            A.state = 7;
+            continue;
+          }
+
+        case 7:
+          a = A.$$.$.B;
+
+          if ((p = new a(100)) === M.token) {
+            A.state = 8;
+            return p;
+          } else {
+            A.state = 8;
+            continue;
+          }
+
+        case 8:
+          a = M.wrap(p);
+          A.$._this.b = a;
+          return A.pure();
+
+        case 0:
+          return A.pure(p);
+
+        case 1:
+          return A.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return A.raise(ex);
+    }
+  }
+}
+
+function B_1(B, p) {
+  for (;;) {
+    try {
+      switch (B.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            B.state = 6;
+            return p;
+          } else {
+            B.state = 6;
+            continue;
+          }
+
+        case 6:
+          B.$._this.i = B.$.i;
+
+          if ((p = M.brk(1)) === M.token) {
+            B.state = 7;
+            return p;
+          } else {
+            B.state = 7;
+            continue;
+          }
+
+        case 7:
+          return B.pure(M.wrap({
+            b: B.$._this,
+            cnt: B.$$.$.cnt
+          }));
+
+        case 0:
+          return B.pure(p);
+
+        case 1:
+          return B.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return B.raise(ex);
+    }
+  }
+}
+
+function f1_1(f1, p) {
+  var a, b;
+
+  for (;;) {
+    try {
+      switch (f1.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            f1.state = 6;
+            return p;
+          } else {
+            f1.state = 6;
+            continue;
+          }
+
+        case 6:
+          f1.$$.$.cnt++;
+
+          if ((p = M.brk(1)) === M.token) {
+            f1.state = 7;
+            return p;
+          } else {
+            f1.state = 7;
+            continue;
+          }
+
+        case 7:
+          if ((p = console.log(\`f1:\${f1.$.i}@\${f1.$$.$.cnt}\`)) === M.token) {
+            f1.state = 8;
+            return p;
+          } else {
+            f1.state = 8;
+            continue;
+          }
+
+        case 8:
+          if ((p = M.brk(2)) === M.token) {
+            f1.state = 9;
+            return p;
+          } else {
+            f1.state = 9;
+            continue;
+          }
+
+        case 9:
+          a = f1.$$.$.A;
+          b = f1.$$.$.cnt;
+
+          if ((p = new a(b)) === M.token) {
+            f1.state = 10;
+            return p;
+          } else {
+            f1.state = 10;
+            continue;
+          }
+
+        case 10:
+          a = M.wrap(p);
+          f1.$.a = a;
+
+          if ((p = M.brk(3)) === M.token) {
+            f1.state = 11;
+            return p;
+          } else {
+            f1.state = 11;
+            continue;
+          }
+
+        case 11:
+          if ((p = console.log(\\"A:\\", f1.$.a)) === M.token) {
+            f1.state = 12;
+            return p;
+          } else {
+            f1.state = 12;
+            continue;
+          }
+
+        case 12:
+          if ((p = M.brk(4)) === M.token) {
+            f1.state = 13;
+            return p;
+          } else {
+            f1.state = 13;
+            continue;
+          }
+
+        case 13:
+          return f1.pure(f1.$$.$.cnt);
+
+        case 0:
+          return f1.pure(p);
+
+        case 1:
+          return f1.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return f1.raise(ex);
+    }
+  }
+}
+
+function f2_1(f2, p) {
+  for (;;) {
+    try {
+      switch (f2.state) {
+        case 5:
+          if ((p = M.brk(0)) === M.token) {
+            f2.state = 6;
+            return p;
+          } else {
+            f2.state = 6;
+            continue;
+          }
+
+        case 6:
+          f2.$$.$.cnt++;
+
+          if ((p = M.brk(1)) === M.token) {
+            f2.state = 7;
+            return p;
+          } else {
+            f2.state = 7;
+            continue;
+          }
+
+        case 7:
+          if ((p = console.log(\`f2:\${f2.$.i}@\${f2.$$.$.cnt}\`)) === M.token) {
+            f2.state = 8;
+            return p;
+          } else {
+            f2.state = 8;
+            continue;
+          }
+
+        case 8:
+          return f2.pure();
+
+        case 0:
+          return f2.pure(p);
+
+        case 1:
+          return f2.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return f2.raise(ex);
+    }
+  }
+}
+
+function f_1(ctx, p) {
+  for (;;) {
+    try {
+      switch (ctx.state) {
+        case 5:
+          ctx.$.exports.__esModule = true;
+          ctx.$.exports.f1 = ctx.$.f1;
+          ctx.$.exports.f2 = ctx.$.f2;
+
+          if ((p = M.brk(0)) === M.token) {
+            ctx.state = 6;
+            return p;
+          } else {
+            ctx.state = 6;
+            continue;
+          }
+
+        case 6:
+          ctx.$.cnt = 0;
+          return ctx.pure();
+
+        case 0:
+          return ctx.pure(p);
+
+        case 1:
+          return ctx.raise(p);
+
+        default:
+          throw new Error(\\"invalid state\\");
+      }
+    } catch (ex) {
+      return ctx.raise(ex);
+    }
+  }
+}"
+`;

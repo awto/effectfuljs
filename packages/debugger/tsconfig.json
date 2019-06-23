@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "lib": ["esnext", "dom"],
+    "outDir": ".",
+    "rootDir": "src",
+    "strict": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": false,
+    "declaration": true,
+    "emitDeclarationOnly": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.js", "node_modules"]
+}

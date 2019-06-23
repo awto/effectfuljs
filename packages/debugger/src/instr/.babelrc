@@ -2,13 +2,16 @@
   "passPerPreset": true,
   "presets": [
     {
+      "plugins": ["@babel/transform-typescript"]
+    },
+    {
       "plugins": [
         [
           "../../transform",
           {
             "blackbox": true,
             "pureModule": true,
-            "importRT": "../kit",
+            "importRT": "../engine",
             "srcRoot": true
           }
         ]

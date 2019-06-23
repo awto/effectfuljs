@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`eval tracing 1`] = `
+Array [
+  Array [
+    "before eval",
+    "g",
+    "a",
+    "b",
+  ],
+  Array [
+    "hi",
+    "g",
+    "a",
+    "b",
+  ],
+  Array [
+    "there",
+    "g",
+    "abg",
+    "b",
+  ],
+  Array [
+    "eval",
+    "abgbg",
+  ],
+  Array [
+    "after eval",
+    "g",
+    "abg",
+    "b",
+  ],
+  Array [
+    "> eval",
+    Array [
+      "g",
+      "abg",
+      "b",
+    ],
+  ],
+]
+`;

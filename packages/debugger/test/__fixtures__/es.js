@@ -1,17 +1,6 @@
-import * as M2 from "./mod2";
-import * as rt from "../instr/rt";
+import * as rt from "../../instr/rt";
 
 let j = 0;
-
-function run(i = 1) {
-  j += i;
-  M2.f2(M2.f1(i++), i);
-  j += i;
-  console.log(`i:${i},j:${j}`);
-}
-
-run();
-run();
 
 export function mapTest(v) {
   j = 0;
@@ -147,17 +136,4 @@ export function everyTest(v) {
       self
     )
   ];
-}
-
-let g = "g";
-export function runEval() {
-  let a = "a";
-  return (function() {
-    let b = "b";
-    console.log("before eval", g, a, b);
-    eval(`console.log('hi', g, a, b); a+=b+g; console.log('there', g, a, b)`);
-    console.log("eval", eval("a + b + g"));
-    console.log("after eval", g, a, b);
-    return [g, a, b];
-  })();
 }

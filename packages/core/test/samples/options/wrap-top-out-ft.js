@@ -1,5 +1,5 @@
 import * as M from "@effectful/core";
-module.exports = M.exports(function (module, exports) {
+module.exports = M.wrapExport(function (module, exports) {
   var other,
       b2,
       somethingElse = function _somethingElse() {

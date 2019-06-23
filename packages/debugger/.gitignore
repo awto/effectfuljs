@@ -1,7 +1,10 @@
-/*.js
-!transform.js
-!*.test.js
 /instr
-!buildLibs.js
+/deps
+/trace
+/*.js
+/*.d.ts
+!buildDeps.js
 !preset-react.js
-/libs
+!preset.js
+!jest.config.js
+

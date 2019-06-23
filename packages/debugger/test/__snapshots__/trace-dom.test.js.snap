@@ -1,0 +1,203 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DOM time traveling 1`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:green"
+    >
+      Hi
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 2`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:red"
+    >
+      <div
+        id="i2"
+      >
+        There
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 3`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:blue"
+    >
+      <h1
+        id="i3"
+      />
+      <div
+        id="i2"
+      >
+        There
+      </div>
+      <h2
+        id="i4"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 4`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:blue"
+    >
+      <h1
+        id="i3"
+      />
+      <div
+        id="i2"
+      >
+        THERE
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 5`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:blue"
+    >
+      <h1
+        id="i3"
+      />
+      <div
+        id="i2"
+      >
+        There
+      </div>
+      <h2
+        id="i4"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 6`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:blue"
+    >
+      <h1
+        id="i3"
+      />
+      <div
+        id="i2"
+      >
+        THERE
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 7`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:red"
+    >
+      <div
+        id="i2"
+      >
+        There
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 8`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:blue"
+    >
+      <h1
+        id="i3"
+      />
+      <div
+        id="i2"
+      >
+        There
+      </div>
+      <h2
+        id="i4"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 9`] = `
+<body>
+  <div
+    id="root"
+  >
+    <div
+      id="i1"
+      style="color:blue"
+    >
+      <h1
+        id="i3"
+      />
+      <div
+        id="i2"
+      >
+        THERE
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DOM time traveling 10`] = `
+<body>
+  <div
+    id="root"
+  />
+</body>
+`;

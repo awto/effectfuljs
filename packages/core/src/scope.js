@@ -273,15 +273,17 @@ function injectModuleDescr(si) {
       sym,
       root.$ns
     );
-    let module = "*";
-    const { file } = s.opts;
-    if (file) {
-      module = file.filename;
-      if (s.opts.srcRoot) {
-        const root =
-          s.opts.srcRoot === true ? file.root || file.cwd : s.opts.srcRoot;
-        if (module.startsWith(root)) module = module.substr(root.length);
-      }
+    let module = s.opts.moduleName;
+    if (!module) {
+      const { file } = s.opts;
+      if (file) {
+        module = file.filename;
+        if (s.opts.srcRoot) {
+          const root =
+            s.opts.srcRoot === true ? file.root || file.cwd : s.opts.srcRoot;
+          if (module.startsWith(root)) module = module.substr(root.length);
+        }
+      } else module = "*";
     }
     if (s.opts.moduleNamePrefix)
       module = `${s.opts.moduleNamePrefix}@${module}`;

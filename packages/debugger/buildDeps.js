@@ -13,7 +13,7 @@ const opts = {
       {
         blackbox: true,
         preInstrumentedLibs: "..",
-        importRT: "../main",
+        importRT: "../engine",
         expTCExceptions: false
       }
     ]
@@ -21,13 +21,13 @@ const opts = {
   compact: false
 };
 
-const libs = require("./libs.json");
+const libs = require("./deps.json");
 
-if (!fs.existsSync("./libs")) fs.mkdirSync("./libs");
+if (!fs.existsSync("./deps")) fs.mkdirSync("./deps");
 
 for (const [l, p] of Object.entries(libs)) {
   fs.writeFileSync(
-    path.join("./libs", `${l.replace("/", "-")}.js`),
+    path.join("./deps", `${l.replace("/", "-")}.js`),
     babel.transformFileSync(path.join("./node_modules", p), opts).code
   );
 }

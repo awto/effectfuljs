@@ -487,7 +487,7 @@ export function topToIIFE(si) {
   const modSym = (s.first.value.modDescrSym = Kit.scope.newSym("$module"));
   if (!s.opts.topIIFE) return s;
   const module = s.first.value;
-  const exportsSym = Kit.sysId("exports");
+  const exportsSym = Kit.sysId("wrapExport");
   module.hasEsImports = false;
   return _topToIIFE();
   function* _topToIIFE() {
