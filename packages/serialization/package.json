@@ -4,7 +4,7 @@
   "description": "References-aware JS values serialization library",
   "module": "main.js",
   "jsnext:main": "main.js",
-  "main": "index.js",
+  "main": "cjs/main.js",
   "repository": "https://github.com/awto/effectfuljs.git",
   "keywords": [
     "serialization",
@@ -15,7 +15,8 @@
   "scripts": {
     "test": "tslint --project . && mocha",
     "build-es": "tsc",
-    "build": "npm run build-es && babel --config-file ../es/babel.cjs.json -o index.js main.js",
+    "build-cjs": "tsc --outDir cjs --module commonjs",
+    "build": "npm run build-es && npm run build-cjs",
     "docs": "typedoc --mode file --out api --theme markdown --excludePrivate src --readme none"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@babel/plugin-syntax-bigint": "^7.2.0",
     "@babel/plugin-transform-typescript": "^7.4.5",
     "@babel/register": "^7.4.4",
+    "jsdom": "^15.1.1",
     "mocha": "^5.1.0",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"

@@ -287,7 +287,7 @@ describe("property's descriptor", function() {
     });
     Lib.regOpaqueObject(descr.set, "dset");
     Lib.regOpaqueObject(descr.get, "dget");
-    const opts = {};
+    const opts = { symsByName: new Map() };
     const res = Lib.write(a, opts);
     assert.deepEqual(res, {
       f: [
@@ -511,7 +511,7 @@ describe("Symbols serialization", function() {
     const a2 = Symbol("a");
     const b = Symbol("b");
     const g = Symbol.for("g");
-    const opts = {};
+    const opts = { symsByName: new Map() };
     const res = Lib.write({ a1, a2, b1: b, b2: b, g }, opts);
     assert.deepStrictEqual(res, {
       f: [

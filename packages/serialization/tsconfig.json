@@ -2,11 +2,12 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "es2015",
-    "lib": ["esnext"],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "outDir": ".",
     "strict": true,
     "alwaysStrict": true,
+    "declaration": true,
     "noFallthroughCasesInSwitch": false
   },
-  "files": ["src/main.ts"]
+  "files": ["src/main.ts", "src/dom.ts"]
 }

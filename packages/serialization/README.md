@@ -1,6 +1,6 @@
 # @effectful/serialization
 
-Extensible, references aware JavaScript values serialization.
+Extensible, references aware, schemaless JavaScript values serialization.
 
 ## Usage 
 
@@ -117,9 +117,31 @@ conversions object's translation will work well.
 The transform is in Proof Of Concept state name, but will be moved into a
 separate library SOON.
 
+## DOM serialization
+
+The package contains proof-of-concept DOM serialization.  It is
+disabled by default. To enable:
+
+```javascript
+import * as SDOM "@effectful/serialization/dom"
+SDOM.track()
+```
+
+This monkey patches some DOM functions to get access to
+internal platform state which is not accessible by JavaScript
+otherwise.
+
+It is very limited for now, requires deeper wrapping. It will
+store/restore elements, events and `document` with all children,
+attributes, and properties of DOM values with some limitations. Events
+will keep only their initialization options with calculated properties
+(such as `target`) not initialized.
+
 ## TODO:
 
- * TS/Flow
+ * Validation
+ * Data versioning
+ * Stricter TS format types
 
 ## LICENSE
 
