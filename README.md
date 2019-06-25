@@ -66,7 +66,25 @@ The package can also contain `macro.js` file for zero-configuration using
 [babel-plugin-macros](https://github.com/kentcdodds/babel-plugin-macros). This works also for
 [Create Reat App](https://github.com/facebook/create-react-app)) where `.babelrc` is disabled.
 
-See libraries documentation for exact details.
+Check the libraries documentation for exact details:
+
+ * [@effectful/js](https://github.com/awto/effectfuljs/tree/master/packages/js)
+  compiles to the most abstract code, single or double level depending
+  on parameters 
+ * [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+  for two-levels syntax either concrete ECMAScript compatible effects
+  or abstract for async, generator and async generators semantics
+  overloading.  
+ * [@effectful/es-inline](https://github.com/awto/effectfuljs/tree/master/packages/es)
+  A shortcut for [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+  with concrete ECMAScript effects implementations.
+
+All the plugins and macros are just shortcuts to
+[@effectful/core](https://github.com/awto/effectfuljs/tree/master/packages/es)
+setting needed lower level options described in
+[config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js)
+thus generated code uses different runtime interfaces.
+
 
 ## Examples
 
@@ -374,26 +392,6 @@ succinct and more readable code is good, but if effects are heavy
 making them explicit may be better. So EffectfulJS compiler supports
 both options.
 
-## Usage
-
-There are babel plugins and macros in separate packages.
-
- * [@effectful/js](https://github.com/awto/effectfuljs/tree/master/packages/js)
-  compiles to the most abstract code, single or double level depending
-  on parameters 
- * [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
-  for two-levels syntax either concrete ECMAScript compatible effects
-  or abstract for async, generator and async generators semantics
-  overloading.  
- * [@effectful/es-inline](https://github.com/awto/effectfuljs/tree/master/packages/es)
-  A shortcut for [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
-  with concrete ECMAScript effects implementations.
-
-All the plugins and macros are just shortcuts to
-[@effectful/core](https://github.com/awto/effectfuljs/tree/master/packages/es)
-setting needed lower level options described in
-[config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js)
-thus generated code uses different runtime interfaces.
 
 ## LICENSE
 
