@@ -1,9 +1,7 @@
 import * as S from "./main";
 
 /** stores event handlers in EventTarget */
-export const eventsSym = Symbol("@effectful/debugger/events");
-
-S.regOpaquePrim(eventsSym);
+export const eventsSym = Symbol.for("@effectful/debugger/events");
 
 if (typeof Event !== "undefined")
   S.regDescriptor(
@@ -51,12 +49,13 @@ type EventMap = Map<
 >;
 
 declare global {
-  interface EventTarget extends S.Serializable {
+  interface EventTarget {
     [eventsSym]: EventMap;
   }
 }
 
 const overrideProps: any = { [S.descriptorSymbol]: false };
+/*
 const el = document.createElement("div");
 for (const i of Object.getOwnPropertySymbols(el)) {
   switch (String(i)) {
@@ -65,6 +64,7 @@ for (const i of Object.getOwnPropertySymbols(el)) {
       overrideProps[i] = false;
   }
 }
+*/
 
 if (typeof Element !== "undefined") {
   S.regConstructor(Element, {
@@ -228,7 +228,7 @@ export function trackEvents(ev: EventTarget) {
 /** monkey patching global `document` to make it serializable */
 export function trackGlobalDocument() {
   if (typeof document === "undefined") return;
-  document[S.descriptorSymbol] = S.regDescriptor({
+  (<any>document)[S.descriptorSymbol] = S.regDescriptor({
     name: "global#document",
     write(ctx, value: Document) {
       const json: S.JSONObject = {};

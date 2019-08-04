@@ -2,6 +2,67 @@
  * # Serialization library for @effectful toolchain
  */
 
+export interface State {
+  /** name for a property storing descriptor */
+  symbol: symbol;
+  /** descriptors registered by type's name */
+  byName: Map<string, Descriptor>;
+  /** descriptors registered by value */
+  byValue: Map<any, Descriptor>;
+  /**
+   * react uses `$$typeof` property for its values, it is the mapping
+   * @private
+   */
+  byTypeOfProp: Map<symbol, Descriptor>;
+}
+
+export interface IncompleteState {
+  symbol?: symbol;
+  byName?: Map<string, Descriptor>;
+  byValue?: Map<any, Descriptor>;
+  byTypeOfProp?: Map<symbol, Descriptor>;
+}
+
+/** symbol for storing global state */
+declare let __effectfulSerializationState: IncompleteState;
+
+function initializeState(init: IncompleteState): State {
+  if (!init.symbol) init.symbol = Symbol("@effectful/serialization/descriptor");
+  if (!init.byName) init.byName = new Map();
+  if (!init.byValue) init.byValue = new Map();
+  if (!init.byTypeOfProp) init.byTypeOfProp = new Map();
+  return <State>init;
+}
+
+if (!(<any>global).__effectfulSerializationState)
+  (<any>global).__effectfulSerializationState = {};
+
+let state: State = initializeState(__effectfulSerializationState);
+
+/** name of a property to specify `Descriptor` for JS value */
+export let descriptorSymbol: symbol = state.symbol;
+
+let descriptorByName: Map<string, Descriptor> = state.byName;
+let descriptorByValue: Map<any, Descriptor> = state.byValue;
+let descriptorByTypeOfProp: Map<symbol, Descriptor> = state.byTypeOfProp;
+
+/**
+ * Sets new state value.
+ *
+ * After setting this each instance of this module will have own state
+ */
+export function resetState(init: IncompleteState = {}) {
+  state = initializeState(init);
+  descriptorSymbol = state.symbol;
+  descriptorByName = state.byName;
+  descriptorByValue = state.byValue;
+  descriptorByTypeOfProp = state.byTypeOfProp;
+}
+
+export function getState(): State {
+  return state;
+}
+
 /**
  * Conversion between JSON values and JS values. JSON values set is a subset
  * of JS values which can be converted to string using `JSON.stringify`
@@ -61,17 +122,6 @@ export interface JSONObject {
 /** `JSON.stringify` serializable Array */
 export interface JSONArray extends Array<JSONValue> {}
 
-const descriptorByName: Map<string, Descriptor> = new Map();
-const descriptorByValue: Map<any, Descriptor> = new Map();
-/**
- * react uses `$$typeof` property for its values, it is the mapping
- * @private
- */
-const descriptorByTypeOfProp: Map<symbol, Descriptor> = new Map();
-
-/** name of a property to specify `Descriptor` for JS value */
-export const descriptorSymbol = Symbol("@effectful/serialization/descriptor");
-
 /* TODO after TS supports symbol indexes `{ [name: string | symbol]: boolean } */
 const defaultOverrideProps: any = {
   [descriptorSymbol]: false
@@ -111,21 +161,8 @@ export interface ReadDescriptor<T = unknown> {
   readContent: (ctx: ReadContext, json: JSONValue, value: T) => void;
 }
 
-export interface Serializable {
-  [descriptorSymbol]?: Descriptor;
-}
-
-export interface Writeable {
-  [descriptorSymbol]?: WriteDescriptor;
-}
-
 export interface WithTypeofTag {
   $$typeof?: symbol;
-}
-
-export interface SerializableObject {
-  [name: string]: Serializable;
-  [name: number]: Serializable;
 }
 
 export interface DescriptorOpts<T = unknown> {
@@ -193,7 +230,7 @@ export interface WriteDescriptor<T = unknown> {
     value: T,
     parent: JSONObject | JSONArray,
     index: number | string
-  ) => any;
+  ) => JSONValue;
 }
 
 export type Descriptor<T = any> = WriteDescriptor<T> &
@@ -401,12 +438,12 @@ class WriteContext {
       if (this.ignore === true) return NotSerializableToken;
       if (this.ignore === "opaque") {
         descriptor =
-          typeof value === "object"
+          typeof value === "object" || typeof value === "function"
             ? regOpaqueObject(value)
             : regOpaquePrim(value);
       } else {
         throw new TypeError(
-          `not writable value ${value} at ${key} of ${parent}`
+          `not writable value "${value}" at "${key}" of "${parent}"`
         );
       }
     }
@@ -536,7 +573,7 @@ function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
             index
           })
         );
-        info.data = descriptor.write(ctx, value, parent, index);
+        info.data = <JSONObject>descriptor.write(ctx, value, parent, index);
         ctx.refs.push(info);
         return info.data;
       }
@@ -622,7 +659,7 @@ export function regDescriptor<T>(
     final = {
       ...final,
       write(ctx, val, parent, index): JSONValue {
-        const json = saved.write(ctx, val, parent, index);
+        const json = <JSONObject>saved.write(ctx, val, parent, index);
         if (!json.$) json.$ = uniq;
         return json;
       }
@@ -853,11 +890,7 @@ export function writeProps(
 }
 
 /** Reading serialized `Object.defineProperty` descriptors from JSON */
-export function readProps<T extends SerializableObject>(
-  ctx: ReadContext,
-  props: any[],
-  value: T
-) {
+export function readProps<T>(ctx: ReadContext, props: any[], value: T) {
   for (const [key, pjson, flags, get, set] of props) {
     const name = key.substr
       ? key
@@ -874,15 +907,13 @@ export function readProps<T extends SerializableObject>(
       if (set) pdescr.set = ctx.step(set);
       Object.defineProperty(value, name, pdescr);
     } else {
-      value[name] = ctx.step(pjson);
+      (<any>value)[name] = ctx.step(pjson);
     }
   }
 }
 
 /** wraps descriptor by adding its own property into the saved dictionary */
-function propsDescriptor<T extends SerializableObject>(
-  descriptor: Descriptor<T>
-): Descriptor<T> {
+function propsDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
   const pred = descriptor.overrideProps || defaultOverrideProps;
   return {
     name: descriptor.name,
@@ -892,7 +923,7 @@ function propsDescriptor<T extends SerializableObject>(
       parent: JSONArray | JSONObject,
       index: number | string
     ): JSONValue {
-      const json = descriptor.write(ctx, value, parent, index);
+      const json = <JSONObject>descriptor.write(ctx, value, parent, index);
       const props = writeProps(
         ctx,
         Object.getOwnPropertyDescriptors(value),
@@ -1055,10 +1086,8 @@ const BigIntDescriptor =
         props: false
       });
 
-function getObjectDescriptor<T extends WithTypeofTag & Serializable>(
-  value: T
-): Descriptor<T> {
-  const descriptor = value[descriptorSymbol];
+function getObjectDescriptor<T extends WithTypeofTag>(value: T): Descriptor<T> {
+  const descriptor = (<any>value)[descriptorSymbol];
   if (descriptor) return descriptor;
   if (value.$$typeof) {
     const res = descriptorByTypeOfProp.get(value.$$typeof);
@@ -1194,7 +1223,8 @@ export function regOpaqueRec(
   deep: boolean = false
 ) {
   if (
-    typeof value.hasOwnProperty !== "function" ||
+    !value ||
+    !(typeof value === "function" || typeof value === "object") ||
     value.hasOwnProperty(descriptorSymbol)
   )
     return;
