@@ -6,7 +6,7 @@ M.option({
   inlineYieldOp: false,
   invertForOf: true,
   contextState: true,
-  storeCont: true,
+  storeCont: "$state",
   markRepeat: true,
   storeErrorCont: true
 });

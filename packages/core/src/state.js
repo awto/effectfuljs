@@ -204,7 +204,7 @@ export const saveDecls = Kit.pipe(
 );
 
 /** restores declaration removed `saveDecls` in the beginning of root's body */
-export function* restoreDecls(s) {
+export function restoreDecls(s) {
   let sl = Kit.auto(s);
   if (sl.first.type === Tag.ArrowFunctionExpression) {
     const loc = sl;
@@ -295,97 +295,108 @@ export function* restoreDecls(s) {
       closures.set(copy, { raw: null, init });
     }
   }
-  for (const i of sl) {
-    yield i;
-    if (i.enter) {
-      if (
-        ((i.value.savedDecls != null && i.value.savedDecls.size) ||
-          (i.value.paramSyms && i.value.paramSyms.length)) &&
-        !i.leave &&
-        sl.curLev()
-      ) {
-        for (const j of sl.sub()) {
-          yield j;
-          if (j.enter && j.type === Tag.Array && j.pos === Tag.body) {
-            const assigns = [];
-            const decls = [];
-            decls.push(
-              ...[...i.value.savedDecls].sort((a, b) => a[0].num - b[0].num)
-            );
-            const vars = [];
-            const raw = [];
-            for (const [k, v] of decls) {
-              if (k.removed) continue;
-              if (v.raw) raw.push(v);
-              else {
-                v.sym = k;
-                if (k.interpr === Bind.ctxField) {
-                  if (v.init)
-                    assigns.push({
-                      sym: k,
-                      init: Kit.reposOneArr(v.init, Tag.right)
-                    });
-                } else vars.push(v);
-              }
-            }
-            if (vars.length) {
-              const lab = sl.label();
-              yield sl.enter(Tag.push, Tag.VariableDeclaration, {
-                node: { kind: "var" }
-              });
-              yield sl.enter(Tag.declarations, Tag.Array);
-              for (const { sym, init } of vars) {
-                if (sym.substSym) continue;
-                yield sl.enter(Tag.push, Tag.VariableDeclarator);
-                yield sl.tok(Tag.id, Tag.Identifier, { sym, decl: true });
-                if (init) yield* init;
-                yield* sl.leave();
-              }
-              yield* lab();
-            }
-
-            if (i.value.paramSyms) {
-              for (const sym of i.value.paramSyms) {
-                if (sym.interpr === Bind.ctxField) {
-                  const copy = (sym.decl.value.sym = Kit.scope.newSym(
-                    sym.orig
-                  ));
-                  copy.copyOf = sym;
-                  sym.localCopy = copy;
-                  copy.type = sym.type;
-                  assigns.push({
-                    sym,
-                    init: [
-                      sl.tok(Tag.right, Tag.Identifier, {
-                        sym: copy,
-                        lhs: false,
-                        rhs: true,
-                        decl: false
-                      })
-                    ]
-                  });
+  return _restoreDecls(sl);
+  function* _restoreDecls(sw) {
+    for (const i of sw) {
+      yield i;
+      if (i.enter) {
+        if (
+          ((i.value.savedDecls != null && i.value.savedDecls.size) ||
+            (i.value.paramSyms && i.value.paramSyms.length)) &&
+          !i.leave &&
+          sl.curLev()
+        ) {
+          for (const j of sl.sub()) {
+            yield j;
+            if (j.enter && j.type === Tag.Array && j.pos === Tag.body) {
+              const assigns = [];
+              const decls = [];
+              decls.push(
+                ...[...i.value.savedDecls].sort((a, b) => a[0].num - b[0].num)
+              );
+              const vars = [];
+              const raw = [];
+              for (const [k, v] of decls) {
+                if (k.removed) continue;
+                if (v.raw) raw.push(v);
+                else {
+                  v.sym = k;
+                  if (k.interpr === Bind.ctxField) {
+                    if (v.init)
+                      assigns.push({
+                        sym: k,
+                        init: Kit.reposOneArr(v.init, Tag.right)
+                      });
+                  } else vars.push(v);
                 }
               }
-            }
-            for (const j of decls) if (j[1].raw != null) yield* j[1].raw;
-            if (assigns.length) {
-              for (const { sym, init } of assigns) {
-                yield sl.enter(Tag.push, Tag.ExpressionStatement);
-                yield sl.enter(Tag.expression, Tag.AssignmentExpression, {
-                  node: { operator: "=" }
+              if (vars.length) {
+                const lab = sl.label();
+                yield sl.enter(Tag.push, Tag.VariableDeclaration, {
+                  node: { kind: "var" }
                 });
-                yield sl.tok(Tag.left, Tag.Identifier, {
-                  sym,
-                  lhs: true,
-                  rhs: false,
-                  decl: false
-                });
-                yield* init;
+                yield sl.enter(Tag.declarations, Tag.Array);
+                for (const { sym, init } of vars) {
+                  if (sym.substSym) continue;
+                  yield sl.enter(Tag.push, Tag.VariableDeclarator);
+                  yield sl.tok(Tag.id, Tag.Identifier, { sym, decl: true });
+                  if (init) yield* init;
+                  yield* sl.leave();
+                }
+                yield* lab();
+              }
+
+              if (i.value.paramSyms) {
+                for (const sym of i.value.paramSyms) {
+                  if (sym.interpr === Bind.ctxField) {
+                    const copy = (sym.decl.value.sym = Kit.scope.newSym(
+                      sym.orig
+                    ));
+                    copy.copyOf = sym;
+                    sym.localCopy = copy;
+                    copy.type = sym.type;
+                    assigns.push({
+                      sym,
+                      init: [
+                        sl.tok(Tag.right, Tag.Identifier, {
+                          sym: copy,
+                          lhs: false,
+                          rhs: true,
+                          decl: false
+                        })
+                      ]
+                    });
+                  }
+                }
+              }
+              for (const j of decls) if (j[1].raw != null) yield* j[1].raw;
+              if (assigns.length) {
+                for (const { sym, init } of assigns) {
+                  yield sl.enter(Tag.push, Tag.ExpressionStatement);
+                  yield sl.enter(Tag.expression, Tag.AssignmentExpression, {
+                    node: { operator: "=" }
+                  });
+                  yield sl.tok(Tag.left, Tag.Identifier, {
+                    sym,
+                    lhs: true,
+                    rhs: false,
+                    decl: false
+                  });
+                  yield* init;
+                  yield* sl.leave();
+                  yield* sl.leave();
+                }
+              }
+              // babel's hoist re-hack
+              if (i.value.babelHoistReHack) {
+                yield sl.enter(Tag.push, Tag.BlockStatement);
+                yield sl.enter(Tag.body, Tag.Array);
+                yield* _restoreDecls(sl.sub());
                 yield* sl.leave();
                 yield* sl.leave();
               }
+              break;
             }
-            break;
           }
         }
       }

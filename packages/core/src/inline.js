@@ -53,6 +53,7 @@ export function storeContinuations(si) {
     if (contextStore) return Kit.sysId(name, true);
     const res = Bind.tempVarSym(root, pat);
     res.fieldName = name;
+    res.subField = false;
     return res;
   }
   root.runningContSym = makeSym(s.opts.storeRunningCont, "gc", true);
@@ -61,7 +62,7 @@ export function storeContinuations(si) {
   const err = s.opts.inlineErrorContAssign && root.errContSym;
   const inlineConts = s.opts.inlineContAssign;
   const inlineContJumps = inlineConts || s.opts.inlinePureJumps === "tail";
-  root.contSym = makeSym(s.opts.storeCont, "sc", true);
+  root.contSym = makeSym(s.opts.storeCont, "sc");
   const cont = inlineContJumps && root.contSym;
   const errIgnore = s.opts.inlineErrorContAssign === "ignore";
   const resIgnore = s.opts.inlineResultContAssign === "ignore";
@@ -581,7 +582,7 @@ export function promisesClosure(si) {
 export function jumpOps(si) {
   const s = Kit.auto(si);
   const inlineJumps = s.opts.inlinePureJumps === "call";
-  const inlineScope = s.opts.inlineScopeOp === "call";
+  const inlineScope = s.opts.scopePrefix && s.opts.inlineScopeOp === "call";
   const jumpsExit = s.opts.inlinePureJumps === "exit";
   const promiseJumps = s.opts.inlinePureJumps === "promise";
   const promiseRec = s.opts.inlineChainOp === "promise";
@@ -1144,11 +1145,72 @@ function replaceContextByClosure(si) {
   }
 }
 
+/** operation's inlining (specified in `injectOps`) */
+export function substOps(si) {
+  const s = Kit.auto(si);
+  const { inlineOps } = s.opts;
+  if (!inlineOps) return s;
+  const root = s.first.value;
+  return _substOps();
+  function* _emit(pos, descr) {
+    if (!descr.depsSyms) {
+      const deps = (descr.depsSyms = []);
+      if (descr.deps) for (const i of descr.deps) deps.push(Kit.sysId(i));
+    }
+    const syms = [];
+    if (root.$ns) syms.push(root.$ns);
+    if (root.contextSym) syms.push(root.contextSym);
+    syms.push(...descr.depsSyms);
+    pos = yield* s.template(pos, descr.inline, ...syms);
+    for (;;) {
+      yield* Kit.reposOne(s.one(), pos);
+      if (s.curLev() == null) break;
+      pos = yield* s.refocus();
+    }
+    yield* s.leave();
+  }
+  function* _substOps() {
+    for (const i of s) {
+      if (i.enter) {
+        switch (i.type) {
+          case Tag.CallExpression:
+            const callee = s.cur();
+            let sym;
+            if (
+              callee.type === Tag.Identifier &&
+              (sym = callee.value.sym) &&
+              sym.lib
+            ) {
+              const descr = inlineOps[sym.orig];
+              if (descr) {
+                for (const j of s) if (j.pos === Tag.arguments) break;
+                yield* _emit(i.pos, descr);
+                for (const j of s) if (j.value === i.value) break;
+              }
+              s.close(i);
+              continue;
+            }
+            break;
+          case Block.app:
+            let descr;
+            if ((descr = inlineOps[i.value.sym.orig])) {
+              yield* _emit(i.pos, descr);
+              s.close(i);
+              continue;
+            }
+        }
+      }
+      yield i;
+    }
+  }
+}
+
 /** runs after `Flat.interpretJumps` */
 export const control = jumpOps;
 
 /** runs before `Flat.interpretApp` */
 export const ops = Kit.pipe(
+  substOps,
   pureOp,
   pureOpLeft,
   raiseOp,

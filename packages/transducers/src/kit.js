@@ -16,7 +16,7 @@ import { parse as babelParse } from "@babel/parser";
 
 const BROWSER_DEBUG =
   (typeof window !== "undefined" && window.chrome) ||
-  process.env.EFFECTUL_DEBUG;
+  process.env.EFFECTFUL_DEBUG;
 let _opts = {};
 
 let leanWrap;
@@ -93,6 +93,7 @@ export function parse(jsCode) {
 /**
  * parses string `s` and outuputs its token stream at `pos`
  * following prefixes are supported in the string
+ *  - '^' - module's top level
  *  - '=' - the string is JS expression
  *  - '*' - the string is a list of statements
  *  - '>' - variable declarator
@@ -113,6 +114,11 @@ export function* toks(pos, s, ...syms) {
   if (s.substr != null) {
     let r = memo.get(s);
     if (r == null) {
+      let topLevel = false;
+      if (s[0] === "^") {
+        s = s.slice(1);
+        topLevel = true;
+      }
       let mod = null;
       let js = s;
       switch (s[0]) {
@@ -122,29 +128,33 @@ export function* toks(pos, s, ...syms) {
           mod = s[0];
           js = s.slice(1);
       }
+      js = topLevel ? js : `function main() { for(;;) {${js}} }`;
       const b = parse(js);
-      if (!mod === "*") invariant(b.program.body.length === 1);
+      const body = topLevel
+        ? b.program.body
+        : b.program.body[0].body.body[0].body.body;
+      if (!mod === "*") invariant(body.length === 1);
       switch (mod) {
         case "=":
-          invariant(b.program.body[0].type === "ExpressionStatement");
-          r = b.program.body[0].expression;
+          invariant(body[0].type === "ExpressionStatement");
+          r = body[0].expression;
           break;
         case ">":
-          invariant(b.program.body[0].type === "ExpressionStatement");
-          const s = b.program.body[0].expression;
+          invariant(body[0].type === "ExpressionStatement");
+          const s = body[0].expression;
           invariant(s.type === "AssignmentExpression");
           r = T.variableDeclarator(s.left, s.right);
           break;
         case "*":
           break;
         default:
-          r = b.program.body[0];
+          r = body[0];
       }
       if (mod !== "=" && mod !== ">") {
         if (mod === "*") {
-          r = b.program.body;
+          r = body;
         } else {
-          r = b.program.body[0];
+          r = body[0];
         }
       }
       memo.set(s, r);
@@ -552,13 +562,13 @@ export const babelBridge = curry(function babelBridge(pass, path, state) {
     _opts
   );
   if (_opts.debug || BROWSER_DEBUG) {
-    pass(produce({ type: "File", program: path.node }));
+    pass(produce(state.file.ast));
   } else {
     try {
-      pass(produce({ type: "File", program: path.node }));
+      pass(produce(state.file.ast));
     } catch (e) {
-      /* eslint-disable no-console */
-      console.log(e);
+      /* eslint-disable-next-line no-console */
+      if (_opts.verbose) console.log(e);
       throw path.hub.file.buildCodeFrameError(e.esNode, e.message);
     }
   }
@@ -579,6 +589,26 @@ export function babelPreset(pass) {
         };
       }
     ]
+  };
+}
+
+export function babelPlugin(pass) {
+  return function(_, opts) {
+    return {
+      visitor: {
+        Program(path, state) {
+          _opts.pluginOpts = opts;
+          babelBridge(
+            function(i) {
+              consume(pass(i));
+            },
+            path,
+            state
+          );
+          path.skip();
+        }
+      }
+    };
   };
 }
 
@@ -1140,6 +1170,7 @@ export function curry(fun, trace) {
 
 /** console.time for generator `s` */
 export const time = curry(function*(name, s) {
+  // eslint-disable-next-line no-console
   console.time(name);
   return yield* s;
 });
@@ -1149,6 +1180,7 @@ export const timeEnd = curry(function*(name, s) {
   try {
     return yield* s;
   } finally {
+    // eslint-disable-next-line no-console
     console.timeEnd(name);
   }
 });

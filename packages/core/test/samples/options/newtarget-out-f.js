@@ -5,7 +5,7 @@ function a1(a) {
 }
 
 function b() {
-  return M.scope(this, new.target, _1);
+  return M.scope(_1);
 
   function _1() {
     var a;

@@ -385,6 +385,13 @@ export const directives = Kit.pipe(
         case Tag.RegExpLiteral:
           Kit.skip(s.leave());
           return new RegExp(i.value.node.pattern, i.value.node.flags);
+        case Tag.ArrayExpression:
+          const arr = [];
+          Kit.skip(s.peelTo(Tag.elements));
+          while (s.curLev()) arr.push(getConst());
+          Kit.skip(s.leave());
+          Kit.skip(s.leave());
+          return arr;
         case Tag.ObjectExpression:
           const res = {};
           Kit.skip(s.peelTo(Tag.properties));

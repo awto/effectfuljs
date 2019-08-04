@@ -330,20 +330,10 @@ exports[`errors handling 2`] = `
   <h1>
     May Throw
   </h1>
-  <p>
-    P1:
-     
-    <b>
-      Normal1
-    </b>
-  </p>
-  <p>
-    P2:
-     
-    <i>
-      Normal2
-    </i>
-  </p>
+  <b>
+    Error: 
+    Error2
+  </b>
 </div>
 `;
 
@@ -366,7 +356,7 @@ exports[`errors handling 4`] = `
   </h1>
   <b>
     Error: 
-    Error2
+    Error1
   </b>
 </div>
 `;
@@ -412,10 +402,20 @@ exports[`errors handling 8`] = `
   <h1>
     May Throw
   </h1>
-  <b>
-    Error: 
-    Error1
-  </b>
+  <p>
+    P1:
+     
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2:
+     
+    <i>
+      Normal2
+    </i>
+  </p>
 </div>
 `;
 
@@ -424,10 +424,20 @@ exports[`errors handling 9`] = `
   <h1>
     May Throw
   </h1>
-  <b>
-    Error: 
-    Error1
-  </b>
+  <p>
+    P1:
+     
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2:
+     
+    <i>
+      Normal2
+    </i>
+  </p>
 </div>
 `;
 
@@ -460,20 +470,10 @@ exports[`errors handling 12`] = `
   <h1>
     May Throw
   </h1>
-  <p>
-    P1:
-     
-    <b>
-      Normal1
-    </b>
-  </p>
-  <p>
-    P2:
-     
-    <i>
-      Normal2
-    </i>
-  </p>
+  <b>
+    Error: 
+    Error1
+  </b>
 </div>
 `;
 
@@ -482,20 +482,10 @@ exports[`errors handling 13`] = `
   <h1>
     May Throw
   </h1>
-  <p>
-    P1:
-     
-    <b>
-      Normal1
-    </b>
-  </p>
-  <p>
-    P2:
-     
-    <i>
-      Normal2
-    </i>
-  </p>
+  <b>
+    Error: 
+    Error1
+  </b>
 </div>
 `;
 
@@ -504,20 +494,10 @@ exports[`errors handling 14`] = `
   <h1>
     May Throw
   </h1>
-  <p>
-    P1:
-     
-    <b>
-      Normal1
-    </b>
-  </p>
-  <p>
-    P2:
-     
-    <i>
-      Normal2
-    </i>
-  </p>
+  <b>
+    Error: 
+    Error1
+  </b>
 </div>
 `;
 
@@ -538,50 +518,24 @@ exports[`errors handling 16`] = `
   <h1>
     May Throw
   </h1>
-  <b>
-    Error: 
-    Error1
-  </b>
+  <p>
+    P1:
+     
+    <b>
+      Normal1
+    </b>
+  </p>
+  <p>
+    P2:
+     
+    <i>
+      Normal2
+    </i>
+  </p>
 </div>
 `;
 
 exports[`errors handling 17`] = `
-<div>
-  <h1>
-    May Throw
-  </h1>
-  <b>
-    Error: 
-    Error1
-  </b>
-</div>
-`;
-
-exports[`errors handling 18`] = `
-<div>
-  <h1>
-    May Throw
-  </h1>
-  <b>
-    Error: 
-    Error1
-  </b>
-</div>
-`;
-
-exports[`errors handling 19`] = `
-<div>
-  <h1>
-    May Throw
-  </h1>
-  <b>
-    Error: 
-    Error1
-  </b>
-</div>
-`;
-
-exports[`errors handling 20`] = `
 <div>
   <h1>
     May Throw
@@ -600,5 +554,41 @@ exports[`errors handling 20`] = `
       Normal2
     </i>
   </p>
+</div>
+`;
+
+exports[`errors handling 18`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error2
+  </b>
+</div>
+`;
+
+exports[`errors handling 19`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error2
+  </b>
+</div>
+`;
+
+exports[`errors handling 20`] = `
+<div>
+  <h1>
+    May Throw
+  </h1>
+  <b>
+    Error: 
+    Error1
+  </b>
 </div>
 `;

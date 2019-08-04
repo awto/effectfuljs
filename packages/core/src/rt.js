@@ -1,9 +1,9 @@
 import * as Kit from "./kit";
-import * as RT from "@effectful/transducers/rt";
 
 const { Tag } = Kit;
 
 const emptyMap = new Map();
+const emptyArr = [];
 
 /**
  * collects all ES or CommonJS imports into root's import field
@@ -88,8 +88,12 @@ export function collectUsages(s) {
   const root = sa[0].value;
   const rootNs = root.$ns;
   const mods = root.injectRT || emptyMap;
-  const ctxns =
-    root.opts.transform && root.opts.contextMethodOps && root.contextSym;
+  const store = root.opts.contextMethodOps;
+  const ctxns = root.opts.transform && root.contextSym;
+  const { injectOps } = root.opts;
+  const module = root.module || root;
+  const copies =
+    module.tmpOpsCopies || (injectOps && (module.tmpOpsCopies = new Map()));
   const spec = root.opts.contextMethodOpsSpec || {};
   for (const i of sa) {
     if (
@@ -98,15 +102,45 @@ export function collectUsages(s) {
       i.value.sym &&
       i.value.sym.lib
     ) {
-      let ns = i.value.ns;
-      if (ns == null && spec[i.value.sym.orig] !== false) ns = ctxns;
+      let { sym, ns } = i.value;
+      const name = sym.orig;
+      if (
+        ns == null &&
+        ((store && spec[name] !== false) || (store === false && spec[name]))
+      )
+        ns = ctxns;
       ns = ns || rootNs;
       i.value.ns = ns;
       const def = mods.get(ns);
-      if (def) def.usages.add(i.value.sym);
+      if (def) add(def, sym, ns);
     }
   }
   return sa;
+
+  function add(def, sym, ns) {
+    let copy;
+    if (injectOps) {
+      const descr = sym.injectOps || (sym.injectOps = injectOps[sym.orig]);
+      if (descr) {
+        copy = copies.get(sym);
+        if (!copy) {
+          copy = Kit.scope.newSym(sym.orig);
+          copy.tmpCopyOf = sym;
+          copy.injectOps = descr;
+          copies.set(sym, copy);
+        }
+        if (descr.deps) {
+          const deps = (descr.depsSyms = []);
+          for (const j of descr.deps) {
+            const sym = Kit.sysId(j);
+            deps.push(add(def, sym, ns) || sym);
+          }
+        }
+      }
+    }
+    def.usages.add(sym);
+    return copy;
+  }
 }
 
 /**
@@ -119,15 +153,72 @@ export function inject(si) {
   const root = s.first.value;
   const mods = root.injectRT;
   if (!mods || !mods.size) return s;
-  const rt = (root.rt = { importSyms: [], importNs: [], inlineSyms: [] });
+  const commonjs = s.opts.modules === "commonjs" || s.opts.modules === "cjs";
+  const esDefault = s.opts.modules === "esDefault";
+  const importBuf = [];
+  const initBuf = [];
+  const inlineBuf = [];
+  const copies = root.tmpOpsCopies;
   for (const def of mods.values()) {
-    if (!def.usages.size) continue;
-    if (def.content)
-      rt.inlineSyms.push({ syms: def.usages, content: def.content });
-    else
-      rt.importSyms.push({ syms: def.usages, ns: def.ns, module: def.module });
+    let syms = def.usages;
+    if (!syms.size) continue;
+    let importNs = true;
+    const { ns } = def;
+    if (copies) {
+      importNs = false;
+      syms = [];
+      for (const sym of def.usages) {
+        const copy = copies.get(sym);
+        if (copy) {
+          const { injectOps } = copy;
+          if (injectOps) {
+            if (injectOps.init) {
+              inlineBuf.push(
+                ...s.toks(
+                  Tag.push,
+                  injectOps.init,
+                  copy,
+                  ns,
+                  ...(injectOps.depsSyms || emptyArr)
+                )
+              );
+              continue;
+            }
+            importNs = true;
+            syms.push(copy);
+            initBuf.push(
+              ...s.toks(Tag.push, `var $I = $I.${sym.orig}`, copy, ns)
+            );
+            continue;
+          }
+          importNs = true;
+          syms.push(sym);
+        } else importNs = true;
+      }
+    }
+    if (importNs) {
+      importBuf.push(
+        ...s.toks(
+          Tag.push,
+          commonjs
+            ? `var $I = require("${def.module}")`
+            : esDefault
+            ? `^import $I from "${def.module}"`
+            : `^import * as $I from "${def.module}"`,
+          ns
+        )
+      );
+    }
   }
-  return RT.importSyms(s);
+  if (importBuf.length || initBuf.length || inlineBuf.length) return _inject();
+  return s;
+  function* _inject() {
+    yield* Kit.fileBody(s);
+    yield* importBuf;
+    yield* initBuf;
+    yield* inlineBuf;
+    yield* s;
+  }
 }
 
 /** replaces symbols with special meaning with their interpretation */
@@ -148,6 +239,15 @@ export function interpretLibSyms(si) {
         i.value.sym.lib
       ) {
         const { sym } = i.value;
+        const copies = root.tmpOpsCopies;
+        if (copies) {
+          const copy = copies.get(sym);
+          if (copy) {
+            i.value.sym = copy;
+            yield i;
+            continue;
+          }
+        }
         if (sym.nsDefault) {
           yield s.tok(i.pos, Tag.Identifier, { sym: ns });
         } else if (ns) {

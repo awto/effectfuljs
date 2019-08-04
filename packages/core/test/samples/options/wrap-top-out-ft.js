@@ -18,17 +18,19 @@ module.exports = M.wrapExport(function (module, exports) {
   };
 
   {
-    ctx._Some = class Some {
-      a() {
-        var _ctx = M.context();
+    {
+      ctx._Some = class Some {
+        a() {
+          var _ctx = M.context();
 
-        _ctx._f = ctx;
-        return M.scope(a_1);
-      }
+          _ctx._f = ctx;
+          return M.scope(a_1);
+        }
 
-    };
-    ctx._b = a;
-    [, other, b2] = ctx._Some;
+      };
+      ctx._b = a;
+      [, other, b2] = ctx._Some;
+    }
   }
 });
 

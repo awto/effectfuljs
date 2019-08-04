@@ -144,6 +144,7 @@ export const stage0 = Kit.pipe(
       Prop.recalcEff,
       Block.splitEffBlock,
       Rt.replaceGlobals,
+      Closure.convertCalls,
       Eval.wrap,
       Ops.combine,
       Flat.convert,
@@ -163,9 +164,11 @@ const stage1 = Kit.pipe(
       Coerce.inject,
       Block.interpretApp,
       Coerce.interpret,
+      Policy.stage("interpretOps"),
       Block.interpretCasts,
       Branch.clean,
-      State.restoreDecls
+      State.restoreDecls,
+      Policy.stage("decls")
     )
   ),
   Array.from,

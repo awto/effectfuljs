@@ -481,13 +481,6 @@ export const convert = Kit.pipe(
         init: true
       });
     }
-    if (root.opts.passNewTarget) {
-      yield s.tok(Tag.push, Tag.ThisExpression);
-      yield s.enter(Tag.push, Tag.MemberExpression);
-      yield s.tok(Tag.object, Tag.Identifier, { node: { name: "new" } });
-      yield s.tok(Tag.property, Tag.Identifier, { node: { name: "target" } });
-      yield* s.leave();
-    }
     yield* s.leave();
     yield* s.leave();
     const resFrameCont = Kit.toArray(ctrlFrames());

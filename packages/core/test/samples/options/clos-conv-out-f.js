@@ -12,8 +12,10 @@ var $module = M.module("*", module),
     });
     ctx._module = module;
     ctx._exports = exports;
-    ctx._i = void 0;
-    return M.chain(eff_top(), f_1);
+    {
+      ctx._i = void 0;
+      return M.chain(eff_top(), f_1);
+    }
   };
 }),
     meta$yh2 = M.meta($module, meta$f, function (x) {

@@ -5,8 +5,8 @@ function a1(a) {
 }
 
 function b() {
-  var b = M.context();
-  return M.scope(this, new.target, b_1);
+  var b = M.context(this, new.target);
+  return M.scope(b_1);
 }
 
 function b_1(b) {

@@ -12,7 +12,9 @@ var $module = M.module("*", module),
     });
     ctx._module = module;
     ctx._exports = exports;
-    return M.scope(f_1);
+    {
+      return M.scope(f_1);
+    }
   };
 }),
     meta$yh2 = M.meta($module, meta$f, function (x) {

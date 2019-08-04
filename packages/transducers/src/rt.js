@@ -7,7 +7,7 @@ import { produce, Tag } from "./core";
  * commonjs if option `modules` === 'commonjs'
  * expects following fields:
  *      type Value = Value & {
- *        rt: { importSyms: {syms:Sym[], ns: Sym, module:string} } }
+ *        rt: { importSyms: {syms:Sym[], ns: Sym, module:string } } }
  *      type Sym = Sym & { importFrom: String }
  */
 export function* importSyms(si) {

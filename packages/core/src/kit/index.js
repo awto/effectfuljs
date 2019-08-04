@@ -19,6 +19,7 @@ const {
   saveLast,
   transform,
   babelBridge,
+  babelPlugin,
   tee,
   optsScope,
   setOpts,
@@ -57,7 +58,8 @@ const {
   timeEnd,
   prepend,
   tillVal,
-  single
+  single,
+  fileBody
 } = kit;
 export {
   toArray,
@@ -79,6 +81,7 @@ export {
   saveLast,
   transform,
   babelBridge,
+  babelPlugin,
   tee,
   optsScope,
   setOpts,
@@ -118,7 +121,8 @@ export {
   timeEnd,
   prepend,
   tillVal,
-  single
+  single,
+  fileBody
 };
 
 import {

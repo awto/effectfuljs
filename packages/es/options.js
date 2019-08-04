@@ -154,9 +154,6 @@ const defunctInline = {
     inlinePureJumps: "tail",
     inlineContAssign: true
   },
-  async: {
-    inlineScopeOp: "call"
-  },
   asyncGenerators: {
     storeHandler: "$run"
   }

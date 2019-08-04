@@ -85,7 +85,7 @@ export function removeUndefinedArgs(si) {
           if (
             j.type === Tag.Identifier &&
             j.value.sym === Kit.scope.undefinedSym &&
-            (!i.value.node || !i.value.node.loc)
+            (!j.value.node || !j.value.node.loc)
           ) {
             buf.push(...s.copy(j));
           } else {

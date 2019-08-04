@@ -1,7 +1,8 @@
 import * as M from "@effectful/core";
 
 function a1(a, b, c, d) {
-  var a1 = M.context();
+  var a1 = M.context(),
+      p;
   a1._a = a;
   a1._b = b;
   a1._c = c;
@@ -25,7 +26,8 @@ function a1(a, b, c, d) {
 }
 
 function a2(a, b, c, d) {
-  var a2 = M.context();
+  var a2 = M.context(),
+      p;
   a2._a = a;
   a2._b = b;
   a2._c = c;
@@ -52,7 +54,8 @@ function a2(a, b, c, d) {
 }
 
 function a3(a, b, c, d) {
-  var a3 = M.context();
+  var a3 = M.context(),
+      p;
   a3._a = a;
   a3._b = b;
   a3._c = c;
@@ -64,7 +67,8 @@ function a3(a, b, c, d) {
     for (;;) {
       switch (a3.true) {
         case 5:
-          p = M.chain(cc(), 6);
+          a3.true = 6;
+          cc();
           continue;
 
         case 0:
@@ -79,7 +83,8 @@ function a3(a, b, c, d) {
 }
 
 function a4(a, b, c, d) {
-  var a4 = M.context();
+  var a4 = M.context(),
+      p;
   a4._a = a;
   a4._b = b;
   a4._c = c;
@@ -111,7 +116,8 @@ function a4(a, b, c, d) {
 }
 
 function a5(a, b, c, d) {
-  var a5 = M.context();
+  var a5 = M.context(),
+      p;
   a5._a = a;
   a5._b = b;
   a5._c = c;

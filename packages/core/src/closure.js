@@ -2,6 +2,7 @@ import * as Kit from "./kit";
 import { Tag, invariant } from "./kit";
 import * as State from "./state";
 import * as Bind from "./bind";
+import * as Block from "./block";
 
 const emptyArr = [];
 
@@ -338,6 +339,17 @@ export const contextDecls = Kit.map(function contextDecls(si) {
                   })
                 ]
               : emptyArr),
+            ...(root.opts.passNewTarget
+              ? [
+                  s.tok(Tag.push, Tag.ThisExpression),
+                  s.enter(Tag.push, Tag.MemberExpression),
+                  s.tok(Tag.object, Tag.Identifier, { node: { name: "new" } }),
+                  s.tok(Tag.property, Tag.Identifier, {
+                    node: { name: "target" }
+                  }),
+                  ...s.leave()
+                ]
+              : emptyArr),
             ...s.leave(),
             ...s.leave()
           ]
@@ -402,6 +414,7 @@ export function substContextIds(si) {
   }
   function* id(pos, sym) {
     invariant(sym.fieldName);
+    const subField = sym.subField == null ? varsSubField : sym.subField;
     yield s.enter(pos, Tag.MemberExpression, { origSym: sym });
     if (ctxDeps && sym.declScope !== root) {
       const info = ctxDeps.get(sym.declScope);
@@ -413,7 +426,7 @@ export function substContextIds(si) {
           );
         const { distance } = info;
         invariant(distance > 0);
-        if (varsSubField) yield s.enter(Tag.object, Tag.MemberExpression);
+        if (subField) yield s.enter(Tag.object, Tag.MemberExpression);
         for (let i = 0; i < distance; i++)
           yield s.enter(Tag.object, Tag.MemberExpression);
         yield s.tok(Tag.object, Tag.Identifier, {
@@ -428,7 +441,7 @@ export function substContextIds(si) {
           });
           yield* s.leave();
         }
-        if (varsSubField) {
+        if (subField) {
           yield s.tok(Tag.property, Tag.Identifier, {
             node: { name: varsSubField }
           });
@@ -454,7 +467,7 @@ export function substContextIds(si) {
         }
       }
     } else {
-      yield* emitSubField(sym.subField || varsSubField);
+      yield* emitSubField(sym.subField == null ? varsSubField : sym.subField);
     }
     yield s.tok(Tag.property, Tag.Identifier, {
       node: { name: sym.fieldName }
@@ -504,7 +517,8 @@ export function topToIIFE(si) {
       func: true,
       transform: module.transform,
       topEff: module.topEff,
-      node: { loc: prog.node.loc }
+      node: { loc: prog.node.loc },
+      babelHoistReHack: true
     });
     module.transform = false;
     module.topEff = false;
@@ -522,5 +536,109 @@ export function topToIIFE(si) {
       yield s.tok(Tag.push, Tag.Identifier, { sym: modSym });
     yield* s.leave();
     yield* s;
+  }
+}
+
+/** interprets `callProtocol` */
+export function convertCalls(si) {
+  const s = Kit.auto(si);
+  const root = s.first.value;
+  if (!s.opts.callProtocol && !s.opts.newProtocol) return s;
+  let tmpThis;
+  return _convertCalls(s);
+
+  function* _convertCalls(sw) {
+    for (const i of sw) {
+      if (i.enter) {
+        switch (i.type) {
+          case Tag.NewExpression:
+            const { newProtocol } = s.opts;
+            if (!newProtocol) break;
+            let newName = s.opts.newName || "construct";
+            const npLab = s.label();
+            if (newProtocol === "op") {
+              const sym = Kit.sysId(newName);
+              yield s.enter(i.pos, Block.op, { sym });
+              yield* Kit.reposOne(_convertCalls(s.one()), Tag.push);
+            } else if (newProtocol === "method") {
+              yield s.enter(i.pos, Tag.CallExpression, i.value);
+              yield s.enter(Tag.callee, Tag.MemberExpression);
+              yield* Kit.reposOne(_convertCalls(s.one()), Tag.object);
+              yield s.tok(Tag.property, Tag.Identifier, {
+                node: { name: newName }
+              });
+              yield* s.leave();
+              yield s.enter(Tag.arguments, Tag.Array);
+            } else throw s.error(`not supported newProtocol:"${newProtocol}"`);
+            const neArgs = s.take();
+            yield s.enter(Tag.push, Tag.ArrayExpression);
+            yield s.enter(Tag.elements, Tag.Array);
+            yield* _convertCalls(s.sub());
+            s.close(neArgs);
+            s.close(i);
+            yield* npLab();
+            continue;
+          case Tag.CallExpression:
+            const protocol = s.opts.callProtocol;
+            if (!protocol) break;
+            const name = s.opts.callName || protocol;
+            const la = s.cur();
+            const lab = s.label();
+            let sym;
+            if (la.type === Tag.MemberExpression) {
+              s.take();
+              let obj = s.cur();
+              let pos = i.pos;
+              if (
+                (obj.type === Tag.Identifier || obj.type === Block.bindPat) &&
+                (sym = obj.value.sym)
+              ) {
+                Kit.skip(s.one());
+                sym = obj.value.sym;
+              } else {
+                if (!tmpThis) tmpThis = Bind.tempVarSym(root);
+                sym = tmpThis;
+                yield s.enter(i.pos, Tag.SequenceExpression);
+                yield s.enter(Tag.expressions, Tag.Array);
+                yield s.enter(Tag.push, Tag.AssignmentExpression, {
+                  node: { operator: "=" }
+                });
+                yield s.tok(Tag.left, Tag.Identifier, { sym });
+                yield* Kit.reposOne(_convertCalls(s.one()), Tag.right);
+                yield* s.leave();
+                pos = Tag.push;
+                obj = s.tok(Tag.object, Tag.Identifier, { sym });
+              }
+              yield s.enter(pos, i.type, i.value);
+              yield s.enter(Tag.callee, Tag.MemberExpression, la);
+              yield s.enter(Tag.object, Tag.MemberExpression);
+              yield s.tok(Tag.object, obj.type, obj.value);
+              yield* _convertCalls(s.one());
+              yield* s.leave();
+              s.close(la);
+            } else {
+              sym = Kit.scope.undefinedSym;
+              yield s.enter(i.pos, i.type, i.value);
+              yield s.enter(Tag.callee, Tag.MemberExpression);
+              yield* Kit.reposOne(_convertCalls(s.one()), Tag.object);
+            }
+            yield s.tok(Tag.property, Tag.Identifier, { node: { name } });
+            yield* s.leave();
+            const args = s.take();
+            yield s.enter(Tag.arguments, Tag.Array);
+            yield s.tok(Tag.push, Tag.Identifier, { sym });
+            if (protocol === "apply") {
+              yield s.enter(Tag.push, Tag.ArrayExpression);
+              yield s.enter(Tag.elements, Tag.Array);
+            }
+            yield* _convertCalls(s.sub());
+            s.close(args);
+            s.close(i);
+            yield* lab();
+            continue;
+        }
+      }
+      yield i;
+    }
   }
 }

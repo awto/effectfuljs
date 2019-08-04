@@ -74,38 +74,31 @@ export function prepare(si) {
   if (!loc) return s;
   const stack = [];
   let tup;
+  const evalCtx = root.evalCtxSym;
   return _injectScopeInfo(s);
   function* _injectScopeInfo(sw) {
     for (const i of sw) {
-      if (
-        i.enter &&
-        tup &&
-        i.type === Tag.CallExpression &&
-        i.value.node &&
-        i.value.node.loc
-      ) {
-        const callee = s.cur();
-        if (
-          (callee.type === Tag.Identifier &&
+      if (i.enter && tup) {
+        if (i.type === Tag.CallExpression && i.value.node && i.value.node.loc) {
+          const callee = s.cur();
+          if (
+            callee.type === Tag.Identifier &&
             callee.value.sym &&
             callee.value.sym.declScope == null &&
-            callee.value.sym.orig === "eval") ||
-          i.value.injectScopeMeta
-        ) {
-          const id = tup.length;
-          const scope = getScope(i.value.node.loc);
-          const meta = {
-            value: i.value,
-            scope,
-            node: []
-          };
-          tup.push(meta);
-          yield i;
-          yield* _injectScopeInfo(s.one());
-          yield s.peel();
-          yield* _injectScopeInfo(s.sub());
-          yield s.tok(Tag.push, Tag.NumericLiteral, { node: { value: id } });
-          yield* s.leave();
+            callee.value.sym.orig === "eval"
+          ) {
+            yield i;
+            yield* _injectScopeInfo(s.one());
+            yield s.peel();
+            yield* _injectScopeInfo(s.sub());
+            yield _emitScope(i);
+            yield* s.leave();
+            continue;
+          }
+        }
+        if (evalCtx && i.type === Tag.Identifier && evalCtx === i.value.sym) {
+          yield _emitScope(i);
+          s.close(i);
           continue;
         }
       }
@@ -121,10 +114,41 @@ export function prepare(si) {
       }
       yield i;
     }
+    function _emitScope(i) {
+      const id = tup.length;
+      const scope = getScope(i.value.node.loc);
+      const meta = {
+        value: i.value,
+        scope,
+        node: []
+      };
+      tup.push(meta);
+      return s.tok(Tag.push, Tag.NumericLiteral, { node: { value: id } });
+    }
     function getScope(nodeLoc) {
       let current;
       for (const root of stack) {
-        const rootLoc = root.node.loc;
+        let rootLoc = root.node.loc;
+        /** some babel passes break location, trying to recover,
+         * but this needs something better
+         */
+        if (!rootLoc) {
+          const { body } = root.node;
+          if (body) {
+            rootLoc = body.loc;
+            if (!rootLoc) {
+              const block = body.body;
+              if (block && Array.isArray(block)) {
+                const locs = block.map(i => i.loc).filter(Boolean);
+                if (!locs.length)
+                  rootLoc = {
+                    start: locs.start,
+                    end: locs.end
+                  };
+              }
+            }
+          }
+        }
         if (!rootLoc) return null;
         const memo = root.scopeMemo || (root.scopeMemo = new Map());
         const scopeStack = [];
@@ -194,7 +218,7 @@ export function injectMeta(si) {
     if (i.scopeMeta && i.metaArgs) {
       const tup = [];
       for (const j of i.scopeMeta) {
-        j.node.unshift(j.scope.expr);
+        if (j.scope) j.node.unshift(j.scope.expr);
         tup.push(j.node);
       }
       i.metaArgs[50] = [...emitConst(Tag.push, tup)];

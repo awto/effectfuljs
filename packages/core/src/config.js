@@ -413,5 +413,27 @@ export default {
   evalWrapArg: null,
 
   // injects scope description parameter for `eval` functions
-  injectEvalCtx: false
+  injectEvalCtx: false,
+
+  // Specifies function's call interfaces
+  // false | "apply" | "call"
+  callProtocol: false,
+
+  // for `callProtocol` !== false specifies the name of the method
+  callName: false,
+
+  // Replacing new operator with a method call or an operation
+  // null | "op" | "method"
+  newProtocol: false,
+
+  // for `newProtocol` !== null specify the operation or method name
+  newName: "construct",
+
+  // custom operation implementation injection
+  // { [name:string]: { init?: string, deps?: string[] } }
+  injectOps: null,
+
+  // replace operation invocation with template's text
+  // { [name:string]: { content?: string, deps?: string[] } }
+  inlineOps: null
 };

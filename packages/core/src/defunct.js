@@ -286,6 +286,53 @@ export function inlineExceptions(si) {
   }
 }
 
+/** some `continue` can be omitted if the switch goes to goto */
+export function calcPassThrough(si) {
+  const sa = Kit.toArray(si);
+  const s = Kit.auto(sa);
+  if (s.opts.inlinePureJumps !== "tail") return s;
+  _calcPassThrough();
+  return sa;
+  function _getLast(res, sw) {
+    for (const i of sw) {
+      if (i.enter) {
+        switch (i.type) {
+          case Block.letStmt:
+          case Ctrl.jump:
+            if (i.value.goto) {
+              res.push(i.value);
+              if (!i.leave) Kit.skip(s.sub());
+            } else res.length = 0;
+            break;
+          case Tag.IfStatement:
+            res.length = 0;
+            Kit.skip(s.one());
+            const tls = [];
+            _getLast(tls, s.one());
+            const els = [];
+            _getLast(els, s.one());
+            if (tls.length && els.length) res.push(...tls, ...els);
+            else res.length = 0;
+            break;
+          default:
+            res.length = 0;
+        }
+      }
+    }
+  }
+  function _calcPassThrough() {
+    for (const i of s) {
+      if (i.enter && i.type === Block.frame) {
+        const last = [];
+        _getLast(last, s.sub());
+        s.close(i);
+        const next = s.cur().value;
+        for (const j of last) j.passThrough = j.goto === next;
+      }
+    }
+  }
+}
+
 /** convert frames into `switch` cases */
 export function* frames(si) {
   const s = Kit.auto(si);
@@ -349,8 +396,10 @@ export function* frames(si) {
   const clab = s.label();
   let hasJumps = false;
   const seenSyms = new Set();
+  let frameCnt = 0;
   for (const i of s.sub()) {
     if (i.enter && i.type === Block.frame) {
+      i.value.frameNum = frameCnt++;
       if (i.value.catchContRedir && i.value.catchContRedir !== errFrameRedir)
         hasJumps = true;
       yield s.enter(Tag.push, Tag.SwitchCase, i.value);
@@ -380,6 +429,7 @@ export function* frames(si) {
           if (j.enter) {
             if (j.type === Ctrl.jump && j.value.goto && !j.value.reflected) {
               j.value.ctrlArg = j.value.goto.declSym;
+              j.value.origGoto = j.value.goto;
               j.value.goto = impl;
               hasJumps = true;
             } else if (
@@ -515,6 +565,7 @@ export function tailJumps(si) {
   }
   if (!s.opts.defunct)
     throw s.error("`inlinePureJumps:'tail'` requires `defunct:true`");
+  const handlePrefix = !s.opts.scopePrefix && s.opts.inlineScopeOp === "call";
   const implFrame = root.implFrame.value;
   let tailCoerceExpr;
   let tailCoerceArg;
@@ -539,14 +590,24 @@ export function tailJumps(si) {
     }
   }
   const pat = root.commonPatSym;
-  return walk();
-  function* walk() {
-    for (const i of s.sub()) {
-      yield i;
-      if (i.enter && i.value === implFrame) break;
+  return _tailJumps();
+  function* _exitFrame(impl, pos, i) {
+    if (impl) {
+      if (!i.value.passThrough) yield s.tok(pos, Tag.ContinueStatement);
+    } else {
+      yield* s.toks(
+        pos,
+        "=$I($I,$I)",
+        { result: true },
+        implFrame.declSym,
+        root.contextSym,
+        pat
+      );
     }
+  }
+  function* _tailFrame(impl) {
     const lab = s.label();
-    if (implFrame.hasJumps) {
+    if (impl && implFrame.hasJumps) {
       yield s.enter(Tag.push, Tag.ForStatement);
       yield s.enter(Tag.body, Tag.BlockStatement);
       yield s.enter(Tag.body, Tag.Array);
@@ -560,14 +621,26 @@ export function tailJumps(si) {
           !i.value.reflected
         ) {
           if (inlineTailCoerce === true) {
+            if (assignCont)
+              yield* s.toks(
+                Tag.push,
+                "=$I = $I",
+                ctrlParam || contStoreSym,
+                i.value.gotoSym
+              );
             i.value.reflected = true;
-            yield s.enter(Tag.push, Tag.AssignmentExpression, {
-              node: { operator: "=" }
-            });
-            yield s.tok(Tag.left, Tag.Identifier, { sym: pat });
-            yield* Kit.reposOne(s.copy(i), Tag.right);
-            yield* s.leave();
-            yield s.tok(Tag.push, Tag.ContinueStatement);
+            if (!i.leave && s.curLev() != null) {
+              if (i.value.sym) {
+                yield s.enter(Tag.push, Tag.AssignmentExpression, {
+                  node: { operator: "=" }
+                });
+                yield s.tok(Tag.left, Tag.Identifier, { sym: pat });
+                yield* Kit.reposOne(s.sub(), Tag.right);
+                yield* s.leave();
+              } else yield* Kit.reposOne(s.sub(), Tag.push);
+            }
+            s.close(i);
+            yield* _exitFrame(impl, Tag.push, i);
             continue;
           }
           if (eraseChain) {
@@ -586,7 +659,7 @@ export function tailJumps(si) {
             yield s.tok(Tag.argument, Tag.Identifier, { sym: pat });
             yield* s.leave();
             yield* s.refocus();
-            yield s.tok(Tag.push, Tag.ContinueStatement);
+            yield* _exitFrame(impl, Tag.push, i);
             yield* s.leave();
             Kit.skip(s.copy(i));
             continue;
@@ -599,7 +672,7 @@ export function tailJumps(si) {
           yield s.enter(Tag.consequent, Tag.ReturnStatement);
           yield s.tok(Tag.argument, Tag.Identifier, { sym: pat });
           yield* s.leave();
-          yield s.tok(Tag.alternate, Tag.ContinueStatement);
+          yield* _exitFrame(impl, Tag.alternate, i);
           yield* s.leave();
           continue;
         }
@@ -630,18 +703,35 @@ export function tailJumps(si) {
             }
           }
           s.close(i);
-          yield s.tok(Tag.push, Tag.ContinueStatement);
+          yield* _exitFrame(impl, Tag.push, i);
           continue;
         }
       }
       yield i;
     }
     yield* lab();
+  }
+  function* _tailJumps() {
+    for (const i of s.sub()) {
+      yield i;
+      if (i.enter && i.type === Block.frame) {
+        const impl = i.value === implFrame;
+        if (!impl) {
+          i.value.savedDecls.set(pat, {});
+          if (!handlePrefix) {
+            yield* s.sub();
+            continue;
+          }
+        }
+        yield* _tailFrame(impl);
+      }
+    }
     yield* s;
   }
 }
 
 export const convert = Kit.pipe(
+  // calcPassThrough,
   frames,
   Kit.toArray,
   stateMappings,

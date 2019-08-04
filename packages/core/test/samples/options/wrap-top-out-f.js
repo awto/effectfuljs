@@ -51,31 +51,33 @@ module.exports = M.wrapExport(function (module, exports) {
   };
 
   {
-    Some = class Some {
-      a() {
-        var r;
-        return M.scope(_1);
+    {
+      Some = class Some {
+        a() {
+          var r;
+          return M.scope(_1);
 
-        function _1() {
-          return M.chain(new Some(), _2);
+          function _1() {
+            return M.chain(new Some(), _2);
+          }
+
+          function _2() {
+            return M.chain(new Something(), _3);
+          }
+
+          function _3() {
+            a1();
+            return M.pure();
+          }
+
+          function _4(r) {
+            return M.pure(r);
+          }
         }
 
-        function _2() {
-          return M.chain(new Something(), _3);
-        }
-
-        function _3() {
-          a1();
-          return M.pure();
-        }
-
-        function _4(r) {
-          return M.pure(r);
-        }
-      }
-
-    };
-    b = a;
-    [, other, b2] = Some;
+      };
+      b = a;
+      [, other, b2] = Some;
+    }
   }
 });

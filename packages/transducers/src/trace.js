@@ -48,8 +48,12 @@ export function cg(ast, opts = {}) {
     return res;
   }
   return "!!" + opts.compact
-    ? JSON.stringify(ast)
-    : JSON.stringify(ast, null, 2);
+    ? JSON.stringify(ast, defaultReplacer)
+    : JSON.stringify(ast, defaultReplacer, 2);
+}
+
+function defaultReplacer(n, v) {
+  return n === "leadingComments" || n === "trailingComments" ? void 0 : v;
 }
 
 /**
