@@ -2,22 +2,45 @@
  * Full state of a currently running program
  */
 
-/** function's call desciption */
-export interface Frame {
-  state: number;
-  self: object;
+/** common prototype for call desriptions of each function */
+export interface ProtoFrame {
+  /** closure captured frame */
+  $$: Frame;
+  /** meta-data */
   meta: FunctionDescr;
-  newTarget: boolean;
-  brk: Brk | null;
-  resume(): void;
 }
 
-export type BrkKind = "s" | "error" | "exit";
+/** function's call desciption */
+export interface Frame extends ProtoFrame {
+  state: number;
+  /** captured `this` */
+  self: object;
+  /** if called as `new` expression */
+  newTarget: boolean;
+  /** where we stopped */
+  brk: Brk | null;
+  /** local variables */
+  $: { [name: string]: any };
+  /** next function in the stack */
+  next: Frame | null;
+  // the debegger's debugging purpose fields
+  deb_id?: number;
+  deb_from?: string;
+}
+
+export enum BrkType {
+  exeception,
+  location,
+  function,
+  exit,
+  debugger
+}
 
 /** breakpoint description */
 export interface Brk {
   /** debugger's specific type of the breakpoint */
-  kind: BrkKind;
+  type: BrkType;
+  reason: string;
   /** unique identifier within the function */
   id: number;
   meta: FunctionDescr;
@@ -27,12 +50,16 @@ export interface Brk {
   endColumn: number;
   exit: boolean;
   scope: ScopeInfo;
+  /** textual representation of the location */
+  location: string;
 }
 
 /** module's description */
 export interface Module {
   name: string;
   functions: { [name: string]: FunctionDescr };
+  pure: boolean;
+  topLevel: FunctionDescr | null;
 }
 
 /** function's description */
@@ -53,16 +80,20 @@ export type FunctionDescr = {
   finHandler: (state: number) => number;
   constr: ($$: { [name: string]: any }) => any;
   evalMemo?: Map<string, (...args: any[]) => any>;
-} & (
-  | { blackbox: true; exitBreakpoint: null }
-  | {
-      blackbox: false;
-      exitBreakpoint: Brk;
-      line: number;
-      column: number;
-      endLine: number;
-      endColumn: number;
-    });
+  exitBreakpoint: Brk | null;
+  line?: number;
+  column?: number;
+  endLine?: number;
+  endColumn?: number;
+  location?: string;
+};
+
+export type NonBlackboxFunctionDescr = FunctionDescr & {
+  line: number;
+  column: number;
+  endLine: number;
+  endColumn: number;
+};
 
 /** pre-calculated scope information */
 export interface ScopeInfo {
@@ -88,20 +119,16 @@ export type Scope = any[] &
       });
 
 export interface State {
-  /** it will stop on break points */
+  /** stopping on break points if `true` */
   debug: boolean;
   /** everything is done */
   terminated: boolean;
   /** the engine now runs a function */
   running: boolean;
-  /** current execution stack */
-  stack: Frame[];
   /** current breakpoint id */
   brk: Brk | null;
   /** loaded modules */
   modules: { [name: string]: Module };
-  /** specifies next function needs to be executed synchronously */
-  sync: boolean;
   /** saved context for synchronous functions */
   syncStack: Job[];
   /** next functions to run */
@@ -110,30 +137,40 @@ export interface State {
   error: boolean;
   /** a current value to be passed into the top of `stack` (or an exception if `error:true`) */
   value: any;
+  /** a callback called when some module's sources are changed */
+  onUpdate?: (module: Module) => void;
+  /** current execution stack */
+  top: Frame | null;
+  /** should the engine stop on this `brk` */
+  needsBreak: (brk: Brk) => boolean;
 }
 
 /** stores information about currently executing function while some sync function runs */
 export interface Job {
-  stack: Frame[];
-  sync: boolean;
+  top: Frame | null;
+  debug: boolean;
   brk: Brk | null;
   value: any;
 }
 
 /** global storage for the whole state of the running program */
 export const context: State = {
-  debug: true,
+  debug: false,
   terminated: false,
   running: false,
-  stack: [],
   brk: null,
+  top: null,
   modules: {},
-  sync: false,
   syncStack: [],
   error: false,
   asyncQueue: [],
-  value: void 0
+  value: void 0,
+  needsBreak() {
+    return false;
+  }
 };
+
+(<any>global).deb_context = context;
 
 /** original global objects monkey-patched by this runtime */
 export const saved = {
@@ -163,7 +200,39 @@ export function evalThunk<T>(value: { [thunkSymbol]: () => T } | T): T {
 export const token = { _effectToken: true };
 
 /** function's meta-data property name */
-export const metaDataSymbol = Symbol("@effectful/debugger/metaData");
+export const dataSymbol = Symbol("@effectful/debugger/data");
 
 /** module's meta-data property name */
 export const moduleSymbol = Symbol("@effectful/debugger/module");
+
+interface IdsStore {
+  free(descriptor: number): void;
+  allocate(): number;
+}
+
+/** generates number from 0 till `1 << bits`, reuses numbers from `release` call  */
+export function idsStore(bits: number = 16): IdsStore {
+  // TODO: ensure optimization with typed arrays and SMI
+  const max = 1 << bits;
+  // stores elements of a linked list of free ids
+  const store: number[] = [];
+  let head = -1;
+  return {
+    free(id: number) {
+      store[id] = head;
+      head = id;
+    },
+    allocate(): number {
+      if (head === -1) {
+        const id = store.length;
+        if (id > max) throw new Error("id's generator overflow");
+        store.push(-1);
+        return id;
+      }
+      const id = head;
+      head = store[id];
+      store[id] = -1;
+      return id;
+    }
+  };
+}

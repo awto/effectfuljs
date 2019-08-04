@@ -1,15 +1,51 @@
 "use strict";
 
+const INLINE_FRAME = `=$1.top = { $$$: $2.$$$, meta: $2.meta, self, 
+newTarget: new.target !=  null, $: {}, brk: null, exitBrk: null, next: $1.top }`;
+const INLINE_FRAME_TT = `=$3($1.top = { $$$: $2.$$$, meta: proto.meta, self,
+newTarget: newTarget != null, $: $3({}), brk: null, exitBrk: null, next: $1.top })`;
+const INLINE_BRK = `= $3.debug
+     && ($2 = ($1.brk = $3.brk = $1.meta.states[$E])) 
+     && $2.check && ($2.check === true || $2.check()) && $5()
+`;
+
+const INLINE_PURE = (alreadyPat, blackbox, empty) => `=(
+  ${alreadyPat || empty ? "" : "($2 = $E),"}
+  ($1.newTarget && ${empty ? "" : "(!$2 || typeof $2 !== 'object') &&"}
+   ($2 = $1.self)),
+  ($1.state = 0),
+  ($3.value = $2),
+  ${blackbox ? "" : "(($3.brk = $1.brk = $1.exitBrk) && $5()),"}
+  ($3.top = $1.next),
+  ${empty ? "void 0" : "$2"});
+`;
+
+const INJECT_FRAME = tt => `
+function $1(proto, self, newTarget) {
+  ${tt ? "if (newTarget) unwrapPrototype(self);" : ""}
+  return $3.top = ${tt ? "wrap" : ""}({
+    $$$: proto.$$$,
+    state: 0,
+    meta: proto.meta,
+    self,
+    newTarget: new.target != null,
+    $: ${tt ? "wrap({})" : "{}"},
+    brk: null,
+    exitBrk: null,
+    next: $3.top
+  })
+}
+`;
+
 module.exports = require("@effectful/core").babelPlugin((opts, {
   Tag,
   Kit,
   Transform: T,
   Policy: P,
-  presets,
-  Block
+  presets
 }) => {
   const moduleAliases = {};
-  const importRT = opts.importRT || "@effectful/debugger/api";
+  const importRT = opts.importRT || (opts.backend ? `@effectful/debugger/backends/${opts.backend}` : "@effectful/debugger/api");
 
   if (opts.preInstrumentedLibs) {
     const root = opts.preInstrumentedLibs.substr ? opts.preInstrumentedLibs : "@effectful/debugger";
@@ -22,6 +58,44 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
   const objWrap = Kit.sysId("wrap");
   const brk = Kit.sysId("brk");
   const unwrapSym = Kit.sysId("unwrapImport");
+  const injectableOps = ["pure", "brk"];
+  const pureSym = Kit.sysId("pure");
+  const contextOpSym = Kit.sysId("context");
+  const tokenSym = Kit.sysId("token");
+  const stopSym = Kit.sysId("stop");
+  const evalCtx = Kit.sysId("evalCtx");
+  const injectOps = {};
+  if (opts.expInline) opts.expInject = 0;
+
+  if (opts.expInject) {
+    for (const i of injectableOps) {
+      const descr = injectOps[i] = {};
+
+      if (opts.expInject === 2) {
+        descr.init = String(require("./engine")[i]).replace(i, "$1").replace(/\bcontext\b/g, "$3");
+        descr.deps = ["context"];
+      }
+    }
+
+    injectOps.frame = opts.inject === 2 ? {
+      init: INJECT_FRAME(opts.timeTravel),
+      deps: ["context"]
+    } : {};
+    if (opts.timeTracel) injectOps.frame.deps.push("wrap");
+  }
+
+  if (opts.expInject === 2 || opts.expInline) {
+    injectOps["context"] = {};
+    injectOps["stop"] = {
+      init: "function $1() { throw $2.token }"
+    };
+  }
+
+  const before = {
+    scope: insertBreaks,
+    meta: injectScopeDescr
+  };
+  if (opts.expInline) before.interpretOps = inlineOps;else before.interpretOps = pauseCheck;
   Object.assign(moduleAliases, opts.moduleAliases);
   return {
     options: { ...presets.defunct,
@@ -32,13 +106,9 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
       par: false,
       topLevel: true,
       topIIFE: !opts.pureModule,
+      scopePrefix: false,
+      inlineScopeOp: "call",
       contextState: true,
-      inlinePureJumps: "tail",
-      inlineJsExceptions: true,
-      inlineTailCoerce: opts.expTCExceptions || {
-        singelton: "token"
-      },
-      inlineContAssign: false,
       modules: "commonjs",
       closureShortcuts: false,
       wrapFunction: opts.closure !== false ? null : "func",
@@ -46,36 +116,32 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
       injectModuleMeta: "module",
       defunctHandlerInProto: true,
       scopeConstructor: "frame",
-      // injectFuncMeta: "meta",
       esForOf: true,
       esForAwaitOf: true,
       varStorageField: "$",
       closureStorageField: "$$",
       closVarPrefix: "",
       closVarPostfix: "",
-      inlineRaiseOp: null,
+      inlineRaiseOp: "throw",
       defunctStateDiscriminant: false,
       passNewTarget: true,
       storeCont: "state",
       wrapArguments: "args",
       replaceGlobals: {
-        eval: true
+        eval: "evalAt"
       },
       injectEvalCtx: true,
-      before: {
-        scope: insertBreaks,
-        meta: injectScopeDescr
-      },
-      contextMethodOpsSpec: {
-        wrap: false,
-        brk: false,
-        unwrapImport: false,
-        iterator: false,
-        asyncIterator: false,
-        forInIterator: false,
-        token: false,
-        args: false
-      },
+      contextMethodOps: false,
+      contextMethodOpsSpec: null,
+      keepLastPure: "tail",
+      keepLastRaise: true,
+      inlinePureJumps: "tail",
+      inlineTailCoerce: true,
+      inlineContAssign: false,
+      injectFuncMeta: "meta",
+      inlinePureOp: false,
+      injectOps,
+      before,
       moduleAliases,
       ...opts
     },
@@ -83,12 +149,18 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
     main(input) {
       const s = Kit.auto(input);
       const opts = s.opts;
+      s.first.value.evalCtxSym = evalCtx;
       T.run(P.propagateOpts(configure()));
 
       function* configure() {
         for (const i of s) {
           if (i.enter) {
             switch (i.type) {
+              case Tag.ReturnStatement:
+                // hacking pre-transpiled arrow function's expression loc
+                if (!i.leave && s.curLev() && !i.value.node.loc) i.value.node.loc = s.curLev().value.node.loc;
+                break;
+
               case Tag.File:
                 if (opts.pureModule) {
                   i.value.captureInChildren = false;
@@ -116,29 +188,8 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
                 i.value.captureParent = true;
                 i.value.optsAssign = {
                   transform: true,
-                  nodebug,
-                  scopePrefix: true,
-                  keepLastPure: "tail",
-                  keepLastRaise: true,
-                  inlinePureJumps: "tail",
-                  inlineJsExceptions: true,
-                  inlineTailCoerce: opts.expTCExceptions || {
-                    singelton: "token"
-                  },
-                  inlineContAssign: false,
-                  injectFuncMeta: "meta",
-                  inlinePureOp: false
+                  nodebug
                 };
-                if (nodebug) Object.assign(i.value.optsAssign, {
-                  scopePrefix: false,
-                  inlinePureJumps: false,
-                  inlineJsExceptions: false,
-                  inlineTailCoerce: null,
-                  injectFuncMeta: "syncMeta",
-                  keepLastPure: false,
-                  keepLastRaise: false,
-                  inlinePureOp: "asis"
-                });
                 if (i.value.node.async || i.value.node.generator) throw s.error("async and generator functions aren't supported yet");
                 break;
             }
@@ -150,6 +201,62 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
     }
 
   };
+
+  function* pauseCheck(si) {
+    const s = Kit.auto(si);
+
+    for (const i of s) {
+      yield i;
+      if (i.pos === Tag.body && i.type === Tag.Array) break;
+    }
+
+    yield* s.template(Tag.push, `try {$_} catch(e) {if (e !== $I || $I.next) throw e;}`, tokenSym, s.first.value.contextSym);
+    yield* s.sub();
+    yield* s.leave();
+    yield* s;
+  }
+
+  function* inlineOps(si) {
+    const s = Kit.auto(si);
+    const root = s.first.value;
+    root.savedDecls.set(root.contextSym, {
+      init: [...s.toks(Tag.init, opts.timeTravel ? INLINE_FRAME_TT : INLINE_FRAME, contextOpSym, root.closureArgSym, objWrap)]
+    });
+    const pat = root.commonPatSym;
+
+    for (const i of s) {
+      if (i.enter) {
+        if (i.type === Tag.CallExpression) {
+          const callee = s.cur();
+
+          if (callee.type === Tag.Identifier) {
+            const sym = callee.value.sym;
+
+            if (sym === brk || sym === pureSym) {
+              for (const j of s) if (j.pos === Tag.arguments) break;
+
+              const empty = s.curLev() == null;
+              const alreadyPat = s.cur().value.sym === pat;
+              const pos = yield* (empty || alreadyPat ? s.toks : s.template).call(s, i.pos, sym === pureSym ? INLINE_PURE(alreadyPat, opts.blackbox, empty) : INLINE_BRK, root.contextSym, pat, contextOpSym, root.$ns, stopSym);
+
+              if (!alreadyPat && !empty) {
+                yield* Kit.reposOne(s.sub(), pos);
+                yield* s.leave();
+              }
+
+              for (const j of s) if (j.value === i.value) break;
+
+              continue;
+            }
+          }
+        }
+      }
+
+      yield i;
+    }
+
+    return s;
+  }
 
   function insertBreaks(si) {
     const s = Kit.auto(si);
@@ -242,8 +349,12 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
 
             case Tag.ObjectExpression:
             case Tag.ArrayExpression:
-              yield* wrap(i, false, objWrap);
-              continue;
+              if (opts.timeTravel) {
+                yield* wrap(i, false, objWrap);
+                continue;
+              }
+
+              break;
           }
         }
 
@@ -260,14 +371,18 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
         node: {
           loc: i.value.node.loc
         },
-        injectScopeMeta: true,
-        brkDescr: i.value.node.loc,
         brkName: name
       });
       yield s.tok(Tag.callee, Tag.Identifier, {
         sym: brk
       });
       yield s.enter(Tag.arguments, Tag.Array);
+      yield s.tok(Tag.push, Tag.Identifier, {
+        sym: evalCtx,
+        node: {
+          loc: i.value.node.loc
+        }
+      });
       yield* lab();
     }
 
@@ -298,8 +413,6 @@ module.exports = require("@effectful/core").babelPlugin((opts, {
     const s = Kit.auto(si);
 
     for (const i of s.first.value.scopes) {
-      if (!i.scopeMeta) console.log(i.funcId.name);
-
       if (i.scopeMeta) {
         for (const j of i.scopeMeta) {
           j.node.push(j.value.brkName || null);

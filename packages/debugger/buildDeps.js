@@ -13,8 +13,9 @@ const opts = {
       {
         blackbox: true,
         preInstrumentedLibs: "..",
-        importRT: "../engine",
-        expTCExceptions: false
+        importRT: "../api",
+        expInject: 0,
+        expInline: false
       }
     ]
   ],

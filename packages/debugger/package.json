@@ -15,20 +15,16 @@
     "build:deps": "node ./buildDeps",
     "build-loose": "npm run build:rt && npm run build:deps"
   },
-  "peerDependencies": {
-    "@babel/preset-react": "^7.0.0",
-    "@effectful/serialization": "^1.1.5"
-  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
     "@babel/plugin-transform-typescript": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
-    "@effectful/serialization": "^1.1.7",
     "@macklinu/jest-environment-jsdom-fifteen": "^0.2.0",
     "@types/jest": "^24.0.14",
     "jest": "^24.5.0",
     "jsdom": "^15.1.1",
+    "prettier": "^1.18.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -42,8 +38,17 @@
     "@babel/plugin-transform-arrow-functions": "^7.2.0",
     "@babel/plugin-transform-classes": "^7.4.0",
     "@babel/plugin-transform-modules-commonjs": "^7.4.0",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-react": "^7.0.0",
     "@babel/standalone": "^7.4.4",
     "@effectful/core": "^1.1.8",
-    "@types/node": "^12.0.8"
+    "@effectful/serialization": "^1.1.5",
+    "@types/node": "^12.0.8",
+    "babel-loader": "^8.0.6",
+    "babel-preset-react-app": "^9.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "vscode-debugprotocol": "^1.35.0",
+    "webpack": "^4.35.2",
+    "webpack-dev-server": "^3.7.2"
   }
 }

@@ -46,7 +46,7 @@ function prototypeFwds(resProto: any) {
 export const mapMeta: TraceMeta<Map<any, any>> = {
   wrap(target: Map<any, any>): Map<any, any> {
     const res = defaultWrap(this, target);
-    res[traceDataSymbol].lastContUpdate = journal.trace;
+    res[traceDataSymbol].lastContUpdate = journal.now;
     return res;
   }
 };
@@ -54,13 +54,16 @@ export const mapMeta: TraceMeta<Map<any, any>> = {
 (<Target<Map<any, any>>>Map.prototype)[traceMetaSymbol] = mapMeta;
 
 function mapSnapshot<K, V>(data: TraceData<Map<K, V>>): Map<K, V> {
-  if (journal.paused || !journal.trace || data.lastContUpdate === journal.trace)
-    return data.target;
+  if (!journal.now || data.lastContUpdate === journal.now) return data.target;
   const { lastContUpdate } = data;
-  data.lastContUpdate = journal.trace;
+  data.lastContUpdate = journal.now;
   const target = data.target;
   const changes = [...target];
   record(() => {
+    if (config.timeTravelForward) {
+      data.lastContUpdate = null;
+      mapSnapshot(data);
+    }
     target.clear();
     data.lastContUpdate = lastContUpdate;
     for (const [k, v] of changes) target.set(k, v);
@@ -101,7 +104,7 @@ prototypeFwds(mapMeta.proto);
 export const setMeta: TraceMeta<Set<any>> = {
   wrap(target: Set<any>): Set<any> {
     const res = defaultWrap(this, target, defaultTrapsWithGetter);
-    res[traceDataSymbol].lastContUpdate = journal.trace;
+    res[traceDataSymbol].lastContUpdate = journal.now;
     return res;
   }
 };
@@ -126,13 +129,17 @@ if (setSizeDescriptor && setSizeDescriptor.get) {
 }
 
 function setSnapshot<T>(data: TraceData<Set<T>>) {
-  if (data.lastContUpdate === journal.trace) return data.target;
+  if (data.lastContUpdate === journal.now) return data.target;
   captureSnapshot(data);
   const { lastContUpdate } = data;
-  data.lastContUpdate = journal.trace;
+  data.lastContUpdate = journal.now;
   const target = data.target;
   const changes = [...target];
   record(() => {
+    if (config.timeTravelForward) {
+      data.lastContUpdate = null;
+      setSnapshot(data);
+    }
     target.clear();
     data.lastContUpdate = lastContUpdate;
     changes.forEach(Set.prototype.add, target);

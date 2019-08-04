@@ -4,99 +4,84 @@
  */
 import config from "./config";
 import {
-  context,
   Frame,
   Brk,
   FunctionDescr,
   Module,
   Scope,
   ScopeInfo,
-  BrkKind,
-  saved,
-  terminationToken,
-  token,
-  metaDataSymbol
+  ProtoFrame,
+  BrkType,
+  Job
 } from "./state";
-import { unwrapPrototype, wrap } from "./trace/main";
+import * as State from "./state";
+import * as TT from "./timeTravel/main";
 import * as S from "@effectful/serialization";
 import { parse as babelParse } from "@babel/parser";
 import babelGenerate from "@babel/generator";
 import * as T from "./transform";
 
+const context = State.context;
+const saved = State.saved;
+const token = State.token;
+const dataSymbol = State.dataSymbol;
+const unwrapPrototype = TT.unwrapPrototype;
+const wrap = TT.wrap;
+
 /**
  * converts a function into another function doing the same, but all
  * callbacks executed within this function will be invoked synchronously
  */
-export const region: (
+export function liftSync(
   func: (this: any, ...args: any[]) => any
-) => (this: any, ...args: any[]) => any = func => {
+): (this: any, ...args: any[]) => any {
   const ret = function(this: any, ...args: any[]) {
-    try {
-      context.syncStack.push({
-        stack: context.stack,
-        sync: context.sync,
-        brk: context.brk,
-        value: context.value
-      });
-      context.stack = [];
-      context.sync = true;
-      return func.apply(this, args);
-    } finally {
-      const f = context.syncStack.pop();
-      if (f) {
-        context.stack = f.stack;
-        context.sync = f.sync;
-        context.brk = f.brk;
-        context.value = f.value;
-      }
-    }
+    return sync(() => func.apply(this, args));
   };
   S.regOpaqueObject(ret, `region${func.name || "?"}`);
   return ret;
-};
+}
 
-var deb_: any = global;
+/** evaluate function `func` in sync mode */
+export function sync<T>(func: () => T): T {
+  try {
+    context.syncStack.push({
+      top: context.top,
+      debug: context.debug,
+      brk: context.brk,
+      value: context.value
+    });
+    context.top = null;
+    context.debug = false;
+    return func();
+  } finally {
+    const f = context.syncStack.pop();
+    if (f) {
+      context.top = f.top;
+      context.debug = f.debug;
+      context.brk = f.brk;
+      context.value = f.value;
+    }
+  }
+}
 
 /** executes a thread starting from the `first` frame */
-export const runSync = config.expTCExceptions
-  ? function runSync(first: Frame) {
-      const { stack, debug, value, brk } = context;
-      context.stack = [first];
-      context.debug = false;
-      context.brk = null;
-      try {
-        while (!context.terminated) {
-          try {
-            return step();
-          } catch (e) {
-            if (e !== token) throw e;
-          }
-        }
-      } finally {
-        context.stack = stack;
-        context.debug = debug;
-        context.value = value;
-        context.brk = brk;
-      }
+export function runSync(first: Frame) {
+  const { top, debug, value, brk } = context;
+  context.top = first;
+  context.debug = false;
+  context.brk = null;
+  try {
+    while (!context.terminated) {
+      return step();
     }
-  : function runSync(first: Frame) {
-      let res: any;
-      const { stack, debug, value, brk } = context;
-      context.stack = [first];
-      context.debug = false;
-      context.brk = null;
-      try {
-        do {
-          res = step();
-        } while (res === token);
-        return res;
-      } finally {
-        context.stack = stack;
-        context.debug = debug;
-        context.value = value;
-        context.brk = brk;
-      }
-    };
+  } finally {
+    context.top = top;
+    context.debug = debug;
+    context.value = value;
+    context.brk = brk;
+  }
+}
 
 export function args<T>(value: Iterable<T>): Array<T> {
   return Array.from(value);
@@ -108,14 +93,14 @@ interface WebpackModule {
   };
 }
 
-export function module(name: string, module: WebpackModule) {
+export function module(name: string, module: WebpackModule, pure: boolean) {
   let info = context.modules[name];
   if (module && module.hot) module.hot.accept();
   if (info) {
-    // if (context.onUpdate) context.onUpdate(info);
+    if (context.onUpdate) context.onUpdate(info);
     return info;
   }
-  info = { name, functions: {} };
+  info = { name, functions: {}, pure, topLevel: null };
   if (!name) name = "console";
   S.regOpaqueObject(info, `module#${name}`);
   return (context.modules[name] = info);
@@ -139,13 +124,14 @@ export function meta(
   handler: (f: Frame, pat: any) => any,
   errHandler: ((state: number) => number) | undefined,
   finHandler: ((state: number) => number) | undefined,
-  states: [Scope, BrkKind, string][],
+  states: [Scope, string, string][],
   name: string,
   loc: string,
   parent: FunctionDescr | undefined
 ): ($$: { [name: string]: any }) => any {
   let meta = module.functions[handler.name];
   if (!meta) meta = module.functions[handler.name] = <FunctionDescr>{};
+  if (!module.pure && !module.topLevel) module.topLevel = meta;
   if (!name) name = "*";
   if (!errHandler) errHandler = defaultErrHandler;
   if (!finHandler) finHandler = defaultFinHandler;
@@ -153,7 +139,7 @@ export function meta(
   for (let p = parent; p; p = p.parent) names.unshift(p.name);
   const fullName = `${module.name}:${names.join(".")}@${loc}`;
   const memo: Brk[] = [];
-  for (const [scope, kind, loc] of states) {
+  for (const [scope, reason, loc] of states) {
     const [line, column, endLine, endColumn] = location(loc);
     let scopeInfo: ScopeInfo;
     if (scope.length === 3) {
@@ -162,7 +148,8 @@ export function meta(
       scopeInfo = buildScope(scope);
     }
     const brk: Brk = {
-      kind,
+      reason,
+      type: BrkType.location,
       id: memo.length,
       meta,
       line,
@@ -170,8 +157,10 @@ export function meta(
       endLine,
       endColumn,
       exit: false,
-      scope: scopeInfo
+      scope: scopeInfo,
+      location: strLoc(line, column, endLine, endColumn)
     };
+
     S.regOpaqueObject(brk, `s#${module.name}#${handler.name}#${brk.id}`);
     memo.push(brk);
   }
@@ -188,11 +177,13 @@ export function meta(
   if (meta.canSkip == null) meta.canSkip = false;
   if (meta.id == null) meta.id = metaCount++;
   meta.states = memo;
+  meta.location = loc;
   if (!meta.blackbox) {
     [meta.line, meta.column, meta.endLine, meta.endColumn] = location(loc);
     memo.push(
       (meta.exitBreakpoint = {
-        kind: "exit",
+        type: BrkType.exit,
+        reason: "exit",
         id: memo.length,
         meta,
         scope: memo.length ? memo[0].scope : {},
@@ -200,11 +191,22 @@ export function meta(
         column: meta.endColumn,
         endLine: meta.endLine,
         endColumn: meta.endColumn,
-        exit: true
+        exit: true,
+        location: strLoc(meta.line, meta.column, meta.endLine, meta.endColumn)
       })
     );
   } else meta.exitBreakpoint = null;
   return meta.constr || (meta.constr = wrapMeta(meta));
+}
+
+function strLoc(
+  line?: number,
+  column?: number,
+  endLine?: number,
+  endColumn?: number
+) {
+  return `${line || "?"}:${column || "?"}-${endLine || "?"}:${endColumn ||
+    "?"}`;
 }
 
 function buildScope(scope: Scope): ScopeInfo {
@@ -233,15 +235,15 @@ function wrapMeta(
       return constr();
     },
     readContent(ctx, json, value) {
-      value[metaDataSymbol].$$ = ctx.step((<any>json).$$);
+      value[dataSymbol].$$ = ctx.step((<any>json).$$);
     },
     write(ctx, value) {
       const json: any = {};
-      const proto = value[metaDataSymbol];
+      const proto = value[dataSymbol];
       json.$$ = ctx.step(proto.$$, json, "$$");
       return json;
     },
-    overrideProps: { [metaDataSymbol]: false },
+    overrideProps: { [dataSymbol]: false },
     typeofHint: "function",
     strictName: true
   });
@@ -252,7 +254,7 @@ function wrapMeta(
     },
     create(ctx, json) {
       const closure = ctx.step((<any>json).constr);
-      const proto = closure[metaDataSymbol];
+      const proto = closure[dataSymbol];
       return Object.create(proto);
     },
     write() {
@@ -261,61 +263,45 @@ function wrapMeta(
     strictName: true
   });
   function constr($$?: { [name: string]: any }): (...args: any[]) => any {
-    const proto = new CallFrame(info, $$);
+    const proto = { meta: info, $$ };
     const closure = info.func(proto);
-    closure[metaDataSymbol] = proto;
+    closure[dataSymbol] = proto;
     closure[S.descriptorSymbol] = funcDescr;
     proto.constructor = closure;
     return closure;
   }
-  (<any>constr)[metaDataSymbol] = info;
+  (<any>constr)[dataSymbol] = info;
   S.regOpaqueObject(constr, `c#${info.module.name}#${info.name}`);
   S.regOpaqueObject(info, `i#${info.module.name}#${info.name}`);
   S.regOpaqueObject(info.handler, `h#${info.module.name}#${info.name}`);
-  if (info.errHandler)
+  if (info.errHandler && info.errHandler !== defaultErrHandler)
     S.regOpaqueObject(info.errHandler, `eh#${info.module.name}#${info.name}`);
+  if (info.finHandler && info.finHandler !== defaultFinHandler)
+    S.regOpaqueObject(info.finHandler, `fh#${info.module.name}#${info.name}`);
   return constr;
 }
 
 let queueCb: (() => void) | null = null;
-let newThread = false;
 
 /** an async iterable signaling start of each new sync thread */
-export const threads = {
+export const threads: AsyncIterable<Job> &
+  AsyncIterator<Job> & { stop: () => void } = {
   [Symbol.asyncIterator]() {
     return this;
   },
-  return() {
+  stop() {
     context.terminated = true;
     if (queueCb) queueCb();
   },
-  async next() {
+  async next(): Promise<IteratorResult<Job>> {
     while (!context.terminated) {
-      if (newThread) {
-        newThread = false;
-        return { done: false };
-      }
-      if (context.stack.length === 0) {
-        while (context.asyncQueue.length !== 0) {
-          const init = context.asyncQueue.shift();
-          /* this is already in the stack, but we still need to signal it */
-          if (init) {
-            // context.stack.push(init);
-            context.stack = init.stack;
-            context.sync = init.sync;
-            context.brk = init.brk;
-            context.value = init.value;
-            /* this may be a simple function without breakpoints, 
-             avoiding bothering the client for them  */
-            step();
-          }
-          if (context.stack.length !== 0) return { done: false };
-        }
-      }
+      const queue = context.asyncQueue;
+      if (!context.top && queue.length)
+        return { done: false, value: <State.Job>queue.shift() };
       await new Promise(i => (queueCb = i));
       queueCb = null;
     }
-    return { done: true };
+    return { done: true, value: <Job>(<any>undefined) };
   }
 };
 
@@ -323,192 +309,56 @@ export const threads = {
  * runs a computation until it encounters some breakpoint (returns `token)
  * or finishes the whole computation (returns the resulting value or throws an exception)
  */
-export const step = config.expTCExceptions
-  ? function step() {
-      const savedRunning = context.running;
-      try {
-        context.running = true;
-        const { stack } = context;
-        while (!context.terminated) {
-          if (!stack.length) {
-            if (queueCb) queueCb();
-            if (context.error) throw context.value;
-            return context.value;
-          }
-          const top = stack[0];
-          if (top.brk && top.brk.exit) {
-            stack.shift();
-            continue;
-          }
-          context.error = false;
-          context.brk = null;
-          try {
-            top.resume();
-          } catch (e) {
-            if (e === token) {
-              if (context.brk && context.debug) break;
-              continue;
-            }
-            throw e;
-          }
-          if (context.brk && context.debug) break;
-        }
-      } finally {
-        context.running = savedRunning;
+export function step() {
+  const savedRunning = context.running;
+  try {
+    context.running = true;
+    let { top } = context;
+    while (!context.terminated) {
+      if (!top) {
+        if (queueCb) queueCb();
+        if (context.error) throw context.value;
+        return context.value;
       }
-      return token;
-    }
-  : function step() {
-      const savedRunning = context.running;
-      try {
-        context.running = true;
-        const { stack } = context;
-        while (!context.terminated) {
-          if (!stack.length) {
-            if (queueCb) queueCb();
-            if (context.error) throw context.value;
-            return context.value;
-          }
-          const top = stack[0];
-          if (top.brk && top.brk.exit) {
-            stack.shift();
-            continue;
-          }
-          context.error = false;
-          context.brk = null;
-          top.resume();
-          if (context.brk && context.debug) break;
-        }
-      } finally {
-        context.running = savedRunning;
+      if (top.brk && top.brk.exit) {
+        context.top = top = top.next;
+        continue;
       }
-      return token;
-    };
-
-const emptyClosure: { [name: string]: any } = {};
-
-class CallFrame {
-  meta: FunctionDescr;
-  $$: { [name: string]: any };
-  constructor(meta: FunctionDescr, $$?: { [name: string]: any }) {
-    this.meta = meta;
-    this.$$ = $$ || emptyClosure;
-  }
-  scope(this: Frame, self: any, newTarget: boolean, dest: number) {
-    if (newTarget) unwrapPrototype(self);
-    this.state = dest;
-    this.newTarget = newTarget !== void 0;
-    this.self = self;
-    if (context.sync) return runSync(this);
-    /* some function is called not via `step` - this may be some event handler */
-    const len = context.stack.length;
-    if (!context.running) {
-      /* if we can run it immediately */
-      if (len === 0 && context.asyncQueue.length === 0) {
-        context.stack.unshift(this);
-        const res = step();
-        if (res === token) {
-          newThread = true;
-          if (queueCb) queueCb();
-        }
-        return res;
-      }
-      const { stack, debug, value, brk } = context;
-      context.stack = [this];
+      context.error = false;
       context.brk = null;
       try {
-        const res = step();
-        if (res === token) {
-          newThread = true;
-          if (queueCb) queueCb();
-          context.asyncQueue.push({
-            stack: context.stack,
-            sync: context.sync,
-            brk: context.brk,
-            value: context.value
-          });
+        const arg = context.value;
+        context.value = void 0;
+        context.error = false;
+        top.meta.handler(top, arg);
+      } catch (e) {
+        if (e === token) {
+          if (context.brk && context.debug) break;
+          continue;
         }
-        return res;
-      } finally {
-        context.stack = stack;
-        context.debug = debug;
-        context.value = value;
-        context.brk = brk;
+        context.error = true;
+        context.value = e;
+        if (config.verbose) saved.console.error(e);
+        top = <Frame>context.top;
+        while (top && top.state === 1) {
+          context.top = top = top.next;
+          if (!top) throw e;
+          top.state = top.meta.errHandler(top.state);
+        }
+        if (!top) throw e;
       }
-
-      //  if (this.meta.canSkip) {
-      /*
-       * some monkey-patched function is called not from within debugger's context
-       * this may be webpack HMR or some test framework
-       * WARNING! this however changes semantics, as this makes some sync code
-       * to run before some other sync code is finished
-       */
-      //      return runSync(this);
-      //      }
-
-      /* something is already running, saving this for some next iteration */
-
-      //      if (queueCb) queueCb();
-
-      //      context.asyncQueue.push(this);
-      // return eff();
+      top = context.top;
     }
-    context.stack.unshift(this);
-    this.resume();
-    /* a shortcut for functions without breakpoints */
-    if (context.stack.length === len) {
-      if (context.error) throw context.value;
-      return context.value;
-    }
-    return eff();
+  } finally {
+    context.running = savedRunning;
   }
-  pure(this: Frame, value: any) {
-    if (this.newTarget && (!value || typeof value !== "object"))
-      value = this.self;
-    const brk =
-      context.debug && (context.brk = this.brk = this.meta.exitBreakpoint);
-    this.state = 0;
-    if (!brk) context.stack.shift();
-    context.value = value;
-  }
-  raise(this: Frame, error: any) {
-    const callee = context.stack[1];
-    if (config.verbose) saved.console.error(error);
-    this.state = 0;
-    context.value = error;
-    const brk =
-      context.debug && (context.brk = this.brk = this.meta.exitBreakpoint);
-    context.error = true;
-    if (!brk) context.stack.shift();
-    if (callee) callee.state = callee.meta.errHandler(callee.state);
-  }
-  resume(this: Frame) {
-    if (context.terminated) throw terminationToken;
-    try {
-      const arg = context.value;
-      context.value = void 0;
-      context.error = false;
-      this.meta.handler(this, arg);
-    } catch (e) {
-      if (e === token) throw e;
-      this.state = this.meta.errHandler(this.state);
-      if (config.verbose) saved.console.error(e);
-      context.error = true;
-      context.value = e;
-    }
-  }
-  eval(this: Frame, src: string, id: number) {
-    return compileEval(src, this, this.meta.states[id])(this);
-  }
+  return token;
 }
 
-const eff = config.expTCExceptions
-  ? function() {
-      throw token;
-    }
-  : function() {
-      return token;
-    };
+export function evalAt(src: string, id: number) {
+  const top = <Frame>context.top;
+  return compileEval(src, top.meta, top.meta.states[id])(top);
+}
 
 const locationRE = /^(\d+):(\d+)-(\d+):(\d+)$/;
 
@@ -526,11 +376,10 @@ let evalCnt = 0;
 
 export function compileEval(
   code: string,
-  func: Frame,
+  meta: FunctionDescr,
   state: Brk,
   blackbox?: boolean
-) {
-  const meta = func.meta;
+): (f: Frame) => any {
   const memo = meta.evalMemo || (meta.evalMemo = new Map());
   const key = `${code}@${state.id}/${!!blackbox}`;
   let res = memo.get(key);
@@ -555,12 +404,10 @@ export function compileEval(
     { compact: true }
   ).code;
   res = new Function("$effectful$debugger$lib$", tgt)(exports);
-  if (blackbox) res = region(res);
+  if (blackbox) res = liftSync(res);
   memo.set(key, res);
   return res;
 }
-
-S.regOpaqueObject(CallFrame.prototype, "debugger#frame");
 
 function defaultErrHandler() {
   return 1;
@@ -570,18 +417,57 @@ function defaultFinHandler() {
   return 0;
 }
 
-export function frame(proto: Frame) {
-  const res = Object.create(proto);
-  res.$ = wrap({});
-  res.brk = null;
-  return wrap(res);
+export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
+  if (newTarget) unwrapPrototype(self);
+  return (context.top = wrap<Frame>({
+    $$: proto.$$,
+    state: 0,
+    meta: proto.meta,
+    self,
+    newTarget: newTarget != null,
+    $: wrap({}),
+    brk: null,
+    next: context.top
+  }));
+}
+
+export function pure(value: any): any {
+  const top = <Frame>context.top;
+  if (top.newTarget && (!value || typeof value !== "object")) value = top.self;
+  const brk = (context.brk = top.brk = context.debug
+    ? top.meta.exitBreakpoint
+    : null);
+  if (brk && context.needsBreak(brk)) throw token;
+  context.top = top.next;
+  top.state = 0;
+  return (context.value = value);
+}
+
+function startThread(brk: Brk) {
+  //TODO: ignore
+  context.asyncQueue.push({
+    top: context.top,
+    brk,
+    debug: context.debug,
+    value: context.value
+  });
+  context.top = null;
+  if (queueCb) queueCb();
 }
 
 export function brk(id: number): any {
   if (context.debug === false) return;
-  const top = context.stack[0];
-  top.brk = context.brk = top.meta.states[id];
-  return eff();
+  // if (context.ignore) throw token;
+  const { needsBreak, top } = context;
+  let p: Brk;
+  if (
+    top &&
+    (p = top.brk = context.brk = top.meta.states[id]) &&
+    needsBreak(p)
+  ) {
+    if (!context.running) startThread(p);
+    throw token;
+  }
 }
 
 export function iterator<T>(v: Iterable<T>) {
@@ -602,8 +488,8 @@ if (config.patchRT) {
   const { defineProperty } = Object;
   Object.defineProperty = function definePropert(obj, prop, descr) {
     const copy = { ...descr };
-    if (copy.set) copy.set = region(copy.set);
-    if (copy.get) copy.get = region(copy.get);
+    if (copy.set) copy.set = liftSync(copy.set);
+    if (copy.get) copy.get = liftSync(copy.get);
     return defineProperty(obj, prop, descr);
   };
   Function.prototype.bind = function bind(

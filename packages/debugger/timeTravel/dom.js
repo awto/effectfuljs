@@ -1,88 +1,91 @@
-import * as Core from "./core";
+"use strict";
+
+exports.__esModule = true;
+exports.flush = flush;
+exports.track = track;
+
+var Core = require("./core");
 
 const journal = Core.journal;
-
 const domObserverSymbol = Symbol("@effectful/debugger/dom");
+let observing = new Set();
 
-let observing = new Set<ElementExt>();
-
-interface ObserverData {
-  root: Element;
-  observer?: MutationObserver;
-}
-
-interface ElementExt extends Element {
-  [domObserverSymbol]?: ObserverData;
-}
-
-function* nodeListIter(nl: NodeList): Iterable<Node> {
+function* nodeListIter(nl) {
   for (let i = 0, len = nl.length; i < len; ++i) yield nl[i];
 }
 
-function record(changes: MutationRecord[]) {
+function record(changes) {
   if (!changes.length) return;
-  Core.record(function() {
+  Core.record(function () {
     for (let i = changes.length - 1; i >= 0; --i) {
       const rec = changes[i];
+
       switch (rec.type) {
         case "childList":
           for (const node of nodeListIter(rec.addedNodes)) {
             const parent = node.parentNode;
             if (parent) parent.removeChild(node);
           }
-          for (const node of nodeListIter(rec.removedNodes))
-            rec.target.insertBefore(node, rec.nextSibling);
+
+          for (const node of nodeListIter(rec.removedNodes)) rec.target.insertBefore(node, rec.nextSibling);
+
           break;
+
         case "attributes":
-          (<Element>rec.target).setAttribute(
-            <string>rec.attributeName,
-            <string>rec.oldValue
-          );
+          rec.target.setAttribute(rec.attributeName, rec.oldValue);
           break;
+
         case "characterData":
-          (<CharacterData>rec.target).data = <string>rec.oldValue;
+          rec.target.data = rec.oldValue;
           break;
       }
     }
   });
 }
 
-function flushData(data: ObserverData) {
+function flushData(data) {
   if (data.observer) {
     const changes = data.observer.takeRecords();
-    if (changes.length && journal.trace && !journal.paused) record(changes);
+    if (changes.length && journal.now) record(changes);
   }
 }
 
-export function flush() {
+function flush() {
   for (const root of observing) {
     const data = root[domObserverSymbol];
     if (data) flushData(data);
   }
 }
-
 /**
  * This enables tracking DOM using MutationObserver.
  * Pass `null` to disable tracking.
  */
-export function track(rootEl: Element) {
-  const root = <ElementExt>rootEl;
+
+
+function track(rootEl) {
+  const root = rootEl;
   let data = root[domObserverSymbol];
+
   if (!root) {
     if (data && data.observer) {
       flush();
       data.observer.disconnect();
       data.observer = void 0;
     }
+
     observing.delete(root);
     return;
   }
+
   observing.add(root);
-  if (!data) data = root[domObserverSymbol] = { root };
+  if (!data) data = root[domObserverSymbol] = {
+    root
+  };
+
   if (!data.observer) {
-    const observer = (data.observer = new MutationObserver(changes => {
-      journal.trace && !journal.paused && changes.length && record(changes);
-    }));
+    const observer = data.observer = new MutationObserver(changes => {
+      journal.now && changes.length && record(changes);
+    });
     observer.observe(data.root, {
       childList: true,
       attributes: true,

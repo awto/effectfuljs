@@ -163,12 +163,10 @@ Array [
     Object {
       "f": Array [
         Array [
-          "stack",
-          Array [
-            Object {
-              "r": 16,
-            },
-          ],
+          "top",
+          Object {
+            "r": 17,
+          },
         ],
         Array [
           "syncStack",
@@ -179,7 +177,7 @@ Array [
           Array [],
         ],
         Array [
-          "sync",
+          "debug",
           false,
         ],
         Array [
@@ -205,39 +203,9 @@ Array [
       ],
       "x": Array [
         Object {
-          "$": "debugger#frame",
-        },
-        Object {
-          "$": "i#/test/__fixtures__/counters.js#*",
-        },
-        Object {},
-        Object {
-          "$": "p#/test/__fixtures__/counters.js#f_1",
-          "$$": Object {
-            "r": 2,
-          },
-          "f": Array [
-            Array [
-              "prototype",
-              Object {
-                "f": Array [
-                  Array [
-                    "constructor",
-                    Object {
-                      "r": 3,
-                    },
-                    2,
-                  ],
-                ],
-              },
-              3,
-            ],
-          ],
-        },
-        Object {
           "$": "p#/test/__fixtures__/counters.js#getCounter_1",
           "$$": Object {
-            "r": 7,
+            "r": 9,
           },
           "f": Array [
             Array [
@@ -247,7 +215,7 @@ Array [
                   Array [
                     "constructor",
                     Object {
-                      "r": 4,
+                      "r": 0,
                     },
                     2,
                   ],
@@ -260,8 +228,45 @@ Array [
         Object {
           "$": "p#/test/__fixtures__/counters.js#runCounters_1",
           "$$": Object {
-            "r": 7,
+            "r": 9,
           },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 1,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+          ],
+        },
+        Object {
+          "$": "/test/__fixtures__/counters.js#exports",
+        },
+        Object {
+          "f": Array [
+            Array [
+              "exports",
+              Object {
+                "r": 2,
+              },
+            ],
+          ],
+        },
+        Object {
+          "$": "@effectful/debugger/instr/rt#exports",
+        },
+        Object {
+          "$": "p#/test/__fixtures__/counters.js#f_1",
+          "$$": null,
           "f": Array [
             Array [
               "prototype",
@@ -281,10 +286,149 @@ Array [
           ],
         },
         Object {
-          "$": "countersMod",
+          "$": "p#/src/instr/rt.ts#exportsThunk_1",
+          "$$": Object {
+            "r": 7,
+          },
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 6,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+            Array [
+              Object {
+                "$": "@effectful/debugger/state#exports#@effectful/debugger/state#exports#thunkSymbol#Symbol(@effectful/debugger/thunk)",
+              },
+              true,
+            ],
+            Array [
+              Object {
+                "$": "@effectful/debugger/state#exports#@effectful/debugger/state#exports#moduleSymbol#Symbol(@effectful/debugger/module)",
+              },
+              Object {
+                "$": "undefined",
+              },
+            ],
+          ],
         },
         Object {
           "f": Array [
+            Array [
+              "$$",
+              null,
+            ],
+            Array [
+              "state",
+              0,
+            ],
+            Array [
+              "meta",
+              Object {
+                "$": "i#/src/instr/rt.ts#*_3",
+              },
+            ],
+            Array [
+              "self",
+              Object {
+                "r": 4,
+              },
+            ],
+            Array [
+              "newTarget",
+              false,
+            ],
+            Array [
+              "$",
+              Object {
+                "f": Array [
+                  Array [
+                    "top",
+                    Object {
+                      "r": 5,
+                    },
+                  ],
+                  Array [
+                    "descr",
+                    Object {
+                      "$": "undefined",
+                    },
+                  ],
+                  Array [
+                    "mod",
+                    Object {
+                      "r": 3,
+                    },
+                  ],
+                  Array [
+                    "res",
+                    Object {
+                      "r": 6,
+                    },
+                  ],
+                ],
+              },
+            ],
+            Array [
+              "brk",
+              null,
+            ],
+            Array [
+              "next",
+              null,
+            ],
+          ],
+        },
+        Object {
+          "f": Array [
+            Array [
+              "value",
+              Object {
+                "r": 2,
+              },
+            ],
+            Array [
+              "name",
+              "/test/__fixtures__/counters.js",
+            ],
+          ],
+        },
+        Object {
+          "f": Array [
+            Array [
+              "$$",
+              null,
+            ],
+            Array [
+              "state",
+              0,
+            ],
+            Array [
+              "meta",
+              Object {
+                "$": "i#/test/__fixtures__/counters.js#*",
+              },
+            ],
+            Array [
+              "self",
+              Object {
+                "$": "undefined",
+              },
+            ],
+            Array [
+              "newTarget",
+              false,
+            ],
             Array [
               "$",
               Object {
@@ -292,32 +436,25 @@ Array [
                   Array [
                     "getCounter",
                     Object {
-                      "r": 4,
+                      "r": 0,
                     },
                   ],
                   Array [
                     "runCounters",
                     Object {
-                      "r": 5,
+                      "r": 1,
                     },
                   ],
                   Array [
                     "module",
                     Object {
-                      "f": Array [
-                        Array [
-                          "exports",
-                          Object {
-                            "r": 6,
-                          },
-                        ],
-                      ],
+                      "r": 3,
                     },
                   ],
                   Array [
                     "exports",
                     Object {
-                      "r": 6,
+                      "r": 2,
                     },
                   ],
                   Array [
@@ -331,94 +468,100 @@ Array [
             ],
             Array [
               "brk",
+              null,
+            ],
+            Array [
+              "next",
               Object {
                 "f": Array [
                   Array [
-                    "kind",
-                    "exit",
+                    "$$",
+                    Object {
+                      "r": 7,
+                    },
                   ],
                   Array [
-                    "id",
-                    1,
+                    "state",
+                    0,
                   ],
                   Array [
                     "meta",
                     Object {
-                      "r": 1,
+                      "$": "i#/src/instr/rt.ts#*_4",
                     },
                   ],
                   Array [
-                    "scope",
+                    "self",
+                    Object {
+                      "r": 8,
+                    },
+                  ],
+                  Array [
+                    "newTarget",
+                    false,
+                  ],
+                  Array [
+                    "$",
                     Object {},
                   ],
                   Array [
-                    "line",
-                    35,
+                    "brk",
+                    null,
                   ],
                   Array [
-                    "column",
-                    0,
-                  ],
-                  Array [
-                    "endLine",
-                    35,
-                  ],
-                  Array [
-                    "endColumn",
-                    0,
-                  ],
-                  Array [
-                    "exit",
-                    true,
+                    "next",
+                    Object {
+                      "f": Array [
+                        Array [
+                          "$$",
+                          null,
+                        ],
+                        Array [
+                          "state",
+                          0,
+                        ],
+                        Array [
+                          "meta",
+                          Object {
+                            "$": "i#/src/instr/rt.ts#*_2",
+                          },
+                        ],
+                        Array [
+                          "self",
+                          Object {
+                            "r": 4,
+                          },
+                        ],
+                        Array [
+                          "newTarget",
+                          false,
+                        ],
+                        Array [
+                          "$",
+                          Object {
+                            "r": 8,
+                          },
+                        ],
+                        Array [
+                          "brk",
+                          null,
+                        ],
+                        Array [
+                          "next",
+                          null,
+                        ],
+                      ],
+                    },
                   ],
                 ],
               },
             ],
-            Array [
-              "state",
-              0,
-            ],
-            Array [
-              "newTarget",
-              false,
-            ],
-            Array [
-              "self",
-              Object {
-                "$": "undefined",
-              },
-            ],
           ],
-          "p": Object {
-            "f": Array [
-              Array [
-                "meta",
-                Object {
-                  "r": 1,
-                },
-              ],
-              Array [
-                "$$",
-                Object {
-                  "r": 2,
-                },
-              ],
-              Array [
-                "constructor",
-                Object {
-                  "r": 3,
-                },
-              ],
-            ],
-            "p": Object {
-              "r": 0,
-            },
-          },
         },
         Object {
           "$": "p#/test/__fixtures__/counters.js#invoke_1",
           "$$": Object {
-            "r": 16,
+            "r": 17,
           },
           "f": Array [
             Array [
@@ -428,7 +571,7 @@ Array [
                   Array [
                     "constructor",
                     Object {
-                      "r": 8,
+                      "r": 10,
                     },
                     2,
                   ],
@@ -437,9 +580,6 @@ Array [
               3,
             ],
           ],
-        },
-        Object {
-          "$": "i#/test/__fixtures__/counters.js#getCounter",
         },
         Object {
           "f": Array [
@@ -467,20 +607,20 @@ Array [
         },
         Array [
           Object {
-            "r": 10,
+            "r": 11,
           },
           Object {
-            "r": 11,
+            "r": 12,
           },
         ],
         Object {
           "$": "Map",
           "k": Array [
             Object {
-              "r": 10,
+              "r": 11,
             },
             Object {
-              "r": 11,
+              "r": 12,
             },
           ],
           "v": Array [
@@ -500,6 +640,32 @@ Array [
           "$$": Object {
             "f": Array [
               Array [
+                "$$",
+                Object {
+                  "r": 9,
+                },
+              ],
+              Array [
+                "state",
+                0,
+              ],
+              Array [
+                "meta",
+                Object {
+                  "$": "i#/test/__fixtures__/counters.js#getCounter",
+                },
+              ],
+              Array [
+                "self",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+              Array [
+                "newTarget",
+                false,
+              ],
+              Array [
                 "$",
                 Object {
                   "f": Array [
@@ -510,19 +676,19 @@ Array [
                     Array [
                       "trace",
                       Object {
-                        "r": 12,
+                        "r": 13,
                       },
                     ],
                     Array [
                       "dir",
                       Object {
-                        "r": 13,
+                        "r": 14,
                       },
                     ],
                     Array [
                       "set",
                       Object {
-                        "r": 14,
+                        "r": 15,
                       },
                     ],
                   ],
@@ -530,134 +696,15 @@ Array [
               ],
               Array [
                 "brk",
+                null,
+              ],
+              Array [
+                "next",
                 Object {
-                  "f": Array [
-                    Array [
-                      "kind",
-                      "exit",
-                    ],
-                    Array [
-                      "id",
-                      5,
-                    ],
-                    Array [
-                      "meta",
-                      Object {
-                        "r": 9,
-                      },
-                    ],
-                    Array [
-                      "scope",
-                      Object {
-                        "f": Array [
-                          Array [
-                            "getCounter",
-                            Array [
-                              "getCounter",
-                              1,
-                            ],
-                          ],
-                          Array [
-                            "runCounters",
-                            Array [
-                              "runCounters",
-                              1,
-                            ],
-                          ],
-                          Array [
-                            "i",
-                            Array [
-                              "i",
-                              0,
-                            ],
-                          ],
-                          Array [
-                            "trace",
-                            Array [
-                              "trace",
-                              0,
-                            ],
-                          ],
-                          Array [
-                            "dir",
-                            Array [
-                              "dir",
-                              0,
-                            ],
-                          ],
-                          Array [
-                            "set",
-                            Array [
-                              "set",
-                              0,
-                            ],
-                          ],
-                        ],
-                      },
-                    ],
-                    Array [
-                      "line",
-                      21,
-                    ],
-                    Array [
-                      "column",
-                      1,
-                    ],
-                    Array [
-                      "endLine",
-                      21,
-                    ],
-                    Array [
-                      "endColumn",
-                      1,
-                    ],
-                    Array [
-                      "exit",
-                      true,
-                    ],
-                  ],
-                },
-              ],
-              Array [
-                "state",
-                0,
-              ],
-              Array [
-                "newTarget",
-                false,
-              ],
-              Array [
-                "self",
-                Object {
-                  "$": "undefined",
+                  "r": 17,
                 },
               ],
             ],
-            "p": Object {
-              "f": Array [
-                Array [
-                  "meta",
-                  Object {
-                    "r": 9,
-                  },
-                ],
-                Array [
-                  "$$",
-                  Object {
-                    "r": 7,
-                  },
-                ],
-                Array [
-                  "constructor",
-                  Object {
-                    "r": 4,
-                  },
-                ],
-              ],
-              "p": Object {
-                "r": 0,
-              },
-            },
           },
           "f": Array [
             Array [
@@ -667,7 +714,7 @@ Array [
                   Array [
                     "constructor",
                     Object {
-                      "r": 15,
+                      "r": 16,
                     },
                     2,
                   ],
@@ -680,13 +727,39 @@ Array [
         Object {
           "f": Array [
             Array [
+              "$$",
+              Object {
+                "r": 9,
+              },
+            ],
+            Array [
+              "state",
+              12,
+            ],
+            Array [
+              "meta",
+              Object {
+                "$": "i#/test/__fixtures__/counters.js#runCounters",
+              },
+            ],
+            Array [
+              "self",
+              Object {
+                "r": 2,
+              },
+            ],
+            Array [
+              "newTarget",
+              false,
+            ],
+            Array [
               "$",
               Object {
                 "f": Array [
                   Array [
                     "invoke",
                     Object {
-                      "r": 8,
+                      "r": 10,
                     },
                   ],
                   Array [
@@ -696,25 +769,25 @@ Array [
                   Array [
                     "c",
                     Object {
-                      "r": 15,
+                      "r": 16,
                     },
                   ],
                   Array [
                     "trace",
                     Object {
-                      "r": 12,
+                      "r": 13,
                     },
                   ],
                   Array [
                     "dir",
                     Object {
-                      "r": 13,
+                      "r": 14,
                     },
                   ],
                   Array [
                     "set",
                     Object {
-                      "r": 14,
+                      "r": 15,
                     },
                   ],
                 ],
@@ -722,50 +795,13 @@ Array [
             ],
             Array [
               "brk",
-              Object {
-                "$": "s#/test/__fixtures__/counters.js#runCounters_1#3",
-              },
+              null,
             ],
             Array [
-              "state",
-              12,
-            ],
-            Array [
-              "newTarget",
-              false,
-            ],
-            Array [
-              "self",
-              Object {
-                "r": 6,
-              },
+              "next",
+              null,
             ],
           ],
-          "p": Object {
-            "f": Array [
-              Array [
-                "meta",
-                Object {
-                  "$": "i#/test/__fixtures__/counters.js#runCounters",
-                },
-              ],
-              Array [
-                "$$",
-                Object {
-                  "r": 7,
-                },
-              ],
-              Array [
-                "constructor",
-                Object {
-                  "r": 5,
-                },
-              ],
-            ],
-            "p": Object {
-              "r": 0,
-            },
-          },
         },
       ],
     },
@@ -874,615 +910,7 @@ Array [
   ],
   Array [
     4,
-    Object {
-      "f": Array [
-        Array [
-          "stack",
-          Array [
-            Object {
-              "r": 16,
-            },
-          ],
-        ],
-        Array [
-          "syncStack",
-          Array [],
-        ],
-        Array [
-          "asyncQueue",
-          Array [],
-        ],
-        Array [
-          "sync",
-          false,
-        ],
-        Array [
-          "brk",
-          null,
-        ],
-        Array [
-          "extra",
-          Object {
-            "$": "Set",
-            "l": Array [
-              Object {
-                "f": Array [
-                  Array [
-                    "value",
-                    "H",
-                  ],
-                ],
-              },
-            ],
-          },
-        ],
-      ],
-      "x": Array [
-        Object {
-          "$": "debugger#frame",
-        },
-        Object {
-          "$": "i#/test/__fixtures__/counters.js#*",
-        },
-        Object {},
-        Object {
-          "$": "p#/test/__fixtures__/counters.js#f_1",
-          "$$": Object {
-            "r": 2,
-          },
-          "f": Array [
-            Array [
-              "prototype",
-              Object {
-                "f": Array [
-                  Array [
-                    "constructor",
-                    Object {
-                      "r": 3,
-                    },
-                    2,
-                  ],
-                ],
-              },
-              3,
-            ],
-          ],
-        },
-        Object {
-          "$": "p#/test/__fixtures__/counters.js#getCounter_1",
-          "$$": Object {
-            "r": 7,
-          },
-          "f": Array [
-            Array [
-              "prototype",
-              Object {
-                "f": Array [
-                  Array [
-                    "constructor",
-                    Object {
-                      "r": 4,
-                    },
-                    2,
-                  ],
-                ],
-              },
-              3,
-            ],
-          ],
-        },
-        Object {
-          "$": "p#/test/__fixtures__/counters.js#runCounters_1",
-          "$$": Object {
-            "r": 7,
-          },
-          "f": Array [
-            Array [
-              "prototype",
-              Object {
-                "f": Array [
-                  Array [
-                    "constructor",
-                    Object {
-                      "r": 5,
-                    },
-                    2,
-                  ],
-                ],
-              },
-              3,
-            ],
-          ],
-        },
-        Object {
-          "$": "countersMod",
-        },
-        Object {
-          "f": Array [
-            Array [
-              "$",
-              Object {
-                "f": Array [
-                  Array [
-                    "getCounter",
-                    Object {
-                      "r": 4,
-                    },
-                  ],
-                  Array [
-                    "runCounters",
-                    Object {
-                      "r": 5,
-                    },
-                  ],
-                  Array [
-                    "module",
-                    Object {
-                      "f": Array [
-                        Array [
-                          "exports",
-                          Object {
-                            "r": 6,
-                          },
-                        ],
-                      ],
-                    },
-                  ],
-                  Array [
-                    "exports",
-                    Object {
-                      "r": 6,
-                    },
-                  ],
-                  Array [
-                    "D",
-                    Object {
-                      "$": "../../main#exports",
-                    },
-                  ],
-                ],
-              },
-            ],
-            Array [
-              "brk",
-              Object {
-                "f": Array [
-                  Array [
-                    "kind",
-                    "exit",
-                  ],
-                  Array [
-                    "id",
-                    1,
-                  ],
-                  Array [
-                    "meta",
-                    Object {
-                      "r": 1,
-                    },
-                  ],
-                  Array [
-                    "scope",
-                    Object {},
-                  ],
-                  Array [
-                    "line",
-                    35,
-                  ],
-                  Array [
-                    "column",
-                    0,
-                  ],
-                  Array [
-                    "endLine",
-                    35,
-                  ],
-                  Array [
-                    "endColumn",
-                    0,
-                  ],
-                  Array [
-                    "exit",
-                    true,
-                  ],
-                ],
-              },
-            ],
-            Array [
-              "state",
-              0,
-            ],
-            Array [
-              "newTarget",
-              false,
-            ],
-            Array [
-              "self",
-              Object {
-                "$": "undefined",
-              },
-            ],
-          ],
-          "p": Object {
-            "f": Array [
-              Array [
-                "meta",
-                Object {
-                  "r": 1,
-                },
-              ],
-              Array [
-                "$$",
-                Object {
-                  "r": 2,
-                },
-              ],
-              Array [
-                "constructor",
-                Object {
-                  "r": 3,
-                },
-              ],
-            ],
-            "p": Object {
-              "r": 0,
-            },
-          },
-        },
-        Object {
-          "$": "p#/test/__fixtures__/counters.js#invoke_1",
-          "$$": Object {
-            "r": 16,
-          },
-          "f": Array [
-            Array [
-              "prototype",
-              Object {
-                "f": Array [
-                  Array [
-                    "constructor",
-                    Object {
-                      "r": 8,
-                    },
-                    2,
-                  ],
-                ],
-              },
-              3,
-            ],
-          ],
-        },
-        Object {
-          "$": "i#/test/__fixtures__/counters.js#getCounter",
-        },
-        Object {
-          "f": Array [
-            Array [
-              "i",
-              0,
-            ],
-            Array [
-              "u",
-              1,
-            ],
-          ],
-        },
-        Object {
-          "f": Array [
-            Array [
-              "i",
-              1,
-            ],
-            Array [
-              "u",
-              11,
-            ],
-          ],
-        },
-        Array [
-          Object {
-            "r": 10,
-          },
-          Object {
-            "r": 11,
-          },
-        ],
-        Object {
-          "$": "Map",
-          "k": Array [
-            Object {
-              "r": 10,
-            },
-            Object {
-              "r": 11,
-            },
-          ],
-          "v": Array [
-            0,
-            1,
-          ],
-        },
-        Object {
-          "$": "Set",
-          "l": Array [
-            0,
-            1,
-          ],
-        },
-        Object {
-          "$": "p#/test/__fixtures__/counters.js#counter_1",
-          "$$": Object {
-            "f": Array [
-              Array [
-                "$",
-                Object {
-                  "f": Array [
-                    Array [
-                      "i",
-                      2,
-                    ],
-                    Array [
-                      "trace",
-                      Object {
-                        "r": 12,
-                      },
-                    ],
-                    Array [
-                      "dir",
-                      Object {
-                        "r": 13,
-                      },
-                    ],
-                    Array [
-                      "set",
-                      Object {
-                        "r": 14,
-                      },
-                    ],
-                  ],
-                },
-              ],
-              Array [
-                "brk",
-                Object {
-                  "f": Array [
-                    Array [
-                      "kind",
-                      "exit",
-                    ],
-                    Array [
-                      "id",
-                      5,
-                    ],
-                    Array [
-                      "meta",
-                      Object {
-                        "r": 9,
-                      },
-                    ],
-                    Array [
-                      "scope",
-                      Object {
-                        "f": Array [
-                          Array [
-                            "getCounter",
-                            Array [
-                              "getCounter",
-                              1,
-                            ],
-                          ],
-                          Array [
-                            "runCounters",
-                            Array [
-                              "runCounters",
-                              1,
-                            ],
-                          ],
-                          Array [
-                            "i",
-                            Array [
-                              "i",
-                              0,
-                            ],
-                          ],
-                          Array [
-                            "trace",
-                            Array [
-                              "trace",
-                              0,
-                            ],
-                          ],
-                          Array [
-                            "dir",
-                            Array [
-                              "dir",
-                              0,
-                            ],
-                          ],
-                          Array [
-                            "set",
-                            Array [
-                              "set",
-                              0,
-                            ],
-                          ],
-                        ],
-                      },
-                    ],
-                    Array [
-                      "line",
-                      21,
-                    ],
-                    Array [
-                      "column",
-                      1,
-                    ],
-                    Array [
-                      "endLine",
-                      21,
-                    ],
-                    Array [
-                      "endColumn",
-                      1,
-                    ],
-                    Array [
-                      "exit",
-                      true,
-                    ],
-                  ],
-                },
-              ],
-              Array [
-                "state",
-                0,
-              ],
-              Array [
-                "newTarget",
-                false,
-              ],
-              Array [
-                "self",
-                Object {
-                  "$": "undefined",
-                },
-              ],
-            ],
-            "p": Object {
-              "f": Array [
-                Array [
-                  "meta",
-                  Object {
-                    "r": 9,
-                  },
-                ],
-                Array [
-                  "$$",
-                  Object {
-                    "r": 7,
-                  },
-                ],
-                Array [
-                  "constructor",
-                  Object {
-                    "r": 4,
-                  },
-                ],
-              ],
-              "p": Object {
-                "r": 0,
-              },
-            },
-          },
-          "f": Array [
-            Array [
-              "prototype",
-              Object {
-                "f": Array [
-                  Array [
-                    "constructor",
-                    Object {
-                      "r": 15,
-                    },
-                    2,
-                  ],
-                ],
-              },
-              3,
-            ],
-          ],
-        },
-        Object {
-          "f": Array [
-            Array [
-              "$",
-              Object {
-                "f": Array [
-                  Array [
-                    "invoke",
-                    Object {
-                      "r": 8,
-                    },
-                  ],
-                  Array [
-                    "persist",
-                    true,
-                  ],
-                  Array [
-                    "c",
-                    Object {
-                      "r": 15,
-                    },
-                  ],
-                  Array [
-                    "trace",
-                    Object {
-                      "r": 12,
-                    },
-                  ],
-                  Array [
-                    "dir",
-                    Object {
-                      "r": 13,
-                    },
-                  ],
-                  Array [
-                    "set",
-                    Object {
-                      "r": 14,
-                    },
-                  ],
-                ],
-              },
-            ],
-            Array [
-              "brk",
-              Object {
-                "$": "s#/test/__fixtures__/counters.js#runCounters_1#3",
-              },
-            ],
-            Array [
-              "state",
-              12,
-            ],
-            Array [
-              "newTarget",
-              false,
-            ],
-            Array [
-              "self",
-              Object {
-                "r": 6,
-              },
-            ],
-          ],
-          "p": Object {
-            "f": Array [
-              Array [
-                "meta",
-                Object {
-                  "$": "i#/test/__fixtures__/counters.js#runCounters",
-                },
-              ],
-              Array [
-                "$$",
-                Object {
-                  "r": 7,
-                },
-              ],
-              Array [
-                "constructor",
-                Object {
-                  "r": 5,
-                },
-              ],
-            ],
-            "p": Object {
-              "r": 0,
-            },
-          },
-        },
-      ],
-    },
+    Array [],
   ],
 ]
 `;

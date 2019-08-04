@@ -8,10 +8,10 @@ let extra = new Set();
  */
 export function capture(): S.JSONObject {
   return S.write({
-    stack: context.stack,
+    top: context.top,
     syncStack: context.syncStack,
     asyncQueue: context.asyncQueue,
-    sync: context.sync,
+    debug: context.debug,
     brk: context.brk,
     extra
   });
@@ -23,10 +23,10 @@ export function capture(): S.JSONObject {
  */
 export function restore(json: S.JSONObject) {
   ({
-    stack: context.stack,
+    top: context.top,
     syncStack: context.syncStack,
     asyncQueue: context.asyncQueue,
-    sync: context.sync,
+    debug: context.debug,
     brk: context.brk,
     extra
   } = S.read(json));

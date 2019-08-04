@@ -7,7 +7,6 @@
  * TODO: transpile core-js instead
  */
 
-import config from "../config";
 import * as Engine from "../engine";
 import * as Persist from "../persist";
 import * as State from "../state";
@@ -115,8 +114,8 @@ export function reduceRight<T>(
   return acc;
 }
 
-export const arraySort = Engine.region(Ap.sort);
-export const typedArraySort = Engine.region(Tp.sort);
+export const arraySort = Engine.liftSync(Ap.sort);
+export const typedArraySort = Engine.liftSync(Tp.sort);
 
 export function some<T, This>(
   this: T[],

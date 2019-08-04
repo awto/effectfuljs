@@ -2,11 +2,8 @@ import config from "../config";
 import { saved } from "../state";
 
 export interface Record {
-  undone: boolean;
-  version: number;
   operations?: Operation;
   prev: Record | null;
-  next: Record | null;
 }
 
 /** operations trace - callbacks to be executed on reverting state */
@@ -48,7 +45,6 @@ export class TraceData<T> {
   meta: TraceMeta<T>;
   proxy: T | null;
   target: T;
-  version: number;
   lastUpdate: Record | null;
   prototypeChanged: boolean;
   proto?: any;
@@ -57,79 +53,60 @@ export class TraceData<T> {
     this.meta = meta;
     this.proxy = proxy;
     this.target = target;
-    this.lastUpdate = journal.trace;
-    this.version = journal.trace ? journal.trace.version : 0;
+    this.lastUpdate = journal.now;
     this.prototypeChanged = false;
   }
 }
 
-interface Journal {
-  trace: Record | null;
-  paused: boolean;
+export interface Journal {
+  /** current checkpoint */
+  now: Record | null;
+  /** a list of changes to undo */
+  past: Record | null;
+  /** a list of changes to redo */
+  future: Record | null;
 }
 
 export const journal: Journal = {
-  /** a list of changes */
-  trace: null,
-  /** this is true when `undoing` changes to avoid re-recording them */
-  paused: !config.timeTravel
+  now: null,
+  past: null,
+  future: null
 };
+
+export function reset() {
+  journal.past = journal.now = journal.future = null;
+}
 
 /**
  * Returns an object which can be passed
  * to `undo` to restored the current state
  */
 export function checkpoint(): Record {
-  const next = {
-    undone: false,
-    version: journal.trace ? journal.trace.version + 1 : 0,
-    prev: journal.trace,
-    next: null
-  };
-  if (journal.trace) journal.trace.next = next;
-  journal.trace = next;
-  return next;
+  journal.future = null;
+  const { now } = journal;
+  if (now) now.prev = journal.past;
+  journal.past = now;
+  return (journal.now = {
+    prev: null
+  });
 }
 
 /**
- * Registers a function(`f`) to be executed on `undo` call
- * The functions are executed in backward order
+ * Registers a function(`f`) to be executed on replay in backward order
  */
-export function record(f: Operation) {
-  if (!f) return;
-  if (journal.trace && !journal.paused) {
-    f.prev = journal.trace.operations || undefined;
-    journal.trace.operations = f;
-  }
-}
-
-export function undoImpl(from?: Record): Record | null {
-  const { trace } = journal;
-  if (!trace) return null;
-  if (!from) from = trace;
-  /*
-  for (let i: Record | null = from; i != null; i = i.next) {
-    const destVersion = i.version;
-    if (i.undone) throw new TypeError("The checkpoint was already undone");
-    i.undone = true;
-    for (let j = i.snapshots; j; j = j.prev) {
-      if (j.data.version >= destVersion) {
-        j.call();
-        j.data.version = destVersion;
-      }
+export const record: (f: Operation) => void = config.timeTravel
+  ? function record(f: Operation) {
+      if (!f) return;
+      const { now } = journal;
+      if (!now) return;
+      f.prev = now.operations || undefined;
+      now.operations = f;
     }
-    trace.snapshots = void 0;
-  }
-    */
-  for (
-    let i: Record | null = trace, till = from.prev;
-    i != null && i != till;
-    i = i.prev
-  )
-    for (let j = i.operations; j != null; j = j.prev) j();
-  journal.trace = from.prev;
-  if (from.prev) from.prev.next = null;
-  return from;
+  : function() {};
+
+/** runs all actions stored in the cocord */
+export function replay(rec: Record) {
+  for (let i = rec.operations; i != null; i = i.prev) i();
 }
 
 /** Returns own property names and symbols */
@@ -139,16 +116,24 @@ export function* allProps(obj: any): Iterable<string | symbol> {
 }
 
 export function captureSnapshot<T>(data: TraceData<T>) {
-  if (journal.paused || !journal.trace || data.lastUpdate === journal.trace)
-    return;
+  if (!journal.now || data.lastUpdate === journal.now) return;
   const target = data.target;
   const lastUpdate = data.lastUpdate;
-  data.lastUpdate = journal.trace;
+  data.lastUpdate = journal.now;
   data.prototypeChanged = false;
   const snapshot = Object.getOwnPropertyDescriptors(target);
   record(() => {
+    const { prototypeChanged, proto } = data;
+    if (config.timeTravelForward) {
+      data.lastUpdate = null;
+      captureSnapshot(data);
+      if (prototypeChanged) {
+        data.proto = Object.getPrototypeOf(target);
+        data.prototypeChanged = true;
+      }
+    }
     data.lastUpdate = lastUpdate;
-    if (data.prototypeChanged) Object.setPrototypeOf(target, data.proto);
+    if (prototypeChanged) Object.setPrototypeOf(target, proto);
     for (const i of allProps(target))
       if (!(i in snapshot)) delete (<any>target)[i];
     for (const i of allProps(snapshot)) {

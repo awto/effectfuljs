@@ -3,6 +3,9 @@
 /trace
 /*.js
 /*.d.ts
+/vscode
+/libs
+/backends
 !buildDeps.js
 !preset-react.js
 !preset.js
