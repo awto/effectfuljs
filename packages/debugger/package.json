@@ -1,6 +1,6 @@
 {
   "name": "@effectful/debugger",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "description": "User space debugging",
   "main": "main.js",
   "repository": "https://github.com/awto/effectfuljs.git",
@@ -41,8 +41,8 @@
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/standalone": "^7.4.4",
-    "@effectful/core": "^1.1.8",
-    "@effectful/serialization": "^1.1.5",
+    "@effectful/core": "^1.2.0",
+    "@effectful/serialization": "^1.2.0",
     "@types/node": "^12.0.8",
     "babel-loader": "^8.0.6",
     "babel-preset-react-app": "^9.0.0",
