@@ -17,6 +17,9 @@ exports.Core = Core;
 var DOM = require("./dom");
 
 exports.DOM = DOM;
+
+var _serialization = require("@effectful/serialization");
+
 const journal = Core.journal;
 exports.journal = journal;
 const reset = Core.reset;
@@ -38,7 +41,7 @@ const undoImpl = _config.default.timeTravelForward ? function undo() {
   const ops = past.operations;
   past.operations = void 0;
 
-  for (let i = ops; i != null; i = i.prev) i();
+  for (let i = ops; i != null; i = i.prev) i.call();
 
   return past;
 } : function undo() {
@@ -49,7 +52,7 @@ const undoImpl = _config.default.timeTravelForward ? function undo() {
   if (!now || !past) return null;
   journal.now = null;
 
-  for (let i = past.operations; i != null; i = i.prev) i();
+  for (let i = past.operations; i != null; i = i.prev) i.call();
 
   journal.now = past;
   journal.past = past.prev;
@@ -82,7 +85,7 @@ const redo = _config.default.timeTravel ? function redo() {
   const ops = now.operations;
   now.operations = void 0;
 
-  for (let i = ops; i != null; i = i.prev) i();
+  for (let i = ops; i != null; i = i.prev) i.call();
 
   flush();
   const {
@@ -129,20 +132,47 @@ const unwrapPrototype = _config.default.timeTravel ? function (target) {
   if (proto.hasOwnProperty(Core.traceDataSymbol)) Object.setPrototypeOf(target, proto[Core.traceDataSymbol].target);
 } : function (_) {};
 exports.unwrapPrototype = unwrapPrototype;
+const deleteTag = {};
+const PropSnapshot = _config.default.timeTravelForward ? function (target, index, oldValue, newValue) {
+  this.target = target;
+  this.index = index;
+  this.newValue = newValue;
+  this.oldValue = oldValue;
+  this.back = true;
+} : function (target, index, oldValue, newValue) {
+  this.target = target;
+  this.index = index;
+  this.newValue = newValue;
+  this.oldValue = oldValue;
+  this.back = true;
+};
+PropSnapshot.prototype.call = _config.default.timeTravelForward ? function () {
+  if (this.back) {
+    if (this.oldValue === deleteTag) delete this.target[this.index];else this.target[this.index] = this.oldValue;
+  } else this.target[this.index] = this.newValue;
 
-/** defines setter a getter in `value` to support time travel */
+  this.back = !this.back;
+  Core.record(this);
+} : function () {
+  if (this.oldValue === deleteTag) delete this.target[this.index];else this.target[this.index] = this.oldValue;
+};
+(0, _serialization.regConstructor)(PropSnapshot);
+/**
+ * defines setter a getter in `value` to support time travel
+ * TODO: delete handler
+ */
+
 function propHack(value, propName) {
   const sym = Symbol(`${propName}`);
   Object.defineProperty(value, propName, {
     set(value) {
-      Core.record(() => delete this[propName]);
       this[sym] = value;
+      Core.record(new PropSnapshot(this, propName, deleteTag, value));
       Object.defineProperty(this, propName, {
         configurable: true,
 
         set(value) {
-          const oldValue = this[sym];
-          Core.record(() => this[sym] = oldValue);
+          Core.record(new PropSnapshot(this, propName, this[sym], value));
           this[sym] = value;
         },
 

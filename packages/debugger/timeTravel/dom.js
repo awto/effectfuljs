@@ -3,8 +3,11 @@
 exports.__esModule = true;
 exports.flush = flush;
 exports.track = track;
+exports.DomSnapshot = void 0;
 
 var Core = require("./core");
+
+var _serialization = require("@effectful/serialization");
 
 const journal = Core.journal;
 const domObserverSymbol = Symbol("@effectful/debugger/dom");
@@ -14,9 +17,16 @@ function* nodeListIter(nl) {
   for (let i = 0, len = nl.length; i < len; ++i) yield nl[i];
 }
 
-function record(changes) {
-  if (!changes.length) return;
-  Core.record(function () {
+class DomSnapshot {
+  constructor(changes) {
+    this.changes = changes;
+  }
+
+  call() {
+    const {
+      changes
+    } = this;
+
     for (let i = changes.length - 1; i >= 0; --i) {
       const rec = changes[i];
 
@@ -40,7 +50,16 @@ function record(changes) {
           break;
       }
     }
-  });
+  }
+
+}
+
+exports.DomSnapshot = DomSnapshot;
+(0, _serialization.regConstructor)(DomSnapshot);
+
+function record(changes) {
+  if (!changes.length) return;
+  Core.record(new DomSnapshot(changes));
 }
 
 function flushData(data) {

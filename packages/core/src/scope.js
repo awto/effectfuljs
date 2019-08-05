@@ -1,6 +1,9 @@
 import { Tag, invariant } from "./kit";
 import * as Kit from "./kit";
 
+const isWindows =
+  typeof process !== "undefined" && process.platform === "win32";
+
 /**
  * unfortunately ObjectMethod type in babylon AST doesn't fit the split
  * pattern, as next passes want the key to remain in parent scope
@@ -282,7 +285,9 @@ function injectModuleDescr(si) {
           const root =
             s.opts.srcRoot === true ? file.root || file.cwd : s.opts.srcRoot;
           if (module.startsWith(root)) module = module.substr(root.length);
+          // we don't want the end user knows if we built this on windows
         }
+        if (isWindows) module = module.replace(/\\/g, "/");
       } else module = "*";
     }
     if (s.opts.moduleNamePrefix)

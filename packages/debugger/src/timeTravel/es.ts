@@ -11,8 +11,10 @@ import {
   record,
   journal,
   defaultTrapsWithGetter,
-  notTraceable
+  notTraceable,
+  Record
 } from "./core";
+import { regConstructor } from "@effectful/serialization";
 
 declare global {
   interface Map<K, V> extends Target<Map<K, V>> {}
@@ -53,22 +55,34 @@ export const mapMeta: TraceMeta<Map<any, any>> = {
 
 (<Target<Map<any, any>>>Map.prototype)[traceMetaSymbol] = mapMeta;
 
-function mapSnapshot<K, V>(data: TraceData<Map<K, V>>): Map<K, V> {
-  if (!journal.now || data.lastContUpdate === journal.now) return data.target;
-  const { lastContUpdate } = data;
-  data.lastContUpdate = journal.now;
-  const target = data.target;
-  const changes = [...target];
-  record(() => {
+export class MapSnapshot<K, V> {
+  changes: [K, V][];
+  data: TraceData<Map<K, V>>;
+  at: Record | null;
+  constructor(data: TraceData<Map<K, V>>) {
+    this.at = data.lastContUpdate;
+    data.lastContUpdate = journal.now;
+    this.data = data;
+    this.changes = [...data.target];
+  }
+  call() {
+    const { data, changes, at } = this;
     if (config.timeTravelForward) {
       data.lastContUpdate = null;
       mapSnapshot(data);
     }
+    const { target } = data;
     target.clear();
-    data.lastContUpdate = lastContUpdate;
+    data.lastContUpdate = at;
     for (const [k, v] of changes) target.set(k, v);
-  });
-  return target;
+  }
+}
+regConstructor(MapSnapshot);
+
+function mapSnapshot<K, V>(data: TraceData<Map<K, V>>): Map<K, V> {
+  if (!journal.now || data.lastContUpdate === journal.now) return data.target;
+  record(new MapSnapshot<K, V>(data));
+  return data.target;
 }
 
 const mapProto: any = (mapMeta.proto = Object.create(Map.prototype));
@@ -128,23 +142,35 @@ if (setSizeDescriptor && setSizeDescriptor.get) {
   });
 }
 
-function setSnapshot<T>(data: TraceData<Set<T>>) {
-  if (data.lastContUpdate === journal.now) return data.target;
-  captureSnapshot(data);
-  const { lastContUpdate } = data;
-  data.lastContUpdate = journal.now;
-  const target = data.target;
-  const changes = [...target];
-  record(() => {
+export class SetSnapshot<T> {
+  data: TraceData<Set<T>>;
+  at: Record | null;
+  changes: T[];
+  constructor(data: TraceData<Set<T>>) {
+    this.data = data;
+    this.changes = [...data.target];
+    this.at = data.lastContUpdate;
+    data.lastContUpdate = journal.now;
+  }
+  call() {
+    const { data, at, changes } = this;
     if (config.timeTravelForward) {
       data.lastContUpdate = null;
       setSnapshot(data);
     }
+    const { target } = data;
     target.clear();
-    data.lastContUpdate = lastContUpdate;
+    data.lastContUpdate = at;
     changes.forEach(Set.prototype.add, target);
-  });
-  return target;
+  }
+}
+regConstructor(SetSnapshot);
+
+function setSnapshot<T>(data: TraceData<Set<T>>) {
+  if (data.lastContUpdate === journal.now) return data.target;
+  captureSnapshot(data);
+  record(new SetSnapshot<T>(data));
+  return data.target;
 }
 
 setProto.add = function<T>(this: Set<T>, v: T) {

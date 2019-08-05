@@ -28,5 +28,8 @@ export declare const record: (f: Core.Operation) => void;
 export declare const unwrapPrototype: (target: Core.Target<unknown>) => void;
 export { Operation, Record, traceDataSymbol, traceMetaSymbol } from "./core";
 export { Core, DOM };
-/** defines setter a getter in `value` to support time travel */
+/**
+ * defines setter a getter in `value` to support time travel
+ * TODO: delete handler
+ */
 export declare function propHack(value: any, propName: string): void;

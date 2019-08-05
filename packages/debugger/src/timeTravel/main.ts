@@ -1,6 +1,7 @@
 import config from "../config";
 import * as Core from "./core";
 import * as DOM from "./dom";
+import { regConstructor } from "@effectful/serialization";
 
 export const journal = Core.journal;
 
@@ -24,14 +25,14 @@ const undoImpl: () => Core.Record | null = config.timeTravelForward
       journal.past = past.prev;
       const ops = past.operations;
       past.operations = void 0;
-      for (let i = ops; i != null; i = i.prev) i();
+      for (let i = ops; i != null; i = i.prev) i.call();
       return past;
     }
   : function undo() {
       const { now, past } = journal;
       if (!now || !past) return null;
       journal.now = null;
-      for (let i = past.operations; i != null; i = i.prev) i();
+      for (let i = past.operations; i != null; i = i.prev) i.call();
       journal.now = past;
       journal.past = past.prev;
       return past;
@@ -61,7 +62,7 @@ export const redo: () => Core.Record | null = config.timeTravel
       if (!now || !future) return null;
       const ops = now.operations;
       now.operations = void 0;
-      for (let i = ops; i != null; i = i.prev) i();
+      for (let i = ops; i != null; i = i.prev) i.call();
       flush();
       const { past } = journal;
       now.prev = past;
@@ -119,18 +120,73 @@ export { Operation, Record, traceDataSymbol, traceMetaSymbol } from "./core";
 
 export { Core, DOM };
 
-/** defines setter a getter in `value` to support time travel */
+const deleteTag = {};
+
+interface IPropSnapshot extends Core.Operation {
+  target: any;
+  index: string | symbol | number;
+  oldValue: any;
+  newValue: any;
+  back: boolean;
+}
+
+const PropSnapshot: any = config.timeTravelForward
+  ? function(
+      this: IPropSnapshot,
+      target: any,
+      index: string | symbol | number,
+      oldValue: any,
+      newValue: any
+    ) {
+      this.target = target;
+      this.index = index;
+      this.newValue = newValue;
+      this.oldValue = oldValue;
+      this.back = true;
+    }
+  : function(
+      this: IPropSnapshot,
+      target: any,
+      index: string | symbol | number,
+      oldValue: any,
+      newValue: any
+    ) {
+      this.target = target;
+      this.index = index;
+      this.newValue = newValue;
+      this.oldValue = oldValue;
+      this.back = true;
+    };
+
+PropSnapshot.prototype.call = config.timeTravelForward
+  ? function(this: IPropSnapshot) {
+      if (this.back) {
+        if (this.oldValue === deleteTag) delete this.target[this.index];
+        else this.target[this.index] = this.oldValue;
+      } else this.target[this.index] = this.newValue;
+      this.back = !this.back;
+      Core.record(this);
+    }
+  : function(this: IPropSnapshot) {
+      if (this.oldValue === deleteTag) delete this.target[this.index];
+      else this.target[this.index] = this.oldValue;
+    };
+regConstructor(PropSnapshot);
+
+/**
+ * defines setter a getter in `value` to support time travel
+ * TODO: delete handler
+ */
 export function propHack(value: any, propName: string) {
   const sym = Symbol(`${propName}`);
   Object.defineProperty(value, propName, {
     set(value) {
-      Core.record(() => delete this[propName]);
       this[sym] = value;
+      Core.record(new PropSnapshot(this, propName, deleteTag, value));
       Object.defineProperty(this, propName, {
         configurable: true,
         set(value) {
-          const oldValue = this[sym];
-          Core.record(() => (this[sym] = oldValue));
+          Core.record(new PropSnapshot(this, propName, this[sym], value));
           this[sym] = value;
         },
         get() {

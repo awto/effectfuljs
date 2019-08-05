@@ -1,4 +1,5 @@
 import * as Core from "./core";
+import { regConstructor } from "@effectful/serialization";
 
 const journal = Core.journal;
 
@@ -19,9 +20,13 @@ function* nodeListIter(nl: NodeList): Iterable<Node> {
   for (let i = 0, len = nl.length; i < len; ++i) yield nl[i];
 }
 
-function record(changes: MutationRecord[]) {
-  if (!changes.length) return;
-  Core.record(function() {
+export class DomSnapshot {
+  changes: MutationRecord[];
+  constructor(changes: MutationRecord[]) {
+    this.changes = changes;
+  }
+  call() {
+    const { changes } = this;
     for (let i = changes.length - 1; i >= 0; --i) {
       const rec = changes[i];
       switch (rec.type) {
@@ -44,7 +49,13 @@ function record(changes: MutationRecord[]) {
           break;
       }
     }
-  });
+  }
+}
+regConstructor(DomSnapshot);
+
+function record(changes: MutationRecord[]) {
+  if (!changes.length) return;
+  Core.record(new DomSnapshot(changes));
 }
 
 function flushData(data: ObserverData) {

@@ -16,6 +16,8 @@ var _config = require("../config");
 
 var _state = require("../state");
 
+var _serialization = require("@effectful/serialization");
+
 /** extension point for tracing customization */
 const traceMetaSymbol = Symbol("@effectful/debugger/traceMeta");
 /** trace related information stored in the object */
@@ -92,7 +94,7 @@ const record = _config.default.timeTravel ? function record(f) {
 exports.record = record;
 
 function replay(rec) {
-  for (let i = rec.operations; i != null; i = i.prev) i();
+  for (let i = rec.operations; i != null; i = i.prev) i.call();
 }
 /** Returns own property names and symbols */
 
@@ -102,17 +104,25 @@ function* allProps(obj) {
   yield* Object.getOwnPropertySymbols(obj);
 }
 
-function captureSnapshot(data) {
-  if (!journal.now || data.lastUpdate === journal.now) return;
-  const target = data.target;
-  const lastUpdate = data.lastUpdate;
-  data.lastUpdate = journal.now;
-  data.prototypeChanged = false;
-  const snapshot = Object.getOwnPropertyDescriptors(target);
-  record(() => {
+class ObjectSnapshot {
+  constructor(data) {
+    this.data = data;
+    this.at = data.lastUpdate;
+    this.snapshot = Object.getOwnPropertyDescriptors(data.target);
+    data.lastUpdate = journal.now;
+    data.prototypeChanged = false;
+  }
+
+  call() {
+    const {
+      data,
+      at,
+      snapshot
+    } = this;
     const {
       prototypeChanged,
-      proto
+      proto,
+      target
     } = data;
 
     if (_config.default.timeTravelForward) {
@@ -125,7 +135,7 @@ function captureSnapshot(data) {
       }
     }
 
-    data.lastUpdate = lastUpdate;
+    data.lastUpdate = at;
     if (prototypeChanged) Object.setPrototypeOf(target, proto);
 
     for (const i of allProps(target)) if (!(i in snapshot)) delete target[i];
@@ -137,7 +147,15 @@ function captureSnapshot(data) {
         if (descr.enumberable && descr.writeable) target[i] = descr.value;else Object.defineProperty(target, i, descr);
       }
     }
-  });
+  }
+
+}
+
+(0, _serialization.regConstructor)(ObjectSnapshot);
+
+function captureSnapshot(data) {
+  if (!journal.now || data.lastUpdate === journal.now) return;
+  record(new ObjectSnapshot(data));
 }
 
 const defaultTraps = {

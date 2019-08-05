@@ -1,11 +1,13 @@
 "use strict";
 
 exports.__esModule = true;
-exports.setMeta = exports.mapMeta = void 0;
+exports.SetSnapshot = exports.setMeta = exports.MapSnapshot = exports.mapMeta = void 0;
 
 var _config = require("../config");
 
 var _core = require("./core");
+
+var _serialization = require("@effectful/serialization");
 
 function prototypeFwds(resProto) {
   const proto = Object.getPrototypeOf(resProto);
@@ -37,26 +39,44 @@ const mapMeta = {
 exports.mapMeta = mapMeta;
 Map.prototype[_core.traceMetaSymbol] = mapMeta;
 
-function mapSnapshot(data) {
-  if (!_core.journal.now || data.lastContUpdate === _core.journal.now) return data.target;
-  const {
-    lastContUpdate
-  } = data;
-  data.lastContUpdate = _core.journal.now;
-  const target = data.target;
-  const changes = [...target];
-  (0, _core.record)(() => {
+class MapSnapshot {
+  constructor(data) {
+    this.at = data.lastContUpdate;
+    data.lastContUpdate = _core.journal.now;
+    this.data = data;
+    this.changes = [...data.target];
+  }
+
+  call() {
+    const {
+      data,
+      changes,
+      at
+    } = this;
+
     if (_config.default.timeTravelForward) {
       data.lastContUpdate = null;
       mapSnapshot(data);
     }
 
+    const {
+      target
+    } = data;
     target.clear();
-    data.lastContUpdate = lastContUpdate;
+    data.lastContUpdate = at;
 
     for (const [k, v] of changes) target.set(k, v);
-  });
-  return target;
+  }
+
+}
+
+exports.MapSnapshot = MapSnapshot;
+(0, _serialization.regConstructor)(MapSnapshot);
+
+function mapSnapshot(data) {
+  if (!_core.journal.now || data.lastContUpdate === _core.journal.now) return data.target;
+  (0, _core.record)(new MapSnapshot(data));
+  return data.target;
 }
 
 const mapProto = mapMeta.proto = Object.create(Map.prototype);
@@ -111,26 +131,44 @@ if (setSizeDescriptor && setSizeDescriptor.get) {
   });
 }
 
-function setSnapshot(data) {
-  if (data.lastContUpdate === _core.journal.now) return data.target;
-  (0, _core.captureSnapshot)(data);
-  const {
-    lastContUpdate
-  } = data;
-  data.lastContUpdate = _core.journal.now;
-  const target = data.target;
-  const changes = [...target];
-  (0, _core.record)(() => {
+class SetSnapshot {
+  constructor(data) {
+    this.data = data;
+    this.changes = [...data.target];
+    this.at = data.lastContUpdate;
+    data.lastContUpdate = _core.journal.now;
+  }
+
+  call() {
+    const {
+      data,
+      at,
+      changes
+    } = this;
+
     if (_config.default.timeTravelForward) {
       data.lastContUpdate = null;
       setSnapshot(data);
     }
 
+    const {
+      target
+    } = data;
     target.clear();
-    data.lastContUpdate = lastContUpdate;
+    data.lastContUpdate = at;
     changes.forEach(Set.prototype.add, target);
-  });
-  return target;
+  }
+
+}
+
+exports.SetSnapshot = SetSnapshot;
+(0, _serialization.regConstructor)(SetSnapshot);
+
+function setSnapshot(data) {
+  if (data.lastContUpdate === _core.journal.now) return data.target;
+  (0, _core.captureSnapshot)(data);
+  (0, _core.record)(new SetSnapshot(data));
+  return data.target;
 }
 
 setProto.add = function (v) {

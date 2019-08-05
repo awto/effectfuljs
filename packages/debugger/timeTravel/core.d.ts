@@ -5,7 +5,7 @@ export interface Record {
 /** operations trace - callbacks to be executed on reverting state */
 export interface Operation {
     prev?: Operation;
-    (): void;
+    call(): void;
 }
 /** extension point for tracing customization */
 export declare const traceMetaSymbol: unique symbol;

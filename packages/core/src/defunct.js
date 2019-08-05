@@ -290,7 +290,7 @@ export function inlineExceptions(si) {
 export function calcPassThrough(si) {
   const sa = Kit.toArray(si);
   const s = Kit.auto(sa);
-  if (s.opts.inlinePureJumps !== "tail") return s;
+  if (s.opts.inlinePureJumps !== "tail" || s.opts.storeRunningCont) return s;
   _calcPassThrough();
   return sa;
   function _getLast(res, sw) {
@@ -731,7 +731,7 @@ export function tailJumps(si) {
 }
 
 export const convert = Kit.pipe(
-  // calcPassThrough,
+  calcPassThrough,
   frames,
   Kit.toArray,
   stateMappings,

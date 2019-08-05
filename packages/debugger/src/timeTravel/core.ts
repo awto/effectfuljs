@@ -1,5 +1,6 @@
 import config from "../config";
 import { saved } from "../state";
+import { regConstructor } from "@effectful/serialization";
 
 export interface Record {
   operations?: Operation;
@@ -9,7 +10,7 @@ export interface Record {
 /** operations trace - callbacks to be executed on reverting state */
 export interface Operation {
   prev?: Operation;
-  (): void;
+  call(): void;
 }
 
 /** extension point for tracing customization */
@@ -106,7 +107,7 @@ export const record: (f: Operation) => void = config.timeTravel
 
 /** runs all actions stored in the cocord */
 export function replay(rec: Record) {
-  for (let i = rec.operations; i != null; i = i.prev) i();
+  for (let i = rec.operations; i != null; i = i.prev) i.call();
 }
 
 /** Returns own property names and symbols */
@@ -115,15 +116,20 @@ export function* allProps(obj: any): Iterable<string | symbol> {
   yield* Object.getOwnPropertySymbols(obj);
 }
 
-export function captureSnapshot<T>(data: TraceData<T>) {
-  if (!journal.now || data.lastUpdate === journal.now) return;
-  const target = data.target;
-  const lastUpdate = data.lastUpdate;
-  data.lastUpdate = journal.now;
-  data.prototypeChanged = false;
-  const snapshot = Object.getOwnPropertyDescriptors(target);
-  record(() => {
-    const { prototypeChanged, proto } = data;
+class ObjectSnapshot<T> {
+  data: TraceData<T>;
+  at: Record | null;
+  snapshot: { [name: string]: PropertyDescriptor };
+  constructor(data: TraceData<T>) {
+    this.data = data;
+    this.at = data.lastUpdate;
+    this.snapshot = Object.getOwnPropertyDescriptors(data.target);
+    data.lastUpdate = journal.now;
+    data.prototypeChanged = false;
+  }
+  call() {
+    const { data, at, snapshot } = this;
+    const { prototypeChanged, proto, target } = data;
     if (config.timeTravelForward) {
       data.lastUpdate = null;
       captureSnapshot(data);
@@ -132,7 +138,7 @@ export function captureSnapshot<T>(data: TraceData<T>) {
         data.prototypeChanged = true;
       }
     }
-    data.lastUpdate = lastUpdate;
+    data.lastUpdate = at;
     if (prototypeChanged) Object.setPrototypeOf(target, proto);
     for (const i of allProps(target))
       if (!(i in snapshot)) delete (<any>target)[i];
@@ -144,7 +150,13 @@ export function captureSnapshot<T>(data: TraceData<T>) {
         else Object.defineProperty(target, i, descr);
       }
     }
-  });
+  }
+}
+regConstructor(ObjectSnapshot);
+
+export function captureSnapshot<T>(data: TraceData<T>) {
+  if (!journal.now || data.lastUpdate === journal.now) return;
+  record(new ObjectSnapshot<T>(data));
 }
 
 export const defaultTraps: ProxyHandler<any> = {

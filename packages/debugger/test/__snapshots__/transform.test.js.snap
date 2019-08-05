@@ -145,50 +145,41 @@ function C_1(C, p) {
         C.$.v1 = 10;
         C.state = 6;
         M.brk(1);
-        continue;
 
       case 6:
         C.state = 7;
         M.brk(2);
-        continue;
 
       case 7:
         C.$.v2 = 11;
         C.state = 8;
         M.brk(3);
-        continue;
 
       case 8:
         C.state = 9;
         M.brk(4);
-        continue;
 
       case 9:
         C.state = 10;
         p = C.$$.$.mod.fn1(C.$.a);
-        continue;
 
       case 10:
         C.state = 11;
         C.$$.$.mod.proc1(p, C.$$.$.v0, C.$.v1, C.$.v2, C.$.v3);
-        continue;
 
       case 11:
         C.state = 12;
         M.brk(5);
-        continue;
 
       case 12:
         C.$.loop = M.iterator(something);
         C.state = 13;
-        continue;
 
       case 13:
         if (!(C.$.i2 = C.$.loop.next()).done) {
           C.$.i = C.$.i2.value;
           C.state = 14;
           M.brk(6);
-          continue;
         } else {
           C.$.fc = 16;
           C.state = 15;
@@ -212,19 +203,16 @@ function C_1(C, p) {
       case 16:
         C.state = 17;
         M.brk(7);
-        continue;
 
       case 17:
         C.$.loop1 = M.iterator(something);
         C.state = 18;
-        continue;
 
       case 18:
         if (!(C.$.i3 = C.$.loop1.next()).done) {
           C.$.i1 = C.$.i3.value;
           C.state = 19;
           M.brk(8);
-          continue;
         } else {
           C.$.fc1 = 21;
           C.state = 20;
@@ -248,7 +236,6 @@ function C_1(C, p) {
       case 21:
         C.state = 22;
         M.brk(9);
-        continue;
 
       case 22:
         C.$.v4 = 100;
@@ -259,12 +246,10 @@ function C_1(C, p) {
         C.$.e = C.$.ex;
         C.state = 24;
         M.brk(10);
-        continue;
 
       case 24:
         C.state = 25;
         C.$$.$.mod.proc4(C.$.e, C.$.v4, C.$.i1);
-        continue;
 
       case 25:
         return M.pure();
@@ -331,19 +316,16 @@ function fn1_1(_fn1, p) {
         _fn1.$.v5 = 10;
         _fn1.state = 6;
         M.brk(1);
-        continue;
 
       case 6:
         _fn1.state = 7;
         p = _fn1.$$.$.mod.f2();
-        continue;
 
       case 7:
         _fn1.$._ = p;
         a = _fn1.$$.$.C;
         _fn1.state = 8;
         p = new a(_fn1.$$.$.v0, _fn1.$.v5);
-        continue;
 
       case 8:
         _fn1.state = 9;
@@ -351,7 +333,6 @@ function fn1_1(_fn1, p) {
           a: _fn1.$._,
           b: [p]
         });
-        continue;
 
       case 9:
         return M.pure(p);
@@ -378,7 +359,6 @@ function f_1(ctx, p) {
         a = require(\\"mod\\");
         ctx.state = 6;
         p = M.unwrapImport(a, \\"mod\\");
-        continue;
 
       case 6:
         ({
@@ -386,13 +366,11 @@ function f_1(ctx, p) {
         } = p);
         ctx.state = 7;
         M.brk(1);
-        continue;
 
       case 7:
         ctx.$.v0 = 10;
         ctx.state = 8;
         M.brk(2);
-        continue;
 
       case 8:
         ctx.$.exports.fn2 = meta$fn1(ctx);
@@ -471,34 +449,28 @@ function run_1(run, p) {
         run.$$.$.j += run.$.i;
         run.state = 6;
         M.brk(1);
-        continue;
 
       case 6:
         a = run.$.i++;
         run.state = 7;
         p = run.$$.$.M2.f1(a);
-        continue;
 
       case 7:
         run.state = 8;
         run.$$.$.M2.f2(p, run.$.i);
-        continue;
 
       case 8:
         run.state = 9;
         M.brk(2);
-        continue;
 
       case 9:
         run.$$.$.j += run.$.i;
         run.state = 10;
         M.brk(3);
-        continue;
 
       case 10:
         run.state = 11;
         console.log(\`i:\${run.$.i},j:\${run.$$.$.j}\`);
-        continue;
 
       case 11:
         return M.pure();
@@ -525,34 +497,28 @@ function f_1(ctx, p) {
         a = require(\\"./mod2\\");
         ctx.state = 6;
         p = M.unwrapImport(a, \\"./mod2\\");
-        continue;
 
       case 6:
         ctx.$.M2 = p;
         ctx.state = 7;
         M.brk(1);
-        continue;
 
       case 7:
         ctx.$.j = 0;
         ctx.state = 8;
         M.brk(2);
-        continue;
 
       case 8:
         ctx.state = 9;
         ctx.$.run();
-        continue;
 
       case 9:
         ctx.state = 10;
         M.brk(3);
-        continue;
 
       case 10:
         ctx.state = 11;
         ctx.$.run();
-        continue;
 
       case 11:
         return M.pure();
@@ -694,13 +660,11 @@ function A_1(A, p) {
         A.$._this.i = A.$.i * 10 + A.$$.$.cnt;
         A.state = 6;
         M.brk(1);
-        continue;
 
       case 6:
         a = A.$$.$.B;
         A.state = 7;
         p = new a(100);
-        continue;
 
       case 7:
         A.$._this.b = p;
@@ -726,7 +690,6 @@ function B_1(B, p) {
         B.$._this.i = B.$.i;
         B.state = 6;
         M.brk(1);
-        continue;
 
       case 6:
         return M.pure({
@@ -756,40 +719,33 @@ function f1_1(f1, p) {
         f1.$$.$.cnt++;
         f1.state = 6;
         M.brk(1);
-        continue;
 
       case 6:
         f1.state = 7;
         console.log(\`f1:\${f1.$.i}@\${f1.$$.$.cnt}\`);
-        continue;
 
       case 7:
         f1.state = 8;
         M.brk(2);
-        continue;
 
       case 8:
         a = f1.$$.$.A;
         b = f1.$$.$.cnt;
         f1.state = 9;
         p = new a(b);
-        continue;
 
       case 9:
         f1.$.a = p;
         f1.state = 10;
         M.brk(3);
-        continue;
 
       case 10:
         f1.state = 11;
         console.log(\\"A:\\", f1.$.a);
-        continue;
 
       case 11:
         f1.state = 12;
         M.brk(4);
-        continue;
 
       case 12:
         return M.pure(f1.$$.$.cnt);
@@ -814,12 +770,10 @@ function f2_1(f2, p) {
         f2.$$.$.cnt++;
         f2.state = 6;
         M.brk(1);
-        continue;
 
       case 6:
         f2.state = 7;
         console.log(\`f2:\${f2.$.i}@\${f2.$$.$.cnt}\`);
-        continue;
 
       case 7:
         return M.pure();

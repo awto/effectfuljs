@@ -1,3 +1,8 @@
+export declare class DomSnapshot {
+    changes: MutationRecord[];
+    constructor(changes: MutationRecord[]);
+    call(): void;
+}
 export declare function flush(): void;
 /**
  * This enables tracking DOM using MutationObserver.
