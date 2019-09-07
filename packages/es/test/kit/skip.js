@@ -14,6 +14,6 @@ module.exports = function() {
     return res;
   }
   global.describe = wrap(describe);
-  global.context = wrap(context);
+  if (global.contet) global.context = wrap(context);
   global.it = wrap(it);
 };

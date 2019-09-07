@@ -12,6 +12,19 @@ function a() {
   return M.scope(a_1);
 }
 
+function zzz(zz) {
+  var zzz = M.context();
+  zzz._zz = zz;
+  zzz._aaaa = (function _aaaa() {
+    var aaaa = M.context();
+    return M.scope(aaaa_1);
+  }, function _aaaa() {
+    var aaaa = M.context();
+    return M.scope(_aaaa_1);
+  });
+  return M.scope(zzz_1);
+}
+
 function b_1(b) {
   var j;
   j = b._a._i;
@@ -42,3 +55,42 @@ function a_3(a) {
 }
 
 function a_4(a) {}
+
+function aaaa_1(aaaa) {
+  return M.chain(eff1(), aaaa_2);
+}
+
+function aaaa_2(aaaa) {}
+
+function _aaaa_1(aaaa) {
+  return M.chain(eff2(), _aaaa_2);
+}
+
+function _aaaa_2(aaaa) {}
+
+function zzz_1(zzz) {
+  var a;
+  a = zzz._aaaa, zzz._aaaa = null;
+  return M.chain(a(), zzz_2);
+}
+
+function bbbb_1(_bbbb) {
+  return M.chain(eff3(), bbbb_2);
+}
+
+function bbbb_2(_bbbb) {}
+
+function zzz_2(zzz) {
+  var a;
+
+  zzz._aaaa = function bbbb() {
+    var _bbbb = M.context();
+
+    return M.scope(bbbb_1);
+  };
+
+  a = zzz._aaaa, zzz._aaaa = null;
+  return M.chain(a(), zzz_3);
+}
+
+function zzz_3(zzz) {}

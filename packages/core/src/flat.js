@@ -374,7 +374,7 @@ export const convert = Kit.pipe(
     const s = Kit.auto(sa);
     const root = s.first.value;
     root.pureExitFrame = {
-      declSym: s.opts.defunct ? Defunct.pureFrameSym : Block.pureId,
+      declSym: s.opts.defunct ? Defunct.pureFrameSym : root.pureId,
       last: true,
       enters: new Set(),
       exits: new Set(),
@@ -405,7 +405,7 @@ export const convert = Kit.pipe(
       /** # a frame returning its argument */
       root.resFrameRedir = fr.value;
       yield fr;
-      yield s.enter(j.pos, Block.app, { sym: Block.pureId, insideCtx: true });
+      yield s.enter(j.pos, Block.app, { sym: root.pureId, insideCtx: true });
       yield s.tok(Tag.push, Tag.Identifier, { sym: psym });
       yield* s.leave();
       yield* s.leave();
@@ -417,7 +417,7 @@ export const convert = Kit.pipe(
       });
       yield er;
       root.errFrameRedir = er.value;
-      yield s.enter(j.pos, Block.app, { sym: Except.raiseId, insideCtx: true });
+      yield s.enter(j.pos, Block.app, { sym: root.raiseId, insideCtx: true });
       yield s.tok(Tag.push, Tag.Identifier, { sym: esym });
       yield* s.leave();
       yield* s.leave();
@@ -613,7 +613,7 @@ export const convert = Kit.pipe(
       });
       yield res;
       yield s.enter(Tag.push, Block.app, {
-        sym: Except.raiseId,
+        sym: root.raiseId,
         insideCtx: true,
         last: true
       });
@@ -1182,7 +1182,7 @@ export function interpretJumps(si) {
             ) {
               yield pure
                 ? s.enter(pos, Block.app, {
-                    sym: Block.pureId,
+                    sym: root.pureId,
                     insideCtx,
                     delegateCtx,
                     reflected: i.value.reflected,
@@ -1450,7 +1450,7 @@ function cleanup(si) {
   }
   function* writeResult(j) {
     yield s.enter(j.pos, Block.app, {
-      sym: Block.pureId,
+      sym: root.pureId,
       insideCtx: !j.value.ref.first
     });
     const args = j.value.frameArgs;
@@ -1482,7 +1482,7 @@ function cleanup(si) {
     const sym =
       (errSym && j.value.frameArgs && j.value.frameArgs.get(errSym)) || errSym;
     yield s.enter(j.pos, Tag.CallExpression, { result: true });
-    yield s.tok(Tag.callee, Tag.Identifier, { sym: Except.raiseId, ns });
+    yield s.tok(Tag.callee, Tag.Identifier, { sym: root.raiseId, ns });
     yield s.enter(Tag.arguments, Tag.Array);
     yield s.tok(Tag.push, Tag.Identifier, {
       sym,

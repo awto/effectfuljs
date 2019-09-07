@@ -264,9 +264,9 @@ const objMThis = {
 class SomeClass {
   f(i) {
     var ctx = M.context();
+    ctx._i = i;
     ctx.__this = this;
     ctx.__args = arguments;
-    ctx._i = i;
     return ctx.scope(_f_1);
   }
 
@@ -275,16 +275,16 @@ class SomeClass {
 class SomeChild extends SomeClass {
   f(i) {
     var ctx = M.context();
+    ctx._i = i;
     ctx.__this = this;
     ctx.__args = arguments;
-    ctx._i = i;
     return ctx.scope(f_11);
   }
 
   static f(i) {
     var ctx = M.context();
-    ctx.__this = this;
     ctx._i = i;
+    ctx.__this = this;
     return ctx.scope(f_12);
   }
 
@@ -596,7 +596,7 @@ function a4_10(a4, b) {
 
 function a4_11(a4, b) {
   var a;
-  a = a4._(a4._1, b);
+  a = (0, a4._)(a4._1, b);
   a4._ = null, a4._1 = null;
   return a4.yld(a, a4_12);
 }
@@ -2051,9 +2051,9 @@ function z_4(z1, r) {
 function z_5(_z) {
   return _z.pure(function z(j) {
     var z1 = M.context();
+    z1._j = j;
     z1._c2_1 = _z._c2_1;
     z1._f = _z._f;
-    z1._j = j;
     return z1.scope(z_1);
   });
 }
@@ -2114,7 +2114,7 @@ function inner_2(inner, a) {
 function inner_3(inner) {
   if (!(inner._loop = inner._loop.step()).done) {
     inner._j = inner._loop.value;
-    return inner.yldStar(inner._j(), inner_4, inner_11);
+    return inner.yldStar((0, inner._j)(), inner_4, inner_11);
   } else {
     inner._fc = inner_7, inner._fe = inner_9, inner._j = null;
     return inner.jump(void 0, inner_6);
@@ -2337,8 +2337,8 @@ function objMethod1_4(ctx) {
     objMethod2(m) {
       var _ctx = M.context();
 
-      _ctx._f = ctx;
       _ctx._m = m;
+      _ctx._f = ctx;
       return _ctx.scope(objMethod2_1);
     }
 
@@ -2357,8 +2357,8 @@ function objMethodsClosure_1(objMethodsClosure) {
   return objMethodsClosure.pure({
     objMethod1(k) {
       var ctx = M.context();
-      ctx._objMethodsClosure = objMethodsClosure;
       ctx._k = k;
+      ctx._objMethodsClosure = objMethodsClosure;
       return ctx.scope(objMethod1_1);
     }
 
@@ -2598,7 +2598,7 @@ function closure1_a_3(closure1_a, r) {
 
 function _c2_1(c2) {
   c2._i = 0;
-  return c2.pure(c2._closure1_b()());
+  return c2.pure((0, c2._closure1_b)()());
 }
 
 function _c2_2(c2, r) {
@@ -2759,8 +2759,8 @@ function f_38(ctx) {
     a = (j => {
       var _ctx = M.context();
 
-      _ctx._f = ctx;
       _ctx._j = j;
+      _ctx._f = ctx;
       return _ctx.scope(f_17);
     })(ctx._j);
 
@@ -3063,8 +3063,8 @@ function f_211(ctx) {
     a = (j => {
       var _ctx = M.context();
 
-      _ctx._f = ctx;
       _ctx._j = j;
+      _ctx._f = ctx;
       return _ctx.scope(f_110);
     })(ctx._j);
 
@@ -3307,8 +3307,8 @@ function f_314(ctx) {
     a = (j => {
       var _ctx = M.context();
 
-      _ctx._f = ctx;
       _ctx._j = j;
+      _ctx._f = ctx;
       return _ctx.scope(f_113);
     })(ctx._j);
 
@@ -3531,8 +3531,8 @@ function closure2_3(closure2) {
   return closure2.pure(function sub(k) {
     var _sub = M.context();
 
-    _sub._closure2 = closure2;
     _sub._k = k;
+    _sub._closure2 = closure2;
     return _sub.scope(sub_1);
   });
 }

@@ -3,6 +3,7 @@
 import config from "./config";
 import * as Instr from "./instr/rt";
 import { wrap } from "./engine";
+import { regOpaqueObject } from "@effectful/serialization";
 
 const Ap = Array.prototype;
 const Tp = Object.getPrototypeOf(Int8Array.prototype);
@@ -21,7 +22,14 @@ export const wrapResult: (
       return fun;
     };
 
+if (config.patchedPromise) {
+  global.Promise = Instr.unwrapImport(require("./deps/promise"), "promise");
+  regOpaqueObject(global.Promise, "global#Promise");
+  regOpaqueObject(global.Promise.prototype, "global#Promise#");
+}
 if (config.patchRT) {
+  //  copyDescriptors(Promise, Instr.PatchedPromise);
+
   Tp.map = Ap.map = wrapResult(Instr.map);
   Tp.filter = Ap.filter = wrapResult(Instr.filter);
   Tp.find = Ap.find = Instr.find;
@@ -32,8 +40,6 @@ if (config.patchRT) {
   Mp.forEach = Instr.mapForEach;
   Tp.reduce = Ap.reduce = Instr.reduce;
   Tp.reduceRight = Ap.reduceRight = Instr.reduceRight;
-  Ap.sort = Instr.arraySort;
-  Tp.sort = Instr.typedArraySort;
   Tp.some = Ap.some = Instr.some;
   Tp.every = Ap.every = Instr.every;
   Array.of = wrapResult(Array.of);

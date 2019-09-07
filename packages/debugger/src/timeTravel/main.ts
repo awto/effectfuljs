@@ -1,7 +1,8 @@
 import config from "../config";
 import * as Core from "./core";
 import * as DOM from "./dom";
-import { regConstructor } from "@effectful/serialization";
+import * as S from "@effectful/serialization";
+import "./persist";
 
 export const journal = Core.journal;
 
@@ -16,25 +17,34 @@ declare module "../state" {
 
 const undoImpl: () => Core.Record | null = config.timeTravelForward
   ? function undo(): Core.Record | null {
-      const { now, past } = journal;
-      if (!now || !past) return null;
-      const { future } = journal;
+      flush();
+      const { now } = journal;
+      if (!now) return null;
+      const ops = now.operations;
+      now.operations = void 0;
+      for (let i = ops; i != null; i = i.prev) i.call();
+      flush();
+      let { future, past } = journal;
       now.prev = future;
       journal.future = now;
       journal.now = past;
-      journal.past = past.prev;
-      const ops = past.operations;
-      past.operations = void 0;
-      for (let i = ops; i != null; i = i.prev) i.call();
+      if (past) {
+        journal.past = past.prev;
+        past.prev = null;
+      } else {
+        journal.past = null;
+      }
       return past;
     }
   : function undo() {
+      flush();
       const { now, past } = journal;
       if (!now || !past) return null;
       journal.now = null;
       for (let i = past.operations; i != null; i = i.prev) i.call();
       journal.now = past;
       journal.past = past.prev;
+      flush();
       return past;
     };
 
@@ -43,14 +53,7 @@ const undoImpl: () => Core.Record | null = config.timeTravelForward
  * (assumes an empty last checkpoint).
  */
 export const undo: () => Core.Record | null = config.timeTravel
-  ? function undo() {
-      flush();
-      try {
-        return undoImpl();
-      } finally {
-        flush();
-      }
-    }
+  ? undoImpl
   : function undo() {
       return null;
     };
@@ -58,17 +61,17 @@ export const undo: () => Core.Record | null = config.timeTravel
 export const redo: () => Core.Record | null = config.timeTravel
   ? function redo() {
       flush();
-      const { now, future } = journal;
-      if (!now || !future) return null;
-      const ops = now.operations;
-      now.operations = void 0;
-      for (let i = ops; i != null; i = i.prev) i.call();
-      flush();
-      const { past } = journal;
-      now.prev = past;
+      const { future } = journal;
+      if (!future) return null;
+      const ops = future.operations;
+      future.operations = void 0;
+      const { now } = journal;
+      if (now) now.prev = journal.past;
       journal.past = now;
       journal.now = future;
       journal.future = future.prev;
+      for (let i = ops; i != null; i = i.prev) i.call();
+      flush();
       return future;
     }
   : function redo() {
@@ -90,15 +93,6 @@ export const checkpoint: () => Core.Record | null = config.timeTravel
       return null;
     };
 
-/** Values wrapper injected by the compiler */
-export const wrap: <T extends Core.MaybeTarget<T>>(
-  target: T
-) => T = config.timeTravel
-  ? Core.wrapImpl
-  : function wrap<T extends Core.MaybeTarget<T>>(v: T): T {
-      return v;
-    };
-
 /** Registers an operation to be called on `undo` in reverse direction */
 export const record = config.timeTravel
   ? Core.record
@@ -116,7 +110,13 @@ export const unwrapPrototype = config.timeTravel
     }
   : function(_: Core.Target) {};
 
-export { Operation, Record, traceDataSymbol, traceMetaSymbol } from "./core";
+export {
+  wrap,
+  Operation,
+  Record,
+  traceDataSymbol,
+  traceMetaSymbol
+} from "./core";
 
 export { Core, DOM };
 
@@ -171,7 +171,7 @@ PropSnapshot.prototype.call = config.timeTravelForward
       if (this.oldValue === deleteTag) delete this.target[this.index];
       else this.target[this.index] = this.oldValue;
     };
-regConstructor(PropSnapshot);
+S.regConstructor(PropSnapshot);
 
 /**
  * defines setter a getter in `value` to support time travel
@@ -197,3 +197,6 @@ export function propHack(value: any, propName: string) {
     get() {}
   });
 }
+
+if (config.persistTimeTravel) S.regConstructor(Core.TraceData);
+else S.regConstructor(Core.TraceData, S.NotSerializableDescriptor);

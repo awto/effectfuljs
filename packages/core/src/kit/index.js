@@ -216,3 +216,6 @@ export {
   skipTillFileBeg
 };
 export const globalOpts = kit.getOpts;
+
+export const isWindows =
+  typeof process !== "undefined" && process.platform === "win32";

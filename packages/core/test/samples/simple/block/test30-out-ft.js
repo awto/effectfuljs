@@ -5,8 +5,8 @@ function a() {
 
   a._b = function _b(i) {
     var b = M.context();
-    b._a = a;
     b._i = i;
+    b._a = a;
     return M.scope(b_1);
   };
 

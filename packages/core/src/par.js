@@ -870,7 +870,7 @@ function emitForkApp(si) {
               /** optimizing `chain(pure(),X)` */
               const sub = Kit.toArray(_emitFork());
               const f = sub[0];
-              if (f.type === Block.app && f.value.sym === Block.pureId) {
+              if (f.type === Block.app && f.value.sym === root.pureId) {
                 if (i.value.goto === root.pureExitFrame) {
                   if (i.value.tmpVar) i.value.tmpVar.emptyThread = true;
                   yield s.enter(i.pos, Block.effExpr, i.value);
@@ -893,7 +893,7 @@ function emitForkApp(si) {
             if (!tmpVar) break;
             const la = s.cur();
             if (la.type !== Block.app) break;
-            if (la.value.sym === Block.pureId) {
+            if (la.value.sym === root.pureId) {
               if (tmpVar.emptyThread !== false) tmpVar.emptyThread = true;
             } else tmpVar.emptyThread = false;
             break;
@@ -906,7 +906,7 @@ function emitForkApp(si) {
                 else vars.push(j);
               }
               if (vars.length === 0) {
-                yield s.enter(i.pos, i.type, { sym: Block.pureId });
+                yield s.enter(i.pos, i.type, { sym: root.pureId });
                 if (!i.leave) yield* s.sub();
                 yield* s.leave();
               } else if (vars.length === 1) {

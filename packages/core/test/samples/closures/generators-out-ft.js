@@ -6,8 +6,8 @@ const a = w => {
   return function mfs(s) {
     var _mfs = M.context();
 
-    _mfs._f = ctx;
     _mfs._s = s;
+    _mfs._f = ctx;
     return M.scope(mfs_1);
   };
 };
@@ -31,7 +31,7 @@ function nn_1(nn) {
         kk = nn._kk,
         vv = nn._vv,
         _nn = nn;
-    return vv._id(kk._k, mfs._v, f._w, m, vv._ww, _nn._mm);
+    return (0, vv._id)(kk._k, mfs._v, f._w, m, vv._ww, _nn._mm);
   }), nn_2);
 }
 
@@ -53,11 +53,11 @@ function vv_1(_vv) {
   _vv._id = void 0;
   return M.yldStar(M.yld(function _nn(mm) {
     var nn = M.context();
+    nn._mm = mm;
     nn._f = _vv._f;
     nn._mfs = _vv._mfs;
     nn._kk = _vv._kk;
     nn._vv = _vv;
-    nn._mm = mm;
     return M.scope(nn_1);
   }), vv_2);
 }
@@ -80,10 +80,10 @@ function mfs_1(_mfs) {
     return function vv(ww) {
       var _vv = M.context();
 
+      _vv._ww = ww;
       _vv._f = _mfs._f;
       _vv._mfs = _mfs;
       _vv._kk = _kk;
-      _vv._ww = ww;
       return M.scope(vv_1);
     };
   });
@@ -119,8 +119,8 @@ function e1_2(e1) {
     return function e2(l) {
       var _e2 = M.context();
 
-      _e2._e1 = e1;
       _e2._l = l;
+      _e2._e1 = e1;
       return M.scope(e2_1);
     };
   }), e1_3);
@@ -159,8 +159,8 @@ function e3_1(_e3) {
   return M.yldStar(M.yld(function e4(l) {
     var _e4 = M.context();
 
-    _e4._e2 = _e3._e2;
     _e4._l = l;
+    _e4._e2 = _e3._e2;
     return M.scope(e4_1);
   }), e3_2);
 }
@@ -177,8 +177,8 @@ function _e2_2(e2) {
   return M.yldStar(M.yld(function e3(m) {
     var _e3 = M.context();
 
-    _e3._e2 = e2;
     _e3._m = m;
+    _e3._e2 = e2;
     return M.scope(e3_1);
   }), _e2_3);
 }

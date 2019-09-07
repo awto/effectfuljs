@@ -4,11 +4,13 @@ import * as Block from "./block";
 
 export const handleId = Kit.sysId("handle");
 export const finallyId = Kit.sysId("finally");
-export const raiseId = Kit.sysId("raise");
 
 /** injects `Block.app` for try-catch statements */
 export function* inject(s) {
   const sl = Kit.auto(s);
+  const root = sl.first.value;
+  const raiseId =
+    root.raiseId || (root.raiseId = Kit.sysId(s.opts.raiseName || "raise"));
   function* walk(sw) {
     for (const i of sw) {
       if (i.value.eff) {

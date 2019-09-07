@@ -7,9 +7,9 @@ Array [
   ],
   Array [
     "A:",
-    _A {
+    A {
       "b": Object {
-        "b": _B {
+        "b": B {
           "i": 100,
         },
         "cnt": 1,
@@ -28,9 +28,9 @@ Array [
   ],
   Array [
     "A:",
-    _A {
+    A {
       "b": Object {
-        "b": _B {
+        "b": B {
           "i": 100,
         },
         "cnt": 3,
@@ -49,17 +49,6 @@ Array [
     Object {
       "__esModule": true,
       "run": [Function],
-      Symbol(@effectful/serialization/descriptor): Object {
-        "create": [Function],
-        "name": "/test/__fixtures__/mod1.js#exports",
-        "overrideProps": Object {
-          Symbol(@effectful/serialization/descriptor): false,
-        },
-        "read": [Function],
-        "readContent": [Function],
-        "value": [Circular],
-        "write": [Function],
-      },
     },
   ],
   Array [
@@ -67,17 +56,6 @@ Array [
     Object {
       "__esModule": true,
       "run": [Function],
-      Symbol(@effectful/serialization/descriptor): Object {
-        "create": [Function],
-        "name": "/test/__fixtures__/mod1.js#exports",
-        "overrideProps": Object {
-          Symbol(@effectful/serialization/descriptor): false,
-        },
-        "read": [Function],
-        "readContent": [Function],
-        "value": [Circular],
-        "write": [Function],
-      },
     },
   ],
   Array [
@@ -88,10 +66,12 @@ Array [
       "f2": [Function],
       Symbol(@effectful/serialization/descriptor): Object {
         "create": [Function],
-        "name": "/test/__fixtures__/mod2.js#exports",
+        "default$": false,
+        "name": "./mod2#exports",
         "overrideProps": Object {
           Symbol(@effectful/serialization/descriptor): false,
         },
+        "props": false,
         "read": [Function],
         "readContent": [Function],
         "value": [Circular],
@@ -104,9 +84,9 @@ Array [
   ],
   Array [
     "A:",
-    _A {
+    A {
       "b": Object {
-        "b": _B {
+        "b": B {
           "i": 100,
         },
         "cnt": 5,

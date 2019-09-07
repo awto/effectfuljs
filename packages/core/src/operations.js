@@ -106,11 +106,21 @@ function getOpName(i) {
 export function inject(si) {
   const nset = new Map();
   const s = Kit.auto(si);
+  const root = s.first.value;
+  root.pureId = Kit.sysId(s.opts.returnName || "pure");
   function setEnv(ops) {
     for (const j in ops) {
       const v = ops[j];
       if (v === false) nset.delete(Tag[j]);
-      else nset.set(Tag[j], v === true ? false : Kit.sysId(v));
+      else
+        nset.set(
+          Tag[j],
+          v === true
+            ? false
+            : Array.isArray(v)
+            ? v.map(Kit.sysId)
+            : Kit.sysId(v)
+        );
     }
   }
   function* walk() {
@@ -118,9 +128,11 @@ export function inject(si) {
       if (i.enter) {
         const ops = i.value.configDiff && i.value.configDiff.ops;
         if (ops != null) setEnv(ops);
-        const v = nset.get(i.type);
+        let v = nset.get(i.type);
         if (v != null) {
-          const name = v || getOpName(i);
+          if (i.type === Tag.YieldExpression && Array.isArray(v))
+            v = v[Number(i.value.node.delegate || 0)];
+          let name = v || getOpName(i);
           yield s.enter(i.pos, op, {
             node: { src: i.value, type: i.type },
             bind: true,

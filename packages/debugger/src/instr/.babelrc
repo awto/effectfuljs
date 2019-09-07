@@ -11,7 +11,7 @@
           {
             "blackbox": true,
             "pureModule": true,
-            "importRT": "../engine",
+            "importRT": "../apiMin",
             "srcRoot": true
           }
         ]

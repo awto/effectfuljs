@@ -1,11 +1,12 @@
 require("./setup-time-travel-fwd");
-const trace = require("./run").bind(null, true);
 const D = require("../main");
+const S = require("@effectful/serialization");
 
 describe("forward time traveling", function() {
   test("Object tracing", function() {
     D.TimeTravel.reset();
     const s = Symbol("S");
+    S.regOpaquePrim(s);
     const v = D.wrap({ a: "A", b: "B", c: "C", [s]: "S" });
     const protoUnwrapped = {};
     const proto = D.wrap(protoUnwrapped);
@@ -26,11 +27,45 @@ describe("forward time traveling", function() {
     };
     expect({ ...v }).toStrictEqual(changed);
     expect(Object.getPrototypeOf(v)).toBe(null);
-    D.TimeTravel.checkpoint();
     D.TimeTravel.undo();
     expect({ ...v }).toStrictEqual(orig);
     expect(Object.getPrototypeOf(v)).toBe(proto);
     D.TimeTravel.redo();
+    expect({ ...v }).toStrictEqual(changed);
+    expect(Object.getPrototypeOf(v)).toBe(null);
+    const j = D.TimeTravel.journal;
+    const data = S.write({
+      now: j.now,
+      future: j.future,
+      past: j.past,
+      data: v
+    });
+    expect(JSON.stringify(data)).toMatchSnapshot();
+
+    D.TimeTravel.reset();
+    const restored = S.read(data);
+    const v2 = restored.data;
+    const orig2 = {
+      ...orig,
+      [D.TimeTravel.traceDataSymbol]: v2[D.TimeTravel.traceDataSymbol]
+    };
+    const changed2 = {
+      ...changed,
+      [D.TimeTravel.traceDataSymbol]: v2[D.TimeTravel.traceDataSymbol]
+    };
+    Object.assign(D.TimeTravel.journal, restored);
+    expect({ ...v2 }).toStrictEqual(changed);
+    expect(Object.getPrototypeOf(v2)).toBe(null);
+    expect({ ...v }).toStrictEqual(changed2);
+    expect(Object.getPrototypeOf(v)).toBe(null);
+    D.TimeTravel.undo();
+    expect({ ...v }).toStrictEqual(changed);
+    expect(Object.getPrototypeOf(v)).toBe(null);
+    expect({ ...v2 }).toStrictEqual(orig2);
+    expect(Object.getPrototypeOf(v2)).not.toBe(proto);
+    D.TimeTravel.redo();
+    expect({ ...v2 }).toStrictEqual(changed2);
+    expect(Object.getPrototypeOf(v2)).toBe(null);
     expect({ ...v }).toStrictEqual(changed);
     expect(Object.getPrototypeOf(v)).toBe(null);
   });
@@ -49,7 +84,6 @@ describe("forward time traveling", function() {
     arr[0] = "a";
     arr[arr.length - 1] = "z";
     const arr3 = [...arr];
-    D.TimeTravel.checkpoint();
     D.TimeTravel.undo();
     expect([...arr]).toEqual(arr2);
     D.TimeTravel.redo();
@@ -79,6 +113,35 @@ describe("forward time traveling", function() {
     D.TimeTravel.redo();
     expect([...arr]).toEqual(arr3);
     D.TimeTravel.redo();
+    expect([...arr]).toEqual(arr3);
+    const j = D.TimeTravel.journal;
+    const data = S.write({
+      now: j.now,
+      future: j.future,
+      past: j.past,
+      data: arr
+    });
+    expect(JSON.stringify(data)).toMatchSnapshot();
+    D.TimeTravel.reset();
+    const restored = S.read(data);
+    const rarr = restored.data;
+    Object.assign(D.TimeTravel.journal, restored);
+    expect([...rarr]).toEqual(arr3);
+    expect([...arr]).toEqual(arr3);
+    D.TimeTravel.undo();
+    expect([...rarr]).toEqual(arr2);
+    expect([...arr]).toEqual(arr3);
+    D.TimeTravel.undo();
+    expect([...rarr]).toEqual(arr1);
+    expect([...arr]).toEqual(arr3);
+    D.TimeTravel.undo();
+    expect([...rarr]).toEqual(orig);
+    expect([...arr]).toEqual(arr3);
+    D.TimeTravel.undo();
+    expect([...rarr]).toEqual(orig);
+    expect([...arr]).toEqual(arr3);
+    D.TimeTravel.redo();
+    expect([...rarr]).toEqual(arr1);
     expect([...arr]).toEqual(arr3);
   });
   test("Map tracing", function() {
@@ -99,7 +162,6 @@ describe("forward time traveling", function() {
     map.set(2, "E");
     map.set(1, "F");
     const map3 = [...map];
-    D.TimeTravel.checkpoint();
     D.TimeTravel.undo();
     expect([...map]).toEqual(map2);
     expect(map.deb_hi).toBe("THERE");
@@ -128,6 +190,36 @@ describe("forward time traveling", function() {
     expect([...map]).toEqual(map3);
     expect(map.deb_hi).toBe("THERE");
     D.TimeTravel.redo();
+    expect([...map]).toEqual(map3);
+    expect(map.deb_hi).toBe("THERE");
+
+    const j = D.TimeTravel.journal;
+    const data = S.write({
+      now: j.now,
+      future: j.future,
+      past: j.past,
+      data: map
+    });
+    expect(JSON.stringify(data)).toMatchSnapshot();
+    D.TimeTravel.reset();
+    const restored = S.read(data);
+    const rmap = restored.data;
+    Object.assign(D.TimeTravel.journal, restored);
+    expect([...rmap]).toEqual(map3);
+    expect(rmap.deb_hi).toBe("THERE");
+    expect([...map]).toEqual(map3);
+    expect(map.deb_hi).toBe("THERE");
+    D.TimeTravel.undo();
+    D.TimeTravel.undo();
+    D.TimeTravel.undo();
+    D.TimeTravel.undo();
+    expect([...rmap]).toEqual(orig);
+    expect(rmap.deb_hi).toBe("there");
+    expect([...map]).toEqual(map3);
+    expect(map.deb_hi).toBe("THERE");
+    D.TimeTravel.redo();
+    expect([...rmap]).toEqual(map1);
+    expect(rmap.deb_hi).toBe("THERE");
     expect([...map]).toEqual(map3);
     expect(map.deb_hi).toBe("THERE");
   });
@@ -151,7 +243,6 @@ describe("forward time traveling", function() {
     set.clear();
     set.add(8);
     const set3 = [...set];
-    D.TimeTravel.checkpoint();
     D.TimeTravel.redo();
     expect([...set]).toEqual(set3);
     expect(set.deb_hi).toBe("THERE");
@@ -183,6 +274,36 @@ describe("forward time traveling", function() {
     expect([...set]).toEqual(set3);
     expect(set.deb_hi).toBe("THERE");
     D.TimeTravel.redo();
+    expect([...set]).toEqual(set3);
+    expect(set.deb_hi).toBe("THERE");
+
+    const j = D.TimeTravel.journal;
+    const data = S.write({
+      now: j.now,
+      future: j.future,
+      past: j.past,
+      data: set
+    });
+    expect(JSON.stringify(data)).toMatchSnapshot();
+    D.TimeTravel.reset();
+    const restored = S.read(data);
+    const rset = restored.data;
+    Object.assign(D.TimeTravel.journal, restored);
+    expect([...rset]).toEqual(set3);
+    expect(rset.deb_hi).toBe("THERE");
+    expect([...set]).toEqual(set3);
+    expect(set.deb_hi).toBe("THERE");
+    D.TimeTravel.undo();
+    D.TimeTravel.undo();
+    D.TimeTravel.undo();
+    D.TimeTravel.undo();
+    expect([...rset]).toEqual(orig);
+    expect(rset.deb_hi).toBe("there");
+    expect([...set]).toEqual(set3);
+    expect(set.deb_hi).toBe("THERE");
+    D.TimeTravel.redo();
+    expect([...rset]).toEqual(set1);
+    expect(rset.deb_hi).toBe("THERE");
     expect([...set]).toEqual(set3);
     expect(set.deb_hi).toBe("THERE");
   });

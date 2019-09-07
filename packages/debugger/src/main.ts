@@ -1,6 +1,7 @@
 import * as S from "@effectful/serialization";
 import * as Persist from "./persist";
 import * as Engine from "./engine";
+import * as Async from "./async";
 import * as State from "./state";
 import * as RT from "./rt";
 import * as Instr from "./instr/rt";
@@ -10,14 +11,13 @@ import * as TimeTravel from "./timeTravel/main";
 import * as TimeTravelCore from "./timeTravel/core";
 import * as TimeTravelDom from "./timeTravel/dom";
 import * as TimeTravelES from "./timeTravel/es";
-(<any>TimeTravelCore.TraceData.prototype)[S.descriptorSymbol] =
-  S.NotSerializableDescriptor;
 Persist.regModule(RT, "@effectful/debugger/rt");
 Persist.regModule(Instr, "@effectful/debugger/instr/rt");
 Persist.regModule(Engine, "@effectful/debugger/engine");
 Persist.regModule(Modules, "@effectful/debugger/modules");
 Persist.regModule(State, "@effectful/debugger/state");
 Persist.regModule(Persist, "@effectful/debugger/persist");
+Persist.regModule(Async, "@effectful/debugger/async");
 Persist.regModule(TimeTravel, "@effectful/debugger/trace/main");
 Persist.regModule(TimeTravelCore, "@effectful/debugger/timeTravel/core");
 Persist.regModule(TimeTravelDom, "@effectful/debugger/timeTravel/dom");
@@ -34,8 +34,12 @@ S.regOpaqueObject(Symbol.keyFor, "Symbol.keyFor");
 S.regOpaquePrim(Symbol.iterator, "SymbolStatic.iterator");
 S.regOpaquePrim(Symbol.asyncIterator, "SymbolStatic.asyncIterator");
 S.regOpaquePrim(Symbol.toStringTag, "SymbolStatic.asyncIterator");
+S.regOpaqueObject(
+  State.context.needsBreak,
+  "@effectful/debugger/default$needsBreak"
+);
 
-export { step, liftSync, runSync, threads, wrap } from "./engine";
+export { step, wrap, liftSync } from "./engine";
 export * from "./state";
 export * from "./modules";
 

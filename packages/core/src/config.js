@@ -18,6 +18,12 @@ export default {
   // Monad bind operation name
   bindName: "chain",
 
+  // Monad `return` operation name
+  returnName: "pure",
+
+  // Exception's `raise` operation name
+  raiseName: "raise",
+
   // pure jump to another frame operation name
   pureBindName: "jump",
 
@@ -31,6 +37,9 @@ export default {
   // defunct `switch` statement discriminant source
   // "arg" - handler's function argument
   defunctStateDiscriminant: false,
+
+  // utilize pass through switch cases if possible
+  defunctCasesPassThrough: false,
 
   // creates a context object for each effectul function's call
   scopeContext: false,
@@ -57,6 +66,9 @@ export default {
 
   // combines Monadic bind and effectful operation into one function's call
   combineOps: false,
+
+  // mapping from Babel AST node name to operation's name (or `true` for some default name)
+  ops: null,
 
   // using pure lean iterator for for-of statement
   pureForOf: true,
@@ -435,5 +447,14 @@ export default {
 
   // replace operation invocation with template's text
   // { [name:string]: { content?: string, deps?: string[] } }
-  inlineOps: null
+  inlineOps: null,
+
+  // name for a function context object
+  contextSymName: null,
+
+  // operations which can write to `function.sent`
+  functionSentOps: {
+    yld: true,
+    scope: true
+  }
 };

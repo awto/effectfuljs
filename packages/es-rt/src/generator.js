@@ -221,8 +221,9 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   GeneratorFunctionPrototype.prototype = Gp;
   GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
   GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunctionPrototype[Symbol.toString] = GeneratorFunction.displayName =
-    "GeneratorFunction";
+  GeneratorFunctionPrototype[
+    Symbol.toStringTag
+  ] = GeneratorFunction.displayName = "GeneratorFunction";
   generatorFunction = function generatorFunction(fun, handler, err, fin) {
     Object.setPrototypeOf(fun, GeneratorFunctionPrototype);
     fun.prototype = Object.create(Gp);

@@ -189,8 +189,7 @@ setProto.clear = function<T>(this: Set<T>) {
 prototypeFwds(setMeta.proto);
 
 if (config.timeTravel) {
-  Promise.prototype[traceMetaSymbol] = notTraceable;
-
+  // Promise.prototype[traceMetaSymbol] = notTraceable;
   if (typeof MessageChannel !== "undefined") {
     MessageChannel.prototype[traceMetaSymbol] = notTraceable;
   }

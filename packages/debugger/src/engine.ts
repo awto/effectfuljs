@@ -12,7 +12,9 @@ import {
   ScopeInfo,
   ProtoFrame,
   BrkType,
-  Job
+  StateMap,
+  Handler,
+  States
 } from "./state";
 import * as State from "./state";
 import * as TT from "./timeTravel/main";
@@ -20,71 +22,53 @@ import * as S from "@effectful/serialization";
 import { parse as babelParse } from "@babel/parser";
 import babelGenerate from "@babel/generator";
 import * as T from "./transform";
+// tslint:disable-next-line
+const asap = require("asap");
 
 const context = State.context;
-const saved = State.saved;
 const token = State.token;
 const dataSymbol = State.dataSymbol;
 const unwrapPrototype = TT.unwrapPrototype;
 const wrap = TT.wrap;
 
-/**
- * converts a function into another function doing the same, but all
- * callbacks executed within this function will be invoked synchronously
- */
-export function liftSync(
-  func: (this: any, ...args: any[]) => any
-): (this: any, ...args: any[]) => any {
-  const ret = function(this: any, ...args: any[]) {
-    return sync(() => func.apply(this, args));
-  };
-  S.regOpaqueObject(ret, `region${func.name || "?"}`);
-  return ret;
-}
-
-/** evaluate function `func` in sync mode */
-export function sync<T>(func: () => T): T {
-  try {
-    context.syncStack.push({
-      top: context.top,
-      debug: context.debug,
-      brk: context.brk,
-      value: context.value
-    });
-    context.top = null;
-    context.debug = false;
-    return func();
-  } finally {
-    const f = context.syncStack.pop();
-    if (f) {
-      context.top = f.top;
-      context.debug = f.debug;
-      context.brk = f.brk;
-      context.value = f.value;
-    }
+class ArgsTraps<T> {
+  func: Frame;
+  target: T[];
+  constructor(func: Frame, target: T[]) {
+    this.func = func;
+    this.target = target;
   }
-}
-
-/** executes a thread starting from the `first` frame */
-export function runSync(first: Frame) {
-  const { top, debug, value, brk } = context;
-  context.top = first;
-  context.debug = false;
-  context.brk = null;
-  try {
-    while (!context.terminated) {
-      return step();
+  set(target: T[], prop: number, value: T) {
+    if (isNaN(prop)) return Reflect.set(target, prop, value);
+    const { func } = this;
+    const params = func.meta.params;
+    if (params) {
+      const name = params[prop];
+      if (name) func.$[name] = value;
     }
-  } finally {
-    context.top = top;
-    context.debug = debug;
-    context.value = value;
-    context.brk = brk;
+    return Reflect.set(target, prop, value);
+  }
+  get(target: T[], prop: number): T {
+    if (isNaN(prop)) return Reflect.get(target, prop);
+    const { func } = this;
+    const params = func.meta.params;
+    if (params) {
+      const name = params[prop];
+      if (name) return func.$[name];
+    }
+    return Reflect.get(target, prop);
   }
 }
 
 export function args<T>(value: Iterable<T>): Array<T> {
-  return Array.from(value);
+  const arr = [...value];
+  const top = <Frame>context.top;
+  Object.defineProperty(arr, "callee", {
+    writable: false,
+    enumerable: false,
+    value: top.func
+  });
+  return new Proxy(arr, new ArgsTraps<T>(top, arr));
 }
 
 interface WebpackModule {
@@ -93,7 +77,11 @@ interface WebpackModule {
   };
 }
 
-export function module(name: string, module: WebpackModule, pure: boolean) {
+export function module(
+  name: string,
+  module: WebpackModule | null,
+  pure: boolean
+) {
   let info = context.modules[name];
   if (module && module.hot) module.hot.accept();
   if (info) {
@@ -118,16 +106,17 @@ export function syncMeta<Closure, Res>(
 
 let metaCount = 0;
 
-export function meta(
+export function fun(
   module: Module,
   func: (...args: any[]) => any,
-  handler: (f: Frame, pat: any) => any,
-  errHandler: ((state: number) => number) | undefined,
-  finHandler: ((state: number) => number) | undefined,
-  states: [Scope, string, string][],
+  handler: Handler,
+  errHandler: StateMap,
+  finHandler: StateMap,
+  states: States,
   name: string,
-  loc: string,
-  parent: FunctionDescr | undefined
+  loc: string | null,
+  parent: FunctionDescr | undefined,
+  params: string[]
 ): ($$: { [name: string]: any }) => any {
   let meta = module.functions[handler.name];
   if (!meta) meta = module.functions[handler.name] = <FunctionDescr>{};
@@ -160,7 +149,6 @@ export function meta(
       scope: scopeInfo,
       location: strLoc(line, column, endLine, endColumn)
     };
-
     S.regOpaqueObject(brk, `s#${module.name}#${handler.name}#${brk.id}`);
     memo.push(brk);
   }
@@ -174,11 +162,12 @@ export function meta(
   meta.fullName = fullName;
   meta.parent = parent;
   meta.uniqName = `${meta.module.name}#${meta.handler.name}`;
+  meta.params = params;
   if (meta.canSkip == null) meta.canSkip = false;
   if (meta.id == null) meta.id = metaCount++;
   meta.states = memo;
-  meta.location = loc;
-  if (!meta.blackbox) {
+  if (loc) {
+    meta.location = loc;
     [meta.line, meta.column, meta.endLine, meta.endColumn] = location(loc);
     memo.push(
       (meta.exitBreakpoint = {
@@ -187,10 +176,10 @@ export function meta(
         id: memo.length,
         meta,
         scope: memo.length ? memo[0].scope : {},
-        line: meta.endLine,
-        column: meta.endColumn,
-        endLine: meta.endLine,
-        endColumn: meta.endColumn,
+        line: <number>meta.endLine,
+        column: <number>meta.endColumn,
+        endLine: <number>meta.endLine,
+        endColumn: <number>meta.endColumn,
         exit: true,
         location: strLoc(meta.line, meta.column, meta.endLine, meta.endColumn)
       })
@@ -267,7 +256,9 @@ function wrapMeta(
     const closure = info.func(proto);
     closure[dataSymbol] = proto;
     closure[S.descriptorSymbol] = funcDescr;
-    proto.constructor = closure;
+    (<any>proto).func = closure;
+    closure.call = defaultCall;
+    closure.apply = defaultApply;
     return closure;
   }
   (<any>constr)[dataSymbol] = info;
@@ -281,83 +272,153 @@ function wrapMeta(
   return constr;
 }
 
-let queueCb: (() => void) | null = null;
+// let queueCb: (() => void) | null = null;
+
+let threadScheduled = false;
+export function signalThread() {
+  // if (queueCb) queueCb();
+  if (threadScheduled) return;
+  threadScheduled = true;
+  asap(function() {
+    threadScheduled = false;
+    if (context.onThread) context.onThread();
+  });
+}
+
+const fapply = Function.prototype.apply;
+const fcall = Function.prototype.call;
+
+function defaultApply(this: any) {
+  context.call = this;
+  return fapply.apply(this, <any>arguments);
+}
+
+S.regOpaqueObject(defaultApply, "@effectful/debugger/apply");
+
+function defaultCall(this: any) {
+  context.call = this;
+  return fcall.apply(this, <any>arguments);
+}
+
+S.regOpaqueObject(defaultCall, "@effectful/debugger/call");
+
+// let cancelNext = false;
 
 /** an async iterable signaling start of each new sync thread */
+/*
 export const threads: AsyncIterable<Job> &
-  AsyncIterator<Job> & { stop: () => void } = {
+  AsyncIterator<Job> & {
+    / ** stops the whole loop * /
+    stop: () => void;
+    / ** cancels current `next` * /
+    cancel: () => void;
+  } = {
   [Symbol.asyncIterator]() {
     return this;
   },
   stop() {
     context.terminated = true;
-    if (queueCb) queueCb();
+    threads.cancel();
+  },
+  cancel() {
+    cancelNext = true;
+    signalThread();
   },
   async next(): Promise<IteratorResult<Job>> {
+    cancelNext = false;
     while (!context.terminated) {
       const queue = context.asyncQueue;
       if (!context.top && queue.length)
         return { done: false, value: <State.Job>queue.shift() };
       await new Promise(i => (queueCb = i));
       queueCb = null;
+      if (cancelNext) break;
     }
     return { done: true, value: <Job>(<any>undefined) };
   }
 };
+*/
 
 /**
  * runs a computation until it encounters some breakpoint (returns `token)
  * or finishes the whole computation (returns the resulting value or throws an exception)
  */
 export function step() {
-  const savedRunning = context.running;
   try {
     context.running = true;
-    let { top } = context;
-    while (!context.terminated) {
-      if (!top) {
-        if (queueCb) queueCb();
-        if (context.error) throw context.value;
-        return context.value;
-      }
-      if (top.brk && top.brk.exit) {
-        context.top = top = top.next;
-        continue;
-      }
-      context.error = false;
-      context.brk = null;
-      try {
-        const arg = context.value;
-        context.value = void 0;
-        context.error = false;
-        top.meta.handler(top, arg);
-      } catch (e) {
-        if (e === token) {
-          if (context.brk && context.debug) break;
-          continue;
-        }
-        context.error = true;
-        context.value = e;
-        if (config.verbose) saved.console.error(e);
-        top = <Frame>context.top;
-        while (top && top.state === 1) {
-          context.top = top = top.next;
-          if (!top) throw e;
-          top.state = top.meta.errHandler(top.state);
-        }
-        if (!top) throw e;
-      }
-      top = context.top;
+    const value = context.value;
+    context.value = void 0;
+    context.error = false;
+    const top = context.top;
+    if (!top) throw new TypeError("nothing to run");
+    if (top.brk && top.brk.exit) {
+      if (!context.debug && top.restoreDebug) context.debug = true;
+      context.top = top.next;
     }
+    return loop(value);
   } finally {
-    context.running = savedRunning;
+    signalThread();
+    context.running = false;
   }
-  return token;
+}
+
+function loop(value: any): any {
+  let top: Frame | null = context.top;
+  // context.first = null;
+  while (top) {
+    try {
+      value = top.meta.handler(top, value);
+      top = context.top;
+    } catch (e) {
+      if (e === token) return e;
+      top = context.top;
+      if (!top) throw e;
+      top.goto = top.meta.errHandler(top.state);
+      value = e;
+    }
+  }
+  return value;
+}
+
+export function call(frame: Frame, e: any) {
+  try {
+    frame.next = context.top;
+    context.top = frame;
+    return frame.meta.handler(frame, e);
+  } catch (e) {
+    return handle(frame, e);
+  }
+}
+
+export function handle(frame: Frame, e: any) {
+  for (;;) {
+    if (e === token) {
+      if (/*frame !== context.first*/ frame.next) throw e;
+      // signalThread();
+      return token; /*(
+        frame.delayedResult || (frame.delayedResult = new ThenableExit(frame))
+      )*/
+    }
+    if (frame !== context.top) throw e;
+    try {
+      frame.goto = frame.meta.errHandler(frame.state);
+      return frame.meta.handler(frame, e);
+    } catch (ex) {
+      e = ex;
+    }
+  }
+}
+
+/** runs `top` until the first breakpoint */
+export function resume(top: Frame, value: any): any {
+  top.next = context.top;
+  context.top = top;
+  return loop(value);
 }
 
 export function evalAt(src: string, id: number) {
   const top = <Frame>context.top;
-  return compileEval(src, top.meta, top.meta.states[id])(top);
+  (context.call = <any>compileEval(src, top.meta, top.meta.states[id]))(top);
 }
 
 const locationRE = /^(\d+):(\d+)-(\d+):(\d+)$/;
@@ -404,7 +465,6 @@ export function compileEval(
     { compact: true }
   ).code;
   res = new Function("$effectful$debugger$lib$", tgt)(exports);
-  if (blackbox) res = liftSync(res);
   memo.set(key, res);
   return res;
 }
@@ -416,48 +476,116 @@ function defaultErrHandler() {
 function defaultFinHandler() {
   return 0;
 }
+/*
+class ThenableExit {
+  frame: Frame;
+  constructor(frame: Frame) {
+    this.frame = frame;
+  }
+  async then(
+    onResolve: (value: any) => any,
+    onReject: (reason: any) => any
+  ): Promise<any> {
+    const frame = this.frame;
+    try {
+      return onResolve(
+        await (frame.promise ||
+          (frame.promise = new saved.Promise((rs, rj) => {
+            frame.onResolve = rs;
+            frame.onReject = rj;
+          })))
+      );
+    } catch (e) {
+      context.call = onReject;
+      return onReject(e);
+    }
+  }
+}
+*/
+export function isDelayedResult(value: any): boolean {
+  // return value instanceof ThenableExit;
+  return value === token;
+}
 
 export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
   if (newTarget) unwrapPrototype(self);
-  return (context.top = wrap<Frame>({
+  const { meta, func } = proto;
+  const next = context.top;
+  const frame: Frame = {
     $$: proto.$$,
     state: 0,
-    meta: proto.meta,
+    goto: 0,
+    meta,
+    func,
     self,
     newTarget: newTarget != null,
     $: wrap({}),
     brk: null,
-    next: context.top
-  }));
+    next,
+    restoreDebug: false,
+    awaiting: token,
+    onResolve: null,
+    onReject: null,
+    promise: null /*,
+    delayedResult: void 0*/
+  };
+  if (context.debug && next) {
+    const call = context.call;
+    const expected =
+        call ===
+        func /*||
+      ((call === fapply || call === fcall) && context.obj === func)*/;
+    if (!expected) {
+      frame.restoreDebug = true;
+      context.debug = false;
+    }
+  }
+  const res = (context.top = wrap<Frame>(frame));
+  // if (!next && !context.running) context.first = res;
+  context.call /*= context.obj*/ = null;
+  return res;
 }
 
-export function pure(value: any): any {
+export function checkExitBrk(top: Frame, value: any) {
+  const meta = top.meta;
+  if (meta.blackbox) return;
+  const brk = (context.brk = top.brk = meta.exitBreakpoint);
+  if (brk && context.needsBreak(brk, value)) {
+    context.value = value;
+    context.error = false;
+    throw token;
+  }
+}
+
+export function ret(value: any): any {
   const top = <Frame>context.top;
   if (top.newTarget && (!value || typeof value !== "object")) value = top.self;
-  const brk = (context.brk = top.brk = context.debug
-    ? top.meta.exitBreakpoint
-    : null);
-  if (brk && context.needsBreak(brk)) throw token;
+  top.state = top.goto = 0;
+  if (top.onResolve) {
+    context.call = top.onResolve;
+    top.onResolve(value);
+  }
+  if (context.debug) {
+    if (context.running) checkExitBrk(top, value);
+  } else if (top.restoreDebug) context.debug = true;
   context.top = top.next;
-  top.state = 0;
-  return (context.value = value);
+  return value;
 }
 
-function startThread(brk: Brk) {
-  //TODO: ignore
-  context.asyncQueue.push({
-    top: context.top,
-    brk,
-    debug: context.debug,
-    value: context.value
-  });
-  context.top = null;
-  if (queueCb) queueCb();
+export function unhandled(e: any) {
+  const top = <Frame>context.top;
+  top.state = top.goto = 0;
+  if (top.onReject) {
+    context.call = top.onReject;
+    top.onReject(e);
+  }
+  if (!context.debug && top.restoreDebug) context.debug = true;
+  context.top = top.next;
+  throw e;
 }
 
 export function brk(id: number): any {
   if (context.debug === false) return;
-  // if (context.ignore) throw token;
   const { needsBreak, top } = context;
   let p: Brk;
   if (
@@ -465,7 +593,16 @@ export function brk(id: number): any {
     (p = top.brk = context.brk = top.meta.states[id]) &&
     needsBreak(p)
   ) {
-    if (!context.running) startThread(p);
+    if (!context.running) {
+      context.queue.push({
+        top: context.top,
+        brk: p,
+        debug: context.debug,
+        value: context.value
+      });
+      context.top = null;
+      signalThread();
+    }
     throw token;
   }
 }
@@ -474,8 +611,10 @@ export function iterator<T>(v: Iterable<T>) {
   return v[Symbol.iterator]();
 }
 
-export function asyncIterator<T>(v: AsyncIterable<T>) {
-  return v[Symbol.asyncIterator]();
+export function iteratorM<T>(v: AsyncIterable<T>) {
+  return v[Symbol.asyncIterator]
+    ? v[Symbol.asyncIterator]()
+    : (<any>v)[Symbol.iterator]();
 }
 
 export function forInIterator(obj: object): Iterable<string> {
@@ -484,14 +623,7 @@ export function forInIterator(obj: object): Iterable<string> {
   })()[Symbol.iterator]();
 }
 
-if (config.patchRT) {
-  const { defineProperty } = Object;
-  Object.defineProperty = function definePropert(obj, prop, descr) {
-    const copy = { ...descr };
-    if (copy.set) copy.set = liftSync(copy.set);
-    if (copy.get) copy.get = liftSync(copy.get);
-    return defineProperty(obj, prop, descr);
-  };
+if (config.patchRT && config.persistState) {
   Function.prototype.bind = function bind(
     this: any,
     self: any,
@@ -501,4 +633,27 @@ if (config.patchRT) {
   };
 }
 
-export { token, wrap };
+export function then(
+  p: Promise<any>,
+  onResolve: (value: any) => any,
+  onReject?: (reason: any) => any
+) {
+  context.call = <any>Promise.resolve;
+  const res = <any>Promise.resolve(p);
+  context.call = res.then;
+  return res.then(onResolve, onReject);
+}
+
+export function liftSync(fun: (this: any, ...args: any[]) => any): any {
+  return function(this: any) {
+    const savedDebug = context.debug;
+    try {
+      context.debug = false;
+      return fun.apply(this, <any>arguments);
+    } finally {
+      context.debug = savedDebug;
+    }
+  };
+}
+
+export { token, wrap, context };

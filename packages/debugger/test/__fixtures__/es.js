@@ -85,14 +85,14 @@ export function reduceRightTest(v) {
 }
 
 export function arraySortTest(v, w) {
-  rt.arraySort.call(v, (a, b) => a - b);
-  rt.arraySort.call(w);
+  v.sort((a, b) => a - b);
+  w.sort();
   return [v, w];
 }
 
 export function typedArraySortTest(v, w) {
-  rt.typedArraySort.call(v, (a, b) => a - b);
-  rt.typedArraySort.call(w);
+  v.sort((a, b) => a - b);
+  w.sort();
   return [v, w];
 }
 

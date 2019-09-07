@@ -1,5 +1,6 @@
 /instr
 /deps
+/timeTravel
 /trace
 /*.js
 /*.d.ts

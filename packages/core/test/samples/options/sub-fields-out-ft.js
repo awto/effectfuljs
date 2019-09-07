@@ -5,8 +5,8 @@ function a1() {
 
   a1.V.b = function _b(j) {
     var b = M.context();
-    b.V.a1 = a1.V;
     b.V.j = j;
+    b.V.a1 = a1.V;
     return M.scope(b_1);
   };
 
@@ -18,8 +18,8 @@ function a2() {
 
   a2.V.$b$$ = function _b(j) {
     var b = M.context();
-    b.VV.$a2$$ = a2.V;
     b.V.$j$$ = j;
+    b.VV.$a2$$ = a2.V;
     return M.scope(_b_1);
   };
 

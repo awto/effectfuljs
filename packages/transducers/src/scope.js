@@ -722,10 +722,8 @@ function solve(si) {
     for (const j of i.varRefs) {
       allIds.add(j);
       Kit.mapAdd(symsStore, j, i);
-      // if ((j.hasDecl = decls.has(j))) {
       j.hasDecl = decls.has(j);
       Kit.mapPush(names, j.orig, j);
-      // }
     }
     for (const [name, syms] of names) {
       if (syms.length > 1 || !name.length || reserved.has(name))

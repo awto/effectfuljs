@@ -1,6 +1,7 @@
 import * as Kit from "./kit";
 import { Tag, symbol, invariant } from "./kit";
 import * as Match from "@effectful/transducers/match";
+import * as path from "path";
 // import {sync as resolve} from "resolve"
 
 /** token type for signaling config object changes */
@@ -152,9 +153,16 @@ function aliases(s) {
   s = Kit.auto(s);
   const aliases = s.opts.moduleAliases;
   if (!aliases) return s;
+  const relAlias = aliases["."];
   return _aliases();
   function* subst(j) {
-    const alias = aliases[j.value.node.value];
+    let str = j.value.node.value;
+    let alias;
+    if (relAlias && str[0] === ".") {
+      str = path.normalize(`${relAlias}/${str}`);
+      if (Kit.isWindows) str = str.replace(/\\/g, "/");
+      alias = aliases[str] || str;
+    } else alias = aliases[str];
     if (!alias) {
       yield* s.copy(j);
       return;

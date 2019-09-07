@@ -229,7 +229,7 @@ function a4() {
 
   function _11(a4, b) {
     var a;
-    a = a4._(a4._1, b);
+    a = (0, a4._)(a4._1, b);
     return a4.yld(a, _12);
   }
 
@@ -1750,11 +1750,11 @@ function c2_1() {
                 return _c2_1._i += j;
               };
 
-              return _z.yldStar(_z._c(), _2);
+              return _z.yldStar((0, _z._c)(), _2);
             }
 
             function _2(_z, a) {
-              return _z.yldStar(_z._d(a), _3);
+              return _z.yldStar((0, _z._d)(a), _3);
             }
 
             function _3(_z, a) {
@@ -1769,9 +1769,9 @@ function c2_1() {
               return _z.pure(function z(j) {
                 var _z = M.context();
 
+                _z._j = j;
                 _z._c2_1 = c2_1;
                 _z._f = ctx;
-                _z._j = j;
                 return _z.scope(_1);
 
                 function _1(_z) {
@@ -1821,7 +1821,7 @@ function c2_1() {
     function _3(inner) {
       if (!(inner._loop = inner._loop.step()).done) {
         inner._j = inner._loop.value;
-        return inner.yldStar(inner._j(), _4, _11);
+        return inner.yldStar((0, inner._j)(), _4, _11);
       } else {
         inner._fc = _7, inner._fe = _9;
         return inner.jump(void 0, _6);
@@ -2038,8 +2038,8 @@ function objMethodsClosure() {
     return objMethodsClosure.pure({
       objMethod1(k) {
         var ctx = M.context();
-        ctx._objMethodsClosure = objMethodsClosure;
         ctx._k = k;
+        ctx._objMethodsClosure = objMethodsClosure;
         return ctx.scope(_1);
 
         function _1(ctx) {
@@ -2066,8 +2066,8 @@ function objMethodsClosure() {
             objMethod2(m) {
               var _ctx = M.context();
 
-              _ctx._f = ctx;
               _ctx._m = m;
+              _ctx._f = ctx;
               return _ctx.scope(_1);
 
               function _1(_ctx) {
@@ -2148,9 +2148,9 @@ const objMThis = {
 class SomeClass {
   f(i) {
     var ctx = M.context();
+    ctx._i = i;
     ctx.__this = this;
     ctx.__args = arguments;
-    ctx._i = i;
     return ctx.scope(_1);
 
     function _1(ctx) {
@@ -2179,9 +2179,9 @@ class SomeClass {
 class SomeChild extends SomeClass {
   f(i) {
     var ctx = M.context();
+    ctx._i = i;
     ctx.__this = this;
     ctx.__args = arguments;
-    ctx._i = i;
     return ctx.scope(_1);
 
     function _1(ctx) {
@@ -2209,8 +2209,8 @@ class SomeChild extends SomeClass {
 
   static f(i) {
     var ctx = M.context();
-    ctx.__this = this;
     ctx._i = i;
+    ctx.__this = this;
     return ctx.scope(_1);
 
     function _1(ctx) {
@@ -2397,7 +2397,7 @@ function c2() {
 
   function _1(c2) {
     c2._i = 0;
-    return c2.pure(c2._closure1_b()());
+    return c2.pure((0, c2._closure1_b)()());
   }
 
   function _2(c2, r) {
@@ -3118,8 +3118,8 @@ function forOfCapt6() {
             a = (j => {
               var _ctx = M.context();
 
-              _ctx._f = ctx;
               _ctx._j = j;
+              _ctx._f = ctx;
               return _ctx.scope(_1);
 
               function _1(_ctx) {
@@ -3356,8 +3356,8 @@ function closure2() {
     return closure2.pure(function sub(k) {
       var _sub = M.context();
 
-      _sub._closure2 = closure2;
       _sub._k = k;
+      _sub._closure2 = closure2;
       return _sub.scope(_1);
 
       function _1(_sub) {

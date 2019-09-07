@@ -1,38 +1,37 @@
 require("./setup-time-travel-fwd");
-const trace = require("./run").bind(null, true);
+const trace = require("./run");
+trace.silent = true;
 const D = require("../main");
+const SD = require("@effectful/serialization/dom");
+const S = require("@effectful/serialization");
 
 test("DOM forward time traveling", function() {
   D.TimeTravel.reset();
   global.console = { log: jest.fn() };
+  D.TimeTravel.reset();
+  SD.trackGlobalDocument();
   document.body.innerHTML = `<div id="root"></div>`;
-  D.evalThunk(require("./__fixtures__/dom"));
-  const mod = trace(true);
+  const mod = trace(D.evalThunk(require("./__fixtures__/dom")));
   console.log("> M:", mod);
   D.TimeTravel.DOM.track(document.getElementById("root"));
   const text0 = document.body.innerHTML;
   expect(text0).toMatchSnapshot();
   D.TimeTravel.checkpoint();
-  mod.changeDom1();
-  trace(true);
+  trace(mod.changeDom1());
   const text1 = document.body.innerHTML;
   expect(text1).toMatchSnapshot();
   D.TimeTravel.checkpoint();
-  mod.changeDom2();
-  trace(true);
+  trace(mod.changeDom2());
   const text2 = document.body.innerHTML;
   expect(text2).toMatchSnapshot();
   D.TimeTravel.checkpoint();
-  mod.changeDom3();
-  trace(true);
+  trace(mod.changeDom3());
   const text3 = document.body.innerHTML;
   expect(text3).toMatchSnapshot();
   D.TimeTravel.checkpoint();
-  mod.changeDom4();
-  trace(true);
+  trace(mod.changeDom4());
   const text4 = document.body.innerHTML;
   expect(text4).toMatchSnapshot();
-  D.TimeTravel.checkpoint();
   D.TimeTravel.undo();
   expect(document.body.innerHTML).toBe(text3);
   D.TimeTravel.redo();
@@ -63,4 +62,48 @@ test("DOM forward time traveling", function() {
   expect(document.body.innerHTML).toBe(text4);
   D.TimeTravel.redo();
   expect(document.body.innerHTML).toBe(text4);
+  D.TimeTravel.undo();
+  expect(document.body.innerHTML).toBe(text3);
+  const j = D.TimeTravel.journal;
+  const data = S.write({
+    now: j.now,
+    future: j.future,
+    past: j.past,
+    data: document.body
+  });
+  expect(JSON.stringify(data)).toMatchSnapshot();
+  const oldDoc = document.documentElement;
+  D.TimeTravel.DOM.untrack(document.getElementById("root"));
+  document.body.innerHTML = "";
+  D.TimeTravel.reset();
+  const restored = S.read(data);
+  document.body.replaceWith(restored.data);
+  D.TimeTravel.DOM.track(document.getElementById("root"));
+  expect(document.body.innerHTML).toBe(text3);
+  Object.assign(D.TimeTravel.journal, restored);
+  D.TimeTravel.redo();
+  expect(document.body.innerHTML).toBe(text4);
+  D.TimeTravel.redo();
+  expect(document.body.innerHTML).toBe(text4);
+  D.TimeTravel.undo();
+  expect(document.body.innerHTML).toBe(text3);
+  D.TimeTravel.undo();
+  expect(document.body.innerHTML).toBe(text2);
+  D.TimeTravel.undo();
+  expect(document.body.innerHTML).toBe(text1);
+  D.TimeTravel.undo();
+  expect(document.body.innerHTML).toBe(text0);
+  D.TimeTravel.undo();
+  expect(document.body.innerHTML).toBe(text0);
+  D.TimeTravel.redo();
+  expect(document.body.innerHTML).toBe(text1);
+  D.TimeTravel.redo();
+  expect(document.body.innerHTML).toBe(text2);
+  D.TimeTravel.redo();
+  expect(document.body.innerHTML).toBe(text3);
+  D.TimeTravel.redo();
+  expect(document.body.innerHTML).toBe(text4);
+  D.TimeTravel.redo();
+  expect(document.body.innerHTML).toBe(text4);
+  expect(console.log.mock.calls).toMatchSnapshot();
 });

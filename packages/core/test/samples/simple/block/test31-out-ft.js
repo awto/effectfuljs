@@ -43,9 +43,9 @@ function a_2(a) {
   return M.chain(function b(i, k) {
     var _b = M.context();
 
-    _b._a = a;
     _b._i = i;
     _b._k = k;
+    _b._a = a;
     return M.scope(b_1);
   }(a._i, b), a_3);
 }

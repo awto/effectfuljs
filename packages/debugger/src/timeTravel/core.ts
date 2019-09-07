@@ -1,6 +1,6 @@
 import config from "../config";
 import { saved } from "../state";
-import { regConstructor } from "@effectful/serialization";
+import * as S from "@effectful/serialization";
 
 export interface Record {
   operations?: Operation;
@@ -40,6 +40,9 @@ export const notTraceable: TraceMeta<any> = {
     return target;
   }
 };
+
+S.regOpaqueObject(notTraceable, "@effectful/debugger/notTraceable");
+S.regOpaqueObject(notTraceable.wrap, "@effectful/debugger/notTraceable#wrap");
 
 /** Class for representing trace data steps */
 export class TraceData<T> {
@@ -112,14 +115,21 @@ export function replay(rec: Record) {
 
 /** Returns own property names and symbols */
 export function* allProps(obj: any): Iterable<string | symbol> {
-  yield* Object.getOwnPropertyNames(obj);
-  yield* Object.getOwnPropertySymbols(obj);
+  for (const i of _allProps()) {
+    // if (i === traceDataSymbol /* || i === traceMetaSymbol*/) continue;
+    yield i;
+  }
+  function* _allProps() {
+    yield* Object.getOwnPropertyNames(obj);
+    yield* Object.getOwnPropertySymbols(obj);
+  }
 }
 
 class ObjectSnapshot<T> {
   data: TraceData<T>;
   at: Record | null;
   snapshot: { [name: string]: PropertyDescriptor };
+  prev?: Operation;
   constructor(data: TraceData<T>) {
     this.data = data;
     this.at = data.lastUpdate;
@@ -140,19 +150,65 @@ class ObjectSnapshot<T> {
     }
     data.lastUpdate = at;
     if (prototypeChanged) Object.setPrototypeOf(target, proto);
-    for (const i of allProps(target))
+    for (const i of allProps(target)) {
       if (!(i in snapshot)) delete (<any>target)[i];
+    }
     for (const i of allProps(snapshot)) {
       const descr = (<any>snapshot)[i];
       if (!descr.set) {
-        if (descr.enumberable && descr.writeable)
-          (<any>target)[i] = descr.value;
+        if (descr.enumerable && descr.writable) (<any>target)[i] = descr.value;
         else Object.defineProperty(target, i, descr);
       }
     }
   }
 }
-regConstructor(ObjectSnapshot);
+
+// shorter format
+S.regConstructor(ObjectSnapshot, {
+  write(ctx, value) {
+    const res = <any>{};
+    res.d = ctx.step(value.data, res, "d");
+    res["@"] = ctx.step(value.at, res, "@");
+    res.p = ctx.step(value.prev, res, "p");
+    const snapshots: any[] = (res.i = []);
+    for (const i of allProps(value.snapshot)) {
+      const descr = (<any>value.snapshot)[i];
+      if (!descr.set) {
+        let flags = 0;
+        if (!descr.enumerable) flags = flags | 1;
+        if (!descr.writable) flags = flags | 2;
+        if (!descr.configurable) flags = flags | 4;
+        const prop: any[] = [i];
+        snapshots.push(prop);
+        prop.push(ctx.step(descr.value, prop, 1));
+        if (flags !== 0) prop.push(flags);
+      }
+    }
+    return res;
+  },
+  create() {
+    return Object.create(ObjectSnapshot.prototype);
+  },
+  readContent(ctx, json, value) {
+    value.data = ctx.step((<any>json).d);
+    value.at = ctx.step((<any>json)["@"]);
+    value.prev = ctx.step((<any>json).p);
+    const snapshot: any = (value.snapshot = {});
+    const items = <[string, any, number][]>(<any>json).i;
+    for (const [name, propJson, flags] of items) {
+      const enumerable = (flags & 1) === 0;
+      const writable = (flags & 2) === 0;
+      const configurable = (flags & 4) === 0;
+      snapshot[name] = {
+        enumerable,
+        writable,
+        configurable,
+        value: ctx.step(propJson)
+      };
+    }
+  },
+  props: false
+});
 
 export function captureSnapshot<T>(data: TraceData<T>) {
   if (!journal.now || data.lastUpdate === journal.now) return;
@@ -206,7 +262,7 @@ export function defaultWrap<T extends MaybeTarget<T>>(
     Object.setPrototypeOf(target, proto);
   }
   const proxy = new saved.Proxy(target, traps);
-  target[traceDataSymbol] = new TraceData(meta, proxy, target);
+  setTraceData(target, new TraceData(meta, proxy, target));
   return proxy;
 }
 
@@ -217,14 +273,46 @@ export const defaultTraceMeta: TraceMeta<any> = {
   proto: null
 };
 
+S.regOpaqueObject(defaultTraceMeta, "@effectful/debugger/defaultTraceMeta");
+S.regOpaqueObject(
+  defaultTraceMeta.wrap,
+  "@effectful/debugger/defaultTraceMeta#wrap"
+);
+
 export function wrapImpl<T extends MaybeTarget<T>>(target: T): T {
   if (!target) return target;
   const type = typeof target;
   if (type === "object" || type === "function") {
-    if (target.hasOwnProperty(traceDataSymbol)) return target;
+    if (getTraceData(target)) return target;
     return (target[traceMetaSymbol] || defaultTraceMeta).wrap(target);
   }
   return target;
+}
+
+export function setTraceData<T extends MaybeTarget<T>>(
+  target: T,
+  data: TraceData<T>
+): T {
+  target[traceDataSymbol] = data;
+  return target;
+}
+
+export function getTraceData<T extends MaybeTarget<T>>(
+  target: T
+): TraceData<T> | undefined {
+  if (!target) return undefined;
+  const traceData = target[traceDataSymbol];
+  if (traceData && traceData.proxy === target) return traceData;
+  return undefined;
+}
+
+export function getTargetTraceData<T extends MaybeTarget<T>>(
+  target: T
+): TraceData<T> | undefined {
+  if (!target) return undefined;
+  const traceData = target[traceDataSymbol];
+  if (traceData && traceData.target === target) return traceData;
+  return undefined;
 }
 
 /**
@@ -232,8 +320,9 @@ export function wrapImpl<T extends MaybeTarget<T>>(target: T): T {
  * or returns `target` otherwise
  */
 export function unwrapTarget<T extends MaybeTarget<T>>(target: T): T {
-  if (!target || !target.hasOwnProperty(traceDataSymbol)) return target;
-  return (<any>target)[traceDataSymbol].target;
+  const data = getTraceData(target);
+  if (!data) return target;
+  return data.target;
 }
 
 /**
@@ -241,7 +330,16 @@ export function unwrapTarget<T extends MaybeTarget<T>>(target: T): T {
  * or returns `target` if it is already the proxy
  */
 export function getWrapper<T extends MaybeTarget<T>>(maybeProxy: T): T {
-  if (!maybeProxy || !maybeProxy.hasOwnProperty(traceDataSymbol))
-    return maybeProxy;
-  return (<any>maybeProxy)[traceDataSymbol].proxy;
+  const data = getTargetTraceData(maybeProxy);
+  if (!data) return maybeProxy;
+  return <any>data.proxy;
 }
+
+/** Values wrapper injected by the compiler */
+export const wrap: <T extends MaybeTarget<T>>(
+  target: T
+) => T = config.timeTravel
+  ? wrapImpl
+  : function wrap<T extends MaybeTarget<T>>(v: T): T {
+      return v;
+    };

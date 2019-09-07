@@ -160,9 +160,9 @@ export function flattenModuleDecls(si) {
         node: { kind: "var" }
       });
       yield s.enter(Tag.declarations, Tag.Array);
-      for (const i of vars) {
+      for (const [sym, node] of new Map(vars.map(i => [i.sym, i.node]))) {
         yield s.enter(Tag.push, Tag.VariableDeclarator);
-        yield s.tok(Tag.id, Tag.Identifier, { sym: i.sym, node: i.node });
+        yield s.tok(Tag.id, Tag.Identifier, { sym, node });
         yield* s.leave();
       }
       yield* s.leave();
@@ -223,9 +223,7 @@ export function closConv(si) {
               "object methods aren't yet supported with `closConv`"
             );
           case Tag.ArrowFunctionExpression:
-            throw s.error(
-              "arrow functions aren't yet supported with `closConv`"
-            );
+            i.type = Tag.FunctionExpression;
           case Tag.FunctionExpression:
             if (!i.value.metaId) break;
             if (!i.value.opts.injectFuncMeta)
@@ -241,10 +239,16 @@ export function closConv(si) {
               s.enter(Tag.body, Tag.BlockStatement),
               s.enter(Tag.body, Tag.Array),
               s.enter(Tag.push, Tag.ReturnStatement),
-              s.peel(Kit.setPos(i, Tag.argument)),
-              ..._closConv(),
-              ...lab()
+              s.peel(Kit.setPos(i, Tag.argument))
             );
+            const id = s.cur();
+            if (
+              id.type === Tag.Identifier &&
+              i.value.funcId &&
+              i.value.funcAlias
+            )
+              id.value.sym = i.value.funcAlias;
+            args.push(..._closConv(), ...lab());
             if (i.value.implFrame)
               args.push(
                 s.tok(Tag.push, Tag.Identifier, {
@@ -388,6 +392,7 @@ export function substContextIds(si) {
   const { closureShortcuts } = opts;
   const varsSubField = opts.varStorageField;
   const closSubField = opts.closureStorageField || varsSubField;
+  const wrapCalls = !s.opts.noClosThis;
   if (!contextSym) return s;
   return walk();
   function* emitSubField(subField) {
@@ -412,10 +417,23 @@ export function substContextIds(si) {
       });
     }
   }
-  function* id(pos, sym) {
+  function* id(pos, sym, i) {
     invariant(sym.fieldName);
     const subField = sym.subField == null ? varsSubField : sym.subField;
-    yield s.enter(pos, Tag.MemberExpression, { origSym: sym });
+    const lab = s.label();
+    if (
+      pos === Tag.callee &&
+      wrapCalls &&
+      i.value.parent.origType === Tag.CallExpression
+    ) {
+      yield s.enter(pos, Tag.SequenceExpression);
+      yield s.enter(Tag.expressions, Tag.Array);
+      yield s.tok(Tag.push, Tag.NumericLiteral, { node: { value: 0 } });
+      pos = Tag.push;
+    }
+    yield s.enter(pos, Tag.MemberExpression, {
+      origSym: sym
+    });
     if (ctxDeps && sym.declScope !== root) {
       const info = ctxDeps.get(sym.declScope);
       invariant(info);
@@ -472,7 +490,7 @@ export function substContextIds(si) {
     yield s.tok(Tag.property, Tag.Identifier, {
       node: { name: sym.fieldName }
     });
-    yield* s.leave();
+    yield* lab();
   }
   function* walk() {
     for (const i of s) {
@@ -484,7 +502,7 @@ export function substContextIds(si) {
           sym.interpr === Bind.ctxField &&
           !i.value.keepClos
         ) {
-          yield* id(i.pos, sym);
+          yield* id(i.pos, sym, i);
           s.close(i);
           continue;
         }

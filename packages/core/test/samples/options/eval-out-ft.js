@@ -28,6 +28,7 @@ var $module = M.module("*"),
 
 function aa($$) {
   var aa = M.context();
+  aa.V._$$ = $$;
 
   aa.V._cc = function _cc(b) {
     var cc = M.context();
@@ -43,6 +44,7 @@ function aa($$) {
 
   aa.V._bb = function _bb($$) {
     var bb = M.context();
+    bb.V._$$ = $$;
 
     bb.V._cc = function _cc(b) {
       var cc = M.context();
@@ -50,11 +52,9 @@ function aa($$) {
       return cc.scope(_cc_1);
     };
 
-    bb.V._$$ = $$;
     return bb.scope(bb_1);
   };
 
-  aa.V._$$ = $$;
   return aa.scope(aa_1);
 }
 

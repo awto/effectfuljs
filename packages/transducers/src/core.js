@@ -646,7 +646,8 @@ export function* resetFieldInfo(s) {
                   : assignmentOpDefault;
               break;
             case Tag.ObjectProperty:
-              if (f && f.declVar) ti = assignmentProperty;
+              if (i.value.node.computed) ti = ti.propAlt;
+              else if (f && f.declVar) ti = assignmentProperty;
               break;
             case Tag.AssignmentPattern:
               if (!f || !f.declVar) ti = symInfo(Tag.AssignmentExpression);

@@ -3,6 +3,7 @@ import { Tag, symbol, invariant } from "./kit";
 import { recalcEff } from "./propagate";
 import * as Ctrl from "./control";
 import * as Bind from "./bind";
+import * as Block from "./block";
 
 export const repeatId = Kit.sysId("repeat");
 export const forParId = Kit.sysId("forPar");
@@ -149,7 +150,12 @@ function forOfStmtImpl(loose, s) {
   const esPureProtocol = s.opts.esForOf;
   const esEffProtocol = s.opts.esForAwaitOf;
   const noResult = s.opts.returnContext === false;
-  const { normPureForIn } = s.opts;
+  const { normPureForIn, ops } = s.opts;
+  const wrapNext =
+    ops &&
+    ops.AwaitExpression &&
+    ops.AwaitExpression.substr &&
+    Kit.sysId(ops.AwaitExpression);
   function* readLeft(sym, forOfInfo) {
     function* val(pos) {
       yield s.enter(pos, Tag.MemberExpression, { forOfInfo });
@@ -180,6 +186,7 @@ function forOfStmtImpl(loose, s) {
   function* exit(loop, forOfExit) {
     const lab = s.label();
     const bind = loop.bindIter;
+    const wrapAwait = loop.wrapAwait;
     const esProtocol = (bind && esEffProtocol) || (!bind && esPureProtocol);
     const exitName = esProtocol ? "return" : "exit";
     yield s.enter(Tag.push, Tag.IfStatement, { forOfExit });
@@ -195,7 +202,15 @@ function forOfStmtImpl(loose, s) {
     yield s.enter(Tag.consequent, Tag.BlockStatement);
     yield s.enter(Tag.body, Tag.Array);
     yield s.enter(Tag.push, Tag.ExpressionStatement);
-    yield s.enter(Tag.expression, Tag.CallExpression, { bind });
+    let pos = Tag.expression;
+    if (wrapAwait) {
+      yield s.enter(pos, Block.op, { bind: true, eff: true, sym: wrapNext });
+      pos = Tag.push;
+    }
+    yield s.enter(pos, Tag.CallExpression, {
+      bind,
+      eff: bind
+    });
     yield s.enter(Tag.callee, Tag.MemberExpression);
     yield s.tok(Tag.object, Tag.Identifier, {
       sym: loop.iterVar,
@@ -230,6 +245,7 @@ function forOfStmtImpl(loose, s) {
             const loop = i.value;
             const sym = (loop.iterVar = Bind.tempVarSym(root, "loop"));
             let forOfInfo;
+            const wrapAwait = (loop.wrapAwait = loop.node.await && wrapNext);
             const bind = (loop.bindIter =
               !loose &&
               i.type !== Tag.ForInStatement &&
@@ -274,7 +290,7 @@ function forOfStmtImpl(loose, s) {
               sym:
                 i.type === Tag.ForInStatement
                   ? forInIteratorId
-                  : bind
+                  : i.value.node.await
                   ? effIteratorId
                   : iteratorId
             });
@@ -317,7 +333,18 @@ function forOfStmtImpl(loose, s) {
               });
               stepPos = Tag.right;
             }
-            yield s.enter(stepPos, Tag.CallExpression, { bind, eff: bind });
+            if (wrapAwait) {
+              yield s.enter(stepPos, Block.op, {
+                sym: wrapNext,
+                bind: true,
+                eff: true
+              });
+              stepPos = Tag.push;
+            }
+            yield s.enter(stepPos, Tag.CallExpression, {
+              bind,
+              eff: bind
+            });
             yield s.enter(Tag.callee, Tag.MemberExpression);
             yield s.tok(Tag.object, Tag.Identifier, {
               sym,
@@ -330,6 +357,7 @@ function forOfStmtImpl(loose, s) {
             yield* s.leave();
             yield s.tok(Tag.arguments, Tag.Array);
             yield* s.leave();
+            if (wrapAwait) yield* s.leave();
             if (noResult && !esProtocol)
               yield s.tok(Tag.push, Tag.Identifier, {
                 sym,
@@ -705,6 +733,7 @@ export function blockScoping(sa) {
               while ((j = s.curLev()) && j.pos !== Tag.body) {
                 yield* walk(s.one(), root, nsubst, capt, labs);
               }
+              const loc = j.value.node.loc;
               const lab = s.label();
               let bs;
               if (j.type === Tag.BlockStatement) {
@@ -712,7 +741,7 @@ export function blockScoping(sa) {
                 yield* s.peelTo(Tag.body);
                 bs = s.sub();
               } else {
-                yield s.enter(Tag.body, Tag.BlockStatement);
+                yield s.enter(Tag.body, Tag.BlockStatement, { node: { loc } });
                 yield s.enter(Tag.body, Tag.Array);
                 bs = s.one();
               }
@@ -737,7 +766,7 @@ export function blockScoping(sa) {
               });
               const clab = s.label();
               const func = s.enter(Tag.callee, Tag.ArrowFunctionExpression, {
-                node: { params: [] },
+                node: { params: [], loc },
                 opts: root.opts,
                 coerce: true,
                 topEff: i.value.eff,
@@ -755,6 +784,7 @@ export function blockScoping(sa) {
                 });
               yield* s.leave();
               const b = s.enter(Tag.body, Tag.BlockStatement, {
+                node: { loc },
                 ctrl: "#ret",
                 labs: ["#ret"],
                 ctrlEff: i.value.eff

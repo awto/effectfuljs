@@ -1,4 +1,6 @@
 const config = require("../config").default;
-config.patchRT = true;
+const D = require("../state");
+D.context.debug = true;
+D.context.needsBreak = () => true;
 config.verbose = false;
 module.exports = config;

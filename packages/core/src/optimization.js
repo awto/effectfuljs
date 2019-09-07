@@ -179,7 +179,7 @@ export function inlinePureCont(si) {
                 reflected: i.value.reflected
               });
               if (!coerce && i.type === Ctrl.jump)
-                yield s.enter(Tag.push, Block.app, { sym: Block.pureId });
+                yield s.enter(Tag.push, Block.app, { sym: root.pureId });
               yield* inner;
               yield* lab();
               s.close(i);

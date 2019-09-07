@@ -29,6 +29,7 @@ var $module = M.module("*"),
 function aa($$) {
   var aa = M.context(),
       a;
+  aa.V._$$ = $$;
 
   aa.V._cc = function _cc(b) {
     var cc = M.context(),
@@ -37,7 +38,7 @@ function aa($$) {
     cc.V._b = b;
     a = cc.C.V._$$.C.C.V._c;
     c = cc.C.V._$$.V._a;
-    return cc.chain(cc.V._b(a, c), _1);
+    return cc.chain((0, cc.V._b)(a, c), _1);
 
     function _1(cc, a) {
       return cc.chain(eval(cc.preEval(a, 0)), _2);
@@ -55,7 +56,7 @@ function aa($$) {
     cc2.V._c = c;
     a = cc2.C.V._$$.C.V._b;
     b = cc2.C.V._$$.V._a;
-    return cc2.chain(cc2.V._c(a, b), _1);
+    return cc2.chain((0, cc2.V._c)(a, b), _1);
 
     function _1(cc2, a) {
       return cc2.chain(cc2.eval(a, 0), _2);
@@ -67,6 +68,7 @@ function aa($$) {
   aa.V._bb = function _bb($$) {
     var bb = M.context(),
         a;
+    bb.V._$$ = $$;
 
     bb.V._cc = function _cc(b) {
       var cc = M.context(),
@@ -85,7 +87,7 @@ function aa($$) {
         var a, b;
         a = cc.C.C.V._$$.C.C.V._c;
         b = cc.C.C.V._$$.V._a;
-        return cc.chain(cc.V._b(a, b), _2);
+        return cc.chain((0, cc.V._b)(a, b), _2);
       }
 
       function _2(cc, a) {
@@ -97,7 +99,6 @@ function aa($$) {
       }
     };
 
-    bb.V._$$ = $$;
     a = bb.C.V._$$.C.V;
     return bb.chain(a._b(), _1);
 
@@ -109,7 +110,6 @@ function aa($$) {
     }
   };
 
-  aa.V._$$ = $$;
   a = aa.V._$$.C.V;
   return aa.chain(a._b(), _1);
 

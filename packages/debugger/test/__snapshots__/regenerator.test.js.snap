@@ -1,0 +1,287 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`regenerator run @@iterator is defined on Generator.prototype and returns this 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions Promise should be a function 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions Promise should be defined globally 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions async function expressions should be allowed 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions dependent promises should be awaitable out of order 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions nested async function calls should evaluate in the right order 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions no-await async function should return a Promise 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions one-await async function should finish asynchronously 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions regeneratorRuntime should be defined globally 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions regeneratorRuntime should have a .wrap method 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions rejected promises should be returned by exceptional async functions 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions rejected promises should cause await expressions to throw 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions rejected promises should propagate failure when returned 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions the this object should default to undefined (strict) 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions the this object should respect .call's this 1`] = `0`;
+
+exports[`regenerator run async functions and await expressions the this object shouldn't capture this when not needed 1`] = `0`;
+
+exports[`regenerator run async generator functions should allow yielding a rejected Promise 1`] = `0`;
+
+exports[`regenerator run async generator functions should be able to handle many awaits 1`] = `0`;
+
+exports[`regenerator run async generator functions should keep results in order 1`] = `0`;
+
+exports[`regenerator run async generator functions should not propagate exceptions between iterations 1`] = `0`;
+
+exports[`regenerator run async generator functions should return a working AsyncIterator 1`] = `0`;
+
+exports[`regenerator run async generator functions should support super.method(...) in async methods 1`] = `0`;
+
+exports[`regenerator run async generator functions should work with nested arrow functions 1`] = `0`;
+
+exports[`regenerator run block binding should translate block binding correctly 1`] = `0`;
+
+exports[`regenerator run block binding should translate block binding with iife correctly 1`] = `0`;
+
+exports[`regenerator run call expression ordering (#244) should be correct 1`] = `0`;
+
+exports[`regenerator run catch parameter shadowing should allow nested catch parameters of the same name 1`] = `0`;
+
+exports[`regenerator run catch parameter shadowing should leave outer variables unmodified 1`] = `0`;
+
+exports[`regenerator run catch parameter shadowing should not interfere with non-referential identifiers 1`] = `0`;
+
+exports[`regenerator run collatz generator eighty two 1`] = `0`;
+
+exports[`regenerator run collatz generator fifty two 1`] = `0`;
+
+exports[`regenerator run collatz generator seven 1`] = `0`;
+
+exports[`regenerator run completed generator should refuse to resume 1`] = `0`;
+
+exports[`regenerator run delegate yield should support any iterable argument 1`] = `0`;
+
+exports[`regenerator run delegated yield should be governed by enclosing try statements 1`] = `0`;
+
+exports[`regenerator run delegated yield should call .return methods of delegate iterators 1`] = `0`;
+
+exports[`regenerator run delegated yield should cope with empty delegatees 1`] = `0`;
+
+exports[`regenerator run delegated yield should delegate correctly 1`] = `0`;
+
+exports[`regenerator run delegated yield should dispatch .thrown exceptions correctly 1`] = `0`;
+
+exports[`regenerator run delegated yield should evaluate to the return value of the delegate 1`] = `0`;
+
+exports[`regenerator run delegated yield should execute finally blocks of delegate generators 1`] = `0`;
+
+exports[`regenerator run delegated yield should not be required to have a .return method 1`] = `0`;
+
+exports[`regenerator run delegated yield should pass sent values through 1`] = `0`;
+
+exports[`regenerator run delegated yield should support deeper nesting 1`] = `0`;
+
+exports[`regenerator run delegated yield should work as a subexpression 1`] = `0`;
+
+exports[`regenerator run directive strings should be kept at top of outer function 1`] = `0`;
+
+exports[`regenerator run dynamic exception should be dispatched correctly 1`] = `0`;
+
+exports[`regenerator run expressions containing yield subexpressions should evaluate all array elements before yielding 1`] = `0`;
+
+exports[`regenerator run expressions containing yield subexpressions should evaluate all subexpressions before yielding 1`] = `0`;
+
+exports[`regenerator run expressions containing yield subexpressions should handle callee member expressions correctly 1`] = `0`;
+
+exports[`regenerator run expressions containing yield subexpressions should handle implicit stringification correctly 1`] = `0`;
+
+exports[`regenerator run expressions containing yield subexpressions should work even with getter member expressions 1`] = `0`;
+
+exports[`regenerator run for loop with var decl and no update expression should compile and run 1`] = `0`;
+
+exports[`regenerator run for-in loop generator should allow non-Identifier left-hand expressions 1`] = `0`;
+
+exports[`regenerator run for-in loop generator should handle break in loop 1`] = `0`;
+
+exports[`regenerator run for-in loop generator should handle property deletion in loop 1`] = `0`;
+
+exports[`regenerator run for-in loop generator should handle risky object expressions 1`] = `0`;
+
+exports[`regenerator run for-in loop generator should handle the simple case 1`] = `0`;
+
+exports[`regenerator run for-in loop generator should loop over inherited properties 1`] = `0`;
+
+exports[`regenerator run for-of loops should work for Arrays 1`] = `0`;
+
+exports[`regenerator run for-of loops should work for generators 1`] = `0`;
+
+exports[`regenerator run for-of loops should work inside of generators 1`] = `0`;
+
+exports[`regenerator run function declaration hoisting should not interfere with function rebinding 1`] = `0`;
+
+exports[`regenerator run function declaration hoisting should not interfere with nested function rebinding itself 1`] = `0`;
+
+exports[`regenerator run function declaration hoisting should work even if the declarations are out of order 1`] = `0`;
+
+exports[`regenerator run function declaration hoisting should work for nested generator function declarations 1`] = `0`;
+
+exports[`regenerator run generator .throw method should immediately complete a new-born generator 1`] = `0`;
+
+exports[`regenerator run generator .throw method should not propagate errors handled inside a delegate 1`] = `0`;
+
+exports[`regenerator run generator .throw method should propagate errors unhandled inside a delegate 1`] = `0`;
+
+exports[`regenerator run generator .throw method should work after the final call to .next 1`] = `0`;
+
+exports[`regenerator run generator function expression should behave just like a declared generator 1`] = `0`;
+
+exports[`regenerator run generator function prototype should follow the expected object model 1`] = `0`;
+
+exports[`regenerator run generator reentry attempt should complain with a TypeError 1`] = `0`;
+
+exports[`regenerator run generator return method should behave as if generator actually returned 1`] = `0`;
+
+exports[`regenerator run generator return method should return both delegate and delegator 1`] = `0`;
+
+exports[`regenerator run generator return method should work with newborn generators 1`] = `0`;
+
+exports[`regenerator run infinite sequence generator should allow limiting 1`] = `0`;
+
+exports[`regenerator run infinite sequence generator should generate a lot of plausible values 1`] = `0`;
+
+exports[`regenerator run isGeneratorFunction should work for function declarations 1`] = `0`;
+
+exports[`regenerator run isGeneratorFunction should work for function expressions 1`] = `0`;
+
+exports[`regenerator run labeled break and continue statements should allow breaking from any labeled statement 1`] = `0`;
+
+exports[`regenerator run labeled break and continue statements should be able to exit multiple try statements 1`] = `0`;
+
+exports[`regenerator run nested finally blocks should dynamically execute in order 1`] = `0`;
+
+exports[`regenerator run nested finally blocks should statically execute in order 1`] = `0`;
+
+exports[`regenerator run nested generators in try-catch should get a reference to the caught error 1`] = `0`;
+
+exports[`regenerator run new expressions should be able to contain yield sub-expressions 1`] = `0`;
+
+exports[`regenerator run newborn generators should allow chaining newborn and non-newborn generators 1`] = `0`;
+
+exports[`regenerator run newborn generators should be able to access function.sent 1`] = `0`;
+
+exports[`regenerator run newborn generators should be able to yield* non-newborn generators 1`] = `0`;
+
+exports[`regenerator run newborn generators should support the ignore-initial-yield wrapper idiom 1`] = `0`;
+
+exports[`regenerator run object literal generator should yield the correct object 1`] = `0`;
+
+exports[`regenerator run object literals with multiple yields should receive different sent values 1`] = `0`;
+
+exports[`regenerator run object properties should work if the generator is a shorthand computed object method 1`] = `0`;
+
+exports[`regenerator run object properties should work if the generator is a shorthand object method 1`] = `0`;
+
+exports[`regenerator run object properties should work if the generator is a simple object property 1`] = `0`;
+
+exports[`regenerator run range generator should yield the empty range 1`] = `0`;
+
+exports[`regenerator run range generator should yield the range 0..n-1 1`] = `0`;
+
+exports[`regenerator run regeneratorRuntime should be defined globally 1`] = `0`;
+
+exports[`regenerator run regeneratorRuntime should be the object name returned by util.runtimeProperty 1`] = `0`;
+
+exports[`regenerator run regeneratorRuntime should have a .mark method 1`] = `0`;
+
+exports[`regenerator run regeneratorRuntime should have a .wrap method 1`] = `0`;
+
+exports[`regenerator run regressions should correctly hoist arguments 1`] = `0`;
+
+exports[`regenerator run simple argument yielder should support multiple yields in expression 1`] = `0`;
+
+exports[`regenerator run simple argument yielder should yield only its first argument 1`] = `0`;
+
+exports[`regenerator run switch statement generator should jump to the correct cases 1`] = `0`;
+
+exports[`regenerator run the arguments object should alias function parameters 1`] = `0`;
+
+exports[`regenerator run the arguments object should be shadowable by explicit declarations (sloppy) 1`] = `0`;
+
+exports[`regenerator run the arguments object should not get confused by properties 1`] = `0`;
+
+exports[`regenerator run the arguments object should work in simple variadic functions 1`] = `0`;
+
+exports[`regenerator run the arguments object supports .callee 1`] = `0`;
+
+exports[`regenerator run the this object should default to undefined (strict) 1`] = `0`;
+
+exports[`regenerator run the this object should respect .call's this 1`] = `0`;
+
+exports[`regenerator run the this object shouldn't capture this when not needed 1`] = `0`;
+
+exports[`regenerator run throw should complete throwing generator 1`] = `0`;
+
+exports[`regenerator run throw should complete yielding/throwing generator 1`] = `0`;
+
+exports[`regenerator run try-catch generator should catch dynamic exceptions properly 1`] = `0`;
+
+exports[`regenerator run try-catch generator should catch static exceptions properly 1`] = `0`;
+
+exports[`regenerator run try-catch-finally generator should dynamically catch and then finalize 1`] = `0`;
+
+exports[`regenerator run try-catch-finally generator should execute catch and finally blocks at most once 1`] = `0`;
+
+exports[`regenerator run try-catch-finally generator should handle backwards jumps in labeled loops 1`] = `0`;
+
+exports[`regenerator run try-catch-finally generator should handle loop continue statements properly 1`] = `0`;
+
+exports[`regenerator run try-catch-finally generator should statically catch and then finalize 1`] = `0`;
+
+exports[`regenerator run try-finally generator should allow additional yields during finally propagation 1`] = `0`;
+
+exports[`regenerator run try-finally generator should execute finally blocks before throwing 1`] = `0`;
+
+exports[`regenerator run try-finally generator should execute finally blocks dynamically 1`] = `0`;
+
+exports[`regenerator run try-finally generator should execute finally blocks statically 1`] = `0`;
+
+exports[`regenerator run try-finally generator should honor break 1`] = `0`;
+
+exports[`regenerator run try-finally generator should honor continue 1`] = `0`;
+
+exports[`regenerator run try-finally generator should honor return 1`] = `0`;
+
+exports[`regenerator run try-finally generator should let the last finally block override all others 1`] = `0`;
+
+exports[`regenerator run try-finally generator should override abrupt with break 1`] = `0`;
+
+exports[`regenerator run try-finally generator should override abrupt with continue 1`] = `0`;
+
+exports[`regenerator run try-finally generator should override abrupt with return 1`] = `0`;
+
+exports[`regenerator run try-finally generator should return the correct value when overridden by finally 1`] = `0`;
+
+exports[`regenerator run try-finally generator should run finally after break within try 1`] = `0`;
+
+exports[`regenerator run try-finally generator should throw correct error when finally contains catch 1`] = `0`;
+
+exports[`regenerator run unqualified function calls should have a global \`this\` object 1`] = `0`;
+
+exports[`regenerator run update operators should explode left side before yielding 1`] = `0`;
+
+exports[`regenerator run update operators should read left side before awaiting 1`] = `0`;
+
+exports[`regenerator run update operators should read left side before yielding 1`] = `0`;
+
+exports[`regenerator run yield chain should have correct associativity 1`] = `0`;
+
+exports[`regenerator run yield* expression results can be used in complex expressions 1`] = `0`;
+
+exports[`regenerator run yield* expression results have correct values 1`] = `0`;

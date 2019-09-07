@@ -77,7 +77,7 @@ function a2_1(a2, p) {
     switch (a2.true) {
       case 5:
         p = M.chain(bb(), 6);
-        if (M.check(p)) return p;
+        if (M.check(p)) return p;else continue;
 
       case 6:
         p = M.chain(cc(), 7);
@@ -99,6 +99,7 @@ function a3_1(a3, p) {
       case 5:
         a3.true = 6;
         bb();
+        continue;
 
       case 6:
         a3.true = 7;
@@ -124,6 +125,7 @@ function a4_1(a4, p) {
           return p;
         } else {
           a4.true = 6;
+          continue;
         }
 
       case 6:
@@ -154,6 +156,7 @@ function a5_1(a5, p) {
           return p;
         } else {
           a5.true = 6;
+          continue;
         }
 
       case 6:

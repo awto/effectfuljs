@@ -8,11 +8,16 @@ export interface ProtoFrame {
   $$: Frame;
   /** meta-data */
   meta: FunctionDescr;
+  /** a constructed function's value */
+  func: () => any;
 }
 
 /** function's call desciption */
 export interface Frame extends ProtoFrame {
+  /** current state */
   state: number;
+  /** next iteration state */
+  goto: number;
   /** captured `this` */
   self: object;
   /** if called as `new` expression */
@@ -23,7 +28,24 @@ export interface Frame extends ProtoFrame {
   $: { [name: string]: any };
   /** next function in the stack */
   next: Frame | null;
-  // the debegger's debugging purpose fields
+  /** set `context.debug = true` on exit */
+  restoreDebug: boolean;
+  /** called if function exits with some resulting value */
+  onResolve: ((value: any) => void) | null;
+  /** called if function exits with some exception */
+  onReject: ((reason: any) => void) | null;
+  /** the promise to settle on `onResolve`/`onReject` */
+  promise: Promise<any> | null;
+  /**  this will be returned by the function in case of suspension  */
+  // delayedResult: any;
+
+  /**
+   * if the frame is suspended this may provide some
+   * information what exactly it is awaiting
+   */
+  awaiting?: any;
+
+  // the debugger's debugging purpose fields
   deb_id?: number;
   deb_from?: string;
 }
@@ -74,6 +96,7 @@ export type FunctionDescr = {
   states: Brk[];
   canSkip: boolean;
   uniqName: string;
+  params: string[];
   func: (...args: any[]) => any;
   handler: (context: Frame, input: any) => any;
   errHandler: (state: number) => number;
@@ -119,11 +142,16 @@ export type Scope = any[] &
       });
 
 export interface State {
-  /** stopping on break points if `true` */
+  /** stopping on break points if `true`, otherwise ignoring them */
   debug: boolean;
   /** everything is done */
   terminated: boolean;
-  /** the engine now runs a function */
+  /**
+   * the engine now runs some code and expects a breakpoint
+   * otherwise it is some new thread which isn't tracked by the debugger
+   * and on next breakpoint it is suspended in `queue`, to run after
+   * with `running: true` (if the breakpoints aren't ignored by `debug:false`)
+   */
   running: boolean;
   /** current breakpoint id */
   brk: Brk | null;
@@ -132,7 +160,12 @@ export interface State {
   /** saved context for synchronous functions */
   syncStack: Job[];
   /** next functions to run */
-  asyncQueue: Job[];
+  queue: Job[];
+  /**
+   * this is called if something a new thread is added into `queue`
+   * or some thread was finished (so the caller can proceed with
+   */
+  onThread?: () => void;
   /** in error state */
   error: boolean;
   /** a current value to be passed into the top of `stack` (or an exception if `error:true`) */
@@ -141,11 +174,15 @@ export interface State {
   onUpdate?: (module: Module) => void;
   /** current execution stack */
   top: Frame | null;
-  /** should the engine stop on this `brk` */
-  needsBreak: (brk: Brk) => boolean;
+  /** queries if the engine stop on this `brk` */
+  needsBreak: (brk: Brk, param?: any) => boolean;
+  /** reference of a function which is expected to be called */
+  call: any;
+  /** currently suspended but not exited frames (e.g. on `await` expressions)  */
+  suspended: Set<Frame>;
 }
 
-/** stores information about currently executing function while some sync function runs */
+/** a part of context stores information about currently executing function */
 export interface Job {
   top: Frame | null;
   debug: boolean;
@@ -163,19 +200,25 @@ export const context: State = {
   modules: {},
   syncStack: [],
   error: false,
-  asyncQueue: [],
-  value: void 0,
+  queue: [],
+  call: null,
   needsBreak() {
     return false;
-  }
+  },
+  value: void 0,
+  suspended: new Set()
 };
-
-(<any>global).deb_context = context;
 
 /** original global objects monkey-patched by this runtime */
 export const saved = {
   console,
   Proxy,
+  Promise,
+  promiseMethods: {
+    then: Promise.prototype.then,
+    catch: Promise.prototype.catch,
+    finally: Promise.prototype.finally
+  },
   Object: {
     defineProperty: Object.defineProperty
   }
@@ -236,3 +279,12 @@ export function idsStore(bits: number = 16): IdsStore {
     }
   };
 }
+
+/** catch/finally handler state ids mapping */
+export type StateMap = ((state: number) => number) | undefined;
+
+/** handler function */
+export type Handler = (f: Frame, pat: any) => any;
+
+/** breakpoint positions */
+export type States = [Scope, string, string][];

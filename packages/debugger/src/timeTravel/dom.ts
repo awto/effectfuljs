@@ -1,10 +1,12 @@
 import * as Core from "./core";
 import { regConstructor } from "@effectful/serialization";
+import { nodeListIter } from "@effectful/serialization/dom";
 
 const journal = Core.journal;
 
 const domObserverSymbol = Symbol("@effectful/debugger/dom");
 
+/** currently observed elements */
 let observing = new Set<ElementExt>();
 
 interface ObserverData {
@@ -16,11 +18,7 @@ interface ElementExt extends Element {
   [domObserverSymbol]?: ObserverData;
 }
 
-function* nodeListIter(nl: NodeList): Iterable<Node> {
-  for (let i = 0, len = nl.length; i < len; ++i) yield nl[i];
-}
-
-export class DomSnapshot {
+export class DomSnapshot implements Core.Operation {
   changes: MutationRecord[];
   constructor(changes: MutationRecord[]) {
     this.changes = changes;
@@ -51,7 +49,24 @@ export class DomSnapshot {
     }
   }
 }
-regConstructor(DomSnapshot);
+
+regConstructor(DomSnapshot, {
+  // TODO: check how to make jsdom to run on same context, so this is not needed
+  write(ctx, value) {
+    const res = <any>{};
+    res.i = ctx.step([...value.changes], res, "i");
+    res.p = ctx.step((<any>value).prev, res, "p");
+    return res;
+  },
+  create() {
+    return new DomSnapshot([]);
+  },
+  readContent(ctx, json, value) {
+    value.changes.push(...ctx.step((<any>json).i));
+    (<any>value).prev = ctx.step((<any>json).p);
+  },
+  props: false
+});
 
 function record(changes: MutationRecord[]) {
   if (!changes.length) return;
@@ -74,20 +89,10 @@ export function flush() {
 
 /**
  * This enables tracking DOM using MutationObserver.
- * Pass `null` to disable tracking.
  */
 export function track(rootEl: Element) {
   const root = <ElementExt>rootEl;
   let data = root[domObserverSymbol];
-  if (!root) {
-    if (data && data.observer) {
-      flush();
-      data.observer.disconnect();
-      data.observer = void 0;
-    }
-    observing.delete(root);
-    return;
-  }
   observing.add(root);
   if (!data) data = root[domObserverSymbol] = { root };
   if (!data.observer) {
@@ -103,4 +108,18 @@ export function track(rootEl: Element) {
       characterDataOldValue: true
     });
   }
+}
+
+/**
+ * This disables tracking DOM using MutationObserver.
+ */
+export function untrack(rootEl: Element) {
+  const root = <ElementExt>rootEl;
+  let data = root[domObserverSymbol];
+  if (data && data.observer) {
+    flush();
+    data.observer.disconnect();
+    data.observer = void 0;
+  }
+  observing.delete(root);
 }

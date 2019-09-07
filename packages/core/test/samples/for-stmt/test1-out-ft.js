@@ -441,8 +441,8 @@ function c2_2(c2) {
   if (c2._i < 10) {
     return M.chain((i => {
       var ctx = M.context();
-      ctx._c2 = c2;
       ctx._i = i;
+      ctx._c2 = c2;
       return M.scope(f_14);
     })(c2._i), c2_2);
   } else {
@@ -477,9 +477,9 @@ function f_15(ctx) {
   return M.chain(function cc(j) {
     var _cc = M.context();
 
+    _cc._j = j;
     _cc._c3 = ctx._c3;
     _cc._f = ctx;
-    _cc._j = j;
     return M.scope(cc_11);
   }(a), f_25);
 }
@@ -498,8 +498,8 @@ function c3_2(c3) {
   if (c3._i < 10) {
     return M.chain((i => {
       var ctx = M.context();
-      ctx._c3 = c3;
       ctx._i = i;
+      ctx._c3 = c3;
       return M.scope(f_15);
     })(c3._i), c3_2);
   } else {

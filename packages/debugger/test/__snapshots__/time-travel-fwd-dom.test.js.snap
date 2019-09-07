@@ -9,3 +9,20 @@ exports[`DOM forward time traveling 3`] = `"<div id=\\"root\\"><div style=\\"col
 exports[`DOM forward time traveling 4`] = `"<div id=\\"root\\"><div style=\\"color:blue\\" id=\\"i1\\"><h1 id=\\"i3\\"></h1><div id=\\"i2\\">There</div><h2 id=\\"i4\\"></h2></div></div>"`;
 
 exports[`DOM forward time traveling 5`] = `"<div id=\\"root\\"><div style=\\"color:blue\\" id=\\"i1\\"><h1 id=\\"i3\\"></h1><div id=\\"i2\\">THERE</div></div></div>"`;
+
+exports[`DOM forward time traveling 6`] = `"{\\"f\\":[[\\"now\\",{\\"f\\":[[\\"prev\\",null],[\\"operations\\",{\\"i\\":[{\\"ty\\":\\"attributes\\",\\"el\\":{\\"r\\":4},\\"an\\":[],\\"rn\\":[],\\"tn\\":\\"style\\",\\"ov\\":\\"color:red\\",\\"$\\":\\"MutationRecord\\"},{\\"ty\\":\\"childList\\",\\"el\\":{\\"r\\":4},\\"an\\":[{\\"r\\":0}],\\"rn\\":[],\\"ns\\":{\\"r\\":2},\\"$\\":\\"MutationRecord\\"},{\\"ty\\":\\"childList\\",\\"el\\":{\\"r\\":4},\\"an\\":[{\\"r\\":3}],\\"rn\\":[],\\"ps\\":{\\"r\\":2},\\"$\\":\\"MutationRecord\\"}],\\"p\\":{\\"$\\":\\"undefined\\"},\\"$\\":\\"DomSnapshot\\"}]]}],[\\"future\\",{\\"f\\":[[\\"prev\\",null],[\\"operations\\",{\\"i\\":[{\\"ty\\":\\"childList\\",\\"el\\":{\\"r\\":4},\\"an\\":[{\\"r\\":3}],\\"rn\\":[],\\"ps\\":{\\"r\\":2},\\"$\\":\\"MutationRecord\\"},{\\"ty\\":\\"characterData\\",\\"el\\":{\\"r\\":1},\\"an\\":[],\\"rn\\":[],\\"ov\\":\\"THERE\\",\\"$\\":\\"MutationRecord\\"}],\\"p\\":{\\"$\\":\\"undefined\\"},\\"$\\":\\"DomSnapshot\\"}]]}],[\\"past\\",{\\"f\\":[[\\"prev\\",{\\"f\\":[[\\"prev\\",null],[\\"operations\\",{\\"i\\":[{\\"ty\\":\\"childList\\",\\"el\\":{\\"r\\":5},\\"an\\":[{\\"r\\":4}],\\"rn\\":[],\\"$\\":\\"MutationRecord\\"}],\\"p\\":{\\"$\\":\\"undefined\\"},\\"$\\":\\"DomSnapshot\\"}]]}],[\\"operations\\",{\\"i\\":[{\\"ty\\":\\"childList\\",\\"el\\":{\\"r\\":4},\\"an\\":[],\\"rn\\":[{\\"text\\":\\"Hi\\",\\"$\\":\\"Text\\"}],\\"$\\":\\"MutationRecord\\"},{\\"ty\\":\\"childList\\",\\"el\\":{\\"r\\":4},\\"an\\":[{\\"r\\":2}],\\"rn\\":[],\\"$\\":\\"MutationRecord\\"},{\\"ty\\":\\"attributes\\",\\"el\\":{\\"r\\":4},\\"an\\":[],\\"rn\\":[],\\"tn\\":\\"style\\",\\"ov\\":\\"color:green\\",\\"$\\":\\"MutationRecord\\"}],\\"p\\":{\\"$\\":\\"undefined\\"},\\"$\\":\\"DomSnapshot\\"}]]}],[\\"data\\",{\\"tag\\":\\"BODY\\",\\"c\\":[{\\"r\\":5}],\\"a\\":{},\\"$\\":\\"Element\\"}]],\\"x\\":[{\\"tag\\":\\"H1\\",\\"c\\":[],\\"a\\":{\\"id\\":\\"i3\\"},\\"f\\":[[\\"innerText\\",\\"PRE\\"]],\\"$\\":\\"Element\\"},{\\"text\\":\\"There\\",\\"$\\":\\"Text\\"},{\\"tag\\":\\"DIV\\",\\"c\\":[{\\"r\\":1}],\\"a\\":{\\"id\\":\\"i2\\"},\\"f\\":[[\\"innerHtml\\",\\"hi there\\"]],\\"$\\":\\"Element\\"},{\\"tag\\":\\"H2\\",\\"c\\":[],\\"a\\":{\\"id\\":\\"i4\\"},\\"f\\":[[\\"innerText\\",\\"post\\"]],\\"$\\":\\"Element\\"},{\\"tag\\":\\"DIV\\",\\"c\\":[{\\"r\\":0},{\\"r\\":2},{\\"r\\":3}],\\"a\\":{\\"style\\":\\"color:blue\\",\\"id\\":\\"i1\\"},\\"$\\":\\"Element\\"},{\\"tag\\":\\"DIV\\",\\"c\\":[{\\"r\\":4}],\\"a\\":{\\"id\\":\\"root\\"},\\"$\\":\\"Element\\"}]}"`;
+
+exports[`DOM forward time traveling 7`] = `
+Array [
+  Array [
+    "> M:",
+    Object {
+      "__esModule": true,
+      "changeDom1": [Function],
+      "changeDom2": [Function],
+      "changeDom3": [Function],
+      "changeDom4": [Function],
+    },
+  ],
+]
+`;

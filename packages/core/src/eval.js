@@ -218,7 +218,7 @@ export function injectMeta(si) {
     if (i.scopeMeta && i.metaArgs) {
       const tup = [];
       for (const j of i.scopeMeta) {
-        if (j.scope) j.node.unshift(j.scope.expr);
+        j.node.unshift(j.scope ? j.scope.expr : null);
         tup.push(j.node);
       }
       i.metaArgs[50] = [...emitConst(Tag.push, tup)];

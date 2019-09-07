@@ -30,3 +30,28 @@ function a() {
 
   function _3() {}
 }
+
+function zzz(zz) {
+  var aaaa = (function aaaa() {
+    return M.chain(eff1(), _1);
+
+    function _1() {}
+  }, function aaaa() {
+    return M.chain(eff2(), _1);
+
+    function _1() {}
+  });
+  return M.chain(aaaa(), _1);
+
+  function _1() {
+    aaaa = function bbbb() {
+      return M.chain(eff3(), _1);
+
+      function _1() {}
+    };
+
+    return M.chain(aaaa(), _2);
+  }
+
+  function _2() {}
+}

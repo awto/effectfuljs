@@ -150,6 +150,28 @@ Ctx.onUpdate = function(module: State.Module) {
 let launchCb: () => void;
 const launchPromise = new Promise(i => (launchCb = i));
 
+Ctx.onThread = function() {
+  if (!Ctx.queue.length) return;
+  const job = <State.Job>Ctx.queue.shift();
+  sysConsole.log("NEW THREAD", Ctx.top);
+  Ctx.top = job.top;
+  Ctx.debug = job.debug;
+  Ctx.brk = job.brk;
+  Ctx.value = job.value;
+  if (Ctx.brk && !savedTop) {
+    savedTop = Ctx.top;
+    Ctx.top = null;
+    if (contThread && reason === "step") {
+      contThread = false;
+      reset();
+      run();
+    } else {
+      event("stopped", { reason });
+    }
+  }
+};
+
+/*
 (async function() {
   await launchPromise;
   for await (const job of Engine.threads) {
@@ -172,6 +194,7 @@ const launchPromise = new Promise(i => (launchCb = i));
   }
   return State.token;
 })();
+*/
 
 handlers.restart = function() {};
 

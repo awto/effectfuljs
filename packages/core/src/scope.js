@@ -1,9 +1,6 @@
 import { Tag, invariant } from "./kit";
 import * as Kit from "./kit";
 
-const isWindows =
-  typeof process !== "undefined" && process.platform === "win32";
-
 /**
  * unfortunately ObjectMethod type in babylon AST doesn't fit the split
  * pattern, as next passes want the key to remain in parent scope
@@ -285,13 +282,12 @@ function injectModuleDescr(si) {
           const root =
             s.opts.srcRoot === true ? file.root || file.cwd : s.opts.srcRoot;
           if (module.startsWith(root)) module = module.substr(root.length);
-          // we don't want the end user knows if we built this on windows
         }
-        if (isWindows) module = module.replace(/\\/g, "/");
+        // we don't want the end user knows if we built this on windows
+        if (Kit.isWindows) module = module.replace(/\\/g, "/");
       } else module = "*";
     }
-    if (s.opts.moduleNamePrefix)
-      module = `${s.opts.moduleNamePrefix}@${module}`;
+    if (s.opts.moduleNamePrefix) module = `${s.opts.moduleNamePrefix}${module}`;
     yield s.tok(Tag.push, Tag.StringLiteral, { node: { value: module } });
     yield* s.leave();
     for (const i of s) {
@@ -710,10 +706,13 @@ export function arrowFunToBlock(si) {
         if (s.cur().type !== Tag.BlockStatement) {
           const lab = s.label();
           yield s.enter(Tag.body, Tag.BlockStatement, {
-            decls: s.cur().value.decls
+            decls: s.cur().value.decls,
+            node: { loc: i.value.node.loc }
           });
           yield s.enter(Tag.body, Tag.Array);
-          yield s.enter(Tag.push, Tag.ReturnStatement);
+          yield s.enter(Tag.push, Tag.ReturnStatement, {
+            node: { loc: i.value.node.loc }
+          });
           yield* Kit.reposOne(_arrowFunToBlock(s.one()), Tag.argument);
           yield* lab();
         }

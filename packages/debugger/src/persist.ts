@@ -10,7 +10,7 @@ export function capture(): S.JSONObject {
   return S.write({
     top: context.top,
     syncStack: context.syncStack,
-    asyncQueue: context.asyncQueue,
+    queue: context.queue,
     debug: context.debug,
     brk: context.brk,
     extra
@@ -25,7 +25,7 @@ export function restore(json: S.JSONObject) {
   ({
     top: context.top,
     syncStack: context.syncStack,
-    asyncQueue: context.asyncQueue,
+    queue: context.queue,
     debug: context.debug,
     brk: context.brk,
     extra

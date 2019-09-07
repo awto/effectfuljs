@@ -1,5 +1,12 @@
 import * as S from "./main";
 
+export function* nodeListIter<T>(nl: {
+  length: number;
+  [index: number]: T;
+}): Iterable<T> {
+  for (let i = 0, len = nl.length; i < len; ++i) yield nl[i];
+}
+
 /** stores event handlers in EventTarget */
 export const eventsSym = Symbol.for("@effectful/debugger/events");
 
@@ -55,26 +62,16 @@ declare global {
 }
 
 const overrideProps: any = { [S.descriptorSymbol]: false };
-/*
-const el = document.createElement("div");
-for (const i of Object.getOwnPropertySymbols(el)) {
-  switch (String(i)) {
-    case "Symbol(impl)":
-    case "Symbol(SameObject caches)":
-      overrideProps[i] = false;
-  }
-}
-*/
 
 if (typeof Element !== "undefined") {
   S.regConstructor(Element, {
     write(ctx, value: Element) {
       const json: S.JSONObject = { tag: value.tagName };
       const nodes: S.JSONArray = (json.c = []);
-      for (const i of [...value.childNodes])
+      for (const i of nodeListIter(value.childNodes))
         nodes.push(ctx.step(i, nodes, nodes.length));
       const attrs: S.JSONObject = (json.a = {});
-      for (const i of [...value.attributes]) attrs[i.name] = i.value;
+      for (const i of nodeListIter(value.attributes)) attrs[i.name] = i.value;
       const events = value[eventsSym];
       if (events) json.ev = ctx.step(events, json, "ev");
       return json;
@@ -242,7 +239,8 @@ export function trackGlobalDocument() {
     readContent(ctx, json, value) {
       const obj = <S.JSONObject>json;
       if (obj.ev) restoreEvents(value, ctx.step(obj.ev));
-    }
+    },
+    overrideProps: { location: false }
   });
 }
 
@@ -253,7 +251,7 @@ export function trackGlobalDocument() {
 export function track() {
   if (typeof EventTarget !== "undefined") trackEvents(EventTarget.prototype);
   trackGlobalDocument();
-  S.regOpaqueRec(global, "global");
+  S.regGlobal();
 }
 
 if (typeof Text !== "undefined")
@@ -324,4 +322,44 @@ if (typeof Document !== "undefined")
       value.replaceChild(ctx.step((<any>json).el), value.documentElement);
     },
     overrideProps
+  });
+
+if (typeof MutationRecord !== "undefined")
+  S.regConstructor(MutationRecord, {
+    write(ctx, value) {
+      const res = <any>{};
+      res.ty = ctx.step(value.type, res, "ty");
+      res.el = ctx.step(value.target, res, "el");
+      if (value.addedNodes)
+        res.an = ctx.step([...nodeListIter(value.addedNodes)], res, "an");
+      if (value.removedNodes)
+        res.rn = ctx.step([...nodeListIter(value.removedNodes)], res, "rn");
+      if (value.previousSibling)
+        res.ps = ctx.step(value.previousSibling, res, "ps");
+      if (value.nextSibling) res.ns = ctx.step(value.nextSibling, res, "ns");
+      if (value.attributeName)
+        res.tn = ctx.step(value.attributeName, res, "tn");
+      if (value.attributeNamespace)
+        res.ts = ctx.step(value.attributeNamespace, res, "ts");
+      if (value.oldValue) res.ov = ctx.step(value.oldValue, res, "ov");
+      return res;
+    },
+    create() {
+      // TODO: don't care about object model for now
+      return <any>{};
+    },
+    readContent(ctx, json: S.JSONValue, value: MutationRecord) {
+      const j = <any>json;
+      const v = <any>value;
+      v.type = ctx.step(j.ty);
+      v.target = ctx.step(j.el);
+      v.addedNodes = ctx.step(j.an);
+      v.removedNodes = ctx.step(j.rn);
+      v.previousSibling = ctx.step(j.ps);
+      v.nextSibling = ctx.step(j.ns);
+      v.attributeName = ctx.step(j.tn);
+      v.attributeNamespace = ctx.step(j.ts);
+      v.oldValue = ctx.step(j.ov);
+    },
+    props: false
   });

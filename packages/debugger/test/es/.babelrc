@@ -1,0 +1,42 @@
+{
+  "passPerPreset": true,
+  "sourceType": "script",
+  "presets": [
+    {
+      "plugins": [
+        [
+          "@babel/plugin-transform-modules-commonjs",
+          {
+            "loose": true
+          }
+        ],
+        "@babel/plugin-transform-shorthand-properties",
+        [
+          "@babel/plugin-proposal-class-properties",
+          {
+            "loose": true
+          }
+        ],
+        [
+          "@babel/plugin-transform-classes",
+          {
+            "loose": true
+          }
+        ],
+        "@babel/plugin-syntax-function-sent"
+      ]
+    },
+    {
+      "plugins": [
+        [
+          "../../transform",
+          {
+            "importRT": "{ROOT}/api",
+            "srcRoot": true,
+            "preInstrumentedLibs": "../../../.."
+          }
+        ]
+      ]
+    }
+  ]
+}

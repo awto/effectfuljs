@@ -13,15 +13,19 @@
     "build": "npm run build:transform && npm run build:decls",
     "build:rt": "babel --extensions \".ts,.js\" --out-dir . src",
     "build:deps": "node ./buildDeps",
-    "build-loose": "npm run build:rt && npm run build:deps"
+    "build-loose": "npm run build:rt && npm run build:deps",
+    "link-test": "node ./test/kit/makeLinks"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
+    "@babel/plugin-syntax-function-sent": "^7.2.0",
     "@babel/plugin-transform-typescript": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@macklinu/jest-environment-jsdom-fifteen": "^0.2.0",
+    "@types/asap": "^2.0.0",
     "@types/jest": "^24.0.14",
+    "@types/node": "^12.0.8",
     "jest": "^24.5.0",
     "jsdom": "^15.1.1",
     "prettier": "^1.18.2",
@@ -43,10 +47,11 @@
     "@babel/standalone": "^7.4.4",
     "@effectful/core": "^1.2.0",
     "@effectful/serialization": "^1.2.0",
-    "@types/node": "^12.0.8",
+    "asap": "^2.0.6",
     "babel-loader": "^8.0.6",
     "babel-preset-react-app": "^9.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "promise": "^8.0.3",
     "vscode-debugprotocol": "^1.35.0",
     "webpack": "^4.35.2",
     "webpack-dev-server": "^3.7.2"

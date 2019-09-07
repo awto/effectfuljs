@@ -96,9 +96,9 @@ function _f_2(ctx, a) {
   return M.chain(a.mapply(function ($dm$b) {
     var _ctx = M.context();
 
+    _ctx._$dm$b = $dm$b;
     _ctx._f = ctx._f;
     _ctx._f1 = ctx;
-    _ctx._$dm$b = $dm$b;
     return M.scope(f_1);
   }), _f_3);
 }
@@ -121,6 +121,8 @@ function f_112(ctx) {
   return M.chain(it("should yield fiber until promise is resolved", function (done) {
     var _ctx = M.context();
 
+    _ctx._done = done;
+
     _ctx._addLater = function _addLater(a, b) {
       var addLater = M.context();
       addLater._a = a;
@@ -128,7 +130,6 @@ function f_112(ctx) {
       return M.scope(addLater_1);
     };
 
-    _ctx._done = done;
     return M.scope(f_12);
   }), f_212);
 }
@@ -223,9 +224,9 @@ function f_25(ctx, a) {
   return M.chain(a.mhandle(function (err) {
     var _ctx = M.context();
 
+    _ctx._err = err;
     _ctx._f = ctx._f;
     _ctx._f1 = ctx;
-    _ctx._err = err;
     return M.scope(f_13, _f_7);
   }), f_33);
 }
@@ -254,8 +255,8 @@ function f_42(ctx, a) {
 function f_16(_ctx) {
   return M.chain(M.scope(function ($dm$root) {
     var ctx = M.context();
-    ctx._f = _ctx._f;
     ctx._$dm$root = $dm$root;
+    ctx._f = _ctx._f;
     return M.scope(f_15);
   }), f_26);
 }
@@ -278,13 +279,13 @@ function f_43(ctx) {}
 function f_212(ctx) {
   return M.chain(it("should throw reasons from rejected promises into fiber", function (done) {
     var ctx = M.context();
+    ctx._done = done;
 
     ctx._throwErrorLater = function _throwErrorLater() {
       var throwErrorLater = M.context();
       return M.scope(throwErrorLater_1);
     };
 
-    ctx._done = done;
     return M.scope(f_18);
   }), f_38);
 }
@@ -352,9 +353,9 @@ function f_210(ctx, a) {
   return M.chain(a.mapply(function ($dm$b) {
     var _ctx = M.context();
 
+    _ctx._$dm$b = $dm$b;
     _ctx._f = ctx._f;
     _ctx._f1 = ctx;
-    _ctx._$dm$b = $dm$b;
     return M.scope(f_19);
   }), f_36);
 }

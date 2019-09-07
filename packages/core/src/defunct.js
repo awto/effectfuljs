@@ -2,7 +2,6 @@ import * as Kit from "./kit";
 import { Tag, invariant } from "./kit";
 import * as Block from "./block";
 import * as Ctrl from "./control";
-import * as Except from "./exceptions";
 
 const reentryCont = 3;
 
@@ -13,6 +12,15 @@ pureFrameSym.numConst = 0;
 export function init(si) {
   const s = Kit.auto(si);
   const root = s.first.value;
+  if (s.opts.delegateRedir !== false) {
+    let redirName, redirResultName;
+    if (s.opts.delegateRedir && s.opts.delegateRedir.length)
+      [redirName, redirResultName] = s.opts.delegateRedir;
+    if (!redirName && !redirResultName) redirResultName = "$redirResult";
+    if (!redirName) redirName = "$redir";
+    root.redirSym = Kit.sysId(redirName);
+    if (redirResultName) root.redirResultSym = Kit.sysId(redirResultName);
+  }
   root.implFrame = Kit.enter(Tag.push, Block.frame, {
     declSym: Kit.scope.newSym("_"),
     patSym: (root.commonPatSym = Kit.scope.newSym("p")),
@@ -48,6 +56,14 @@ export function* prepare(si) {
   // needs already running check
   if (!s.opts.loose) num++;
   let hasYldStar = false;
+  const ops = s.opts.ops || emptyObj;
+  const name =
+    (ops &&
+      ops.YieldExpression &&
+      ops.YieldExpression.length &&
+      ops.YieldExpression[1]) ||
+    "yldStar";
+  const sym = Kit.sysId(name);
   yield* s.till(i => i.type === Block.frame && i.leave);
   for (const i of s) {
     if (i.enter) {
@@ -70,7 +86,13 @@ export function* prepare(si) {
             frames.push(i.value);
           }
         }
-      } else if (i.type === Block.letStmt && i.value.bindName === "yldStar") {
+      } else if (i.type === Block.letStmt && i.value.bindName === name) {
+        hasYldStar = true;
+      } else if (
+        i.pos === Tag.callee &&
+        i.type === Tag.Identifier &&
+        i.value.sym === sym
+      ) {
         hasYldStar = true;
       }
     }
@@ -276,7 +298,7 @@ export function inlineExceptions(si) {
         yield s.tok(Tag.consequent, Tag.ContinueStatement);
         yield* s.leave();
       }
-      yield s.enter(Tag.push, Block.app, { sym: Except.raiseId, result: true });
+      yield s.enter(Tag.push, Block.app, { sym: root.raiseId, result: true });
       yield s.tok(Tag.push, Tag.Identifier, { sym: ex });
     }
     implFrame.hasJumps = true;
@@ -290,7 +312,11 @@ export function inlineExceptions(si) {
 export function calcPassThrough(si) {
   const sa = Kit.toArray(si);
   const s = Kit.auto(sa);
-  if (s.opts.inlinePureJumps !== "tail" || s.opts.storeRunningCont) return s;
+  if (!s.opts.defunctCasesPassThrough) return s;
+  if (s.opts.inlinePureJumps !== "tail")
+    throw s.error(
+      `"defunctCasesPassThrough" requires "inlinePureJumps":"tail"`
+    );
   _calcPassThrough();
   return sa;
   function _getLast(res, sw) {
@@ -339,7 +365,7 @@ export function* frames(si) {
   const root = s.first.value;
   const { contextSym, contSym, errFrameRedir } = root;
   const inlineJumps = s.opts.inlinePureJumps === "tail";
-  const inlineTailCoerce = s.opts.inlineTailCoerce != null;
+  const inlineTailCoerce = s.opts.inlineTailCoerce;
   invariant(contextSym);
   const impl = root.implFrame.value;
   const decls = impl.savedDecls;
@@ -459,29 +485,42 @@ export function* frames(si) {
           `=Promise.resolve($2($3)).then($1.$resolve,$1.$reject)`,
           { result: true },
           contextSym,
-          Block.redirSym,
+          root.redirSym,
           root.commonPatSym
         );
-      else
+      else {
+        if (inlineTailCoerce === true) {
+          yield* s.toks(
+            Tag.push,
+            `=$2 = $1($2)`,
+            root.redirSym,
+            root.commonPatSym
+          );
+          yield s.tok(Tag.push, Tag.ContinueStatement);
+        } else {
+          yield* s.toks(
+            Tag.push,
+            `=$I($I)`,
+            { result: true },
+            root.redirSym,
+            root.commonPatSym
+          );
+        }
+      }
+      yield* clab();
+      if (root.redirResultSym) {
+        yield s.enter(Tag.push, Tag.SwitchCase);
+        yield s.tok(Tag.test, Tag.NumericLiteral, { node: { value: 3 } });
+        yield s.enter(Tag.consequent, Tag.Array);
         yield* s.toks(
           Tag.push,
           `=$I($I)`,
           { result: true },
-          Block.redirSym,
+          root.redirResultSym,
           root.commonPatSym
         );
-      yield* clab();
-      yield s.enter(Tag.push, Tag.SwitchCase);
-      yield s.tok(Tag.test, Tag.NumericLiteral, { node: { value: 3 } });
-      yield s.enter(Tag.consequent, Tag.Array);
-      yield* s.toks(
-        Tag.push,
-        `=$I($I)`,
-        { result: true },
-        Block.redirResultSym,
-        root.commonPatSym
-      );
-      yield* clab();
+        yield* clab();
+      }
     } else {
       yield s.enter(Tag.push, Tag.SwitchCase);
       yield s.tok(Tag.test, Tag.NumericLiteral, { node: { value: 2 } });
@@ -490,7 +529,7 @@ export function* frames(si) {
         Tag.push,
         `=$I($I)`,
         { result: true },
-        Block.redirSym,
+        root.redirSym,
         root.commonPatSym
       );
       yield* clab();
@@ -512,6 +551,7 @@ export function wrapFirstFrame(si) {
   const s = Kit.auto(si);
   if (!s.opts.defunct || s.opts.scopePrefix || !s.opts.inlineJsExceptions)
     return s;
+  const root = s.first.value;
   return _wrapFirstFrame();
   function* _wrapFirstFrame() {
     for (const i of s) {
@@ -525,7 +565,7 @@ export function wrapFirstFrame(si) {
     if (s.opts.inlineRaiseOp === "promiseRight") {
       yield* s.toks(Tag.push, "=Promise.reject($I)", { result: true }, sym);
     } else {
-      yield s.enter(Tag.push, Block.app, { sym: Except.raiseId });
+      yield s.enter(Tag.push, Block.app, { sym: root.raiseId });
       yield s.tok(Tag.push, Tag.Identifier, { sym });
       yield* s.leave();
     }
@@ -573,6 +613,7 @@ export function tailJumps(si) {
   const assignCont = s.opts.inlineContAssign === false;
   const { ctrlParam } = implFrame;
   const contStoreSym = root.contSym;
+  const runningContSym = root.runningContSym;
   if (inlineTailCoerce != null) {
     if (inlineTailCoerce.substr) {
       tailCoerceExpr = "=$2($1)";
@@ -593,7 +634,10 @@ export function tailJumps(si) {
   return _tailJumps();
   function* _exitFrame(impl, pos, i) {
     if (impl) {
-      if (!i.value.passThrough) yield s.tok(pos, Tag.ContinueStatement);
+      if (i.value.passThrough) {
+        if (impl && runningContSym && assignCont)
+          yield* s.toks(Tag.push, "=$I = $I", runningContSym, i.value.gotoSym);
+      } else yield s.tok(pos, Tag.ContinueStatement);
     } else {
       yield* s.toks(
         pos,
@@ -618,6 +662,7 @@ export function tailJumps(si) {
           inlineTailCoerce != null &&
           i.type === Block.letStmt &&
           i.value.eff &&
+          (!i.value.opSym || i.value.opSym === Block.chainId) &&
           !i.value.reflected
         ) {
           if (inlineTailCoerce === true) {
@@ -628,8 +673,12 @@ export function tailJumps(si) {
                 ctrlParam || contStoreSym,
                 i.value.gotoSym
               );
-            i.value.reflected = true;
-            if (!i.leave && s.curLev() != null) {
+            const la = s.curLev();
+            if (!i.leave && la != null) {
+              if (la.type === Block.effExpr) {
+                la.value.reflected = true;
+                i.value.passThrough = false;
+              }
               if (i.value.sym) {
                 yield s.enter(Tag.push, Tag.AssignmentExpression, {
                   node: { operator: "=" }
@@ -677,13 +726,12 @@ export function tailJumps(si) {
           continue;
         }
         if (i.type === Ctrl.jump && !i.value.bindName && !i.value.reflected) {
-          if (assignCont)
-            yield* s.toks(
-              Tag.push,
-              "=$I = $I",
-              ctrlParam || contStoreSym,
-              i.value.gotoSym
-            );
+          yield* s.toks(
+            Tag.push,
+            "=$I = $I",
+            ctrlParam || contStoreSym,
+            i.value.gotoSym
+          );
           const j = s.curLev();
           if (j) {
             if (j.type === Block.bindPat && i.value.sym === pat) {
@@ -742,3 +790,5 @@ export const convert = Kit.pipe(
   Kit.toArray,
   tailJumps
 );
+
+const emptyObj = {};

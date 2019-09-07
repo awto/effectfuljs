@@ -1,0 +1,350 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`async functions 1`] = `
+Array [
+  Array [
+    "> M:",
+    [Function],
+  ],
+  Array [
+    "ENTER testBlockPar",
+  ],
+  Array [
+    "S1:1",
+  ],
+  Array [
+    "T1",
+    Promise {
+      "_h": 0,
+      "_i": 1,
+      "_j": 1001,
+      "_k": null,
+    },
+  ],
+  Array [
+    "S1:2",
+  ],
+  Array [
+    "S2:1",
+  ],
+  Array [
+    "S2:2",
+  ],
+  Array [
+    "S3:1",
+  ],
+  Array [
+    "S3:2",
+  ],
+  Array [
+    "T2",
+    1002,
+  ],
+  Array [
+    "S1:3",
+  ],
+  Array [
+    "S2:3",
+  ],
+  Array [
+    "S3:3",
+  ],
+  Array [
+    "T3",
+    1003,
+  ],
+  Array [
+    "T1A",
+    1001,
+  ],
+  Array [
+    "OK1",
+  ],
+  Array [
+    "OK2",
+    [Error: 1],
+  ],
+  Array [
+    "EXIT testBlockPar",
+  ],
+  Array [
+    "R",
+    1000,
+  ],
+]
+`;
+
+exports[`async generators functions 1`] = `
+Array [
+  Array [
+    "> M:",
+    [Function],
+  ],
+  Array [
+    "Async Generators>",
+  ],
+  Array [
+    "Async Generators Item:",
+    "> async generators level 2",
+  ],
+  Array [
+    "Async Generators Item:",
+    0,
+  ],
+  Array [
+    "Async Generators Item:",
+    1,
+  ],
+  Array [
+    "Async Generators Item:",
+    2,
+  ],
+  Array [
+    "simple async generator result:",
+    4,
+  ],
+  Array [
+    "Async Generators Item:",
+    0,
+  ],
+  Array [
+    "Async Generators Item:",
+    1,
+  ],
+  Array [
+    "Async Generators Item:",
+    2,
+  ],
+  Array [
+    "Async Generators Item:",
+    "simple async generator item:0",
+  ],
+  Array [
+    "Async Generators Item:",
+    "simple async generator item:1",
+  ],
+  Array [
+    "Async Generators Item:",
+    "simple async generator item:2",
+  ],
+  Array [
+    "level 2 result:",
+    "generator result: 4",
+  ],
+  Array [
+    "Async Generators Item:",
+    0,
+  ],
+  Array [
+    "Async Generators Item:",
+    1,
+  ],
+  Array [
+    "Async Generators Item:",
+    2,
+  ],
+  Array [
+    "simple async generator result:",
+    4,
+  ],
+  Array [
+    "Async Generators Item:",
+    0,
+  ],
+  Array [
+    "Async Generators Item:",
+    1,
+  ],
+  Array [
+    "Async Generators Item:",
+    2,
+  ],
+  Array [
+    "Async Generators Item:",
+    "simple async generator item:0",
+  ],
+  Array [
+    "Async Generators Item:",
+    "simple async generator item:1",
+  ],
+  Array [
+    "Async Generators Item:",
+    "simple async generator item:2",
+  ],
+  Array [
+    "Async Generators Item:",
+    "< async generators level 2",
+  ],
+  Array [
+    "yield* redirect",
+    "async redirect 2",
+  ],
+  Array [
+    "Async Generators Item:",
+    0,
+  ],
+  Array [
+    "Async Generators Item:",
+    1,
+  ],
+  Array [
+    "Async Generators Item:",
+    2,
+  ],
+  Array [
+    "yield* redirect to sync",
+    4,
+  ],
+  Array [
+    "get sync iterator",
+  ],
+  Array [
+    "custom iterator next:",
+    0,
+  ],
+  Array [
+    "Async Generators Item:",
+    0,
+  ],
+  Array [
+    "custom iterator next:",
+    1,
+  ],
+  Array [
+    "Async Generators Item:",
+    1,
+  ],
+  Array [
+    "custom iterator next:",
+    2,
+  ],
+  Array [
+    "custom async generator",
+    2,
+  ],
+  Array [
+    "get async iterator",
+  ],
+  Array [
+    "custom async iterator next:",
+    0,
+  ],
+  Array [
+    "Async Generators Item:",
+    0,
+  ],
+  Array [
+    "custom async iterator next:",
+    1,
+  ],
+  Array [
+    "Async Generators Item:",
+    1,
+  ],
+  Array [
+    "custom async iterator next:",
+    2,
+  ],
+  Array [
+    "custom generator",
+    2,
+  ],
+  Array [
+    "yield* empty async generator:",
+    "empty",
+  ],
+  Array [
+    "yield* empty generator:",
+    "empty",
+  ],
+  Array [
+    "Async Generators Result:",
+    "variousYieldStarsInAsyncGenerator",
+  ],
+  Array [
+    "R",
+    "Async Generators Resulting Value",
+  ],
+]
+`;
+
+exports[`generator functions 1`] = `
+Array [
+  Array [
+    "> M:",
+    [Function],
+  ],
+  Array [
+    "G6",
+    "->",
+  ],
+  Array [
+    "G6",
+    0,
+  ],
+  Array [
+    "G6",
+    1,
+  ],
+  Array [
+    "G6",
+    2,
+  ],
+  Array [
+    "G6",
+    "G1",
+  ],
+  Array [
+    "G6",
+    "A:0",
+  ],
+  Array [
+    "G6",
+    "A:1",
+  ],
+  Array [
+    "G6",
+    "A:2",
+  ],
+  Array [
+    "G6",
+    "<-",
+  ],
+  Array [
+    "G6",
+    "->",
+  ],
+  Array [
+    "G6",
+    0,
+  ],
+  Array [
+    "G6",
+    1,
+  ],
+  Array [
+    "G6",
+    2,
+  ],
+  Array [
+    "G6",
+    "G1",
+  ],
+  Array [
+    "G6",
+    "A:0",
+  ],
+  Array [
+    "G6",
+    "A:1",
+  ],
+  Array [
+    "G6",
+    "A:2",
+  ],
+  Array [
+    "G6",
+    "<-",
+  ],
+]
+`;

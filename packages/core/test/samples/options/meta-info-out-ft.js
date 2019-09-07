@@ -12,9 +12,9 @@ function a2() {
   a2._c = function _c() {
     var b = M.wrap(function _b(j) {
       var b = M.context(_b);
+      b._j = j;
       b._a2 = _a2;
       b._c = c;
-      b._j = j;
       return M.scope(b_1);
     }, meta$b),
         c = {},

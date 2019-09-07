@@ -1,7 +1,7 @@
 require("./setup-time-travel");
-const trace = require("./run").bind(null, true);
+const trace = require("./run");
 const D = require("../main");
-
+trace.silent = true;
 describe("time traveling", function() {
   test("Object tracing", function() {
     D.TimeTravel.reset();
@@ -109,21 +109,18 @@ describe("time traveling", function() {
     D.TimeTravel.undo();
     expect([...set]).toEqual(orig);
   });
-  test("captured state", function() {
+  test("Closures tracing", function() {
     D.TimeTravel.reset();
     global.console = { log: jest.fn() };
-    D.evalThunk(require("./__fixtures__/counters"));
-    const mod = trace();
-    mod.getCounter();
-    const [counter, tr, dir, set] = trace(true);
+    const mod = trace(D.evalThunk(require("./__fixtures__/counters")));
+    const [counter, tr, dir, set] = trace(mod.getCounter());
     console.log("INIT", tr, dir, set);
     let stepNum = 0;
     function counterStep() {
-      counter();
       console.log(
         "STEP",
         stepNum++,
-        trace(true),
+        trace(counter()),
         JSON.stringify({ tr, dir: [...dir], set: [...set] })
       );
     }
@@ -152,13 +149,11 @@ describe("time traveling", function() {
     counterStep();
     counterStep();
     console.log("UNDO SAVE");
-    counter();
-    console.log(trace(true));
+    console.log(trace(counter()));
     console.log("UNDO SAVE1");
     D.TimeTravel.checkpoint();
     D.TimeTravel.undo();
-    counter();
-    console.log(trace());
+    console.log(trace(counter()));
     expect(console.log.mock.calls).toMatchSnapshot();
   });
 });

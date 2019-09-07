@@ -23,12 +23,9 @@ export const pure = symbol("pure");
 export const sharedRef = symbol("sharedRef");
 /** effectful operation */
 export const op = symbol("op");
-export const pureId = Kit.sysId("pure");
 export const chainId = Kit.sysId("chain");
 export const alreadyRunningSym = Kit.sysId("$alreadyRunning");
 export const delegateSym = Kit.sysId("$delegate");
-export const redirSym = Kit.sysId("$redir");
-export const redirResultSym = Kit.sysId("$redirResult");
 
 /** in frameArgs binds inner content of the jump tag */
 export const argSym = Kit.scope.newSym("arg");

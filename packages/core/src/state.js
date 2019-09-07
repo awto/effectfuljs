@@ -30,7 +30,7 @@ export const saveDecls = Kit.pipe(
           switch (i.type) {
             case Tag.ClassDeclaration:
               const id = sl.cur().value.sym;
-              decls.set(id, { raw: null });
+              if (!decls.has(id)) decls.set(id, { raw: null });
               yield sl.enter(i.pos, Tag.ExpressionStatement);
               yield sl.enter(Tag.expression, Tag.AssignmentExpression, {
                 node: { operator: "=" }
@@ -43,14 +43,28 @@ export const saveDecls = Kit.pipe(
               yield* sl.leave();
               continue;
             case Tag.FunctionDeclaration:
-              decls.set(i.value.funcId, {
-                raw: null,
-                init: [
-                  ...sl.copy(
-                    Kit.setType(Kit.setPos(i, Tag.init), Tag.FunctionExpression)
-                  )
-                ]
-              });
+              const old = decls.get(i.value.funcId);
+              const init = [
+                ...sl.copy(
+                  Kit.setType(Kit.setPos(i, Tag.init), Tag.FunctionExpression)
+                )
+              ];
+              if (old)
+                old.init = old.init
+                  ? [
+                      sl.enter(Tag.init, Tag.SequenceExpression),
+                      sl.enter(Tag.expressions, Tag.Array),
+                      ...Kit.reposOneArr(old.init, Tag.push),
+                      ...Kit.reposOneArr(init, Tag.push),
+                      ...sl.leave(),
+                      ...sl.leave()
+                    ]
+                  : init;
+              else
+                decls.set(i.value.funcId, {
+                  raw: null,
+                  init
+                });
               if (i.value.wrapId) i.value.funcId = i.value.wrapId;
               continue;
             case Tag.TryStatement:
@@ -79,7 +93,8 @@ export const saveDecls = Kit.pipe(
                   const ids = [];
                   for (const j of sl.one()) {
                     if (j.enter && j.type === Tag.Identifier && j.value.decl) {
-                      decls.set(j.value.sym, { raw: null });
+                      const { sym } = j.value;
+                      if (!decls.has(sym)) decls.set(sym, { raw: null });
                       j.value.lhs = true;
                       j.value.rhs = false;
                       j.value.decl = false;
@@ -128,7 +143,7 @@ export const saveDecls = Kit.pipe(
                 for (const j of id) {
                   if (j.enter && j.type === Tag.Identifier && j.value.decl) {
                     const sym = j.value.sym;
-                    if (!sym.noDecl) {
+                    if (!sym.noDecl && !decls.has(sym)) {
                       decls.set(sym, { raw: null, node: j.value.node });
                     }
                     j.value.decl = false;
@@ -311,41 +326,37 @@ export function restoreDecls(s) {
             if (j.enter && j.type === Tag.Array && j.pos === Tag.body) {
               const assigns = [];
               const decls = [];
+              const { funcId } = i.value;
+              if (funcId) {
+                const copy = Kit.scope.newSym(funcId.orig);
+                copy.num = -copy.num;
+                copy.strict = true;
+                funcId.strict = false;
+                i.value.funcAlias = copy;
+                if (
+                  funcId.interpr === Bind.ctxField &&
+                  funcId.declScope === i.value &&
+                  funcId.hasReads
+                ) {
+                  assigns.push({
+                    sym: funcId,
+                    init: [
+                      sl.tok(Tag.right, Tag.Identifier, {
+                        sym: copy,
+                        lhs: false,
+                        rhs: true,
+                        decl: false
+                      })
+                    ]
+                  });
+                }
+                // this makes more likely for the function to have same name
+              }
               decls.push(
                 ...[...i.value.savedDecls].sort((a, b) => a[0].num - b[0].num)
               );
               const vars = [];
               const raw = [];
-              for (const [k, v] of decls) {
-                if (k.removed) continue;
-                if (v.raw) raw.push(v);
-                else {
-                  v.sym = k;
-                  if (k.interpr === Bind.ctxField) {
-                    if (v.init)
-                      assigns.push({
-                        sym: k,
-                        init: Kit.reposOneArr(v.init, Tag.right)
-                      });
-                  } else vars.push(v);
-                }
-              }
-              if (vars.length) {
-                const lab = sl.label();
-                yield sl.enter(Tag.push, Tag.VariableDeclaration, {
-                  node: { kind: "var" }
-                });
-                yield sl.enter(Tag.declarations, Tag.Array);
-                for (const { sym, init } of vars) {
-                  if (sym.substSym) continue;
-                  yield sl.enter(Tag.push, Tag.VariableDeclarator);
-                  yield sl.tok(Tag.id, Tag.Identifier, { sym, decl: true });
-                  if (init) yield* init;
-                  yield* sl.leave();
-                }
-                yield* lab();
-              }
-
               if (i.value.paramSyms) {
                 for (const sym of i.value.paramSyms) {
                   if (sym.interpr === Bind.ctxField) {
@@ -369,6 +380,37 @@ export function restoreDecls(s) {
                   }
                 }
               }
+              for (const [k, v] of decls) {
+                if (k.removed) continue;
+                if (v.raw) raw.push(v);
+                else {
+                  v.sym = k;
+                  if (k.interpr === Bind.ctxField || k.param) {
+                    if (v.init) {
+                      assigns.push({
+                        sym: k,
+                        init: Kit.reposOneArr(v.init, Tag.right)
+                      });
+                    }
+                  } else vars.push(v);
+                }
+              }
+              if (vars.length) {
+                const lab = sl.label();
+                yield sl.enter(Tag.push, Tag.VariableDeclaration, {
+                  node: { kind: "var" }
+                });
+                yield sl.enter(Tag.declarations, Tag.Array);
+                for (const { sym, init } of vars) {
+                  if (sym.substSym) continue;
+                  yield sl.enter(Tag.push, Tag.VariableDeclarator);
+                  yield sl.tok(Tag.id, Tag.Identifier, { sym, decl: true });
+                  if (init) yield* init;
+                  yield* sl.leave();
+                }
+                yield* lab();
+              }
+
               for (const j of decls) if (j[1].raw != null) yield* j[1].raw;
               if (assigns.length) {
                 for (const { sym, init } of assigns) {
@@ -463,8 +505,7 @@ function calcVarsHandling(si) {
  * variable is used except declaration function)
  *
  *     type Sym = Sym &
- *       { refScopes: Set<TokenValue>,
- *         funcRef?: FuncValue -- function the symbol references
+ *       { funcRef?: FuncValue -- function the symbol references
  *         singleAssign: boolean,
  *         -- function where the var is read or modified(except where declared)
  *         refScopes: FuncValue[],
@@ -493,7 +534,7 @@ export function calcRefScopes(si) {
   function collectScopes(root) {
     const decls = (root.scopeDecls = new Set(root.paramSyms));
     root.contextSym = Kit.scope.newSym(
-      (root.funcId && root.funcId.name) || "ctx"
+      s.opts.contextSymName || (root.funcId && root.funcId.name) || "ctx"
     );
     const ctxState = root.opts.contextState;
     root.contextSym.bound =
@@ -588,7 +629,7 @@ export function calcRefScopes(si) {
     const si = i.sym;
     if (si.singleAssign && !si.byValStrict) si.byVal = false;
     if (si.refScopes && si.track) {
-      if (si.captLoop /* && si.captLoop.eff */) {
+      if (si.captLoop) {
         loops.add(si.captLoop);
         si.captLoop.track = true;
       }
@@ -752,6 +793,7 @@ export function calcFrameStateVars(si) {
   if (!frames.length) return sa;
   for (const frame of frames)
     frame.stateVars = { r: new Set(), w: new Set(), s: new Set() };
+  const functionSentOps = root.opts.functionSentOps || {};
   const first = frames[0].stateVars;
   for (const i of root.scopeDecls) {
     if (i.interpr && i.interpr !== Bind.closureVar) {
@@ -879,7 +921,8 @@ export function calcFrameStateVars(si) {
       for (const f of frameArgs.values()) {
         if (f.interpr && !s.has(f)) r.add(f);
       }
-    if (functionSentSym && (v.bindName === "yld" || v.bindName === "scope")) {
+    if (functionSentSym && functionSentOps[v.bindName]) {
+      // this frame can write function.sent
       for (const j of v.gotoDests) j.wfsent = true;
     }
   }
@@ -1051,31 +1094,53 @@ export function handleSpecVars(si) {
   const root = s.first.value;
   const static_ = root.node && root.node.static;
   if (!usesThis && !usesArgs) return sa;
-  const decls = root.savedDecls || (root.savedDecls = new Map());
-  const thisSym = usesThis && Bind.tempVarSym(root, "_this");
-  if (thisSym) {
-    decls.set(thisSym, {
-      raw: null,
-      init: [s.tok(Tag.init, Tag.ThisExpression)]
-    });
-    root.scopeDecls.add(thisSym);
+  let storeRoot = root;
+  while (storeRoot && storeRoot.origType === Tag.ArrowFunctionExpression)
+    storeRoot = storeRoot.parentScope;
+  if (!storeRoot) return sa;
+  const decls = storeRoot.savedDecls || (storeRoot.savedDecls = new Map());
+  let thisSym;
+  if (usesThis) {
+    thisSym = storeRoot.thisSym;
+    if (!thisSym) {
+      thisSym = storeRoot.thisSym = Bind.tempVarSym(storeRoot, "_this");
+      decls.set(thisSym, {
+        raw: null,
+        init: [s.tok(Tag.init, Tag.ThisExpression)]
+      });
+      storeRoot.scopeDecls.add(thisSym);
+    }
+    if (storeRoot !== root) {
+      thisSym.closCapt = true;
+      (thisSym.refScopes || (thisSym.refScopes = new Set())).add(root);
+      root.scopeCapt.add(thisSym);
+    }
   }
-  const argsSym = usesArgs && Bind.tempVarSym(root, "_args");
-  if (argsSym) {
-    decls.set(argsSym, {
-      raw: null,
-      init: root.opts.wrapArguments
-        ? [
-            ...s.toks(
-              Tag.init,
-              "$I($I)",
-              Kit.sysId(root.opts.wrapArguments),
-              Kit.scope.argumentsSym
-            )
-          ]
-        : [s.tok(Tag.init, Tag.Identifier, { sym: Kit.scope.argumentsSym })]
-    });
-    root.scopeDecls.add(argsSym);
+  let argsSym;
+  if (usesArgs) {
+    argsSym = storeRoot.argsSym;
+    if (!argsSym) {
+      argsSym = storeRoot.argsSym = Bind.tempVarSym(storeRoot, "_args");
+      decls.set(argsSym, {
+        raw: null,
+        init: storeRoot.opts.wrapArguments
+          ? [
+              ...s.toks(
+                Tag.init,
+                "$I($I)",
+                Kit.sysId(storeRoot.opts.wrapArguments),
+                Kit.scope.argumentsSym
+              )
+            ]
+          : [s.tok(Tag.init, Tag.Identifier, { sym: Kit.scope.argumentsSym })]
+      });
+      storeRoot.scopeDecls.add(argsSym);
+    }
+    if (storeRoot !== root) {
+      argsSym.closCapt = true;
+      (argsSym.refScopes || (argsSym.refScopes = new Set())).add(root);
+      root.scopeCapt.add(argsSym);
+    }
   }
   function* walk() {
     for (const i of s.sub()) {
@@ -1182,7 +1247,8 @@ function prepareContextVars(root, cfg) {
     if (opt && !i.closCapt && i.writeFrames) {
       i.interpr = null;
       i.fieldName = null;
-      root.savedDecls.delete(i);
+      const decl = root.savedDecls.get(i);
+      if (!decl || (decl.init && decl.raw)) root.savedDecls.delete(i);
       if (i.writeFrames)
         for (const f of i.writeFrames)
           (f.savedDecls || (f.savedDecls = new Map())).set(i, { raw: null });

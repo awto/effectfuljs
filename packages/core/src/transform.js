@@ -21,6 +21,7 @@ import * as Simplify from "./simplify";
 import { ifLoose } from "./options";
 import * as Par from "./par";
 import * as Eval from "./eval";
+import * as path from "path";
 
 export const consumeScope = consume;
 
@@ -205,6 +206,19 @@ export function pass(s) {
   let sa = Kit.toArray(Closure.topToIIFE(Rt.collectImports(orig)));
   const root = sa[0].value;
   let opts = root.opts || Kit.globalOpts();
+  let rel;
+  if (opts.file) {
+    const root =
+      opts.srcRoot === true ? opts.file.root || opts.file.cwd : opts.srcRoot;
+    if (root) {
+      rel = path.relative(path.dirname(opts.file.filename), root);
+      if (Kit.isWindows) rel = rel.replace(/\\/g, "/");
+      if (opts.detectRT && opts.detectRT.replace)
+        opts.detectRT = opts.detectRT.replace("{ROOT}", rel);
+      if (opts.importRT && opts.importRT.replace)
+        opts.importRT = opts.importRT.replace("{ROOT}", rel);
+    }
+  }
   if (opts.detectRT) {
     if (!root.imports.has(opts.detectRT)) return null;
     opts.importRT = opts.detectRT;

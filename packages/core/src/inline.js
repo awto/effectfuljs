@@ -3,7 +3,6 @@ import { Tag } from "./kit";
 import * as Block from "./block";
 import * as Bind from "./bind";
 import * as Ctrl from "./control";
-import * as Except from "./exceptions";
 
 /** marks frames with only jump in its payload, so no needs to check reentry */
 export function markSimpleRedir(si) {
@@ -838,7 +837,8 @@ export function pureOp(si) {
   const inlineYieldResultPromise = inlineYieldOp === "iteratorResultPromise";
   const promise = template === "promise" && !s.opts.leftChain;
   if (!asis && !generators && !promise) return s;
-  const { contextSym } = s.first.value;
+  const root = s.first.value;
+  const { contextSym } = root;
   if (!contextSym && generators)
     throw s.error("not implemented inlinePure: 'iterator' without context");
   const field = s.opts.storeCont,
@@ -848,7 +848,7 @@ export function pureOp(si) {
   function* _pureOp() {
     for (const i of s) {
       if (i.enter && i.type === Block.app) {
-        if (i.value.sym === Block.pureId) {
+        if (i.value.sym === root.pureId) {
           const lab = s.label();
           if (asis) {
             yield s.enter(i.pos, Block.effExpr, i.value);
@@ -905,7 +905,7 @@ export function pureOpLeft(si) {
             reflected = i.value.reflected;
             break;
           case Block.app:
-            if (i.value.sym !== Block.pureId) break;
+            if (i.value.sym !== root.pureId) break;
             yield s.enter(i.pos, Block.effExpr, i.value);
             if (reflected || i.value.reflected)
               yield* s.template(Tag.push, `=Promise.resolve($E)`);
@@ -952,7 +952,7 @@ export function raiseOp(si) {
   function* _raiseOp() {
     for (const i of s) {
       const lab = s.label();
-      if (i.enter && i.type === Block.app && i.value.sym === Except.raiseId) {
+      if (i.enter && i.type === Block.app && i.value.sym === root.raiseId) {
         if (asThrow) {
           if (contSym && defunct) yield* s.toks(Tag.push, `$I = 0`, contSym);
           else if (contSym && resContSym)

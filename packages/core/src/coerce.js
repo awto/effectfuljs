@@ -93,6 +93,7 @@ export function inject(s) {
   const sl = Kit.auto(s);
   const coerce = sl.opts.coerce && !sl.opts.inlineCoerce;
   if (!coerce) return sl;
+  const root = sl.first.value;
   return walk(sl);
   function* walk(sw) {
     for (const i of sw) {
@@ -104,7 +105,7 @@ export function inject(s) {
           yield* sl.leave();
           continue;
         }
-        if (i.value.sym === Block.pureId) {
+        if (i.value.sym === root.pureId) {
           if (sl.curLev()) {
             const inner = Kit.toArray(sl.sub());
             inner[0].value.result = true;
@@ -153,7 +154,8 @@ export function interpret(s) {
 export function cleanPureJumps(si) {
   const s = Kit.auto(si);
   if (!s.opts.coerce) return s;
-  const { pureExitFrame } = s.first.value;
+  const root = s.first.value;
+  const { pureExitFrame } = root;
   return _cleanPureJumps();
   function* _skip(i) {
     yield s.enter(i.pos, Block.effExpr, i.value);
@@ -168,7 +170,7 @@ export function cleanPureJumps(si) {
       if (i.enter) {
         switch (i.type) {
           case Block.app:
-            if (i.value.sym === Block.pureId) {
+            if (i.value.sym === root.pureId) {
               yield* _skip(i);
               continue;
             }

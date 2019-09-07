@@ -11,3 +11,17 @@ function a() {
   eff(4, i, k);
   eff(5, i, k);
 }
+
+function zzz(zz) {
+  aaaa();
+  function aaaa() {
+    eff1();
+  }
+  function aaaa() {
+    eff2();
+  }
+  var aaaa = function bbbb() {
+    eff3();
+  };
+  aaaa();
+}

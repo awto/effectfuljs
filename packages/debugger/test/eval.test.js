@@ -1,12 +1,13 @@
 require("./setup");
-const trace = require("./run").bind(null, true);
+const trace = require("./run");
+trace.silent = true;
 const D = require("../main");
 
 test("eval tracing", function() {
   global.console = { log: jest.fn() };
-  D.evalThunk(require("./__fixtures__/eval"));
-  const mod = trace();
-  mod.runEval();
-  console.log("> eval", trace());
+  D.context.debug = true;
+  D.context.needsBreak = () => true;
+  const mod = trace(D.evalThunk(require("./__fixtures__/eval")));
+  console.log("> eval", trace(mod.runEval()));
   expect(console.log.mock.calls).toMatchSnapshot();
 });

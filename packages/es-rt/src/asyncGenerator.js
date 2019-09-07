@@ -296,7 +296,7 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   AsyncGeneratorFunction.prototype = AsyncGeneratorFunctionPrototype;
   AsyncGeneratorFunctionPrototype.constructor = AsyncGeneratorFunction;
   AsyncGeneratorFunctionPrototype[
-    Symbol.toString
+    Symbol.toStringTag
   ] = AsyncGeneratorFunction.displayName = "AsyncGeneratorFunction";
 }
 

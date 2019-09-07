@@ -13,8 +13,7 @@ module.exports = M.wrapExport(function (module, exports) {
 
   ctx._Something = function Something() {
     var f = ctx;
-
-    f._a1(f._b);
+    (0, f._a1)(f._b);
   };
 
   {
@@ -36,7 +35,7 @@ module.exports = M.wrapExport(function (module, exports) {
 
 function zz_1(_zz) {
   var a;
-  a = eff_1(_zz._f._Something());
+  a = eff_1((0, _zz._f._Something)());
   return M.chain(a, zz_2);
 }
 
@@ -82,8 +81,7 @@ function a_2(_ctx) {
 }
 
 function a_3(_ctx) {
-  _ctx._f._a1();
-
+  (0, _ctx._f._a1)();
   return M.pure();
 }
 

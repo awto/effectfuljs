@@ -72,9 +72,9 @@ function f_2(ctx) {
   return M.chain(eff(function b(k) {
     var _b = M.context();
 
+    _b._k = k;
     _b._a = ctx._a;
     _b._f = ctx;
-    _b._k = k;
     return M.scope(b_1);
   }), f_3);
 }
@@ -94,8 +94,8 @@ function a_4(a) {
     a._i = a._loop.value;
     return M.chain((i => {
       var ctx = M.context();
-      ctx._a = a;
       ctx._i = i;
+      ctx._a = a;
       return M.scope(f_1);
     })(a._i), a_4, a_10);
   } else {
