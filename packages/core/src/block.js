@@ -314,3 +314,17 @@ export function applyIgnoreResult(si) {
     }
   }
 }
+
+export function isEffFree(i) {
+  switch (i.type) {
+    case bindPat:
+    case Tag.Identifier:
+    case Tag.RegExpLiteral:
+    case Tag.NullLiteral:
+    case Tag.StringLiteral:
+    case Tag.BooleanLiteral:
+    case Tag.NumericLiteral:
+      return true;
+  }
+  return false;
+}

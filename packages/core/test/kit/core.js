@@ -71,7 +71,12 @@ export const run = Kit.curryN(
       Object.assign(
         {},
         defaultOpts,
-        { importRT: "@effectful/core", contextMethodOpsSpec: {}, ns: "M" },
+        {
+          importRT: "@effectful/core",
+          contextMethodOpsSpec: {},
+          ns: "M",
+          wrapPropAccess: null
+        },
         opts
       )
     );

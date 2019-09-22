@@ -26,7 +26,10 @@ export function map<T, U, This = undefined>(
 ): U[] {
   const res = new Array<U>(this.length);
   let x = 0;
-  for (const i of this) res[x++] = callback.call(self, i, x, this);
+  for (const i of this) {
+    let cur = x++;
+    res[cur] = callback.call(self, i, cur, this);
+  }
   return res;
 }
 

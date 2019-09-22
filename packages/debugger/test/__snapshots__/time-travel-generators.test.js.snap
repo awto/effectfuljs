@@ -1,0 +1,3037 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`async function's time traveling 1`] = `
+Array [
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    0,
+    0,
+  ],
+  Array [
+    "CHECKPOINT - 1",
+  ],
+  Array [
+    "J",
+    0,
+    100,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    1,
+    100,
+  ],
+  Array [
+    "A:R1",
+    100,
+    0,
+  ],
+  Array [
+    "CHECKPOINT - 2",
+  ],
+  Array [
+    "J",
+    1,
+    300,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    2,
+    300,
+  ],
+  Array [
+    "A:R2",
+    300,
+    300,
+  ],
+  Array [
+    "CHECKPOINT - 3",
+  ],
+  Array [
+    "J",
+    2,
+    600,
+  ],
+  Array [
+    "EXIT:",
+    600,
+  ],
+  Array [
+    "A:R3",
+    600,
+    1200,
+  ],
+  Array [
+    "UNDO 1",
+  ],
+  Array [
+    "CHECKPOINT - 3/2",
+  ],
+  Array [
+    "J",
+    2,
+    601,
+  ],
+  Array [
+    "EXIT:",
+    601,
+  ],
+  Array [
+    "A:R3/1",
+    601,
+    1202,
+  ],
+  Array [
+    "UNDO 2",
+  ],
+  Array [
+    "CHECKPOINT/3",
+  ],
+  Array [
+    "I",
+    2,
+    300,
+  ],
+  Array [
+    "CONT 2",
+    undefined,
+  ],
+  Array [
+    "CHECKPOINT - 3/3",
+  ],
+  Array [
+    "J",
+    2,
+    602,
+  ],
+  Array [
+    "EXIT:",
+    602,
+  ],
+  Array [
+    "A:R3/2",
+    602,
+    1204,
+  ],
+  Array [
+    "UNDO3",
+  ],
+  Array [
+    "CHECKPOINT - 3/3",
+  ],
+  Array [
+    "J",
+    2,
+    603,
+  ],
+  Array [
+    "EXIT:",
+    603,
+  ],
+  Array [
+    "A:R3/3",
+    603,
+    1206,
+  ],
+  Array [
+    "UNDO4",
+  ],
+  Array [
+    "CHECKPOINT - 3/4",
+  ],
+  Array [
+    "J",
+    2,
+    604,
+  ],
+  Array [
+    "EXIT:",
+    604,
+  ],
+  Array [
+    "A:R3/4",
+    604,
+    1208,
+  ],
+  Array [
+    "UNDO5",
+  ],
+  Array [
+    "WRITE",
+  ],
+  Array [
+    "CHECKPOINT - 3/5",
+  ],
+  Array [
+    "J",
+    2,
+    605,
+  ],
+  Array [
+    "EXIT:",
+    605,
+  ],
+  Array [
+    "A:R3/5",
+    605,
+    1210,
+  ],
+  Array [
+    "UNDO 6",
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": noop {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": valuePromise {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": wrapExport {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": unwrapImport {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": denodeifyWithCount {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": denodeifyWithoutCount {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": RawTask {
+        "call": [Function],
+      },
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": flush {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": requestFlush {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": rawAsap {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": asap {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Promise {
+        "catch": [Function],
+        "done": [Function],
+        "finally": [Function],
+        "nodeify": [Function],
+        "then": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "default$": false,
+          "name": "global#Promise#",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "props": false,
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": getThen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": tryCallOne {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": tryCallTwo {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": safeThen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": handle {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": handleResolved {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": resolve {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": reject {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": finale {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": doResolve {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Handler {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsync {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsyncGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": _testAsync {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsync {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsyncGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": wrapExport {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": GeneratorFunctionPrototype {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorMethod {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorNext {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorReturn {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorReturn {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorMethod {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "CHECKPOINT - 3/6",
+  ],
+  Array [
+    "J",
+    2,
+    606,
+  ],
+  Array [
+    "EXIT:",
+    606,
+  ],
+  Array [
+    "A:R3/6",
+    606,
+    1212,
+  ],
+  Array [
+    "UNDO 7",
+  ],
+  Array [
+    "CHECKPOINT - 3/7",
+  ],
+  Array [
+    "J",
+    2,
+    607,
+  ],
+  Array [
+    "EXIT:",
+    607,
+  ],
+  Array [
+    "A:R3/7",
+    607,
+    1214,
+  ],
+]
+`;
+
+exports[`async generator functions time traveling 1`] = `
+Array [
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    0,
+    0,
+  ],
+  Array [
+    "CHECKPOINT - 1",
+  ],
+  Array [
+    "K",
+    100,
+    100,
+  ],
+  Array [
+    "J",
+    0,
+    100,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    1,
+    100,
+  ],
+  Array [
+    "A:R1",
+    100,
+    0,
+  ],
+  Array [
+    "CHECKPOINT - 2",
+  ],
+  Array [
+    "K",
+    300,
+    300,
+  ],
+  Array [
+    "J",
+    1,
+    300,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    2,
+    300,
+  ],
+  Array [
+    "A:R2",
+    300,
+    300,
+  ],
+  Array [
+    "CHECKPOINT - 3",
+  ],
+  Array [
+    "K",
+    600,
+    600,
+  ],
+  Array [
+    "J",
+    2,
+    600,
+  ],
+  Array [
+    "EXIT:",
+    600,
+  ],
+  Array [
+    "A:R3",
+    600,
+    1200,
+  ],
+  Array [
+    "UNDO 1",
+  ],
+  Array [
+    "CHECKPOINT - 3/2",
+  ],
+  Array [
+    "K",
+    601,
+    601,
+  ],
+  Array [
+    "J",
+    2,
+    601,
+  ],
+  Array [
+    "EXIT:",
+    601,
+  ],
+  Array [
+    "A:R3/1",
+    601,
+    1202,
+  ],
+  Array [
+    "UNDO 2",
+  ],
+  Array [
+    "CHECKPOINT/3",
+  ],
+  Array [
+    "I",
+    2,
+    300,
+  ],
+  Array [
+    "CONT 2",
+    undefined,
+  ],
+  Array [
+    "CHECKPOINT - 3/3",
+  ],
+  Array [
+    "K",
+    602,
+    602,
+  ],
+  Array [
+    "J",
+    2,
+    602,
+  ],
+  Array [
+    "EXIT:",
+    602,
+  ],
+  Array [
+    "A:R3/2",
+    602,
+    1204,
+  ],
+  Array [
+    "UNDO3",
+  ],
+  Array [
+    "CHECKPOINT - 3/3",
+  ],
+  Array [
+    "K",
+    603,
+    603,
+  ],
+  Array [
+    "J",
+    2,
+    603,
+  ],
+  Array [
+    "EXIT:",
+    603,
+  ],
+  Array [
+    "A:R3/3",
+    603,
+    1206,
+  ],
+  Array [
+    "UNDO4",
+  ],
+  Array [
+    "CHECKPOINT - 3/4",
+  ],
+  Array [
+    "K",
+    604,
+    604,
+  ],
+  Array [
+    "J",
+    2,
+    604,
+  ],
+  Array [
+    "EXIT:",
+    604,
+  ],
+  Array [
+    "A:R3/4",
+    604,
+    1208,
+  ],
+  Array [
+    "UNDO5",
+  ],
+  Array [
+    "WRITE",
+  ],
+  Array [
+    "CHECKPOINT - 3/5",
+  ],
+  Array [
+    "K",
+    605,
+    605,
+  ],
+  Array [
+    "J",
+    2,
+    605,
+  ],
+  Array [
+    "EXIT:",
+    605,
+  ],
+  Array [
+    "A:R3/5",
+    605,
+    1210,
+  ],
+  Array [
+    "UNDO 6",
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": noop {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": valuePromise {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": wrapExport {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": unwrapImport {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": denodeifyWithCount {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": denodeifyWithoutCount {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": RawTask {
+        "call": [Function],
+      },
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": flush {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": requestFlush {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": rawAsap {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": asap {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Promise {
+        "catch": [Function],
+        "done": [Function],
+        "finally": [Function],
+        "nodeify": [Function],
+        "then": [Function],
+        Symbol(@effectful/serialization/descriptor): Object {
+          "create": [Function],
+          "default$": false,
+          "name": "global#Promise#",
+          "overrideProps": Object {
+            Symbol(@effectful/serialization/descriptor): false,
+          },
+          "props": false,
+          "read": [Function],
+          "readContent": [Function],
+          "value": [Circular],
+          "write": [Function],
+        },
+      },
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": getThen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": tryCallOne {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": tryCallTwo {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": safeThen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": handle {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": handleResolved {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": resolve {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": reject {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": finale {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": doResolve {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Handler {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsync {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsyncGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": _testAsyncGenLoop {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": _testAsyncGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": _testAsyncGenInit {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": asyncNextImpl {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": _testAsyncGenInit {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": asyncGeneratorMethod {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": _testAsyncGenInit {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": asyncReturnImpl {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsync {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsyncGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": wrapExport {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": GeneratorFunctionPrototype {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorMethod {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorNext {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorReturn {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorReturn {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorMethod {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "CHECKPOINT - 3/6",
+  ],
+  Array [
+    "K",
+    606,
+    606,
+  ],
+  Array [
+    "J",
+    2,
+    606,
+  ],
+  Array [
+    "EXIT:",
+    606,
+  ],
+  Array [
+    "A:R3/6",
+    606,
+    1212,
+  ],
+  Array [
+    "UNDO 7",
+  ],
+  Array [
+    "CHECKPOINT - 3/7",
+  ],
+  Array [
+    "K",
+    607,
+    607,
+  ],
+  Array [
+    "J",
+    2,
+    607,
+  ],
+  Array [
+    "EXIT:",
+    607,
+  ],
+  Array [
+    "A:R3/7",
+    607,
+    1214,
+  ],
+]
+`;
+
+exports[`generator functions time traveling 1`] = `
+Array [
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    0,
+    0,
+  ],
+  Array [
+    "C",
+    1,
+    0,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    1,
+    1,
+  ],
+  Array [
+    "C",
+    3,
+    1,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    2,
+    3,
+  ],
+  Array [
+    "C",
+    10,
+    6,
+  ],
+  Array [
+    "DONE 1",
+    10,
+  ],
+  Array [
+    "I",
+    2,
+    3,
+  ],
+  Array [
+    "C",
+    10,
+    6,
+  ],
+  Array [
+    "DONE 2",
+    10,
+  ],
+  Array [
+    "I",
+    0,
+    0,
+  ],
+  Array [
+    "C",
+    1,
+    0,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    1,
+    1,
+  ],
+  Array [
+    "C",
+    3,
+    1,
+  ],
+  Array [
+    "CHECKPOINT",
+  ],
+  Array [
+    "I",
+    2,
+    3,
+  ],
+  Array [
+    "C",
+    10,
+    6,
+  ],
+  Array [
+    "DONE 3",
+    10,
+  ],
+  Array [
+    "I",
+    2,
+    3,
+  ],
+  Array [
+    "C",
+    10,
+    6,
+  ],
+  Array [
+    "DONE 4",
+    10,
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsync {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": testAsyncGen {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": wrapExport {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": exportsThunk {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorMethod {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorNext {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": generatorReturn {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": Object {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "while defining property",
+    "prototype",
+    Object {
+      "configurable": false,
+      "enumerable": false,
+      "value": GeneratorFunctionPrototype {},
+      "writable": true,
+    },
+  ],
+  Array [
+    "I",
+    2,
+    3,
+  ],
+  Array [
+    "C",
+    10,
+    6,
+  ],
+  Array [
+    "DONE 5",
+    10,
+  ],
+]
+`;

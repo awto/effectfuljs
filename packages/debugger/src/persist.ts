@@ -42,8 +42,6 @@ export function regModule(exp: any, name: string) {
   S.regOpaqueRec(exp, `${name || "?"}#exports`);
 }
 
-S.regAutoOpaqueConstr(Function);
-
 if (typeof MessagePort !== "undefined") {
   S.regAutoOpaqueConstr(MessagePort);
   S.regAutoOpaqueConstr(MessageChannel);

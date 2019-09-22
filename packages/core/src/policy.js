@@ -56,7 +56,11 @@ export const ctImportPass = postproc(function* ctImportPass(s) {
   for (const i of s) {
     if (i.type === ctImport) {
       if (i.enter) {
-        const r = resolveImport(i.value.name, s.opts, i.value.optional);
+        const r = resolveImport(
+          i.value.name,
+          s.opts,
+          true /*i.value.optional*/
+        );
         if (r != null) {
           const p = yield* r(s.opts, i.value);
           if (p != null) {

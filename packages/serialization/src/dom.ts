@@ -13,7 +13,7 @@ export const eventsSym = Symbol.for("@effectful/debugger/events");
 if (typeof Event !== "undefined")
   S.regDescriptor(
     {
-      name: "Event",
+      name: "dom#Event",
       create(ctx, json): Event {
         const EventConstructor = ctx.step((<any>json).c);
         const init: any = (<any>json).init;
@@ -65,6 +65,7 @@ const overrideProps: any = { [S.descriptorSymbol]: false };
 
 if (typeof Element !== "undefined") {
   S.regConstructor(Element, {
+    name: "dom#Element",
     write(ctx, value: Element) {
       const json: S.JSONObject = { tag: value.tagName };
       const nodes: S.JSONArray = (json.c = []);
@@ -256,6 +257,7 @@ export function track() {
 
 if (typeof Text !== "undefined")
   S.regConstructor(Text, {
+    name: "dom#Text",
     write(_, value) {
       return { text: value.data };
     },
@@ -267,6 +269,7 @@ if (typeof Text !== "undefined")
 
 if (typeof ProcessingInstruction !== "undefined")
   S.regConstructor(ProcessingInstruction, {
+    name: "dom#PI",
     write(_, value) {
       return { target: value.target, data: value.data };
     },
@@ -281,6 +284,8 @@ if (typeof ProcessingInstruction !== "undefined")
 
 if (typeof Comment !== "undefined")
   S.regConstructor(Comment, {
+    name: "dom#Comment",
+
     write(_, value) {
       return { text: value.data };
     },
@@ -292,6 +297,7 @@ if (typeof Comment !== "undefined")
 
 if (typeof CSSStyleDeclaration !== "undefined")
   S.regConstructor(CSSStyleDeclaration, {
+    name: "dom#CSSStyleDeclaration",
     write(_, value) {
       return { text: value.cssText };
     },
@@ -305,6 +311,7 @@ if (typeof CSSStyleDeclaration !== "undefined")
 
 if (typeof Document !== "undefined")
   S.regConstructor(Document, {
+    name: "dom#Document",
     write(_, value) {
       const s = new XMLSerializer();
       return {
@@ -326,6 +333,7 @@ if (typeof Document !== "undefined")
 
 if (typeof MutationRecord !== "undefined")
   S.regConstructor(MutationRecord, {
+    name: "dom#MutationRecord",
     write(ctx, value) {
       const res = <any>{};
       res.ty = ctx.step(value.type, res, "ty");

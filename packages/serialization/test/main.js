@@ -185,8 +185,8 @@ describe("prototypes chain", function() {
         this.c1 = new C1(this);
       }
     }
-    Lib.regOpaqueObject(C1, "C1", true);
-    Lib.regOpaqueObject(C2, "C2", true);
+    Lib.regOpaqueObject(C1, "C1", { props: true });
+    Lib.regOpaqueObject(C2, "C2", { props: true });
     const obj = new C2();
     const res = Lib.write(obj);
     assert.deepEqual(res, {
@@ -226,7 +226,7 @@ describe("prototypes chain", function() {
         this.b = "B";
       }
     }
-    Lib.regOpaqueObject(C4, "C4", true);
+    Lib.regOpaqueObject(C4, "C4", { props: true });
     const obj2 = new C4();
     const res2 = Lib.write(obj2);
     assert.deepEqual(res2, {
@@ -582,18 +582,55 @@ describe("bind function arguments", function() {
     bind.rec = bind;
     const fjson = Lib.write({ f: bind });
     assert.deepStrictEqual(fjson, {
-      f: [["f", { r: 0 }]],
+      f: [
+        [
+          "f",
+          {
+            r: 0
+          }
+        ]
+      ],
       x: [
         {
-          $: "Bind",
-          func: { $: "f1" },
-          self: { $: "obj" },
-          args: [{ $: "arg" }, { $: "arg_1" }],
           f: [
-            ["prototype", { f: [["constructor", { r: 0 }, 2]] }, 3],
             ["someNum", 100],
-            ["rec", { r: 0 }]
-          ]
+            [
+              "rec",
+              {
+                r: 0
+              }
+            ],
+            [
+              {
+                $: "#this"
+              },
+              {
+                $: "obj"
+              }
+            ],
+            [
+              {
+                $: "#fun"
+              },
+              {
+                $: "f1"
+              }
+            ],
+            [
+              {
+                $: "#args"
+              },
+              [
+                {
+                  $: "arg"
+                },
+                {
+                  $: "arg_1"
+                }
+              ]
+            ]
+          ],
+          $: "Bind"
         }
       ]
     });
@@ -629,6 +666,56 @@ describe("RegExp", function() {
     assert.equal(re2.src, bre2.src);
     assert.equal(re2.flags, bre2.flags);
     assert.equal(re2.lastIndex, bre2.lastIndex);
+  });
+});
+
+describe("not serializable values", function() {
+  it("should throw an exception if `ignore:falsy`", function() {
+    function A() {}
+    try {
+      Lib.write({ A });
+    } catch (e) {
+      assert.equal(e.constructor, TypeError);
+      assert.equal(
+        e.message,
+        `not serializable value "function A() {}" at "1" of "A"`
+      );
+      return;
+    }
+    assert.fail("should throw");
+  });
+  it("should be ignored if `ignore:true`", function() {
+    function A() {}
+    const d = Lib.write({ A }, { ignore: true });
+    const r = Lib.read(d);
+    assert.deepEqual(r, {});
+  });
+  it('should register an opaque descriptor `ignore:"opaque"`', function() {
+    function A() {}
+    const d = Lib.write({ A, b: A }, { ignore: "opaque" });
+    const r = Lib.read(d);
+    assert.deepEqual(r, { A, b: A });
+  });
+  it("should register an opaque descriptor with auto-opaque descriptor", function() {
+    function A() {}
+    Lib.regAutoOpaqueConstr(A, true);
+    const a = new A();
+    const d = Lib.write({ a, b: a }, { ignore: "opaque" });
+    const r = Lib.read(d);
+    assert.deepEqual(r, { a, b: a });
+  });
+  it('should be converted into a not usable placeholder if `ignore:"placeholder"`', function() {
+    function A() {}
+    const d = Lib.write({ A }, { ignore: "placeholder" });
+    const r = Lib.read(d);
+    try {
+      r.A();
+    } catch (e) {
+      assert.equal(e.constructor, TypeError);
+      assert.equal(e.message, "apply in a not restored object");
+      return;
+    }
+    assert.fail("should throw");
   });
 });
 

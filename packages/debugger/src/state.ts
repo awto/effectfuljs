@@ -36,18 +36,37 @@ export interface Frame extends ProtoFrame {
   onReject: ((reason: any) => void) | null;
   /** the promise to settle on `onResolve`/`onReject` */
   promise: Promise<any> | null;
-  /**  this will be returned by the function in case of suspension  */
-  // delayedResult: any;
-
+  /** when this frame was last updated */
+  timestamp: Record | null;
   /**
    * if the frame is suspended this may provide some
    * information what exactly it is awaiting
    */
   awaiting?: any;
+}
 
-  // the debugger's debugging purpose fields
-  deb_id?: number;
-  deb_from?: string;
+export interface Record {
+  operations?: Operation;
+  objectSnapshots: Set<any> | null;
+  dataSnapshots: Set<any> | null;
+  prev: Record | null;
+}
+
+/** operations trace - callbacks to be executed on reverting state */
+export interface Operation {
+  prev?: Operation;
+  call(): void;
+}
+
+export interface Journal {
+  /** current checkpoint */
+  now: Record | null;
+  /** a list of changes to undo */
+  past: Record | null;
+  /** a list of changes to redo */
+  future: Record | null;
+  /** the data is collected now */
+  enabled: boolean;
 }
 
 export enum BrkType {

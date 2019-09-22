@@ -26,7 +26,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 0,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "$": "_signal",
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -60,41 +90,6 @@ Object {
         },
       },
     ],
-  ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "_signal",
-      },
-      "self": null,
-    },
   ],
 }
 `;
@@ -140,7 +135,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 0,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "$": "_signal",
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -174,41 +199,6 @@ Object {
         },
       },
     ],
-  ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "_signal",
-      },
-      "self": null,
-    },
   ],
 }
 `;
@@ -254,7 +244,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 0,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "$": "_signal",
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -288,41 +308,6 @@ Object {
         },
       },
     ],
-  ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "_signal",
-      },
-      "self": null,
-    },
   ],
 }
 `;
@@ -368,7 +353,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 1,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -395,7 +410,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 2,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "REDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -433,72 +478,6 @@ Object {
   "x": Array [
     Object {
       "$": "_signal",
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 1,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "REDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 2,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
     },
   ],
 }
@@ -545,7 +524,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 1,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -572,7 +581,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 2,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "REDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -610,72 +649,6 @@ Object {
   "x": Array [
     Object {
       "$": "_signal",
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 1,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "REDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 2,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
     },
   ],
 }
@@ -722,7 +695,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 1,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -749,7 +752,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 2,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "REDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -787,72 +820,6 @@ Object {
   "x": Array [
     Object {
       "$": "_signal",
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 1,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "REDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 2,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
     },
   ],
 }
@@ -899,7 +866,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 0,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "$": "_signal",
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -933,41 +930,6 @@ Object {
         },
       },
     ],
-  ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "_signal",
-      },
-      "self": null,
-    },
   ],
 }
 `;
@@ -1013,7 +975,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 1,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -1040,7 +1032,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 2,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "REDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -1078,72 +1100,6 @@ Object {
   "x": Array [
     Object {
       "$": "_signal",
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 1,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "REDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 2,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
     },
   ],
 }
@@ -1190,7 +1146,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 0,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "$": "_signal",
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -1224,41 +1210,6 @@ Object {
         },
       },
     ],
-  ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "_signal",
-      },
-      "self": null,
-    },
   ],
 }
 `;
@@ -1304,7 +1255,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 1,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "UNDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -1331,7 +1312,37 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 2,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "undefined",
+                          },
+                          "REDO",
+                          Object {
+                            "$": "undefined",
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -1369,72 +1380,6 @@ Object {
   "x": Array [
     Object {
       "$": "_signal",
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "UNDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 1,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "undefined",
-        },
-        "REDO",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 2,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
     },
   ],
 }

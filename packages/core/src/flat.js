@@ -876,7 +876,6 @@ function* copyFrameVars(si) {
     const vars = new Set();
     if (sw) {
       sw.w.forEach(vars.add, vars);
-      // sw.c.forEach(vars.add,vars)
       sw.r.forEach(vars.add, vars);
     }
     const patSym = frame.errSym || frame.patSym;
@@ -917,9 +916,8 @@ function* copyFrameVars(si) {
                 i.enter &&
                 (i.type === Block.bindPat || i.type === Tag.Identifier) &&
                 i.value.sym === patSym
-              ) {
+              )
                 i.value.sym = commonPatSym;
-              }
               yield i;
             }
           }
@@ -931,11 +929,12 @@ function* copyFrameVars(si) {
         switch (i.type) {
           case Block.bindPat:
           case Tag.Identifier:
-            if (i.value.sym) {
-              if (commonPatSym && i.value.sym === patSym)
-                i.value.sym = commonPatSym;
-              if (i.value.sym.interpr === Bind.ctxField)
+            const { sym } = i.value;
+            if (sym) {
+              if (commonPatSym && sym === patSym) i.value.sym = commonPatSym;
+              else if (sym.interpr === Bind.ctxField)
                 i.value.insideCtx = !frame.first;
+              else if (sym.frameLocal) frame.savedDecls.set(sym, {});
             }
             break;
           case Tag.AssignmentExpression:
@@ -1022,9 +1021,8 @@ function* copyFrameVars(si) {
                           break;
                         }
                       case Tag.Identifier:
-                        if ((sym = j.value.sym) && del.has(sym)) {
+                        if ((sym = j.value.sym) && del.has(sym))
                           j.value.sym = getCopy(sym);
-                        }
                     }
                   }
                 }

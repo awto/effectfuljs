@@ -33,21 +33,33 @@ regConstructor(AsyncGenerator);
 
 (<any>AsyncGenerator.prototype).throw = Instr.asyncGeneratorMethod(
   Instr.asyncThrowImpl,
-  (frame: AsyncGeneratorFrame, value: any) => (
-    (frame.goto = frame.meta.errHandler(frame.state)), nextStep(frame, value)
-  )
+  nextThrowStep
 );
 (<any>AsyncGenerator.prototype).return = Instr.asyncGeneratorMethod(
   Instr.asyncReturnImpl,
-  (frame: AsyncGeneratorFrame, value: any) => (
-    (frame.goto = frame.meta.finHandler(frame.state)), nextStep(frame, value)
-  )
+  nextReturnStep
 );
 
 function nextStep(frame: AsyncGeneratorFrame, value: any): Promise<Item> {
   frame.promise = new Promise<Item>(scopeInit.bind(frame));
   return call(frame, value);
 }
+
+regOpaqueObject(nextStep, "@effectful/debugger/ag#next");
+
+function nextThrowStep(frame: AsyncGeneratorFrame, value: any): Promise<Item> {
+  frame.goto = frame.meta.errHandler(frame.state);
+  return nextStep(frame, value);
+}
+
+regOpaqueObject(nextThrowStep, "@effectful/debugger/ag#throw");
+
+function nextReturnStep(frame: AsyncGeneratorFrame, value: any): Promise<Item> {
+  frame.goto = frame.meta.finHandler(frame.state);
+  return nextStep(frame, value);
+}
+
+regOpaqueObject(nextReturnStep, "@effectful/debugger/ag#return");
 
 export function funAG(
   module: Module,
@@ -71,6 +83,8 @@ function cleanup(this: AsyncGeneratorFrame) {
   if (this.queue.length) (<() => void>this.queue.shift())();
   else this.running = false;
 }
+
+regOpaqueObject(cleanup, "@effectful/debugger/ag#cleanup");
 
 export function scopeAG(goto: number) {
   const top = <AsyncGeneratorFrame>context.top;

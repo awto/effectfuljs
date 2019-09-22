@@ -321,7 +321,7 @@ describe("<Suspense/>", function() {
   });
 });
 
-test("errors handling", async function() {
+test.skip("errors handling", async function() {
   function ErrorBoundary({ effChildren }) {
     "component";
     try {

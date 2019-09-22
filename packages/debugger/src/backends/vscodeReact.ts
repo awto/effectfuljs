@@ -10,6 +10,7 @@ const ReactDom = Debugger.unwrapImport(
   "../deps/react-dom"
 );
 
+/*
 const vars = ReactDom.render[Debugger.dataSymbol].$$.$;
 
 const { propHack } = Debugger.TimeTravel;
@@ -24,3 +25,4 @@ for (const prop in vars) {
     propHack(Node.prototype, val);
 }
 propHack(Node.prototype, "_reactRootContainer");
+*/

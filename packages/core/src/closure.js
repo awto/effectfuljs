@@ -395,9 +395,9 @@ export function substContextIds(si) {
   const wrapCalls = !s.opts.noClosThis;
   if (!contextSym) return s;
   return walk();
-  function* emitSubField(subField) {
+  function* emitSubField(subField, pos) {
     if (subField && subField !== true) {
-      yield s.enter(Tag.object, Tag.MemberExpression);
+      yield s.enter(pos, Tag.MemberExpression);
       yield s.tok(Tag.object, Tag.Identifier, {
         sym: contextSym,
         lhs: false,
@@ -409,7 +409,7 @@ export function substContextIds(si) {
       });
       yield* s.leave();
     } else {
-      yield s.tok(Tag.object, Tag.Identifier, {
+      yield s.tok(pos, Tag.Identifier, {
         sym: contextSym,
         lhs: false,
         rhs: true,
@@ -418,7 +418,7 @@ export function substContextIds(si) {
     }
   }
   function* id(pos, sym, i) {
-    invariant(sym.fieldName);
+    invariant(sym.fieldName || sym.fieldName === null);
     const subField = sym.subField == null ? varsSubField : sym.subField;
     const lab = s.label();
     if (
@@ -431,9 +431,12 @@ export function substContextIds(si) {
       yield s.tok(Tag.push, Tag.NumericLiteral, { node: { value: 0 } });
       pos = Tag.push;
     }
-    yield s.enter(pos, Tag.MemberExpression, {
-      origSym: sym
-    });
+    if (sym.fieldName) {
+      yield s.enter(pos, Tag.MemberExpression, {
+        origSym: sym
+      });
+      pos = Tag.object;
+    }
     if (ctxDeps && sym.declScope !== root) {
       const info = ctxDeps.get(sym.declScope);
       invariant(info);
@@ -444,10 +447,15 @@ export function substContextIds(si) {
           );
         const { distance } = info;
         invariant(distance > 0);
-        if (subField) yield s.enter(Tag.object, Tag.MemberExpression);
-        for (let i = 0; i < distance; i++)
-          yield s.enter(Tag.object, Tag.MemberExpression);
-        yield s.tok(Tag.object, Tag.Identifier, {
+        if (subField) {
+          yield s.enter(pos, Tag.MemberExpression);
+          pos = Tag.object;
+        }
+        for (let i = 0; i < distance; i++) {
+          yield s.enter(pos, Tag.MemberExpression);
+          pos = Tag.object;
+        }
+        yield s.tok(pos, Tag.Identifier, {
           sym: contextSym,
           lhs: false,
           rhs: true,
@@ -469,14 +477,15 @@ export function substContextIds(si) {
         const { copy } = info;
         if (copy.interpr === Bind.ctxField) {
           invariant(copy.fieldName);
-          yield s.enter(Tag.object, Tag.MemberExpression, { origSym: copy });
-          yield* emitSubField(copy.subField || closSubField);
+          yield s.enter(pos, Tag.MemberExpression, { origSym: copy });
+          pos = Tag.object;
+          yield* emitSubField(copy.subField || closSubField, pos);
           yield s.tok(Tag.property, Tag.Identifier, {
             node: { name: copy.fieldName }
           });
           yield* s.leave();
         } else {
-          yield s.tok(Tag.object, Tag.Identifier, {
+          yield s.tok(pos, Tag.Identifier, {
             sym: copy,
             lhs: false,
             rhs: true,
@@ -485,11 +494,15 @@ export function substContextIds(si) {
         }
       }
     } else {
-      yield* emitSubField(sym.subField == null ? varsSubField : sym.subField);
+      yield* emitSubField(
+        sym.subField == null ? varsSubField : sym.subField,
+        pos
+      );
     }
-    yield s.tok(Tag.property, Tag.Identifier, {
-      node: { name: sym.fieldName }
-    });
+    if (sym.fieldName)
+      yield s.tok(Tag.property, Tag.Identifier, {
+        node: { name: sym.fieldName }
+      });
     yield* lab();
   }
   function* walk() {

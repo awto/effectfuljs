@@ -1,0 +1,7 @@
+{
+  "normalizeAssign": true,
+  "optimizeContextVars": false,
+  "wrapPropAccess": {
+    "get": { "name": "G", "bind": false, "locals": false }
+  }
+}

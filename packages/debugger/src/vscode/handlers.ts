@@ -24,7 +24,7 @@ declare module "../state" {
 }
 
 declare module "../timeTravel/core" {
-  interface Record {
+  interface Snapshot {
     context?: State.Job;
   }
 }
@@ -67,6 +67,7 @@ let reason: string | null = null;
 Ctx.needsBreak = config.timeTravel
   ? function(brk: State.Brk) {
       const checkpoint = Trace.checkpoint();
+      /*
       if (checkpoint)
         checkpoint.context = {
           top: Ctx.top,
@@ -74,6 +75,7 @@ Ctx.needsBreak = config.timeTravel
           brk: Ctx.brk,
           value: Ctx.value
         };
+*/
       return (reason = checkPause(brk)) != null;
     }
   : function(brk: State.Brk) {
@@ -477,13 +479,14 @@ function run(back?: boolean) {
 
 const step: (back?: boolean) => void = config.timeTravel
   ? function step(back?: boolean) {
-      const iter = back ? Trace.undo : Trace.redo;
-      for (let now: Trace.Record | null; (now = iter()); ) {
-        Object.assign(Ctx, now.context);
+      /*const iter = back ? Trace.undo : Trace.redo;
+      for (let now: State.Record | null; (now = iter()); ) {
+        // Object.assign(Ctx, now.context);
         const { brk } = Ctx;
         if (brk && (reason = checkPause(brk)) != null) return;
       }
       if (!back) Engine.step();
+*/
     }
   : Engine.step;
 

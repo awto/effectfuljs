@@ -119,7 +119,7 @@ export const stage0 = Kit.pipe(
       Policy.resetOpts,
       Loops.doWhileStmt,
       Prop.recalcEff,
-      Branch.normilizeSwitch,
+      Branch.normalizeSwitch,
       Prop.recalcEff,
       Branch.addAlternate,
       Branch.toBlocks
@@ -136,8 +136,10 @@ export const stage0 = Kit.pipe(
   Control.injectBlock,
   Kit.map(
     Kit.pipe(
-      Prop.recalcEff,
+      Ops.normalizeAssign,
+      Ops.propAccess,
       Policy.stage("organize"),
+      Prop.recalcEff,
       Bind.flatten,
       Par.markRegions,
       Policy.stage("inject"),
@@ -177,13 +179,22 @@ const stage1 = Kit.pipe(
     Kit.pipe(
       substSym,
       Closure.substContextIds,
+      Policy.stage("context"),
       Block.ctxMethods,
       Rt.collectUsages,
+      Policy.stage("simplify"),
       Simplify.main,
-      Kit.toArray
+      Kit.toArray,
+      postproc
     )
   )
 );
+
+function postproc(sa) {
+  const postproc = sa[0].value.postproc;
+  if (postproc) for (const i of postproc) i();
+  return sa;
+}
 
 /** replacing sym with `substSym` property if it is defined */
 export function* substSym(si) {

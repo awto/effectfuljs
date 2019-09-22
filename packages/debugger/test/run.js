@@ -19,7 +19,7 @@ function describe() {
 }
 
 function cont(value) {
-  if (!trace.silent) trace.logCb(`Run Job: ${Ctx.top.fullName}`);
+  if (!trace.silent) trace.logCb(`Run Job: ${Ctx.top.meta.fullName}`);
   let num = 0;
   let f;
   Ctx.value = value;

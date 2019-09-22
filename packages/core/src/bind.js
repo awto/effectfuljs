@@ -32,7 +32,7 @@ export function interpretPureLet(si) {
 }
 
 /**
- * Generates temporal local variable
+ * Generates temporal function-local variable
  */
 export function tempVarSym(top, pat, hasDecl) {
   const sym = Kit.scope.newSym(pat);
@@ -193,6 +193,13 @@ export const flatten = Kit.pipe(
               s.cur().value.lhs = true;
               yield bind(i, buf);
               continue;
+            case Tag.UnaryExpression:
+              if (i.value.node.operator === "delete") {
+                s.cur().value.lhs = true;
+                yield bind(i, buf);
+                continue;
+              }
+              break;
             case Tag.MemberExpression:
               yield i.pos === Tag.callee || i.value.lhs ? i : bind(i, buf);
               continue;

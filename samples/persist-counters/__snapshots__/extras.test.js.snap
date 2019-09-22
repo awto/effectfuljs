@@ -23,7 +23,35 @@ Object {
             Array [
               "onClick",
               Object {
-                "r": 0,
+                "$": "Bind",
+                "f": Array [
+                  Array [
+                    Object {
+                      "$": "#this",
+                    },
+                    Object {
+                      "$": "undefined",
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "$": "#fun",
+                    },
+                    Object {
+                      "$": "runIncrementAsync",
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "$": "#args",
+                    },
+                    Array [
+                      Object {
+                        "$": "extrasDispatch",
+                      },
+                    ],
+                  ],
+                ],
               },
             ],
             Array [
@@ -37,39 +65,6 @@ Object {
         "type": "button",
       },
     ],
-  ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "extrasDispatch",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "runIncrementAsync",
-      },
-      "self": Object {
-        "$": "undefined",
-      },
-    },
   ],
 }
 `;
@@ -97,7 +92,37 @@ Object {
             Array [
               "onClick",
               Object {
-                "r": 0,
+                "$": "Bind",
+                "f": Array [
+                  Array [
+                    Object {
+                      "$": "#this",
+                    },
+                    null,
+                  ],
+                  Array [
+                    Object {
+                      "$": "#fun",
+                    },
+                    Object {
+                      "$": "_signal",
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "$": "#args",
+                    },
+                    Array [
+                      Object {
+                        "$": "extrasDispatch",
+                      },
+                      "INCREMENT",
+                      Object {
+                        "$": "undefined",
+                      },
+                    ],
+                  ],
+                ],
               },
             ],
             Array [
@@ -111,41 +136,6 @@ Object {
         "type": "button",
       },
     ],
-  ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "extrasDispatch",
-        },
-        "INCREMENT",
-        Object {
-          "$": "undefined",
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "_signal",
-      },
-      "self": null,
-    },
   ],
 }
 `;

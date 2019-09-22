@@ -15,7 +15,10 @@
     "no-empty": false,
     "no-bitwise": false,
     "arrow-parens": false,
-    "array-type": false
+    "array-type": false,
+    "no-conditional-assignment": false,
+    "no-shadowed-variable": false,
+    "only-arrow-functions": false
   },
   "rulesDirectory": []
 }

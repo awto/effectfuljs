@@ -511,6 +511,10 @@ Array [
               "promise",
               null,
             ],
+            Array [
+              "timestamp",
+              null,
+            ],
           ],
         },
         Object {
@@ -713,6 +717,10 @@ Array [
                     "promise",
                     null,
                   ],
+                  Array [
+                    "timestamp",
+                    null,
+                  ],
                 ],
               },
             ],
@@ -736,6 +744,10 @@ Array [
             ],
             Array [
               "promise",
+              null,
+            ],
+            Array [
+              "timestamp",
               null,
             ],
           ],
@@ -1027,6 +1039,10 @@ Array [
                 "promise",
                 null,
               ],
+              Array [
+                "timestamp",
+                null,
+              ],
             ],
           },
           "f": Array [
@@ -1171,6 +1187,10 @@ Array [
             ],
             Array [
               "promise",
+              null,
+            ],
+            Array [
+              "timestamp",
               null,
             ],
           ],

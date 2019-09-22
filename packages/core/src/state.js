@@ -1221,26 +1221,24 @@ function prepareContextVars(root, cfg) {
   const ctxSyms = [];
   const resSym = root.resSym;
   const opt = root.opts.optimizeContextVars !== false;
-  if (opt) {
-    const first = cfg[0];
-    for (const i of root.ctxDeps.values()) if (i.copy) i.copy.hasReads = true;
-    for (const i of cfg) {
-      if (i === first) continue;
-      const sw = i.stateVars;
-      if (!sw) continue;
-      for (const j of sw.r) {
-        j.hasReads = true;
-      }
+  const first = cfg[0];
+  for (const i of root.ctxDeps.values()) if (i.copy) i.copy.hasReads = true;
+  for (const i of cfg) {
+    if (i === first) continue;
+    const sw = i.stateVars;
+    if (!sw) continue;
+    for (const j of sw.r) {
+      j.hasReads = true;
     }
-    for (const i of cfg) {
-      if (i === first) continue;
-      const sw = i.stateVars;
-      if (!sw) continue;
-      for (const j of sw.w) {
-        if (j.hasReads || j === i.patSym || j === i.errSym || j === resSym)
-          continue;
-        (j.writeFrames || (j.writeFrames = new Set())).add(i);
-      }
+  }
+  for (const i of cfg) {
+    if (i === first) continue;
+    const sw = i.stateVars;
+    if (!sw) continue;
+    for (const j of sw.w) {
+      if (j.hasReads || j === i.patSym || j === i.errSym || j === resSym)
+        continue;
+      (j.writeFrames || (j.writeFrames = new Set())).add(i);
     }
   }
   for (const i of root.scopeDecls) {

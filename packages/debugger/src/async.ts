@@ -8,7 +8,7 @@ import {
   FunctionDescr
 } from "./state";
 import * as State from "./state";
-import { fun, checkExitBrk, call, resume, then, handle, wrap } from "./engine";
+import { fun, checkExitBrk, call, resume, then, handle } from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
 
 const { context, token } = State;
@@ -65,7 +65,7 @@ export function scopeA(dest: number): Promise<any> {
   top.goto = dest;
   if (!top.promise) {
     context.call = <any>Promise;
-    top.promise = wrap(new Promise(scopeInit.bind(top)));
+    top.promise = new Promise(scopeInit.bind(top));
   }
   try {
     return top.meta.handler(top, void 0);

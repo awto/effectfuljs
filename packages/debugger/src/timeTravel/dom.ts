@@ -1,6 +1,7 @@
 import * as Core from "./core";
 import { regConstructor } from "@effectful/serialization";
 import { nodeListIter } from "@effectful/serialization/dom";
+import { Operation } from "../state";
 
 const journal = Core.journal;
 
@@ -18,7 +19,28 @@ interface ElementExt extends Element {
   [domObserverSymbol]?: ObserverData;
 }
 
-export class DomSnapshot implements Core.Operation {
+/*
+ * avoiding snapshot recording for runtime setters,
+ * we'll get the  normalizedresults from the mutation observer
+ */
+if (typeof Node !== undefined) {
+  for (const i of [Node, NodeList]) {
+    Object.defineProperty(i.prototype, Core.SetSymbol, {
+      value(node: any, name: any, value: any) {
+        if (journal.enabled) {
+          const proto = Object.getPrototypeOf(node);
+          if (!(name in proto)) Core.recordProp(node, name);
+        }
+        return (node[name] = value);
+      }
+    });
+    Object.defineProperty(i.prototype, Core.DeleteSymbol, {
+      value: Core.noOrderDelete
+    });
+  }
+}
+
+export class DomSnapshot implements Operation {
   changes: MutationRecord[];
   constructor(changes: MutationRecord[]) {
     this.changes = changes;
@@ -69,7 +91,7 @@ regConstructor(DomSnapshot, {
 });
 
 function record(changes: MutationRecord[]) {
-  if (!changes.length) return;
+  if (journal.enabled && !changes.length) return;
   Core.record(new DomSnapshot(changes));
 }
 

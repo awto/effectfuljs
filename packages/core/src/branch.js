@@ -9,7 +9,7 @@ export const thread = symbol("branch.thread");
  * if switch statement contains effects in tests it will resort to
  * a chain of if-statements
  */
-export function normilizeSwitch(si) {
+export function normalizeSwitch(si) {
   const sa = Kit.toArray(si);
   let any = false;
   mark();

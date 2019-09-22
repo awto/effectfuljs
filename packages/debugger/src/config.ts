@@ -3,8 +3,6 @@ export default {
   patchRT: true,
   /** enables traces collections */
   timeTravel: false,
-  /** should it use the trace for forward time traveling */
-  timeTravelForward: false,
   /** tries to make everything serializable */
   persistState: true,
   /** stores time travel trace when serializing the application's state */

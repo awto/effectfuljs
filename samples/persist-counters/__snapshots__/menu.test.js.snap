@@ -22,7 +22,42 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 0,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "$": "_signal",
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "$": "menuDispatch",
+                          },
+                          "Menu3",
+                          Object {
+                            "f": Array [
+                              Array [
+                                "type",
+                                "Menu3",
+                              ],
+                            ],
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -57,46 +92,6 @@ Object {
       },
     ],
   ],
-  "x": Array [
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "$": "menuDispatch",
-        },
-        "Menu3",
-        Object {
-          "f": Array [
-            Array [
-              "type",
-              "Menu3",
-            ],
-          ],
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 0,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "$": "_signal",
-      },
-      "self": null,
-    },
-  ],
 }
 `;
 
@@ -122,7 +117,42 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 2,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "r": 1,
+                          },
+                          "Menu1",
+                          Object {
+                            "f": Array [
+                              Array [
+                                "type",
+                                "Menu1",
+                              ],
+                            ],
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -149,7 +179,42 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 3,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "r": 1,
+                          },
+                          "Menu3",
+                          Object {
+                            "f": Array [
+                              Array [
+                                "type",
+                                "Menu3",
+                              ],
+                            ],
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -190,82 +255,6 @@ Object {
     },
     Object {
       "$": "menuDispatch",
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "r": 1,
-        },
-        "Menu1",
-        Object {
-          "f": Array [
-            Array [
-              "type",
-              "Menu1",
-            ],
-          ],
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 2,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "r": 1,
-        },
-        "Menu3",
-        Object {
-          "f": Array [
-            Array [
-              "type",
-              "Menu3",
-            ],
-          ],
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 3,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
     },
   ],
 }
@@ -293,7 +282,42 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 2,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "r": 1,
+                          },
+                          "Menu1",
+                          Object {
+                            "f": Array [
+                              Array [
+                                "type",
+                                "Menu1",
+                              ],
+                            ],
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -320,7 +344,42 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 3,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "r": 1,
+                          },
+                          "Menu2",
+                          Object {
+                            "f": Array [
+                              Array [
+                                "type",
+                                "Menu2",
+                              ],
+                            ],
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -347,7 +406,42 @@ Object {
                 Array [
                   "onClick",
                   Object {
-                    "r": 4,
+                    "$": "Bind",
+                    "f": Array [
+                      Array [
+                        Object {
+                          "$": "#this",
+                        },
+                        null,
+                      ],
+                      Array [
+                        Object {
+                          "$": "#fun",
+                        },
+                        Object {
+                          "r": 0,
+                        },
+                      ],
+                      Array [
+                        Object {
+                          "$": "#args",
+                        },
+                        Array [
+                          Object {
+                            "r": 1,
+                          },
+                          "Menu3",
+                          Object {
+                            "f": Array [
+                              Array [
+                                "type",
+                                "Menu3",
+                              ],
+                            ],
+                          },
+                        ],
+                      ],
+                    ],
                   },
                 ],
                 Array [
@@ -388,120 +482,6 @@ Object {
     },
     Object {
       "$": "menuDispatch",
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "r": 1,
-        },
-        "Menu1",
-        Object {
-          "f": Array [
-            Array [
-              "type",
-              "Menu1",
-            ],
-          ],
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 2,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "r": 1,
-        },
-        "Menu2",
-        Object {
-          "f": Array [
-            Array [
-              "type",
-              "Menu2",
-            ],
-          ],
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 3,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
-    },
-    Object {
-      "$": "Bind",
-      "args": Array [
-        Object {
-          "r": 1,
-        },
-        "Menu3",
-        Object {
-          "f": Array [
-            Array [
-              "type",
-              "Menu3",
-            ],
-          ],
-        },
-      ],
-      "f": Array [
-        Array [
-          "prototype",
-          Object {
-            "f": Array [
-              Array [
-                "constructor",
-                Object {
-                  "r": 4,
-                },
-                2,
-              ],
-            ],
-          },
-          3,
-        ],
-      ],
-      "func": Object {
-        "r": 0,
-      },
-      "self": null,
     },
   ],
 }

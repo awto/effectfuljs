@@ -145,7 +145,8 @@ function forOfStmtImpl(loose, s) {
   s = Kit.auto(s);
   const root = s.first.value;
   root.hasForOf = false;
-  const all = (loose || s.opts.loose) && s.opts.leanForOf;
+  const all =
+    ((loose || s.opts.loose) && s.opts.leanForOf) || s.opts.normPureForOf;
   const finalize = s.opts.finalizeForOf !== false;
   const esPureProtocol = s.opts.esForOf;
   const esEffProtocol = s.opts.esForAwaitOf;

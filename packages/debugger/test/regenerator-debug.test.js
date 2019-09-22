@@ -1,3 +1,4 @@
+require("./setup");
 const { describe, run, opts } = require("./setup-regenerator");
 
 describe("regenerator trace", function() {

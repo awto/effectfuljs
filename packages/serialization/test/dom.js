@@ -37,17 +37,17 @@ describe("DOM serialization", function() {
                   c: [
                     {
                       text: "hello, world!",
-                      $: "Text"
+                      $: "dom#Text"
                     }
                   ],
                   a: {},
-                  $: "Element"
+                  $: "dom#Element"
                 }
               ],
               a: {
                 id: "root"
               },
-              $: "Element"
+              $: "dom#Element"
             }
           ],
           a: {},
@@ -60,7 +60,7 @@ describe("DOM serialization", function() {
               }
             ]
           ],
-          $: "Element"
+          $: "dom#Element"
         }
       ]
     };

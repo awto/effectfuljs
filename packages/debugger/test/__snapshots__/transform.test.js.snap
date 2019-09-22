@@ -5,6 +5,10 @@ exports[`default transpiler 1`] = `
 
 var M = require(\\"../../api\\");
 
+var frame = M.frame;
+var brk = M.brk;
+var ret = M.ret;
+var unhandled = M.unhandled;
 var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
     v_1 = [{
   mod: \\"mod\\",
@@ -34,7 +38,7 @@ var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
 }, v_1],
     meta$f = M.fun($module, function (x) {
   return function (module, exports) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.module = module;
     $.$.exports = exports;
@@ -42,7 +46,7 @@ var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
     {
       try {
         $.goto = 5;
-        M.brk(0);
+        brk(0);
         return f_1($, p);
       } catch (e) {
         return M.handle($, e);
@@ -52,12 +56,12 @@ var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
 }, f_1, void 0, void 0, [[[{}, null], null, \\"1:0-1:31\\"], [v_1, null, \\"3:0-3:12\\"], [v_1, null, \\"21:0-24:2\\"]], \\"f\\", \\"1:0-25:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$fn1 = M.fun($module, function (x) {
   return function fn1() {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
 
     try {
       $.goto = 5;
-      M.brk(0);
+      brk(0);
       return fn1_1($, p);
     } catch (e) {
       return M.handle($, e);
@@ -66,13 +70,13 @@ var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
 }, fn1_1, void 0, void 0, [[v_4, null, \\"22:2-22:16\\"], [v_4, null, \\"23:2-23:55\\"]], \\"fn1\\", \\"21:14-24:1\\", meta$f, []),
     meta$C = M.fun($module, function (x) {
   return function C(a) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.a = a;
 
     try {
       $.goto = 5;
-      M.brk(0);
+      brk(0);
       return C_1($, p);
     } catch (e) {
       return M.handle($, e);
@@ -150,23 +154,23 @@ function C_1($, p) {
       case 5:
         $.$.v1 = 10;
         $.goto = 6;
-        M.brk(1);
+        brk(1);
         $.state = 6;
 
       case 6:
         $.goto = 7;
-        M.brk(2);
+        brk(2);
         $.state = 7;
 
       case 7:
         $.$.v2 = 11;
         $.goto = 8;
-        M.brk(3);
+        brk(3);
         $.state = 8;
 
       case 8:
         $.goto = 9;
-        M.brk(4);
+        brk(4);
         $.state = 9;
 
       case 9:
@@ -181,7 +185,7 @@ function C_1($, p) {
 
       case 11:
         $.goto = 12;
-        M.brk(5);
+        brk(5);
         $.state = 12;
 
       case 12:
@@ -201,7 +205,7 @@ function C_1($, p) {
         if (!a) {
           $.$.i = i.value;
           $.goto = 15;
-          M.brk(6);
+          brk(6);
           $.state = 15;
         } else {
           $.$.fc = 17;
@@ -228,7 +232,7 @@ function C_1($, p) {
 
       case 17:
         $.goto = 18;
-        M.brk(7);
+        brk(7);
         $.state = 18;
 
       case 18:
@@ -248,7 +252,7 @@ function C_1($, p) {
         if (!a) {
           $.$.i1 = i.value;
           $.goto = 21;
-          M.brk(8);
+          brk(8);
           $.state = 21;
         } else {
           $.$.fc1 = 23;
@@ -275,7 +279,7 @@ function C_1($, p) {
 
       case 23:
         $.goto = 24;
-        M.brk(9);
+        brk(9);
         $.state = 24;
 
       case 24:
@@ -286,7 +290,7 @@ function C_1($, p) {
       case 25:
         $.$.e = $.$.ex;
         $.goto = 26;
-        M.brk(10);
+        brk(10);
         $.state = 26;
 
       case 26:
@@ -295,13 +299,13 @@ function C_1($, p) {
         $.state = 27;
 
       case 27:
-        return M.ret();
+        return ret();
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       case 28:
         $.goto = 0;
@@ -357,7 +361,7 @@ function fn1_1($, p) {
       case 5:
         $.$.v5 = 10;
         $.goto = 6;
-        M.brk(1);
+        brk(1);
         $.state = 6;
 
       case 6:
@@ -381,13 +385,13 @@ function fn1_1($, p) {
         $.state = 9;
 
       case 9:
-        return M.ret(p);
+        return ret(p);
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -411,24 +415,24 @@ function f_1($, p) {
           mod: $.$.mod
         } = p);
         $.goto = 7;
-        M.brk(1);
+        brk(1);
         $.state = 7;
 
       case 7:
         $.$.v0 = 10;
         $.goto = 8;
-        M.brk(2);
+        brk(2);
         $.state = 8;
 
       case 8:
         $.$.exports.fn2 = meta$fn1($);
-        return M.ret();
+        return ret();
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -442,6 +446,10 @@ exports[`default transpiler 2`] = `
 
 var M = require(\\"../../api\\");
 
+var frame = M.frame;
+var brk = M.brk;
+var ret = M.ret;
+var unhandled = M.unhandled;
 var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
     v_1 = [{
   j: \\"j\\",
@@ -452,7 +460,7 @@ var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
 }, v_1],
     meta$f = M.fun($module, function (x) {
   return function (module, exports) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.module = module;
     $.$.exports = exports;
@@ -462,7 +470,7 @@ var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
         $.$.exports.__esModule = true;
         $.$.exports.run = $.$.run;
         $.goto = 5;
-        M.brk(0);
+        brk(0);
         return f_1($, p);
       } catch (e) {
         return M.handle($, e);
@@ -472,13 +480,13 @@ var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
 }, f_1, void 0, void 0, [[[{}, null], null, \\"1:0-1:29\\"], [v_1, null, \\"3:0-3:10\\"], [v_1, null, \\"12:0-12:6\\"], [v_1, null, \\"13:0-13:6\\"]], \\"f\\", \\"1:0-14:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$run = M.fun($module, function (x) {
   return function run(i = 1) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
 
     try {
       $.goto = 5;
-      M.brk(0);
+      brk(0);
       return run_1($, p);
     } catch (e) {
       return M.handle($, e);
@@ -488,20 +496,17 @@ var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
 module.exports = M.wrapExport(meta$f(null));
 
 function run_1($, p) {
-  var a;
-
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$$.$.j += $.$.i;
+        $.$$.$.j = $.$$.$.j + $.$.i;
         $.goto = 6;
-        M.brk(1);
+        brk(1);
         $.state = 6;
 
       case 6:
-        a = $.$.i++;
         $.goto = 7;
-        p = (M.context.call = $.$$.$.M2.f1).call($.$$.$.M2, a);
+        p = (M.context.call = $.$$.$.M2.f1).call($.$$.$.M2, ($.$._ = $.$.i, $.$.i = $.$._ + 1, $.$._));
         $.state = 7;
 
       case 7:
@@ -511,13 +516,13 @@ function run_1($, p) {
 
       case 8:
         $.goto = 9;
-        M.brk(2);
+        brk(2);
         $.state = 9;
 
       case 9:
-        $.$$.$.j += $.$.i;
+        $.$$.$.j = $.$$.$.j + $.$.i;
         $.goto = 10;
-        M.brk(3);
+        brk(3);
         $.state = 10;
 
       case 10:
@@ -526,13 +531,13 @@ function run_1($, p) {
         $.state = 11;
 
       case 11:
-        return M.ret();
+        return ret();
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -554,13 +559,13 @@ function f_1($, p) {
       case 6:
         $.$.M2 = p;
         $.goto = 7;
-        M.brk(1);
+        brk(1);
         $.state = 7;
 
       case 7:
         $.$.j = 0;
         $.goto = 8;
-        M.brk(2);
+        brk(2);
         $.state = 8;
 
       case 8:
@@ -570,7 +575,7 @@ function f_1($, p) {
 
       case 9:
         $.goto = 10;
-        M.brk(3);
+        brk(3);
         $.state = 10;
 
       case 10:
@@ -579,13 +584,13 @@ function f_1($, p) {
         $.state = 11;
 
       case 11:
-        return M.ret();
+        return ret();
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -599,6 +604,10 @@ exports[`default transpiler 3`] = `
 
 var M = require(\\"../../api\\");
 
+var frame = M.frame;
+var brk = M.brk;
+var ret = M.ret;
+var unhandled = M.unhandled;
 var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
     v_1 = [{
   cnt: \\"cnt\\",
@@ -622,7 +631,7 @@ var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
 }, v_1],
     meta$f = M.fun($module, function (x) {
   return function (module, exports) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.module = module;
     $.$.exports = exports;
@@ -636,7 +645,7 @@ var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
         $.$.exports.f1 = $.$.f1;
         $.$.exports.f2 = $.$.f2;
         $.goto = 5;
-        M.brk(0);
+        brk(0);
         return f_1($, p);
       } catch (e) {
         return M.handle($, e);
@@ -646,13 +655,13 @@ var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
 }, f_1, void 0, void 0, [[[{}, null], null, \\"1:0-1:12\\"]], \\"f\\", \\"1:0-25:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$f2 = M.fun($module, function (x) {
   return function f2(i) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
 
     try {
       $.goto = 5;
-      M.brk(0);
+      brk(0);
       return f2_1($, p);
     } catch (e) {
       return M.handle($, e);
@@ -661,13 +670,13 @@ var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
 }, f2_1, void 0, void 0, [[v_5, null, \\"22:2-22:8\\"], [v_5, null, \\"23:2-23:32\\"]], \\"f2\\", \\"21:7-24:1\\", meta$f, [\\"i\\"]),
     meta$f1 = M.fun($module, function (x) {
   return function f1(i) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
 
     try {
       $.goto = 5;
-      M.brk(0);
+      brk(0);
       return f1_1($, p);
     } catch (e) {
       return M.handle($, e);
@@ -676,14 +685,14 @@ var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
 }, f1_1, void 0, void 0, [[v_4, null, \\"14:2-14:8\\"], [v_4, null, \\"15:2-15:32\\"], [v_4, null, \\"16:2-16:23\\"], [v_4, null, \\"17:2-17:23\\"], [v_4, null, \\"18:2-18:13\\"]], \\"f1\\", \\"13:7-19:1\\", meta$f, [\\"i\\"]),
     meta$B = M.fun($module, function (x) {
   return function B(i) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
     $.$._this = this;
 
     try {
       $.goto = 5;
-      M.brk(0);
+      brk(0);
       return B_1($, p);
     } catch (e) {
       return M.handle($, e);
@@ -692,14 +701,14 @@ var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
 }, B_1, void 0, void 0, [[v_3, null, \\"9:2-9:13\\"], [v_3, null, \\"10:2-10:26\\"]], \\"B\\", \\"8:0-11:1\\", meta$f, [\\"i\\"]),
     meta$A = M.fun($module, function (x) {
   return function A(i) {
-    var $ = M.frame(x, this, new.target),
+    var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
     $.$._this = this;
 
     try {
       $.goto = 5;
-      M.brk(0);
+      brk(0);
       return A_1($, p);
     } catch (e) {
       return M.handle($, e);
@@ -716,7 +725,7 @@ function A_1($, p) {
       case 5:
         $.$._this.i = $.$.i * 10 + $.$$.$.cnt;
         $.goto = 6;
-        M.brk(1);
+        brk(1);
         $.state = 6;
 
       case 6:
@@ -727,13 +736,13 @@ function A_1($, p) {
 
       case 7:
         $.$._this.b = p;
-        return M.ret();
+        return ret();
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -747,20 +756,20 @@ function B_1($, p) {
       case 5:
         $.$._this.i = $.$.i;
         $.goto = 6;
-        M.brk(1);
+        brk(1);
         $.state = 6;
 
       case 6:
-        return M.ret({
+        return ret({
           b: $.$._this,
           cnt: $.$$.$.cnt
         });
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -774,9 +783,9 @@ function f1_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$$.$.cnt++;
+        $.$$.$.cnt = $.$$.$.cnt + 1;
         $.goto = 6;
-        M.brk(1);
+        brk(1);
         $.state = 6;
 
       case 6:
@@ -786,7 +795,7 @@ function f1_1($, p) {
 
       case 7:
         $.goto = 8;
-        M.brk(2);
+        brk(2);
         $.state = 8;
 
       case 8:
@@ -799,7 +808,7 @@ function f1_1($, p) {
       case 9:
         $.$.a = p;
         $.goto = 10;
-        M.brk(3);
+        brk(3);
         $.state = 10;
 
       case 10:
@@ -809,17 +818,17 @@ function f1_1($, p) {
 
       case 11:
         $.goto = 12;
-        M.brk(4);
+        brk(4);
         $.state = 12;
 
       case 12:
-        return M.ret($.$$.$.cnt);
+        return ret($.$$.$.cnt);
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -831,9 +840,9 @@ function f2_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$$.$.cnt++;
+        $.$$.$.cnt = $.$$.$.cnt + 1;
         $.goto = 6;
-        M.brk(1);
+        brk(1);
         $.state = 6;
 
       case 6:
@@ -842,13 +851,13 @@ function f2_1($, p) {
         $.state = 7;
 
       case 7:
-        return M.ret();
+        return ret();
 
       case 0:
-        return M.ret(p);
+        return ret(p);
 
       case 1:
-        return M.unhandled(p);
+        return unhandled(p);
 
       default:
         throw new Error(\\"invalid state\\");
@@ -860,13 +869,13 @@ function f_1($, p) {
   switch ($.state = $.goto) {
     case 5:
       $.$.cnt = 0;
-      return M.ret();
+      return ret();
 
     case 0:
-      return M.ret(p);
+      return ret(p);
 
     case 1:
-      return M.unhandled(p);
+      return unhandled(p);
 
     default:
       throw new Error(\\"invalid state\\");

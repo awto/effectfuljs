@@ -1,39 +1,3 @@
-const INLINE_FRAME = `=$1.top = { $$$: $2.$$$, meta: $2.meta, self, 
-newTarget: new.target !=  null, $: {}, brk: null, exitBrk: null, next: $1.top }`;
-const INLINE_FRAME_TT = `=$3($1.top = { $$$: $2.$$$, meta: proto.meta, self,
-newTarget: newTarget != null, $: $3({}), brk: null, exitBrk: null, next: $1.top })`;
-const INLINE_BRK = `= $3.debug
-     && ($2 = ($1.brk = $3.brk = $1.meta.states[$E])) 
-     && $2.check && ($2.check === true || $2.check()) && $5()
-`;
-const INLINE_PURE = (alreadyPat, blackbox, empty) => `=(
-  ${alreadyPat || empty ? "" : "($2 = $E),"}
-  ($1.newTarget && ${empty ? "" : "(!$2 || typeof $2 !== 'object') &&"}
-   ($2 = $1.self)),
-  ($1.state = 0),
-  ($3.value = $2),
-  ${blackbox ? "" : "(($3.brk = $1.brk = $1.exitBrk) && $5()),"}
-  ($3.top = $1.next),
-  ${empty ? "void 0" : "$2"});
-`;
-
-const INJECT_FRAME = tt => `
-function $1(proto, self, newTarget) {
-  ${tt ? "if (newTarget) unwrapPrototype(self);" : ""}
-  return $3.top = ${tt ? "wrap" : ""}({
-    $$$: proto.$$$,
-    state: 0,
-    meta: proto.meta,
-    self,
-    newTarget: new.target != null,
-    $: ${tt ? "wrap({})" : "{}"},
-    brk: null,
-    exitBrk: null,
-    next: $3.top
-  })
-}
-`;
-
 const asyncOps = {
   AwaitExpression: "awt",
   YieldExpression: true
@@ -46,8 +10,33 @@ const asyncGeneratorOps = {
   YieldExpression: ["yldAG", "yldStarAG"]
 };
 
+const injectableOps = [
+  "ret",
+  "retA",
+  "retAG",
+  "retG",
+  "brk",
+  "token",
+  "yld",
+  "yldStar",
+  "yldAG",
+  "yldStarAG",
+  "scopeG",
+  "scopeAG",
+  "scopeA",
+  "frameA",
+  "frameAG",
+  "frameG",
+  "frame",
+  "unhandled",
+  "unhandledA",
+  "unhandledAG",
+  "set",
+  "delete"
+];
+
 module.exports = require("@effectful/core").babelPlugin(
-  (opts, { Tag, Kit, Transform: T, Policy: P, presets }) => {
+  (opts, { Tag, Kit, Transform: T, Policy: P, presets, Block }) => {
     const moduleAliases = {};
     const importRT =
       opts.importRT ||
@@ -59,72 +48,31 @@ module.exports = require("@effectful/core").babelPlugin(
         ? opts.preInstrumentedLibs
         : "@effectful/debugger";
       for (const i in require("./deps.json")) {
-        const path = `${root}/deps/${i.replace(/\//g, "-")}`;
+        const suffix = opts.timeTravel ? "-t" : "";
+        const path = `${root}/deps/${i.replace(/\//g, "-")}${suffix}`;
         moduleAliases[i] = path;
         if (i.includes("/")) moduleAliases[`${i}.js`] = path;
       }
     }
-    const objWrap = Kit.sysId("wrap");
     const brk = Kit.sysId("brk");
     const unwrapSym = Kit.sysId("unwrapImport");
-    const injectableOps = [
-      "ret",
-      "retA",
-      "retAG",
-      "retG",
-      "brk",
-      "token",
-      "yld",
-      "yldStar",
-      "yldAG",
-      "yldStarAG",
-      "scopeG",
-      "scopeAG",
-      "scopeA",
-      "frameA",
-      "frameAG",
-      "frameG",
-      "frame"
-    ];
-    const pureSym = Kit.sysId("pure");
+    const savePropSym = Kit.sysId("upd");
     const contextOpSym = Kit.sysId("context");
     const stopSym = Kit.sysId("stop");
     const evalCtx = Kit.sysId("evalCtx");
     const handleSym = Kit.sysId("handle");
     const injectOps = {};
-    if (opts.expInline) opts.expInject = 0;
-    if (opts.expInject) {
+    if (opts.expInject !== false) {
       for (const i of injectableOps) {
         const descr = (injectOps[i] = {});
-        if (opts.expInject === 2) {
-          descr.init = String(require("./engine")[i])
-            .replace(i, "$1")
-            .replace(/\bcontext\b/g, "$3");
-          descr.deps = ["context"];
-        }
       }
-      injectOps.frame =
-        opts.inject === 2
-          ? {
-              init: INJECT_FRAME(opts.timeTravel),
-              deps: ["context"]
-            }
-          : {};
-      if (opts.timeTracel) injectOps.frame.deps.push("wrap");
-    }
-    if (opts.expInject === 2 || opts.expInline) {
-      injectOps["context"] = {};
-      injectOps["stop"] = {
-        init: "function $1() { throw $2.token }"
-      };
     }
     const before = {
       scope: insertBreaks,
       meta: injectScopeDescr,
-      interpret: v => safeCalls(v)
+      interpret: safeCalls,
+      interpretOps: pauseCheck
     };
-    if (opts.expInline) before.interpretOps = inlineOps;
-    else before.interpretOps = pauseCheck;
     Object.assign(moduleAliases, opts.moduleAliases);
     return {
       options: {
@@ -172,6 +120,10 @@ module.exports = require("@effectful/core").babelPlugin(
         pureForOf: false,
         delegateRedir: false,
         contextSymName: "$",
+        normalizeAssign: true,
+        normPureForIn: opts.timeTravel,
+        normPureForOf: opts.timeTravel,
+        optimizeContextVars: !opts.timeTravel,
         functionSentOps: {
           yldAG: true,
           yld: true,
@@ -187,6 +139,12 @@ module.exports = require("@effectful/core").babelPlugin(
           yldStarAG: true,
           brk: true
         },
+        wrapPropAccess: opts.timeTravel
+          ? {
+              set: { name: "set", bind: false },
+              delete: { name: "del", bind: false }
+            }
+          : null,
         ...opts,
         moduleAliases
       },
@@ -242,7 +200,6 @@ module.exports = require("@effectful/core").babelPlugin(
                       patch.raiseName = "unhandledAG";
                       patch.scopePrefix = "scopeAG";
                       patch.injectFuncMeta = "funAG";
-                      // patch.delegateRedir = ["delegate", "delegateAG"];
                       ops = asyncGeneratorOps;
                     } else {
                       patch.returnName = "retA";
@@ -256,7 +213,6 @@ module.exports = require("@effectful/core").babelPlugin(
                     patch.raiseName = "unhandledG";
                     patch.scopePrefix = "scopeG";
                     patch.injectFuncMeta = "funG";
-                    // patch.delegateRedir = ["delegateAG", "delegateRetAG"];
                     ops = generatorOps;
                   } else {
                     patch.passNewTarget = true;
@@ -275,6 +231,153 @@ module.exports = require("@effectful/core").babelPlugin(
         }
       }
     };
+    /** time traveling log */
+    function opsLog(si) {
+      if (!opts.timeTravel) return si;
+      const s = Kit.auto(si);
+      const root = s.first.value;
+      debugger;
+      const { contextSym } = root;
+      const varsPool = [];
+      let varsPoolPos = 0;
+      return _opsLog(s, true);
+      function tmpVar(ids) {
+        if (varsPoolPos < varsPool.length) return varsPool[varsPoolPos++];
+        const res = Kit.scope.newSym();
+        varsPool.push(res);
+        varsPoolPos++;
+        ids.push(res);
+        return res;
+      }
+      function isEffFree(i) {
+        switch (i.type) {
+          case Block.bindPat:
+          case Tag.Identifier:
+          case Tag.RegExpLiteral:
+          case Tag.NullLiteral:
+          case Tag.StringLiteral:
+          case Tag.BooleanLiteral:
+          case Tag.NumericLiteral:
+            return true;
+        }
+        return false;
+      }
+      function* getEffFree(buf, ids) {
+        const res = [..._opsLog(s.one())];
+        if (isEffFree(res[0])) {
+          buf.push(...res);
+          return Kit.reposOne(Kit.clone(res), Tag.push);
+        }
+        const sym = tmpVar(ids);
+        const pos = res[0].pos;
+        buf.push(s.tok(pos, Tag.Identifier, { sym }));
+        yield* s.template(Tag.push, `=$I=$E`, sym);
+        yield* Kit.reposOne(res, Tag.right);
+        yield* s.leave();
+        return [s.tok(Tag.push, Tag.Identifier, { sym })];
+      }
+      function* _opsLog(sw, ids, top) {
+        for (const i of sw) {
+          if (i.enter) {
+            switch (i.type) {
+              case Tag.FunctionDeclaration:
+                yield i;
+                for (const j of sw) {
+                  yield j;
+                  if (j.pos === Tag.body && j.type === Tag.Array) break;
+                }
+                const fids = [];
+                const fbuf = [..._opsLog(s.sub(), fids, true)];
+                if (fids.length) {
+                  yield s.enter(Tag.push, Tag.VariableDeclaration, {
+                    node: { kind: "var" }
+                  });
+                  yield s.enter(Tag.declarations, Tag.Array);
+                  for (const sym of fids) {
+                    yield s.enter(Tag.push, Tag.VariableDeclarator);
+                    yield s.tok(Tag.id, Tag.Identifier, { sym });
+                    yield* s.leave();
+                  }
+                  yield* s.leave();
+                  yield* s.leave();
+                }
+                yield* fbuf;
+                continue;
+              case Tag.UnaryExpression:
+                if (i.value.node.operator !== "delete") break;
+              case Tag.UpdateExpression:
+              case Tag.AssignmentExpression:
+                const arg = s.cur();
+                if (
+                  arg.type === Tag.Identifier &&
+                  arg.value.sym &&
+                  arg.value.sym.global
+                ) {
+                  yield* s.template(
+                    i.pos,
+                    `=$I(global,"${arg.value.sym.name}"), $E`,
+                    savePropSym
+                  );
+                  yield Kit.setPos(i, Tag.push);
+                  yield* _opsLog(s.sub(), top);
+                  yield Kit.setPos(s.close(i), Tag.push);
+                  yield* s.leave();
+                  continue;
+                }
+                if (arg.type !== Tag.MemberExpression) break;
+                s.take();
+                const objTok = s.cur();
+                if (
+                  objTok.type === Tag.Identifier &&
+                  objTok.value.sym &&
+                  (objTok.value.sym === contextSym ||
+                    objTok.value.sym === contextOpSym)
+                ) {
+                  yield i;
+                  yield arg;
+                  continue;
+                }
+                if (top) varsPoolPos = 0;
+                const buf = [Kit.setPos(i, Tag.push), arg];
+                let obj, prop;
+                yield s.enter(i.pos, Tag.SequenceExpression);
+                yield s.enter(Tag.expressions, Tag.Array);
+                obj = yield* getEffFree(buf, ids);
+                if (arg.value.node.computed) prop = yield* getEffFree(buf, ids);
+                else {
+                  const p = s.cur();
+                  buf.push(...s.one());
+                  prop = [
+                    s.tok(Tag.push, Tag.StringLiteral, {
+                      node: { value: p.value.node.name }
+                    })
+                  ];
+                }
+                buf.push(s.close(arg));
+                yield* s.template(Tag.push, `=$I($E)`, savePropSym);
+                yield* obj;
+                yield* prop;
+                yield* s.leave();
+                yield* buf;
+                yield* _opsLog(s.sub(), false);
+                yield Kit.setPos(s.close(i), Tag.push);
+                yield* s.leave();
+                yield* s.leave();
+                continue;
+              case Tag.ObjectPattern:
+              case Tag.ArrayPattern:
+                throw s.error(
+                  'destructuring isn\'t supported, apply "@babel/plugin-transform-destructuring"'
+                );
+              default:
+                yield i;
+                continue;
+            }
+          }
+          yield i;
+        }
+      }
+    }
     /** saving function's reference in call so we know the function is called in managed stack */
     function* safeCalls(si) {
       const s = Kit.auto(si);
@@ -299,7 +402,6 @@ module.exports = require("@effectful/core").babelPlugin(
               const prop = [...s.one()];
               yield* s.template(
                 i.pos,
-                // "=($1.call = $E).call($1.obj = $E, $E)",
                 "=($1.call = $E).call($E)",
                 contextOpSym
               );
@@ -308,7 +410,7 @@ module.exports = require("@effectful/core").babelPlugin(
               yield* prop;
               yield Kit.setPos(s.close(callee), Tag.right);
               yield* s.refocus();
-              yield* Kit.reposOne(Kit.clone(obj), /*Tag.right*/ Tag.push);
+              yield* Kit.reposOne(Kit.clone(obj), Tag.push);
               const args = s.take();
               yield* s.sub();
               s.close(args);
@@ -346,60 +448,6 @@ module.exports = require("@effectful/core").babelPlugin(
       yield* s.sub();
       yield* s.leave();
       yield* s;
-    }
-    function* inlineOps(si) {
-      const s = Kit.auto(si);
-      const root = s.first.value;
-      root.savedDecls.set(root.contextSym, {
-        init: [
-          ...s.toks(
-            Tag.init,
-            opts.timeTravel ? INLINE_FRAME_TT : INLINE_FRAME,
-            contextOpSym,
-            root.closureArgSym,
-            objWrap
-          )
-        ]
-      });
-      const pat = root.commonPatSym;
-      for (const i of s) {
-        if (i.enter) {
-          if (i.type === Tag.CallExpression) {
-            const callee = s.cur();
-            if (callee.type === Tag.Identifier) {
-              const sym = callee.value.sym;
-              if (sym === brk || sym === pureSym) {
-                for (const j of s) if (j.pos === Tag.arguments) break;
-                const empty = s.curLev() == null;
-                const alreadyPat = s.cur().value.sym === pat;
-                const pos = yield* (empty || alreadyPat
-                  ? s.toks
-                  : s.template
-                ).call(
-                  s,
-                  i.pos,
-                  sym === pureSym
-                    ? INLINE_PURE(alreadyPat, opts.blackbox, empty)
-                    : INLINE_BRK,
-                  root.contextSym,
-                  pat,
-                  contextOpSym,
-                  root.$ns,
-                  stopSym
-                );
-                if (!alreadyPat && !empty) {
-                  yield* Kit.reposOne(s.sub(), pos);
-                  yield* s.leave();
-                }
-                for (const j of s) if (j.value === i.value) break;
-                continue;
-              }
-            }
-          }
-        }
-        yield i;
-      }
-      return s;
     }
     function insertBreaks(si) {
       const s = Kit.auto(si);
@@ -487,12 +535,6 @@ module.exports = require("@effectful/core").babelPlugin(
                 break;
               case Tag.NewExpression:
                 i.value.bind = true;
-              case Tag.ObjectExpression:
-              case Tag.ArrayExpression:
-                if (opts.timeTravel) {
-                  yield* wrap(i, false, objWrap);
-                  continue;
-                }
                 break;
             }
           }
@@ -515,14 +557,6 @@ module.exports = require("@effectful/core").babelPlugin(
           node: { loc: i.value.node.loc }
         });
         yield* lab();
-      }
-      function* wrap(i, bind, sym) {
-        yield* s.template(i.pos, "=$I($E)", { bind, expr: true }, sym);
-        yield s.peel(Kit.setPos(i, Tag.push));
-        yield* _insertBreaks();
-        yield* s.leave();
-        yield* Kit.emitConst(position(i.value.node.loc));
-        yield* s.leave();
       }
     }
     function position(loc) {

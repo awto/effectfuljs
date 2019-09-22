@@ -25,11 +25,11 @@ import * as T from "./transform";
 // tslint:disable-next-line
 const asap = require("asap");
 
+const journal = TT.journal;
 const context = State.context;
 const token = State.token;
 const dataSymbol = State.dataSymbol;
-const unwrapPrototype = TT.unwrapPrototype;
-const wrap = TT.wrap;
+const wrapFrame = TT.wrapFrame;
 
 class ArgsTraps<T> {
   func: Frame;
@@ -38,8 +38,9 @@ class ArgsTraps<T> {
     this.func = func;
     this.target = target;
   }
-  set(target: T[], prop: number, value: T) {
-    if (isNaN(prop)) return Reflect.set(target, prop, value);
+  set(target: T[], prop: any, value: T) {
+    if (typeof prop === "symbol" || isNaN(prop))
+      return Reflect.set(target, prop, value);
     const { func } = this;
     const params = func.meta.params;
     if (params) {
@@ -48,8 +49,9 @@ class ArgsTraps<T> {
     }
     return Reflect.set(target, prop, value);
   }
-  get(target: T[], prop: number): T {
-    if (isNaN(prop)) return Reflect.get(target, prop);
+  get(target: T[], prop: any): T {
+    if (typeof prop === "symbol" || isNaN(prop))
+      return Reflect.get(target, prop);
     const { func } = this;
     const params = func.meta.params;
     if (params) {
@@ -272,11 +274,8 @@ function wrapMeta(
   return constr;
 }
 
-// let queueCb: (() => void) | null = null;
-
 let threadScheduled = false;
 export function signalThread() {
-  // if (queueCb) queueCb();
   if (threadScheduled) return;
   threadScheduled = true;
   asap(function() {
@@ -301,43 +300,6 @@ function defaultCall(this: any) {
 }
 
 S.regOpaqueObject(defaultCall, "@effectful/debugger/call");
-
-// let cancelNext = false;
-
-/** an async iterable signaling start of each new sync thread */
-/*
-export const threads: AsyncIterable<Job> &
-  AsyncIterator<Job> & {
-    / ** stops the whole loop * /
-    stop: () => void;
-    / ** cancels current `next` * /
-    cancel: () => void;
-  } = {
-  [Symbol.asyncIterator]() {
-    return this;
-  },
-  stop() {
-    context.terminated = true;
-    threads.cancel();
-  },
-  cancel() {
-    cancelNext = true;
-    signalThread();
-  },
-  async next(): Promise<IteratorResult<Job>> {
-    cancelNext = false;
-    while (!context.terminated) {
-      const queue = context.asyncQueue;
-      if (!context.top && queue.length)
-        return { done: false, value: <State.Job>queue.shift() };
-      await new Promise(i => (queueCb = i));
-      queueCb = null;
-      if (cancelNext) break;
-    }
-    return { done: true, value: <Job>(<any>undefined) };
-  }
-};
-*/
 
 /**
  * runs a computation until it encounters some breakpoint (returns `token)
@@ -393,11 +355,8 @@ export function call(frame: Frame, e: any) {
 export function handle(frame: Frame, e: any) {
   for (;;) {
     if (e === token) {
-      if (/*frame !== context.first*/ frame.next) throw e;
-      // signalThread();
-      return token; /*(
-        frame.delayedResult || (frame.delayedResult = new ThenableExit(frame))
-      )*/
+      if (frame.next) throw e;
+      return token;
     }
     if (frame !== context.top) throw e;
     try {
@@ -476,39 +435,14 @@ function defaultErrHandler() {
 function defaultFinHandler() {
   return 0;
 }
-/*
-class ThenableExit {
-  frame: Frame;
-  constructor(frame: Frame) {
-    this.frame = frame;
-  }
-  async then(
-    onResolve: (value: any) => any,
-    onReject: (reason: any) => any
-  ): Promise<any> {
-    const frame = this.frame;
-    try {
-      return onResolve(
-        await (frame.promise ||
-          (frame.promise = new saved.Promise((rs, rj) => {
-            frame.onResolve = rs;
-            frame.onReject = rj;
-          })))
-      );
-    } catch (e) {
-      context.call = onReject;
-      return onReject(e);
-    }
-  }
-}
-*/
+
 export function isDelayedResult(value: any): boolean {
-  // return value instanceof ThenableExit;
   return value === token;
 }
 
+let deb_cnt = 0;
+
 export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
-  if (newTarget) unwrapPrototype(self);
   const { meta, func } = proto;
   const next = context.top;
   const frame: Frame = {
@@ -519,30 +453,26 @@ export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
     func,
     self,
     newTarget: newTarget != null,
-    $: wrap({}),
+    $: {},
     brk: null,
     next,
     restoreDebug: false,
     awaiting: token,
     onResolve: null,
     onReject: null,
-    promise: null /*,
-    delayedResult: void 0*/
+    promise: null,
+    timestamp: journal.now
   };
   if (context.debug && next) {
     const call = context.call;
-    const expected =
-        call ===
-        func /*||
-      ((call === fapply || call === fcall) && context.obj === func)*/;
+    const expected = call === func;
     if (!expected) {
       frame.restoreDebug = true;
       context.debug = false;
     }
   }
-  const res = (context.top = wrap<Frame>(frame));
-  // if (!next && !context.running) context.first = res;
-  context.call /*= context.obj*/ = null;
+  const res = (context.top = wrapFrame(frame));
+  context.call = null;
   return res;
 }
 
@@ -656,4 +586,5 @@ export function liftSync(fun: (this: any, ...args: any[]) => any): any {
   };
 }
 
-export { token, wrap, context };
+export { token, context };
+export { set, del } from "./timeTravel/core";

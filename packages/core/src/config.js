@@ -456,5 +456,12 @@ export default {
   functionSentOps: {
     yld: true,
     scope: true
-  }
+  },
+
+  // converts update expressions and assignments without `=` operation into
+  // assignments with `=`
+  normalizeAssign: false,
+  // converts properties set/get/delete into operations calls
+  // {[get|set|delete]:true|{name:string,bind:boolean,[locals|globals]:string|boolean|undefined}|falsy}
+  wrapPropAccess: null
 };

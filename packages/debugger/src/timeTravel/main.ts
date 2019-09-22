@@ -1,22 +1,24 @@
 import config from "../config";
 import * as Core from "./core";
 import * as DOM from "./dom";
+import * as State from "../state";
 import * as S from "@effectful/serialization";
-import "./persist";
+import { Record } from "../state";
 
 export const journal = Core.journal;
+const context = State.context;
 
 export const reset = Core.reset;
 
 const flush: () => void =
   config.timeTravel && config.mutationObserver ? DOM.flush : function() {};
 
-declare module "../state" {
-  interface Frame extends Core.MaybeTarget<Frame> {}
-}
-
-const undoImpl: () => Core.Record | null = config.timeTravelForward
-  ? function undo(): Core.Record | null {
+/**
+ * This rollbacks all changed objects and runs functions registered by `record`,
+ * (assumes an empty last checkpoint).
+ */
+export const undo: () => Record | null = config.timeTravel
+  ? function undo(): Record | null {
       flush();
       const { now } = journal;
       if (!now) return null;
@@ -37,28 +39,10 @@ const undoImpl: () => Core.Record | null = config.timeTravelForward
       return past;
     }
   : function undo() {
-      flush();
-      const { now, past } = journal;
-      if (!now || !past) return null;
-      journal.now = null;
-      for (let i = past.operations; i != null; i = i.prev) i.call();
-      journal.now = past;
-      journal.past = past.prev;
-      flush();
-      return past;
-    };
-
-/**
- * This rollbacks all changed objects and runs functions registered by `record`,
- * (assumes an empty last checkpoint).
- */
-export const undo: () => Core.Record | null = config.timeTravel
-  ? undoImpl
-  : function undo() {
       return null;
     };
 
-export const redo: () => Core.Record | null = config.timeTravel
+export const redo: () => Record | null = config.timeTravel
   ? function redo() {
       flush();
       const { future } = journal;
@@ -78,125 +62,93 @@ export const redo: () => Core.Record | null = config.timeTravel
       return null;
     };
 
+function recordContext() {
+  record(
+    resetContext.bind(null, {
+      top: context.top,
+      debug: context.debug,
+      brk: context.brk,
+      value: context.value
+    })
+  );
+}
+
+function resetContext(job: State.Job) {
+  recordContext();
+  context.top = job.top;
+  context.debug = job.debug;
+  context.brk = job.brk;
+  context.value = job.value;
+}
+
+S.regOpaqueObject(resetContext, "@effectful/debug/reset#ctx");
+
+function checkpointImpl() {
+  const cp = Core.checkpoint();
+  recordContext();
+  return cp;
+}
+
 /**
  * Returns an object which can be passed
  * to `undo` to restored the current state
  */
-export const checkpoint: () => Core.Record | null = config.timeTravel
+export const checkpoint: () => Record | null = config.timeTravel
   ? config.mutationObserver
     ? function checkpoint() {
         flush();
-        return Core.checkpoint();
+        return checkpointImpl();
       }
-    : Core.checkpoint
+    : checkpointImpl
   : function() {
       return null;
     };
 
-/** Registers an operation to be called on `undo` in reverse direction */
-export const record = config.timeTravel
-  ? Core.record
-  : function record(_: Core.Operation) {};
+const assign = Core.objectSaved.assign;
 
-/**
- * when constructing new objects replacing its prototype to unwrapped one,
- * otherwise it will catch all setters of not yet wrapped target
- */
-export const unwrapPrototype = config.timeTravel
-  ? function(target: Core.Target) {
-      const proto = Object.getPrototypeOf(target);
-      if (proto.hasOwnProperty(Core.traceDataSymbol))
-        Object.setPrototypeOf(target, proto[Core.traceDataSymbol].target);
+function frameData(f: State.Frame): any {
+  // TODO: for usual frame goto is enough, so it is possible to avoid creating the object
+  const res: any = assign({}, f);
+  delete res[S.descriptorSymbol];
+  return res;
+}
+
+function resetFrame(f: State.Frame, stored: any) {
+  record(resetFrame.bind(null, f, frameData(f)));
+  assign(f, stored);
+}
+
+S.regOpaqueObject(resetFrame, "@effectful/debugger/frame#trace");
+
+const frameTraps = {
+  set(f: any, prop: any, value: any, receiver: any) {
+    if (journal.enabled && journal.now && f.timestamp !== journal.now) {
+      f.timestamp = journal.now;
+      record(resetFrame.bind(null, receiver, frameData(f)));
     }
-  : function(_: Core.Target) {};
+    f[prop] = value;
+    return true;
+  }
+};
 
-export {
-  wrap,
-  Operation,
-  Record,
-  traceDataSymbol,
-  traceMetaSymbol
-} from "./core";
+const wrapDescriptor = S.regDescriptor({
+  ...S.descriptorTemplate,
+  name: "@effectful/debugger/object",
+  create() {
+    return wrapFrame(<any>{});
+  }
+});
+
+export const wrapFrame = config.timeTravel
+  ? function(f: State.Frame): State.Frame {
+      (<any>f)[S.descriptorSymbol] = wrapDescriptor;
+      return new Proxy(f, frameTraps);
+    }
+  : function(v: State.Frame) {
+      return v;
+    };
+
+/** Registers an operation to be called on `undo` in reverse direction */
+export const record = config.timeTravel ? Core.record : function record() {};
 
 export { Core, DOM };
-
-const deleteTag = {};
-
-interface IPropSnapshot extends Core.Operation {
-  target: any;
-  index: string | symbol | number;
-  oldValue: any;
-  newValue: any;
-  back: boolean;
-}
-
-const PropSnapshot: any = config.timeTravelForward
-  ? function(
-      this: IPropSnapshot,
-      target: any,
-      index: string | symbol | number,
-      oldValue: any,
-      newValue: any
-    ) {
-      this.target = target;
-      this.index = index;
-      this.newValue = newValue;
-      this.oldValue = oldValue;
-      this.back = true;
-    }
-  : function(
-      this: IPropSnapshot,
-      target: any,
-      index: string | symbol | number,
-      oldValue: any,
-      newValue: any
-    ) {
-      this.target = target;
-      this.index = index;
-      this.newValue = newValue;
-      this.oldValue = oldValue;
-      this.back = true;
-    };
-
-PropSnapshot.prototype.call = config.timeTravelForward
-  ? function(this: IPropSnapshot) {
-      if (this.back) {
-        if (this.oldValue === deleteTag) delete this.target[this.index];
-        else this.target[this.index] = this.oldValue;
-      } else this.target[this.index] = this.newValue;
-      this.back = !this.back;
-      Core.record(this);
-    }
-  : function(this: IPropSnapshot) {
-      if (this.oldValue === deleteTag) delete this.target[this.index];
-      else this.target[this.index] = this.oldValue;
-    };
-S.regConstructor(PropSnapshot);
-
-/**
- * defines setter a getter in `value` to support time travel
- * TODO: delete handler
- */
-export function propHack(value: any, propName: string) {
-  const sym = Symbol(`${propName}`);
-  Object.defineProperty(value, propName, {
-    set(value) {
-      this[sym] = value;
-      Core.record(new PropSnapshot(this, propName, deleteTag, value));
-      Object.defineProperty(this, propName, {
-        configurable: true,
-        set(value) {
-          Core.record(new PropSnapshot(this, propName, this[sym], value));
-          this[sym] = value;
-        },
-        get() {
-          return this[sym];
-        }
-      });
-    },
-    get() {}
-  });
-}
-
-if (config.persistTimeTravel) S.regConstructor(Core.TraceData);
-else S.regConstructor(Core.TraceData, S.NotSerializableDescriptor);
