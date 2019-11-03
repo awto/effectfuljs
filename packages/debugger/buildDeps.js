@@ -27,7 +27,7 @@ for (const [l, p] of Object.entries(libs)) {
             importRT: "../api",
             expInject: 1,
             srcRoot: true,
-            moduleNamePrefix: "@effectful/debugger",
+            moduleNamePrefix: "@effectful/debugger/",
             moduleAliases,
             ...copts
           }

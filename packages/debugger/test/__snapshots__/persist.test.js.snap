@@ -165,7 +165,7 @@ Array [
         Array [
           "top",
           Object {
-            "r": 22,
+            "r": 25,
           },
         ],
         Array [
@@ -183,7 +183,7 @@ Array [
         Array [
           "brk",
           Object {
-            "r": 21,
+            "r": 24,
           },
         ],
         Array [
@@ -205,7 +205,7 @@ Array [
       ],
       "x": Array [
         Object {
-          "$": "i#/test/__fixtures__/counters.js#f",
+          "$": "i#test/__fixtures__/counters.js#f",
         },
         Object {
           "$": "@effectful/debugger/call",
@@ -214,7 +214,7 @@ Array [
           "$": "@effectful/debugger/apply",
         },
         Object {
-          "$": "p#/test/__fixtures__/counters.js#f_1",
+          "$": "p#test/__fixtures__/counters.js#f_1",
           "$$": null,
           "f": Array [
             Array [
@@ -247,22 +247,15 @@ Array [
           ],
         },
         Object {
-          "$": "countersMod",
+          "$": "module#test/__fixtures__/counters.js",
         },
         Object {
-          "f": Array [
-            Array [
-              "exports",
-              Object {
-                "r": 4,
-              },
-            ],
-          ],
+          "$": "test/__fixtures__/counters.js#exports",
         },
         Object {
-          "$": "p#/test/__fixtures__/counters.js#getCounter_1",
+          "$": "p#test/__fixtures__/counters.js#getCounter_1",
           "$$": Object {
-            "r": 12,
+            "r": 15,
           },
           "f": Array [
             Array [
@@ -295,9 +288,9 @@ Array [
           ],
         },
         Object {
-          "$": "p#/test/__fixtures__/counters.js#runCounters_1",
+          "$": "p#test/__fixtures__/counters.js#runCounters_1",
           "$$": Object {
-            "r": 12,
+            "r": 15,
           },
           "f": Array [
             Array [
@@ -330,7 +323,7 @@ Array [
           ],
         },
         Object {
-          "$": "p#/src/instr/rt.ts#wrapExport_1",
+          "$": "p#src/instr/rt.ts#wrapExport_1",
           "$$": null,
           "f": Array [
             Array [
@@ -363,7 +356,7 @@ Array [
           ],
         },
         Object {
-          "$": "p#/src/instr/rt.ts#exportsThunk_1",
+          "$": "p#src/instr/rt.ts#exportsThunk_1",
           "$$": Object {
             "r": 11,
           },
@@ -401,14 +394,6 @@ Array [
               },
               true,
             ],
-            Array [
-              Object {
-                "$": "@effectful/debugger/state#exports#@effectful/debugger/state#exports#moduleSymbol#Symbol(@effectful/debugger/module)",
-              },
-              Object {
-                "$": "undefined",
-              },
-            ],
           ],
         },
         Object {
@@ -431,7 +416,7 @@ Array [
             Array [
               "meta",
               Object {
-                "$": "i#/src/instr/rt.ts#*_17",
+                "$": "i#src/instr/rt.ts#*_17",
               },
             ],
             Array [
@@ -443,7 +428,7 @@ Array [
             Array [
               "self",
               Object {
-                "$": "@effectful/debugger/instr/rt#exports",
+                "$": "undefined",
               },
             ],
             Array [
@@ -461,16 +446,14 @@ Array [
                     },
                   ],
                   Array [
-                    "descr",
+                    "mod",
                     Object {
-                      "$": "undefined",
+                      "r": 4,
                     },
                   ],
                   Array [
-                    "mod",
-                    Object {
-                      "r": 5,
-                    },
+                    "loaded",
+                    true,
                   ],
                   Array [
                     "res",
@@ -488,6 +471,222 @@ Array [
             Array [
               "next",
               null,
+            ],
+            Array [
+              "caller",
+              null,
+            ],
+            Array [
+              "restoreDebug",
+              false,
+            ],
+            Array [
+              "awaiting",
+              Object {
+                "r": 10,
+              },
+            ],
+            Array [
+              "onResolve",
+              null,
+            ],
+            Array [
+              "onReject",
+              null,
+            ],
+            Array [
+              "promise",
+              null,
+            ],
+            Array [
+              "timestamp",
+              null,
+            ],
+          ],
+        },
+        Object {
+          "$": "p#src/instr/rt.ts#unwrapImport_1",
+          "$$": null,
+          "f": Array [
+            Array [
+              "prototype",
+              Object {
+                "f": Array [
+                  Array [
+                    "constructor",
+                    Object {
+                      "r": 12,
+                    },
+                    2,
+                  ],
+                ],
+              },
+              3,
+            ],
+            Array [
+              "call",
+              Object {
+                "r": 1,
+              },
+            ],
+            Array [
+              "apply",
+              Object {
+                "r": 2,
+              },
+            ],
+          ],
+        },
+        Object {
+          "f": Array [
+            Array [
+              "$$",
+              null,
+            ],
+            Array [
+              "state",
+              0,
+            ],
+            Array [
+              "goto",
+              0,
+            ],
+            Array [
+              "meta",
+              Object {
+                "$": "i#src/instr/rt.ts#*_16",
+              },
+            ],
+            Array [
+              "func",
+              Object {
+                "r": 12,
+              },
+            ],
+            Array [
+              "self",
+              Object {
+                "$": "@effectful/debugger/instr/rt#exports",
+              },
+            ],
+            Array [
+              "newTarget",
+              false,
+            ],
+            Array [
+              "$",
+              Object {
+                "f": Array [
+                  Array [
+                    "value",
+                    Object {
+                      "r": 5,
+                    },
+                  ],
+                  Array [
+                    "name",
+                    "test/__fixtures__/counters.js",
+                  ],
+                ],
+              },
+            ],
+            Array [
+              "brk",
+              null,
+            ],
+            Array [
+              "next",
+              null,
+            ],
+            Array [
+              "caller",
+              null,
+            ],
+            Array [
+              "restoreDebug",
+              false,
+            ],
+            Array [
+              "awaiting",
+              Object {
+                "r": 10,
+              },
+            ],
+            Array [
+              "onResolve",
+              null,
+            ],
+            Array [
+              "onReject",
+              null,
+            ],
+            Array [
+              "promise",
+              null,
+            ],
+            Array [
+              "timestamp",
+              null,
+            ],
+          ],
+        },
+        Object {
+          "f": Array [
+            Array [
+              "$$",
+              Object {
+                "r": 11,
+              },
+            ],
+            Array [
+              "state",
+              0,
+            ],
+            Array [
+              "goto",
+              0,
+            ],
+            Array [
+              "meta",
+              Object {
+                "$": "i#src/instr/rt.ts#*_18",
+              },
+            ],
+            Array [
+              "func",
+              Object {
+                "r": 9,
+              },
+            ],
+            Array [
+              "self",
+              Object {
+                "$": "undefined",
+              },
+            ],
+            Array [
+              "newTarget",
+              false,
+            ],
+            Array [
+              "$",
+              Object {},
+            ],
+            Array [
+              "brk",
+              null,
+            ],
+            Array [
+              "next",
+              Object {
+                "r": 13,
+              },
+            ],
+            Array [
+              "caller",
+              Object {
+                "r": 13,
+              },
             ],
             Array [
               "restoreDebug",
@@ -560,13 +759,13 @@ Array [
                   Array [
                     "module",
                     Object {
-                      "r": 5,
+                      "r": 4,
                     },
                   ],
                   Array [
                     "exports",
                     Object {
-                      "r": 4,
+                      "r": 5,
                     },
                   ],
                   Array [
@@ -584,7 +783,7 @@ Array [
                   Array [
                     "D",
                     Object {
-                      "$": "../../main#exports",
+                      "$": "?#exports",
                     },
                   ],
                 ],
@@ -646,82 +845,13 @@ Array [
             Array [
               "next",
               Object {
-                "f": Array [
-                  Array [
-                    "$$",
-                    Object {
-                      "r": 11,
-                    },
-                  ],
-                  Array [
-                    "state",
-                    0,
-                  ],
-                  Array [
-                    "goto",
-                    0,
-                  ],
-                  Array [
-                    "meta",
-                    Object {
-                      "$": "i#/src/instr/rt.ts#*_18",
-                    },
-                  ],
-                  Array [
-                    "func",
-                    Object {
-                      "r": 9,
-                    },
-                  ],
-                  Array [
-                    "self",
-                    Object {
-                      "$": "undefined",
-                    },
-                  ],
-                  Array [
-                    "newTarget",
-                    false,
-                  ],
-                  Array [
-                    "$",
-                    Object {},
-                  ],
-                  Array [
-                    "brk",
-                    null,
-                  ],
-                  Array [
-                    "next",
-                    null,
-                  ],
-                  Array [
-                    "restoreDebug",
-                    false,
-                  ],
-                  Array [
-                    "awaiting",
-                    Object {
-                      "r": 10,
-                    },
-                  ],
-                  Array [
-                    "onResolve",
-                    null,
-                  ],
-                  Array [
-                    "onReject",
-                    null,
-                  ],
-                  Array [
-                    "promise",
-                    null,
-                  ],
-                  Array [
-                    "timestamp",
-                    null,
-                  ],
-                ],
+                "r": 14,
+              },
+            ],
+            Array [
+              "caller",
+              Object {
+                "r": 14,
               },
             ],
             Array [
@@ -753,9 +883,9 @@ Array [
           ],
         },
         Object {
-          "$": "p#/test/__fixtures__/counters.js#invoke_1",
+          "$": "p#test/__fixtures__/counters.js#invoke_1",
           "$$": Object {
-            "r": 22,
+            "r": 25,
           },
           "f": Array [
             Array [
@@ -765,7 +895,7 @@ Array [
                   Array [
                     "constructor",
                     Object {
-                      "r": 13,
+                      "r": 16,
                     },
                     2,
                   ],
@@ -788,7 +918,7 @@ Array [
           ],
         },
         Object {
-          "$": "i#/test/__fixtures__/counters.js#getCounter",
+          "$": "i#test/__fixtures__/counters.js#getCounter",
         },
         Object {
           "f": Array [
@@ -816,20 +946,20 @@ Array [
         },
         Array [
           Object {
-            "r": 15,
+            "r": 18,
           },
           Object {
-            "r": 16,
+            "r": 19,
           },
         ],
         Object {
           "$": "Map",
           "k": Array [
             Object {
-              "r": 15,
+              "r": 18,
             },
             Object {
-              "r": 16,
+              "r": 19,
             },
           ],
           "v": Array [
@@ -845,13 +975,13 @@ Array [
           ],
         },
         Object {
-          "$": "p#/test/__fixtures__/counters.js#counter_1",
+          "$": "p#test/__fixtures__/counters.js#counter_1",
           "$$": Object {
             "f": Array [
               Array [
                 "$$",
                 Object {
-                  "r": 12,
+                  "r": 15,
                 },
               ],
               Array [
@@ -865,7 +995,7 @@ Array [
               Array [
                 "meta",
                 Object {
-                  "r": 14,
+                  "r": 17,
                 },
               ],
               Array [
@@ -895,19 +1025,19 @@ Array [
                     Array [
                       "trace",
                       Object {
-                        "r": 17,
+                        "r": 20,
                       },
                     ],
                     Array [
                       "dir",
                       Object {
-                        "r": 18,
+                        "r": 21,
                       },
                     ],
                     Array [
                       "set",
                       Object {
-                        "r": 19,
+                        "r": 22,
                       },
                     ],
                   ],
@@ -932,7 +1062,7 @@ Array [
                     Array [
                       "meta",
                       Object {
-                        "r": 14,
+                        "r": 17,
                       },
                     ],
                     Array [
@@ -1014,7 +1144,13 @@ Array [
               Array [
                 "next",
                 Object {
-                  "r": 22,
+                  "r": 25,
+                },
+              ],
+              Array [
+                "caller",
+                Object {
+                  "r": 25,
                 },
               ],
               Array [
@@ -1053,7 +1189,7 @@ Array [
                   Array [
                     "constructor",
                     Object {
-                      "r": 20,
+                      "r": 23,
                     },
                     2,
                   ],
@@ -1076,28 +1212,28 @@ Array [
           ],
         },
         Object {
-          "$": "s#/test/__fixtures__/counters.js#runCounters_1#3",
+          "$": "s#test/__fixtures__/counters.js#runCounters_1#3",
         },
         Object {
           "f": Array [
             Array [
               "$$",
               Object {
-                "r": 12,
+                "r": 15,
               },
             ],
             Array [
               "state",
-              11,
+              12,
             ],
             Array [
               "goto",
-              12,
+              13,
             ],
             Array [
               "meta",
               Object {
-                "$": "i#/test/__fixtures__/counters.js#runCounters",
+                "$": "i#test/__fixtures__/counters.js#runCounters",
               },
             ],
             Array [
@@ -1109,7 +1245,7 @@ Array [
             Array [
               "self",
               Object {
-                "r": 4,
+                "r": 5,
               },
             ],
             Array [
@@ -1127,31 +1263,31 @@ Array [
                   Array [
                     "invoke",
                     Object {
-                      "r": 13,
+                      "r": 16,
                     },
                   ],
                   Array [
                     "c",
                     Object {
-                      "r": 20,
+                      "r": 23,
                     },
                   ],
                   Array [
                     "trace",
                     Object {
-                      "r": 17,
+                      "r": 20,
                     },
                   ],
                   Array [
                     "dir",
                     Object {
-                      "r": 18,
+                      "r": 21,
                     },
                   ],
                   Array [
                     "set",
                     Object {
-                      "r": 19,
+                      "r": 22,
                     },
                   ],
                 ],
@@ -1160,11 +1296,15 @@ Array [
             Array [
               "brk",
               Object {
-                "r": 21,
+                "r": 24,
               },
             ],
             Array [
               "next",
+              null,
+            ],
+            Array [
+              "caller",
               null,
             ],
             Array [

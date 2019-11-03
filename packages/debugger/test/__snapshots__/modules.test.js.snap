@@ -64,19 +64,6 @@ Array [
       "__esModule": true,
       "f1": [Function],
       "f2": [Function],
-      Symbol(@effectful/serialization/descriptor): Object {
-        "create": [Function],
-        "default$": false,
-        "name": "./mod2#exports",
-        "overrideProps": Object {
-          Symbol(@effectful/serialization/descriptor): false,
-        },
-        "props": false,
-        "read": [Function],
-        "readContent": [Function],
-        "value": [Circular],
-        "write": [Function],
-      },
     },
   ],
   Array [

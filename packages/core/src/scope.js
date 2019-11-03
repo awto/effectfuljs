@@ -1,6 +1,6 @@
 import { Tag, invariant } from "./kit";
 import * as Kit from "./kit";
-
+import * as path from "path";
 /**
  * unfortunately ObjectMethod type in babylon AST doesn't fit the split
  * pattern, as next passes want the key to remain in parent scope
@@ -255,7 +255,11 @@ function injectModuleDescr(si) {
   if (!(s.opts.injectFuncMeta || s.opts.injectModuleMeta) || !root.hasEff)
     return s;
   const sym = root.modDescrSym;
-  const postfix = s.opts.evalCtx ? "" : ",module";
+  const postfix = s.opts.evalCtx
+    ? ""
+    : s.opts.staticBundler
+    ? ",module"
+    : ",module,require";
   const name =
     s.opts.injectModuleDescr && s.opts.injectModuleDescr.substr
       ? s.opts.injectModuleDescr
@@ -274,21 +278,26 @@ function injectModuleDescr(si) {
       root.$ns
     );
     let module = s.opts.moduleName;
-    if (!module) {
-      const { file } = s.opts;
-      if (file) {
-        module = file.filename;
-        if (s.opts.srcRoot) {
-          const root =
-            s.opts.srcRoot === true ? file.root || file.cwd : s.opts.srcRoot;
-          if (module.startsWith(root)) module = module.substr(root.length);
-        }
-        // we don't want the end user knows if we built this on windows
-        if (Kit.isWindows) module = module.replace(/\\/g, "/");
-      } else module = "*";
+    if (module !== false) {
+      if (module == null) {
+        const { file } = s.opts;
+        if (file) {
+          module = file.filename;
+          if (s.opts.srcRoot) {
+            const root =
+              s.opts.srcRoot === true ? file.root || file.cwd : s.opts.srcRoot;
+            module = path.relative(root, module);
+          }
+          module = path.normalize(module);
+          // we don't want the end user knows if we built this on windows
+          if (Kit.isWindows) module = module.replace(/\\/g, "/");
+        } else module = "*";
+      }
+      if (s.opts.moduleNamePrefix && typeof module === "string")
+        module = `${s.opts.moduleNamePrefix}${module}`;
+      yield* Kit.emitConst(Tag.push, module);
     }
-    if (s.opts.moduleNamePrefix) module = `${s.opts.moduleNamePrefix}${module}`;
-    yield s.tok(Tag.push, Tag.StringLiteral, { node: { value: module } });
+    if (root.evalCtxSym) yield* Kit.emitConst(Tag.push, s.opts.evalCtx);
     yield* s.leave();
     for (const i of s) {
       if (i.enter && i.value.func && i.value.metaArgs)

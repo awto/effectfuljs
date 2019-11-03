@@ -1,4 +1,8 @@
 const { mod } = require("mod");
+const n = require("mod2_" + mod);
+const k = require("mod3_" + n.n);
+k();
+n();
 
 let v0 = 10;
 

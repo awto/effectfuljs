@@ -71,13 +71,18 @@ export const flatten = Kit.pipe(
             yield* scope();
             yield* s.leave();
           } else if (i.value.eff || i.value.shallowEff) {
-            const sub = [],
-              inner = [];
-            Kit.result(walk(sub, s.sub()), inner);
-            for (const j of sub) yield* j;
-            yield i;
-            yield* inner;
-            yield s.close(i);
+            const sub = [];
+            const inner = [];
+            if (i.leave) {
+              yield i;
+              s.close(i);
+            } else {
+              Kit.result(walk(sub, s.sub()), inner);
+              for (const j of sub) yield* j;
+              yield i;
+              yield* inner;
+              yield s.close(i);
+            }
           } else {
             yield* s.copy(i);
           }
@@ -212,6 +217,7 @@ export const flatten = Kit.pipe(
               ) {
                 break;
               }
+            case Block.op:
             case Tag.CallExpression:
               yield bind(i, buf);
               continue;
@@ -223,7 +229,9 @@ export const flatten = Kit.pipe(
               let sym;
               buf.push([
                 ...(function*() {
-                  yield s.enter(Tag.push, Tag.IfStatement);
+                  yield s.enter(Tag.push, Tag.IfStatement, {
+                    node: { loc: i.value.node && i.value.node.loc }
+                  });
                   const ilab = s.label();
                   yield* walk(buf, s.one(), true);
                   const cbuf = [];
@@ -287,7 +295,9 @@ export const flatten = Kit.pipe(
               buf.push([
                 ...(function*() {
                   const lab = s.label();
-                  yield s.enter(Tag.push, Tag.IfStatement);
+                  yield s.enter(Tag.push, Tag.IfStatement, {
+                    node: { loc: i.value.node && i.value.node.loc }
+                  });
                   const lsym = tempVarSym(root);
                   lsym.bound = false;
                   const ilab = s.label();

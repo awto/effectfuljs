@@ -409,7 +409,7 @@ export default {
 
   // adds `new.target` as an argument of `scope` function
   // this way the context can handle `new` operator
-  passNewTarget: false,
+  passNewTarget: null,
 
   // moves all closures to top level
   // requires `topLevel` and `injectFuncMeta`
@@ -462,6 +462,11 @@ export default {
   // assignments with `=`
   normalizeAssign: false,
   // converts properties set/get/delete into operations calls
-  // {[get|set|delete]:true|{name:string,bind:boolean,[locals|globals]:string|boolean|undefined}|falsy}
-  wrapPropAccess: null
+  // {[get|set|delete]:true|{bind:boolean}|falsy,[locals|globals]:boolean,arrArgs:boolean}
+  wrapPropAccess: null,
+  // assumes the output is passed to some static bandler like webpack or parcel,
+  // thus avoiding dynamic `require` injections
+  staticBundler: true,
+  // shifts line number values
+  adjustLine: 0
 };

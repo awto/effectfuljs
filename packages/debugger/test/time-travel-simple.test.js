@@ -2,6 +2,7 @@ require("./setup-time-travel");
 const trace = require("./run");
 const D = require("../main");
 const S = require("@effectful/serialization");
+const context = D.context;
 
 trace.silent = true;
 describe("time traveling", function() {
@@ -11,7 +12,7 @@ describe("time traveling", function() {
     const v = { a: "A", b: "B", c: "C", [s]: "S" };
     const proto = {};
     const orig = { ...v };
-    Object.setPrototypeOf(v, proto);
+    (context.call = Object.setPrototypeOf), Object.setPrototypeOf(v, proto);
     expect(Object.getPrototypeOf(v)).toBe(proto);
     function get() {
       return "z";
@@ -23,11 +24,12 @@ describe("time traveling", function() {
     D.set(v, "a", "a");
     D.del(v, "b");
     D.set(v, s, "s");
-    Object.setPrototypeOf(v, null);
-    Object.defineProperty(v, "z", {
-      enumerable: true,
-      get
-    });
+    (context.call = Object.setPrototypeOf), Object.setPrototypeOf(v, null);
+    (context.call = Object.defineProperty),
+      Object.defineProperty(v, "z", {
+        enumerable: true,
+        get
+      });
     const changed = {
       a: "a",
       c: "C",
@@ -36,13 +38,15 @@ describe("time traveling", function() {
     };
     expect(v).toEqual(changed);
     D.TimeTravel.checkpoint();
-    Object.assign(v, { a: "_a", [s]: "_s", d: "D" });
-    Object.defineProperties(v, {
-      z: {
-        enumerable: true,
-        value: "Z"
-      }
-    });
+    (context.call = Object.assign),
+      Object.assign(v, { a: "_a", [s]: "_s", d: "D" });
+    (context.call = Object.defineProperties),
+      Object.defineProperties(v, {
+        z: {
+          enumerable: true,
+          value: "Z"
+        }
+      });
     const changed2 = {
       a: "_a",
       c: "C",
@@ -103,20 +107,22 @@ describe("time traveling", function() {
     const orig = [...arr];
     D.TimeTravel.reset();
     D.TimeTravel.checkpoint();
-    arr.splice(2, 2, "A", "B", "C");
+    (context.call = arr.splice), arr.splice(2, 2, "A", "B", "C");
     const arr1 = [1, 2, "A", "B", "C", 5];
     expect([...arr]).toEqual(arr1);
     expect(arr).not.toHaveProperty("deb_hi");
     D.TimeTravel.checkpoint();
     D.set(arr, "deb_hi", "there");
-    arr.push("Z");
-    arr.unshift("A");
+    (context.call = arr.push), arr.push("Z");
+    (context.call = arr.unshift), arr.unshift("A");
     const arr2 = ["A", 1, 2, "A", "B", "C", 5, "Z"];
     expect([...arr]).toEqual(arr2);
     expect(arr.deb_hi).toBe("there");
     D.TimeTravel.checkpoint();
     D.set(arr, "deb_hi", "THERE");
+    context.call = arr.pop;
     const l = arr.pop();
+    context.call = arr.shift;
     const f = arr.shift();
     D.set(arr, 0, "a");
     D.set(arr, arr.length - 1, "z");
@@ -124,7 +130,7 @@ describe("time traveling", function() {
     expect([...arr]).toEqual(arr3);
     expect(arr.deb_hi).toBe("THERE");
     D.TimeTravel.checkpoint();
-    arr.sort();
+    (context.call = arr.sort), arr.sort();
     D.del(arr, "deb_hi");
     const arr4 = [2, "A", "B", "C", "a", "z"];
     expect([...arr]).toEqual(arr4);
@@ -306,18 +312,25 @@ describe("time traveling", function() {
     D.TimeTravel.reset();
     D.TimeTravel.checkpoint();
     D.set(set, "deb_hi", "THERE");
+    context.call = set.delete;
     set.delete(1);
+    context.call = set.delete;
     set.delete(3);
+    context.call = set.add;
     set.add(4);
+    context.call = set.add;
     set.add(2);
+    context.call = set.add;
     set.add(1);
     const set1 = [2, 4, 1];
     expect([...set]).toEqual(set1);
     D.TimeTravel.checkpoint();
+    context.call = set.clear;
     set.clear();
     const set2 = [];
     expect([...set]).toEqual(set2);
     D.TimeTravel.checkpoint();
+    context.call = set.add;
     set.add(8);
     const set3 = [8];
     expect([...set]).toEqual(set3);

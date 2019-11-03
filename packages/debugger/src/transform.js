@@ -1,3 +1,4 @@
+const path = require("path");
 const asyncOps = {
   AwaitExpression: "awt",
   YieldExpression: true
@@ -24,6 +25,7 @@ const injectableOps = [
   "scopeG",
   "scopeAG",
   "scopeA",
+  "scope",
   "frameA",
   "frameAG",
   "frameG",
@@ -32,17 +34,14 @@ const injectableOps = [
   "unhandledA",
   "unhandledAG",
   "set",
-  "delete"
+  "del",
+  "mcall"
 ];
 
 module.exports = require("@effectful/core").babelPlugin(
   (opts, { Tag, Kit, Transform: T, Policy: P, presets, Block }) => {
     const moduleAliases = {};
-    const importRT =
-      opts.importRT ||
-      (opts.backend
-        ? `@effectful/debugger/backends/${opts.backend}`
-        : "@effectful/debugger/api");
+    const importRT = opts.importRT || "@effectful/debugger/api";
     if (opts.preInstrumentedLibs) {
       const root = opts.preInstrumentedLibs.substr
         ? opts.preInstrumentedLibs
@@ -59,6 +58,7 @@ module.exports = require("@effectful/core").babelPlugin(
     const savePropSym = Kit.sysId("upd");
     const contextOpSym = Kit.sysId("context");
     const stopSym = Kit.sysId("stop");
+    const raiseSym = Kit.sysId("raise");
     const evalCtx = Kit.sysId("evalCtx");
     const handleSym = Kit.sysId("handle");
     const injectOps = {};
@@ -68,7 +68,7 @@ module.exports = require("@effectful/core").babelPlugin(
       }
     }
     const before = {
-      scope: insertBreaks,
+      scope: replaceThrow,
       meta: injectScopeDescr,
       interpret: safeCalls,
       interpretOps: pauseCheck
@@ -85,7 +85,7 @@ module.exports = require("@effectful/core").babelPlugin(
         par: false,
         topLevel: true,
         topIIFE: !opts.pureModule,
-        inlineScopeOp: "call",
+        inlineScopeOp: opts.blackbox ? "call" : false,
         contextState: true,
         modules: "commonjs",
         closureShortcuts: false,
@@ -123,7 +123,8 @@ module.exports = require("@effectful/core").babelPlugin(
         normalizeAssign: true,
         normPureForIn: opts.timeTravel,
         normPureForOf: opts.timeTravel,
-        optimizeContextVars: !opts.timeTravel,
+        optimizeContextVars: false,
+        srcRoot: opts.srcRoot || true,
         functionSentOps: {
           yldAG: true,
           yld: true,
@@ -152,6 +153,12 @@ module.exports = require("@effectful/core").babelPlugin(
         const s = Kit.auto(input);
         const opts = s.opts;
         s.first.value.evalCtxSym = evalCtx;
+        if (process.env.EFFECTFUL_DEBUGGER_VERBOSE)
+          console.log(
+            `transforming:"${opts.file &&
+              opts.file
+                .filename}", blackbox:${!!opts.blackbox}, timeTravel:${!!opts.timeTravel}`
+          );
         T.run(P.propagateOpts(configure()));
         function* configure() {
           for (const i of s) {
@@ -187,7 +194,7 @@ module.exports = require("@effectful/core").babelPlugin(
                   i.value.captureParent = true;
                   const patch = {
                     injectFuncMeta: "fun",
-                    scopePrefix: false,
+                    scopePrefix: opts.blackbox ? false : "scope",
                     returnName: "ret",
                     raiseName: "unhandled",
                     passNewTarget: false
@@ -231,198 +238,113 @@ module.exports = require("@effectful/core").babelPlugin(
         }
       }
     };
-    /** time traveling log */
-    function opsLog(si) {
-      if (!opts.timeTravel) return si;
-      const s = Kit.auto(si);
-      const root = s.first.value;
-      debugger;
-      const { contextSym } = root;
-      const varsPool = [];
-      let varsPoolPos = 0;
-      return _opsLog(s, true);
-      function tmpVar(ids) {
-        if (varsPoolPos < varsPool.length) return varsPool[varsPoolPos++];
-        const res = Kit.scope.newSym();
-        varsPool.push(res);
-        varsPoolPos++;
-        ids.push(res);
-        return res;
-      }
-      function isEffFree(i) {
-        switch (i.type) {
-          case Block.bindPat:
-          case Tag.Identifier:
-          case Tag.RegExpLiteral:
-          case Tag.NullLiteral:
-          case Tag.StringLiteral:
-          case Tag.BooleanLiteral:
-          case Tag.NumericLiteral:
-            return true;
-        }
-        return false;
-      }
-      function* getEffFree(buf, ids) {
-        const res = [..._opsLog(s.one())];
-        if (isEffFree(res[0])) {
-          buf.push(...res);
-          return Kit.reposOne(Kit.clone(res), Tag.push);
-        }
-        const sym = tmpVar(ids);
-        const pos = res[0].pos;
-        buf.push(s.tok(pos, Tag.Identifier, { sym }));
-        yield* s.template(Tag.push, `=$I=$E`, sym);
-        yield* Kit.reposOne(res, Tag.right);
-        yield* s.leave();
-        return [s.tok(Tag.push, Tag.Identifier, { sym })];
-      }
-      function* _opsLog(sw, ids, top) {
-        for (const i of sw) {
-          if (i.enter) {
-            switch (i.type) {
-              case Tag.FunctionDeclaration:
-                yield i;
-                for (const j of sw) {
-                  yield j;
-                  if (j.pos === Tag.body && j.type === Tag.Array) break;
-                }
-                const fids = [];
-                const fbuf = [..._opsLog(s.sub(), fids, true)];
-                if (fids.length) {
-                  yield s.enter(Tag.push, Tag.VariableDeclaration, {
-                    node: { kind: "var" }
-                  });
-                  yield s.enter(Tag.declarations, Tag.Array);
-                  for (const sym of fids) {
-                    yield s.enter(Tag.push, Tag.VariableDeclarator);
-                    yield s.tok(Tag.id, Tag.Identifier, { sym });
-                    yield* s.leave();
-                  }
-                  yield* s.leave();
-                  yield* s.leave();
-                }
-                yield* fbuf;
-                continue;
-              case Tag.UnaryExpression:
-                if (i.value.node.operator !== "delete") break;
-              case Tag.UpdateExpression:
-              case Tag.AssignmentExpression:
-                const arg = s.cur();
-                if (
-                  arg.type === Tag.Identifier &&
-                  arg.value.sym &&
-                  arg.value.sym.global
-                ) {
-                  yield* s.template(
-                    i.pos,
-                    `=$I(global,"${arg.value.sym.name}"), $E`,
-                    savePropSym
-                  );
-                  yield Kit.setPos(i, Tag.push);
-                  yield* _opsLog(s.sub(), top);
-                  yield Kit.setPos(s.close(i), Tag.push);
-                  yield* s.leave();
-                  continue;
-                }
-                if (arg.type !== Tag.MemberExpression) break;
-                s.take();
-                const objTok = s.cur();
-                if (
-                  objTok.type === Tag.Identifier &&
-                  objTok.value.sym &&
-                  (objTok.value.sym === contextSym ||
-                    objTok.value.sym === contextOpSym)
-                ) {
-                  yield i;
-                  yield arg;
-                  continue;
-                }
-                if (top) varsPoolPos = 0;
-                const buf = [Kit.setPos(i, Tag.push), arg];
-                let obj, prop;
-                yield s.enter(i.pos, Tag.SequenceExpression);
-                yield s.enter(Tag.expressions, Tag.Array);
-                obj = yield* getEffFree(buf, ids);
-                if (arg.value.node.computed) prop = yield* getEffFree(buf, ids);
-                else {
-                  const p = s.cur();
-                  buf.push(...s.one());
-                  prop = [
-                    s.tok(Tag.push, Tag.StringLiteral, {
-                      node: { value: p.value.node.name }
-                    })
-                  ];
-                }
-                buf.push(s.close(arg));
-                yield* s.template(Tag.push, `=$I($E)`, savePropSym);
-                yield* obj;
-                yield* prop;
-                yield* s.leave();
-                yield* buf;
-                yield* _opsLog(s.sub(), false);
-                yield Kit.setPos(s.close(i), Tag.push);
-                yield* s.leave();
-                yield* s.leave();
-                continue;
-              case Tag.ObjectPattern:
-              case Tag.ArrayPattern:
-                throw s.error(
-                  'destructuring isn\'t supported, apply "@babel/plugin-transform-destructuring"'
-                );
-              default:
-                yield i;
-                continue;
-            }
+    function* replaceThrow(si) {
+      const s = Kit.auto(insertBreaks(si));
+      for (const i of s) {
+        if (i.enter) {
+          if (i.type === Tag.ThrowStatement) {
+            yield s.enter(i.pos, Tag.ExpressionStatement, {
+              node: { loc: i.value.node.loc },
+              bind: true,
+              eff: true
+            });
+            yield s.enter(Tag.expression, Tag.CallExpression, {
+              node: { loc: i.value.node.loc },
+              bind: true,
+              eff: true
+            });
+            yield s.tok(Tag.callee, Tag.Identifier, { sym: raiseSym });
+            yield s.enter(Tag.arguments, Tag.Array);
+            yield* Kit.reposOne(s.sub(), Tag.push);
+            yield* s.leave();
+            yield* s.leave();
+            yield* s.leave();
+            s.close(i);
+            continue;
           }
-          yield i;
         }
+        yield i;
       }
     }
     /** saving function's reference in call so we know the function is called in managed stack */
     function* safeCalls(si) {
       const s = Kit.auto(si);
+      const callId = Kit.sysId("mcall");
       for (const i of s) {
-        if (
-          i.enter &&
-          (i.type === Tag.NewExpression || i.type === Tag.CallExpression)
-        ) {
-          const callee = s.cur();
-          let sym;
-          if (
-            callee.type !== Tag.Identifier ||
-            !(sym = callee.value.sym) ||
-            (!sym.lib && !(sym.global && sym.orig === "require"))
-          ) {
+        if (i.enter) {
+          if (i.type === Tag.NewExpression || i.type === Tag.CallExpression) {
+            const callee = s.cur();
+            let sym;
             if (
-              i.type === Tag.CallExpression &&
-              callee.type === Tag.MemberExpression
+              callee.type !== Tag.Identifier ||
+              !(sym = callee.value.sym) ||
+              !sym.lib
             ) {
-              s.take();
-              const obj = [...s.one()];
-              const prop = [...s.one()];
-              yield* s.template(
-                i.pos,
-                "=($1.call = $E).call($E)",
-                contextOpSym
-              );
-              yield Kit.setPos(callee, Tag.right);
-              yield* obj;
-              yield* prop;
-              yield Kit.setPos(s.close(callee), Tag.right);
-              yield* s.refocus();
-              yield* Kit.reposOne(Kit.clone(obj), Tag.push);
-              const args = s.take();
-              yield* s.sub();
-              s.close(args);
+              if (
+                i.type === Tag.CallExpression &&
+                callee.type === Tag.MemberExpression
+              ) {
+                s.take();
+                const obj = [...s.one()];
+                const prop = [...s.one()];
+                const objType = obj[0].type;
+                yield* s.template(i.pos, "=$I($E)", callId);
+                if (callee.value.node.computed)
+                  yield* Kit.reposOne(prop, Tag.push);
+                else
+                  yield s.tok(Tag.push, Tag.StringLiteral, {
+                    node: { value: prop[0].value.node.name }
+                  });
+                yield* Kit.reposOne(obj, Tag.push);
+                s.close(callee);
+                const args = s.take();
+                yield* s.sub();
+                s.close(args);
+                yield* s.leave();
+                s.close(i);
+              } else if (sym && sym.global && sym.orig === "require") {
+                for (const i of s) if (i.pos === Tag.arguments) break;
+                const args = [...s.sub()];
+                const hasSideEff = args.some(i => {
+                  if (i.enter) {
+                    switch (i.type) {
+                      case Tag.CallExpression:
+                      case Tag.AssignmentExpression:
+                      case Tag.MemberExpression:
+                      case Tag.UpdateExpression:
+                        return true;
+                    }
+                  }
+                  return false;
+                });
+                if (hasSideEff) {
+                  yield* s.template(
+                    i.pos,
+                    "=$1.modulePath = $E, $.moduleId = require.resolve($1.modulePath), $2($1.modulePath)",
+                    contextOpSym,
+                    sym
+                  );
+                  yield* Kit.reposOne(args, Tag.right);
+                } else {
+                  yield* s.template(
+                    i.pos,
+                    "=$I.moduleId = require.resolve($E), $I($E)",
+                    contextOpSym,
+                    sym
+                  );
+                  yield* Kit.clone(args);
+                  yield* s.refocus();
+                  yield* args;
+                }
+                for (const j of s) if (j.value === i.value) break;
+              } else {
+                yield i;
+                yield* s.template(Tag.callee, "=($I.call = $E)", contextOpSym);
+                yield* Kit.reposOne(s.one(i), Tag.right);
+              }
               yield* s.leave();
-              s.close(i);
-            } else {
-              yield i;
-              yield* s.template(Tag.callee, "=($I.call = $E)", contextOpSym);
-              yield* Kit.reposOne(s.one(i), Tag.right);
+              continue;
             }
-            yield* s.leave();
-            continue;
           }
         }
         yield i;
@@ -518,14 +440,12 @@ module.exports = require("@effectful/core").babelPlugin(
                     // since it may duplicate some side effects
                     yield* s.template(
                       i.pos,
-                      "=$I($I($E),$E)",
+                      "=$I($I($E))",
                       { bind: true, expr: true },
                       unwrapSym,
                       la.value.sym
                     );
                     yield* arg;
-                    yield* s.refocus();
-                    yield* Kit.clone(arg);
                     yield* s.leave();
                     for (const j of s) if (j.value === i.value) break;
                     continue;
@@ -547,14 +467,14 @@ module.exports = require("@effectful/core").babelPlugin(
         yield s.enter(Tag.expression, Tag.CallExpression, {
           bind: true,
           expr: true,
-          node: { loc: i.value.node.loc },
-          brkName: name
+          node: { loc: i.value.node.loc }
         });
         yield s.tok(Tag.callee, Tag.Identifier, { sym: brk });
         yield s.enter(Tag.arguments, Tag.Array);
         yield s.tok(Tag.push, Tag.Identifier, {
           sym: evalCtx,
-          node: { loc: i.value.node.loc }
+          node: { loc: i.value.node.loc },
+          brkName: name
         });
         yield* lab();
       }

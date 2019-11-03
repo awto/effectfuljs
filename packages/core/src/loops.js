@@ -190,7 +190,10 @@ function forOfStmtImpl(loose, s) {
     const wrapAwait = loop.wrapAwait;
     const esProtocol = (bind && esEffProtocol) || (!bind && esPureProtocol);
     const exitName = esProtocol ? "return" : "exit";
-    yield s.enter(Tag.push, Tag.IfStatement, { forOfExit });
+    yield s.enter(Tag.push, Tag.IfStatement, {
+      forOfExit,
+      node: { loc: loop.node && loop.node.loc }
+    });
     yield s.enter(Tag.test, Tag.MemberExpression);
     yield s.tok(Tag.object, Tag.Identifier, {
       sym: loop.iterVar,
@@ -535,20 +538,19 @@ export const normalizeFor = Kit.pipe(
                         yield sl.enter(Tag.body, Tag.Array);
                         yield sl.enter(Tag.push, repeat, {
                           stmt: true,
-                          origLoop: i.value
+                          origLoop: i.value,
+                          node: i.value.node
                         });
                         i.value.node.init = i.value.node.test = i.value.node.update = null;
-                        // yield sl.peel(Kit.setPos(j,Tag.push))
                         yield sl.enter(Tag.push, Tag.BlockStatement);
                         yield* sl.peelTo(Tag.body);
                         if (test != null) {
-                          yield sl.enter(Tag.push, Tag.IfStatement);
+                          yield sl.enter(Tag.push, Tag.IfStatement, {
+                            node: { loc: i.value.node.loc }
+                          });
                           yield* test;
-                          // yield sl.enter(Tag.consequent,Tag.BlockStatement,j.value)
                           yield sl.peel(Kit.setPos(j, Tag.consequent));
                         } else yield sl.peel(Kit.setPos(j, Tag.push));
-                        /** keeping options stored in this block statement */
-                        // yield sl.enter(Tag.push,Tag.BlockStatement,j.value)
                         yield sl.enter(Tag.body, Tag.Array);
                         yield* walk();
                         if (upd != null) {

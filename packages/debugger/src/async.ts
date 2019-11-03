@@ -8,7 +8,15 @@ import {
   FunctionDescr
 } from "./state";
 import * as State from "./state";
-import { fun, checkExitBrk, call, resume, then, handle } from "./engine";
+import {
+  fun,
+  checkExitBrk,
+  resumeWithThrow,
+  resume,
+  then,
+  handle,
+  signalThread
+} from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
 
 const { context, token } = State;
@@ -21,7 +29,7 @@ interface AsyncFrame extends Frame {
 
 let AsyncFunctionPrototype: any;
 
-const exec = config.patchedPromise ? call : resume;
+const exec = config.patchedPromise ? resume : resumeWithThrow;
 
 try {
   AsyncFunctionPrototype = Object.getPrototypeOf(eval("(async function(){})"));
@@ -80,9 +88,9 @@ export function retA(value: any): any {
   top.onResolve(value);
   top.state = top.goto = 0;
   if (context.debug) {
-    if (context.running) checkExitBrk(top, top.promise);
+    checkExitBrk(top, top.promise);
   } else if (top.restoreDebug) context.debug = true;
-  context.top = top.next;
+  if ((context.top = top.next) == null) signalThread();
   return top.promise;
 }
 
@@ -92,7 +100,7 @@ export function unhandledA(reason: any): any {
   top.onReject(reason);
   top.state = top.goto = 0;
   if (!context.debug && top.restoreDebug) context.debug = true;
-  context.top = top.next;
+  if ((context.top = top.next) == null) signalThread();
   return top.promise;
 }
 
@@ -119,12 +127,12 @@ export function awtImpl(
 ) {
   const top = <AsyncFrame>context.top;
   if (!context.debug && top.restoreDebug) context.debug = true;
-  context.top = top.next;
-  top.next = null;
-  top.goto = goto;
   context.suspended.add(top);
   top.awaiting = asyncValue;
   then(asyncValue, onResolve.bind(top), awtOnReject.bind(top));
+  top.goto = goto;
+  if ((context.top = top.next) == null) signalThread();
+  top.next = null;
   return (context.value = top.promise);
 }
 

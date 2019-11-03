@@ -1,6 +1,6 @@
 import { Module, StateMap, Handler, FunctionDescr, States } from "./state";
 import * as State from "./state";
-import { fun, call, token } from "./engine";
+import { fun, resumeLocal, token, checkExitBrk, pop } from "./engine";
 import { Item, AsyncGeneratorFrame } from "./instr/rt";
 import * as Instr from "./instr/rt";
 import { scopeInit, awtImpl, unhandledA } from "./async";
@@ -42,7 +42,7 @@ regConstructor(AsyncGenerator);
 
 function nextStep(frame: AsyncGeneratorFrame, value: any): Promise<Item> {
   frame.promise = new Promise<Item>(scopeInit.bind(frame));
-  return call(frame, value);
+  return resumeLocal(frame, value);
 }
 
 regOpaqueObject(nextStep, "@effectful/debugger/ag#next");
@@ -89,7 +89,7 @@ regOpaqueObject(cleanup, "@effectful/debugger/ag#cleanup");
 export function scopeAG(goto: number) {
   const top = <AsyncGeneratorFrame>context.top;
   if (!context.debug && top.restoreDebug) context.debug = true;
-  context.top = top.next;
+  pop(top);
   top.goto = goto;
   top.next = null;
   top.queue = [];
@@ -98,12 +98,16 @@ export function scopeAG(goto: number) {
   return (context.value = new AsyncGenerator(top));
 }
 
-function awtYldResolve(this: State.Frame, value: any) {
-  context.suspended.delete(this);
-  this.awaiting = token;
-  (<AsyncGeneratorFrame>this).onResolve(
+function yldResolve(top: State.Frame, value: any) {
+  context.suspended.delete(top);
+  top.awaiting = token;
+  (<AsyncGeneratorFrame>top).onResolve(
     (context.value = { value, done: false })
   );
+}
+
+function awtYldResolve(this: State.Frame, value: any) {
+  yldResolve(this, value);
 }
 
 regOpaqueObject(awtYldResolve, "@effectful/debugger/awt#yld");
@@ -114,6 +118,10 @@ function awtDoneResolve(this: State.Frame, value: any) {
   (<AsyncGeneratorFrame>this).onResolve(
     (context.value = { value, done: true })
   );
+  this.state = 0;
+  if (context.debug) {
+    checkExitBrk(this, value);
+  } else if (this.restoreDebug) context.debug = true;
 }
 
 regOpaqueObject(awtDoneResolve, "@effectful/debugger/awt#done");
@@ -128,8 +136,14 @@ export function retAG(value: any): any {
 
 export const unhandledAG = unhandledA;
 
+function yldStartCb(dest: AsyncGeneratorFrame, value: any): Promise<any> {
+  yldResolve(dest, value);
+  return dest.promise;
+}
+
 export function yldStarAG(value: any, goto: number) {
   const top = <AsyncGeneratorFrame>context.top;
-  context.top = top.next;
-  return Instr.yldStarAGImpl(top, value, goto);
+  pop(top);
+  context.call = Instr.yldStarAGImpl;
+  return Instr.yldStarAGImpl(top, value, goto, yldStartCb);
 }

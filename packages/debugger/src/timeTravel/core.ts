@@ -1,6 +1,8 @@
 import config from "../config";
 import * as S from "@effectful/serialization";
-import { Journal, Record, Operation } from "../state";
+import { Journal, Record, Operation, saved, context } from "../state";
+
+const ALWAYS = false;
 
 export const journal: Journal = {
   now: null,
@@ -52,14 +54,16 @@ export function replay(rec: Record) {
 }
 
 /** `record` a function with bound arguments if `journal.enabled` */
+/*
 export const recordBind: (
   func: (...args: any[]) => any,
   ...args: any[]
 ) => void = config.timeTravel
   ? function() {
-      if (journal.enabled) record(S.bind.apply(void 0, <any>arguments));
+      if (journal.enabled) record(bind.apply(void 0, <any>arguments));
     }
   : function() {};
+*/
 
 export const set: (
   obj: any,
@@ -143,7 +147,7 @@ function objectIsExtensible(obj: any) {
 }
 
 function objectSetPrototypeOf(obj: any, prototype: any) {
-  if (journal.enabled) {
+  if (journal.enabled && (context.call === objectSetPrototypeOf || ALWAYS)) {
     const cur = Object.getPrototypeOf(obj);
     if (cur !== prototype) record(objectSetPrototypeOf.bind(Object, obj, cur));
   }
@@ -167,8 +171,8 @@ export function takeObjectSnapshot(obj: any) {
 }
 
 export function wrapMutableMethod(method: (this: any, ...args: any[]) => any) {
-  return function(this: any) {
-    takeObjectSnapshot(this);
+  return function impl(this: any) {
+    if (context.call === impl || ALWAYS) takeObjectSnapshot(this);
     return method.apply(this, <any>arguments);
   };
 }
@@ -184,10 +188,10 @@ class RestoreObjectSnapshot implements Operation {
     const { self, saved } = this;
     const cur = Object.getOwnPropertyDescriptors(self);
     record(new RestoreObjectSnapshot(self, cur));
-    for (const i of [
-      ...Object.getOwnPropertyNames(saved),
-      ...Object.getOwnPropertySymbols(saved)
-    ]) {
+    for (const i of [].concat(
+      <any>Object.getOwnPropertyNames(saved),
+      <any>Object.getOwnPropertySymbols(saved)
+    )) {
       const descr = cur[<any>i];
       if (descr && !descr.configurable) {
         if (descr.writable) {
@@ -233,13 +237,23 @@ function objectDefineProperty(
   name: string,
   descr: PropertyDescriptor
 ) {
-  takeObjectSnapshot(obj);
+  if (context.call === objectDefineProperty || ALWAYS) takeObjectSnapshot(obj);
   // TODO: this change of configurable value makes debugger visible to the program
   // however this can be hidden by patching getOwnProperty etc
   try {
-    objectSaved.defineProperty(obj, name, { ...descr, configurable: true });
+    const curDescr = Object.getOwnPropertyDescriptor(obj, name);
+    if (!curDescr || curDescr.configurable) {
+      objectSaved.defineProperty(
+        obj,
+        name,
+        Object.assign({}, descr, { configurable: true })
+      );
+    } else if (curDescr.writable && "value" in descr) {
+      obj[name] = descr.value;
+    }
   } catch (e) {
-    console.log("while defining property", name, descr);
+    if (config.verbose)
+      console.log("error while defining property", name, descr, e);
     throw e;
   }
 }
@@ -250,12 +264,13 @@ function objectDefineProperties(
   obj: any,
   descrs: { [name: string]: PropertyDescriptor }
 ) {
-  takeObjectSnapshot(obj);
+  if (context.call === objectDefineProperties || ALWAYS)
+    takeObjectSnapshot(obj);
   return objectSaved.defineProperties(obj, descrs);
 }
 
 function objectAssign(tgt: any) {
-  takeObjectSnapshot(tgt);
+  if (context.call === objectAssign || ALWAYS) takeObjectSnapshot(tgt);
   return objectSaved.assign.apply(Object, <any>arguments);
 }
 
@@ -290,15 +305,7 @@ export const SetSymbol = Symbol("@effectful/debugger/set");
  */
 export const DeleteSymbol = Symbol("@effectful/debugger/delete");
 
-export const arraySaved = {
-  push: Ap.push,
-  pop: Ap.pop,
-  shift: Ap.shift,
-  unshift: Ap.unshift,
-  sort: Ap.sort,
-  reverse: Ap.reverse,
-  splice: Ap.splice
-};
+export const arraySaved = saved.Array;
 
 export const typedArraySaved = {
   sort: TAp.sort,
@@ -326,7 +333,7 @@ export const weakMapSaved = {
 };
 
 function weakMapSet<K extends object, V>(this: WeakMap<K, V>, k: K, v: V) {
-  if (journal.enabled) {
+  if (journal.enabled && (context.call === weakMapSet || ALWAYS)) {
     if (this.has(k)) {
       const old = this.get(k);
       if (old !== v) record(weakMapSet.bind(this, k, this.get(k)));
@@ -338,7 +345,11 @@ function weakMapSet<K extends object, V>(this: WeakMap<K, V>, k: K, v: V) {
 S.regOpaqueObject(weakMapSet, "@effectful/debugger/wmap#set");
 
 function weakMapDelete<K extends object, V>(this: WeakMap<K, V>, k: K) {
-  if (journal.enabled && this.has(k))
+  if (
+    journal.enabled &&
+    (context.call === weakMapDelete || ALWAYS) &&
+    this.has(k)
+  )
     record(weakMapSet.bind(this, k, this.get(k)));
   return weakMapSaved.delete.call(this, k);
 }
@@ -354,7 +365,7 @@ export const mapSaved = {
 };
 
 function restoreMapSnashot<K, V>(this: Map<K, V>, snapshot: [K, V][]) {
-  record(restoreMapSnashot.bind(this, [...this]));
+  record(restoreMapSnashot.bind(this, Array.from(this)));
   mapSaved.clear.call(this);
   for (const i of snapshot) mapSaved.set.apply(this, i);
 }
@@ -368,7 +379,7 @@ function takeMapSnapshot<K, V>(map: Map<K, V>) {
   const snapshots = now.dataSnapshots || (now.dataSnapshots = new Set());
   if (!snapshots.has(map)) {
     setSaved.add.call(snapshots, map);
-    record(restoreMapSnashot.bind(map, [...map]));
+    record(restoreMapSnashot.bind(map, Array.from(map)));
   }
 }
 
@@ -401,14 +412,24 @@ export const weakSetSaved = {
 };
 
 function weakSetAdd<T extends Object>(this: WeakSet<T>, v: T) {
-  if (journal.enabled && !this.has(v)) record(weakSetDelete.bind(this, v));
+  if (
+    journal.enabled &&
+    (context.call === weakSetAdd || ALWAYS) &&
+    !this.has(v)
+  )
+    record(weakSetDelete.bind(this, v));
   return setSaved.add.call(this, v);
 }
 
 S.regOpaqueObject(weakSetAdd, "@effectful/debugger/wset#add");
 
 function weakSetDelete<T extends object>(this: WeakSet<T>, v: T) {
-  if (journal.enabled && this.has(v)) record(weakSetAdd.bind(this, v));
+  if (
+    journal.enabled &&
+    (context.call === weakSetDelete || ALWAYS) &&
+    this.has(v)
+  )
+    record(weakSetAdd.bind(this, v));
   return weakSetSaved.delete.call(this, v);
 }
 
@@ -423,7 +444,7 @@ export const setSaved = {
 };
 
 function restoreSetSnashot<T>(this: Set<T>, snapshot: T[]) {
-  record(restoreSetSnashot.bind(this, [...this]));
+  record(restoreSetSnashot.bind(this, Array.from(this)));
   takeSetSnapshot(this);
   setSaved.clear.call(this);
   for (const i of snapshot) setSaved.add.call(this, i);
@@ -438,22 +459,22 @@ function takeSetSnapshot<T>(set: Set<T>) {
   const snapshots = now.dataSnapshots || (now.dataSnapshots = new Set());
   if (!snapshots.has(set)) {
     setSaved.add.call(snapshots, set);
-    record(restoreSetSnashot.bind(set, [...set]));
+    record(restoreSetSnashot.bind(set, Array.from(set)));
   }
 }
 
 function setAdd<T>(this: Set<T>, v: T) {
-  takeSetSnapshot(this);
+  if (context.call === setAdd || ALWAYS) takeSetSnapshot(this);
   return setSaved.add.call(this, v);
 }
 
 function setDelete<T>(this: Set<T>, v: T) {
-  takeSetSnapshot(this);
+  if (context.call === setDelete || ALWAYS) takeSetSnapshot(this);
   return setSaved.delete.call(this, v);
 }
 
 function setClear<T>(this: Set<T>) {
-  takeSetSnapshot(this);
+  if (context.call === setClear || ALWAYS) takeSetSnapshot(this);
   return setSaved.clear.call(this);
 }
 
@@ -471,7 +492,8 @@ export function defineProperty(
   descr: PropertyDescriptor | undefined
 ) {
   const cur = Object.getOwnPropertyDescriptor(this, name);
-  if (journal.enabled) record(defineProperty.bind(this, name, cur));
+  if (journal.enabled && (context.call === defineProperty || ALWAYS))
+    record(defineProperty.bind(this, name, cur));
   try {
     if (cur && !cur.configurable) {
       if (descr && cur.writable && descr.value) this[name] = descr.value;
@@ -480,7 +502,8 @@ export function defineProperty(
     if (descr) objectSaved.defineProperty(this, name, descr);
     else delete this[name];
   } catch (e) {
-    console.log("while defining property", name, descr);
+    if (config.verbose)
+      console.log("error while defining property", name, descr, e);
     throw e;
   }
 }
@@ -507,6 +530,8 @@ export function simpleSet(target: any, name: any, value: any) {
   if (journal.enabled) record(simpleSet.bind(null, target, name, target[name]));
   target[name] = value;
 }
+
+Object.defineProperty(global, SetSymbol, { value: simpleSet });
 
 /**
  * a setter implementation which doesn't respect insertion order,

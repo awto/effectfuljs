@@ -274,7 +274,7 @@ describe("normalize `do-while`", function() {
   });
 });
 
-describe("normalize `for`", function() {
+describe.skip("normalize `for`", function() {
   const run = runImpl(i => {
     const [v] = [...Loops.normalizeFor([i])];
     return v;
@@ -488,7 +488,7 @@ describe("normalize `for`", function() {
   });
 });
 
-describe("normalize `for`", function() {
+describe("normalize `for-of`", function() {
   const run = transformExpr(
     Kit.pipe(
       Loops.looseForOf,

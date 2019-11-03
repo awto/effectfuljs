@@ -1,0 +1,450 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VSCode protocol handlers breakpoints 1`] = `
+Object {
+  "stderr": "",
+  "stdout": "",
+  "trace": Array [
+    Object {
+      "reason": "breakpoint",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "breakpoints.js",
+          "line": 3,
+          "name": "f",
+          "scopes": Array [
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "1",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "breakpoint",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "breakpoints.js",
+          "line": 15,
+          "name": "f",
+          "scopes": Array [
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "2",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "breakpoint",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "breakpoints.js",
+          "line": 5,
+          "name": "func1",
+          "scopes": Array [
+            Object {
+              "[name]": "func1",
+            },
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "3",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "breakpoints.js",
+          "line": 16,
+          "name": "f",
+          "scopes": Array [
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "3",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "breakpoint",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "breakpoints.js",
+          "line": 11,
+          "name": "func2",
+          "scopes": Array [
+            Object {
+              "[name]": "func2",
+              "func2": "undefined",
+            },
+            Object {
+              "[name]": "func1",
+            },
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "3",
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "breakpoints.js",
+          "line": 5,
+          "name": "func1",
+          "scopes": Array [
+            Object {
+              "[name]": "func1",
+            },
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "3",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "breakpoints.js",
+          "line": 16,
+          "name": "f",
+          "scopes": Array [
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "3",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "breakpoint",
+      "stack": Array [
+        Object {
+          "column": 12,
+          "file": "breakpoints.js",
+          "line": 12,
+          "name": "func2",
+          "scopes": Array [
+            Object {
+              "[name]": "func2",
+              "func2": "undefined",
+            },
+            Object {
+              "[name]": "func1",
+            },
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "4",
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "breakpoints.js",
+          "line": 5,
+          "name": "func1",
+          "scopes": Array [
+            Object {
+              "[name]": "func1",
+            },
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "4",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "breakpoints.js",
+          "line": 16,
+          "name": "f",
+          "scopes": Array [
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "4",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "breakpoint",
+      "stack": Array [
+        Object {
+          "column": 12,
+          "file": "breakpoints.js",
+          "line": 12,
+          "name": "func2",
+          "scopes": Array [
+            Object {
+              "[name]": "func2",
+              "func2": "undefined",
+            },
+            Object {
+              "[name]": "func1",
+            },
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "5",
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "breakpoints.js",
+          "line": 5,
+          "name": "func1",
+          "scopes": Array [
+            Object {
+              "[name]": "func1",
+            },
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "5",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "breakpoints.js",
+          "line": 16,
+          "name": "f",
+          "scopes": Array [
+            Object {
+              "[name]": "f",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@breakpoints.js:5:0-14:1",
+                },
+              },
+              "i": "5",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
+`;

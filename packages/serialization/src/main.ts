@@ -7,8 +7,10 @@ export interface State {
   symbol: symbol;
   /** descriptors registered by type's name */
   byName: Map<string, Descriptor>;
-  /** descriptors registered by value */
+  /** descriptors registered by some primitive value */
   byValue: Map<any, Descriptor>;
+  /** descriptors registered by some value */
+  byObject: WeakMap<any, Descriptor>;
   /**
    * react uses `$$typeof` property for its values, it is the mapping
    * @private
@@ -16,10 +18,15 @@ export interface State {
   byTypeOfProp: Map<symbol, Descriptor>;
 }
 
+export const options = {
+  descriptorSymForOpaque: true
+};
+
 export interface IncompleteState {
   symbol?: symbol;
   byName?: Map<string, Descriptor>;
   byValue?: Map<any, Descriptor>;
+  byObject?: WeakMap<any, Descriptor>;
   byTypeOfProp?: Map<symbol, Descriptor>;
 }
 
@@ -30,6 +37,7 @@ function initializeState(init: IncompleteState): State {
   if (!init.symbol) init.symbol = Symbol("@effectful/serialization/descriptor");
   if (!init.byName) init.byName = new Map();
   if (!init.byValue) init.byValue = new Map();
+  if (!init.byObject) init.byObject = new WeakMap();
   if (!init.byTypeOfProp) init.byTypeOfProp = new Map();
   return <State>init;
 }
@@ -44,6 +52,7 @@ export let descriptorSymbol: symbol = state.symbol;
 
 let descriptorByName: Map<string, Descriptor> = state.byName;
 let descriptorByValue: Map<any, Descriptor> = state.byValue;
+let descriptorByObject: WeakMap<any, Descriptor> = state.byObject;
 let descriptorByTypeOfProp: Map<symbol, Descriptor> = state.byTypeOfProp;
 
 /**
@@ -56,6 +65,7 @@ export function resetState(init: IncompleteState = {}) {
   descriptorSymbol = state.symbol;
   descriptorByName = state.byName;
   descriptorByValue = state.byValue;
+  descriptorByObject = state.byObject;
   descriptorByTypeOfProp = state.byTypeOfProp;
 }
 
@@ -215,6 +225,7 @@ export interface DescriptorOpts<T = unknown> {
 
   /** constant value */
   value?: T;
+
   /** mask for property descriptor flags (configurable:1,enumerable:2,writable:4,no value = 8)  */
   propsDescrMask?: number;
 }
@@ -362,7 +373,7 @@ function makeBind(): (...args: any[]) => any {
   return bind;
 }
 
-const BindDescriptor = regDescriptor({
+export const BindDescriptor = regDescriptor({
   name: "Bind",
   create() {
     return makeBind();
@@ -463,7 +474,8 @@ export class WriteContext {
           `unsupported value for ignore option = ${this.ignore}`
         );
     }
-    return descriptor.write(this, value, parent, key);
+    if (descriptor) return descriptor.write(this, value, parent, key);
+    return {};
   }
   /**
    * Register `data` to be a serialized representation of value,
@@ -641,8 +653,7 @@ function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
  * @returns
  */
 export function regDescriptor<T>(
-  descriptor: IncompleteDescriptor<T>,
-  value?: any
+  descriptor: IncompleteDescriptor<T>
 ): Descriptor<T> {
   let {
     read: readImpl,
@@ -716,7 +727,6 @@ export function regDescriptor<T>(
     props: descriptor.props,
     default$: descriptor.default$
   };
-  if (value) value[descriptorSymbol] = final;
   return final;
 }
 
@@ -768,17 +778,27 @@ export function regOpaqueObject(
   name: string = guessObjectName(value),
   descriptor: IncompleteDescriptor<any> = { props: false }
 ): Descriptor {
-  if (value.hasOwnProperty(descriptorSymbol)) return value[descriptorSymbol];
-  const descr = regDescriptor(
-    {
-      ...OpaqueDescriptor,
-      name,
-      value,
-      typeofHint: typeof value,
-      ...descriptor
-    },
-    value
-  );
+  const useSymbol = options.descriptorSymForOpaque !== false;
+  if (useSymbol && value.hasOwnProperty(descriptorSymbol))
+    return value[descriptorSymbol];
+  let descr: Descriptor | undefined;
+  if ((descr = descriptorByObject.get(value)) != null) return descr;
+  descr = regDescriptor({
+    ...OpaqueDescriptor,
+    name,
+    value,
+    typeofHint: typeof value,
+    ...descriptor
+  });
+  if (useSymbol) {
+    try {
+      Object.defineProperty(value, descriptorSymbol, { value: descr });
+      return descr;
+    } catch (e) {
+      // not extensible
+    }
+  }
+  descriptorByObject.set(value, descr);
   return descr;
 }
 
@@ -831,15 +851,14 @@ export function regConstructor<T>(
   constr: ValueConstructor<T>,
   descriptor: IncompleteDescriptor<T> = descriptorTemplate
 ): Descriptor<T> {
-  return regDescriptor(
-    {
-      valuePrototype: constr.prototype,
-      name: constr.name,
-      ...descriptor,
-      overrideProps: { ...descriptor.overrideProps, prototype: false }
-    },
-    constr.prototype
-  );
+  const descr = regDescriptor({
+    valuePrototype: constr.prototype,
+    name: constr.name,
+    ...descriptor,
+    overrideProps: { ...descriptor.overrideProps, prototype: false }
+  });
+  constr.prototype[descriptorSymbol] = descr;
+  return descr;
 }
 
 export const NotSerializableDescriptor = regDescriptor({
@@ -1261,7 +1280,12 @@ export let getValueDescriptor: (
       return PrimDescriptor;
     case "object":
       if (!value) return PrimDescriptor;
-      return getObjectDescriptor(value) || PojsoDescriptor;
+      return (
+        getObjectDescriptor(value) ||
+        (options.descriptorSymForOpaque === false &&
+          descriptorByObject.get(value)) ||
+        PojsoDescriptor
+      );
     case "function":
       return getObjectDescriptor(value);
     case "symbol":
@@ -1505,5 +1529,5 @@ notSerializableTraps.get = function(_: any, prop: any) {
 };
 
 /** an object which is replaces all not serializable values after read */
-export const notSerializablePlaceholder: any = new Proxy(function() {},
+const notSerializablePlaceholder: any = new Proxy(function() {},
 notSerializableTraps);

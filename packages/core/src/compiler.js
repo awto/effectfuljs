@@ -4,6 +4,7 @@ import * as T from "./transform";
 import * as Policy from "./policy";
 import * as RT from "./rt";
 import * as Block from "./block";
+import * as Bind from "./bind";
 import * as Ctrl from "./control";
 import defunctPreset from "./presets/defunct";
 
@@ -20,6 +21,7 @@ const helpers = {
   RT,
   Ctrl,
   Block,
+  Bind,
   presets: { defunct: defunctPreset }
 };
 
@@ -27,7 +29,7 @@ const rescopeVisitor = { Identifier() {} };
 
 export function makePlugin(transform, initOpts) {
   return function effectfulPlugin(babel, opts) {
-    const descr = transform({ ...initOpts, ...opts }, helpers);
+    const descr = transform({ ...initOpts, ...opts, babel }, helpers);
     return {
       name: descr.name || "effectful",
       manipulateOptions(mopts, parserOpts) {
@@ -38,7 +40,10 @@ export function makePlugin(transform, initOpts) {
         Program(path, state) {
           state.file.scope.path.traverse(rescopeVisitor);
           Kit.optsScope(function effectfulPreset() {
-            Kit.setOpts({ ...defaults, ...descr.options });
+            Kit.setOpts({
+              ...defaults,
+              ...descr.options
+            });
             Kit.babelBridge(
               Kit.pipe(
                 Kit.prepare,
@@ -60,9 +65,7 @@ export function makePlugin(transform, initOpts) {
 export function babelPlugin(transform) {
   const res = makePlugin(transform, transform.opts);
   res.options = opts => {
-    const res = babelPlugin(iopts =>
-      transform(Object.assign({}, opts, iopts), helpers)
-    );
+    const res = babelPlugin(iopts => transform({ ...opts, ...iopts }, helpers));
     res.opts = opts;
     return res;
   };

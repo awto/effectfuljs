@@ -1,4 +1,4 @@
-import { Tag, auto, sysId, emitConst, scope } from "./kit";
+import { Tag, auto, sysId, emitConst, scope, isSynthetic } from "./kit";
 
 /**
  * If the code is an argument of `eval` this injects context variables refs
@@ -12,19 +12,24 @@ export function substVars(si) {
     throw s.error("`eval` requires `contextState` option");
   const varField = opts.varStorageField;
   const name = opts.closureStorageField || opts.varStorageField || "$$";
+  const root = s.first.value;
+  const ctxSym = root.contextSym;
+  let parDepth = 0;
+  for (let cur = root; (cur = cur.parScope); ) ++parDepth;
   return _injectCtx();
-  function* _injectCtx(ctxSym) {
+  function* _injectCtx() {
     for (const i of s) {
       if (i.enter) {
         if (
           i.type === Tag.Identifier &&
-          ctxSym &&
           i.value.sym &&
-          !i.value.sym.declScope
+          !i.value.sym.declScope &&
+          !isSynthetic(i.value.node)
         ) {
           const info = ctx[i.value.sym.orig];
           if (info) {
-            const [prop, depth] = info;
+            let [prop, depth] = info;
+            depth += parDepth;
             yield s.enter(i.pos, Tag.MemberExpression);
             if (varField) yield s.enter(Tag.object, Tag.MemberExpression);
             for (let i = 0; i < depth; ++i)
@@ -45,15 +50,6 @@ export function substVars(si) {
             s.close(i);
             continue;
           }
-        } else if (i.value.func) {
-          yield i;
-          let nextCtx = ctxSym;
-          if (!ctxSym) {
-            nextCtx = i.value.paramSyms[0];
-            nextCtx.strict = false;
-          }
-          yield* _injectCtx(nextCtx);
-          continue;
         }
       }
       yield i;
@@ -126,7 +122,7 @@ export function prepare(si) {
       return s.tok(Tag.push, Tag.NumericLiteral, { node: { value: id } });
     }
     function getScope(nodeLoc) {
-      let current;
+      let current = null;
       for (const root of stack) {
         let rootLoc = root.node.loc;
         /** some babel passes break location, trying to recover,
@@ -149,7 +145,7 @@ export function prepare(si) {
             }
           }
         }
-        if (!rootLoc) return null;
+        if (!rootLoc) return current;
         const memo = root.scopeMemo || (root.scopeMemo = new Map());
         const scopeStack = [];
         for (const j of root.scopeDecls) {

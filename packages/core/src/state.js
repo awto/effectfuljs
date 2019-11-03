@@ -1092,6 +1092,7 @@ export function handleSpecVars(si) {
   collect();
   const s = Kit.auto(sa);
   const root = s.first.value;
+  root.usesThis = usesThis;
   const static_ = root.node && root.node.static;
   if (!usesThis && !usesArgs) return sa;
   let storeRoot = root;
@@ -1104,6 +1105,7 @@ export function handleSpecVars(si) {
     thisSym = storeRoot.thisSym;
     if (!thisSym) {
       thisSym = storeRoot.thisSym = Bind.tempVarSym(storeRoot, "_this");
+      thisSym.singleAssign = true;
       decls.set(thisSym, {
         raw: null,
         init: [s.tok(Tag.init, Tag.ThisExpression)]
@@ -1221,6 +1223,7 @@ function prepareContextVars(root, cfg) {
   const ctxSyms = [];
   const resSym = root.resSym;
   const opt = root.opts.optimizeContextVars !== false;
+  // TODO: check if eval is in scope
   const first = cfg[0];
   for (const i of root.ctxDeps.values()) if (i.copy) i.copy.hasReads = true;
   for (const i of cfg) {

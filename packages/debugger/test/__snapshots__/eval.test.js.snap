@@ -13,6 +13,9 @@ Array [
     "g",
     "a",
     "b",
+    Object {
+      "obj": true,
+    },
   ],
   Array [
     "there",

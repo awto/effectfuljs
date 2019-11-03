@@ -328,3 +328,11 @@ export function isEffFree(i) {
   }
   return false;
 }
+
+export function frameLocalTmp(value) {
+  let f;
+  for (f = value; f && f.origType !== frame; f = f.parent) {}
+  const sym = Kit.scope.newSym();
+  f.savedDecls.set(sym, {});
+  return sym;
+}

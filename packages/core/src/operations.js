@@ -9,7 +9,7 @@ const opNamesMap = new Map();
 const opNamesReserved = new Set();
 
 const assignmentOps = {
-  "=": Kit.sysId("assignOp"),
+  "=": Kit.sysId("set"),
   "+=": Kit.sysId("plusAssignOp"),
   "-=": Kit.sysId("minusAssignOp"),
   "*=": Kit.sysId("multAssignOp"),
@@ -23,17 +23,17 @@ const assignmentOps = {
   "&=": Kit.sysId("bwAndAssignOp")
 };
 
-const binaryOps = {
+const unaryOps = {
   "-": Kit.sysId("unaryMinusOp"),
   "+": Kit.sysId("unaryPlusOp"),
   "!": Kit.sysId("notOp"),
   "~": Kit.sysId("invertOp"),
   typeof: Kit.sysId("typeofOp"),
   void: Kit.sysId("voidOp"),
-  delete: Kit.sysId("deleteOp")
+  delete: Kit.sysId("del")
 };
 
-const unaryOps = {
+const binaryOps = {
   "==": Kit.sysId("eqOp"),
   "!=": Kit.sysId("neqOp"),
   "===": Kit.sysId("strictEqOp"),
@@ -49,7 +49,7 @@ const unaryOps = {
   "-": Kit.sysId("minusOp"),
   "*": Kit.sysId("multOp"),
   "/": Kit.sysId("divOp"),
-  "%": Kit.sysId("ModOp"),
+  "%": Kit.sysId("modOp"),
   "|": Kit.sysId("bwOrOp"),
   "^": Kit.sysId("bwXorOp"),
   "&": Kit.sysId("bwAndOp"),
@@ -135,7 +135,11 @@ export function inject(si) {
             v = v[Number(i.value.node.delegate || 0)];
           let name = v || getOpName(i);
           yield s.enter(i.pos, op, {
-            node: { src: i.value, type: i.type },
+            node: {
+              src: i.value,
+              type: i.type,
+              loc: i.value.node && i.value.node.loc
+            },
             bind: true,
             expr: true,
             sym: name
@@ -160,11 +164,17 @@ export function interpret(si) {
     for (const i of s.sub()) {
       if (i.enter && i.type === op) {
         const lab = s.label();
-        yield s.enter(i.pos, Block.effExpr);
-        yield s.enter(Tag.expression, Tag.CallExpression);
+        let pos = i.pos;
+        if (i.value.bind) {
+          yield s.enter(pos, Block.effExpr);
+          pos = Tag.expression;
+        }
+        yield s.enter(pos, Tag.CallExpression, {
+          node: { loc: i.value.node && i.value.node.loc }
+        });
         yield s.tok(Tag.callee, Tag.Identifier, { sym: i.value.sym });
         yield s.enter(Tag.arguments, Tag.Array);
-        yield* Kit.reposOne(walk(), Tag.push);
+        yield* Kit.repos(walk(), Tag.push);
         yield* lab();
         s.close(i);
         continue;
@@ -211,6 +221,12 @@ export function combine(si) {
   }
 }
 
+const globalObjNames = {
+  window: true,
+  global: true,
+  globalThis: true
+};
+
 /** replaces property access with API calls */
 export function propAccess(si) {
   const s = Kit.auto(si);
@@ -220,8 +236,11 @@ export function propAccess(si) {
   const del = varOp(wrap.delete, "del");
   const set = varOp(wrap.set, "set");
   const get = varOp(wrap.get, "get");
-  if (set && !s.opts.normalizeAssign)
-    throw s.error("`wrapPropAccess:{set}` requires `normalizeAssign:true`");
+  const call = varOp(wrap.call, "call");
+  const constr = varOp(wrap.constr, "constr");
+  const globals = wrap.globals;
+  const locals = wrap.locals;
+  const wrapArgs = wrap.arrArgs;
   if (set && s.opts.optimizeContextVars)
     throw s.error(
       "`wrapPropAccess:{set}` doesn't work yet with `optimizeContextVars:true`"
@@ -230,13 +249,8 @@ export function propAccess(si) {
   return _propAccess(s);
   function varOp(conf, defaultName) {
     if (!conf) return null;
-    const sym = Kit.sysId(conf.name ? conf.name : defaultName);
+    const sym = Kit.sysId(defaultName);
     sym.bindOp = conf.bind !== false;
-    const globs = conf && conf.globals;
-    if (globs !== false)
-      sym.globOp = globs && globs.substr ? Kit.sysId(globs) : sym;
-    const locs = conf && conf.locals;
-    if (locs !== false) sym.locOp = locs && locs.substr ? Kit.sysId(locs) : sym;
     return sym;
   }
   function* _propAccess(sw) {
@@ -244,6 +258,12 @@ export function propAccess(si) {
       if (i.enter) {
         let sym, opSym;
         switch (i.type) {
+          case Tag.UpdateExpression:
+            if (set) {
+              sym = set;
+              opSym = getOpName(i);
+            }
+            break;
           case Tag.UnaryExpression:
             if (i.value.node.operator === "delete") {
               if (!del) {
@@ -254,12 +274,19 @@ export function propAccess(si) {
               sym = del;
             }
             break;
+          case Tag.CallExpression:
+            if (call) sym = call;
+            break;
+          case Tag.NewExpression:
+            if (constr) sym = constr;
+            break;
           case Tag.AssignmentExpression:
             if (!set) {
               yield i;
               yield s.take();
               continue;
             }
+            opSym = getOpName(i);
             sym = set;
             break;
           case Tag.Identifier:
@@ -272,76 +299,125 @@ export function propAccess(si) {
         }
         if (sym) {
           let obj, prop;
-          opSym = sym;
-          const objTok = sym === get ? i : s.take();
-          switch (objTok.type) {
-            case Tag.Identifier:
-              const objSym = objTok.value.sym;
-              if (
-                !objSym ||
-                (!objSym.global &&
-                  (objSym.interpr !== Bind.ctxField || !(opSym = sym.locOp))) ||
-                (objSym.global && !(opSym = sym.globOp))
-              ) {
+          function splitMemberExpression(objTok) {
+            obj = Kit.reposOneArr([..._propAccess(s.one())], Tag.push);
+            if (!objTok.value.node.computed) {
+              prop = [
+                s.tok(Tag.push, Tag.StringLiteral, {
+                  node: { value: s.cur().value.node.name }
+                })
+              ];
+              Kit.skip(s.one());
+            } else prop = Kit.reposOneArr([..._propAccess(s.one())], Tag.push);
+          }
+          if (!opSym) opSym = sym;
+          if (sym === constr) {
+            obj = Kit.reposOneArr([..._propAccess(s.one())], Tag.push);
+            prop = [];
+          } else if (sym === call) {
+            const objTok = s.cur();
+            if (objTok.type === Tag.MemberExpression) {
+              s.take();
+              splitMemberExpression(objTok);
+              s.close(objTok);
+            } else {
+              obj = Kit.reposOneArr([..._propAccess(s.one())], Tag.push);
+              prop = [
+                root.sloppy
+                  ? s.tok(Tag.push, Tag.Identifier, {
+                      node: { name: "global" }
+                    })
+                  : s.tok(Tag.push, Tag.Identifier, {
+                      sym: Kit.scope.undefinedSym
+                    })
+              ];
+            }
+          } else {
+            const objTok = sym === get ? i : s.take();
+            switch (objTok.type) {
+              case Tag.MemberExpression:
+                splitMemberExpression(objTok);
+                break;
+              case Tag.Identifier:
+                const objSym = objTok.value.sym;
+                if (
+                  !objSym ||
+                  objSym.singleAssign ||
+                  (!objSym.global &&
+                    (objSym.interpr !== Bind.ctxField || locals === false)) ||
+                  (objSym.global && (!globals || globalObjNames[objSym.orig]))
+                ) {
+                  yield i;
+                  if (sym !== get) yield objTok;
+                  continue;
+                }
+                if (objSym.global) {
+                  obj = [
+                    s.tok(Tag.push, Tag.Identifier, {
+                      node: { name: "global" }
+                    })
+                  ];
+                  prop = [
+                    s.tok(Tag.push, Tag.StringLiteral, {
+                      node: { value: objSym.name }
+                    })
+                  ];
+                } else {
+                  const ctxSym = Kit.scope.newSym();
+                  ctxSym.declScope = objSym.declScope;
+                  ctxSym.interpr = objSym.interpr;
+                  ctxSym.fieldName = null;
+                  obj = [s.tok(Tag.push, Tag.Identifier, { sym: ctxSym })];
+                  const val = s.tok(Tag.push, Tag.StringLiteral, {
+                    sym,
+                    node: { value: objSym.orig }
+                  });
+                  prop = [val];
+                  postproc.push(
+                    // core-loose is compiled without respect to the loops scope
+                    (function(objSym, val) {
+                      return function() {
+                        val.value.node.value = objSym.fieldName;
+                      };
+                    })(objSym, val)
+                  );
+                }
+                break;
+              default:
                 yield i;
                 if (sym !== get) yield objTok;
                 continue;
-              }
-              if (objSym.global) {
-                obj = [
-                  s.tok(Tag.push, Tag.Identifier, {
-                    node: { name: "global" }
-                  })
-                ];
-                prop = [
-                  s.tok(Tag.push, Tag.StringLiteral, {
-                    node: { value: objSym.name }
-                  })
-                ];
-              } else {
-                const ctxSym = Kit.scope.newSym();
-                ctxSym.declScope = objSym.declScope;
-                ctxSym.interpr = objSym.interpr;
-                ctxSym.fieldName = null;
-                obj = [s.tok(Tag.push, Tag.Identifier, { sym: ctxSym })];
-                const val = s.tok(Tag.push, Tag.StringLiteral, {
-                  sym,
-                  node: { value: objSym.orig }
-                });
-                prop = [val];
-                postproc.push(function() {
-                  val.value.node.value = objSym.fieldName;
-                });
-              }
-              break;
-            case Tag.MemberExpression:
-              obj = Kit.reposOneArr([..._propAccess(s.one())], Tag.push);
-              if (!objTok.value.node.computed) {
-                prop = [
-                  s.tok(Tag.push, Tag.StringLiteral, {
-                    node: { value: s.cur().value.node.name }
-                  })
-                ];
-                Kit.skip(s.one());
-              } else
-                prop = Kit.reposOneArr([..._propAccess(s.one())], Tag.push);
-              break;
-            default:
-              yield i;
-              if (sym !== get) yield objTok;
-              continue;
+            }
+            if (sym !== get) s.close(objTok);
           }
-          if (sym !== get) s.close(objTok);
-          yield s.enter(i.pos, Tag.CallExpression, {
+          yield s.enter(i.pos, op, {
+            node: {
+              src: i.value,
+              loc: i.value.node && i.value.node.loc,
+              type: i.type
+            },
             bind: sym.bindOp,
-            eff: sym.bindOpx
+            expr: sym.bindOp,
+            sym: opSym
           });
-          yield s.tok(Tag.callee, Tag.Identifier, { sym: opSym });
-          yield s.enter(Tag.arguments, Tag.Array);
           yield* obj;
           yield* prop;
           if (sym === set) yield* Kit.reposOne(_propAccess(s.sub()), Tag.push);
-          yield* s.leave();
+          else if (sym === call || sym === constr) {
+            const args = s.take();
+            if (!args.leave) {
+              if (wrapArgs) {
+                yield s.enter(Tag.push, Tag.ArrayExpression);
+                yield s.enter(Tag.elements, Tag.Array);
+              }
+              yield* _propAccess(s.sub());
+              if (wrapArgs) {
+                yield* s.leave();
+                yield* s.leave();
+              }
+              s.close(args);
+            }
+          }
           yield* s.leave();
           s.close(i);
           continue;
@@ -405,6 +481,7 @@ export function normalizeAssign(si) {
               let sym = tmps[x];
               if (!sym) {
                 sym = Bind.tempVarSym(root);
+                sym.singleAssign = true;
                 yield s.enter(Tag.push, Tag.AssignmentExpression, {
                   node: { operator: "=" }
                 });
@@ -430,14 +507,17 @@ export function normalizeAssign(si) {
           }
           const right = upd
             ? [s.tok(Tag.right, Tag.NumericLiteral, { node: { value: 1 } })]
-            : [...normalizeAssign(s.one())];
+            : [..._normalizeAssign(s.one())];
           let leftArg = [...Kit.clone(left)];
           const leftTok = leftArg[0].value;
           leftTok.lhs = left[0].value.rhs = false;
           leftTok.rhs = true;
           if (retOld) {
             yield* startSeq();
-            if (!updTmp) updTmp = Bind.tempVarSym(root);
+            if (!updTmp) {
+              updTmp = Bind.tempVarSym(root);
+              updTmp.singleAssign = true;
+            }
             yield s.enter(pos, Tag.AssignmentExpression, {
               node: { operator: "=" }
             });

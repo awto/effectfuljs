@@ -11,41 +11,38 @@ export function* nodeListIter<T>(nl: {
 export const eventsSym = Symbol.for("@effectful/debugger/events");
 
 if (typeof Event !== "undefined")
-  S.regDescriptor(
-    {
-      name: "dom#Event",
-      create(ctx, json): Event {
-        const EventConstructor = ctx.step((<any>json).c);
-        const init: any = (<any>json).init;
-        for (const i of Object.keys(init)) {
-          const prop = init[i];
-          if (prop && typeof prop === "object") init[i] = ctx.step(prop);
-        }
-        return new EventConstructor(init.type, init);
-      },
-      write(ctx, value: Event) {
-        const res: S.JSONObject = {};
-        res.c = ctx.step(value.constructor, res, "c");
-        const descrs: any = {};
-        for (
-          let i = value;
-          i && i !== Object.prototype;
-          i = Object.getPrototypeOf(i)
-        )
-          Object.assign(descrs, Object.getOwnPropertyDescriptors(i), descrs);
-        const init: S.JSONObject = (res.init = {});
-        for (const name in descrs) {
-          if (!descrs[name].get) continue;
-          const prop = (<any>value)[name];
-          if (prop) init[name] = ctx.step(prop, init, name);
-        }
-        return res;
-      },
-      readContent() {},
-      props: false
+  (<any>Event.prototype)[S.descriptorSymbol] = S.regDescriptor({
+    name: "dom#Event",
+    create(ctx: S.ReadContext, json: any): Event {
+      const EventConstructor = ctx.step((<any>json).c);
+      const init: any = (<any>json).init;
+      for (const i of Object.keys(init)) {
+        const prop = init[i];
+        if (prop && typeof prop === "object") init[i] = ctx.step(prop);
+      }
+      return new EventConstructor(init.type, init);
     },
-    Event.prototype
-  );
+    write(ctx: S.WriteContext, value: Event) {
+      const res: S.JSONObject = {};
+      res.c = ctx.step(value.constructor, res, "c");
+      const descrs: any = {};
+      for (
+        let i = value;
+        i && i !== Object.prototype;
+        i = Object.getPrototypeOf(i)
+      )
+        Object.assign(descrs, Object.getOwnPropertyDescriptors(i), descrs);
+      const init: S.JSONObject = (res.init = {});
+      for (const name in descrs) {
+        if (!descrs[name].get) continue;
+        const prop = (<any>value)[name];
+        if (prop) init[name] = ctx.step(prop, init, name);
+      }
+      return res;
+    },
+    readContent() {},
+    props: false
+  });
 
 type EventMap = Map<
   string,

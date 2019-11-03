@@ -1,6 +1,6 @@
 import { Module, StateMap, Handler, FunctionDescr, States } from "./state";
 import * as State from "./state";
-import { fun, checkExitBrk, unhandled } from "./engine";
+import { fun, checkExitBrk, unhandled, pop } from "./engine";
 import * as Instr from "./instr/rt";
 import { GeneratorFrame } from "./instr/rt";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
@@ -80,7 +80,7 @@ export function funG(
 export function scopeG(goto: number) {
   const top = <GeneratorFrame>context.top;
   if (!context.debug && top.restoreDebug) context.debug = true;
-  context.top = top.next;
+  pop(top);
   top.goto = goto;
   top.next = null;
   const caller = top.func;
@@ -98,18 +98,17 @@ export function yld(value: any, goto: number): any {
   const res = (context.value = { value, done: false });
   top.goto = goto;
   if (!context.debug && top.restoreDebug) context.debug = true;
-  context.top = top.next;
+  pop(top);
   return res;
 }
 
 export function retG(value: any): any {
   const top = <GeneratorFrame>context.top;
   const res = (context.value = { value, done: true });
-  top.goto = 0;
-  context.top = top.next;
-  if (context.debug) {
-    if (context.running) checkExitBrk(top, res);
-  } else if (top.restoreDebug) context.debug = true;
+  top.state = top.goto = 0;
+  if (context.debug) checkExitBrk(top, res);
+  else if (top.restoreDebug) context.debug = true;
+  pop(top);
   return res;
 }
 
@@ -117,6 +116,7 @@ export const unhandledG = unhandled;
 
 export function yldStar(value: any, goto: number): any {
   const top = <GeneratorFrame>context.top;
-  context.top = top.next;
+  pop(top);
+  context.call = Instr.yldStarImpl;
   return Instr.yldStarImpl(top, value, goto);
 }

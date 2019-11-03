@@ -2,6 +2,7 @@ import * as M from "@effectful/core";
 
 var $module = M.module("*"),
     v_1 = [{
+  $$: "_$$",
   cc: "_cc",
   cc2: "_cc2",
   bb: "_bb"
@@ -27,18 +28,13 @@ var $module = M.module("*"),
 }, v_1]]]);
 
 function aa($$) {
-  var aa = M.context(),
-      a;
+  var aa = M.context();
   aa.V._$$ = $$;
 
   aa.V._cc = function _cc(b) {
-    var cc = M.context(),
-        a,
-        c;
+    var cc = M.context();
     cc.V._b = b;
-    a = cc.C.V._$$.C.C.V._c;
-    c = cc.C.V._$$.V._a;
-    return cc.chain((0, cc.V._b)(a, c), _1);
+    return cc.chain((0, cc.V._b)(cc.C.C.C.C.V._c, cc.C.C.V._a), _1);
 
     function _1(cc, a) {
       return cc.chain(eval(cc.preEval(a, 0)), _2);
@@ -50,13 +46,9 @@ function aa($$) {
   };
 
   aa.V._cc2 = function _cc2(c) {
-    var cc2 = M.context(),
-        a,
-        b;
+    var cc2 = M.context();
     cc2.V._c = c;
-    a = cc2.C.V._$$.C.V._b;
-    b = cc2.C.V._$$.V._a;
-    return cc2.chain((0, cc2.V._c)(a, b), _1);
+    return cc2.chain((0, cc2.V._c)(cc2.C.C.C.V._b, cc2.C.C.V._a), _1);
 
     function _1(cc2, a) {
       return cc2.chain(cc2.eval(a, 0), _2);
@@ -66,28 +58,22 @@ function aa($$) {
   };
 
   aa.V._bb = function _bb($$) {
-    var bb = M.context(),
-        a;
+    var bb = M.context();
     bb.V._$$ = $$;
 
     bb.V._cc = function _cc(b) {
-      var cc = M.context(),
-          a;
+      var cc = M.context();
       cc.V._b = b;
 
-      if (cc.C.C.V._$$.V._a) {
+      if (cc.C.C.C.V._a) {
         cc.V._a = something;
         return cc.chain(cc.eval(cc.V._a, 0), _1);
       } else {
-        a = cc.C.C.V._$$.V._a;
-        return cc.chain(cc.eval(a, 1), _1);
+        return cc.chain(cc.eval(cc.C.C.C.V._a, 1), _1);
       }
 
       function _1(cc) {
-        var a, b;
-        a = cc.C.C.V._$$.C.C.V._c;
-        b = cc.C.C.V._$$.V._a;
-        return cc.chain((0, cc.V._b)(a, b), _2);
+        return cc.chain((0, cc.V._b)(cc.C.C.C.C.C.V._c, cc.C.C.C.V._a), _2);
       }
 
       function _2(cc, a) {
@@ -99,24 +85,16 @@ function aa($$) {
       }
     };
 
-    a = bb.C.V._$$.C.V;
-    return bb.chain(a._b(), _1);
+    return bb.chain(bb.C.C.C.V._b(), _1);
 
     function _1(bb, a) {
-      var b, c;
-      b = bb.C.V._$$.C.C.V._c;
-      c = bb.C.V._$$.V._a;
-      a + b + c;
+      a + bb.C.C.C.C.V._c + bb.C.C.V._a;
     }
   };
 
-  a = aa.V._$$.C.V;
-  return aa.chain(a._b(), _1);
+  return aa.chain(aa.C.C.V._b(), _1);
 
   function _1(aa, a) {
-    var b, c;
-    b = aa.V._$$.C.C.V._c;
-    c = aa.V._$$.V._a;
-    a + b + c;
+    a + aa.C.C.C.V._c + aa.C.V._a;
   }
 }

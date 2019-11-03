@@ -15,8 +15,8 @@ program's state from some savepoints and other diagnostics tools.
 
 ## Not yet implemented
 
- * stepping into setters, getters, proxy traps, casts etc
- * stepping into runtime called callbacks
+ * stepping into setters, getters, proxy traps, casts,
+   runtime called callbacks, dynamic imports
  * `with` statements
 
 ## LICENSE

@@ -1,78 +1,28 @@
 import * as M from "@effectful/core";
 
 function tuza() {
-  var a,
+  var av,
       tuzb = function tuzb() {
-    var b, m, v, d, e, f, g, h, k, n, x, y, z, a1, b1;
+    var b, mv, v, a, d, e, f, g, h;
     b = 2;
-    m = 3;
-    n = M.G(global, "che");
-    return M.chain(b(), _1);
+    mv = 3;
+    M.call(che, void 0, av = M.call(b));
+    //che((av += b()), (av -= c()));
+    //mv++;
+    //--mv;
+    M.call(me);
+    v = (a = M.get(M.get(b, "a"), "d"), d = (e = M.get(c, "b"), f = M.get(e, "a"), e.a = f + 1, f), a[d] = M.get(a, d) - 1);
+    c = v;
+    M.call(be);
+    c = process === 1000 ? M.call(a_fun, void 0, M.call(M.call(process, M.call(c_fun, void 0, "a"), "b"), void 0, M.call(d_fun, void 0, "c"), "d", M.constr(M.get(process, "D"), "e"))) : 2;
 
-    function _1(c) {
-      var b;
-      b = a = c;
-      return M.chain(n(b), _2);
+    if (g = M.get(b, "a"), h = M.get(av, "m"), f = M.get(g, h), g[h] = f + 1, f) {
+      delete b[av];
     }
 
-    function _2() {
-      x = M.G(global, "che");
-      z = a;
-      return M.chain(b(), _3);
-    }
-
-    function _3(b) {
-      var c;
-      y = a = z + b;
-      a1 = a;
-      c = M.G(global, "c");
-      return M.chain(c(), _4);
-    }
-
-    function _4(c) {
-      var b;
-      b = a = a1 - c;
-      return M.chain(x(y, b), _5);
-    }
-
-    function _5() {
-      var a;
-      m = m + 1;
-      m = m - 1;
-      a = M.G(global, "me");
-      return M.chain(a(), _6);
-    }
-
-    function _6() {
-      var a;
-      v = (d = M.G(M.G(b, "a"), "d"), e = (f = M.G(M.G(global, "c"), "b"), g = M.G(f, "a"), f.a = g + 1, g), d[e] = M.G(d, e) - 1);
-      c = v;
-      a = M.G(global, "be");
-      return M.chain(a(), _7);
-    }
-
-    function _7() {
-      if (h = M.G(b, "a"), k = M.G(a, "m"), g = M.G(h, k), h[k] = g + 1, g) {
-        delete b[a];
-      }
-
-      delete b[a] + delete b.a;
-      return M.chain(b(), _8);
-    }
-
-    function _8(c) {
-      var b;
-      b1 = c;
-      b = a;
-      return M.chain(b(), _9);
-    }
-
-    function _9(b) {
-      var c;
-      c = delete M.G(a, "z")[2 + 2];
-      delete b1[b + c];
-    }
+    // delete b[av] + delete b.a;
+    delete M.call(b)[M.call(av) + delete M.get(av, "z")[2 + 2]];
   };
 
-  a = 1;
+  av = 1;
 }

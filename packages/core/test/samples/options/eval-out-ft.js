@@ -2,6 +2,7 @@ import * as M from "@effectful/core";
 
 var $module = M.module("*"),
     v_1 = [{
+  $$: "_$$",
   cc: "_cc",
   cc2: "_cc2",
   bb: "_bb"
@@ -59,11 +60,9 @@ function aa($$) {
 }
 
 function cc_1(cc) {
-  var a, b, c;
-  a = cc.C.V._$$.C.C.V._c;
-  b = cc.C.V._$$.V._a;
-  c = cc.V._b, cc.V._b = null;
-  return cc.chain(c(a, b), cc_2);
+  var a;
+  a = cc.V._b, cc.V._b = null;
+  return cc.chain(a(cc.C.C.C.C.V._c, cc.C.C.V._a), cc_2);
 }
 
 function cc_2(cc, a) {
@@ -75,11 +74,9 @@ function cc_3(cc, a) {
 }
 
 function cc2_1(cc2) {
-  var a, b, c;
-  a = cc2.C.V._$$.C.V._b;
-  b = cc2.C.V._$$.V._a;
-  c = cc2.V._c, cc2.V._c = null;
-  return cc2.chain(c(a, b), cc2_2);
+  var a;
+  a = cc2.V._c, cc2.V._c = null;
+  return cc2.chain(a(cc2.C.C.C.V._b, cc2.C.C.V._a), cc2_2);
 }
 
 function cc2_2(cc2, a) {
@@ -89,25 +86,22 @@ function cc2_2(cc2, a) {
 function cc2_3(cc2) {}
 
 function _cc_1(cc) {
-  var a, b;
+  var a;
 
-  if (cc.C.C.V._$$.V._a) {
+  if (cc.C.C.C.V._a) {
     cc.V._a = something;
-    b = cc.V._a, cc.V._a = null;
-    return cc.chain(cc.eval(b, 0), _cc_2);
+    a = cc.V._a, cc.V._a = null;
+    return cc.chain(cc.eval(a, 0), _cc_2);
   } else {
-    a = cc.C.C.V._$$.V._a;
     cc.V._a = null;
-    return cc.chain(cc.eval(a, 1), _cc_2);
+    return cc.chain(cc.eval(cc.C.C.C.V._a, 1), _cc_2);
   }
 }
 
 function _cc_2(cc) {
-  var a, b, c;
-  a = cc.C.C.V._$$.C.C.V._c;
-  b = cc.C.C.V._$$.V._a;
-  c = cc.V._b, cc.V._b = null;
-  return cc.chain(c(a, b), _cc_3);
+  var a;
+  a = cc.V._b, cc.V._b = null;
+  return cc.chain(a(cc.C.C.C.C.C.V._c, cc.C.C.C.V._a), _cc_3);
 }
 
 function _cc_3(cc, a) {
@@ -119,27 +113,17 @@ function cc_4(cc, a) {
 }
 
 function bb_1(bb) {
-  var a;
-  a = bb.C.V._$$.C.V;
-  return bb.chain(a._b(), bb_2);
+  return bb.chain(bb.C.C.C.V._b(), bb_2);
 }
 
 function bb_2(bb, a) {
-  var b, c;
-  b = bb.C.V._$$.C.C.V._c;
-  c = bb.C.V._$$.V._a;
-  a + b + c;
+  a + bb.C.C.C.C.V._c + bb.C.C.V._a;
 }
 
 function aa_1(aa) {
-  var a;
-  a = aa.V._$$.C.V;
-  return aa.chain(a._b(), aa_2);
+  return aa.chain(aa.C.C.V._b(), aa_2);
 }
 
 function aa_2(aa, a) {
-  var b, c;
-  b = aa.V._$$.C.C.V._c;
-  c = aa.V._$$.V._a;
-  a + b + c;
+  a + aa.C.C.C.V._c + aa.C.V._a;
 }

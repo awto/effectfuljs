@@ -55,6 +55,7 @@ export function normalizeSwitch(si) {
           }
           const ilab = s.label();
           const sym = Bind.tempVarSym(s.first.value, "pat");
+          // sym.singleAssign = true;
           yield s.enter(Tag.push, Tag.ExpressionStatement);
           yield s.enter(Tag.expression, Tag.AssignmentExpression, {
             node: { operator: "=" }
@@ -117,7 +118,8 @@ export function toBlocks(si) {
               yield s.enter(i.pos, Tag.BlockStatement, i.value);
               yield s.enter(Tag.body, Tag.Array);
               yield s.enter(Tag.push, Tag.SwitchStatement, {
-                origSwitch: i.value
+                origSwitch: i.value,
+                node: { loc: i.value.node && i.value.node.loc }
               });
               yield* walk();
               yield* lab();

@@ -1,4 +1,4 @@
-import { kit, scope as varScope } from "@effectful/transducers";
+import { kit, scope as varScope, isSynthetic } from "@effectful/transducers";
 const {
   toArray,
   result,
@@ -213,8 +213,10 @@ export {
   resetLevel,
   sysId,
   coerceId,
-  skipTillFileBeg
+  skipTillFileBeg,
+  isSynthetic
 };
+
 export const globalOpts = kit.getOpts;
 
 export const isWindows =

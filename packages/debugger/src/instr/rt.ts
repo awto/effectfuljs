@@ -10,7 +10,7 @@
 import * as Engine from "../engine";
 import * as Persist from "../persist";
 import * as State from "../state";
-import { call } from "../engine";
+import { resume, resumeLocal } from "../engine";
 
 type Callback<This, T, R> = (
   this: This | undefined,
@@ -155,18 +155,17 @@ export function mapForEach<K, V, This>(
  * wraps a top module's export, returns a function which on each call
  * returns `exports` object, but the value is memoized on its first call
  */
-export function wrapExport(top: any, descr: any): any {
+export function wrapExport(top: any, mod: any): any {
   "nodebug";
-  let mod: any;
+  let loaded = false;
   const res: any = function exportsThunk() {
-    if (!mod) {
-      mod = {};
+    if (!loaded) {
+      loaded = true;
       top(mod, (mod.exports = {}));
     }
     return mod.exports;
   };
   res[State.thunkSymbol] = true;
-  res[State.moduleSymbol] = descr;
   return res;
 }
 
@@ -213,7 +212,7 @@ export function generatorNext(frame: GeneratorFrame, value: any): Item {
       value = e;
     }
   }
-  return call(frame, value);
+  return resumeLocal(frame, value);
 }
 
 export function generatorThrow(frame: GeneratorFrame, value: any): Item {
@@ -233,10 +232,10 @@ export function generatorThrow(frame: GeneratorFrame, value: any): Item {
       frame.delegatee = null;
       value = e;
     }
-    if (item) return call(frame, item.value);
+    if (item) return resumeLocal(frame, item.value);
   }
   frame.goto = frame.meta.errHandler(frame.state);
-  return call(frame, value);
+  return resumeLocal(frame, value);
 }
 
 export function generatorReturn(frame: GeneratorFrame, value: any): Item {
@@ -249,13 +248,13 @@ export function generatorReturn(frame: GeneratorFrame, value: any): Item {
       } catch (e) {
         frame.delegatee = null;
         frame.goto = frame.meta.errHandler(frame.state);
-        return call(frame, e);
+        return resumeLocal(frame, e);
       }
     }
     frame.delegatee = null;
   }
   frame.goto = frame.meta.finHandler(frame.state);
-  return call(frame, value);
+  return resumeLocal(frame, value);
 }
 
 export function generatorMethod(
@@ -289,7 +288,7 @@ export function yldStarImpl(
     value = e;
   }
   dest.delegatee = null;
-  return call(dest, value);
+  return resumeLocal(dest, value);
 }
 
 export type AsyncSubGenerator = AsyncIterator<any> & {
@@ -316,20 +315,21 @@ export type AsyncStep = (
 export async function yldStarAGImpl(
   dest: AsyncGeneratorFrame,
   value: any,
-  goto: number
+  goto: number,
+  yld: (dest: AsyncGeneratorFrame, value: any) => Promise<any>
 ) {
   dest.goto = goto;
   const delegatee = (dest.delegatee = Engine.iteratorM(value));
   try {
     const item = await delegatee.next();
     value = await item.value;
-    if (!item.done) return { value, done: false };
+    if (!item.done) return yld(dest, value);
   } catch (e) {
     dest.goto = dest.meta.errHandler(dest.state);
     value = e;
   }
   dest.delegatee = null;
-  return call(dest, value);
+  return resumeLocal(dest, value);
 }
 
 export function runQueue(

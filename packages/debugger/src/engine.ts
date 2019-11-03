@@ -14,14 +14,19 @@ import {
   BrkType,
   StateMap,
   Handler,
-  States
+  States,
+  normalizeDrive,
+  toGlobal
 } from "./state";
+
 import * as State from "./state";
 import * as TT from "./timeTravel/main";
 import * as S from "@effectful/serialization";
 import { parse as babelParse } from "@babel/parser";
 import babelGenerate from "@babel/generator";
 import * as T from "./transform";
+import * as path from "path";
+
 // tslint:disable-next-line
 const asap = require("asap");
 
@@ -30,6 +35,14 @@ const context = State.context;
 const token = State.token;
 const dataSymbol = State.dataSymbol;
 const wrapFrame = TT.wrapFrame;
+const SavedFunction = Function;
+const savedApply = SavedFunction.prototype.apply;
+const savedCall = SavedFunction.prototype.call;
+const CallSym = Symbol("@effectful/debugger/call");
+const ApplySym = Symbol("@effectful/debugger/call");
+
+(<any>Function.prototype)[CallSym] = defaultCall;
+(<any>Function.prototype)[ApplySym] = defaultApply;
 
 class ArgsTraps<T> {
   func: Frame;
@@ -63,7 +76,7 @@ class ArgsTraps<T> {
 }
 
 export function args<T>(value: Iterable<T>): Array<T> {
-  const arr = [...value];
+  const arr = Array.from(value);
   const top = <Frame>context.top;
   Object.defineProperty(arr, "callee", {
     writable: false,
@@ -73,27 +86,55 @@ export function args<T>(value: Iterable<T>): Array<T> {
   return new Proxy(arr, new ArgsTraps<T>(top, arr));
 }
 
-interface WebpackModule {
+interface CjsModule {
+  id: string;
   hot?: {
     accept(): void;
   };
+  __effectful_js_require: any;
 }
 
 export function module(
-  name: string,
-  module: WebpackModule | null,
-  pure: boolean
+  modName: string | number,
+  evalCtx: { [name: string]: [string, number] } | undefined,
+  module: CjsModule | undefined,
+  require?: any,
+  pure?: boolean
 ) {
-  let info = context.modules[name];
-  if (module && module.hot) module.hot.accept();
+  let fullPath: string | undefined;
+  let name: string;
+  let id: number | undefined;
+  if (typeof modName === "number") {
+    id = modName;
+    name = `#eval_${id}.js`;
+  } else {
+    name = modName;
+    fullPath = normalizeDrive(path.resolve(path.join(config.srcRoot, name)));
+  }
+  let info = fullPath && context.modules[<any>(fullPath || id)];
+  if (module) {
+    if (module.hot) module.hot.accept();
+    module.__effectful_js_require = require;
+  }
   if (info) {
-    if (context.onUpdate) context.onUpdate(info);
+    context.moduleId = (module && module.id) || null;
+    info.version++;
     return info;
   }
-  info = { name, functions: {}, pure, topLevel: null };
-  if (!name) name = "console";
+  info = {
+    name,
+    fullPath,
+    id,
+    functions: {},
+    pure: !!pure,
+    topLevel: null,
+    cjs: module,
+    version: 0,
+    evalCtx
+  };
   S.regOpaqueObject(info, `module#${name}`);
-  return (context.modules[name] = info);
+  context.modules[<any>(fullPath || id)] = info;
+  return info;
 }
 
 export function syncMeta<Closure, Res>(
@@ -107,6 +148,18 @@ export function syncMeta<Closure, Res>(
 }
 
 let metaCount = 0;
+
+export function scope(dest: number): any {
+  const top = <Frame>context.top;
+  top.goto = dest;
+  try {
+    return top.meta.handler(top, void 0);
+  } catch (e) {
+    return handle(top, e);
+  }
+}
+
+const deb_console = console;
 
 export function fun(
   module: Module,
@@ -128,19 +181,19 @@ export function fun(
   if (!finHandler) finHandler = defaultFinHandler;
   const names = [name];
   for (let p = parent; p; p = p.parent) names.unshift(p.name);
-  const fullName = `${module.name}:${names.join(".")}@${loc}`;
+  const fullName = `${module.name}:${names.join(".")}@${loc || "?"}`;
   const memo: Brk[] = [];
+  const evalCtx = module.evalCtx || {};
   for (const [scope, reason, loc] of states) {
+    if (!scope) continue;
     const [line, column, endLine, endColumn] = location(loc);
-    let scopeInfo: ScopeInfo;
-    if (scope.length === 3) {
-      scopeInfo = scope[2];
-    } else {
-      scopeInfo = buildScope(scope);
-    }
+    if (scope == null)
+      deb_console.error("NO SCOPES IN ", func, name, handler, states);
+    const scopeInfo =
+      scope.length === 3 ? scope[2] : buildScope(scope, evalCtx);
     const brk: Brk = {
       reason,
-      type: BrkType.location,
+      type: reason === "debugger" ? BrkType.debugger : BrkType.location,
       id: memo.length,
       meta,
       line,
@@ -163,7 +216,7 @@ export function fun(
   meta.name = name;
   meta.fullName = fullName;
   meta.parent = parent;
-  meta.uniqName = `${meta.module.name}#${meta.handler.name}`;
+  meta.uniqName = `${module.name}#${handler.name}`;
   meta.params = params;
   if (meta.canSkip == null) meta.canSkip = false;
   if (meta.id == null) meta.id = metaCount++;
@@ -200,14 +253,17 @@ function strLoc(
     "?"}`;
 }
 
-function buildScope(scope: Scope): ScopeInfo {
-  if (scope == null) return {};
+function buildScope(
+  scope: Scope,
+  parent: { [name: string]: [string, number] }
+): ScopeInfo {
+  if (scope == null) return parent;
   if (scope.length === 3) return scope[2];
   const [vars, par] = scope;
   const scopeInfo: ScopeInfo = {};
   scope.push(scopeInfo);
-  if (par) {
-    const parScope = buildScope(par);
+  const parScope = par ? buildScope(par, parent) : parent;
+  if (parScope) {
     for (const i in parScope) {
       const [field, depth] = parScope[i];
       scopeInfo[i] = [field, depth + 1];
@@ -271,6 +327,7 @@ function wrapMeta(
     S.regOpaqueObject(info.errHandler, `eh#${info.module.name}#${info.name}`);
   if (info.finHandler && info.finHandler !== defaultFinHandler)
     S.regOpaqueObject(info.finHandler, `fh#${info.module.name}#${info.name}`);
+  if (config.expFunctionConstr) constr.constructor = FunctionConstr;
   return constr;
 }
 
@@ -280,23 +337,24 @@ export function signalThread() {
   threadScheduled = true;
   asap(function() {
     threadScheduled = false;
-    if (context.onThread) context.onThread();
+    context.onThread();
   });
 }
 
-const fapply = Function.prototype.apply;
-const fcall = Function.prototype.call;
-
 function defaultApply(this: any) {
-  context.call = this;
-  return fapply.apply(this, <any>arguments);
+  context.call = context.call === defaultApply ? this : null;
+  return savedApply.apply(this, <any>arguments);
 }
 
 S.regOpaqueObject(defaultApply, "@effectful/debugger/apply");
 
 function defaultCall(this: any) {
-  context.call = this;
-  return fcall.apply(this, <any>arguments);
+  context.call = context.call === defaultCall ? this : null;
+  return savedCall.apply(this, <any>arguments);
+}
+
+export function mcall(prop: string, ...args: [any, ...any[]]) {
+  return savedCall.apply((context.call = args[0][prop]), args);
 }
 
 S.regOpaqueObject(defaultCall, "@effectful/debugger/call");
@@ -315,24 +373,33 @@ export function step() {
     if (!top) throw new TypeError("nothing to run");
     if (top.brk && top.brk.exit) {
       if (!context.debug && top.restoreDebug) context.debug = true;
-      context.top = top.next;
+      pop(top);
     }
+    // checkpoint();
     return loop(value);
   } finally {
-    signalThread();
     context.running = false;
   }
 }
 
-function loop(value: any): any {
+export function loop(value: any): any {
   let top: Frame | null = context.top;
-  // context.first = null;
   while (top) {
     try {
       value = top.meta.handler(top, value);
       top = context.top;
     } catch (e) {
-      if (e === token) return e;
+      if (e === token) {
+        context.onStop();
+        return e;
+      }
+      if (checkErrBrk(<Frame>top, e)) {
+        context.value = e;
+        context.error = true;
+        context.onStop();
+        if (top) top.goto = top.meta.errHandler(top.state);
+        return token;
+      }
       top = context.top;
       if (!top) throw e;
       top.goto = top.meta.errHandler(top.state);
@@ -342,7 +409,8 @@ function loop(value: any): any {
   return value;
 }
 
-export function call(frame: Frame, e: any) {
+/** resumes execution of the current stack */
+export function resume(frame: Frame, e: any) {
   try {
     frame.next = context.top;
     context.top = frame;
@@ -352,32 +420,113 @@ export function call(frame: Frame, e: any) {
   }
 }
 
+/** like `resume` but does't interpret any exception */
+export function resumeWithThrow(top: Frame, value: any): any {
+  top.next = context.top;
+  context.top = top;
+  return loop(value);
+}
+
+/** like `resume` but appends the frame to the current stack */
+export function resumeLocal(frame: Frame, e: any) {
+  try {
+    frame.caller = frame.next = context.top;
+    context.top = frame;
+    return frame.meta.handler(frame, e);
+  } catch (e) {
+    return handle(frame, e);
+  }
+}
+
+/** checks if the current frame's state has an exception handler */
+function hasEH(frame: Frame): boolean {
+  const meta = frame.meta;
+
+  for (let state = frame.state; state !== 1; ) {
+    const err = meta.errHandler(state);
+    if (err === 1) return false;
+    const fin = meta.finHandler(state);
+    if (fin !== err) return true;
+    state = fin;
+  }
+  return false;
+}
+
+function checkErrBrk(frame: Frame, e: any): boolean {
+  if (!context.debug) return false;
+  if (e && context.exception !== e) {
+    context.exception = e;
+    if (e.stack) {
+      if (config.debuggerDebug)
+        Object.defineProperty(e, "_deb_stack", { value: e.stack });
+      const stack = [String(e)];
+      for (let i: Frame | null = frame; i; i = i.next) {
+        if (i.brk)
+          stack.push(
+            `    at ${i.meta.name} (${i.meta.module.name}:${i.brk.line}:${
+              i.brk.column
+            })`
+          );
+      }
+      if (!config.debuggerDebug) e.stack = stack.join("\n");
+    }
+    let needsStop = false;
+    if (context.brkOnAnyException) {
+      needsStop = true;
+    } else if (context.brkOnUncaughtException) {
+      // avoiding running finally blocks
+      needsStop = true;
+      for (let i: Frame | null = frame; i; i = i.next) {
+        if (hasEH(i)) {
+          needsStop = false;
+          break;
+        }
+      }
+    }
+    return needsStop;
+  }
+  return false;
+}
+
 export function handle(frame: Frame, e: any) {
   for (;;) {
     if (e === token) {
       if (frame.next) throw e;
+      context.onStop();
       return token;
     }
     if (frame !== context.top) throw e;
+    if (!frame.next && config.debuggerDebug) console.error("Uncaught", e.stack);
+    const meta = frame.meta;
+    const goto = meta.errHandler(frame.state);
+    if (checkErrBrk(frame, e)) {
+      context.value = e;
+      context.error = true;
+      frame.goto = goto;
+      if (frame.next) throw token;
+      context.onStop();
+      return token;
+    }
+    frame.goto = goto;
     try {
-      frame.goto = frame.meta.errHandler(frame.state);
-      return frame.meta.handler(frame, e);
+      return meta.handler(frame, e);
     } catch (ex) {
       e = ex;
     }
   }
 }
 
-/** runs `top` until the first breakpoint */
-export function resume(top: Frame, value: any): any {
-  top.next = context.top;
-  context.top = top;
-  return loop(value);
-}
-
 export function evalAt(src: string, id: number) {
   const top = <Frame>context.top;
-  (context.call = <any>compileEval(src, top.meta, top.meta.states[id]))(top);
+  const func = compileEval(src, top.meta, top.meta.states[id]);
+  const data = (<any>func)[dataSymbol];
+  data.$$ = top;
+  try {
+    context.call = func;
+    return savedCall.call(func, top.self);
+  } finally {
+    data.$$ = null;
+  }
 }
 
 const locationRE = /^(\d+):(\d+)-(\d+):(\d+)$/;
@@ -394,19 +543,114 @@ export function location(str: string): number[] {
 
 let evalCnt = 0;
 
+const indirMemo = new Map<string, string>();
+
+export function compileIndirEval(code: string): string {
+  const top = context.top;
+  const meta = top && top.meta;
+  const blackbox = !meta || meta.blackbox;
+  const key = code + "@" + blackbox;
+  let tgt = indirMemo.get(key);
+  if (tgt) return tgt;
+  const id = toGlobal(evalCnt++);
+  if (!blackbox) context.onNewSource(id, code);
+  const wcode =
+    `return ($effectful$debugger$lib$.context.call=` +
+    `(function() {\n${code}\n}))();`;
+  const ast = babelParse(wcode, {
+    allowReturnOutsideFunction: true,
+    startLine: 0
+  });
+  const body = (<any>ast.program.body[0]).argument.callee.right.body.body;
+  if (body.length === 1 && body[0].type === "ExpressionStatement")
+    body[0] = { type: "ReturnStatement", argument: body[0].expression };
+  tgt = babelGenerate(
+    T.run(ast, {
+      preInstrumentedLibs: true,
+      blackbox,
+      pureModule: true,
+      importRT: false,
+      moduleName: id,
+      ns: "$effectful$debugger$lib$"
+    }),
+    { compact: false }
+  ).code;
+  indirMemo.set(key, tgt);
+  return tgt;
+}
+
+const functionConstrMemo = new Map<string, string>();
+
+export function compileFunctionConstr(args: any[], code: string) {
+  const top = context.top;
+  const meta = top && top.meta;
+  const blackbox = !meta || meta.blackbox;
+  const id = toGlobal(evalCnt++);
+  const wcode = `return (function(${args.join()}) {\n${code}\n})`;
+  let tgt = functionConstrMemo.get(wcode);
+  if (!tgt) {
+    if (!blackbox) context.onNewSource(id, code);
+    const ast = babelParse(wcode, {
+      allowReturnOutsideFunction: true,
+      startLine: 0
+    });
+    tgt = babelGenerate(
+      T.run(ast, {
+        preInstrumentedLibs: true,
+        blackbox,
+        pureModule: true,
+        importRT: false,
+        moduleName: id,
+        ns: "$effectful$debugger$lib$"
+      }),
+      { compact: false }
+    ).code;
+  }
+  return tgt;
+}
+
+export const FunctionConstr = function Function(...args: any[]) {
+  let res: any;
+  if (context.debug) {
+    const tgt = compileFunctionConstr(args, args.pop());
+    res = new SavedFunction("module", tgt)(
+      context.top && context.top.meta.module
+    );
+  } else res = Reflect.construct(SavedFunction, args);
+  res.constructor = Function;
+  return res;
+};
+FunctionConstr.prototype = Function.prototype;
+
+S.regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
+
+const savedEval = eval;
+
+export function indirEval(code: string): any {
+  if (!context.debug) return savedEval(code);
+  const wcode = compileIndirEval(code);
+  return new SavedFunction("module", wcode)(
+    context.top && context.top.meta.module
+  );
+}
+
 export function compileEval(
   code: string,
   meta: FunctionDescr,
   state: Brk,
   blackbox?: boolean
-): (f: Frame) => any {
+): () => any {
   const memo = meta.evalMemo || (meta.evalMemo = new Map());
   const key = `${code}@${state.id}/${!!blackbox}`;
   let res = memo.get(key);
   if (res) return res;
-  const id = evalCnt++;
-  const wcode = `return function eval_${id}($$) { ${code} }`;
-  const ast = babelParse(wcode, { allowReturnOutsideFunction: true });
+  const id = toGlobal(evalCnt++);
+  if (!blackbox) context.onNewSource(id, code);
+  const wcode = `return function() {\n${code}\n}`;
+  const ast = babelParse(wcode, {
+    allowReturnOutsideFunction: true,
+    startLine: 0
+  });
   const body = (<any>ast.program.body[0]).argument.body.body;
   if (body.length === 1 && body[0].type === "ExpressionStatement")
     body[0] = { type: "ReturnStatement", argument: body[0].expression };
@@ -418,12 +662,29 @@ export function compileEval(
       pureModule: true,
       evalCtx: state.scope,
       importRT: false,
-      moduleName: `#eval_${id}`,
+      moduleName: id,
       ns: "$effectful$debugger$lib$"
     }),
     { compact: true }
   ).code;
-  res = new Function("$effectful$debugger$lib$", tgt)(exports);
+  const mod = meta.module;
+  const cjs = mod && meta.module.cjs;
+  res = new SavedFunction(
+    // "$effectful$debugger$lib$",
+    "exports",
+    "require",
+    "module",
+    "__filename",
+    "__dirname",
+    tgt
+  )(
+    // exports,
+    mod && (<any>mod).exports,
+    cjs && (cjs.__effectful_js_require || cjs.require),
+    mod,
+    mod.fullPath,
+    mod && mod.fullPath ? path.dirname(mod.fullPath) : ""
+  );
   memo.set(key, res);
   return res;
 }
@@ -440,8 +701,6 @@ export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
-let deb_cnt = 0;
-
 export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
   const { meta, func } = proto;
   const next = context.top;
@@ -456,6 +715,7 @@ export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
     $: {},
     brk: null,
     next,
+    caller: next,
     restoreDebug: false,
     awaiting: token,
     onResolve: null,
@@ -480,9 +740,21 @@ export function checkExitBrk(top: Frame, value: any) {
   const meta = top.meta;
   if (meta.blackbox) return;
   const brk = (context.brk = top.brk = meta.exitBreakpoint);
-  if (brk && context.needsBreak(brk, value)) {
+  if (brk && context.needsBreak(brk, top, value)) {
     context.value = value;
     context.error = false;
+    if (!context.running) {
+      context.queue.push({
+        top: context.top,
+        brk,
+        debug: context.debug,
+        value: context.value,
+        stopOnEntry: true
+      });
+      context.top = null;
+      signalThread();
+    }
+    // context.top = top;
     throw token;
   }
 }
@@ -496,9 +768,9 @@ export function ret(value: any): any {
     top.onResolve(value);
   }
   if (context.debug) {
-    if (context.running) checkExitBrk(top, value);
+    checkExitBrk(top, value);
   } else if (top.restoreDebug) context.debug = true;
-  context.top = top.next;
+  pop(top);
   return value;
 }
 
@@ -511,6 +783,7 @@ export function unhandled(e: any) {
   }
   if (!context.debug && top.restoreDebug) context.debug = true;
   context.top = top.next;
+  pop(top);
   throw e;
 }
 
@@ -518,23 +791,27 @@ export function brk(id: number): any {
   if (context.debug === false) return;
   const { needsBreak, top } = context;
   let p: Brk;
+  let stopOnEntry = false;
+  let stopped = !context.running;
   if (
     top &&
     (p = top.brk = context.brk = top.meta.states[id]) &&
-    needsBreak(p)
+    ((stopOnEntry = needsBreak(p, top)) || (stopped && context.activeTop))
   ) {
-    if (!context.running) {
+    if (stopped) {
       context.queue.push({
         top: context.top,
         brk: p,
         debug: context.debug,
-        value: context.value
+        value: context.value,
+        stopOnEntry
       });
       context.top = null;
       signalThread();
     }
     throw token;
   }
+  // checkpoint();
 }
 
 export function iterator<T>(v: Iterable<T>) {
@@ -553,13 +830,58 @@ export function forInIterator(obj: object): Iterable<string> {
   })()[Symbol.iterator]();
 }
 
+const {
+  boundFunSymbol,
+  boundThisSymbol,
+  boundArgsSymbol,
+  descriptorSymbol
+} = S;
+
+const BindDescriptor = S.regDescriptor({
+  name: "#b",
+  create() {
+    return makeBind();
+  },
+  write() {
+    return {};
+  },
+  overrideProps: {
+    arguments: false,
+    caller: false,
+    length: false,
+    name: false,
+    prototype: false
+  }
+});
+
+function makeBind(): (...args: any[]) => any {
+  function bind(...rest: any[]): any {
+    const fun = (<any>bind)[boundFunSymbol];
+    context.call = context.call === bind ? fun : null;
+    const boundArgs: any[] = (<any>bind)[boundArgsSymbol];
+    //avoiding spreads because they are monkey patched
+    const arr: any[] = Array(rest.length + boundArgs.length + 1);
+    arr[0] = (<any>bind)[boundThisSymbol];
+    let index = 0;
+    for (const i of boundArgs) arr[++index] = i;
+    for (const i of rest) arr[++index] = i;
+    return savedCall.apply(fun, <any>arr);
+  }
+  (<any>bind)[descriptorSymbol] = BindDescriptor;
+  return bind;
+}
+
 if (config.patchRT && config.persistState) {
-  Function.prototype.bind = function bind(
+  FunctionConstr.prototype.bind = SavedFunction.prototype.bind = function bind(
     this: any,
     self: any,
     ...args: any[]
   ): (...args: any[]) => any {
-    return S.bind(this, self, ...args);
+    const bind = <any>makeBind();
+    bind[boundFunSymbol] = this;
+    bind[boundThisSymbol] = self;
+    bind[boundArgsSymbol] = args;
+    return bind;
   };
 }
 
@@ -586,5 +908,26 @@ export function liftSync(fun: (this: any, ...args: any[]) => any): any {
   };
 }
 
+export function raise(e: any) {
+  context.exception = null;
+  throw e;
+}
+
 export { token, context };
-export { set, del } from "./timeTravel/core";
+export { del, set } from "./timeTravel/core";
+
+/** resets module's states (for tests) */
+export function reset() {
+  metaCount = 0;
+  evalCnt = 0;
+  indirMemo.clear();
+  functionConstrMemo.clear();
+  context.activeTop = context.top = null;
+  context.running = false;
+  context.brk = null;
+  context.queue.length = 0;
+}
+
+export function pop(top: Frame) {
+  if ((context.top = top.next) == null) signalThread();
+}

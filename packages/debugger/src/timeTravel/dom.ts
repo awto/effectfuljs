@@ -23,7 +23,7 @@ interface ElementExt extends Element {
  * avoiding snapshot recording for runtime setters,
  * we'll get the  normalizedresults from the mutation observer
  */
-if (typeof Node !== undefined) {
+if (typeof Node !== "undefined") {
   for (const i of [Node, NodeList]) {
     Object.defineProperty(i.prototype, Core.SetSymbol, {
       value(node: any, name: any, value: any) {

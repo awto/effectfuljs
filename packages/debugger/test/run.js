@@ -58,6 +58,13 @@ function trace(value) {
   return cont();
 }
 
+function teardown() {
+  Ctx.top = null;
+  Ctx.activeTop = null;
+  Ctx.queue.length = 0;
+  Ctx.suspended.clear();
+}
+
 function nothingToDo() {
   return !Ctx.top && Ctx.queue.length === 0 && Ctx.suspended.size === 0;
 }
@@ -70,5 +77,6 @@ trace.logCb = function() {
 };
 trace.cont = cont;
 trace.nothingToDo = nothingToDo;
+trace.teardown = teardown;
 
 module.exports = trace;

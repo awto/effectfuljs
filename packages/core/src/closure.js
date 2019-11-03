@@ -353,6 +353,8 @@ export const contextDecls = Kit.map(function contextDecls(si) {
                   }),
                   ...s.leave()
                 ]
+              : root.opts.passNewTarget === false && root.usesThis
+              ? [s.tok(Tag.push, Tag.ThisExpression)]
               : emptyArr),
             ...s.leave(),
             ...s.leave()

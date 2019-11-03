@@ -2,6 +2,8 @@
   "normalizeAssign": true,
   "optimizeContextVars": false,
   "wrapPropAccess": {
-    "get": { "name": "G", "bind": false, "locals": false }
+    "get": { "name": "G", "bind": false, "locals": false },
+    "call": { "name": "C", "bind": false, "wrapArr":true },
+    "constr": {"name": "N", "bind": false, "wrapArr":true}
   }
 }

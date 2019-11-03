@@ -30,6 +30,7 @@ global.it = function patchedIt(descr, fun) {
     fun &&
     baseIt(descr, async function() {
       let count = 0;
+      if (isJest) jest.setTimeout(30000);
       const logCb = trace.logCb;
       if (config.timeTravel) {
         D.TimeTravel.reset();
@@ -61,6 +62,7 @@ global.it = function patchedIt(descr, fun) {
       } finally {
         if (config.timeTravel) D.TimeTravel.reset(false);
         trace.silent = true;
+        trace.teardown();
         if (isJest) {
           trace.logCb = logCb;
           expect(count).toMatchSnapshot();

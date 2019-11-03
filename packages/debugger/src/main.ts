@@ -13,7 +13,6 @@ import * as TimeTravel from "./timeTravel/main";
 import * as TimeTravelCore from "./timeTravel/core";
 import * as TimeTravelDom from "./timeTravel/dom";
 
-// Persist.regModule(S, "@effectful/serialization");
 Persist.regModule(RT, "@effectful/debugger/rt");
 Persist.regModule(Instr, "@effectful/debugger/instr/rt");
 Persist.regModule(Engine, "@effectful/debugger/engine");
@@ -38,14 +37,10 @@ S.regOpaqueObject(Symbol.keyFor, "Symbol.keyFor");
 S.regOpaquePrim(Symbol.iterator, "SymbolStatic.iterator");
 S.regOpaquePrim(Symbol.asyncIterator, "SymbolStatic.asyncIterator");
 S.regOpaquePrim(Symbol.toStringTag, "SymbolStatic.asyncIterator");
-S.regOpaqueObject(
-  State.context.needsBreak,
-  "@effectful/debugger/default$needsBreak"
-);
 
 S.regOpaqueObject(Object);
 
-export { step, liftSync, set, del } from "./engine";
+export { step, liftSync, set, del, raise } from "./engine";
 export * from "./state";
 export * from "./modules";
 

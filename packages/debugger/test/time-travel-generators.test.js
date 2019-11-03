@@ -171,7 +171,6 @@ test("async function's time traveling", async function() {
     trace(r2.rs(306));
     console.log("A:R3/6", await trace.async(new Promise(resetR)), r2.v);
     console.log("UNDO 7");
-    debugger;
     D.TimeTravel.undo();
     console.log("CHECKPOINT - 3/7");
     D.TimeTravel.checkpoint();

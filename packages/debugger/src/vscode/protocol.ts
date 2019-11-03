@@ -9,6 +9,9 @@ declare module "vscode-debugprotocol" {
       arguments: {
         threadId: number;
         stopOnEntry?: boolean;
+        dirSep: string;
+        breakpoints: SetBreakpointsArguments[];
+        exceptions: SetExceptionBreakpointsArguments;
       };
     }
 
@@ -28,7 +31,22 @@ declare module "vscode-debugprotocol" {
 
     interface LaunchRequestArguments {
       stopOnEntry?: boolean;
-      trace?: boolean;
+      verbose?: boolean;
+      command?: string | boolean;
+      preset?: string | boolean;
+      reuse?: boolean;
+      cwd?: string;
+      env?: { [name: string]: string | undefined };
+      argv0?: string;
+      args?: string[];
+      timeTravel?: boolean;
+      keepRunning?: boolean;
+      open?: boolean | string;
+      console?:
+        | boolean
+        | "internalConsole"
+        | "integratedTerminal"
+        | "externalTerminal";
     }
   }
 }

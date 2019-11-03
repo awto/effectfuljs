@@ -1,4 +1,10 @@
 {
-  "plugins": [["@babel/plugin-transform-modules-commonjs",
-               {"loose":true,"noInterop":true}]]
+  "plugins": [
+    [
+      "@babel/plugin-transform-modules-commonjs",
+      { "loose": true, "noInterop": true }
+    ],
+    "@babel/plugin-transform-spread",
+    "@babel/plugin-proposal-object-rest-spread"
+  ]
 }

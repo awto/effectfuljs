@@ -6,12 +6,16 @@ exports[`default transpiler 1`] = `
 var M = require(\\"../../api\\");
 
 var frame = M.frame;
+var scope = M.scope;
 var brk = M.brk;
+var mcall = M.mcall;
 var ret = M.ret;
 var unhandled = M.unhandled;
-var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
+var $module = M.module(\\"test/__fixtures__/code.js\\", void 0, module),
     v_1 = [{
   mod: \\"mod\\",
+  n: \\"n\\",
+  k: \\"k\\",
   v0: \\"v0\\",
   C: \\"C\\"
 }, null],
@@ -38,51 +42,32 @@ var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
 }, v_1],
     meta$f = M.fun($module, function (x) {
   return function (module, exports) {
-    var $ = frame(x, this, new.target),
+    var _$ = frame(x, this, new.target),
         p;
-    $.$.module = module;
-    $.$.exports = exports;
-    $.$.C = meta$C($);
+
+    _$.$.module = module;
+    _$.$.exports = exports;
+    _$.$.C = meta$C(_$);
     {
-      try {
-        $.goto = 5;
-        brk(0);
-        return f_1($, p);
-      } catch (e) {
-        return M.handle($, e);
-      }
+      return scope(5);
     }
   };
-}, f_1, void 0, void 0, [[[{}, null], null, \\"1:0-1:31\\"], [v_1, null, \\"3:0-3:12\\"], [v_1, null, \\"21:0-24:2\\"]], \\"f\\", \\"1:0-25:0\\", null, [\\"module\\", \\"exports\\"]),
+}, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:31\\"], [v_1, \\"s\\", \\"2:0-2:33\\"], [v_1, \\"s\\", \\"3:0-3:33\\"], [v_1, \\"s\\", \\"4:0-4:4\\"], [v_1, \\"s\\", \\"5:0-5:4\\"], [v_1, \\"s\\", \\"7:0-7:12\\"], [v_1, \\"s\\", \\"25:0-28:2\\"]], \\"f\\", \\"1:0-29:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$fn1 = M.fun($module, function (x) {
   return function fn1() {
     var $ = frame(x, this, new.target),
         p;
-
-    try {
-      $.goto = 5;
-      brk(0);
-      return fn1_1($, p);
-    } catch (e) {
-      return M.handle($, e);
-    }
+    return scope(5);
   };
-}, fn1_1, void 0, void 0, [[v_4, null, \\"22:2-22:16\\"], [v_4, null, \\"23:2-23:55\\"]], \\"fn1\\", \\"21:14-24:1\\", meta$f, []),
+}, fn1_1, void 0, void 0, [[v_4, \\"s\\", \\"26:2-26:16\\"], [v_4, \\"s\\", \\"27:2-27:55\\"]], \\"fn1\\", \\"25:14-28:1\\", meta$f, []),
     meta$C = M.fun($module, function (x) {
   return function C(a) {
     var $ = frame(x, this, new.target),
         p;
     $.$.a = a;
-
-    try {
-      $.goto = 5;
-      brk(0);
-      return C_1($, p);
-    } catch (e) {
-      return M.handle($, e);
-    }
+    return scope(5);
   };
-}, C_1, C_err, C_fin, [[v_2, null, \\"6:2-6:14\\"], [v_2, null, \\"7:2-18:3\\"], [v_3, null, \\"8:4-8:18\\"], [v_3, null, \\"9:4-9:11\\"], [v_3, null, \\"10:4-10:42\\"], [v_3, null, \\"11:4-13:5\\"], [[{
+}, C_1, C_err, C_fin, [[v_2, \\"s\\", \\"10:2-10:14\\"], [v_2, \\"s\\", \\"11:2-22:3\\"], [v_3, \\"s\\", \\"12:4-12:18\\"], [v_3, \\"s\\", \\"13:4-13:11\\"], [v_3, \\"s\\", \\"14:4-14:42\\"], [v_3, \\"s\\", \\"15:4-17:5\\"], [[{
   a: \\"a\\",
   v3: \\"v3\\",
   i: \\"i\\",
@@ -90,39 +75,39 @@ var $module = M.module(\\"/test/__fixtures__/code.js\\", module),
   v1: \\"v1\\",
   e: \\"e\\",
   v2: \\"v2\\"
-}, v_1], null, \\"12:6-12:19\\"], [v_3, null, \\"14:4-14:42\\"], [v_3, null, \\"14:29-14:42\\"], [v_3, null, \\"15:4-15:17\\"], [v_2, null, \\"17:4-17:24\\"]], \\"C\\", \\"5:0-19:1\\", meta$f, [\\"a\\"]);
+}, v_1], \\"s\\", \\"16:6-16:19\\"], [v_3, \\"s\\", \\"18:4-18:42\\"], [v_3, \\"s\\", \\"18:29-18:42\\"], [v_3, \\"s\\", \\"19:4-19:17\\"], [v_2, \\"s\\", \\"21:4-21:24\\"]], \\"C\\", \\"9:0-23:1\\", meta$f, [\\"a\\"]);
 module.exports = M.wrapExport(meta$f(null));
 
 function C_err(s) {
   switch (s) {
-    case 6:
     case 7:
     case 8:
     case 9:
     case 10:
     case 11:
     case 12:
-    case 17:
-    case 18:
-    case 23:
-    case 24:
-      return 29;
-
     case 13:
-    case 14:
-    case 15:
+    case 18:
+    case 19:
+    case 24:
+    case 25:
       return 30;
 
+    case 14:
+    case 15:
     case 16:
-      return 32;
+      return 31;
 
-    case 19:
-    case 20:
-    case 21:
+    case 17:
       return 33;
 
+    case 20:
+    case 21:
     case 22:
-      return 35;
+      return 34;
+
+    case 23:
+      return 36;
 
     default:
       return 1;
@@ -131,15 +116,15 @@ function C_err(s) {
 
 function C_fin(s) {
   switch (s) {
-    case 13:
     case 14:
     case 15:
-      return 31;
+    case 16:
+      return 32;
 
-    case 19:
     case 20:
     case 21:
-      return 34;
+    case 22:
+      return 35;
 
     default:
       return 0;
@@ -147,82 +132,87 @@ function C_fin(s) {
 }
 
 function C_1($, p) {
-  var i, a, b;
+  var a, b;
 
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$.v1 = 10;
         $.goto = 6;
-        brk(1);
+        brk(0);
         $.state = 6;
 
       case 6:
+        $.$.v1 = 10;
         $.goto = 7;
-        brk(2);
+        brk(1);
         $.state = 7;
 
       case 7:
-        $.$.v2 = 11;
         $.goto = 8;
-        brk(3);
+        brk(2);
         $.state = 8;
 
       case 8:
+        $.$.v2 = 11;
         $.goto = 9;
-        brk(4);
+        brk(3);
         $.state = 9;
 
       case 9:
         $.goto = 10;
-        p = (M.context.call = $.$$.$.mod.fn1).call($.$$.$.mod, $.$.a);
+        brk(4);
         $.state = 10;
 
       case 10:
         $.goto = 11;
-        (M.context.call = $.$$.$.mod.proc1).call($.$$.$.mod, p, $.$$.$.v0, $.$.v1, $.$.v2, $.$.v3);
+        p = mcall(\\"fn1\\", $.$$.$.mod, $.$.a);
         $.state = 11;
 
       case 11:
         $.goto = 12;
-        brk(5);
+        mcall(\\"proc1\\", $.$$.$.mod, p, $.$$.$.v0, $.$.v1, $.$.v2, $.$.v3);
         $.state = 12;
 
       case 12:
-        $.$.loop = M.iterator(something);
         $.goto = 13;
+        brk(5);
         $.state = 13;
 
       case 13:
+        $.$.loop = M.iterator(something);
         $.goto = 14;
-        p = (M.context.call = $.$.loop.next).call($.$.loop);
         $.state = 14;
 
       case 14:
-        b = i = p;
+        $.goto = 15;
+        p = mcall(\\"next\\", $.$.loop);
+        $.state = 15;
+
+      case 15:
+        b = $.$.i2 = p;
         a = b.done;
 
         if (!a) {
-          $.$.i = i.value;
-          $.goto = 15;
-          brk(6);
-          $.state = 15;
-        } else {
-          $.$.fc = 17;
+          $.$.i = $.$.i2.value;
           $.goto = 16;
+          brk(6);
+          $.state = 16;
+        } else {
+          $.$.fc = 18;
+          $.goto = 17;
           continue;
         }
 
-      case 15:
-        $.goto = 13;
-        (M.context.call = $.$$.$.mod.proc2).call($.$$.$.mod, $.$.i);
+      case 16:
+        $.goto = 14;
+        mcall(\\"proc2\\", $.$$.$.mod, $.$.i);
         continue;
 
-      case 16:
+      case 17:
         if ($.$.loop.return) {
           $.$.ex = $.$.err1;
           $.goto = $.$.fc;
-          (M.context.call = $.$.loop.return).call($.$.loop);
+          mcall(\\"return\\", $.$.loop);
           continue;
         } else {
           $.$.ex = $.$.err1;
@@ -230,46 +220,46 @@ function C_1($, p) {
           continue;
         }
 
-      case 17:
-        $.goto = 18;
-        brk(7);
-        $.state = 18;
-
       case 18:
-        $.$.loop1 = M.iterator(something);
         $.goto = 19;
+        brk(7);
         $.state = 19;
 
       case 19:
+        $.$.loop1 = M.iterator(something);
         $.goto = 20;
-        p = (M.context.call = $.$.loop1.next).call($.$.loop1);
         $.state = 20;
 
       case 20:
-        b = i = p;
+        $.goto = 21;
+        p = mcall(\\"next\\", $.$.loop1);
+        $.state = 21;
+
+      case 21:
+        b = $.$.i3 = p;
         a = b.done;
 
         if (!a) {
-          $.$.i1 = i.value;
-          $.goto = 21;
-          brk(8);
-          $.state = 21;
-        } else {
-          $.$.fc1 = 23;
+          $.$.i1 = $.$.i3.value;
           $.goto = 22;
+          brk(8);
+          $.state = 22;
+        } else {
+          $.$.fc1 = 24;
+          $.goto = 23;
           continue;
         }
 
-      case 21:
-        $.goto = 19;
-        (M.context.call = $.$$.$.mod.proc3).call($.$$.$.mod, $.$.i1);
+      case 22:
+        $.goto = 20;
+        mcall(\\"proc3\\", $.$$.$.mod, $.$.i1);
         continue;
 
-      case 22:
+      case 23:
         if ($.$.loop1.return) {
           $.$.ex = $.$.err2;
           $.goto = $.$.fc1;
-          (M.context.call = $.$.loop1.return).call($.$.loop1);
+          mcall(\\"return\\", $.$.loop1);
           continue;
         } else {
           $.$.ex = $.$.err2;
@@ -277,28 +267,28 @@ function C_1($, p) {
           continue;
         }
 
-      case 23:
-        $.goto = 24;
-        brk(9);
-        $.state = 24;
-
       case 24:
-        $.$.v4 = 100;
-        $.goto = 27;
-        continue;
+        $.goto = 25;
+        brk(9);
+        $.state = 25;
 
       case 25:
-        $.$.e = $.$.ex;
-        $.goto = 26;
-        brk(10);
-        $.state = 26;
+        $.$.v4 = 100;
+        $.goto = 28;
+        continue;
 
       case 26:
+        $.$.e = $.$.ex;
         $.goto = 27;
-        (M.context.call = $.$$.$.mod.proc4).call($.$$.$.mod, $.$.e, $.$.v4, $.$.i1);
+        brk(10);
         $.state = 27;
 
       case 27:
+        $.goto = 28;
+        mcall(\\"proc4\\", $.$$.$.mod, $.$.e, $.$.v4, $.$.i1);
+        $.state = 28;
+
+      case 28:
         return ret();
 
       case 0:
@@ -307,44 +297,44 @@ function C_1($, p) {
       case 1:
         return unhandled(p);
 
-      case 28:
+      case 29:
         $.goto = 0;
         p = $.$.r;
         continue;
 
-      case 29:
-        $.$.ex = p;
-        $.goto = 25;
-        continue;
-
       case 30:
-        $.$.fc = 25, $.$.err1 = p;
-        $.goto = 16;
+        $.$.ex = p;
+        $.goto = 26;
         continue;
 
       case 31:
-        $.$.fc = 28, $.$.r = p;
-        $.goto = 16;
+        $.$.fc = 26, $.$.err1 = p;
+        $.goto = 17;
         continue;
 
       case 32:
-        $.$.ex = p;
-        $.goto = 25;
+        $.$.fc = 29, $.$.r = p;
+        $.goto = 17;
         continue;
 
       case 33:
-        $.$.fc1 = 25, $.$.err2 = p;
-        $.goto = 22;
+        $.$.ex = p;
+        $.goto = 26;
         continue;
 
       case 34:
-        $.$.fc1 = 28, $.$.r = p;
-        $.goto = 22;
+        $.$.fc1 = 26, $.$.err2 = p;
+        $.goto = 23;
         continue;
 
       case 35:
+        $.$.fc1 = 29, $.$.r = p;
+        $.goto = 23;
+        continue;
+
+      case 36:
         $.$.ex = p;
-        $.goto = 25;
+        $.goto = 26;
         continue;
 
       default:
@@ -359,32 +349,37 @@ function fn1_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$.v5 = 10;
         $.goto = 6;
-        brk(1);
+        brk(0);
         $.state = 6;
 
       case 6:
+        $.$.v5 = 10;
         $.goto = 7;
-        p = (M.context.call = $.$$.$.mod.f2).call($.$$.$.mod);
+        brk(1);
         $.state = 7;
 
       case 7:
-        $.$._ = p;
-        a = $.$$.$.C;
         $.goto = 8;
-        p = new (M.context.call = a)($.$$.$.v0, $.$.v5);
+        p = mcall(\\"f2\\", $.$$.$.mod);
         $.state = 8;
 
       case 8:
+        $.$._ = p;
+        a = $.$$.$.C;
         $.goto = 9;
-        p = (M.context.call = $.$$.$.mod.some).call($.$$.$.mod, {
-          a: $.$._,
-          b: [p]
-        });
+        p = new (M.context.call = a)($.$$.$.v0, $.$.v5);
         $.state = 9;
 
       case 9:
+        $.goto = 10;
+        p = mcall(\\"some\\", $.$$.$.mod, {
+          a: $.$._,
+          b: [p]
+        });
+        $.state = 10;
+
+      case 10:
         return ret(p);
 
       case 0:
@@ -399,33 +394,86 @@ function fn1_1($, p) {
   }
 }
 
-function f_1($, p) {
+function f_1(_$, p) {
   var a;
 
   for (;;) {
-    switch ($.state = $.goto) {
+    switch (_$.state = _$.goto) {
       case 5:
-        a = require(\\"mod\\");
-        $.goto = 6;
-        p = M.unwrapImport(a, \\"mod\\");
-        $.state = 6;
+        _$.goto = 6;
+        brk(0);
+        _$.state = 6;
 
       case 6:
-        ({
-          mod: $.$.mod
-        } = p);
-        $.goto = 7;
-        brk(1);
-        $.state = 7;
+        a = (M.context.moduleId = require.resolve(\\"mod\\"), require(\\"mod\\"));
+        _$.goto = 7;
+        p = M.unwrapImport(a);
+        _$.state = 7;
 
       case 7:
-        $.$.v0 = 10;
-        $.goto = 8;
-        brk(2);
-        $.state = 8;
+        ({
+          mod: _$.$.mod
+        } = p);
+        _$.goto = 8;
+        brk(1);
+        _$.state = 8;
 
       case 8:
-        $.$.exports.fn2 = meta$fn1($);
+        a = (M.context.moduleId = require.resolve(\\"mod2_\\" + _$.$.mod), require(\\"mod2_\\" + _$.$.mod));
+        _$.goto = 9;
+        p = M.unwrapImport(a);
+        _$.state = 9;
+
+      case 9:
+        _$.$.n = p;
+        _$.goto = 10;
+        brk(2);
+        _$.state = 10;
+
+      case 10:
+        a = (M.context.modulePath = \\"mod3_\\" + _$.$.n.n, $.moduleId = require.resolve(M.context.modulePath), require(M.context.modulePath));
+        _$.goto = 11;
+        p = M.unwrapImport(a);
+        _$.state = 11;
+
+      case 11:
+        _$.$.k = p;
+        _$.goto = 12;
+        brk(3);
+        _$.state = 12;
+
+      case 12:
+        _$.goto = 13;
+
+        (M.context.call = _$.$.k)();
+
+        _$.state = 13;
+
+      case 13:
+        _$.goto = 14;
+        brk(4);
+        _$.state = 14;
+
+      case 14:
+        _$.goto = 15;
+
+        (M.context.call = _$.$.n)();
+
+        _$.state = 15;
+
+      case 15:
+        _$.goto = 16;
+        brk(5);
+        _$.state = 16;
+
+      case 16:
+        _$.$.v0 = 10;
+        _$.goto = 17;
+        brk(6);
+        _$.state = 17;
+
+      case 17:
+        _$.$.exports.fn2 = meta$fn1(_$);
         return ret();
 
       case 0:
@@ -447,10 +495,12 @@ exports[`default transpiler 2`] = `
 var M = require(\\"../../api\\");
 
 var frame = M.frame;
+var scope = M.scope;
 var brk = M.brk;
+var mcall = M.mcall;
 var ret = M.ret;
 var unhandled = M.unhandled;
-var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
+var $module = M.module(\\"test/__fixtures__/mod1.js\\", void 0, module),
     v_1 = [{
   j: \\"j\\",
   run: \\"run\\"
@@ -466,71 +516,61 @@ var $module = M.module(\\"/test/__fixtures__/mod1.js\\", module),
     $.$.exports = exports;
     $.$.run = meta$run($);
     {
-      try {
-        $.$.exports.__esModule = true;
-        $.$.exports.run = $.$.run;
-        $.goto = 5;
-        brk(0);
-        return f_1($, p);
-      } catch (e) {
-        return M.handle($, e);
-      }
+      return scope(5);
     }
   };
-}, f_1, void 0, void 0, [[[{}, null], null, \\"1:0-1:29\\"], [v_1, null, \\"3:0-3:10\\"], [v_1, null, \\"12:0-12:6\\"], [v_1, null, \\"13:0-13:6\\"]], \\"f\\", \\"1:0-14:0\\", null, [\\"module\\", \\"exports\\"]),
+}, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:29\\"], [v_1, \\"s\\", \\"3:0-3:10\\"], [v_1, \\"s\\", \\"12:0-12:6\\"], [v_1, \\"s\\", \\"13:0-13:6\\"]], \\"f\\", \\"1:0-14:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$run = M.fun($module, function (x) {
   return function run(i = 1) {
     var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
-
-    try {
-      $.goto = 5;
-      brk(0);
-      return run_1($, p);
-    } catch (e) {
-      return M.handle($, e);
-    }
+    return scope(5);
   };
-}, run_1, void 0, void 0, [[v_2, null, \\"6:2-6:9\\"], [v_2, null, \\"7:2-7:23\\"], [v_2, null, \\"8:2-8:9\\"], [v_2, null, \\"9:2-9:31\\"]], \\"run\\", \\"5:7-10:1\\", meta$f, [\\"i\\"]);
+}, run_1, void 0, void 0, [[v_2, \\"s\\", \\"6:2-6:9\\"], [v_2, \\"s\\", \\"7:2-7:23\\"], [v_2, \\"s\\", \\"8:2-8:9\\"], [v_2, \\"s\\", \\"9:2-9:31\\"]], \\"run\\", \\"5:7-10:1\\", meta$f, [\\"i\\"]);
 module.exports = M.wrapExport(meta$f(null));
 
 function run_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$$.$.j = $.$$.$.j + $.$.i;
         $.goto = 6;
-        brk(1);
+        brk(0);
         $.state = 6;
 
       case 6:
+        $.$$.$.j = $.$$.$.j + $.$.i;
         $.goto = 7;
-        p = (M.context.call = $.$$.$.M2.f1).call($.$$.$.M2, ($.$._ = $.$.i, $.$.i = $.$._ + 1, $.$._));
+        brk(1);
         $.state = 7;
 
       case 7:
         $.goto = 8;
-        (M.context.call = $.$$.$.M2.f2).call($.$$.$.M2, p, $.$.i);
+        p = mcall(\\"f1\\", $.$$.$.M2, ($.$._ = $.$.i, $.$.i = $.$._ + 1, $.$._));
         $.state = 8;
 
       case 8:
         $.goto = 9;
-        brk(2);
+        mcall(\\"f2\\", $.$$.$.M2, p, $.$.i);
         $.state = 9;
 
       case 9:
-        $.$$.$.j = $.$$.$.j + $.$.i;
         $.goto = 10;
-        brk(3);
+        brk(2);
         $.state = 10;
 
       case 10:
+        $.$$.$.j = $.$$.$.j + $.$.i;
         $.goto = 11;
-        (M.context.call = console.log).call(console, \`i:\${$.$.i},j:\${$.$$.$.j}\`);
+        brk(3);
         $.state = 11;
 
       case 11:
+        $.goto = 12;
+        mcall(\\"log\\", console, \`i:\${$.$.i},j:\${$.$$.$.j}\`);
+        $.state = 12;
+
+      case 12:
         return ret();
 
       case 0:
@@ -551,39 +591,46 @@ function f_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        a = require(\\"./mod2\\");
+        $.$.exports.__esModule = true;
+        $.$.exports.run = $.$.run;
         $.goto = 6;
-        p = M.unwrapImport(a, \\"./mod2\\");
+        brk(0);
         $.state = 6;
 
       case 6:
-        $.$.M2 = p;
+        a = (M.context.moduleId = require.resolve(\\"./mod2\\"), require(\\"./mod2\\"));
         $.goto = 7;
-        brk(1);
+        p = M.unwrapImport(a);
         $.state = 7;
 
       case 7:
-        $.$.j = 0;
+        $.$.M2 = p;
         $.goto = 8;
-        brk(2);
+        brk(1);
         $.state = 8;
 
       case 8:
+        $.$.j = 0;
         $.goto = 9;
-        (M.context.call = $.$.run)();
+        brk(2);
         $.state = 9;
 
       case 9:
         $.goto = 10;
-        brk(3);
+        (M.context.call = $.$.run)();
         $.state = 10;
 
       case 10:
         $.goto = 11;
-        (M.context.call = $.$.run)();
+        brk(3);
         $.state = 11;
 
       case 11:
+        $.goto = 12;
+        (M.context.call = $.$.run)();
+        $.state = 12;
+
+      case 12:
         return ret();
 
       case 0:
@@ -605,10 +652,12 @@ exports[`default transpiler 3`] = `
 var M = require(\\"../../api\\");
 
 var frame = M.frame;
+var scope = M.scope;
 var brk = M.brk;
 var ret = M.ret;
 var unhandled = M.unhandled;
-var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
+var mcall = M.mcall;
+var $module = M.module(\\"test/__fixtures__/mod2.js\\", void 0, module),
     v_1 = [{
   cnt: \\"cnt\\",
   A: \\"A\\",
@@ -640,81 +689,44 @@ var $module = M.module(\\"/test/__fixtures__/mod2.js\\", module),
     $.$.f1 = meta$f1($);
     $.$.f2 = meta$f2($);
     {
-      try {
-        $.$.exports.__esModule = true;
-        $.$.exports.f1 = $.$.f1;
-        $.$.exports.f2 = $.$.f2;
-        $.goto = 5;
-        brk(0);
-        return f_1($, p);
-      } catch (e) {
-        return M.handle($, e);
-      }
+      return scope(5);
     }
   };
-}, f_1, void 0, void 0, [[[{}, null], null, \\"1:0-1:12\\"]], \\"f\\", \\"1:0-25:0\\", null, [\\"module\\", \\"exports\\"]),
+}, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:12\\"]], \\"f\\", \\"1:0-25:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$f2 = M.fun($module, function (x) {
   return function f2(i) {
     var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
-
-    try {
-      $.goto = 5;
-      brk(0);
-      return f2_1($, p);
-    } catch (e) {
-      return M.handle($, e);
-    }
+    return scope(5);
   };
-}, f2_1, void 0, void 0, [[v_5, null, \\"22:2-22:8\\"], [v_5, null, \\"23:2-23:32\\"]], \\"f2\\", \\"21:7-24:1\\", meta$f, [\\"i\\"]),
+}, f2_1, void 0, void 0, [[v_5, \\"s\\", \\"22:2-22:8\\"], [v_5, \\"s\\", \\"23:2-23:32\\"]], \\"f2\\", \\"21:7-24:1\\", meta$f, [\\"i\\"]),
     meta$f1 = M.fun($module, function (x) {
   return function f1(i) {
     var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
-
-    try {
-      $.goto = 5;
-      brk(0);
-      return f1_1($, p);
-    } catch (e) {
-      return M.handle($, e);
-    }
+    return scope(5);
   };
-}, f1_1, void 0, void 0, [[v_4, null, \\"14:2-14:8\\"], [v_4, null, \\"15:2-15:32\\"], [v_4, null, \\"16:2-16:23\\"], [v_4, null, \\"17:2-17:23\\"], [v_4, null, \\"18:2-18:13\\"]], \\"f1\\", \\"13:7-19:1\\", meta$f, [\\"i\\"]),
+}, f1_1, void 0, void 0, [[v_4, \\"s\\", \\"14:2-14:8\\"], [v_4, \\"s\\", \\"15:2-15:32\\"], [v_4, \\"s\\", \\"16:2-16:23\\"], [v_4, \\"s\\", \\"17:2-17:23\\"], [v_4, \\"s\\", \\"18:2-18:13\\"]], \\"f1\\", \\"13:7-19:1\\", meta$f, [\\"i\\"]),
     meta$B = M.fun($module, function (x) {
   return function B(i) {
     var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
     $.$._this = this;
-
-    try {
-      $.goto = 5;
-      brk(0);
-      return B_1($, p);
-    } catch (e) {
-      return M.handle($, e);
-    }
+    return scope(5);
   };
-}, B_1, void 0, void 0, [[v_3, null, \\"9:2-9:13\\"], [v_3, null, \\"10:2-10:26\\"]], \\"B\\", \\"8:0-11:1\\", meta$f, [\\"i\\"]),
+}, B_1, void 0, void 0, [[v_3, \\"s\\", \\"9:2-9:13\\"], [v_3, \\"s\\", \\"10:2-10:26\\"]], \\"B\\", \\"8:0-11:1\\", meta$f, [\\"i\\"]),
     meta$A = M.fun($module, function (x) {
   return function A(i) {
     var $ = frame(x, this, new.target),
         p;
     $.$.i = i;
     $.$._this = this;
-
-    try {
-      $.goto = 5;
-      brk(0);
-      return A_1($, p);
-    } catch (e) {
-      return M.handle($, e);
-    }
+    return scope(5);
   };
-}, A_1, void 0, void 0, [[v_2, null, \\"4:2-4:24\\"], [v_2, null, \\"5:2-5:22\\"]], \\"A\\", \\"3:0-6:1\\", meta$f, [\\"i\\"]);
+}, A_1, void 0, void 0, [[v_2, \\"s\\", \\"4:2-4:24\\"], [v_2, \\"s\\", \\"5:2-5:22\\"]], \\"A\\", \\"3:0-6:1\\", meta$f, [\\"i\\"]);
 module.exports = M.wrapExport(meta$f(null));
 
 function A_1($, p) {
@@ -723,18 +735,23 @@ function A_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$._this.i = $.$.i * 10 + $.$$.$.cnt;
         $.goto = 6;
-        brk(1);
+        brk(0);
         $.state = 6;
 
       case 6:
-        a = $.$$.$.B;
+        $.$._this.i = $.$.i * 10 + $.$$.$.cnt;
         $.goto = 7;
-        p = new (M.context.call = a)(100);
+        brk(1);
         $.state = 7;
 
       case 7:
+        a = $.$$.$.B;
+        $.goto = 8;
+        p = new (M.context.call = a)(100);
+        $.state = 8;
+
+      case 8:
         $.$._this.b = p;
         return ret();
 
@@ -754,12 +771,17 @@ function B_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$._this.i = $.$.i;
         $.goto = 6;
-        brk(1);
+        brk(0);
         $.state = 6;
 
       case 6:
+        $.$._this.i = $.$.i;
+        $.goto = 7;
+        brk(1);
+        $.state = 7;
+
+      case 7:
         return ret({
           b: $.$._this,
           cnt: $.$$.$.cnt
@@ -783,45 +805,50 @@ function f1_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$$.$.cnt = $.$$.$.cnt + 1;
         $.goto = 6;
-        brk(1);
+        brk(0);
         $.state = 6;
 
       case 6:
+        $.$$.$.cnt = $.$$.$.cnt + 1;
         $.goto = 7;
-        (M.context.call = console.log).call(console, \`f1:\${$.$.i}@\${$.$$.$.cnt}\`);
+        brk(1);
         $.state = 7;
 
       case 7:
         $.goto = 8;
-        brk(2);
+        mcall(\\"log\\", console, \`f1:\${$.$.i}@\${$.$$.$.cnt}\`);
         $.state = 8;
 
       case 8:
-        a = $.$$.$.A;
-        b = $.$$.$.cnt;
         $.goto = 9;
-        p = new (M.context.call = a)(b);
+        brk(2);
         $.state = 9;
 
       case 9:
-        $.$.a = p;
+        a = $.$$.$.A;
+        b = $.$$.$.cnt;
         $.goto = 10;
-        brk(3);
+        p = new (M.context.call = a)(b);
         $.state = 10;
 
       case 10:
+        $.$.a = p;
         $.goto = 11;
-        (M.context.call = console.log).call(console, \\"A:\\", $.$.a);
+        brk(3);
         $.state = 11;
 
       case 11:
         $.goto = 12;
-        brk(4);
+        mcall(\\"log\\", console, \\"A:\\", $.$.a);
         $.state = 12;
 
       case 12:
+        $.goto = 13;
+        brk(4);
+        $.state = 13;
+
+      case 13:
         return ret($.$$.$.cnt);
 
       case 0:
@@ -840,17 +867,22 @@ function f2_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$$.$.cnt = $.$$.$.cnt + 1;
         $.goto = 6;
-        brk(1);
+        brk(0);
         $.state = 6;
 
       case 6:
+        $.$$.$.cnt = $.$$.$.cnt + 1;
         $.goto = 7;
-        (M.context.call = console.log).call(console, \`f2:\${$.$.i}@\${$.$$.$.cnt}\`);
+        brk(1);
         $.state = 7;
 
       case 7:
+        $.goto = 8;
+        mcall(\\"log\\", console, \`f2:\${$.$.i}@\${$.$$.$.cnt}\`);
+        $.state = 8;
+
+      case 8:
         return ret();
 
       case 0:
@@ -866,19 +898,29 @@ function f2_1($, p) {
 }
 
 function f_1($, p) {
-  switch ($.state = $.goto) {
-    case 5:
-      $.$.cnt = 0;
-      return ret();
+  for (;;) {
+    switch ($.state = $.goto) {
+      case 5:
+        $.$.exports.__esModule = true;
+        $.$.exports.f1 = $.$.f1;
+        $.$.exports.f2 = $.$.f2;
+        $.goto = 6;
+        brk(0);
+        $.state = 6;
 
-    case 0:
-      return ret(p);
+      case 6:
+        $.$.cnt = 0;
+        return ret();
 
-    case 1:
-      return unhandled(p);
+      case 0:
+        return ret(p);
 
-    default:
-      throw new Error(\\"invalid state\\");
+      case 1:
+        return unhandled(p);
+
+      default:
+        throw new Error(\\"invalid state\\");
+    }
   }
 }"
 `;

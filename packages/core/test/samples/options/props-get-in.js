@@ -1,19 +1,23 @@
 function tuza() {
-  let a = 1;
+  let av = 1;
 
   function tuzb() {
     let b = 2,
-      m = 3;
-    che((a = b()));
-    che((a += b()), (a -= c()));
-    m++;
-    --m;
+      mv = 3;
+    che((av = b()));
+    //che((av += b()), (av -= c()));
+    //mv++;
+    //--mv;
     me();
     const v = --b.a.d[c.b.a++];
     c = v;
     be();
-    if (b.a[a.m]++) delete b[a];
-    delete b[a] + delete b.a;
-    delete b()[a() + delete a.z[2 + 2]];
+    c =
+      process === 1000
+        ? a_fun(process[c_fun("a")]("b")(d_fun("c"), "d", new process.D("e")))
+        : 2;
+    if (b.a[av.m]++) delete b[av];
+    // delete b[av] + delete b.a;
+    delete b()[av() + delete av.z[2 + 2]];
   }
 }

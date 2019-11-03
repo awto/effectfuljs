@@ -28,7 +28,6 @@ export const consumeScope = consume;
 export const preproc = Kit.pipe(
   Kit.scope.prepare,
   Policy.stage("scope"),
-  Eval.substVars,
   Prop.prepare,
   Policy.prepare,
   Policy.stage("prepare"),
@@ -151,7 +150,8 @@ export const stage0 = Kit.pipe(
       Eval.wrap,
       Ops.combine,
       Flat.convert,
-      Inline.jsExceptions
+      Inline.jsExceptions,
+      Eval.substVars
     )
   )
 );

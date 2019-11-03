@@ -332,6 +332,7 @@ export const convert = Kit.pipe(
       }
     }
   },
+  Policy.stage("rawConvert"),
   Kit.toArray,
   // sets a few useful fields
   function postproc(sa) {
@@ -889,7 +890,7 @@ function* copyFrameVars(si) {
       let patOrig = patSym;
       if (patSym.assignedAt) {
         const { assignPat } = patSym.assignedAt;
-        if (!assignPat.parCopy) {
+        if (!assignPat.parCopy && assignPat.interpr) {
           patOrig = assignPat;
           patSym.removed = patSym.assignedAt.removed = true;
         }

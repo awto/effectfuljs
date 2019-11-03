@@ -6,6 +6,7 @@
 /*.d.ts
 /vscode
 /libs
+/node
 /backends
 !buildDeps.js
 !preset-react.js

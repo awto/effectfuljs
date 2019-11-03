@@ -19,6 +19,6 @@ npm-debug.log
 __fixtures__
 __snapshots__
 src
-/thirdparty.js
+/buildDeps.js
 jest.config.js
 

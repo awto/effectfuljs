@@ -1,9 +1,9 @@
 import config from "../config";
 import * as Core from "./core";
 import * as DOM from "./dom";
+import { Record } from "../state";
 import * as State from "../state";
 import * as S from "@effectful/serialization";
-import { Record } from "../state";
 
 export const journal = Core.journal;
 const context = State.context;
@@ -24,7 +24,10 @@ export const undo: () => Record | null = config.timeTravel
       if (!now) return null;
       const ops = now.operations;
       now.operations = void 0;
-      for (let i = ops; i != null; i = i.prev) i.call();
+      for (let i = ops; i != null; i = i.prev) {
+        context.call = i;
+        i.call();
+      }
       flush();
       let { future, past } = journal;
       now.prev = future;
@@ -54,7 +57,10 @@ export const redo: () => Record | null = config.timeTravel
       journal.past = now;
       journal.now = future;
       journal.future = future.prev;
-      for (let i = ops; i != null; i = i.prev) i.call();
+      for (let i = ops; i != null; i = i.prev) {
+        context.call = i;
+        i.call();
+      }
       flush();
       return future;
     }
@@ -84,6 +90,7 @@ function resetContext(job: State.Job) {
 S.regOpaqueObject(resetContext, "@effectful/debug/reset#ctx");
 
 function checkpointImpl() {
+  if (!journal.enabled) return null;
   const cp = Core.checkpoint();
   recordContext();
   return cp;
