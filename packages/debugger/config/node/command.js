@@ -1,4 +1,4 @@
-exports.command = "run";
+exports.command = "node";
 
 exports.describe =
   "runs a command line with all `node` invocations are intercepted by the debugger";

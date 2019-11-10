@@ -24,6 +24,8 @@ There are such libraries for:
  * Multi-prompt delimited continuations -
    [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/cc)
  * Logical programming - WIP [Old version](https://github.com/awto/mfjs-logic)
+ * Debugger API -
+    [@effectful/debugger](packages/debugger) and VSCode plugin [effectful/debugger](packages/debugger-vscode)
 
 Not yet implemented:
   * probabilistic programming

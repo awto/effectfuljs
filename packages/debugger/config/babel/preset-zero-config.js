@@ -8,7 +8,7 @@ module.exports = function(api, opts = { preInstrumentedLibs: true }) {
     };
     if (opts.jsxPragma) reactOpts.pragma = opts.jsxPragma;
     if (opts.jsxPragmaFrag) reactOpts.pragmaFrag = opts.jsxPragmaFrag;
-    result.presets.push([require("@babel/preset-react").default, reactOpts]);
+    result.presets.unshift([require("@babel/preset-react").default, reactOpts]);
   }
   const targets = {
     node: "current",
@@ -50,7 +50,10 @@ module.exports = function(api, opts = { preInstrumentedLibs: true }) {
   const tsOpts = { allowNamespaces: opts.tsAllowNamespaces };
   if (opts.jsxPragma) tsOpts.jsxPragma = opts.jsxPragma;
   if (opts.typescript !== false) {
-    result.presets.push([require("@babel/preset-typescript").default, tsOpts]);
+    result.presets.unshift(require("./ts-preproc"), [
+      require("@babel/preset-typescript").default,
+      tsOpts
+    ]);
   }
   result.overrides = [
     opts.flow !== false && {

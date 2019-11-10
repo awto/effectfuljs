@@ -122,6 +122,7 @@ const weakAdd = WeakSet.prototype.add;
 
 function objectFreeze(obj: any) {
   weakAdd.call(frozen, obj);
+  return obj;
 }
 
 function objectIsFrozen(obj: any) {
@@ -132,6 +133,7 @@ function objectIsFrozen(obj: any) {
 
 function objectSeal(obj: any) {
   weakAdd.call(sealed, obj);
+  return obj;
 }
 
 function objectIsSealed(obj: any) {
@@ -140,6 +142,7 @@ function objectIsSealed(obj: any) {
 
 function objectPreventExtensions(obj: any) {
   weakAdd.call(notExtensible, obj);
+  return obj;
 }
 
 function objectIsExtensible(obj: any) {
@@ -418,7 +421,7 @@ function weakSetAdd<T extends Object>(this: WeakSet<T>, v: T) {
     !this.has(v)
   )
     record(weakSetDelete.bind(this, v));
-  return setSaved.add.call(this, v);
+  return weakSetSaved.add.call(this, v);
 }
 
 S.regOpaqueObject(weakSetAdd, "@effectful/debugger/wset#add");

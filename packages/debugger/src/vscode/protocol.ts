@@ -47,6 +47,11 @@ declare module "vscode-debugprotocol" {
         | "internalConsole"
         | "integratedTerminal"
         | "externalTerminal";
+      indexJs?: string | null;
+      htmlTemplate?: string | null;
+      reconnectTimeout?: number;
+      debuggerHost?: string;
+      debuggerPort?: number;
     }
   }
 }

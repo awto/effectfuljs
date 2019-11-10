@@ -23,5 +23,8 @@ export default {
   /** if `redirConsole` is specified output messages to a local console too */
   localConsole: true,
   expFunctionConstr: true,
-  debuggerDebug: false
+  debuggerDebug: false,
+  /** global variable NS for the debugger library */
+  globalNS: "EDBG"
 };
+

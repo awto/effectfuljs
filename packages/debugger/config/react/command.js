@@ -1,6 +1,6 @@
 const defaults = require("../../config");
 
-exports.command = "react";
+exports.command = "browser";
 
 exports.describe = "starts a configured webpack-dev-server";
 
@@ -13,8 +13,7 @@ exports.builder = function(yargs) {
       default: defaults.port,
       type: "number"
     })
-    .option("index-js", {
-      alias: ["j"],
+    .option("indexJs", {
       type: "string",
       describe: "index.js file"
     })

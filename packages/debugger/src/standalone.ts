@@ -1,6 +1,7 @@
 /** runs program and outputs some information about each step */
 import * as Debugger from "./main";
 import config from "./config";
+import {Frame} from "./state";
 
 const { context } = Debugger;
 
@@ -53,7 +54,7 @@ export function traced() {
     Object.assign(context, context.queue.shift());
     let threadCnt = 0;
     let threadId = threadCnt++;
-    let f: Debugger.Frame | undefined;
+    let f: Frame | undefined;
     log(`Starting thread ${threadId}`);
     while ((f = Debugger.step()) === Debugger.token)
       log(stateDescr(num++, threadId));

@@ -670,7 +670,22 @@ Array [
             ],
             Array [
               "$",
-              Object {},
+              Object {
+                "f": Array [
+                  Array [
+                    "_1",
+                    Object {
+                      "r": 3,
+                    },
+                  ],
+                  Array [
+                    "_2",
+                    Object {
+                      "r": 4,
+                    },
+                  ],
+                ],
+              },
             ],
             Array [
               "brk",

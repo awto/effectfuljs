@@ -6,6 +6,7 @@ const defaults = require("../defaults");
 let paths;
 let modules;
 let getClientEnvironment;
+
 try {
   paths = require("react-scripts/config/paths");
   modules = require("react-scripts/config/modules");
@@ -62,12 +63,18 @@ if (!paths.moduleFileExtensions)
     "jsx"
   ];
 
-if (!paths.appSrc) paths.appSrc = defaults.srcRoot;
+if (!paths.appSrc || !!fs.existsSync(paths.appSrc))
+  paths.appSrc = defaults.srcRoot;
+
+if (!path.appPublic) path.appPublic = process.cwd();
 
 if (isWindows) {
   paths.appSrc = normalizeDrive(paths.appSrc);
   paths.appPath = normalizeDrive(paths.appPath);
   paths.appIndexJs = normalizeDrive(paths.appIndexJs);
+  paths.appPublic = normalizeDrive(paths.appPublic);
 }
+
+if (!fs.existsSync(paths.appHtml)) paths.appHtml = null;
 
 module.exports = { paths, modules, getClientEnvironment };

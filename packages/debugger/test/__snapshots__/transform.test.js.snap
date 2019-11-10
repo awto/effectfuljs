@@ -473,7 +473,11 @@ function f_1(_$, p) {
         _$.state = 17;
 
       case 17:
+        _$.goto = 18;
         _$.$.exports.fn2 = meta$fn1(_$);
+        _$.state = 18;
+
+      case 18:
         return ret();
 
       case 0:
@@ -591,38 +595,36 @@ function f_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$.exports.__esModule = true;
-        $.$.exports.run = $.$.run;
         $.goto = 6;
-        brk(0);
+        $.$.exports.__esModule = true;
         $.state = 6;
 
       case 6:
-        a = (M.context.moduleId = require.resolve(\\"./mod2\\"), require(\\"./mod2\\"));
         $.goto = 7;
-        p = M.unwrapImport(a);
+        $.$.exports.run = $.$.run;
         $.state = 7;
 
       case 7:
-        $.$.M2 = p;
         $.goto = 8;
-        brk(1);
+        brk(0);
         $.state = 8;
 
       case 8:
-        $.$.j = 0;
+        a = (M.context.moduleId = require.resolve(\\"./mod2\\"), require(\\"./mod2\\"));
         $.goto = 9;
-        brk(2);
+        p = M.unwrapImport(a);
         $.state = 9;
 
       case 9:
+        $.$.M2 = p;
         $.goto = 10;
-        (M.context.call = $.$.run)();
+        brk(1);
         $.state = 10;
 
       case 10:
+        $.$.j = 0;
         $.goto = 11;
-        brk(3);
+        brk(2);
         $.state = 11;
 
       case 11:
@@ -631,6 +633,16 @@ function f_1($, p) {
         $.state = 12;
 
       case 12:
+        $.goto = 13;
+        brk(3);
+        $.state = 13;
+
+      case 13:
+        $.goto = 14;
+        (M.context.call = $.$.run)();
+        $.state = 14;
+
+      case 14:
         return ret();
 
       case 0:
@@ -740,19 +752,27 @@ function A_1($, p) {
         $.state = 6;
 
       case 6:
-        $.$._this.i = $.$.i * 10 + $.$$.$.cnt;
         $.goto = 7;
-        brk(1);
+        $.$._this.i = $.$.i * 10 + $.$$.$.cnt;
         $.state = 7;
 
       case 7:
-        a = $.$$.$.B;
         $.goto = 8;
-        p = new (M.context.call = a)(100);
+        brk(1);
         $.state = 8;
 
       case 8:
+        a = $.$$.$.B;
+        $.goto = 9;
+        p = new (M.context.call = a)(100);
+        $.state = 9;
+
+      case 9:
+        $.goto = 10;
         $.$._this.b = p;
+        $.state = 10;
+
+      case 10:
         return ret();
 
       case 0:
@@ -776,12 +796,16 @@ function B_1($, p) {
         $.state = 6;
 
       case 6:
-        $.$._this.i = $.$.i;
         $.goto = 7;
-        brk(1);
+        $.$._this.i = $.$.i;
         $.state = 7;
 
       case 7:
+        $.goto = 8;
+        brk(1);
+        $.state = 8;
+
+      case 8:
         return ret({
           b: $.$._this,
           cnt: $.$$.$.cnt
@@ -901,14 +925,26 @@ function f_1($, p) {
   for (;;) {
     switch ($.state = $.goto) {
       case 5:
-        $.$.exports.__esModule = true;
-        $.$.exports.f1 = $.$.f1;
-        $.$.exports.f2 = $.$.f2;
         $.goto = 6;
-        brk(0);
+        $.$.exports.__esModule = true;
         $.state = 6;
 
       case 6:
+        $.goto = 7;
+        $.$.exports.f1 = $.$.f1;
+        $.state = 7;
+
+      case 7:
+        $.goto = 8;
+        $.$.exports.f2 = $.$.f2;
+        $.state = 8;
+
+      case 8:
+        $.goto = 9;
+        brk(0);
+        $.state = 9;
+
+      case 9:
         $.$.cnt = 0;
         return ret();
 

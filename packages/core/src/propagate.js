@@ -77,6 +77,7 @@ export function propagateEff(s) {
       if (i.leave) {
         if (i.value.boundary) {
           if (i.value.bind) {
+            i.value.eff = false; // preventing the propagation's stop immediately
             propagate(stack);
             stack.shift();
           } else if (i.value.shallowEff || i.value.eff) {

@@ -145,10 +145,10 @@ export function setForEach<T, This>(
 
 export function mapForEach<K, V, This>(
   this: Map<K, V>,
-  callback: (this: This | undefined, k: K, v: V, cont: Map<K, V>) => void,
+  callback: (this: This | undefined, v: V, k: K, cont: Map<K, V>) => void,
   self?: This
 ): void {
-  for (const [k, v] of this) callback.call(self, k, v, this);
+  for (const [k, v] of this) callback.call(self, v, k, this);
 }
 
 /**

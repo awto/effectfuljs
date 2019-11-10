@@ -5,7 +5,7 @@ const path = require("path");
 const { paths } = require("./cra");
 
 const appPackageJson = paths.appPackageJson
-  ? require(path.appPackageJson)
+  ? require(paths.appPackageJson)
   : {
       name: paths.appIndexJs
     };
@@ -32,24 +32,27 @@ async function main() {
   const proxyConfig = prepareProxy(proxySetting, paths.appPublic);
   const devServerOptions = {
     hot: true,
-    stats: { colors: true },
+    stats: { colors: false },
     progress: false,
     open: !!process.env.EFFECTFUL_DEBUGGER_OPEN,
-    port: defaults.port,
+    port,
     publicPath: "/",
+    contentBase: paths.appPublic,
+    watchContentBase: true,
     https: protocol === "https",
     host: defaults.host,
     overlay: false,
     proxy: proxyConfig,
-    public: urls.lanUrlForConfig
+    public: `${protocol}://${urls.lanUrlForConfig}:${port}`,
+    clientLogLevel: "silent"
   };
   const server = new WebpackDevServer(compiler, devServerOptions);
-  server.listen(port, HOST, function(err) {
+  server.listen(port, defaults.host, function(err) {
     if (err) {
-      console.log(err);
+      console.error(err);
       return;
     }
-    console.log(`Listening on ${urls.lanUrlForTerminal}`);
+    console.error(`Listening on ${urls.localUrlForBrowser}`);
   });
 }
 main();

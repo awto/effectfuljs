@@ -40,6 +40,6 @@ const yargs = require("yargs")
     type: "string",
     describe: "VSCode extension's root folder"
   })
-  .command(require("../configs/node/command"))
-  .command(require("../configs/react/command"))
+  .command(require("../config/node/command"))
+  .command(require("../config/react/command"))
   .help("help").argv;

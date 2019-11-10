@@ -30,6 +30,8 @@ import * as path from "path";
 // tslint:disable-next-line
 const asap = require("asap");
 
+const globalNS = config.globalNS
+
 const journal = TT.journal;
 const context = State.context;
 const token = State.token;
@@ -43,6 +45,8 @@ const ApplySym = Symbol("@effectful/debugger/call");
 
 (<any>Function.prototype)[CallSym] = defaultCall;
 (<any>Function.prototype)[ApplySym] = defaultApply;
+
+const noProps = { props: false };
 
 class ArgsTraps<T> {
   func: Frame;
@@ -109,7 +113,7 @@ export function module(
     name = `#eval_${id}.js`;
   } else {
     name = modName;
-    fullPath = normalizeDrive(path.resolve(path.join(config.srcRoot, name)));
+    fullPath = normalizeDrive(path.join(config.srcRoot, name));
   }
   let info = fullPath && context.modules[<any>(fullPath || id)];
   if (module) {
@@ -132,7 +136,7 @@ export function module(
     version: 0,
     evalCtx
   };
-  S.regOpaqueObject(info, `module#${name}`);
+  S.regOpaqueObject(info, `module#${name}`, noProps);
   context.modules[<any>(fullPath || id)] = info;
   return info;
 }
@@ -204,7 +208,11 @@ export function fun(
       scope: scopeInfo,
       location: strLoc(line, column, endLine, endColumn)
     };
-    S.regOpaqueObject(brk, `s#${module.name}#${handler.name}#${brk.id}`);
+    S.regOpaqueObject(
+      brk,
+      `s#${module.name}#${handler.name}#${brk.id}`,
+      noProps
+    );
     memo.push(brk);
   }
   meta.blackbox = loc == null;
@@ -240,7 +248,7 @@ export function fun(
       })
     );
   } else meta.exitBreakpoint = null;
-  return meta.constr || (meta.constr = wrapMeta(meta));
+  return meta.constr || wrapMeta(meta);
 }
 
 function strLoc(
@@ -320,14 +328,26 @@ function wrapMeta(
     return closure;
   }
   (<any>constr)[dataSymbol] = info;
-  S.regOpaqueObject(constr, `c#${info.module.name}#${info.name}`);
-  S.regOpaqueObject(info, `i#${info.module.name}#${info.name}`);
-  S.regOpaqueObject(info.handler, `h#${info.module.name}#${info.name}`);
-  if (info.errHandler && info.errHandler !== defaultErrHandler)
-    S.regOpaqueObject(info.errHandler, `eh#${info.module.name}#${info.name}`);
-  if (info.finHandler && info.finHandler !== defaultFinHandler)
-    S.regOpaqueObject(info.finHandler, `fh#${info.module.name}#${info.name}`);
   if (config.expFunctionConstr) constr.constructor = FunctionConstr;
+  S.regOpaqueObject(constr, `c#${info.module.name}#${info.name}`, noProps);
+  S.regOpaqueObject(info, `i#${info.module.name}#${info.name}`, noProps);
+  S.regOpaqueObject(
+    info.handler,
+    `h#${info.module.name}#${info.name}`,
+    noProps
+  );
+  if (info.errHandler && info.errHandler !== defaultErrHandler)
+    S.regOpaqueObject(
+      info.errHandler,
+      `eh#${info.module.name}#${info.name}`,
+      noProps
+    );
+  if (info.finHandler && info.finHandler !== defaultFinHandler)
+    S.regOpaqueObject(
+      info.finHandler,
+      `fh#${info.module.name}#${info.name}`,
+      noProps
+    );
   return constr;
 }
 
@@ -346,7 +366,7 @@ function defaultApply(this: any) {
   return savedApply.apply(this, <any>arguments);
 }
 
-S.regOpaqueObject(defaultApply, "@effectful/debugger/apply");
+S.regOpaqueObject(defaultApply, "@effectful/debugger/apply", noProps);
 
 function defaultCall(this: any) {
   context.call = context.call === defaultCall ? this : null;
@@ -357,7 +377,7 @@ export function mcall(prop: string, ...args: [any, ...any[]]) {
   return savedCall.apply((context.call = args[0][prop]), args);
 }
 
-S.regOpaqueObject(defaultCall, "@effectful/debugger/call");
+S.regOpaqueObject(defaultCall, "@effectful/debugger/call", noProps);
 
 /**
  * runs a computation until it encounters some breakpoint (returns `token)
@@ -555,7 +575,7 @@ export function compileIndirEval(code: string): string {
   const id = toGlobal(evalCnt++);
   if (!blackbox) context.onNewSource(id, code);
   const wcode =
-    `return ($effectful$debugger$lib$.context.call=` +
+    `return (${globalNS}.context.call=` +
     `(function() {\n${code}\n}))();`;
   const ast = babelParse(wcode, {
     allowReturnOutsideFunction: true,
@@ -571,7 +591,7 @@ export function compileIndirEval(code: string): string {
       pureModule: true,
       importRT: false,
       moduleName: id,
-      ns: "$effectful$debugger$lib$"
+      ns: globalNS
     }),
     { compact: false }
   ).code;
@@ -601,7 +621,7 @@ export function compileFunctionConstr(args: any[], code: string) {
         pureModule: true,
         importRT: false,
         moduleName: id,
-        ns: "$effectful$debugger$lib$"
+        ns: globalNS
       }),
       { compact: false }
     ).code;
@@ -622,7 +642,7 @@ export const FunctionConstr = function Function(...args: any[]) {
 };
 FunctionConstr.prototype = Function.prototype;
 
-S.regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
+S.regOpaqueObject(FunctionConstr, "@effectful/debugger/Function", noProps);
 
 const savedEval = eval;
 
@@ -663,20 +683,19 @@ export function compileEval(
       evalCtx: state.scope,
       importRT: false,
       moduleName: id,
-      ns: "$effectful$debugger$lib$"
+      ns: globalNS
     }),
     { compact: true }
   ).code;
   const mod = meta.module;
   const cjs = mod && meta.module.cjs;
   res = new SavedFunction(
-    // "$effectful$debugger$lib$",
     "exports",
     "require",
     "module",
     "__filename",
     "__dirname",
-    tgt
+   tgt
   )(
     // exports,
     mod && (<any>mod).exports,
@@ -914,6 +933,7 @@ export function raise(e: any) {
 }
 
 export { token, context };
+
 export { del, set } from "./timeTravel/core";
 
 /** resets module's states (for tests) */

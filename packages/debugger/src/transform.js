@@ -142,8 +142,8 @@ module.exports = require("@effectful/core").babelPlugin(
         },
         wrapPropAccess: opts.timeTravel
           ? {
-              set: { name: "set", bind: false },
-              delete: { name: "del", bind: false }
+              set: { name: "set", bind: true },
+              delete: { name: "del", bind: true }
             }
           : null,
         ...opts,
@@ -380,6 +380,7 @@ module.exports = require("@effectful/core").babelPlugin(
             switch (i.type) {
               case Tag.VariableDeclaration:
                 if (i.pos === Tag.left || i.pos === Tag.init) break;
+              case Tag.ForStatement:
               case Tag.ReturnStatement:
               case Tag.BreakStatement:
               case Tag.ContinueStatement:
@@ -389,18 +390,17 @@ module.exports = require("@effectful/core").babelPlugin(
               case Tag.TryStatement:
               case Tag.WhileStatement:
               case Tag.DoWhileStatement:
-              case Tag.ForStatement:
               case Tag.ForOfStatement:
               case Tag.ExpressionStatement:
               case Tag.WithStatement:
               case Tag.LabeledStatement:
                 if (
-                  opts.blackbox ||
-                  (opts.pureModule &&
-                    i.value.parentBlock &&
-                    i.value.parentBlock.origType === Tag.Program)
+                  opts.pureModule &&
+                  i.value.parentBlock &&
+                  i.value.parentBlock.origType === Tag.Program
                 )
                   break;
+                if (opts.blackbox) break;
                 const lab = s.label();
                 if (i.pos !== Tag.push) {
                   yield s.enter(i.pos, Tag.BlockStatement);
@@ -424,6 +424,7 @@ module.exports = require("@effectful/core").babelPlugin(
                 yield* brkStmt(i.pos, i, "debugger");
                 s.close(i);
                 continue;
+              case Tag.UpdateExpression:
               case Tag.CallExpression:
                 const la = s.cur();
                 if (
@@ -453,6 +454,8 @@ module.exports = require("@effectful/core").babelPlugin(
                 }
                 i.value.bind = true;
                 break;
+              case Tag.AssignmentExpression:
+              case Tag.UpdateExpression:
               case Tag.NewExpression:
                 i.value.bind = true;
                 break;

@@ -69,19 +69,7 @@ if (path.sep === "\\")
     srcRoot: normalizeDrive(configJS.srcRoot.replace(/\\/g, "/"))
   };
 
-console.log("PATHS", paths);
 const include = [paths.appSrc];
-// if (isWindows && paths.appSrc.length > 1 && paths.appSrc[1] === ":")
-//  include.push(paths.appSrc.charAt(0).toLowerCase() + paths.appSrc.slice(1));
-
-console.log("INCLUDE", include);
-console.log(
-  "MODULES",
-  prependModules.concat(
-    ["node_modules", paths.appNodeModules],
-    modules.additionalModulePaths || []
-  )
-);
 
 const isDebuggerPath = filename =>
   path.resolve(normalizeDrive(filename)).startsWith(debuggerPath);
@@ -143,9 +131,9 @@ module.exports = {
     futureEmitAssets: true,
     chunkFilename: "static/js/[name].chunk.js",
     publicPath: publicPath,
-    devtoolModuleFilenameTemplate: info =>
-      path.resolve(info.absoluteResourcePath).replace(/\\/g, "/"),
-    jsonpFunction: `webpackJsonp${appPackageJson ? appPackageJson.name : ""}`,
+    // devtoolModuleFilenameTemplate: info =>
+    //  path.resolve(info.absoluteResourcePath).replace(/\\/g, "/"),
+    // jsonpFunction: `webpackJsonp${appPackageJson ? appPackageJson.name : ""}`,
     globalObject: "this"
   },
   resolve: {
@@ -159,9 +147,6 @@ module.exports = {
     extensions: paths.moduleFileExtensions
       .map(ext => `.${ext}`)
       .filter(ext => useTypeScript || !ext.includes("ts")),
-    alias: {
-      "react-native": "react-native-web"
-    },
     plugins: [
       PnpWebpackPlugin,
       new ModuleScopePlugin(
@@ -188,7 +173,6 @@ module.exports = {
             }
           },
           {
-            //TODO: stricter
             test: /eff.+debugger(?:\/|\\{1,2})config.js$/,
             loader: require.resolve("babel-loader"),
             exclude: [
@@ -308,7 +292,7 @@ module.exports = {
           },
           {
             loader: require.resolve("file-loader"),
-            exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|mjs|jsx|ts|tsx|ejs)$/, /\.html$/, /\.json$/],
             options: {
               name: "static/media/[name].[hash:8].[ext]"
             }

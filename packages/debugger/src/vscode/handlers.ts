@@ -82,8 +82,7 @@ const knownBreakpoints = new Map<
 
 function setDirSep(sep: string | undefined) {
   if (!sep || sep === curDirSep || sep === "/") return;
-  normalizeDir = dir =>
-    State.normalizeDrive(path.resolve(dir.replace(/\\/g, "/")));
+  normalizeDir = dir => State.normalizeDrive(dir.replace(/\\/g, "/"));
 }
 
 interface Location {
@@ -103,7 +102,8 @@ interface VarValue {
   indexedVariables?: number;
 }
 
-let reason: string | null = null;
+let reason: string | undefined;
+let runningTrace: boolean = false;
 
 function defaultNeedsBreak(brk: State.Brk, top: State.Frame) {
   Trace.checkpoint();
@@ -140,6 +140,15 @@ S.regOpaqueObject(context.needsBreak, "@effectful/debugger/vscode$brk");
 function output(category: string, args: any[], value?: any) {
   const descr = value !== undefined ? varValue("console", value) : undefined;
   //TODO: formatter
+  const top = context.top;
+  let source: P.Source | undefined;
+  let line: number | undefined;
+  let column: number | undefined;
+  if (top && top.brk) {
+    source = getSource(top.meta.module);
+    line = top.brk.line;
+    column = top.brk.column;
+  }
   event(
     "output",
     assign(
@@ -148,7 +157,10 @@ function output(category: string, args: any[], value?: any) {
         category,
         output: (<any>util.format).apply(util.format, <any>args) + "\n",
         value: descr && descr.value,
-        variablesReference: descr && descr.variablesReference
+        variablesReference: descr && descr.variablesReference,
+        source,
+        line,
+        column
       },
       getLocation()
     )
@@ -284,7 +296,13 @@ context.onThread = async function() {
   }
 };
 
-handlers.restart = function() {};
+handlers.childRestart = function(res) {
+  if (typeof window !== "undefined") window.location.reload();
+  else {
+    res.success = false;
+    res.message = "restart isn't supported";
+  }
+};
 
 handlers.launch = function() {};
 
@@ -553,7 +571,11 @@ function reset() {
 
 handlers.childLaunch = function(args, res) {
   setDirSep(args.dirSep);
-  if (config.timeTravel) Trace.reset();
+  if (config.timeTravel) {
+    Trace.reset();
+    if (config.mutationObserver && Trace.DOM && typeof window !== "undefined")
+      Trace.DOM.track(document.documentElement);
+  }
   res.body = {
     breakpoints:
       args.breakpoints && map(args.breakpoints, (v: any) => setBreakpoints(v))
@@ -565,9 +587,7 @@ handlers.childLaunch = function(args, res) {
   }
   send(res);
   context.threadId = args.threadId;
-  if (launchCb) {
-    launchCb(args.stopOnEntry);
-  }
+  if (launchCb) launchCb(args.stopOnEntry);
   if (config.verbose) trace(`DEBUGGER: launch ${JSON.stringify(args)}`);
 };
 
@@ -575,7 +595,7 @@ function checkPause(
   brk: State.Brk,
   top: State.Frame
 ):
-  | null
+  | undefined
   | "pause"
   | "step"
   | "next"
@@ -583,7 +603,7 @@ function checkPause(
   | "stepOut"
   | "debugger_statement"
   | "entry" {
-  if (!context.debug) return null;
+  if (!context.debug) return undefined;
   if (launchCb != null) return "entry";
   const { breakpoint: bp } = brk;
   if (
@@ -600,11 +620,11 @@ function checkPause(
       break;
     case State.BrkType.exit:
       if (brkOut && brkOut === top) return "stepOut";
-      return null;
+      return undefined;
     case State.BrkType.debugger:
       return "debugger_statement";
   }
-  return null;
+  return undefined;
 }
 
 let stepCount = 0;
@@ -626,6 +646,7 @@ function run(back?: boolean) {
 const step: (back?: boolean) => void = config.timeTravel
   ? function step(back?: boolean) {
       if (back || journal.future) {
+        runningTrace = true;
         const iter = back ? Trace.undo : Trace.redo;
         let lastBrk = context.brk;
         while (iter()) {
@@ -638,6 +659,7 @@ const step: (back?: boolean) => void = config.timeTravel
           }
         }
       }
+      runningTrace = false;
       if (context.top) {
         if (back) {
           reason = "entry";
@@ -660,13 +682,17 @@ function signalStopped() {
           description: "Paused on exception",
           text: String(context.value)
         }
-      : { reason }
+      : {
+          reason,
+          description: runningTrace ? `${reason} from trace` : undefined
+        }
   );
 }
 
-context.onStop = function() {
+context.onStop = function(description?: string) {
   if (config.verbose) trace("DEBUGGER: stop signal");
   if (!context.top) return;
+
   context.activeTop = context.top;
   context.top = null;
   signalStopped();
@@ -684,6 +710,24 @@ handlers.pause = function(_, res) {
   if (config.timeTravel) run(true);
 };
 
+function checkTimeTravelEnabled(res: P.Response) {
+  if (!config.timeTravel) {
+    res.success = false;
+    res.message = "time traveling isn't enabled in the runtime";
+    res.body = {
+      error: {
+        message: 10001,
+        format: res.message
+      }
+    };
+    send(res);
+    output("stderr", [`ERROR: ${res.message}`]);
+    signalStopped();
+    return true;
+  }
+  return false;
+}
+
 handlers.stepIn = function(_, res) {
   send(res);
   reset();
@@ -692,12 +736,14 @@ handlers.stepIn = function(_, res) {
 };
 
 handlers.reverseContinue = function(_, res) {
+  if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
   run(true);
 };
 
 handlers.stepBack = function(_, res) {
+  if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
   stepIn = true;

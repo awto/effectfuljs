@@ -298,8 +298,6 @@ export const saved = {
   }
 };
 
-export const terminationToken = new Error("Terminated");
-
 /**
  * marks functions represeting a lazy value, the value is result
  * of the function's call
