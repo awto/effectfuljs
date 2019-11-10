@@ -12,17 +12,17 @@ There are such libraries for:
    async generators)
    * **_Why not native or other transpilers_**
      * Abstract API -
-       [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+       [@effectful/es](packages/es)
      * Persistent state -
-       [@effectful/es-persist](https://github.com/awto/effectfuljs/tree/master/packages/es-persist)
+       [@effectful/es-persist](packages/es-persist)
      * Concrete API -
-       [@effectful/es-inline](https://github.com/awto/effectfuljs/tree/master/packages/es-inline),
+       [@effectful/es-inline](packages/es-inline),
        the best performance
      * Implicit parallelism
      * Deriving program's static graphs for analysis and conversion to other
        languages - WIP
  * Multi-prompt delimited continuations -
-   [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/cc)
+   [@effectful/cc](packages/cc)
  * Logical programming - WIP [Old version](https://github.com/awto/mfjs-logic)
  * Debugger API -
     [@effectful/debugger](packages/debugger) and VSCode plugin [effectful/debugger](packages/debugger-vscode)
@@ -70,21 +70,21 @@ The package can also contain `macro.js` file for zero-configuration using
 
 Check the libraries documentation for exact details:
 
- * [@effectful/js](https://github.com/awto/effectfuljs/tree/master/packages/js)
+ * [@effectful/js](packages/js)
   compiles to the most abstract code, single or double level depending
   on parameters 
- * [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+ * [@effectful/es](packages/es)
   for two-levels syntax either concrete ECMAScript compatible effects
   or abstract for async, generator and async generators semantics
   overloading.  
- * [@effectful/es-inline](https://github.com/awto/effectfuljs/tree/master/packages/es)
-  A shortcut for [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+ * [@effectful/es-inline](packages/es)
+  A shortcut for [@effectful/es](packages/es)
   with concrete ECMAScript effects implementations.
 
 All the plugins and macros are just shortcuts to
-[@effectful/core](https://github.com/awto/effectfuljs/tree/master/packages/es)
+[@effectful/core](packages/es)
 setting needed lower level options described in
-[config.js](https://github.com/awto/effectfuljs/blob/master/packages/core/src/config.js)
+[config.js](packages/core/src/config.js)
 thus generated code uses different runtime interfaces.
 
 
@@ -134,7 +134,7 @@ also for debugging purposes. This makes it very simple to implement **hot
 reloading** and **time traveling**, as this just saving and restoring the
 application state at some particular execution points.
 
-More details are in [@effectful/es](https://github.com/awto/effectfuljs/tree/master/packages/es)
+More details are in [@effectful/es](packages/es)
 project.
 
 ### Delimited continuations
@@ -150,7 +150,7 @@ possible to specify only some region. For example, for the persistent state,
 this allows saving not the whole application state, which may be big, but only
 some interesting part.
 
-Check [@effectful/cc](https://github.com/awto/effectfuljs/tree/master/packages/es) for 
+Check [@effectful/cc](packages/es) for 
 more details.
 
 ## Implicit parallelism
@@ -386,7 +386,7 @@ function() {
 ```
 
 There are more examples of input/output in the 
-[test folder](https://github.com/awto/effectfuljs/tree/master/packages/js/test/samples).
+[test folder](packages/js/test/samples).
 
 It is arguable if explicit or implicit levels separation is
 better. This likely depends on what kind of effects is used. The

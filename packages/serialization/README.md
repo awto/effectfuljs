@@ -75,8 +75,17 @@ their first argument is the value, and the second argument is its name. The name
 may be omitted for `S.regOpaqueObject` the library will try to guess it. If it
 is a function declaration, it will use its name, for example.
 
+The third argument specifies additional options (see `DescriptorOpts` type
+in the API).
+
+By default the output will contain properties set or changed in object after
+`S.regOpaqueObject` call. This can be disabled by setting `{props:false}` in
+the third argument to disable any property output. Or `{propsSnapshot:false}`
+to disable storing the original values snapshot (thus all properties will be
+output). Reads mutate the registered objects.
+
 Calling `S.regOpaqueObject` will set `[S.descriptorSymbol]` property in the
-object, while `S.regOpaquePrim` will store the value in library's internal map.
+object, while `S.regOpaquePrim` will store the value in a library's internal map.
 
 ## Prototypes based inheritance
 

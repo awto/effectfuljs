@@ -44,7 +44,7 @@ S.regOpaquePrim(Symbol.toStringTag, "SymbolStatic.asyncIterator");
 S.regOpaqueObject(Object);
 
 export {evalThunk, thunkSymbol} from "./state";
-export * from "./apiMin"
+export * from "./api"
 
 export { TimeTravel, Persist, Engine, RT };
 import config from "./config"

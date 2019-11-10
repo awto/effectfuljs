@@ -185,23 +185,25 @@ describe("prototypes chain", function() {
         this.c1 = new C1(this);
       }
     }
-    Lib.regOpaqueObject(C1, "C1", { props: true });
-    Lib.regOpaqueObject(C2, "C2", { props: true });
+    Lib.regOpaqueObject(C1.prototype, "C1");
+    Lib.regOpaqueObject(C2.prototype, "C2");
     const obj = new C2();
+    C1.prototype.p_prop_1 = "prop_1";
     const res = Lib.write(obj);
+    C1.prototype.p_prop_1 = "changed";
     assert.deepEqual(res, {
-      r: 2,
+      r: 1,
       x: [
         {
-          f: [["constructor", { $: "C1", f: [["prototype", { r: 0 }, 3]] }, 2]]
+          p: {
+            $: "C1",
+            f: [["p_prop_1", "prop_1"]]
+          },
+          f: [["p1", { r: 1 }]]
         },
         {
-          p: { r: 0 },
-          f: [["constructor", { $: "C2", f: [["prototype", { r: 1 }, 3]] }, 2]]
-        },
-        {
-          p: { r: 1 },
-          f: [["p1", "A"], ["c1", { p: { r: 0 }, f: [["p1", { r: 2 }]] }]]
+          p: { $: "C2" },
+          f: [["p1", "A"], ["c1", { r: 0 }]]
         }
       ]
     });
@@ -213,31 +215,27 @@ describe("prototypes chain", function() {
     assert.strictEqual(r2.c1.constructor, C1);
     assert.strictEqual(r2.c1.p1, r2);
     assert.equal(r2.p1, "A");
-
+    assert.strictEqual(C1.prototype.p_prop_1, "prop_1");
     class C3 {
       constructor(val) {
         this.a = val;
       }
     }
-    Lib.regOpaqueObject(C3.prototype);
+    Lib.regOpaqueObject(C3.prototype, "C3", { props: false });
     class C4 extends C3 {
       constructor() {
         super("A");
         this.b = "B";
       }
     }
-    Lib.regOpaqueObject(C4, "C4", { props: true });
+    Lib.regOpaqueObject(C4.prototype, "C4");
     const obj2 = new C4();
     const res2 = Lib.write(obj2);
     assert.deepEqual(res2, {
-      p: { r: 0 },
-      f: [["a", "A"], ["b", "B"]],
-      x: [
-        {
-          p: { $: "C3" },
-          f: [["constructor", { $: "C4", f: [["prototype", { r: 0 }, 3]] }, 2]]
-        }
-      ]
+      p: {
+        $: "C4"
+      },
+      f: [["a", "A"], ["b", "B"]]
     });
     const obj3 = Lib.read(res2);
     assert.ok(obj3 instanceof C3);
@@ -479,6 +477,51 @@ describe("opaque objects serialization", function() {
       assert.deepStrictEqual(Lib.write({ a }), { f: [["a", { $: "a_1" }]] });
       assert.deepStrictEqual(Lib.read({ f: [["a", { $: "a_1" }]] }), { a });
     })();
+  });
+  it("should not serialize properties specified before its registration", function() {
+    const obj = {
+      prop1: "p1",
+      [Symbol.for("sym#a")]: "s1",
+      [Symbol.for("sym#b")]: "s2",
+      prop2: "p2",
+      [3]: "N3",
+      [4]: "N4"
+    };
+    Lib.regOpaqueObject(obj, "A");
+    obj.prop1 = "P2";
+    obj.prop3 = "p3";
+    obj[Symbol.for("sym#a")] = "S1";
+    obj[Symbol.for("sym#c")] = "s3";
+    obj[4] = "n4";
+    obj[5] = "n5";
+    assert.deepStrictEqual(Lib.write({ obj }), {
+      f: [
+        [
+          "obj",
+          {
+            $: "A",
+            f: [
+              ["4", "n4"],
+              ["5", "n5"],
+              ["prop1", "P2"],
+              ["prop3", "p3"],
+              [
+                {
+                  key: "sym#a"
+                },
+                "S1"
+              ],
+              [
+                {
+                  key: "sym#c"
+                },
+                "s3"
+              ]
+            ]
+          }
+        ]
+      ]
+    });
   });
 });
 

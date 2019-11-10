@@ -200,6 +200,12 @@ export interface DescriptorOpts<T = unknown> {
   props?: boolean;
 
   /**
+   * Make a snapshot of its original property values and won't write
+   * them if they aren't changed
+   */
+  propsSnapshot?: boolean;
+
+  /**
    * If !== false the descriptor will add property `$` equal to `name` by default
    */
   default$?: boolean;
@@ -209,12 +215,10 @@ export interface DescriptorOpts<T = unknown> {
    */
   typeofHint?: string;
 
-  /**
-   * if `props !== false` this is a predicate to specify which properties should be output.
-   */
+  /** if `props !== false` this is a predicate to specify which properties should be output. */
   overrideProps?: { [name: string /*|symbol*/]: boolean };
 
-  /** this won't change the `name` to make it unique */
+  /** don't change the `name` to make it unique */
   strictName?: boolean;
 
   /** a prototype to be assigned with `Object.setPrototype` in reads */
@@ -228,6 +232,11 @@ export interface DescriptorOpts<T = unknown> {
 
   /** mask for property descriptor flags (configurable:1,enumerable:2,writable:4,no value = 8)  */
   propsDescrMask?: number;
+
+  /**
+   * if an object has this prototype it won't be recorded
+   */
+  defaultPrototype?: any;
 }
 
 interface ValueConstructor<T = unknown> {
@@ -250,6 +259,12 @@ export interface WriteDescriptor<T = unknown> {
     parent: JSONObject | JSONArray,
     index: number | string
   ) => JSONValue;
+
+  /**
+   * for descriptors traversing properties with stores
+   * original values which shouldn't be output
+   */
+  initialSnapshot?: { [name: string]: PropertyDescriptor };
 }
 
 export type Descriptor<T = any> = WriteDescriptor<T> &
@@ -538,7 +553,8 @@ function defaultWrite<T>(
   const json: JSONObject = {};
   if (this.valuePrototype !== void 0) return json;
   const proto = Object.getPrototypeOf(value);
-  if (proto === Object.prototype) return json;
+  if (proto === Object.prototype || proto === this.defaultPrototype)
+    return json;
   // ensuring prototype reference is ahead
   json.p = ctx.step(proto, json, "p");
   return json;
@@ -553,7 +569,10 @@ function defaultCreate<T>(
   if (this.valuePrototype !== void 0 && this.valuePrototype !== false)
     return Object.create(this.valuePrototype);
   const protoJson = <JSONObject>(<JSONObject>json).p;
-  if (protoJson === void 0) return <T>{};
+  if (protoJson === void 0)
+    return <T>(
+      (this.defaultPrototype ? Object.create(this.defaultPrototype) : {})
+    );
   if (protoJson === null) return Object.create(null);
   let protoValue;
   // TODO: since prototypes cannot be cyclic it could ensure this
@@ -587,6 +606,7 @@ export const descriptorTemplate: Descriptor = {
  */
 function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
   return {
+    ...descriptor,
     name: descriptor.name,
     read(ctx: ReadContext, json: JSONValue) {
       const ref = <number>(<JSONObject>json).r;
@@ -665,6 +685,13 @@ export function regDescriptor<T>(
     if (descriptor.create)
       readImpl = descriptor.readContent ? defaultRead : descriptor.create;
   }
+  if (
+    !descriptor.defaultPrototype &&
+    descriptor.props !== false &&
+    descriptor.propsSnapshot !== false &&
+    descriptor.value
+  )
+    descriptor.defaultPrototype = Object.getPrototypeOf(descriptor.value);
   const overrideProps = Object.assign(
     {},
     defaultOverrideProps,
@@ -725,9 +752,28 @@ export function regDescriptor<T>(
     overrideProps,
     value: descriptor.value,
     props: descriptor.props,
-    default$: descriptor.default$
+    default$: descriptor.default$,
+    initialSnapshot: final.initialSnapshot
   };
   return final;
+}
+
+/**
+ * updates `initialSnapshot` with the current values of its properties
+ */
+export function updateInitialSnapshot(value: any) {
+  const descriptor = getValueDescriptor(value);
+  if (!descriptor) throw new TypeError("not serializable value");
+  if (
+    !descriptor.initialSnapshot ||
+    !descriptor.value ||
+    descriptor.value !== value
+  )
+    throw new TypeError("the object doesn't contain another snapshot");
+  Object.assign(
+    descriptor.initialSnapshot,
+    Object.getOwnPropertyDescriptors(value)
+  );
 }
 
 /**
@@ -776,7 +822,7 @@ const PojsoPropsDescriptor = propsDescriptor(descriptorTemplate);
 export function regOpaqueObject(
   value: any,
   name: string = guessObjectName(value),
-  descriptor: IncompleteDescriptor<any> = { props: false }
+  descriptor: IncompleteDescriptor<any> = { props: true, propsSnapshot: true }
 ): Descriptor {
   const useSymbol = options.descriptorSymForOpaque !== false;
   if (useSymbol && value.hasOwnProperty(descriptorSymbol))
@@ -855,7 +901,8 @@ export function regConstructor<T>(
     valuePrototype: constr.prototype,
     name: constr.name,
     ...descriptor,
-    overrideProps: { ...descriptor.overrideProps, prototype: false }
+    overrideProps: { ...descriptor.overrideProps, prototype: false },
+    propsSnapshot: descriptor.propsSnapshot
   });
   constr.prototype[descriptorSymbol] = descr;
   return descr;
@@ -960,29 +1007,54 @@ function descrFlags(descr: PropertyDescriptor): number {
   return flags;
 }
 
+function propFlags(
+  initialSnapshot: { [name: string]: PropertyDescriptor } | undefined,
+  pred: { [name: string]: boolean },
+  name: string,
+  descr: PropertyDescriptor,
+  mask: number
+): number | undefined {
+  let flags: number | undefined;
+  if (pred[name] === false || ((flags = descrFlags(descr)) & mask) !== 0)
+    return void 0;
+  if (initialSnapshot) {
+    const init = initialSnapshot[name];
+    if (
+      init &&
+      (("value" in init && init.value === descr.value) ||
+        ("get" in init && init.get === descr.get))
+    )
+      return void 0;
+  }
+  return flags;
+}
+
 /** Writing serialized `Object.defineProperty` descriptors to JSON */
 export function writeProps(
   ctx: WriteContext,
   descrs: { [name: string]: PropertyDescriptor },
   pred: { [name: string]: boolean },
-  mask: number
+  mask: number,
+  initialSnapshot?: { [name: string]: PropertyDescriptor }
 ) {
   const props = [];
   let flags: number;
-  let descr: PropertyDescriptor;
   for (const name in descrs) {
+    const descr = descrs[name];
     if (
-      pred[name] === false ||
-      ((flags = descrFlags((descr = descrs[name]))) & mask) !== 0
+      (flags = <number>propFlags(initialSnapshot, pred, name, descr, mask)) ===
+      void 0
     )
       continue;
     const propInfo = writeProp(ctx, [name], descr, flags);
     if (propInfo) props.push(propInfo);
   }
   for (const name of Object.getOwnPropertySymbols(descrs)) {
+    const descr = descrs[<any>name];
     if (
-      pred[<any>name] === false ||
-      ((flags = descrFlags((descr = descrs[<any>name]))) & mask) !== 0
+      (flags = <number>(
+        propFlags(initialSnapshot, pred, <any>name, descr, mask)
+      )) === void 0
     )
       continue;
     const propJson: JSONArray = [];
@@ -1081,7 +1153,8 @@ function propsDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
         ctx,
         Object.getOwnPropertyDescriptors(value),
         pred,
-        descriptor.propsDescrMask || 0
+        descriptor.propsDescrMask || 0,
+        this.initialSnapshot
       );
       if (props.length) json.f = props;
       return json;
@@ -1094,7 +1167,13 @@ function propsDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
     },
     create(ctx, json) {
       return descriptor.create(ctx, json);
-    }
+    },
+    initialSnapshot:
+      (descriptor.props !== false &&
+        descriptor.propsSnapshot !== false &&
+        descriptor.value &&
+        Object.getOwnPropertyDescriptors(descriptor.value)) ||
+      undefined
   };
 }
 
@@ -1435,7 +1514,7 @@ export function regOpaqueRec(
     value.hasOwnProperty(descriptorSymbol)
   )
     return;
-  regOpaqueObject(value, prefix, opts.descriptor);
+  regOpaqueObject(value, prefix, opts.descriptor || { props: false });
   const descrs = Object.getOwnPropertyDescriptors(value);
   for (const i of Object.getOwnPropertySymbols(descrs)) {
     if (i === descriptorSymbol) continue;

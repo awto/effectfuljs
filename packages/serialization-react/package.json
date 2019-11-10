@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.7.2",
     "@effectful/serialization": "^1.2.0",
     "eslint": "^5.15.1",
     "mocha": "^5.2.0",

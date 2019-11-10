@@ -1,9 +1,11 @@
 const Lib = require("../src/main");
 const Dom = require("../src/dom");
 const assert = require("assert");
-Dom.track();
 
 describe("DOM serialization", function() {
+  before(function() {
+    Dom.track();
+  });
   it("should preserve Event's options", function() {
     const ev = new MouseEvent("click", {
       bubbles: true,

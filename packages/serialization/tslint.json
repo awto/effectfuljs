@@ -18,7 +18,8 @@
     "array-type": false,
     "no-conditional-assignment": false,
     "no-shadowed-variable": false,
-    "only-arrow-functions": false
+    "only-arrow-functions": false,
+    "forin": false
   },
   "rulesDirectory": []
 }

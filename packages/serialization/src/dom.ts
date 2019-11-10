@@ -1,10 +1,21 @@
 import * as S from "./main";
 
-export function* nodeListIter<T>(nl: {
+export function nodeListIter<T>(nl: {
   length: number;
   [index: number]: T;
 }): Iterable<T> {
-  for (let i = 0, len = nl.length; i < len; ++i) yield nl[i];
+  return {
+    [Symbol.iterator]() {
+      let i = 0;
+      return {
+        next(): { value: T; done: boolean } {
+          return i < nl.length
+            ? { done: false, value: nl[i++] }
+            : { done: true, value: <any>undefined };
+        }
+      };
+    }
+  };
 }
 
 /** stores event handlers in EventTarget */
