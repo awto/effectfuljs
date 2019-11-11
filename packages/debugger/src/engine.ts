@@ -30,7 +30,7 @@ import * as path from "path";
 // tslint:disable-next-line
 const asap = require("asap");
 
-const globalNS = config.globalNS
+const globalNS = config.globalNS;
 
 const journal = TT.journal;
 const context = State.context;
@@ -421,7 +421,16 @@ export function loop(value: any): any {
         return token;
       }
       top = context.top;
-      if (!top) throw e;
+      if (!top) {
+        if (config.verbose) {
+          console.error(
+            `Uncaught exception: ${e}(on any:${!!context.brkOnAnyException},on uncaught:${!!context.brkOnUncaughtException}`
+          );
+          if (config.debuggerDebug)
+            console.error("Original stack:", e._deb_stack);
+        }
+        throw e;
+      }
       top.goto = top.meta.errHandler(top.state);
       value = e;
     }
@@ -488,7 +497,7 @@ function checkErrBrk(frame: Frame, e: any): boolean {
             })`
           );
       }
-      if (!config.debuggerDebug) e.stack = stack.join("\n");
+      e.stack = stack.join("\n");
     }
     let needsStop = false;
     if (context.brkOnAnyException) {
@@ -575,8 +584,7 @@ export function compileIndirEval(code: string): string {
   const id = toGlobal(evalCnt++);
   if (!blackbox) context.onNewSource(id, code);
   const wcode =
-    `return (${globalNS}.context.call=` +
-    `(function() {\n${code}\n}))();`;
+    `return (${globalNS}.context.call=` + `(function() {\n${code}\n}))();`;
   const ast = babelParse(wcode, {
     allowReturnOutsideFunction: true,
     startLine: 0
@@ -695,7 +703,7 @@ export function compileEval(
     "module",
     "__filename",
     "__dirname",
-   tgt
+    tgt
   )(
     // exports,
     mod && (<any>mod).exports,

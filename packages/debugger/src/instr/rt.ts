@@ -197,6 +197,7 @@ export type SubGenerator = Iterator<any> & {
 export interface GeneratorFrame extends State.Frame {
   delegatee: SubGenerator | null;
   running: boolean;
+  sent: any;
 }
 
 export function generatorNext(frame: GeneratorFrame, value: any): Item {
@@ -264,6 +265,7 @@ export function generatorMethod(
     const frame = this.$frame;
     try {
       if (frame.running) throw new TypeError("Generator is already running");
+      frame.sent = value;
       frame.running = true;
       return handler(frame, value);
     } finally {
@@ -305,6 +307,7 @@ export interface AsyncGeneratorFrame extends State.Frame {
   onResolve: (value: any) => void;
   onReject: (reason: any) => void;
   promise: Promise<Item>;
+  sent: any;
 }
 
 export type AsyncStep = (
@@ -344,6 +347,7 @@ export function runQueue(
   rs: (value: any) => any,
   rj: (reason: any) => any
 ) {
+  this.sent = value;
   impl(this, step, value).then(rs, rj);
 }
 
@@ -375,6 +379,7 @@ export function asyncGeneratorMethod(
     if (frame.running)
       return new Promise<Item>(enqueue.bind(frame, impl, step, value));
     frame.running = true;
+    frame.sent = value;
     return impl(frame, step, value);
   };
 }

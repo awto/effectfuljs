@@ -1,8 +1,10 @@
 const config = require("../config").default;
 if (process.env.EFFECTFUL_DEBUGGER_URL)
   config.url = process.env.EFFECTFUL_DEBUGGER_URL;
-if (process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL)
-  config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL);
+config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL);
+config.timeTravelDisabled = isTrue(
+  process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED
+);
 
 config.srcRoot = require("../state").normalizeDrive(
   process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || process.cwd()
@@ -35,6 +37,8 @@ if (isNaN(config.port)) config.port = 10010;
 
 if (config.verbose) console.log(`DEBUGGER: config  ${JSON.stringify(config)}`);
 
+config.open = isTrue(process.env.EFFECTFUL_DEBUGGER_OPEN);
+
 module.exports = config;
 
 function isTrue(str, defaultValue = false) {
@@ -46,6 +50,8 @@ function isTrue(str, defaultValue = false) {
     case "t":
     case "true":
       return true;
+    case "undefined":
+    case "null":
     case "no":
     case "n":
     case "0":

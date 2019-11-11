@@ -56,9 +56,14 @@ export function prepare(si) {
 
 /** replaces `function.sent` to a special temp variable */
 export function* functionSentPrepare(si) {
-  let sym;
   const s = Kit.auto(si);
+  let sym;
   const root = s.first.value;
+  if (s.opts.functionStateField) {
+    sym = Bind.tempVarSym(root, s.opts.functionStateField);
+    sym.fieldName = s.opts.functionStateField;
+    sym.subField = false;
+  }
   for (const i of s) {
     if (i.enter) {
       switch (i.type) {

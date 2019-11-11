@@ -57,6 +57,7 @@ var $module = M.module(\\"test/__fixtures__/code.js\\", void 0, module),
   return function fn1() {
     var $ = frame(x, this, new.target),
         p;
+    $.$.fn1 = fn1;
     return scope(5);
   };
 }, fn1_1, void 0, void 0, [[v_4, \\"s\\", \\"26:2-26:16\\"], [v_4, \\"s\\", \\"27:2-27:55\\"]], \\"fn1\\", \\"25:14-28:1\\", meta$f, []),

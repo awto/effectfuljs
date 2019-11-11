@@ -5,9 +5,10 @@
   "license": "MIT",
   "version": "0.0.0",
   "scripts": {
-    "test": "cross-env BABEL_DISABLE_CACHE=1 lerna run test",
-    "build": "lerna run build && lerna run build-loose",
-    "prepare": "lerna bootstrap && npm run build && npm run prepare-test",
+    "test:tmp": "cross-env BABEL_DISABLE_CACHE=1 lerna run test --stream",
+    "test": "npm run build && cd packages/vscode-debugger && npm test",
+    "compile": "lerna run build && lerna run build-loose",
+    "build": "lerna bootstrap && npm run compile && npm run prepare-test",
     "prepare-test": "lerna run prepare-test && lerna run link-test"
   },
   "devDependencies": {

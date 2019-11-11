@@ -25,7 +25,7 @@ There are such libraries for:
    [@effectful/cc](packages/cc)
  * Logical programming - WIP [Old version](https://github.com/awto/mfjs-logic)
  * Debugger API -
-    [@effectful/debugger](packages/debugger) and VSCode plugin [effectful/debugger](packages/debugger-vscode)
+    [@effectful/debugger](packages/debugger) and VSCode plugin [effectful/debugger](packages/vscode-debugger)
 
 Not yet implemented:
   * probabilistic programming

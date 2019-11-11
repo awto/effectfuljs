@@ -1,18 +1,8 @@
-/**
- * @babel/plugin-transform-typescript doesn't support const enums,
- * but for debugging purposes we can ignore this
- */
-module.exports = {
-  plugins: [
-    function(babel) {
-      return {
-        name: "@effectful/debugger/ts-no-const",
-        visitor: {
-          TSEnumDeclaration(path) {
-            path.node.const = false;
-          }
-        }
-      };
-    }
-  ]
+module.exports = function(_, opts) {
+  return {
+    plugins: [
+      require("./ts-no-consts"),
+      [require("@babel/plugin-transform-typescript").default, opts]
+    ]
+  };
 };

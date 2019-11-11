@@ -10,8 +10,8 @@ const fs = require("fs");
 const preset = require("../babel/preset-zero-config");
 const cacheId = require("../cacheId");
 const { normalizeDrive } = require("../../state");
+require("./vm");
 
-global.Debug = Debug;
 global.WebSocket = require("ws");
 
 const Module = module.constructor;
@@ -19,6 +19,8 @@ const Module = module.constructor;
 const Mp = Module.prototype;
 
 const savedCompile = Mp._compile;
+
+const savedConsole = console;
 
 const builtIn = Module.builtinModules.filter(i => {
   switch (i) {
@@ -46,6 +48,8 @@ babelOpts = {
   }
 };
 
+const log = (...args) => console.log(...args);
+
 function mtime(filename) {
   return +fs.statSync(filename).mtime;
 }
@@ -60,8 +64,6 @@ const root = path.resolve(config.srcRoot);
 
 const nodeModules = path.join(config.srcRoot, "node_modules");
 
-// const knownConfigs = new WeakSet();
-
 require.extensions[".ts"] = require.extensions[".tsx"] = require.extensions[
   ".jsx"
 ] = require.extensions[".js"];
@@ -69,7 +71,7 @@ require.extensions[".ts"] = require.extensions[".tsx"] = require.extensions[
 const rootPath = normalizeDrive(fs.realpathSync(root));
 
 const debuggerPath = normalizeDrive(
-  fs.realpathSync(path.join(__dirname, "../.."))
+  fs.realpathSync(path.join(__dirname, "../../"))
 );
 
 const requirePath =
@@ -82,8 +84,10 @@ const requirePath =
       };
 
 Mp._compile = function _compile(content, filename) {
+  const ext = path.extname(filename);
   if (
     disabled ||
+    ext === ".json" || // TODO: more options
     (filename = normalizeDrive(filename)).startsWith(debuggerPath) ||
     !(filename.startsWith(nodeModules) || filename.startsWith(rootPath))
   )
@@ -94,6 +98,7 @@ Mp._compile = function _compile(content, filename) {
   if (config.verbose) {
     let msg = `DEBUGGER: compiling ${filename}, disabled:${disabled}, filename:${filename}, rt:${importRT}`;
     if (config.verbose > 1) msg += ` content:${JSON.stringify(content)}`;
+    log(msg);
   }
   disabled = true;
   let result;
@@ -130,34 +135,41 @@ Mp._compile = function _compile(content, filename) {
     let cached = cache && cache[cacheKey];
     let curMtime = mtime(filename);
     if (!cached || cached.mtime !== curMtime) {
-      if (config.verbose) console.error("DEBUGGER: Rebuilding");
+      if (config.verbose) {
+        let msg = "DEBUGGER: Rebuilding";
+        if (!cached) msg += "(not in cache)";
+        else {
+          if (config.verbose > 1) msg += `, key:{${cacheKey}}`;
+          else msg += ` (${cached.mtime} < ${curMtime})`;
+        }
+        log(msg);
+      }
       cached = babel.transformSync(content, opts);
       if (cache) {
         cache[cacheKey] = cached;
         cached.mtime = mtime(filename);
       }
     } else {
-      if (config.verbose) console.error("DEBUGGER: Using the cached version");
+      if (config.verbose) {
+        let msg = "DEBUGGER: Using the cached version";
+        if (config.verbose > 1) msg += `: key:{${cacheKey}}`;
+        log(msg);
+      }
     }
     if (config.hot) {
       let reloading = 0;
       if (config.verbose)
-        console.error(`DEBUGGER: enabling hot swapping for ${filename}`);
+        log(`DEBUGGER: enabling hot swapping for ${filename}`);
       fs.watch(filename, { persistent: false, encoding: "utf-8" }, type => {
         const nextMtime = mtime(filename);
         if (config.verbose)
-          console.error(
-            `DEBUGGER: updating ${filename}`,
-            type,
-            curMtime,
-            nextMtime
-          );
+          log(`DEBUGGER: updating ${filename}`, type, curMtime, nextMtime);
         if (type !== "change" || curMtime === nextMtime) return;
         curMtime = nextMtime;
         if (reloading) clearTimeout(reloading);
         reloading = setTimeout(() => {
           reloading = 0;
-          if (config.verbose) console.error(`DEBUGGER: Reloading ${filename}`);
+          if (config.verbose) log(`DEBUGGER: Reloading ${filename}`);
           try {
             disabled = true;
             content = fs.readFileSync(filename, "utf-8");
@@ -182,17 +194,18 @@ Mp._compile = function _compile(content, filename) {
               path.dirname(filename)
             );
           } catch (e) {
-            console.error(`DEBUGGER: Error on building:${filename}`, e);
+            log(`DEBUGGER: Error on building:${filename}`, e);
           } finally {
             disabled = false;
           }
         }, 500);
       });
     }
-    if (config.verbose > 1)
-      console.error(
-        `DEBUGGER:compiled ${filename}: ${JSON.stringify(cached.code)}`
-      );
+    if (config.verbose) {
+      if (config.verbose > 1)
+        log(`DEBUGGER:compiled ${filename}: ${JSON.stringify(cached.code)}`);
+      else log(`DEBUGGER: ${filename} is compiled`);
+    }
     result = savedCompile.call(this, cached.code, filename);
   } finally {
     disabled = false;

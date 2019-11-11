@@ -1,6 +1,7 @@
 import * as Kit from "./kit";
 import { Tag, symbol } from "@effectful/transducers";
 import * as Block from "./block";
+import * as Policy from "./policy";
 
 export const blockId = Kit.sysId("block");
 export const scopeId = Kit.sysId("scope");
@@ -195,6 +196,7 @@ export function* injectExplicitRet(si) {
 export const injectBlock = Kit.pipe(
   Kit.map(
     Kit.pipe(
+      Policy.stage("control-block"),
       function* injectScopeRefs(s) {
         const sl = Kit.auto(s);
         const root = sl.first.value;
@@ -231,42 +233,50 @@ export const injectBlock = Kit.pipe(
         }
         yield* walk();
       },
-      Kit.toArray
+      Policy.stage("after-control-block")
     )
   ),
   Array.from,
-  Kit.map(function* injectJumps(si) {
-    const s = Kit.auto(si);
-    for (const i of s) {
-      if (i.enter) {
-        switch (i.type) {
-          case Tag.BreakStatement:
-          case Tag.ReturnStatement:
-            if (i.value.block && i.value.eff && !i.value.last) {
-              if (i.enter) {
-                let pos = i.pos;
-                const { ctrlNode } = i.value.block;
-                const j = s.enter(pos, jump, {
-                  bind: true,
-                  ctrlNode,
-                  result: i.type === Tag.ReturnStatement && s.curLev() != null,
-                  orig: i.value
-                });
-                if (ctrlNode)
-                  (ctrlNode.brkRefs || (ctrlNode.brkRefs = [])).push(j.value);
-                yield j;
-                yield* Kit.reposOne(s.sub(), Tag.push);
-                yield* s.leave();
-                s.close(i);
-                continue;
-              }
+  Kit.map(
+    Kit.pipe(
+      Policy.stage("control-jumps"),
+      function* injectJumps(si) {
+        const s = Kit.auto(si);
+        for (const i of s) {
+          if (i.enter) {
+            switch (i.type) {
+              case Tag.BreakStatement:
+              case Tag.ReturnStatement:
+                if (i.value.block && i.value.eff && !i.value.last) {
+                  if (i.enter) {
+                    let pos = i.pos;
+                    const { ctrlNode } = i.value.block;
+                    const j = s.enter(pos, jump, {
+                      bind: true,
+                      ctrlNode,
+                      result:
+                        i.type === Tag.ReturnStatement && s.curLev() != null,
+                      orig: i.value
+                    });
+                    if (ctrlNode)
+                      (ctrlNode.brkRefs || (ctrlNode.brkRefs = [])).push(
+                        j.value
+                      );
+                    yield j;
+                    yield* Kit.reposOne(s.sub(), Tag.push);
+                    yield* s.leave();
+                    s.close(i);
+                    continue;
+                  }
+                }
             }
+          }
+          yield i;
         }
-      }
-      yield i;
-    }
-  }),
-  Kit.map(Kit.toArray),
+      },
+      Policy.stage("after-control-jumps")
+    )
+  ),
   Array.from
 );
 

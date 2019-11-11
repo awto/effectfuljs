@@ -312,7 +312,8 @@ export const contextDecls = Kit.map(function contextDecls(si) {
   const { topEff, contextSym } = root;
   const saved = root.savedDecls || (root.savedDecls = new Map());
   const decls = root.scopeDecls;
-  for (const i of decls) if (i.interpr === Bind.ctxField) ctxSyms.push(i);
+  for (const i of decls)
+    if (i.interpr === Bind.ctxField && i.subField !== false) ctxSyms.push(i);
   // for not effectful function with captured
   if (
     ctxSyms.length ||

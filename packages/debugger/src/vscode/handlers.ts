@@ -1,7 +1,7 @@
 import config from "../config";
 import * as State from "../state";
 import * as Engine from "../engine";
-import * as Trace from "../timeTravel/main";
+import * as TT from "../timeTravel/main";
 import * as path from "path";
 import { DebugProtocol as P } from "./protocol";
 import * as S from "@effectful/serialization";
@@ -55,7 +55,7 @@ const localConsole = config.localConsole
       dir() {}
     };
 
-const { journal } = Trace;
+const { journal } = TT;
 context.debug = true;
 
 function trace(...args: [any, ...any[]]) {
@@ -106,7 +106,7 @@ let reason: string | undefined;
 let runningTrace: boolean = false;
 
 function defaultNeedsBreak(brk: State.Brk, top: State.Frame) {
-  Trace.checkpoint();
+  TT.checkpoint();
   reason = checkPause(brk, top);
   brkFrame = reason ? top : null;
   return reason != null;
@@ -114,26 +114,10 @@ function defaultNeedsBreak(brk: State.Brk, top: State.Frame) {
 
 context.needsBreak = config.timeTravel
   ? function(brk: State.Brk, top: State.Frame) {
-      Trace.checkpoint();
+      TT.checkpoint();
       return defaultNeedsBreak(brk, top);
     }
   : defaultNeedsBreak;
-
-/*
-context.needsBreak = config.timeTravel
-  ? function(brk: State.Brk, top: State.Frame) {
-      Trace.checkpoint();
-      if (checkpoint)
-        checkpoint.context = {
-          top: context.top,
-          debug: context.debug,
-          brk: context.brk,
-          value: context.value
-        };
-      return defaultNeedsBreak(brk, top);
-    }
-  : defaultNeedsBreak;
-      */
 
 S.regOpaqueObject(context.needsBreak, "@effectful/debugger/vscode$brk");
 
@@ -284,7 +268,7 @@ context.onThread = async function() {
     if (job.stopOnEntry && !stop && (reason = checkPause(context.brk, top)))
       stop = true;
     journal.enabled = config.timeTravel;
-    Trace.checkpoint();
+    TT.checkpoint();
     if (stop) {
       context.activeTop = context.top;
       context.top = null;
@@ -571,10 +555,11 @@ function reset() {
 
 handlers.childLaunch = function(args, res) {
   setDirSep(args.dirSep);
-  if (config.timeTravel) {
-    Trace.reset();
-    if (config.mutationObserver && Trace.DOM && typeof window !== "undefined")
-      Trace.DOM.track(document.documentElement);
+  if (config.timeTravel && !config.timeTravelDisabled) {
+    console.log("REZET");
+    TT.reset();
+    if (config.mutationObserver && TT.DOM && typeof window !== "undefined")
+      TT.DOM.track(document.documentElement);
   }
   res.body = {
     breakpoints:
@@ -647,7 +632,7 @@ const step: (back?: boolean) => void = config.timeTravel
   ? function step(back?: boolean) {
       if (back || journal.future) {
         runningTrace = true;
-        const iter = back ? Trace.undo : Trace.redo;
+        const iter = back ? TT.undo : TT.redo;
         let lastBrk = context.brk;
         while (iter()) {
           const { brk, top } = context;

@@ -1,3 +1,4 @@
+const cp = require("child_process");
 exports.command = "node";
 
 exports.describe =

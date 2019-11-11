@@ -4,6 +4,7 @@ import { recalcEff } from "./propagate";
 import * as Ctrl from "./control";
 import * as Bind from "./bind";
 import * as Block from "./block";
+import * as Policy from "./policy";
 
 export const repeatId = Kit.sysId("repeat");
 export const forParId = Kit.sysId("forPar");
@@ -414,6 +415,7 @@ export const looseForOf = s => forOfStmtImpl(true, s);
 export const normalizeFor = Kit.pipe(
   Kit.map(
     Kit.pipe(
+      Policy.stage("normalize-for-1"),
       recalcEff,
       Ctrl.recalc,
       function prepareContinue(s) {
@@ -456,12 +458,13 @@ export const normalizeFor = Kit.pipe(
         }
         return walk();
       },
-      Kit.toArray
+      Policy.stage("after-normalize-for-1")
     )
   ),
   Array.from,
   Kit.map(
     Kit.pipe(
+      Policy.stage("normalize-for-2"),
       function* removeContinue(s) {
         const sl = Kit.auto(s);
         for (const i of sl) {
@@ -590,7 +593,8 @@ export const normalizeFor = Kit.pipe(
         return walk({});
       },
       Kit.completeSubst,
-      recalcEff
+      recalcEff,
+      Policy.stage("after-normalize-for-2")
     )
   )
 );

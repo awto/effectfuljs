@@ -309,7 +309,7 @@ function injectModuleDescr(si) {
 
 /**
  * if `wrapFunction` is set for a function expression or declaration
- * it will be wrapped with the call to runtime function with name
+ * it will be wrapped with the call to runtime function with a name
  * from the argument value
  */
 export function funcWraps(si) {

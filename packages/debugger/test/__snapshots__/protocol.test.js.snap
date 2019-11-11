@@ -150,7 +150,23 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
-              "func2": "undefined",
+              "func2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func2",
+                "prototype": Object {
+                  "constructor": "func2@breakpoints.js:5:20-13:1",
+                },
+              },
             },
             Object {
               "[name]": "func1",
@@ -252,7 +268,23 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
-              "func2": "undefined",
+              "func2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func2",
+                "prototype": Object {
+                  "constructor": "func2@breakpoints.js:5:20-13:1",
+                },
+              },
             },
             Object {
               "[name]": "func1",
@@ -354,7 +386,23 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
-              "func2": "undefined",
+              "func2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "func2",
+                "prototype": Object {
+                  "constructor": "func2@breakpoints.js:5:20-13:1",
+                },
+              },
             },
             Object {
               "[name]": "func1",

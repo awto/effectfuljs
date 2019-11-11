@@ -21,8 +21,13 @@ const yargs = require("yargs")
     choices: ["vscode", "vscodeReact", "standalone", "standaloneTrace"]
   })
   .option("time-travel", {
-    describe: "Enable time traveling trace",
-    alias: ["t", "time_travel"],
+    describe: "Compile with traveling trace",
+    alias: ["t"],
+    default: false,
+    type: "boolean"
+  })
+  .option("time-travel-disabled", {
+    describe: "Do not collect time traveling trace, await an API call",
     default: false,
     type: "boolean"
   })
