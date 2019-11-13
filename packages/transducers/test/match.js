@@ -5,16 +5,8 @@ import * as Kit from "../kit";
 import * as Match from "../match";
 import * as Trace from "../trace";
 
-const gen = ast =>
-  generate(ast, { retainLines: false, concise: true, quotes: "'" }).code;
-const pretty = Kit.pipe(
-  v => v.toString(),
-  parse,
-  gen
-);
 const runImpl = pats =>
   Kit.pipe(
-    v => v.toString(),
     parse,
     produce,
     Match.run(pats)
@@ -25,12 +17,12 @@ describe("match", function() {
   it("should find sub-node", function() {
     const p = Kit.auto(
       Trace.verify(
-        run(function f() {
+        run(`function f() {
           let a = 1,
             b = a + 1;
           a = b--;
           (b = a), (b = b--);
-        })
+        }`)
       )
     );
     let i = Kit.skip(p.till(i => i.enter && i.type === Match.Root));

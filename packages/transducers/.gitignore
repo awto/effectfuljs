@@ -9,3 +9,4 @@ tmp-*
 /*.js
 /samples/*.js
 loose
+/v2

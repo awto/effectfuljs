@@ -6,8 +6,8 @@ import * as Kit from "../kit";
 import * as Trace from "../trace";
 
 describe("lookahead iterator", function() {
-  const COUNT = 1000;
-  it("should provide accesst to the next element", function() {
+  const COUNT = 1000; // ensuring no stack overflows
+  it("should provide access to the next element", function() {
     const buf = Array.from(Array(COUNT + 1).keys());
     const s = Kit.auto(buf);
     expect(s.cur()).to.equal(0);

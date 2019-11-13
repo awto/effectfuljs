@@ -1,7 +1,6 @@
 var path = require("path");
 
-require("@babel/register")({
+if (typeof EDBG === "undefined") require("@babel/register")({
   ignore: ["@effectful/**/*"]
 });
-
 global.expect = require("chai").expect;

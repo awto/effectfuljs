@@ -467,7 +467,7 @@ export class DebugSession extends SessionImpl {
         }
         let startBuf: string[] = [];
         if (!child) {
-          const spawnArgs: any = { cwd, env, shell: true };
+          const spawnArgs: any = { cwd, env, shell: preset !== "browser"};
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
           child.on("error", data => {

@@ -2,7 +2,7 @@ import * as M from "@effectful/core";
 
 var $module = M.module("*", module),
     meta$f = M.meta($module, null, function (x) {
-  return function (module, exports) {
+  return function f(module, exports) {
     var ctx = M.context(x);
     ctx._module = module;
     ctx._exports = exports;

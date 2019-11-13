@@ -10,15 +10,43 @@ import {
   symInfo
 } from "./core";
 
-let symNum = 0;
-let curSymId = 0;
-
 symInfo(Tag.ClassDeclaration).funDecl = true;
 symInfo(Tag.FunctionDeclaration).funDecl = true;
 
-function* emitSym(pos) {
-  yield tok(pos, Tag.Identifier, { node: {}, sym: this });
+let symNum = 0;
+
+const nameOpts = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "k",
+  "m",
+  "n",
+  "x",
+  "y",
+  "z"
+];
+
+export function namePos(n, pos) {
+  if (!n.length) {
+    const len = nameOpts.length;
+    if (pos < len) return nameOpts[pos];
+    return `${nameOpts[pos % len]}${Math.floor(pos / len)}`;
+  }
+  if (n[n.length - 1] === "_") return n + (pos + 1);
+  if (pos === 0) {
+    return reserved.get(n) || n;
+  }
+  if (pos === 1) return "_" + n;
+  return `${n}${pos - 1}`;
 }
+
+export const reserved = new Map([["arguments", "args"]]);
 
 // String -> Sym
 export function newSym(name, strict = false, decl) {
@@ -26,18 +54,13 @@ export function newSym(name, strict = false, decl) {
   return {
     name,
     orig: name,
-    id: `${name}_${curSymId++}`,
+    id: `${name}_${symNum++}`,
     strict,
     decl,
     num: symNum++,
     type: null,
     emitConstMethod: emitSym
   };
-}
-
-/** `sort` comparator */
-function byNum(a, b) {
-  return a.num - b.num;
 }
 
 export const undefinedSym = newSym("undefined", true);
@@ -53,6 +76,29 @@ const globals = new Map([
   ["Array", ArraySym],
   ["Symbol", SymbolSym]
 ]);
+
+/** `sort` comparator */
+function byNum(a, b) {
+  return a.num - b.num;
+}
+
+export function cloneSym(sym) {
+  const res = newSym(sym.orig);
+  res.declScope = sym.declScope;
+  res.declLoop = sym.declLoop;
+  res.captLoop = sym.captLoop;
+  res.declBlock = sym.declBlock;
+  res.decl = sym.decl;
+  res.param = sym.param;
+  return res;
+}
+
+symInfo(Tag.ClassDeclaration).funDecl = true;
+symInfo(Tag.FunctionDeclaration).funDecl = true;
+
+function* emitSym(pos) {
+  yield tok(pos, Tag.Identifier, { node: {}, sym: this });
+}
 
 /**
  * sets temporal `node.name` for each Identifier for debug dumps outputs
@@ -74,92 +120,8 @@ export function* tempNames(s) {
 }
 
 /**
- * resets symbols decl map for resolving names
- * for new identifiers from transform passes,
- * the transform pass has to use sym field to identifier
- * symbols in `Identifier` nodes
- */
-export const resetSym = Kit.pipe(
-  resetFieldInfo,
-  function resetSym(si) {
-    const sa = Kit.toArray(si);
-    const s = Kit.auto(sa);
-    function id(i, blockScope) {
-      const { sym } = i;
-      if (sym != null) {
-        if (i.decl == null) {
-          const fi = i.fieldInfo;
-          i.decl = fi.declVar;
-        }
-        if (sym.orig != null) sym.name = sym.orig;
-        if (i.node.name == null) i.node.name = sym.name;
-        if (i.decl && blockScope != null) blockScope.add(sym);
-      }
-    }
-    function walk(sw, blockScope) {
-      for (const i of sw) {
-        if (i.enter) {
-          switch (i.type) {
-            case Tag.JSXIdentifier:
-              if (i.value.sym) id(i.value, blockScope);
-              break;
-            case Tag.Identifier:
-              id(i.value, blockScope);
-              break;
-            case Tag.FunctionDeclaration:
-              const j = s.curLev();
-              if (j) {
-                id(j.value, blockScope);
-                Kit.skip(s.one());
-              }
-            case Tag.FunctionExpression:
-            case Tag.ObjectMethod:
-            case Tag.ClassMethod:
-            case Tag.ArrowFunctionExpression:
-              // parameters must be added to body's scope
-              const nscope = new Set();
-              for (let j; (j = s.curLev()) != null; ) {
-                if (j.pos === Tag.body) {
-                  s.take();
-                  walk(s.sub(), (j.value.decls = nscope));
-                } else {
-                  walk(s.one(), nscope);
-                }
-              }
-              break;
-            case Tag.Program:
-            case Tag.BlockStatement:
-            case Tag.SwitchStatement:
-            case Tag.CatchClause:
-            case Tag.ForStatement:
-            case Tag.ForInStatement:
-            case Tag.ForAwaitStatement:
-            case Tag.ForOfStatement:
-              walk((i.value.decls = new Set()));
-              break;
-          }
-        }
-      }
-    }
-    walk(s);
-    return sa;
-  }
-);
-
-export function cloneSym(sym) {
-  const res = newSym(sym.orig);
-  res.declScope = sym.declScope;
-  res.declLoop = sym.declLoop;
-  res.captLoop = sym.captLoop;
-  res.declBlock = sym.declBlock;
-  res.decl = sym.decl;
-  res.param = sym.param;
-  return res;
-}
-
-/**
- * assigns unique Symbol object for each variable declaration and usage
- * stores it in sym fields, for root value stores map syms mapping the
+ * This assigns unique Symbol object for each variable declaration and usage.
+ * It stores it in `sym` fields, for root value stores map syms mapping the
  * sym object to a SymbolInfo structure
  *
  *     interface Sym {
@@ -655,39 +617,6 @@ function calcBlockRefs(si) {
   return sa;
 }
 
-const nameOpts = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "k",
-  "m",
-  "n",
-  "x",
-  "y",
-  "z"
-];
-
-function namePos(n, pos) {
-  if (!n.length) {
-    const len = nameOpts.length;
-    if (pos < len) return nameOpts[pos];
-    return `${nameOpts[pos % len]}${Math.floor(pos / len)}`;
-  }
-  if (n[n.length - 1] === "_") return n + (pos + 1);
-  if (pos === 0) {
-    return reserved.get(n) || n;
-  }
-  if (pos === 1) return "_" + n;
-  return `${n}${pos - 1}`;
-}
-
-const reserved = new Map([["arguments", "args"]]);
-
 /**
  * after adding some names, there may be some naming conflicts
  * this pass resolves them by looking for same name but different symbols ids
@@ -782,16 +711,22 @@ function solve(si) {
   for (const j of allIds) {
     if (!j.hasDecl && !j.strict && !j.global) {
       j.name = `${j.name}_UNDECL_${j.num}`;
+      const opts = sa[0].value.opts;
+      const fn = opts && opts.file && opts.file.filename;
       /* eslint-disable no-console */
       console.warn(
-        `INTERNAL ERROR: not declared generated symbol name ${j.name}`
+        `INTERNAL ERROR: not declared generated symbol name ${j.name}(${fn})`
       );
     }
   }
   for (const i of idToks) {
     if (!i.sym.name) {
+      const opts = sa[0].value.opts;
+      const fn = opts && opts.file && opts.file.filename;
       i.sym.name = `UNKNOWN_${i.sym.id}`;
-      console.warn(`INTERNAL ERROR: not resolved symbol name ${i.sym.name}`);
+      console.warn(
+        `INTERNAL ERROR: not resolved symbol name ${i.sym.name}(${fn})`
+      );
     }
     i.node.name = i.sym.name || (i.sym.name = i.sym.orig);
   }

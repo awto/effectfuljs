@@ -3,58 +3,70 @@ import * as M from "@effectful/core";
 function tuza() {
   var av,
       tuzb = function tuzb() {
-    var b, mv, v, a, d, e, f, g, h, k, m, n;
+    var b, mv, v, a, d, e, f, g, h, k, m, n, x, y, z;
     b = 2;
     mv = 3;
+    k = M.get(global, "che");
     return M.chain(M.call(b), _1);
 
     function _1(b) {
       var a;
       a = av = b;
-      return M.chain(M.call(che, void 0, a), _2);
+      return M.chain(M.call(k, void 0, a), _2);
     }
 
     function _2() {
-      return M.chain(M.call(me), _3);
+      var a;
+      a = M.get(global, "me");
+      return M.chain(M.call(a), _3);
     }
 
     function _3() {
-      v = (a = M.get(M.get(b, "a"), "d"), d = (e = M.get(c, "b"), f = M.get(e, "a"), e.a = f + 1, f), a[d] = M.get(a, d) - 1);
+      var g;
+      v = (a = M.get(M.get(b, "a"), "d"), d = (e = M.get(M.get(global, "c"), "b"), f = M.get(e, "a"), e.a = f + 1, f), a[d] = M.get(a, d) - 1);
       c = v;
-      return M.chain(M.call(be), _4);
+      g = M.get(global, "be");
+      return M.chain(M.call(g), _4);
     }
 
     function _4() {
-      if (process === 1000) {
-        return M.chain(M.call(c_fun, void 0, "a"), _5);
+      var a;
+
+      if (M.get(global, "process") === 1000) {
+        n = M.get(global, "a_fun");
+        y = M.get(global, "process");
+        a = M.get(global, "c_fun");
+        return M.chain(M.call(a, void 0, "a"), _5);
       } else {
-        k = 2;
+        m = 2;
         return M.jump(void 0, _9);
       }
     }
 
     function _5(a) {
-      m = M.call(process, a, "b");
-      return M.chain(M.call(d_fun, void 0, "c"), _6);
+      var b;
+      x = M.call(y, a, "b");
+      b = M.get(global, "d_fun");
+      return M.chain(M.call(b, void 0, "c"), _6);
     }
 
     function _6(a) {
       var b;
-      b = M.constr(M.get(process, "D"), "e");
-      return M.chain(M.call(m, void 0, a, "d", b), _7);
+      b = M.constr(M.get(M.get(global, "process"), "D"), "e");
+      return M.chain(M.call(x, void 0, a, "d", b), _7);
     }
 
     function _7(a) {
-      return M.chain(M.call(a_fun, void 0, a), _8);
+      return M.chain(M.call(n, void 0, a), _8);
     }
 
     function _8(a) {
-      k = a;
+      m = a;
       return M.jump(void 0, _9);
     }
 
     function _9() {
-      c = k;
+      c = m;
 
       if (g = M.get(b, "a"), h = M.get(av, "m"), f = M.get(g, h), g[h] = f + 1, f) {
         delete b[av];
@@ -66,7 +78,7 @@ function tuza() {
 
     function _10(b) {
       var a;
-      n = b;
+      z = b;
       a = av;
       return M.chain(M.call(a), _11);
     }
@@ -74,7 +86,7 @@ function tuza() {
     function _11(a) {
       var b;
       b = delete M.get(av, "z")[2 + 2];
-      delete n[a + b];
+      delete z[a + b];
     }
   };
 
