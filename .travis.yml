@@ -1,5 +1,8 @@
 language: node_js
 node_js:
   - "11"
+dist: xenial
+services:
+  - xvfb
 cache:
   yarn: true

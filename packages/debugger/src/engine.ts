@@ -30,7 +30,7 @@ import * as path from "path";
 // tslint:disable-next-line
 const asap = require("asap");
 
-const globalNS = config.globalNS
+const globalNS = config.globalNS;
 
 const journal = TT.journal;
 const context = State.context;
@@ -374,7 +374,9 @@ function defaultCall(this: any) {
 }
 
 export function mcall(prop: string, ...args: [any, ...any[]]) {
-  return savedCall.apply((context.call = args[0][prop]), args);
+  const func = args[0][prop];
+  if (!func) throw new TypeError(`${prop} isn't a function`);
+  return savedCall.apply((context.call = func), args);
 }
 
 S.regOpaqueObject(defaultCall, "@effectful/debugger/call", noProps);
@@ -421,7 +423,16 @@ export function loop(value: any): any {
         return token;
       }
       top = context.top;
-      if (!top) throw e;
+      if (!top) {
+        if (config.verbose) {
+          console.error(
+            `Uncaught exception: ${e}(on any:${!!context.brkOnAnyException},on uncaught:${!!context.brkOnUncaughtException}`
+          );
+          if (config.debuggerDebug)
+            console.error("Original stack:", e._deb_stack);
+        }
+        throw e;
+      }
       top.goto = top.meta.errHandler(top.state);
       value = e;
     }
@@ -477,8 +488,6 @@ function checkErrBrk(frame: Frame, e: any): boolean {
   if (e && context.exception !== e) {
     context.exception = e;
     if (e.stack) {
-      if (config.debuggerDebug)
-        Object.defineProperty(e, "_deb_stack", { value: e.stack });
       const stack = [String(e)];
       for (let i: Frame | null = frame; i; i = i.next) {
         if (i.brk)
@@ -488,7 +497,9 @@ function checkErrBrk(frame: Frame, e: any): boolean {
             })`
           );
       }
-      if (!config.debuggerDebug) e.stack = stack.join("\n");
+      if (config.debuggerDebug)
+        Object.defineProperty(e, "_deb_stack", { value: stack.join("\n") });
+      else e.stack = stack.join("\n");
     }
     let needsStop = false;
     if (context.brkOnAnyException) {
@@ -575,8 +586,7 @@ export function compileIndirEval(code: string): string {
   const id = toGlobal(evalCnt++);
   if (!blackbox) context.onNewSource(id, code);
   const wcode =
-    `return (${globalNS}.context.call=` +
-    `(function() {\n${code}\n}))();`;
+    `return (${globalNS}.context.call=` + `(function() {\n${code}\n}))();`;
   const ast = babelParse(wcode, {
     allowReturnOutsideFunction: true,
     startLine: 0
@@ -695,7 +705,7 @@ export function compileEval(
     "module",
     "__filename",
     "__dirname",
-   tgt
+    tgt
   )(
     // exports,
     mod && (<any>mod).exports,
@@ -834,13 +844,13 @@ export function brk(id: number): any {
 }
 
 export function iterator<T>(v: Iterable<T>) {
-  return v[Symbol.iterator]();
+  return (context.call = v[Symbol.iterator]), v[Symbol.iterator]();
 }
 
 export function iteratorM<T>(v: AsyncIterable<T>) {
   return v[Symbol.asyncIterator]
-    ? v[Symbol.asyncIterator]()
-    : (<any>v)[Symbol.iterator]();
+    ? ((context.call = v[Symbol.asyncIterator]), v[Symbol.asyncIterator]())
+    : ((context.call = (<any>v)[Symbol.iterator]), (<any>v)[Symbol.iterator]());
 }
 
 export function forInIterator(obj: object): Iterable<string> {

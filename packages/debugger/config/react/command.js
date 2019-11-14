@@ -39,7 +39,7 @@ exports.handler = function(argv) {
   if (argv.srcRoot) process.env.EFFECTFUL_DEBUGGER_SRC_ROOT = argv.srcRoot;
   if (argv.port) process.env.EFFECTFUL_DEBUGGER_PORT = argv.port;
   if (argv.verbose) process.env.EFFECTFUL_DEBUGGER_VERBOSE = 1;
-  if (argv.indexJs) process.env.EFFECTFUL_INDEX_JS = argv.indexJs;
+  if (argv.indexJs) process.env.EFFECTFUL_DEBUGGER_INDEX_JS = argv.indexJs;
   if (argv.htmlTemplate)
     process.env.EFFECTFUL_HTML_TEMPLATE = argv.htmlTemplate;
   process.env.EFFECTFUL_DEBUGGER_WEBPACK = 1;

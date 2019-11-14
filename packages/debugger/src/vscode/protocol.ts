@@ -40,6 +40,7 @@ declare module "vscode-debugprotocol" {
       argv0?: string;
       args?: string[];
       timeTravel?: boolean;
+      timeTravelDisabled?: boolean;
       keepRunning?: boolean;
       open?: boolean | string;
       console?:

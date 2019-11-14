@@ -1,6 +1,7 @@
 import * as Kit from "./kit";
 import { Tag, symbol, invariant } from "./kit";
 import * as Prop from "./propagate";
+import * as Policy from "./policy";
 
 /**
  * saves result of operation with an effect
@@ -123,6 +124,7 @@ export const interpretCasts = Kit.pipe(
     }
     yield* walk();
   },
+  Policy.stage("adjust-field-type"),
   Kit.adjustFieldType
 );
 
@@ -327,12 +329,4 @@ export function isEffFree(i) {
       return true;
   }
   return false;
-}
-
-export function frameLocalTmp(value) {
-  let f;
-  for (f = value; f && f.origType !== frame; f = f.parent) {}
-  const sym = Kit.scope.newSym();
-  f.savedDecls.set(sym, {});
-  return sym;
 }

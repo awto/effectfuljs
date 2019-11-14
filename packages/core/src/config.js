@@ -458,6 +458,9 @@ export default {
     scope: true
   },
 
+  // store function's sent in context's field
+  functionStateField: false,
+
   // converts update expressions and assignments without `=` operation into
   // assignments with `=`
   normalizeAssign: false,
@@ -468,5 +471,7 @@ export default {
   // thus avoiding dynamic `require` injections
   staticBundler: true,
   // shifts line number values
-  adjustLine: 0
+  adjustLine: 0,
+  // disables all optimizations if `false`
+  optimizations: true
 };

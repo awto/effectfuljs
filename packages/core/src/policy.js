@@ -307,17 +307,19 @@ function namespaces(si) {
       }
     }
   }
-  let $ns;
-  root.skipFile = false;
-  if (imp) $ns = namespaces.get(imp);
-  s.first.value.nsImported = !!$ns;
+  let $ns = root.$ns;
   if (!$ns) {
-    $ns = Kit.scope.newSym(s.opts.ns || "M");
-    // suppressing scope warning
-    if (!imp) $ns.num = -1;
-    $ns.global = true;
+    root.skipFile = false;
+    if (imp) $ns = namespaces.get(imp);
+    s.first.value.nsImported = !!$ns;
+    if (!$ns) {
+      $ns = Kit.scope.newSym(s.opts.ns || "M");
+      // suppressing scope warning
+      if (!imp) $ns.num = -1;
+      $ns.global = true;
+    }
+    root.$ns = $ns;
   }
-  root.$ns = $ns;
   let cur = s;
   if (imp) {
     cur = applyLib(`${imp}-ct`, true, cur);
@@ -957,17 +959,45 @@ export const injectFuncOpts = (opts, withSelf = false) => {
   };
 };
 
+export const STATISTICS =
+  (typeof window !== "undefined" && window.chrome) ||
+  (typeof performance !== "undefined" && process.env.EFFECTFUL_STAT);
+
 /** Marks and assign a name to set of passes */
-export const stage = Kit.curry(function(name, si) {
-  let s = Kit.auto(si);
-  const origStage = s.opts.stageName;
+export const stage = STATISTICS
+  ? Kit.curry(function(name, si) {
+      let s = Kit.auto(Kit.toArray(si));
+      const first = s.first.value;
+      const origStage = first.savedMeasure;
+      if (name.startsWith("after-")) {
+        first.savedMeasure = null;
+      } else {
+        performance.mark(name);
+        first.savedMeasure = name;
+      }
+      if (origStage)
+        performance.measure(
+          // `${origStage}:${first.funcId ? first.funcId.orig : "*"}`,
+          origStage,
+          origStage
+        );
+      return hooks(s, name);
+    })
+  : Kit.curry(function(name, si) {
+      let s = Kit.auto(Kit.toArray(si));
+      return hooks(s, name);
+    });
+
+function hooks(s, nextStage) {
+  const origStage = s.first.value.savedStageName;
   if (origStage && s.opts.after) {
     let hook = s.opts.after[origStage];
     if (hook) s = Kit.auto(hook(s));
   }
+  s.first.value.savedStageName = nextStage;
   if (s.opts.before) {
-    const hook = s.opts.before[name];
+    const hook = s.opts.before[nextStage];
     if (hook != null) s = hook(s);
   }
   return s;
-});
+}

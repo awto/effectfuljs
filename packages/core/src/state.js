@@ -250,6 +250,7 @@ export function restoreDecls(s) {
   const root = sl.first.value;
   const { ctxDeps, savedDecls: saved } = root;
   let closures = saved;
+  const noOpts = sl.opts.optimizations === false;
   let closArg;
   const { closConv } = root.opts;
   if (closConv) {
@@ -336,7 +337,8 @@ export function restoreDecls(s) {
                 if (
                   funcId.interpr === Bind.ctxField &&
                   funcId.declScope === i.value &&
-                  funcId.hasReads
+                  // funcId.hasReads
+                  ((noOpts && funcId.bound) || funcId.hasReads)
                 ) {
                   assigns.push({
                     sym: funcId,
@@ -1051,6 +1053,7 @@ function propagateArgs(cfg) {
 export function allUniqFields(syms, pref = "", postf = "") {
   const names = new Set();
   const epref = pref ? "" : "_";
+  // TODO: group by field name
   for (const sym of syms) {
     let name = `${pref}${sym.orig}${postf}`;
     for (
@@ -1222,48 +1225,58 @@ export function handleSpecVars(si) {
 function prepareContextVars(root, cfg) {
   const ctxSyms = [];
   const resSym = root.resSym;
-  const opt = root.opts.optimizeContextVars !== false;
+  const allOpts = root.opts.optimizations !== false;
+  const opt = root.opts.optimizeContextVars !== false && allOpts;
   // TODO: check if eval is in scope
-  const first = cfg[0];
-  for (const i of root.ctxDeps.values()) if (i.copy) i.copy.hasReads = true;
-  for (const i of cfg) {
-    if (i === first) continue;
-    const sw = i.stateVars;
-    if (!sw) continue;
-    for (const j of sw.r) {
-      j.hasReads = true;
+  if (allOpts) {
+    const first = cfg[0];
+    for (const i of root.ctxDeps.values()) if (i.copy) i.copy.hasReads = true;
+    for (const i of cfg) {
+      if (i === first) continue;
+      const sw = i.stateVars;
+      if (!sw) continue;
+      for (const j of sw.r) {
+        j.hasReads = true;
+      }
     }
-  }
-  for (const i of cfg) {
-    if (i === first) continue;
-    const sw = i.stateVars;
-    if (!sw) continue;
-    for (const j of sw.w) {
-      if (j.hasReads || j === i.patSym || j === i.errSym || j === resSym)
-        continue;
-      (j.writeFrames || (j.writeFrames = new Set())).add(i);
+    for (const i of cfg) {
+      if (i === first) continue;
+      const sw = i.stateVars;
+      if (!sw) continue;
+      for (const j of sw.w) {
+        if (j.hasReads || j === i.patSym || j === i.errSym || j === resSym)
+          continue;
+        (j.writeFrames || (j.writeFrames = new Set())).add(i);
+      }
     }
-  }
-  for (const i of root.scopeDecls) {
-    if (opt && !i.closCapt && i.writeFrames) {
-      i.interpr = null;
-      i.fieldName = null;
-      const decl = root.savedDecls.get(i);
-      if (!decl || (decl.init && decl.raw)) root.savedDecls.delete(i);
-      if (i.writeFrames)
-        for (const f of i.writeFrames)
-          (f.savedDecls || (f.savedDecls = new Map())).set(i, { raw: null });
+    for (const i of root.scopeDecls) {
+      if (opt && !i.closCapt && i.writeFrames) {
+        i.interpr = null;
+        i.fieldName = null;
+        const decl = root.savedDecls.get(i);
+        if (!decl || (decl.init && decl.raw)) root.savedDecls.delete(i);
+        if (i.writeFrames)
+          for (const f of i.writeFrames)
+            (f.savedDecls || (f.savedDecls = new Map())).set(i, { raw: null });
+      }
+      if (i.interpr === Bind.ctxField && i.subField !== false) ctxSyms.push(i);
     }
-    if (i.interpr === Bind.ctxField) ctxSyms.push(i);
+  } else {
+    for (const i of root.scopeDecls) {
+      if (i.interpr === Bind.ctxField && i.subField !== false) ctxSyms.push(i);
+    }
   }
   allUniqFields(ctxSyms, root.opts.closVarPrefix, root.opts.closVarPostfix);
 }
 
 export function calcFlatCfg(cfg, sa) {
   const root = sa[0].value;
-  calcFrameStateVars(sa);
+  const opt = root.opts.optimizations;
+  if (opt) calcFrameStateVars(sa);
   if (root.opts.contextState) prepareContextVars(root, cfg);
-  resolveFrameParams(cfg);
-  propagateArgs(cfg);
-  localsDecls(cfg);
+  if (opt) {
+    resolveFrameParams(cfg);
+    propagateArgs(cfg);
+    localsDecls(cfg);
+  }
 }

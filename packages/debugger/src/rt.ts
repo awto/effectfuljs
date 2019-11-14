@@ -29,7 +29,10 @@ function switchDefault(
   const defImpl: any = proto[name];
   proto[name] = function impl() {
     if (context.call === impl)
-      return (context.call = debugImpl), debugImpl.apply(this, <any>arguments);
+      return (
+        //TODO: move to faster apply
+        (context.call = debugImpl.apply), debugImpl.apply(this, <any>arguments)
+      );
     return (context.call = null), defImpl.apply(this, <any>arguments);
   };
 }
@@ -57,6 +60,7 @@ if (config.patchRT) {
   switchDefault(Ap, "some", Instr.some);
   switchDefault(Tp, "every", Instr.every);
   switchDefault(Ap, "every", Instr.every);
+  switchDefault(Array, "from", Instr.arrayFrom);
   global.eval = Engine.indirEval;
   if (config.expFunctionConstr) (<any>global).Function = Engine.FunctionConstr;
 }

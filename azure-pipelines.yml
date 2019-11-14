@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+      - master
+      - feature.*
+
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-latest'
+    mac:
+      imageName: 'macOS-latest'
+    windows:
+      imageName: 'windows-latest'
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '>=11.1.0'
+  displayName: 'Install Node.js'
+- script: |
+    /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+    echo ">>> Started xvfb"
+  displayName: Start xvfb
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+- script: |
+    yarn && yarn test
+  displayName: Build and test
+  env:
+    DISPLAY: ':99.0'

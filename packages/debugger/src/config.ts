@@ -3,6 +3,8 @@ export default {
   patchRT: true,
   /** enables traces collections */
   timeTravel: false,
+  /** don't start collecting traces immediately but await an API call */
+  timeTravelDisabled: false,
   /** tries to make everything serializable */
   persistState: true,
   /** Track DOM changes using MutationObserver */
@@ -27,4 +29,3 @@ export default {
   /** global variable NS for the debugger library */
   globalNS: "EDBG"
 };
-

@@ -10,3 +10,4 @@ tmp-*
 /samples/*.js
 loose
 /test/*.js
+/v2

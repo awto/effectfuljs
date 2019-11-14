@@ -1,0 +1,297 @@
+{
+  "name": "debugger",
+  "publisher": "effectful",
+  "displayName": "EffectfulJS Debugger",
+  "description": "Debug your JavaScipt/TypeScript applications with time-traveling, hot swapping, persistent state, scripting and more",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.33.0"
+  },
+  "categories": [
+    "Debuggers"
+  ],
+  "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
+  "activationEvents": [
+    "onDebugInitialConfigurations",
+    "onDebugResolve:effectful"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "breakpoints": [
+      {
+        "language": "javascript"
+      },
+      {
+        "language": "typescript"
+      },
+      {
+        "language": "typescriptreact"
+      },
+      {
+        "language": "javascriptreact"
+      }
+    ],
+    "commands": [],
+    "debuggers": [
+      {
+        "type": "effectful",
+        "label": "Debug with EffectfulJS",
+        "program": "./out/debugAdapter.js",
+        "runtime": "node",
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop after launch",
+                "default": false
+              },
+              "verbose": {
+                "type": [
+                  "boolean",
+                  "number"
+                ],
+                "description": "Enable logging.",
+                "default": false
+              },
+              "timeTravel": {
+                "type": "boolean",
+                "description": "Transpile sources with time-traveling support",
+                "default": false
+              },
+              "timeTravelDisabled": {
+                "type": "boolean",
+                "description": "Don't start time traveling trace collection immediately (awaits API call)",
+                "default": false
+              },
+              "command": {
+                "type": [
+                  "string",
+                  "boolean"
+                ],
+                "default": false,
+                "descriptcion": "A command to run on launch"
+              },
+              "cwd": {
+                "type": "string",
+                "default": "${workspaceFolder}",
+                "descriptcion": "Working folder for the launched command"
+              },
+              "args": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "description": "Arguments for the command",
+                "default": []
+              },
+              "console": {
+                "type": "string",
+                "enum": [
+                  "internalConsole",
+                  "integratedTerminal",
+                  "externalTerminal"
+                ],
+                "enumDescriptions": [
+                  "VS Code Debug Console (which doesn't support to read input from a program)",
+                  "VS Code's integrated terminal",
+                  "External terminal that can be configured via user settings"
+                ],
+                "description": "Where to launch the debug target (for preset:\"node\")",
+                "default": "internalConsole"
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": "Environment variables for the command",
+                "default": {}
+              },
+              "preset": {
+                "type": [
+                  "string",
+                  "boolean"
+                ],
+                "enum": [
+                  "node",
+                  "browser",
+                  false
+                ],
+                "enumDescriptions": [
+                  "Run a command as a local process, intercepting all node processes to debug",
+                  "Run Create React App based project in a browser",
+                  "Just run the command, expceting the debugger's integration is implemented there"
+                ],
+                "default": "run",
+                "description": "Zero-config presets"
+              },
+              "open": {
+                "type": [
+                  "boolean",
+                  "string"
+                ],
+                "default": true,
+                "description": "Open the URL (default if `true`) in the local browser for `preset:\"browser\"`."
+              },
+              "reuse": {
+                "type": "boolean",
+                "default": false,
+                "description": "Don't kill the launched process on stopping sessions, and reuse it on its next start (if it still runs)."
+              },
+              "htmlTemplate": {
+                "type": [
+                  "null",
+                  "string"
+                ],
+                "default": null,
+                "description": "A template file for HtmlWebpackPlugin (for \"browser\" preset)"
+              },
+              "indexJs": {
+                "type": [
+                  "null",
+                  "string"
+                ],
+                "default": null,
+                "description": "webpack entry file for \"browser\" preset"
+              },
+              "reconnectTimeout": {
+                "type": "number",
+                "default": 0,
+                "description": "Number of seconds to wait for more remotes before exiting the session (always if less than 0)"
+              },
+              "debuggerHost": {
+                "type": "string",
+                "default": "localhost",
+                "description": "WebSocket host where the debugger listens for applications connections"
+              },
+              "debuggerPort": {
+                "type": "number",
+                "default": 20011,
+                "description": "WebSocket port number where the debugger listens for applications connections"
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "effectful",
+            "request": "launch",
+            "name": "Launch Node application",
+            "preset": "node",
+            "stopOnEntry": false,
+            "timeTravel": true,
+            "cwd": "^\"\\${workspaceRoot}\"",
+            "command": "node",
+            "args": [
+              "^\"\\${file}\""
+            ],
+            "console": "integratedTerminal",
+            "env": {}
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "Effectful: Listener",
+            "description": "Don't launch anything, just listen for incoming connections.",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "Listen for incoming connections",
+              "stopOnEntry": false,
+              "timeTravel": true,
+              "reconnectTimeout": -1
+            }
+          },
+          {
+            "label": "Effectful: Browser",
+            "description": "Launch a browser's application (uses react-scripts to derive configs)",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "Launch Browser application",
+              "preset": "browser",
+              "stopOnEntry": false,
+              "timeTravel": true,
+              "cwd": "^\"\\${workspaceRoot}\"",
+              "htmlTemplate": null,
+              "indexJs": null,
+              "reconnectTimeout": 5,
+              "open": true
+            }
+          },
+          {
+            "label": "Effectful: Node",
+            "description": "Launch for create-react-app created project",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "Launch Node application",
+              "preset": "node",
+              "stopOnEntry": false,
+              "timeTravel": true,
+              "cwd": "^\"\\${workspaceRoot}\"",
+              "command": "node",
+              "args": [
+                "^\"\\${file}\""
+              ],
+              "console": "integratedTerminal",
+              "env": {}
+            }
+          },
+          {
+            "label": "Effectful: Tests",
+            "description": "Launch for create-react-app created project",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "Launch npm tests",
+              "preset": "node",
+              "stopOnEntry": false,
+              "timeTravel": true,
+              "cwd": "^\"\\${workspaceRoot}\"",
+              "command": "npm",
+              "args": [
+                "test"
+              ],
+              "console": "integratedTerminal",
+              "env": {}
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile && node ./nolinks.js",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test:adapter": "mocha -u tdd ./out/test/adapter",
+    "test": "npm run compile && npm run test:adapter && npm run test:ide",
+    "test:ide": "node ./testExtension.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^10.12.21",
+    "@types/puppeteer": "^1.20.2",
+    "@types/ws": "^6.0.1",
+    "cross-env": "^6.0.3",
+    "puppeteer": "^2.0.0",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1",
+    "vscode": "^1.1.28",
+    "vscode-debugadapter-testsupport": "^1.34.0",
+    "vscode-test": "^1.2.2"
+  },
+  "dependencies": {
+    "@effectful/debugger": "^1.1.8",
+    "vscode-debugadapter": "^1.34.0",
+    "vscode-debugprotocol": "^1.34.0",
+    "ws": "^7.0.0"
+  },
+  "private": true
+}

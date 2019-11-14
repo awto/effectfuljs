@@ -935,7 +935,6 @@ function* copyFrameVars(si) {
               if (commonPatSym && sym === patSym) i.value.sym = commonPatSym;
               else if (sym.interpr === Bind.ctxField)
                 i.value.insideCtx = !frame.first;
-              else if (sym.frameLocal) frame.savedDecls.set(sym, {});
             }
             break;
           case Tag.AssignmentExpression:
@@ -1296,7 +1295,7 @@ function calcVarDeps(si) {
  */
 function markBound(si) {
   const sa = Kit.toArray(si);
-  for (const i of si) {
+  for (const i of sa) {
     if (
       i.enter &&
       (i.type === Tag.Identifier || i.type === Block.bindPat) &&
@@ -1656,12 +1655,13 @@ function prepareCfg(sa) {
 /** conferts flat structure to JS expressions */
 export const interpret = Kit.pipe(
   Inline.markSimpleRedir,
-  Kit.toArray,
   markBound,
   prepareCfg,
   Par.convert,
+  Policy.stage("flat-interpret-opt"),
   Opt.removeSingleJumps,
   Opt.inlineFrames,
+  Policy.stage("flat-interpret-vars"),
   calcVarDeps,
   ifDefunct(Defunct.init),
   Par.postproc,
@@ -1672,14 +1672,13 @@ export const interpret = Kit.pipe(
   Bind.interpretPureLet,
   copyFrameVars,
   Policy.stage("interpretFrames"),
-  Kit.toArray,
   ifDefunct(Defunct.convert),
+  Policy.stage("clean-jumps"),
   Coerce.cleanPureJumps,
-  Kit.toArray,
   Policy.stage("defunctFrames"),
   Inline.jumps,
   interpretJumps,
-  Kit.toArray,
+  Policy.stage("flat-interpret-3"),
   Inline.control,
   interpretFrames,
   Kit.toArray,

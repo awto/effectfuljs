@@ -396,8 +396,9 @@ export function propAccess(si) {
               loc: i.value.node && i.value.node.loc,
               type: i.type
             },
-            bind: sym.bindOp,
-            expr: sym.bindOp,
+            bind: i.value.bind, // sym.bindOp,
+            eff: i.value.eff, // sym.bindOp,
+            // expr: sym.bindOp,
             sym: opSym
           });
           yield* obj;

@@ -23,9 +23,9 @@ const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent")
 const appPackageJson = paths.appPackageJson
   ? require(paths.appPackageJson)
   : false;
-const { normalizeDrive, isWindows } = require("../../state");
+const { normalizeDrive } = require("../../state");
 
-const { backend, cache, srcRoot, timeTravel, hot } = config;
+const { backend, cache, srcRoot, timeTravel } = config;
 
 const importRT = `@effectful/debugger/backends/${backend}`;
 
@@ -39,7 +39,6 @@ const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 const publicPath = "/";
-const shouldUseRelativeAssetPaths = false;
 const publicUrl = "";
 
 const env = getClientEnvironment(publicUrl);
@@ -49,7 +48,7 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 const prependModules = [];
 
 const debuggerPath = normalizeDrive(
-  fs.realpathSync(path.resolve(__dirname, "../../.."))
+  fs.realpathSync(path.resolve(__dirname, "..", "..", ".."))
 );
 
 prependModules.push(path.resolve(debuggerPath, "debugger", "node_modules"));
@@ -71,8 +70,12 @@ if (path.sep === "\\")
 
 const include = [paths.appSrc];
 
-const isDebuggerPath = filename =>
-  path.resolve(normalizeDrive(filename)).startsWith(debuggerPath);
+function isDebuggerPath(filename) {
+  filename = path.resolve(normalizeDrive(filename));
+  return (
+    filename.startsWith(debuggerPath) && !filename.startsWith(paths.appSrc)
+  );
+}
 
 // common function to get style loaders
 const getStyleLoaders = (cssOptions, preProcessor) => {

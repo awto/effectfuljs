@@ -26,9 +26,11 @@ import * as path from "path";
 export const consumeScope = consume;
 
 export const preproc = Kit.pipe(
+  Policy.stage("scope-prepare"),
   Kit.scope.prepare,
   Policy.stage("scope"),
   Prop.prepare,
+  Policy.stage("policy-scope"),
   Policy.prepare,
   Policy.stage("prepare"),
   Gens.prepare,
@@ -40,7 +42,8 @@ export const preproc = Kit.pipe(
   Control.assignLabels,
   Prop.propagateEff,
   State.prepare,
-  Eval.prepare
+  Eval.prepare,
+  Policy.stage("after-preproc")
 );
 
 /* default transform for all functions if loose mode is set */
@@ -78,7 +81,8 @@ const finalize = Kit.pipe(
   Policy.stage("symbols"),
   Rt.interpretLibSyms,
   Kit.toArray,
-  Rt.inject
+  Rt.inject,
+  Policy.stage("after-finalize")
 );
 
 export const normalizeOnlyStage0 = Kit.map(
@@ -105,6 +109,7 @@ export const normalizeOnlyStage1 = Kit.map(
 export const stage0 = Kit.pipe(
   Kit.map(
     Kit.pipe(
+      Policy.stage("before-stage0"),
       Gens.functionSentPrepare,
       Control.injectExplicitRet,
       Ops.inject,
@@ -121,20 +126,24 @@ export const stage0 = Kit.pipe(
       Branch.normalizeSwitch,
       Prop.recalcEff,
       Branch.addAlternate,
-      Branch.toBlocks
+      Branch.toBlocks,
+      Policy.stage("after-normalize")
     )
   ),
   Loops.normalizeFor,
   Kit.map(
     Kit.pipe(
+      Policy.stage("save-decls"),
       State.saveDecls,
       Prop.recalcEff,
-      Coerce.lift
+      Coerce.lift,
+      Policy.stage("blocks")
     )
   ),
   Control.injectBlock,
   Kit.map(
     Kit.pipe(
+      Policy.stage("operations"),
       Ops.normalizeAssign,
       Ops.propAccess,
       Policy.stage("organize"),
@@ -149,9 +158,12 @@ export const stage0 = Kit.pipe(
       Closure.convertCalls,
       Eval.wrap,
       Ops.combine,
+      Policy.stage("flat-convert"),
       Flat.convert,
+      Policy.stage("flat-form"),
       Inline.jsExceptions,
-      Eval.substVars
+      Eval.substVars,
+      Policy.stage("after-stage0")
     )
   )
 );
@@ -159,17 +171,23 @@ export const stage0 = Kit.pipe(
 const stage1 = Kit.pipe(
   Kit.map(
     Kit.pipe(
+      Policy.stage("before-stage1"),
       Block.cleanPureEff,
       Policy.stage("interpret"),
       Ops.interpret,
+      Policy.stage("interpret-flat"),
       Flat.interpret,
+      Policy.stage("interpret-ops-inline"),
       Inline.ops,
       Coerce.inject,
+      Policy.stage("interpret-app"),
       Block.interpretApp,
       Coerce.interpret,
       Policy.stage("interpretOps"),
       Block.interpretCasts,
+      Policy.stage("interpret-clean"),
       Branch.clean,
+      Policy.stage("restore-decls"),
       State.restoreDecls,
       Policy.stage("decls")
     )
@@ -177,6 +195,7 @@ const stage1 = Kit.pipe(
   Array.from,
   Kit.map(
     Kit.pipe(
+      Policy.stage("before-subst-sym"),
       substSym,
       Closure.substContextIds,
       Policy.stage("context"),
@@ -184,6 +203,7 @@ const stage1 = Kit.pipe(
       Rt.collectUsages,
       Policy.stage("simplify"),
       Simplify.main,
+      Policy.stage("after-stage1"),
       Kit.toArray,
       postproc
     )
@@ -213,6 +233,7 @@ const dryRun = Kit.pipe(
 );
 
 export function pass(s) {
+  if (Policy.STATISTICS) performance.mark("full");
   const orig = Kit.toArray(s);
   let sa = Kit.toArray(Closure.topToIIFE(Rt.collectImports(orig)));
   const root = sa[0].value;
@@ -286,7 +307,7 @@ export function pass(s) {
   const hasEff = (root.hasEff = transform.length !== 0);
   if (!hasEff) {
     /** no transforms, but it may need to erase some directives */
-    return ifLoose(loose)(orig);
+    return loose(orig);
   }
   if (root.opts.topIIFE && root.hasESM)
     throw new Error(
@@ -306,7 +327,9 @@ export function pass(s) {
     file = dryRun(file);
   }
   const res = [...l1, ...stage1(s1), ...normalizeOnlyStage1(n1), file];
-  return finalize([...Scope.restore(root, res)]);
+  const fin = finalize([...Scope.restore(root, res)]);
+  if (Policy.STATISTICS) performance.measure("full", "full");
+  return fin;
 }
 
 /**

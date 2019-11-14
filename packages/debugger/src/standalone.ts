@@ -1,9 +1,17 @@
 /** runs program and outputs some information about each step */
 import * as Debugger from "./main";
 import config from "./config";
-import {Frame} from "./state";
+import { Frame } from "./state";
 
 const { context } = Debugger;
+
+function str(value: any): string {
+  try {
+    return String(value);
+  } catch (e) {
+    return e.message;
+  }
+}
 
 export function stateDescr(
   stepId: number,
@@ -13,7 +21,7 @@ export function stateDescr(
   const x = Debugger.context;
   const res = [];
   res.push(
-    `#${threadId}: Step #${stepId}@${x.brk ? "stopped" : "running"} = ${String(
+    `#${threadId}: Step #${stepId}@${x.brk ? "stopped" : "running"} = ${str(
       x.value
     )} ${x.error ? "ERROR" : ""}`
   );
@@ -31,7 +39,7 @@ export function stateDescr(
     for (const j in x.top.brk.scope) {
       const [name, decl] = x.top.brk.scope[j];
       res.push(
-        `#${threadId}:    ${name}@${decl}: ${String(x.top.$[j])} = ${String(
+        `#${threadId}:    ${name}@${decl}: ${str(x.top.$[j])} = ${str(
           x.top.$[j]
         )}`
       );

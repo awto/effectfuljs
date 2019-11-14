@@ -60,7 +60,7 @@ function unref() {
 
 async function send(data: any, optional?: boolean) {
   const msg = JSON.stringify(data);
-  if (config.verbose)
+  if (config.verbose && data.event !== "output")
     sysConsole.log(`DEBUGGER: SEND ${msg} from ${context.threadId}`);
   if (closed) {
     if (config.verbose)

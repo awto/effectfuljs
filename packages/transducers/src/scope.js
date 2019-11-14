@@ -782,16 +782,22 @@ function solve(si) {
   for (const j of allIds) {
     if (!j.hasDecl && !j.strict && !j.global) {
       j.name = `${j.name}_UNDECL_${j.num}`;
+      const opts = sa[0].value.opts;
+      const fn = opts && opts.file && opts.file.filename;
       /* eslint-disable no-console */
       console.warn(
-        `INTERNAL ERROR: not declared generated symbol name ${j.name}`
+        `INTERNAL ERROR: not declared generated symbol name ${j.name}(${fn})`
       );
     }
   }
   for (const i of idToks) {
     if (!i.sym.name) {
+      const opts = sa[0].value.opts;
+      const fn = opts && opts.file && opts.file.filename;
       i.sym.name = `UNKNOWN_${i.sym.id}`;
-      console.warn(`INTERNAL ERROR: not resolved symbol name ${i.sym.name}`);
+      console.warn(
+        `INTERNAL ERROR: not resolved symbol name ${i.sym.name}(${fn})`
+      );
     }
     i.node.name = i.sym.name || (i.sym.name = i.sym.orig);
   }

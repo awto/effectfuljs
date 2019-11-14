@@ -1,4 +1,3 @@
-const path = require("path");
 const asyncOps = {
   AwaitExpression: "awt",
   YieldExpression: true
@@ -38,8 +37,14 @@ const injectableOps = [
   "mcall"
 ];
 
+let VERBOSE = process.env.EFFECTFUL_DEBUGGER_VERBOSE;
+
+if (VERBOSE) {
+  VERBOSE = VERBOSE[0].toLowerCase() === "t" || (!isNaN(VERBOSE) && +VERBOSE);
+} else VERBOSE = false;
+
 module.exports = require("@effectful/core").babelPlugin(
-  (opts, { Tag, Kit, Transform: T, Policy: P, presets, Block }) => {
+  (opts, { Tag, Kit, Transform: T, Policy: P, presets }) => {
     const moduleAliases = {};
     const importRT = opts.importRT || "@effectful/debugger/api";
     if (opts.preInstrumentedLibs) {
@@ -55,16 +60,14 @@ module.exports = require("@effectful/core").babelPlugin(
     }
     const brk = Kit.sysId("brk");
     const unwrapSym = Kit.sysId("unwrapImport");
-    const savePropSym = Kit.sysId("upd");
     const contextOpSym = Kit.sysId("context");
-    const stopSym = Kit.sysId("stop");
     const raiseSym = Kit.sysId("raise");
     const evalCtx = Kit.sysId("evalCtx");
     const handleSym = Kit.sysId("handle");
     const injectOps = {};
     if (opts.expInject !== false) {
       for (const i of injectableOps) {
-        const descr = (injectOps[i] = {});
+        injectOps[i] = {};
       }
     }
     const before = {
@@ -125,6 +128,9 @@ module.exports = require("@effectful/core").babelPlugin(
         normPureForOf: opts.timeTravel,
         optimizeContextVars: false,
         srcRoot: opts.srcRoot || true,
+        optimizations: false,
+        cleanupFrameVars: false,
+        functionStateField: "sent",
         functionSentOps: {
           yldAG: true,
           yld: true,
@@ -142,8 +148,8 @@ module.exports = require("@effectful/core").babelPlugin(
         },
         wrapPropAccess: opts.timeTravel
           ? {
-              set: { name: "set", bind: true },
-              delete: { name: "del", bind: true }
+              set: { name: "set" /*, bind: true*/ },
+              delete: { name: "del" /*, bind: true*/ }
             }
           : null,
         ...opts,
@@ -153,7 +159,7 @@ module.exports = require("@effectful/core").babelPlugin(
         const s = Kit.auto(input);
         const opts = s.opts;
         s.first.value.evalCtxSym = evalCtx;
-        if (process.env.EFFECTFUL_DEBUGGER_VERBOSE)
+        if (VERBOSE)
           console.log(
             `transforming:"${opts.file &&
               opts.file
@@ -287,7 +293,6 @@ module.exports = require("@effectful/core").babelPlugin(
                 s.take();
                 const obj = [...s.one()];
                 const prop = [...s.one()];
-                const objType = obj[0].type;
                 yield* s.template(i.pos, "=$I($E)", callId);
                 if (callee.value.node.computed)
                   yield* Kit.reposOne(prop, Tag.push);
@@ -441,7 +446,7 @@ module.exports = require("@effectful/core").babelPlugin(
                     // since it may duplicate some side effects
                     yield* s.template(
                       i.pos,
-                      "=$I($I($E))",
+                      "=$1($2($E))",
                       { bind: true, expr: true },
                       unwrapSym,
                       la.value.sym
@@ -454,8 +459,9 @@ module.exports = require("@effectful/core").babelPlugin(
                 }
                 i.value.bind = true;
                 break;
+              case Tag.UnaryExpression:
+                if (i.value.node.operation !== "delete") break;
               case Tag.AssignmentExpression:
-              case Tag.UpdateExpression:
               case Tag.NewExpression:
                 i.value.bind = true;
                 break;
