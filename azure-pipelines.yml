@@ -9,7 +9,7 @@ strategy:
     linux:
       imageName: 'ubuntu-latest'
     mac:
-      imageName: 'macOS-latest'
+      imageName: 'macOS-10.13'
     windows:
       imageName: 'windows-latest'
 
