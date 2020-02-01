@@ -26,12 +26,21 @@ export function asserts(si) {
   return Kit.cleanEmptyExprs(calls(mark()));
   function* mark() {
     for (const i of s) {
-      if (i.enter && i.type === Tag.MemberExpression) {
-        const c = s.cur();
-        if (c.type === Tag.Identifier && c.value.node.name === "assert") {
-          yield s.tok(i.pos, Tag.Null);
-          Kit.skip(s.copy(i));
-          continue;
+      if (i.enter) {
+        if (i.type === Tag.MemberExpression) {
+          const c = s.cur();
+          if (c.type === Tag.Identifier && c.value.node.name === "assert") {
+            yield s.tok(i.pos, Tag.Null);
+            Kit.skip(s.copy(i));
+            continue;
+          }
+        } else if (i.type === Tag.CallExpression) {
+          const c = s.cur();
+          if (c.type === Tag.Identifier && c.value.node.name === "invariant") {
+            yield s.tok(i.pos, Tag.Null);
+            Kit.skip(s.copy(i));
+            continue;
+          }
         }
       }
       yield i;

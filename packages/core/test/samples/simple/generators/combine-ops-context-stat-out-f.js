@@ -2230,9 +2230,9 @@ class SomeChild extends SomeClass {
 
 }
 
-function clasClosure(A) {
+function clasClosure(_A) {
   var clasClosure = M.context();
-  clasClosure._A = A;
+  clasClosure._A = _A;
   return clasClosure.scope(_1);
 
   function _1(clasClosure) {
@@ -2244,7 +2244,7 @@ function clasClosure(A) {
 
   function _2(clasClosure) {
     var a;
-    clasClosure._B = class B extends clasClosure._A {
+    clasClosure._B = class B extends A {
       constructor() {
         var _clasClosure = clasClosure;
         _clasClosure._cnt++;
@@ -2274,7 +2274,7 @@ function clasClosure(A) {
 
   function _3(clasClosure) {
     var a;
-    clasClosure._B1 = class B extends clasClosure._A {
+    clasClosure._B1 = class B extends A {
       constructor() {
         var _clasClosure = clasClosure;
         _clasClosure._cnt += 2;

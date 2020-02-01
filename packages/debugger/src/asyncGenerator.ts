@@ -1,12 +1,21 @@
-import { Module, StateMap, Handler, FunctionDescr, States } from "./state";
+import {
+  Module,
+  StateMap,
+  Handler,
+  FunctionDescr,
+  States,
+  Item,
+  AsyncGeneratorFrame,
+  Frame
+} from "./state";
 import * as State from "./state";
 import { fun, resumeLocal, token, checkExitBrk, pop } from "./engine";
-import { Item, AsyncGeneratorFrame } from "./instr/rt";
 import * as Instr from "./instr/rt";
 import { scopeInit, awtImpl, unhandledA } from "./async";
 import { regOpaqueObject, regConstructor } from "@effectful/serialization";
 
 const { context } = State;
+const { defineProperty } = State.saved.Object;
 
 class AsyncIterableThis {
   [Symbol.asyncIterator]() {
@@ -26,19 +35,17 @@ class AsyncGenerator extends AsyncIterableThis {
 
 regConstructor(AsyncGenerator);
 
-(<any>AsyncGenerator.prototype).next = Instr.asyncGeneratorMethod(
-  Instr.asyncNextImpl,
-  <any>nextStep
-);
-
-(<any>AsyncGenerator.prototype).throw = Instr.asyncGeneratorMethod(
-  Instr.asyncThrowImpl,
-  nextThrowStep
-);
-(<any>AsyncGenerator.prototype).return = Instr.asyncGeneratorMethod(
-  Instr.asyncReturnImpl,
-  nextReturnStep
-);
+defineProperty(AsyncGenerator.prototype, "next", {
+  value: Instr.asyncGeneratorMethod(Instr.asyncNextImpl, <any>nextStep),
+  configurable: true
+});
+defineProperty(AsyncGenerator.prototype, "throw", {
+  value: Instr.asyncGeneratorMethod(Instr.asyncThrowImpl, nextThrowStep)
+});
+defineProperty(AsyncGenerator.prototype, "return", {
+  value: Instr.asyncGeneratorMethod(Instr.asyncReturnImpl, nextReturnStep),
+  configurable: true
+});
 
 function nextStep(frame: AsyncGeneratorFrame, value: any): Promise<Item> {
   frame.promise = new Promise<Item>(scopeInit.bind(frame));
@@ -73,9 +80,18 @@ export function funAG(
   parent: FunctionDescr | undefined,
   params: string[]
 ): ($$: { [name: string]: any }) => any {
-  return Object.setPrototypeOf(
-    fun(module, func, handler, err, fin, states, name, loc, parent, params),
-    AsyncGenerator.prototype
+  return fun(
+    module,
+    func,
+    handler,
+    err,
+    fin,
+    states,
+    name,
+    loc,
+    parent,
+    params,
+    State.GeneratorKind | State.AsyncKind
   );
 }
 
@@ -98,7 +114,7 @@ export function scopeAG(goto: number) {
   return (context.value = new AsyncGenerator(top));
 }
 
-function yldResolve(top: State.Frame, value: any) {
+function yldResolve(top: Frame, value: any) {
   context.suspended.delete(top);
   top.awaiting = token;
   (<AsyncGeneratorFrame>top).onResolve(
@@ -106,13 +122,13 @@ function yldResolve(top: State.Frame, value: any) {
   );
 }
 
-function awtYldResolve(this: State.Frame, value: any) {
+function awtYldResolve(this: Frame, value: any) {
   yldResolve(this, value);
 }
 
 regOpaqueObject(awtYldResolve, "@effectful/debugger/awt#yld");
 
-function awtDoneResolve(this: State.Frame, value: any) {
+function awtDoneResolve(this: Frame, value: any) {
   context.suspended.delete(this);
   this.awaiting = token;
   (<AsyncGeneratorFrame>this).onResolve(

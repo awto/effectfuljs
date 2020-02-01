@@ -2,15 +2,21 @@ const config = require("../defaults");
 const package = require("../../package.json");
 const Persist = require("../../persist");
 const path = require("path");
-const babel = require("@babel/core");
 const deepClone = require("lodash/cloneDeep");
 const Debug = require("../../engine");
-const registerCache = require("@babel/register/lib/cache");
 const fs = require("fs");
-const preset = require("../babel/preset-zero-config");
 const cacheId = require("../cacheId");
-const { normalizeDrive } = require("../../state");
+const {
+  normalizeDrive,
+  saved: { Function }
+} = require("../../state");
 require("./vm");
+
+const CACHE_SAVE_TIMEOUT = 2000;
+
+const babel = require("@babel/core");
+const registerCache = require("@babel/register/lib/cache");
+const preset = require("../babel/preset-zero-config");
 
 global.WebSocket = require("ws");
 
@@ -30,13 +36,6 @@ const builtIn = Module.builtinModules.filter(i => {
   if (/^(?:v8|node-inspect)\//g.test(i)) return false;
   return true;
 });
-
-let cache;
-
-if (config.cache) {
-  registerCache.load();
-  cache = registerCache.get();
-}
 
 let babelOpts = config.babelOpts || {};
 
@@ -83,6 +82,91 @@ const requirePath =
         return path.join(debuggerPath, "backends", backend);
       };
 
+let cacheSaveScheduled = false;
+
+const findCacheDir = require("find-cache-dir");
+const makeDir = require("make-dir");
+const os = require("os");
+
+const DEFAULT_CACHE_DIR =
+  findCacheDir({
+    name: "@effectful/debugger"
+  }) ||
+  os.homedir() ||
+  os.tmpdir();
+
+const DEFAULT_FILENAME = path.join(
+  DEFAULT_CACHE_DIR,
+  `.babel.${babel.version}.${babel.getEnv()}.json`
+);
+
+const FILENAME = process.env.BABEL_CACHE_PATH || DEFAULT_FILENAME;
+
+// copy-pasted from @babel/register but with ability to merge
+function saveCache() {
+  if (!cacheSaveScheduled || !config.cache) return;
+  cacheSaveScheduled = false;
+  let serialised = "{}";
+  const data = loadCache() || {};
+  Object.assign(data, cacheData);
+  try {
+    serialised = JSON.stringify(data, null, "  ");
+  } catch (err) {
+    if (err.message === "Invalid string length") {
+      err.message = "Cache too large so it's been cleared.";
+      console.error(err.stack);
+    } else {
+      throw err;
+    }
+  }
+  try {
+    makeDir.sync(path.dirname(FILENAME));
+    fs.writeFileSync(FILENAME, serialised);
+  } catch (e) {
+    switch (e.code) {
+      case "EACCES":
+      case "EPERM":
+        console.warn(`Babel could not write cache to file: ${FILENAME} 
+due to a permission issue. Cache is disabled.`);
+        config.cache = false;
+        break;
+
+      case "EROFS":
+        console.warn(`Babel could not write cache to file: ${FILENAME} 
+because it resides in a readonly filesystem. Cache is disabled.`);
+        config.cache = false;
+        break;
+
+      default:
+        throw e;
+    }
+  }
+}
+
+function loadCache() {
+  if (!config.cache) return null;
+  let cacheContent;
+  try {
+    cacheContent = fs.readFileSync(FILENAME);
+  } catch (e) {
+    switch (e.code) {
+      case "EACCES":
+        console.warn(`Babel could not read cache file: ${FILENAME}
+due to a permission issue. Cache is disabled.`);
+        config.cache = false;
+      default:
+        return null;
+    }
+  }
+  try {
+    return JSON.parse(cacheContent);
+  } catch (_unused) {
+    return null;
+  }
+}
+
+const cacheData = loadCache();
+
 Mp._compile = function _compile(content, filename) {
   const ext = path.extname(filename);
   if (
@@ -90,73 +174,91 @@ Mp._compile = function _compile(content, filename) {
     ext === ".json" || // TODO: more options
     (filename = normalizeDrive(filename)).startsWith(debuggerPath) ||
     !(filename.startsWith(nodeModules) || filename.startsWith(rootPath))
-  )
+  ) {
+    if (config.verbose > 1)
+      log(`DEBUGGER: loading without instrumentation ${filename}`);
     return savedCompile.call(this, content, filename);
+  }
   const blackbox = filename.startsWith(nodeModules);
   const moduleConfig = require("../defaults");
   const importRT = requirePath(moduleConfig.backend);
   if (config.verbose) {
-    let msg = `DEBUGGER: compiling ${filename}, disabled:${disabled}, filename:${filename}, rt:${importRT}`;
+    let msg = `DEBUGGER: compiling ${filename}, filename:${filename}, rt:${importRT}`;
     if (config.verbose > 1) msg += ` content:${JSON.stringify(content)}`;
     log(msg);
   }
   disabled = true;
   let result;
+  let cached;
+  let code;
+  let curMtime = mtime(filename);
+  let opts;
+  let cacheKey;
   try {
-    const opts = new babel.OptionManager().init(
-      config.babelZeroConfig
-        ? {
-            presets: [
-              [
-                preset,
-                {
-                  blackbox,
-                  timeTravel: config.timeTravel,
-                  importRT,
-                  staticBundler: false
-                }
-              ]
-            ],
-            babelrc: false,
-            configFile: false,
-            ...babelOpts,
-            filename
-          }
-        : {
-            sourceRoot: path.dirname(filename),
-            ...deepClone(babelOpts),
-            filename
-          }
-    );
+    if (config.instrument) {
+      opts = new babel.OptionManager().init(
+        config.zeroConfig
+          ? {
+              presets: [
+                [
+                  preset,
+                  {
+                    blackbox,
+                    timeTravel: config.timeTravel,
+                    importRT,
+                    staticBundler: false
+                  }
+                ]
+              ],
+              babelrc: false,
+              configFile: false,
+              ...babelOpts,
+              filename
+            }
+          : {
+              sourceRoot: path.dirname(filename),
+              ...deepClone(babelOpts),
+              filename
+            }
+      );
 
-    let cacheKey = `${JSON.stringify(opts)}@${cacheId}`;
-    const env = babel.getEnv(false);
-    if (env) cacheKey += `@${env}`;
-    let cached = cache && cache[cacheKey];
-    let curMtime = mtime(filename);
-    if (!cached || cached.mtime !== curMtime) {
-      if (config.verbose) {
-        let msg = "DEBUGGER: Rebuilding";
-        if (!cached) msg += "(not in cache)";
-        else {
-          if (config.verbose > 1) msg += `, key:{${cacheKey}}`;
-          else msg += ` (${cached.mtime} < ${curMtime})`;
+      cacheKey =
+        // `${JSON.stringify(opts)}@${cacheId}`;
+        `${filename}@${cacheId}`;
+      const env = babel.getEnv(false);
+      if (env) cacheKey += `@${env}`;
+      cached = cacheData && cacheData[cacheKey];
+      if (!cached || cached.mtime !== curMtime) {
+        if (config.verbose) {
+          let msg = "DEBUGGER: Rebuilding";
+          if (!cached) {
+            msg += "(not in cache)";
+          } else {
+            if (config.verbose > 1) msg += `, key:{${cacheKey}}`;
+            else msg += ` (${cached.mtime} < ${curMtime})`;
+          }
+          log(msg);
         }
-        log(msg);
+        cached = babel.transformSync(content, opts);
+        if (cacheData) {
+          cacheData[cacheKey] = cached;
+          cached.mtime = mtime(filename);
+        }
+        if (config.cache && !cacheSaveScheduled) {
+          cacheSaveScheduled = true;
+          process.on("exit", saveCache);
+          process.nextTick(saveCache);
+        }
+      } else {
+        if (config.verbose) {
+          let msg = "DEBUGGER: Using the cached version";
+          if (config.verbose > 1) msg += `: key:{${cacheKey}}`;
+          log(msg);
+        }
       }
-      cached = babel.transformSync(content, opts);
-      if (cache) {
-        cache[cacheKey] = cached;
-        cached.mtime = mtime(filename);
-      }
-    } else {
-      if (config.verbose) {
-        let msg = "DEBUGGER: Using the cached version";
-        if (config.verbose > 1) msg += `: key:{${cacheKey}}`;
-        log(msg);
-      }
-    }
-    if (config.hot) {
+      code = cached.code;
+    } else code = content;
+    if (config.hot && !blackbox) {
       let reloading = 0;
       if (config.verbose)
         log(`DEBUGGER: enabling hot swapping for ${filename}`);
@@ -172,20 +274,28 @@ Mp._compile = function _compile(content, filename) {
           if (config.verbose) log(`DEBUGGER: Reloading ${filename}`);
           try {
             disabled = true;
-            content = fs.readFileSync(filename, "utf-8");
-            cached = babel.transformSync(content, opts);
-            if (cache) {
-              cache[cacheKey] = cached;
-              cached.mtime = curMtime;
+            let run;
+            try {
+              content = fs.readFileSync(filename, "utf-8");
+              if (config.instrument) {
+                cached = babel.transformSync(content, opts);
+                if (cacheData) {
+                  cacheData[cacheKey] = cached;
+                  cached.mtime = curMtime;
+                }
+                code = cached.code;
+              } else code = content;
+              run = new Function(
+                "exports",
+                "require",
+                "module",
+                "__filename",
+                "__dirname",
+                code
+              );
+            } finally {
+              disabled = false;
             }
-            const run = new Function(
-              "exports",
-              "require",
-              "module",
-              "__filename",
-              "__dirname",
-              cached.code
-            );
             run(
               this.exports,
               this.__effectful_js_require,
@@ -195,20 +305,18 @@ Mp._compile = function _compile(content, filename) {
             );
           } catch (e) {
             log(`DEBUGGER: Error on building:${filename}`, e);
-          } finally {
-            disabled = false;
           }
         }, 500);
       });
     }
     if (config.verbose) {
       if (config.verbose > 1)
-        log(`DEBUGGER:compiled ${filename}: ${JSON.stringify(cached.code)}`);
+        log(`DEBUGGER:compiled ${filename}: ${JSON.stringify(code)}`);
       else log(`DEBUGGER: ${filename} is compiled`);
     }
-    result = savedCompile.call(this, cached.code, filename);
   } finally {
     disabled = false;
   }
+  result = savedCompile.call(this, code, filename);
   return result;
 };

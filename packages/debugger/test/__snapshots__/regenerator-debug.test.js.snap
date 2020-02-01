@@ -36,7 +36,7 @@ exports[`regenerator trace async generator functions should allow yielding a rej
 
 exports[`regenerator trace async generator functions should be able to handle many awaits 1`] = `5477`;
 
-exports[`regenerator trace async generator functions should keep results in order 1`] = `525`;
+exports[`regenerator trace async generator functions should keep results in order 1`] = `785`;
 
 exports[`regenerator trace async generator functions should not propagate exceptions between iterations 1`] = `87`;
 

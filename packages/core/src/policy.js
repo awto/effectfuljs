@@ -307,17 +307,19 @@ function namespaces(si) {
       }
     }
   }
-  let $ns;
-  root.skipFile = false;
-  if (imp) $ns = namespaces.get(imp);
-  s.first.value.nsImported = !!$ns;
+  let $ns = root.$ns;
   if (!$ns) {
-    $ns = Kit.scope.newSym(s.opts.ns || "M");
-    // suppressing scope warning
-    if (!imp) $ns.num = -1;
-    $ns.global = true;
+    root.skipFile = false;
+    if (imp) $ns = namespaces.get(imp);
+    s.first.value.nsImported = !!$ns;
+    if (!$ns) {
+      $ns = Kit.scope.newSym(s.opts.ns || "M");
+      // suppressing scope warning
+      if (!imp) $ns.num = -1;
+      $ns.global = true;
+    }
+    root.$ns = $ns;
   }
-  root.$ns = $ns;
   let cur = s;
   if (imp) {
     cur = applyLib(`${imp}-ct`, true, cur);

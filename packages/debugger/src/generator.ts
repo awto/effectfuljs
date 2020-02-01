@@ -1,11 +1,20 @@
-import { Module, StateMap, Handler, FunctionDescr, States } from "./state";
+import {
+  FunctionDescr,
+  GeneratorFrame,
+  saved,
+  Module,
+  StateMap,
+  States,
+  Handler
+} from "./state";
 import * as State from "./state";
-import { fun, checkExitBrk, unhandled, pop } from "./engine";
+import { fun, clos, checkExitBrk, unhandled, pop } from "./engine";
 import * as Instr from "./instr/rt";
-import { GeneratorFrame } from "./instr/rt";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
 
 const { context } = State;
+
+const { defineProperty } = saved.Object;
 
 class IterableThis {
   [Symbol.iterator]() {
@@ -27,9 +36,18 @@ regConstructor(Generator);
 
 const Gp = <any>Generator.prototype;
 
-Gp.next = Instr.generatorMethod(Instr.generatorNext);
-Gp.throw = Instr.generatorMethod(Instr.generatorThrow);
-Gp.return = Instr.generatorMethod(Instr.generatorReturn);
+defineProperty(Gp, "next", {
+  value: Instr.generatorMethod(Instr.generatorNext),
+  configurable: true
+});
+defineProperty(Gp, "throw", {
+  value: Instr.generatorMethod(Instr.generatorThrow),
+  configurable: true
+});
+defineProperty(Gp, "return", {
+  value: Instr.generatorMethod(Instr.generatorReturn),
+  configurable: true
+});
 
 function GeneratorFunction() {}
 
@@ -58,23 +76,26 @@ export function funG(
   parent: FunctionDescr | undefined,
   params: string[]
 ): ($$: { [name: string]: any }) => any {
-  return function($$) {
-    const res = fun(
-      module,
-      func,
-      handler,
-      err,
-      fin,
-      states,
-      name,
-      loc,
-      parent,
-      params
-    )($$);
-    Object.setPrototypeOf(res, GeneratorFunctionPrototype);
-    res.prototype = Object.create(Gp);
-    return res;
-  };
+  return fun(
+    module,
+    func,
+    handler,
+    err,
+    fin,
+    states,
+    name,
+    loc,
+    parent,
+    params,
+    State.GeneratorKind
+  );
+}
+
+export function closG($$: any, meta: FunctionDescr, closure: any) {
+  const res = clos($$, meta, closure);
+  Object.setPrototypeOf(res, GeneratorFunctionPrototype);
+  res.prototype = Object.create(Gp);
+  return res;
 }
 
 export function scopeG(goto: number) {

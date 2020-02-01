@@ -13,6 +13,8 @@ import * as Loops from "../../loops";
 import * as Rt from "../../rt";
 import * as Policy from "../../policy";
 import defaultOpts from "../../config";
+import * as babel from "@babel/core";
+const packageJson = require("../../package.json");
 
 export function pretty(f) {
   return prettyBlock(`(${f.toString()});`);
@@ -35,10 +37,7 @@ const defaultParseOpts = {
 export function prettyBlock(f, opts = {}) {
   try {
     const ast = parse(f.toString(), opts.parser || defaultParseOpts);
-    const orig = Kit.pipe(
-      Kit.produce,
-      Kit.strip
-    )(ast);
+    const orig = Kit.pipe(Kit.produce, Kit.strip)(ast);
     consume(orig);
     return generate(ast, { quotes: "single", retainFunctionParens: true }, "")
       .code;
@@ -67,34 +66,42 @@ function* prepareJsx(s) {
 export const run = Kit.curryN(
   2,
   Kit.optsScopeLift(function run(opts, f) {
-    Kit.setOpts(
-      Object.assign(
-        {},
-        defaultOpts,
-        {
-          importRT: "@effectful/core",
-          contextMethodOpsSpec: {},
-          ns: "M",
-          wrapPropAccess: null
-        },
-        opts
-      )
-    );
     const ast = parse(f.toString(), opts.parser || defaultParseOpts);
-    const orig = Kit.pipe(
-      Kit.produce,
-      prepareJsx,
-      Array.from
-    )(ast);
-    Transform.run(orig);
-    return prettyBlock(
-      generate(
+    let code;
+    if (packageJson.name === "@effectful/core" && opts.babelPreset) {
+      const presetOpts = { ...opts };
+      delete presetOpts.babelPreset;
+      delete presetOpts.parser;
+      code = babel.transformFromAstSync(ast, f.toString(), {
+        presets: [[opts.babelPreset, presetOpts]]
+      }).code;
+    } else {
+      Kit.setOpts(
+        Object.assign(
+          {},
+          defaultOpts,
+          {
+            importRT: "@effectful/core",
+            contextMethodOpsSpec: {},
+            ns: "M",
+            wrapPropAccess: null
+          },
+          opts
+        )
+      );
+      if (opts.transformMain) {
+        opts.transformMain(ast);
+      } else {
+        const orig = Kit.pipe(Kit.produce, prepareJsx, Array.from)(ast);
+        Transform.run(orig);
+      }
+      code = generate(
         ast,
         { quotes: "single", retainFunctionParens: true, concise: true },
         ""
-      ).code,
-      opts
-    );
+      ).code;
+    }
+    return prettyBlock(code, opts);
   })
 );
 
@@ -147,11 +154,7 @@ export const transformBlock = Kit.curryN(
       )
     );
     const ast = parse(src.toString(), defaultParseOpts);
-    const s = Kit.pipe(
-      Kit.produce,
-      Array.from,
-      scopes
-    )(ast);
+    const s = Kit.pipe(Kit.produce, Array.from, scopes)(ast);
     for (const i of s) fun(i);
     return prettyBlock(
       generate(
@@ -172,13 +175,7 @@ const scopes = Kit.pipe(
   Policy.propagateOpts,
   Transform.preproc,
   Scope.splitScopes,
-  Kit.map(
-    Kit.pipe(
-      Branch.toBlocks,
-      Prop.recalcEff,
-      Kit.toArray
-    )
-  ),
+  Kit.map(Kit.pipe(Branch.toBlocks, Prop.recalcEff, Kit.toArray)),
   Control.injectBlock,
   Kit.map(Kit.pipe(Kit.toArray)),
   Array.from

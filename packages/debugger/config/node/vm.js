@@ -1,55 +1,48 @@
 const vm = require("vm");
 const { compileIndirEval } = require("../../engine");
+const config = require("../../config").default;
+const ns = config.globalNS;
 
 function precompile(code, params) {
-  if (!params) params = "";
-  return `(function(${params}) { ${compileIndirEval(code)} })(${params})`;
+  if (!params) params = [];
+  const iparams = params.slice(0);
+  iparams.push("module");
+  return `(function(${iparams}) { ${compileIndirEval(code)} })(${params})`;
 }
 
-const Script = vm.Script;
-const Sp = Script.prototype;
-const runInContext = Sp.runInContext;
-Sp.runInContext = function runInContext(contextifiedSandbox, options) {
-  contextifiedSandbox.$effectful$debugger$lib$ =
-    global.$effectful$debugger$lib$;
-  return runInContext.call(this, contextifiedSandbox, options);
-};
+const ScriptConstr = vm.Script;
+const Sp = ScriptConstr.prototype;
+const runInContextMethod = Sp.runInContext;
+const compileFunctionStatic = vm.compileFunction;
+const runInContextStatic = vm.runInContext;
+const runInNewContextStatic = vm.runInNewContext;
+const runInNewContextMethod = Sp.runInNewContext;
 
-const runInNewContext = Sp.runInNewContext;
-Sp.runInNewContext = function runInNewContext(sandbox, options) {
-  sandbox.$effectful$debugger$lib$ = global.$effectful$debugger$lib$;
-  return runInNewContext.call(this, sandbox, options);
+Sp.runInContext = function runInContext(contextifiedSandbox, options) {
+  Object.defineProperty(contextifiedSandbox, ns, {
+    value: global[ns],
+    configurable: true
+  });
+  return runInContextMethod.call(this, contextifiedSandbox, options);
 };
 
 vm.Script = function Script(code, options) {
-  return new Script(precompile(code), options);
+  return new ScriptConstr(precompile(code), options);
 };
-
-const compileFunction = vm.compileFunction;
 
 vm.compileFunction = function compileFunction(code, params, options) {
   if (options && options.parsingContext)
-    options.parsingContext.$effectful$debugger$lib$ =
-      global.$effectful$debugger$lib$;
-  return runInContextStatic(
-    precompile(code, params && params.join()),
-    params,
-    options
-  );
+    Object.defineProperty(options.parsingContext, ns, {
+      value: global[ns],
+      configurable: true
+    });
+  return compileFunctionStatic(precompile(code, params), params, options);
 };
 
-const runInContextStatic = vm.runInContext;
-
 vm.runInContext = function runInContext(code, contextifiedSandbox, options) {
-  contextifiedSandbox.$effectful$debugger$lib$ =
-    global.$effectful$debugger$lib$;
   return runInContextStatic(precompile(code), contextifiedSandbox, options);
 };
 
-const runInNewContextStatic = vm.runInNewContext;
-
 vm.runInNewContext = function runInNewContext(code, sandbox, options) {
-  if (!sandbox) sandbox = {};
-  sandbox.$effectful$debugger$lib$ = global.$effectful$debugger$lib$;
-  return runInNewContext(precompile(code), sandbox, options);
+  return runInNewContextStatic(precompile(code), sandbox, options);
 };

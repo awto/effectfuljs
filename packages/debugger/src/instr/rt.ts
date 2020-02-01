@@ -9,8 +9,14 @@
 
 import * as Engine from "../engine";
 import * as Persist from "../persist";
-import * as State from "../state";
-import { resume, resumeLocal } from "../engine";
+import { resumeLocal } from "../engine";
+import { ManagedSet, ManagedMap } from "../timeTravel/core";
+import {
+  Item,
+  AsyncGeneratorFrame,
+  thunkSymbol,
+  GeneratorFrame
+} from "../state";
 
 type Callback<This, T, R> = (
   this: This | undefined,
@@ -31,6 +37,22 @@ export function map<T, U, This = undefined>(
     res[cur] = callback.call(self, i, cur, this);
   }
   return res;
+}
+
+export function arrayFrom<T, U = T, This = undefined>(
+  iter: Iterable<T>,
+  mapFn?: Callback<This, T, U>,
+  self?: This
+) {
+  if (mapFn) {
+    const arr: U[] = [];
+    let x = 0;
+    for (const i of iter) arr.push(mapFn.call(self, i, x++, <any>arr));
+    return arr;
+  }
+  const arr: T[] = [];
+  for (const i of iter) arr.push(i);
+  return arr;
 }
 
 export function filter<T, This = undefined>(
@@ -143,6 +165,8 @@ export function setForEach<T, This>(
   for (const i of this) callback.call(self, i, i, this);
 }
 
+(<any>ManagedSet.prototype).forEach = setForEach;
+
 export function mapForEach<K, V, This>(
   this: Map<K, V>,
   callback: (this: This | undefined, v: V, k: K, cont: Map<K, V>) => void,
@@ -150,6 +174,8 @@ export function mapForEach<K, V, This>(
 ): void {
   for (const [k, v] of this) callback.call(self, v, k, this);
 }
+
+(<any>ManagedMap.prototype).forEach = mapForEach;
 
 /**
  * wraps a top module's export, returns a function which on each call
@@ -165,13 +191,13 @@ export function wrapExport(top: any, mod: any): any {
     }
     return mod.exports;
   };
-  res[State.thunkSymbol] = true;
+  res[thunkSymbol] = true;
   return res;
 }
 
 export function unwrapImport(value: any, name: string): any {
   if (!value) return value;
-  if (value[State.thunkSymbol]) {
+  if (value[thunkSymbol]) {
     value = value();
     if (!value) return value;
   }
@@ -185,19 +211,6 @@ function reify<T>(v: T): T {
 
 export function chainM<A, B>(arg: A, func: (a: A) => B): B {
   return func(reify(arg));
-}
-
-export type Item = { value: any; done: boolean };
-
-export type SubGenerator = Iterator<any> & {
-  throw?: (value: any) => Item;
-  return?: (value: any) => Item;
-};
-
-export interface GeneratorFrame extends State.Frame {
-  delegatee: SubGenerator | null;
-  running: boolean;
-  sent: any;
 }
 
 export function generatorNext(frame: GeneratorFrame, value: any): Item {
@@ -291,23 +304,6 @@ export function yldStarImpl(
   }
   dest.delegatee = null;
   return resumeLocal(dest, value);
-}
-
-export type AsyncSubGenerator = AsyncIterator<any> & {
-  throw?: (value: any) => Promise<Item>;
-  return?: (value: any) => Promise<Item>;
-};
-
-export interface AsyncGeneratorFrame extends State.Frame {
-  delegatee: AsyncSubGenerator | null;
-  goto: number;
-  running: boolean;
-  queue: (() => void)[];
-  cleanup(): void;
-  onResolve: (value: any) => void;
-  onReject: (reason: any) => void;
-  promise: Promise<Item>;
-  sent: any;
 }
 
 export type AsyncStep = (

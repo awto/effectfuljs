@@ -13,7 +13,6 @@ const toBrowserPath: (p: string) => string =
       };
 
 suite("Debugging on Chrome", function() {
-  // this.timeout(60000);
   this.timeout(0);
   const PROJECT_ROOT = path.join(__dirname, "../../..");
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
@@ -34,7 +33,7 @@ suite("Debugging on Chrome", function() {
     const MOD2 = toBrowserPath(path.join(DATA_ROOT, "stepsModule2.js"));
     const MOD3 = toBrowserPath(path.join(DATA_ROOT, "stepsModule3.js"));
     const savedDefaultTimeout = dc.defaultTimeout;
-    dc.defaultTimeout = 30000;
+    dc.defaultTimeout = 300000;
     await Promise.all([
       dc.configurationSequence(),
       dc.awaitWebpack(),

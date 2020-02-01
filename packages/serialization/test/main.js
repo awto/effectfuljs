@@ -762,6 +762,53 @@ describe("not serializable values", function() {
   });
 });
 
+describe("TypedArray", function() {
+  it("should be serializable", function() {
+    const arr1 = new Int32Array([1, 2, 3, 4, 5]);
+    const arr2 = new Uint32Array(arr1.buffer, 8);
+    const d = Lib.write({ arr1, arr2 }, {});
+    assert.deepStrictEqual(d, {
+      f: [
+        [
+          "arr1",
+          {
+            o: 0,
+            l: 5,
+            b: {
+              r: 0
+            },
+            $: "Int32Array"
+          }
+        ],
+        [
+          "arr2",
+          {
+            o: 8,
+            l: 3,
+            b: {
+              r: 0
+            },
+            $: "Uint32Array"
+          }
+        ]
+      ],
+      x: [
+        {
+          d: "AQAAAAIAAAADAAAABAAAAAUAAAA=",
+          $: "ArrayBuffer"
+        }
+      ]
+    });
+    const { arr1: rarr1, arr2: rarr2 } = Lib.read(d);
+    assert.equal(rarr1.constructor, Int32Array);
+    assert.equal(rarr2.constructor, Uint32Array);
+    assert.notStrictEqual(arr1, rarr1);
+    assert.notStrictEqual(arr2, rarr2);
+    assert.deepStrictEqual(arr1, rarr1);
+    assert.deepStrictEqual(arr2, rarr2);
+  });
+});
+
 describe("BigInt", function() {
   it("should be serializable", function() {
     const num = 2n ** 10000n;

@@ -27,7 +27,7 @@ const yargs = require("yargs")
     type: "boolean"
   })
   .option("time-travel-disabled", {
-    describe: "Do not collect time traveling trace, await an API call",
+    describe: "Do not collect time traveling trace",
     default: false,
     type: "boolean"
   })
@@ -44,6 +44,17 @@ const yargs = require("yargs")
   .option("extension-root", {
     type: "string",
     describe: "VSCode extension's root folder"
+  })
+  .option("zero-config", {
+    alias: ["z", "zero_config"],
+    describe: "Default babel plugins set for .ts/.js",
+    default: true,
+    type: "boolean"
+  })
+  .option("instrument", {
+    describe: "Instrument sources before loading",
+    default: true,
+    type: "boolean"
   })
   .command(require("../config/node/command"))
   .command(require("../config/react/command"))

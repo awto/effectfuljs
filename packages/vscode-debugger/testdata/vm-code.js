@@ -6,21 +6,41 @@ const sandbox = {
   count: 2
 };
 
-const savedCompile = vm.compileFunction;
-
-vm.compileFunction = function(args, params, opts) {
-  console.log("COMPILE", args, params, opts);
-  return savedCompile.call(vm, args, params, opts);
-};
-
-const savedCreateScript = vm.createScript;
-
-vm.savedCreateScript = function(args, params, opts) {
-  console.log("Script", args, params, opts);
-  return savedCreateScript.call(vm, args, params, opts);
-};
-
-vm.runInNewContext('count += 1; name = "kitty"', sandbox);
+vm.runInNewContext(
+  `count += 1; 
+   name = "kitty"
+   debugger;`,
+  sandbox
+);
 console.log(util.inspect(sandbox));
 
-vm.runInNewContext('console.log("HI")', { console });
+vm.createContext(sandbox);
+
+vm.runInContext(
+  `count += 1; 
+   name = "another kitty"
+   debugger;`,
+  sandbox
+);
+
+console.log(util.inspect(sandbox));
+
+const script = new vm.Script(
+  `count += 1; 
+   name = "kitty2";
+   debugger;`
+);
+
+script.runInContext(sandbox);
+
+console.log(util.inspect(sandbox));
+
+let fn = vm.compileFunction(
+  `count += c; 
+   name = n
+   debugger;`,
+  ["c", "n"],
+  { parsingContext: vm.createContext(sandbox) }
+);
+fn(2, "c1");
+console.log(util.inspect(sandbox));

@@ -50,14 +50,6 @@ module.exports = function(api, opts = { preInstrumentedLibs: true }) {
   const tsOpts = { allowNamespaces: opts.tsAllowNamespaces };
   if (opts.jsxPragma) tsOpts.jsxPragma = opts.jsxPragma;
   if (opts.typescript !== false) {
-    /*
-    result.presets.unshift({
-      plugins: [
-        require("./ts-no-consts"),
-        [require("@babel/plugin-transform-typescript").default, tsOpts]
-      ]
-    });
-    */
     result.presets.unshift(
       {
         plugins: [require("./ts-no-consts")]

@@ -57,7 +57,7 @@ for (const i of s) {
   const n = i.path[i.path.length - 1];
   const name = i.path[i.path.length - 2];
   const nopts = i.value;
-  nopts.filename = path.join(dir, `${name}-in.js`);
+  // nopts.filename = path.join(dir, `${name}-in.js`);
   if (nopts.require == null) nopts.require = "./effectfuljscore";
   const resName = path.join(dir, `${name}-out-${n}.js`);
   let resCode;

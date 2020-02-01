@@ -1,3 +1,5 @@
+const debuggerTransform = require("../../../debugger/config/babel/preset");
+
 function* permut(c) {
   if (!c.length) {
     yield ["", {}];
@@ -11,6 +13,19 @@ function* permut(c) {
 }
 
 function* opts() {
+  yield* permut([
+    [
+      [
+        "d",
+        { babelPreset: debuggerTransform, blackbox: false, timeTravel: false }
+      ]
+    ],
+    [
+      ["", {}],
+      ["b", { blackbox: true }],
+      ["s", { timeTravel: true }]
+    ]
+  ]);
   yield* permut([
     [["f", { static: true, contextState: false }]],
     [

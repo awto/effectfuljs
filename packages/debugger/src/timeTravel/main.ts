@@ -4,6 +4,7 @@ import * as DOM from "./dom";
 import { Record } from "../state";
 import * as State from "../state";
 import * as S from "@effectful/serialization";
+import { record2, record3, record4, record5, record6, record8 } from "./binds";
 
 export const journal = Core.journal;
 const context = State.context;
@@ -24,7 +25,8 @@ export const undo: () => Record | null = config.timeTravel
       if (!now) return null;
       const ops = now.operations;
       now.operations = void 0;
-      for (let i = ops; i != null; i = i.prev) {
+      for (let i = ops, j; i != null; i = j) {
+        j = i.prev; // `call` may reschedule the same object
         context.call = i;
         i.call();
       }
@@ -57,7 +59,8 @@ export const redo: () => Record | null = config.timeTravel
       journal.past = now;
       journal.now = future;
       journal.future = future.prev;
-      for (let i = ops; i != null; i = i.prev) {
+      for (let i = ops, j; i != null; i = j) {
+        j = i.prev;
         context.call = i;
         i.call();
       }
@@ -69,32 +72,38 @@ export const redo: () => Record | null = config.timeTravel
     };
 
 function recordContext() {
-  record(
-    resetContext.bind(null, {
-      top: context.top,
-      debug: context.debug,
-      brk: context.brk,
-      value: context.value
-    })
+  record4(
+    resetContextOp,
+    context.top,
+    context.debug,
+    context.brk,
+    context.value
   );
 }
 
-function resetContext(job: State.Job) {
-  recordContext();
-  context.top = job.top;
-  context.debug = job.debug;
-  context.brk = job.brk;
-  context.value = job.value;
+function resetContextOp(this: any) {
+  const { a: top, b: debug, c: brk, d: value } = this;
+  this.a = context.top;
+  this.b = context.debug;
+  this.c = context.brk;
+  this.d = context.value;
+  record(this);
+  context.top = top;
+  context.debug = debug;
+  context.brk = brk;
+  context.value = value;
 }
 
-S.regOpaqueObject(resetContext, "@effectful/debug/reset#ctx");
+S.regOpaqueObject(resetContextOp, "@effectful/debug/reset#ctx");
 
-function checkpointImpl() {
+const checkpointImpl = function checkpoint() {
   if (!journal.enabled) return null;
   const cp = Core.checkpoint();
+  const top = context.top;
+  if (top) recordFrame(top);
   recordContext();
   return cp;
-}
+};
 
 /**
  * Returns an object which can be passed
@@ -111,51 +120,140 @@ export const checkpoint: () => Record | null = config.timeTravel
       return null;
     };
 
-const assign = Core.objectSaved.assign;
-
-function frameData(f: State.Frame): any {
-  // TODO: for usual frame goto is enough, so it is possible to avoid creating the object
-  const res: any = assign({}, f);
-  delete res[S.descriptorSymbol];
-  return res;
-}
-
-function resetFrame(f: State.Frame, stored: any) {
-  record(resetFrame.bind(null, f, frameData(f)));
-  assign(f, stored);
-}
-
-S.regOpaqueObject(resetFrame, "@effectful/debugger/frame#trace");
-
-const frameTraps = {
-  set(f: any, prop: any, value: any, receiver: any) {
-    if (journal.enabled && journal.now && f.timestamp !== journal.now) {
-      f.timestamp = journal.now;
-      record(resetFrame.bind(null, receiver, frameData(f)));
-    }
-    f[prop] = value;
-    return true;
-  }
-};
-
-const wrapDescriptor = S.regDescriptor({
-  ...S.descriptorTemplate,
-  name: "@effectful/debugger/object",
-  create() {
-    return wrapFrame(<any>{});
-  }
-});
-
-export const wrapFrame = config.timeTravel
-  ? function(f: State.Frame): State.Frame {
-      (<any>f)[S.descriptorSymbol] = wrapDescriptor;
-      return new Proxy(f, frameTraps);
-    }
-  : function(v: State.Frame) {
-      return v;
-    };
-
 /** Registers an operation to be called on `undo` in reverse direction */
 export const record = config.timeTravel ? Core.record : function record() {};
 
 export { Core, DOM };
+
+/** disables tracing on a specific TypedArray object */
+export const typedArrayDisableTrace = config.timeTravel
+  ? function typedArrayDisableTrace(arr: any) {
+      if (arr.set === Core.typedArraySaved.set) return;
+      arr.set = Core.typedArraySaved.set;
+      arr.sort = Core.typedArraySaved.sort;
+      return arr;
+    }
+  : function typedArrayDisableTrace(arr: any) {
+      return arr;
+    };
+
+/** disables tracing on a specific WeakMap object */
+export const weakMapDisableTrace = config.timeTravel
+  ? function weakMapDisableTrace(map: WeakMap<any, any>) {
+      if (Core.weakMapSaved.set === map.set) return;
+      map.set = Core.weakMapSaved.set;
+      map.delete = Core.weakMapSaved.delete;
+      return map;
+    }
+  : function weakMapDisableTrace(map: WeakMap<any, any>) {
+      return map;
+    };
+
+/** disables tracing on a specific WeakSet object */
+export const weakSetDisableTrace = config.timeTravel
+  ? function weakSetDisableTrace(set: WeakSet<any>) {
+      if (Core.weakSetSaved.add === set.add) return;
+      set.add = Core.weakSetSaved.add;
+      set.delete = Core.weakSetSaved.delete;
+      return set;
+    }
+  : function weakSetDisableTrace(set: WeakSet<any>) {
+      return set;
+    };
+
+function restoreFrameFullOp(this: any) {
+  const { a: frame, b: saved } = this;
+  this.b = State.saved.Object.assign({}, frame);
+  State.saved.Object.assign(frame, saved);
+  record(this);
+}
+
+S.regOpaqueObject(restoreFrameFullOp, "#frame");
+
+function restoreFrameOp(this: any) {
+  const { a: frame, b: goto, c: brk } = this;
+  this.b = frame.goto;
+  this.c = frame.brk;
+  record(this);
+  frame.goto = goto;
+  frame.brk = brk;
+  frame.timestamp = journal.now;
+}
+
+S.regOpaqueObject(restoreFrameOp, "#frame");
+
+function restoreGeneratorFrameOp(this: any) {
+  const {
+    a: frame,
+    b: goto,
+    c: brk,
+    d: delegate,
+    e: running,
+    f: sent,
+    g: next,
+    h: caller
+  } = this;
+  this.b = frame.goto;
+  this.c = frame.brk;
+  this.d = frame.delegate;
+  this.e = frame.running;
+  this.f = frame.sent;
+  this.g = frame.next;
+  this.h = frame.caller;
+  record(this);
+  frame.goto = goto;
+  frame.brk = brk;
+  frame.delegatee = delegate;
+  frame.running = running;
+  frame.sent = sent;
+  frame.timestamp = journal.now;
+  frame.next = next;
+  frame.caller = caller;
+}
+
+S.regOpaqueObject(restoreGeneratorFrameOp, "#frame$g");
+
+export function recordFrame(frame: State.Frame) {
+  if (journal.enabled && frame.timestamp !== journal.now) {
+    const kind = frame.meta.kind;
+    if ((kind & State.GeneratorKind) !== 0) {
+      if ((kind & State.AsyncKind) !== 0) {
+        frame.timestamp = journal.now;
+        //TODO: saved only needed properties
+        record2(
+          restoreFrameFullOp,
+          frame,
+          State.saved.Object.assign({}, frame)
+        );
+      } else {
+        record8(
+          restoreGeneratorFrameOp,
+          frame,
+          frame.goto,
+          frame.brk,
+          (<State.GeneratorFrame>frame).delegatee,
+          (<State.GeneratorFrame>frame).running,
+          (<State.GeneratorFrame>frame).sent,
+          frame.next,
+          frame.caller
+        );
+      }
+    } else {
+      if ((kind & State.AsyncKind) !== 0) {
+        record2(
+          restoreFrameFullOp,
+          frame,
+          State.saved.Object.assign({}, frame)
+        );
+      } else {
+        record3(restoreFrameOp, frame, frame.goto, frame.brk);
+      }
+    }
+  }
+  /*
+  if (journal.enabled && frame.timestamp !== journal.now) {
+    frame.timestamp = journal.now;
+    record2(restoreFrameFullOp, frame, State.saved.Object.assign({}, frame));
+  }
+*/
+}

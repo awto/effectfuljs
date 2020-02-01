@@ -95,6 +95,7 @@ function restoreMethods(si) {
           yield s.tok(Tag.id, Tag.Identifier, { sym: i.value.classId });
       } else if (
         i.enter &&
+        !i.value.opts.closWrap &&
         i.type === Tag.FunctionExpression &&
         i.value.origType === Tag.FunctionDeclaration
       ) {

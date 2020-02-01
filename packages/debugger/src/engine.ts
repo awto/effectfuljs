@@ -16,19 +16,24 @@ import {
   Handler,
   States,
   normalizeDrive,
-  toGlobal
+  toGlobal,
+  saved
 } from "./state";
 
 import * as State from "./state";
+import * as TTCore from "./timeTravel/core";
 import * as TT from "./timeTravel/main";
-import * as S from "@effectful/serialization";
 import { parse as babelParse } from "@babel/parser";
 import babelGenerate from "@babel/generator";
 import * as T from "./transform";
 import * as path from "path";
+import * as S from "@effectful/serialization";
+import { regOpaqueObject, regDescriptor } from "./persist";
 
 // tslint:disable-next-line
 const asap = require("asap");
+
+const Map = saved.Map;
 
 const globalNS = config.globalNS;
 
@@ -36,17 +41,22 @@ const journal = TT.journal;
 const context = State.context;
 const token = State.token;
 const dataSymbol = State.dataSymbol;
-const wrapFrame = TT.wrapFrame;
 const SavedFunction = Function;
 const savedApply = SavedFunction.prototype.apply;
 const savedCall = SavedFunction.prototype.call;
 const CallSym = Symbol("@effectful/debugger/call");
 const ApplySym = Symbol("@effectful/debugger/call");
 
-(<any>Function.prototype)[CallSym] = defaultCall;
-(<any>Function.prototype)[ApplySym] = defaultApply;
+const defineProperty = State.saved.Object.defineProperty;
 
-const noProps = { props: false };
+defineProperty(Function.prototype, CallSym, { value: savedCall });
+defineProperty(Function.prototype, ApplySym, { value: savedApply });
+
+const recordFrame = config.timeTravel
+  ? function recordFrame(top: Frame | null) {
+      if (top && journal.enabled) TT.recordFrame(top);
+    }
+  : function recordFrame() {};
 
 class ArgsTraps<T> {
   func: Frame;
@@ -119,6 +129,7 @@ export function module(
   if (module) {
     if (module.hot) module.hot.accept();
     module.__effectful_js_require = require;
+    regOpaqueObject(module, `cjs#${name}`);
   }
   if (info) {
     context.moduleId = (module && module.id) || null;
@@ -136,7 +147,7 @@ export function module(
     version: 0,
     evalCtx
   };
-  S.regOpaqueObject(info, `module#${name}`, noProps);
+  regOpaqueObject(info, `module#${name}`);
   context.modules[<any>(fullPath || id)] = info;
   return info;
 }
@@ -153,6 +164,8 @@ export function syncMeta<Closure, Res>(
 
 let metaCount = 0;
 
+export const parentTag = { _parentTag: true };
+
 export function scope(dest: number): any {
   const top = <Frame>context.top;
   top.goto = dest;
@@ -162,8 +175,6 @@ export function scope(dest: number): any {
     return handle(top, e);
   }
 }
-
-const deb_console = console;
 
 export function fun(
   module: Module,
@@ -175,7 +186,8 @@ export function fun(
   name: string,
   loc: string | null,
   parent: FunctionDescr | undefined,
-  params: string[]
+  params: string[],
+  kind?: number
 ): ($$: { [name: string]: any }) => any {
   let meta = module.functions[handler.name];
   if (!meta) meta = module.functions[handler.name] = <FunctionDescr>{};
@@ -191,8 +203,6 @@ export function fun(
   for (const [scope, reason, loc] of states) {
     if (!scope) continue;
     const [line, column, endLine, endColumn] = location(loc);
-    if (scope == null)
-      deb_console.error("NO SCOPES IN ", func, name, handler, states);
     const scopeInfo =
       scope.length === 3 ? scope[2] : buildScope(scope, evalCtx);
     const brk: Brk = {
@@ -208,16 +218,13 @@ export function fun(
       scope: scopeInfo,
       location: strLoc(line, column, endLine, endColumn)
     };
-    S.regOpaqueObject(
-      brk,
-      `s#${module.name}#${handler.name}#${brk.id}`,
-      noProps
-    );
+    regOpaqueObject(brk, `s#${module.name}#${handler.name}#${brk.id}`);
     memo.push(brk);
   }
   meta.blackbox = loc == null;
   meta.module = module;
   meta.func = func;
+  meta.kind = kind || 0;
   meta.handler = handler;
   meta.errHandler = errHandler;
   meta.finHandler = finHandler;
@@ -226,7 +233,6 @@ export function fun(
   meta.parent = parent;
   meta.uniqName = `${module.name}#${handler.name}`;
   meta.params = params;
-  if (meta.canSkip == null) meta.canSkip = false;
   if (meta.id == null) meta.id = metaCount++;
   meta.states = memo;
   if (loc) {
@@ -281,75 +287,80 @@ function buildScope(
   return scopeInfo;
 }
 
-function wrapMeta(
-  info: FunctionDescr
-): ($$?: { [name: string]: any }) => (...args: any) => any {
-  const funcDescr = S.regDescriptor<any>({
-    name: `p#${info.uniqName}`,
-    create() {
-      return constr();
-    },
-    readContent(ctx, json, value) {
-      value[dataSymbol].$$ = ctx.step((<any>json).$$);
-    },
-    write(ctx, value) {
-      const json: any = {};
-      const proto = value[dataSymbol];
-      json.$$ = ctx.step(proto.$$, json, "$$");
-      return json;
-    },
-    overrideProps: { [dataSymbol]: false },
-    typeofHint: "function",
-    strictName: true
-  });
-  S.regDescriptor<any>({
-    name: `f@${info.uniqName}`,
-    readContent(ctx, json, value) {
-      value.$ = ctx.step((<any>json).$);
-    },
-    create(ctx, json) {
-      const closure = ctx.step((<any>json).constr);
-      const proto = closure[dataSymbol];
-      return Object.create(proto);
-    },
-    write() {
-      return {};
-    },
-    strictName: true
-  });
-  function constr($$?: { [name: string]: any }): (...args: any[]) => any {
-    const proto = { meta: info, $$ };
-    const closure = info.func(proto);
-    closure[dataSymbol] = proto;
-    closure[S.descriptorSymbol] = funcDescr;
-    (<any>proto).func = closure;
-    closure.call = defaultCall;
-    closure.apply = defaultApply;
-    return closure;
-  }
-  (<any>constr)[dataSymbol] = info;
-  if (config.expFunctionConstr) constr.constructor = FunctionConstr;
-  S.regOpaqueObject(constr, `c#${info.module.name}#${info.name}`, noProps);
-  S.regOpaqueObject(info, `i#${info.module.name}#${info.name}`, noProps);
-  S.regOpaqueObject(
-    info.handler,
-    `h#${info.module.name}#${info.name}`,
-    noProps
-  );
-  if (info.errHandler && info.errHandler !== defaultErrHandler)
-    S.regOpaqueObject(
-      info.errHandler,
-      `eh#${info.module.name}#${info.name}`,
-      noProps
-    );
-  if (info.finHandler && info.finHandler !== defaultFinHandler)
-    S.regOpaqueObject(
-      info.finHandler,
-      `fh#${info.module.name}#${info.name}`,
-      noProps
-    );
-  return constr;
-}
+const wrapMeta = config.persistState
+  ? function wrapMeta(
+      info: FunctionDescr
+    ): ($$?: { [name: string]: any }) => (...args: any) => any {
+      const funcDescr = regDescriptor<any>({
+        name: `p#${info.uniqName}`,
+        create() {
+          return constr();
+        },
+        readContent(ctx, json, value) {
+          value[dataSymbol].$$ = ctx.step((<any>json).$$);
+        },
+        write(ctx, value) {
+          const json: any = {};
+          const proto = value[dataSymbol];
+          json.$$ = ctx.step(proto.$$, json, "$$");
+          return json;
+        },
+        overrideProps: { [dataSymbol]: false },
+        typeofHint: "function",
+        strictName: true
+      });
+      regDescriptor<any>({
+        name: `f@${info.uniqName}`,
+        readContent(ctx, json, value) {
+          value.$ = ctx.step((<any>json).$);
+        },
+        create(ctx, json) {
+          const closure = ctx.step((<any>json).constr);
+          const proto = closure[dataSymbol];
+          return Object.create(proto);
+        },
+        write() {
+          return {};
+        },
+        strictName: true
+      });
+      const constr = info.func;
+      (<any>info).descriptor = funcDescr;
+      (<any>constr)[dataSymbol] = info;
+      if (config.expFunctionConstr) constr.constructor = FunctionConstr;
+      regOpaqueObject(constr, `c#${info.module.name}#${info.name}`);
+      regOpaqueObject(info, `i#${info.module.name}#${info.name}`);
+      regOpaqueObject(info.handler, `h#${info.module.name}#${info.name}`);
+      if (info.errHandler && info.errHandler !== defaultErrHandler)
+        regOpaqueObject(info.errHandler, `eh#${info.module.name}#${info.name}`);
+      if (info.finHandler && info.finHandler !== defaultFinHandler)
+        regOpaqueObject(info.finHandler, `fh#${info.module.name}#${info.name}`);
+      return constr;
+    }
+  : function wrapMeta(
+      info: FunctionDescr
+    ): ($$?: { [name: string]: any }) => (...args: any) => any {
+      const constr = info.func;
+      (<any>constr)[dataSymbol] = info;
+      if (config.expFunctionConstr) constr.constructor = FunctionConstr;
+      return constr;
+    };
+
+export const clos: any = config.persistState
+  ? function clos($$: any, constr: any, closure: any) {
+      const meta = (<any>constr)[dataSymbol];
+      closure[dataSymbol] = { meta, $$ };
+      closure[S.descriptorSymbol] = (<any>meta).descriptor;
+      closure.call = defaultCall;
+      closure.apply = defaultApply;
+      return closure;
+    }
+  : function clos($$: any, constr: any, closure: any) {
+      closure[dataSymbol] = { meta: (<any>constr)[dataSymbol], $$ };
+      closure.call = defaultCall;
+      closure.apply = defaultApply;
+      return closure;
+    };
 
 let threadScheduled = false;
 export function signalThread() {
@@ -366,7 +377,7 @@ function defaultApply(this: any) {
   return savedApply.apply(this, <any>arguments);
 }
 
-S.regOpaqueObject(defaultApply, "@effectful/debugger/apply", noProps);
+regOpaqueObject(defaultApply, "@effectful/debugger/apply");
 
 function defaultCall(this: any) {
   context.call = context.call === defaultCall ? this : null;
@@ -374,10 +385,12 @@ function defaultCall(this: any) {
 }
 
 export function mcall(prop: string, ...args: [any, ...any[]]) {
-  return savedCall.apply((context.call = args[0][prop]), args);
+  const func = args[0][prop];
+  if (!func) throw new TypeError(`${prop} isn't a function`);
+  return savedCall.apply((context.call = func), args);
 }
 
-S.regOpaqueObject(defaultCall, "@effectful/debugger/call", noProps);
+regOpaqueObject(defaultCall, "@effectful/debugger/call");
 
 /**
  * runs a computation until it encounters some breakpoint (returns `token)
@@ -395,7 +408,6 @@ export function step() {
       if (!context.debug && top.restoreDebug) context.debug = true;
       pop(top);
     }
-    // checkpoint();
     return loop(value);
   } finally {
     context.running = false;
@@ -406,6 +418,7 @@ export function loop(value: any): any {
   let top: Frame | null = context.top;
   while (top) {
     try {
+      recordFrame(top);
       value = top.meta.handler(top, value);
       top = context.top;
     } catch (e) {
@@ -443,17 +456,11 @@ export function resume(frame: Frame, e: any) {
   try {
     frame.next = context.top;
     context.top = frame;
+    recordFrame(frame);
     return frame.meta.handler(frame, e);
   } catch (e) {
     return handle(frame, e);
   }
-}
-
-/** like `resume` but does't interpret any exception */
-export function resumeWithThrow(top: Frame, value: any): any {
-  top.next = context.top;
-  context.top = top;
-  return loop(value);
 }
 
 /** like `resume` but appends the frame to the current stack */
@@ -461,6 +468,7 @@ export function resumeLocal(frame: Frame, e: any) {
   try {
     frame.caller = frame.next = context.top;
     context.top = frame;
+    recordFrame(frame);
     return frame.meta.handler(frame, e);
   } catch (e) {
     return handle(frame, e);
@@ -486,18 +494,16 @@ function checkErrBrk(frame: Frame, e: any): boolean {
   if (e && context.exception !== e) {
     context.exception = e;
     if (e.stack) {
-      if (config.debuggerDebug)
-        Object.defineProperty(e, "_deb_stack", { value: e.stack });
       const stack = [String(e)];
       for (let i: Frame | null = frame; i; i = i.next) {
         if (i.brk)
           stack.push(
-            `    at ${i.meta.name} (${i.meta.module.name}:${i.brk.line}:${
-              i.brk.column
-            })`
+            `    at ${i.meta.name} (${i.meta.module.name}:${i.brk.line}:${i.brk.column})`
           );
       }
-      e.stack = stack.join("\n");
+      if (config.debuggerDebug)
+        Object.defineProperty(e, "_deb_stack", { value: stack.join("\n") });
+      else e.stack = stack.join("\n");
     }
     let needsStop = false;
     if (context.brkOnAnyException) {
@@ -538,6 +544,7 @@ export function handle(frame: Frame, e: any) {
     }
     frame.goto = goto;
     try {
+      recordFrame(frame);
       return meta.handler(frame, e);
     } catch (ex) {
       e = ex;
@@ -650,7 +657,7 @@ export const FunctionConstr = function Function(...args: any[]) {
 };
 FunctionConstr.prototype = Function.prototype;
 
-S.regOpaqueObject(FunctionConstr, "@effectful/debugger/Function", noProps);
+regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
 
 const savedEval = eval;
 
@@ -728,16 +735,16 @@ export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
-export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
-  const { meta, func } = proto;
+function buildFrame(closure: any, self: any, newTarget: any): any {
   const next = context.top;
+  const { meta, $$ } = <ProtoFrame>closure[dataSymbol];
   const frame: Frame = {
-    $$: proto.$$,
+    $$,
     state: 0,
     goto: 0,
     meta,
-    func,
-    self,
+    func: closure,
+    self: self === parentTag ? $$.self : self,
     newTarget: newTarget != null,
     $: {},
     brk: null,
@@ -752,16 +759,28 @@ export function frame(proto: ProtoFrame, self: any, newTarget: any): any {
   };
   if (context.debug && next) {
     const call = context.call;
-    const expected = call === func;
+    const expected = call === frame.func;
     if (!expected) {
       frame.restoreDebug = true;
       context.debug = false;
     }
   }
-  const res = (context.top = wrapFrame(frame));
+  const res = (context.top = frame);
   context.call = null;
   return res;
 }
+
+export const frame: (
+  closure: any,
+  self: any,
+  newTarget: any
+) => any = config.timeTravel
+  ? function frame(closure: any, self: any, newTarget: any): any {
+      const top = context.top;
+      recordFrame(top);
+      return buildFrame(closure, self, newTarget);
+    }
+  : buildFrame;
 
 export function checkExitBrk(top: Frame, value: any) {
   const meta = top.meta;
@@ -838,24 +857,21 @@ export function brk(id: number): any {
     }
     throw token;
   }
-  // checkpoint();
 }
 
 export function iterator<T>(v: Iterable<T>) {
-  return v[Symbol.iterator]();
+  return (context.call = v[Symbol.iterator]), v[Symbol.iterator]();
 }
 
 export function iteratorM<T>(v: AsyncIterable<T>) {
   return v[Symbol.asyncIterator]
-    ? v[Symbol.asyncIterator]()
-    : (<any>v)[Symbol.iterator]();
+    ? ((context.call = v[Symbol.asyncIterator]), v[Symbol.asyncIterator]())
+    : ((context.call = (<any>v)[Symbol.iterator]), (<any>v)[Symbol.iterator]());
 }
 
-export function forInIterator(obj: object): Iterable<string> {
-  return (function*() {
-    for (const i in obj) yield i;
-  })()[Symbol.iterator]();
-}
+export const forInIterator = config.timeTravel
+  ? TTCore.forInIterator
+  : State.forInIterator;
 
 const {
   boundFunSymbol,
@@ -864,7 +880,7 @@ const {
   descriptorSymbol
 } = S;
 
-const BindDescriptor = S.regDescriptor({
+const BindDescriptor = regDescriptor({
   name: "#b",
   create() {
     return makeBind();
@@ -894,7 +910,7 @@ function makeBind(): (...args: any[]) => any {
     for (const i of rest) arr[++index] = i;
     return savedCall.apply(fun, <any>arr);
   }
-  (<any>bind)[descriptorSymbol] = BindDescriptor;
+  if (config.persistState) (<any>bind)[descriptorSymbol] = BindDescriptor;
   return bind;
 }
 
@@ -942,7 +958,7 @@ export function raise(e: any) {
 
 export { token, context };
 
-export { del, set } from "./timeTravel/core";
+export { del, set, gset, gdel, lset, ldel } from "./timeTravel/core";
 
 /** resets module's states (for tests) */
 export function reset() {
@@ -957,5 +973,7 @@ export function reset() {
 }
 
 export function pop(top: Frame) {
-  if ((context.top = top.next) == null) signalThread();
+  const next = top.next;
+  if ((context.top = next) == null) signalThread();
+  else recordFrame(next);
 }

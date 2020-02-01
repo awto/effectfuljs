@@ -15,7 +15,14 @@
             "@effectful/transducers/rt": "@effectful/transducers-loose/rt",
             "@effectful/transducers/dump": "@effectful/transducers-loose/dump",
             "@effectful/transducers/trace": "@effectful/transducers-loose/trace",
-            "@effectful/transducers/match": "@effectful/transducers-loose/match"
+            "@effectful/transducers/match": "@effectful/transducers-loose/match",
+            "@effectful/transducers/v2/core": "@effectful/transducers-loose/v2/core",
+            "@effectful/transducers/v2/config": "@effectful/transducers-loose/v2/config",
+            "@effectful/transducers/v2/template": "@effectful/transducers-loose/v2/template",
+            "@effectful/transducers/v2/scope": "@effectful/transducers-loose/v2/scope",
+            "@effectful/transducers/v2/combinators": "@effectful/transducers-loose/v2/combinators",
+            "@effectful/transducers/v2/debug": "@effectful/transducers-loose/v2/debug",
+            "@effectful/transducers/v2/types": "@effectful/transducers-loose/v2/types"
           }
         }
       }

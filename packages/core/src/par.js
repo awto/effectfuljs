@@ -1138,9 +1138,7 @@ export function frameThreads(root, icfg) {
           chain.length &&
           subsetOf(node.recEnters, block)
         ) {
-          /**
-           * avoiding unconstrained loops, otherwise it will produce infinite `join`
-           */
+          /** avoiding unconstrained loops, they produce infinite `join` */
           if (node.block !== chain[0]) {
             chain.push(node.block);
             node.block.loopEnter = node;
@@ -1157,7 +1155,7 @@ export function frameThreads(root, icfg) {
       node.recExit = null;
       if (
         node.exits.size > 1 ||
-        /** infinite may have only 1 exit */
+        /** infinite ones may have only 1 exit */
         node.recEnters.size
       ) {
         const subBlock = new Set();
@@ -1237,7 +1235,6 @@ export function frameThreads(root, icfg) {
           }
         }
         residual.forEach(setAdd, schedule);
-        // residualRec.forEach(setAdd,scheduleRec)
         subBlock.forEach(setAdd, block);
         if (!hasJoins) {
           schedule.add(pureExitFrame);

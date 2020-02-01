@@ -29,6 +29,14 @@ const runningCommands: Map<string, ChildProcess> = new Map();
 const RUNINTERMINAL_TIMEOUT = 5000;
 const CONFIGURATION_DONE_REQUEST_TIMEOUT = 1000;
 
+interface BreakpointInfo {
+  id: number;
+  source: P.Source;
+  remotes: Set<number>;
+  request: P.SourceBreakpoint;
+  response: P.Breakpoint;
+}
+
 export class DebugSession extends SessionImpl {
   private remotes: Map<number, Handler> = new Map();
   private connectCb?: (h?: Handler) => void;
@@ -44,6 +52,12 @@ export class DebugSession extends SessionImpl {
   private launched = false;
   private exceptionArgs: P.SetExceptionBreakpointsArguments | undefined;
   private exitCode: number | undefined;
+
+  private breakpointsSrcs: Map<string | number, BreakpointInfo[]> = new Map();
+  private breakpointsIds: Map<number, BreakpointInfo> = new Map();
+  private breakpointsResponseRemotes?: Set<number>;
+  private breakpointsCount = 0;
+  private breakpointsResponse?: P.SetBreakpointsResponse;
 
   private hideProgress() {
     if (this.progressCb) {
@@ -103,6 +117,13 @@ export class DebugSession extends SessionImpl {
 
   private async closeRemote(remoteId: number) {
     const hadThread = this.remotes.delete(remoteId);
+    for (const i of this.breakpointsIds.values()) {
+      i.remotes.delete(remoteId);
+      if (!i.remotes.size) {
+        i.response.verified = false;
+        this.sendEvent(new BreakpointEvent("changed", i.response));
+      }
+    }
     if (hadThread) this.sendEvent(new ThreadEvent("exited", remoteId));
     if (!this.remotes.size) {
       if (this.awaitReconnect) {
@@ -268,7 +289,8 @@ export class DebugSession extends SessionImpl {
         case "loadedSources":
           const lsev = <any>ev;
           if (lsev.body.breakpoints)
-            this.convertResponseBreakpoints(lsev.body.breakpoints);
+            this.mergeResponseBreakpoints(lsev.body.breakpoints, thread.id);
+          // this.convertResponseBreakpoints(lsev.body.breakpoints);
           delete lsev.body.breakpoints;
           break;
         case "continued":
@@ -292,21 +314,25 @@ export class DebugSession extends SessionImpl {
           this.sendEvent(new ThreadEvent("started", thread.id));
           if (response.body && response.body.breakpoints) {
             for (const i of response.body.breakpoints)
-              this.convertResponseBreakpoints(i.breakpoints);
+              this.mergeResponseBreakpoints(i.breakpoints, thread.id);
           }
           return;
         case "childSetBreakpoints":
-          const pbody = (<P.SetBreakpointsResponse>response).body;
-          if (response.body && response.body.breakpoints) {
-            pbody.breakpoints = this.convertResponseBreakpoints(
+          if (!this.breakpointsResponseRemotes) return;
+          this.breakpointsResponseRemotes.delete(thread.id);
+          if (response.body && response.body.breakpoints)
+            this.mergeResponseBreakpoints(
               response.body.breakpoints,
+              thread.id,
               true
             );
-          }
-          response.command = "setBreakpoints";
-          if (this.breakpointsResponse) {
+          if (this.breakpointsResponseRemotes.size !== 0) return;
+          if (
+            this.breakpointsResponseRemotes.size === 0 &&
+            this.breakpointsResponse
+          ) {
+            this.sendResponse(this.breakpointsResponse);
             this.breakpointsResponse = void 0;
-            this.sendResponse(response);
           }
           return;
       }
@@ -399,8 +425,8 @@ export class DebugSession extends SessionImpl {
           ? String(args.verbose)
           : "0";
       if (process.env["EFFECTFUL_DEBUGGER_URL"] == null)
-        env["EFFECTFUL_DEBUGGER_URL"] =
-            `ws://${host}:${args.debuggerPort || 20011}`
+        env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${args.debuggerPort ||
+          20011}`;
       env["EFFECTFUL_DEBUGGER_OPEN"] = args.open ? String(args.open) : "0";
       env["EFFECTFUL_DEBUGGER_TIME_TRAVEL"] = args.timeTravel
         ? String(args.timeTravel)
@@ -467,7 +493,11 @@ export class DebugSession extends SessionImpl {
         }
         let startBuf: string[] = [];
         if (!child) {
-          const spawnArgs: any = { cwd, env, shell: preset !== "browser"};
+          const spawnArgs: any = {
+            cwd,
+            env,
+            shell: true /*preset !== "browser"*/
+          };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
           child.on("error", data => {
@@ -480,7 +510,6 @@ export class DebugSession extends SessionImpl {
           });
           child.stdout.on("data", data => {
             const txt = String(data);
-            console.error("DATA:",txt);
             if (preset === "browser")
               this.sendEvent(new OutputEvent(`webpack: ${txt}`, "stdout"));
             else if (args.verbose) logger.verbose(txt);
@@ -488,7 +517,6 @@ export class DebugSession extends SessionImpl {
           });
           child.stderr.on("data", data => {
             const txt = String(data);
-            console.error("EDATA:",txt);
             if (preset === "browser") {
               this.sendEvent(new OutputEvent(`webpack: ${txt}`, "stderr"));
             } else if (args.verbose) logger.error(txt);
@@ -536,11 +564,6 @@ export class DebugSession extends SessionImpl {
     this.sendResponse(response);
   }
 
-  private breakpointsSources = new Map<string | number, P.SourceBreakpoint[]>();
-  private breakpointById = new Map<number, P.Breakpoint>();
-  private breakpointsCount = 0;
-  private breakpointsResponse?: P.SetBreakpointsResponse;
-
   private launchChild(remote: Handler): void {
     const args = this.launchArgs || {};
     logger.verbose(`launching {remote.id}...`);
@@ -553,44 +576,68 @@ export class DebugSession extends SessionImpl {
         stopOnEntry: args.stopOnEntry,
         dirSep: path.sep,
         exceptions: this.exceptionArgs,
-        breakpoints: [...this.breakpointsSources].map(
+        breakpoints: [...this.breakpointsSrcs].map(
+          ([srcPath, breakpoints]) => ({
+            breakpoints: breakpoints.map(i => i.response),
+            source:
+              typeof srcPath === "number"
+                ? { sourceReference: srcPath }
+                : { path: normalizeDrive(srcPath) }
+          }) /*[...this.breakpointsSources].map(
           ([srcPath, breakpoints]) => ({
             breakpoints,
             source:
               typeof srcPath === "number"
                 ? { sourceReference: srcPath }
                 : { path: normalizeDrive(srcPath) }
-          })
+          })*/
         )
       }
     });
   }
 
-  protected doSetBreakpoints(req: P.SetBreakpointsRequest): void {
+  private doSetBreakpoints(req: P.SetBreakpointsRequest): void {
     const args = req.arguments;
     const srcPath: string | number =
       args.source.path || args.source.sourceReference || 0;
     if (args.source.path) args.source.path = normalizeDrive(args.source.path);
     // clear all breakpoints for this file
     const response = <P.SetBreakpointsResponse>new Response(req);
-    const breakpoints: P.BreakpointInfo[] = [];
-    response.body = { breakpoints };
+    const bps: BreakpointInfo[] = [];
     if (args.breakpoints) {
       for (const i of args.breakpoints) {
-        const bp = {
+        const id = ++this.breakpointsCount;
+        const response = {
           ...i,
-          id: ++this.breakpointsCount,
+          id,
           verified: false,
           source: args.source
         };
-        breakpoints.push(bp);
-        this.breakpointById.set(bp.id, bp);
+        const bpi: BreakpointInfo = {
+          id,
+          remotes: new Set(),
+          source: args.source,
+          request: i,
+          response
+        };
+        bps.push(bpi);
+        this.breakpointsIds.set(id, bpi);
       }
     }
-    if (!breakpoints.length) this.breakpointsSources.delete(srcPath);
-    else this.breakpointsSources.set(srcPath, breakpoints);
+    const old = this.breakpointsSrcs.get(srcPath);
+    if (old) {
+      for (const i of old) this.breakpointsIds.delete(i.id);
+    }
+    if (bps.length) {
+      this.breakpointsSrcs.set(srcPath, bps);
+    } else if (old) {
+      this.breakpointsSrcs.delete(srcPath);
+    }
+    const breakpoints: P.Breakpoint[] = bps.map(i => i.response);
+    response.body = { breakpoints };
     if (this.remotes.size) {
       this.breakpointsResponse = response;
+      this.breakpointsResponseRemotes = new Set(this.remotes.keys());
       for (const remote of this.remotes.values()) {
         remote.send({
           command: "childSetBreakpoints",
@@ -606,35 +653,35 @@ export class DebugSession extends SessionImpl {
       this.sendResponse(response);
     }
   }
-
-  protected convertResponseBreakpoints(
+  private mergeResponseBreakpoints(
     bodyBreakpoints: P.BreakpointInfo[],
+    remoteId: number,
     isResponse?: boolean
-  ): P.Breakpoint[] {
-    // TODO: this arrives from many remotes
-    const breakpoints: P.Breakpoint[] = [];
-    for (let i of bodyBreakpoints) {
-      if (i.id) {
-        const b = this.breakpointById.get(i.id);
-        if (b) {
-          const sendEvent =
-            !isResponse &&
-            (i.line !== b.line ||
-              i.verified !== b.verified ||
-              i.message !== b.message);
-          i = Object.assign(b, i);
-          if (sendEvent) this.sendEvent(new BreakpointEvent("changed", i));
-        }
+  ) {
+    for (const i of bodyBreakpoints) {
+      const bpi = this.breakpointsIds.get(<any>i.id);
+      if (!bpi) continue;
+      const response = bpi.response;
+      let changed = false;
+      if (i.verified) {
+        bpi.remotes.add(remoteId);
+        changed =
+          i.line !== response.line ||
+          i.endLine !== response.endLine ||
+          i.column !== response.column ||
+          i.message !== response.message ||
+          i.endColumn !== response.endColumn;
+        Object.assign(bpi.response, i);
+      } else {
+        bpi.remotes.delete(remoteId);
       }
-      breakpoints.push({
-        id: i.id,
-        verified: i.verified,
-        message: i.message,
-        source: i.source,
-        line: i.line
-      });
+      if (!bpi.remotes.size) {
+        if (response.verified) changed = true;
+        response.verified = false;
+      }
+      if (changed && !isResponse)
+        this.sendEvent(new BreakpointEvent("changed", response));
     }
-    return breakpoints;
   }
 
   protected threadsRequest(response: P.ThreadsResponse): void {

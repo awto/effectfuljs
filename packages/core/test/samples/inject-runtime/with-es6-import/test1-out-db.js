@@ -120,102 +120,121 @@ $M.fun("m$3", "_interopRequireWildcard", "m$0", ["obj"], 0, function () {
         }
 
       case 2:
+        $0 = $.$.$0 === null;
+
+        if ($0) {
+          $.state = 3;
+        } else {
+          $0 = typeof $.$.$0 !== "object";
+
+          if ($0) {
+            $0 = typeof $.$.$0 !== "function";
+            $.goto = 4;
+            continue;
+          } else {
+            $.goto = 4;
+            continue;
+          }
+        }
+
+      case 3:
+        if ($0) {
+          return $M.ret({
+            default: $.$.$0
+          });
+        } else {
+          $.goto = 5;
+          continue;
+        }
+
+      case 4:
         $.goto = 3;
+        continue;
+
+      case 5:
+        $.goto = 6;
         $p = ($M.context.call = $.$$.$.$1)();
         continue;
 
-      case 3:
+      case 6:
         $.$.$1 = $p;
         $.$.$6 = $.$.$1;
 
         if ($.$.$6) {
-          $.goto = 18;
+          $.goto = 20;
           $p = ($M.context.call = $.$.$1.has).dbg$call($.$.$1, $.$.$0);
-          continue;
-        } else {
-          $.state = 4;
-        }
-
-      case 4:
-        if ($.$.$6) {
-          $.goto = 17;
-          $p = ($M.context.call = $.$.$1.get).dbg$call($.$.$1, $.$.$0);
-          continue;
-        } else {
-          $.state = 5;
-        }
-
-      case 5:
-        $.$.$2 = {};
-
-        if ($.$.$0 != null) {
-          $0 = Object.defineProperty;
-
-          if ($0) {
-            $0 = Object.getOwnPropertyDescriptor;
-            $.goto = 8;
-            continue;
-          } else {
-            $.goto = 8;
-            continue;
-          }
-        } else {
-          $.state = 6;
-        }
-
-      case 6:
-        $.$.$2.default = $.$.$0;
-
-        if ($.$.$1) {
-          $.goto = 7;
-          ($M.context.call = $.$.$1.set).dbg$call($.$.$1, $.$.$0, $.$.$2);
           continue;
         } else {
           $.state = 7;
         }
 
       case 7:
-        return $M.ret($.$.$2);
+        if ($.$.$6) {
+          $.goto = 19;
+          $p = ($M.context.call = $.$.$1.get).dbg$call($.$.$1, $.$.$0);
+          continue;
+        } else {
+          $.state = 8;
+        }
 
       case 8:
-        $.$.$3 = $0;
-        $.$.$6 = $M.forInIterator($.$.$0);
-        $.state = 9;
+        $.$.$2 = {};
+        $0 = Object.defineProperty;
+
+        if ($0) {
+          $0 = Object.getOwnPropertyDescriptor;
+          $.state = 9;
+        } else {
+          $.state = 9;
+        }
 
       case 9:
+        $.$.$3 = $0;
+        $.$.$6 = $M.forInIterator($.$.$0);
+        $.state = 10;
+
+      case 10:
         $0 = $.$.$6.next();
 
         if ($0.done) {
-          $.goto = 6;
-          continue;
+          $.$.$2.default = $.$.$0;
+
+          if ($.$.$1) {
+            $.goto = 18;
+            ($M.context.call = $.$.$1.set).dbg$call($.$.$1, $.$.$0, $.$.$2);
+            continue;
+          } else {
+            $.goto = 18;
+            continue;
+          }
         } else {
           $.$.$4 = $0.value;
           $0 = Object.prototype.hasOwnProperty;
-          $.goto = 10;
+          $.goto = 11;
           $p = ($M.context.call = $0.call).dbg$call($0, $.$.$0, $.$.$4);
           continue;
         }
 
-      case 10:
+      case 11:
         if ($p) {
           if ($.$.$3) {
-            $.goto = 16;
+            $.goto = 17;
             $p = ($M.context.call = Object.getOwnPropertyDescriptor).dbg$call(Object, $.$.$0, $.$.$4);
             continue;
           } else {
             $.$.$7 = null;
-            $.goto = 12;
+            $.goto = 13;
             continue;
           }
         } else {
-          $.state = 11;
+          $.state = 12;
         }
 
-      case 11:
-        $.goto = 9;
+      case 12:
+        $.goto = 10;
         continue;
 
-      case 12:
+      case 13:
         $.$.$5 = $.$.$7;
         $0 = $.$.$5;
 
@@ -223,59 +242,62 @@ $M.fun("m$3", "_interopRequireWildcard", "m$0", ["obj"], 0, function () {
           $0 = $.$.$5.get;
 
           if ($0) {
-            $.goto = 15;
+            $.goto = 16;
             continue;
           } else {
             $0 = $.$.$5.set;
-            $.goto = 15;
+            $.goto = 16;
             continue;
           }
         } else {
-          $.state = 13;
-        }
-
-      case 13:
-        if ($0) {
-          $.goto = 14;
-          ($M.context.call = Object.defineProperty).dbg$call(Object, $.$.$2, $.$.$4, $.$.$5);
-          continue;
-        } else {
-          $.$.$2[$.$.$4] = $.$.$0[$.$.$4];
           $.state = 14;
         }
 
       case 14:
-        $.goto = 11;
-        continue;
+        if ($0) {
+          $.goto = 15;
+          ($M.context.call = Object.defineProperty).dbg$call(Object, $.$.$2, $.$.$4, $.$.$5);
+          continue;
+        } else {
+          $.$.$2[$.$.$4] = $.$.$0[$.$.$4];
+          $.state = 15;
+        }
 
       case 15:
-        $.goto = 13;
-        continue;
-
-      case 16:
-        $.$.$7 = $p;
         $.goto = 12;
         continue;
 
-      case 17:
-        return $M.ret($p);
-
-      case 18:
-        $.$.$6 = $p;
-        $.goto = 4;
+      case 16:
+        $.goto = 14;
         continue;
 
+      case 17:
+        $.$.$7 = $p;
+        $.goto = 13;
+        continue;
+
+      case 18:
+        return $M.ret($.$.$2);
+
       case 19:
-        return $M.ret($.value);
+        return $M.ret($p);
 
       case 20:
+        $.$.$6 = $p;
+        $.goto = 7;
+        continue;
+
+      case 21:
+        return $M.ret($.value);
+
+      case 22:
         throw $.value;
 
       default:
         throw new Error("Invalid state");
     }
   }
-}, null, null, [[], [], [null, "e", $s$3], [null, "e", $s$3], [null, "e", $s$3], [], [null, "e", $s$3], [], [], [null, "e", $s$3], [null, "e", $s$3], [], [], [null, "e", $s$3], [], [], [], [], [], [], []]);
+}, null, null, [[], [], [], [], [], [null, "e", $s$3], [null, "e", $s$3], [null, "e", $s$3], [], [], [null, "e", $s$3], [null, "e", $s$3], [], [], [null, "e", $s$3], [], [], [], [], [], [], [], []]);
 $M.fun("m$4", "a", "m$0", [], 2, function () {
   for (;;) {
     switch ($.state = $.goto) {

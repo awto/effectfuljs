@@ -12,7 +12,6 @@ import * as ApiMin from "./apiMin";
 import * as TimeTravel from "./timeTravel/main";
 import * as TimeTravelCore from "./timeTravel/core";
 import * as TimeTravelDom from "./timeTravel/dom";
-import * as TimeTravelMain from "./timeTravel/main";
 
 S.regOpaqueObject(State.context, "@effectful/context", { props: false });
 Persist.regModule(RT, "@effectful/debugger/rt");
@@ -25,7 +24,6 @@ Persist.regModule(Async, "@effectful/debugger/async");
 Persist.regModule(TimeTravel, "@effectful/debugger/trace/main");
 Persist.regModule(TimeTravelCore, "@effectful/debugger/timeTravel/core");
 Persist.regModule(TimeTravelDom, "@effectful/debugger/timeTravel/dom");
-Persist.regModule(TimeTravelMain, "@effectful/debugger/timeTravel/main");
 Persist.regModule(Api, "@effectful/debugger/api");
 Persist.regModule(ApiMin, "@effectful/debugger/apiMin");
 for (const i of Object.values(RT)) {
@@ -43,12 +41,12 @@ S.regOpaquePrim(Symbol.toStringTag, "SymbolStatic.asyncIterator");
 
 S.regOpaqueObject(Object);
 
-export {evalThunk, thunkSymbol} from "./state";
-export * from "./api"
+export { evalThunk, thunkSymbol } from "./state";
+export * from "./api";
 
 export { TimeTravel, Persist, Engine, RT };
-import config from "./config"
+import config from "./config";
 
-if (config.globalNS)
-  (<any>global)[config.globalNS] = exports;
+export { journal } from "./timeTravel/core";
 
+if (config.globalNS) (<any>global)[config.globalNS] = exports;

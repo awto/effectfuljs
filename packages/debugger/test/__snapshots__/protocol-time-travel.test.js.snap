@@ -741,6 +741,7 @@ Object {
                   "prototype": "[object Object]",
                 },
                 "length": "1",
+                "name": "f",
                 "prototype": Object {
                   "constructor": "*@core.js:undefined",
                 },
@@ -829,6 +830,7 @@ Object {
                   "prototype": "[object Object]",
                 },
                 "length": "1",
+                "name": "f",
                 "prototype": Object {
                   "constructor": "*@core.js:undefined",
                 },
@@ -2962,6 +2964,7 @@ Object {
                   "prototype": "[object Object]",
                 },
                 "length": "1",
+                "name": "f",
                 "prototype": Object {
                   "constructor": "*@core.js:undefined",
                 },
@@ -3031,6 +3034,7 @@ Object {
                   "prototype": "[object Object]",
                 },
                 "length": "1",
+                "name": "f",
                 "prototype": Object {
                   "constructor": "*@core.js:undefined",
                 },
@@ -3514,55 +3518,17 @@ Object {
             },
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "101",
-              "j": "20",
             },
           ],
         },
         Object {
           "column": 1,
           "file": "stepBackAsync.js",
-          "line": 20,
+          "line": 21,
           "name": "f",
           "scopes": Array [
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "101",
-              "j": "20",
             },
           ],
         },
@@ -3601,55 +3567,17 @@ Object {
             },
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "100",
-              "j": "20",
             },
           ],
         },
         Object {
           "column": 1,
           "file": "stepBackAsync.js",
-          "line": 20,
+          "line": 21,
           "name": "f",
           "scopes": Array [
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "100",
-              "j": "20",
             },
           ],
         },
@@ -3774,55 +3702,17 @@ Object {
             },
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "100",
-              "j": "20",
             },
           ],
         },
         Object {
           "column": 1,
           "file": "stepBackAsync.js",
-          "line": 20,
+          "line": 21,
           "name": "f",
           "scopes": Array [
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "100",
-              "j": "20",
             },
           ],
         },
@@ -3861,55 +3751,17 @@ Object {
             },
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "101",
-              "j": "20",
             },
           ],
         },
         Object {
           "column": 1,
           "file": "stepBackAsync.js",
-          "line": 20,
+          "line": 21,
           "name": "f",
           "scopes": Array [
             Object {
               "[name]": "f",
-              "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
-                },
-              },
-              "i": "101",
-              "j": "20",
             },
           ],
         },
@@ -4212,6 +4064,7 @@ Object {
                   "prototype": "[object Object]",
                 },
                 "length": "1",
+                "name": "f",
                 "prototype": Object {
                   "constructor": "*@core.js:undefined",
                 },
@@ -4414,6 +4267,7 @@ Object {
                   "prototype": "[object Object]",
                 },
                 "length": "1",
+                "name": "f",
                 "prototype": Object {
                   "constructor": "*@core.js:undefined",
                 },

@@ -10,7 +10,7 @@ import { DebugSession } from "../../../session";
 export class DebugClient extends Support.DebugClient {
   constructor(executable: string) {
     super("node", executable, "effectful", {}, true);
-    this.defaultTimeout = 10000;
+    this.defaultTimeout = 60000;
   }
 
   private assertPartialLocationsEqualCopy(

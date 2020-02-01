@@ -19,7 +19,9 @@
     "no-conditional-assignment": false,
     "no-shadowed-variable": false,
     "only-arrow-functions": false,
-    "forin": false
+    "forin": false,
+    "variable-name": false,
+    "no-var-requires": false
   },
   "rulesDirectory": []
 }

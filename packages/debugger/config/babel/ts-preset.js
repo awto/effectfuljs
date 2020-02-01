@@ -13,6 +13,7 @@ module.exports = function(_, opts) {
             }
           ],
           [require("@babel/plugin-transform-shorthand-properties")],
+          [require("@babel/plugin-transform-spread")],
           [
             require("@babel/plugin-proposal-class-properties"),
             {

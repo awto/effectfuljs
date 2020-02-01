@@ -329,11 +329,14 @@ export function restoreDecls(s) {
               const decls = [];
               const { funcId } = i.value;
               if (funcId) {
-                const copy = Kit.scope.newSym(funcId.orig);
+                const copy = root.funcAlias;
+                /*
+                      Kit.scope.newSym(funcId.orig);
                 copy.num = -copy.num;
                 copy.strict = true;
                 funcId.strict = false;
                 i.value.funcAlias = copy;
+                */
                 if (
                   funcId.interpr === Bind.ctxField &&
                   funcId.declScope === i.value &&
@@ -353,6 +356,8 @@ export function restoreDecls(s) {
                   });
                 }
                 // this makes more likely for the function to have same name
+              } else if (i.value.origType !== Block.frame) {
+                i.value.funcAlias = Kit.scope.newSym();
               }
               decls.push(
                 ...[...i.value.savedDecls].sort((a, b) => a[0].num - b[0].num)
@@ -1053,15 +1058,16 @@ function propagateArgs(cfg) {
 export function allUniqFields(syms, pref = "", postf = "") {
   const names = new Set();
   const epref = pref ? "" : "_";
+  // TODO: group by field name
   for (const sym of syms) {
     let name = `${pref}${sym.orig}${postf}`;
+    if (!name.length) name = "_";
     for (
       let cnt = 0;
       names.has(name);
       cnt++, name = `${pref}${sym.orig || epref}${cnt}${postf}`
     ) {} // eslint-disable-line no-empty
     names.add(name);
-    if (!name.length) name = "_";
     sym.fieldName = name;
   }
 }
@@ -1091,9 +1097,10 @@ export function handleSpecVars(si) {
       }
     }
   }
-  collect();
   const s = Kit.auto(sa);
   const root = s.first.value;
+  const opts = s.opts;
+  collect();
   root.usesThis = usesThis;
   const static_ = root.node && root.node.static;
   if (!usesThis && !usesArgs) return sa;
@@ -1151,14 +1158,23 @@ export function handleSpecVars(si) {
       if (i.enter) {
         switch (i.type) {
           case Tag.ThisExpression:
-            invariant(thisSym);
             Kit.skip(s.copy(i));
-            yield s.tok(i.pos, Tag.Identifier, {
-              sym: thisSym,
-              lhs: false,
-              rhs: true,
-              decl: false
-            });
+            if (opts.thisField) {
+              yield* s.toks(
+                i.pos,
+                `=$I.${opts.thisField}`,
+                { pure: true },
+                root.contextSym
+              );
+            } else {
+              invariant(thisSym);
+              yield s.tok(i.pos, Tag.Identifier, {
+                sym: thisSym,
+                lhs: false,
+                rhs: true,
+                decl: false
+              });
+            }
             continue;
           case Tag.CallExpression:
             if (s.cur().type !== Tag.MemberExpression) break;

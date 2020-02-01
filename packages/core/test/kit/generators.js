@@ -7,6 +7,7 @@ import * as assert from "assert";
 import libs from "../../config";
 import configs from "./configs";
 libs["./effectfuljscore"] = libs["@effectful/core"];
+const packageJson = require("../../package.json");
 
 /** moves file layout representation into a stream of tests */
 export function toStream(files) {
@@ -199,11 +200,7 @@ export const parse = Kit.pipe(
   parseOptsAlieas
 );
 
-export const prepare = Kit.pipe(
-  typeToField,
-  propagateOpts,
-  setOutpOpts
-);
+export const prepare = Kit.pipe(typeToField, propagateOpts, setOutpOpts);
 
 /** converts tests tree into a QUnit suite */
 function qunitTests(m) {
@@ -242,13 +239,7 @@ function qunitTests(m) {
   for (const i of walk(m)) i();
 }
 
-export const qunit = Kit.pipe(
-  parse,
-  prepare,
-  toArr,
-  group,
-  qunitTests
-);
+export const qunit = Kit.pipe(parse, prepare, toArr, group, qunitTests);
 
 export function mochaTests(m) {
   function check(i) {
@@ -273,7 +264,9 @@ export function mochaTests(m) {
         yield () => it.only(() => otests.forEach(check(i)));
         continue;
       }
-      const atests = tests.filter(i => !i.skip);
+      let atests = tests.filter(i => !i.skip);
+      if (packageJson.name !== "@effectful/core")
+        atests = atests.filter(i => !i.babelPreset);
       if (!atests.length) {
         yield () => it.skip(i, () => {});
         continue;
@@ -296,9 +289,4 @@ export const mochaPrepare = Kit.pipe(
   crop(5)
 );
 
-export const mochaBdd = Kit.pipe(
-  parse,
-  mochaPrepare,
-  group,
-  mochaTests
-);
+export const mochaBdd = Kit.pipe(parse, mochaPrepare, group, mochaTests);

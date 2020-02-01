@@ -1,7 +1,26 @@
 import { context } from "./state";
 import * as S from "@effectful/serialization";
+import config from "./config";
 
 let extra = new Set();
+
+function nop() {}
+
+export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
+export const regAutoOpaqueConstr = config.persistState
+  ? S.regAutoOpaqueConstr
+  : nop;
+
+const noProps = { props: false, propsSnapshot: false };
+
+export const regOpaqueObject = config.persistState
+  ? function(obj: any, name: string) {
+      S.regOpaqueObject(obj, name, noProps);
+    }
+  : nop;
+export const regDescriptor = config.persistState ? S.regDescriptor : nop;
+export const regConstructor = config.persistState ? S.regConstructor : nop;
+
 /**
  * Returns `JSON.stringify` serializable object with the whole
  * current execution state
@@ -46,3 +65,5 @@ if (typeof MessagePort !== "undefined") {
   S.regAutoOpaqueConstr(MessagePort);
   S.regAutoOpaqueConstr(MessageChannel);
 }
+
+export const descriptorSymbol = S.descriptorSymbol;

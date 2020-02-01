@@ -206,7 +206,9 @@ export const flatten = Kit.pipe(
               }
               break;
             case Tag.MemberExpression:
-              yield i.pos === Tag.callee || i.value.lhs ? i : bind(i, buf);
+              yield i.pos === Tag.callee || i.value.lhs || i.value.pure
+                ? i
+                : bind(i, buf);
               continue;
             case Tag.Identifier:
               if (

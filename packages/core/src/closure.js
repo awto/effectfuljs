@@ -239,15 +239,30 @@ export function closConv(si) {
               s.enter(Tag.body, Tag.BlockStatement),
               s.enter(Tag.body, Tag.Array),
               s.enter(Tag.push, Tag.ReturnStatement),
-              s.peel(Kit.setPos(i, Tag.argument))
+              ...(s.opts.closWrap
+                ? [
+                    s.enter(Tag.argument, Tag.CallExpression),
+                    s.tok(Tag.callee, Tag.Identifier, {
+                      sym: Kit.sysId(s.opts.closWrap)
+                    }),
+                    s.enter(Tag.arguments, Tag.Array),
+                    s.tok(Tag.push, Tag.Identifier, {
+                      sym: i.value.closureArgSym
+                    }),
+                    s.tok(Tag.push, Tag.Identifier, {
+                      sym: i.value.metaId
+                    }),
+                    s.peel(Kit.setPos(i, Tag.push))
+                  ]
+                : [s.peel(Kit.setPos(i, Tag.argument))])
             );
             const id = s.cur();
-            if (
-              id.type === Tag.Identifier &&
-              i.value.funcId &&
-              i.value.funcAlias
-            )
-              id.value.sym = i.value.funcAlias;
+            if (id.pos !== Tag.id) {
+              // args.push(s.tok(Tag.id, Tag.Identifier, { sym: i.value.funcId }));
+              args.push(
+                s.tok(Tag.id, Tag.Identifier, { sym: i.value.funcAlias })
+              );
+            } else id.value.sym = i.value.funcAlias;
             args.push(..._closConv(), ...lab());
             if (i.value.implFrame)
               args.push(
@@ -302,6 +317,8 @@ export function closConv(si) {
   }
 }
 
+const parentTag = Kit.sysId("parentTag");
+
 /**
  * adds declarations and constructions for context objects
  */
@@ -315,6 +332,15 @@ export const contextDecls = Kit.map(function contextDecls(si) {
   for (const i of decls)
     if (i.interpr === Bind.ctxField && i.subField !== false) ctxSyms.push(i);
   // for not effectful function with captured
+  const funcId = root.funcId;
+  const funcAlias = (root.funcAlias = Kit.scope.newSym(
+    funcId ? funcId.orig : void 0
+  ));
+  funcAlias.num = -funcAlias.num;
+  funcAlias.strict = true;
+  funcId.strict = false;
+  // if (s.opts.closWrap) root.wrapId = funcId;
+  if (s.opts.closWrap) root.wrapId = funcAlias;
   if (
     ctxSyms.length ||
     (root.opts.transform &&
@@ -329,6 +355,12 @@ export const contextDecls = Kit.map(function contextDecls(si) {
       : s.opts.pureScopeConstructor;
     const constrSym = (root.constrSym = constr && Kit.sysId(constr));
     const wrapId = root.wrapId || root.closureArgSym;
+    const thisExpr =
+      wrapId &&
+      s.opts.thisField &&
+      root.origType === Tag.ArrowFunctionExpression
+        ? [s.tok(Tag.push, Tag.Identifier, { sym: parentTag })]
+        : [s.tok(Tag.push, Tag.ThisExpression)];
     saved.set(contextSym, {
       raw: null,
       init: constr
@@ -346,7 +378,7 @@ export const contextDecls = Kit.map(function contextDecls(si) {
               : emptyArr),
             ...(root.opts.passNewTarget
               ? [
-                  s.tok(Tag.push, Tag.ThisExpression),
+                  ...thisExpr,
                   s.enter(Tag.push, Tag.MemberExpression),
                   s.tok(Tag.object, Tag.Identifier, { node: { name: "new" } }),
                   s.tok(Tag.property, Tag.Identifier, {
@@ -355,7 +387,7 @@ export const contextDecls = Kit.map(function contextDecls(si) {
                   ...s.leave()
                 ]
               : root.opts.passNewTarget === false && root.usesThis
-              ? [s.tok(Tag.push, Tag.ThisExpression)]
+              ? thisExpr
               : emptyArr),
             ...s.leave(),
             ...s.leave()

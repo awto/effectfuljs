@@ -69,7 +69,7 @@ if (path.sep === "\\")
   };
 
 const include = [paths.appSrc];
-
+console.log("INCLUDE", include);
 function isDebuggerPath(filename) {
   filename = path.resolve(normalizeDrive(filename));
   return (
@@ -190,67 +190,86 @@ module.exports = {
               ]
             }
           },
-          {
-            test: /\.(js|mjs|jsx|ts|tsx)$/,
-            include,
-            exclude: [isDebuggerPath, /node_modules/],
-            loader: require.resolve("babel-loader"),
-            options: {
-              babelrc: false,
-              configFile: false,
-              compact: false,
-              passPerPreset: true,
-              presets: [
-                [
-                  preset,
-                  {
-                    importRT,
-                    timeTravel,
-                    preInstrumentedLibs: true,
-                    expInject: 0,
-                    expInline: false,
-                    srcRoot
-                  }
-                ]
+          config.instrument &&
+            !config.zeroConfig && {
+              test: /\.(js|mjs|jsx|ts|tsx)$/,
+              // include,
+              exclude: [isDebuggerPath /*, /node_modules/*/],
+              loader: require.resolve("babel-loader"),
+              options: {
+                cacheDirectory: cache,
+                cacheIdentifier,
+                cacheCompression: false,
+                sourceMaps: false
+              }
+            },
+          config.instrument &&
+            config.zeroConfig && {
+              test: /\.(js|mjs|jsx|ts|tsx)$/,
+              include,
+              exclude: [isDebuggerPath, /node_modules/],
+              loader: require.resolve("babel-loader"),
+              options: {
+                babelrc: false,
+                configFile: false,
+                compact: false,
+                passPerPreset: true,
+                presets: [
+                  [
+                    preset,
+                    {
+                      importRT,
+                      timeTravel,
+                      preInstrumentedLibs: true,
+                      expInject: 0,
+                      expInline: false,
+                      srcRoot,
+                      expNoCallWraps: configJS.expNoCallWraps
+                    }
+                  ]
+                ],
+                cacheDirectory: cache,
+                cacheIdentifier,
+                cacheCompression: false,
+                sourceMaps: false
+              }
+            },
+          config.instrument &&
+            config.zeroConfig && {
+              test: /\.(js|mjs)$/,
+              exclude: [
+                /@babel(?:\/|\\{1,2})runtime/,
+                /@effectful(?:\/|\\{1,2})/,
+                /css-loader/,
+                /style-loader/,
+                isDebuggerPath
               ],
-              cacheDirectory: cache,
-              cacheIdentifier,
-              sourceMaps: false
-            }
-          },
-          {
-            test: /\.(js|mjs)$/,
-            exclude: [
-              /@babel(?:\/|\\{1,2})runtime/,
-              /@effectful(?:\/|\\{1,2})/,
-              /css-loader/,
-              /style-loader/,
-              isDebuggerPath
-            ],
-            loader: require.resolve("babel-loader"),
-            options: {
-              babelrc: false,
-              configFile: false,
-              compact: false,
-              passPerPreset: true,
-              presets: [
-                [
-                  preset,
-                  {
-                    blackbox: true,
-                    importRT,
-                    timeTravel,
-                    expInject: 0,
-                    expInline: false,
-                    srcRoot
-                  }
-                ]
-              ],
-              cacheDirectory: cache,
-              cacheIdentifier,
-              sourceMaps: false
-            }
-          },
+              loader: require.resolve("babel-loader"),
+              options: {
+                babelrc: false,
+                configFile: false,
+                compact: false,
+                passPerPreset: true,
+                presets: [
+                  [
+                    preset,
+                    {
+                      blackbox: true,
+                      importRT,
+                      timeTravel,
+                      expInject: 0,
+                      expInline: false,
+                      srcRoot,
+                      expNoCallWraps: configJS.expNoCallWraps
+                    }
+                  ]
+                ],
+                cacheDirectory: cache,
+                cacheIdentifier,
+                cacheCompression: false,
+                sourceMaps: false
+              }
+            },
           {
             test: cssRegex,
             exclude: cssModuleRegex,
@@ -300,7 +319,7 @@ module.exports = {
               name: "static/media/[name].[hash:8].[ext]"
             }
           }
-        ]
+        ].filter(Boolean)
       }
     ]
   },

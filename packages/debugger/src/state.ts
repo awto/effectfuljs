@@ -49,8 +49,6 @@ export interface Frame extends ProtoFrame {
 
 export interface Record {
   operations?: Operation;
-  objectSnapshots: Set<any> | null;
-  dataSnapshots: Set<any> | null;
   prev: Record | null;
 }
 
@@ -114,6 +112,11 @@ export interface Module {
   evalCtx?: { [name: string]: [string, number] };
 }
 
+//TODO: babel doesn't support const enums
+export const PlainKind = 0;
+export const AsyncKind = 1;
+export const GeneratorKind = 2;
+
 /** function's description */
 export type FunctionDescr = {
   /** module where the function is defined */
@@ -127,6 +130,7 @@ export type FunctionDescr = {
   canSkip: boolean;
   uniqName: string;
   params: string[];
+  kind: number;
   func: (...args: any[]) => any;
   handler: (context: Frame, input: any) => any;
   errHandler: (state: number) => number;
@@ -169,7 +173,8 @@ export type Scope = any[] &
         /** memoized `ScopeInfo` */
         2: ScopeInfo;
         length: 3;
-      });
+      }
+  );
 
 export interface State {
   /** stopping on break points if `true`, otherwise ignoring them */
@@ -295,7 +300,9 @@ export const saved = {
     splice: Array.prototype.splice,
     sort: Array.prototype.sort,
     reverse: Array.prototype.reverse
-  }
+  },
+  Map,
+  Set
 };
 
 /**
@@ -309,7 +316,9 @@ export const thunkSymbol = Symbol("@effectful/debugger/thunk");
  * otherwise `value` is returned as is
  */
 export function evalThunk<T>(value: { [thunkSymbol]: boolean } | T): T {
-  return value && (<any>value)[thunkSymbol] ? (<any>value)() : value;
+  return value && (<any>value)[thunkSymbol]
+    ? ((context.call = value), (<any>value)())
+    : value;
 }
 
 export const token = { _effectToken: true };
@@ -389,3 +398,45 @@ export const normalizeDrive = isWindows
   : function(path: string) {
       return path;
     };
+
+/*
+export function forInIterator(obj: object): Iterable<string> {
+  return (function*() {
+    for (const i in obj) yield i;
+  })()[Symbol.iterator]();
+}
+
+*/
+
+export function* forInIterator(obj: object): Iterable<string> {
+  for (const i in obj) yield i;
+}
+
+export type SubGenerator = Iterator<any> & {
+  throw?: (value: any) => Item;
+  return?: (value: any) => Item;
+};
+
+export interface GeneratorFrame extends Frame {
+  delegatee: SubGenerator | null;
+  running: boolean;
+  sent: any;
+}
+
+export type Item = { value: any; done: boolean };
+
+export type AsyncSubGenerator = AsyncIterator<any> & {
+  throw?: (value: any) => Promise<Item>;
+  return?: (value: any) => Promise<Item>;
+};
+
+export interface AsyncGeneratorFrame extends Frame {
+  delegatee: AsyncSubGenerator | null;
+  running: boolean;
+  queue: (() => void)[];
+  cleanup(): void;
+  onResolve: (value: any) => void;
+  onReject: (reason: any) => void;
+  promise: Promise<Item>;
+  sent: any;
+}

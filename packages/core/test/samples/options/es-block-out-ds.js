@@ -48,7 +48,7 @@ $M.fun("m$0", "file", null, [], 32, function () {
       case 3:
         $.$.$0 = $p;
         $.goto = 4;
-        $M.brk(24);
+        $M.brk(25);
         continue;
 
       case 4:
@@ -185,7 +185,7 @@ $M.fun("m$3", "_interopRequireWildcard", "m$0", ["obj"], 0, function () {
 
       case 2:
         if ($0) {
-          $.goto = 35;
+          $.goto = 38;
           $M.brk(8);
           continue;
         } else {
@@ -198,235 +198,264 @@ $M.fun("m$3", "_interopRequireWildcard", "m$0", ["obj"], 0, function () {
         continue;
 
       case 4:
-        $.goto = 5;
-        $p = ($M.context.call = $.$$.$.$1)();
-        continue;
+        $0 = $.$.$0 === null;
+
+        if ($0) {
+          $.state = 5;
+        } else {
+          $0 = typeof $.$.$0 !== "object";
+
+          if ($0) {
+            $0 = typeof $.$.$0 !== "function";
+            $.goto = 6;
+            continue;
+          } else {
+            $.goto = 6;
+            continue;
+          }
+        }
 
       case 5:
-        $.$.$1 = $p;
-        $.goto = 6;
-        $M.brk(10);
-        continue;
+        if ($0) {
+          $.goto = 37;
+          $M.brk(10);
+          continue;
+        } else {
+          $.goto = 7;
+          continue;
+        }
 
       case 6:
-        $.$.$6 = $.$.$1;
-
-        if ($.$.$6) {
-          $.goto = 34;
-          $p = $M.mcall("has", $.$.$1, $.$.$0);
-          continue;
-        } else {
-          $.state = 7;
-        }
+        $.goto = 5;
+        continue;
 
       case 7:
-        if ($.$.$6) {
-          $.goto = 32;
-          $M.brk(11);
-          continue;
-        } else {
-          $.state = 8;
-        }
+        $.goto = 8;
+        $M.brk(11);
+        continue;
 
       case 8:
         $.goto = 9;
-        $M.brk(12);
+        $p = ($M.context.call = $.$$.$.$1)();
         continue;
 
       case 9:
-        $.$.$2 = {};
+        $.$.$1 = $p;
         $.goto = 10;
-        $M.brk(13);
+        $M.brk(12);
         continue;
 
       case 10:
-        if ($.$.$0 != null) {
-          $.goto = 17;
-          $M.brk(14);
+        $.$.$6 = $.$.$1;
+
+        if ($.$.$6) {
+          $.goto = 36;
+          $p = $M.mcall("has", $.$.$1, $.$.$0);
           continue;
         } else {
           $.state = 11;
         }
 
       case 11:
-        $.goto = 12;
-        $M.brk(20);
-        continue;
+        if ($.$.$6) {
+          $.goto = 34;
+          $M.brk(13);
+          continue;
+        } else {
+          $.state = 12;
+        }
 
       case 12:
-        $M.set($.$.$2, "default", $.$.$0);
         $.goto = 13;
-        $M.brk(21);
+        $M.brk(14);
         continue;
 
       case 13:
-        if ($.$.$1) {
-          $.goto = 16;
-          $M.brk(22);
-          continue;
-        } else {
-          $.state = 14;
-        }
+        $.$.$2 = {};
+        $.goto = 14;
+        $M.brk(15);
+        continue;
 
       case 14:
-        $.goto = 15;
-        $M.brk(23);
-        continue;
-
-      case 15:
-        return $M.ret($.$.$2);
-
-      case 16:
-        $.goto = 14;
-        $M.mcall("set", $.$.$1, $.$.$0, $.$.$2);
-        continue;
-
-      case 17:
         $0 = Object.defineProperty;
 
         if ($0) {
           $0 = Object.getOwnPropertyDescriptor;
-          $.state = 18;
+          $.state = 15;
         } else {
-          $.state = 18;
+          $.state = 15;
         }
 
-      case 18:
+      case 15:
         $.$.$3 = $0;
         $.$.$6 = $M.forInIterator($.$.$0);
-        $.state = 19;
+        $.state = 16;
 
-      case 19:
+      case 16:
         $0 = $.$.$6.next();
 
         if ($0.done) {
-          $.goto = 11;
+          $.goto = 29;
+          $M.brk(21);
           continue;
         } else {
           $.$.$4 = $0.value;
-          $.goto = 20;
-          $M.brk(15);
+          $.goto = 17;
+          $M.brk(16);
           continue;
         }
 
-      case 20:
-        $.goto = 21;
+      case 17:
+        $.goto = 18;
         $p = $M.mcall("call", Object.prototype.hasOwnProperty, $.$.$0, $.$.$4);
         continue;
 
-      case 21:
+      case 18:
         if ($p) {
-          $.goto = 23;
-          $M.brk(16);
+          $.goto = 20;
+          $M.brk(17);
           continue;
         } else {
-          $.state = 22;
+          $.state = 19;
         }
 
-      case 22:
-        $.goto = 19;
+      case 19:
+        $.goto = 16;
         continue;
 
-      case 23:
+      case 20:
         if ($.$.$3) {
-          $.goto = 31;
+          $.goto = 28;
           $p = $M.mcall("getOwnPropertyDescriptor", Object, $.$.$0, $.$.$4);
           continue;
         } else {
           $.$.$7 = null;
-          $.state = 24;
+          $.state = 21;
         }
 
-      case 24:
+      case 21:
         $.$.$5 = $.$.$7;
-        $.goto = 25;
-        $M.brk(17);
+        $.goto = 22;
+        $M.brk(18);
         continue;
 
-      case 25:
+      case 22:
         $0 = $.$.$5;
 
         if ($0) {
           $0 = $.$.$5.get;
 
           if ($0) {
-            $.goto = 30;
+            $.goto = 27;
             continue;
           } else {
             $0 = $.$.$5.set;
-            $.goto = 30;
+            $.goto = 27;
             continue;
           }
         } else {
-          $.state = 26;
+          $.state = 23;
         }
 
-      case 26:
+      case 23:
         if ($0) {
-          $.goto = 29;
-          $M.brk(18);
-          continue;
-        } else {
-          $.goto = 27;
+          $.goto = 26;
           $M.brk(19);
           continue;
+        } else {
+          $.goto = 24;
+          $M.brk(20);
+          continue;
         }
 
-      case 27:
+      case 24:
         $M.set($.$.$2, $.$.$4, $.$.$0[$.$.$4]);
-        $.state = 28;
+        $.state = 25;
 
-      case 28:
-        $.goto = 22;
+      case 25:
+        $.goto = 19;
         continue;
 
-      case 29:
-        $.goto = 28;
+      case 26:
+        $.goto = 25;
         $M.mcall("defineProperty", Object, $.$.$2, $.$.$4, $.$.$5);
         continue;
 
-      case 30:
-        $.goto = 26;
+      case 27:
+        $.goto = 23;
         continue;
 
-      case 31:
+      case 28:
         $.$.$7 = $p;
-        $.goto = 24;
+        $.goto = 21;
+        continue;
+
+      case 29:
+        $M.set($.$.$2, "default", $.$.$0);
+        $.goto = 30;
+        $M.brk(22);
+        continue;
+
+      case 30:
+        if ($.$.$1) {
+          $.goto = 33;
+          $M.brk(23);
+          continue;
+        } else {
+          $.state = 31;
+        }
+
+      case 31:
+        $.goto = 32;
+        $M.brk(24);
         continue;
 
       case 32:
-        $.goto = 33;
+        return $M.ret($.$.$2);
+
+      case 33:
+        $.goto = 31;
+        $M.mcall("set", $.$.$1, $.$.$0, $.$.$2);
+        continue;
+
+      case 34:
+        $.goto = 35;
         $p = $M.mcall("get", $.$.$1, $.$.$0);
         continue;
 
-      case 33:
+      case 35:
         return $M.ret($p);
 
-      case 34:
+      case 36:
         $.$.$6 = $p;
-        $.goto = 7;
+        $.goto = 11;
         continue;
 
-      case 35:
+      case 37:
+        return $M.ret({
+          default: $.$.$0
+        });
+
+      case 38:
         return $M.ret($.$.$0);
 
-      case 36:
+      case 39:
         return $M.ret($.value);
 
-      case 37:
+      case 40:
         throw $.value;
 
       default:
         throw new Error("Invalid state");
     }
   }
-}, null, null, [[null, "s", $s$3], [], [null, "s", $s$3], [null, "s", $s$3], [null, "e", $s$3], [null, "s", $s$3], [null, "e", $s$3], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [], [null, "e", $s$3], [], [], [null, "s", $s$3], [null, "e", $s$3], [null, "s", $s$3], [], [null, "e", $s$3], [null, "s", $s$3], [], [null, "s", $s$3], [], [], [null, "e", $s$3], [], [], [null, "e", $s$3], [], [], [], [], []]);
+}, null, null, [[null, "s", $s$3], [], [null, "s", $s$3], [null, "s", $s$3], [], [null, "s", $s$3], [], [null, "s", $s$3], [null, "e", $s$3], [null, "s", $s$3], [null, "e", $s$3], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [], [], [null, "s", $s$3], [null, "e", $s$3], [null, "s", $s$3], [], [null, "e", $s$3], [null, "s", $s$3], [], [null, "s", $s$3], [], [], [null, "e", $s$3], [], [], [null, "s", $s$3], [null, "s", $s$3], [null, "s", $s$3], [], [null, "e", $s$3], [null, "e", $s$3], [], [], [], [], [], []]);
 $M.fun("m$4", "a", "m$0", [], 1, function () {
   for (;;) {
     switch ($.state = $.goto) {
       case 0:
         $.goto = 1;
-        $M.brk(25);
+        $M.brk(26);
         continue;
 
       case 1:
@@ -436,7 +465,7 @@ $M.fun("m$4", "a", "m$0", [], 1, function () {
 
       case 2:
         $.goto = 3;
-        $M.brk(26);
+        $M.brk(27);
         continue;
 
       case 3:
@@ -446,7 +475,7 @@ $M.fun("m$4", "a", "m$0", [], 1, function () {
 
       case 4:
         $.goto = 5;
-        $M.brk(27);
+        $M.brk(28);
         continue;
 
       case 5:
@@ -456,7 +485,7 @@ $M.fun("m$4", "a", "m$0", [], 1, function () {
 
       case 6:
         $.goto = 7;
-        $M.brk(28);
+        $M.brk(29);
         continue;
 
       case 7:
@@ -483,7 +512,7 @@ $M.fun("m$5", "b", "m$0", [], 1, function () {
     switch ($.state = $.goto) {
       case 0:
         $.goto = 1;
-        $M.brk(29);
+        $M.brk(30);
         continue;
 
       case 1:
@@ -493,7 +522,7 @@ $M.fun("m$5", "b", "m$0", [], 1, function () {
 
       case 2:
         $.goto = 3;
-        $M.brk(30);
+        $M.brk(31);
         continue;
 
       case 3:
@@ -504,7 +533,7 @@ $M.fun("m$5", "b", "m$0", [], 1, function () {
 
       case 4:
         $.goto = 5;
-        $M.brk(31);
+        $M.brk(32);
         continue;
 
       case 5:
@@ -514,7 +543,7 @@ $M.fun("m$5", "b", "m$0", [], 1, function () {
 
       case 6:
         $.goto = 7;
-        $M.brk(32);
+        $M.brk(33);
         continue;
 
       case 7:
@@ -541,7 +570,7 @@ $M.fun("m$6", "c", "m$0", [], 1, function () {
     switch ($.state = $.goto) {
       case 0:
         $.goto = 1;
-        $M.brk(33);
+        $M.brk(34);
         continue;
 
       case 1:
@@ -551,7 +580,7 @@ $M.fun("m$6", "c", "m$0", [], 1, function () {
 
       case 2:
         $.goto = 3;
-        $M.brk(34);
+        $M.brk(35);
         continue;
 
       case 3:
@@ -562,7 +591,7 @@ $M.fun("m$6", "c", "m$0", [], 1, function () {
 
       case 4:
         $.goto = 5;
-        $M.brk(35);
+        $M.brk(36);
         continue;
 
       case 5:
@@ -572,7 +601,7 @@ $M.fun("m$6", "c", "m$0", [], 1, function () {
 
       case 6:
         $.goto = 7;
-        $M.brk(36);
+        $M.brk(37);
         continue;
 
       case 7:
@@ -599,7 +628,7 @@ $M.fun("m$7", "d", "m$0", [], 1, function () {
     switch ($.state = $.goto) {
       case 0:
         $.goto = 1;
-        $M.brk(37);
+        $M.brk(38);
         continue;
 
       case 1:
@@ -609,13 +638,13 @@ $M.fun("m$7", "d", "m$0", [], 1, function () {
 
       case 2:
         $.goto = 3;
-        $M.brk(38);
+        $M.brk(39);
         continue;
 
       case 3:
         "par";
         $.goto = 4;
-        $M.brk(39);
+        $M.brk(40);
         continue;
 
       case 4:
@@ -625,7 +654,7 @@ $M.fun("m$7", "d", "m$0", [], 1, function () {
 
       case 5:
         $.goto = 6;
-        $M.brk(40);
+        $M.brk(41);
         continue;
 
       case 6:

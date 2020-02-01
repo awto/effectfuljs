@@ -26,10 +26,10 @@ describe('flatten expressions', function() {
   context('with logical sub expression', function() {
     it('should not let effect to escape 1', function() {
       equal(
-        run(function() {
+        run(`function() {
           eff(1) || (eff(2) + eff3());
-        }),
-        print(function () /*BS|..|B*/{
+        }`),
+        print(`function () /*BS|..|B*/{
           /*VD|S|E*/var b = /*CE|B*/eff(1);
           /*VD|S*/
           var a = b;
@@ -40,33 +40,33 @@ describe('flatten expressions', function() {
           } else /*BS|..*/{
             /*VD|S*/var c = a;
           }
-        }))
+        }`))
     })
     context('with js side effects', function() {
       it('should order all effects accordingly', function() {
         equal(
-          run(function() {
+          run(`function() {
             i+=2;
             eff1(eff2(++i),i++,eff3(i));
-          }),
-          print(function () /*BS|..|B*/{
+          }`),
+          print(`function () /*BS|..|B*/{
             i += 2;
             /*VD|S*/var c = ++i;
             /*VD|S|E*/var b = /*CE|B*/eff2(c);
             /*VD|S*/var d = i++;
             /*VD|S|E*/var e = /*CE|B*/eff3(i);
             /*VD|S|E*/var a = /*CE|B*/eff1(b, d, e);
-          }))
+          }`))
       })
     })
   })
   context('with variable declaration', function() {
     it('should not let effect to escape 2', function() {
       equal(
-        run(function() {
+        run(`function() {
           var a = eff(1) || eff(2);
-        }),
-        print(function () /*BS|..|B*/{
+        }`),
+        print(`function () /*BS|..|B*/{
           /*VD|S|E*/var c = /*CE|B*/eff(1);
           /*VD|S*/
           var b = c;
@@ -78,15 +78,15 @@ describe('flatten expressions', function() {
             /*VD|S|E*/var d = /*CE|..|B*/pure(b);
           }
           var a = d;
-        }))
+        }`))
     })
   })
   it('should not let effect to escape 3', function() {
     equal(
-      run(function() {
+      run(`function() {
         eff(1) || eff(2);
-      }),
-      print(function () /*BS|..|B*/{
+      }`),
+      print(`function () /*BS|..|B*/{
         /*VD|S|E*/var b = /*CE|B*/eff(1);
         /*VD|S*/
         var a = b;
@@ -98,15 +98,15 @@ describe('flatten expressions', function() {
         } else /*BS|..|E*/{
           /*VD|S|E*/var c = /*CE|..|B*/pure(a);
         }
-      }))
+      }`))
   })
   context('with sequence operator', function() {
     it.skip('should remove the sequence operator', function() {
       equal(
-        run(function() {
+        run(`function() {
           var i = 0;
           eff(i), i++, eff(i--), eff(i+=2);
-        }),
+        }`),
         //TODO: clean the sequence
         print(`function () /*BS|E*/{
           var i = 0;
@@ -123,7 +123,7 @@ describe('flatten expressions', function() {
     context('with pure branch', function() {
       it('should keep effect in body', function() {
         equal(
-          run(function() {
+          run(`function() {
             var i = 0
             if (i) {
               eff(i)
@@ -131,8 +131,8 @@ describe('flatten expressions', function() {
               i+=2
               e
             }
-          }),
-          print(function () /*BS|..|B*/{
+          }`),
+          print(`function () /*BS|..|B*/{
             var i = 0;
             
             /*IS|E*/if (i) /*BS|..|B*/{
@@ -141,7 +141,7 @@ describe('flatten expressions', function() {
               i += 2;
               e;
             }
-          }))
+          }`))
       })
     })
   })
@@ -157,29 +157,29 @@ describe('flatten `for-of`', function() {
             eff(1);
           }
         }`),
-        print(function () /*BS|..|B*/{
+        print(`function () /*BS|..|B*/{
           /*FOS|E*/for (var i of s) /*BS|..|B*/{
             /*VD|S|E*/var a = /*CE|B*/eff(1);
           }
-        }))
+        }`))
       })
   })
   context('with effect on the right', function() {
     it('should extract the effect into former step',
        function() {
          equal(
-           run(function() {
+           run(`function() {
              for(var i of eff(1)) {
                2+2;
              }
-           }),
-           print(function () /*BS|..|B*/{
+           }`),
+           print(`function () /*BS|..|B*/{
              /*VD|S|E*/var a = /*CE|B*/eff(1);
              
              for (var i of a) {
                2 + 2;
              }
-           }))
+           }`))
        })
   })
 })
@@ -189,16 +189,16 @@ describe('flatten `for`', function() {
   context('with non-block in body', function() {
     it('should keep effect in the body', function() {
       equal(
-        run(function() {
+        run(`function() {
           for(;;) {
             eff(1);
           }
-        }),
-        print(function () /*BS|..|B*/{
+        }`),
+        print(`function () /*BS|..|B*/{
           /*FS|E*/for (;;) /*BS|..|B*/{
             /*VD|S|E*/var a = /*CE|B*/eff(1);
           }
-        }))
+        }`))
     })
   })
   context('with effects in init', function() {
@@ -209,13 +209,13 @@ describe('flatten `for`', function() {
             b;
           }
         }`),
-        print(function () /*BS|..|B*/{
+        print(`function () /*BS|..|B*/{
           /*VD|S|E*/var a = /*CE|B*/init();
           
           for (var i = a;;) {
             b;
           }
-        }))
+        }`))
     })
   })
 })

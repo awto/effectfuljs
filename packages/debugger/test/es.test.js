@@ -33,7 +33,15 @@ describe("ECMAScript containers stepping", function() {
     console.log("> forEach:Set", trace(mod.forEachTest(new Set([1, 2, 3]))));
     console.log(
       "> forEach:Map",
-      trace(mod.forEachTest(new Map([[1, "a"], [2, "b"], [3, "c"]])))
+      trace(
+        mod.forEachTest(
+          new Map([
+            [1, "a"],
+            [2, "b"],
+            [3, "c"]
+          ])
+        )
+      )
     );
     expect(console.log.mock.calls).toMatchSnapshot();
   });
@@ -46,7 +54,15 @@ describe("ECMAScript containers stepping", function() {
     global.console = { log: jest.fn() };
     console.log(
       "> forEach:Map",
-      trace(mod.forEachTest(new Map([[1, "a"], [2, "b"], [3, "c"]])))
+      trace(
+        mod.forEachTest(
+          new Map([
+            [1, "a"],
+            [2, "b"],
+            [3, "c"]
+          ])
+        )
+      )
     );
     expect(console.log.mock.calls).toMatchSnapshot();
   });

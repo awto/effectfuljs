@@ -802,9 +802,11 @@ export function blockScoping(sa) {
               const lmap = new Map();
               const nctrl = { cnt: 0, block, labs: lmap };
               if (labs)
-                for (const j of labs.keys()) lmap.set(j, { brk: {}, cnt: {} });
-              for (const j of i.value.labs) lmap.set(j, { brk: {}, cnt: {} });
-              lmap.set("##", { brk: {}, cnt: {} });
+                for (const j of labs.keys())
+                  lmap.set(j, { brk: {}, cnt: {}, root });
+              for (const j of i.value.labs)
+                lmap.set(j, { brk: {}, cnt: {}, root });
+              lmap.set("##", { brk: {}, cnt: {}, root });
               yield* Kit.reposOne(
                 walk(bs, func.value, subst, null, nctrl, lmap),
                 Tag.push
@@ -911,6 +913,7 @@ export function blockScoping(sa) {
               if (labs) {
                 nlabs = new Map(labs);
                 for (const j of i.value.labs) nlabs.set(j, false);
+                nlabs.set("##", false);
               }
               yield* walk(s.sub(), root, subst, capt, ctrl, nlabs);
             }

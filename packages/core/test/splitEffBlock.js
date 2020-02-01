@@ -30,13 +30,13 @@ describe('split block', function() {
   const run = runImpl(v => v)
   it('split block simple 1', function() {
     equal(
-      run(function() {
+      run(`function() {
         var i = 0
         eff(1);
         i++;
         eff(2);
-      }),
-      print(function () /*BS|..|B*/{
+      }`),
+      print(`function () /*BS|..|B*/{
         /*BS|#|E*/{
           var i = 0;
           /*VD|S|E*/var a = /*CE|B*/eff(1);
@@ -45,41 +45,41 @@ describe('split block', function() {
           i++;
           /*VD|S|E*/var b = /*CE|B*/eff(2);
         }
-      }))
+      }`))
   })
   it('split block simple 2', function() {
     equal(
-      run(function() {
+      run(`function() {
         var i = 0
         eff(1);
-      }),
-      print(function () /*BS|..|B*/{
+      }`),
+      print(`function () /*BS|..|B*/{
         /*BS|#|E*/{
           var i = 0;
           /*VD|S|E*/var a = /*CE|B*/eff(1);
         }
-      }))
+      }`))
   })
   it('split block simple 3', function() {
     equal(
-      run(function() {
+      run(`function() {
         eff(1);
-      }),
-      print(function () /*BS|..|B*/{
+      }`),
+      print(`function () /*BS|..|B*/{
         /*BS|#|E*/{
           /*VD|S|E*/var a = /*CE|B*/eff(1);
         }
-      }))
+      }`))
   })
   context('with assignments', function() {
     it('should move assignment to the next block', function() {
       equal(
-        run(function() {
+        run(`function() {
           var i;
           i = eff(1);
           i = eff(2);
-        }),
-        print(function () /*BS|..|B*/{
+        }`),
+        print(`function () /*BS|..|B*/{
           /*BS|#|E*/{
             var i;
             /*VD|S|E*/var b = /*CE|B*/eff(1);
@@ -91,23 +91,23 @@ describe('split block', function() {
           /*BS|#*/{
             /*VD|S*/var c = i = d;
           }
-        }))
+        }`))
     })
   })
   context('with effectful sub-expression', function() {
     it('should have only 1 effect in a block', function() {
       equal(
-        run(function() {
+        run(`function() {
           eff1(eff2(1));
-        }),
-        print(function () /*BS|..|B*/{
+        }`),
+        print(`function () /*BS|..|B*/{
           /*BS|#|E*/{
             /*VD|S|E*/var b = /*CE|B*/eff2(1);
           }
           /*BS|#|E*/{
             /*VD|S|E*/var a = /*CE|B*/eff1(b);
           }
-        }))
+        }`))
     })
   })
   context('with `if` statement', function() {
@@ -124,7 +124,7 @@ describe('split block', function() {
             eff(5);
           eff(6);
         }`),
-        print(function () /*BS|..|B*/{
+        print(`function () /*BS|..|B*/{
           /*BS|#|E*/{
             /*VD|S|E*/var a = /*CE|B*/eff1(1);
           }
@@ -150,7 +150,7 @@ describe('split block', function() {
           /*BS|#|E*/{
             /*VD|S|E*/var h = /*CE|B*/eff(6);
           }
-        }))
+        }`))
     })
     it('should have only 1 effectful statement in a block 2', function() {
       equal(
@@ -166,7 +166,7 @@ describe('split block', function() {
             eff(5);
           eff(6);
         }`),
-        print(function () /*BS|..|B*/{
+        print(`function () /*BS|..|B*/{
           /*BS|#|E*/{
             /*VD|S|E*/var d = /*CE|B*/eff1(1);
           }
@@ -190,7 +190,7 @@ describe('split block', function() {
           /*BS|#|E*/{
             /*VD|S|E*/var h = /*CE|B*/eff(6);
           }
-        }))
+        }`))
     })
   })
 })

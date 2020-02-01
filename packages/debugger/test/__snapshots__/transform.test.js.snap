@@ -6,7 +6,6 @@ exports[`default transpiler 1`] = `
 var M = require(\\"../../api\\");
 
 var frame = M.frame;
-var scope = M.scope;
 var brk = M.brk;
 var mcall = M.mcall;
 var ret = M.ret;
@@ -41,33 +40,51 @@ var $module = M.module(\\"test/__fixtures__/code.js\\", void 0, module),
   v2: \\"v2\\"
 }, v_1],
     meta$f = M.fun($module, function (x) {
-  return function (module, exports) {
-    var _$ = frame(x, this, new.target),
+  return M.clos(x, meta$f, function f(module, exports) {
+    var _$ = frame(f, this, new.target),
         p;
 
     _$.$.module = module;
     _$.$.exports = exports;
     _$.$.C = meta$C(_$);
     {
-      return scope(5);
+      _$.goto = 5;
+
+      try {
+        return _$.meta.handler(_$, void 0);
+      } catch (e) {
+        return M.handle(_$, e);
+      }
     }
-  };
+  });
 }, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:31\\"], [v_1, \\"s\\", \\"2:0-2:33\\"], [v_1, \\"s\\", \\"3:0-3:33\\"], [v_1, \\"s\\", \\"4:0-4:4\\"], [v_1, \\"s\\", \\"5:0-5:4\\"], [v_1, \\"s\\", \\"7:0-7:12\\"], [v_1, \\"s\\", \\"25:0-28:2\\"]], \\"f\\", \\"1:0-29:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$fn1 = M.fun($module, function (x) {
-  return function fn1() {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$fn1, function fn1() {
+    var $ = frame(fn1, this, new.target),
         p;
     $.$.fn1 = fn1;
-    return scope(5);
-  };
+    $.goto = 5;
+
+    try {
+      return $.meta.handler($, void 0);
+    } catch (e) {
+      return M.handle($, e);
+    }
+  });
 }, fn1_1, void 0, void 0, [[v_4, \\"s\\", \\"26:2-26:16\\"], [v_4, \\"s\\", \\"27:2-27:55\\"]], \\"fn1\\", \\"25:14-28:1\\", meta$f, []),
     meta$C = M.fun($module, function (x) {
-  return function C(a) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$C, function C(a) {
+    var $ = frame(C, this, new.target),
         p;
     $.$.a = a;
-    return scope(5);
-  };
+    $.goto = 5;
+
+    try {
+      return $.meta.handler($, void 0);
+    } catch (e) {
+      return M.handle($, e);
+    }
+  });
 }, C_1, C_err, C_fin, [[v_2, \\"s\\", \\"10:2-10:14\\"], [v_2, \\"s\\", \\"11:2-22:3\\"], [v_3, \\"s\\", \\"12:4-12:18\\"], [v_3, \\"s\\", \\"13:4-13:11\\"], [v_3, \\"s\\", \\"14:4-14:42\\"], [v_3, \\"s\\", \\"15:4-17:5\\"], [[{
   a: \\"a\\",
   v3: \\"v3\\",
@@ -500,7 +517,6 @@ exports[`default transpiler 2`] = `
 var M = require(\\"../../api\\");
 
 var frame = M.frame;
-var scope = M.scope;
 var brk = M.brk;
 var mcall = M.mcall;
 var ret = M.ret;
@@ -514,24 +530,36 @@ var $module = M.module(\\"test/__fixtures__/mod1.js\\", void 0, module),
   i: \\"i\\"
 }, v_1],
     meta$f = M.fun($module, function (x) {
-  return function (module, exports) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$f, function f(module, exports) {
+    var $ = frame(f, this, new.target),
         p;
     $.$.module = module;
     $.$.exports = exports;
     $.$.run = meta$run($);
     {
-      return scope(5);
+      $.goto = 5;
+
+      try {
+        return $.meta.handler($, void 0);
+      } catch (e) {
+        return M.handle($, e);
+      }
     }
-  };
+  });
 }, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:29\\"], [v_1, \\"s\\", \\"3:0-3:10\\"], [v_1, \\"s\\", \\"12:0-12:6\\"], [v_1, \\"s\\", \\"13:0-13:6\\"]], \\"f\\", \\"1:0-14:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$run = M.fun($module, function (x) {
-  return function run(i = 1) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$run, function run(i = 1) {
+    var $ = frame(run, this, new.target),
         p;
     $.$.i = i;
-    return scope(5);
-  };
+    $.goto = 5;
+
+    try {
+      return $.meta.handler($, void 0);
+    } catch (e) {
+      return M.handle($, e);
+    }
+  });
 }, run_1, void 0, void 0, [[v_2, \\"s\\", \\"6:2-6:9\\"], [v_2, \\"s\\", \\"7:2-7:23\\"], [v_2, \\"s\\", \\"8:2-8:9\\"], [v_2, \\"s\\", \\"9:2-9:31\\"]], \\"run\\", \\"5:7-10:1\\", meta$f, [\\"i\\"]);
 module.exports = M.wrapExport(meta$f(null));
 
@@ -665,7 +693,6 @@ exports[`default transpiler 3`] = `
 var M = require(\\"../../api\\");
 
 var frame = M.frame;
-var scope = M.scope;
 var brk = M.brk;
 var ret = M.ret;
 var unhandled = M.unhandled;
@@ -692,8 +719,8 @@ var $module = M.module(\\"test/__fixtures__/mod2.js\\", void 0, module),
   i: \\"i\\"
 }, v_1],
     meta$f = M.fun($module, function (x) {
-  return function (module, exports) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$f, function f(module, exports) {
+    var $ = frame(f, this, new.target),
         p;
     $.$.module = module;
     $.$.exports = exports;
@@ -702,43 +729,73 @@ var $module = M.module(\\"test/__fixtures__/mod2.js\\", void 0, module),
     $.$.f1 = meta$f1($);
     $.$.f2 = meta$f2($);
     {
-      return scope(5);
+      $.goto = 5;
+
+      try {
+        return $.meta.handler($, void 0);
+      } catch (e) {
+        return M.handle($, e);
+      }
     }
-  };
+  });
 }, f_1, void 0, void 0, [[[{}, null], \\"s\\", \\"1:0-1:12\\"]], \\"f\\", \\"1:0-25:0\\", null, [\\"module\\", \\"exports\\"]),
     meta$f2 = M.fun($module, function (x) {
-  return function f2(i) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$f2, function f2(i) {
+    var $ = frame(f2, this, new.target),
         p;
     $.$.i = i;
-    return scope(5);
-  };
+    $.goto = 5;
+
+    try {
+      return $.meta.handler($, void 0);
+    } catch (e) {
+      return M.handle($, e);
+    }
+  });
 }, f2_1, void 0, void 0, [[v_5, \\"s\\", \\"22:2-22:8\\"], [v_5, \\"s\\", \\"23:2-23:32\\"]], \\"f2\\", \\"21:7-24:1\\", meta$f, [\\"i\\"]),
     meta$f1 = M.fun($module, function (x) {
-  return function f1(i) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$f1, function f1(i) {
+    var $ = frame(f1, this, new.target),
         p;
     $.$.i = i;
-    return scope(5);
-  };
+    $.goto = 5;
+
+    try {
+      return $.meta.handler($, void 0);
+    } catch (e) {
+      return M.handle($, e);
+    }
+  });
 }, f1_1, void 0, void 0, [[v_4, \\"s\\", \\"14:2-14:8\\"], [v_4, \\"s\\", \\"15:2-15:32\\"], [v_4, \\"s\\", \\"16:2-16:23\\"], [v_4, \\"s\\", \\"17:2-17:23\\"], [v_4, \\"s\\", \\"18:2-18:13\\"]], \\"f1\\", \\"13:7-19:1\\", meta$f, [\\"i\\"]),
     meta$B = M.fun($module, function (x) {
-  return function B(i) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$B, function B(i) {
+    var $ = frame(B, this, new.target),
         p;
     $.$.i = i;
     $.$._this = this;
-    return scope(5);
-  };
+    $.goto = 5;
+
+    try {
+      return $.meta.handler($, void 0);
+    } catch (e) {
+      return M.handle($, e);
+    }
+  });
 }, B_1, void 0, void 0, [[v_3, \\"s\\", \\"9:2-9:13\\"], [v_3, \\"s\\", \\"10:2-10:26\\"]], \\"B\\", \\"8:0-11:1\\", meta$f, [\\"i\\"]),
     meta$A = M.fun($module, function (x) {
-  return function A(i) {
-    var $ = frame(x, this, new.target),
+  return M.clos(x, meta$A, function A(i) {
+    var $ = frame(A, this, new.target),
         p;
     $.$.i = i;
     $.$._this = this;
-    return scope(5);
-  };
+    $.goto = 5;
+
+    try {
+      return $.meta.handler($, void 0);
+    } catch (e) {
+      return M.handle($, e);
+    }
+  });
 }, A_1, void 0, void 0, [[v_2, \\"s\\", \\"4:2-4:24\\"], [v_2, \\"s\\", \\"5:2-5:22\\"]], \\"A\\", \\"3:0-6:1\\", meta$f, [\\"i\\"]);
 module.exports = M.wrapExport(meta$f(null));
 
@@ -754,7 +811,7 @@ function A_1($, p) {
 
       case 6:
         $.goto = 7;
-        $.$._this.i = $.$.i * 10 + $.$$.$.cnt;
+        $.self.i = $.$.i * 10 + $.$$.$.cnt;
         $.state = 7;
 
       case 7:
@@ -770,7 +827,7 @@ function A_1($, p) {
 
       case 9:
         $.goto = 10;
-        $.$._this.b = p;
+        $.self.b = p;
         $.state = 10;
 
       case 10:
@@ -798,7 +855,7 @@ function B_1($, p) {
 
       case 6:
         $.goto = 7;
-        $.$._this.i = $.$.i;
+        $.self.i = $.$.i;
         $.state = 7;
 
       case 7:
@@ -808,7 +865,7 @@ function B_1($, p) {
 
       case 8:
         return ret({
-          b: $.$._this,
+          b: $.self,
           cnt: $.$$.$.cnt
         });
 

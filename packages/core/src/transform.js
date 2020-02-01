@@ -227,10 +227,7 @@ export function* substSym(si) {
   }
 }
 
-const dryRun = Kit.pipe(
-  Control.removeLabeledStatement,
-  Kit.toArray
-);
+const dryRun = Kit.pipe(Control.removeLabeledStatement, Kit.toArray);
 
 export function pass(s) {
   if (Policy.STATISTICS) performance.mark("full");
@@ -257,6 +254,7 @@ export function pass(s) {
   }
   sa = Kit.toArray(preproc(sa));
   if (!sa[0].value.$ns) return;
+
   const inp = Kit.toArray(Scope.splitScopes(sa));
   let scopeNum = 0;
   const len = inp.length;
@@ -307,7 +305,7 @@ export function pass(s) {
   const hasEff = (root.hasEff = transform.length !== 0);
   if (!hasEff) {
     /** no transforms, but it may need to erase some directives */
-    return ifLoose(loose)(orig);
+    return loose(orig);
   }
   if (root.opts.topIIFE && root.hasESM)
     throw new Error(

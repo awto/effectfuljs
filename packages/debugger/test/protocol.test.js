@@ -9,6 +9,7 @@ config.srcRoot = path.resolve(path.join(__dirname, ".."));
 config.localConsole = false;
 const Kit = require("./protocol");
 const D = require("../backends/vscode");
+const { context } = require("../state");
 const assert = require("assert");
 
 const deb_log = require("../state").saved.console;
@@ -144,7 +145,7 @@ describe("VSCode protocol handlers", function() {
       done
     );
   });
-  test.only("breakpoints", function(done) {
+  test("breakpoints", function(done) {
     const PROGRAM = path.resolve(
       config.srcRoot,
       require.resolve("./__fixtures__/breakpoints")
@@ -170,6 +171,8 @@ describe("VSCode protocol handlers", function() {
       return false;
     });
     Kit.traverse(
+      /* requied with `expEagerModuleExport: false`:
+          (context.moduleId = require.resolve("./__fixtures__/breakpoints")),*/
       require("./__fixtures__/breakpoints"),
       {
         breakpoints: [
@@ -485,7 +488,7 @@ describe("VSCode protocol handlers", function() {
   });
   // this breaks Promises (leaves them in inconsistent state)
   // so works only if run last (TODO: adapt test)
-  test("pause", function(done) {
+  test.skip("pause", function(done) {
     let pauseDone = false;
     Kit.launch(require("./__fixtures__/pause"), {}, function() {
       Kit.awaitEvent("stopped", function(args) {

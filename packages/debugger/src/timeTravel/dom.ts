@@ -1,7 +1,8 @@
 import * as Core from "./core";
-import { regConstructor } from "@effectful/serialization";
+import { regConstructor, regOpaqueObject } from "@effectful/serialization";
 import { nodeListIter } from "@effectful/serialization/dom";
 import { Operation } from "../state";
+import { record1 } from "./binds";
 
 const journal = Core.journal;
 
@@ -25,7 +26,8 @@ interface ElementExt extends Element {
  */
 if (typeof Node !== "undefined") {
   for (const i of [Node, NodeList]) {
-    Object.defineProperty(i.prototype, Core.SetSymbol, {
+    Core.objectSaved.defineProperty(i.prototype, Core.SetSymbol, {
+      configurable: true,
       value(node: any, name: any, value: any) {
         if (journal.enabled) {
           const proto = Object.getPrototypeOf(node);
@@ -34,7 +36,8 @@ if (typeof Node !== "undefined") {
         return (node[name] = value);
       }
     });
-    Object.defineProperty(i.prototype, Core.DeleteSymbol, {
+    Core.objectSaved.defineProperty(i.prototype, Core.DeleteSymbol, {
+      configurable: true,
       value: Core.noOrderDelete
     });
   }
@@ -90,9 +93,15 @@ regConstructor(DomSnapshot, {
   props: false
 });
 
+function restoreDom(this: any) {
+  this.a.call();
+}
+
+regOpaqueObject(restoreDom, "#dom");
+
 function record(changes: MutationRecord[]) {
   if (journal.enabled && !changes.length) return;
-  Core.record(new DomSnapshot(changes));
+  record1(restoreDom, new DomSnapshot(changes));
 }
 
 function flushData(data: ObserverData) {

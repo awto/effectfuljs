@@ -253,11 +253,11 @@ describe("propagate effect for `for-of`", function() {
                  2+2;
                }
              }`),
-            print(function() /*BS|..|B*/ {
+            print(`function() /*BS|..|B*/ {
               /*FOS|e*/ for (var i of /*CE|B*/ eff(1)) {
                 2 + 2;
               }
-            })
+            }`)
           );
         });
       });

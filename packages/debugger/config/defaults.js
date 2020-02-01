@@ -1,4 +1,5 @@
 const config = require("../config").default;
+const fs = require("fs");
 if (process.env.EFFECTFUL_DEBUGGER_URL)
   config.url = process.env.EFFECTFUL_DEBUGGER_URL;
 config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL);
@@ -7,14 +8,13 @@ config.timeTravelDisabled = isTrue(
 );
 
 config.srcRoot = require("../state").normalizeDrive(
-  process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || process.cwd()
+  fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || ".")
 );
 config.backend = process.env.EFFECTFUL_DEBUGGER_BACKEND || "vscode";
-config.cache = isTrue(process.env.EFFECTFUL_DEBUGGER_CACHE);
-config.babelZeroConfig = isTrue(
-  process.env.EFFECTFUL_DEBUGGER_BABEL_ZERO_CONFIG,
-  true
-);
+config.cache =
+  isTrue(process.env.EFFECTFUL_DEBUGGER_CACHE) ||
+  !isTrue(process.BABEL_DISABLE_CACHE);
+config.zeroConfig = isTrue(process.env.EFFECTFUL_DEBUGGER_ZERO_CONFIG, true);
 config.verbose = isNaN(process.env.EFFECTFUL_DEBUGGER_VERBOSE)
   ? isTrue(process.env.EFFECTFUL_DEBUGGER_VERBOSE)
     ? 1
@@ -38,6 +38,12 @@ if (isNaN(config.port)) config.port = 10010;
 if (config.verbose) console.log(`DEBUGGER: config  ${JSON.stringify(config)}`);
 
 config.open = isTrue(process.env.EFFECTFUL_DEBUGGER_OPEN);
+
+config.instrument = isTrue(process.env.EFFECTFUL_DEBUGGER_INSTRUMENT, true);
+
+if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
+
+config.expEagerModuleExport = false;
 
 module.exports = config;
 

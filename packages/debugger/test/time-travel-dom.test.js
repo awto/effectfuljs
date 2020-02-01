@@ -9,6 +9,7 @@ test("DOM time traveling", function() {
   try {
     SD.trackGlobalDocument();
     document.body.innerHTML = `<div id="root"></div>`;
+    document.body.deb_trace = true;
     const mod = trace(D.evalThunk(require("./__fixtures__/tt/dom")));
     D.TimeTravel.DOM.track(document.getElementById("root"));
     D.TimeTravel.reset();
@@ -19,6 +20,7 @@ test("DOM time traveling", function() {
     j.enabled = true;
     D.TimeTravel.checkpoint();
     trace(mod.changeDom1());
+    document.body.deb_trace = false;
     const text1 = document.body.innerHTML;
     j.enabled = false;
     expect(text1).toMatchSnapshot();

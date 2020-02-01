@@ -238,8 +238,8 @@ export function propAccess(si) {
   const get = varOp(wrap.get, "get");
   const call = varOp(wrap.call, "call");
   const constr = varOp(wrap.constr, "constr");
-  const globals = wrap.globals;
-  const locals = wrap.locals;
+  const globals = wrap.globals !== false;
+  const locals = wrap.locals !== false;
   const wrapArgs = wrap.arrArgs;
   if (set && s.opts.optimizeContextVars)
     throw s.error(
@@ -251,6 +251,11 @@ export function propAccess(si) {
     if (!conf) return null;
     const sym = Kit.sysId(defaultName);
     sym.bindOp = conf.bind !== false;
+    const locName = conf.local;
+    sym.locSym = locName === false ? null : locName ? Kit.sysId(locName) : sym;
+    const globName = conf.global;
+    sym.globSym =
+      globName === false ? null : globName ? Kit.sysId(globName) : sym;
     return sym;
   }
   function* _propAccess(sw) {
@@ -340,7 +345,15 @@ export function propAccess(si) {
                 break;
               case Tag.Identifier:
                 const objSym = objTok.value.sym;
+                if (objSym) {
+                  if (objSym.global) {
+                    opSym = opSym.globSym;
+                  } else if (objSym.interpr === Bind.ctxField) {
+                    opSym = opSym.locSym;
+                  }
+                }
                 if (
+                  !opSym ||
                   !objSym ||
                   objSym.singleAssign ||
                   (!objSym.global &&
@@ -396,9 +409,8 @@ export function propAccess(si) {
               loc: i.value.node && i.value.node.loc,
               type: i.type
             },
-            bind: i.value.bind, // sym.bindOp,
-            eff: i.value.eff, // sym.bindOp,
-            // expr: sym.bindOp,
+            bind: i.value.bind,
+            eff: i.value.eff,
             sym: opSym
           });
           yield* obj;

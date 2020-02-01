@@ -1,5 +1,10 @@
 import * as S from "./main";
 
+const LocMap = Map;
+const LocWeakMap = WeakMap;
+
+const defineProperty = Object.defineProperty;
+
 export function nodeListIter<T>(nl: {
   length: number;
   [index: number]: T;
@@ -22,37 +27,40 @@ export function nodeListIter<T>(nl: {
 export const eventsSym = Symbol.for("@effectful/debugger/events");
 
 if (typeof Event !== "undefined")
-  (<any>Event.prototype)[S.descriptorSymbol] = S.regDescriptor({
-    name: "dom#Event",
-    create(ctx: S.ReadContext, json: any): Event {
-      const EventConstructor = ctx.step((<any>json).c);
-      const init: any = (<any>json).init;
-      for (const i of Object.keys(init)) {
-        const prop = init[i];
-        if (prop && typeof prop === "object") init[i] = ctx.step(prop);
-      }
-      return new EventConstructor(init.type, init);
-    },
-    write(ctx: S.WriteContext, value: Event) {
-      const res: S.JSONObject = {};
-      res.c = ctx.step(value.constructor, res, "c");
-      const descrs: any = {};
-      for (
-        let i = value;
-        i && i !== Object.prototype;
-        i = Object.getPrototypeOf(i)
-      )
-        Object.assign(descrs, Object.getOwnPropertyDescriptors(i), descrs);
-      const init: S.JSONObject = (res.init = {});
-      for (const name in descrs) {
-        if (!descrs[name].get) continue;
-        const prop = (<any>value)[name];
-        if (prop) init[name] = ctx.step(prop, init, name);
-      }
-      return res;
-    },
-    readContent() {},
-    props: false
+  defineProperty(Event.prototype, S.descriptorSymbol, {
+    value: S.regDescriptor({
+      name: "dom#Event",
+      create(ctx: S.ReadContext, json: any): Event {
+        const EventConstructor = ctx.step((<any>json).c);
+        const init: any = (<any>json).init;
+        for (const i of Object.keys(init)) {
+          const prop = init[i];
+          if (prop && typeof prop === "object") init[i] = ctx.step(prop);
+        }
+        return new EventConstructor(init.type, init);
+      },
+      write(ctx: S.WriteContext, value: Event) {
+        const res: S.JSONObject = {};
+        res.c = ctx.step(value.constructor, res, "c");
+        const descrs: any = {};
+        for (
+          let i = value;
+          i && i !== Object.prototype;
+          i = Object.getPrototypeOf(i)
+        )
+          Object.assign(descrs, Object.getOwnPropertyDescriptors(i), descrs);
+        const init: S.JSONObject = (res.init = {});
+        for (const name in descrs) {
+          if (!descrs[name].get) continue;
+          const prop = (<any>value)[name];
+          if (prop) init[name] = ctx.step(prop, init, name);
+        }
+        return res;
+      },
+      readContent() {},
+      props: false
+    }),
+    configurable: true
   });
 
 type EventMap = Map<
@@ -143,7 +151,7 @@ function wrapOnceHandleEvent(this: EventListenerOnceHandler, event: Event) {
 
 S.regOpaqueObject(wrapOnceHandleEvent, "S#wrapOnceHandleEvent");
 
-const onceHandlers = new WeakMap<
+const onceHandlers = new LocWeakMap<
   EventListenerOrEventListenerObject,
   EventListenerOnceHandler
 >();
@@ -183,9 +191,9 @@ export function addEventListener(
       });
     }
   }
-  const byType = this[eventsSym] || (this[eventsSym] = new Map());
+  const byType = this[eventsSym] || (this[eventsSym] = new LocMap());
   let byListener = byType.get(type);
-  if (!byListener) byType.set(type, (byListener = new Map()));
+  if (!byListener) byType.set(type, (byListener = new LocMap()));
   let byCapture = byListener.get(listener);
   if (!byCapture) {
     byCapture = [void 0, void 0];
@@ -234,23 +242,27 @@ export function trackEvents(ev: EventTarget) {
 /** monkey patching global `document` to make it serializable */
 export function trackGlobalDocument() {
   if (typeof document === "undefined") return;
-  (<any>document)[S.descriptorSymbol] = S.regDescriptor({
-    name: "global#document",
-    write(ctx, value: Document) {
-      const json: S.JSONObject = {};
-      const events = value[eventsSym];
-      if (events) json.ev = ctx.step(events, json, "ev");
-      return json;
-    },
-    create() {
-      return document;
-    },
-    readContent(ctx, json, value) {
-      const obj = <S.JSONObject>json;
-      if (obj.ev) restoreEvents(value, ctx.step(obj.ev));
-    },
-    overrideProps: { location: false }
-  });
+  defineProperty(
+    document,
+    S.descriptorSymbol,
+    S.regDescriptor({
+      name: "global#document",
+      write(ctx, value: Document) {
+        const json: S.JSONObject = {};
+        const events = value[eventsSym];
+        if (events) json.ev = ctx.step(events, json, "ev");
+        return json;
+      },
+      create() {
+        return document;
+      },
+      readContent(ctx, json, value) {
+        const obj = <S.JSONObject>json;
+        if (obj.ev) restoreEvents(value, ctx.step(obj.ev));
+      },
+      overrideProps: { location: false }
+    })
+  );
 }
 
 /**

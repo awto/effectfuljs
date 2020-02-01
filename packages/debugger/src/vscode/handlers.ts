@@ -12,6 +12,8 @@ import { map, filter } from "../kit";
 
 const { assign } = State.saved.Object;
 
+const Map = State.saved.Map;
+
 declare module "../state" {
   interface Brk {
     logPoint?: (frame: Frame) => void;
@@ -52,7 +54,9 @@ const localConsole = config.localConsole
       log() {},
       error() {},
       warn() {},
-      dir() {}
+      dir() {},
+      time() {},
+      timeEnd() {}
     };
 
 const { journal } = TT;
@@ -106,7 +110,6 @@ let reason: string | undefined;
 let runningTrace: boolean = false;
 
 function defaultNeedsBreak(brk: State.Brk, top: State.Frame) {
-  TT.checkpoint();
   reason = checkPause(brk, top);
   brkFrame = reason ? top : null;
   return reason != null;
@@ -154,7 +157,6 @@ function output(category: string, args: any[], value?: any) {
 const patchedConsole: any = assign(
   {},
   {
-    console,
     log(...args: any[]) {
       localConsole.log.apply(localConsole, <any>args);
       output("stdout", args);
@@ -170,7 +172,9 @@ const patchedConsole: any = assign(
     dir(arg: any) {
       localConsole.dir(arg);
       output("console", [], arg);
-    }
+    },
+    time: console.time,
+    timeEnd: console.timeEnd
   }
 );
 
@@ -267,7 +271,7 @@ context.onThread = async function() {
     }
     if (job.stopOnEntry && !stop && (reason = checkPause(context.brk, top)))
       stop = true;
-    journal.enabled = config.timeTravel;
+    // journal.enabled = config.timeTravel;
     TT.checkpoint();
     if (stop) {
       context.activeTop = context.top;
@@ -555,9 +559,8 @@ function reset() {
 
 handlers.childLaunch = function(args, res) {
   setDirSep(args.dirSep);
-  if (config.timeTravel && !config.timeTravelDisabled) {
-    console.log("REZET");
-    TT.reset();
+  if (config.timeTravel) {
+    TT.reset(!config.timeTravelDisabled);
     if (config.mutationObserver && TT.DOM && typeof window !== "undefined")
       TT.DOM.track(document.documentElement);
   }
@@ -803,7 +806,8 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
       if (
         i.line == null ||
         i.endLine == null ||
-        (i.line > line || i.endLine < line)
+        i.line > line ||
+        i.endLine < line
       )
         continue;
       const { states } = i;

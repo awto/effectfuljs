@@ -5,6 +5,7 @@
 const path = require("path");
 const fs = require("fs");
 const babel = require("@babel/core");
+const config = require("./config").default;
 
 const libs = require("./deps.json");
 
@@ -29,6 +30,7 @@ for (const [l, p] of Object.entries(libs)) {
             srcRoot: true,
             moduleNamePrefix: "@effectful/debugger/",
             moduleAliases,
+            expNoCallWraps: config.expNoCallWraps,
             ...copts
           }
         ]

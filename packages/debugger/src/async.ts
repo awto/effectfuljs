@@ -5,17 +5,18 @@ import {
   Handler,
   StateMap,
   States,
-  FunctionDescr
+  FunctionDescr,
+  saved
 } from "./state";
 import * as State from "./state";
 import {
   fun,
   checkExitBrk,
-  resumeWithThrow,
   resume,
   then,
   handle,
-  signalThread
+  signalThread,
+  frame
 } from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
 
@@ -29,10 +30,10 @@ interface AsyncFrame extends Frame {
 
 let AsyncFunctionPrototype: any;
 
-const exec = config.patchedPromise ? resume : resumeWithThrow;
-
 try {
-  AsyncFunctionPrototype = Object.getPrototypeOf(eval("(async function(){})"));
+  AsyncFunctionPrototype = Object.getPrototypeOf(
+    saved.eval("(async function(){})")
+  );
 } catch (e) {
   function AsyncFunction() {}
   AsyncFunctionPrototype = AsyncFunction.prototype;
@@ -51,9 +52,18 @@ export function funA(
   parent: FunctionDescr | undefined,
   params: string[]
 ): ($$: { [name: string]: any }) => any {
-  return Object.setPrototypeOf(
-    fun(module, func, handler, err, fin, states, name, loc, parent, params),
-    AsyncFunctionPrototype
+  return fun(
+    module,
+    func,
+    handler,
+    err,
+    fin,
+    states,
+    name,
+    loc,
+    parent,
+    params,
+    State.AsyncKind
   );
 }
 
@@ -71,15 +81,26 @@ regOpaqueObject(scopeInit, "@effectful/debugger/scopeInit");
 export function scopeA(dest: number): Promise<any> {
   const top = <AsyncFrame>context.top;
   top.goto = dest;
+  /*
   if (!top.promise) {
     context.call = <any>Promise;
     top.promise = new Promise(scopeInit.bind(top));
   }
+*/
   try {
     return top.meta.handler(top, void 0);
   } catch (e) {
     return handle(top, e);
   }
+} // = scope
+
+export function frameA(proto: any, self: any) {
+  const top = frame(proto, self, null);
+  if (!top.promise) {
+    context.call = <any>Promise;
+    top.promise = new Promise(scopeInit.bind(top));
+  }
+  return top;
 }
 
 export function retA(value: any): any {
@@ -107,7 +128,7 @@ export function unhandledA(reason: any): any {
 function awtOnResolve(this: Frame, value: any) {
   context.suspended.delete(this);
   this.awaiting = token;
-  return exec(this, value);
+  return resume(this, value);
 }
 
 regOpaqueObject(awtOnResolve, "@effectful/debugger/awt#resolve");
@@ -116,7 +137,7 @@ export function awtOnReject(this: AsyncFrame, error: any) {
   context.suspended.delete(this);
   this.awaiting = token;
   this.goto = this.meta.errHandler(this.state);
-  return exec(this, error);
+  return resume(this, error);
 }
 regOpaqueObject(awtOnReject, "@effectful/debugger/awt#reject");
 

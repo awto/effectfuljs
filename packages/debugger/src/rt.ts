@@ -12,15 +12,6 @@ const Tp = Object.getPrototypeOf(Int8Array.prototype);
 const Sp = Set.prototype;
 const Mp = Map.prototype;
 
-if (config.patchedPromise) {
-  const Promise = (global.Promise = Instr.unwrapImport(
-    config.timeTravel ? require("./deps/promise-t") : require("./deps/promise"),
-    "promise"
-  ));
-  regOpaqueObject(Promise, "global#Promise");
-  regOpaqueObject(Promise.prototype, "global#Promise#");
-}
-
 function switchDefault(
   proto: any,
   name: string,
@@ -29,12 +20,21 @@ function switchDefault(
   const defImpl: any = proto[name];
   proto[name] = function impl() {
     if (context.call === impl)
-      return (context.call = debugImpl), debugImpl.apply(this, <any>arguments);
+      return (
+        //TODO: move to faster apply
+        (context.call = debugImpl.apply), debugImpl.apply(this, <any>arguments)
+      );
     return (context.call = null), defImpl.apply(this, <any>arguments);
   };
 }
 
 if (config.patchRT) {
+  const Promise = (global.Promise = Instr.unwrapImport(
+    config.timeTravel ? require("./deps/promise-t") : require("./deps/promise"),
+    "promise"
+  ));
+  regOpaqueObject(Promise, "global#Promise");
+  regOpaqueObject(Promise.prototype, "global#Promise#");
   switchDefault(Tp, "map", Instr.map);
   switchDefault(Ap, "map", Instr.map);
   switchDefault(Tp, "filter", Instr.filter);
@@ -57,6 +57,7 @@ if (config.patchRT) {
   switchDefault(Ap, "some", Instr.some);
   switchDefault(Tp, "every", Instr.every);
   switchDefault(Ap, "every", Instr.every);
+  switchDefault(Array, "from", Instr.arrayFrom);
   global.eval = Engine.indirEval;
   if (config.expFunctionConstr) (<any>global).Function = Engine.FunctionConstr;
 }

@@ -15,65 +15,65 @@ suite("Debugging on NodeJS", function() {
 
   let dc: DebugClient;
 
-  setup(() => {
+  setup(function() {
     dc = new DebugClient(DEBUG_ADAPTER);
     return dc.start();
   });
 
   teardown(() => dc.stop());
 
-  suite("basic", () => {
-    test("unknown request should produce error", done => {
+  suite("basic", function() {
+    test("unknown request should produce error", function(done) {
       dc.send("illegal_request")
-        .then(() => {
+        .then(function() {
           done(new Error("does not report error on unknown request"));
         })
-        .catch(() => {
+        .catch(function() {
           done();
         });
     });
   });
 
-  suite("initialize", () => {
-    test("should return supported features", () => {
+  suite("initialize", function() {
+    test("should return supported features", function() {
       return dc.initializeRequest().then(
-        response => {
+        function(response) {
           response.body = response.body || {};
           assert.equal(response.body.supportsConfigurationDoneRequest, true);
         },
-        e => {
+        function(e) {
           console.error(e);
         }
       );
     });
-    test("should produce error for invalid 'pathFormat'", done => {
+    test("should produce error for invalid 'pathFormat'", function(done) {
       dc.initializeRequest({
         adapterID: "mock",
         linesStartAt1: true,
         columnsStartAt1: true,
         pathFormat: "url"
       })
-        .then(response => {
+        .then(function(response) {
           done(
             new Error("does not report error on invalid 'pathFormat' attribute")
           );
         })
-        .catch(err => {
+        .catch(function(err) {
           // error expected
           done();
         });
     });
   });
-  suite.only("launch", () => {
-    test("should run program to the end", () => {
+  suite("launch", function() {
+    test("should run program to the end", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "program.js");
       return Promise.all([
         dc.configurationSequence(),
-        dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose:2 }),
+        dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose: 2 }),
         dc.waitForEvent("terminated")
       ]);
     });
-    test("should stop on entry", () => {
+    test("should stop on entry", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "program.js");
       const ENTRY_LINE = 1;
       return Promise.all([
@@ -86,7 +86,7 @@ suite("Debugging on NodeJS", function() {
         dc.assertStoppedLocation("entry", { path: PROGRAM, line: ENTRY_LINE })
       ]);
     });
-    test("should stop on debugger statement", () => {
+    test("should stop on debugger statement", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "programWithDebugger.js");
       const DEBUGGER_LINE = 6;
 
@@ -95,7 +95,7 @@ suite("Debugging on NodeJS", function() {
         dc.launch({
           command: `node ${PROGRAM}`,
           preset: "node",
-          verbose:2
+          verbose: 2
         }),
         dc.assertStoppedLocation("debugger_statement", {
           path: PROGRAM,
@@ -103,7 +103,7 @@ suite("Debugging on NodeJS", function() {
         })
       ]);
     });
-    test("should stop on debugger statement in first line", () => {
+    test("should stop on debugger statement in first line", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "programWithDebugger1.js");
       const DEBUGGER_LINE = 1;
 
@@ -117,8 +117,8 @@ suite("Debugging on NodeJS", function() {
       ]);
     });
   });
-  suite("setBreakpoints", () => {
-    test("should stop on a breakpoint", () => {
+  suite("setBreakpoints", function() {
+    test("should stop on a breakpoint", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "program.js");
       const BREAKPOINT_LINE = 2;
       return dc.hitBreakpoint(
@@ -131,7 +131,7 @@ suite("Debugging on NodeJS", function() {
     });
 
     for (const NAME of ["eval", "indirect eval", "function constructor"])
-      test(`should stop on a breakpoint in ${NAME}`, async () => {
+      test(`should stop on a breakpoint in ${NAME}`, async function() {
         const PROGRAM = path.join(DATA_ROOT, `${NAME}.js`);
         await Promise.all([
           dc.configurationSequence(),
@@ -164,7 +164,7 @@ suite("Debugging on NodeJS", function() {
         await dc.continueRequest({ threadId: 0 });
         await dc.waitForEvent("terminated");
       });
-    test(`should stop on a conditional breakpoint in eval`, async () => {
+    test(`should stop on a conditional breakpoint in eval`, async function() {
       const PROGRAM = path.join(DATA_ROOT, "evalCond.js");
       await Promise.all([
         dc.configurationSequence(),
@@ -195,7 +195,7 @@ suite("Debugging on NodeJS", function() {
         "same dynamic source reference"
       );
     });
-    test("should stop on a breakpoint in file with spaces in its name", () => {
+    test("should stop on a breakpoint in file with spaces in its name", function() {
       const PROGRAM = path.join(
         NODE_DATA_ROOT,
         "folder with spaces",
@@ -212,7 +212,7 @@ suite("Debugging on NodeJS", function() {
       );
     });
 
-    test("should stop on a breakpoint identical to the entrypoint", () => {
+    test("should stop on a breakpoint identical to the entrypoint", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "program.js");
       const ENTRY_LINE = 1;
 
@@ -225,7 +225,7 @@ suite("Debugging on NodeJS", function() {
       );
     });
 
-    test.skip("should break on a specific column in a single line program", () => {
+    test.skip("should break on a specific column in a single line program", function() {
       const SINGLE_LINE_PROGRAM = path.join(
         NODE_DATA_ROOT,
         "programSingleLine.js"
@@ -242,13 +242,13 @@ suite("Debugging on NodeJS", function() {
       );
     });
 
-    test("should stop on a conditional breakpoint", () => {
+    test("should stop on a conditional breakpoint", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "program.js");
       const COND_BREAKPOINT_LINE = 13;
       const COND_BREAKPOINT_COLUMN = 2;
 
       return Promise.all([
-        dc.waitForEvent("initialized").then(async event => {
+        dc.waitForEvent("initialized").then(async function(event) {
           const response = await dc.setBreakpointsRequest({
             breakpoints: [{ line: COND_BREAKPOINT_LINE, condition: "i === 3" }],
             source: { path: PROGRAM }
@@ -280,7 +280,7 @@ suite("Debugging on NodeJS", function() {
             path: PROGRAM,
             line: COND_BREAKPOINT_LINE
           })
-          .then(response => {
+          .then(function(response) {
             const frame = response.body.stackFrames[0];
             return dc
               .evaluateRequest({
@@ -288,7 +288,7 @@ suite("Debugging on NodeJS", function() {
                 frameId: frame.id,
                 expression: "x"
               })
-              .then(response => {
+              .then(function(response) {
                 assert.equal(response.body.result, 9, "x !== 9");
                 return response;
               });
@@ -296,7 +296,7 @@ suite("Debugging on NodeJS", function() {
       ]);
     });
 
-    test.skip("should stop on <node_internals> module", () => {
+    test.skip("should stop on <node_internals> module", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "programWithInternal.js");
 
       return dc.hitBreakpoint(
@@ -305,7 +305,7 @@ suite("Debugging on NodeJS", function() {
       );
     });
 
-    test("should stop on debugger statement in eval", () => {
+    test("should stop on debugger statement in eval", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "programWithDebuggerEval.js");
       const DEBUGGER_LINE = 2;
 
@@ -317,8 +317,8 @@ suite("Debugging on NodeJS", function() {
     });
   });
 
-  suite("setBreakpoints in TypeScript", () => {
-    test("should stop at entry point", () => {
+  suite("setBreakpoints in TypeScript", function() {
+    test("should stop at entry point", function() {
       const PROGRAM = path.join(
         NODE_DATA_ROOT,
         "sourcemaps-entrypoint/index.ts"
@@ -335,7 +335,7 @@ suite("Debugging on NodeJS", function() {
         dc.assertStoppedLocation("entry", { path: PROGRAM, line: TS_LINE })
       ]);
     });
-    test("should stop on a breakpoint in source (all files top level)", () => {
+    test("should stop on a breakpoint in source (all files top level)", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "sourcemaps-simple/classes.ts");
       const TS_LINE = 17;
 
@@ -351,7 +351,7 @@ suite("Debugging on NodeJS", function() {
       );
     });
 
-    test("should stop on a breakpoint in source with spaces in paths (outDir)", () => {
+    test("should stop on a breakpoint in source with spaces in paths (outDir)", function() {
       const PROGRAM = path.join(
         NODE_DATA_ROOT,
         "sourcemaps with spaces",
@@ -371,7 +371,7 @@ suite("Debugging on NodeJS", function() {
       );
     });
 
-    test("should stop on an explicit breakpoint at entry point", () => {
+    test("should stop on an explicit breakpoint at entry point", function() {
       const PROGRAM = path.join(
         NODE_DATA_ROOT,
         "sourcemaps-entrypoint/index.ts"
@@ -387,7 +387,7 @@ suite("Debugging on NodeJS", function() {
       );
     });
   });
-  suite.skip("function setBreakpoints", () => {
+  suite.skip("function setBreakpoints", function() {
     const PROGRAM = path.join(NODE_DATA_ROOT, "programWithFunction.js");
     const FUNCTION_NAME_1 = "foo";
     const FUNCTION_LINE_1 = 4;
@@ -395,7 +395,7 @@ suite("Debugging on NodeJS", function() {
     const FUNCTION_LINE_2 = 8;
     const FUNCTION_NAME_3 = "xyz";
 
-    test("should stop on a function breakpoint", () => {
+    test("should stop on a function breakpoint", function() {
       return Promise.all<DebugProtocol.ProtocolMessage>([
         dc.launch({ program: PROGRAM }),
 
@@ -408,7 +408,7 @@ suite("Debugging on NodeJS", function() {
             .setFunctionBreakpointsRequest({
               breakpoints: [{ name: FUNCTION_NAME_2 }]
             })
-            .then(() => {
+            .then(function() {
               return dc
                 .setFunctionBreakpointsRequest({
                   breakpoints: [
@@ -441,10 +441,10 @@ suite("Debugging on NodeJS", function() {
     });
   });
 
-  suite("setExceptionBreakpoints", () => {
+  suite("setExceptionBreakpoints", function() {
     const PROGRAM = path.join(NODE_DATA_ROOT, "programWithException.js");
 
-    test("should not stop on an exception", () => {
+    test("should not stop on an exception", function() {
       return Promise.all<DebugProtocol.ProtocolMessage>([
         dc
           .waitForEvent("initialized")
@@ -463,7 +463,7 @@ suite("Debugging on NodeJS", function() {
       ]);
     });
 
-    test("should stop on a caught exception", () => {
+    test("should stop on a caught exception", function() {
       const EXCEPTION_LINE = 6;
 
       return Promise.all([
@@ -487,7 +487,7 @@ suite("Debugging on NodeJS", function() {
       ]);
     });
 
-    test("should stop on uncaught exception", () => {
+    test("should stop on uncaught exception", function() {
       const UNCAUGHT_EXCEPTION_LINE = 12;
 
       return Promise.all([
@@ -512,10 +512,10 @@ suite("Debugging on NodeJS", function() {
     });
   });
 
-  suite("setExceptionBreakpoints in eval", () => {
+  suite("setExceptionBreakpoints in eval", function() {
     const PROGRAM = path.join(DATA_ROOT, "evalWithException.js");
 
-    test("should not stop on an exception in `eval`", () => {
+    test("should not stop on an exception in `eval`", function() {
       return Promise.all<DebugProtocol.ProtocolMessage>([
         dc
           .waitForEvent("initialized")
@@ -534,7 +534,7 @@ suite("Debugging on NodeJS", function() {
       ]);
     });
 
-    test("should stop on a caught exception in `eval`", async () => {
+    test("should stop on a caught exception in `eval`", async function() {
       await Promise.all([
         dc
           .waitForEvent("initialized")
@@ -561,10 +561,10 @@ suite("Debugging on NodeJS", function() {
     });
   });
 
-  suite("output events", () => {
+  suite("output events", function() {
     const PROGRAM = path.join(NODE_DATA_ROOT, "programWithOutput.js");
 
-    test("stdout and stderr events should be complete and in correct order", () => {
+    test("stdout and stderr events should be complete and in correct order", function() {
       return Promise.all([
         dc.configurationSequence(),
         dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
@@ -576,7 +576,7 @@ suite("Debugging on NodeJS", function() {
       ]);
     });
   });
-  suite("stepping", () => {
+  suite("stepping", function() {
     const PROGRAM = path.join(DATA_ROOT, "stepsTest.js");
     test("should enter all functions on `step in`", async function() {
       await Promise.all([
@@ -678,7 +678,7 @@ suite("Debugging on NodeJS", function() {
       await dc.waitForEvent("terminated");
     });
   });
-  suite("`require` stepping", () => {
+  suite("`require` stepping", function() {
     const PROGRAM = path.join(DATA_ROOT, "stepsModule.js");
     const MOD2 = path.join(DATA_ROOT, "stepsModule2.js");
     const MOD3 = path.join(DATA_ROOT, "stepsModule3.js");
@@ -787,7 +787,7 @@ suite("Debugging on NodeJS", function() {
       await dc.waitForEvent("terminated");
     });
   });
-  suite("async", () => {
+  suite("async", function() {
     const PROGRAM = path.join(DATA_ROOT, "setTimeout.js");
     test("should await an async event", async function() {
       const out = dc.assertOutput("stdout", "BEFORE\nAFTER\nBEFORE\nAFTER\n");
@@ -838,11 +838,11 @@ suite("Debugging on NodeJS", function() {
       await out;
     });
   });
-  suite("hot swapping", () => {
+  suite("hot swapping", function() {
     const PROGRAM = path.join(DATA_ROOT, "hot-swap-main.js");
     teardown(() => util.promisify(fs.unlink)(PROGRAM));
     const copy = util.promisify(fs.copyFile);
-    test("should change the functions code", async () => {
+    test("should change the functions code", async function() {
       const out = dc.assertOutput("stdout", "M:1\nN:2\n");
       await copy(path.join(DATA_ROOT, "hot1.js"), PROGRAM);
       await dc.hitBreakpoint(
@@ -864,11 +864,11 @@ suite("Debugging on NodeJS", function() {
       await out;
     });
   });
-  suite("child processes", () => {
+  suite("child processes", function() {
     const PROGRAM = path.join(DATA_ROOT, "spawn.js");
     const CP1 = path.join(DATA_ROOT, "child_process1.js");
     const CP2 = path.join(DATA_ROOT, "child_process2.js");
-    test("should create threads on each child process", async () => {
+    test("should create threads on each child process", async function() {
       await Promise.all([
         dc.configurationSequence(),
         dc.launch({
@@ -921,18 +921,21 @@ suite("Debugging on NodeJS", function() {
       await dc.waitForEvent("terminated");
     });
   });
-  suite.skip("other terminals", () => {});
-  suite("`eval` scopes", () => {
+  suite.skip("other terminals", function() {});
+  suite("`eval` scopes", function() {
     const PROGRAM = path.join(DATA_ROOT, "scopes.js");
-    test("should correctly refer variables", async () => {
+    test("should correctly refer variables", async function() {
       async function watch(res: string) {
         assert.equal(
-          (await dc.evaluateRequest({
-            context: "watch",
-            frameId: (await dc.assertStoppedLocation("debugger_statement", {}))
-              .body.stackFrames[0].id,
-            expression: "`i:${i},j:${j},k:${k}`"
-          })).body.result,
+          (
+            await dc.evaluateRequest({
+              context: "watch",
+              frameId: (
+                await dc.assertStoppedLocation("debugger_statement", {})
+              ).body.stackFrames[0].id,
+              expression: "`i:${i},j:${j},k:${k}`"
+            })
+          ).body.result,
           res
         );
       }
@@ -1013,6 +1016,37 @@ suite("Debugging on NodeJS", function() {
       ]);
       await dc.continueRequest({ threadId: 0 });
       await dc.waitForEvent("terminated");
+    });
+  });
+  suite("node vm", function() {
+    const PROGRAM = path.join(DATA_ROOT, "vm-code.js");
+    test("should enter each module only once on `step in`", async function() {
+      await Promise.all([
+        dc.configurationSequence(),
+        dc.launch({
+          command: PROGRAM,
+          preset: "node"
+        })
+      ]);
+      const out = dc.assertOutput(
+        "stdout",
+        [
+          "{ animal: 'cat', count: 3, name: 'kitty' }",
+          "{ animal: 'cat', count: 4, name: 'another kitty' }",
+          "{ animal: 'cat', count: 5, name: 'kitty2' }",
+          "{ animal: 'cat', count: 7, name: 'c1' }"
+        ].join("\n")
+      );
+      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
+      await dc.continueRequest({ threadId: 0 });
+      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
+      await dc.continueRequest({ threadId: 0 });
+      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
+      await dc.continueRequest({ threadId: 0 });
+      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
+      await dc.continueRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
+      await out;
     });
   });
 });

@@ -13,8 +13,8 @@ export class DebugClient extends Kit.DebugClient {
       super.start(port),
       (async () => {
         this.browser = await puppeteer.launch({
-                    //headless: false,
-                    //args: ["--auto-open-devtools-for-tabs"]
+          // headless: false,
+          // args: ["--auto-open-devtools-for-tabs"]
         });
         this.page = await this.browser.newPage();
       })()

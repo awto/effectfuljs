@@ -6,7 +6,6 @@ let cb: () => void;
 let connected: Promise<undefined> | null = new Promise(i => (cb = i));
 let closed = false;
 const sysConsole = console;
-
 const WS = (<any>config).WebSocket || WebSocket;
 reconnect();
 

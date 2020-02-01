@@ -63,7 +63,13 @@ if (!paths.moduleFileExtensions)
     "jsx"
   ];
 
-if (!paths.appSrc || !!fs.existsSync(paths.appSrc))
+if (
+  process.env.EFFECTFUL_DEBUGGER_SRC_ROOT ||
+  !paths.appSrc ||
+  !fs.existsSync(paths.appSrc) ||
+  (paths.appIndexJs &&
+    path.relative(paths.appSrc, paths.appIndexJs).startsWith(".."))
+)
   paths.appSrc = defaults.srcRoot;
 
 if (!path.appPublic) path.appPublic = process.cwd();
