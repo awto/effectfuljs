@@ -1,21 +1,16 @@
 const config = require("../defaults");
-const package = require("../../package.json");
 const Persist = require("../../persist");
 const path = require("path");
 const deepClone = require("lodash/cloneDeep");
-const Debug = require("../../engine");
+// const Debug = require("../../engine");
 const fs = require("fs");
 const cacheId = require("../cacheId");
 const {
   normalizeDrive,
   saved: { Function }
 } = require("../../state");
-require("./vm");
-
-const CACHE_SAVE_TIMEOUT = 2000;
 
 const babel = require("@babel/core");
-const registerCache = require("@babel/register/lib/cache");
 const preset = require("../babel/preset-zero-config");
 
 global.WebSocket = require("ws");
@@ -26,7 +21,7 @@ const Mp = Module.prototype;
 
 const savedCompile = Mp._compile;
 
-const savedConsole = console;
+// const savedConsole = console;
 
 const builtIn = Module.builtinModules.filter(i => {
   switch (i) {
@@ -76,10 +71,14 @@ const debuggerPath = normalizeDrive(
 const requirePath =
   path.sep === "\\"
     ? function requirePath(backend) {
-        return path.join(debuggerPath, "backends", backend).replace(/\\/g, "/");
+        return config.builtInBackends[backend]
+          ? path.join(debuggerPath, "backends", backend).replace(/\\/g, "/")
+          : backend;
       }
     : function requirePath(backend) {
-        return path.join(debuggerPath, "backends", backend);
+        return config.builtInBackends[backend]
+          ? path.join(debuggerPath, "backends", backend)
+          : backend;
       };
 
 let cacheSaveScheduled = false;
@@ -181,9 +180,9 @@ Mp._compile = function _compile(content, filename) {
   }
   const blackbox = filename.startsWith(nodeModules);
   const moduleConfig = require("../defaults");
-  const importRT = requirePath(moduleConfig.backend);
+  const rt = requirePath(moduleConfig.backend);
   if (config.verbose) {
-    let msg = `DEBUGGER: compiling ${filename}, filename:${filename}, rt:${importRT}`;
+    let msg = `DEBUGGER: compiling ${filename}, filename:${filename}, rt:${rt}`;
     if (config.verbose > 1) msg += ` content:${JSON.stringify(content)}`;
     log(msg);
   }
@@ -205,7 +204,7 @@ Mp._compile = function _compile(content, filename) {
                   {
                     blackbox,
                     timeTravel: config.timeTravel,
-                    importRT,
+                    rt,
                     staticBundler: false
                   }
                 ]
@@ -221,10 +220,7 @@ Mp._compile = function _compile(content, filename) {
               filename
             }
       );
-
-      cacheKey =
-        // `${JSON.stringify(opts)}@${cacheId}`;
-        `${filename}@${cacheId}`;
+      cacheKey = `${filename}@${cacheId}`;
       const env = babel.getEnv(false);
       if (env) cacheKey += `@${env}`;
       cached = cacheData && cacheData[cacheKey];
@@ -258,6 +254,7 @@ Mp._compile = function _compile(content, filename) {
       }
       code = cached.code;
     } else code = content;
+    require("./vm");
     if (config.hot && !blackbox) {
       let reloading = 0;
       if (config.verbose)

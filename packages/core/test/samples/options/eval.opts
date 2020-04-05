@@ -8,6 +8,11 @@
     "b": ["_b", 1],
     "c": ["_c", 2]
   },
+  "evalContext": {
+    "a": [4, 0],
+    "b": [5, 1],
+    "c": [6, 2]
+  },
   "contextMethodOps":true,
   "injectEvalCtx":true,
   "injectFuncMeta": "meta"

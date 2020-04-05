@@ -1,34 +1,31 @@
 import * as State from "./state";
-import * as RT from "./instr/rt";
+import { persistModule } from "./instr/rt";
 import config from "./config";
+import { getCurModule } from "./engine";
 
-const context = State.context;
+const { context, token, thunkSymbol, saved } = State;
 
-export function unwrapImport(mod: any, name: string) {
-  return (context.call = RT.unwrapImport)(mod, name);
-}
+const { defineProperty } = saved.Object;
 
-export function wrapExport(top: any): any {
-  const data = top[State.dataSymbol];
-  if (!data) return top;
-  const mod = data.meta.module;
+export function moduleExports() {
+  const mod = getCurModule();
+  const topMeta = mod.topLevel;
   const cjs = mod.cjs;
   const hot = mod.version > 0;
-  const force =
-    (!config.expEagerModuleExport || context.top) &&
-    !hot &&
-    (!cjs || cjs.id !== context.moduleId);
   if (config.verbose)
-    State.saved.console.log(
-      `DEBUGGER: exporting "${cjs.id}", "${context.moduleId}", fullPath:"${mod.fullPath}", name:"${mod.name}" run:${force}`
+    saved.console.log(
+      `DEBUGGER: exporting:"${cjs.id}", "${context.moduleId}", fullPath:"${mod.fullPath}", name:"${mod.name}"`
     );
-  context.moduleId = null;
-  const res = (context.call = RT.wrapExport)(top, cjs);
   if (context.onLoad) context.onLoad(mod, hot);
-  if (force) {
-    context.call = null;
-    return RT.unwrapImport(res, mod.name);
+  if (hot) return;
+  const fun = topMeta.func(null);
+  context.call = cjs && cjs.id === context.moduleId ? persistModule : null;
+  context.moduleId = null;
+  try {
+    if (persistModule(fun, mod.name, cjs, cjs.exports) !== token) return;
+    defineProperty(cjs.exports, thunkSymbol, { value: 1, configurable: true });
+  } catch (e) {
+    if (e !== token) throw e;
+    defineProperty(cjs.exports, thunkSymbol, { value: 2, configurable: true });
   }
-  context.call = RT.unwrapImport;
-  return res;
 }

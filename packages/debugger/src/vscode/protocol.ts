@@ -9,6 +9,7 @@ declare module "vscode-debugprotocol" {
       arguments: {
         threadId: number;
         stopOnEntry?: boolean;
+        stopOnExit?: boolean;
         dirSep: string;
         breakpoints: SetBreakpointsArguments[];
         exceptions: SetExceptionBreakpointsArguments;
@@ -31,6 +32,7 @@ declare module "vscode-debugprotocol" {
 
     interface LaunchRequestArguments {
       stopOnEntry?: boolean;
+      stopOnExit?: boolean;
       verbose?: boolean;
       command?: string | boolean;
       preset?: string | boolean;

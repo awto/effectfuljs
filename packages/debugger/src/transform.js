@@ -1,3 +1,24 @@
+const config = require("@effectful/core/v2/config").default;
+const transform = require("@effectful/core/v2/presets/debugger").default;
+const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
+  ast
+) {
+  if (config.preInstrumentedLibs) {
+    const root = config.preInstrumentedLibs.substr
+      ? config.preInstrumentedLibs
+      : "@effectful/debugger";
+    const moduleAliases = {};
+    for (const i in require("./deps.json")) {
+      const suffix = config.timeTravel ? "-t" : "";
+      const path = `${root}/deps/${i.replace(/\//g, "-")}${suffix}`;
+      moduleAliases[i] = path;
+      if (i.includes("/")) moduleAliases[`${i}.js`] = path;
+    }
+    config.moduleAliases = Object.assign(moduleAliases, config.moduleAliases);
+  }
+  transform(ast);
+});
+
 const asyncOps = {
   AwaitExpression: "awt",
   YieldExpression: true
@@ -51,10 +72,8 @@ if (VERBOSE) {
   VERBOSE = VERBOSE[0].toLowerCase() === "t" || (!isNaN(VERBOSE) && +VERBOSE);
 } else VERBOSE = false;
 
-module.exports = process.env.EFFECTFUL_TRANSFORM_V2
-  ? require("@effectful/core/v2/compiler").babelPlugin(
-      require("@effectful/core/v2/presets/debugger").default
-    )
+module.exports = !process.env.EFFECTFUL_TRANSFORM_V1
+  ? plugin
   : require("@effectful/core").babelPlugin(
       (opts, { Tag, Kit, Transform: T, Policy: P, presets, Block }) => {
         const moduleAliases = {};

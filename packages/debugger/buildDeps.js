@@ -11,7 +11,7 @@ const libs = require("./deps.json");
 
 if (!fs.existsSync("./deps")) fs.mkdirSync("./deps");
 
-const configs = { "": {}, "-t": { timeTravel: true } };
+const configs = { "": { timeTravel: false }, "-t": { timeTravel: true } };
 
 for (const [l, p] of Object.entries(libs)) {
   const dirIndex = p.lastIndexOf("/");
@@ -25,10 +25,8 @@ for (const [l, p] of Object.entries(libs)) {
           {
             blackbox: true,
             preInstrumentedLibs: "..",
-            importRT: "../api",
+            rt: "../api",
             expInject: 1,
-            srcRoot: true,
-            moduleNamePrefix: "@effectful/debugger/",
             moduleAliases,
             expNoCallWraps: config.expNoCallWraps,
             ...copts

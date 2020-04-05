@@ -1,8 +1,11 @@
+import config from "./config";
 import * as Kit from "./kit";
 import * as Scope from "./scope";
 import * as Ctx from "./context";
+import * as Dom from "./dom";
+import * as path from "path";
 
-const { Tag } = Kit;
+const { Tag, append, num, insertAfter, insertBefore, arr, node } = Kit;
 const { sysSym } = Scope;
 
 function needsResult(doc) {
@@ -24,9 +27,9 @@ function needsResult(doc) {
  * converts update expressions and assignments without `=` operation into
  * assignments with `=`
  */
-
 export function normalizeAssign() {
   const file = Ctx.root;
+  file.nextSymStr = file.prevSymStr = file;
   for (let i = file.nextUpdateExpression, n; i !== file; i = n) {
     n = i.nextUpdateExpression;
     const operator = i.node.operator[0];
@@ -38,7 +41,7 @@ export function normalizeAssign() {
     op(
       i,
       i.firstChild,
-      Kit.num(Tag.right, 1),
+      num(Tag.right, 1),
       operator[0],
       !i.node.prefix && needsResult(i)
     );
@@ -55,12 +58,12 @@ export function normalizeAssign() {
     op(i, arg, rarg, operator.substr(0, operator.length - 1), false);
   }
   function op(i, arg, rarg, operator, retOld) {
-    const seq = Kit.arr(Tag.expressions);
-    const seqExpr = Kit.node(i.pos, Tag.SequenceExpression);
+    const seq = arr(Tag.expressions);
+    const seqExpr = node(i.pos, Tag.SequenceExpression);
     i.pos = Tag.push;
     Kit.replace(i, seqExpr);
-    Kit.append(seq, i);
-    Kit.append(seqExpr, seq);
+    append(seq, i);
+    append(seqExpr, seq);
     let lhs, larg;
     const scope = i.parentFunc;
     const root = scope.funcDef;
@@ -83,32 +86,35 @@ export function normalizeAssign() {
     }
     if (retOld) {
       const oldTmp = Scope.tempSym(root, scope);
-      assignTemp(oldTmp, larg, i);
+      const expr = Kit.assign(Tag.push);
+      larg.pos = Tag.right;
+      insertAfter(append(expr, Kit.id(Tag.left, oldTmp)), larg);
+      insertBefore(i, expr);
       larg = Scope.tempId(Tag.left, oldTmp, scope);
-      Kit.insertAfter(i, Scope.tempId(Tag.push, oldTmp, scope));
+      insertAfter(i, Scope.tempId(Tag.push, oldTmp, scope));
     }
     i.type = Tag.AssignmentExpression;
     i.node.operator = "=";
     const binExpr = Kit.tok(Tag.right, Tag.BinaryExpression, { operator });
-    Kit.insertBefore(Kit.append(binExpr, rarg), larg);
-    Kit.insertAfter(lhs, binExpr);
+    insertBefore(append(binExpr, rarg), larg);
+    insertAfter(lhs, binExpr);
   }
 }
-
-function assignTemp(sym, doc, before) {
-  const expr = Kit.assign(Tag.push);
-  doc.pos = Tag.right;
-  Kit.insertAfter(Kit.append(expr, Kit.id(Tag.left, sym)), doc);
-  Kit.insertBefore(before, expr);
-  return expr;
+/*
+export function assignTempOp(block, sym, scope, rhs) {
+  const call = node(Tag.push, Tag.CallExpression);
+  append(call, Scope.sysId(Tag.callee, locSetSym));
+  const args = append(call, arr(Tag.arguments));
+  append(args, Scope.scopeExpr(Tag.push, scope, sym));
+  append(args, num(Tag.push, sym.index));
+  rhs.pos = Tag.push;
+  append(args, rhs);
+  Kit.exprStmt(block, call);
 }
+*/
 
 function copy(pos, doc, tempObj, scope) {
-  return tempObj
-    ? Scope.tempId(pos, tempObj, scope)
-    : doc.type === Tag.Identifier
-    ? Scope.id(pos, doc.sym, scope)
-    : Kit.clone(doc);
+  return tempObj ? Scope.tempId(pos, tempObj, scope) : Dom.clone(doc);
 }
 
 function absTemp(root, doc, before) {
@@ -117,15 +123,15 @@ function absTemp(root, doc, before) {
   const sym = Scope.tempSym(root, scope);
   Kit.detach(doc);
   doc.pos = Tag.right;
-  Kit.insertAfter(Kit.append(expr, Kit.id(Tag.left, sym)), doc);
-  Kit.insertBefore(before, expr);
+  insertAfter(append(expr, Kit.id(Tag.left, sym)), doc);
+  insertBefore(before, expr);
   return sym;
 }
 
 function memExpr(computed, prop, tempProp, obj, tempObj, scope) {
   const memExpr = Kit.tok(Tag.left, Tag.MemberExpression, { computed });
-  Kit.insertAfter(
-    Kit.append(memExpr, copy(Tag.object, obj, tempObj, scope)),
+  insertAfter(
+    append(memExpr, copy(Tag.object, obj, tempObj, scope)),
     computed
       ? copy(Tag.property, prop, tempProp, scope)
       : Kit.tok(Tag.property, Tag.Identifier, { name: prop.node.name })
@@ -175,13 +181,12 @@ export function deleters() {
     let i = file.nextDeleteExpression;
     i !== file;
     i = i.nextDeleteExpression
-  ) {
+  )
     replaceModOp(i, Kit.detach(i.firstChild), null, opSym, opLocSym, opGlobSym);
-  }
 }
 
 function replaceModOp(i, arg, rarg, opSym, opLocSym, opGlobSym) {
-  const args = Kit.arr(Tag.arguments);
+  const args = arr(Tag.arguments);
   const scope = Scope.parentScope(i);
   i.type = Tag.CallExpression;
   let calleeSym;
@@ -190,25 +195,48 @@ function replaceModOp(i, arg, rarg, opSym, opLocSym, opGlobSym) {
     const obj = arg.firstChild;
     const prop = obj.nextSibling;
     prop.pos = obj.pos = Tag.push;
-    Kit.append(args, Kit.detach(obj));
-    if (arg.node.computed) Kit.append(args, Kit.detach(prop));
-    else Kit.append(args, Kit.str(Tag.push, prop.node.name));
+    append(args, Kit.detach(obj));
+    if (arg.node.computed) append(args, Kit.detach(prop));
+    else append(args, Kit.str(Tag.push, prop.node.name));
   } else if (arg.type === Tag.Identifier) {
     const sym = arg.sym;
     if (sym.decl) {
       calleeSym = opLocSym;
-      Kit.append(args, Scope.scopeExpr(Tag.push, scope, sym.scope));
+      append(args, Scope.scopeExpr(Tag.push, scope, sym));
     } else {
       calleeSym = opGlobSym;
-      Kit.append(args, Kit.id(Tag.push, Scope.globalSym));
+      append(args, Kit.id(Tag.push, Scope.globalSym));
     }
-    Kit.append(args, Kit.str(Tag.push, sym.name));
+    append(args, symStr(sym));
   } else throw Kit.error(`Invalid left-hand side expression`, i);
   if (rarg) {
     rarg.pos = Tag.push;
-    Kit.append(args, rarg);
+    append(args, rarg);
   }
-  Kit.insertBefore(Kit.append(i, args), Scope.sysId(Tag.callee, calleeSym));
+  insertBefore(append(i, args), Scope.sysId(Tag.callee, calleeSym));
+}
+
+function symStr(sym) {
+  if (!sym.decl) return Kit.str(Tag.push, sym.orig);
+  const res = num(Tag.push, sym.index);
+  if (config.debug && sym.orig)
+    res.node.trailingComments = [
+      {
+        type: "CommentBlock",
+        value: sym.orig || sym.name
+      }
+    ];
+  const file = (res.prevSymStr = Ctx.root);
+  const before = (res.nextSymStr = file.nextSymStr);
+  before.prevSymStr = file.nextSymStr = res;
+  res.sym = sym;
+  return res;
+}
+
+export function replaceSymNames() {
+  const file = Ctx.root;
+  for (let i = file.nextSymStr; i !== file; i = i.nextSymStr)
+    i.node.value = i.sym.index;
 }
 
 /** replaces `a.b(...args)` with `mcall(b, a, ...args)` */
@@ -226,49 +254,199 @@ export function methodCalls() {
     let prop = Kit.detach(obj.nextSibling);
     prop.pos = obj.pos = Tag.push;
     if (!callee.node.computed) prop = Kit.str(Tag.push, prop.node.name);
-    Kit.insertAfter(Kit.prepend(args, prop), Kit.detach(obj));
+    insertAfter(Kit.prepend(args, prop), Kit.detach(obj));
     (n.prevCallExpression = i.prevCallExpression).nextCallExpression = n;
   }
 }
 
 /** replaces `a(...args)` with `(context.call = a)(...args)` */
 export function assignCall() {
-  const file = Ctx.root;
-  const opSym = Scope.sysSym("context");
-  for (let i = file.nextCallExpression; i !== file; i = i.nextCallExpression) {
+  const { root } = Ctx;
+  const { nsSym, ctxSym } = root;
+  const aliases = config.moduleAliases || {};
+  const relAlias = aliases["."];
+  const opSym = Scope.contextSym;
+  for (let i = root.nextCallExpression; i !== root; i = i.nextCallExpression) {
     const callee = i.firstChild;
+    if (
+      i.type === Tag.CallExpression &&
+      callee.type === Tag.Identifier &&
+      callee.sym === Scope.requireSym
+    ) {
+      (i.prevCallExpression = i.nextCallExpression).prevCallExpression =
+        i.prevCallExpression;
+      const arg = callee.nextSibling.firstChild;
+      if (arg.type === Tag.StringLiteral) {
+        const alias = getAlias(arg.node.value);
+        if (alias) arg.node.value = alias;
+      }
+      const seq = node(i.pos, Tag.SequenceExpression);
+      Scope.replaceRhs(i, seq);
+      const exprs = append(seq, arr(Tag.expressions));
+      i.pos = Tag.push;
+      append(
+        insertAfter(
+          append(
+            insertAfter(
+              append(
+                append(exprs, Kit.assign(Tag.push)),
+                Scope.sysMemExpr(Tag.left, opSym, "moduleId")
+              ),
+              node(Tag.right, Tag.CallExpression)
+            ),
+            Kit.memExpr(Tag.callee, Scope.requireSym, "resolve")
+          ),
+          arr(Tag.arguments)
+        ),
+        Dom.clone(arg)
+      );
+      append(
+        insertAfter(
+          append(
+            append(exprs, node(Tag.push, Tag.CallExpression)),
+            Kit.memExpr(Tag.callee, nsSym, "force")
+          ),
+          arr(Tag.arguments)
+        ),
+        i
+      );
+      continue;
+    }
+    if (config.expInlineCalls && i.type === Tag.CallExpression) {
+      const seq = node(i.pos, Tag.SequenceExpression);
+      const exprs = append(seq, arr(Tag.expressions));
+      Scope.replaceRhs(i, seq);
+      /*
+a = fn1[x](a1, a2)
+==>
+a = $o = fn1, $f = $o[x], $s = $f[$shift], $s
+  ? ($a = $callm($o, $f, 2), $a = $t.$, $a[$s] = a1, $a[$s+1] = a2, context.exec($t, $a))
+  : $f.call($o, a1, a2)
+*/
+      /* 
+a = (x, fn1)(a1, a2)
+===>
+a = $f = (x, fn1), $s = $f[$shift], $s
+  ? ($t = $call(void 0, $f, 2), $a = $t.$, $a[$s] = a1, $a[$s+1] = a2, context.exec($t, $a))
+  : $f(a1, a2); 
+        */
+      const root = i.parentFunc.funcDef;
+      const args = callee.nextSibling;
+      const firstArg = args.firstChild;
+      let lastArg = firstArg;
+      let calleeSym = root.calleeSym;
+      let frameSym, shiftSym, argsSym, objSym;
+      if (!root.calleeSym) {
+        calleeSym = root.calleeSym = Scope.locFrameSym(root);
+        frameSym = root.frameSym = Scope.locFrameSym(root);
+        shiftSym = root.shiftSym = Scope.locFrameSym(root);
+        argsSym = root.argsSym = Scope.locFrameSym(root);
+      } else ({ calleeSym, frameSym, shiftSym, argsSym } = root);
+      if (callee.type === Tag.MemberExpression)
+        objSym = root.objSym || (root.objSym = Scope.locFrameSym(root));
+      if (objSym) {
+        const assignObj = append(exprs, Kit.assign(Tag.push));
+        append(assignObj, Kit.id(Tag.left, objSym));
+        const obj = callee.firstChild;
+        Kit.replace(obj, Kit.id(Tag.object, objSym));
+        obj.pos = Tag.right;
+        Kit.append(assignObj, obj);
+        Kit.replace(
+          callee,
+          Scope.sysMemExpr(Tag.callee, Scope.contextSym, "call")
+        );
+        Kit.prepend(args, (lastArg = Kit.id(Tag.push, objSym)));
+      } else {
+        Kit.replace(callee, Kit.id(Tag.callee, calleeSym));
+      }
+      const assignCallee = append(exprs, Kit.assign(Tag.push));
+      append(assignCallee, Kit.id(Tag.left, calleeSym));
+      append(assignCallee, callee);
+      callee.pos = Tag.right;
+      const assignShift = append(exprs, Kit.assign(Tag.push));
+      append(assignShift, Kit.id(Tag.left, shiftSym));
+      const shiftExpr = Kit.tok(Tag.right, Tag.MemberExpression, {
+        computed: true
+      });
+      append(assignShift, shiftExpr);
+      append(shiftExpr, Kit.id(Tag.object, calleeSym));
+      append(shiftExpr, Scope.sysId(Tag.property, Scope.shiftPropSym));
+      const cond = node(Tag.push, Tag.ConditionalExpression);
+      append(exprs, cond);
+      append(cond, Kit.id(Tag.test, shiftSym));
+      const consequent = append(
+        append(cond, node(Tag.consequent, Tag.SequenceExpression)),
+        arr(Tag.expressions)
+      );
+      append(cond, i);
+      i.pos = Tag.alternate;
+      const frameAssign = append(consequent, Kit.assign(Tag.push));
+      append(frameAssign, Kit.id(Tag.left, frameSym));
+      const frameConstr = node(Tag.right, Tag.CallExpression);
+      append(frameAssign, frameConstr);
+      append(frameConstr, Scope.sysId(Tag.callee, Scope.callSym));
+      const constrArgs = append(frameConstr, arr(Tag.arguments));
+      append(
+        constrArgs,
+        objSym ? Kit.id(Tag.push, objSym) : Kit.void0(Tag.push)
+      );
+      append(constrArgs, Kit.id(Tag.push, calleeSym));
+      append(constrArgs, Kit.id(Tag.push, ctxSym));
+      let argsCount = 0;
+      if (firstArg) {
+        let arg = firstArg;
+        const argsAssign = append(consequent, Kit.assign(Tag.push));
+        append(argsAssign, Kit.id(Tag.left, argsSym));
+        append(argsAssign, Kit.memExpr(Tag.right, frameSym, "$"));
+        do {
+          const argAssign = append(consequent, Kit.assign(Tag.push));
+          const argMemExpr = node(Tag.left, Tag.MemberExpression);
+          append(argAssign, argMemExpr);
+          argMemExpr.node.computed = true;
+          append(argMemExpr, Kit.id(Tag.object, argsSym));
+          append(argMemExpr, plusShift(Tag.property, shiftSym, argsCount++));
+          const clone = Dom.clone(arg);
+          clone.pos = Tag.right;
+          append(argAssign, clone);
+        } while ((arg = arg.nextSibling) !== lastArg);
+      }
+      Kit.append(constrArgs, Kit.num(Tag.push, argsCount));
+      const call = node(Tag.push, Tag.CallExpression);
+      append(consequent, call);
+      const handler = Kit.node(Tag.callee, Tag.MemberExpression);
+      append(handler, Kit.memExpr(Tag.object, frameSym, "meta"));
+      append(
+        handler,
+        Kit.tok(Tag.property, Tag.Identifier, { name: "handler" })
+      );
+      append(call, handler);
+      const hargs = append(call, arr(Tag.arguments));
+      append(hargs, Kit.id(Tag.push, frameSym));
+      append(hargs, Kit.id(Tag.push, argsSym));
+      continue;
+    }
     const assign = Kit.assign(Tag.callee);
     callee.pos = Tag.right;
-    callee.type === Tag.MemberExpression && callee.firstChild;
     Kit.replace(callee, assign);
-    Kit.append(assign, callee);
-    Kit.insertAfter(
-      Kit.append(
-        Kit.insertBefore(callee, Kit.node(Tag.left, Tag.MemberExpression)),
-        Scope.sysId(Tag.object, opSym)
-      ),
-      Kit.tok(Tag.property, Tag.Identifier, { name: "call" })
-    );
-    if (callee.type === Tag.MemberExpression && i.type === Tag.CallExpression) {
-      const obj = callee.firstChild;
-      const args = assign.nextSibling;
-      assign.pos = Tag.object;
-      const callProp = Kit.node(Tag.callee, Tag.MemberExpression);
-      Kit.replace(assign, callProp);
-      Kit.insertBefore(
-        Kit.append(
-          callProp,
-          Kit.tok(Tag.property, Tag.Identifier, { name: "dbg$call" })
-        ),
-        assign
-      );
-      const objCopy =
-        obj.type === Tag.Identifier && obj.sym
-          ? Scope.id(Tag.push, obj.sym, Scope.parentScope(i))
-          : Kit.clone(obj);
-      objCopy.pos = Tag.push;
-      Kit.prepend(args, objCopy);
-    }
+    append(assign, callee);
+    insertBefore(callee, Scope.sysMemExpr(Tag.left, opSym, "call"));
+  }
+  function getAlias(str) {
+    let alias = null;
+    if (relAlias && str[0] === ".") {
+      str = path.normalize(`${relAlias}/${str}`);
+      if (Kit.isWindows) str = str.replace(/\\/g, "/");
+      alias = aliases[str] || str;
+    } else alias = aliases[str];
+    return alias;
+  }
+  function plusShift(pos, sym, shift) {
+    if (shift === 0) return Kit.id(pos, sym);
+    const res = Kit.node(pos, Tag.BinaryExpression);
+    res.node.operator = "+";
+    Kit.append(res, Kit.id(Tag.left, sym));
+    Kit.append(res, Kit.num(Tag.right, shift));
+    return res;
   }
 }
 

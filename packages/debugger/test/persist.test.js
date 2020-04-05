@@ -4,22 +4,19 @@ trace.silent = true;
 const D = require("../main");
 const S = require("@effectful/serialization");
 require("../persist");
+S.regGlobal();
 
 test("persistent state", function() {
-  global.console = { log: jest.fn() };
-  const extra = { value: "H" };
-  D.Persist.extraState().add(extra);
-  const mod = trace(D.evalThunk(require("./__fixtures__/counters")));
+  global.console = { log: jest.fn(), error: console.error, warn: console.warn };
+  S.regOpaqueObject(global.console, "mock-console-persist");
+  const mod = trace(D.force(require("./__fixtures__/counters")));
   S.regOpaqueObject(mod, "countersMod");
   const [counter1, s1] = trace(mod.runCounters(true));
   console.log(counter1, s1);
-  D.Persist.restore(s1);
-  const [extraAfter] = D.Persist.extraState();
-  expect(extra).not.toBe(extraAfter);
-  expect(extra).toEqual(extraAfter);
+  D.context.top = S.read(s1).top;
   const ps2 = { s2: true };
   const [counter2, s2] = trace.cont(ps2);
   console.log(counter2, s2);
   expect(s2).toBe(ps2);
-  // expect(console.log.mock.calls).toMatchSnapshot();
+  expect(console.log.mock.calls).toMatchSnapshot();
 });

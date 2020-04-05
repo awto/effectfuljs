@@ -1,12 +1,17 @@
 import * as Kit from "./kit";
 import * as Scope from "./scope";
 import * as Ctx from "./context";
+import config from "@effectful/transducers/v2/config";
+const { Tag } = Kit;
 
 export function prepare() {
   const { root } = Ctx;
+  const paramsFirst = !config.expInlineCalls;
   for (let i = root.scopes; i; i = i.nextScope) {
     let varCount = 0;
-    for (const j of i.scopeDecls) Kit.setSymName(j, varCount++, "$");
+    for (const j of i.scopeDecls)
+      if (j.bound && (paramsFirst || !j.param))
+        Kit.setSymName(j, varCount++, "$");
     i.varCount = varCount;
     const globList = (root.globBindSyms = {});
     globList.nextPat = globList.prevPat = globList;
@@ -15,21 +20,26 @@ export function prepare() {
     i.symScopePool = globPool;
     i.symScopeList = globList;
   }
+  for (let i = root.firstChild; i; i = i.nextFunc) {
+    const def = i.funcDef;
+    const locList = (def.locBindSyms = {});
+    locList.nextPat = locList.prevPat = locList;
+    const locPool = (def.localVars = { varCount: 0 });
+    locPool.nextInPool = locPool.prevInPool = locPool;
+  }
 }
 
 /** minimizing number of variables required for storing intermediate values */
 export function assignBindVar(root) {
+  const { patSym } = Ctx.root;
   const end = root.cfgBlock;
   const maxOrder = end.order;
   const maxEffOrder = end.effOrder;
-  const patSym = root.patSym;
-  patSym.frameLocal = true;
   const forRelease = Array(maxOrder).fill(null);
-  const locList = (root.locBindSyms = {});
-  locList.nextPat = locList.prevPat = locList;
-  const locPool = (root.localVars = { varCount: 0 });
-  locPool.nextInPool = locPool.prevInPool = locPool;
   const reservedSyms = root.module.reservedSyms;
+  const locList = root.locBindSyms;
+  const locPool = root.localVars;
+  const { reuseTempVars } = config;
   let cur = 0;
   for (let i = root.orderedBinds; i; i = i.nextOrderedBind) {
     if (!i.bound) continue;
@@ -62,16 +72,9 @@ export function assignBindVar(root) {
         if (effOrder > maxEff) maxEff = effOrder;
       }
     }
-    /*
-    const { usageBlock } = i;
-    if (usageBlock) {
-      const { order, effOrder } = usageBlock;
-      if (order > max) max = order;
-      if (effOrder > maxEff) maxEff = effOrder;
-    }
-    */
     const local = minEff === maxEff;
     let list, pool;
+    let reuse = true;
     if (local) {
       list = locList;
       pool = locPool;
@@ -83,16 +86,17 @@ export function assignBindVar(root) {
       const scope = i.scope;
       list = scope.symScopeList;
       pool = scope.symScopePool;
+      reuse = reuseTempVars;
     }
     let sym;
-    if (pool.nextInPool === pool) {
+    if (!reuse || pool.nextInPool === pool) {
       sym = i;
       sym.pool = pool;
       sym.nextPat = list;
       sym.prevPat = list.prevPat;
       list.prevPat = list.prevPat.nextPat = sym;
       sym.frameLocal = local;
-      Kit.setSymName(sym, pool.varCount++, "$");
+      Kit.setSymName(sym, pool.varCount++, "_");
       if (reservedSyms) Scope.ensureUnique(sym);
     } else {
       sym = pool.nextInPool;
@@ -102,8 +106,10 @@ export function assignBindVar(root) {
       prev.nextInPool = next;
       i.varSym = sym;
     }
-    sym.nextRelease = forRelease[max];
-    forRelease[max] = sym;
+    if (reuse) {
+      sym.nextRelease = forRelease[max];
+      forRelease[max] = sym;
+    }
     // removing simple var copies
     for (let j = i.rhs; j != null; j = j.prevRHS) {
       const cfgItem = j.cfgItem;
@@ -154,4 +160,112 @@ export function composeItems(root) {
   }
   root.bindNum = bindNum;
   return root;
+}
+
+export function sortFrames(root) {
+  const { ctxSym } = Ctx.root;
+  const { errFrame, lastFrame } = root;
+  const resFrame = errFrame.prevFrame;
+  let jobs = null;
+  let clock = 0;
+  schedule(resFrame);
+  schedule(errFrame);
+  let cur = null;
+  let pureExit = null;
+  if (config.expInline) {
+    for (let i = lastFrame.nextFrame; i !== lastFrame; i = i.nextFrame) {
+      if (
+        i.tryInline &&
+        i.nextEffSkipExit === i &&
+        i.nextEffExit === i &&
+        i.nextDynExit === i &&
+        (pureExit = i.nextPureExit) !== i &&
+        pureExit.nextPureExit === i &&
+        i.consequent.firstChild === pureExit.parent.parent
+      ) {
+        const dst = pureExit.dst;
+        for (let j = i.nextEnter; i !== j; j = j.nextEnter) j.dst = dst;
+        const next = i.nextFrame;
+        (next.prevFrame = i.prevFrame).nextFrame = next;
+        if (i.handlerStart) i.handlerStart.frame = dst;
+        if (i.finalizerStart) i.finalizerStart.frame = dst;
+      }
+      // TODO: inline single reference pure frames
+    }
+  }
+  const firstFrame = errFrame.nextFrame;
+  schedule(firstFrame);
+  firstFrame.prevFrame = lastFrame;
+  lastFrame.nextFrame = firstFrame;
+  let count = 0;
+  while (jobs) {
+    const job = jobs;
+    jobs = jobs.nextJob;
+    job.end = ++clock;
+    const id = (job.id = count++);
+    const { block } = job;
+    if (block) {
+      const { finalizer, handler } = block;
+      if (finalizer) schedule(finalizer.frame);
+      if (handler) schedule(handler.frame);
+    }
+    for (let i = job.nextDynExit; i !== job; i = i.nextDynExit)
+      for (let j = i.nextInstance; j !== i; j = j.nextInstance) schedule(j.dst);
+    for (let i = job.nextEffExit; i !== job; i = i.nextEffExit) schedule(i.dst);
+    for (let i = job.nextEffSkipExit; i !== job; i = i.nextEffSkipExit)
+      schedule(i.dst);
+    for (let i = job.nextPureExit; i !== job; i = i.nextPureExit)
+      schedule(i.dst);
+    if (cur) {
+      for (let i = cur.nextEffSkipExit; i !== cur; i = i.nextEffSkipExit) {
+        if (i.dst !== job) continue;
+        const assign = Kit.assign(Tag.expression);
+        Kit.append(assign, Kit.memExpr(Tag.left, ctxSym, "state"));
+        Kit.append(assign, Kit.num(Tag.right, id));
+        const cont = i.continueStmt;
+        cont.type = Tag.ExpressionStatement;
+        Kit.append(cont, assign);
+        if (i.noSkip)
+          Kit.insertAfter(cont, Kit.node(Tag.push, Tag.BreakStatement));
+      }
+      /*
+      const srcBlock = cur.block;
+      const dstBlock = job.block;
+      if (
+        srcBlock.handler === dstBlock.handler &&
+        srcBlock.finalizer === dstBlock.finalizer &&
+        false
+      ) {
+        for (let i = cur.nextPureExit; i !== cur; i = i.nextPureExit) {
+          if (i.dst !== job) continue;
+          Kit.detach(i.parent.parent);
+          if (i.noSkip) i.continueStmt.type = Tag.BreakStatement;
+          else Kit.detach(i.continueStmt);
+        }
+      } else {*/
+      for (let i = cur.nextPureExit; i !== cur; i = i.nextPureExit) {
+        if (i.dst !== job) continue;
+        i.prevSibling.firstChild.prevSibling.node.name = "state";
+        if (i.noSkip) i.continueStmt.type = Tag.BreakStatement;
+        else Kit.detach(i.continueStmt);
+      }
+      // }
+      (job.prevFrame = cur).nextFrame = job;
+    }
+    cur = job;
+  }
+  errFrame.end = ++clock;
+  resFrame.end = ++clock;
+  cur.nextFrame = lastFrame;
+  lastFrame.prevFrame = cur;
+  for (let i = lastFrame.nextFrame; i !== lastFrame; i = i.nextFrame) {
+    const id = i.id;
+    for (let j = i.nextEnter; j !== i; j = j.nextEnter) j.node.value = id;
+  }
+  function schedule(job) {
+    if (job.beg > 0) return;
+    job.beg = ++clock;
+    job.nextJob = jobs;
+    jobs = job;
+  }
 }

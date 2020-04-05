@@ -28,12 +28,8 @@ export default {
   globalNS: "EDBG",
   keepObjectKeysOrder: true,
   keepContainersOrder: true,
-  expNoCallWraps: true,
   expNoAccessOverloading: true,
-  /**
-   * evaluate modules exports eagerly in debug mode
-   * if this is `false` each top level module must be specified
-   * in `context.moduleId` to be able to be stopped on breakpoint
-   */
-  expEagerModuleExport: true
+  expInlineNext: false,
+  /** for timeTravel debugging don't exit node process on program termination */
+  stopOnExit: false
 };

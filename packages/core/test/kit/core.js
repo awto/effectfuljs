@@ -44,6 +44,7 @@ export function prettyBlock(f, opts = {}) {
   } catch (e) {
     console.error("pretty-block-error:", e);
     console.log(f);
+    throw e;
   }
 }
 

@@ -10,8 +10,9 @@ export const dump = Lib.dumpDoc;
 
 export function nodeStr(node, pretty) {
   try {
-    return generate(node, { compact: !pretty, comments: false }).code;
+    return generate(node, { compact: !pretty /*, comments: false*/ }).code;
   } catch (e) {
+    console.error("CONSUME ERROR", e);
     return "<not-JS>";
   }
 }
@@ -26,7 +27,7 @@ function tempNamesRange(from, to) {
   const seen = new Set();
   do {
     if (seen.has(i)) {
-      console.log(i);
+      console.log("CYCLE:", i);
       throw new Error("CYCLE!");
     }
     seen.add(i);
@@ -50,8 +51,8 @@ function tempNamesRange(from, to) {
 }
 
 export function node(doc) {
+  Kit.consume(doc);
   tempNamesRange(doc, Kit.after(doc));
-  Kit.consumeRange(doc, Kit.after(doc));
   return doc.node;
 }
 
@@ -119,16 +120,20 @@ export function cfgToDot(root, name = "") {
     lines.push(`  ${i.deb_id}[shape="box" label="${labels.join("")}"];`);
   }
   lines.push(`  END[label="RET"];`);
+  function dest(block) {
+    if (block.ibr) {
+      const name = symStr(block.ibr);
+      lines.push(`  ${name}[shape=diamond];`);
+      return name;
+    }
+    return block.deb_id;
+  }
   for (let i = beg; i !== end; i = i.nextBlock) {
-    if (i.trueBr) lines.push(`  ${i.deb_id} -> ${i.trueBr.deb_id}[label=T];`);
-    if (i.falseBr) lines.push(`  ${i.deb_id} -> ${i.falseBr.deb_id}[label=F];`);
+    if (i.trueBr) lines.push(`  ${i.deb_id} -> ${dest(i.trueBr)}[label=T];`);
+    if (i.falseBr) lines.push(`  ${i.deb_id} -> ${dest(i.falseBr)}[label=F];`);
     if (i.br) {
-      if (i.br.ibr)
-        lines.push(
-          `  ${i.br.deb_id}[shape=diamond label="${symStr(i.br.ibr)}"];`
-        );
       lines.push(
-        `  ${i.deb_id} -> ${i.br.deb_id}[style="${
+        `  ${i.deb_id} -> ${dest(i.br)}[style="${
           i.unwind ? "dashed" : "solid"
         }",color=${i.rec ? "red" : "black"}];`
       );

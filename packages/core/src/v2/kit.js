@@ -5,7 +5,6 @@ import {
   tok,
   produce,
   produceNode,
-  consume,
   replace,
   detach,
   assign,
@@ -13,7 +12,6 @@ import {
   prepend,
   insertAfter,
   insertBefore,
-  consumeRange,
   id,
   bool,
   block,
@@ -36,6 +34,7 @@ import {
 import {
   Tag,
   typeInfo,
+  symInfo,
   invariant,
   symName
 } from "@effectful/transducers/v2/types";
@@ -48,7 +47,6 @@ export {
   str,
   produce,
   produceNode,
-  consume,
   emitConst,
   toks,
   toksRaw,
@@ -63,7 +61,6 @@ export {
   insertAfter,
   insertBefore,
   Tag,
-  consumeRange,
   id,
   bool,
   block,
@@ -79,36 +76,6 @@ export {
   after,
   next
 };
-
-/**
- * if the expression `i` has some side effects
- */
-export function isPureExpr(i) {
-  if (i.pure) return true;
-  switch (i.type) {
-    case Tag.FunctionExpression:
-    case Tag.ArrowFunctionExpression:
-    case Tag.Identifier:
-    case Tag.RegExpLiteral:
-    case Tag.NullLiteral:
-    case Tag.StringLiteral:
-    case Tag.BooleanLiteral:
-    case Tag.NumericLiteral:
-    case Tag.BinaryExpression:
-    case Tag.ObjectExpression:
-    case Tag.ClassExpression:
-    case Tag.ArrayExpression:
-    case Tag.ThisExpression:
-      return true;
-    case Tag.UnaryExpression:
-      switch (i.node.operator) {
-        case "delete":
-        case "throw":
-          return false;
-      }
-      return true;
-  }
-}
 
 export function memExpr(pos, objSym, propName) {
   const res = node(pos, Tag.MemberExpression);
@@ -126,6 +93,7 @@ export function exprStmt(par, doc) {
   const res = node(Tag.push, Tag.ExpressionStatement);
   append(res, doc);
   append(par, res);
+  copyMeta(doc, res);
   return doc;
 }
 
@@ -135,6 +103,7 @@ export function assignStmt(par, l, r) {
   const res = assign(Tag.expression);
   append(res, r);
   insertBefore(r, l);
+  res.node.loc = l.node.loc || r.node.loc;
   return exprStmt(par, res);
 }
 
@@ -149,11 +118,13 @@ export function throwStmt(par, msg, name) {
 
 export const setSymName = config.debug
   ? function setSymName(sym, index, prefix) {
-      sym.index = index;
-      sym.name = `${prefix || "_"}${sym.orig ? sym.orig + "$" : ""}${index}`;
+      sym.index = index + 1;
+      sym.name = `${prefix || "_"}${
+        sym.orig ? sym.orig.replace(/\W/g, "_") + "$" : ""
+      }${index}`;
     }
   : function setSymName(sym, index, prefix) {
-      sym.index = index;
+      sym.index = index + 1;
       sym.name = `${prefix || "_"}${index}`;
     };
 
@@ -167,4 +138,62 @@ export function resetNames(root) {
     if (i.type === Tag.Identifier && (sym = i.sym) != null)
       i.node.name = (sym.varSym || sym).name;
   } while ((i = next(i)) !== root);
+}
+
+export function locStr(loc) {
+  return loc
+    ? `${loc.start.line}:${loc.start.column}-${loc.end.line}:${loc.end.column}`
+    : null;
+}
+
+export function consume(root) {
+  let i = root;
+  let sym;
+  do {
+    const { parent, node } = i;
+    if (parent) {
+      if (i.pos === Tag.push) {
+        parent.node.push(node);
+      } else parent.node[symName(i.pos)] = node;
+    }
+    if (i.type === Tag.Array) node.length = 0;
+    else if (i.type === Tag.Null) i.node = null;
+    else {
+      if (i.type === Tag.Identifier && (sym = i.sym) != null)
+        node.name = (sym.varSym || sym).name;
+      const ti = symInfo(i.type);
+      if (ti) {
+        if (ti.esType != null) i.node.type = ti.esType;
+        if (ti.fields) Object.assign(i.node, ti.fields);
+      }
+    }
+  } while ((i = next(i)) !== root);
+}
+
+export const isWindows =
+  typeof process !== "undefined" && process.platform === "win32";
+
+export function void0(pos) {
+  const res = tok(pos, Tag.UnaryExpression, { operator: "void" });
+  append(res, num(Tag.argument, 0));
+  return res;
+}
+
+export function varDecl() {
+  return tok(Tag.push, Tag.VariableDeclaration, { kind: "var" });
+}
+
+export function copyMeta(from, to) {
+  to.node.loc = from.node.loc;
+  to.parentFunc = from.parentFunc;
+  to.parentBlock = from.parentBlock;
+  to.parentLoop = from.parentLoop;
+  to.parentMaybeScope = from.parentMaybeScope;
+}
+
+export function hasDirective(node, value) {
+  for (const i of node.directives) {
+    if (i.value && i.value.value === value) return true;
+  }
+  return false;
 }

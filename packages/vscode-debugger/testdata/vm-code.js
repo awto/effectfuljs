@@ -8,7 +8,7 @@ const sandbox = {
 
 vm.runInNewContext(
   `count += 1; 
-   name = "kitty"
+   name = "kitty";
    debugger;`,
   sandbox
 );

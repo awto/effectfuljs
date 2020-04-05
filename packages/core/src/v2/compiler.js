@@ -8,6 +8,9 @@ import * as Debug from "./debug";
 import * as Emit from "./emit";
 import * as Meta from "./meta";
 import * as Operations from "./operations";
+import * as path from "path";
+
+const defaults = { ...config };
 
 const helpers = {
   context,
@@ -50,7 +53,7 @@ export function run(transform, state) {
 /** returns babel's plugin definition suitable for assigning to `module.exports` */
 export function babelPlugin(transform) {
   const res = function effectfulPlugin(babel, args) {
-    Object.assign(config, args, { babel });
+    Object.assign(config, defaults, args, { babel });
     return {
       name: config.pluginName || transform.name || "effectful",
       manipulateOptions(_opts, parserOpts) {
@@ -58,18 +61,33 @@ export function babelPlugin(transform) {
           parserOpts.plugins.push(...config.syntaxPlugins);
       },
       visitor: {
-        Program(path, state) {
+        Program(_path, state) {
           const file = state.file;
-          config.srcRoot =
-            (file && file.opts && file.opts.root) || file.opts.cwd || ".";
-          config.filename =
-            (file && file.opts && file.opts.filename) || "file.js";
+          if (file) {
+            const opts = file.opts;
+            let root = config.srcRoot;
+            if (!root || !root.substr)
+              root = config.srcRoot = opts.root || opts.cwd || ".";
+            root = path.resolve(root);
+            config.filename = opts.filename || "file.js";
+            let rel = path.relative(root, config.filename);
+            if (Kit.isWindows) rel = rel.replace(/\\/g, "/");
+            config.relativeName = rel;
+          } else {
+            config.srcRoot = ".";
+            config.relativeName = config.filename = "file.js";
+          }
           run(transform, state);
         }
       }
     };
   };
   res.macro = () => babelMacro(transform);
+  res.run = function(ast, opts) {
+    Object.assign(config, opts);
+    transform(ast, helpers);
+    return ast;
+  };
   return res;
 }
 

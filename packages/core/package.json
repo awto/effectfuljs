@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
+    "@babel/node": "^7.8.7",
     "cross-env": "^7.0.0",
     "eslint": "^5.15.1",
     "mocha": "^5.0.1"

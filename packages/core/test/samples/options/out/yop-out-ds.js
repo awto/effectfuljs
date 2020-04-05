@@ -1,890 +1,908 @@
-var $0M = require("@effectful/debugger/api");
-
-$0M.module("file.js", null, module, null, "$0");
-var $s$1 = [{
-  done: "$0",
-  addLater: "$1"
-}, null, false],
-    $s$2 = [{
-  result: "$0"
-}, $s$1, false],
+var $0M = require("@effectful/debugger/api"),
+    $0context = $0M.context,
+    $0ret = $0M.ret,
+    $0unhandled = $0M.unhandled,
+    $0brk = $0M.brk,
+    $0lset = $0M.lset,
+    $0mcall = $0M.mcall,
+    $0gset = $0M.gset,
+    $0m = $0M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$0", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{}, null, 0],
+    $s$2 = [{}, $s$1, 1],
     $s$3 = [{
-  $dm$b: "$0"
-}, $s$2, false],
+  done: [1, "6:62-6:66"],
+  addLater: [2, "20:13-20:21"]
+}, $s$2, 2],
     $s$4 = [{
-  err: "$1"
-}, $s$3, false],
+  result: [1, "9:10-9:16"]
+}, $s$3, 3],
     $s$5 = [{
-  a: "$0",
-  b: "$1",
-  deferred: "$2"
-}, $s$1, false],
+  $dm$b: [1, "10:47-10:52"]
+}, $s$4, 4],
     $s$6 = [{
-  done: "$0",
-  throwErrorLater: "$1"
-}, null, false],
+  err: [2, "15:17-15:20"]
+}, $s$5, 4],
     $s$7 = [{
-  $dm$root: "$0"
-}, $s$6, false],
-    $s$8 = [{
-  err: "$0"
-}, $s$7, false],
+  a: [1, "20:22-20:23"],
+  b: [2, "20:25-20:26"],
+  deferred: [3, "21:10-21:18"]
+}, $s$3, 3],
+    $s$8 = [{}, $s$7, 4],
     $s$9 = [{
-  expectErr: "$1"
-}, $s$8, false],
-    $s$10 = [{
-  deferred: "$0"
-}, $s$6, false],
+  done: [1, "29:72-29:76"],
+  throwErrorLater: [2, "50:13-50:28"]
+}, $s$2, 2],
+    $s$10 = [{}, $s$9, 3],
     $s$11 = [{
-  done: "$0"
-}, null, false],
+  $dm$root: [1, "32:30-32:38"]
+}, $s$10, 4],
     $s$12 = [{
-  result: "$0"
-}, $s$11, false],
+  err: [1, "34:28-34:31"]
+}, $s$11, 5],
     $s$13 = [{
-  $dm$b: "$0"
-}, $s$12, false],
-    $s$14 = [{
-  err: "$1"
-}, $s$13, false];
-$0M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(0);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0p = $0M.evalDir("@effectfuljs/core");
-        continue;
-
-      case 2:
-        $0M.gset(global, "M", $0p);
-        $0.goto = 3;
-        $0M.brk(1);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0p = $0M.evalDir("Q");
-        continue;
-
-      case 4:
-        $0M.gset(global, "Q", $0p);
-        $0.goto = 5;
-        $0M.brk(2);
-        continue;
-
-      case 5:
-        $0.goto = 6;
-        $0p = $0M.evalDir("@effectfuljs/promise");
-        continue;
-
-      case 6:
-        $0.goto = 7;
-        $0p = ($0M.context.call = $0p)(Q);
-        continue;
-
-      case 7:
-        $0M.gset(global, "QM", $0p);
-        $0.goto = 8;
-        $0M.brk(3);
-        continue;
-
-      case 8:
-        $0.goto = 9;
-        ($0M.context.call = describe)("yop", $0c.f($0));
-        continue;
-
-      case 9:
-        return $0M.ret();
-
-      case 10:
-        return $0M.ret($0.value);
-
-      case 11:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["2:0-2:33", "s", null], ["2:4-2:32", "e", null], ["3:0-3:17", "s", null], ["3:4-3:16", "e", null], ["4:0-4:40", "s", null], ["4:5-4:36", "e", null], ["4:5-4:39", "e", null], ["5:0-74:3", "s", null], ["5:0-74:2", "e", null], [], [], []]);
-$0M.fun("m$1", null, "m$0", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(4);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        ($0M.context.call = it)("should yield fiber until promise is resolved", $0c.f($0));
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0M.brk(20);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        ($0M.context.call = it)("should throw reasons from rejected promises into fiber", $0c.f($0));
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0M.brk(37);
-        continue;
-
-      case 5:
-        $0.goto = 6;
-        ($0M.context.call = it)("should work just fine with passed a value instead of a promise", $0c.f($0));
-        continue;
-
-      case 6:
-        return $0M.ret();
-
-      case 7:
-        return $0M.ret($0.value);
-
-      case 8:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["6:2-28:5", "s", null], ["6:2-28:4", "e", null], ["29:2-58:5", "s", null], ["29:2-58:4", "e", null], ["59:2-73:5", "s", null], ["59:2-73:4", "e", null], [], [], []]);
-$0M.fun("m$2", null, "m$1", ["done"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.$.$1 = $0c.addLater($0);
-        $0.goto = 1;
-        $0M.brk(5);
-        continue;
-
-      case 1:
-        if ($0.$.$0.async) {
-          $0.goto = 5;
-          $0M.brk(6);
-          continue;
-        } else {
-          $0.state = 2;
-        }
-
-      case 2:
-        $0.goto = 3;
-        $0M.brk(7);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0M.mcall("run", M, QM, $0c.f($0));
-        continue;
-
-      case 4:
-        return $0M.ret();
-
-      case 5:
-        $0.goto = 6;
-        $0p = $0M.mcall("async", $0.$.$0);
-        continue;
-
-      case 6:
-        $0M.lset($0.$, "done", $0p);
-        $0.goto = 2;
-        continue;
-
-      case 7:
-        return $0M.ret($0.value);
-
-      case 8:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["7:4-7:40", "s", $s$1], ["7:20-7:40", "s", $s$1], ["8:4-19:7", "s", $s$1], ["8:4-19:6", "e", $s$1], [], ["7:27-7:39", "e", $s$1], [], [], []]);
-$0M.fun("m$3", null, "m$2", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(8);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0M.brk(9);
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0p = ($0M.context.call = $0.$$.$.$1)(1, 2);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0p = ($0M.context.call = M)($0p);
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0p = $0M.mcall("mapply", $0p, $0c.f($0));
-        continue;
-
-      case 5:
-        return $0M.ret($0p);
-
-      case 6:
-        return $0M.ret($0.value);
-
-      case 7:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["9:6-9:17", "s", $s$2], ["10:6-18:9", "s", $s$2], ["10:15-10:29", "e", $s$2], ["10:13-10:30", "e", $s$2], ["10:13-18:8", "e", $s$2], [], [], []]);
-$0M.fun("m$4", null, "m$3", ["$dm$b"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 2;
-        $0M.brk(10);
-        continue;
-
-      case 1:
-        $1 = $0.value;
-        $0.goto = 9;
-        $0M.brk(14);
-        continue;
-
-      case 2:
-        $0M.lset($0.$$.$, "result", $0.$.$0);
-        $0.goto = 3;
-        $0M.brk(11);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0M.brk(12);
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0p = ($0M.context.call = expect)($0.$$.$.$0);
-        continue;
-
-      case 5:
-        $0.goto = 6;
-        $0M.mcall("equal", $0p.to, 3);
-        continue;
-
-      case 6:
-        $0.goto = 7;
-        $0M.brk(13);
-        continue;
-
-      case 7:
-        $0.goto = 8;
-        ($0M.context.call = $0.$$.$.$0)();
-        continue;
-
-      case 8:
-        return $0M.ret();
-
-      case 9:
-        $0.goto = 8;
-        ($0M.context.call = $0.$$.$.$0)($0.$.$1);
-        continue;
-
-      case 10:
-        return $0M.ret($0.value);
-
-      case 11:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, function ($0) {
-  switch ($0.state) {
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
+  expectErr: [2, "38:21-38:30"]
+}, $s$12, 5],
+    $s$14 = [{}, $s$11, 5],
+    $s$15 = [{
+  deferred: [1, "51:10-51:18"]
+}, $s$9, 3],
+    $s$16 = [{}, $s$15, 4],
+    $s$17 = [{
+  done: [1, "59:80-59:84"]
+}, $s$2, 2],
+    $s$18 = [{
+  result: [1, "62:10-62:16"]
+}, $s$17, 3],
+    $s$19 = [{
+  $dm$b: [1, "63:38-63:43"]
+}, $s$18, 4],
+    $s$20 = [{
+  err: [2, "68:17-68:20"]
+}, $s$19, 4],
+    $0m$0 = $0M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-75:0", 32, function file_js($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
       $0.goto = 1;
-      break;
+      $0brk("2:0-2:33");
+      $0.state = 1;
 
-    default:
-      $0.goto = 11;
-      break;
-  }
-}, null, [["11:8-11:23", "s", $s$3], ["16:10-16:20", "s", $s$4], ["12:8-17:9", "s", $s$3], ["13:10-13:37", "s", $s$3], ["13:10-13:24", "e", $s$3], ["13:10-13:36", "e", $s$3], ["14:10-14:17", "s", $s$3], ["14:10-14:16", "e", $s$3], [], ["16:10-16:19", "e", $s$4], [], []]);
-$0M.fun("m$5", "addLater", "m$2", ["a", "b"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(15);
-        continue;
+    case 1:
+      $0.goto = 2;
+      $0p = ($0context.moduleId = require.resolve("@effectfuljs/core"), $0M.force(require("@effectfuljs/core")));
+      $0.state = 2;
 
-      case 1:
-        $0.goto = 2;
-        $0M.brk(16);
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0p = $0M.mcall("defer", Q);
-        continue;
-
-      case 3:
-        $0M.lset($0.$, "deferred", $0p);
-        $0.goto = 4;
-        $0M.brk(17);
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0M.mcall("nextTick", process, $0c.f($0));
-        continue;
-
-      case 5:
-        $0.goto = 6;
-        $0M.brk(19);
-        continue;
-
-      case 6:
-        return $0M.ret($0.$.$2.promise);
-
-      case 7:
-        return $0M.ret($0.value);
-
-      case 8:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["21:6-21:19", "s", $s$5], ["22:6-22:27", "s", $s$5], ["22:17-22:26", "e", $s$5], ["23:6-25:9", "s", $s$5], ["23:6-25:8", "e", $s$5], ["26:6-26:30", "s", $s$5], [], [], []]);
-$0M.fun("m$6", null, "m$5", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(18);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0M.mcall("resolve", $0.$$.$.$2, $0.$$.$.$0 + $0.$$.$.$1);
-        continue;
-
-      case 2:
-        return $0M.ret();
-
-      case 3:
-        return $0M.ret($0.value);
-
-      case 4:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["24:8-24:32", "s", $s$5], ["24:8-24:31", "e", $s$5], [], [], []]);
-$0M.fun("m$7", null, "m$1", ["done"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.$.$1 = $0c.throwErrorLater($0);
-        $0.goto = 1;
-        $0M.brk(21);
-        continue;
-
-      case 1:
-        if ($0.$.$0.async) {
-          $0.goto = 5;
-          $0M.brk(22);
-          continue;
-        } else {
-          $0.state = 2;
-        }
-
-      case 2:
-        $0.goto = 3;
-        $0M.brk(23);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0M.mcall("run", M, QM, $0c.f($0));
-        continue;
-
-      case 4:
-        return $0M.ret();
-
-      case 5:
-        $0.goto = 6;
-        $0p = $0M.mcall("async", $0.$.$0);
-        continue;
-
-      case 6:
-        $0M.lset($0.$, "done", $0p);
-        $0.goto = 2;
-        continue;
-
-      case 7:
-        return $0M.ret($0.value);
-
-      case 8:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["30:4-30:40", "s", $s$6], ["30:20-30:40", "s", $s$6], ["31:4-49:7", "s", $s$6], ["31:4-49:6", "e", $s$6], [], ["30:27-30:39", "e", $s$6], [], [], []]);
-$0M.fun("m$8", null, "m$7", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(24);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0p = $0M.mcall("scope", M, $0c.f($0));
-        continue;
-
-      case 2:
-        return $0M.ret($0p);
-
-      case 3:
-        return $0M.ret($0.value);
-
-      case 4:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["32:6-48:9", "s", $s$6], ["32:13-48:8", "e", $s$6], [], [], []]);
-$0M.fun("m$9", null, "m$8", ["$dm$root"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(25);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0p = ($0M.context.call = $0.$$.$.$1)();
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0p = ($0M.context.call = M)($0p);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0p = $0M.mcall("mhandle", $0p, $0c.f($0));
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0p = $0M.mcall("mapply", $0p, $0c.f($0));
-        continue;
-
-      case 5:
-        return $0M.ret($0p);
-
-      case 6:
-        return $0M.ret($0.value);
-
-      case 7:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["33:8-47:13", "s", $s$7], ["33:17-33:34", "e", $s$7], ["33:15-33:35", "e", $s$7], ["33:15-42:12", "e", $s$7], ["33:15-47:12", "e", $s$7], [], [], []]);
-$0M.fun("m$10", null, "m$9", ["err"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 2;
-        $0M.brk(26);
-        continue;
-
-      case 1:
-        $1 = $0.value;
-        $0.goto = 10;
-        $0M.brk(29);
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0M.brk(27);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0p = ($0M.context.call = expect)($0.$.$0.message);
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0M.mcall("equal", $0p.to, "promise rejected");
-        continue;
-
-      case 5:
-        $0.goto = 6;
-        $0M.brk(28);
-        continue;
-
-      case 6:
-        $0.goto = 7;
-        ($0M.context.call = $0.$$.$.$0)();
-        continue;
-
-      case 7:
-        $0.goto = 8;
-        $0M.brk(30);
-        continue;
-
-      case 8:
-        $0.goto = 9;
-        $0p = $0M.mcall("brk", $0.$$.$.$0);
-        continue;
-
-      case 9:
-        return $0M.ret($0p);
-
-      case 10:
-        $0.goto = 7;
-        ($0M.context.call = $0.$$.$.$0)($0.$.$1);
-        continue;
-
-      case 11:
-        return $0M.ret($0.value);
-
-      case 12:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, function ($0) {
-  switch ($0.state) {
     case 2:
+      $0gset(global, "M", $0p);
+      $0.goto = 3;
+      $0brk("3:0-3:17");
+      $0.state = 3;
+
     case 3:
+      $0.goto = 4;
+      $0p = ($0context.moduleId = require.resolve("Q"), $0M.force(require("Q")));
+      $0.state = 4;
+
     case 4:
+      $0gset(global, "Q", $0p);
+      $0.goto = 5;
+      $0brk("4:0-4:40");
+      $0.state = 5;
+
     case 5:
+      $0.goto = 6;
+      $0p = ($0context.moduleId = require.resolve("@effectfuljs/promise"), $0M.force(require("@effectfuljs/promise")));
+      $0.state = 6;
+
     case 6:
+      $0.goto = 7;
+      $0p = ($0context.call = $0p)(Q);
+      $0.state = 7;
+
+    case 7:
+      $0gset(global, "QM", $0p);
+      $0.goto = 8;
+      $0brk("5:0-74:3");
+      $0.state = 8;
+
+    case 8:
+      $0.goto = 10;
+      ($0context.call = describe)("yop", $0m$1($0));
+      continue;
+
+    case 9:
+      $0.goto = 10;
+      return $0unhandled($0.error);
+
+    case 10:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 0, [[4, "2:0-2:33", $s$1], [2, "2:4-2:32", $s$1], [4, "3:0-3:17", $s$1], [2, "3:4-3:16", $s$1], [4, "4:0-4:40", $s$1], [2, "4:5-4:36", $s$1], [2, "4:5-4:39", $s$1], [4, "5:0-74:3", $s$1], [2, "5:0-74:2", $s$1], [16, "75:0-75:0", $s$1], [16, "75:0-75:0", $s$1]]),
+    $0m$1 = $0M.fun("m$1", null, null, $0m$0, [], 0, 1, "5:16-74:1", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
       $0.goto = 1;
+      $0brk("6:2-28:5");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      ($0context.call = it)("should yield fiber until promise is resolved", $0m$2($0));
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0brk("29:2-58:5");
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 4;
+      ($0context.call = it)("should throw reasons from rejected promises into fiber", $0m$7($0));
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0brk("59:2-73:5");
+      $0.state = 5;
+
+    case 5:
+      $0.goto = 7;
+      ($0context.call = it)("should work just fine with passed a value instead of a promise", $0m$14($0));
+      continue;
+
+    case 6:
+      $0.goto = 7;
+      return $0unhandled($0.error);
+
+    case 7:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 1, [[4, "6:2-28:5", $s$2], [2, "6:2-28:4", $s$2], [4, "29:2-58:5", $s$2], [2, "29:2-58:4", $s$2], [4, "59:2-73:5", $s$2], [2, "59:2-73:4", $s$2], [16, "74:1-74:1", $s$2], [16, "74:1-74:1", $s$2]]),
+    $0m$2 = $0M.fun("m$2", null, null, $0m$1, ["done"], 0, 3, "6:53-28:3", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0lset($0l, 2,
+      /*addLater*/
+      $0m$5($0));
+      $0.goto = 1;
+      $0brk("7:4-7:40");
+      $0.state = 1;
+
+    case 1:
+      if ($0l[1].async) {
+        $0.goto = 4;
+        $0brk("7:20-7:40");
+        continue;
+      } else {
+        $0.state = 2;
+      }
+
+    case 2:
+      $0.goto = 3;
+      $0brk("8:4-19:7");
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 7;
+      $0mcall("run", M, QM, $0m$3($0));
+      continue;
+
+    case 4:
+      $0.goto = 5;
+      $0p = $0mcall("async", $0l[1]);
+      $0.state = 5;
+
+    case 5:
+      $0lset($0l, 1,
+      /*done*/
+      $0p);
+      $0.goto = 2;
+      continue;
+
+    case 6:
+      $0.goto = 7;
+      return $0unhandled($0.error);
+
+    case 7:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 2, [[4, "7:4-7:40", $s$3], [4, "7:20-7:40", $s$3], [4, "8:4-19:7", $s$3], [2, "8:4-19:6", $s$3], [2, "7:27-7:39", $s$3], [0, "7:20-7:39", $s$3], [16, "28:3-28:3", $s$3], [16, "28:3-28:3", $s$3]]),
+    $0m$3 = $0M.fun("m$3", null, null, $0m$2, [], 0, 2, "8:14-19:5", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("9:6-9:17");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0brk("10:6-18:9");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0p = ($0context.call = $0l[0][2])(1, 2);
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 4;
+      $0p = ($0context.call = M)($0p);
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0p = $0mcall("mapply", $0p, $0m$4($0));
+      $0.state = 5;
+
+    case 5:
+      $0.result = $0p;
+      $0.goto = 7;
+      continue;
+
+    case 6:
+      $0.goto = 7;
+      return $0unhandled($0.error);
+
+    case 7:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 3, [[4, "9:6-9:17", $s$4], [4, "10:6-18:9", $s$4], [2, "10:15-10:29", $s$4], [2, "10:13-10:30", $s$4], [2, "10:13-18:8", $s$4], [0, null, $s$4], [16, "19:5-19:5", $s$4], [16, "19:5-19:5", $s$4]]),
+    $0m$4 = $0M.fun("m$4", null, null, $0m$3, ["$dm$b"], 0, 3, "10:38-18:7", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("11:8-11:23");
+      $0.state = 1;
+
+    case 1:
+      $0lset($0l[0], 1,
+      /*result*/
+      $0l[1]);
+      $0.goto = 2;
+      $0brk("12:8-17:9");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0brk("13:10-13:37");
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 4;
+      $0p = ($0context.call = expect)($0l[0][1]);
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0mcall("equal", $0p.to, 3);
+      $0.state = 5;
+
+    case 5:
+      $0.goto = 6;
+      $0brk("14:10-14:17");
+      $0.state = 6;
+
+    case 6:
+      $0.goto = 7;
+      ($0context.call = $0l[0][0][1])();
+      $0.state = 7;
+
+    case 7:
+      $0.goto = 11;
+      continue;
+
+    case 8:
+      $0lset($0l, 2,
+      /*err*/
+      $0.error);
+      $0.error = void 0;
+      $0.goto = 9;
+      $0brk("16:10-16:20");
+      $0.state = 9;
+
+    case 9:
+      $0.goto = 7;
+      ($0context.call = $0l[0][0][1])($0l[2]);
+      continue;
+
+    case 10:
+      $0.goto = 11;
+      return $0unhandled($0.error);
+
+    case 11:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, function ($0, $0l) {
+  switch ($0.state) {
+    case 6:
+    case 5:
+    case 4:
+    case 3:
+    case 2:
+      $0.goto = 8;
       break;
 
     default:
-      $0.goto = 12;
+      $0.goto = 10;
       break;
   }
-}, null, [["35:12-40:13", "s", $s$8], ["39:14-39:30", "s", $s$9], ["36:14-36:63", "s", $s$8], ["36:14-36:33", "e", $s$8], ["36:14-36:62", "e", $s$8], ["37:14-37:21", "s", $s$8], ["37:14-37:20", "e", $s$8], ["41:12-41:34", "s", $s$8], ["41:19-41:33", "e", $s$8], [], ["39:14-39:29", "e", $s$9], [], []]);
-$0M.fun("m$11", null, "m$9", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(31);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0p = new ($0M.context.call = Error)("yop should have thrown reason from rejected promise");
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        ($0M.context.call = $0.$$.$.$0)($0p);
-        continue;
-
-      case 3:
-        return $0M.ret();
-
-      case 4:
-        return $0M.ret($0.value);
-
-      case 5:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["44:12-46:14", "s", $s$7], ["45:14-45:78", "e", $s$7], ["44:12-46:13", "e", $s$7], [], [], []]);
-$0M.fun("m$12", "throwErrorLater", "m$7", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(32);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0M.brk(33);
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0p = $0M.mcall("defer", Q);
-        continue;
-
-      case 3:
-        $0M.lset($0.$, "deferred", $0p);
-        $0.goto = 4;
-        $0M.brk(34);
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0M.mcall("nextTick", process, $0c.f($0));
-        continue;
-
-      case 5:
-        $0.goto = 6;
-        $0M.brk(36);
-        continue;
-
-      case 6:
-        return $0M.ret($0.$.$0.promise);
-
-      case 7:
-        return $0M.ret($0.value);
-
-      case 8:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["51:6-51:19", "s", $s$10], ["52:6-52:27", "s", $s$10], ["52:17-52:26", "e", $s$10], ["53:6-55:9", "s", $s$10], ["53:6-55:8", "e", $s$10], ["56:6-56:30", "s", $s$10], [], [], []]);
-$0M.fun("m$13", null, "m$12", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(35);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0p = new ($0M.context.call = Error)("promise rejected");
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0M.mcall("reject", $0.$$.$.$0, $0p);
-        continue;
-
-      case 3:
-        return $0M.ret();
-
-      case 4:
-        return $0M.ret($0.value);
-
-      case 5:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["54:8-54:55", "s", $s$10], ["54:24-54:53", "e", $s$10], ["54:8-54:54", "e", $s$10], [], [], []]);
-$0M.fun("m$14", null, "m$1", ["done"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(38);
-        continue;
-
-      case 1:
-        if ($0.$.$0.async) {
-          $0.goto = 5;
-          $0M.brk(39);
-          continue;
-        } else {
-          $0.state = 2;
-        }
-
-      case 2:
-        $0.goto = 3;
-        $0M.brk(40);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0M.mcall("run", M, QM, $0c.f($0));
-        continue;
-
-      case 4:
-        return $0M.ret();
-
-      case 5:
-        $0.goto = 6;
-        $0p = $0M.mcall("async", $0.$.$0);
-        continue;
-
-      case 6:
-        $0M.lset($0.$, "done", $0p);
-        $0.goto = 2;
-        continue;
-
-      case 7:
-        return $0M.ret($0.value);
-
-      case 8:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["60:4-60:40", "s", $s$11], ["60:20-60:40", "s", $s$11], ["61:4-72:7", "s", $s$11], ["61:4-72:6", "e", $s$11], [], ["60:27-60:39", "e", $s$11], [], [], []]);
-$0M.fun("m$15", null, "m$14", [], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 1;
-        $0M.brk(41);
-        continue;
-
-      case 1:
-        $0.goto = 2;
-        $0M.brk(42);
-        continue;
-
-      case 2:
-        $0.goto = 3;
-        $0p = ($0M.context.call = M)(1 + 2);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0p = $0M.mcall("mapply", $0p, $0c.f($0));
-        continue;
-
-      case 4:
-        return $0M.ret($0p);
-
-      case 5:
-        return $0M.ret($0.value);
-
-      case 6:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [["62:6-62:17", "s", $s$12], ["63:6-71:9", "s", $s$12], ["63:13-63:21", "e", $s$12], ["63:13-71:8", "e", $s$12], [], [], []]);
-$0M.fun("m$16", null, "m$15", ["$dm$b"], 0, function () {
-  for (;;) {
-    switch ($0.state = $0.goto) {
-      case 0:
-        $0.goto = 2;
-        $0M.brk(43);
-        continue;
-
-      case 1:
-        $1 = $0.value;
-        $0.goto = 9;
-        $0M.brk(47);
-        continue;
-
-      case 2:
-        $0M.lset($0.$$.$, "result", $0.$.$0);
-        $0.goto = 3;
-        $0M.brk(44);
-        continue;
-
-      case 3:
-        $0.goto = 4;
-        $0M.brk(45);
-        continue;
-
-      case 4:
-        $0.goto = 5;
-        $0p = ($0M.context.call = expect)($0.$$.$.$0);
-        continue;
-
-      case 5:
-        $0.goto = 6;
-        $0M.mcall("equal", $0p.to, 3);
-        continue;
-
-      case 6:
-        $0.goto = 7;
-        $0M.brk(46);
-        continue;
-
-      case 7:
-        $0.goto = 8;
-        ($0M.context.call = $0.$$.$$.$.$0)();
-        continue;
-
-      case 8:
-        return $0M.ret();
-
-      case 9:
-        $0.goto = 8;
-        ($0M.context.call = $0.$$.$$.$.$0)($0.$.$1);
-        continue;
-
-      case 10:
-        return $0M.ret($0.value);
-
-      case 11:
-        throw $0.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, function ($0) {
-  switch ($0.state) {
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
+}, null, 4, [[4, "11:8-11:23", $s$5], [4, "12:8-17:9", $s$5], [5, "13:10-13:37", $s$5], [3, "13:10-13:24", $s$5], [3, "13:10-13:36", $s$5], [5, "14:10-14:17", $s$5], [3, "14:10-14:16", $s$5], [0, null, $s$5], [4, "16:10-16:20", $s$6], [2, "16:10-16:19", $s$6], [16, "18:7-18:7", $s$5], [16, "18:7-18:7", $s$5]]),
+    $0m$5 = $0M.fun("m$5", "addLater", null, $0m$2, ["a", "b"], 0, 4, "20:4-27:5", 0, function addLater($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
       $0.goto = 1;
+      $0brk("21:6-21:19");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0brk("22:6-22:27");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0p = $0mcall("defer", Q);
+      $0.state = 3;
+
+    case 3:
+      $0lset($0l, 3,
+      /*deferred*/
+      $0p);
+      $0.goto = 4;
+      $0brk("23:6-25:9");
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0mcall("nextTick", process, $0m$6($0));
+      $0.state = 5;
+
+    case 5:
+      $0.goto = 6;
+      $0brk("26:6-26:30");
+      $0.state = 6;
+
+    case 6:
+      $0.result = $0l[3].promise;
+      $0.goto = 8;
+      continue;
+
+    case 7:
+      $0.goto = 8;
+      return $0unhandled($0.error);
+
+    case 8:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 3, [[4, "21:6-21:19", $s$7], [4, "22:6-22:27", $s$7], [2, "22:17-22:26", $s$7], [4, "23:6-25:9", $s$7], [2, "23:6-25:8", $s$7], [4, "26:6-26:30", $s$7], [0, "26:13-26:29", $s$7], [16, "27:5-27:5", $s$7], [16, "27:5-27:5", $s$7]]),
+    $0m$6 = $0M.fun("m$6", null, null, $0m$5, [], 0, 1, "23:23-25:7", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("24:8-24:32");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 3;
+      $0mcall("resolve", $0l[0][3], $0l[0][1] + $0l[0][2]);
+      continue;
+
+    case 2:
+      $0.goto = 3;
+      return $0unhandled($0.error);
+
+    case 3:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 4, [[4, "24:8-24:32", $s$8], [2, "24:8-24:31", $s$8], [16, "25:7-25:7", $s$8], [16, "25:7-25:7", $s$8]]),
+    $0m$7 = $0M.fun("m$7", null, null, $0m$1, ["done"], 0, 3, "29:63-58:3", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0lset($0l, 2,
+      /*throwErrorLater*/
+      $0m$12($0));
+      $0.goto = 1;
+      $0brk("30:4-30:40");
+      $0.state = 1;
+
+    case 1:
+      if ($0l[1].async) {
+        $0.goto = 4;
+        $0brk("30:20-30:40");
+        continue;
+      } else {
+        $0.state = 2;
+      }
+
+    case 2:
+      $0.goto = 3;
+      $0brk("31:4-49:7");
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 7;
+      $0mcall("run", M, QM, $0m$8($0));
+      continue;
+
+    case 4:
+      $0.goto = 5;
+      $0p = $0mcall("async", $0l[1]);
+      $0.state = 5;
+
+    case 5:
+      $0lset($0l, 1,
+      /*done*/
+      $0p);
+      $0.goto = 2;
+      continue;
+
+    case 6:
+      $0.goto = 7;
+      return $0unhandled($0.error);
+
+    case 7:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 2, [[4, "30:4-30:40", $s$9], [4, "30:20-30:40", $s$9], [4, "31:4-49:7", $s$9], [2, "31:4-49:6", $s$9], [2, "30:27-30:39", $s$9], [0, "30:20-30:39", $s$9], [16, "58:3-58:3", $s$9], [16, "58:3-58:3", $s$9]]),
+    $0m$8 = $0M.fun("m$8", null, null, $0m$7, [], 0, 1, "31:14-49:5", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("32:6-48:9");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0p = $0mcall("scope", M, $0m$9($0));
+      $0.state = 2;
+
+    case 2:
+      $0.result = $0p;
+      $0.goto = 4;
+      continue;
+
+    case 3:
+      $0.goto = 4;
+      return $0unhandled($0.error);
+
+    case 4:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 3, [[4, "32:6-48:9", $s$10], [2, "32:13-48:8", $s$10], [0, null, $s$10], [16, "49:5-49:5", $s$10], [16, "49:5-49:5", $s$10]]),
+    $0m$9 = $0M.fun("m$9", null, null, $0m$8, ["$dm$root"], 0, 2, "32:21-48:7", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("33:8-47:13");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0p = ($0context.call = $0l[0][0][2])();
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0p = ($0context.call = M)($0p);
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 4;
+      $0p = $0mcall("mhandle", $0p, $0m$10($0));
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0p = $0mcall("mapply", $0p, $0m$11($0));
+      $0.state = 5;
+
+    case 5:
+      $0.result = $0p;
+      $0.goto = 7;
+      continue;
+
+    case 6:
+      $0.goto = 7;
+      return $0unhandled($0.error);
+
+    case 7:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 4, [[4, "33:8-47:13", $s$11], [2, "33:17-33:34", $s$11], [2, "33:15-33:35", $s$11], [2, "33:15-42:12", $s$11], [2, "33:15-47:12", $s$11], [0, null, $s$11], [16, "48:7-48:7", $s$11], [16, "48:7-48:7", $s$11]]),
+    $0m$10 = $0M.fun("m$10", null, null, $0m$9, ["err"], 0, 3, "34:19-42:11", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("35:12-40:13");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0brk("36:14-36:63");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0p = ($0context.call = expect)($0l[1].message);
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 4;
+      $0mcall("equal", $0p.to, "promise rejected");
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0brk("37:14-37:21");
+      $0.state = 5;
+
+    case 5:
+      $0.goto = 6;
+      ($0context.call = $0l[0][0][0][1])();
+      $0.state = 6;
+
+    case 6:
+      $0.goto = 7;
+      $0brk("41:12-41:34");
+      $0.state = 7;
+
+    case 7:
+      $0.goto = 8;
+      $0p = $0mcall("brk", $0l[0][1]);
+      $0.state = 8;
+
+    case 8:
+      $0.result = $0p;
+      $0.goto = 12;
+      continue;
+
+    case 9:
+      $0lset($0l, 2,
+      /*expectErr*/
+      $0.error);
+      $0.error = void 0;
+      $0.goto = 10;
+      $0brk("39:14-39:30");
+      $0.state = 10;
+
+    case 10:
+      $0.goto = 6;
+      ($0context.call = $0l[0][0][0][1])($0l[2]);
+      continue;
+
+    case 11:
+      $0.goto = 12;
+      return $0unhandled($0.error);
+
+    case 12:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, function ($0, $0l) {
+  switch ($0.state) {
+    case 5:
+    case 4:
+    case 3:
+    case 2:
+    case 1:
+      $0.goto = 9;
       break;
 
     default:
       $0.goto = 11;
       break;
   }
-}, null, [["64:8-64:23", "s", $s$13], ["69:10-69:20", "s", $s$14], ["65:8-70:9", "s", $s$13], ["66:10-66:37", "s", $s$13], ["66:10-66:24", "e", $s$13], ["66:10-66:36", "e", $s$13], ["67:10-67:17", "s", $s$13], ["67:10-67:16", "e", $s$13], [], ["69:10-69:19", "e", $s$14], [], []]);
-module.exports = $0M.exports();
+}, null, 5, [[4, "35:12-40:13", $s$12], [5, "36:14-36:63", $s$12], [3, "36:14-36:33", $s$12], [3, "36:14-36:62", $s$12], [5, "37:14-37:21", $s$12], [3, "37:14-37:20", $s$12], [4, "41:12-41:34", $s$12], [2, "41:19-41:33", $s$12], [0, null, $s$12], [4, "39:14-39:30", $s$13], [2, "39:14-39:29", $s$13], [16, "42:11-42:11", $s$12], [16, "42:11-42:11", $s$12]]),
+    $0m$11 = $0M.fun("m$11", null, null, $0m$9, [], 0, 2, "43:18-47:11", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("44:12-46:14");
+      $0.state = 1;
+
+    case 1:
+      $0l[1] = $0l[0][0][0][1];
+      $0.goto = 2;
+      $0p = new ($0context.call = Error)("yop should have thrown reason from rejected promise");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 4;
+      ($0context.call = $0l[1])($0p);
+      continue;
+
+    case 3:
+      $0.goto = 4;
+      return $0unhandled($0.error);
+
+    case 4:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 5, [[4, "44:12-46:14", $s$14], [2, "45:14-45:78", $s$14], [2, "44:12-46:13", $s$14], [16, "47:11-47:11", $s$14], [16, "47:11-47:11", $s$14]]),
+    $0m$12 = $0M.fun("m$12", "throwErrorLater", null, $0m$7, [], 0, 2, "50:4-57:5", 0, function throwErrorLater($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("51:6-51:19");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0brk("52:6-52:27");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0p = $0mcall("defer", Q);
+      $0.state = 3;
+
+    case 3:
+      $0lset($0l, 1,
+      /*deferred*/
+      $0p);
+      $0.goto = 4;
+      $0brk("53:6-55:9");
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0mcall("nextTick", process, $0m$13($0));
+      $0.state = 5;
+
+    case 5:
+      $0.goto = 6;
+      $0brk("56:6-56:30");
+      $0.state = 6;
+
+    case 6:
+      $0.result = $0l[1].promise;
+      $0.goto = 8;
+      continue;
+
+    case 7:
+      $0.goto = 8;
+      return $0unhandled($0.error);
+
+    case 8:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 3, [[4, "51:6-51:19", $s$15], [4, "52:6-52:27", $s$15], [2, "52:17-52:26", $s$15], [4, "53:6-55:9", $s$15], [2, "53:6-55:8", $s$15], [4, "56:6-56:30", $s$15], [0, "56:13-56:29", $s$15], [16, "57:5-57:5", $s$15], [16, "57:5-57:5", $s$15]]),
+    $0m$13 = $0M.fun("m$13", null, null, $0m$12, [], 0, 1, "53:23-55:7", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("54:8-54:55");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0p = new ($0context.call = Error)("promise rejected");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 4;
+      $0mcall("reject", $0l[0][1], $0p);
+      continue;
+
+    case 3:
+      $0.goto = 4;
+      return $0unhandled($0.error);
+
+    case 4:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 4, [[4, "54:8-54:55", $s$16], [2, "54:24-54:53", $s$16], [2, "54:8-54:54", $s$16], [16, "55:7-55:7", $s$16], [16, "55:7-55:7", $s$16]]),
+    $0m$14 = $0M.fun("m$14", null, null, $0m$1, ["done"], 0, 2, "59:71-73:3", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("60:4-60:40");
+      $0.state = 1;
+
+    case 1:
+      if ($0l[1].async) {
+        $0.goto = 4;
+        $0brk("60:20-60:40");
+        continue;
+      } else {
+        $0.state = 2;
+      }
+
+    case 2:
+      $0.goto = 3;
+      $0brk("61:4-72:7");
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 7;
+      $0mcall("run", M, QM, $0m$15($0));
+      continue;
+
+    case 4:
+      $0.goto = 5;
+      $0p = $0mcall("async", $0l[1]);
+      $0.state = 5;
+
+    case 5:
+      $0lset($0l, 1,
+      /*done*/
+      $0p);
+      $0.goto = 2;
+      continue;
+
+    case 6:
+      $0.goto = 7;
+      return $0unhandled($0.error);
+
+    case 7:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 2, [[4, "60:4-60:40", $s$17], [4, "60:20-60:40", $s$17], [4, "61:4-72:7", $s$17], [2, "61:4-72:6", $s$17], [2, "60:27-60:39", $s$17], [0, "60:20-60:39", $s$17], [16, "73:3-73:3", $s$17], [16, "73:3-73:3", $s$17]]),
+    $0m$15 = $0M.fun("m$15", null, null, $0m$14, [], 0, 2, "61:14-72:5", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("62:6-62:17");
+      $0.state = 1;
+
+    case 1:
+      $0.goto = 2;
+      $0brk("63:6-71:9");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0p = ($0context.call = M)(1 + 2);
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 4;
+      $0p = $0mcall("mapply", $0p, $0m$16($0));
+      $0.state = 4;
+
+    case 4:
+      $0.result = $0p;
+      $0.goto = 6;
+      continue;
+
+    case 5:
+      $0.goto = 6;
+      return $0unhandled($0.error);
+
+    case 6:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 3, [[4, "62:6-62:17", $s$18], [4, "63:6-71:9", $s$18], [2, "63:13-63:21", $s$18], [2, "63:13-71:8", $s$18], [0, null, $s$18], [16, "72:5-72:5", $s$18], [16, "72:5-72:5", $s$18]]),
+    $0m$16 = $0M.fun("m$16", null, null, $0m$15, ["$dm$b"], 0, 3, "63:29-71:7", 0, function ($0, $0l, $0p) {
+  for (;;) switch ($0.state = $0.goto) {
+    case 0:
+      $0.goto = 1;
+      $0brk("64:8-64:23");
+      $0.state = 1;
+
+    case 1:
+      $0lset($0l[0], 1,
+      /*result*/
+      $0l[1]);
+      $0.goto = 2;
+      $0brk("65:8-70:9");
+      $0.state = 2;
+
+    case 2:
+      $0.goto = 3;
+      $0brk("66:10-66:37");
+      $0.state = 3;
+
+    case 3:
+      $0.goto = 4;
+      $0p = ($0context.call = expect)($0l[0][1]);
+      $0.state = 4;
+
+    case 4:
+      $0.goto = 5;
+      $0mcall("equal", $0p.to, 3);
+      $0.state = 5;
+
+    case 5:
+      $0.goto = 6;
+      $0brk("67:10-67:17");
+      $0.state = 6;
+
+    case 6:
+      $0.goto = 7;
+      ($0context.call = $0l[0][0][1])();
+      $0.state = 7;
+
+    case 7:
+      $0.goto = 11;
+      continue;
+
+    case 8:
+      $0lset($0l, 2,
+      /*err*/
+      $0.error);
+      $0.error = void 0;
+      $0.goto = 9;
+      $0brk("69:10-69:20");
+      $0.state = 9;
+
+    case 9:
+      $0.goto = 7;
+      ($0context.call = $0l[0][0][1])($0l[2]);
+      continue;
+
+    case 10:
+      $0.goto = 11;
+      return $0unhandled($0.error);
+
+    case 11:
+      return $0ret($0.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, function ($0, $0l) {
+  switch ($0.state) {
+    case 6:
+    case 5:
+    case 4:
+    case 3:
+    case 2:
+      $0.goto = 8;
+      break;
+
+    default:
+      $0.goto = 10;
+      break;
+  }
+}, null, 4, [[4, "64:8-64:23", $s$19], [4, "65:8-70:9", $s$19], [5, "66:10-66:37", $s$19], [3, "66:10-66:24", $s$19], [3, "66:10-66:36", $s$19], [5, "67:10-67:17", $s$19], [3, "67:10-67:16", $s$19], [0, null, $s$19], [4, "69:10-69:20", $s$20], [2, "69:10-69:19", $s$20], [16, "71:7-71:7", $s$19], [16, "71:7-71:7", $s$19]]);
+
+$0M.moduleExports();

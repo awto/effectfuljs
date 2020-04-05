@@ -26,43 +26,6 @@ export function nodeListIter<T>(nl: {
 /** stores event handlers in EventTarget */
 export const eventsSym = Symbol.for("@effectful/debugger/events");
 
-if (typeof Event !== "undefined")
-  defineProperty(Event.prototype, S.descriptorSymbol, {
-    value: S.regDescriptor({
-      name: "dom#Event",
-      create(ctx: S.ReadContext, json: any): Event {
-        const EventConstructor = ctx.step((<any>json).c);
-        const init: any = (<any>json).init;
-        for (const i of Object.keys(init)) {
-          const prop = init[i];
-          if (prop && typeof prop === "object") init[i] = ctx.step(prop);
-        }
-        return new EventConstructor(init.type, init);
-      },
-      write(ctx: S.WriteContext, value: Event) {
-        const res: S.JSONObject = {};
-        res.c = ctx.step(value.constructor, res, "c");
-        const descrs: any = {};
-        for (
-          let i = value;
-          i && i !== Object.prototype;
-          i = Object.getPrototypeOf(i)
-        )
-          Object.assign(descrs, Object.getOwnPropertyDescriptors(i), descrs);
-        const init: S.JSONObject = (res.init = {});
-        for (const name in descrs) {
-          if (!descrs[name].get) continue;
-          const prop = (<any>value)[name];
-          if (prop) init[name] = ctx.step(prop, init, name);
-        }
-        return res;
-      },
-      readContent() {},
-      props: false
-    }),
-    configurable: true
-  });
-
 type EventMap = Map<
   string,
   Map<
@@ -79,42 +42,20 @@ declare global {
 
 const overrideProps: any = { [S.descriptorSymbol]: false };
 
-if (typeof Element !== "undefined") {
-  S.regConstructor(Element, {
-    name: "dom#Element",
-    write(ctx, value: Element) {
-      const json: S.JSONObject = { tag: value.tagName };
-      const nodes: S.JSONArray = (json.c = []);
-      for (const i of nodeListIter(value.childNodes))
-        nodes.push(ctx.step(i, nodes, nodes.length));
-      const attrs: S.JSONObject = (json.a = {});
-      for (const i of nodeListIter(value.attributes)) attrs[i.name] = i.value;
-      const events = value[eventsSym];
-      if (events) json.ev = ctx.step(events, json, "ev");
-      return json;
-    },
-    create(_, json) {
-      return document.createElement((<any>json).tag);
-    },
-    readContent(ctx, json, value) {
-      const obj = <any>json;
-      for (const i of obj.c) value.appendChild(ctx.step(i));
-      for (const n in obj.a) value.setAttribute(n, obj.a[n]);
-      if (obj.ev) restoreEvents(value, ctx.step(obj.ev));
-    },
-    overrideProps
-  });
-}
 function restoreEvents(et: EventTarget, map: EventMap) {
+  cleanupEvents(et);
   for (const [type, byType] of map)
     for (const [listener, byListener] of byType)
       for (const byCapture of byListener)
         if (byCapture)
           for (const options of byCapture)
             et.addEventListener(type, listener, options);
+  et[eventsSym] = map;
 }
 
 export function cleanupEvents(et: EventTarget) {
+  const map = et[eventsSym];
+  if (!map) return;
   for (const [type, byType] of et[eventsSym])
     for (const [listener, byListener] of byType)
       for (const byCapture of byListener)
@@ -172,7 +113,7 @@ export function addEventListener(
       capture: options.capture,
       passive: options.passive
     });
-    if (once) {
+    if (once || type === "load") {
       let onceHandler = onceHandlers.get(listener);
       if (!onceHandler) {
         onceHandlers.set(
@@ -242,13 +183,22 @@ export function trackEvents(ev: EventTarget) {
 /** monkey patching global `document` to make it serializable */
 export function trackGlobalDocument() {
   if (typeof document === "undefined") return;
-  defineProperty(
-    document,
-    S.descriptorSymbol,
-    S.regDescriptor({
+  // ignoring jsdom props (not needed if jsdom is transpiled too)
+  const el = document.createElement("div");
+  el.addEventListener("test-event", function() {});
+  el.innerHTML = `<div id="root"><p>hello, world!</p></div>`;
+  const _children = el.children;
+  const _attrs = el.attributes;
+  for (const i of Object.getOwnPropertySymbols(el)) overrideProps[i] = false;
+  for (const i of Object.getOwnPropertySymbols(document))
+    overrideProps[i] = false;
+  defineProperty(document, S.descriptorSymbol, {
+    configurable: true,
+    value: S.regDescriptor({
       name: "global#document",
       write(ctx, value: Document) {
         const json: S.JSONObject = {};
+        json.el = ctx.step(document.documentElement, json, "el");
         const events = value[eventsSym];
         if (events) json.ev = ctx.step(events, json, "ev");
         return json;
@@ -257,12 +207,217 @@ export function trackGlobalDocument() {
         return document;
       },
       readContent(ctx, json, value) {
-        const obj = <S.JSONObject>json;
+        value.replaceChild(ctx.step((<any>json).el), value.documentElement);
+        if ((<any>json).ev) restoreEvents(value, ctx.step((<any>json).ev));
+      },
+      overrideProps: { ...overrideProps, location: false, [eventsSym]: false }
+    })
+  });
+  if (typeof NodeList !== "undefined") {
+    S.regConstructor(NodeList, { name: "dom#NodeList", overrideProps });
+  }
+  if (typeof EventTarget !== "undefined") {
+    S.regConstructor(NodeList, { name: "dom#EventTarget", overrideProps });
+  }
+  if (typeof Element !== "undefined") {
+    S.regConstructor(Element, {
+      name: "dom#Element",
+      write(ctx, value: Element, par, key) {
+        const json: S.JSONObject = { tag: value.tagName };
+        const nodes: S.JSONArray = (json.c = []);
+        for (const i of nodeListIter(value.childNodes))
+          nodes.push(ctx.step(i, nodes, nodes.length));
+        const attrs: S.JSONObject = (json.a = {});
+        for (const i of nodeListIter(value.attributes)) attrs[i.name] = i.value;
+        const events = value[eventsSym];
+        if (events) json.ev = ctx.step(events, json, "ev");
+        return json;
+      },
+      create(_, json) {
+        return document.createElement((<any>json).tag);
+      },
+      readContent(ctx, json, value) {
+        const obj = <any>json;
+        for (const i of obj.c) value.appendChild(ctx.step(i));
+        for (const n in obj.a) value.setAttribute(n, obj.a[n]);
         if (obj.ev) restoreEvents(value, ctx.step(obj.ev));
       },
-      overrideProps: { location: false }
-    })
-  );
+      overrideProps: { ...overrideProps, [eventsSym]: false }
+    });
+  }
+  if (typeof Event !== "undefined")
+    defineProperty(Event.prototype, S.descriptorSymbol, {
+      value: S.regDescriptor({
+        name: "dom#Event",
+        create(ctx: S.ReadContext, json: any): Event {
+          const EventConstructor = ctx.step((<any>json).c);
+          const init: any = (<any>json).init;
+          for (const i of Object.keys(init)) {
+            const prop = init[i];
+            if (prop && typeof prop === "object") init[i] = ctx.step(prop);
+          }
+          return new EventConstructor(init.type, init);
+        },
+        write(ctx: S.WriteContext, value: Event) {
+          const res: S.JSONObject = {};
+          res.c = ctx.step(value.constructor, res, "c");
+          const descrs: any = {};
+          for (
+            let i = value;
+            i && i !== Object.prototype;
+            i = Object.getPrototypeOf(i)
+          )
+            Object.assign(descrs, Object.getOwnPropertyDescriptors(i), descrs);
+          const init: S.JSONObject = (res.init = {});
+          for (const name in descrs) {
+            if (!descrs[name].get) continue;
+            const prop = (<any>value)[name];
+            if (prop) init[name] = ctx.step(prop, init, name);
+          }
+          return res;
+        },
+        readContent() {},
+        props: false
+      }),
+      configurable: true
+    });
+  if (typeof Text !== "undefined")
+    S.regConstructor(Text, {
+      name: "dom#Text",
+      write(_, value) {
+        return { text: value.data };
+      },
+      create(_, json) {
+        return document.createTextNode((<any>json).text);
+      },
+      overrideProps
+    });
+
+  if (typeof ProcessingInstruction !== "undefined")
+    S.regConstructor(ProcessingInstruction, {
+      name: "dom#PI",
+      write(_, value) {
+        return { target: value.target, data: value.data };
+      },
+      create(_, json) {
+        return document.createProcessingInstruction(
+          (<any>json).target,
+          (<any>json).data
+        );
+      },
+      overrideProps
+    });
+
+  if (typeof Comment !== "undefined")
+    S.regConstructor(Comment, {
+      name: "dom#Comment",
+
+      write(_, value) {
+        return { text: value.data };
+      },
+      create(_, json) {
+        return document.createTextNode((<any>json).text);
+      },
+      overrideProps
+    });
+
+  if (typeof CSSStyleDeclaration !== "undefined")
+    S.regConstructor(CSSStyleDeclaration, {
+      name: "dom#CSSStyleDeclaration",
+      write(_, value) {
+        return { text: value.cssText };
+      },
+      create(_, json) {
+        const dummy = document.createElement("div");
+        dummy.style.cssText = (<any>json).text;
+        return dummy.style;
+      },
+      overrideProps
+    });
+
+  if (typeof Document !== "undefined")
+    S.regConstructor(Document, {
+      name: "dom#Document",
+      write(_, value) {
+        const s = new XMLSerializer();
+        return {
+          text: s.serializeToString(value),
+          type: value.contentType
+        };
+      },
+      create(_, json: S.JSONValue): Document {
+        return new DOMParser().parseFromString(
+          (<any>json).text,
+          (<any>json).type
+        );
+      },
+      readContent(ctx, json, value) {
+        value.replaceChild(ctx.step((<any>json).el), value.documentElement);
+      },
+      overrideProps
+    });
+
+  if ((<any>global).InputDeviceCapabilities) {
+    S.regConstructor((<any>global).InputDeviceCapabilities, {
+      name: "dom#InputDeviceCapabilities",
+      write(_ctx, value) {
+        return { fireTouchEvents: (<any>value).fireTouchEvents };
+      },
+      create(_ctx, json) {
+        // TODO: don't care about object model for now
+        return new (<any>global).InputDeviceCapabilities({
+          fireTouchEvents: (<any>json).fireTouchEvents
+        });
+      },
+      props: false
+    });
+  }
+
+  if (typeof MutationRecord !== "undefined")
+    S.regConstructor(MutationRecord, {
+      name: "dom#MutationRecord",
+      write(ctx, value) {
+        const res = <any>{};
+        res.ty = ctx.step(value.type, res, "ty");
+        res.el = ctx.step(value.target, res, "el");
+        if (value.addedNodes)
+          res.an = ctx.step([...nodeListIter(value.addedNodes)], res, "an");
+        if (value.removedNodes)
+          res.rn = ctx.step([...nodeListIter(value.removedNodes)], res, "rn");
+        if (value.previousSibling)
+          res.ps = ctx.step(value.previousSibling, res, "ps");
+        if (value.nextSibling) res.ns = ctx.step(value.nextSibling, res, "ns");
+        if (value.attributeName)
+          res.tn = ctx.step(value.attributeName, res, "tn");
+        if (value.attributeNamespace)
+          res.ts = ctx.step(value.attributeNamespace, res, "ts");
+        if (value.oldValue) res.ov = ctx.step(value.oldValue, res, "ov");
+        return res;
+      },
+      create() {
+        // TODO: don't care about object model for now
+        return <any>{};
+      },
+      readContent(ctx, json: S.JSONValue, value: MutationRecord) {
+        const j = <any>json;
+        const v = <any>value;
+        v.type = ctx.step(j.ty);
+        v.target = ctx.step(j.el);
+        v.addedNodes = ctx.step(j.an);
+        v.removedNodes = ctx.step(j.rn);
+        v.previousSibling = ctx.step(j.ps);
+        v.nextSibling = ctx.step(j.ns);
+        v.attributeName = ctx.step(j.tn);
+        v.attributeNamespace = ctx.step(j.ts);
+        v.oldValue = ctx.step(j.ov);
+      },
+      props: false
+    });
+  if (typeof MutationObserver !== "undefined")
+    S.regConstructor(MutationObserver, {
+      name: "dom#MutationObserver",
+      overrideProps
+    });
 }
 
 /**
@@ -274,120 +429,3 @@ export function track() {
   trackGlobalDocument();
   S.regGlobal();
 }
-
-if (typeof Text !== "undefined")
-  S.regConstructor(Text, {
-    name: "dom#Text",
-    write(_, value) {
-      return { text: value.data };
-    },
-    create(_, json) {
-      return document.createTextNode((<any>json).text);
-    },
-    overrideProps
-  });
-
-if (typeof ProcessingInstruction !== "undefined")
-  S.regConstructor(ProcessingInstruction, {
-    name: "dom#PI",
-    write(_, value) {
-      return { target: value.target, data: value.data };
-    },
-    create(_, json) {
-      return document.createProcessingInstruction(
-        (<any>json).target,
-        (<any>json).data
-      );
-    },
-    overrideProps
-  });
-
-if (typeof Comment !== "undefined")
-  S.regConstructor(Comment, {
-    name: "dom#Comment",
-
-    write(_, value) {
-      return { text: value.data };
-    },
-    create(_, json) {
-      return document.createTextNode((<any>json).text);
-    },
-    overrideProps
-  });
-
-if (typeof CSSStyleDeclaration !== "undefined")
-  S.regConstructor(CSSStyleDeclaration, {
-    name: "dom#CSSStyleDeclaration",
-    write(_, value) {
-      return { text: value.cssText };
-    },
-    create(_, json) {
-      const dummy = document.createElement("div");
-      dummy.style.cssText = (<any>json).text;
-      return dummy.style;
-    },
-    overrideProps
-  });
-
-if (typeof Document !== "undefined")
-  S.regConstructor(Document, {
-    name: "dom#Document",
-    write(_, value) {
-      const s = new XMLSerializer();
-      return {
-        text: s.serializeToString(value),
-        type: value.contentType
-      };
-    },
-    create(_, json: S.JSONValue): Document {
-      return new DOMParser().parseFromString(
-        (<any>json).text,
-        (<any>json).type
-      );
-    },
-    readContent(ctx, json, value) {
-      value.replaceChild(ctx.step((<any>json).el), value.documentElement);
-    },
-    overrideProps
-  });
-
-if (typeof MutationRecord !== "undefined")
-  S.regConstructor(MutationRecord, {
-    name: "dom#MutationRecord",
-    write(ctx, value) {
-      const res = <any>{};
-      res.ty = ctx.step(value.type, res, "ty");
-      res.el = ctx.step(value.target, res, "el");
-      if (value.addedNodes)
-        res.an = ctx.step([...nodeListIter(value.addedNodes)], res, "an");
-      if (value.removedNodes)
-        res.rn = ctx.step([...nodeListIter(value.removedNodes)], res, "rn");
-      if (value.previousSibling)
-        res.ps = ctx.step(value.previousSibling, res, "ps");
-      if (value.nextSibling) res.ns = ctx.step(value.nextSibling, res, "ns");
-      if (value.attributeName)
-        res.tn = ctx.step(value.attributeName, res, "tn");
-      if (value.attributeNamespace)
-        res.ts = ctx.step(value.attributeNamespace, res, "ts");
-      if (value.oldValue) res.ov = ctx.step(value.oldValue, res, "ov");
-      return res;
-    },
-    create() {
-      // TODO: don't care about object model for now
-      return <any>{};
-    },
-    readContent(ctx, json: S.JSONValue, value: MutationRecord) {
-      const j = <any>json;
-      const v = <any>value;
-      v.type = ctx.step(j.ty);
-      v.target = ctx.step(j.el);
-      v.addedNodes = ctx.step(j.an);
-      v.removedNodes = ctx.step(j.rn);
-      v.previousSibling = ctx.step(j.ps);
-      v.nextSibling = ctx.step(j.ns);
-      v.attributeName = ctx.step(j.tn);
-      v.attributeNamespace = ctx.step(j.ts);
-      v.oldValue = ctx.step(j.ov);
-    },
-    props: false
-  });

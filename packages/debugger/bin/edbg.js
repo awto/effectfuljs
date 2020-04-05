@@ -17,8 +17,7 @@ const yargs = require("yargs")
   .option("backend", {
     alias: "b",
     type: "string",
-    default: "vscode",
-    choices: ["vscode", "vscodeReact", "standalone", "standaloneTrace"]
+    default: "vscode"
   })
   .option("time-travel", {
     describe: "Compile with traveling trace",
@@ -57,5 +56,5 @@ const yargs = require("yargs")
     type: "boolean"
   })
   .command(require("../config/node/command"))
-  .command(require("../config/react/command"))
+  .command(require("../config/browser/command"))
   .help("help").argv;

@@ -1,102 +1,105 @@
-var $M = require("@effectful/debugger/api");
-
-$M.module("file.js", null, module, null, "$");
-var $s$1 = [{
-  a: "$0"
-}, null, false],
+var $M = require("@effectful/debugger/api"),
+    $context = $M.context,
+    $ret = $M.ret,
+    $unhandled = $M.unhandled,
+    $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{
+  a: [1, "2:9-2:10"]
+}, null, 0],
     $s$2 = [{
-  k: "$0",
-  i: "$1",
-  j: "$2"
-}, $s$1, false];
-$M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$0 = $c.a($);
-        return $M.ret();
+  k: [1, "6:8-6:9"],
+  i: [2, "5:11-5:12"],
+  j: [3, "5:23-5:24"]
+}, $s$1, 1],
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-11:0", 160, function file_js($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $l[1] = $m$1($);
+      $.goto = 2;
+      continue;
 
-      case 1:
-        return $M.ret($.value);
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 2:
-        throw $.value;
+    case 2:
+      return $ret($.result);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [[], [], []]);
-$M.fun("m$1", "a", "m$0", [], 0, function () {
-  var $0;
+}, null, null, 0, [[0, "2:0-10:1", $s$1], [16, "11:0-11:0", $s$1], [16, "11:0-11:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "a", null, $m$0, [], 1, 4, "2:0-10:1", 128, function a($, $l, $p) {
+  var $1;
 
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = eff1)();
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      ($context.call = eff1)();
+      $.state = 1;
+
+    case 1:
+      $.goto = 2;
+      $p = ($context.call = eff2)();
+      $.state = 2;
+
+    case 2:
+      $l[2] = $p;
+      $.goto = 3;
+      $p = ($context.call = eff3)();
+      $.state = 3;
+
+    case 3:
+      $l[3] = $p;
+      $.state = 4;
+
+    case 4:
+      $1 = $l[2] < 10;
+
+      if ($1) {
+        $1 = $l[3] > -10;
+        $.state = 5;
+      } else {
+        $.state = 5;
+      }
+
+    case 5:
+      if ($1) {
+        $.goto = 6;
+        $p = ($context.call = eff3)($l[2]);
+        $.state = 6;
+      } else {
+        $.goto = 9;
+        ($context.call = eff5)($l[2], $l[3]);
         continue;
+      }
 
-      case 1:
-        $.goto = 2;
-        $p = ($M.context.call = eff2)();
-        continue;
+    case 6:
+      $l[1] = $p;
+      $1 = $l[1];
+      $l[1] = $1 + 1;
+      $.goto = 7;
+      ($context.call = eff4)($1);
+      $.state = 7;
 
-      case 2:
-        $.$.$1 = $p;
-        $.goto = 3;
-        $p = ($M.context.call = eff3)();
-        continue;
+    case 7:
+      $l[2] = $l[2] + 1;
+      $l[3] = $l[3] - 1;
+      $.goto = 4;
+      continue;
 
-      case 3:
-        $.$.$2 = $p;
-        $.state = 4;
+    case 8:
+      $.goto = 9;
+      return $unhandled($.error);
 
-      case 4:
-        $0 = $.$.$1 < 10;
+    case 9:
+      return $ret($.result);
 
-        if ($0) {
-          $0 = $.$.$2 > -10;
-          $.state = 5;
-        } else {
-          $.state = 5;
-        }
-
-      case 5:
-        if ($0) {
-          $.goto = 7;
-          $p = ($M.context.call = eff3)($.$.$1);
-          continue;
-        } else {
-          $.goto = 6;
-          ($M.context.call = eff5)($.$.$1, $.$.$2);
-          continue;
-        }
-
-      case 6:
-        return $M.ret();
-
-      case 7:
-        $.$.$0 = $p;
-        $.goto = 8;
-        ($M.context.call = eff4)($.$.$0++);
-        continue;
-
-      case 8:
-        $.$.$1++;
-        $.$.$2--;
-        $.goto = 4;
-        continue;
-
-      case 9:
-        return $M.ret($.value);
-
-      case 10:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["3:2-3:8", "e", $s$2], ["5:15-5:21", "e", $s$2], ["5:27-5:33", "e", $s$2], [], [], ["6:12-6:19", "e", $s$2], [], ["7:4-7:13", "e", $s$2], [], [], []]);
-module.exports = $M.exports();
+}, null, null, 1, [[2, "3:2-3:8", $s$2], [2, "5:15-5:21", $s$2], [2, "5:27-5:33", $s$2], [0, "5:23-5:33", $s$2], [0, "5:35-5:41", $s$2], [2, "6:12-6:19", $s$2], [2, "7:4-7:13", $s$2], [0, "5:54-5:57", $s$2], [16, "10:1-10:1", $s$2], [16, "10:1-10:1", $s$2]]);
+
+$M.moduleExports();

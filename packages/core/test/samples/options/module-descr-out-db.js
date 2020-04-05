@@ -1,464 +1,449 @@
-var $M = require("@effectful/debugger/api");
-
-$M.module("file.js", null, module, null, "$");
-var $s$1 = [{
-  _defineProperties: "$0",
-  _createClass: "$1",
-  _require: "$2",
-  mod: "$3",
-  C: "$4",
-  Cl: "$5",
-  obj1: "$6"
-}, null, false],
+var $M = require("@effectful/debugger/api"),
+    $context = $M.context,
+    $ret = $M.ret,
+    $retA = $M.retA,
+    $retG = $M.retG,
+    $unhandled = $M.unhandled,
+    $unhandledA = $M.unhandledA,
+    $unhandledG = $M.unhandledG,
+    $mcall = $M.mcall,
+    $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{
+  _defineProperties: [1, null],
+  _createClass: [2, null],
+  _require: [3, null],
+  mod: [4, "1:8-1:11"],
+  C: [5, "3:9-3:10"],
+  Cl: [6, "12:6-12:8"],
+  obj1: [7, "30:6-30:10"]
+}, null, 0],
     $s$2 = [{
-  target: "$0",
-  props: "$1",
-  i: "$2",
-  descriptor: "$3"
-}, $s$1, false],
+  target: [1, null],
+  props: [2, null],
+  i: [3, null],
+  descriptor: [4, null]
+}, $s$1, 1],
     $s$3 = [{
-  Constructor: "$0",
-  protoProps: "$1",
-  staticProps: "$2"
-}, $s$1, false],
+  Constructor: [1, null],
+  protoProps: [2, null],
+  staticProps: [3, null]
+}, $s$1, 1],
     $s$4 = [{
-  a: "$0"
-}, $s$1, false],
+  a: [1, "3:11-3:12"]
+}, $s$1, 1],
     $s$5 = [{
-  e: "$1"
-}, $s$4, false],
+  e: [2, "7:11-7:12"]
+}, $s$4, 1],
     $s$6 = [{
-  Cl: "$0",
-  _proto: "$1"
-}, $s$1, false],
-    $s$7 = [{
-  func: "$0"
-}, $s$6, false],
-    $s$8 = [{
-  func: "$0"
-}, $s$6, false],
-    $s$9 = [{
-  value: "$0"
-}, $s$6, false],
-    $s$10 = [{
-  a: "$0"
-}, $s$1, false],
-    $s$11 = [{
-  fn1: "$0"
-}, $s$1, false];
-$M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$0 = $c._defineProperties($);
-        $.$.$4 = $c.C($);
-        $.$.$1 = $c._createClass($);
-        $.goto = 1;
-        $p = $M.evalDir("mod");
-        continue;
+  Cl: [1, null],
+  _proto: [2, null]
+}, $s$1, 1],
+    $s$7 = [{}, $s$6, 2],
+    $s$8 = [{}, $s$6, 2],
+    $s$9 = [{}, $s$6, 2],
+    $s$10 = [{}, $s$9, 3],
+    $s$11 = [{}, $s$6, 2],
+    $s$12 = [{
+  value: [1, "19:12-19:17"]
+}, $s$6, 2],
+    $s$13 = [{
+  a: [1, "31:8-31:9"]
+}, $s$1, 1],
+    $s$14 = [{}, $s$1, 1],
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 8, "1:0-39:0", 160, function file_js($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $l[1] = $m$1($);
+      $l[2] = $m$2($);
+      $l[5] = $m$3($);
+      $.goto = 1;
+      $p = ($context.moduleId = require.resolve("mod"), $M.force(require("mod")));
+      $.state = 1;
 
-      case 1:
-        $.$.$2 = $p;
-        $.$.$3 = $.$.$2.mod;
-        $.goto = 2;
-        $p =
-        /*#__PURE__*/
-        ($M.context.call = $c.f($))();
-        continue;
+    case 1:
+      $l[3] = $p;
+      $l[4] = $l[3].mod;
+      $.goto = 2;
+      $p = /*#__PURE__*/($context.call = $m$4($))();
+      $.state = 2;
 
-      case 2:
-        $.$.$5 = $p;
-        $.$.$6 = {
-          objFn: $c.f($)
-        };
-        exports.fn2 = $c.fn1($);
-        return $M.ret();
+    case 2:
+      $l[6] = $p;
+      $l[7] = {
+        objFn: $m$11($)
+      };
+      module.exports.fn2 = $m$12($);
+      $.goto = 4;
+      continue;
 
-      case 3:
-        return $M.ret($.value);
+    case 3:
+      $.goto = 4;
+      return $unhandled($.error);
 
-      case 4:
-        throw $.value;
+    case 4:
+      return $ret($.result);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["1:16-1:30", "e", $s$1], [null, "e", $s$1], [], [], []]);
-$M.fun("m$1", "_defineProperties", "m$0", ["target", "props"], 0, function () {
-  var $0;
+}, null, null, 0, [[2, "1:16-1:30", $s$1], [2, null, $s$1], [0, null, $s$1], [16, "39:0-39:0", $s$1], [16, "39:0-39:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "_defineProperties", null, $m$0, ["target", "props"], 1, 5, null, 128, function _defineProperties($, $l, $p) {
+  var $1;
 
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$2 = 0;
-        $.state = 1;
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $l[3] = 0;
+      $.state = 1;
 
-      case 1:
-        if ($.$.$2 < $.$.$1.length) {
-          $.$.$3 = $.$.$1[$.$.$2];
-          $0 = $.$.$3.enumerable;
+    case 1:
+      if ($l[3] < $l[2].length) {
+        $l[4] = $l[2][$l[3]];
+        $1 = $l[4].enumerable;
 
-          if ($0) {
-            $.state = 2;
-          } else {
-            $0 = false;
-            $.state = 2;
-          }
+        if ($1) {
+          $.state = 2;
         } else {
-          return $M.ret();
-        }
-
-      case 2:
-        $.$.$3.enumerable = $0;
-        $.$.$3.configurable = true;
-
-        if ("value" in $.$.$3) {
-          $.$.$3.writable = true;
-          $.state = 3;
-        } else {
-          $.state = 3;
-        }
-
-      case 3:
-        $.goto = 4;
-        ($M.context.call = Object.defineProperty).dbg$call(Object, $.$.$0, $.$.$3.key, $.$.$3);
-        continue;
-
-      case 4:
-        $.$.$2++;
-        $.goto = 1;
-        continue;
-
-      case 5:
-        return $M.ret($.value);
-
-      case 6:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [[], [], [], [null, "e", $s$2], [], [], []]);
-$M.fun("m$2", "_createClass", "m$0", ["Constructor", "protoProps", "staticProps"], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        if ($.$.$1) {
-          $.goto = 1;
-          ($M.context.call = $.$$.$.$0)($.$.$0.prototype, $.$.$1);
-          continue;
-        } else {
-          $.state = 1;
-        }
-
-      case 1:
-        if ($.$.$2) {
-          $.goto = 2;
-          ($M.context.call = $.$$.$.$0)($.$.$0, $.$.$2);
-          continue;
-        } else {
+          $1 = false;
           $.state = 2;
         }
-
-      case 2:
-        return $M.ret($.$.$0);
-
-      case 3:
-        return $M.ret($.value);
-
-      case 4:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, null, null, [[null, "e", $s$3], [null, "e", $s$3], [], [], []]);
-$M.fun("m$3", "C", "m$0", ["a"], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 2;
+      } else {
+        $.goto = 6;
         continue;
+      }
 
-      case 1:
-        $1 = $.value;
-        $.goto = 5;
-        ($M.context.call = $.$$.$.$3.proc3).dbg$call($.$$.$.$3, $.$.$1);
-        continue;
-
-      case 2:
-        $.goto = 3;
-        $p = ($M.context.call = $.$$.$.$3.fn1).dbg$call($.$$.$.$3, $.$.$0);
-        continue;
-
-      case 3:
-        $.goto = 4;
-        ($M.context.call = $.$$.$.$3.proc1).dbg$call($.$$.$.$3, $p);
-        continue;
-
-      case 4:
-        $.goto = 5;
-        ($M.context.call = $.$$.$.$3.proc2).dbg$call($.$$.$.$3);
-        continue;
-
-      case 5:
-        return $M.ret();
-
-      case 6:
-        return $M.ret($.value);
-
-      case 7:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
-  }
-}, function ($) {
-  switch ($.state) {
     case 2:
+      $l[4].enumerable = $1;
+      $l[4].configurable = true;
+
+      if ("value" in $l[4]) {
+        $l[4].writable = true;
+        $.state = 3;
+      } else {
+        $.state = 3;
+      }
+
     case 3:
+      $.goto = 4;
+      $mcall("defineProperty", Object, $l[1], $l[4].key, $l[4]);
+      $.state = 4;
+
     case 4:
+      $l[3] = $l[3] + 1;
       $.goto = 1;
+      continue;
+
+    case 5:
+      $.goto = 6;
+      return $unhandled($.error);
+
+    case 6:
+      return $ret($.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
+    $m$2 = $M.fun("m$2", "_createClass", null, $m$0, ["Constructor", "protoProps", "staticProps"], 0, 4, null, 128, function _createClass($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      if ($l[2]) {
+        $.goto = 1;
+        ($context.call = $l[0][1])($l[1].prototype, $l[2]);
+        $.state = 1;
+      } else {
+        $.state = 1;
+      }
+
+    case 1:
+      if ($l[3]) {
+        $.goto = 2;
+        ($context.call = $l[0][1])($l[1], $l[3]);
+        $.state = 2;
+      } else {
+        $.state = 2;
+      }
+
+    case 2:
+      $.result = $l[1];
+      $.goto = 4;
+      continue;
+
+    case 3:
+      $.goto = 4;
+      return $unhandled($.error);
+
+    case 4:
+      return $ret($.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 1, [[2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
+    $m$3 = $M.fun("m$3", "C", null, $m$0, ["a"], 0, 3, "3:0-10:1", 128, function C($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.state = 1;
+
+    case 1:
+      $.goto = 2;
+      $p = $mcall("fn1", $l[0][4], $l[1]);
+      $.state = 2;
+
+    case 2:
+      $.goto = 3;
+      $mcall("proc1", $l[0][4], $p);
+      $.state = 3;
+
+    case 3:
+      $.goto = 4;
+      $mcall("proc2", $l[0][4]);
+      $.state = 4;
+
+    case 4:
+      $.goto = 7;
+      continue;
+
+    case 5:
+      $l[2] = $.error;
+      $.error = void 0;
+      $.goto = 4;
+      $mcall("proc3", $l[0][4], $l[2]);
+      continue;
+
+    case 6:
+      $.goto = 7;
+      return $unhandled($.error);
+
+    case 7:
+      return $ret($.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, function ($, $l) {
+  switch ($.state) {
+    case 3:
+    case 2:
+    case 1:
+      $.goto = 5;
       break;
 
     default:
-      $.goto = 7;
+      $.goto = 6;
       break;
   }
-}, null, [[], ["8:4-8:16", "e", $s$5], ["5:14-5:24", "e", $s$4], ["5:4-5:25", "e", $s$4], ["6:4-6:15", "e", $s$4], [], [], []]);
-$M.fun("m$4", null, "m$0", [], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$0 = $c.Cl($);
-        $.$.$1 = $.$.$0.prototype;
-        $.$.$1.func = $c.func($);
-        $.$.$1.func = $c.func($);
-        $.goto = 1;
-        ($M.context.call = $.$$.$.$1)($.$.$0, [{
-          key: "prop1",
-          get: $c.f($),
-          set: $c.f($)
-        }]);
-        continue;
+}, null, 1, [[0, null, $s$4], [3, "5:14-5:24", $s$4], [3, "5:4-5:25", $s$4], [3, "6:4-6:15", $s$4], [0, null, $s$4], [2, "8:4-8:16", $s$5], [16, "10:1-10:1", $s$4], [16, "10:1-10:1", $s$4]]),
+    $m$4 = $M.fun("m$4", null, null, $m$0, [], 0, 3, null, 128, function ($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $l[1] = $m$5($);
+      $l[2] = $l[1].prototype;
+      $l[2].func = $m$6($);
+      $l[2].func = $m$7($);
+      $.goto = 1;
+      ($context.call = $l[0][2])($l[1], [{
+        key: "prop1",
+        get: $m$9($),
+        set: $m$10($)
+      }]);
+      $.state = 1;
 
-      case 1:
-        return $M.ret($.$.$0);
+    case 1:
+      $.result = $l[1];
+      $.goto = 3;
+      continue;
 
-      case 2:
-        return $M.ret($.value);
+    case 2:
+      $.goto = 3;
+      return $unhandled($.error);
 
-      case 3:
-        throw $.value;
+    case 3:
+      return $ret($.result);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [[null, "e", $s$6], [], [], []]);
-$M.fun("m$5", "Cl", "m$4", [], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = not_traced)();
-        continue;
+}, null, null, 1, [[2, null, $s$6], [0, null, $s$6], [16, null, $s$6], [16, null, $s$6]]),
+    $m$5 = $M.fun("m$5", "Cl", null, $m$4, [], 0, 1, "13:2-15:3", 128, function Cl($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 2;
+      ($context.call = not_traced)();
+      continue;
 
-      case 1:
-        return $M.ret();
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 2:
-        return $M.ret($.value);
+    case 2:
+      return $ret($.result);
 
-      case 3:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["14:4-14:16", "e", $s$6], [], [], []]);
-$M.fun("m$6", "func", "m$4", [], 1, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = not_traced)();
-        continue;
+}, null, null, 2, [[2, "14:4-14:16", $s$7], [16, "15:3-15:3", $s$7], [16, "15:3-15:3", $s$7]]),
+    $m$6 = $M.fun("m$6", "func", null, $m$4, [], 0, 1, "22:2-24:3", 129, function func($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 2;
+      ($context.call = not_traced)();
+      continue;
 
-      case 1:
-        return $M.retA();
+    case 1:
+      $.goto = 2;
+      return $unhandledA($.error);
 
-      case 2:
-        return $M.retA($.value);
+    case 2:
+      return $retA($.result);
 
-      case 3:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["23:4-23:16", "e", $s$7], [], [], []]);
-$M.fun("m$7", "func", "m$4", [], 2, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = not_traced)($c.f($));
-        continue;
+}, null, null, 2, [[2, "23:4-23:16", $s$8], [16, "24:3-24:3", $s$8], [16, "24:3-24:3", $s$8]]),
+    $m$7 = $M.fun("m$7", "func", null, $m$4, [], 0, 1, "25:2-27:3", 130, function func($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 2;
+      ($context.call = not_traced)($m$8($));
+      continue;
 
-      case 1:
-        return $M.retG();
+    case 1:
+      $.goto = 2;
+      return $unhandledG($.error);
 
-      case 2:
-        return $M.retG($.value);
+    case 2:
+      return $retG($.result);
 
-      case 3:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["26:4-26:43", "e", $s$8], [], [], []]);
-$M.fun("m$8", null, "m$7", [], 4, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        $p = ($M.context.call = traced)(1);
-        continue;
+}, null, null, 2, [[2, "26:4-26:43", $s$9], [16, "27:3-27:3", $s$9], [16, "27:3-27:3", $s$9]]),
+    $m$8 = $M.fun("m$8", null, null, $m$7, [], 0, 2, "26:15-26:42", 132, function ($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      $p = ($context.call = traced)(1);
+      $.state = 1;
 
-      case 1:
-        $.$.$0 = $p;
-        $.goto = 2;
-        $p = ($M.context.call = traced)(2);
-        continue;
+    case 1:
+      $l[1] = $p;
+      $.goto = 2;
+      $p = ($context.call = traced)(2);
+      $.state = 2;
 
-      case 2:
-        return $M.ret($.$.$0 + $p);
+    case 2:
+      $.result = $l[1] + $p;
+      $.goto = 4;
+      continue;
 
-      case 3:
-        return $M.ret($.value);
+    case 3:
+      $.goto = 4;
+      return $unhandled($.error);
 
-      case 4:
-        throw $.value;
+    case 4:
+      return $ret($.result);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["26:21-26:30", "e", $s$8], ["26:33-26:42", "e", $s$8], [], [], []]);
-$M.fun("m$9", null, "m$4", [], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = not_traced)();
-        continue;
+}, null, null, 3, [[2, "26:21-26:30", $s$10], [2, "26:33-26:42", $s$10], [0, "26:21-26:42", $s$10], [16, "26:42-26:42", $s$10], [16, "26:42-26:42", $s$10]]),
+    $m$9 = $M.fun("m$9", null, null, $m$4, [], 0, 1, null, 128, function ($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 2;
+      ($context.call = not_traced)();
+      continue;
 
-      case 1:
-        return $M.ret();
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 2:
-        return $M.ret($.value);
+    case 2:
+      return $ret($.result);
 
-      case 3:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["17:4-17:16", "e", $s$6], [], [], []]);
-$M.fun("m$10", null, "m$4", ["value"], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = not_traced)();
-        continue;
+}, null, null, 2, [[2, "17:4-17:16", $s$11], [16, null, $s$11], [16, null, $s$11]]),
+    $m$10 = $M.fun("m$10", null, null, $m$4, ["value"], 0, 2, null, 128, function ($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 2;
+      ($context.call = not_traced)();
+      continue;
 
-      case 1:
-        return $M.ret();
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 2:
-        return $M.ret($.value);
+    case 2:
+      return $ret($.result);
 
-      case 3:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["20:4-20:16", "e", $s$9], [], [], []]);
-$M.fun("m$11", null, "m$0", ["a"], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        $p = new ($M.context.call = $.$$.$.$5)();
-        continue;
+}, null, null, 2, [[2, "20:4-20:16", $s$12], [16, null, $s$12], [16, null, $s$12]]),
+    $m$11 = $M.fun("m$11", null, null, $m$0, ["a"], 0, 2, null, 128, function ($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      $p = new ($context.call = $l[0][6])();
+      $.state = 1;
 
-      case 1:
-        $.goto = 2;
-        ($M.context.call = $p.fn).dbg$call($p, $.$.$0);
-        continue;
+    case 1:
+      $.goto = 3;
+      $mcall("fn", $p, $l[1]);
+      continue;
 
-      case 2:
-        return $M.ret();
+    case 2:
+      $.goto = 3;
+      return $unhandled($.error);
 
-      case 3:
-        return $M.ret($.value);
+    case 3:
+      return $ret($.result);
 
-      case 4:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["32:4-32:12", "e", $s$10], ["32:4-32:18", "e", $s$10], [], [], []]);
-$M.fun("m$12", "fn1", "m$0", [], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        $p = ($M.context.call = $.$$.$.$3.f2).dbg$call($.$$.$.$3);
-        continue;
+}, null, null, 1, [[2, "32:4-32:12", $s$13], [2, "32:4-32:18", $s$13], [16, null, $s$13], [16, null, $s$13]]),
+    $m$12 = $M.fun("m$12", "fn1", null, $m$0, [], 0, 2, "36:14-38:1", 128, function fn1($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      $p = $mcall("f2", $l[0][4]);
+      $.state = 1;
 
-      case 1:
-        $.$.$1 = $p;
-        $.goto = 2;
-        $p = new ($M.context.call = $.$$.$.$4)();
-        continue;
+    case 1:
+      $l[1] = $p;
+      $.goto = 2;
+      $p = new ($context.call = $l[0][5])();
+      $.state = 2;
 
-      case 2:
-        $.goto = 3;
-        $p = ($M.context.call = $.$$.$.$3.some).dbg$call($.$$.$.$3, {
-          a: $.$.$1,
-          b: [$p]
-        });
-        continue;
+    case 2:
+      $.goto = 3;
+      $p = $mcall("some", $l[0][4], {
+        a: $l[1],
+        b: [$p]
+      });
+      $.state = 3;
 
-      case 3:
-        return $M.ret($p);
+    case 3:
+      $.result = $p;
+      $.goto = 5;
+      continue;
 
-      case 4:
-        return $M.ret($.value);
+    case 4:
+      $.goto = 5;
+      return $unhandled($.error);
 
-      case 5:
-        throw $.value;
+    case 5:
+      return $ret($.result);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["37:23-37:31", "e", $s$11], ["37:37-37:44", "e", $s$11], ["37:9-37:48", "e", $s$11], [], [], []]);
-module.exports = $M.exports();
+}, null, null, 1, [[2, "37:23-37:31", $s$14], [2, "37:37-37:44", $s$14], [2, "37:9-37:48", $s$14], [0, null, $s$14], [16, "38:1-38:1", $s$14], [16, "38:1-38:1", $s$14]]);
+
+$M.moduleExports();

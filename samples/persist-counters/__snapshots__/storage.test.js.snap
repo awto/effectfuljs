@@ -24,13 +24,13 @@ Array [
               "$": "Set",
               "l": Array [
                 Object {
-                  "r": 3,
-                },
-                Object {
-                  "r": 0,
-                },
-                Object {
                   "r": 2,
+                },
+                Object {
+                  "r": 1,
+                },
+                Object {
+                  "r": 3,
                 },
                 Object {
                   "r": 4,
@@ -46,6 +46,14 @@ Array [
           ],
         ],
         "x": Array [
+          Object {
+            "f": Array [
+              Array [
+                "type",
+                "FLUSH",
+              ],
+            ],
+          },
           Object {
             "$": "_data",
             "f": Array [
@@ -65,71 +73,6 @@ Array [
                 "$arg",
                 Object {
                   "$": "undefined",
-                },
-              ],
-            ],
-          },
-          Object {
-            "f": Array [
-              Array [
-                "type",
-                "FLUSH",
-              ],
-            ],
-          },
-          Object {
-            "$": "saveLocal",
-            "f": Array [
-              Array [
-                "queue",
-                Array [
-                  Object {
-                    "$": "Residual",
-                    "f": Array [
-                      Array [
-                        "dest",
-                        Array [
-                          Object {
-                            "r": 3,
-                          },
-                        ],
-                      ],
-                      Array [
-                        "state",
-                        0,
-                      ],
-                    ],
-                  },
-                ],
-              ],
-              Array [
-                "_input",
-                null,
-              ],
-              Array [
-                "$step",
-                13,
-              ],
-              Array [
-                "$last",
-                12,
-              ],
-              Array [
-                "$arg",
-                Object {
-                  "$": "undefined",
-                },
-              ],
-              Array [
-                "_loop",
-                Object {
-                  "r": 0,
-                },
-              ],
-              Array [
-                "_i",
-                Object {
-                  "r": 1,
                 },
               ],
             ],
@@ -195,7 +138,7 @@ Array [
               Array [
                 "_loop",
                 Object {
-                  "r": 2,
+                  "r": 3,
                 },
               ],
               Array [
@@ -207,7 +150,64 @@ Array [
               Array [
                 "_i",
                 Object {
+                  "r": 0,
+                },
+              ],
+            ],
+          },
+          Object {
+            "$": "saveLocal",
+            "f": Array [
+              Array [
+                "queue",
+                Array [
+                  Object {
+                    "$": "Residual",
+                    "f": Array [
+                      Array [
+                        "dest",
+                        Array [
+                          Object {
+                            "r": 2,
+                          },
+                        ],
+                      ],
+                      Array [
+                        "state",
+                        0,
+                      ],
+                    ],
+                  },
+                ],
+              ],
+              Array [
+                "_input",
+                null,
+              ],
+              Array [
+                "$step",
+                13,
+              ],
+              Array [
+                "$last",
+                12,
+              ],
+              Array [
+                "$arg",
+                Object {
+                  "$": "undefined",
+                },
+              ],
+              Array [
+                "_loop",
+                Object {
                   "r": 1,
+                },
+              ],
+              Array [
+                "_i",
+                Object {
+                  "r": 0,
                 },
               ],
             ],
@@ -242,7 +242,7 @@ Array [
                       "dest",
                       Array [
                         Object {
-                          "r": 2,
+                          "r": 3,
                         },
                       ],
                     ],

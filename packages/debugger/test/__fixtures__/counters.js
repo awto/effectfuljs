@@ -1,4 +1,5 @@
 import * as D from "../../main";
+import * as S from "@effectful/serialization";
 
 export function getCounter() {
   let i = 0;
@@ -27,7 +28,7 @@ export function runCounters(persist) {
   }
   invoke();
   invoke();
-  const state = persist && D.Persist.capture();
+  const state = persist && S.write({ top: D.context.top });
   invoke();
   invoke();
   return [c(), state, trace, dir, set];

@@ -15,7 +15,6 @@ function emitSym(pos) {
 export function newSym(name, strict = false, decl = null) {
   if (!name) name = "";
   const num = ++symNum;
-  // if (num === 107) debugger;
   return {
     name,
     orig: name,

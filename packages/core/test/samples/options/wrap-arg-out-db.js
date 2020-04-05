@@ -1,59 +1,58 @@
-var $M = require("@effectful/debugger/api");
+var $M = require("@effectful/debugger/api"),
+    $context = $M.context,
+    $ret = $M.ret,
+    $unhandled = $M.unhandled,
+    $mcall = $M.mcall,
+    $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{
+  z2: [1, "3:9-3:11"]
+}, null, 0],
+    $s$2 = [{}, $s$1, 1],
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-7:0", 160, function file_js($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $l[1] = $m$1($);
+      $.goto = 2;
+      $mcall("option", M, {
+        wrapArguments: "args"
+      });
+      continue;
 
-$M.module("file.js", null, module, null, "$");
-var $s$1 = [{
-  z2: "$0"
-}, null, false];
-$M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$0 = $c.z2($);
-        $.goto = 1;
-        ($M.context.call = M.option).dbg$call(M, {
-          wrapArguments: "args"
-        });
-        continue;
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 1:
-        return $M.ret();
+    case 2:
+      return $ret($.result);
 
-      case 2:
-        return $M.ret($.value);
-
-      case 3:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["1:0-1:35", "e", $s$1], [], [], []]);
-$M.fun("m$1", "z2", "m$0", [], 16, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = eff)(1);
-        continue;
+}, null, null, 0, [[2, "1:0-1:35", $s$1], [16, "7:0-7:0", $s$1], [16, "7:0-7:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "z2", null, $m$0, [], 0, 1, "3:0-6:1", 144, function z2($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      ($context.call = eff)(1);
+      $.state = 1;
 
-      case 1:
-        $.goto = 2;
-        ($M.context.call = aff)($.args);
-        continue;
+    case 1:
+      $.goto = 3;
+      ($context.call = aff)($.args);
+      continue;
 
-      case 2:
-        return $M.ret();
+    case 2:
+      $.goto = 3;
+      return $unhandled($.error);
 
-      case 3:
-        return $M.ret($.value);
+    case 3:
+      return $ret($.result);
 
-      case 4:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["4:2-4:8", "e", $s$1], ["5:2-5:16", "e", $s$1], [], [], []]);
-module.exports = $M.exports();
+}, null, null, 1, [[2, "4:2-4:8", $s$2], [2, "5:2-5:16", $s$2], [16, "6:1-6:1", $s$2], [16, "6:1-6:1", $s$2]]);
+
+$M.moduleExports();

@@ -6,13 +6,44 @@ describe("plain object output", function() {
     it("should have resembling structure", function() {
       const obj1 = { a: 1, b: "b", c: true };
       const res = Lib.write(obj1);
-      const exp1 = { f: [["a", 1], ["b", "b"], ["c", true]] };
+      const exp1 = {
+        f: [
+          ["a", 1],
+          ["b", "b"],
+          ["c", true]
+        ]
+      };
       assert.deepStrictEqual(res, exp1);
       assert.equal(Lib.stringify(obj1), JSON.stringify(res));
       const obj2 = { obj1 };
       const exp2 = { f: [["obj1", exp1]] };
       assert.deepStrictEqual(Lib.write(obj2), exp2);
       assert.equal(Lib.stringify(obj2), JSON.stringify(exp2));
+    });
+    context("with `alwaysByRef: true`", function() {
+      it("should use references environment", function() {
+        const obj1 = { a: { a: 1 }, b: { b: "b" }, c: { c: true } };
+        const res = Lib.write(obj1, { alwaysByRef: true });
+        const exp1 = {
+          r: 3,
+          x: [
+            { f: [["c", true]] },
+            { f: [["b", "b"]] },
+            { f: [["a", 1]] },
+            {
+              f: [
+                ["a", { r: 2 }],
+                ["b", { r: 1 }],
+                ["c", { r: 0 }]
+              ]
+            }
+          ]
+        };
+        assert.deepStrictEqual(res, exp1);
+        const obj2 = Lib.read(res);
+        assert.notStrictEqual(obj1, obj2);
+        assert.deepStrictEqual(obj1, obj2);
+      });
     });
   });
   it("should have correct format for shared values", function() {
@@ -48,7 +79,11 @@ describe("special values", function() {
     const root = { undef: undefined, nul: null, nan: NaN };
     const res = Lib.write(root);
     assert.deepStrictEqual(res, {
-      f: [["undef", { $: "undefined" }], ["nul", null], ["nan", { $: "NaN" }]]
+      f: [
+        ["undef", { $: "undefined" }],
+        ["nul", null],
+        ["nan", { $: "NaN" }]
+      ]
     });
     const { undef, nul, nan } = Lib.read(res);
     assert.strictEqual(undef, undefined);
@@ -117,7 +152,11 @@ describe("object with parent", function() {
     const obj1 = new MyObj();
     assert.deepEqual(Lib.write(obj1), {
       $: "MyObj",
-      f: [["a", 1], ["b", "b"], ["c", true]]
+      f: [
+        ["a", 1],
+        ["b", "b"],
+        ["c", true]
+      ]
     });
     function Object() {
       this.a = obj1;
@@ -125,13 +164,29 @@ describe("object with parent", function() {
     Lib.regConstructor(Object);
     assert.deepEqual(Lib.write(new Object()), {
       $: "Object_1",
-      f: [["a", { f: [["a", 1], ["b", "b"], ["c", true]], $: "MyObj" }]]
+      f: [
+        [
+          "a",
+          {
+            f: [
+              ["a", 1],
+              ["b", "b"],
+              ["c", true]
+            ],
+            $: "MyObj"
+          }
+        ]
+      ]
     });
   });
   it("should use `$` attribute to resolve a type on read", function() {
     const obj1 = Lib.read({
       $: "MyObj",
-      f: [["a", 1], ["b", "b"], ["c", true]]
+      f: [
+        ["a", 1],
+        ["b", "b"],
+        ["c", true]
+      ]
     });
     assert.strictEqual(obj1.constructor, MyObj);
     assert.equal(
@@ -192,18 +247,20 @@ describe("prototypes chain", function() {
     const res = Lib.write(obj);
     C1.prototype.p_prop_1 = "changed";
     assert.deepEqual(res, {
-      r: 1,
+      r: 0,
       x: [
         {
-          p: {
-            $: "C1",
-            f: [["p_prop_1", "prop_1"]]
-          },
-          f: [["p1", { r: 1 }]]
-        },
-        {
           p: { $: "C2" },
-          f: [["p1", "A"], ["c1", { r: 0 }]]
+          f: [
+            ["p1", "A"],
+            [
+              "c1",
+              {
+                p: { $: "C1", f: [["p_prop_1", "prop_1"]] },
+                f: [["p1", { r: 0 }]]
+              }
+            ]
+          ]
         }
       ]
     });
@@ -235,7 +292,10 @@ describe("prototypes chain", function() {
       p: {
         $: "C4"
       },
-      f: [["a", "A"], ["b", "B"]]
+      f: [
+        ["a", "A"],
+        ["b", "B"]
+      ]
     });
     const obj3 = Lib.read(res2);
     assert.ok(obj3 instanceof C3);
@@ -385,7 +445,10 @@ describe("`Set` serialization", function() {
           {
             $: "Set",
             l: [1, "a", [true, [false, null]], { $: "undefined" }],
-            f: [["someNum", 100], ["self", { r: 0 }]]
+            f: [
+              ["someNum", 100],
+              ["self", { r: 0 }]
+            ]
           }
         ]
       });
@@ -806,6 +869,94 @@ describe("TypedArray", function() {
     assert.notStrictEqual(arr2, rarr2);
     assert.deepStrictEqual(arr1, rarr1);
     assert.deepStrictEqual(arr2, rarr2);
+  });
+});
+
+describe("WeakSet/WeakMap", function() {
+  it("should be serializable", function() {
+    const set = new Lib.WeakSetWorkaround();
+    const map = new Lib.WeakMapWorkaround();
+    const map2 = new Lib.WeakMapWorkaround();
+    const obj1 = {};
+    const obj2 = {};
+    Lib.regOpaqueObject(obj1, "w#obj1");
+    set.add(obj1).add(obj2);
+    map.set(obj1, "obj1").set(obj2, "obj2");
+    map2.set(obj1, "2obj1");
+    assert.ok(set.has(obj1));
+    assert.ok(map.has(obj1));
+    assert.strictEqual(map.get(obj1), "obj1");
+    assert.strictEqual(map.get({}), void 0);
+    const d = Lib.write({ set, map, map2, obj1, obj2 });
+    assert.deepStrictEqual(d, {
+      f: [
+        [
+          "set",
+          {
+            f: [["prop", { name: "@effectful/weakset", $: "Symbol" }]],
+            $: "WeakSet"
+          }
+        ],
+        [
+          "map",
+          {
+            f: [["prop", { name: "@effectful/weakmap", $: "Symbol" }]],
+            $: "WeakMap"
+          }
+        ],
+        [
+          "map2",
+          {
+            f: [["prop", { name: "@effectful/weakmap", id: 1, $: "Symbol" }]],
+            $: "WeakMap"
+          }
+        ],
+        [
+          "obj1",
+          {
+            $: "w#obj1",
+            f: [
+              [{ name: "@effectful/weakset" }, true, 6],
+              [{ name: "@effectful/weakmap" }, "obj1", 6],
+              [{ name: "@effectful/weakmap", id: 1 }, "2obj1", 6]
+            ]
+          }
+        ],
+        [
+          "obj2",
+          {
+            f: [
+              [{ name: "@effectful/weakset" }, true, 6],
+              [{ name: "@effectful/weakmap" }, "obj2", 6]
+            ]
+          }
+        ]
+      ]
+    });
+    const {
+      set: rset,
+      map: rmap,
+      map2: rmap2,
+      obj1: robj1,
+      obj2: robj2
+    } = Lib.read(d);
+    assert.strictEqual(robj1, obj1);
+    assert.notStrictEqual(robj2, obj2);
+    assert.ok(rset.has(obj1));
+    assert.ok(set.delete(obj1));
+    assert.ok(!set.has(obj1));
+    assert.ok(rset.has(obj1));
+    assert.ok(rset.has(robj2));
+    assert.ok(!rset.has(obj2));
+    assert.ok(!set.has(robj2));
+    assert.strictEqual(rmap.get(obj1), "obj1");
+    assert.strictEqual(rmap2.get(obj1), "2obj1");
+    assert.ok(map.delete(obj1));
+    assert.strictEqual(rmap.get(obj1), "obj1");
+    assert.ok(rset.delete(robj2));
+    assert.ok(!rset.has(robj2));
+    assert.ok(!rset.delete(robj2));
+    assert.ok(!rset.has(robj2));
   });
 });
 

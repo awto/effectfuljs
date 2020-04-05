@@ -44,7 +44,12 @@
               "stopOnEntry": {
                 "type": "boolean",
                 "description": "Automatically stop after launch",
-                "default": false
+                "default": true
+              },
+              "stopOnExit": {
+                "type": "boolean",
+                "description": "Automatically stop just before program's exit (for traveling backward in time)",
+                "default": true
               },
               "verbose": {
                 "type": [
@@ -202,6 +207,7 @@
               "request": "launch",
               "name": "Listen for incoming connections",
               "stopOnEntry": false,
+              "stopOnExit": false,
               "timeTravel": true,
               "reconnectTimeout": -1
             }
@@ -215,6 +221,7 @@
               "name": "Launch Browser application",
               "preset": "browser",
               "stopOnEntry": false,
+              "stopOnExit": false,
               "timeTravel": true,
               "cwd": "^\"\\${workspaceRoot}\"",
               "htmlTemplate": null,
@@ -232,30 +239,12 @@
               "name": "Launch Node application",
               "preset": "node",
               "stopOnEntry": false,
+              "stopOnExit": false,
               "timeTravel": true,
               "cwd": "^\"\\${workspaceRoot}\"",
               "command": "node",
               "args": [
                 "^\"\\${file}\""
-              ],
-              "console": "integratedTerminal",
-              "env": {}
-            }
-          },
-          {
-            "label": "Effectful: Tests",
-            "description": "Launch for create-react-app created project",
-            "body": {
-              "type": "effectful",
-              "request": "launch",
-              "name": "Launch npm tests",
-              "preset": "node",
-              "stopOnEntry": false,
-              "timeTravel": true,
-              "cwd": "^\"\\${workspaceRoot}\"",
-              "command": "npm",
-              "args": [
-                "test"
               ],
               "console": "integratedTerminal",
               "env": {}
@@ -271,7 +260,7 @@
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test:adapter": "mocha -u tdd ./out/test/adapter",
-    "test": "npm run compile && npm run test:adapter && npm run test:ide",
+    "test": "npm run compile",
     "test:ide": "node ./testExtension.js"
   },
   "devDependencies": {

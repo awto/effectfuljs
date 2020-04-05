@@ -1,9 +1,13 @@
-import { context } from "./state";
+import {
+  context,
+  dataSymbol,
+  FunctionDescr,
+  defaultErrHandler,
+  defaultFinHandler,
+  saved
+} from "./state";
 import * as S from "@effectful/serialization";
 import config from "./config";
-
-let extra = new Set();
-
 function nop() {}
 
 export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
@@ -13,6 +17,13 @@ export const regAutoOpaqueConstr = config.persistState
 
 const noProps = { props: false, propsSnapshot: false };
 
+const {
+  boundFunSymbol,
+  boundThisSymbol,
+  boundArgsSymbol,
+  descriptorSymbol
+} = S;
+
 export const regOpaqueObject = config.persistState
   ? function(obj: any, name: string) {
       S.regOpaqueObject(obj, name, noProps);
@@ -21,44 +32,11 @@ export const regOpaqueObject = config.persistState
 export const regDescriptor = config.persistState ? S.regDescriptor : nop;
 export const regConstructor = config.persistState ? S.regConstructor : nop;
 
-/**
- * Returns `JSON.stringify` serializable object with the whole
- * current execution state
- */
-export function capture(): S.JSONObject {
-  return S.write({
-    top: context.top,
-    syncStack: context.syncStack,
-    queue: context.queue,
-    debug: context.debug,
-    brk: context.brk,
-    extra
-  });
-}
-
-/**
- * Restores execution state from an object previously returned by
- * `capture` the current state is discarded
- */
-export function restore(json: S.JSONObject) {
-  ({
-    top: context.top,
-    syncStack: context.syncStack,
-    queue: context.queue,
-    debug: context.debug,
-    brk: context.brk,
-    extra
-  } = S.read(json));
-}
-
-/** any required additional values to store (e.g. DOM nodes) */
-export function extraState() {
-  return extra;
-}
-
 /** `Serialization.regOpaqueDeep` for module exports */
 export function regModule(exp: any, name: string) {
-  S.regOpaqueRec(exp, `${name || "?"}#exports`);
+  S.regOpaqueRec(exp, `${name || "?"}#exports`, {
+    descriptor: { propsSnapshot: true, value: exp, props: true }
+  });
 }
 
 if (typeof MessagePort !== "undefined") {
@@ -66,4 +44,124 @@ if (typeof MessagePort !== "undefined") {
   S.regAutoOpaqueConstr(MessageChannel);
 }
 
-export const descriptorSymbol = S.descriptorSymbol;
+export const ModuleDescriptor = S.regDescriptor<any>({
+  name: "@effectful/debugger/module",
+  create(_ctx, json: any) {
+    return context.modules[json.id] || {};
+  },
+  readContent(ctx, json: any, module: any) {
+    if (module.cjs && json.exports) {
+      module.cjs.exports = ctx.step(json.exports);
+    }
+  },
+  write(ctx, module: any) {
+    const res: any = { id: module.fullPath || module.id };
+    if (module.cjs) res.exports = ctx.step(module.cjs.exports, res, "exports");
+    return res;
+  },
+  props: false
+});
+
+export function regFun(meta: FunctionDescr) {
+  const constr = meta.func;
+  const funcDescr = S.regDescriptor<any>({
+    name: `p#${meta.persistName}`,
+    create() {
+      return constr();
+    },
+    readContent(ctx, json, value) {
+      let data = value[dataSymbol];
+      data.$ = ctx.step((<any>json).$$);
+      data.parent = ctx.step((<any>json).p);
+    },
+    write(ctx, value) {
+      const json: any = {};
+      const proto = value[dataSymbol];
+      json.$$ = ctx.step(proto.$, json, "$$");
+      json.p = ctx.step(proto.parent, json, "p");
+      return json;
+    },
+    // TODO: save the props in snapshot so they can be updated
+    overrideProps: {
+      [dataSymbol]: false,
+      call: false,
+      apply: false
+    },
+    typeofHint: "function"
+  });
+  S.regDescriptor<any>({
+    name: `f@${meta.persistName}`,
+    readContent(ctx, json, value) {
+      value.$ = ctx.step((<any>json).$);
+    },
+    create(ctx, json) {
+      const closure = ctx.step((<any>json).constr);
+      const proto = closure[dataSymbol];
+      return Object.create(proto);
+    },
+    write() {
+      return {};
+    },
+    propsSnapshot: true
+  });
+  (<any>meta).descriptor = funcDescr;
+  regOpaqueObject(constr, `c#${meta.persistName}`);
+  regOpaqueObject(meta, `i#${meta.persistName}`);
+  regOpaqueObject(meta.handler, `h#${meta.persistName}`);
+  if (meta.errHandler && meta.errHandler !== defaultErrHandler)
+    regOpaqueObject(meta.errHandler, `eh#${meta.persistName}`);
+  if (meta.finHandler && meta.finHandler !== defaultFinHandler)
+    regOpaqueObject(meta.finHandler, `fh#${meta.persistName}`);
+}
+
+const BindDescriptor = regDescriptor({
+  name: "#b",
+  create() {
+    return makeBind();
+  },
+  write() {
+    return {};
+  },
+  overrideProps: {
+    arguments: false,
+    caller: false,
+    length: false,
+    name: false,
+    prototype: false
+  }
+});
+
+const savedCall = saved.FunctionMethods.call;
+
+function makeBind(): (...args: any[]) => any {
+  function bind(...rest: any[]): any {
+    const fun = (<any>bind)[boundFunSymbol];
+    context.call = context.call === bind ? fun : null;
+    const boundArgs: any[] = (<any>bind)[boundArgsSymbol];
+    // avoiding spreads because they are monkey patched
+    const arr: any[] = Array(rest.length + boundArgs.length + 1);
+    arr[0] = (<any>bind)[boundThisSymbol];
+    let index = 0;
+    for (const i of boundArgs) arr[++index] = i;
+    for (const i of rest) arr[++index] = i;
+    return savedCall.apply(fun, <any>arr);
+  }
+  if (config.persistState) (<any>bind)[descriptorSymbol] = BindDescriptor;
+  return bind;
+}
+
+if (config.patchRT && config.persistState) {
+  Function.prototype.bind = function bind(
+    this: any,
+    self: any,
+    ...args: any[]
+  ): (...args: any[]) => any {
+    const bind = <any>makeBind();
+    bind[boundFunSymbol] = this;
+    bind[boundThisSymbol] = self;
+    bind[boundArgsSymbol] = args;
+    return bind;
+  };
+}
+
+export const extra: Set<any> = new Set();

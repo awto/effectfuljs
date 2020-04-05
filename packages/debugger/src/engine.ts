@@ -10,16 +10,19 @@ import {
   Module,
   Scope,
   ScopeInfo,
+  VarInfo,
   ProtoFrame,
-  BrkType,
   StateMap,
-  Handler,
   States,
   normalizeDrive,
   toGlobal,
-  saved
+  saved,
+  Flag,
+  BrkFlag,
+  defaultErrHandler,
+  defaultFinHandler,
+  thunkSymbol
 } from "./state";
-
 import * as State from "./state";
 import * as TTCore from "./timeTravel/core";
 import * as TT from "./timeTravel/main";
@@ -28,7 +31,8 @@ import babelGenerate from "@babel/generator";
 import * as T from "./transform";
 import * as path from "path";
 import * as S from "@effectful/serialization";
-import { regOpaqueObject, regDescriptor } from "./persist";
+import { regOpaqueObject, regFun, ModuleDescriptor } from "./persist";
+import { isValidIdentifier } from "@babel/types";
 
 // tslint:disable-next-line
 const asap = require("asap");
@@ -37,20 +41,13 @@ const Map = saved.Map;
 
 const globalNS = config.globalNS;
 
-const journal = TT.journal;
-const context = State.context;
-const token = State.token;
-const dataSymbol = State.dataSymbol;
-const SavedFunction = Function;
-const savedApply = SavedFunction.prototype.apply;
-const savedCall = SavedFunction.prototype.call;
-const CallSym = Symbol("@effectful/debugger/call");
-const ApplySym = Symbol("@effectful/debugger/call");
+const { journal, context, token, dataSymbol } = State;
+const SavedFunction = State.saved.Function;
+const savedApply = State.saved.FunctionMethods.apply;
+const savedCall = State.saved.FunctionMethods.call;
+const defineProperty = saved.Object.defineProperty;
 
-const defineProperty = State.saved.Object.defineProperty;
-
-defineProperty(Function.prototype, CallSym, { value: savedCall });
-defineProperty(Function.prototype, ApplySym, { value: savedApply });
+let curModule: Module = undefined as any; // this is always used in context where this is inited
 
 const recordFrame = config.timeTravel
   ? function recordFrame(top: Frame | null) {
@@ -58,46 +55,41 @@ const recordFrame = config.timeTravel
     }
   : function recordFrame() {};
 
-class ArgsTraps<T> {
+class ArgsTraps {
   func: Frame;
-  target: T[];
-  constructor(func: Frame, target: T[]) {
+  constructor(func: Frame) {
     this.func = func;
-    this.target = target;
   }
-  set(target: T[], prop: any, value: T) {
+  set(target: any[], prop: any, value: any) {
     if (typeof prop === "symbol" || isNaN(prop))
       return Reflect.set(target, prop, value);
     const { func } = this;
-    const params = func.meta.params;
-    if (params) {
-      const name = params[prop];
-      if (name) func.$[name] = value;
-    }
+    func.$[func.meta.shift + +prop] = value;
     return Reflect.set(target, prop, value);
   }
-  get(target: T[], prop: any): T {
+  get(target: any[], prop: any): any {
     if (typeof prop === "symbol" || isNaN(prop))
       return Reflect.get(target, prop);
     const { func } = this;
-    const params = func.meta.params;
-    if (params) {
-      const name = params[prop];
-      if (name) return func.$[name];
-    }
+    const meta = func.meta;
+    const index = +prop;
+    if (meta.params.length > index) return func.$[meta.shift + index];
     return Reflect.get(target, prop);
   }
 }
 
-export function args<T>(value: Iterable<T>): Array<T> {
+export function getCurModule(): Module {
+  return curModule;
+}
+
+export function argsWrap<T>(frame: Frame, value: Iterable<T>): T[] {
   const arr = Array.from(value);
-  const top = <Frame>context.top;
-  Object.defineProperty(arr, "callee", {
-    writable: false,
+  defineProperty(arr, "callee", {
+    writable: true,
     enumerable: false,
-    value: top.func
+    value: frame.func
   });
-  return new Proxy(arr, new ArgsTraps<T>(top, arr));
+  return new Proxy(arr, new ArgsTraps(frame));
 }
 
 interface CjsModule {
@@ -109,11 +101,14 @@ interface CjsModule {
 }
 
 export function module(
+  this: any,
   modName: string | number,
-  evalCtx: { [name: string]: [string, number] } | undefined,
-  module: CjsModule | undefined,
-  require?: any,
-  pure?: boolean
+  evalContext: { [name: string]: VarInfo } | undefined,
+  cjs: CjsModule | undefined,
+  require: any,
+  safePrefix: string,
+  closSyms: { [name: string]: any },
+  params: { [name: string]: any } | null
 ) {
   let fullPath: string | undefined;
   let name: string;
@@ -125,136 +120,229 @@ export function module(
     name = modName;
     fullPath = normalizeDrive(path.join(config.srcRoot, name));
   }
-  let info = fullPath && context.modules[<any>(fullPath || id)];
-  if (module) {
-    if (module.hot) module.hot.accept();
-    module.__effectful_js_require = require;
-    regOpaqueObject(module, `cjs#${name}`);
+  curModule = context.modules[<any>(fullPath || id)];
+  if (!require) require = <any>closSyms["__webpack_require__"];
+  if (cjs) {
+    if (cjs.hot) cjs.hot.accept();
+    cjs.__effectful_js_require = require;
   }
-  if (info) {
-    context.moduleId = (module && module.id) || null;
-    info.version++;
-    return info;
+  regOpaqueObject(cjs, `cjs#${name}`);
+  if (!curModule) curModule = <any>{ functions: {} };
+  regOpaqueObject(cjs, name + "$mod");
+  context.modules[<any>(fullPath || id)] = curModule;
+  (<any>curModule)[S.descriptorSymbol] = ModuleDescriptor;
+  if (cjs) {
+    context.modulesById[cjs.id] = curModule;
+    regOpaqueObject(cjs, `${cjs.id}$mod`);
   }
-  info = {
-    name,
-    fullPath,
-    id,
-    functions: {},
-    pure: !!pure,
-    topLevel: null,
-    cjs: module,
-    version: 0,
-    evalCtx
-  };
-  regOpaqueObject(info, `module#${name}`);
-  context.modules[<any>(fullPath || id)] = info;
-  return info;
-}
-
-export function syncMeta<Closure, Res>(
-  _: Module,
-  func: (ctx: { $$: Closure }) => Res
-): (c: any) => Res {
-  const wrap = function($$: Closure) {
-    return func({ $$ });
-  };
-  return wrap;
+  curModule.name = name;
+  curModule.fullPath = fullPath;
+  curModule.id = id;
+  context.moduleId = (cjs && cjs.id) || null;
+  if (curModule.version === void 0) curModule.version = 0;
+  else curModule.version++;
+  curModule.cjs = cjs;
+  curModule.evalContext = evalContext;
+  curModule.safePrefix = safePrefix;
+  curModule.api = this;
+  curModule.closSyms = closSyms;
+  curModule.params = params;
+  return curModule;
 }
 
 let metaCount = 0;
 
 export const parentTag = { _parentTag: true };
 
-export function scope(dest: number): any {
-  const top = <Frame>context.top;
-  top.goto = dest;
-  try {
-    return top.meta.handler(top, void 0);
-  } catch (e) {
-    return handle(top, e);
-  }
-}
-
 export function fun(
-  module: Module,
-  func: (...args: any[]) => any,
-  handler: Handler,
+  name: string,
+  origName: string | null,
+  calleeName: number | null,
+  parentConstr: ((this: any, ...args: any[]) => any) | null,
+  params: string[],
+  localsNum: number,
+  varsNum: number,
+  loc: string | null,
+  flags: number,
+  handler: (this: any, p: any) => any | string,
   errHandler: StateMap,
   finHandler: StateMap,
-  states: States,
-  name: string,
-  loc: string | null,
-  parent: FunctionDescr | undefined,
-  params: string[],
-  kind?: number
-): ($$: { [name: string]: any }) => any {
-  let meta = module.functions[handler.name];
-  if (!meta) meta = module.functions[handler.name] = <FunctionDescr>{};
-  if (!module.pure && !module.topLevel) module.topLevel = meta;
-  if (!name) name = "*";
+  scopeDepth: number,
+  states: States
+): (this: any, ...args: any[]) => any {
+  let meta = curModule.functions[name];
+  if (!meta) meta = curModule.functions[name] = <FunctionDescr>{};
+  const top = !curModule.topLevel;
+  if (top) curModule.topLevel = meta;
   if (!errHandler) errHandler = defaultErrHandler;
   if (!finHandler) finHandler = defaultFinHandler;
-  const names = [name];
+  const names = [origName || "*"];
+  let parent: FunctionDescr | null = null;
+  if (parentConstr) parent = (<any>parentConstr)[dataSymbol];
   for (let p = parent; p; p = p.parent) names.unshift(p.name);
-  const fullName = `${module.name}:${names.join(".")}@${loc || "?"}`;
+  const fullName = `${curModule.name}:${names.join(".")}@${loc || "?"}`;
+  const uniqName = `${curModule.name}#${name}`;
+  let persistName = parent ? parent.persistName : curModule.name;
+  if (!top) persistName += "#" + (origName || "*");
   const memo: Brk[] = [];
-  const evalCtx = module.evalCtx || {};
-  for (const [scope, reason, loc] of states) {
-    if (!scope) continue;
+  const evalContext = curModule.evalContext || {};
+  if (loc) {
+    meta.location = loc;
+    [meta.line, meta.column, meta.endLine, meta.endColumn] = location(loc);
+  }
+  for (const [flags, loc, scope] of states) {
     const [line, column, endLine, endColumn] = location(loc);
-    const scopeInfo =
-      scope.length === 3 ? scope[2] : buildScope(scope, evalCtx);
+    let id = memo.length;
     const brk: Brk = {
-      reason,
-      type: reason === "debugger" ? BrkType.debugger : BrkType.location,
-      id: memo.length,
+      flags,
+      id,
       meta,
       line,
       column,
       endLine,
       endColumn,
-      exit: false,
-      scope: scopeInfo,
-      location: strLoc(line, column, endLine, endColumn)
+      scope: scope ? buildScope(scope, evalContext) : evalContext,
+      scopeDepth: scope[2],
+      location: strLoc(line, column, endLine, endColumn),
+      breakpoint: null,
+      logPoint: null
     };
-    regOpaqueObject(brk, `s#${module.name}#${handler.name}#${brk.id}`);
+    regOpaqueObject(brk, `s#${persistName}#${id}`);
     memo.push(brk);
   }
-  meta.blackbox = loc == null;
-  meta.module = module;
-  meta.func = func;
-  meta.kind = kind || 0;
+  meta.varsNum = varsNum;
+  meta.shift = calleeName ? 2 : 1;
+  meta.exitBreakpoint = memo[memo.length - 1];
+  meta.blackbox = (flags & Flag.BLACKBOX) !== 0;
+  meta.origName = origName || "(anonymous)";
+  meta.calleeName = calleeName;
+  meta.module = curModule;
+  meta.flags = flags || 0;
   meta.handler = handler;
   meta.errHandler = errHandler;
   meta.finHandler = finHandler;
   meta.name = name;
   meta.fullName = fullName;
   meta.parent = parent;
-  meta.uniqName = `${module.name}#${handler.name}`;
+  meta.uniqName = uniqName;
+  meta.persistName = persistName;
   meta.params = params;
+  meta.localsNum = localsNum;
+  meta.errState = states.length - 2;
+  meta.finState = states.length - 1;
   if (meta.id == null) meta.id = metaCount++;
   meta.states = memo;
-  if (loc) {
-    meta.location = loc;
-    [meta.line, meta.column, meta.endLine, meta.endColumn] = location(loc);
-    memo.push(
-      (meta.exitBreakpoint = {
-        type: BrkType.exit,
-        reason: "exit",
-        id: memo.length,
-        meta,
-        scope: memo.length ? memo[0].scope : {},
-        line: <number>meta.endLine,
-        column: <number>meta.endColumn,
-        endLine: <number>meta.endLine,
-        endColumn: <number>meta.endColumn,
-        exit: true,
-        location: strLoc(meta.line, meta.column, meta.endLine, meta.endColumn)
-      })
+  meta.statesByLine = memo.filter(hasLine).sort(byLine);
+  meta.deps = [];
+  meta.scopeDepth = scopeDepth;
+  if (parent) parent.deps.push(meta);
+  const headLines: string[] = [];
+  const ctx = curModule.safePrefix;
+  let funcName = meta.origName;
+  if (funcName) {
+    if (!isValidIdentifier(funcName) || meta.params.indexOf(funcName) !== -1)
+      funcName = ctx + funcName.replace(/\W/g, "_");
+  } else {
+    funcName = ctx + meta.name;
+  }
+  let varsInit = [`${ctx}.$`];
+  if (meta.calleeName) varsInit.push(funcName);
+  varsInit.push(...meta.params);
+  varsInit.fill("void 0", varsInit.length, (varsInit.length = meta.varsNum));
+  headLines.push(`${ctx}.$ = [${varsInit.join()}]`);
+  const isArrow = flags & Flag.ARROW_FUNCTION;
+  const isAsync = flags & Flag.ASYNC_FUNCTION;
+  const isGenerator = flags & Flag.GENERATOR_FUNCTION;
+  if (flags & Flag.HAS_THIS)
+    headLines.push(`${ctx}.self = ${isArrow ? ctx + "$.self" : "this"}`);
+  if (flags & Flag.HAS_ARGUMENTS)
+    headLines.push(
+      `${ctx}.args = ${
+        isArrow ? ctx + "$.args" : `${ctx}args(${ctx},arguments)`
+      }`
     );
-  } else meta.exitBreakpoint = null;
-  return meta.constr || wrapMeta(meta);
+  const api = curModule.api;
+  let headCode;
+  if (isGenerator) {
+    if (config.expInlineNext) {
+      (<any>meta).nextImpl = new Function(
+        "pushFrame",
+        "handle",
+        "meta",
+        "context",
+        `return function next(value) {
+            const frame = this._frame;
+            if (frame.running)
+              throw new Error("Generator is already running");
+            frame.sent = value;
+            frame.running = true;
+            context.call = context.call === next ? frame.func : null;
+            pushFrame(frame);
+            try {
+              return meta.handler(frame, frame.$, value);
+            } catch (e) {
+              return handle(frame, e);
+            }
+          }`
+      )(api.pushFrame, api.handle, meta, context);
+    }
+    headCode = `return ${ctx}.iter`;
+  } else {
+    headCode = `try { return ${ctx}.meta.handler(${ctx}, ${ctx}.$, null); } 
+                catch(e) {return ${ctx}M.handle(${ctx},e);}`;
+  }
+  const constrParams = [
+    "module",
+    "exports",
+    `${ctx}args`,
+    `${ctx}context`,
+    `${ctx}m`,
+    `${ctx}M`,
+    `${ctx}clos`,
+    `${ctx}frame`
+  ];
+  const cjs = curModule.cjs;
+  const args = [
+    cjs,
+    cjs && cjs.exports,
+    argsWrap,
+    context,
+    meta,
+    api,
+    isAsync || !isGenerator ? api.clos : api.closG,
+    isAsync
+      ? isGenerator
+        ? api.frameAG
+        : api.frameA
+      : isGenerator
+      ? api.frameG
+      : api.frame
+  ];
+  constrParams.push(`return (function(${ctx}$){
+    return ${ctx}clos(${ctx}$,${ctx}m,(function ${funcName}(${meta.params.join()}) {
+      ${flags & Flag.SLOPPY ? "" : '"use strict";'}
+      var ${ctx} = ${ctx}frame(${funcName},new.target);
+      ${headLines.join("\n")}
+      ${headCode}
+      }));
+})`);
+  const constr: any = saved.Reflect.construct(
+    SavedFunction,
+    constrParams
+  ).apply(null, args);
+  meta.func = constr;
+  (<any>constr)[dataSymbol] = meta;
+  if (config.expFunctionConstr) constr.constructor = FunctionConstr;
+  if (config.persistState) regFun(meta);
+  return meta.func;
+}
+
+function hasLine(b: Brk): boolean {
+  return (b.flags & State.BrkFlag.STMT) !== 0 && b.line > 0;
+}
+
+function byLine(a: Brk, b: Brk): number {
+  return a.line - b.line;
 }
 
 function strLoc(
@@ -263,102 +351,60 @@ function strLoc(
   endLine?: number,
   endColumn?: number
 ) {
-  return `${line || "?"}:${column || "?"}-${endLine || "?"}:${endColumn ||
-    "?"}`;
+  return `${line || "?"}:${column == null ? "?" : column}-${endLine || "?"}:${
+    endColumn == null ? "?" : endColumn
+  }`;
 }
 
 function buildScope(
   scope: Scope,
-  parent: { [name: string]: [string, number] }
+  parent: { [name: string]: VarInfo }
 ): ScopeInfo {
   if (scope == null) return parent;
-  if (scope.length === 3) return scope[2];
-  const [vars, par] = scope;
+  if (scope.length === 4) return scope[3];
+  const [vars, par, depth] = scope;
   const scopeInfo: ScopeInfo = {};
   scope.push(scopeInfo);
   const parScope = par ? buildScope(par, parent) : parent;
-  if (parScope) {
-    for (const i in parScope) {
-      const [field, depth] = parScope[i];
-      scopeInfo[i] = [field, depth + 1];
-    }
+  if (parScope) Object.assign(scopeInfo, parScope);
+  // tslint:disable-next-line:forin
+  for (const i in vars) {
+    const info = vars[i];
+    if (!info) continue;
+    const [declDepth, declLoc] = info;
+    scopeInfo[i] = [declDepth, depth, declLoc];
   }
-  for (const i in vars) scopeInfo[i] = [vars[i], 0];
   return scopeInfo;
 }
 
-const wrapMeta = config.persistState
-  ? function wrapMeta(
-      info: FunctionDescr
-    ): ($$?: { [name: string]: any }) => (...args: any) => any {
-      const funcDescr = regDescriptor<any>({
-        name: `p#${info.uniqName}`,
-        create() {
-          return constr();
-        },
-        readContent(ctx, json, value) {
-          value[dataSymbol].$$ = ctx.step((<any>json).$$);
-        },
-        write(ctx, value) {
-          const json: any = {};
-          const proto = value[dataSymbol];
-          json.$$ = ctx.step(proto.$$, json, "$$");
-          return json;
-        },
-        overrideProps: { [dataSymbol]: false },
-        typeofHint: "function",
-        strictName: true
-      });
-      regDescriptor<any>({
-        name: `f@${info.uniqName}`,
-        readContent(ctx, json, value) {
-          value.$ = ctx.step((<any>json).$);
-        },
-        create(ctx, json) {
-          const closure = ctx.step((<any>json).constr);
-          const proto = closure[dataSymbol];
-          return Object.create(proto);
-        },
-        write() {
-          return {};
-        },
-        strictName: true
-      });
-      const constr = info.func;
-      (<any>info).descriptor = funcDescr;
-      (<any>constr)[dataSymbol] = info;
-      if (config.expFunctionConstr) constr.constructor = FunctionConstr;
-      regOpaqueObject(constr, `c#${info.module.name}#${info.name}`);
-      regOpaqueObject(info, `i#${info.module.name}#${info.name}`);
-      regOpaqueObject(info.handler, `h#${info.module.name}#${info.name}`);
-      if (info.errHandler && info.errHandler !== defaultErrHandler)
-        regOpaqueObject(info.errHandler, `eh#${info.module.name}#${info.name}`);
-      if (info.finHandler && info.finHandler !== defaultFinHandler)
-        regOpaqueObject(info.finHandler, `fh#${info.module.name}#${info.name}`);
-      return constr;
-    }
-  : function wrapMeta(
-      info: FunctionDescr
-    ): ($$?: { [name: string]: any }) => (...args: any) => any {
-      const constr = info.func;
-      (<any>constr)[dataSymbol] = info;
-      if (config.expFunctionConstr) constr.constructor = FunctionConstr;
-      return constr;
-    };
-
 export const clos: any = config.persistState
-  ? function clos($$: any, constr: any, closure: any) {
-      const meta = (<any>constr)[dataSymbol];
-      closure[dataSymbol] = { meta, $$ };
-      closure[S.descriptorSymbol] = (<any>meta).descriptor;
+  ? function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
+      /*defineProperty(closure, "call", {
+        configurable: true,
+        value: defaultCall
+      });
+      defineProperty(closure, "apply", {
+        configurable: true,
+        value: defaultApply
+      });
+      defineProperty(closure, dataSymbol, {
+        configurable: true,
+        value: { meta, parent, $: parent && parent.$ }
+      });
+      defineProperty(closure, S.descriptorSymbol, {
+        configurable: true,
+        value: (<any>meta).descriptor
+      });*/
       closure.call = defaultCall;
       closure.apply = defaultApply;
+      closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
+      closure[S.descriptorSymbol] = (<any>meta).descriptor;
       return closure;
     }
-  : function clos($$: any, constr: any, closure: any) {
-      closure[dataSymbol] = { meta: (<any>constr)[dataSymbol], $$ };
+  : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
       closure.call = defaultCall;
       closure.apply = defaultApply;
+      closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
       return closure;
     };
 
@@ -384,6 +430,29 @@ function defaultCall(this: any) {
   return savedCall.apply(this, <any>arguments);
 }
 
+export function wrapBuiltinFunc(func: any) {
+  func.call = defaultCall;
+  func.apply = defaultApply;
+  return func;
+}
+
+export function pushScope(varsNum: number) {
+  const top = <Frame>context.top;
+  const cur = Array(varsNum);
+  cur[0] = top.$;
+  return (top.$ = cur);
+}
+
+export function copyScope() {
+  const top = <Frame>context.top;
+  return (top.$ = top.$.slice());
+}
+
+export function popScope() {
+  const top = <Frame>context.top;
+  return (top.$ = top.$[0]);
+}
+
 export function mcall(prop: string, ...args: [any, ...any[]]) {
   const func = args[0][prop];
   if (!func) throw new TypeError(`${prop} isn't a function`);
@@ -404,9 +473,9 @@ export function step() {
     context.error = false;
     const top = context.top;
     if (!top) throw new TypeError("nothing to run");
-    if (top.brk && top.brk.exit) {
+    if (top.brk && top.brk.flags & BrkFlag.EXIT) {
       if (!context.debug && top.restoreDebug) context.debug = true;
-      pop(top);
+      popFrame(top);
     }
     return loop(value);
   } finally {
@@ -419,7 +488,7 @@ export function loop(value: any): any {
   while (top) {
     try {
       recordFrame(top);
-      value = top.meta.handler(top, value);
+      value = top.meta.handler(top, top.$, value);
       top = context.top;
     } catch (e) {
       if (e === token) {
@@ -430,22 +499,27 @@ export function loop(value: any): any {
         context.value = e;
         context.error = true;
         context.onStop();
-        if (top) top.goto = top.meta.errHandler(top.state);
+        if (top) {
+          top.error = e;
+          top.meta.errHandler(top, top.$);
+        }
         return token;
       }
       top = context.top;
       if (!top) {
         if (config.verbose) {
+          // tslint:disable-next-line:no-console
           console.error(
-            `Uncaught exception: ${e}(on any:${!!context.brkOnAnyException},on uncaught:${!!context.brkOnUncaughtException}`
+            `Uncaught exception: ${e}(on any:${!!context.brkOnAnyException},on uncaught:${!!context.brkOnUncaughtException})`
           );
           if (config.debuggerDebug)
+            // tslint:disable-next-line:no-console
             console.error("Original stack:", e._deb_stack);
         }
         throw e;
       }
-      top.goto = top.meta.errHandler(top.state);
-      value = e;
+      top.error = value = e;
+      top.meta.errHandler(top, top.$);
     }
   }
   return value;
@@ -457,7 +531,7 @@ export function resume(frame: Frame, e: any) {
     frame.next = context.top;
     context.top = frame;
     recordFrame(frame);
-    return frame.meta.handler(frame, e);
+    return frame.meta.handler(frame, frame.$, e);
   } catch (e) {
     return handle(frame, e);
   }
@@ -469,7 +543,7 @@ export function resumeLocal(frame: Frame, e: any) {
     frame.caller = frame.next = context.top;
     context.top = frame;
     recordFrame(frame);
-    return frame.meta.handler(frame, e);
+    return frame.meta.handler(frame, frame.$, e);
   } catch (e) {
     return handle(frame, e);
   }
@@ -477,16 +551,7 @@ export function resumeLocal(frame: Frame, e: any) {
 
 /** checks if the current frame's state has an exception handler */
 function hasEH(frame: Frame): boolean {
-  const meta = frame.meta;
-
-  for (let state = frame.state; state !== 1; ) {
-    const err = meta.errHandler(state);
-    if (err === 1) return false;
-    const fin = meta.finHandler(state);
-    if (fin !== err) return true;
-    state = fin;
-  }
-  return false;
+  return (frame.meta.states[frame.state].flags & BrkFlag.HAS_EH) !== 0;
 }
 
 function checkErrBrk(frame: Frame, e: any): boolean {
@@ -501,9 +566,11 @@ function checkErrBrk(frame: Frame, e: any): boolean {
             `    at ${i.meta.name} (${i.meta.module.name}:${i.brk.line}:${i.brk.column})`
           );
       }
-      if (config.debuggerDebug)
-        Object.defineProperty(e, "_deb_stack", { value: stack.join("\n") });
-      else e.stack = stack.join("\n");
+      if (config.debuggerDebug) {
+        try {
+          defineProperty(e, "_deb_stack", { value: stack.join("\n") });
+        } catch (e) {}
+      } // else e.stack = stack.join("\n");
     }
     let needsStop = false;
     if (context.brkOnAnyException) {
@@ -531,46 +598,59 @@ export function handle(frame: Frame, e: any) {
       return token;
     }
     if (frame !== context.top) throw e;
-    if (!frame.next && config.debuggerDebug) console.error("Uncaught", e.stack);
+    // tslint:disable-next-line:no-console
     const meta = frame.meta;
-    const goto = meta.errHandler(frame.state);
+    frame.error = e;
+    meta.errHandler(frame, frame.$);
     if (checkErrBrk(frame, e)) {
       context.value = e;
       context.error = true;
-      frame.goto = goto;
       if (frame.next) throw token;
       context.onStop();
       return token;
     }
-    frame.goto = goto;
     try {
       recordFrame(frame);
-      return meta.handler(frame, e);
+      return frame.meta.handler(frame, frame.$, null);
     } catch (ex) {
       e = ex;
     }
   }
 }
 
-export function evalAt(src: string, id: number) {
+export function evalAt(src: string) {
   const top = <Frame>context.top;
-  const func = compileEval(src, top.meta, top.meta.states[id]);
-  const data = (<any>func)[dataSymbol];
-  data.$$ = top;
-  try {
-    context.call = func;
-    return savedCall.call(func, top.self);
-  } finally {
-    data.$$ = null;
+  const meta = top.meta;
+  const state = top.meta.states[top.state];
+  const memo = meta.evalMemo || (meta.evalMemo = new Map()); // : indirMemo;
+  const key = `${src}@${meta.uniqName}@${state ? state.id : "*"}/${
+    context.debug
+  }}`;
+  let resMeta = memo.get(key);
+  if (!resMeta) {
+    resMeta = compileEval(
+      src,
+      meta.module,
+      state.scope,
+      state.scopeDepth + 1,
+      !context.debug,
+      null
+    );
+    memo.set(key, resMeta);
   }
+  const func = resMeta.func(top);
+  context.call = func;
+  return savedCall.call(func, top.self);
 }
 
 const locationRE = /^(\d+):(\d+)-(\d+):(\d+)$/;
 
+const undefLoc = [0, 0, 0, 0];
+
 /** parses location string into a tuple with a line, a column, a last last and a last column */
 export function location(str: string): number[] {
+  if (!str) return undefLoc;
   const res: number[] = [];
-  if (!str) return res;
   const re = locationRE.exec(str);
   if (!re || re.length < 5) return res;
   for (let i = 1; i < 5; i++) res.push(+re[i]);
@@ -581,7 +661,15 @@ let evalCnt = 0;
 
 const indirMemo = new Map<string, string>();
 
-export function compileIndirEval(code: string): string {
+/**
+ * Like `compileEval` but returns a self-sufficient string, which can be
+ * passed to, say, "vm". However, it doesn't memoize meta-data construction
+ * (like `compileEval` does) though.
+ */
+export function compileEvalToString(
+  code: string,
+  params: string[] | null
+): string {
   const top = context.top;
   const meta = top && top.meta;
   const blackbox = !meta || meta.blackbox;
@@ -590,121 +678,139 @@ export function compileIndirEval(code: string): string {
   if (tgt) return tgt;
   const id = toGlobal(evalCnt++);
   if (!blackbox) context.onNewSource(id, code);
-  const wcode =
-    `return (${globalNS}.context.call=` + `(function() {\n${code}\n}))();`;
-  const ast = babelParse(wcode, {
-    allowReturnOutsideFunction: true,
-    startLine: 0
+  const ast = babelParse(code, {
+    allowReturnOutsideFunction: true
   });
-  const body = (<any>ast.program.body[0]).argument.callee.right.body.body;
-  if (body.length === 1 && body[0].type === "ExpressionStatement")
-    body[0] = { type: "ReturnStatement", argument: body[0].expression };
+  if (params == null) {
+    const body = <any>ast.program.body;
+    if (body.length === 1 && body[0].type === "ExpressionStatement")
+      body[0] = { type: "ReturnStatement", argument: body[0].expression };
+  }
   tgt = babelGenerate(
     T.run(ast, {
       preInstrumentedLibs: true,
       blackbox,
       pureModule: true,
-      importRT: false,
-      moduleName: id,
-      ns: globalNS
+      evalContext: null,
+      evalParams: params,
+      directEval: false,
+      rt: false,
+      ns: globalNS,
+      relativeName: id,
+      filename: `VM${id}.js`,
+      iifeWrap: true,
+      moduleExports: params == null ? "execModule" : "retModule",
+      constrParams: { code }
     }),
-    { compact: false }
+    { compact: true }
   ).code;
   indirMemo.set(key, tgt);
-  return tgt;
+  return `(function() { ${tgt}; })()`;
 }
 
-const functionConstrMemo = new Map<string, string>();
-
-export function compileFunctionConstr(args: any[], code: string) {
-  const top = context.top;
-  const meta = top && top.meta;
-  const blackbox = !meta || meta.blackbox;
-  const id = toGlobal(evalCnt++);
-  const wcode = `return (function(${args.join()}) {\n${code}\n})`;
-  let tgt = functionConstrMemo.get(wcode);
-  if (!tgt) {
-    if (!blackbox) context.onNewSource(id, code);
-    const ast = babelParse(wcode, {
-      allowReturnOutsideFunction: true,
-      startLine: 0
-    });
-    tgt = babelGenerate(
-      T.run(ast, {
-        preInstrumentedLibs: true,
-        blackbox,
-        pureModule: true,
-        importRT: false,
-        moduleName: id,
-        ns: globalNS
-      }),
-      { compact: false }
-    ).code;
-  }
-  return tgt;
+/**
+ * executes a top level function for a current module
+ * this is an API required for `compileEvalToString`
+ */
+export function execModule() {
+  return (context.call = curModule.topLevel.func(null))();
 }
+
+/**
+ * returns a top level function for a current module
+ * this is an API required for `compileEvalToString`
+ */
+export function retModule() {
+  return curModule.topLevel.func(null);
+}
+
+const functionConstrMemo = new Map<string, FunctionDescr>();
+
+const savedEval = eval;
 
 export const FunctionConstr = function Function(...args: any[]) {
   let res: any;
-  if (context.debug) {
-    const tgt = compileFunctionConstr(args, args.pop());
-    res = new SavedFunction("module", tgt)(
-      context.top && context.top.meta.module
-    );
-  } else res = Reflect.construct(SavedFunction, args);
+  if (context.debug && context.call === Function) {
+    const code = args.pop();
+    const key = `${code}@Fn@/${context.debug}/${args.join()}`;
+    let meta = functionConstrMemo.get(key);
+    if (!meta) {
+      meta = compileEval(
+        code,
+        (context.top && context.top.meta && context.top.meta.module) || null,
+        null,
+        0,
+        !context.debug,
+        args
+      );
+      functionConstrMemo.set(key, meta);
+    }
+    res = meta.func(null);
+    // const txt = compileEvalToString(code, args);
+    // res = savedEval(txt);
+  } else res = saved.Reflect.construct(SavedFunction, args);
   res.constructor = Function;
   return res;
 };
 FunctionConstr.prototype = Function.prototype;
-
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
 
-const savedEval = eval;
-
 export function indirEval(code: string): any {
-  if (!context.debug) return savedEval(code);
-  const wcode = compileIndirEval(code);
-  return new SavedFunction("module", wcode)(
-    context.top && context.top.meta.module
+  if (!context.debug || context.call !== indirEval) return savedEval(code);
+  const meta = compileEval(
+    code,
+    context.top ? context.top.meta.module : null,
+    null,
+    0,
+    !context.debug,
+    null
   );
+  const func = meta.func(null);
+  context.call = func;
+  return savedCall.call(func, void 0);
+  // return savedEval(compileEvalToString(code, null));
 }
 
 export function compileEval(
   code: string,
-  meta: FunctionDescr,
-  state: Brk,
-  blackbox?: boolean
-): () => any {
-  const memo = meta.evalMemo || (meta.evalMemo = new Map());
-  const key = `${code}@${state.id}/${!!blackbox}`;
-  let res = memo.get(key);
-  if (res) return res;
-  const id = toGlobal(evalCnt++);
+  mod: Module | null,
+  evalContext: { [name: string]: VarInfo } | null,
+  scopeDepth: number | null,
+  blackbox: boolean,
+  params: string[] | null,
+  id?: number
+): FunctionDescr {
+  if (id == null) id = toGlobal(evalCnt++);
   if (!blackbox) context.onNewSource(id, code);
-  const wcode = `return function() {\n${code}\n}`;
-  const ast = babelParse(wcode, {
-    allowReturnOutsideFunction: true,
-    startLine: 0
+  const ast = babelParse(code, {
+    allowReturnOutsideFunction: true
   });
-  const body = (<any>ast.program.body[0]).argument.body.body;
-  if (body.length === 1 && body[0].type === "ExpressionStatement")
-    body[0] = { type: "ReturnStatement", argument: body[0].expression };
-  blackbox = blackbox || meta.blackbox || !context.debug;
+  if (params == null) {
+    const body = <any>ast.program.body;
+    if (body.length === 1 && body[0].type === "ExpressionStatement")
+      body[0] = { type: "ReturnStatement", argument: body[0].expression };
+  }
   const tgt = babelGenerate(
     T.run(ast, {
       preInstrumentedLibs: true,
       blackbox,
       pureModule: true,
-      evalCtx: state.scope,
-      importRT: false,
-      moduleName: id,
-      ns: globalNS
+      evalContext,
+      evalParams: params,
+      directEval: evalContext != null,
+      rt: false,
+      ns: globalNS,
+      relativeName: id,
+      filename: `VM${id}.js`,
+      moduleExports: null,
+      iifeWrap: false,
+      scopeDepth,
+      constrParams: null
     }),
     { compact: true }
   ).code;
-  const mod = meta.module;
-  const cjs = mod && meta.module.cjs;
-  res = new SavedFunction(
+  const cjs = mod && mod.cjs;
+  new SavedFunction(
     "exports",
     "require",
     "module",
@@ -716,71 +822,88 @@ export function compileEval(
     mod && (<any>mod).exports,
     cjs && (cjs.__effectful_js_require || cjs.require),
     mod,
-    mod.fullPath,
+    mod ? mod.fullPath : ".",
     mod && mod.fullPath ? path.dirname(mod.fullPath) : ""
   );
-  memo.set(key, res);
+  curModule.params = {
+    code,
+    parent: mod && (mod.fullPath || mod.id),
+    evalContext,
+    scopeDepth,
+    id,
+    params,
+    blackbox
+  };
+  const res = curModule.topLevel;
   return res;
-}
-
-function defaultErrHandler() {
-  return 1;
-}
-
-function defaultFinHandler() {
-  return 0;
 }
 
 export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
-function buildFrame(closure: any, self: any, newTarget: any): any {
-  const next = context.top;
-  const { meta, $$ } = <ProtoFrame>closure[dataSymbol];
+export function makeFrame(closure: any, newTarget: any): Frame {
+  const { meta, $, parent } = <ProtoFrame>closure[dataSymbol];
+  let $g = parent ? parent.$g : global;
+  // uses globals AND eval
+  // if (meta.flags & Flag.HAS_DICTIONARY_SCOPE) $g = Object.create($g);
   const frame: Frame = {
-    $$,
+    $,
+    $g,
+    meta,
     state: 0,
     goto: 0,
-    meta,
+    done: false,
+    running: false,
+    parent,
     func: closure,
-    self: self === parentTag ? $$.self : self,
     newTarget: newTarget != null,
-    $: {},
     brk: null,
-    next,
-    caller: next,
+    next: null,
+    caller: null,
     restoreDebug: false,
     awaiting: token,
     onResolve: null,
     onReject: null,
     promise: null,
-    timestamp: journal.now
+    timestamp: journal.now,
+    result: void 0,
+    error: void 0,
+    self: void 0,
+    args: void 0
   };
+  return frame;
+}
+
+export function pushFrame(frame: Frame): any {
+  const next = context.top;
+  frame.next = frame.caller = next;
   if (context.debug && next) {
-    const call = context.call;
-    const expected = call === frame.func;
-    if (!expected) {
+    if (context.call !== frame.func) {
       frame.restoreDebug = true;
       context.debug = false;
     }
   }
   const res = (context.top = frame);
-  context.call = null;
+  // context.call = null;
   return res;
 }
 
-export const frame: (
-  closure: any,
-  self: any,
-  newTarget: any
-) => any = config.timeTravel
-  ? function frame(closure: any, self: any, newTarget: any): any {
+export function popFrame(top: Frame) {
+  const next = top.next;
+  if ((context.top = next) == null) signalThread();
+  else recordFrame(next);
+}
+
+export const frame: (closure: any, newTarget: any) => any = config.timeTravel
+  ? function frame(closure: any, newTarget: any): any {
       const top = context.top;
       recordFrame(top);
-      return buildFrame(closure, self, newTarget);
+      return pushFrame(makeFrame(closure, newTarget));
     }
-  : buildFrame;
+  : function frame(closure: any, newTarget: any) {
+      return pushFrame(makeFrame(closure, newTarget));
+    };
 
 export function checkExitBrk(top: Frame, value: any) {
   const meta = top.meta;
@@ -808,7 +931,9 @@ export function checkExitBrk(top: Frame, value: any) {
 export function ret(value: any): any {
   const top = <Frame>context.top;
   if (top.newTarget && (!value || typeof value !== "object")) value = top.self;
-  top.state = top.goto = 0;
+  // top.state = top.goto = 0;
+  top.result = void 0;
+  top.done = true;
   if (top.onResolve) {
     context.call = top.onResolve;
     top.onResolve(value);
@@ -816,24 +941,25 @@ export function ret(value: any): any {
   if (context.debug) {
     checkExitBrk(top, value);
   } else if (top.restoreDebug) context.debug = true;
-  pop(top);
+  popFrame(top);
   return value;
 }
 
 export function unhandled(e: any) {
   const top = <Frame>context.top;
-  top.state = top.goto = 0;
+  // top.state = top.goto = 0;
   if (top.onReject) {
     context.call = top.onReject;
     top.onReject(e);
   }
+  top.error = void 0;
+  top.done = true;
   if (!context.debug && top.restoreDebug) context.debug = true;
-  context.top = top.next;
-  pop(top);
+  popFrame(top);
   throw e;
 }
 
-export function brk(id: number): any {
+export function brk(): any {
   if (context.debug === false) return;
   const { needsBreak, top } = context;
   let p: Brk;
@@ -841,7 +967,7 @@ export function brk(id: number): any {
   let stopped = !context.running;
   if (
     top &&
-    (p = top.brk = context.brk = top.meta.states[id]) &&
+    (p = top.brk = context.brk = top.meta.states[top.state]) &&
     ((stopOnEntry = needsBreak(p, top)) || (stopped && context.activeTop))
   ) {
     if (stopped) {
@@ -872,61 +998,6 @@ export function iteratorM<T>(v: AsyncIterable<T>) {
 export const forInIterator = config.timeTravel
   ? TTCore.forInIterator
   : State.forInIterator;
-
-const {
-  boundFunSymbol,
-  boundThisSymbol,
-  boundArgsSymbol,
-  descriptorSymbol
-} = S;
-
-const BindDescriptor = regDescriptor({
-  name: "#b",
-  create() {
-    return makeBind();
-  },
-  write() {
-    return {};
-  },
-  overrideProps: {
-    arguments: false,
-    caller: false,
-    length: false,
-    name: false,
-    prototype: false
-  }
-});
-
-function makeBind(): (...args: any[]) => any {
-  function bind(...rest: any[]): any {
-    const fun = (<any>bind)[boundFunSymbol];
-    context.call = context.call === bind ? fun : null;
-    const boundArgs: any[] = (<any>bind)[boundArgsSymbol];
-    //avoiding spreads because they are monkey patched
-    const arr: any[] = Array(rest.length + boundArgs.length + 1);
-    arr[0] = (<any>bind)[boundThisSymbol];
-    let index = 0;
-    for (const i of boundArgs) arr[++index] = i;
-    for (const i of rest) arr[++index] = i;
-    return savedCall.apply(fun, <any>arr);
-  }
-  if (config.persistState) (<any>bind)[descriptorSymbol] = BindDescriptor;
-  return bind;
-}
-
-if (config.patchRT && config.persistState) {
-  FunctionConstr.prototype.bind = SavedFunction.prototype.bind = function bind(
-    this: any,
-    self: any,
-    ...args: any[]
-  ): (...args: any[]) => any {
-    const bind = <any>makeBind();
-    bind[boundFunSymbol] = this;
-    bind[boundThisSymbol] = self;
-    bind[boundArgsSymbol] = args;
-    return bind;
-  };
-}
 
 export function then(
   p: Promise<any>,
@@ -963,7 +1034,6 @@ export { del, set, gset, gdel, lset, ldel } from "./timeTravel/core";
 /** resets module's states (for tests) */
 export function reset() {
   metaCount = 0;
-  evalCnt = 0;
   indirMemo.clear();
   functionConstrMemo.clear();
   context.activeTop = context.top = null;
@@ -972,8 +1042,35 @@ export function reset() {
   context.queue.length = 0;
 }
 
-export function pop(top: Frame) {
-  const next = top.next;
-  if ((context.top = next) == null) signalThread();
-  else recordFrame(next);
+export function iterErr(iter: any, reason: any) {
+  if (!(context.call = iter.throw)) throw reason;
+  return iter.throw(reason);
 }
+
+export function iterErrUndef() {
+  return TypeError("The iterator does not provide a 'throw' method.");
+}
+
+export function iterFin(iter: any, value: any) {
+  if (!(context.call = iter.return)) return { value, done: true };
+  return iter.return(value);
+}
+
+export function iterNext(iter: any, value: any) {
+  return (context.call = iter.next), iter.next(value);
+}
+
+/**
+ * if `value` is a lazy thunk it is executed and its result is returned
+ * otherwise `value` is returned as is
+ */
+export function force(value: any): any {
+  if (!value) return value;
+  const code = value[thunkSymbol];
+  if (!code) return value;
+  defineProperty(value, thunkSymbol, { value: 0, configurable: true });
+  if (code === 1) return token;
+  throw token;
+}
+
+export { config };

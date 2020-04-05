@@ -5,9 +5,9 @@
   "license": "MIT",
   "version": "0.0.0",
   "scripts": {
-    "test": "cross-env BABEL_DISABLE_CACHE=1 lerna run test",
-    "build": "lerna run build && lerna run build-loose",
-    "prepare": "lerna bootstrap && npm run build && npm run prepare-test",
+    "test": "cross-env BABEL_DISABLE_CACHE=1 lerna run test --stream",
+    "build": "lerna run build && lerna run build-loose && npm run prepare-test",
+    "prepare": "lerna bootstrap && npm run build",
     "prepare-test": "lerna run prepare-test && lerna run link-test"
   },
   "devDependencies": {

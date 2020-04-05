@@ -1,31 +1,44 @@
+// ensuring it is loaded before anything patched
+import "@effectful/serialization";
+import "@effectful/serialization/dom";
 /**
  * Full state of a currently running program
  */
+export interface Env {
+  /** local variables */
+  $: any[];
+  /** local's sub-scope (loops block scoping) */
+}
 
 /** common prototype for call descriptions of each function */
-export interface ProtoFrame {
+export interface ProtoFrame extends Env {
   /** closure captured frame */
-  $$: Frame;
+  // $: Env | null;
   /** meta-data */
   meta: FunctionDescr;
   /** a constructed function's value */
   func: () => any;
+  parent: Frame | null;
 }
 
 /** function's call desciption */
-export interface Frame extends ProtoFrame {
+export interface Frame extends ProtoFrame, Env {
   /** current state */
   state: number;
   /** next iteration state */
   goto: number;
   /** captured `this` */
-  self: object;
+  self: object | undefined;
+  /** captured `arguments` */
+  args: object | undefined;
   /** if called as `new` expression */
   newTarget: boolean;
-  /** where we stopped */
+  /** location's desciption */
   brk: Brk | null;
-  /** local variables */
-  $: { [name: string]: any };
+  /** current return value */
+  result?: any;
+  /** current exception value */
+  error?: any;
   /** next function in the stack */
   next: Frame | null;
   /** like `next` but keeps real caller for coroutines */
@@ -45,6 +58,11 @@ export interface Frame extends ProtoFrame {
    * information what exactly it is awaiting
    */
   awaiting?: any;
+  /** the control flow is currently within generator's */
+  running: boolean;
+  done: boolean;
+  /** global env object (searched by name) */
+  $g: any;
 }
 
 export interface Record {
@@ -69,19 +87,17 @@ export interface Journal {
   enabled: boolean;
 }
 
-export enum BrkType {
-  exeception,
-  location,
-  function,
-  exit,
-  debugger
-}
+export const journal: Journal = {
+  now: null,
+  past: null,
+  future: null,
+  enabled: false
+};
 
 /** breakpoint description */
 export interface Brk {
   /** debugger's specific type of the breakpoint */
-  type: BrkType;
-  reason: string;
+  flags: BrkFlag;
   /** unique identifier within the function */
   id: number;
   meta: FunctionDescr;
@@ -89,10 +105,25 @@ export interface Brk {
   column: number;
   endLine: number;
   endColumn: number;
-  exit: boolean;
   scope: ScopeInfo;
   /** textual representation of the location */
   location: string;
+  scopeDepth: number;
+  logPoint: ((frame: Frame) => void) | null;
+  breakpoint: {
+    condition: (frame: Frame) => boolean | null;
+    hitCondition: (frame: Frame) => number;
+    hits: number;
+    signal: () => void;
+  } | null;
+}
+
+export enum BrkFlag {
+  HAS_EH = 1 << 0,
+  EXPR = 1 << 1,
+  STMT = 1 << 2,
+  DEBUGGER_STMT = 1 << 3,
+  EXIT = 1 << 4
 }
 
 /** module's description */
@@ -100,22 +131,22 @@ export interface Module {
   name: string;
   /** unique id for loaded modules */
   fullPath?: string;
-  /** unique id for generated modules (e.g. `eval`) */
-  id?: number;
+  /** unique id (a number for generated modules) */
+  id?: number | string;
   functions: { [name: string]: FunctionDescr };
-  pure: boolean;
-  topLevel: FunctionDescr | null;
+  // pure: boolean;
+  topLevel: FunctionDescr;
   /** `module` object from CommonJS */
   cjs: any;
   version: number;
-  /** parent's variables for eval*/
-  evalCtx?: { [name: string]: [string, number] };
+  /** parent's variables for eval */
+  evalContext?: { [name: string]: VarInfo };
+  /** string which is safe to use as a prefix to avoid clashes with other names */
+  safePrefix: string;
+  api: any;
+  closSyms: { [name: string]: any };
+  params: null | { [name: string]: any };
 }
-
-//TODO: babel doesn't support const enums
-export const PlainKind = 0;
-export const AsyncKind = 1;
-export const GeneratorKind = 2;
 
 /** function's description */
 export type FunctionDescr = {
@@ -123,18 +154,24 @@ export type FunctionDescr = {
   module: Module;
   id: number | null;
   name: string;
+  origName: string | null;
+  calleeName: number | null;
   fullName: string;
   blackbox: boolean;
-  parent?: FunctionDescr; // Frame?
+  parent: FunctionDescr | null; // Frame?
   states: Brk[];
+  statesByLine: Brk[];
   canSkip: boolean;
   uniqName: string;
+  persistName: string;
   params: string[];
-  kind: number;
+  flags: number;
   func: (...args: any[]) => any;
-  handler: (context: Frame, input: any) => any;
-  errHandler: (state: number) => number;
-  finHandler: (state: number) => number;
+  handler: (frame: Frame, locals: { [name: string]: any }, input: any) => any;
+  errHandler: (f: Frame, locals: { [name: string]: any }) => void;
+  finHandler: (f: Frame, locals: { [name: string]: any }) => void;
+  errState: number;
+  finState: number;
   constr: ($$: { [name: string]: any }) => any;
   evalMemo?: Map<string, (...args: any[]) => any>;
   exitBreakpoint: Brk | null;
@@ -143,6 +180,15 @@ export type FunctionDescr = {
   endLine?: number;
   endColumn?: number;
   location?: string;
+  code: string;
+  /* number of frame-local variables */
+  localsNum: number;
+  /* number of variables in top scope */
+  varsNum: number;
+  /** where arguments start */
+  shift: number;
+  deps: FunctionDescr[];
+  scopeDepth: number;
 };
 
 export type NonBlackboxFunctionDescr = FunctionDescr & {
@@ -152,27 +198,31 @@ export type NonBlackboxFunctionDescr = FunctionDescr & {
   endColumn: number;
 };
 
+/** describse variable scope (decl depth, function depth, location) */
+export type VarInfo = [number, number, string | null];
+
 /** pre-calculated scope information */
 export interface ScopeInfo {
-  /** original variable name to its storing field name and depth to parent */
-  [name: string]: [string, number];
+  /** original variable name to its storing index and depth to parent */
+  [name: string]: VarInfo;
 }
 
 /** passed to this runtime by compiler */
 export type Scope = any[] &
   (
     | {
-        /** scope object's field name to their original names */
-        0: { [name: string]: string };
+        /** scope object's index and location to their original names */
+        0: { [name: string]: [number, string | null] };
         /** parent's scope */
         1: Scope | null;
-        /** memoized `ScopeInfo` */
-        length: 2;
+        /** statement's level */
+        2: number;
+        length: 3;
       }
     | {
         /** memoized `ScopeInfo` */
-        2: ScopeInfo;
-        length: 3;
+        3: ScopeInfo;
+        length: 4;
       }
   );
 
@@ -190,8 +240,10 @@ export interface State {
   running: boolean;
   /** current breakpoint id */
   brk: Brk | null;
-  /** loaded modules */
+  /** loaded modules (by full path) */
   modules: { [name: string]: Module };
+  /** loaded modules (by CommonJs id) */
+  modulesById: { [name: string]: Module };
   /** saved context for synchronous functions */
   syncStack: Job[];
   /** next functions to run */
@@ -254,6 +306,7 @@ export const context: State = {
   brk: null,
   top: null,
   modules: {},
+  modulesById: {},
   syncStack: [],
   error: false,
   queue: [],
@@ -281,8 +334,14 @@ export const saved = {
   console,
   Proxy,
   Promise,
+  // tslint:disable-next-line:object-literal-shorthand
   eval: eval,
   Function,
+  FunctionMethods: {
+    call: Function.prototype.call,
+    apply: Function.prototype.apply,
+    bind: Function.prototype.bind
+  },
   promiseMethods: {
     then: Promise.prototype.then,
     catch: Promise.prototype.catch,
@@ -302,7 +361,10 @@ export const saved = {
     reverse: Array.prototype.reverse
   },
   Map,
-  Set
+  Set,
+  Reflect: {
+    construct: Reflect.construct
+  }
 };
 
 /**
@@ -310,16 +372,6 @@ export const saved = {
  * of the function's call
  */
 export const thunkSymbol = Symbol("@effectful/debugger/thunk");
-
-/**
- * if `value` is a lazy thunk it is executed and its result is returned
- * otherwise `value` is returned as is
- */
-export function evalThunk<T>(value: { [thunkSymbol]: boolean } | T): T {
-  return value && (<any>value)[thunkSymbol]
-    ? ((context.call = value), (<any>value)())
-    : value;
-}
 
 export const token = { _effectToken: true };
 
@@ -359,13 +411,13 @@ export function idsStore(bits: number = 16): IdsStore {
 }
 
 /** catch/finally handler state ids mapping */
-export type StateMap = ((state: number) => number) | undefined;
+export type StateMap = ((f: Frame) => void) | undefined;
 
 /** handler function */
 export type Handler = (f: Frame, pat: any) => any;
 
 /** breakpoint positions */
-export type States = [Scope, string, string][];
+export type States = [number, string, Scope][];
 
 export const THREAD_BITS = 10;
 
@@ -399,44 +451,71 @@ export const normalizeDrive = isWindows
       return path;
     };
 
-/*
-export function forInIterator(obj: object): Iterable<string> {
-  return (function*() {
-    for (const i in obj) yield i;
-  })()[Symbol.iterator]();
+export class ForInIterator implements Iterable<string>, Iterator<string> {
+  fields: string[];
+  pos: number;
+  obj: any;
+  constructor(obj: any) {
+    const fields: string[] = [];
+    this.fields = fields;
+    this.pos = 0;
+    for (let i in obj) fields.push(i);
+    this.obj = obj;
+  }
+  [Symbol.iterator]() {
+    return this;
+  }
+  next(): IteratorResult<string> {
+    for (;;) {
+      if (this.pos >= this.fields.length)
+        return { done: true, value: undefined };
+      const value = this.fields[this.pos++];
+      if (value in this.obj) return { done: false, value };
+    }
+  }
 }
-
-*/
-
+export function forInIterator(obj: object): Iterable<string> {
+  return new ForInIterator(obj);
+}
+/*
 export function* forInIterator(obj: object): Iterable<string> {
   for (const i in obj) yield i;
 }
-
-export type SubGenerator = Iterator<any> & {
-  throw?: (value: any) => Item;
-  return?: (value: any) => Item;
-};
-
+*/
 export interface GeneratorFrame extends Frame {
-  delegatee: SubGenerator | null;
-  running: boolean;
   sent: any;
+  iter: Iterable<any>;
 }
 
 export type Item = { value: any; done: boolean };
 
-export type AsyncSubGenerator = AsyncIterator<any> & {
-  throw?: (value: any) => Promise<Item>;
-  return?: (value: any) => Promise<Item>;
-};
-
 export interface AsyncGeneratorFrame extends Frame {
-  delegatee: AsyncSubGenerator | null;
   running: boolean;
   queue: (() => void)[];
-  cleanup(): void;
   onResolve: (value: any) => void;
   onReject: (reason: any) => void;
   promise: Promise<Item>;
   sent: any;
+  iter: AsyncIterable<any>;
+}
+
+export enum Flag {
+  ASYNC_FUNCTION = 1 << 0,
+  GENERATOR_FUNCTION = 1 << 1,
+  ARROW_FUNCTION = 1 << 2,
+  HAS_THIS = 1 << 3,
+  HAS_ARGUMENTS = 1 << 4,
+  FILE_TOP_LEVEL = 1 << 5,
+  BLACKBOX = 1 << 7,
+  SLOPPY = 1 << 8,
+  HAS_FUNCTION_SENT = 1 << 9,
+  HAS_DICTIONARY_SCOPE = 1 << 10
+}
+
+export function defaultErrHandler(f: Frame) {
+  f.state = f.goto = f.meta.errState;
+}
+
+export function defaultFinHandler(f: Frame) {
+  f.state = f.goto = f.meta.finState;
 }

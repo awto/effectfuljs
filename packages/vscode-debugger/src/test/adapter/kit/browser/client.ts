@@ -1,7 +1,6 @@
 import * as Support from "vscode-debugadapter-testsupport";
 import * as Kit from "../client";
 import * as puppeteer from "puppeteer";
-import { DebugProtocol } from "vscode-debugprotocol";
 
 const debServerStartedRe = /^webpack: Listening on (.+)$/m;
 
@@ -12,10 +11,14 @@ export class DebugClient extends Kit.DebugClient {
     await Promise.all([
       super.start(port),
       (async () => {
-        this.browser = await puppeteer.launch({
-          // headless: false,
-          // args: ["--auto-open-devtools-for-tabs"]
-        });
+        this.browser = await puppeteer.launch(
+          process.env.EFFECTFUL_DEBUG_CHROME
+            ? {
+                headless: false,
+                args: ["--auto-open-devtools-for-tabs"]
+              }
+            : {}
+        );
         this.page = await this.browser.newPage();
       })()
     ]);
@@ -41,7 +44,7 @@ export class DebugClient extends Kit.DebugClient {
       })
     );
     if (this.page && url)
-      await this.page.goto(url, { waitUntil: "networkidle2" });
+      await this.page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
     return url;
   }
 }

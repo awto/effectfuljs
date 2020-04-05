@@ -50,7 +50,15 @@ exports[`regenerator run block binding should translate block binding correctly 
 
 exports[`regenerator run block binding should translate block binding with iife correctly 1`] = `0`;
 
-exports[`regenerator run call expression ordering (#244) should be correct 1`] = `0`;
+exports[`regenerator run call expression ordering should be correct with chained calls (#244) 1`] = `0`;
+
+exports[`regenerator run call expression ordering when the callee is a member expression should allow vars assigned in the callee to be used in the args (#379) 1`] = `0`;
+
+exports[`regenerator run call expression ordering when the callee is a member expression should be correct when only the arguments contains yield 1`] = `0`;
+
+exports[`regenerator run call expression ordering when the callee is a member expression should be correct when only the callee contains yield 1`] = `0`;
+
+exports[`regenerator run call expression ordering when the callee is a member expression should be correct when the callee and the arguments contain yield 1`] = `0`;
 
 exports[`regenerator run catch parameter shadowing should allow nested catch parameters of the same name 1`] = `0`;
 
@@ -103,6 +111,8 @@ exports[`regenerator run expressions containing yield subexpressions should hand
 exports[`regenerator run expressions containing yield subexpressions should handle implicit stringification correctly 1`] = `0`;
 
 exports[`regenerator run expressions containing yield subexpressions should work even with getter member expressions 1`] = `0`;
+
+exports[`regenerator run expressions containing yield subexpressions should work when yield is in an array spread 1`] = `0`;
 
 exports[`regenerator run for loop with var decl and no update expression should compile and run 1`] = `0`;
 

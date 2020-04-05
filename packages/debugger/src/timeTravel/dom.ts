@@ -1,10 +1,12 @@
+import config from "../config";
+import * as State from "../state";
 import * as Core from "./core";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
 import { nodeListIter } from "@effectful/serialization/dom";
 import { Operation } from "../state";
 import { record1 } from "./binds";
 
-const journal = Core.journal;
+const journal = State.journal;
 
 const domObserverSymbol = Symbol("@effectful/debugger/dom");
 
@@ -26,19 +28,25 @@ interface ElementExt extends Element {
  */
 if (typeof Node !== "undefined") {
   for (const i of [Node, NodeList]) {
-    Core.objectSaved.defineProperty(i.prototype, Core.SetSymbol, {
-      configurable: true,
-      value(node: any, name: any, value: any) {
-        if (journal.enabled) {
-          const proto = Object.getPrototypeOf(node);
-          if (!(name in proto)) Core.recordProp(node, name);
+    if (!config.expNoAccessOverloading) {
+      Core.objectSaved.defineProperty(i.prototype, Core.SetSymbol, {
+        configurable: true,
+        value(node: any, name: any, value: any) {
+          if (journal.enabled) {
+            const proto = Object.getPrototypeOf(node);
+            if (!(name in proto)) Core.recordProp(node, name);
+          }
+          return (node[name] = value);
         }
-        return (node[name] = value);
-      }
-    });
-    Core.objectSaved.defineProperty(i.prototype, Core.DeleteSymbol, {
+      });
+      Core.objectSaved.defineProperty(i.prototype, Core.DeleteSymbol, {
+        configurable: true,
+        value: Core.noOrderDelete
+      });
+    }
+    Core.objectSaved.defineProperty(i.prototype, Core.KeysMapSymbol, {
       configurable: true,
-      value: Core.noOrderDelete
+      value: false
     });
   }
 }
@@ -128,7 +136,7 @@ export function track(rootEl: Element) {
   if (!data) data = root[domObserverSymbol] = { root };
   if (!data.observer) {
     const observer = (data.observer = new MutationObserver(changes => {
-      journal.now && changes.length && record(changes);
+      if (journal.now && changes.length) record(changes);
     }));
     observer.observe(data.root, {
       childList: true,

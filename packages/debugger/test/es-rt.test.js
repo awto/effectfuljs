@@ -3,8 +3,10 @@ const trace = require("./run");
 trace.silent = true;
 const D = require("../main");
 
+const savedConsole = console;
+
 describe("ECMAScript containers stepping", function() {
-  const mod = trace(D.evalThunk(require("./__fixtures__/es")));
+  const mod = trace(D.force(require("./__fixtures__/es")));
   test("Array#map", function() {
     global.console = { log: jest.fn() };
     console.log("> map:Array", trace(mod.mapTest([1, 2, 3])));

@@ -4,9 +4,8 @@ import * as DOM from "./dom";
 import { Record } from "../state";
 import * as State from "../state";
 import * as S from "@effectful/serialization";
-import { record2, record3, record4, record5, record6, record8 } from "./binds";
-
-export const journal = Core.journal;
+import { record2, record4, record8 } from "./binds";
+export const journal = State.journal;
 const context = State.context;
 
 export const reset = Core.reset;
@@ -137,30 +136,6 @@ export const typedArrayDisableTrace = config.timeTravel
       return arr;
     };
 
-/** disables tracing on a specific WeakMap object */
-export const weakMapDisableTrace = config.timeTravel
-  ? function weakMapDisableTrace(map: WeakMap<any, any>) {
-      if (Core.weakMapSaved.set === map.set) return;
-      map.set = Core.weakMapSaved.set;
-      map.delete = Core.weakMapSaved.delete;
-      return map;
-    }
-  : function weakMapDisableTrace(map: WeakMap<any, any>) {
-      return map;
-    };
-
-/** disables tracing on a specific WeakSet object */
-export const weakSetDisableTrace = config.timeTravel
-  ? function weakSetDisableTrace(set: WeakSet<any>) {
-      if (Core.weakSetSaved.add === set.add) return;
-      set.add = Core.weakSetSaved.add;
-      set.delete = Core.weakSetSaved.delete;
-      return set;
-    }
-  : function weakSetDisableTrace(set: WeakSet<any>) {
-      return set;
-    };
-
 function restoreFrameFullOp(this: any) {
   const { a: frame, b: saved } = this;
   this.b = State.saved.Object.assign({}, frame);
@@ -171,13 +146,15 @@ function restoreFrameFullOp(this: any) {
 S.regOpaqueObject(restoreFrameFullOp, "#frame");
 
 function restoreFrameOp(this: any) {
-  const { a: frame, b: goto, c: brk } = this;
+  const { a: frame, b: goto, c: brk, d: $ } = this;
   this.b = frame.goto;
   this.c = frame.brk;
+  this.d = frame.$;
   record(this);
   frame.goto = goto;
   frame.brk = brk;
   frame.timestamp = journal.now;
+  frame.$ = $;
 }
 
 S.regOpaqueObject(restoreFrameOp, "#frame");
@@ -187,7 +164,7 @@ function restoreGeneratorFrameOp(this: any) {
     a: frame,
     b: goto,
     c: brk,
-    d: delegate,
+    d: $,
     e: running,
     f: sent,
     g: next,
@@ -195,7 +172,7 @@ function restoreGeneratorFrameOp(this: any) {
   } = this;
   this.b = frame.goto;
   this.c = frame.brk;
-  this.d = frame.delegate;
+  this.d = frame.$;
   this.e = frame.running;
   this.f = frame.sent;
   this.g = frame.next;
@@ -203,7 +180,7 @@ function restoreGeneratorFrameOp(this: any) {
   record(this);
   frame.goto = goto;
   frame.brk = brk;
-  frame.delegatee = delegate;
+  frame.$ = $;
   frame.running = running;
   frame.sent = sent;
   frame.timestamp = journal.now;
@@ -213,13 +190,15 @@ function restoreGeneratorFrameOp(this: any) {
 
 S.regOpaqueObject(restoreGeneratorFrameOp, "#frame$g");
 
+const Flag = State.Flag;
+
 export function recordFrame(frame: State.Frame) {
   if (journal.enabled && frame.timestamp !== journal.now) {
-    const kind = frame.meta.kind;
-    if ((kind & State.GeneratorKind) !== 0) {
-      if ((kind & State.AsyncKind) !== 0) {
+    const flags = frame.meta.flags;
+    if (flags & Flag.GENERATOR_FUNCTION) {
+      if (flags & Flag.ASYNC_FUNCTION) {
         frame.timestamp = journal.now;
-        //TODO: saved only needed properties
+        // TODO: saved only needed properties
         record2(
           restoreFrameFullOp,
           frame,
@@ -231,7 +210,7 @@ export function recordFrame(frame: State.Frame) {
           frame,
           frame.goto,
           frame.brk,
-          (<State.GeneratorFrame>frame).delegatee,
+          frame.$,
           (<State.GeneratorFrame>frame).running,
           (<State.GeneratorFrame>frame).sent,
           frame.next,
@@ -239,21 +218,15 @@ export function recordFrame(frame: State.Frame) {
         );
       }
     } else {
-      if ((kind & State.AsyncKind) !== 0) {
+      if ((flags & Flag.ASYNC_FUNCTION) !== 0) {
         record2(
           restoreFrameFullOp,
           frame,
           State.saved.Object.assign({}, frame)
         );
       } else {
-        record3(restoreFrameOp, frame, frame.goto, frame.brk);
+        record4(restoreFrameOp, frame, frame.goto, frame.brk, frame.$);
       }
     }
   }
-  /*
-  if (journal.enabled && frame.timestamp !== journal.now) {
-    frame.timestamp = journal.now;
-    record2(restoreFrameFullOp, frame, State.saved.Object.assign({}, frame));
-  }
-*/
 }

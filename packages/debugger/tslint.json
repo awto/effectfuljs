@@ -13,7 +13,14 @@
     "max-classes-per-file": false,
     "object-literal-sort-keys": false,
     "no-empty": false,
-    "no-bitwise": false
+    "no-bitwise": false,
+    "no-shadowed-variable": false,
+    "only-arrow-functions": false,
+    "no-empty-interface": false,
+    "prefer-const": false,
+    "no-conditional-assignment": false,
+    "no-string-literal": false,
+    "no-var-requires": false
   },
   "rulesDirectory": []
 }

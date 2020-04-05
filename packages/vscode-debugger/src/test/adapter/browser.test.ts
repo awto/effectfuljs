@@ -127,17 +127,18 @@ suite("Debugging on Chrome", function() {
         line: 10
       })
     ]);
+    const scope = await dc.scopeDescr();
     assert.deepEqual(
       JSON.parse(
-        JSON.stringify(await dc.scopeDescr(), (n, v) =>
-          n === "setter" ? true : v
+        JSON.stringify(scope, (n, v) =>
+          n === "setter" ? "<SETTER>" : n === "Counter" ? "<Counter>" : v
         )
       ),
       [
         [
-          { "[name]": "f" },
-          { value: "0", setter: true, "[name]": "Counter" },
-          { "[name]": "f" }
+          { "[name]": "(anonymous)" },
+          { value: "0", setter: "<SETTER>", "[name]": "Counter" },
+          { Counter: "<Counter>", "[name]": "Counter.tsx" }
         ]
       ]
     );

@@ -27,7 +27,9 @@ const { normalizeDrive } = require("../../state");
 
 const { backend, cache, srcRoot, timeTravel } = config;
 
-const importRT = `@effectful/debugger/backends/${backend}`;
+const rt = config.builtInBackends[backend]
+  ? `@effectful/debugger/backends/${backend}`
+  : backend;
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
@@ -69,7 +71,7 @@ if (path.sep === "\\")
   };
 
 const include = [paths.appSrc];
-console.log("INCLUDE", include);
+
 function isDebuggerPath(filename) {
   filename = path.resolve(normalizeDrive(filename));
   return (
@@ -218,13 +220,10 @@ module.exports = {
                   [
                     preset,
                     {
-                      importRT,
+                      rt,
                       timeTravel,
                       preInstrumentedLibs: true,
-                      expInject: 0,
-                      expInline: false,
-                      srcRoot,
-                      expNoCallWraps: configJS.expNoCallWraps
+                      srcRoot
                     }
                   ]
                 ],
@@ -255,12 +254,9 @@ module.exports = {
                     preset,
                     {
                       blackbox: true,
-                      importRT,
                       timeTravel,
                       expInject: 0,
-                      expInline: false,
-                      srcRoot,
-                      expNoCallWraps: configJS.expNoCallWraps
+                      srcRoot
                     }
                   ]
                 ],

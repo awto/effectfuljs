@@ -1,18 +1,18 @@
-import {
-  FunctionDescr,
-  GeneratorFrame,
-  saved,
-  Module,
-  StateMap,
-  States,
-  Handler
-} from "./state";
+import { FunctionDescr, GeneratorFrame } from "./state";
 import * as State from "./state";
-import { fun, clos, checkExitBrk, unhandled, pop } from "./engine";
-import * as Instr from "./instr/rt";
+import config from "./config";
+import {
+  pushFrame,
+  popFrame,
+  makeFrame,
+  clos,
+  checkExitBrk,
+  unhandled,
+  handle,
+  wrapBuiltinFunc
+} from "./engine";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
-
-const { context } = State;
+const { context, saved } = State;
 
 const { defineProperty } = saved.Object;
 
@@ -25,10 +25,10 @@ class IterableThis {
 regConstructor(IterableThis);
 
 class Generator extends IterableThis {
-  $frame: GeneratorFrame;
+  _frame: GeneratorFrame;
   constructor(frame: GeneratorFrame) {
     super();
-    this.$frame = frame;
+    this._frame = frame;
   }
 }
 
@@ -36,17 +36,48 @@ regConstructor(Generator);
 
 const Gp = <any>Generator.prototype;
 
-defineProperty(Gp, "next", {
-  value: Instr.generatorMethod(Instr.generatorNext),
-  configurable: true
-});
 defineProperty(Gp, "throw", {
-  value: Instr.generatorMethod(Instr.generatorThrow),
-  configurable: true
+  value: function raise(e: any) {
+    context.call = context.call === raise ? next : null;
+    const frame = this._frame;
+    frame.error = e;
+    frame.meta.errHandler(frame, frame.$);
+    return this.next(e);
+  },
+  configurable: true,
+  writable: true
 });
+
+function next(this: any, value: any) {
+  const frame = this._frame;
+  if (frame.running) throw new Error("Generator is already running");
+  frame.sent = value;
+  frame.running = true;
+  context.call = context.call === next ? frame.func : null;
+  pushFrame(frame);
+  try {
+    return frame.meta.handler(frame, frame.$, value);
+  } catch (e) {
+    return handle(frame, e);
+  }
+}
+
 defineProperty(Gp, "return", {
-  value: Instr.generatorMethod(Instr.generatorReturn),
-  configurable: true
+  value: wrapBuiltinFunc(function ret(this: any, r: any) {
+    context.call = context.call === ret ? next : null;
+    const frame = this._frame;
+    frame.meta.finHandler(frame, frame.$);
+    frame.result = r;
+    return this.next(r);
+  }),
+  configurable: true,
+  writable: true
+});
+
+defineProperty(Gp, "next", {
+  value: next,
+  configurable: true,
+  writable: true
 });
 
 function GeneratorFunction() {}
@@ -64,80 +95,63 @@ GeneratorFunctionPrototype.constructor = GeneratorFunction;
   Symbol.toStringTag
 ] = GeneratorFunction.displayName = "GeneratorFunction";
 
-export function funG(
-  module: Module,
-  func: (...args: any[]) => any,
-  handler: Handler,
-  err: StateMap,
-  fin: StateMap,
-  states: States,
-  name: string,
-  loc: string,
-  parent: FunctionDescr | undefined,
-  params: string[]
-): ($$: { [name: string]: any }) => any {
-  return fun(
-    module,
-    func,
-    handler,
-    err,
-    fin,
-    states,
-    name,
-    loc,
-    parent,
-    params,
-    State.GeneratorKind
-  );
-}
-
 export function closG($$: any, meta: FunctionDescr, closure: any) {
   const res = clos($$, meta, closure);
   Object.setPrototypeOf(res, GeneratorFunctionPrototype);
+  /*
+  const proto = (res.prototype = Object.create(Gp));
+  defineProperty(proto, "next", {
+    value: meta.handler,
+    configurable: true
+  });*/
   res.prototype = Object.create(Gp);
   return res;
 }
 
-export function scopeG(goto: number) {
-  const top = <GeneratorFrame>context.top;
-  if (!context.debug && top.restoreDebug) context.debug = true;
-  pop(top);
-  top.goto = goto;
-  top.next = null;
-  const caller = top.func;
-  const esProto =
-      caller && caller.prototype instanceof Generator
-        ? caller.prototype
-        : Generator.prototype,
-    res = Object.create(esProto);
-  res.$frame = top;
-  return res;
-}
+export const frameG: (
+  closure: any,
+  newTarget: any
+) => GeneratorFrame = config.expInlineNext
+  ? function frameG(closure: any, newTarget: any) {
+      const frame = <GeneratorFrame>makeFrame(closure, newTarget);
+      const iter = Object.create(closure.prototype);
+      frame.iter = iter;
+      iter.next = (<any>frame.meta).nextImpl;
+      iter._frame = frame;
+      return frame;
+    }
+  : function frameG(closure: any, newTarget: any) {
+      const frame = <GeneratorFrame>makeFrame(closure, newTarget);
+      const iter = Object.create(closure.prototype);
+      frame.iter = iter;
+      iter._frame = frame;
+      return frame;
+    };
 
-export function yld(value: any, goto: number): any {
-  const top = <GeneratorFrame>context.top;
+export function yld(value: any): any {
+  const frame = <GeneratorFrame>context.top;
   const res = (context.value = { value, done: false });
-  top.goto = goto;
-  if (!context.debug && top.restoreDebug) context.debug = true;
-  pop(top);
+  if (!context.debug && frame.restoreDebug) context.debug = true;
+  popFrame(frame);
+  frame.running = false;
   return res;
 }
 
 export function retG(value: any): any {
-  const top = <GeneratorFrame>context.top;
+  const frame = <GeneratorFrame>context.top;
   const res = (context.value = { value, done: true });
-  top.state = top.goto = 0;
-  if (context.debug) checkExitBrk(top, res);
-  else if (top.restoreDebug) context.debug = true;
-  pop(top);
+  frame.result = void 0;
+  frame.running = false;
+  frame.done = true;
+  if (context.debug) checkExitBrk(frame, res);
+  else if (frame.restoreDebug) context.debug = true;
+  popFrame(frame);
   return res;
 }
 
-export const unhandledG = unhandled;
-
-export function yldStar(value: any, goto: number): any {
-  const top = <GeneratorFrame>context.top;
-  pop(top);
-  context.call = Instr.yldStarImpl;
-  return Instr.yldStarImpl(top, value, goto);
+export function unhandledG(e: any) {
+  const frame = <GeneratorFrame>context.top;
+  frame.running = false;
+  frame.done = true;
+  return unhandled(e);
 }

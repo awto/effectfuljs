@@ -13,18 +13,21 @@ test("generator functions time traveling", function() {
     global.console = {
       log(...args) {
         D.TimeTravel.Core.arraySaved.push.call(calls, args);
-      }
+      },
+      error: console.error
     };
+    S.regOpaqueObject(global.console, "mock-console-tt-generators");
     Ctx.debug = true;
     Ctx.needsBreak = brk => {
-      if (brk.meta.name === "_testGen" && brk.id === 1) {
+      if (brk.meta.origName === "_testGen" && brk.line - brk.meta.line === 2) {
         console.log("CHECKPOINT");
         D.TimeTravel.checkpoint();
       }
       return false;
     };
     S.regOpaqueObject(Ctx.needsBreak, "needsBrk");
-    const mod = trace(D.evalThunk(require("./__fixtures__/tt/generators")));
+    const mod = trace(D.force(require("./__fixtures__/tt/generators")));
+    S.regOpaqueObject(mod, "fixtures/tt/generators");
     D.TimeTravel.reset();
     Ctx.call = mod.testGen;
     console.log("DONE 1", trace(mod.testGen()));
@@ -78,17 +81,22 @@ test("async function's time traveling", async function() {
     global.console = {
       log(...args) {
         D.TimeTravel.Core.arraySaved.push.call(calls, args);
-      }
+      },
+      error: console.error
     };
+    S.regOpaqueObject(global.console, "mock-console-tt-async");
     Ctx.debug = true;
     Ctx.needsBreak = brk => {
-      if (brk.meta.name === "_testAsync" && brk.id === 1) {
+      if (
+        brk.meta.origName === "_testAsync" &&
+        brk.line - brk.meta.line === 2
+      ) {
         console.log("CHECKPOINT");
         D.TimeTravel.checkpoint();
       }
       return false;
     };
-    const mod = trace(D.evalThunk(require("./__fixtures__/tt/generators")));
+    const mod = trace(D.force(require("./__fixtures__/tt/generators")));
     let r;
     function resetR(rs) {
       r.cont = rs;
@@ -202,17 +210,22 @@ test("async generator functions time traveling", async function() {
     global.console = {
       log(...args) {
         D.TimeTravel.Core.arraySaved.push.call(calls, args);
-      }
+      },
+      error: console.error
     };
+    S.regOpaqueObject(global.console, "mock-console-tt-async-generators");
     Ctx.debug = true;
     Ctx.needsBreak = brk => {
-      if (brk.meta.name === "_testAsyncGen" && brk.id === 1) {
+      if (
+        brk.meta.origName === "_testAsyncGen" &&
+        brk.line - brk.meta.line === 2
+      ) {
         console.log("CHECKPOINT");
         D.TimeTravel.checkpoint();
       }
       return false;
     };
-    const mod = trace(D.evalThunk(require("./__fixtures__/tt/generators")));
+    const mod = trace(D.force(require("./__fixtures__/tt/generators")));
     let r;
     function resetR(rs) {
       r.cont = rs;

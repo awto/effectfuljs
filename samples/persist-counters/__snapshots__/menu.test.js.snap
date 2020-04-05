@@ -130,7 +130,7 @@ Object {
                           "$": "#fun",
                         },
                         Object {
-                          "r": 0,
+                          "r": 1,
                         },
                       ],
                       Array [
@@ -139,7 +139,7 @@ Object {
                         },
                         Array [
                           Object {
-                            "r": 1,
+                            "r": 0,
                           },
                           "Menu1",
                           Object {
@@ -192,7 +192,7 @@ Object {
                           "$": "#fun",
                         },
                         Object {
-                          "r": 0,
+                          "r": 1,
                         },
                       ],
                       Array [
@@ -201,7 +201,7 @@ Object {
                         },
                         Array [
                           Object {
-                            "r": 1,
+                            "r": 0,
                           },
                           "Menu3",
                           Object {
@@ -251,10 +251,10 @@ Object {
   ],
   "x": Array [
     Object {
-      "$": "_signal",
+      "$": "menuDispatch",
     },
     Object {
-      "$": "menuDispatch",
+      "$": "_signal",
     },
   ],
 }
@@ -295,7 +295,7 @@ Object {
                           "$": "#fun",
                         },
                         Object {
-                          "r": 0,
+                          "r": 1,
                         },
                       ],
                       Array [
@@ -304,7 +304,7 @@ Object {
                         },
                         Array [
                           Object {
-                            "r": 1,
+                            "r": 0,
                           },
                           "Menu1",
                           Object {
@@ -357,7 +357,7 @@ Object {
                           "$": "#fun",
                         },
                         Object {
-                          "r": 0,
+                          "r": 1,
                         },
                       ],
                       Array [
@@ -366,7 +366,7 @@ Object {
                         },
                         Array [
                           Object {
-                            "r": 1,
+                            "r": 0,
                           },
                           "Menu2",
                           Object {
@@ -419,7 +419,7 @@ Object {
                           "$": "#fun",
                         },
                         Object {
-                          "r": 0,
+                          "r": 1,
                         },
                       ],
                       Array [
@@ -428,7 +428,7 @@ Object {
                         },
                         Array [
                           Object {
-                            "r": 1,
+                            "r": 0,
                           },
                           "Menu3",
                           Object {
@@ -478,10 +478,10 @@ Object {
   ],
   "x": Array [
     Object {
-      "$": "_signal",
+      "$": "menuDispatch",
     },
     Object {
-      "$": "menuDispatch",
+      "$": "_signal",
     },
   ],
 }

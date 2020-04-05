@@ -1,5 +1,4 @@
 /** Monkey-patching JS runtime */
-
 import config from "./config";
 import * as Instr from "./instr/rt";
 import * as Engine from "./engine";
@@ -21,7 +20,7 @@ function switchDefault(
   proto[name] = function impl() {
     if (context.call === impl)
       return (
-        //TODO: move to faster apply
+        // TODO: move to faster apply
         (context.call = debugImpl.apply), debugImpl.apply(this, <any>arguments)
       );
     return (context.call = null), defImpl.apply(this, <any>arguments);
@@ -29,9 +28,8 @@ function switchDefault(
 }
 
 if (config.patchRT) {
-  const Promise = (global.Promise = Instr.unwrapImport(
-    config.timeTravel ? require("./deps/promise-t") : require("./deps/promise"),
-    "promise"
+  const Promise = (global.Promise = Engine.force(
+    config.timeTravel ? require("./deps/promise-t") : require("./deps/promise")
   ));
   regOpaqueObject(Promise, "global#Promise");
   regOpaqueObject(Promise.prototype, "global#Promise#");

@@ -1,22 +1,15 @@
 import config from "../config";
-import { Journal, Record, saved, context } from "../state";
+import { journal, Record, saved, context } from "../state";
 import { record1, record2, record3, record4 } from "./binds";
-import { regOpaqueObject, regConstructor } from "../persist";
+import { regOpaqueObject } from "../persist";
+import { descriptorSymbol } from "@effectful/serialization";
 
-export const journal: Journal = {
-  now: null,
-  past: null,
-  future: null,
-  enabled: false
-};
+const SavedSet = Set;
 
 export function reset(enabled: boolean = true) {
   journal.enabled = enabled;
   journal.past = journal.now = journal.future = null;
 }
-
-const SavedMap = Map;
-const SavedSet = Set;
 
 /**
  * Returns an object which can be passed
@@ -85,7 +78,7 @@ interface KeysDescr {
   symMap: { [name: string]: KeysOrder };
 }
 
-const keysMapSymbol = Symbol.for("@effectful/debugger/keys");
+export const KeysMapSymbol = Symbol.for("@effectful/debugger/keys");
 
 function isInt(str: string): boolean {
   return String(Math.ceil(Math.abs(<any>str))) === str;
@@ -93,9 +86,13 @@ function isInt(str: string): boolean {
 
 function getObjKeys(obj: any): KeysDescr | undefined {
   if (!obj) return undefined;
-  const descr = Object.getOwnPropertyDescriptor(obj, keysMapSymbol);
-  if (!descr) return undefined;
-  return descr.value;
+  const value = obj[KeysMapSymbol];
+  if (
+    value === false ||
+    Object.prototype.hasOwnProperty.call(obj, KeysMapSymbol)
+  )
+    return value;
+  return void 0;
 }
 
 function getOrCreateObjKeys(
@@ -103,7 +100,7 @@ function getOrCreateObjKeys(
   optional: boolean
 ): KeysDescr | undefined {
   let descr = getObjKeys(obj);
-  if (descr || optional) return descr;
+  if (descr != null || optional) return descr;
   let strKeys: KeysOrder = <any>{ name: null };
   strKeys.next = strKeys;
   strKeys.prev = strKeys;
@@ -124,6 +121,7 @@ function getOrCreateObjKeys(
     };
   }
   for (const i of objectSaved.getOwnPropertySymbols(obj)) {
+    if (i === descriptorSymbol) continue;
     const { next } = symKeys;
     symMap[<any>i] = symKeys.next = next.prev = {
       name: <any>i,
@@ -133,7 +131,7 @@ function getOrCreateObjKeys(
       prev: symKeys
     };
   }
-  objectSaved.defineProperty(obj, keysMapSymbol, {
+  objectSaved.defineProperty(obj, KeysMapSymbol, {
     configurable: true,
     value: descr = { strKeys, strMap, symKeys, symMap }
   });
@@ -232,6 +230,7 @@ function addKey(
   enumerable: boolean,
   optional: boolean
 ): boolean {
+  if (<any>name === descriptorSymbol) return false;
   const ty = typeof name;
   if (ty !== "number") {
     if (ty === "string") {
@@ -262,6 +261,7 @@ function addNotIntKey(
   optional: boolean
 ): boolean {
   if (typeof name === "symbol") {
+    if (name === descriptorSymbol) return false;
     const descr = getOrCreateObjKeys(obj, optional);
     if (!descr) return false;
     addKeyImpl(name, descr.symMap, descr.symKeys, <any>{
@@ -324,7 +324,7 @@ function objectKeys(obj: any): string[] {
   let pos = 0;
   for (let i = 0; i < len; ++i, ++pos) if (!isInt(keys[i])) break;
   const { strKeys } = descr;
-  for (let i = strKeys.prev; i != strKeys; i = i.prev)
+  for (let i = strKeys.prev; i !== strKeys; i = i.prev)
     if (i.enumerable) keys[pos++] = i.name;
   return keys;
 }
@@ -335,6 +335,7 @@ export function forInIterator(obj: any): Iterable<string> {
 
   function* _forInIterator(obj: any): Iterable<string> {
     const descr = getObjKeys(obj);
+    // tslint:disable-next-line:forin
     for (const i in obj) {
       if (descr && (!isInt(i) || !Object.prototype.hasOwnProperty.call(obj, i)))
         break;
@@ -345,7 +346,7 @@ export function forInIterator(obj: any): Iterable<string> {
     }
     if (!descr) return;
     const { strKeys } = <any>descr;
-    for (let i = strKeys.prev; i != strKeys; i = i.prev)
+    for (let i = strKeys.prev; i !== strKeys; i = i.prev)
       if (i.enumerable) {
         if (!seen.has(i.name)) {
           seen.add(i.name);
@@ -361,7 +362,10 @@ function objectEntries(obj: any): string[] {
   const ks = objectKeys(obj);
   const len = ks.length;
   const res = new Array(len);
-  for (let i = 0; i < len; ++i) res[i] = obj[ks[i]];
+  for (let i = 0; i < len; ++i) {
+    const key = ks[i];
+    res[i] = [key, obj[key]];
+  }
   return res;
 }
 
@@ -394,36 +398,25 @@ export const set: (
     ? function set(obj: any, name: string, value: any) {
         if (journal.enabled) {
           if (Array.isArray(obj)) return arraySet(obj, name, value);
-          // TODO: this is needed for typed array
-          // but doesn't work well for other objects
-          if (typeof name !== "symbol" && isInt(String(<any>name))) {
-            const index = +name;
-            if (Object.prototype.hasOwnProperty.call(obj, index))
-              record3(propSetOp, obj, name, obj[index]);
-            else record2(propDelOp, obj, name);
-          } else {
-            const cur = defaultGetOwnPropertyDescriptor(obj, name);
-            if (cur) {
-              if (cur.writable && !cur.set) {
-                addNotIntKey(obj, name, true, false);
-                record3(propSetOp, obj, name, cur.value);
-              }
-            } else if (name in obj) {
-              // this may be some inherited setter call which we need to ignore
-              for (let p = obj; (p = Object.getPrototypeOf(p)) != null; ) {
-                const cur = defaultGetOwnPropertyDescriptor(p, name);
-                if (cur) {
-                  if (cur.writable && !cur.set) {
-                    addNotIntKey(obj, name, true, false);
-                    record2(propDelOp, obj, name);
-                  }
-                  break;
-                }
-              }
-            } else {
-              addNotIntKey(obj, name, true, false);
-              record2(delOp, obj, name);
+          let descr: PropertyDescriptor | undefined = void 0;
+          let descrObj: any;
+          if (name in obj) {
+            descrObj = obj;
+            while (descrObj && descrObj !== Object.prototype) {
+              descr = Object.getOwnPropertyDescriptor(descrObj, name);
+              if (descr) break;
+              descrObj = Object.getPrototypeOf(descrObj);
             }
+            if (descr && (descr.set || !descr.writable))
+              return (obj[name] = value);
+          }
+          const isIntIndex =
+            typeof name !== "symbol" && isInt(String(<any>name));
+          if (descrObj === obj) {
+            record3(propSetOp, obj, name, obj[name]);
+          } else {
+            record2(propDelOp, obj, name);
+            if (!isIntIndex) addNotIntKey(obj, name, true, false);
           }
         }
         return (obj[name] = value);
@@ -527,7 +520,7 @@ function objectFreeze(obj: any) {
 }
 
 function objectIsFrozen(obj: any) {
-  //TODO: this is still visible to the program,
+  // TODO: this is still visible to the program,
   // another checks must be added into setters
   return frozen.has(obj);
 }
@@ -585,6 +578,7 @@ function objectDefinePropertyNoRec(
     }
   } catch (e) {
     if (config.verbose)
+      // tslint:disable-next-line:no-console
       console.log("error while defining property", name, descr, e);
     throw e;
   }
@@ -611,7 +605,7 @@ function objectDefineProperty(
   name: string,
   descr: PropertyDescriptor
 ) {
-  //TODO: track this in runtime
+  // TODO: track this in runtime
   const enabled = journal.enabled && context.call === objectDefineProperty;
   addKey(obj, name, descr.enumerable === true, !enabled);
   return objectDefinePropertyImpl(obj, name, descr, enabled);
@@ -649,12 +643,21 @@ function objectDefineProperties(
 
 function objectAssign(dest: any, ...args: any[]) {
   if (context.call !== objectAssign) return objectSaved.assign(dest, ...args);
+  context.call = Object.defineProperty;
   for (const value of args) {
     if (!value) continue;
     for (const name of Object.getOwnPropertyNames(value))
-      set(dest, name, value[name]);
+      Object.defineProperty(
+        dest,
+        name,
+        <any>Object.getOwnPropertyDescriptor(value, name)
+      );
     for (const name of Object.getOwnPropertySymbols(value))
-      set(dest, <any>name, value[name]);
+      Object.defineProperty(
+        dest,
+        name,
+        <any>Object.getOwnPropertyDescriptor(value, name)
+      );
   }
   return dest;
 }
@@ -917,304 +920,6 @@ function typedArrayFill(
   return typedArraySaved.fill.call(this, value, offset);
 }
 
-const WMp = WeakMap.prototype;
-
-export const weakMapSaved = {
-  set: WMp.set,
-  delete: WMp.delete
-};
-
-function weakMapSetOp(this: any) {
-  const { a: map, b: k, c: v } = this;
-  this.call = weakMapDeleteOp;
-  record(this);
-  weakMapSaved.set.call(map, k, v);
-}
-
-regOpaqueObject(weakMapSetOp, "#set$wmap");
-
-function weakMapSet<K extends object, V>(this: WeakMap<K, V>, k: K, v: V) {
-  if (journal.enabled && context.call === weakMapSet) {
-    if (this.has(k)) {
-      const old = this.get(k);
-      if (old !== v) record3(weakMapSetOp, this, k, this.get(k));
-    } else record3(weakMapDeleteOp, this, k, v);
-  }
-  return weakMapSaved.set.call(this, k, v);
-}
-
-function weakMapDeleteOp(this: any) {
-  const { a: map, b: k } = this;
-  this.call = weakMapSetOp;
-  record(this);
-  weakMapSaved.delete.call(map, k);
-}
-
-regOpaqueObject(weakMapDeleteOp, "#del$wmap");
-
-function weakMapDelete<K extends object, V>(this: WeakMap<K, V>, k: K) {
-  if (journal.enabled && context.call === weakMapDelete && this.has(k))
-    record3(weakMapSetOp, this, k, this.get(k));
-  return weakMapSaved.delete.call(this, k);
-}
-
-interface MapEntry<K, V> {
-  next: MapEntry<K, V>;
-  prev: MapEntry<K, V>;
-  k: K;
-  v: V;
-}
-
-function resetEntryValueOp(this: any) {
-  const { a: entry, b: old } = this;
-  this.b = entry.v;
-  record(this);
-  entry.v = old;
-}
-
-regOpaqueObject(resetEntryValueOp, "#map$v");
-
-function restoreEntryOp(this: any) {
-  const { a: inner, b: entry } = this;
-  this.call = mapDelOp;
-  record(this);
-  const { next, prev } = entry;
-  prev.next = entry;
-  next.prev = entry;
-  inner.set(entry.k, entry);
-}
-
-regOpaqueObject(restoreEntryOp, "#map$p");
-
-function mapDelOp(this: any) {
-  const { a: inner, b: entry } = this;
-  this.call = restoreEntryOp;
-  record(this);
-  inner.delete(entry.k);
-  const { next, prev } = entry;
-  next.prev = prev;
-  prev.next = next;
-}
-
-regOpaqueObject(mapDelOp, "#map$d");
-
-function mapDel<K, V>(inner: Map<K, MapEntry<K, V>>, entry: MapEntry<K, V>) {
-  inner.delete(entry.k);
-  const { next, prev } = entry;
-  next.prev = prev;
-  prev.next = next;
-  record2(restoreEntryOp, inner, entry);
-}
-
-type SavedMap<K, V> = Map<K, V>;
-
-export const ManagedMap = class Map<K, V> {
-  inner: SavedMap<K, MapEntry<K, V>>;
-  list: MapEntry<K, V>;
-  constructor(iter?: Iterable<[K, V]>) {
-    const s: MapEntry<K, V> = <any>{};
-    s.next = s;
-    s.prev = s;
-    this.list = s;
-    this.inner = new SavedMap();
-    if (iter) {
-      const enabled = journal.enabled;
-      journal.enabled = false;
-      try {
-        for (const [k, v] of iter) this.set(k, v);
-      } finally {
-        journal.enabled = enabled;
-      }
-    }
-  }
-  get size() {
-    return this.inner.size;
-  }
-  get(k: K): V | undefined {
-    const res = this.inner.get(k);
-    return res && res.v;
-  }
-  delete(k: K): boolean {
-    const entry = this.inner.get(k);
-    if (!entry) return false;
-    mapDel(this.inner, entry);
-    return true;
-  }
-  clear() {
-    record3(mapRestoreOp, this, this.inner, this.list);
-    const s: MapEntry<K, V> = <any>{};
-    s.next = s;
-    s.prev = s;
-    this.list = s;
-    this.inner = new SavedMap();
-  }
-  set(k: K, v: V): Map<K, V> {
-    const { inner } = this;
-    let entry = inner.get(k);
-    if (entry) {
-      record2(resetEntryValueOp, entry, entry.v);
-      entry.v = v;
-    } else {
-      const { list } = this;
-      entry = { k, v, prev: list, next: list.next };
-      list.next = list.next.prev = entry;
-      inner.set(k, entry);
-      record2(mapDelOp, inner, entry);
-    }
-    return <any>this;
-  }
-  *keys(): Iterable<K> {
-    const list = this.list;
-    for (let i = list.prev; i !== list; i = i.prev) yield i.k;
-  }
-  *values(): Iterable<V> {
-    const { list } = this;
-    for (let i = list.prev; i !== list; i = i.prev) yield i.v;
-  }
-  has(k: K): boolean {
-    return this.inner.has(k);
-  }
-  *entries(): Iterable<[K, V]> {
-    const { list } = this;
-    for (let i = list.prev; i !== list; i = i.prev) yield [i.k, i.v];
-  }
-  [Symbol.iterator](): Iterator<[K, V]> {
-    return this.entries()[Symbol.iterator]();
-  }
-  forEach<This>(
-    callback: (this: This | undefined, v: V, k: K, cont: Map<K, V>) => void,
-    self?: This
-  ): void {
-    for (const [k, v] of this) callback.call(self, v, k, this);
-  }
-};
-
-regConstructor(ManagedMap, { name: "#Map" });
-
-function mapRestoreOp(this: any) {
-  const { a: map, b: inner, c: list } = this;
-  this.b = map.inner;
-  this.c = map.list;
-  record(this);
-  map.inner = inner;
-  map.list = list;
-}
-
-regOpaqueObject(mapRestoreOp, "#map$restore");
-
-const WSp = WeakSet.prototype;
-
-export const weakSetSaved = {
-  add: WSp.add,
-  delete: WSp.delete
-};
-
-function weakSetAddOp(this: any) {
-  const { a: set, b: v } = this;
-  this.call = weakSetDeleteOp;
-  record(this);
-  return weakSetSaved.add.call(set, v);
-}
-
-regOpaqueObject(weakSetAddOp, "#add$wset");
-
-function weakSetAdd<T extends Object>(this: WeakSet<T>, v: T) {
-  if (journal.enabled && context.call === weakSetAdd && !this.has(v))
-    record2(weakSetDeleteOp, this, v);
-  return weakSetSaved.add.call(this, v);
-}
-
-function weakSetDeleteOp(this: any) {
-  const { a: set, b: v } = this;
-  this.call = weakSetAddOp;
-  record(this);
-  weakSetSaved.delete.call(set, v);
-}
-
-regOpaqueObject(weakSetDeleteOp, "#del$wset");
-
-function weakSetDelete<T extends object>(this: WeakSet<T>, v: T) {
-  if (journal.enabled && context.call === weakSetDelete && this.has(v))
-    record2(weakSetAddOp, this, v);
-  return weakSetSaved.delete.call(this, v);
-}
-
-type SetEntry<T> = MapEntry<T, undefined>;
-
-export const ManagedSet = class Set<T> {
-  inner: SavedMap<T, SetEntry<T>>;
-  list: SetEntry<T>;
-  constructor(iter?: Iterable<T>) {
-    const s: SetEntry<T> = <any>{};
-    s.next = s;
-    s.prev = s;
-    this.list = s;
-    this.inner = new SavedMap();
-    if (iter) {
-      const enabled = journal.enabled;
-      journal.enabled = false;
-      try {
-        for (const i of iter) this.add(i);
-      } finally {
-        journal.enabled = enabled;
-      }
-    }
-  }
-  get size() {
-    return this.inner.size;
-  }
-  delete(k: T): boolean {
-    const entry = this.inner.get(k);
-    if (!entry) return false;
-    mapDel(this.inner, entry);
-    return true;
-  }
-  clear() {
-    record3(mapRestoreOp, this, this.inner, this.list);
-    const s: SetEntry<T> = <any>{};
-    s.next = s;
-    s.prev = s;
-    this.list = s;
-    this.inner = new SavedMap();
-  }
-  *keys(): Iterable<T> {
-    const { list } = this;
-    for (let i = list.prev; i !== list; i = i.prev) yield i.k;
-  }
-  *entries(): Iterable<[T, T]> {
-    const { list } = this;
-    for (let i = list.prev; i !== list; i = i.prev) yield [i.k, i.k];
-  }
-  add(k: T): Set<T> {
-    const { inner } = this;
-    let entry = inner.get(k);
-    if (!entry) {
-      const { list } = this;
-      entry = { k, v: undefined, prev: list, next: list.next };
-      list.next = list.next.prev = entry;
-      inner.set(k, entry);
-      record2(mapDelOp, inner, entry);
-    }
-    return <any>this;
-  }
-  has(v: T): boolean {
-    return this.inner.has(v);
-  }
-  [Symbol.iterator](): Iterator<T> {
-    return this.keys()[Symbol.iterator]();
-  }
-  forEach<This>(
-    callback: (this: This | undefined, k: T, v: T, cont: Set<T>) => void,
-    self?: This
-  ): void {
-    for (const i of this) callback.call(self, i, i, this);
-  }
-};
-
-(<any>ManagedSet.prototype).values = ManagedSet.prototype.keys;
-
-regConstructor(ManagedSet, { name: "#Set" });
-
 /** records current property value but don't try to keep insertion order */
 export function recordProp(target: any, name: any) {
   const cur = defaultGetOwnPropertyDescriptor(target, name);
@@ -1291,8 +996,8 @@ if (config.timeTravel && config.patchRT) {
   (<any>Object).keys = objectKeys;
   (<any>Object).entries = objectEntries;
   (<any>Object).create = objectCreate;
-  (<any>global).Map = ManagedMap;
-  (<any>global).Set = ManagedSet;
+  // (<any>global).Map = ManagedMap;
+  // (<any>global).Set = ManagedSet;
   /**/
   Ap.push = arrayPush;
   Ap.pop = arrayPop;
@@ -1305,10 +1010,6 @@ if (config.timeTravel && config.patchRT) {
   TAp.sort = typedArraySort;
   TAp.reverse = typedArrayReverse;
   TAp.fill = typedArrayFill;
-  WeakSet.prototype.add = weakSetAdd;
-  WeakSet.prototype.delete = weakSetDelete;
-  WeakMap.prototype.set = weakMapSet;
-  WeakMap.prototype.delete = weakMapDelete;
 }
 
 // TODO: Reflect

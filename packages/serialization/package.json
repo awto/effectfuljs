@@ -2,8 +2,6 @@
   "name": "@effectful/serialization",
   "version": "1.2.0",
   "description": "References-aware JS values serialization library",
-  "module": "es/main.js",
-  "jsnext:main": "es/main.js",
   "main": "main.js",
   "repository": "https://github.com/awto/effectfuljs.git",
   "keywords": [
@@ -14,9 +12,7 @@
   "license": "MIT",
   "scripts": {
     "test": "tslint -t verbose --project . && mocha",
-    "build-es": "tsc --outDir es",
-    "build-cjs": "tsc --outDir . --module commonjs",
-    "build": "npm run build-es && npm run build-cjs",
+    "build": "tsc --outDir .",
     "docs": "typedoc --mode file --out api --theme markdown --excludePrivate src --readme none"
   },
   "devDependencies": {

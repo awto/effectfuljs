@@ -19,10 +19,13 @@ function describe() {
 }
 
 function cont(value) {
-  if (!trace.silent) trace.logCb(`Run Job: ${Ctx.top.meta.fullName}`);
-  let num = 0;
-  let f;
   Ctx.value = value;
+  return loop();
+}
+
+function loop() {
+  if (!trace.silent) trace.logCb(`Run Job: ${Ctx.top.meta.fullName}`);
+  let f;
   while ((f = D.step()) === D.token) describe();
   return f;
 }
@@ -34,7 +37,7 @@ function call(fun) {
 function activeOnThread() {
   if (Ctx.queue.length === 0) return;
   Object.assign(Ctx, Ctx.queue.shift());
-  cont();
+  loop();
 }
 
 async function traceAsync(resultPromise) {
@@ -55,7 +58,7 @@ async function callAsync(fun) {
 function trace(value) {
   if (value !== Engine.token) return value;
   Object.assign(Ctx, Ctx.queue.shift());
-  return cont();
+  return loop();
 }
 
 function teardown() {

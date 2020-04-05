@@ -6,197 +6,207 @@ exports[`regenerator trace async functions and await expressions Promise should 
 
 exports[`regenerator trace async functions and await expressions Promise should be defined globally 1`] = `20`;
 
-exports[`regenerator trace async functions and await expressions async function expressions should be allowed 1`] = `28`;
+exports[`regenerator trace async functions and await expressions async function expressions should be allowed 1`] = `49`;
 
-exports[`regenerator trace async functions and await expressions dependent promises should be awaitable out of order 1`] = `80`;
+exports[`regenerator trace async functions and await expressions dependent promises should be awaitable out of order 1`] = `172`;
 
-exports[`regenerator trace async functions and await expressions nested async function calls should evaluate in the right order 1`] = `390`;
+exports[`regenerator trace async functions and await expressions nested async function calls should evaluate in the right order 1`] = `487`;
 
-exports[`regenerator trace async functions and await expressions no-await async function should return a Promise 1`] = `28`;
+exports[`regenerator trace async functions and await expressions no-await async function should return a Promise 1`] = `98`;
 
-exports[`regenerator trace async functions and await expressions one-await async function should finish asynchronously 1`] = `55`;
+exports[`regenerator trace async functions and await expressions one-await async function should finish asynchronously 1`] = `132`;
 
 exports[`regenerator trace async functions and await expressions regeneratorRuntime should be defined globally 1`] = `20`;
 
 exports[`regenerator trace async functions and await expressions regeneratorRuntime should have a .wrap method 1`] = `4`;
 
-exports[`regenerator trace async functions and await expressions rejected promises should be returned by exceptional async functions 1`] = `100`;
+exports[`regenerator trace async functions and await expressions rejected promises should be returned by exceptional async functions 1`] = `282`;
 
-exports[`regenerator trace async functions and await expressions rejected promises should cause await expressions to throw 1`] = `55`;
+exports[`regenerator trace async functions and await expressions rejected promises should cause await expressions to throw 1`] = `118`;
 
 exports[`regenerator trace async functions and await expressions rejected promises should propagate failure when returned 1`] = `53`;
 
-exports[`regenerator trace async functions and await expressions the this object should default to undefined (strict) 1`] = `19`;
+exports[`regenerator trace async functions and await expressions the this object should default to undefined (strict) 1`] = `51`;
 
-exports[`regenerator trace async functions and await expressions the this object should respect .call's this 1`] = `19`;
+exports[`regenerator trace async functions and await expressions the this object should respect .call's this 1`] = `60`;
 
 exports[`regenerator trace async functions and await expressions the this object shouldn't capture this when not needed 1`] = `7`;
 
-exports[`regenerator trace async generator functions should allow yielding a rejected Promise 1`] = `140`;
+exports[`regenerator trace async generator functions should allow yielding a rejected Promise 1`] = `124`;
 
-exports[`regenerator trace async generator functions should be able to handle many awaits 1`] = `5477`;
+exports[`regenerator trace async generator functions should be able to handle many awaits 1`] = `5431`;
 
-exports[`regenerator trace async generator functions should keep results in order 1`] = `785`;
+exports[`regenerator trace async generator functions should keep results in order 1`] = `998`;
 
 exports[`regenerator trace async generator functions should not propagate exceptions between iterations 1`] = `87`;
 
-exports[`regenerator trace async generator functions should return a working AsyncIterator 1`] = `254`;
+exports[`regenerator trace async generator functions should return a working AsyncIterator 1`] = `240`;
 
-exports[`regenerator trace async generator functions should support super.method(...) in async methods 1`] = `30`;
+exports[`regenerator trace async generator functions should support super.method(...) in async methods 1`] = `64`;
 
-exports[`regenerator trace async generator functions should work with nested arrow functions 1`] = `44`;
+exports[`regenerator trace async generator functions should work with nested arrow functions 1`] = `53`;
 
-exports[`regenerator trace block binding should translate block binding correctly 1`] = `88`;
+exports[`regenerator trace block binding should translate block binding correctly 1`] = `56`;
 
-exports[`regenerator trace block binding should translate block binding with iife correctly 1`] = `289`;
+exports[`regenerator trace block binding should translate block binding with iife correctly 1`] = `116`;
 
-exports[`regenerator trace call expression ordering (#244) should be correct 1`] = `103`;
+exports[`regenerator trace call expression ordering should be correct with chained calls (#244) 1`] = `68`;
 
-exports[`regenerator trace catch parameter shadowing should allow nested catch parameters of the same name 1`] = `178`;
+exports[`regenerator trace call expression ordering when the callee is a member expression should allow vars assigned in the callee to be used in the args (#379) 1`] = `48`;
 
-exports[`regenerator trace catch parameter shadowing should leave outer variables unmodified 1`] = `525`;
+exports[`regenerator trace call expression ordering when the callee is a member expression should be correct when only the arguments contains yield 1`] = `96`;
 
-exports[`regenerator trace catch parameter shadowing should not interfere with non-referential identifiers 1`] = `126`;
+exports[`regenerator trace call expression ordering when the callee is a member expression should be correct when only the callee contains yield 1`] = `75`;
 
-exports[`regenerator trace collatz generator eighty two 1`] = `5369`;
+exports[`regenerator trace call expression ordering when the callee is a member expression should be correct when the callee and the arguments contain yield 1`] = `99`;
 
-exports[`regenerator trace collatz generator fifty two 1`] = `617`;
+exports[`regenerator trace catch parameter shadowing should allow nested catch parameters of the same name 1`] = `138`;
 
-exports[`regenerator trace collatz generator seven 1`] = `857`;
+exports[`regenerator trace catch parameter shadowing should leave outer variables unmodified 1`] = `413`;
 
-exports[`regenerator trace completed generator should refuse to resume 1`] = `49`;
+exports[`regenerator trace catch parameter shadowing should not interfere with non-referential identifiers 1`] = `90`;
 
-exports[`regenerator trace delegate yield should support any iterable argument 1`] = `283`;
+exports[`regenerator trace collatz generator eighty two 1`] = `4029`;
 
-exports[`regenerator trace delegated yield should be governed by enclosing try statements 1`] = `655`;
+exports[`regenerator trace collatz generator fifty two 1`] = `465`;
 
-exports[`regenerator trace delegated yield should call .return methods of delegate iterators 1`] = `1617`;
+exports[`regenerator trace collatz generator seven 1`] = `645`;
 
-exports[`regenerator trace delegated yield should cope with empty delegatees 1`] = `180`;
+exports[`regenerator trace completed generator should refuse to resume 1`] = `37`;
 
-exports[`regenerator trace delegated yield should delegate correctly 1`] = `340`;
+exports[`regenerator trace delegate yield should support any iterable argument 1`] = `259`;
 
-exports[`regenerator trace delegated yield should dispatch .thrown exceptions correctly 1`] = `135`;
+exports[`regenerator trace delegated yield should be governed by enclosing try statements 1`] = `480`;
 
-exports[`regenerator trace delegated yield should evaluate to the return value of the delegate 1`] = `282`;
+exports[`regenerator trace delegated yield should call .return methods of delegate iterators 1`] = `1369`;
 
-exports[`regenerator trace delegated yield should execute finally blocks of delegate generators 1`] = `124`;
+exports[`regenerator trace delegated yield should cope with empty delegatees 1`] = `134`;
 
-exports[`regenerator trace delegated yield should not be required to have a .return method 1`] = `142`;
+exports[`regenerator trace delegated yield should delegate correctly 1`] = `270`;
 
-exports[`regenerator trace delegated yield should pass sent values through 1`] = `74`;
+exports[`regenerator trace delegated yield should dispatch .thrown exceptions correctly 1`] = `79`;
 
-exports[`regenerator trace delegated yield should support deeper nesting 1`] = `310`;
+exports[`regenerator trace delegated yield should evaluate to the return value of the delegate 1`] = `220`;
 
-exports[`regenerator trace delegated yield should work as a subexpression 1`] = `256`;
+exports[`regenerator trace delegated yield should execute finally blocks of delegate generators 1`] = `74`;
 
-exports[`regenerator trace directive strings should be kept at top of outer function 1`] = `129`;
+exports[`regenerator trace delegated yield should not be required to have a .return method 1`] = `94`;
 
-exports[`regenerator trace dynamic exception should be dispatched correctly 1`] = `168`;
+exports[`regenerator trace delegated yield should pass sent values through 1`] = `48`;
 
-exports[`regenerator trace expressions containing yield subexpressions should evaluate all array elements before yielding 1`] = `34`;
+exports[`regenerator trace delegated yield should support deeper nesting 1`] = `226`;
 
-exports[`regenerator trace expressions containing yield subexpressions should evaluate all subexpressions before yielding 1`] = `44`;
+exports[`regenerator trace delegated yield should work as a subexpression 1`] = `178`;
 
-exports[`regenerator trace expressions containing yield subexpressions should handle callee member expressions correctly 1`] = `43`;
+exports[`regenerator trace directive strings should be kept at top of outer function 1`] = `113`;
 
-exports[`regenerator trace expressions containing yield subexpressions should handle implicit stringification correctly 1`] = `34`;
+exports[`regenerator trace dynamic exception should be dispatched correctly 1`] = `128`;
 
-exports[`regenerator trace expressions containing yield subexpressions should work even with getter member expressions 1`] = `43`;
+exports[`regenerator trace expressions containing yield subexpressions should evaluate all array elements before yielding 1`] = `26`;
 
-exports[`regenerator trace for loop with var decl and no update expression should compile and run 1`] = `41`;
+exports[`regenerator trace expressions containing yield subexpressions should evaluate all subexpressions before yielding 1`] = `36`;
 
-exports[`regenerator trace for-in loop generator should allow non-Identifier left-hand expressions 1`] = `270`;
+exports[`regenerator trace expressions containing yield subexpressions should handle callee member expressions correctly 1`] = `31`;
 
-exports[`regenerator trace for-in loop generator should handle break in loop 1`] = `218`;
+exports[`regenerator trace expressions containing yield subexpressions should handle implicit stringification correctly 1`] = `26`;
 
-exports[`regenerator trace for-in loop generator should handle property deletion in loop 1`] = `122`;
+exports[`regenerator trace expressions containing yield subexpressions should work even with getter member expressions 1`] = `35`;
 
-exports[`regenerator trace for-in loop generator should handle risky object expressions 1`] = `312`;
+exports[`regenerator trace expressions containing yield subexpressions should work when yield is in an array spread 1`] = `47`;
 
-exports[`regenerator trace for-in loop generator should handle the simple case 1`] = `159`;
+exports[`regenerator trace for loop with var decl and no update expression should compile and run 1`] = `33`;
 
-exports[`regenerator trace for-in loop generator should loop over inherited properties 1`] = `174`;
+exports[`regenerator trace for-in loop generator should allow non-Identifier left-hand expressions 1`] = `206`;
+
+exports[`regenerator trace for-in loop generator should handle break in loop 1`] = `162`;
+
+exports[`regenerator trace for-in loop generator should handle property deletion in loop 1`] = `90`;
+
+exports[`regenerator trace for-in loop generator should handle risky object expressions 1`] = `240`;
+
+exports[`regenerator trace for-in loop generator should handle the simple case 1`] = `119`;
+
+exports[`regenerator trace for-in loop generator should loop over inherited properties 1`] = `130`;
 
 exports[`regenerator trace for-of loops should work for Arrays 1`] = `19`;
 
-exports[`regenerator trace for-of loops should work for generators 1`] = `73`;
+exports[`regenerator trace for-of loops should work for generators 1`] = `44`;
 
-exports[`regenerator trace for-of loops should work inside of generators 1`] = `1250`;
+exports[`regenerator trace for-of loops should work inside of generators 1`] = `776`;
 
-exports[`regenerator trace function declaration hoisting should not interfere with function rebinding 1`] = `498`;
+exports[`regenerator trace function declaration hoisting should not interfere with function rebinding 1`] = `378`;
 
-exports[`regenerator trace function declaration hoisting should not interfere with nested function rebinding itself 1`] = `93`;
+exports[`regenerator trace function declaration hoisting should not interfere with nested function rebinding itself 1`] = `73`;
 
-exports[`regenerator trace function declaration hoisting should work even if the declarations are out of order 1`] = `430`;
+exports[`regenerator trace function declaration hoisting should work even if the declarations are out of order 1`] = `326`;
 
-exports[`regenerator trace function declaration hoisting should work for nested generator function declarations 1`] = `211`;
+exports[`regenerator trace function declaration hoisting should work for nested generator function declarations 1`] = `161`;
 
 exports[`regenerator trace generator .throw method should immediately complete a new-born generator 1`] = `22`;
 
-exports[`regenerator trace generator .throw method should not propagate errors handled inside a delegate 1`] = `102`;
+exports[`regenerator trace generator .throw method should not propagate errors handled inside a delegate 1`] = `58`;
 
-exports[`regenerator trace generator .throw method should propagate errors unhandled inside a delegate 1`] = `61`;
+exports[`regenerator trace generator .throw method should propagate errors unhandled inside a delegate 1`] = `37`;
 
-exports[`regenerator trace generator .throw method should work after the final call to .next 1`] = `28`;
+exports[`regenerator trace generator .throw method should work after the final call to .next 1`] = `24`;
 
-exports[`regenerator trace generator function expression should behave just like a declared generator 1`] = `119`;
+exports[`regenerator trace generator function expression should behave just like a declared generator 1`] = `99`;
 
-exports[`regenerator trace generator function prototype should follow the expected object model 1`] = `176`;
+exports[`regenerator trace generator function prototype should follow the expected object model 1`] = `168`;
 
-exports[`regenerator trace generator reentry attempt should complain with a TypeError 1`] = `64`;
+exports[`regenerator trace generator reentry attempt should complain with a TypeError 1`] = `44`;
 
-exports[`regenerator trace generator return method should behave as if generator actually returned 1`] = `76`;
+exports[`regenerator trace generator return method should behave as if generator actually returned 1`] = `56`;
 
-exports[`regenerator trace generator return method should return both delegate and delegator 1`] = `262`;
+exports[`regenerator trace generator return method should return both delegate and delegator 1`] = `158`;
 
-exports[`regenerator trace generator return method should work with newborn generators 1`] = `40`;
+exports[`regenerator trace generator return method should work with newborn generators 1`] = `32`;
 
-exports[`regenerator trace infinite sequence generator should allow limiting 1`] = `508`;
+exports[`regenerator trace infinite sequence generator should allow limiting 1`] = `332`;
 
-exports[`regenerator trace infinite sequence generator should generate a lot of plausible values 1`] = `27106`;
+exports[`regenerator trace infinite sequence generator should generate a lot of plausible values 1`] = `19070`;
 
 exports[`regenerator trace isGeneratorFunction should work for function declarations 1`] = `27`;
 
 exports[`regenerator trace isGeneratorFunction should work for function expressions 1`] = `27`;
 
-exports[`regenerator trace labeled break and continue statements should allow breaking from any labeled statement 1`] = `1352`;
+exports[`regenerator trace labeled break and continue statements should allow breaking from any labeled statement 1`] = `1147`;
 
-exports[`regenerator trace labeled break and continue statements should be able to exit multiple try statements 1`] = `1734`;
+exports[`regenerator trace labeled break and continue statements should be able to exit multiple try statements 1`] = `1343`;
 
-exports[`regenerator trace nested finally blocks should dynamically execute in order 1`] = `191`;
+exports[`regenerator trace nested finally blocks should dynamically execute in order 1`] = `151`;
 
-exports[`regenerator trace nested finally blocks should statically execute in order 1`] = `178`;
+exports[`regenerator trace nested finally blocks should statically execute in order 1`] = `142`;
 
-exports[`regenerator trace nested generators in try-catch should get a reference to the caught error 1`] = `65`;
+exports[`regenerator trace nested generators in try-catch should get a reference to the caught error 1`] = `49`;
 
-exports[`regenerator trace new expressions should be able to contain yield sub-expressions 1`] = `82`;
+exports[`regenerator trace new expressions should be able to contain yield sub-expressions 1`] = `62`;
 
-exports[`regenerator trace newborn generators should allow chaining newborn and non-newborn generators 1`] = `799`;
+exports[`regenerator trace newborn generators should allow chaining newborn and non-newborn generators 1`] = `635`;
 
-exports[`regenerator trace newborn generators should be able to access function.sent 1`] = `46`;
+exports[`regenerator trace newborn generators should be able to access function.sent 1`] = `30`;
 
-exports[`regenerator trace newborn generators should be able to yield* non-newborn generators 1`] = `56`;
+exports[`regenerator trace newborn generators should be able to yield* non-newborn generators 1`] = `38`;
 
-exports[`regenerator trace newborn generators should support the ignore-initial-yield wrapper idiom 1`] = `200`;
+exports[`regenerator trace newborn generators should support the ignore-initial-yield wrapper idiom 1`] = `124`;
 
-exports[`regenerator trace object literal generator should yield the correct object 1`] = `171`;
+exports[`regenerator trace object literal generator should yield the correct object 1`] = `155`;
 
-exports[`regenerator trace object literals with multiple yields should receive different sent values 1`] = `157`;
+exports[`regenerator trace object literals with multiple yields should receive different sent values 1`] = `141`;
 
-exports[`regenerator trace object properties should work if the generator is a shorthand computed object method 1`] = `51`;
+exports[`regenerator trace object properties should work if the generator is a shorthand computed object method 1`] = `54`;
 
-exports[`regenerator trace object properties should work if the generator is a shorthand object method 1`] = `48`;
+exports[`regenerator trace object properties should work if the generator is a shorthand object method 1`] = `51`;
 
-exports[`regenerator trace object properties should work if the generator is a simple object property 1`] = `59`;
+exports[`regenerator trace object properties should work if the generator is a simple object property 1`] = `51`;
 
-exports[`regenerator trace range generator should yield the empty range 1`] = `41`;
+exports[`regenerator trace range generator should yield the empty range 1`] = `33`;
 
-exports[`regenerator trace range generator should yield the range 0..n-1 1`] = `171`;
+exports[`regenerator trace range generator should yield the range 0..n-1 1`] = `143`;
 
 exports[`regenerator trace regeneratorRuntime should be defined globally 1`] = `20`;
 
-exports[`regenerator trace regeneratorRuntime should be the object name returned by util.runtimeProperty 1`] = `32`;
+exports[`regenerator trace regeneratorRuntime should be the object name returned by util.runtimeProperty 1`] = `28`;
 
 exports[`regenerator trace regeneratorRuntime should have a .mark method 1`] = `4`;
 
@@ -204,84 +214,84 @@ exports[`regenerator trace regeneratorRuntime should have a .wrap method 1`] = `
 
 exports[`regenerator trace regressions should correctly hoist arguments 1`] = `48`;
 
-exports[`regenerator trace simple argument yielder should support multiple yields in expression 1`] = `31`;
+exports[`regenerator trace simple argument yielder should support multiple yields in expression 1`] = `23`;
 
-exports[`regenerator trace simple argument yielder should yield only its first argument 1`] = `111`;
+exports[`regenerator trace simple argument yielder should yield only its first argument 1`] = `95`;
 
-exports[`regenerator trace switch statement generator should jump to the correct cases 1`] = `178`;
+exports[`regenerator trace switch statement generator should jump to the correct cases 1`] = `154`;
 
-exports[`regenerator trace the arguments object should alias function parameters 1`] = `481`;
+exports[`regenerator trace the arguments object should alias function parameters 1`] = `385`;
 
-exports[`regenerator trace the arguments object should be shadowable by explicit declarations (sloppy) 1`] = `265`;
+exports[`regenerator trace the arguments object should be shadowable by explicit declarations (sloppy) 1`] = `217`;
 
-exports[`regenerator trace the arguments object should not get confused by properties 1`] = `104`;
+exports[`regenerator trace the arguments object should not get confused by properties 1`] = `84`;
 
-exports[`regenerator trace the arguments object should work in simple variadic functions 1`] = `333`;
+exports[`regenerator trace the arguments object should work in simple variadic functions 1`] = `269`;
 
-exports[`regenerator trace the arguments object supports .callee 1`] = `278`;
+exports[`regenerator trace the arguments object supports .callee 1`] = `218`;
 
-exports[`regenerator trace the this object should default to undefined (strict) 1`] = `37`;
+exports[`regenerator trace the this object should default to undefined (strict) 1`] = `25`;
 
-exports[`regenerator trace the this object should respect .call's this 1`] = `40`;
+exports[`regenerator trace the this object should respect .call's this 1`] = `28`;
 
 exports[`regenerator trace the this object shouldn't capture this when not needed 1`] = `7`;
 
-exports[`regenerator trace throw should complete throwing generator 1`] = `46`;
+exports[`regenerator trace throw should complete throwing generator 1`] = `38`;
 
-exports[`regenerator trace throw should complete yielding/throwing generator 1`] = `49`;
+exports[`regenerator trace throw should complete yielding/throwing generator 1`] = `41`;
 
-exports[`regenerator trace try-catch generator should catch dynamic exceptions properly 1`] = `335`;
+exports[`regenerator trace try-catch generator should catch dynamic exceptions properly 1`] = `271`;
 
-exports[`regenerator trace try-catch generator should catch static exceptions properly 1`] = `322`;
+exports[`regenerator trace try-catch generator should catch static exceptions properly 1`] = `262`;
 
-exports[`regenerator trace try-catch-finally generator should dynamically catch and then finalize 1`] = `232`;
+exports[`regenerator trace try-catch-finally generator should dynamically catch and then finalize 1`] = `188`;
 
-exports[`regenerator trace try-catch-finally generator should execute catch and finally blocks at most once 1`] = `288`;
+exports[`regenerator trace try-catch-finally generator should execute catch and finally blocks at most once 1`] = `224`;
 
-exports[`regenerator trace try-catch-finally generator should handle backwards jumps in labeled loops 1`] = `422`;
+exports[`regenerator trace try-catch-finally generator should handle backwards jumps in labeled loops 1`] = `337`;
 
-exports[`regenerator trace try-catch-finally generator should handle loop continue statements properly 1`] = `223`;
+exports[`regenerator trace try-catch-finally generator should handle loop continue statements properly 1`] = `135`;
 
-exports[`regenerator trace try-catch-finally generator should statically catch and then finalize 1`] = `219`;
+exports[`regenerator trace try-catch-finally generator should statically catch and then finalize 1`] = `179`;
 
-exports[`regenerator trace try-finally generator should allow additional yields during finally propagation 1`] = `181`;
+exports[`regenerator trace try-finally generator should allow additional yields during finally propagation 1`] = `113`;
 
-exports[`regenerator trace try-finally generator should execute finally blocks before throwing 1`] = `245`;
+exports[`regenerator trace try-finally generator should execute finally blocks before throwing 1`] = `189`;
 
-exports[`regenerator trace try-finally generator should execute finally blocks dynamically 1`] = `329`;
+exports[`regenerator trace try-finally generator should execute finally blocks dynamically 1`] = `257`;
 
-exports[`regenerator trace try-finally generator should execute finally blocks statically 1`] = `303`;
+exports[`regenerator trace try-finally generator should execute finally blocks statically 1`] = `239`;
 
-exports[`regenerator trace try-finally generator should honor break 1`] = `207`;
+exports[`regenerator trace try-finally generator should honor break 1`] = `155`;
 
-exports[`regenerator trace try-finally generator should honor continue 1`] = `336`;
+exports[`regenerator trace try-finally generator should honor continue 1`] = `248`;
 
-exports[`regenerator trace try-finally generator should honor return 1`] = `185`;
+exports[`regenerator trace try-finally generator should honor return 1`] = `141`;
 
-exports[`regenerator trace try-finally generator should let the last finally block override all others 1`] = `175`;
+exports[`regenerator trace try-finally generator should let the last finally block override all others 1`] = `107`;
 
-exports[`regenerator trace try-finally generator should override abrupt with break 1`] = `630`;
+exports[`regenerator trace try-finally generator should override abrupt with break 1`] = `470`;
 
-exports[`regenerator trace try-finally generator should override abrupt with continue 1`] = `1039`;
+exports[`regenerator trace try-finally generator should override abrupt with continue 1`] = `763`;
 
-exports[`regenerator trace try-finally generator should override abrupt with return 1`] = `564`;
+exports[`regenerator trace try-finally generator should override abrupt with return 1`] = `428`;
 
-exports[`regenerator trace try-finally generator should return the correct value when overridden by finally 1`] = `49`;
+exports[`regenerator trace try-finally generator should return the correct value when overridden by finally 1`] = `33`;
 
-exports[`regenerator trace try-finally generator should run finally after break within try 1`] = `167`;
+exports[`regenerator trace try-finally generator should run finally after break within try 1`] = `135`;
 
-exports[`regenerator trace try-finally generator should throw correct error when finally contains catch 1`] = `122`;
+exports[`regenerator trace try-finally generator should throw correct error when finally contains catch 1`] = `82`;
 
-exports[`regenerator trace unqualified function calls should have a global \`this\` object 1`] = `72`;
+exports[`regenerator trace unqualified function calls should have a global \`this\` object 1`] = `56`;
 
-exports[`regenerator trace update operators should explode left side before yielding 1`] = `49`;
+exports[`regenerator trace update operators should explode left side before yielding 1`] = `41`;
 
 exports[`regenerator trace update operators should read left side before awaiting 1`] = `46`;
 
-exports[`regenerator trace update operators should read left side before yielding 1`] = `40`;
+exports[`regenerator trace update operators should read left side before yielding 1`] = `32`;
 
-exports[`regenerator trace yield chain should have correct associativity 1`] = `201`;
+exports[`regenerator trace yield chain should have correct associativity 1`] = `185`;
 
-exports[`regenerator trace yield* expression results can be used in complex expressions 1`] = `275`;
+exports[`regenerator trace yield* expression results can be used in complex expressions 1`] = `231`;
 
-exports[`regenerator trace yield* expression results have correct values 1`] = `129`;
+exports[`regenerator trace yield* expression results have correct values 1`] = `97`;

@@ -1,8 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
 import * as Kit from "../../kit";
-import { isQUnit, run, pretty, prettyBlock, blockEqual } from "./core";
-import tags from "./tags";
+import { isQUnit, run, prettyBlock, blockEqual } from "./core";
 import * as assert from "assert";
 import libs from "../../config";
 import configs from "./configs";

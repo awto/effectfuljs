@@ -1,96 +1,107 @@
-var $M = require("@effectful/debugger/api");
-
-$M.module("file.js", null, module, null, "$");
-var $s$1 = [{
-  a: "$0"
-}, null, false],
+var $M = require("@effectful/debugger/api"),
+    $context = $M.context,
+    $ret = $M.ret,
+    $unhandled = $M.unhandled,
+    $brk = $M.brk,
+    $lset = $M.lset,
+    $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{
+  a: [1, "1:9-1:10"]
+}, null, 0],
     $s$2 = [{
-  i: "$0"
-}, $s$1, false];
-$M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$0 = $c.a($);
-        return $M.ret();
+  i: [1, "2:6-2:7"]
+}, $s$1, 1],
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-7:0", 32, function file_js($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $lset($l, 1,
+      /*a*/
+      $m$1($));
+      $.goto = 2;
+      continue;
 
-      case 1:
-        return $M.ret($.value);
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 2:
-        throw $.value;
+    case 2:
+      return $ret($.result);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [[], [], []]);
-$M.fun("m$1", "a", "m$0", [], 0, function () {
-  var $0;
+}, null, null, 0, [[0, "1:0-6:1", $s$1], [16, "7:0-7:0", $s$1], [16, "7:0-7:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "a", null, $m$0, [], 1, 2, "1:0-6:1", 0, function a($, $l, $p) {
+  var $1;
 
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        $M.brk(0);
-        continue;
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      $brk("2:2-2:12");
+      $.state = 1;
 
-      case 1:
-        $.$.$0 = 0;
-        $.goto = 2;
-        $M.brk(1);
-        continue;
+    case 1:
+      $lset($l, 1,
+      /*i*/
+      0);
+      $.goto = 2;
+      $brk("3:2-3:12");
+      $.state = 2;
 
-      case 2:
-        $0 = $.$.$0;
-        $M.lset($.$, "i", $0 + 1);
-        $.goto = 3;
-        ($M.context.call = eff5)($0);
-        continue;
+    case 2:
+      $1 = $l[1];
+      $lset($l, 1,
+      /*i*/
+      $1 + 1);
+      $.goto = 3;
+      ($context.call = eff5)($1);
+      $.state = 3;
 
-      case 3:
-        $.goto = 4;
-        $M.brk(2);
-        continue;
+    case 3:
+      $.goto = 4;
+      $brk("4:2-4:20");
+      $.state = 4;
 
-      case 4:
-        if (ee) {
-          $.goto = 8;
-          $M.brk(3);
-          continue;
-        } else {
-          $.state = 5;
-        }
-
-      case 5:
-        $.goto = 6;
-        $M.brk(4);
-        continue;
-
-      case 6:
+    case 4:
+      if (ee) {
         $.goto = 7;
-        ($M.context.call = eff8)($.$.$0);
+        $brk("4:10-4:20");
         continue;
+      } else {
+        $.state = 5;
+      }
 
-      case 7:
-        return $M.ret();
+    case 5:
+      $.goto = 6;
+      $brk("5:2-5:10");
+      $.state = 6;
 
-      case 8:
-        $0 = $.$.$0;
-        $M.lset($.$, "i", $0 + 1);
-        $.goto = 5;
-        ($M.context.call = eff7)($0);
-        continue;
+    case 6:
+      $.goto = 9;
+      ($context.call = eff8)($l[1]);
+      continue;
 
-      case 9:
-        return $M.ret($.value);
+    case 7:
+      $1 = $l[1];
+      $lset($l, 1,
+      /*i*/
+      $1 + 1);
+      $.goto = 5;
+      ($context.call = eff7)($1);
+      continue;
 
-      case 10:
-        throw $.value;
+    case 8:
+      $.goto = 9;
+      return $unhandled($.error);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    case 9:
+      return $ret($.result);
+
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["2:2-2:12", "s", $s$2], ["3:2-3:12", "s", $s$2], ["3:2-3:11", "e", $s$2], ["4:2-4:20", "s", $s$2], ["4:10-4:20", "s", $s$2], ["5:2-5:10", "s", $s$2], ["5:2-5:9", "e", $s$2], [], ["4:10-4:19", "e", $s$2], [], []]);
-module.exports = $M.exports();
+}, null, null, 1, [[4, "2:2-2:12", $s$2], [4, "3:2-3:12", $s$2], [2, "3:2-3:11", $s$2], [4, "4:2-4:20", $s$2], [4, "4:10-4:20", $s$2], [4, "5:2-5:10", $s$2], [2, "5:2-5:9", $s$2], [2, "4:10-4:19", $s$2], [16, "6:1-6:1", $s$2], [16, "6:1-6:1", $s$2]]);
+
+$M.moduleExports();

@@ -36,11 +36,12 @@ export function stateDescr(
   }
   if (x.top && x.top.brk) {
     res.push(`#${threadId}:   Variables:`);
+    // tslint:disable-next-line:forin
     for (const j in x.top.brk.scope) {
       const [name, decl] = x.top.brk.scope[j];
       res.push(
-        `#${threadId}:    ${name}@${decl}: ${str(x.top.$[j])} = ${str(
-          x.top.$[j]
+        `#${threadId}:    ${name}@${decl}: ${str(x.top.$[name])} = ${str(
+          x.top.$[name]
         )}`
       );
     }
@@ -54,6 +55,7 @@ export function traced() {
     output.push(args);
     if (config.verbose)
       // console.log(...args);
+      // tslint:disable-next-line:no-console
       console.log(args[0]);
   }
   let num = 0;

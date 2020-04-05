@@ -2,17 +2,19 @@
   "passPerPreset": true,
   "presets": [
     {
-      "plugins": ["@babel/transform-typescript"]
-    },
-    {
       "plugins": [
+        "@babel/transform-typescript",
         [
-          "../../transform",
+          "@babel/transform-modules-commonjs",
           {
-            "blackbox": true,
-            "pureModule": true,
-            "importRT": "../apiMin",
-            "srcRoot": true
+            "loose": true,
+            "noInterop": true
+          }
+        ],
+        [
+          "@babel/transform-destructuring",
+          {
+            "useBuiltIns": true
           }
         ]
       ]
@@ -20,8 +22,13 @@
     {
       "plugins": [
         [
-          "@babel/transform-modules-commonjs",
-          { "loose": true, "noInterop": true }
+          "../../transform",
+          {
+            "blackbox": true,
+            "rt": "../apiMin",
+            "pureModule": true,
+            preInstrumentedLibs: ".."
+          }
         ]
       ]
     }

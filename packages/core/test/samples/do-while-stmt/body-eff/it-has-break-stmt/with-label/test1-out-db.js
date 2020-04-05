@@ -1,141 +1,146 @@
-var $M = require("@effectful/debugger/api");
+var $M = require("@effectful/debugger/api"),
+    $context = $M.context,
+    $ret = $M.ret,
+    $unhandled = $M.unhandled,
+    $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{}, null, 0],
+    $s$2 = [{}, $s$1, 1],
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-28:0", 160, function file_js($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $m$1($);
+      $.goto = 2;
+      continue;
 
-$M.module("file.js", null, module, null, "$");
-$M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $c.f($);
-        return $M.ret();
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 1:
-        return $M.ret($.value);
+    case 2:
+      return $ret($.result);
 
-      case 2:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [[], [], []]);
-$M.fun("m$1", null, "m$0", [], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        ($M.context.call = eff)(0);
+}, null, null, 0, [[0, null, $s$1], [16, "28:0-28:0", $s$1], [16, "28:0-28:0", $s$1]]),
+    $m$1 = $M.fun("m$1", null, null, $m$0, [], 0, 1, "1:1-27:1", 128, function ($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      ($context.call = eff)(0);
+      $.state = 1;
+
+    case 1:
+      $.goto = 2;
+      ($context.call = eff)(1);
+      $.state = 2;
+
+    case 2:
+      $.goto = 3;
+      ($context.call = eff)(2);
+      $.state = 3;
+
+    case 3:
+      $.goto = 4;
+      $p = ($context.call = eff)(3);
+      $.state = 4;
+
+    case 4:
+      if ($p) {
+        $.goto = 15;
+        ($context.call = eff)(4);
         continue;
+      } else {
+        $.state = 5;
+      }
 
-      case 1:
-        $.goto = 2;
-        ($M.context.call = eff)(1);
+    case 5:
+      $.goto = 6;
+      $p = ($context.call = eff)(3);
+      $.state = 6;
+
+    case 6:
+      if ($p) {
+        $.goto = 13;
+        ($context.call = eff)(4);
         continue;
+      } else {
+        $.state = 7;
+      }
 
-      case 2:
-        $.goto = 3;
-        ($M.context.call = eff)(2);
-        continue;
+    case 7:
+      $.goto = 8;
+      $p = ($context.call = eff)(5);
+      $.state = 8;
 
-      case 3:
-        $.goto = 4;
-        $p = ($M.context.call = eff)(3);
-        continue;
-
-      case 4:
-        if ($p) {
-          $.goto = 13;
-          ($M.context.call = eff)(4);
-          continue;
-        } else {
-          $.state = 5;
-        }
-
-      case 5:
-        $.goto = 6;
-        $p = ($M.context.call = eff)(3);
-        continue;
-
-      case 6:
-        if ($p) {
-          $.goto = 11;
-          ($M.context.call = eff)(4);
-          continue;
-        } else {
-          $.state = 7;
-        }
-
-      case 7:
-        $.goto = 8;
-        $p = ($M.context.call = eff)(5);
-        continue;
-
-      case 8:
-        if ($p) {
-          $.goto = 14;
-          ($M.context.call = eff)(6);
-          continue;
-        } else {
-          $.state = 9;
-        }
-
-      case 9:
-        $.goto = 10;
-        $p = ($M.context.call = eff)(7);
-        continue;
-
-      case 10:
-        if ($p) {
-          $.goto = 15;
-          ($M.context.call = eff)(8);
-          continue;
-        } else {
-          $.state = 11;
-        }
-
-      case 11:
+    case 8:
+      if ($p) {
         $.goto = 12;
-        $p = ($M.context.call = eff)(9);
+        ($context.call = eff)(6);
         continue;
+      } else {
+        $.state = 9;
+      }
 
-      case 12:
-        if ($p) {
-          $.goto = 2;
-          continue;
-        } else {
-          $.state = 13;
-        }
+    case 9:
+      $.goto = 10;
+      $p = ($context.call = eff)(7);
+      $.state = 10;
 
-      case 13:
-        $.goto = 14;
-        ($M.context.call = eff)(10);
+    case 10:
+      if ($p) {
+        $.goto = 11;
+        ($context.call = eff)(8);
+        $.state = 11;
+      } else {
+        $.goto = 13;
         continue;
+      }
 
-      case 14:
-        if (true) {
-          $.goto = 1;
-          continue;
-        } else {
-          $.state = 15;
-        }
+    case 11:
+      $.goto = 17;
+      ($context.call = eff)(11);
+      continue;
 
-      case 15:
-        $.goto = 16;
-        ($M.context.call = eff)(11);
+    case 12:
+      if (true) {
+        $.goto = 1;
         continue;
+      } else {
+        $.goto = 11;
+        continue;
+      }
 
-      case 16:
-        return $M.ret();
+    case 13:
+      $.goto = 14;
+      $p = ($context.call = eff)(9);
+      $.state = 14;
 
-      case 17:
-        return $M.ret($.value);
+    case 14:
+      if ($p) {
+        $.goto = 2;
+        continue;
+      } else {
+        $.state = 15;
+      }
 
-      case 18:
-        throw $.value;
+    case 15:
+      $.goto = 12;
+      ($context.call = eff)(10);
+      continue;
 
-      default:
-        throw new Error("Invalid state");
-    }
+    case 16:
+      $.goto = 17;
+      return $unhandled($.error);
+
+    case 17:
+      return $ret($.result);
+
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["2:2-2:8", "e", null], ["4:4-4:10", "e", null], ["6:6-6:12", "e", null], ["7:10-7:16", "e", null], ["8:8-8:14", "e", null], ["11:10-11:16", "e", null], ["12:8-12:14", "e", null], ["15:10-15:16", "e", null], ["16:8-16:14", "e", null], ["19:10-19:16", "e", null], ["20:8-20:14", "e", null], ["23:13-23:19", "e", null], [], ["24:4-24:11", "e", null], [], ["26:2-26:9", "e", null], [], [], []]);
-module.exports = $M.exports();
+}, null, null, 1, [[2, "2:2-2:8", $s$2], [2, "4:4-4:10", $s$2], [2, "6:6-6:12", $s$2], [2, "7:10-7:16", $s$2], [2, "8:8-8:14", $s$2], [2, "11:10-11:16", $s$2], [2, "12:8-12:14", $s$2], [2, "15:10-15:16", $s$2], [2, "16:8-16:14", $s$2], [2, "19:10-19:16", $s$2], [2, "20:8-20:14", $s$2], [2, "26:2-26:9", $s$2], [0, null, $s$2], [2, "23:13-23:19", $s$2], [0, null, $s$2], [2, "24:4-24:11", $s$2], [16, "27:1-27:1", $s$2], [16, "27:1-27:1", $s$2]]);
+
+$M.moduleExports();

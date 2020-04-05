@@ -278,7 +278,11 @@ describe("time traveling", function() {
     j.enabled = false;
   });
   test("Map tracing", function() {
-    const map = new Map([[1, "A"], [2, "B"], [3, "C"]]);
+    const map = new Map([
+      [1, "A"],
+      [2, "B"],
+      [3, "C"]
+    ]);
     D.set(map, "deb_hi", "there");
     const orig = [...map];
     D.TimeTravel.reset();
@@ -287,7 +291,11 @@ describe("time traveling", function() {
     map.set(1, "D").delete(2);
     map.delete(3);
     map.set(3, "E").set(4, "F");
-    const map1 = [[1, "D"], [3, "E"], [4, "F"]];
+    const map1 = [
+      [1, "D"],
+      [3, "E"],
+      [4, "F"]
+    ];
     expect([...map]).toEqual(map1);
     D.TimeTravel.checkpoint();
     map.clear();
@@ -296,7 +304,10 @@ describe("time traveling", function() {
     D.TimeTravel.checkpoint();
     map.set(2, "E");
     map.set(1, "F");
-    const map3 = [[2, "E"], [1, "F"]];
+    const map3 = [
+      [2, "E"],
+      [1, "F"]
+    ];
     expect([...map]).toEqual(map3);
     D.TimeTravel.undo();
     expect([...map]).toEqual(map2);
@@ -775,7 +786,7 @@ describe("time traveling", function() {
           D.TimeTravel.Core.arraySaved.push.call(logs, args);
         }
       };
-      const mod = trace(D.evalThunk(require("./__fixtures__/counters")));
+      const mod = trace(D.force(require("./__fixtures__/counters")));
       const [counter, tr, dir, set] = trace(mod.getCounter());
       console.log("INIT", tr, dir, set);
       let stepNum = 0;

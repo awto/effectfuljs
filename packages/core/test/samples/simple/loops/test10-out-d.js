@@ -1,122 +1,129 @@
-var $M = require("@effectful/debugger/api");
-
-$M.module("file.js", null, module, null, "$");
-var $s$1 = [{
-  a: "$0"
-}, null, false],
-    $s$2 = [{
-  i: "$0"
-}, $s$1, false],
+var $M = require("@effectful/debugger/api"),
+    $context = $M.context,
+    $ret = $M.ret,
+    $unhandled = $M.unhandled,
+    $brk = $M.brk,
+    $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{
+  a: [1, "1:9-1:10"]
+}, null, 0],
+    $s$2 = [{}, $s$1, 1],
     $s$3 = [{
-  j: "$1"
-}, $s$2, false];
-$M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$0 = $c.a($);
-        return $M.ret();
+  i: [1, "2:16-2:17"]
+}, $s$2, 1],
+    $s$4 = [{
+  j: [2, "3:13-3:14"]
+}, $s$3, 1],
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-7:0", 32, function file_js($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $l[1] = $m$1($);
+      $.goto = 2;
+      continue;
 
-      case 1:
-        return $M.ret($.value);
+    case 1:
+      $.goto = 2;
+      return $unhandled($.error);
 
-      case 2:
-        throw $.value;
+    case 2:
+      return $ret($.result);
 
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [[], [], []]);
-$M.fun("m$1", "a", "m$0", [], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        $M.brk(0);
+}, null, null, 0, [[0, "1:0-6:1", $s$1], [16, "7:0-7:0", $s$1], [16, "7:0-7:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "a", null, $m$0, [], 0, 3, "1:0-6:1", 0, function a($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      $brk("2:2-5:24");
+      $.state = 1;
+
+    case 1:
+      $.goto = 2;
+      $brk("2:7-5:24");
+      $.state = 2;
+
+    case 2:
+      $.goto = 3;
+      $p = ($context.call = init)();
+      $.state = 3;
+
+    case 3:
+      $l[1] = $p;
+      $.state = 4;
+
+    case 4:
+      $.goto = 5;
+      $p = ($context.call = check)();
+      $.state = 5;
+
+    case 5:
+      if ($p === true) {
+        $.goto = 6;
+        $brk("3:4-5:24");
+        $.state = 6;
+      } else {
+        $.goto = 14;
         continue;
+      }
 
-      case 1:
-        $.goto = 2;
-        $M.brk(1);
+    case 6:
+      $.goto = 7;
+      $p = ($context.call = initJ)();
+      $.state = 7;
+
+    case 7:
+      $l[2] = $p;
+      $.state = 8;
+
+    case 8:
+      $.goto = 9;
+      $p = ($context.call = checkJ)();
+      $.state = 9;
+
+    case 9:
+      if ($p === true) {
+        $.goto = 11;
+        $brk("4:6-5:24");
         continue;
+      } else {
+        $.state = 10;
+      }
 
-      case 2:
-        $.goto = 3;
-        $p = ($M.context.call = init)();
+    case 10:
+      $.goto = 4;
+      ($context.call = upd)();
+      continue;
+
+    case 11:
+      if ($l[1] === $l[2]) {
+        $.goto = 12;
+        $brk("4:19-4:28");
+        $.state = 12;
+      } else {
+        $.goto = 10;
+        $brk("5:11-5:24");
         continue;
+      }
 
-      case 3:
-        $.$.$0 = $p;
-        $.state = 4;
+    case 12:
+      $.goto = 8;
+      ($context.call = updJ)();
+      continue;
 
-      case 4:
-        $.goto = 5;
-        $p = ($M.context.call = check)();
-        continue;
+    case 13:
+      $.goto = 14;
+      return $unhandled($.error);
 
-      case 5:
-        if ($p === true) {
-          $.goto = 6;
-          $M.brk(2);
-          continue;
-        } else {
-          return $M.ret();
-        }
+    case 14:
+      return $ret($.result);
 
-      case 6:
-        $.goto = 7;
-        $p = ($M.context.call = initJ)();
-        continue;
-
-      case 7:
-        $.$.$1 = $p;
-        $.state = 8;
-
-      case 8:
-        $.goto = 9;
-        $p = ($M.context.call = checkJ)();
-        continue;
-
-      case 9:
-        if ($p === true) {
-          $.goto = 11;
-          $M.brk(3);
-          continue;
-        } else {
-          $.state = 10;
-        }
-
-      case 10:
-        $.goto = 4;
-        ($M.context.call = upd)();
-        continue;
-
-      case 11:
-        if ($.$.$0 === $.$.$1) {
-          $.goto = 12;
-          $M.brk(4);
-          continue;
-        } else {
-          $.goto = 10;
-          $M.brk(5);
-          continue;
-        }
-
-      case 12:
-        $.goto = 8;
-        ($M.context.call = updJ)();
-        continue;
-
-      case 13:
-        return $M.ret($.value);
-
-      case 14:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["2:2-5:24", "s", $s$1], ["2:7-5:24", "s", $s$1], ["2:20-2:26", "e", $s$2], [], ["2:28-2:35", "e", $s$2], ["3:4-5:24", "s", $s$2], ["3:17-3:24", "e", $s$3], [], ["3:26-3:34", "e", $s$3], ["4:6-5:24", "s", $s$3], ["2:46-2:51", "e", $s$2], ["4:19-4:28", "s", $s$3], ["3:45-3:51", "e", $s$3], [], []]);
-module.exports = $M.exports();
+}, null, null, 1, [[4, "2:2-5:24", $s$2], [4, "2:7-5:24", $s$2], [2, "2:20-2:26", $s$3], [0, "2:16-2:26", $s$3], [2, "2:28-2:35", $s$3], [4, "3:4-5:24", $s$3], [2, "3:17-3:24", $s$4], [0, "3:13-3:24", $s$4], [2, "3:26-3:34", $s$4], [4, "4:6-5:24", $s$4], [2, "2:46-2:51", $s$3], [4, "4:19-4:28", $s$4], [2, "3:45-3:51", $s$4], [16, "6:1-6:1", $s$2], [16, "6:1-6:1", $s$2]]);
+
+$M.moduleExports();

@@ -6,7 +6,7 @@ import { DebugProtocol } from "vscode-debugprotocol";
 import { DebugClient } from "./kit/client";
 
 suite("Debugging on NodeJS", function() {
-  this.timeout(60000);
+  this.timeout(100000);
   const PROJECT_ROOT = path.join(__dirname, "../../..");
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
@@ -686,7 +686,7 @@ suite("Debugging on NodeJS", function() {
       await Promise.all([
         dc.configurationSequence(),
         dc.launch({
-          command: `node ${PROGRAM}`,
+          command: PROGRAM,
           preset: "node",
           stopOnEntry: true
         })
@@ -695,64 +695,60 @@ suite("Debugging on NodeJS", function() {
         path: PROGRAM,
         line: 1
       });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: MOD2,
-        line: 1
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: MOD3,
-        line: 4
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: MOD3,
-        line: 2
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: MOD2,
-        line: 2
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 2
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: MOD2, line: 1 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: MOD3, line: 4 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: MOD3, line: 2 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: MOD2, line: 2 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: PROGRAM, line: 2 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
     });
     test("should exit modules top level on `step out`", async function() {
       await dc.hitBreakpoint(
         {
-          command: `node ${PROGRAM}`,
-          preset: "node"
+          command: PROGRAM,
+          preset: "node",
+          verbose: 2
         },
         { path: MOD3, line: 2 }
       );
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: MOD3,
-        line: 3
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: MOD3,
-        line: 4
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: MOD2,
-        line: 3
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: PROGRAM,
-        line: 3
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", { path: MOD3, line: 3 })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", { path: MOD3, line: 4 })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", { path: MOD2, line: 3 })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", { path: PROGRAM, line: 3 })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
     });
     test("should exit function on `step over`", async function() {
       await Promise.all([
@@ -768,23 +764,22 @@ suite("Debugging on NodeJS", function() {
         breakpoints: [{ line: 2, column: 0 }],
         source: { path: MOD3 }
       });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("breakpoint", {
-        path: MOD3,
-        line: 2
-      });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("next", {
-        path: MOD2,
-        line: 2
-      });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("next", {
-        path: PROGRAM,
-        line: 2
-      });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("breakpoint", { path: MOD3, line: 2 })
+      ]);
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("next", { path: MOD2, line: 2 })
+      ]);
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("next", { path: PROGRAM, line: 2 })
+      ]);
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
     });
   });
   suite("async", function() {
@@ -803,48 +798,56 @@ suite("Debugging on NodeJS", function() {
         path: PROGRAM,
         line: 7
       });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 8
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 2
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 3
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 4
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: PROGRAM,
-        line: 5
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 9
-      });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", {
+          path: PROGRAM,
+          line: 8
+        })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: PROGRAM, line: 2 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: PROGRAM, line: 3 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: PROGRAM, line: 3 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: PROGRAM, line: 4 })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", { path: PROGRAM, line: 5 })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", { path: PROGRAM, line: 9 })
+      ]);
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
       await out;
     });
   });
   suite("hot swapping", function() {
     const PROGRAM = path.join(DATA_ROOT, "hot-swap-main.js");
     teardown(() => util.promisify(fs.unlink)(PROGRAM));
-    const copy = util.promisify(fs.copyFile);
+    async function copy(fn: string) {
+      await util.promisify(fs.writeFile)(
+        PROGRAM,
+        await util.promisify(fs.readFile)(path.join(DATA_ROOT, fn), "utf-8")
+      );
+    }
     test("should change the functions code", async function() {
       const out = dc.assertOutput("stdout", "M:1\nN:2\n");
-      await copy(path.join(DATA_ROOT, "hot1.js"), PROGRAM);
+      await copy("hot1.js");
       await dc.hitBreakpoint(
         {
           command: `node ${PROGRAM}`,
@@ -852,15 +855,16 @@ suite("Debugging on NodeJS", function() {
         },
         { path: PROGRAM, line: 2 }
       );
-      await dc.continueRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("breakpoint", {
-        path: PROGRAM,
-        line: 2
-      });
-      await copy(path.join(DATA_ROOT, "hot2.js"), PROGRAM);
-      await dc.waitForEvent("loadedSources");
-      await dc.continueRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("breakpoint", { path: PROGRAM, line: 2 })
+      ]);
+      await new Promise(i => setTimeout(i, 100));
+      await Promise.all([copy("hot2.js"), dc.waitForEvent("loadedSources")]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
       await out;
     });
   });
@@ -926,13 +930,12 @@ suite("Debugging on NodeJS", function() {
     const PROGRAM = path.join(DATA_ROOT, "scopes.js");
     test("should correctly refer variables", async function() {
       async function watch(res: string) {
+        const stop = await dc.assertStoppedLocation("debugger_statement", {});
         assert.equal(
           (
             await dc.evaluateRequest({
               context: "watch",
-              frameId: (
-                await dc.assertStoppedLocation("debugger_statement", {})
-              ).body.stackFrames[0].id,
+              frameId: stop.body.stackFrames[0].id,
               expression: "`i:${i},j:${j},k:${k}`"
             })
           ).body.result,
@@ -949,70 +952,70 @@ suite("Debugging on NodeJS", function() {
       await watch("i:I2,j:J2,k:K1+1");
       assert.deepEqual(await dc.scopeDescr(), [
         [
-          { this: { obj: "OBJ" }, j: "J2", "[name]": "f" },
-          { this: { obj: "OBJ" }, i: "I2", j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1", "[name]": "f" }
+          { this: { obj: "OBJ" }, j: "J2", "[name]": "VM0.js" },
+          { this: { obj: "OBJ" }, i: "I2", j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1", "[name]": "scopes.js" }
         ],
         [
-          { this: { obj: "OBJ" }, i: "I2", j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1", "[name]": "f" }
+          { this: { obj: "OBJ" }, i: "I2", j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1", "[name]": "scopes.js" }
         ],
-        [{ i: "I1", k: "K1+1", "[name]": "f" }]
+        [{ i: "I1", k: "K1+1", "[name]": "scopes.js" }]
       ]);
       await dc.continueRequest({ threadId: 0 });
       await watch("i:GI,j:J3,k:GK+2");
       assert.deepEqual(await dc.scopeDescr(), [
-        [{ j: "J3", "[name]": "f" }],
+        [{ j: "J3", "[name]": "VM2048.js" }],
         [
-          { this: { obj: "OBJ" }, j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1-1", "[name]": "f" }
+          { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
         ],
-        [{ i: "I1", k: "K1+1-1", "[name]": "f" }]
+        [{ i: "I1", k: "K1+1-1", "[name]": "scopes.js" }]
       ]);
       await dc.continueRequest({ threadId: 0 });
       await watch("i:I3,j:JF,k:GK+2-2+3");
       assert.deepEqual(await dc.scopeDescr(), [
-        [{ this: { obj: "OBJ" }, j: "JF", i: "I3", "[name]": "f" }],
+        [{ this: { obj: "OBJ" }, j: "JF", i: "I3", "[name]": "VM4096.js" }],
         [
-          { this: { obj: "OBJ" }, j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1-1", "[name]": "f" }
+          { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
         ],
-        [{ i: "I1", k: "K1+1-1", "[name]": "f" }]
+        [{ i: "I1", k: "K1+1-1", "[name]": "scopes.js" }]
       ]);
       await dc.continueRequest({ threadId: 0 });
       await watch("i:I1,j:J4,k:KL");
       assert.deepEqual(await dc.scopeDescr(), [
         [
-          { this: { obj: "OBJ" }, j: "J4", "[name]": "f" },
-          { this: { obj: "OBJ" }, k: "KL", "[name]": "f" },
-          { this: { obj: "OBJ" }, j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1-1", "[name]": "f" }
+          { this: { obj: "OBJ" }, j: "J4", "[name]": "VM6144.js" },
+          { this: { obj: "OBJ" }, k: "KL", "[name]": "(anonymous)" },
+          { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
         ],
         [
-          { this: { obj: "OBJ" }, k: "KL", "[name]": "f" },
-          { this: { obj: "OBJ" }, j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1-1", "[name]": "f" }
+          { this: { obj: "OBJ" }, k: "KL", "[name]": "(anonymous)" },
+          { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
         ],
         [
-          { this: { obj: "OBJ" }, j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1-1", "[name]": "f" }
+          { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
         ],
-        [{ i: "I1", k: "K1+1-1", "[name]": "f" }]
+        [{ i: "I1", k: "K1+1-1", "[name]": "scopes.js" }]
       ]);
       await dc.continueRequest({ threadId: 0 });
       await watch("i:GI,j:J5,k:GK+2-2+3-3");
       assert.deepEqual(await dc.scopeDescr(), [
-        [{ j: "J5", "[name]": "f" }],
+        [{ j: "J5", "[name]": "VM8192.js" }],
         [
-          { this: { obj: "OBJ" }, k: "KL", "[name]": "f" },
-          { this: { obj: "OBJ" }, j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1-1", "[name]": "f" }
+          { this: { obj: "OBJ" }, k: "KL", "[name]": "(anonymous)" },
+          { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
         ],
         [
-          { this: { obj: "OBJ" }, j: "J1", "[name]": "f" },
-          { i: "I1", k: "K1+1-1", "[name]": "f" }
+          { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
+          { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
         ],
-        [{ i: "I1", k: "K1+1-1", "[name]": "f" }]
+        [{ i: "I1", k: "K1+1-1", "[name]": "scopes.js" }]
       ]);
       await dc.continueRequest({ threadId: 0 });
       await dc.waitForEvent("terminated");

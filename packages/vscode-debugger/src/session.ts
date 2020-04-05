@@ -58,6 +58,7 @@ export class DebugSession extends SessionImpl {
   private breakpointsResponseRemotes?: Set<number>;
   private breakpointsCount = 0;
   private breakpointsResponse?: P.SetBreakpointsResponse;
+  private lastThread = 0;
 
   private hideProgress() {
     if (this.progressCb) {
@@ -247,6 +248,7 @@ export class DebugSession extends SessionImpl {
       case "reverseContinue":
         const args: any = request.arguments;
         if (args.threadId != null) {
+          this.lastThread = args.threadId;
           if (this.sendToThread(args.threadId, request)) return;
           break;
         }
@@ -258,6 +260,10 @@ export class DebugSession extends SessionImpl {
           if (this.sendToThread(toThread(args.variablesReference), request))
             return;
           break;
+        }
+        if (request.command === "evaluate") {
+          this.sendToThread(this.lastThread, request);
+          return;
         }
         logger.error("no thread's destination");
         break;
@@ -290,13 +296,13 @@ export class DebugSession extends SessionImpl {
           const lsev = <any>ev;
           if (lsev.body.breakpoints)
             this.mergeResponseBreakpoints(lsev.body.breakpoints, thread.id);
-          // this.convertResponseBreakpoints(lsev.body.breakpoints);
           delete lsev.body.breakpoints;
           break;
         case "continued":
         case "stopped":
         case "thread":
           (<any>ev).body.threadId = thread.id;
+          (<any>ev).body.allThreadsContinued = false;
       }
       this.sendEvent(ev);
     } else if (data.type === "response") {
@@ -413,7 +419,6 @@ export class DebugSession extends SessionImpl {
       this.awaitReconnect = args.reconnectTimeout * 1000;
     if (args.command) {
       const env: { [name: string]: string | null } = <any>{};
-      //TODO: resolve
       const host =
         !args.debuggerHost ||
         args.debuggerHost === "::" ||
@@ -493,11 +498,7 @@ export class DebugSession extends SessionImpl {
         }
         let startBuf: string[] = [];
         if (!child) {
-          const spawnArgs: any = {
-            cwd,
-            env,
-            shell: true /*preset !== "browser"*/
-          };
+          const spawnArgs: any = { cwd, env, shell: preset !== "browser" };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
           child.on("error", data => {
@@ -574,6 +575,7 @@ export class DebugSession extends SessionImpl {
         noDebug: args.noDebug,
         restart: args.__restart,
         stopOnEntry: args.stopOnEntry,
+        stopOnExit: args.stopOnExit,
         dirSep: path.sep,
         exceptions: this.exceptionArgs,
         breakpoints: [...this.breakpointsSrcs].map(
@@ -662,25 +664,12 @@ export class DebugSession extends SessionImpl {
       const bpi = this.breakpointsIds.get(<any>i.id);
       if (!bpi) continue;
       const response = bpi.response;
-      let changed = false;
       if (i.verified) {
         bpi.remotes.add(remoteId);
-        changed =
-          i.line !== response.line ||
-          i.endLine !== response.endLine ||
-          i.column !== response.column ||
-          i.message !== response.message ||
-          i.endColumn !== response.endColumn;
         Object.assign(bpi.response, i);
-      } else {
-        bpi.remotes.delete(remoteId);
-      }
-      if (!bpi.remotes.size) {
-        if (response.verified) changed = true;
-        response.verified = false;
-      }
-      if (changed && !isResponse)
-        this.sendEvent(new BreakpointEvent("changed", response));
+      } else bpi.remotes.delete(remoteId);
+      if (!bpi.remotes.size) response.verified = false;
+      if (!isResponse) this.sendEvent(new BreakpointEvent("changed", response));
     }
   }
 

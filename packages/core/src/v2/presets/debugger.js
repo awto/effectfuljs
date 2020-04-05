@@ -9,32 +9,33 @@ import * as Meta from "../meta";
 import * as Eval from "../eval";
 
 export default function debuggerTransform(ast) {
+  config.loopsSubScopes = config.timeTravel ? "always" : "closure";
+  config.reuseTempVars = !config.timeTravel;
+  config.expInjectTempSetters = false;
+  config.debug = true;
+  if (Kit.hasDirective(ast.program, "no-debug")) return;
   const root = Kit.produce(ast);
   Scope.prepare(root);
   Eval.replaceEvalDir();
   if (!config.blackbox) Meta.injectBrk();
   Scope.split();
-  if (config.timeTravel) Operations.normalizeAssign();
+  Operations.normalizeAssign();
   Scope.forEach(CFG.build);
-  // dbg.cfgs("bld1");
   if (config.timeTravel) {
-    Operations.normalizeAssign();
     Operations.setters();
     Operations.deleters();
-    Operations.methodCalls();
   }
+  Optimization.prepare();
+  if (!config.expInlineCalls) Operations.methodCalls();
   Operations.assignCall();
   Scope.forEach(Optimization.composeItems);
-  // dbg.cfgs("opt1");
-  Optimization.prepare();
   Scope.forEach(CFG.prepare);
-  // dbg.cfgs("prep1");
   Scope.forEach(Optimization.assignBindVar);
-  // dbg.cfgs("vars1");
   Scope.injectVarGetters();
   Scope.forEach(Emit.calcFrames);
+  Scope.forEach(Optimization.sortFrames);
   Scope.forEach(Meta.all);
+  if (config.timeTravel) Operations.replaceSymNames();
   Emit.module();
-  Kit.resetNames(root);
   Kit.consume(root);
 }

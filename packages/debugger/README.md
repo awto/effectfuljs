@@ -13,12 +13,6 @@ Even if programs don't use EffectfulJS they can get time-traveling and
 hot-reloading with restoring closure captured variables, restoring
 program's state from some savepoints and other diagnostics tools.
 
-## Not *yet* implemented
-
- * stepping into setters, getters, proxy traps, casts,
-   runtime called callbacks, dynamic imports
- * `with` statements
- * original function's source code
 
 ## LICENSE
 

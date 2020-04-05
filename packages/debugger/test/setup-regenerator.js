@@ -6,7 +6,6 @@ const { context } = D;
 const baseIt = global.it || global.test;
 const baseDescribe = global.describe;
 const assert = require("assert");
-const RT = require("../rt");
 const config = require("../config").default;
 
 const isJest = typeof jest !== "undefined";
@@ -44,12 +43,15 @@ global.it = function patchedIt(descr, fun) {
         context.debug = opts.debug;
         if (fun.length) {
           await trace.async(
-            new Promise((rs, rj) =>
-              fun.call(this, function(e) {
-                if (arguments.length) {
-                  rj(e);
-                } else rs();
-              })
+            new Promise(
+              (rs, rj) => (
+                (context.call = fun.call),
+                fun.call(this, function(e) {
+                  if (arguments.length) {
+                    (context.call = rj)(e);
+                  } else (context.call = rs)();
+                })
+              )
             )
           );
         } else {
@@ -82,7 +84,7 @@ global.skipTests = {
 };
 
 function run(descr) {
-  return trace(D.evalThunk(descr));
+  return trace(D.force(descr));
 }
 
 module.exports = {

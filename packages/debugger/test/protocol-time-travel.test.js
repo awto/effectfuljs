@@ -9,16 +9,11 @@ config.localConsole = DEBUG;
 config.srcRoot = path.resolve(path.join(__dirname, ".."));
 config.localConsole = false;
 const Kit = require("./protocol");
-const D = require("../backends/vscode");
-const assert = require("assert");
-
-const deb_log = require("../state").saved.console;
-
-//TODO: check returns the capabilities
+// const D = require("../backends/vscode");
 
 describe("VSCode protocol handlers with time traveling", function() {
   afterEach(Kit.teardown);
-  test("step back", function(done) {
+  test("step back calls", function(done) {
     Kit.traverseBack(
       require("./__fixtures__/tt/stepBackPlain"),
       {},

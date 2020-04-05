@@ -1,74 +1,74 @@
-var $M = require("@effectful/debugger/api");
+var $M = require("@effectful/debugger/api"),
+    $context = $M.context,
+    $ret = $M.ret,
+    $unhandled = $M.unhandled,
+    $brk = $M.brk,
+    $mcall = $M.mcall,
+    $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
+}, null),
+    $s$1 = [{
+  scope: [1, "3:9-3:14"]
+}, null, 0],
+    $s$2 = [{}, $s$1, 1],
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-7:0", 32, function file_js($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $l[1] = $m$1($);
+      $.goto = 1;
+      $brk("1:0-1:40");
+      $.state = 1;
 
-$M.module("file.js", null, module, null, "$");
-var $s$1 = [{
-  scope: "$0"
-}, null, false];
-$M.fun("m$0", "file", null, [], 32, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.$.$0 = $c.scope($);
-        $.goto = 1;
-        $M.brk(0);
-        continue;
+    case 1:
+      $.goto = 3;
+      $mcall("option", M, {
+        scopePrefix: "otherScope"
+      });
+      continue;
 
-      case 1:
-        $.goto = 2;
-        ($M.context.call = M.option).dbg$call(M, {
-          scopePrefix: "otherScope"
-        });
-        continue;
+    case 2:
+      $.goto = 3;
+      return $unhandled($.error);
 
-      case 2:
-        return $M.ret();
+    case 3:
+      return $ret($.result);
 
-      case 3:
-        return $M.ret($.value);
-
-      case 4:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["1:0-1:40", "s", $s$1], ["1:0-1:39", "e", $s$1], [], [], []]);
-$M.fun("m$1", "scope", "m$0", [], 0, function () {
-  for (;;) {
-    switch ($.state = $.goto) {
-      case 0:
-        $.goto = 1;
-        $M.brk(1);
-        continue;
+}, null, null, 0, [[4, "1:0-1:40", $s$1], [2, "1:0-1:39", $s$1], [16, "7:0-7:0", $s$1], [16, "7:0-7:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "scope", null, $m$0, [], 0, 1, "3:0-6:1", 0, function scope($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      $brk("4:2-4:10");
+      $.state = 1;
 
-      case 1:
-        $.goto = 2;
-        ($M.context.call = eff_1)();
-        continue;
+    case 1:
+      $.goto = 2;
+      ($context.call = eff_1)();
+      $.state = 2;
 
-      case 2:
-        $.goto = 3;
-        $M.brk(2);
-        continue;
+    case 2:
+      $.goto = 3;
+      $brk("5:2-5:10");
+      $.state = 3;
 
-      case 3:
-        $.goto = 4;
-        ($M.context.call = eff_2)();
-        continue;
+    case 3:
+      $.goto = 5;
+      ($context.call = eff_2)();
+      continue;
 
-      case 4:
-        return $M.ret();
+    case 4:
+      $.goto = 5;
+      return $unhandled($.error);
 
-      case 5:
-        return $M.ret($.value);
+    case 5:
+      return $ret($.result);
 
-      case 6:
-        throw $.value;
-
-      default:
-        throw new Error("Invalid state");
-    }
+    default:
+      throw new Error("Invalid state");
   }
-}, null, null, [["4:2-4:10", "s", $s$1], ["4:2-4:9", "e", $s$1], ["5:2-5:10", "s", $s$1], ["5:2-5:9", "e", $s$1], [], [], []]);
-module.exports = $M.exports();
+}, null, null, 1, [[4, "4:2-4:10", $s$2], [2, "4:2-4:9", $s$2], [4, "5:2-5:10", $s$2], [2, "5:2-5:9", $s$2], [16, "6:1-6:1", $s$2], [16, "6:1-6:1", $s$2]]);
+
+$M.moduleExports();

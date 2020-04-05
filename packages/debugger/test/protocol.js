@@ -3,9 +3,8 @@
  * async functions and promises, as the whole system stops on some breakpoint
  */
 const config = require("../config").default;
-const assert = require("assert");
 const path = require("path");
-const { context, saved } = require("../state");
+const { context, saved, journal } = require("../state");
 
 let socket;
 
@@ -39,9 +38,6 @@ class WS {
 config.WebSocket = WS;
 
 const { resetLoad } = require("../vscode/handlers");
-const { journal } = require("../timeTravel/core");
-
-let terminateTH = 0;
 
 function recv(msg) {
   const data = JSON.parse(msg);
@@ -161,7 +157,7 @@ function setBreakpoint(loc, cb) {
 
 function launch(mod, opts, cb) {
   socket.onopen();
-  D.evalThunk(mod);
+  D.force(mod);
   return stopAfterCommand(
     "childLaunch",
     {
