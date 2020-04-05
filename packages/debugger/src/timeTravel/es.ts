@@ -76,12 +76,13 @@ function mapDelOp(this: any) {
 
 regOpaqueObject(mapDelOp, "#map$d");
 
-function mapDel<K, V>(inner: Map<K, MapEntry<K, V>>, entry: MapEntry<K, V>) {
+function mapDel<K, V>(inner: Map<K, MapEntry<K, V>>, entry: MapEntry<K, V>, enabled: boolean) {
   inner.delete(entry.k);
   const { next, prev } = entry;
   next.prev = prev;
   prev.next = next;
-  record2(restoreEntryOp, inner, entry);
+  if (enabled)
+    record2(restoreEntryOp, inner, entry);
 }
 
 type SavedMap<K, V> = Map<K, V>;
@@ -175,11 +176,12 @@ export const ManagedMap = class Map<K, V> {
   delete(k: K): boolean {
     const entry = this.inner.get(k);
     if (!entry) return false;
-    mapDel(this.inner, entry);
+    mapDel(this.inner, entry, journal.enabled && context.call === ManagedMap.prototype.delete);
     return true;
   }
   clear() {
-    record3(mapRestoreOp, this, this.inner, this.list);
+    if (journal.enabled && context.call === ManagedMap.prototype.clear)
+      record3(mapRestoreOp, this, this.inner, this.list);
     const s: MapEntry<K, V> = <any>{};
     s.next = s;
     s.prev = s;
@@ -190,14 +192,16 @@ export const ManagedMap = class Map<K, V> {
     const { inner } = this;
     let entry = inner.get(k);
     if (entry) {
-      record2(resetEntryValueOp, entry, entry.v);
+      if (journal.enabled && context.call === ManagedMap.prototype.set)
+        record2(resetEntryValueOp, entry, entry.v);
       entry.v = v;
     } else {
       const { list } = this;
       entry = { k, v, prev: list, next: list.next };
       list.next = list.next.prev = entry;
       inner.set(k, entry);
-      record2(mapDelOp, inner, entry);
+      if (journal.enabled && context.call === ManagedMap.prototype.set)
+        record2(mapDelOp, inner, entry);
     }
     return <any>this;
   }
@@ -264,11 +268,12 @@ export const ManagedSet = class Set<T> {
   delete(k: T): boolean {
     const entry = this.inner.get(k);
     if (!entry) return false;
-    mapDel(this.inner, entry);
+    mapDel(this.inner, entry, journal.enabled && context.call === ManagedSet.prototype.delete);
     return true;
   }
   clear() {
-    record3(mapRestoreOp, this, this.inner, this.list);
+    if (journal.enabled && context.call === ManagedSet.prototype.clear)
+      record3(mapRestoreOp, this, this.inner, this.list);
     const s: SetEntry<T> = <any>{};
     s.next = s;
     s.prev = s;
@@ -289,7 +294,8 @@ export const ManagedSet = class Set<T> {
       entry = { k, v: k, prev: list, next: list.next };
       list.next = list.next.prev = entry;
       inner.set(k, entry);
-      record2(mapDelOp, inner, entry);
+      if (journal.enabled && context.call === ManagedSet.prototype.add)
+        record2(mapDelOp, inner, entry);
     }
     return <any>this;
   }

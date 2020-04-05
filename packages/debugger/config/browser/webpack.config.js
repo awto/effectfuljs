@@ -4,7 +4,6 @@
 const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
-const resolve = require("resolve");
 const PnpWebpackPlugin = require("pnp-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
@@ -42,6 +41,7 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 const publicPath = "/";
 const publicUrl = "";
+const compact = !config.debuggerDebug;
 
 const env = getClientEnvironment(publicUrl);
 
@@ -77,6 +77,13 @@ function isDebuggerPath(filename) {
   return (
     filename.startsWith(debuggerPath) && !filename.startsWith(paths.appSrc)
   );
+}
+
+const CONFIG_PATH = require.resolve("../../config");
+
+function isConfigPath(filename) {
+  if (filename === CONFIG_PATH)
+  return filename === CONFIG_PATH;
 }
 
 // common function to get style loaders
@@ -178,12 +185,8 @@ module.exports = {
             }
           },
           {
-            test: /eff.+debugger(?:\/|\\{1,2})config.js$/,
+            test: isConfigPath,
             loader: require.resolve("babel-loader"),
-            exclude: [
-              /@babel(?:\/|\\{1,2})runtime/,
-              /(webpack|css-loader|style-loader)/
-            ],
             options: {
               babelrc: false,
               configFile: false,
@@ -198,6 +201,7 @@ module.exports = {
               // include,
               exclude: [isDebuggerPath /*, /node_modules/*/],
               loader: require.resolve("babel-loader"),
+              compact,
               options: {
                 cacheDirectory: cache,
                 cacheIdentifier,
@@ -214,7 +218,7 @@ module.exports = {
               options: {
                 babelrc: false,
                 configFile: false,
-                compact: false,
+                compact,
                 passPerPreset: true,
                 presets: [
                   [
@@ -233,8 +237,8 @@ module.exports = {
                 sourceMaps: false
               }
             },
-          config.instrument &&
-            config.zeroConfig && {
+          config.instrument && config.zeroConfig && config.instrumentDeps &&
+             {
               test: /\.(js|mjs)$/,
               exclude: [
                 /@babel(?:\/|\\{1,2})runtime/,

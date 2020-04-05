@@ -6,7 +6,7 @@ import { DebugProtocol } from "vscode-debugprotocol";
 import { DebugClient } from "./kit/client";
 
 suite("Debugging on NodeJS", function() {
-  this.timeout(100000);
+  this.timeout(0);
   const PROJECT_ROOT = path.join(__dirname, "../../..");
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
@@ -14,6 +14,7 @@ suite("Debugging on NodeJS", function() {
   //  const CHROME_DATA_ROOT = path.join(DATA_ROOT, "vscode-chrome-debug/");
 
   let dc: DebugClient;
+  process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
 
   setup(function() {
     dc = new DebugClient(DEBUG_ADAPTER);

@@ -288,9 +288,11 @@ describe("time traveling", function() {
     D.TimeTravel.reset();
     D.TimeTravel.checkpoint();
     D.set(map, "deb_hi", "THERE");
-    map.set(1, "D").delete(2);
-    map.delete(3);
-    map.set(3, "E").set(4, "F");
+    (context.call = map.set), map.set(1, "D");
+    (context.call = map.delete), map.delete(2);
+    (context.call = map.delete), map.delete(3);
+    (context.call = map.set), map.set(3, "E");
+    (context.call = map.set), map.set(4, "F");
     const map1 = [
       [1, "D"],
       [3, "E"],
@@ -298,12 +300,12 @@ describe("time traveling", function() {
     ];
     expect([...map]).toEqual(map1);
     D.TimeTravel.checkpoint();
-    map.clear();
+    (context.call = map.clear), map.clear();
     const map2 = [];
     expect([...map]).toEqual(map2);
     D.TimeTravel.checkpoint();
-    map.set(2, "E");
-    map.set(1, "F");
+    (context.call = map.set), map.set(2, "E");
+    (context.call = map.set), map.set(1, "F");
     const map3 = [
       [2, "E"],
       [1, "F"]
@@ -545,9 +547,9 @@ describe("time traveling", function() {
     const restored = S.read(data);
     const rset = restored.data;
     objs = restored.objs;
-    objs.forEach(o => (o.retored = true));
+    objs.forEach((o) => (o.retored = true));
     objs2 = restored.objs2;
-    objs2.forEach(o => (o.retored = true));
+    objs2.forEach((o) => (o.retored = true));
     Object.assign(D.TimeTravel.journal, restored);
     j.enabled = true;
     state0(rset);
@@ -655,9 +657,9 @@ describe("time traveling", function() {
     const restored = S.read(data);
     const rmap = restored.data;
     objs = restored.objs;
-    objs.forEach(o => (o.retored = true));
+    objs.forEach((o) => (o.retored = true));
     objs2 = restored.objs2;
-    objs2.forEach(o => (o.retored = true));
+    objs2.forEach((o) => (o.retored = true));
     Object.assign(D.TimeTravel.journal, restored);
     j.enabled = true;
     state0(rmap);

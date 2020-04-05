@@ -21876,15 +21876,9 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.func1 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:2:9)
-    at func1 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.func2 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:6:5)
-    at func2 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:11:1)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at Object.<anonymous>.context.onThread (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:286:7)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)",
+    at m$1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
+    at m$2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
+    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "func1",
             },
@@ -21937,15 +21931,9 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.func1 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:2:9)
-    at func1 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.func2 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:6:5)
-    at func2 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:11:1)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at Object.<anonymous>.context.onThread (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:286:7)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)",
+    at m$1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
+    at m$2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
+    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "func2",
             },
@@ -21998,15 +21986,9 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.func1 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:2:9)
-    at func1 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.func2 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:6:5)
-    at func2 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:11:1)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at Object.<anonymous>.context.onThread (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:286:7)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)",
+    at m$1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
+    at m$2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
+    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "exceptionBreakpoints.js",
               "func1": Object {
@@ -22061,29 +22043,15 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.func1 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:2:9)
-    at func1 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.func2 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:6:5)
-    at func2 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:11:1)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at Object.<anonymous>.context.onThread (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:286:7)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)",
+    at m$2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
+    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "func2",
               "e": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.func1 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:2:9)
-    at func1 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.func2 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:6:5)
-    at func2 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:11:1)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at Object.<anonymous>.context.onThread (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:286:7)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)",
+    at m$2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
+    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
             },
             Object {
@@ -22135,15 +22103,8 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.func1 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:2:9)
-    at func1 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.func2 [as handler] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:6:5)
-    at func2 (eval at fun (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:338:38), <anonymous>:6:27)
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpoints.js:11:1)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at Object.<anonymous>.context.onThread (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:286:7)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)",
+    at m$2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
+    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "exceptionBreakpoints.js",
               "func1": Object {
@@ -24159,29 +24120,13 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpointsUncaught.js:2:9)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at run (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:651:5)
-    at handler (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:769:3)
-    at Object.onmessage (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:218:16)
-    at WS.onmessage (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/comms.js:41:30)
-    at Immediate.send [as _onImmediate] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/protocol.js:106:10)
-    at processImmediate (internal/timers.js:441:21)",
+    at m$0 (test/__fixtures__/exceptionBreakpointsUncaught.js:4:2)",
               },
               "[name]": "exceptionBreakpointsUncaught.js",
               "e": Object {
                 "message": "error",
                 "stack": "Error: error
-    at Object.handler (/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/exceptionBreakpointsUncaught.js:2:9)
-    at loop (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:498:24)
-    at step (/Users/vx/work/src/mfjs/eff/packages/debugger/engine.js:486:12)
-    at run (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:651:5)
-    at handler (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:769:3)
-    at Object.onmessage (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/handlers.js:218:16)
-    at WS.onmessage (/Users/vx/work/src/mfjs/eff/packages/debugger/vscode/comms.js:41:30)
-    at Immediate.send [as _onImmediate] (/Users/vx/work/src/mfjs/eff/packages/debugger/test/protocol.js:106:10)
-    at processImmediate (internal/timers.js:441:21)",
+    at m$0 (test/__fixtures__/exceptionBreakpointsUncaught.js:4:2)",
               },
             },
           ],

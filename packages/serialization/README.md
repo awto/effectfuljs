@@ -150,7 +150,6 @@ will keep only their initialization options with calculated properties
 
  * Validation
  * Data versioning
- * Stricter TS format types
 
 ## LICENSE
 

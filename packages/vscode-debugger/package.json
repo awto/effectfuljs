@@ -260,7 +260,7 @@
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test:adapter": "mocha -u tdd ./out/test/adapter",
-    "test": "npm run compile",
+    "test": "npm run compile && npm run test:adapter && npm run test:ide",
     "test:ide": "node ./testExtension.js"
   },
   "devDependencies": {

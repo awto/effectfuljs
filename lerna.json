@@ -5,8 +5,8 @@
     "samples/*"
   ],
   "version": "1.2.1",
-  "npmClient": "yarn",
   "npmClientArgs": [
-    "--no-lockfile"
+    "--no-package-lock",
+    "--scripts-prepend-node-path"
   ]
 }

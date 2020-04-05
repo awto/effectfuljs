@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`default transpiler 1`] = `
-"var $M = require(\\"/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/../../api\\"),
+"var $M = require(\\"../../../api\\"),
     $iterator = $M.iterator,
     $iterFin = $M.iterFin,
     $context = $M.context,
@@ -9,7 +9,7 @@ exports[`default transpiler 1`] = `
     $unhandled = $M.unhandled,
     $brk = $M.brk,
     $mcall = $M.mcall,
-    $m = $M.module(\\"test/__fixtures__/code.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
+    $m = $M.module(\\"test/__fixtures__/transform/code.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
   __webpack_require__: typeof __webpack_require__ !== \\"undefined\\" && __webpack_require__
 }, null),
     $s$1 = [{
@@ -475,14 +475,14 @@ $M.moduleExports();"
 `;
 
 exports[`default transpiler 2`] = `
-"var $M = require(\\"/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/../../api\\"),
+"var $M = require(\\"../../../api\\"),
     $forInIterator = $M.forInIterator,
     $context = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $brk = $M.brk,
     $mcall = $M.mcall,
-    $m = $M.module(\\"test/__fixtures__/mod1.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
+    $m = $M.module(\\"test/__fixtures__/transform/mod1.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
   __webpack_require__: typeof __webpack_require__ !== \\"undefined\\" && __webpack_require__
 }, null),
     $s$1 = [{
@@ -1039,13 +1039,13 @@ $M.moduleExports();"
 `;
 
 exports[`default transpiler 3`] = `
-"var $M = require(\\"/Users/vx/work/src/mfjs/eff/packages/debugger/test/__fixtures__/../../api\\"),
+"var $M = require(\\"../../../api\\"),
     $context = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $brk = $M.brk,
     $mcall = $M.mcall,
-    $m = $M.module(\\"test/__fixtures__/mod2.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
+    $m = $M.module(\\"test/__fixtures__/transform/mod2.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
   __webpack_require__: typeof __webpack_require__ !== \\"undefined\\" && __webpack_require__
 }, null),
     $s$1 = [{

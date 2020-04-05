@@ -155,10 +155,10 @@ describe("VSCode protocol handlers", function() {
       { line: 5 },
       { line: 8, expLine: 11 },
       { line: 12 },
-      { line: 4, expLine: 15 }
+      { line: 4, expLine: 15 },
     ];
     Kit.awaitEvent("breakpoint", function(event) {
-      const bp = bps.find(i => i.id === event.brekpoint.id);
+      const bp = bps.find((i) => i.id === event.brekpoint.id);
       if (bp) {
         expect(bp.verified).toBe(true);
         expect(bp.line).toBe(bp.expLine || bp.line);
@@ -174,32 +174,32 @@ describe("VSCode protocol handlers", function() {
         breakpoints: [
           {
             source: {
-              path: PROGRAM
+              path: PROGRAM,
             },
             breakpoints: [
               {
-                line: 3
-              }
-            ]
+                line: 3,
+              },
+            ],
           },
           {
             source: {
-              path: SUB_MODULE
+              path: SUB_MODULE,
             },
             breakpoints: [
               {
-                line: 2
-              }
-            ]
-          }
+                line: 2,
+              },
+            ],
+          },
         ],
         onStop(cb, frame) {
           if (frame.line === 3) {
             Kit.command(
               "childSetBreakpoints",
               {
-                breakpoints: bps.map(i => ({ line: i.line })),
-                source: { path: PROGRAM }
+                breakpoints: bps.map((i) => ({ line: i.line })),
+                source: { path: PROGRAM },
               },
               function(res) {
                 res.breakpoints.forEach(function(i, x) {
@@ -214,11 +214,11 @@ describe("VSCode protocol handlers", function() {
               }
             );
           } else cb();
-        }
+        },
       },
       "continue",
       function() {
-        expect(bps.every(i => i.verified)).toBe(true);
+        expect(bps.every((i) => i.verified)).toBe(true);
         done();
       }
     );
@@ -234,16 +234,16 @@ describe("VSCode protocol handlers", function() {
         breakpoints: [
           {
             source: {
-              path: PROGRAM
+              path: PROGRAM,
             },
             breakpoints: [
               {
                 line: 3,
-                condition: "i === 3"
-              }
-            ]
-          }
-        ]
+                condition: "i === 3",
+              },
+            ],
+          },
+        ],
       },
       "continue",
       done
@@ -261,7 +261,7 @@ describe("VSCode protocol handlers", function() {
             {
               context: "watch",
               expression: "`i:${i},j:${j}`",
-              frameId: 0
+              frameId: 0,
             },
             function(resp) {
               vals.push(resp.result);
@@ -270,7 +270,7 @@ describe("VSCode protocol handlers", function() {
                 {
                   context: "watch",
                   expression: "{i:i,j:j}",
-                  frameId: 0
+                  frameId: 0,
                 },
                 function(resp) {
                   if (resp.variablesReference)
@@ -286,7 +286,7 @@ describe("VSCode protocol handlers", function() {
               );
             }
           );
-        }
+        },
       },
       "stepIn",
       function() {
@@ -310,16 +310,16 @@ describe("VSCode protocol handlers", function() {
               path: path.resolve(
                 config.srcRoot,
                 require.resolve("./__fixtures__/logPoints")
-              )
+              ),
             },
             breakpoints: [
               {
                 line: 3,
-                logMessage: "i:{i}, j:{j}"
-              }
-            ]
-          }
-        ]
+                logMessage: "i:{i}, j:{j}",
+              },
+            ],
+          },
+        ],
       },
       "continue",
       done
@@ -336,36 +336,34 @@ describe("VSCode protocol handlers", function() {
               path: path.resolve(
                 config.srcRoot,
                 require.resolve("./__fixtures__/hitCond")
-              )
+              ),
             },
             breakpoints: [
               {
                 line: 3,
-                hitCondition: "HIT_AT-2"
-              }
-            ]
-          }
-        ]
+                hitCondition: "HIT_AT-2",
+              },
+            ],
+          },
+        ],
       },
       "continue",
       done
     );
   });
-  // different paths on server TODO:
-  test.skip("all exception breakpoints", function(done) {
+  test("all exception breakpoints", function(done) {
     Kit.traverse(
       require("./__fixtures__/exceptionBreakpoints"),
       {
         exceptions: {
-          filters: ["all"]
-        }
+          filters: ["all"],
+        },
       },
       "continue",
       done
     );
   });
-  // different paths on server TODO:
-  test.skip("uncaught exception breakpoints", function(done) {
+  test("uncaught exception breakpoints", function(done) {
     Kit.traverse(
       require("./__fixtures__/exceptionBreakpointsUncaught"),
       {
@@ -378,7 +376,7 @@ describe("VSCode protocol handlers", function() {
               cb
             );
           else cb();
-        }
+        },
       },
       "continue",
       done
@@ -398,14 +396,14 @@ describe("VSCode protocol handlers", function() {
                 breakpoints: [
                   {
                     line: 4,
-                    condition: "i === 3"
-                  }
+                    condition: "i === 3",
+                  },
                 ],
-                source: { sourceReference: frame.file }
+                source: { sourceReference: frame.file },
               },
               function(res) {
                 const {
-                  breakpoints: [bp]
+                  breakpoints: [bp],
                 } = res;
                 expect(bp.line).toBe(4);
                 expect(bp.verified).toBe(true);
@@ -418,7 +416,7 @@ describe("VSCode protocol handlers", function() {
               {
                 context: "watch",
                 expression: "`i:${i},j:${j}`",
-                frameId: 0
+                frameId: 0,
               },
               function(resp) {
                 expect(resp.result).toBe("i:3,j:1");
@@ -426,7 +424,7 @@ describe("VSCode protocol handlers", function() {
               }
             );
           } else cb();
-        }
+        },
       },
       "continue",
       done
@@ -446,14 +444,14 @@ describe("VSCode protocol handlers", function() {
                 breakpoints: [
                   {
                     line: 4,
-                    condition: "i === 3"
-                  }
+                    condition: "i === 3",
+                  },
                 ],
-                source: { sourceReference: frame.file }
+                source: { sourceReference: frame.file },
               },
               function(res) {
                 const {
-                  breakpoints: [bp]
+                  breakpoints: [bp],
                 } = res;
                 expect(bp.line).toBe(4);
                 expect(bp.verified).toBe(true);
@@ -467,7 +465,7 @@ describe("VSCode protocol handlers", function() {
               {
                 context: "watch",
                 expression: "`i:${i},j:${j}`",
-                frameId: 0
+                frameId: 0,
               },
               function(resp) {
                 expect(resp.result).toBe("i:3,j:2");
@@ -475,7 +473,7 @@ describe("VSCode protocol handlers", function() {
               }
             );
           } else cb();
-        }
+        },
       },
       "continue",
       done

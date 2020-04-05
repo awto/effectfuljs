@@ -17,7 +17,7 @@ export default {
   /** module's hot swapping is enabled */
   hot: true,
   /** webpack-dev-server listening port */
-  port: 10010,
+  port: 12345,
   /** redirect `console` methods into the debug stream  */
   redirConsole: true,
   /** if `redirConsole` is specified output messages to a local console too */

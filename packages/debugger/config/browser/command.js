@@ -29,7 +29,6 @@ exports.builder = function(yargs) {
 };
 
 exports.handler = function(argv) {
-  const env = {};
   if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
   if (argv.timeTravel) process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL = 1;
   if (argv.timeTravelDisabled)
@@ -43,6 +42,7 @@ exports.handler = function(argv) {
   if (argv.verbose) process.env.EFFECTFUL_DEBUGGER_VERBOSE = 1;
   if (argv.indexJs) process.env.EFFECTFUL_DEBUGGER_INDEX_JS = argv.indexJs;
   if (argv.instrument) process.env.EFFECTFUL_INSTRUMENT = 1;
+  if (argv.instrumentDeps) process.env.EFFECTFUL_INSTRUMENT_DEPS = 1;
   process.env.EFFECTFUL_DEBUGGER_ZERO_CONFIG = argv.zeroConfig ? 1 : 0;
   if (argv.htmlTemplate)
     process.env.EFFECTFUL_HTML_TEMPLATE = argv.htmlTemplate;

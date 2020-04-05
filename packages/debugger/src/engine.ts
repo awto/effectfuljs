@@ -21,7 +21,7 @@ import {
   BrkFlag,
   defaultErrHandler,
   defaultFinHandler,
-  thunkSymbol
+  thunkSymbol,
 } from "./state";
 import * as State from "./state";
 import * as TTCore from "./timeTravel/core";
@@ -87,7 +87,7 @@ export function argsWrap<T>(frame: Frame, value: Iterable<T>): T[] {
   defineProperty(arr, "callee", {
     writable: true,
     enumerable: false,
-    value: frame.func
+    value: frame.func,
   });
   return new Proxy(arr, new ArgsTraps(frame));
 }
@@ -570,7 +570,7 @@ function checkErrBrk(frame: Frame, e: any): boolean {
         try {
           defineProperty(e, "_deb_stack", { value: stack.join("\n") });
         } catch (e) {}
-      } // else e.stack = stack.join("\n");
+      } else e.stack = stack.join("\n");
     }
     let needsStop = false;
     if (context.brkOnAnyException) {
@@ -622,7 +622,7 @@ export function evalAt(src: string) {
   const top = <Frame>context.top;
   const meta = top.meta;
   const state = top.meta.states[top.state];
-  const memo = meta.evalMemo || (meta.evalMemo = new Map()); // : indirMemo;
+  const memo = meta.evalMemo || (meta.evalMemo = new saved.Map()); // : indirMemo;
   const key = `${src}@${meta.uniqName}@${state ? state.id : "*"}/${
     context.debug
   }}`;
@@ -659,7 +659,7 @@ export function location(str: string): number[] {
 
 let evalCnt = 0;
 
-const indirMemo = new Map<string, string>();
+const indirMemo = new saved.Map<string, string>();
 
 /**
  * Like `compileEval` but returns a self-sufficient string, which can be
@@ -670,6 +670,8 @@ export function compileEvalToString(
   code: string,
   params: string[] | null
 ): string {
+  const savedEnabled = journal.enabled;
+try {
   const top = context.top;
   const meta = top && top.meta;
   const blackbox = !meta || meta.blackbox;
@@ -706,6 +708,9 @@ export function compileEvalToString(
   ).code;
   indirMemo.set(key, tgt);
   return `(function() { ${tgt}; })()`;
+} finally {
+    journal.enabled = savedEnabled
+  }
 }
 
 /**
@@ -724,7 +729,7 @@ export function retModule() {
   return curModule.topLevel.func(null);
 }
 
-const functionConstrMemo = new Map<string, FunctionDescr>();
+const functionConstrMemo = new saved.Map<string, FunctionDescr>();
 
 const savedEval = eval;
 
@@ -780,6 +785,9 @@ export function compileEval(
   params: string[] | null,
   id?: number
 ): FunctionDescr {
+  const savedEnabled = journal.enabled;
+try {
+
   if (id == null) id = toGlobal(evalCnt++);
   if (!blackbox) context.onNewSource(id, code);
   const ast = babelParse(code, {
@@ -836,6 +844,9 @@ export function compileEval(
   };
   const res = curModule.topLevel;
   return res;
+} finally {
+  journal.enabled = savedEnabled
+}
 }
 
 export function isDelayedResult(value: any): boolean {
@@ -885,7 +896,7 @@ export function pushFrame(frame: Frame): any {
     }
   }
   const res = (context.top = frame);
-  // context.call = null;
+  context.call = null;
   return res;
 }
 

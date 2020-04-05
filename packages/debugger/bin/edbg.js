@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const yargs = require("yargs")
+require("yargs")
   .scriptName("edbg")
   .env("EFFECTFUL_DEBUGGER")
   .demandCommand()
@@ -52,6 +53,11 @@ const yargs = require("yargs")
   })
   .option("instrument", {
     describe: "Instrument sources before loading",
+    default: true,
+    type: "boolean"
+  })
+  .option("instrument-deps", {
+    describe: "Instrument third-party sources in node_modules",
     default: true,
     type: "boolean"
   })

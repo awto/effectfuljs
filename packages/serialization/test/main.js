@@ -7,11 +7,7 @@ describe("plain object output", function() {
       const obj1 = { a: 1, b: "b", c: true };
       const res = Lib.write(obj1);
       const exp1 = {
-        f: [
-          ["a", 1],
-          ["b", "b"],
-          ["c", true]
-        ]
+        f: [["a", 1], ["b", "b"], ["c", true]]
       };
       assert.deepStrictEqual(res, exp1);
       assert.equal(Lib.stringify(obj1), JSON.stringify(res));
@@ -31,11 +27,7 @@ describe("plain object output", function() {
             { f: [["b", "b"]] },
             { f: [["a", 1]] },
             {
-              f: [
-                ["a", { r: 2 }],
-                ["b", { r: 1 }],
-                ["c", { r: 0 }]
-              ]
+              f: [["a", { r: 2 }], ["b", { r: 1 }], ["c", { r: 0 }]]
             }
           ]
         };
@@ -79,11 +71,7 @@ describe("special values", function() {
     const root = { undef: undefined, nul: null, nan: NaN };
     const res = Lib.write(root);
     assert.deepStrictEqual(res, {
-      f: [
-        ["undef", { $: "undefined" }],
-        ["nul", null],
-        ["nan", { $: "NaN" }]
-      ]
+      f: [["undef", { $: "undefined" }], ["nul", null], ["nan", { $: "NaN" }]]
     });
     const { undef, nul, nan } = Lib.read(res);
     assert.strictEqual(undef, undefined);
@@ -152,11 +140,7 @@ describe("object with parent", function() {
     const obj1 = new MyObj();
     assert.deepEqual(Lib.write(obj1), {
       $: "MyObj",
-      f: [
-        ["a", 1],
-        ["b", "b"],
-        ["c", true]
-      ]
+      f: [["a", 1], ["b", "b"], ["c", true]]
     });
     function Object() {
       this.a = obj1;
@@ -168,11 +152,7 @@ describe("object with parent", function() {
         [
           "a",
           {
-            f: [
-              ["a", 1],
-              ["b", "b"],
-              ["c", true]
-            ],
+            f: [["a", 1], ["b", "b"], ["c", true]],
             $: "MyObj"
           }
         ]
@@ -182,11 +162,7 @@ describe("object with parent", function() {
   it("should use `$` attribute to resolve a type on read", function() {
     const obj1 = Lib.read({
       $: "MyObj",
-      f: [
-        ["a", 1],
-        ["b", "b"],
-        ["c", true]
-      ]
+      f: [["a", 1], ["b", "b"], ["c", true]]
     });
     assert.strictEqual(obj1.constructor, MyObj);
     assert.equal(
@@ -292,10 +268,7 @@ describe("prototypes chain", function() {
       p: {
         $: "C4"
       },
-      f: [
-        ["a", "A"],
-        ["b", "B"]
-      ]
+      f: [["a", "A"], ["b", "B"]]
     });
     const obj3 = Lib.read(res2);
     assert.ok(obj3 instanceof C3);
@@ -445,10 +418,7 @@ describe("`Set` serialization", function() {
           {
             $: "Set",
             l: [1, "a", [true, [false, null]], { $: "undefined" }],
-            f: [
-              ["someNum", 100],
-              ["self", { r: 0 }]
-            ]
+            f: [["someNum", 100], ["self", { r: 0 }]]
           }
         ]
       });
@@ -916,9 +886,9 @@ describe("WeakSet/WeakMap", function() {
           {
             $: "w#obj1",
             f: [
-              [{ name: "@effectful/weakset" }, true, 6],
-              [{ name: "@effectful/weakmap" }, "obj1", 6],
-              [{ name: "@effectful/weakmap", id: 1 }, "2obj1", 6]
+              [{ name: "@effectful/weakset" }, true, 2],
+              [{ name: "@effectful/weakmap" }, "obj1", 2],
+              [{ name: "@effectful/weakmap", id: 1 }, "2obj1", 2]
             ]
           }
         ],
@@ -926,8 +896,8 @@ describe("WeakSet/WeakMap", function() {
           "obj2",
           {
             f: [
-              [{ name: "@effectful/weakset" }, true, 6],
-              [{ name: "@effectful/weakmap" }, "obj2", 6]
+              [{ name: "@effectful/weakset" }, true, 2],
+              [{ name: "@effectful/weakmap" }, "obj2", 2]
             ]
           }
         ]

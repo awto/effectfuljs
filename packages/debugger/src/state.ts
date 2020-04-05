@@ -455,11 +455,9 @@ export class ForInIterator implements Iterable<string>, Iterator<string> {
   fields: string[];
   pos: number;
   obj: any;
-  constructor(obj: any) {
-    const fields: string[] = [];
+  constructor(obj: any, fields: string[]) {
     this.fields = fields;
     this.pos = 0;
-    for (let i in obj) fields.push(i);
     this.obj = obj;
   }
   [Symbol.iterator]() {
@@ -475,13 +473,11 @@ export class ForInIterator implements Iterable<string>, Iterator<string> {
   }
 }
 export function forInIterator(obj: object): Iterable<string> {
-  return new ForInIterator(obj);
+  const fields: string[] = [];
+  for (let i in obj) fields.push(i);
+  return new ForInIterator(obj, fields);
 }
-/*
-export function* forInIterator(obj: object): Iterable<string> {
-  for (const i in obj) yield i;
-}
-*/
+
 export interface GeneratorFrame extends Frame {
   sent: any;
   iter: Iterable<any>;

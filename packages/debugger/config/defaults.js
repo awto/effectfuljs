@@ -19,9 +19,9 @@ config.verbose = isNaN(process.env.EFFECTFUL_DEBUGGER_VERBOSE)
     ? 1
     : 0
   : +process.env.EFFECTFUL_DEBUGGER_VERBOSE;
-if (process.env.EFFECTFUL_DEBUGGER_PORT)
+if (process.env.EFFECTFUL_DEBUGGER_PORT && !isNaN(process.env.EFFECTFUL_DEBUGGER_PORT))
   config.port = +process.env.EFFECTFUL_DEBUGGER_PORT;
-else if (process.env.PORT) {
+else if (process.env.PORT && !isNaN(process.env.PORT)) {
   process.env.EFFECTFUL_DEBUGGER_PORT = process.env.PORT;
   config.port = +process.env.PORT;
 }
@@ -32,13 +32,13 @@ else if (process.env.HOST) {
   config.host = process.env.HOST;
 } else config.host = "0.0.0.0";
 
-if (isNaN(config.port)) config.port = 10010;
-
 if (config.verbose) console.log(`DEBUGGER: config  ${JSON.stringify(config)}`);
 
 config.open = isTrue(process.env.EFFECTFUL_DEBUGGER_OPEN);
 
 config.instrument = isTrue(process.env.EFFECTFUL_DEBUGGER_INSTRUMENT, true);
+
+config.instrumentDeps = isTrue(process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS, true);
 
 if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
 

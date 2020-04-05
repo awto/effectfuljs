@@ -1758,7 +1758,7 @@ Array [
           ],
         },
         Object {
-          "$": "#_globalProxy",
+          "$": "#global",
           "f": Array [
             Array [
               "console",

@@ -11,6 +11,8 @@ const toBrowserPath: (p: string) => string =
     : function toBrowserPath(path: string) {
         return path;
       };
+process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
+process.env.EFFECTFUL_DEBUGGER_VERBOSE = "2"
 
 suite("Debugging on Chrome", function() {
   this.timeout(0);
@@ -33,7 +35,7 @@ suite("Debugging on Chrome", function() {
     const MOD2 = toBrowserPath(path.join(DATA_ROOT, "stepsModule2.js"));
     const MOD3 = toBrowserPath(path.join(DATA_ROOT, "stepsModule3.js"));
     const savedDefaultTimeout = dc.defaultTimeout;
-    dc.defaultTimeout = 300000;
+    dc.defaultTimeout = 1000000;
     await Promise.all([
       dc.configurationSequence(),
       dc.awaitWebpack(),

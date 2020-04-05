@@ -1,5 +1,5 @@
 import config from "../config";
-import { journal, Record, saved, context } from "../state";
+import { journal, Record, saved, context, ForInIterator } from "../state";
 import { record1, record2, record3, record4 } from "./binds";
 import { regOpaqueObject } from "../persist";
 import { descriptorSymbol } from "@effectful/serialization";
@@ -331,9 +331,11 @@ function objectKeys(obj: any): string[] {
 
 export function forInIterator(obj: any): Iterable<string> {
   const seen = new SavedSet();
-  return _forInIterator(obj);
+  const keys: string[] = [];
+  _forInIterator(obj);
+  return new ForInIterator(obj, keys);
 
-  function* _forInIterator(obj: any): Iterable<string> {
+  function _forInIterator(obj: any) {
     const descr = getObjKeys(obj);
     // tslint:disable-next-line:forin
     for (const i in obj) {
@@ -341,7 +343,7 @@ export function forInIterator(obj: any): Iterable<string> {
         break;
       if (!seen.has(i)) {
         seen.add(i);
-        yield i;
+        keys.push(i);
       }
     }
     if (!descr) return;
@@ -350,11 +352,11 @@ export function forInIterator(obj: any): Iterable<string> {
       if (i.enumerable) {
         if (!seen.has(i.name)) {
           seen.add(i.name);
-          yield i.name;
+          keys.push(i.name);
         }
       }
     const proto = objectSaved.getPrototypeOf(obj);
-    if (proto) yield* _forInIterator(proto);
+    if (proto) _forInIterator(proto);
   }
 }
 
@@ -554,6 +556,7 @@ regOpaqueObject(objectSetPrototypeOfOp, "#setp");
 
 function objectSetPrototypeOf(obj: any, prototype: any) {
   if (journal.enabled && context.call === objectSetPrototypeOf) {
+    context.call = null;
     const cur = objectSaved.getPrototypeOf(obj);
     if (cur !== prototype) record2(objectSetPrototypeOfOp, obj, cur);
   }
@@ -594,7 +597,9 @@ function objectDefinePropertyImpl(
   const cur = defaultGetOwnPropertyDescriptor(obj, name);
   if (enabled) {
     if (cur) record3(objectDefinePropertyOp, obj, name, cur);
-    else record2(delOp, obj, name);
+    else {
+      record2(delOp, obj, name);
+    }
   }
   return objectDefinePropertyNoRec(obj, name, descr, cur);
 }
@@ -607,6 +612,7 @@ function objectDefineProperty(
 ) {
   // TODO: track this in runtime
   const enabled = journal.enabled && context.call === objectDefineProperty;
+  context.call = null;
   addKey(obj, name, descr.enumerable === true, !enabled);
   return objectDefinePropertyImpl(obj, name, descr, enabled);
 }
@@ -643,17 +649,16 @@ function objectDefineProperties(
 
 function objectAssign(dest: any, ...args: any[]) {
   if (context.call !== objectAssign) return objectSaved.assign(dest, ...args);
-  context.call = Object.defineProperty;
   for (const value of args) {
     if (!value) continue;
     for (const name of Object.getOwnPropertyNames(value))
-      Object.defineProperty(
+      (context.call = Object.defineProperty)(
         dest,
         name,
         <any>Object.getOwnPropertyDescriptor(value, name)
       );
     for (const name of Object.getOwnPropertySymbols(value))
-      Object.defineProperty(
+      (context.call = Object.defineProperty)(
         dest,
         name,
         <any>Object.getOwnPropertyDescriptor(value, name)
@@ -742,7 +747,9 @@ function arraySet(arr: any[], name: string, value: any) {
   addKey(arr, name, true, false);
   const cur = defaultGetOwnPropertyDescriptor(arr, name);
   if (cur) record3(objectDefinePropertyOp, arr, name, cur);
-  else record2(delOp, arr, name);
+  else {
+    record2(delOp, arr, name);
+  }
   return (arr[<any>name] = value);
 }
 
@@ -785,8 +792,10 @@ regOpaqueObject(arrayPopOp, "#arr$pop");
 function arrayPop(this: any[]): any {
   if (this.length) {
     const res = arraySaved.pop.call(this);
-    if (journal.enabled && context.call === arrayPop)
+    if (journal.enabled && context.call === arrayPop) {
+      context.call = null;
       record2(arrayPush1Op, this, res);
+    }
     return res;
   }
   return undefined;
@@ -805,6 +814,7 @@ regOpaqueObject(arrayPush1Op, "#arr$push1");
 function arrayPush(this: any[]): number {
   const res = arraySaved.push.apply(this, <any>arguments);
   if (journal.enabled && context.call === arrayPush) {
+    context.call = null;
     const len = arguments.length;
     if (len === 1) record1(arrayPopOp, this);
     else record4(spliceOp, this, this.length - len, len, []);
@@ -826,8 +836,10 @@ regOpaqueObject(arrayShiftOp, "#arr$shift");
 function arrayShift(this: any[]): any {
   if (this.length) {
     const res = arraySaved.shift.call(this);
-    if (journal.enabled && context.call === arrayShift)
+    if (journal.enabled && context.call === arrayShift) {
+      context.call = null;
       record2(arrayUnshift1Op, this, res);
+    }
     return res;
   }
   return undefined;
@@ -845,6 +857,7 @@ regOpaqueObject(arrayUnshift1Op, "#arr$unshift");
 
 function arrayUnshift(this: any[]): number {
   if (journal.enabled && context.call === arrayUnshift) {
+    context.call = null;
     const alen = arguments.length;
     if (alen === 1) record1(arrayShiftOp, this);
     else record4(spliceOp, this, 0, alen, []);
@@ -858,22 +871,28 @@ function arrayReverseOp(this: any) {
 }
 
 function arrayReverse(this: any[]): any[] {
-  if (journal.enabled && context.call === arrayReverse)
+  if (journal.enabled && context.call === arrayReverse) {
+    context.call = null;
     record1(arrayReverseOp, this);
+  }
   return arraySaved.reverse.call(this);
 }
 
 regOpaqueObject(arrayReverseOp, "#arr$reverse");
 
 function arraySort(this: any[], pred: any): any[] {
-  if (journal.enabled && context.call === arraySort)
+  if (journal.enabled && context.call === arraySort) {
+    context.call = null;
     record4(spliceOp, this, 0, this.length, Array.from(this));
+  }
   return arraySaved.sort.call(this, pred);
 }
 
 function arraySplice(this: any[], from: number, del: number, ...ins: any[]) {
-  if (journal.enabled && context.call === arraySplice)
+  if (journal.enabled && context.call === arraySplice) {
+    context.call = null;
     return spliceImpl(this, from, del, ins);
+  }
   return arraySaved.splice.apply(this, <any>arguments);
 }
 
@@ -887,25 +906,31 @@ function typedArraySetOp(this: any) {
 regOpaqueObject(typedArraySetOp, "#tarr$set");
 
 function typedArraySort(this: any[], pred: any): any[] {
-  if (journal.enabled && context.call === typedArraySort)
+  if (journal.enabled && context.call === typedArraySort) {
+    context.call = null;
     record3(typedArraySetOp, this, this.slice(0), 0);
+  }
   return typedArraySaved.sort.call(this, pred);
 }
 
 function typedArrayReverse(this: any[], pred: any): any[] {
-  if (journal.enabled && context.call === typedArrayReverse)
+  if (journal.enabled && context.call === typedArrayReverse) {
+    context.call = null;
     record3(typedArraySetOp, this, this.slice(0), 0);
+  }
   return typedArraySaved.reverse.call(this, pred);
 }
 
 function typedArraySet(this: any, value: any, offset: number = 0) {
-  if (journal.enabled && context.call === typedArraySet)
+  if (journal.enabled && context.call === typedArraySet) {
+    context.call = null;
     record3(
       typedArraySetOp,
       this,
       this.slice(offset, value.length + offset),
       offset
     );
+  }
   return typedArraySaved.set.call(this, value, offset);
 }
 
@@ -915,8 +940,10 @@ function typedArrayFill(
   offset: number = 0,
   end: number = this.length
 ) {
-  if (journal.enabled && context.call === typedArrayFill)
+  if (journal.enabled && context.call === typedArrayFill) {
+    context.call = null;
     record3(typedArraySetOp, this, this.slice(offset, end), offset);
+  }
   return typedArraySaved.fill.call(this, value, offset);
 }
 

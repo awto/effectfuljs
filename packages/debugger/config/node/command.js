@@ -40,7 +40,8 @@ exports.handler = function(argv) {
     EFFECTFUL_DEBUGGER_NODE: 1,
     EFFECTFUL_DEBUGGER_VERBOSE: config.verbose,
     EFFECTFUL_ZERO_CONFIG: config.zeroConfig,
-    EFFECTFUL_ZERO_INSTRUMENT: config.instrument
+    EFFECTFUL_ZERO_INSTRUMENT: config.instrument,
+    EFFECTFUL_ZERO_INSTRUMENT_DEPS: config.instrumentDeps
   };
   const extraPath = path.join(".", "node_modules", ".bin");
   if (fs.existsSync(extraPath))
