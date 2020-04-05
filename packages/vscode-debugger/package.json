@@ -3,7 +3,7 @@
   "publisher": "effectful",
   "displayName": "EffectfulJS Debugger",
   "description": "Debug your JavaScipt/TypeScript applications with time-traveling, hot swapping, persistent state, scripting and more",
-  "version": "0.0.1",
+  "version": "1.2.1",
   "engines": {
     "vscode": "^1.33.0"
   },
@@ -277,7 +277,7 @@
     "vscode-test": "^1.2.2"
   },
   "dependencies": {
-    "@effectful/debugger": "^1.1.8",
+    "@effectful/debugger": "^1.2.1",
     "vscode-debugadapter": "^1.34.0",
     "vscode-debugprotocol": "^1.34.0",
     "ws": "^7.0.0"

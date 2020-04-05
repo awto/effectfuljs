@@ -1,6 +1,6 @@
 {
   "name": "@effectful/transducers-loose",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "@effectful/transducers built with faster generators",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,7 @@
     "@babel/generator": "^7.0.0",
     "@babel/parser": "^7.0.0",
     "@babel/types": "^7.0.0",
-    "@effectful/es-rt": "^1.1.5"
+    "@effectful/es-rt": "^1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
