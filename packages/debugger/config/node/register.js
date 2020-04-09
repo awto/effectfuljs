@@ -56,7 +56,7 @@ let disabled = false;
 
 const root = path.resolve(config.srcRoot);
 
-const nodeModules = path.join(config.srcRoot, "node_modules");
+const nodeModules = normalizeDrive(path.join(config.srcRoot, "node_modules"));
 
 require.extensions[".ts"] = require.extensions[".tsx"] = require.extensions[
   ".jsx"
@@ -167,12 +167,12 @@ due to a permission issue. Cache is disabled.`);
 const cacheData = loadCache();
 
 Mp._compile = function _compile(content, filename) {
+  filename = normalizeDrive(filename);
   const ext = path.extname(filename);
   if (
     disabled ||
     ext === ".json" ||
-    (config.instrumentDeps &&
-      (filename = normalizeDrive(filename)).startsWith(config.extensionRoot)) ||
+    (config.instrumentDeps && filename.startsWith(config.extensionRoot)) ||
     !(
       (config.instrumentDeps && filename.startsWith(nodeModules)) ||
       filename.startsWith(rootPath)

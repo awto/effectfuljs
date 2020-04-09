@@ -14,7 +14,11 @@ suite("Debugging on NodeJS", function() {
   //  const CHROME_DATA_ROOT = path.join(DATA_ROOT, "vscode-chrome-debug/");
 
   let dc: DebugClient;
+  // process.env.EFFECTFUL_DEBUG_DEBUGGER = "1";
   process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
+  process.env.EFFECTFUL_DEBUGGER_VERBOSE = process.env.EFFECTFUL_DEBUG_DEBUGGER
+    ? "2"
+    : "0";
 
   setup(function() {
     dc = new DebugClient(DEBUG_ADAPTER);
@@ -143,8 +147,10 @@ suite("Debugging on NodeJS", function() {
           }),
           dc.assertStoppedLocation("entry", { path: PROGRAM, line: 1 })
         ]);
-        await dc.stepInRequest({ threadId: 0 });
-        const req1 = await dc.assertStoppedLocation("step", { line: 1 });
+        const [, req1] = await Promise.all([
+          dc.stepInRequest({ threadId: 0 }),
+          dc.assertStoppedLocation("step", { line: 1 })
+        ]);
         const source = <any>req1.body.stackFrames[0].source;
         assert.ok(
           source && source.sourceReference != null,
@@ -155,28 +161,32 @@ suite("Debugging on NodeJS", function() {
           breakpoints: [{ line: 3 }],
           source
         });
-        await dc.continueRequest({ threadId: 0 });
-        const req2 = await dc.assertStoppedLocation("breakpoint", { line: 3 });
+        const [, req2] = await Promise.all([
+          dc.continueRequest({ threadId: 0 }),
+          dc.assertStoppedLocation("breakpoint", { line: 3 })
+        ]);
         const source2 = <any>req2.body.stackFrames[0].source;
         assert.ok(
           source2 && source.sourceReference === source2.sourceReference,
           "same dynamic source reference"
         );
-        await dc.continueRequest({ threadId: 0 });
-        await dc.waitForEvent("terminated");
+        await Promise.all([
+          dc.continueRequest({ threadId: 0 }),
+          dc.waitForEvent("terminated")
+        ]);
       });
     test(`should stop on a conditional breakpoint in eval`, async function() {
       const PROGRAM = path.join(DATA_ROOT, "evalCond.js");
-      await Promise.all([
+      const [, , req1] = await Promise.all([
         dc.configurationSequence(),
         dc.launch({
           command: `node "${PROGRAM}"`,
           preset: "node"
+        }),
+        dc.assertStoppedLocation("debugger_statement", {
+          line: 2
         })
       ]);
-      const req1 = await dc.assertStoppedLocation("debugger_statement", {
-        line: 2
-      });
       const source = <any>req1.body.stackFrames[0].source;
       assert.ok(
         source && source.sourceReference != null,
@@ -187,8 +197,10 @@ suite("Debugging on NodeJS", function() {
         source
       });
       assert.ok(bpResponse.body.breakpoints[0].verified);
-      await dc.continueRequest({ threadId: 0 });
-      const req2 = await dc.assertStoppedLocation("breakpoint", { line: 4 });
+      const [, req2] = await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("breakpoint", { line: 4 })
+      ]);
       const frame = req2.body.stackFrames[0];
       const source2 = <any>frame.source;
       assert.ok(
@@ -433,7 +445,6 @@ suite("Debugging on NodeJS", function() {
                 });
             });
         }),
-
         dc.assertStoppedLocation("breakpoint", {
           path: PROGRAM,
           line: FUNCTION_LINE_1
@@ -547,18 +558,25 @@ suite("Debugging on NodeJS", function() {
           .then(response => {
             return dc.configurationDoneRequest();
           }),
-
-        dc.launch({ command: `node ${PROGRAM}`, preset: "node" })
+        dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
+        dc.assertStoppedInEvalLocation("exception", 4)
       ]);
-      await dc.assertStoppedInEvalLocation("exception", 4);
-      await dc.continueRequest({ threadId: 0 });
-      await dc.assertStoppedInEvalLocation("exception", 3);
-      await dc.continueRequest({ threadId: 0 });
-      await dc.assertStoppedInEvalLocation("exception", 3);
-      await dc.continueRequest({ threadId: 0 });
-      await dc.assertStoppedInEvalLocation("exception", 2);
-      await dc.continueRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedInEvalLocation("exception", 3)
+      ]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedInEvalLocation("exception", 3)
+      ]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedInEvalLocation("exception", 2)
+      ]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
     });
   });
 
@@ -586,39 +604,51 @@ suite("Debugging on NodeJS", function() {
           command: `node ${PROGRAM}`,
           preset: "node",
           stopOnEntry: true
+        }),
+        dc.assertStoppedLocation("entry", {
+          path: PROGRAM,
+          line: 1
         })
       ]);
-      await dc.assertStoppedLocation("entry", {
-        path: PROGRAM,
-        line: 1
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 9
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 3
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 4
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 7
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("step", {
-        path: PROGRAM,
-        line: 10
-      });
-      await dc.stepInRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", {
+          path: PROGRAM,
+          line: 9
+        })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", {
+          path: PROGRAM,
+          line: 3
+        })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", {
+          path: PROGRAM,
+          line: 4
+        })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", {
+          path: PROGRAM,
+          line: 7
+        })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("step", {
+          path: PROGRAM,
+          line: 10
+        })
+      ]);
+      await Promise.all([
+        dc.stepInRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
     });
     test("should exit function on `step out`", async function() {
       await dc.hitBreakpoint(
@@ -628,23 +658,31 @@ suite("Debugging on NodeJS", function() {
         },
         { path: PROGRAM, line: 7 }
       );
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: PROGRAM,
-        line: 8
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: PROGRAM,
-        line: 5
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("stepOut", {
-        path: PROGRAM,
-        line: 11
-      });
-      await dc.stepOutRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", {
+          path: PROGRAM,
+          line: 8
+        })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", {
+          path: PROGRAM,
+          line: 5
+        })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("stepOut", {
+          path: PROGRAM,
+          line: 11
+        })
+      ]);
+      await Promise.all([
+        dc.stepOutRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
     });
     test("should exit function on `step over`", async function() {
       await Promise.all([
@@ -660,23 +698,31 @@ suite("Debugging on NodeJS", function() {
         breakpoints: [{ line: 7, column: 0 }],
         source: { path: PROGRAM }
       });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("next", {
-        path: PROGRAM,
-        line: 9
-      });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("breakpoint", {
-        path: PROGRAM,
-        line: 7
-      });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("next", {
-        path: PROGRAM,
-        line: 10
-      });
-      await dc.nextRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("next", {
+          path: PROGRAM,
+          line: 9
+        })
+      ]);
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("breakpoint", {
+          path: PROGRAM,
+          line: 7
+        })
+      ]);
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("next", {
+          path: PROGRAM,
+          line: 10
+        })
+      ]);
+      await Promise.all([
+        dc.nextRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
     });
   });
   suite("`require` stepping", function() {
@@ -690,12 +736,12 @@ suite("Debugging on NodeJS", function() {
           command: PROGRAM,
           preset: "node",
           stopOnEntry: true
+        }),
+        dc.assertStoppedLocation("entry", {
+          path: PROGRAM,
+          line: 1
         })
       ]);
-      await dc.assertStoppedLocation("entry", {
-        path: PROGRAM,
-        line: 1
-      });
       await Promise.all([
         dc.stepInRequest({ threadId: 0 }),
         dc.assertStoppedLocation("step", { path: MOD2, line: 1 })
@@ -725,8 +771,7 @@ suite("Debugging on NodeJS", function() {
       await dc.hitBreakpoint(
         {
           command: PROGRAM,
-          preset: "node",
-          verbose: 2
+          preset: "node"
         },
         { path: MOD3, line: 2 }
       );
@@ -793,12 +838,12 @@ suite("Debugging on NodeJS", function() {
           command: `node ${PROGRAM}`,
           preset: "node",
           stopOnEntry: true
-        })
-      ]);
-      await dc.assertStoppedLocation("entry", {
+        }),
+        dc.assertStoppedLocation("entry", {
         path: PROGRAM,
         line: 7
-      });
+      })
+      ]);
       await Promise.all([
         dc.stepInRequest({ threadId: 0 }),
         dc.assertStoppedLocation("step", {
@@ -841,10 +886,9 @@ suite("Debugging on NodeJS", function() {
     const PROGRAM = path.join(DATA_ROOT, "hot-swap-main.js");
     teardown(() => util.promisify(fs.unlink)(PROGRAM));
     async function copy(fn: string) {
-      await util.promisify(fs.writeFile)(
-        PROGRAM,
-        await util.promisify(fs.readFile)(path.join(DATA_ROOT, fn), "utf-8")
-      );
+      await util.promisify(
+        fs.writeFile
+      )(PROGRAM, await util.promisify(fs.readFile)(path.join(DATA_ROOT, fn), "utf-8"));
     }
     test("should change the functions code", async function() {
       const out = dc.assertOutput("stdout", "M:1\nN:2\n");
@@ -880,12 +924,12 @@ suite("Debugging on NodeJS", function() {
           command: `node ${PROGRAM}`,
           preset: "node",
           stopOnEntry: true
-        })
-      ]);
-      await dc.assertStoppedLocation("entry", {
+        }),
+        dc.assertStoppedLocation("entry", {
         path: PROGRAM,
         line: 1
-      });
+      })
+      ]);
       await dc.continueRequest({ threadId: 0 });
       const [t1] = await Promise.all([
         dc.waitForEvent("thread"),
@@ -933,13 +977,11 @@ suite("Debugging on NodeJS", function() {
       async function watch(res: string) {
         const stop = await dc.assertStoppedLocation("debugger_statement", {});
         assert.equal(
-          (
-            await dc.evaluateRequest({
-              context: "watch",
-              frameId: stop.body.stackFrames[0].id,
-              expression: "`i:${i},j:${j},k:${k}`"
-            })
-          ).body.result,
+          (await dc.evaluateRequest({
+            context: "watch",
+            frameId: stop.body.stackFrames[0].id,
+            expression: "`i:${i},j:${j},k:${k}`"
+          })).body.result,
           res
         );
       }
@@ -1025,13 +1067,6 @@ suite("Debugging on NodeJS", function() {
   suite("node vm", function() {
     const PROGRAM = path.join(DATA_ROOT, "vm-code.js");
     test("should enter each module only once on `step in`", async function() {
-      await Promise.all([
-        dc.configurationSequence(),
-        dc.launch({
-          command: PROGRAM,
-          preset: "node"
-        })
-      ]);
       const out = dc.assertOutput(
         "stdout",
         [
@@ -1041,15 +1076,22 @@ suite("Debugging on NodeJS", function() {
           "{ animal: 'cat', count: 7, name: 'c1' }"
         ].join("\n")
       );
-      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
-      await dc.continueRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
-      await dc.continueRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
-      await dc.continueRequest({ threadId: 0 });
-      await dc.assertStoppedLocation("debugger_statement", { line: 3 });
-      await dc.continueRequest({ threadId: 0 });
-      await dc.waitForEvent("terminated");
+      await Promise.all([
+        dc.configurationSequence(),
+        dc.launch({
+          command: PROGRAM,
+          preset: "node"
+        }),
+        dc.assertStoppedLocation("debugger_statement", { line: 3 })
+      ]);
+      await Promise.all([dc.continueRequest({ threadId: 0 }),
+                         dc.assertStoppedLocation("debugger_statement", { line: 3 })]);
+      await Promise.all([dc.continueRequest({ threadId: 0 }),
+                         dc.assertStoppedLocation("debugger_statement", { line: 3 })]);
+      await Promise.all([dc.continueRequest({ threadId: 0 }),
+                         dc.assertStoppedLocation("debugger_statement", { line: 3 })]);
+      await Promise.all([dc.continueRequest({ threadId: 0 }),
+                         dc.waitForEvent("terminated")]);
       await out;
     });
   });

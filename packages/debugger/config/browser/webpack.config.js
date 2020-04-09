@@ -49,13 +49,14 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 
 const prependModules = [];
 
-const debuggerRoot = fs.realpathSync(path.join(__dirname,"..",".."))
+const debuggerPath = normalizeDrive(
+  fs.realpathSync(
+    process.env.EFFECTFUL__DEBUGGER_DIR ||
+      path.resolve(__dirname, "..", "..", "..")
+  )
+);
 
-const rt = config.builtInBackends[backend]
-  ? path.join(debuggerRoot,"backends", backend)
-  : backend;
-
-prependModules.push(path.resolve(debuggerPath, "debugger", "node_modules"));
+prependModules.push(path.resolve(debuggerPath, "node_modules"));
 
 let configJS = config;
 if (path.sep === "\\")
@@ -69,15 +70,14 @@ const include = [paths.appSrc];
 function isDebuggerPath(filename) {
   filename = path.resolve(normalizeDrive(filename));
   return (
-    filename.startsWith(config.extensionRoot) && !filename.startsWith(paths.appSrc)
+    filename.startsWith(debuggerPath) && !filename.startsWith(paths.appSrc)
   );
 }
 
 const CONFIG_PATH = require.resolve("../../config");
 
 function isConfigPath(filename) {
-  if (filename === CONFIG_PATH)
-  return filename === CONFIG_PATH;
+  if (filename === CONFIG_PATH) return filename === CONFIG_PATH;
 }
 
 // common function to get style loaders
@@ -230,8 +230,9 @@ module.exports = {
                 sourceMaps: false
               }
             },
-          config.instrument && config.zeroConfig && config.instrumentDeps &&
-             {
+          config.instrument &&
+            config.zeroConfig &&
+            config.instrumentDeps && {
               test: /\.(js|mjs)$/,
               exclude: [
                 /@babel(?:\/|\\{1,2})runtime/,
@@ -252,7 +253,7 @@ module.exports = {
                     {
                       blackbox: true,
                       timeTravel,
-                      expInject: 0,
+                      preInstrumentedLibs: true,
                       srcRoot
                     }
                   ]

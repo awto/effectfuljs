@@ -45,7 +45,7 @@ suite("Extension Tests", function() {
         command: 'node',
         args: ["${file}"],
         console: "integratedTerminal",
-        env: {}
+        env: {EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS:0}
       })
     );
     // TODO: for now we are happy if nothing throws,
