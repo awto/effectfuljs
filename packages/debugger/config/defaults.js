@@ -1,14 +1,24 @@
 const config = require("../config").default;
 const fs = require("fs");
+const path = require("path");
 if (process.env.EFFECTFUL_DEBUGGER_URL)
   config.url = process.env.EFFECTFUL_DEBUGGER_URL;
 config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL);
 config.timeTravelDisabled = isTrue(
   process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED
 );
-config.srcRoot = require("../state").normalizeDrive(
+const { normalizeDrive } = require("../state");
+config.srcRoot = normalizeDrive(
   fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || ".")
 );
+
+config.extensionRoot = normalizeDrive(
+  fs.realpathSync(
+    process.env.EFFECTFUL_DEBUGGER_EXTENSION_ROOT ||
+      path.join(__dirname, "..", "..")
+  )
+);
+
 config.backend = process.env.EFFECTFUL_DEBUGGER_BACKEND || "vscode";
 config.cache =
   isTrue(process.env.EFFECTFUL_DEBUGGER_CACHE) ||
@@ -19,7 +29,11 @@ config.verbose = isNaN(process.env.EFFECTFUL_DEBUGGER_VERBOSE)
     ? 1
     : 0
   : +process.env.EFFECTFUL_DEBUGGER_VERBOSE;
-if (process.env.EFFECTFUL_DEBUGGER_PORT && !isNaN(process.env.EFFECTFUL_DEBUGGER_PORT))
+
+if (
+  process.env.EFFECTFUL_DEBUGGER_PORT &&
+  !isNaN(process.env.EFFECTFUL_DEBUGGER_PORT)
+)
   config.port = +process.env.EFFECTFUL_DEBUGGER_PORT;
 else if (process.env.PORT && !isNaN(process.env.PORT)) {
   process.env.EFFECTFUL_DEBUGGER_PORT = process.env.PORT;
@@ -38,7 +52,10 @@ config.open = isTrue(process.env.EFFECTFUL_DEBUGGER_OPEN);
 
 config.instrument = isTrue(process.env.EFFECTFUL_DEBUGGER_INSTRUMENT, true);
 
-config.instrumentDeps = isTrue(process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS, true);
+config.instrumentDeps = isTrue(
+  process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS,
+  true
+);
 
 if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
 
@@ -50,6 +67,7 @@ config.builtInBackends = {
   standaloneTrace: true,
   react: true
 };
+
 
 module.exports = config;
 

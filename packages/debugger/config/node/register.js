@@ -170,9 +170,13 @@ Mp._compile = function _compile(content, filename) {
   const ext = path.extname(filename);
   if (
     disabled ||
-    ext === ".json" || // TODO: more options
-    (filename = normalizeDrive(filename)).startsWith(debuggerPath) ||
-    !(filename.startsWith(nodeModules) || filename.startsWith(rootPath))
+    ext === ".json" ||
+    (config.instrumentDeps &&
+      (filename = normalizeDrive(filename)).startsWith(config.extensionRoot)) ||
+    !(
+      (config.instrumentDeps && filename.startsWith(nodeModules)) ||
+      filename.startsWith(rootPath)
+    )
   ) {
     if (config.verbose > 1)
       log(`DEBUGGER: loading without instrumentation ${filename}`);

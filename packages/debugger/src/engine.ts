@@ -671,44 +671,44 @@ export function compileEvalToString(
   params: string[] | null
 ): string {
   const savedEnabled = journal.enabled;
-try {
-  const top = context.top;
-  const meta = top && top.meta;
-  const blackbox = !meta || meta.blackbox;
-  const key = code + "@" + blackbox;
-  let tgt = indirMemo.get(key);
-  if (tgt) return tgt;
-  const id = toGlobal(evalCnt++);
-  if (!blackbox) context.onNewSource(id, code);
-  const ast = babelParse(code, {
-    allowReturnOutsideFunction: true
-  });
-  if (params == null) {
-    const body = <any>ast.program.body;
-    if (body.length === 1 && body[0].type === "ExpressionStatement")
-      body[0] = { type: "ReturnStatement", argument: body[0].expression };
-  }
-  tgt = babelGenerate(
-    T.run(ast, {
-      preInstrumentedLibs: true,
-      blackbox,
-      pureModule: true,
-      evalContext: null,
-      evalParams: params,
-      directEval: false,
-      rt: false,
-      ns: globalNS,
-      relativeName: id,
-      filename: `VM${id}.js`,
-      iifeWrap: true,
-      moduleExports: params == null ? "execModule" : "retModule",
-      constrParams: { code }
-    }),
-    { compact: true }
-  ).code;
-  indirMemo.set(key, tgt);
-  return `(function() { ${tgt}; })()`;
-} finally {
+  try {
+    const top = context.top;
+    const meta = top && top.meta;
+    const blackbox = !meta || meta.blackbox;
+    const key = code + "@" + blackbox;
+    let tgt = indirMemo.get(key);
+    if (tgt) return tgt;
+    const id = toGlobal(evalCnt++);
+    if (!blackbox) context.onNewSource(id, code);
+    const ast = babelParse(code, {
+      allowReturnOutsideFunction: true
+    });
+    if (params == null) {
+      const body = <any>ast.program.body;
+      if (body.length === 1 && body[0].type === "ExpressionStatement")
+        body[0] = { type: "ReturnStatement", argument: body[0].expression };
+    }
+    tgt = babelGenerate(
+      T.run(ast, {
+        preInstrumentedLibs: true,
+        blackbox,
+        pureModule: true,
+        evalContext: null,
+        evalParams: params,
+        directEval: false,
+        rt: false,
+        ns: globalNS,
+        relativeName: id,
+        filename: `VM${id}.js`,
+        iifeWrap: true,
+        moduleExports: params == null ? "execModule" : "retModule",
+        constrParams: { code }
+      }),
+      { compact: true }
+    ).code;
+    indirMemo.set(key, tgt);
+    return `(function() { ${tgt}; })()`;
+  } finally {
     journal.enabled = savedEnabled
   }
 }

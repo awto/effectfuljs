@@ -49,19 +49,13 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 
 const prependModules = [];
 
-const debuggerPath = normalizeDrive(
-  fs.realpathSync(path.resolve(__dirname, "..", "..", ".."))
-);
+const debuggerRoot = fs.realpathSync(path.join(__dirname,"..",".."))
+
+const rt = config.builtInBackends[backend]
+  ? path.join(debuggerRoot,"backends", backend)
+  : backend;
 
 prependModules.push(path.resolve(debuggerPath, "debugger", "node_modules"));
-
-if (process.env.EFFECTFUL_DEBUGGER_EXTENSION_ROOT)
-  prependModules.push(
-    path.resolve(
-      fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_EXTENSION_ROOT),
-      "node_modules"
-    )
-  );
 
 let configJS = config;
 if (path.sep === "\\")
@@ -75,7 +69,7 @@ const include = [paths.appSrc];
 function isDebuggerPath(filename) {
   filename = path.resolve(normalizeDrive(filename));
   return (
-    filename.startsWith(debuggerPath) && !filename.startsWith(paths.appSrc)
+    filename.startsWith(config.extensionRoot) && !filename.startsWith(paths.appSrc)
   );
 }
 
@@ -198,8 +192,7 @@ module.exports = {
           config.instrument &&
             !config.zeroConfig && {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              // include,
-              exclude: [isDebuggerPath /*, /node_modules/*/],
+              exclude: isDebuggerPath,
               loader: require.resolve("babel-loader"),
               compact,
               options: {

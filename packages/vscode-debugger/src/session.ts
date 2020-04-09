@@ -21,7 +21,7 @@ import { spawn, ChildProcess } from "child_process";
 import * as path from "path";
 import subscribe from "./wscomms";
 
-const DEBUGGER_IMPL = require.resolve("@effectful/debugger");
+const DEBUGGER_IMPL = normalizeDrive(require.resolve("@effectful/debugger"));
 const DEBUGGER_EDBG = path.join(path.dirname(DEBUGGER_IMPL), "bin", "edbg.js");
 const DEBUGGER_PATHS = path.resolve(path.join(DEBUGGER_IMPL, "..", ".."));
 const runningCommands: Map<string, ChildProcess> = new Map();
@@ -511,8 +511,7 @@ export class DebugSession extends SessionImpl {
           };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
-          console.log("SPAWN", command, launchArgs, { ...spawnArgs, env });
-          child.on("error", (data) => {
+          child.on("error", data => {
             this.sendErrorResponse(
               response,
               1001,
