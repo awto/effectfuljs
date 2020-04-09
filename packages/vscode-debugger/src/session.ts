@@ -79,7 +79,7 @@ export class DebugSession extends SessionImpl {
     super(true);
     // super("effectful-debug.log", true);
     // this.obsolete_logFilePath = obsolete_logFilePath;
-    this.on("error", event => {
+    this.on("error", (event) => {
       logger.error(event.body);
     });
     this.setDebuggerLinesStartAt1(false);
@@ -88,7 +88,11 @@ export class DebugSession extends SessionImpl {
 
   start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream) {
     super.start(inStream, outStream);
-    logger.init(e => this.sendEvent(e), "effectful-debug.log", this._isServer);
+    logger.init(
+      (e) => this.sendEvent(e),
+      "effectful-debug.log",
+      this._isServer
+    );
   }
 
   sendEvent(event: P.Event): void {
@@ -129,7 +133,7 @@ export class DebugSession extends SessionImpl {
     if (!this.remotes.size) {
       if (this.awaitReconnect) {
         if (this.awaitReconnect < 0) return;
-        await new Promise(i => setTimeout(i, this.awaitReconnect));
+        await new Promise((i) => setTimeout(i, this.awaitReconnect));
         if (this.remotes.size) return;
       }
       this.terminate(
@@ -394,8 +398,9 @@ export class DebugSession extends SessionImpl {
         logger.verbose(`new debuggee: ${remote.id}`);
         this.remotes.set(remote.id, remote);
         remote.onclose = () => this.closeRemote(remote.id);
-        remote.onmessage = data => this.dispatchResponse(remote, <Message>data);
-        remote.onerror = reason => logger.error(reason);
+        remote.onmessage = (data) =>
+          this.dispatchResponse(remote, <Message>data);
+        remote.onerror = (reason) => logger.error(reason);
         if (this.launched) this.launchChild(remote);
         if (this.connectCb) this.connectCb();
       },
@@ -430,8 +435,9 @@ export class DebugSession extends SessionImpl {
           ? String(args.verbose)
           : "0";
       if (process.env["EFFECTFUL_DEBUGGER_URL"] == null)
-        env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${args.debuggerPort ||
-          20011}`;
+        env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${
+          args.debuggerPort || 20011
+        }`;
       env["EFFECTFUL_DEBUGGER_OPEN"] = args.open ? String(args.open) : "0";
       env["EFFECTFUL_DEBUGGER_TIME_TRAVEL"] = args.timeTravel
         ? String(args.timeTravel)
@@ -475,7 +481,7 @@ export class DebugSession extends SessionImpl {
         this.runInTerminalRequest(
           termArgs,
           RUNINTERMINAL_TIMEOUT,
-          runResponse => {
+          (runResponse) => {
             // TODO: await termination
             if (!runResponse.success) {
               this.sendErrorResponse(
@@ -498,10 +504,15 @@ export class DebugSession extends SessionImpl {
         }
         let startBuf: string[] = [];
         if (!child) {
-          const spawnArgs: any = { cwd, env:{...process.env,...env}, shell: preset !== "browser" };
+          const spawnArgs: any = {
+            cwd,
+            env: { ...process.env, ...env },
+            shell: preset !== "browser"
+          };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
-          child.on("error", data => {
+          console.log("SPAWN", command, launchArgs, { ...spawnArgs, env });
+          child.on("error", (data) => {
             this.sendErrorResponse(
               response,
               1001,
@@ -509,21 +520,21 @@ export class DebugSession extends SessionImpl {
             );
             this.terminate("spawn error: " + data.message);
           });
-          child.stdout.on("data", data => {
+          child.stdout.on("data", (data) => {
             const txt = String(data);
             if (preset === "browser")
               this.sendEvent(new OutputEvent(`webpack: ${txt}`, "stdout"));
             else if (args.verbose) logger.verbose(txt);
             if (!this.launched) startBuf.push(txt);
           });
-          child.stderr.on("data", data => {
+          child.stderr.on("data", (data) => {
             const txt = String(data);
             if (preset === "browser") {
               this.sendEvent(new OutputEvent(`webpack: ${txt}`, "stderr"));
             } else if (args.verbose) logger.error(txt);
             if (!this.launched) startBuf.push(txt);
           });
-          child.on("exit", code => {
+          child.on("exit", (code) => {
             if (!this.launched && startBuf.length) {
               errMessage = startBuf.join("");
             }
@@ -538,7 +549,7 @@ export class DebugSession extends SessionImpl {
     }
     if (!this.remotes.size) {
       this.showProgress("Awaiting a debuggee");
-      await new Promise<Handler | undefined>(i => (this.connectCb = i));
+      await new Promise<Handler | undefined>((i) => (this.connectCb = i));
       logger.verbose("first connection");
       this.connectCb = undefined;
       this.hideProgress();
@@ -546,8 +557,8 @@ export class DebugSession extends SessionImpl {
     if (this.remotes.size && !this.stopped) {
       // wait until configuration has finished (and configurationDoneRequest has been called)
       await Promise.race([
-        new Promise(i => (this.configurationCb = i)),
-        new Promise(i => setTimeout(i, CONFIGURATION_DONE_REQUEST_TIMEOUT))
+        new Promise((i) => (this.configurationCb = i)),
+        new Promise((i) => setTimeout(i, CONFIGURATION_DONE_REQUEST_TIMEOUT))
       ]);
       logger.verbose("config done");
       for (const remote of this.remotes.values()) this.launchChild(remote);
@@ -580,7 +591,7 @@ export class DebugSession extends SessionImpl {
         exceptions: this.exceptionArgs,
         breakpoints: [...this.breakpointsSrcs].map(
           ([srcPath, breakpoints]) => ({
-            breakpoints: breakpoints.map(i => i.response),
+            breakpoints: breakpoints.map((i) => i.response),
             source:
               typeof srcPath === "number"
                 ? { sourceReference: srcPath }
@@ -635,7 +646,7 @@ export class DebugSession extends SessionImpl {
     } else if (old) {
       this.breakpointsSrcs.delete(srcPath);
     }
-    const breakpoints: P.Breakpoint[] = bps.map(i => i.response);
+    const breakpoints: P.Breakpoint[] = bps.map((i) => i.response);
     response.body = { breakpoints };
     if (this.remotes.size) {
       this.breakpointsResponse = response;
@@ -677,7 +688,7 @@ export class DebugSession extends SessionImpl {
     // runtime supports now threads so just return a default thread.
     response.body = {
       threads: [...this.remotes.keys()].map(
-        id => new Thread(id, `thread ${id}`)
+        (id) => new Thread(id, `thread ${id}`)
       )
     };
 

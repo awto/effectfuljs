@@ -265,6 +265,7 @@
       }
     ]
   },
+  "repository": "https://github.com/awto/effectfuljs.git",
   "scripts": {
     "vscode:prepublish": "npm run compile && node ./nolinks.js",
     "compile": "tsc -p ./",
@@ -290,8 +291,9 @@
   "dependencies": {
     "@effectful/debugger": "^1.2.2",
     "vscode-debugadapter": "^1.34.0",
-    "vscode-debugprotocol": "^1.34.0",
-    "ws": "^7.0.0"
+    "vscode-debugprotocol": "^1.40.0",
+    "webpack": "^4.42.1",
+    "ws": "^7.2.3"
   },
   "private": true
 }
