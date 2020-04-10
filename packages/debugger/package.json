@@ -1,6 +1,6 @@
 {
   "name": "@effectful/debugger",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "User space debugging",
   "main": "main.js",
   "repository": "https://github.com/awto/effectfuljs.git",

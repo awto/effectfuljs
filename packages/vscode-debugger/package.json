@@ -4,7 +4,7 @@
   "displayName": "EffectfulJS Debugger",
   "description": "Debug your JavaScipt/TypeScript applications with time-traveling, hot swapping, persistent state, scripting and more",
   "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "license": "MIT",
   "homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
   "icon": "images/logo128.png",
@@ -290,7 +290,7 @@
     "vscode-test": "^1.2.2"
   },
   "dependencies": {
-    "@effectful/debugger": "^1.2.2",
+    "@effectful/debugger": "^1.2.3",
     "vscode-debugadapter": "^1.34.0",
     "vscode-debugprotocol": "^1.40.0",
     "webpack": "^4.42.1",
