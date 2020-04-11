@@ -51,7 +51,7 @@ const prependModules = [];
 
 const debuggerPath = normalizeDrive(
   fs.realpathSync(
-    process.env.EFFECTFUL__DEBUGGER_DIR ||
+    process.env.EFFECTFUL_DEBUGGER_EXTENSION_ROOT ||
       path.resolve(__dirname, "..", "..", "..")
   )
 );
@@ -219,6 +219,7 @@ module.exports = {
                     {
                       rt,
                       timeTravel,
+                      blackbox: false,
                       preInstrumentedLibs: true,
                       srcRoot
                     }

@@ -69,17 +69,17 @@
                   "number"
                 ],
                 "description": "Enable logging.",
-                "default": false
+                "default": 2
               },
               "timeTravel": {
                 "type": "boolean",
                 "description": "Transpile sources with time-traveling support",
-                "default": false
+                "default": true
               },
               "timeTravelDisabled": {
                 "type": "boolean",
                 "description": "Don't start time traveling trace collection immediately (awaits API call)",
-                "default": false
+                "default": true
               },
               "command": {
                 "type": [
@@ -189,6 +189,11 @@
                 "type": "number",
                 "default": 20011,
                 "description": "WebSocket port number where the debugger listens for applications connections"
+              },
+              "backend": {
+                "type": "string",
+                "default": "vscode",
+                "description": "Debugger's runtime"
               }
             }
           }
@@ -199,15 +204,11 @@
             "request": "launch",
             "name": "Launch Node application",
             "preset": "node",
-            "stopOnEntry": false,
-            "timeTravel": true,
             "cwd": "^\"\\${workspaceRoot}\"",
             "command": "node",
             "args": [
               "^\"\\${file}\""
-            ],
-            "console": "integratedTerminal",
-            "env": {}
+            ]
           }
         ],
         "configurationSnippets": [
@@ -218,10 +219,9 @@
               "type": "effectful",
               "request": "launch",
               "name": "Listen for incoming connections",
-              "stopOnEntry": false,
-              "stopOnExit": false,
-              "timeTravel": true,
-              "reconnectTimeout": -1
+              "reconnectTimeout": -1,
+              "console": "integratedTerminal",
+              "env": {}
             }
           },
           {
@@ -232,12 +232,7 @@
               "request": "launch",
               "name": "Launch Browser application",
               "preset": "browser",
-              "stopOnEntry": false,
-              "stopOnExit": false,
-              "timeTravel": true,
               "cwd": "^\"\\${workspaceRoot}\"",
-              "htmlTemplate": null,
-              "indexJs": null,
               "reconnectTimeout": 5,
               "open": true
             }
@@ -250,9 +245,6 @@
               "request": "launch",
               "name": "Launch Node application",
               "preset": "node",
-              "stopOnEntry": false,
-              "stopOnExit": false,
-              "timeTravel": true,
               "cwd": "^\"\\${workspaceRoot}\"",
               "command": "node",
               "args": [

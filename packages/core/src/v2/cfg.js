@@ -785,7 +785,6 @@ export function build(root) {
           const discrim = i.firstChild;
           j = after(i);
           const cases = discrim.nextSibling.firstChild;
-          const last = cases.prevSibling;
           let scase = cases;
           // trying not to break switch
           do {
@@ -802,6 +801,7 @@ export function build(root) {
           enter(discrim, lsym);
           let prevBlock = null;
           scase = cases;
+          let hasDefault = false;
           if (pureTests) {
             const exits = (lastBlock.switchCases = []);
             exitSym(lsym, EXIT_SWITCH);
@@ -811,6 +811,7 @@ export function build(root) {
               if (test.pos !== Tag.test) {
                 consequent = test;
                 test = null;
+                hasDefault = true;
               } else consequent = test.nextSibling;
               const block = newBlock();
               if (prevBlock) prevBlock.br = block;
@@ -821,9 +822,12 @@ export function build(root) {
               prevBlock = lastBlock;
             } while ((scase = scase.nextSibling) !== cases);
             if (prevBlock) prevBlock.br = exitBlock;
-            if (last.firstChild.pos === Tag.test) exits.push(exitBlock);
+            if (!hasDefault) exits.push(exitBlock);
           } else {
             let prevTest;
+            let defaultBlock;
+            let prevBlock;
+            const startBlock = lastBlock;
             do {
               let test = scase.firstChild;
               let consequent;
@@ -835,7 +839,10 @@ export function build(root) {
                 if (prevTest) {
                   prevTest.falseBr = testBlock;
                   lastBlock.br = bodyBlock;
-                } else lastBlock.br = testBlock;
+                } else {
+                  startBlock.br = testBlock;
+                }
+                if (prevBlock) prevBlock.br = bodyBlock;
                 setBlock(testBlock);
                 enter(test, rsym);
                 const cmp = Kit.tok(Tag.right, Tag.BinaryExpression, {
@@ -851,16 +858,21 @@ export function build(root) {
                 lastBlock.trueBr = bodyBlock;
                 setBlock(bodyBlock);
               } else {
-                if (prevTest) prevTest.falseBr = bodyBlock;
-                prevTest = null;
-                lastBlock.br = bodyBlock;
+                // if (prevTest) prevTest.falseBr = bodyBlock;
+                defaultBlock = bodyBlock;
+                // prevTest = null;
+                if (prevBlock) lastBlock.br = bodyBlock;
                 setBlock(bodyBlock);
                 consequent = test;
               }
               traverse(consequent, after(consequent));
+              prevBlock = lastBlock;
             } while ((scase = scase.nextSibling) !== cases);
             lastBlock.br = exitBlock;
-            if (prevTest) prevTest.falseBr = exitBlock;
+            if (prevTest) {
+              if (defaultBlock) prevTest.falseBr = defaultBlock;
+              else prevTest.falseBr = exitBlock;
+            }
           }
           curBrk = parBrk;
           setBlock(exitBlock);

@@ -436,8 +436,9 @@ export class DebugSession extends SessionImpl {
           : "0";
       if (process.env["EFFECTFUL_DEBUGGER_URL"] == null)
         env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${
-          args.debuggerPort || 20011
-        }`;
+          args.debuggerPort || 20011}`;
+      if (args.backend)
+        env["EFFECTFUL_DEBUGGER_BACKEND"] = args.backend; 
       env["EFFECTFUL_DEBUGGER_OPEN"] = args.open ? String(args.open) : "0";
       env["EFFECTFUL_DEBUGGER_TIME_TRAVEL"] = args.timeTravel
         ? String(args.timeTravel)
@@ -482,7 +483,6 @@ export class DebugSession extends SessionImpl {
           termArgs,
           RUNINTERMINAL_TIMEOUT,
           (runResponse) => {
-            // TODO: await termination
             if (!runResponse.success) {
               this.sendErrorResponse(
                 response,
@@ -500,7 +500,6 @@ export class DebugSession extends SessionImpl {
         if (reuse) {
           key = `${key}@${cwd}/${timeTravel}/${JSON.stringify(env)}`;
           child = runningCommands.get(key);
-          //TODO: browser refresh
         }
         let startBuf: string[] = [];
         if (!child) {
@@ -595,14 +594,7 @@ export class DebugSession extends SessionImpl {
               typeof srcPath === "number"
                 ? { sourceReference: srcPath }
                 : { path: normalizeDrive(srcPath) }
-          }) /*[...this.breakpointsSources].map(
-          ([srcPath, breakpoints]) => ({
-            breakpoints,
-            source:
-              typeof srcPath === "number"
-                ? { sourceReference: srcPath }
-                : { path: normalizeDrive(srcPath) }
-          })*/
+          })
         )
       }
     });

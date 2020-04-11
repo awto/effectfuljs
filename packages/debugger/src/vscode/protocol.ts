@@ -55,6 +55,7 @@ declare module "vscode-debugprotocol" {
       reconnectTimeout?: number;
       debuggerHost?: string;
       debuggerPort?: number;
+      backend?: string;
     }
   }
 }

@@ -151,14 +151,15 @@ export function consume(root) {
   let sym;
   do {
     const { parent, node } = i;
+    //if (i.type === Tag.Null)
+    //   node = i.node = null;
     if (parent) {
       if (i.pos === Tag.push) {
         parent.node.push(node);
       } else parent.node[symName(i.pos)] = node;
     }
     if (i.type === Tag.Array) node.length = 0;
-    else if (i.type === Tag.Null) i.node = null;
-    else {
+    else if (node) {
       if (i.type === Tag.Identifier && (sym = i.sym) != null)
         node.name = (sym.varSym || sym).name;
       const ti = symInfo(i.type);

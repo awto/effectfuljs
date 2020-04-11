@@ -307,7 +307,7 @@ export function produceNode(pos, babelNode) {
   if (Array.isArray(babelNode)) {
     const res = arr(pos);
     for (const i of babelNode)
-      append(res, i ? produceNode(Tag.push, i) : node(Tag.push, Tag.Null));
+      append(res, i ? produceNode(Tag.push, i) : tok(Tag.push, Tag.Null, null));
     return res;
   }
   const type = babelNode.type;
