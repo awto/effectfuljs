@@ -24,11 +24,9 @@ const appPackageJson = paths.appPackageJson
   : false;
 const { normalizeDrive } = require("../../state");
 
-const { backend, cache, srcRoot, timeTravel } = config;
+const { runtime, cache, srcRoot, timeTravel } = config;
 
-const rt = config.builtInBackends[backend]
-  ? `@effectful/debugger/backends/${backend}`
-  : backend;
+const rt = runtime || "@effectful/debugger";
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
@@ -47,16 +45,12 @@ const env = getClientEnvironment(publicUrl);
 
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
-const prependModules = [];
-
-const debuggerPath = normalizeDrive(
+const runtimePackages = normalizeDrive(
   fs.realpathSync(
-    process.env.EFFECTFUL_DEBUGGER_EXTENSION_ROOT ||
-      path.resolve(__dirname, "..", "..", "..")
+    process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES
+    || path.resolve(__dirname, "..", "..", "..")
   )
 );
-
-prependModules.push(path.resolve(debuggerPath, "node_modules"));
 
 let configJS = config;
 if (path.sep === "\\")
@@ -67,11 +61,10 @@ if (path.sep === "\\")
 
 const include = [paths.appSrc];
 
-function isDebuggerPath(filename) {
-  filename = path.resolve(normalizeDrive(filename));
-  return (
-    filename.startsWith(debuggerPath) && !filename.startsWith(paths.appSrc)
-  );
+function isRuntimePath(filename) {
+  if (!config.instrumentDeps)
+    return false;
+  return normalizeDrive(filename).startsWith(runtimePackages);
 }
 
 const CONFIG_PATH = require.resolve("../../config");
@@ -146,9 +139,10 @@ module.exports = {
     // this may break something, avoiding loading transpiled modules
     // the safer way would be an explicit list of all used library
     // or pre-transpiled libs
-    modules: prependModules.concat(
+    modules: [].concat(
       ["node_modules", paths.appNodeModules],
-      modules.additionalModulePaths || []
+      modules.additionalModulePaths || [],
+      runtimePackages
     ),
     extensions: paths.moduleFileExtensions
       .map(ext => `.${ext}`)
@@ -192,7 +186,7 @@ module.exports = {
           config.instrument &&
             !config.zeroConfig && {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              exclude: isDebuggerPath,
+              exclude: isRuntimePath,
               loader: require.resolve("babel-loader"),
               compact,
               options: {
@@ -206,7 +200,7 @@ module.exports = {
             config.zeroConfig && {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include,
-              exclude: [isDebuggerPath, /node_modules/],
+              exclude: [isRuntimePath, /node_modules/],
               loader: require.resolve("babel-loader"),
               options: {
                 babelrc: false,
@@ -240,7 +234,7 @@ module.exports = {
                 /@effectful(?:\/|\\{1,2})/,
                 /css-loader/,
                 /style-loader/,
-                isDebuggerPath
+                isRuntimePath
               ],
               loader: require.resolve("babel-loader"),
               options: {

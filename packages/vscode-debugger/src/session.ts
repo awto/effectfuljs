@@ -10,20 +10,37 @@ import {
   ThreadEvent,
   CapabilitiesEvent,
   OutputEvent,
-  DebugSession as SessionImpl
+  DebugSession as SessionImpl,
 } from "vscode-debugadapter";
 
-import { DebugProtocol as P } from "@effectful/debugger/vscode/protocol";
-import { toThread, normalizeDrive } from "@effectful/debugger/state";
-import { Handler } from "./comms";
+import { DebugProtocol as P } from "./protocol";
+import { toThread, Handler } from "./comms";
 import { Message } from "vscode-debugadapter/lib/messages";
 import { spawn, ChildProcess } from "child_process";
 import * as path from "path";
 import subscribe from "./wscomms";
+import { sync as resolve } from "resolve";
 
-const DEBUGGER_IMPL = normalizeDrive(require.resolve("@effectful/debugger"));
-const DEBUGGER_EDBG = path.join(path.dirname(DEBUGGER_IMPL), "bin", "edbg.js");
-const DEBUGGER_PATHS = path.resolve(path.join(DEBUGGER_IMPL, "..", ".."));
+const normalizeDrive =
+  typeof process !== "undefined" && process.platform === "win32"
+    ? function normalizeDrive(path: string) {
+        return path && path.length > 2 && path[1] === ":"
+          ? path.charAt(0).toUpperCase() + path.slice(1)
+          : path;
+      }
+    : function (path: string) {
+        return path;
+      };
+
+function packageBase(name:string) {
+  const f = name[0];
+  if (f === "@")
+    return name.split("/").slice(0,2).join("/");
+  if (f === "." || f === "/" || name[1] === ":")
+    return f;
+  return name.split("/")[0];
+}
+
 const runningCommands: Map<string, ChildProcess> = new Map();
 
 const RUNINTERMINAL_TIMEOUT = 5000;
@@ -77,7 +94,7 @@ export class DebugSession extends SessionImpl {
    */
   public constructor() {
     super(true);
-    // super("effectful-debug.log", true);
+    // super("effectful-debug.log");
     // this.obsolete_logFilePath = obsolete_logFilePath;
     this.on("error", (event) => {
       logger.error(event.body);
@@ -89,7 +106,9 @@ export class DebugSession extends SessionImpl {
   start(inStream: NodeJS.ReadableStream, outStream: NodeJS.WritableStream) {
     super.start(inStream, outStream);
     logger.init(
-      (e) => this.sendEvent(e),
+      (e) => {
+        this.sendEvent(e)
+      },
       "effectful-debug.log",
       this._isServer
     );
@@ -180,7 +199,7 @@ export class DebugSession extends SessionImpl {
     response.body.supportsStepInTargetsRequest = false;
     response.body.exceptionBreakpointFilters = [
       { filter: "all", label: "All Exceptions", default: false },
-      { filter: "uncaught", label: "Uncaught Exceptions", default: false }
+      { filter: "uncaught", label: "Uncaught Exceptions", default: false },
     ];
     this.sendResponse(response);
     this.sendEvent(new InitializedEvent());
@@ -203,7 +222,7 @@ export class DebugSession extends SessionImpl {
     return true;
   }
   protected async dispatchRequest(request: P.Request) {
-    logger.log(`dispatchRequest: ${JSON.stringify(request)}`);
+    logger.verbose(`dispatchRequest: ${JSON.stringify(request)}`);
     if (this.stopped) return;
     switch (request.command) {
       case "restart":
@@ -390,9 +409,82 @@ export class DebugSession extends SessionImpl {
     args: P.LaunchRequestArguments
   ) {
     logger.setup(
-      args.verbose ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop,
+      args.verbose ? Logger.LogLevel.Verbose 
+        : (args.verbose === false ? Logger.LogLevel.Stop : Logger.LogLevel.Log),
       false
     );
+    const cwd = args.cwd || (args.cwd = process.cwd());
+    const runtime = args.runtime || "@effectful/debugger";
+    const runtimeBase = packageBase(runtime);
+    let debuggerImpl: string;
+    try {
+      debuggerImpl = resolve(runtimeBase, {basedir:cwd});
+    } catch (e) {
+      try {
+        debuggerImpl = require.resolve(runtimeBase);
+      } catch (e) {
+        if (e.code !== "MODULE_NOT_FOUND") {
+          this.sendErrorResponse(
+            response,
+            1002,
+            `Couldn't resolve the debuggers runtime - ${e}`
+          );
+          return;
+        }
+        logger.log(`couldn't find "${runtimeBase}" runtime, installing it`);
+        let cb: (b: boolean) => void;
+        const child = spawn(
+          "npm",
+          [
+            "install",
+            "--no-package-lock",
+            "--no-save",
+            "--global-style",
+            "--no-audit",
+            runtimeBase
+          ],
+          { shell: true, cwd: path.join(__dirname, "..") }
+        );
+        child.on("error", (data) => {
+          this.sendErrorResponse(
+            response,
+            1003,
+            `Cannot install ${runtimeBase} (${data.message}).`
+          );
+          this.terminate("install error: " + data.message);
+          cb(true);
+        });
+        child.stdout.on("data", (data) => {
+          logger.log("install: " + String(data));
+        });
+        child.stderr.on("data", (data) => {
+          logger.log("install: " + String(data));
+        });
+        child.on("exit", (code) => {
+          if (!code) return cb(false);
+          this.sendErrorResponse(
+            response,
+            1003,
+            `Cannot install ${runtimeBase} (Exit code: ${code}).`
+          );
+          cb(true);
+        });
+        if (await new Promise((i) => (cb = i))) return;
+        try {
+          debuggerImpl = require.resolve(runtimeBase);
+        } catch (e) {
+          this.sendErrorResponse(
+            response,
+            1002,
+            `Couldn't resolve the debuggers runtime - ${e}`
+          );
+          return;
+        }
+      }
+    }
+    debuggerImpl = path.dirname(normalizeDrive(debuggerImpl));
+    const edbgJs = path.join(debuggerImpl, "bin", "edbg.js");
+    const debuggerDeps = path.resolve(path.join(debuggerImpl, "..", ".."));
     this.stopComms = subscribe(
       (remote: Handler) => {
         logger.verbose(`new debuggee: ${remote.id}`);
@@ -413,8 +505,8 @@ export class DebugSession extends SessionImpl {
       this.sendEvent(
         new CapabilitiesEvent({
           supportsStepBack: args.timeTravel,
-          supportsRestartFrame: false, // args.timeTravel,
-          supportsRestartRequest: args.preset !== "node"
+          supportsRestartFrame: false,
+          supportsRestartRequest: args.preset !== "node",
         })
       );
     if (args.preset && !args.command) args.command = true;
@@ -436,9 +528,9 @@ export class DebugSession extends SessionImpl {
           : "0";
       if (process.env["EFFECTFUL_DEBUGGER_URL"] == null)
         env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${
-          args.debuggerPort || 20011}`;
-      if (args.backend)
-        env["EFFECTFUL_DEBUGGER_BACKEND"] = args.backend; 
+          args.debuggerPort || 20011
+        }`;
+      if (runtime) env["EFFECTFUL_DEBUGGER_RUNTIME"] = runtime;
       env["EFFECTFUL_DEBUGGER_OPEN"] = args.open ? String(args.open) : "0";
       env["EFFECTFUL_DEBUGGER_TIME_TRAVEL"] = args.timeTravel
         ? String(args.timeTravel)
@@ -450,9 +542,9 @@ export class DebugSession extends SessionImpl {
       if (term === true) term = "externalTerminal";
       else if (!term) term = "internalConsole";
       const reuse = args.reuse && term === "internalConsole";
-      env["EFFECTFUL_DEBUGGER_EXTENSION_ROOT"] = path.resolve(__dirname, "..");
+      env["EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES"] = debuggerDeps;
       if (args.preset === "node") {
-        let node_path = DEBUGGER_PATHS;
+        let node_path = debuggerDeps;
         if (env.NODE_PATH) node_path += path.delimiter + env.NODE_PATH;
         env.NODE_PATH = node_path;
       } else if (args.preset === "browser") {
@@ -460,7 +552,6 @@ export class DebugSession extends SessionImpl {
         if (args.htmlTemplate)
           env.EFFECTFUL_DEBUGGER_HTML_TEMPLATE = args.htmlTemplate;
       }
-      const cwd = args.cwd || (args.cwd = process.cwd());
       const launchArgs = [...(args.args || [])];
       let preset = args.preset;
       if (preset === true) preset = "node";
@@ -468,7 +559,7 @@ export class DebugSession extends SessionImpl {
       if (command === true) command = "";
       if (preset) {
         if (command.length) launchArgs.unshift(command);
-        launchArgs.unshift(DEBUGGER_EDBG, preset);
+        launchArgs.unshift(edbgJs, preset);
         command = "node";
       }
       if (term === "externalTerminal" || term === "integratedTerminal") {
@@ -477,7 +568,7 @@ export class DebugSession extends SessionImpl {
           title: "Effectful Debug Console",
           cwd,
           args: [command, ...launchArgs],
-          env
+          env,
         };
         this.runInTerminalRequest(
           termArgs,
@@ -506,11 +597,12 @@ export class DebugSession extends SessionImpl {
           const spawnArgs: any = {
             cwd,
             env: { ...process.env, ...env },
-            shell: preset !== "browser"
+            shell: preset !== "browser",
           };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
-          child.on("error", data => {
+          logger.verbose(`SPAWN: ${command} ${launchArgs.join(" ")} ${JSON.stringify({...spawnArgs,env})}`)
+          child.on("error", (data) => {
             this.sendErrorResponse(
               response,
               1001,
@@ -521,7 +613,7 @@ export class DebugSession extends SessionImpl {
           child.stdout.on("data", (data) => {
             const txt = String(data);
             if (preset === "browser")
-              this.sendEvent(new OutputEvent(`webpack: ${txt}`, "stdout"));
+              logger.log(`webpack: ${txt}`);
             else if (args.verbose) logger.verbose(txt);
             if (!this.launched) startBuf.push(txt);
           });
@@ -556,7 +648,7 @@ export class DebugSession extends SessionImpl {
       // wait until configuration has finished (and configurationDoneRequest has been called)
       await Promise.race([
         new Promise((i) => (this.configurationCb = i)),
-        new Promise((i) => setTimeout(i, CONFIGURATION_DONE_REQUEST_TIMEOUT))
+        new Promise((i) => setTimeout(i, CONFIGURATION_DONE_REQUEST_TIMEOUT)),
       ]);
       logger.verbose("config done");
       for (const remote of this.remotes.values()) this.launchChild(remote);
@@ -593,10 +685,10 @@ export class DebugSession extends SessionImpl {
             source:
               typeof srcPath === "number"
                 ? { sourceReference: srcPath }
-                : { path: normalizeDrive(srcPath) }
+                : { path: normalizeDrive(srcPath) },
           })
-        )
-      }
+        ),
+      },
     });
   }
 
@@ -615,14 +707,14 @@ export class DebugSession extends SessionImpl {
           ...i,
           id,
           verified: false,
-          source: args.source
+          source: args.source,
         };
         const bpi: BreakpointInfo = {
           id,
           remotes: new Set(),
           source: args.source,
           request: i,
-          response
+          response,
         };
         bps.push(bpi);
         this.breakpointsIds.set(id, bpi);
@@ -649,8 +741,8 @@ export class DebugSession extends SessionImpl {
           arguments: {
             breakpoints,
             source: args.source,
-            sourceModified: args.sourceModified
-          }
+            sourceModified: args.sourceModified,
+          },
         });
       }
     } else {
@@ -680,7 +772,7 @@ export class DebugSession extends SessionImpl {
     response.body = {
       threads: [...this.remotes.keys()].map(
         (id) => new Thread(id, `thread ${id}`)
-      )
+      ),
     };
 
     this.sendResponse(response);

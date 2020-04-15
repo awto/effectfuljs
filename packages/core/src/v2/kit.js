@@ -22,6 +22,7 @@ import {
   error,
   dft,
   next,
+  prev,
   after
 } from "@effectful/transducers/v2/core";
 import { curry, pipe } from "@effectful/transducers/v2/combinators";
@@ -74,7 +75,8 @@ export {
   symName,
   dft,
   after,
-  next
+  next,
+  prev
 };
 
 export function memExpr(pos, objSym, propName) {
@@ -146,13 +148,42 @@ export function locStr(loc) {
     : null;
 }
 
+export function approxLoc(i) {
+  let loc = i.node.loc;
+  if (loc)
+    return loc;
+  loc = {};
+  const last = after(i);
+  let j = i;
+  let minLine = Number.MAX_SAFE_INTEGER;
+  let minCol = Number.MAX_SAFE_INTEGER;
+  let maxLine = 0;
+  let maxCol = 0;
+  do {
+    if (j.node && j.node.loc) {
+      const {start, end} = j.node.loc;
+      if (start.line <= minLine) {
+        minLine = start.line;
+        if (start.column < minCol)
+          minCol = start.column;
+      }
+      if (end.line >= maxLine) {
+        maxLine = end.line;
+        if (end.column > maxCol)
+          maxCol = end.column;
+      }
+    }
+  } while((j = next(j)) !== last)
+  if (maxLine === 0)
+    return null;
+  return {start:{line:minLine,column:minCol},end:{line:maxLine,column:maxCol}};
+}
+
 export function consume(root) {
   let i = root;
   let sym;
   do {
     const { parent, node } = i;
-    //if (i.type === Tag.Null)
-    //   node = i.node = null;
     if (parent) {
       if (i.pos === Tag.push) {
         parent.node.push(node);

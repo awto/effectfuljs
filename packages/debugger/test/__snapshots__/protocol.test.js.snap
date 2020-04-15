@@ -429,6 +429,61 @@ Object {
       "reason": "step",
       "stack": Array [
         Object {
+          "column": 16,
+          "file": "stepInESM3.js",
+          "line": 6,
+          "name": "stepInESM3.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInESM3.js",
+              "a": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "a",
+                "prototype": Object {
+                  "constructor": "a@stepInESM3.js:1:0-3:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepInESM2.js",
+          "line": 1,
+          "name": "stepInESM2.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInESM2.js",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepInESM.js",
+          "line": 1,
+          "name": "stepInESM.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInESM.js",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
           "column": 1,
           "file": "stepInESM.js",
           "line": 3,
@@ -13575,6 +13630,44 @@ Object {
           "column": 1,
           "file": "stepOverESM3.js",
           "line": 1,
+          "name": "stepOverESM3.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverESM3.js",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverESM2.js",
+          "line": 1,
+          "name": "stepOverESM2.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverESM2.js",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverESM.js",
+          "line": 1,
+          "name": "stepOverESM.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverESM.js",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 16,
+          "file": "stepOverESM3.js",
+          "line": 2,
           "name": "stepOverESM3.js",
           "scopes": Array [
             Object {

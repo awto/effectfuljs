@@ -24,7 +24,7 @@ exports.handler = function(argv) {
   const foreground = require("foreground-child");
   config.timeTravel = argv.timeTravel;
   config.zeroConfig = argv.zeroConfig;
-  config.backend = argv.backend;
+  config.runtime = argv.runtime;
   config.cache = argv.cache;
   config.verbose = argv.verbose;
   if (argv.url) config.url = argv.url;
@@ -34,15 +34,17 @@ exports.handler = function(argv) {
     EFFECTFUL_DEBUGGER_TIME_TRAVEL: config.timeTravel,
     EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED: config.timeTravelDisabled,
     EFFECTFUL_DEBUGGER_SRC_ROOT: config.srcRoot,
-    EFFECTFUL_DEBUGGER_BACKEND: config.backend,
+    EFFECTFUL_DEBUGGER_RUNTIME: config.runtime,
     EFFECTFUL_DEBUGGER_CACHE: config.cache,
     EFFECTFUL_DEBUGGER: 1,
     EFFECTFUL_DEBUGGER_NODE: 1,
     EFFECTFUL_DEBUGGER_VERBOSE: config.verbose,
-    EFFECTFUL_ZERO_CONFIG: config.zeroConfig,
-    EFFECTFUL_ZERO_INSTRUMENT: config.instrument,
-    EFFECTFUL_ZERO_INSTRUMENT_DEPS: config.instrumentDeps
+    EFFECTFUL_DEBUGGER_ZERO_CONFIG: config.zeroConfig,
+    EFFECTFUL_DEBUGGER_INSTRUMENT: config.instrument,
+    EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: config.instrumentDeps
   };
+  if (config.runtimePackages)
+    env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES = config.runtimePackages;
   const extraPath = path.join(".", "node_modules", ".bin");
   if (fs.existsSync(extraPath))
     process.env.PATH = process.env.PATH + path.delimiter + extraPath;

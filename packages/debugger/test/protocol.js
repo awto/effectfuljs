@@ -78,7 +78,7 @@ function recv(msg) {
   }
 }
 
-require("../backends/vscode");
+require("../vscode");
 const D = require("../main");
 
 function teardown() {
@@ -320,7 +320,7 @@ function cont(request, onStop, onDone) {
       if (terminated) return onDone();
       if (onStop.length < 2) return onStop(_req);
       return stackSnapshot(
-        snapshot => (snapshot ? onStop(_req, snapshot) : onDone()),
+        (snapshot) => (snapshot ? onStop(_req, snapshot) : onDone()),
         request
       );
     } catch (e) {

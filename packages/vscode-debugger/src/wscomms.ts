@@ -1,8 +1,9 @@
 import { Server } from "ws";
-import { Handler } from "./comms";
-import { THREAD_BITS } from "@effectful/debugger/state";
+import { Handler, THREAD_BITS } from "./comms";
 
 const MAX_THREAD_ID = 1 << THREAD_BITS;
+
+// from @effectful/debugger/state (TODO: a common module)
 
 export default function subscribe(
   onconnect: (h: Handler) => void,

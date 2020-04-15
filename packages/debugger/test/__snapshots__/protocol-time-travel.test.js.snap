@@ -2873,6 +2873,44 @@ Object {
       "reason": "step",
       "stack": Array [
         Object {
+          "column": 16,
+          "file": "stepBackESM3.js",
+          "line": 1,
+          "name": "stepBackESM3.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM3.js",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepBackESM2.js",
+          "line": 1,
+          "name": "stepBackESM2.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM2.js",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepBackESM.js",
+          "line": 1,
+          "name": "stepBackESM.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM.js",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
           "column": 1,
           "file": "stepBackESM2.js",
           "line": 1,
@@ -2915,6 +2953,44 @@ Object {
     Object {
       "reason": "step",
       "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackESM2.js",
+          "line": 1,
+          "name": "stepBackESM2.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM2.js",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepBackESM.js",
+          "line": 1,
+          "name": "stepBackESM.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM.js",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 16,
+          "file": "stepBackESM3.js",
+          "line": 1,
+          "name": "stepBackESM3.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM3.js",
+            },
+          ],
+        },
         Object {
           "column": 1,
           "file": "stepBackESM2.js",

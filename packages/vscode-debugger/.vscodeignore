@@ -11,3 +11,4 @@ vsc-extension-quickstart.md
 testdata
 nolinks.js
 testExtension.js
+**/*.log

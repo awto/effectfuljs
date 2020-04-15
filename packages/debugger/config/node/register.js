@@ -23,7 +23,7 @@ const savedCompile = Mp._compile;
 
 // const savedConsole = console;
 
-const builtIn = Module.builtinModules.filter(i => {
+const builtIn = Module.builtinModules.filter((i) => {
   switch (i) {
     case "sys":
       return false;
@@ -70,15 +70,11 @@ const debuggerPath = normalizeDrive(
 
 const requirePath =
   path.sep === "\\"
-    ? function requirePath(backend) {
-        return config.builtInBackends[backend]
-          ? path.join(debuggerPath, "backends", backend).replace(/\\/g, "/")
-          : backend;
+    ? function requirePath(rt) {
+        return rt || path.join(debuggerPath, "vscode").replace(/\\/g, "/");
       }
-    : function requirePath(backend) {
-        return config.builtInBackends[backend]
-          ? path.join(debuggerPath, "backends", backend)
-          : backend;
+    : function requirePath(rt) {
+        return rt || path.join(debuggerPath, "vscode");
       };
 
 let cacheSaveScheduled = false;
@@ -172,7 +168,7 @@ Mp._compile = function _compile(content, filename) {
   if (
     disabled ||
     ext === ".json" ||
-    (config.instrumentDeps && filename.startsWith(config.extensionRoot)) ||
+    (config.instrumentDeps && filename.startsWith(config.runtimePackages)) ||
     !(
       (config.instrumentDeps && filename.startsWith(nodeModules)) ||
       filename.startsWith(rootPath)
@@ -184,7 +180,7 @@ Mp._compile = function _compile(content, filename) {
   }
   const blackbox = filename.startsWith(nodeModules);
   const moduleConfig = require("../defaults");
-  const rt = requirePath(moduleConfig.backend);
+  const rt = requirePath(moduleConfig.runtime);
   if (config.verbose) {
     let msg = `DEBUGGER: compiling ${filename}, filename:${filename}, rt:${rt}`;
     if (config.verbose > 1) msg += ` content:${JSON.stringify(content)}`;
@@ -263,7 +259,7 @@ Mp._compile = function _compile(content, filename) {
       let reloading = 0;
       if (config.verbose)
         log(`DEBUGGER: enabling hot swapping for ${filename}`);
-      fs.watch(filename, { persistent: false, encoding: "utf-8" }, type => {
+      fs.watch(filename, { persistent: false, encoding: "utf-8" }, (type) => {
         const nextMtime = mtime(filename);
         if (config.verbose)
           log(`DEBUGGER: updating ${filename}`, type, curMtime, nextMtime);

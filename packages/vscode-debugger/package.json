@@ -4,7 +4,7 @@
   "displayName": "EffectfulJS Debugger",
   "description": "Debug your JavaScipt/TypeScript applications with time-traveling, hot swapping, persistent state, scripting and more",
   "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "MIT",
   "homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
   "icon": "images/logo128.png",
@@ -190,7 +190,7 @@
                 "default": 20011,
                 "description": "WebSocket port number where the debugger listens for applications connections"
               },
-              "backend": {
+              "runtime": {
                 "type": "string",
                 "default": "vscode",
                 "description": "Debugger's runtime"
@@ -260,7 +260,7 @@
   },
   "repository": "https://github.com/awto/effectfuljs.git",
   "scripts": {
-    "vscode:prepublish": "npm run compile && node ./nolinks.js",
+    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
@@ -269,9 +269,11 @@
     "test:ide": "node ./testExtension.js"
   },
   "devDependencies": {
+    "@effectful/debugger": "^1.2.4",
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.12.21",
     "@types/puppeteer": "^1.20.2",
+    "@types/resolve": "^1.14.0",
     "@types/ws": "^6.0.1",
     "cross-env": "^6.0.3",
     "puppeteer": "^2.0.0",
@@ -282,10 +284,8 @@
     "vscode-test": "^1.2.2"
   },
   "dependencies": {
-    "@effectful/debugger": "^1.2.3",
     "vscode-debugadapter": "^1.34.0",
     "vscode-debugprotocol": "^1.40.0",
-    "webpack": "^4.42.1",
     "ws": "^7.2.3"
   },
   "private": true

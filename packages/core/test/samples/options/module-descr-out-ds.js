@@ -69,54 +69,64 @@ var $M = require("@effectful/debugger/api"),
       /*C*/
       $m$3($));
       $.goto = 1;
-      $p = ($context.moduleId = require.resolve("mod"), $M.force(require("mod")));
+      $brk("1:8-1:30");
       $.state = 1;
 
     case 1:
+      $.goto = 2;
+      $p = ($context.moduleId = require.resolve("mod"), $M.force(require("mod")));
+      $.state = 2;
+
+    case 2:
       $lset($l, 3,
       /*_require*/
       $p);
       $lset($l, 4,
       /*mod*/
       $l[3].mod);
-      $.goto = 2;
-      $p = /*#__PURE__*/($context.call = $m$4($))();
-      $.state = 2;
-
-    case 2:
-      $lset($l, 6,
-      /*Cl*/
-      $p);
       $.goto = 3;
-      $brk("30:0-34:2");
+      $brk("12:6-27:12");
       $.state = 3;
 
     case 3:
+      $.goto = 4;
+      $p = /*#__PURE__*/($context.call = $m$4($))();
+      $.state = 4;
+
+    case 4:
+      $lset($l, 6,
+      /*Cl*/
+      $p);
+      $.goto = 5;
+      $brk("30:0-34:2");
+      $.state = 5;
+
+    case 5:
       $lset($l, 7,
       /*obj1*/
       {
         objFn: $m$11($)
       });
-      $.goto = 4;
+      $.goto = 6;
       $brk("36:0-38:2");
-      $.state = 4;
-
-    case 4:
-      $set(module.exports, "fn2", $m$12($));
-      $.goto = 6;
-      continue;
-
-    case 5:
-      $.goto = 6;
-      return $unhandled($.error);
+      $.state = 6;
 
     case 6:
+      $set(module.exports, "fn2", $m$12($));
+      $.goto = 8;
+      continue;
+
+    case 7:
+      $.goto = 8;
+      return $unhandled($.error);
+
+    case 8:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 0, [[2, "1:16-1:30", $s$1], [2, null, $s$1], [4, "30:0-34:2", $s$1], [4, "36:0-38:2", $s$1], [0, "36:0-38:1", $s$1], [16, "39:0-39:0", $s$1], [16, "39:0-39:0", $s$1]]),
+}, null, null, 0, [[4, "1:8-1:30", $s$1], [2, "1:16-1:30", $s$1], [4, "12:6-27:12", $s$1], [2, null, $s$1], [4, "30:0-34:2", $s$1], [4, "36:0-38:2", $s$1], [0, "36:0-38:1", $s$1], [16, "39:0-39:0", $s$1], [16, "39:0-39:0", $s$1]]),
     $m$1 = $M.fun("m$1", "_defineProperties", null, $m$0, ["target", "props"], 1, 6, null, 0, function _defineProperties($, $l, $p) {
   var $1;
 
@@ -344,32 +354,47 @@ var $M = require("@effectful/debugger/api"),
       $lset($l, 2,
       /*_proto*/
       $l[1].prototype);
-      $set($l[2], "func", $m$6($));
-      $set($l[2], "func", $m$7($));
       $.goto = 1;
+      $brk("22:2-24:12");
+      $.state = 1;
+
+    case 1:
+      $set($l[2], "func", $m$6($));
+      $.goto = 2;
+      $brk("25:2-27:7");
+      $.state = 2;
+
+    case 2:
+      $set($l[2], "func", $m$7($));
+      $.goto = 3;
+      $brk("16:14-21:17");
+      $.state = 3;
+
+    case 3:
+      $.goto = 4;
       ($context.call = $l[0][2])($l[1], [{
         key: "prop1",
         get: $m$9($),
         set: $m$10($)
       }]);
-      $.state = 1;
+      $.state = 4;
 
-    case 1:
+    case 4:
       $.result = $l[1];
-      $.goto = 3;
+      $.goto = 6;
       continue;
 
-    case 2:
-      $.goto = 3;
+    case 5:
+      $.goto = 6;
       return $unhandled($.error);
 
-    case 3:
+    case 6:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[2, null, $s$7], [0, null, $s$7], [16, null, $s$7], [16, null, $s$7]]),
+}, null, null, 1, [[4, "22:2-24:12", $s$7], [4, "25:2-27:7", $s$7], [4, "16:14-21:17", $s$7], [2, null, $s$7], [0, null, $s$7], [16, null, $s$7], [16, null, $s$7]]),
     $m$5 = $M.fun("m$5", "Cl", null, $m$4, [], 0, 1, "13:2-15:3", 0, function Cl($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

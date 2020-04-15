@@ -9,7 +9,6 @@ config.localConsole = DEBUG;
 config.srcRoot = path.resolve(path.join(__dirname, ".."));
 config.localConsole = false;
 const Kit = require("./protocol");
-// const D = require("../backends/vscode");
 
 describe("VSCode protocol handlers with time traveling", function() {
   afterEach(Kit.teardown);

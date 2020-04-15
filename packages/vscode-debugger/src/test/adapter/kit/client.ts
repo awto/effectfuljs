@@ -5,7 +5,6 @@ import {
   IPartialLocation,
   ILocation
 } from "vscode-debugadapter-testsupport/lib/debugClient";
-import { DebugSession } from "../../../session";
 
 export class DebugClient extends Support.DebugClient {
   constructor(executable: string) {

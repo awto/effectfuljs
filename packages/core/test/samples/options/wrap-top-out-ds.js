@@ -106,26 +106,36 @@ var $M = require("@effectful/debugger/api"),
       /*somethingElse*/
       $m$12($));
       $.goto = 1;
-      $p = /*#__PURE__*/($context.call = $m$8($))();
+      $brk("3:8-8:12");
       $.state = 1;
 
     case 1:
-      $lset($l, 8,
-      /*Some*/
-      $p);
       $.goto = 2;
-      $brk("10:2-10:12");
+      $p = /*#__PURE__*/($context.call = $m$8($))();
       $.state = 2;
 
     case 2:
-      $lset($l, 9,
-      /*b*/
-      a);
+      $lset($l, 8,
+      /*Some*/
+      $p);
       $.goto = 3;
-      $p = ($context.call = $l[1])($l[8], 3);
+      $brk("10:2-10:12");
       $.state = 3;
 
     case 3:
+      $lset($l, 9,
+      /*b*/
+      a);
+      $.goto = 4;
+      $brk("14:11-14:28");
+      $.state = 4;
+
+    case 4:
+      $.goto = 5;
+      $p = ($context.call = $l[1])($l[8], 3);
+      $.state = 5;
+
+    case 5:
       $lset($l, 11,
       /*_Some*/
       $p);
@@ -135,20 +145,20 @@ var $M = require("@effectful/debugger/api"),
       $lset($l, 13,
       /*b2*/
       $l[11][2]);
-      $.goto = 5;
+      $.goto = 7;
       continue;
 
-    case 4:
-      $.goto = 5;
+    case 6:
+      $.goto = 7;
       return $unhandled($.error);
 
-    case 5:
+    case 7:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 0, [[2, null, $s$2], [4, "10:2-10:12", $s$2], [2, null, $s$2], [0, null, $s$2], [16, "23:0-23:0", $s$1], [16, "23:0-23:0", $s$1]]),
+}, null, null, 0, [[4, "3:8-8:12", $s$2], [2, null, $s$2], [4, "10:2-10:12", $s$2], [4, "14:11-14:28", $s$2], [2, null, $s$2], [0, null, $s$2], [16, "23:0-23:0", $s$1], [16, "23:0-23:0", $s$1]]),
     $m$1 = $M.fun("m$1", "_slicedToArray", null, $m$0, ["arr", "i"], 0, 3, null, 0, function _slicedToArray($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -789,22 +799,27 @@ var $M = require("@effectful/debugger/api"),
       $lset($l, 2,
       /*_proto*/
       $l[1].prototype);
-      $set($l[2], "a", $m$10($));
-      $.result = $l[1];
-      $.goto = 2;
-      continue;
+      $.goto = 1;
+      $brk("4:4-8:11");
+      $.state = 1;
 
     case 1:
-      $.goto = 2;
-      return $unhandled($.error);
+      $set($l[2], "a", $m$10($));
+      $.result = $l[1];
+      $.goto = 3;
+      continue;
 
     case 2:
+      $.goto = 3;
+      return $unhandled($.error);
+
+    case 3:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[0, null, $s$13], [16, null, $s$13], [16, null, $s$13]]),
+}, null, null, 1, [[4, "4:4-8:11", $s$13], [0, null, $s$13], [16, null, $s$13], [16, null, $s$13]]),
     $m$9 = $M.fun("m$9", "Some", null, $m$8, [], 0, 1, null, 0, function Some($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

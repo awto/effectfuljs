@@ -337,6 +337,19 @@ export function next(node) {
   return node.firstChild || after(node);
 }
 
+/** prev node in DFT order before `node` */
+export function prev(node) {
+  const { parent } = node;
+  if (parent && parent.firstChild === node)
+    return parent;
+  for(let i = node.prevSibling;;) {
+    const {firstChild} = i
+    if (!firstChild)
+      return i;
+    i = firstChild.prevSibling;
+  }
+}
+
 /** traverses range [from,to) */
 export function* dft(from, to = from.nextSibling) {
   let i = from;

@@ -1603,127 +1603,167 @@ var $M = require("@effectful/debugger/api"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = ($context.call = eff_1)();
+      $brk("88:9-88:33");
       $.state = 1;
 
     case 1:
-      $l[4] = $p;
       $.goto = 2;
-      $p = ($context.call = $l[0][5])($l[4]);
+      $p = ($context.call = eff_1)();
       $.state = 2;
 
     case 2:
-      $l[5] = $p;
-      $l[6] = $l[5][1];
-      $l[7] = $l[5][2];
+      $l[4] = $p;
       $.goto = 3;
-      $p = $mcall("slice", $l[5], 3);
+      $p = ($context.call = $l[0][5])($l[4]);
       $.state = 3;
 
     case 3:
-      $l[8] = $p;
+      $l[5] = $p;
+      $l[6] = $l[5][1];
+      $l[7] = $l[5][2];
       $.goto = 4;
-      $p = ($context.call = eff)(2);
+      $p = $mcall("slice", $l[5], 3);
       $.state = 4;
 
     case 4:
-      $l[9] = $p;
+      $l[8] = $p;
       $.goto = 5;
-      $p = ($context.call = $l[0][5])($l[9].m);
+      $brk("90:4-91:12");
       $.state = 5;
 
     case 5:
+      $.goto = 6;
+      $p = ($context.call = eff)(2);
+      $.state = 6;
+
+    case 6:
+      $l[9] = $p;
+      $.goto = 7;
+      $p = ($context.call = $l[0][5])($l[9].m);
+      $.state = 7;
+
+    case 7:
       $l[10] = $p;
       $l[11] = $l[10][0];
       $l[12] = $l[10][1];
       $l[13] = $l[12].b;
       $l[14] = $l[12].m;
-      $.goto = 6;
-      $p = ($context.call = $l[0][3])($l[12], ["b", "m"]);
-      $.state = 6;
-
-    case 6:
-      $l[15] = $p;
-      $.goto = 7;
-      $p = $mcall("slice", $l[10], 2);
-      $.state = 7;
-
-    case 7:
-      $l[16] = $p;
       $.goto = 8;
-      $p = ($context.call = eff_1)();
+      $p = ($context.call = $l[0][3])($l[12], ["b", "m"]);
       $.state = 8;
 
     case 8:
-      $l[21] = $p;
+      $l[15] = $p;
       $.goto = 9;
-      $p = ($context.call = eff)(2);
+      $p = $mcall("slice", $l[10], 2);
       $.state = 9;
 
     case 9:
-      $l[1] = $p;
+      $l[16] = $p;
       $.goto = 10;
-      $p = ($context.call = $l[0][1])($l[1].m, 2);
+      $brk("92:13-96:3");
       $.state = 10;
 
     case 10:
+      $.goto = 11;
+      $p = ($context.call = eff_1)();
+      $.state = 11;
+
+    case 11:
+      $l[21] = $p;
+      $.goto = 12;
+      $p = ($context.call = eff)(2);
+      $.state = 12;
+
+    case 12:
+      $l[1] = $p;
+      $.goto = 13;
+      $p = ($context.call = $l[0][1])($l[1].m, 2);
+      $.state = 13;
+
+    case 13:
       $l[2] = $p;
       $l[11] = $l[2][0];
       $l[3] = $l[2][1];
       $l[13] = $l[3].b;
       $l[14] = $l[3].m;
-      $.goto = 11;
-      $p = ($context.call = $l[0][3])($l[3], ["b", "m"]);
-      $.state = 11;
-
-    case 11:
-      $l[15] = $p;
-      $.goto = 12;
-      $p = ($context.call = $l[21])($l[1]);
-      $.state = 12;
-
-    case 12:
-      $l[17] = $p;
-      $.goto = 13;
-      $p = ($context.call = $l[0][1])($l[17], 3);
-      $.state = 13;
-
-    case 13:
-      $l[18] = $p;
-      $l[6] = $l[18][1];
-      $l[7] = $l[18][2];
       $.goto = 14;
-      $p = ($context.call = eff_4)();
+      $p = ($context.call = $l[0][3])($l[3], ["b", "m"]);
       $.state = 14;
 
     case 14:
-      $l[19] = $p;
+      $l[15] = $p;
       $.goto = 15;
-      $p = ($context.call = $l[0][5])($l[19]);
+      $p = ($context.call = $l[21])($l[1]);
       $.state = 15;
 
     case 15:
-      $l[20] = $p;
-      $l[6] = $l[20][0];
+      $l[17] = $p;
       $.goto = 16;
-      $p = $mcall("slice", $l[20], 1);
+      $p = ($context.call = $l[0][1])($l[17], 3);
       $.state = 16;
 
     case 16:
-      $l[8] = $p;
-      $.goto = 18;
-      continue;
+      $l[18] = $p;
+      $.goto = 17;
+      $brk("92:5-92:6");
+      $.state = 17;
 
     case 17:
+      $l[6] = $l[18][1];
       $.goto = 18;
-      return $unhandled($.error);
+      $brk("92:8-92:9");
+      $.state = 18;
 
     case 18:
+      $l[7] = $l[18][2];
+      $.goto = 19;
+      $brk("97:17-97:24");
+      $.state = 19;
+
+    case 19:
+      $.goto = 20;
+      $p = ($context.call = eff_4)();
+      $.state = 20;
+
+    case 20:
+      $l[19] = $p;
+      $.goto = 21;
+      $p = ($context.call = $l[0][5])($l[19]);
+      $.state = 21;
+
+    case 21:
+      $l[20] = $p;
+      $.goto = 22;
+      $brk("97:3-97:4");
+      $.state = 22;
+
+    case 22:
+      $l[6] = $l[20][0];
+      $.goto = 23;
+      $brk("97:9-97:13");
+      $.state = 23;
+
+    case 23:
+      $.goto = 24;
+      $p = $mcall("slice", $l[20], 1);
+      $.state = 24;
+
+    case 24:
+      $l[8] = $p;
+      $.goto = 26;
+      continue;
+
+    case 25:
+      $.goto = 26;
+      return $unhandled($.error);
+
+    case 26:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[2, "88:26-88:33", $s$24], [2, null, $s$24], [2, null, $s$24], [2, "91:6-91:12", $s$24], [2, null, $s$24], [2, null, $s$24], [2, null, $s$24], [2, "92:13-92:20", $s$24], [2, "95:8-95:14", $s$24], [2, null, $s$24], [2, null, $s$24], [2, "92:13-96:3", $s$24], [2, null, $s$24], [2, "97:17-97:24", $s$24], [2, null, $s$24], [2, null, $s$24], [0, null, $s$24], [16, "98:1-98:1", $s$24], [16, "98:1-98:1", $s$24]]);
+}, null, null, 1, [[4, "88:9-88:33", $s$24], [2, "88:26-88:33", $s$24], [2, null, $s$24], [2, null, $s$24], [4, "90:4-91:12", $s$24], [2, "91:6-91:12", $s$24], [2, null, $s$24], [2, null, $s$24], [2, null, $s$24], [4, "92:13-96:3", $s$24], [2, "92:13-92:20", $s$24], [2, "95:8-95:14", $s$24], [2, null, $s$24], [2, null, $s$24], [2, "92:13-96:3", $s$24], [2, null, $s$24], [4, "92:5-92:6", $s$24], [4, "92:8-92:9", $s$24], [4, "97:17-97:24", $s$24], [2, "97:17-97:24", $s$24], [2, null, $s$24], [4, "97:3-97:4", $s$24], [4, "97:9-97:13", $s$24], [2, null, $s$24], [0, null, $s$24], [16, "98:1-98:1", $s$24], [16, "98:1-98:1", $s$24]]);
 
 $M.moduleExports();

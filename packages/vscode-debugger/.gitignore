@@ -2,3 +2,4 @@ log
 .DS_Store
 out
 .vscode-test
+*.vsix

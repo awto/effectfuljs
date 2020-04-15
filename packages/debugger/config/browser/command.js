@@ -13,7 +13,7 @@ exports.builder = function(yargs) {
       default: defaults.port,
       type: "number"
     })
-    .option("indexJs", {
+    .option("index-js", {
       type: "string",
       describe: "index.js file"
     })
@@ -33,7 +33,7 @@ exports.handler = function(argv) {
   if (argv.timeTravel) process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL = 1;
   if (argv.timeTravelDisabled)
     process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED = 1;
-  if (argv.backend) process.env.EFFECTFUL_DEBUGGER_BACKEND = argv.backend;
+  if (argv.runtime) process.env.EFFECTFUL_DEBUGGER_RUNTIME = argv.runtime;
   if (argv.cache) process.env.EFFECTFUL_DEBUGGER_CACHE = 1;
   if (argv.open) process.env.EFFECTFUL_DEBUGGER_OPEN = 1;
   if (argv.url) process.env.EFFECTFUL_DEBUGGER_URL = argv.url;
@@ -41,11 +41,13 @@ exports.handler = function(argv) {
   if (argv.port) process.env.EFFECTFUL_DEBUGGER_PORT = argv.port;
   if (argv.verbose) process.env.EFFECTFUL_DEBUGGER_VERBOSE = 1;
   if (argv.indexJs) process.env.EFFECTFUL_DEBUGGER_INDEX_JS = argv.indexJs;
-  if (argv.instrument) process.env.EFFECTFUL_INSTRUMENT = 1;
-  if (argv.instrumentDeps) process.env.EFFECTFUL_INSTRUMENT_DEPS = 1;
+  process.env.EFFECTFUL_DEBUGGER_INSTRUMENT = argv.instrument;
+  process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = argv.instrumentDeps;
+  if (argv.runtimePackages)
+    process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES = argv.runtimePackages;
   process.env.EFFECTFUL_DEBUGGER_ZERO_CONFIG = argv.zeroConfig ? 1 : 0;
   if (argv.htmlTemplate)
-    process.env.EFFECTFUL_HTML_TEMPLATE = argv.htmlTemplate;
+    process.env.EFFECTFUL_DEBUGGER_HTML_TEMPLATE = argv.htmlTemplate;
   process.env.EFFECTFUL_DEBUGGER_WEBPACK = 1;
   process.env.EFFECTFUL_DEBUGGER = 1;
   require("./server");

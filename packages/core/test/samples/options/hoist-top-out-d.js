@@ -116,48 +116,63 @@ var $M = require("@effectful/debugger/api"),
 
     case 5:
       $.goto = 6;
-      $p = ($context.call = $l[3])($l[1].default, 2);
+      $brk("3:14-3:20");
       $.state = 6;
 
     case 6:
+      $.goto = 7;
+      $p = ($context.call = $l[3])($l[1].default, 2);
+      $.state = 7;
+
+    case 7:
       $l[9] = $p;
       $l[10] = $l[9][1];
       module.exports.a = $l[10];
       $l[17] = $m$12($);
-      $.goto = 7;
-      $p = /*#__PURE__*/($context.call = $m$9($))();
-      $.state = 7;
-
-    case 7:
-      $l[12] = $p;
       $.goto = 8;
-      $brk("11:2-11:12");
+      $brk("6:8-9:12");
       $.state = 8;
 
     case 8:
-      $l[13] = $l[10];
       $.goto = 9;
-      $p = ($context.call = $l[3])($l[12], 3);
+      $p = /*#__PURE__*/($context.call = $m$9($))();
       $.state = 9;
 
     case 9:
+      $l[12] = $p;
+      $.goto = 10;
+      $brk("11:2-11:12");
+      $.state = 10;
+
+    case 10:
+      $l[13] = $l[10];
+      $.goto = 11;
+      $brk("12:11-12:28");
+      $.state = 11;
+
+    case 11:
+      $.goto = 12;
+      $p = ($context.call = $l[3])($l[12], 3);
+      $.state = 12;
+
+    case 12:
       $l[14] = $p;
       $l[15] = $l[14][1];
       $l[16] = $l[14][2];
-      $.goto = 11;
+      $.goto = 14;
       continue;
 
-    case 10:
-      $.goto = 11;
+    case 13:
+      $.goto = 14;
       return $unhandled($.error);
 
-    case 11:
+    case 14:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 0, [[4, "2:0-2:21", $s$1], [2, null, $s$1], [2, null, $s$1], [4, "1:0-1:16", $s$1], [2, "1:0-1:15", $s$1], [2, null, $s$1], [2, null, $s$2], [4, "11:2-11:12", $s$2], [2, null, $s$2], [0, null, $s$2], [16, "20:0-20:0", $s$1], [16, "20:0-20:0", $s$1]]),
+}, null, null, 0, [[4, "2:0-2:21", $s$1], [2, null, $s$1], [2, null, $s$1], [4, "1:0-1:16", $s$1], [2, "1:0-1:15", $s$1], [4, "3:14-3:20", $s$1], [2, null, $s$1], [4, "6:8-9:12", $s$2], [2, null, $s$2], [4, "11:2-11:12", $s$2], [4, "12:11-12:28", $s$2], [2, null, $s$2], [0, null, $s$2], [16, "20:0-20:0", $s$1], [16, "20:0-20:0", $s$1]]),
     $m$1 = $M.fun("m$1", "_interopRequireDefault", null, $m$0, ["obj"], 1, 2, null, 0, function _interopRequireDefault($, $l, $p) {
   var $1;
 
@@ -730,22 +745,27 @@ var $M = require("@effectful/debugger/api"),
     case 0:
       $l[1] = $m$10($);
       $l[2] = $l[1].prototype;
-      $l[2].a = $m$11($);
-      $.result = $l[1];
-      $.goto = 2;
-      continue;
+      $.goto = 1;
+      $brk("7:4-9:11");
+      $.state = 1;
 
     case 1:
-      $.goto = 2;
-      return $unhandled($.error);
+      $l[2].a = $m$11($);
+      $.result = $l[1];
+      $.goto = 3;
+      continue;
 
     case 2:
+      $.goto = 3;
+      return $unhandled($.error);
+
+    case 3:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[0, null, $s$12], [16, null, $s$12], [16, null, $s$12]]),
+}, null, null, 1, [[4, "7:4-9:11", $s$12], [0, null, $s$12], [16, null, $s$12], [16, null, $s$12]]),
     $m$10 = $M.fun("m$10", "Some", null, $m$9, [], 0, 1, null, 0, function Some($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

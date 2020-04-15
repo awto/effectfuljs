@@ -15,8 +15,8 @@ require("yargs")
     alias: "u",
     type: "string"
   })
-  .option("backend", {
-    alias: "b",
+  .option("runtime", {
+    alias: "r",
     type: "string",
     default: "vscode"
   })
@@ -37,13 +37,12 @@ require("yargs")
     type: "boolean"
   })
   .option("src-root", {
-    alias: ["r"],
     type: "string",
     describe: "sources root folder location"
   })
-  .option("extension-root", {
+  .option("runtime-packages", {
     type: "string",
-    describe: "VSCode extension's root folder"
+    describe: "debugger's own packages root (for NODE_PATH)"
   })
   .option("zero-config", {
     alias: ["z", "zero_config"],

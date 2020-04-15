@@ -18,14 +18,16 @@ export function injectBrk() {
     switch (i.type) {
       case Tag.ArrowFunctionExpression:
         const body = i.firstChild.prevSibling;
-        if (body.type !== Tag.BlockStatement && body.node.loc) {
+        if (body.type !== Tag.BlockStatement) {
           const brk = brkExpr(body);
-          const seq = Kit.node(Tag.body, Tag.SequenceExpression);
-          Kit.replace(body, seq);
-          const arr = Kit.append(seq, Kit.arr(Tag.expressions));
-          body.pos = brk.pos = Tag.push;
-          Kit.append(arr, brk);
-          Kit.append(arr, body);
+          if (brk) {
+            const seq = Kit.node(Tag.body, Tag.SequenceExpression);
+            Kit.replace(body, seq);
+            const arr = Kit.append(seq, Kit.arr(Tag.expressions));
+            body.pos = brk.pos = Tag.push;
+            Kit.append(arr, brk);
+            Kit.append(arr, body);
+          }
         }
         break;
       case Tag.VariableDeclaration:
@@ -43,7 +45,7 @@ export function injectBrk() {
       case Tag.WhileStatement:
       case Tag.DoWhileStatement:
       case Tag.ForOfStatement:
-      case Tag.LabeledStatement:
+      case Tag.LabeledStatement: {
         if (i.pos !== Tag.push && i.parent.type !== Tag.LabeledStatement) {
           const block = Kit.node(i.pos, Tag.BlockStatement);
           i.pos = Tag.push;
@@ -52,22 +54,30 @@ export function injectBrk() {
           Kit.detach(i);
           Kit.append(arr, i);
         }
-        if (i.node.loc)
+        const expr = brkExpr(i);
+        if (expr)
           Kit.append(
             Kit.insertBefore(i, Kit.node(Tag.push, Tag.ExpressionStatement)),
-            brkExpr(i)
+            expr
           );
         for (; i.type === Tag.LabeldStatement; i = i.firstChild.nextSibling) {}
         break;
-      case Tag.DebuggerStatement:
-        Kit.append(
-          Kit.replace(i, Kit.node(Tag.push, Tag.ExpressionStatement)),
-          brkExpr(i)
-        ).brkFlags |= Scope.DEBUGGER_STMT_BRK_FLAG;
+      }
+      case Tag.DebuggerStatement: {
+        const expr = brkExpr(i);
+        if (expr)
+          Kit.append(
+            Kit.replace(i, Kit.node(Tag.push, Tag.ExpressionStatement)),
+            expr
+          ).brkFlags |= Scope.DEBUGGER_STMT_BRK_FLAG;
         break;
+      }
     }
   } while ((i = n) !== root);
   function brkExpr(i) {
+    const loc = Kit.approxLoc(i);
+    i.node.loc = loc;
+    if (!loc) return null;
     const call = Kit.node(Tag.expression, Tag.CallExpression);
     call.eff = true;
     call.refDoc = i;
@@ -77,7 +87,7 @@ export function injectBrk() {
       Kit.arr(Tag.arguments, [])
     );
     if (DEBUG_BRKS) Kit.append(args, Kit.num(Tag.push, debNum++));
-    Kit.append(args, Kit.emitConst(Tag.push, Kit.locStr(i.node.loc)));
+    Kit.append(args, Kit.emitConst(Tag.push, Kit.locStr(loc)));
     return call;
   }
 }

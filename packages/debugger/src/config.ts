@@ -9,7 +9,7 @@ export default {
   persistState: true,
   /** Track DOM changes using MutationObserver */
   mutationObserver: true,
-  /** Output debugging information to console (for some backends) */
+  /** Output debugging information to console (for some runtimes) */
   verbose: 0,
   /** URL to connect back to debugger adapter */
   url: "ws://localhost:20011",

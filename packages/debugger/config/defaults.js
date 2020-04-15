@@ -7,19 +7,21 @@ config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL);
 config.timeTravelDisabled = isTrue(
   process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED
 );
+
 const { normalizeDrive } = require("../state");
+
 config.srcRoot = normalizeDrive(
   fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || ".")
 );
 
-config.extensionRoot = normalizeDrive(
+config.runtimePackages = normalizeDrive(
   fs.realpathSync(
-    process.env.EFFECTFUL_DEBUGGER_EXTENSION_ROOT ||
+    process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES ||
       path.join(__dirname, "..", "..")
   )
 );
 
-config.backend = process.env.EFFECTFUL_DEBUGGER_BACKEND || "vscode";
+config.runtime = process.env.EFFECTFUL_DEBUGGER_RUNTIME || "vscode";
 config.cache =
   isTrue(process.env.EFFECTFUL_DEBUGGER_CACHE) ||
   !isTrue(process.BABEL_DISABLE_CACHE);
@@ -60,14 +62,6 @@ config.instrumentDeps = isTrue(
 if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
 
 config.expEagerModuleExport = false;
-
-config.builtInBackends = {
-  vscode: true,
-  standalone: true,
-  standaloneTrace: true,
-  react: true
-};
-
 
 module.exports = config;
 
