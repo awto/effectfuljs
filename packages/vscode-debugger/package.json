@@ -4,7 +4,7 @@
   "displayName": "EffectfulJS Debugger",
   "description": "Debug your JavaScipt/TypeScript applications with time-traveling, hot swapping, persistent state, scripting and more",
   "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "license": "MIT",
   "homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
   "icon": "icon.png",
@@ -269,7 +269,7 @@
     "test:ide": "node ./testExtension.js"
   },
   "devDependencies": {
-    "@effectful/debugger": "^1.3.1",
+    "@effectful/debugger": "^1.3.2",
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.12.21",
     "@types/puppeteer": "^1.20.2",
