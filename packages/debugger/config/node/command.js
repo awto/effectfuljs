@@ -5,14 +5,14 @@ exports.command = "node";
 exports.describe =
   "runs a command line with all `node` invocations are intercepted by the debugger";
 
-exports.builder = function(yargs) {
+exports.builder = function (yargs) {
   yargs.option("command", {
     alias: ["c", "_"],
-    describe: "Command string to execute"
+    describe: "Command string to execute",
   });
 };
 
-exports.handler = function(argv) {
+exports.handler = function (argv) {
   const command = argv.command ? [argv.command] : argv._.slice(1);
   if (command.length) {
     const ext = path.extname(command[0]);
@@ -41,7 +41,7 @@ exports.handler = function(argv) {
     EFFECTFUL_DEBUGGER_VERBOSE: config.verbose,
     EFFECTFUL_DEBUGGER_ZERO_CONFIG: config.zeroConfig,
     EFFECTFUL_DEBUGGER_INSTRUMENT: config.instrument,
-    EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: config.instrumentDeps
+    EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: config.instrumentDeps,
   };
   if (config.runtimePackages)
     env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES = config.runtimePackages;

@@ -4,31 +4,31 @@ exports.command = "browser";
 
 exports.describe = "starts a configured webpack-dev-server";
 
-exports.builder = function(yargs) {
+exports.builder = function (yargs) {
   yargs
     .strict()
     .option("port", {
       describe: "dev-server listening port",
       alias: "p",
       default: defaults.port,
-      type: "number"
+      type: "number",
     })
     .option("index-js", {
       type: "string",
-      describe: "index.js file"
+      describe: "index.js file",
     })
     .option("html-template", {
       type: "string",
-      describe: "webpack HTML template file"
+      describe: "webpack HTML template file",
     })
     .option("open", {
       describe: "open the URL",
       default: false,
-      boolean: true
+      boolean: true,
     });
 };
 
-exports.handler = function(argv) {
+exports.handler = function (argv) {
   if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
   if (argv.timeTravel) process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL = 1;
   if (argv.timeTravelDisabled)

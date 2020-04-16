@@ -7,9 +7,9 @@ import { journal, context } from "../state";
 import * as S from "@effectful/serialization";
 import { Core } from "./main";
 
-const record = config.timeTravel ? TTCore.record : function() {};
-const record2 = config.timeTravel ? Binds.record2 : function() {};
-const record3 = config.timeTravel ? Binds.record3 : function() {};
+const record = config.timeTravel ? TTCore.record : function () {};
+const record2 = config.timeTravel ? Binds.record2 : function () {};
+const record3 = config.timeTravel ? Binds.record3 : function () {};
 
 const SavedMap = Map;
 const Ap = Array.prototype;
@@ -76,13 +76,16 @@ function mapDelOp(this: any) {
 
 regOpaqueObject(mapDelOp, "#map$d");
 
-function mapDel<K, V>(inner: Map<K, MapEntry<K, V>>, entry: MapEntry<K, V>, enabled: boolean) {
+function mapDel<K, V>(
+  inner: Map<K, MapEntry<K, V>>,
+  entry: MapEntry<K, V>,
+  enabled: boolean
+) {
   inner.delete(entry.k);
   const { next, prev } = entry;
   next.prev = prev;
   prev.next = next;
-  if (enabled)
-    record2(restoreEntryOp, inner, entry);
+  if (enabled) record2(restoreEntryOp, inner, entry);
 }
 
 type SavedMap<K, V> = Map<K, V>;
@@ -176,7 +179,11 @@ export const ManagedMap = class Map<K, V> {
   delete(k: K): boolean {
     const entry = this.inner.get(k);
     if (!entry) return false;
-    mapDel(this.inner, entry, journal.enabled && context.call === ManagedMap.prototype.delete);
+    mapDel(
+      this.inner,
+      entry,
+      journal.enabled && context.call === ManagedMap.prototype.delete
+    );
     return true;
   }
   clear() {
@@ -268,7 +275,11 @@ export const ManagedSet = class Set<T> {
   delete(k: T): boolean {
     const entry = this.inner.get(k);
     if (!entry) return false;
-    mapDel(this.inner, entry, journal.enabled && context.call === ManagedSet.prototype.delete);
+    mapDel(
+      this.inner,
+      entry,
+      journal.enabled && context.call === ManagedSet.prototype.delete
+    );
     return true;
   }
   clear() {
@@ -325,7 +336,8 @@ if (config.timeTravel) {
         context.call = context.call === set ? Object.defineProperty : null;
         Object.defineProperty(key, this.prop, {
           configurable: true,
-          value
+          writable: true,
+          value,
         });
         break;
       default:
@@ -350,7 +362,8 @@ if (config.timeTravel) {
         context.call = context.call === add ? Object.defineProperty : null;
         Object.defineProperty(value, this.prop, {
           configurable: true,
-          value: true
+          writable: true,
+          value: true,
         });
         break;
       default:

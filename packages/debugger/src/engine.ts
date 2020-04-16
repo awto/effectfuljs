@@ -205,7 +205,7 @@ export function fun(
       scopeDepth: scope[2],
       location: strLoc(line, column, endLine, endColumn),
       breakpoint: null,
-      logPoint: null
+      logPoint: null,
     };
     regOpaqueObject(brk, `s#${persistName}#${id}`);
     memo.push(brk);
@@ -299,7 +299,7 @@ export function fun(
     `${ctx}m`,
     `${ctx}M`,
     `${ctx}clos`,
-    `${ctx}frame`
+    `${ctx}frame`,
   ];
   const cjs = curModule.cjs;
   const args = [
@@ -316,7 +316,7 @@ export function fun(
         : api.frameA
       : isGenerator
       ? api.frameG
-      : api.frame
+      : api.frame,
   ];
   constrParams.push(`return (function(${ctx}$){
     return ${ctx}clos(${ctx}$,${ctx}m,(function ${funcName}(${meta.params.join()}) {
@@ -412,7 +412,7 @@ let threadScheduled = false;
 export function signalThread() {
   if (threadScheduled) return;
   threadScheduled = true;
-  asap(function() {
+  asap(function () {
     threadScheduled = false;
     context.onThread();
   });
@@ -512,9 +512,12 @@ export function loop(value: any): any {
           console.error(
             `Uncaught exception: ${e}(on any:${!!context.brkOnAnyException},on uncaught:${!!context.brkOnUncaughtException})`
           );
-          if (config.debuggerDebug)
+          if (config.debuggerDebug && e.stack) {
+            // tslint:disable-next-line:no-console
+            console.error("Real stack:", e.stack);
             // tslint:disable-next-line:no-console
             console.error("Original stack:", e._deb_stack);
+          }
         }
         throw e;
       }
@@ -563,7 +566,7 @@ function checkErrBrk(frame: Frame, e: any): boolean {
       for (let i: Frame | null = frame; i; i = i.next) {
         if (i.brk)
           stack.push(
-            `    at ${i.meta.name} (${i.meta.module.name}:${i.brk.line}:${i.brk.column})`
+            `    at ${i.meta.origName} (${i.meta.module.name}:${i.brk.line}:${i.brk.column})`
           );
       }
       if (config.debuggerDebug) {
@@ -681,7 +684,7 @@ export function compileEvalToString(
     const id = toGlobal(evalCnt++);
     if (!blackbox) context.onNewSource(id, code);
     const ast = babelParse(code, {
-      allowReturnOutsideFunction: true
+      allowReturnOutsideFunction: true,
     });
     if (params == null) {
       const body = <any>ast.program.body;
@@ -702,14 +705,14 @@ export function compileEvalToString(
         filename: `VM${id}.js`,
         iifeWrap: true,
         moduleExports: params == null ? "execModule" : "retModule",
-        constrParams: { code }
+        constrParams: { code },
       }),
       { compact: true }
     ).code;
     indirMemo.set(key, tgt);
     return `(function() { ${tgt}; })()`;
   } finally {
-    journal.enabled = savedEnabled
+    journal.enabled = savedEnabled;
   }
 }
 
@@ -786,67 +789,66 @@ export function compileEval(
   id?: number
 ): FunctionDescr {
   const savedEnabled = journal.enabled;
-try {
-
-  if (id == null) id = toGlobal(evalCnt++);
-  if (!blackbox) context.onNewSource(id, code);
-  const ast = babelParse(code, {
-    allowReturnOutsideFunction: true
-  });
-  if (params == null) {
-    const body = <any>ast.program.body;
-    if (body.length === 1 && body[0].type === "ExpressionStatement")
-      body[0] = { type: "ReturnStatement", argument: body[0].expression };
-  }
-  const tgt = babelGenerate(
-    T.run(ast, {
-      preInstrumentedLibs: true,
-      blackbox,
-      pureModule: true,
+  try {
+    if (id == null) id = toGlobal(evalCnt++);
+    if (!blackbox) context.onNewSource(id, code);
+    const ast = babelParse(code, {
+      allowReturnOutsideFunction: true,
+    });
+    if (params == null) {
+      const body = <any>ast.program.body;
+      if (body.length === 1 && body[0].type === "ExpressionStatement")
+        body[0] = { type: "ReturnStatement", argument: body[0].expression };
+    }
+    const tgt = babelGenerate(
+      T.run(ast, {
+        preInstrumentedLibs: true,
+        blackbox,
+        pureModule: true,
+        evalContext,
+        evalParams: params,
+        directEval: evalContext != null,
+        rt: false,
+        ns: globalNS,
+        relativeName: id,
+        filename: `VM${id}.js`,
+        moduleExports: null,
+        iifeWrap: false,
+        scopeDepth,
+        constrParams: null,
+      }),
+      { compact: true }
+    ).code;
+    const cjs = mod && mod.cjs;
+    new SavedFunction(
+      "exports",
+      "require",
+      "module",
+      "__filename",
+      "__dirname",
+      tgt
+    )(
+      // exports,
+      mod && (<any>mod).exports,
+      cjs && (cjs.__effectful_js_require || cjs.require),
+      mod,
+      mod ? mod.fullPath : ".",
+      mod && mod.fullPath ? path.dirname(mod.fullPath) : ""
+    );
+    curModule.params = {
+      code,
+      parent: mod && (mod.fullPath || mod.id),
       evalContext,
-      evalParams: params,
-      directEval: evalContext != null,
-      rt: false,
-      ns: globalNS,
-      relativeName: id,
-      filename: `VM${id}.js`,
-      moduleExports: null,
-      iifeWrap: false,
       scopeDepth,
-      constrParams: null
-    }),
-    { compact: true }
-  ).code;
-  const cjs = mod && mod.cjs;
-  new SavedFunction(
-    "exports",
-    "require",
-    "module",
-    "__filename",
-    "__dirname",
-    tgt
-  )(
-    // exports,
-    mod && (<any>mod).exports,
-    cjs && (cjs.__effectful_js_require || cjs.require),
-    mod,
-    mod ? mod.fullPath : ".",
-    mod && mod.fullPath ? path.dirname(mod.fullPath) : ""
-  );
-  curModule.params = {
-    code,
-    parent: mod && (mod.fullPath || mod.id),
-    evalContext,
-    scopeDepth,
-    id,
-    params,
-    blackbox
-  };
-  const res = curModule.topLevel;
-  return res;
-} finally {
-  journal.enabled = savedEnabled
-}
+      id,
+      params,
+      blackbox,
+    };
+    const res = curModule.topLevel;
+    return res;
+  } finally {
+    journal.enabled = savedEnabled;
+  }
 }
 
 export function isDelayedResult(value: any): boolean {
@@ -881,7 +883,7 @@ export function makeFrame(closure: any, newTarget: any): Frame {
     result: void 0,
     error: void 0,
     self: void 0,
-    args: void 0
+    args: void 0,
   };
   return frame;
 }
@@ -929,7 +931,7 @@ export function checkExitBrk(top: Frame, value: any) {
         brk,
         debug: context.debug,
         value: context.value,
-        stopOnEntry: true
+        stopOnEntry: true,
       });
       context.top = null;
       signalThread();
@@ -987,7 +989,7 @@ export function brk(): any {
         brk: p,
         debug: context.debug,
         value: context.value,
-        stopOnEntry
+        stopOnEntry,
       });
       context.top = null;
       signalThread();
@@ -1022,7 +1024,7 @@ export function then(
 }
 
 export function liftSync(fun: (this: any, ...args: any[]) => any): any {
-  return function(this: any) {
+  return function (this: any) {
     const savedDebug = context.debug;
     try {
       context.debug = false;

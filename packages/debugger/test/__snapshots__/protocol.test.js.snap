@@ -21969,9 +21969,9 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
-    at m$2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
-    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at func1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
+    at func2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "func1",
             },
@@ -22024,9 +22024,9 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
-    at m$2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
-    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at func1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
+    at func2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "func2",
             },
@@ -22079,9 +22079,9 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
-    at m$2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
-    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at func1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
+    at func2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "exceptionBreakpoints.js",
               "func1": Object {
@@ -22136,15 +22136,15 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
-    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at func2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "func2",
               "e": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
-    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at func2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
             },
             Object {
@@ -22196,8 +22196,8 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
-    at m$0 (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at func2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
               },
               "[name]": "exceptionBreakpoints.js",
               "func1": Object {
@@ -24213,13 +24213,13 @@ Object {
               "@error": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$0 (test/__fixtures__/exceptionBreakpointsUncaught.js:4:2)",
+    at exceptionBreakpointsUncaught.js (test/__fixtures__/exceptionBreakpointsUncaught.js:4:2)",
               },
               "[name]": "exceptionBreakpointsUncaught.js",
               "e": Object {
                 "message": "error",
                 "stack": "Error: error
-    at m$0 (test/__fixtures__/exceptionBreakpointsUncaught.js:4:2)",
+    at exceptionBreakpointsUncaught.js (test/__fixtures__/exceptionBreakpointsUncaught.js:4:2)",
               },
             },
           ],

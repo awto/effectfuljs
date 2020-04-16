@@ -1,4 +1,4 @@
-const config = require("config").default;
+const config = require("./config").default;
 let lib;
 {
   if (

@@ -7,7 +7,7 @@ const fs = require("fs");
 const cacheId = require("../cacheId");
 const {
   normalizeDrive,
-  saved: { Function }
+  saved: { Function },
 } = require("../../state");
 
 const babel = require("@babel/core");
@@ -20,8 +20,6 @@ const Module = module.constructor;
 const Mp = Module.prototype;
 
 const savedCompile = Mp._compile;
-
-// const savedConsole = console;
 
 const builtIn = Module.builtinModules.filter((i) => {
   switch (i) {
@@ -38,8 +36,8 @@ babelOpts = {
   ...babelOpts,
   caller: {
     name: "@effectful/debugger",
-    ...(babelOpts.caller || {})
-  }
+    ...(babelOpts.caller || {}),
+  },
 };
 
 const log = (...args) => console.log(...args);
@@ -85,7 +83,7 @@ const os = require("os");
 
 const DEFAULT_CACHE_DIR =
   findCacheDir({
-    name: "@effectful/debugger"
+    name: "@effectful/debugger",
   }) ||
   os.homedir() ||
   os.tmpdir();
@@ -169,21 +167,20 @@ Mp._compile = function _compile(content, filename) {
     disabled ||
     ext === ".json" ||
     (config.instrumentDeps && filename.startsWith(config.runtimePackages)) ||
-    !(
-      (config.instrumentDeps && filename.startsWith(nodeModules)) ||
-      filename.startsWith(rootPath)
-    )
+    filename.startsWith(nodeModules)
+      ? !config.instrumentDeps
+      : !filename.startsWith(rootPath)
   ) {
-    if (config.verbose > 1)
+    if (config.verbose > 2)
       log(`DEBUGGER: loading without instrumentation ${filename}`);
     return savedCompile.call(this, content, filename);
   }
   const blackbox = filename.startsWith(nodeModules);
   const moduleConfig = require("../defaults");
   const rt = requirePath(moduleConfig.runtime);
-  if (config.verbose) {
+  if (config.verbose > 1) {
     let msg = `DEBUGGER: compiling ${filename}, filename:${filename}, rt:${rt}`;
-    if (config.verbose > 1) msg += ` content:${JSON.stringify(content)}`;
+    if (config.verbose > 2) msg += ` content:${JSON.stringify(content)}`;
     log(msg);
   }
   disabled = true;
@@ -205,19 +202,19 @@ Mp._compile = function _compile(content, filename) {
                     blackbox,
                     timeTravel: config.timeTravel,
                     rt,
-                    staticBundler: false
-                  }
-                ]
+                    staticBundler: false,
+                  },
+                ],
               ],
               babelrc: false,
               configFile: false,
               ...babelOpts,
-              filename
+              filename,
             }
           : {
               sourceRoot: path.dirname(filename),
               ...deepClone(babelOpts),
-              filename
+              filename,
             }
       );
       cacheKey = `${filename}@${cacheId}`;
@@ -225,12 +222,12 @@ Mp._compile = function _compile(content, filename) {
       if (env) cacheKey += `@${env}`;
       cached = cacheData && cacheData[cacheKey];
       if (!cached || cached.mtime !== curMtime) {
-        if (config.verbose) {
+        if (config.verbose > 1) {
           let msg = "DEBUGGER: Rebuilding";
           if (!cached) {
             msg += "(not in cache)";
           } else {
-            if (config.verbose > 1) msg += `, key:{${cacheKey}}`;
+            if (config.verbose > 2) msg += `, key:{${cacheKey}}`;
             else msg += ` (${cached.mtime} < ${curMtime})`;
           }
           log(msg);
@@ -246,9 +243,9 @@ Mp._compile = function _compile(content, filename) {
           process.nextTick(saveCache);
         }
       } else {
-        if (config.verbose) {
+        if (config.verbose > 1) {
           let msg = "DEBUGGER: Using the cached version";
-          if (config.verbose > 1) msg += `: key:{${cacheKey}}`;
+          if (config.verbose > 2) msg += `: key:{${cacheKey}}`;
           log(msg);
         }
       }
@@ -257,11 +254,11 @@ Mp._compile = function _compile(content, filename) {
     require("./vm");
     if (config.hot && !blackbox) {
       let reloading = 0;
-      if (config.verbose)
+      if (config.verbose > 1)
         log(`DEBUGGER: enabling hot swapping for ${filename}`);
       fs.watch(filename, { persistent: false, encoding: "utf-8" }, (type) => {
         const nextMtime = mtime(filename);
-        if (config.verbose)
+        if (config.verbose > 1)
           log(`DEBUGGER: updating ${filename}`, type, curMtime, nextMtime);
         if (type !== "change" || curMtime === nextMtime) return;
         curMtime = nextMtime;
@@ -306,8 +303,8 @@ Mp._compile = function _compile(content, filename) {
         }, 500);
       });
     }
-    if (config.verbose) {
-      if (config.verbose > 1)
+    if (config.verbose > 1) {
+      if (config.verbose > 2)
         log(`DEBUGGER:compiled ${filename}: ${JSON.stringify(code)}`);
       else log(`DEBUGGER: ${filename} is compiled`);
     }

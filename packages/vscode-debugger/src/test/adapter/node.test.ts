@@ -74,7 +74,7 @@ suite("Debugging on NodeJS", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "program.js");
       return Promise.all([
         dc.configurationSequence(),
-        dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose: 2 }),
+        dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose: false }),
         dc.waitForEvent("terminated")
       ]);
     });
@@ -86,7 +86,8 @@ suite("Debugging on NodeJS", function() {
         dc.launch({
           command: `node ${PROGRAM}`,
           preset: "node",
-          stopOnEntry: true
+          stopOnEntry: true,
+          verbose: false
         }),
         dc.assertStoppedLocation("entry", { path: PROGRAM, line: ENTRY_LINE })
       ]);
@@ -586,7 +587,7 @@ suite("Debugging on NodeJS", function() {
     test("stdout and stderr events should be complete and in correct order", function() {
       return Promise.all([
         dc.configurationSequence(),
-        dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
+        dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose: false }),
         dc.assertOutput(
           "stdout",
           "Hello stdout 0\nHello stdout 1\nHello stdout 2\n"
@@ -603,7 +604,8 @@ suite("Debugging on NodeJS", function() {
         dc.launch({
           command: `node ${PROGRAM}`,
           preset: "node",
-          stopOnEntry: true
+          stopOnEntry: true,
+          verbose: false
         }),
         dc.assertStoppedLocation("entry", {
           path: PROGRAM,
@@ -837,7 +839,8 @@ suite("Debugging on NodeJS", function() {
         dc.launch({
           command: `node ${PROGRAM}`,
           preset: "node",
-          stopOnEntry: true
+          stopOnEntry: true,
+          verbose: false
         }),
         dc.assertStoppedLocation("entry", {
         path: PROGRAM,
@@ -896,7 +899,8 @@ suite("Debugging on NodeJS", function() {
       await dc.hitBreakpoint(
         {
           command: `node ${PROGRAM}`,
-          preset: "node"
+          preset: "node",
+          verbose: false
         },
         { path: PROGRAM, line: 2 }
       );
@@ -1080,7 +1084,8 @@ suite("Debugging on NodeJS", function() {
         dc.configurationSequence(),
         dc.launch({
           command: PROGRAM,
-          preset: "node"
+          preset: "node",
+          verbose: false
         }),
         dc.assertStoppedLocation("debugger_statement", { line: 3 })
       ]);

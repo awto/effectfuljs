@@ -11,7 +11,7 @@ const savedObject = {
   getPrototypeOf: Object.getPrototypeOf,
   getOwnPropertySymbols: Object.getOwnPropertySymbols,
   getOwnPropertyNames: Object.getOwnPropertyNames,
-  getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor
+  getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor,
 };
 
 // tslint:disable-next-line
@@ -61,7 +61,7 @@ export interface State {
 }
 
 export const options = {
-  descriptorSymForOpaque: true
+  descriptorSymForOpaque: true,
 };
 
 export interface IncompleteState {
@@ -190,14 +190,14 @@ export interface JSONArray extends Array<JSONValue> {}
 
 /* TODO after TS supports symbol indexes `{ [name: string | symbol]: boolean } */
 const defaultOverrideProps: any = {
-  [descriptorSymbol]: false
+  [descriptorSymbol]: false,
 };
 
 const funcOverrideProps: { [name: string]: boolean } = {
   arguments: false,
   caller: false,
   length: false,
-  name: false
+  name: false,
 };
 
 /** Describes how to read values of a type */
@@ -444,7 +444,7 @@ function makeBind(): (...args: any[]) => any {
   function bind(...rest: any[]): any {
     return (<any>bind)[boundFunSymbol].apply((<any>bind)[boundThisSymbol], [
       ...(<any>bind)[boundArgsSymbol],
-      ...rest
+      ...rest,
     ]);
   }
   (<any>bind)[descriptorSymbol] = BindDescriptor;
@@ -459,7 +459,7 @@ export const BindDescriptor = regDescriptor({
   write() {
     return {};
   },
-  overrideProps: { ...funcOverrideProps, prototype: false }
+  overrideProps: { ...funcOverrideProps, prototype: false },
 });
 
 /**
@@ -559,7 +559,7 @@ export class WriteContext {
 }
 
 if (SHOW_STACK)
-  (<any>WriteContext.prototype).showStack = function(
+  (<any>WriteContext.prototype).showStack = function (
     key: string | number,
     value: any
   ) {
@@ -648,7 +648,7 @@ export const descriptorTemplate: Descriptor = {
     if ((<JSONObject>json).p && savedObject.getPrototypeOf(value) === null) {
       savedObject.setPrototypeOf(value, ctx.step((<JSONObject>json).p));
     }
-  }
+  },
 };
 
 /**
@@ -686,7 +686,7 @@ function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
             descriptor,
             index,
             nextJob: ctx.jobs,
-            started: false
+            started: false,
           })
         );
         ctx.jobs = info;
@@ -710,7 +710,7 @@ function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
     readContent(ctx: ReadContext, json: JSONValue, value: any) {
       if ((<JSONObject>json).r != null) return;
       descriptor.readContent(ctx, json, value);
-    }
+    },
   });
 }
 
@@ -737,7 +737,7 @@ export function regDescriptor<T>(
     read: readImpl,
     readContent: readContentImpl,
     create: createImpl,
-    write: writeImpl
+    write: writeImpl,
   } = descriptor;
   if (!readImpl) {
     if (descriptor.create)
@@ -781,7 +781,7 @@ export function regDescriptor<T>(
     create: createImpl,
     write: writeImpl,
     name: uniq,
-    overrideProps
+    overrideProps,
   });
   if (descriptor.props !== false) final = propsDescriptor(final);
   if (descriptor.default$ !== false && uniq !== "Object") {
@@ -796,7 +796,7 @@ export function regDescriptor<T>(
         const json = <JSONObject>saved.write(ctx, val, parent, index);
         if (!json.$) json.$ = uniq;
         return json;
-      }
+      },
     });
   }
   const noRefs = final;
@@ -814,7 +814,7 @@ export function regDescriptor<T>(
     value: descriptor.value,
     props: descriptor.props,
     default$: descriptor.default$,
-    snapshot: final.snapshot
+    snapshot: final.snapshot,
   };
   return final;
 }
@@ -902,7 +902,7 @@ export function regOpaqueObject(
       savedObject.defineProperty(value, descriptorSymbol, {
         value: descr,
         configurable: true,
-        writable: true
+        writable: true,
       });
       return descr;
     } catch (e) {
@@ -928,7 +928,7 @@ export function regOpaquePrim<T>(
     savedObject.assign({}, OpaquePrimDescriptor, {
       name,
       value,
-      refAware: false
+      refAware: false,
     })
   );
   descriptorByValue.set(value, descriptor);
@@ -967,14 +967,14 @@ export function regConstructor<T>(
       descriptor,
       {
         overrideProps: savedObject.assign({}, descriptor.overrideProps),
-        propsSnapshot: descriptor.propsSnapshot
+        propsSnapshot: descriptor.propsSnapshot,
       }
     )
   );
   savedObject.defineProperty(constr.prototype, descriptorSymbol, {
     value: descr,
     configurable: true,
-    writable: true
+    writable: true,
   });
   return descr;
 }
@@ -991,7 +991,7 @@ export const NotSerializableDescriptor = regDescriptor({
   },
   props: false,
   refAware: false,
-  default$: false
+  default$: false,
 });
 
 const NotSerializablePlaceholderDescriptor = regDescriptor({
@@ -1003,12 +1003,12 @@ const NotSerializablePlaceholderDescriptor = regDescriptor({
     return {};
   },
   props: false,
-  refAware: false
+  refAware: false,
 });
 
 function notSerializableRead(this: Descriptor) {
   if (this.name === "NotSerializable") return notSerializablePlaceholder;
-  const res: any = function() {};
+  const res: any = function () {};
   res[descriptorSymbol] = this.name;
   return new Proxy(res, notSerializableTraps);
 }
@@ -1030,7 +1030,7 @@ export function regNewConstructor<T>(
 
 const PojsoDescriptor = regDescriptor({
   ...descriptorTemplate,
-  name: "Object"
+  name: "Object",
 });
 
 export const PrimDescriptor: Descriptor = regDescriptor({
@@ -1046,14 +1046,14 @@ export const PrimDescriptor: Descriptor = regDescriptor({
   },
   refAware: false,
   props: false,
-  default$: false
+  default$: false,
 });
 
 const RefDescriptor: Descriptor = regDescriptor({
   name: "Ref",
   read(ctx: ReadContext, json: JSONValue): any {
     return ctx.sharedVals[<number>(<JSONObject>json).r];
-  }
+  },
 });
 
 export const NotSerializableToken = { _notSerializable: true };
@@ -1181,7 +1181,7 @@ function readPropDescriptor(
   savedObject.defineProperty(pdescr, descriptorSymbol, {
     value: PropertyDescriptorDescriptor,
     configurable: true,
-    writable: true
+    writable: true,
   });
   return pdescr;
 }
@@ -1208,7 +1208,7 @@ export function readProps<T>(ctx: ReadContext, props: any[], value: T) {
 export const ObjectPropertiesDescriptor = {
   write(ctx: WriteContext, value: any): JSONValue {
     return {
-      f: writeProps(ctx, value, defaultOverrideProps, 0)
+      f: writeProps(ctx, value, defaultOverrideProps, 0),
     };
   },
   create() {
@@ -1225,7 +1225,7 @@ export const ObjectPropertiesDescriptor = {
         {}
       );
     }
-  }
+  },
 };
 
 /** wraps descriptor by adding its own property into the saved dictionary */
@@ -1267,7 +1267,7 @@ function propsDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
     create(ctx, json) {
       return descriptor.create(ctx, json);
     },
-    snapshot
+    snapshot,
   };
 }
 
@@ -1290,12 +1290,12 @@ const OpaqueDescriptor: IncompleteDescriptor<any> = {
   create(): any {
     return this.value;
   },
-  default$: false
+  default$: false,
 };
 
 const OpaquePrimDescriptor: IncompleteDescriptor<any> = {
   ...OpaqueDescriptor,
-  props: false
+  props: false,
 };
 
 function writeSym(
@@ -1356,7 +1356,7 @@ function readSym(ctx: ReadContext, json: JSONValue): symbol {
     const descr = {
       name: <string>name,
       id,
-      value: Symbol(<string>(<JSONObject>json).name)
+      value: Symbol(<string>(<JSONObject>json).name),
     };
     if (!local) ctx.symsByName.set(<string>name, (local = []));
     local[id] = descr;
@@ -1379,7 +1379,7 @@ function specValueDescriptor<T>(name: string, value: T): Descriptor<T> {
     },
     refAware: false,
     props: false,
-    default$: false
+    default$: false,
   });
 }
 
@@ -1391,7 +1391,7 @@ const SymbolDescriptor = regDescriptor<symbol>({
   read: readSym,
   name: "Symbol",
   refAware: false,
-  props: false
+  props: false,
 });
 
 export const BigIntDescriptor =
@@ -1405,7 +1405,7 @@ export const BigIntDescriptor =
         },
         name: "Int",
         refAware: false,
-        props: false
+        props: false,
       })
     : regDescriptor({
         name: "Int",
@@ -1416,7 +1416,7 @@ export const BigIntDescriptor =
           return { int: String(value) };
         },
         refAware: false,
-        props: false
+        props: false,
       });
 
 export let getObjectDescriptor: (
@@ -1496,7 +1496,7 @@ export function getJsonDescriptor(
       if (ctx.opts.ignore === "placeholder")
         return regDescriptor(
           savedObject.assign({}, NotSerializablePlaceholderDescriptor, {
-            name: <string>json.$
+            name: <string>json.$,
           })
         );
       return UndefDescriptor;
@@ -1520,7 +1520,7 @@ const ArrayDescriptor = regNewConstructor(Array, {
   },
   props: false,
   default$: false,
-  globalName: "Array"
+  globalName: "Array",
 });
 
 function iterableDescriptor<T extends Iterable<unknown>>(
@@ -1538,7 +1538,7 @@ function iterableDescriptor<T extends Iterable<unknown>>(
         const json: JSONArray = [];
         for (const i of value) json.push(ctx.step(i, json, json.length));
         return { $: this.name || "Iterable", l: json };
-      }
+      },
     },
     descriptor
   );
@@ -1556,7 +1556,7 @@ export const WeakSetWorkaround = class WeakSet {
         Object.defineProperty(value, this.prop, {
           configurable: true,
           writable: true,
-          value: true
+          value: true,
         });
         break;
       default:
@@ -1586,8 +1586,10 @@ export const WeakMapWorkaround = class WeakMap {
         Object.defineProperty(key, this.prop, {
           configurable: true,
           writable: true,
-          value
+          value,
         });
+        if (!(<any>Object).getOwnPropertyDescriptor(key, this.prop).writable)
+          throw new Error("W");
         break;
       default:
         throw TypeError("Invalid value used in weak map");
@@ -1617,7 +1619,7 @@ regConstructor(WeakSet, {
   },
   create() {
     return new WeakSet();
-  }
+  },
 });
 
 regConstructor(WeakMap, {
@@ -1627,7 +1629,7 @@ regConstructor(WeakMap, {
   },
   create() {
     return new WeakMap();
-  }
+  },
 });
 
 regNewConstructor<Set<unknown>>(
@@ -1636,7 +1638,7 @@ regNewConstructor<Set<unknown>>(
     readContent(ctx: ReadContext, json: JSONValue, value: Set<unknown>) {
       for (const i of <JSONArray>(<JSONObject>json).l) value.add(ctx.step(i));
     },
-    globalName: "Set"
+    globalName: "Set",
   })
 );
 
@@ -1661,7 +1663,7 @@ regNewConstructor(
       for (let i = 0, len = (<JSONArray>k).length; i < len; ++i)
         value.set(ctx.step((<JSONArray>k)[i]), ctx.step((<JSONArray>v)[i]));
     },
-    globalName: "Map"
+    globalName: "Map",
   })
 );
 
@@ -1683,7 +1685,7 @@ regNewConstructor(RegExp, {
   },
   props: false,
   refAware: false,
-  globalName: "RegExp"
+  globalName: "RegExp",
 });
 
 /**
@@ -1753,7 +1755,7 @@ export function regAutoOpaqueConstr(constr: any, silent?: boolean) {
         console.warn("auto opaque", name, value, new Error().stack);
       }
       return regOpaqueObject(value, name).write(ctx, value, parent, index);
-    }
+    },
   });
 }
 
@@ -1765,7 +1767,7 @@ export function rebindGlobal() {
     byName: new LocMap(),
     byValue: new LocMap(state.byValue),
     byObject: state.byObject,
-    byTypeOfProp: new LocMap(state.byTypeOfProp)
+    byTypeOfProp: new LocMap(state.byTypeOfProp),
   };
   (<any>global).__effectfulSerializationState = {};
   for (let [name, descriptor] of oldState.byName) {
@@ -1776,7 +1778,7 @@ export function rebindGlobal() {
       savedObject.defineProperty(value, descriptorSymbol, {
         configurable: true,
         writable: true,
-        value: descriptor
+        value: descriptor,
       });
     }
     state.byName.set(name, descriptor);
@@ -1846,9 +1848,9 @@ for (const i of [
   "ownKeys",
   "preventExtensions",
   "set",
-  "setPrototypeOf"
+  "setPrototypeOf",
 ]) {
-  notSerializableTraps[i] = function(target: any) {
+  notSerializableTraps[i] = function (target: any) {
     throw new TypeError(
       `${i} in a not restored object${
         target[descriptorSymbol] ? ` (${target[descriptorSymbol].name})` : ""
@@ -1857,7 +1859,7 @@ for (const i of [
   };
 }
 
-notSerializableTraps.get = function(target: any, prop: any) {
+notSerializableTraps.get = function (target: any, prop: any) {
   if (prop === descriptorSymbol)
     return target[descriptorSymbol] || NotSerializableDescriptor;
   throw new TypeError(
@@ -1868,7 +1870,7 @@ notSerializableTraps.get = function(target: any, prop: any) {
 };
 
 /** an object which is replaces all not serializable values after read */
-const notSerializablePlaceholder: any = new Proxy(function() {},
+const notSerializablePlaceholder: any = new Proxy(function () {},
 notSerializableTraps);
 
 /** shorter format for properties descriptors */
@@ -1892,14 +1894,14 @@ export const PropertyDescriptorDescriptor = regDescriptor({
     return <any>{ v: res[0], f: res[1], s: res[2], g: res[3] };
   },
   name: "PD",
-  props: false
+  props: false,
 });
 
 export function regPropertyDescriptor(p: PropertyDescriptor) {
   savedObject.defineProperty(p, descriptorSymbol, {
     value: PropertyDescriptorDescriptor,
     configurable: true,
-    writable: true
+    writable: true,
   });
 }
 
@@ -1913,7 +1915,7 @@ if (typeof ArrayBuffer !== "undefined") {
     create(_ctx, json) {
       return decode((<any>json).d);
     },
-    props: false
+    props: false,
   });
   for (const name of [
     "DataView",
@@ -1927,7 +1929,7 @@ if (typeof ArrayBuffer !== "undefined") {
     "Float32Array",
     "Float64Array",
     "BigInt64Array",
-    "BigUint64Array"
+    "BigUint64Array",
   ]) {
     const Constr = (<any>global)[name];
     if (!Constr) continue;
@@ -1945,7 +1947,7 @@ if (typeof ArrayBuffer !== "undefined") {
           (<any>json).l
         );
       },
-      props: false
+      props: false,
     });
   }
 }

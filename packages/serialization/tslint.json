@@ -21,7 +21,8 @@
     "only-arrow-functions": false,
     "forin": false,
     "variable-name": false,
-    "no-var-requires": false
+    "no-var-requires": false,
+    "space-before-function-paren": false
   },
   "rulesDirectory": []
 }

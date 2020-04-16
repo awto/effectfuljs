@@ -23,13 +23,13 @@ Install through VS Code Marketplace.
 
 [Marketplace: Effectful Debugger](https://marketplace.visualstudio.com/items?itemName=effectful.debugger)
 
-Or start VS Code Quick Open (Ctrl+P), and enter:
+Or start VS Code Quick Open (Ctrl-P/Command-P), and enter:
 
 ```
 ext install effectful.debugger
 ```
 
-Next create ` .vscode/launch.json`, if it doesn't exist yet. For this open Debugger view (Ctrl-Shift-D) and press `create a launch.json file` link, and choose "Debug with EffectfulJS".
+Next create ` .vscode/launch.json`, if it doesn't exist yet. For this open Debugger view (Ctrl-Shift-D/Command-Shit-D) and press `create a launch.json file` link, and choose "Debug with EffectfulJS".
 
 By default it adds NodeJS debugging configuration, to add browser's debugger, press "Add Configuration..." button in the left bottom corner of `launch.json` editor and choose "Effectful: Browser". By default, it doesn't require any other configs and expects a project with structure from [create-react-app](https://github.com/facebook/create-react-app).
 
@@ -50,7 +50,7 @@ Here is an example from `launch.json`:
 }
 ```
 
-Video:
+After configured, start debugging (F5). The first run takes more time because it needs to install its runtime.
 
 The common parameters in the configurations:
 
@@ -123,9 +123,9 @@ The transpiled code calls debugger API functions. This API is installed separate
 
 Here are some of them:
 
-1. Install "@effectful/debugger" into a separate folder and add it into NODE_MODULES, or put it into some parent folder of your project.
+1. Install "@effectful/debugger" into a separate folder and add it into NODE_PATH, or put it into some parent folder of your project.
 
-2. Install "@effectful/debugger" globally and add a link to it.
+2. Install "@effectful/debugger" globally and add link it into the project.
 
 ```
 $ npm install --global @effectful/debugger
@@ -153,7 +153,7 @@ The state can be accessed via "Debug Console" in VSCode, or from some dev script
 
 ## Persistent state
 
-We capture and restore the whole application state.
+We can capture and restore the whole application state.
 
 Not everything is serializable by default, but everything can be made serializable by providing special handlers. Among the not serializable by default values, there are sockets, sessions auth tokens, native modules states. If there are no serialization handlers provided, they are serialized into values that are ignored in the restoring state. This is fine if we don't mean to resurrect the program and only want to replay the time-traveling trace.
 

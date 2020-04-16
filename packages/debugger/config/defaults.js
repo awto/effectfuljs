@@ -21,7 +21,8 @@ config.runtimePackages = normalizeDrive(
   )
 );
 
-config.runtime = process.env.EFFECTFUL_DEBUGGER_RUNTIME || "vscode";
+config.runtime =
+  process.env.EFFECTFUL_DEBUGGER_RUNTIME || "@effectful/debugger";
 config.cache =
   isTrue(process.env.EFFECTFUL_DEBUGGER_CACHE) ||
   !isTrue(process.BABEL_DISABLE_CACHE);

@@ -21,7 +21,7 @@ export function checkpoint(): Record {
   if (now) now.prev = journal.past;
   journal.past = now;
   return (journal.now = {
-    prev: null
+    prev: null,
   });
 }
 
@@ -41,7 +41,7 @@ export const record: <T extends Callable>(f: T) => void = config.timeTravel
       (<any>f).prev = now.operations || null;
       now.operations = f;
     }
-  : function() {};
+  : function () {};
 
 export const objectSaved = {
   freeze: Object.freeze,
@@ -61,7 +61,7 @@ export const objectSaved = {
   getOwnPropertyDescriptors: Object.getOwnPropertyDescriptors,
   getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor,
   getPrototypeOf: Object.getPrototypeOf,
-  create: Object.create
+  create: Object.create,
 };
 
 interface KeysOrder {
@@ -117,7 +117,7 @@ function getOrCreateObjKeys(
       enumerable:
         (<any>objectSaved.getOwnPropertyDescriptor(obj, i)).enumerable === true,
       next,
-      prev: strKeys
+      prev: strKeys,
     };
   }
   for (const i of objectSaved.getOwnPropertySymbols(obj)) {
@@ -128,12 +128,12 @@ function getOrCreateObjKeys(
       enumerable:
         (<any>objectSaved.getOwnPropertyDescriptor(obj, i)).enumerable === true,
       next,
-      prev: symKeys
+      prev: symKeys,
     };
   }
   objectSaved.defineProperty(obj, KeysMapSymbol, {
     configurable: true,
-    value: descr = { strKeys, strMap, symKeys, symMap }
+    value: descr = { strKeys, strMap, symKeys, symMap },
   });
   return descr;
 }
@@ -239,7 +239,7 @@ function addKey(
         if (!descr) return false;
         addKeyImpl(name, descr.strMap, descr.strKeys, <any>{
           name,
-          enumerable
+          enumerable,
         });
       }
     } else {
@@ -247,7 +247,7 @@ function addKey(
       if (!descr) return false;
       addKeyImpl(name, descr.symMap, descr.symKeys, <any>{
         name,
-        enumerable
+        enumerable,
       });
     }
   }
@@ -266,14 +266,14 @@ function addNotIntKey(
     if (!descr) return false;
     addKeyImpl(name, descr.symMap, descr.symKeys, <any>{
       name,
-      enumerable
+      enumerable,
     });
   } else {
     const descr = getOrCreateObjKeys(obj, optional);
     if (!descr) return false;
     addKeyImpl(name, descr.strMap, descr.strKeys, <any>{
       name,
-      enumerable
+      enumerable,
     });
   }
   return true;
@@ -683,7 +683,7 @@ export const typedArraySaved = {
   sort: TAp.sort,
   set: TAp.set,
   fill: TAp.fill,
-  reverse: TAp.reverse
+  reverse: TAp.reverse,
 };
 
 function spliceOp(this: any) {
@@ -771,12 +771,12 @@ function typedArrayPropSet(arr: any[], name: string, value: any) {
 if (!config.expNoAccessOverloading) {
   objectSaved.defineProperty(Array.prototype, SetSymbol, {
     value: arraySet,
-    configurable: true
+    configurable: true,
   });
 
   objectSaved.defineProperty(TAp, SetSymbol, {
     value: typedArrayPropSet,
-    configurable: true
+    configurable: true,
   });
   Object.defineProperty(global, SetSymbol, { value: simpleSet });
 }
