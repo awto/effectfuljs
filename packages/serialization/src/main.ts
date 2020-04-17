@@ -1801,7 +1801,8 @@ export function regGlobal() {
       if (!obj) continue;
 
       if (typeof obj !== "function" && typeof obj !== "object") continue;
-      if (obj[descriptorSymbol]) continue;
+      if (Object.prototype.hasOwnProperty.call(obj,descriptorSymbol))
+        continue;
       if (name === "location") {
         regOpaqueObject((<any>global).location, "location", { props: false });
         continue;
