@@ -1,10 +1,10 @@
 {
   "name": "debugger",
   "publisher": "effectful",
-  "displayName": "EffectfulJS Debugger",
-  "description": "Debug your JavaScipt/TypeScript applications with time-traveling, hot swapping, persistent state, scripting and more",
+  "displayName": "Effectful JavaScript Debugger",
+  "description": "Time-Traveling, Persistent State, Hot-Swapping, API and more",
   "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-  "version": "1.3.2",
+  "version": "1.3.5",
   "license": "MIT",
   "homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
   "icon": "icon.png",

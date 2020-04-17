@@ -29,7 +29,7 @@ Or start VS Code Quick Open (Ctrl-P/Command-P), and enter:
 ext install effectful.debugger
 ```
 
-Next create ` .vscode/launch.json`, if it doesn't exist yet. For this open Debugger view (Ctrl-Shift-D/Command-Shit-D) and press `create a launch.json file` link, and choose "Debug with EffectfulJS".
+Next create ` .vscode/launch.json`, if it doesn't exist yet. For this open Debugger view (Ctrl(Command)-Shift-D) and press `create a launch.json file` link, and choose "Debug with EffectfulJS".
 
 By default it adds NodeJS debugging configuration, to add browser's debugger, press "Add Configuration..." button in the left bottom corner of `launch.json` editor and choose "Effectful: Browser". By default, it doesn't require any other configs and expects a project with structure from [create-react-app](https://github.com/facebook/create-react-app).
 
