@@ -11,6 +11,8 @@ VSCode debugger for JavaScript/TypeScript. Besides the typical debugger's featur
 
 This works by instrumenting JavaScript/TypeScript code and injecting necessary debugging API calls into it. It is implemented using [EffectfulJS](https://github.com/awto/effectfuljs).
 
+![](images/debugger1.gif)
+
 ## Caveats
 
 The project is at its early stage. It requires runtime monkey patching and it isn't fully and properly done yet. So in big projects, it is quite unlikely everything works effortlessly (this, however, reduces debugging efforts).
