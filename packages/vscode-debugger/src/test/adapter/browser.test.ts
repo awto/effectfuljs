@@ -42,7 +42,8 @@ suite("Debugging on Chrome", function() {
       dc.launch({
         indexJs: PROGRAM,
         stopOnEntry: true,
-        preset: "browser"
+        preset: "browser",
+        cwd: DATA_ROOT
       }),
       dc.assertStoppedLocation("entry", {
         path: PROGRAM,
@@ -95,7 +96,8 @@ suite("Debugging on Chrome", function() {
       dc.hitBreakpoint(
         {
           indexJs: PROGRAM,
-          preset: "browser"
+          preset: "browser",
+          cwd: DATA_ROOT
         },
         { path: PROGRAM, line: BREAKPOINT_LINE }
       )

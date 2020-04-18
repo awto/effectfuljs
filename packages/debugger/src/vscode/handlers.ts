@@ -1078,7 +1078,7 @@ export function capture(): S.JSONObject {
         document: (<any>global).document,
         extra: Persist.extra
       },
-      { ignore: "opaque", warnIgnored: true, alwaysByRef: true }
+      { ignore: "opaque", warnIgnored: true, alwaysByRef: true, verbose:config.debuggerDebug }
     );
     res.modules = modules;
     return res;
@@ -1145,9 +1145,18 @@ export function restore(json: S.JSONObject) {
       },
       extra
     } = S.read(json, { ignore: "placeholder", warnIgnored: true }));
-    if (context.activeTop) signalStopped();
-    else event("continued", {});
     for (const i of extra) Persist.extra.add(i);
+    // reloading somehow breaks WebSockets 
+    setTimeout(function() {
+      if (typeof document !== "undefined") {
+        if (config.mutationObserver && TT.DOM && typeof window !== "undefined") {
+          TT.DOM.observing.clear();
+          TT.DOM.track(document.documentElement);
+        }
+      }
+      if (context.activeTop) signalStopped();
+      else event("continued", {});
+    }, 1000);
   } finally {
     journal.enabled = savedEnabled;
   }

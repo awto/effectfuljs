@@ -34,7 +34,7 @@ const normalizeDrive =
 function packageBase(name: string) {
   const f = name[0];
   if (f === "@") return name.split("/").slice(0, 2).join("/");
-  if (f === "." || f === "/" || name[1] === ":") return f;
+  if (f === "." || f === "/" || f === "~" || name[1] === ":") return f;
   return name.split("/")[0];
 }
 
@@ -413,13 +413,23 @@ export class DebugSession extends SessionImpl {
         : Logger.LogLevel.Log,
       false
     );
-    const cwd = args.cwd || (args.cwd = process.cwd());
+    let cwd = args.cwd;
+    if (!cwd) {
+      if (args.preset === "browser")
+        this.sendErrorResponse(
+          response,
+          1001,
+          "\"browser\" preset needs \"cwd\" parameter," +
+          "please add it to launch.json (for example `..,\"cwd\":\"${workspaceFolder}\"...`)"
+        );
+      cwd = (args.cwd = process.cwd());
+    }
     const runtime = args.runtime || "@effectful/debugger";
     const runtimeBase = packageBase(runtime);
     let debuggerImpl: string;
     const resolvePaths: string[] = require.resolve.paths && [
       ...new Set(
-        [].concat(
+        [cwd].concat(
           <any>require.resolve.paths(cwd),
           <any>require.resolve.paths(__dirname)
         )

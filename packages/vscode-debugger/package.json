@@ -87,12 +87,12 @@
                   "boolean"
                 ],
                 "default": false,
-                "descriptcion": "A command to run on launch"
+                "description": "A command to run on launch"
               },
               "cwd": {
                 "type": "string",
                 "default": "${workspaceFolder}",
-                "descriptcion": "Working folder for the launched command"
+                "description": "Working folder for the launched command"
               },
               "args": {
                 "items": {
@@ -177,7 +177,7 @@
               },
               "reconnectTimeout": {
                 "type": "number",
-                "default": 0,
+                "default": -1,
                 "description": "Number of seconds to wait for more remotes before exiting the session (always if less than 0)"
               },
               "debuggerHost": {

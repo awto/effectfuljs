@@ -22,7 +22,9 @@
     "forin": false,
     "variable-name": false,
     "no-var-requires": false,
-    "space-before-function-paren": false
+    "space-before-function-paren": false,
+    "ban-types": false,
+    "no-construct": false
   },
   "rulesDirectory": []
 }

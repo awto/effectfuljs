@@ -17,22 +17,18 @@ const savedObject = {
 // tslint:disable-next-line
 const savedConsol = { log: console.log, warn: console.warn };
 
-const SHOW_STACK = false;
-
-const showStack = SHOW_STACK
-  ? function showStack(ctx: WriteContext, key: string | number, value: any) {
-      savedConsol.warn("SF#0: ", key, value);
-      let i = ctx.jobs;
-      let num = 0;
-      for (;;) {
-        while (i && !i.started) i = i.nextJob;
-        if (!i) break;
-        savedConsol.warn(`SF#${++num}:`, i.index, ":", i.value);
-        if (num > 200) break;
-        i = i.nextJob;
-      }
-    }
-  : function showStack() {};
+function showStack(ctx: WriteContext, key: string | number, value: any) {
+  savedConsol.warn("SF#0: ", key, value);
+  let i = ctx.jobs;
+  let num = 0;
+  for (;;) {
+    while (i && !i.started) i = i.nextJob;
+    if (!i) break;
+    savedConsol.warn(`SF#${++num}:`, i.index, ":", i.value);
+    if (num > 200) break;
+    i = i.nextJob;
+  }
+}
 
 const LocMap = Map;
 const LocWeakMap = WeakMap;
@@ -152,6 +148,7 @@ export interface WriteOptions {
    * structures like linked lists, this option will always generate a reference
    */
   alwaysByRef?: boolean;
+  verbose?: boolean;
 }
 
 /** Options to amend `write` behavior */
@@ -528,7 +525,7 @@ export class WriteContext {
     let descriptor = getValueDescriptor(value);
     if (!descriptor) {
       const { opts } = this;
-      if (opts.ignore !== true) showStack(this, key, value);
+      if (opts.ignore !== true && opts.verbose) showStack(this, key, value);
       if (!opts.ignore)
         throw new TypeError(
           `not serializable value "${value}" at "${key}" of "${parent}"`
@@ -558,14 +555,12 @@ export class WriteContext {
   }
 }
 
-if (SHOW_STACK)
-  (<any>WriteContext.prototype).showStack = function (
-    key: string | number,
-    value: any
-  ) {
-    showStack(this, key, value);
-  };
-
+(<any>WriteContext.prototype).showStack = function (
+  key: string | number,
+  value: any
+) {
+  showStack(this, key, value);
+};
 const undef = { _undef: true };
 
 /**
@@ -1905,6 +1900,24 @@ export function regPropertyDescriptor(p: PropertyDescriptor) {
     writable: true,
   });
 }
+
+regConstructor(String, {
+  create(_ctx, json) {
+    return new String((<any>json).v);
+  },
+  write(_ctx, value: String) {
+    return { v: String(value) };
+  }
+});
+
+regConstructor(Number, {
+  create(_ctx, json) {
+    return new Number((<any>json).v);
+  },
+  write(_ctx, value: Number) {
+    return { v: Number(value) };
+  }
+});
 
 if (typeof ArrayBuffer !== "undefined") {
   const { encode, decode } = <any>require("base64-arraybuffer");

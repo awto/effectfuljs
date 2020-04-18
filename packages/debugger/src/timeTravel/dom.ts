@@ -11,7 +11,7 @@ const journal = State.journal;
 const domObserverSymbol = Symbol("@effectful/debugger/dom");
 
 /** currently observed elements */
-let observing = new Set<ElementExt>();
+export let observing = new Set<ElementExt>();
 
 interface ObserverData {
   root: Element;

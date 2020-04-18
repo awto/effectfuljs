@@ -10,3 +10,4 @@ tmp-*
 input.json
 err-log.json
 .cache
+@effectful
