@@ -1,6 +1,6 @@
 {
   "name": "@effectful/react-do",
-  "version": "1.3.1",
+  "version": "1.3.9",
   "description": "Applicative and Monadic do-notation as a replacement for React Suspense and Hooks",
   "main": "index.js",
   "module": "main.js",
@@ -27,7 +27,7 @@
     "@babel/generator": "^7.3.3",
     "@babel/parser": "^7.3.3",
     "@babel/preset-react": "^7.0.0",
-    "@effectful/core": "^1.3.1",
+    "@effectful/core": "^1.3.9",
     "babel-jest": "^24.1.0",
     "babel-plugin-macros": "^2.5.0",
     "jest": "^24.1.0",
