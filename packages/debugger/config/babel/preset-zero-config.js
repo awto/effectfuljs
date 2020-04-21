@@ -8,7 +8,7 @@ module.exports = function(api, opts = { preInstrumentedLibs: true }) {
     };
     if (opts.jsxPragma) reactOpts.pragma = opts.jsxPragma;
     if (opts.jsxPragmaFrag) reactOpts.pragmaFrag = opts.jsxPragmaFrag;
-    result.presets.unshift([require("@babel/preset-react").default, reactOpts]);
+    result.presets.unshift([require.resolve("@babel/preset-react"), reactOpts]);
   }
   const targets = {
     node: "current",
@@ -16,7 +16,7 @@ module.exports = function(api, opts = { preInstrumentedLibs: true }) {
   };
   result.presets.push(
     [
-      require("@babel/preset-env").default,
+      require.resolve("@babel/preset-env"),
       {
         loose: true,
         modules: false,
@@ -35,15 +35,15 @@ module.exports = function(api, opts = { preInstrumentedLibs: true }) {
     ],
     {
       plugins: [
-        require("@babel/plugin-syntax-dynamic-import").default,
+        require.resolve("@babel/plugin-syntax-dynamic-import"),
         [
-          require("@babel/plugin-proposal-object-rest-spread").default,
+          require.resolve("@babel/plugin-proposal-object-rest-spread"),
           {
             useBuiltIns: true
           }
         ],
         process.env.EFFECTFUL_DEBUGGER_NODE &&
-          require("babel-plugin-dynamic-import-node")
+          require.resolve("babel-plugin-dynamic-import-node")
       ].filter(Boolean)
     }
   );
@@ -52,20 +52,20 @@ module.exports = function(api, opts = { preInstrumentedLibs: true }) {
   if (opts.typescript !== false) {
     result.presets.unshift(
       {
-        plugins: [require("./ts-no-consts")]
+        plugins: [require.resolve("./ts-no-consts")]
       },
-      [require("@babel/preset-typescript").default, tsOpts]
+      [require.resolve("@babel/preset-typescript"), tsOpts]
     );
   }
   result.overrides = [
     opts.flow !== false && {
       exclude: /\.tsx?$/,
-      plugins: [require("@babel/plugin-transform-flow-strip-types").default]
+      plugins: [require.resolve("@babel/plugin-transform-flow-strip-types")]
     },
     opts.typescript !== false && {
       test: /\.tsx?$/,
       plugins: [
-        [require("@babel/plugin-proposal-decorators").default, { legacy: true }]
+        [require.resolve("@babel/plugin-proposal-decorators"), { legacy: true }]
       ]
     }
   ].filter(Boolean);

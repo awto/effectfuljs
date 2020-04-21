@@ -1,5 +1,5 @@
 import config from "../config";
-import { journal, Record, saved, context, ForInIterator } from "../state";
+import { journal, Record, saved, context, ForInIterator, patchNative as patch } from "../state";
 import { record1, record2, record3, record4 } from "./binds";
 import { regOpaqueObject } from "../persist";
 import { descriptorSymbol } from "@effectful/serialization";
@@ -35,13 +35,13 @@ export interface Callable {
  */
 export const record: <T extends Callable>(f: T) => void = config.timeTravel
   ? function record(f: any) {
-      if (!f) return;
-      const { now } = journal;
-      if (!now) return;
-      (<any>f).prev = now.operations || null;
-      now.operations = f;
-    }
-  : function () {};
+    if (!f) return;
+    const { now } = journal;
+    if (!now) return;
+    (<any>f).prev = now.operations || null;
+    now.operations = f;
+  }
+  : function () { };
 
 export const objectSaved = {
   freeze: Object.freeze,
@@ -396,8 +396,8 @@ export const set: (
   name: string /* | symbol | number */,
   value: any
 ) => any = config.timeTravel
-  ? config.expNoAccessOverloading
-    ? function set(obj: any, name: string, value: any) {
+    ? config.expNoAccessOverloading
+      ? function set(obj: any, name: string, value: any) {
         if (journal.enabled) {
           if (Array.isArray(obj)) return arraySet(obj, name, value);
           let descr: PropertyDescriptor | undefined = void 0;
@@ -423,7 +423,7 @@ export const set: (
         }
         return (obj[name] = value);
       }
-    : function set(obj: any, name: string, value: any) {
+      : function set(obj: any, name: string, value: any) {
         if (journal.enabled) {
           const setter = obj[SetSymbol];
           if (setter) return setter(obj, name, value);
@@ -434,7 +434,7 @@ export const set: (
         }
         return (obj[name] = value);
       }
-  : function set(obj: any, name: string, value: any) {
+    : function set(obj: any, name: string, value: any) {
       return (obj[name] = value);
     };
 
@@ -443,8 +443,8 @@ export const del: (
   obj: any,
   name: string /* | symbol | number */
 ) => any = config.timeTravel
-  ? config.expNoAccessOverloading
-    ? function del(obj: any, name: string) {
+    ? config.expNoAccessOverloading
+      ? function del(obj: any, name: string) {
         if (journal.enabled) {
           const cur = defaultGetOwnPropertyDescriptor(obj, name);
           if (cur) {
@@ -454,7 +454,7 @@ export const del: (
         }
         return delete obj[name];
       }
-    : function del(obj: any, name: string) {
+      : function del(obj: any, name: string) {
         if (journal.enabled) {
           const deleter = obj[DeleteSymbol];
           if (deleter) return deleter(obj, name);
@@ -466,7 +466,7 @@ export const del: (
         }
         return delete obj[name];
       }
-  : function del(obj: any, name: string) {
+    : function del(obj: any, name: string) {
       return delete obj[name];
     };
 
@@ -1006,37 +1006,37 @@ export function noOrderDelete(obj: any, name: any): boolean {
   return delete obj[name];
 }
 
+if ((config.timeTravel || config.persistState) && config.patchRT) {
+  patch(Object, "seal", objectSeal);
+  patch(Object, "isSealed", objectIsSealed);
+  patch(Object, "preventExtensions", objectPreventExtensions);
+  patch(Object, "isExtensible", objectIsExtensible);
+  patch(Object, "freeze", objectFreeze);
+  patch(Object, "isFrozen", objectIsFrozen);
+}
+
 if (config.timeTravel && config.patchRT) {
-  (<any>Object).freeze = objectFreeze;
-  (<any>Object).isFrozen = objectIsFrozen;
-  (<any>Object).seal = objectSeal;
-  (<any>Object).isSealed = objectIsSealed;
-  (<any>Object).preventExtensions = objectPreventExtensions;
-  (<any>Object).isExtensible = objectIsExtensible;
-  (<any>Object).setPrototypeOf = objectSetPrototypeOf;
-  (<any>Object).defineProperty = objectDefineProperty;
-  (<any>Object).defineProperties = objectDefineProperties;
-  (<any>Object).assign = objectAssign;
-  (<any>Object).getOwnPropertyDescriptors = objectGetOwnPropertyDescriptors;
-  (<any>Object).getOwnPropertyNames = objectGetOwnPropertyNames;
-  (<any>Object).getOwnPropertySymbols = objectGetOwnPropertySymbols;
-  (<any>Object).keys = objectKeys;
-  (<any>Object).entries = objectEntries;
-  (<any>Object).create = objectCreate;
-  // (<any>global).Map = ManagedMap;
-  // (<any>global).Set = ManagedSet;
-  /**/
-  Ap.push = arrayPush;
-  Ap.pop = arrayPop;
-  Ap.shift = arrayShift;
-  Ap.unshift = arrayUnshift;
-  Ap.sort = arraySort;
-  Ap.reverse = arrayReverse;
-  Ap.splice = arraySplice;
-  TAp.set = typedArraySet;
-  TAp.sort = typedArraySort;
-  TAp.reverse = typedArrayReverse;
-  TAp.fill = typedArrayFill;
+  patch(Object, "setPrototypeOf", objectSetPrototypeOf);
+  patch(Object, "defineProperty", objectDefineProperty);
+  patch(Object, "defineProperties", objectDefineProperties);
+  patch(Object, "assign", objectAssign);
+  patch(Object, "getOwnPropertyDescriptors", objectGetOwnPropertyDescriptors);
+  patch(Object, "getOwnPropertyNames", objectGetOwnPropertyNames);
+  patch(Object, "getOwnPropertySymbols", objectGetOwnPropertySymbols);
+  patch(Object, "keys", objectKeys);
+  patch(Object, "entries", objectEntries);
+  patch(Object, "create", objectCreate);
+  patch(Ap, "push", arrayPush);
+  patch(Ap, "pop", arrayPop);
+  patch(Ap, "shift", arrayShift);
+  patch(Ap, "unshift", arrayUnshift);
+  patch(Ap, "sort", arraySort);
+  patch(Ap, "reverse", arrayReverse);
+  patch(Ap, "splice", arraySplice);
+  patch(TAp, "set", typedArraySet);
+  patch(TAp, "sort", typedArraySort);
+  patch(TAp, "reverse", typedArrayReverse);
+  patch(TAp, "fill", typedArrayFill);
 }
 
 // TODO: Reflect

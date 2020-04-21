@@ -1,13 +1,13 @@
-var $M = require("@effectful/debugger/api"),
+var $M = require("@effectful/debugger"),
     $context = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
-    $set = $M.set,
-    $del = $M.del,
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
+    $set = $M.set,
     $gset = $M.gset,
+    $del = $M.del,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),

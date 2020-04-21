@@ -6,7 +6,7 @@ require("yargs")
   .env("EFFECTFUL_DEBUGGER")
   .demandCommand()
   .option("cache", {
-    describe: "Babel cache",
+    describe: "babel cache",
     default: true,
     type: "boolean",
   })
@@ -20,18 +20,18 @@ require("yargs")
     type: "string",
   })
   .option("time-travel", {
-    describe: "Compile with traveling trace",
+    describe: "compile with traveling trace",
     alias: ["t"],
     default: false,
     type: "boolean",
   })
   .option("time-travel-disabled", {
-    describe: "Do not collect time traveling trace",
+    describe: "do not collect time traveling trace",
     default: false,
     type: "boolean",
   })
   .option("verbose", {
-    describe: "Outputs additional debug information",
+    describe: "outputs additional debug information",
     default: 0,
     type: "number",
   })
@@ -45,17 +45,31 @@ require("yargs")
   })
   .option("zero-config", {
     alias: ["z", "zero_config"],
-    describe: "Default babel plugins set for .ts/.js",
+    describe: "default babel plugins set for .ts/.js",
     default: true,
     type: "boolean",
   })
+  .option("include", {
+    describe: "glob for files to instrument",
+    type: "string",
+    default: "**/*.[jte]s?(x)"
+  })
+  .option("blackbox", {
+    describe: "glob for files to instrument as a blackbox",
+    type: "string",
+    default: "**/node_modules/**/*.?(m)js"
+  })
+  .option("exclude", {
+    describe: "glob for files to not instrument at all",
+    type: "string"
+  })
   .option("instrument", {
-    describe: "Instrument sources before loading",
+    describe: "instrument sources before loading",
     default: true,
     type: "boolean",
   })
   .option("instrument-deps", {
-    describe: "Instrument third-party sources in node_modules",
+    describe: "instrument third-party sources in node_modules",
     default: true,
     type: "boolean",
   })

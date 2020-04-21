@@ -104,7 +104,7 @@ function isPureCaseExpr(i) {
   }
 }
 
-function needsSave(doc) {
+function defaultNeedsSave(doc) {
   switch (doc.type) {
     case Tag.ThisExpression:
     case Tag.RegExpLiteral:
@@ -122,6 +122,7 @@ function needsSave(doc) {
     case Tag.ObjectExpression:
     case Tag.ClassExpression:
     case Tag.ArrayExpression:
+      return false;
     case Tag.UnaryExpression: {
       switch (doc.node.operator) {
         case "delete":
@@ -155,57 +156,76 @@ function needsSave(doc) {
   return true;
 }
 
-export function build(root) {
-  const func = root.origFunc;
-  const body = root.firstChild.prevSibling;
-  const blocks = {};
-  let lastBlock = blocks;
-  let lastItem = null;
-  let curBrk = null;
-  let curCnt = null;
-  let brkLabels = new Map();
-  let cntLabels = new Map();
-  let curFinalizer = null;
-  let curScope = func;
+export function build(needsSave = defaultNeedsSave) {
+  let root,
+    func,
+    body,
+    blocks,
+    lastBlock,
+    lastItem,
+    curBrk,
+    curCnt,
+    brkLabels,
+    cntLabels;
+  let curFinalizer,
+    curScope,
+    startBlock,
+    retBlock,
+    errBlock,
+    curHandler,
+    retSym,
+    errSym;
+  let finalizers, handlers, yieldSym, async, generator, lastInChain;
   const nsSym = Ctx.root.nsSym;
-  const startBlock = emptyBlock();
-  startBlock.scope = curScope;
-  startBlock.doc = body;
-  const retBlock = emptyBlock();
-  const errBlock = emptyBlock();
-  root.errBlock = errBlock;
-  errBlock.exitKind = EXIT_TERM;
-  let curHandler = errBlock;
-  startBlock.handler = errBlock;
   const { patSym, ctxSym, localsSym } = Ctx.root;
-  const retSym = (root.retSym = newSym("r"));
-  retSym.decl = func;
-  retSym.fieldName = "result";
-  const errSym = (root.errSym = newSym("e"));
-  errSym.decl = func;
-  errSym.fieldName = "error";
-  const finalizers = (root.finalizers = new Set());
-  const handlers = (root.handlers = new Set());
-  patSym.decl = curScope;
-  patSym.rhs = null;
-  patSym.lhs = null;
-  let yieldSym;
-  const { async, generator } = func.node;
-  if (generator) yieldSym = async ? Scope.yieldAGSym : Scope.yieldSym;
-  root.cfgBlock = retBlock;
-  root.errBlock = errBlock;
-  let lastInChain;
-  lastInChain = lastBlock = lastItem = startBlock;
-  if (
-    func.type === Tag.ArrowFunctionExpression &&
-    body.type !== Tag.BlockStatement
-  )
-    enter(body, retSym);
-  else traverse(body, after(body));
-  lastBlock.br = retBlock;
-  setBlock(errBlock);
-  setBlock(retBlock);
-  return root;
+
+  for (func = Ctx.root.firstChild; func; func = func.nextFunc) {
+    root = func.funcDef;
+    body = root.firstChild.prevSibling;
+    blocks = {};
+    lastBlock = blocks;
+    lastItem = null;
+    curBrk = null;
+    curCnt = null;
+    brkLabels = new Map();
+    cntLabels = new Map();
+    curFinalizer = null;
+    curScope = func;
+    startBlock = emptyBlock();
+    startBlock.scope = curScope;
+    startBlock.doc = body;
+    retBlock = emptyBlock();
+    errBlock = emptyBlock();
+    root.errBlock = errBlock;
+    errBlock.exitKind = EXIT_TERM;
+    curHandler = errBlock;
+    startBlock.handler = errBlock;
+    retSym = root.retSym = newSym("r");
+    retSym.decl = func;
+    retSym.fieldName = "result";
+    errSym = root.errSym = newSym("e");
+    errSym.decl = func;
+    errSym.fieldName = "error";
+    finalizers = root.finalizers = new Set();
+    handlers = root.handlers = new Set();
+    patSym.decl = curScope;
+    patSym.rhs = null;
+    patSym.lhs = null;
+    ({ async, generator } = func.node);
+    if (generator) yieldSym = async ? Scope.yieldAGSym : Scope.yieldSym;
+    root.cfgBlock = retBlock;
+    root.errBlock = errBlock;
+    lastInChain = lastBlock = lastItem = startBlock;
+    if (
+      func.type === Tag.ArrowFunctionExpression &&
+      body.type !== Tag.BlockStatement
+    )
+      enter(body, retSym);
+    else traverse(body, after(body));
+    lastBlock.br = retBlock;
+    setBlock(errBlock);
+    setBlock(retBlock);
+  }
 
   function push(item) {
     const { nextItem } = lastItem;
@@ -413,7 +433,10 @@ export function build(root) {
         const rhs = lhs.nextSibling;
         if (lhs.firstChild) traverse(lhs.firstChild, rhs);
         item = newItem(sym, doc, curScope);
-        traverse(rhs, after(doc));
+        // traverse(rhs, after(doc));
+        const rsym = tempSym(root, curScope);
+        Kit.replace(rhs, tempId(Tag.right, rsym, curScope));
+        enter(rhs, rsym);
         Kit.detach(doc);
         push(item);
         return;

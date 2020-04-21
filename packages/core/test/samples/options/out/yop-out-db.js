@@ -1,4 +1,4 @@
-var $0M = require("@effectful/debugger/api"),
+var $0M = require("@effectful/debugger"),
     $0context = $0M.context,
     $0ret = $0M.ret,
     $0unhandled = $0M.unhandled,

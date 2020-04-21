@@ -8,7 +8,7 @@ import {
 } from "./state";
 import * as S from "@effectful/serialization";
 import config from "./config";
-function nop() {}
+function nop() { }
 
 export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
 export const regAutoOpaqueConstr = config.persistState
@@ -25,9 +25,9 @@ const {
 } = S;
 
 export const regOpaqueObject = config.persistState
-  ? function(obj: any, name: string) {
-      S.regOpaqueObject(obj, name, noProps);
-    }
+  ? function (obj: any, name: string) {
+    S.regOpaqueObject(obj, name, noProps);
+  }
   : nop;
 export const regDescriptor = config.persistState ? S.regDescriptor : nop;
 export const regConstructor = config.persistState ? S.regConstructor : nop;
@@ -156,11 +156,11 @@ if (config.patchRT && config.persistState) {
     self: any,
     ...args: any[]
   ): (...args: any[]) => any {
-    const bind = <any>makeBind();
-    bind[boundFunSymbol] = this;
-    bind[boundThisSymbol] = self;
-    bind[boundArgsSymbol] = args;
-    return bind;
+    const res = <any>makeBind();
+    res[boundFunSymbol] = this;
+    res[boundThisSymbol] = self;
+    res[boundArgsSymbol] = args;
+    return res;
   };
 }
 

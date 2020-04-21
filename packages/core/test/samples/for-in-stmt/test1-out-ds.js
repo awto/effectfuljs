@@ -1,4 +1,4 @@
-var $M = require("@effectful/debugger/api"),
+var $M = require("@effectful/debugger"),
     $forInIterator = $M.forInIterator,
     $context = $M.context,
     $ret = $M.ret,

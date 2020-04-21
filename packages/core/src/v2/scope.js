@@ -250,7 +250,7 @@ export function funcSyms() {
   let safePrefix = "$";
   if (reservedSyms.size) {
     let num = 0;
-    up: for (;;) {
+    up: for (; ;) {
       safePrefix = `$${num++}`;
       const len = safePrefix.length;
       for (let i of reservedSyms)
@@ -276,7 +276,7 @@ export function eraseFuncDecls() {
         block.type === Tag.Array &&
         (block.pos === Tag.body || block.pos === Tag.consequent);
         block = block.parent
-      ) {}
+      ) { }
       const lastHoisted = block.lastHoisted;
       const expr = Kit.node(i.pos, Tag.ExpressionStatement);
       const funAssign = assign(Tag.expression, i);
@@ -468,9 +468,9 @@ export function index(root) {
     i.root = root;
     i.declClause =
       (i.pos === Tag.id && i.type !== Tag.PrivateName) ||
-      i.pos === Tag.param ||
-      i.pos === Tag.params ||
-      i.pos === Tag.local
+        i.pos === Tag.param ||
+        i.pos === Tag.params ||
+        i.pos === Tag.local
         ? i
         : parent.declClause;
     i.parentStmt =
@@ -628,6 +628,7 @@ export function index(root) {
       case Tag.MemberExpression:
       case Tag.BindExpression:
       case Tag.TaggedTemplateExpression:
+      case Tag.BinaryExpression:
         isExpr = true;
         break;
       case Tag.ImportDeclaration:
@@ -960,7 +961,7 @@ function parentScope(node) {
     j = node.parentMaybeScope;
     j && !j.isScopeNode;
     j = j.parentMaybeScope
-  ) {}
+  ) { }
   return j;
 }
 

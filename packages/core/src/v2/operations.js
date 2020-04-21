@@ -6,7 +6,6 @@ import * as Dom from "./dom";
 import * as path from "path";
 
 const { Tag, append, num, insertAfter, insertBefore, arr, node } = Kit;
-const { sysSym } = Scope;
 
 function needsResult(doc) {
   switch (doc.pos) {
@@ -96,22 +95,11 @@ export function normalizeAssign() {
     i.type = Tag.AssignmentExpression;
     i.node.operator = "=";
     const binExpr = Kit.tok(Tag.right, Tag.BinaryExpression, { operator });
+    binExpr.isExpr = true;
     insertBefore(append(binExpr, rarg), larg);
     insertAfter(lhs, binExpr);
   }
 }
-/*
-export function assignTempOp(block, sym, scope, rhs) {
-  const call = node(Tag.push, Tag.CallExpression);
-  append(call, Scope.sysId(Tag.callee, locSetSym));
-  const args = append(call, arr(Tag.arguments));
-  append(args, Scope.scopeExpr(Tag.push, scope, sym));
-  append(args, num(Tag.push, sym.index));
-  rhs.pos = Tag.push;
-  append(args, rhs);
-  Kit.exprStmt(block, call);
-}
-*/
 
 function copy(pos, doc, tempObj, scope) {
   return tempObj ? Scope.tempId(pos, tempObj, scope) : Dom.clone(doc);
@@ -130,6 +118,7 @@ function absTemp(root, doc, before) {
 
 function memExpr(computed, prop, tempProp, obj, tempObj, scope) {
   const memExpr = Kit.tok(Tag.left, Tag.MemberExpression, { computed });
+  memExpr.isExpr = true;
   insertAfter(
     append(memExpr, copy(Tag.object, obj, tempObj, scope)),
     computed
@@ -316,20 +305,6 @@ export function assignCall() {
       const seq = node(i.pos, Tag.SequenceExpression);
       const exprs = append(seq, arr(Tag.expressions));
       Scope.replaceRhs(i, seq);
-      /*
-a = fn1[x](a1, a2)
-==>
-a = $o = fn1, $f = $o[x], $s = $f[$shift], $s
-  ? ($a = $callm($o, $f, 2), $a = $t.$, $a[$s] = a1, $a[$s+1] = a2, context.exec($t, $a))
-  : $f.call($o, a1, a2)
-*/
-      /* 
-a = (x, fn1)(a1, a2)
-===>
-a = $f = (x, fn1), $s = $f[$shift], $s
-  ? ($t = $call(void 0, $f, 2), $a = $t.$, $a[$s] = a1, $a[$s+1] = a2, context.exec($t, $a))
-  : $f(a1, a2); 
-        */
       const root = i.parentFunc.funcDef;
       const args = callee.nextSibling;
       const firstArg = args.firstChild;
@@ -368,6 +343,7 @@ a = $f = (x, fn1), $s = $f[$shift], $s
       const shiftExpr = Kit.tok(Tag.right, Tag.MemberExpression, {
         computed: true
       });
+      shiftExpr.isExpr = true;
       append(assignShift, shiftExpr);
       append(shiftExpr, Kit.id(Tag.object, calleeSym));
       append(shiftExpr, Scope.sysId(Tag.property, Scope.shiftPropSym));
@@ -448,99 +424,4 @@ a = $f = (x, fn1), $s = $f[$shift], $s
     Kit.append(res, Kit.num(Tag.right, shift));
     return res;
   }
-}
-
-const assignmentOps = {
-  "=": sysSym("set"),
-  "+=": sysSym("plusAssignOp"),
-  "-=": sysSym("minusAssignOp"),
-  "*=": sysSym("multAssignOp"),
-  "/=": sysSym("divAssignOp"),
-  "%=": sysSym("modAssignOp"),
-  "<<=": sysSym("lshiftAssignOp"),
-  ">>=": sysSym("rshiftAssignOp"),
-  ">>>=": sysSym("rushiftAssignOp"),
-  "|=": sysSym("bwOrAssignOp"),
-  "^=": sysSym("bwXorAssignOp"),
-  "&=": sysSym("bwAndAssignOp")
-};
-
-const unaryOps = {
-  "-": sysSym("unaryMinusOp"),
-  "+": sysSym("unaryPlusOp"),
-  "!": sysSym("notOp"),
-  "~": sysSym("invertOp"),
-  typeof: sysSym("typeofOp"),
-  void: sysSym("voidOp"),
-  delete: sysSym("del")
-};
-
-const binaryOps = {
-  "==": sysSym("eqOp"),
-  "!=": sysSym("neqOp"),
-  "===": sysSym("strictEqOp"),
-  "!==": sysSym("strictNeqOp"),
-  "<": sysSym("lsOp"),
-  "<=": sysSym("leOp"),
-  ">": sysSym("mrOp"),
-  ">=": sysSym("meOp"),
-  "<<": sysSym("lshiftOp"),
-  ">>": sysSym("rshiftOp"),
-  ">>>": sysSym("urshiftEqOp"),
-  "+": sysSym("plusOp"),
-  "-": sysSym("minusOp"),
-  "*": sysSym("multOp"),
-  "/": sysSym("divOp"),
-  "%": sysSym("modOp"),
-  "|": sysSym("bwOrOp"),
-  "^": sysSym("bwXorOp"),
-  "&": sysSym("bwAndOp"),
-  in: sysSym("inOp"),
-  instanceof: sysSym("instanceOfOp")
-};
-
-const updateOps = {
-  "++": sysSym("incrOp"),
-  "--": sysSym("decrOp")
-};
-
-const prefixUpdateOps = {
-  "++": sysSym("prefixIncrOp"),
-  "--": sysSym("prefixDecrOp")
-};
-
-const logicalOps = {
-  "||": sysSym("orOp"),
-  "&&": sysSym("andOp")
-};
-
-const opNamesMap = new Map();
-
-export function getOpName(i) {
-  switch (i.type) {
-    case Tag.AssignmentExpression:
-      return assignmentOps[i.node.operator];
-    case Tag.BinaryExpression:
-      return binaryOps[i.node.operator];
-    case Tag.UnaryExpression:
-      return unaryOps[i.node.operator];
-    case Tag.UpdateExpression:
-      return (i.node.prefix ? prefixUpdateOps : updateOps)[i.node.operator];
-    case Tag.LogicalExpression:
-      return logicalOps[i.node.operator];
-    case Tag.YieldExpression:
-      if (i.node.delegate) return sysSym("yldStar");
-      return sysSym("yld");
-    case Tag.AwaitExpression:
-      return sysSym("chain");
-  }
-  let res = opNamesMap.get(i.type);
-  if (res != null) return res;
-  res = sysSym(
-    Kit.symName(i.type)
-      .match(/[A-Z]/g)
-      .join("")
-  );
-  opNamesMap.set(i.type, res);
-  return res;
 }

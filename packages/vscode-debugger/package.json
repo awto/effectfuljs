@@ -194,6 +194,11 @@
                 "type": "string",
                 "default": "vscode",
                 "description": "Debugger's runtime"
+              },
+              "srcRoot": {
+                "type": "string",
+                "default": "^\"\\${workspaceRoot}\"",
+                "description": "The project's root, files outside of the root won't be instrumented"
               }
             }
           }
@@ -205,6 +210,7 @@
             "name": "Launch Node application",
             "preset": "node",
             "cwd": "^\"\\${workspaceRoot}\"",
+            "srcRoot": "^\"\\${workspaceRoot}\"",
             "command": "node",
             "args": [
               "^\"\\${file}\""
@@ -246,6 +252,7 @@
               "name": "Launch Node application",
               "preset": "node",
               "cwd": "^\"\\${workspaceRoot}\"",
+              "srcRoot": "^\"\\${workspaceRoot}\"",
               "command": "node",
               "args": [
                 "^\"\\${file}\""

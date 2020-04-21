@@ -1,4 +1,4 @@
-var $M = require("@effectful/debugger/api"),
+var $M = require("@effectful/debugger"),
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {

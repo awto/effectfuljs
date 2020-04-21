@@ -9,26 +9,26 @@ module.exports = (
     {
       plugins: [
         [
-          require("@babel/plugin-transform-modules-commonjs"),
+          require.resolve("@babel/plugin-transform-modules-commonjs"),
           {
             loose: true
           }
         ],
         [
-          require("@babel/plugin-transform-destructuring"),
+          require.resolve("@babel/plugin-transform-destructuring"),
           { useBuiltIns: true }
         ],
-        [require("@babel/plugin-transform-shorthand-properties")],
-        [require("@babel/plugin-transform-parameters"), { loose: true }],
-        [require("@babel/plugin-transform-spread")],
+        [require.resolve("@babel/plugin-transform-shorthand-properties")],
+        [require.resolve("@babel/plugin-transform-parameters"), { loose: true }],
+        [require.resolve("@babel/plugin-transform-spread")],
         [
-          require("@babel/plugin-proposal-class-properties"),
+          require.resolve("@babel/plugin-proposal-class-properties"),
           {
             loose: true
           }
         ],
         [
-          require("@babel/plugin-transform-classes"),
+          require.resolve("@babel/plugin-transform-classes"),
           {
             loose: true
           }
@@ -36,7 +36,7 @@ module.exports = (
       ]
     },
     {
-      plugins: [[require("../../transform"), opts]]
+      plugins: [[require.resolve("../../transform"), opts]]
     }
   ]
 });

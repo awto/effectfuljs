@@ -1,3 +1,5 @@
+const config = require("../config").default;
+config.patchRT = false;
 const babel = require("@babel/core");
 const context = require("../state");
 

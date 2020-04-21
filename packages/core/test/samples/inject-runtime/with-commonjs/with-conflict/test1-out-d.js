@@ -1,4 +1,4 @@
-var $M = require("@effectful/debugger/api"),
+var $M = require("@effectful/debugger"),
     $yld = $M.yld,
     $ret = $M.ret,
     $retG = $M.retG,

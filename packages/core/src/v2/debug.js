@@ -76,7 +76,7 @@ export function cfgBlock(block) {
     if (i.caseTest) i.deb_case = str(i.caseTest).replace(/"/g, "'");
     for (let j = i.nextItem; j !== i; j = j.nextItem) {
       if (!j.deb_id) j.deb_id = `I${j.id}`;
-      let label = "";
+      let label = j.eff ? "!" : " ";
       if (j.lhsExpr) label += `${str(j.lhsExpr)}/*${symStr(j.sym)}*/ <- `;
       else if (j.sym) label += `${symStr(j.sym)} <- `;
       if (j.doc) {
@@ -134,7 +134,7 @@ export function cfgToDot(root, name = "") {
     if (i.br) {
       lines.push(
         `  ${i.deb_id} -> ${dest(i.br)}[style="${
-          i.unwind ? "dashed" : "solid"
+        i.unwind ? "dashed" : "solid"
         }",color=${i.rec ? "red" : "black"}];`
       );
     }
@@ -158,7 +158,7 @@ export function cfgToDot(root, name = "") {
 }
 
 export function cfgs(name = "G") {
-  Scope.forEach(function(root) {
+  Scope.forEach(function (root) {
     console.log(cfgToDot(root, name));
   });
 }

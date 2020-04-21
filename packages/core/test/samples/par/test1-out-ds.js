@@ -1,4 +1,4 @@
-var $M = require("@effectful/debugger/api"),
+var $M = require("@effectful/debugger"),
     $iterator = $M.iterator,
     $awt = $M.awt,
     $iterFin = $M.iterFin,
@@ -8,10 +8,10 @@ var $M = require("@effectful/debugger/api"),
     $unhandled = $M.unhandled,
     $unhandledA = $M.unhandledA,
     $raise = $M.raise,
-    $set = $M.set,
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
+    $set = $M.set,
     $gset = $M.gset,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__

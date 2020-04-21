@@ -2,7 +2,7 @@ import config from "@effectful/transducers/v2/config";
 Object.assign(config, {
   srcRoot: ".",
   filename: "file.js",
-  rt: "@effectful/debugger/api",
+  rt: "@effectful/debugger",
   // information about the current scope
   evalContext: null,
   evalParams: null,

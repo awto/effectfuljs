@@ -1,6 +1,7 @@
 const config = require("../config").default;
 const fs = require("fs");
 const path = require("path");
+const mm = require("minimatch");
 if (process.env.EFFECTFUL_DEBUGGER_URL)
   config.url = process.env.EFFECTFUL_DEBUGGER_URL;
 config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL);
@@ -8,16 +9,16 @@ config.timeTravelDisabled = isTrue(
   process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED
 );
 
-const { normalizeDrive } = require("../state");
+const { normalizeDrive, normalizePath } = require("../state");
 
 config.srcRoot = normalizeDrive(
   fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || ".")
 );
 
-config.runtimePackages = normalizeDrive(
+config.runtimePackages = normalizePath(
   fs.realpathSync(
     process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES ||
-      path.join(__dirname, "..", "..")
+    path.join(__dirname, "..", "..", "..")
   )
 );
 
@@ -59,6 +60,11 @@ config.instrumentDeps = isTrue(
   process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS,
   true
 );
+
+
+config.blackbox = mm.makeRe(process.env.EFFECTFUL_DEBUGGER_BLACKBOX || "**/node_modules/**/*.?(m)js");
+config.include = mm.makeRe(process.env.EFFECTFUL_DEBUGGER_INCLUDE || "**/*.[jte]s?(x)")
+config.exclude = process.env.EFFECTFUL_DEBUGGER_EXCLUDE ? mm.makeRe(process.env.EFFECTFUL_DEBUGGER_EXCLUDE) : null;
 
 if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
 

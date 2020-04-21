@@ -693,6 +693,10 @@ suite("Debugging on NodeJS", function() {
           command: `node ${PROGRAM}`,
           preset: "node",
           stopOnEntry: true
+        }),
+        dc.assertStoppedLocation("entry", {
+          path: PROGRAM,
+          line: 1
         })
       ]);
       await dc.setBreakpointsRequest({
@@ -805,6 +809,10 @@ suite("Debugging on NodeJS", function() {
           command: `node ${PROGRAM}`,
           preset: "node",
           stopOnEntry: true
+        }),
+        dc.assertStoppedLocation("entry", {
+          path: PROGRAM,
+          line: 1
         })
       ]);
       await dc.setBreakpointsRequest({

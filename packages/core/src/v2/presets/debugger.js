@@ -20,7 +20,7 @@ export default function debuggerTransform(ast) {
   if (!config.blackbox) Meta.injectBrk();
   Scope.split();
   Operations.normalizeAssign();
-  Scope.forEach(CFG.build);
+  CFG.build();
   if (config.timeTravel) {
     Operations.setters();
     Operations.deleters();

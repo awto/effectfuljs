@@ -1583,8 +1583,6 @@ export const WeakMapWorkaround = class WeakMap {
           writable: true,
           value,
         });
-        if (!(<any>Object).getOwnPropertyDescriptor(key, this.prop).writable)
-          throw new Error("W");
         break;
       default:
         throw TypeError("Invalid value used in weak map");
@@ -1786,8 +1784,6 @@ export function rebindGlobal() {
  * run it as soon as possible if a global serialization is needed
  */
 export function regGlobal() {
-  (<any>global).WeakMap = WeakMapWorkaround;
-  (<any>global).WeakSet = WeakSetWorkaround;
   if ((<any>global)[descriptorSymbol]) return;
   regOpaqueObject(<any>global, "#global");
   for (const name of Object.getOwnPropertyNames(global)) {

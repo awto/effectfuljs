@@ -138,7 +138,7 @@ export function composeItems(root) {
     const rhs = i.rhs;
     if (rhs != null && rhs.prevRHS == null) {
       let itemNode = rhs;
-      for (let j = rhs; (j = j.parent); itemNode = j) {}
+      for (let j = rhs; (j = j.parent); itemNode = j) { }
       const item = itemNode.cfgItem;
       const prev = item.prevItem;
       if (!prev.eff && prev.sym === i) {
@@ -228,28 +228,12 @@ export function sortFrames(root) {
         if (i.noSkip)
           Kit.insertAfter(cont, Kit.node(Tag.push, Tag.BreakStatement));
       }
-      /*
-      const srcBlock = cur.block;
-      const dstBlock = job.block;
-      if (
-        srcBlock.handler === dstBlock.handler &&
-        srcBlock.finalizer === dstBlock.finalizer &&
-        false
-      ) {
-        for (let i = cur.nextPureExit; i !== cur; i = i.nextPureExit) {
-          if (i.dst !== job) continue;
-          Kit.detach(i.parent.parent);
-          if (i.noSkip) i.continueStmt.type = Tag.BreakStatement;
-          else Kit.detach(i.continueStmt);
-        }
-      } else {*/
       for (let i = cur.nextPureExit; i !== cur; i = i.nextPureExit) {
         if (i.dst !== job) continue;
         i.prevSibling.firstChild.prevSibling.node.name = "state";
         if (i.noSkip) i.continueStmt.type = Tag.BreakStatement;
         else Kit.detach(i.continueStmt);
       }
-      // }
       (job.prevFrame = cur).nextFrame = job;
     }
     cur = job;

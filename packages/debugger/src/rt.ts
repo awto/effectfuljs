@@ -3,6 +3,7 @@ import config from "./config";
 import * as Instr from "./instr/rt";
 import * as Engine from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
+import { saved } from "./state";
 
 const context = Engine.context;
 
@@ -17,14 +18,19 @@ function switchDefault(
   debugImpl: (this: any, ...vals: any[]) => any
 ) {
   const defImpl: any = proto[name];
-  proto[name] = function impl() {
-    if (context.call === impl)
-      return (
-        // TODO: move to faster apply
-        (context.call = debugImpl.apply), debugImpl.apply(this, <any>arguments)
-      );
-    return (context.call = null), defImpl.apply(this, <any>arguments);
-  };
+  // asNative(debugImpl, name);
+  saved.Object.defineProperty(proto, name, {
+    configurable: true,
+    writable: true,
+    value: function impl() {
+      if (context.call === impl)
+        return (
+          // TODO: move to faster apply
+          (context.call = debugImpl.apply), debugImpl.apply(this, <any>arguments)
+        );
+      return (context.call = null), defImpl.apply(this, <any>arguments);
+    }
+  })
 }
 
 if (config.patchRT) {

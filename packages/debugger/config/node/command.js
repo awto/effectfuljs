@@ -40,6 +40,9 @@ exports.handler = function (argv) {
     EFFECTFUL_DEBUGGER_NODE: 1,
     EFFECTFUL_DEBUGGER_VERBOSE: config.verbose,
     EFFECTFUL_DEBUGGER_ZERO_CONFIG: config.zeroConfig,
+    EFFECTFUL_DEBUGGER_INCLUDE: argv.include,
+    EFFECTFUL_DEBUGGER_BLACKBOX: argv.blackbox,
+    EFFECTFUL_DEBUGGER_EXCLUDE: argv.exclude,
     EFFECTFUL_DEBUGGER_INSTRUMENT: config.instrument,
     EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: config.instrumentDeps,
   };

@@ -3,13 +3,13 @@ import config from "../config";
 import * as TTCore from "./core";
 import { regOpaqueObject, regConstructor } from "../persist";
 import * as Binds from "./binds";
-import { journal, context } from "../state";
+import { journal, context, patchNative as patch } from "../state";
 import * as S from "@effectful/serialization";
 import { Core } from "./main";
 
-const record = config.timeTravel ? TTCore.record : function () {};
-const record2 = config.timeTravel ? Binds.record2 : function () {};
-const record3 = config.timeTravel ? Binds.record3 : function () {};
+const record = config.timeTravel ? TTCore.record : function () { };
+const record2 = config.timeTravel ? Binds.record2 : function () { };
+const record3 = config.timeTravel ? Binds.record3 : function () { };
 
 const SavedMap = Map;
 const Ap = Array.prototype;
@@ -374,14 +374,9 @@ if (config.timeTravel) {
 }
 
 if ((config.timeTravel || config.persistState) && config.patchRT) {
-  (<any>Ap)[Symbol.iterator] = arrayIterator;
-  (<any>global).Map = ManagedMap;
-  (<any>global).Set = ManagedSet;
-}
-
-if (config.timeTravel && config.patchRT) {
-  (<any>global).Map = ManagedMap;
-  (<any>global).Set = ManagedSet;
-  (<any>global).WeakMap = S.WeakMapWorkaround;
-  (<any>global).WeakSet = S.WeakSetWorkaround;
+  patch(global, "WeakMap", S.WeakMapWorkaround);
+  patch(global, "WeakSet", S.WeakSetWorkaround);
+  patch(Ap, Symbol.iterator, arrayIterator);
+  patch(global, "Map", ManagedMap);
+  patch(global, "Set", ManagedSet);
 }

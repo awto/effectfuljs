@@ -1,4 +1,4 @@
-var $M = require("@effectful/debugger/api"),
+var $M = require("@effectful/debugger"),
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $brk = $M.brk,

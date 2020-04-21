@@ -211,19 +211,19 @@ export interface ScopeInfo {
 export type Scope = any[] &
   (
     | {
-        /** scope object's index and location to their original names */
-        0: { [name: string]: [number, string | null] };
-        /** parent's scope */
-        1: Scope | null;
-        /** statement's level */
-        2: number;
-        length: 3;
-      }
+      /** scope object's index and location to their original names */
+      0: { [name: string]: [number, string | null] };
+      /** parent's scope */
+      1: Scope | null;
+      /** statement's level */
+      2: number;
+      length: 3;
+    }
     | {
-        /** memoized `ScopeInfo` */
-        3: ScopeInfo;
-        length: 4;
-      }
+      /** memoized `ScopeInfo` */
+      3: ScopeInfo;
+      length: 4;
+    }
   );
 
 export interface State {
@@ -443,13 +443,19 @@ export const isWindows =
 
 export const normalizeDrive = isWindows
   ? function normalizeDrive(path: string) {
-      return path && path.length > 2 && path[1] === ":"
-        ? path.charAt(0).toUpperCase() + path.slice(1)
-        : path;
-    }
-  : function(path: string) {
-      return path;
-    };
+    return path && path.length > 2 && path[1] === ":"
+      ? path.charAt(0).toUpperCase() + path.slice(1)
+      : path;
+  }
+  : function (path: string) {
+    return path;
+  };
+
+export const normalizePath = isWindows
+  ? function normalizePath(path: string) {
+    return normalizeDrive(path.replace(/\\/g, "/"))
+  }
+  : function normalizePath(path: string) { return path; }
 
 export class ForInIterator implements Iterable<string>, Iterator<string> {
   fields: string[];
@@ -464,7 +470,7 @@ export class ForInIterator implements Iterable<string>, Iterator<string> {
     return this;
   }
   next(): IteratorResult<string> {
-    for (;;) {
+    for (; ;) {
       if (this.pos >= this.fields.length)
         return { done: true, value: undefined };
       const value = this.fields[this.pos++];
@@ -514,4 +520,8 @@ export function defaultErrHandler(f: Frame) {
 
 export function defaultFinHandler(f: Frame) {
   f.state = f.goto = f.meta.finState;
+}
+
+export function patchNative(obj: any, name: string | symbol, value: any) {
+  saved.Object.defineProperty(obj, name, { configurable: true, writable: true, value });
 }

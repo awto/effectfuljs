@@ -19,6 +19,8 @@ The project is at its early stage. It requires runtime monkey patching and it is
 
 Performance is obviously worse comparing to not instrumented code, especially when time-traveling is enabled.
 
+Some libraries may depend on functions sources, this won't work here, it tries to keep at least parameters names though.
+
 ## Usage
 
 Install through VS Code Marketplace.

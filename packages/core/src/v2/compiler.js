@@ -24,7 +24,7 @@ const helpers = {
   Operations
 };
 
-const rescopeVisitor = { Identifier() {} };
+const rescopeVisitor = { Identifier() { } };
 
 export function run(transform, state) {
   state.file.scope.path.traverse(rescopeVisitor);
@@ -53,7 +53,6 @@ export function run(transform, state) {
 /** returns babel's plugin definition suitable for assigning to `module.exports` */
 export function babelPlugin(transform) {
   const res = function effectfulPlugin(babel, args) {
-    Object.assign(config, defaults, args, { babel });
     return {
       name: config.pluginName || transform.name || "effectful",
       manipulateOptions(_opts, parserOpts) {
@@ -62,6 +61,7 @@ export function babelPlugin(transform) {
       },
       visitor: {
         Program(_path, state) {
+          Object.assign(config, defaults, args, { babel });
           const file = state.file;
           if (file) {
             const opts = file.opts;
@@ -83,7 +83,7 @@ export function babelPlugin(transform) {
     };
   };
   res.macro = () => babelMacro(transform);
-  res.run = function(ast, opts) {
+  res.run = function (ast, opts) {
     Object.assign(config, opts);
     transform(ast, helpers);
     return ast;
@@ -131,9 +131,9 @@ function createMacro(macro, options = {}) {
     if (!isBabelMacrosCall) {
       throw new Error(
         `The macro you imported from "${source}" is being executed outside the context of compilation with babel-plugin-macros. ` +
-          `This indicates that you don't have the babel plugin "babel-plugin-macros" configured correctly. ` +
-          `Please see the documentation for how to configure babel-plugin-macros properly: ` +
-          "https://github.com/kentcdodds/babel-plugin-macros/blob/master/other/docs/user.md"
+        `This indicates that you don't have the babel plugin "babel-plugin-macros" configured correctly. ` +
+        `Please see the documentation for how to configure babel-plugin-macros properly: ` +
+        "https://github.com/kentcdodds/babel-plugin-macros/blob/master/other/docs/user.md"
       );
     }
     return macro(args);

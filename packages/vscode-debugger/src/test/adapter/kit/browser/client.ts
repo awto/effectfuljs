@@ -1,4 +1,3 @@
-import * as Support from "vscode-debugadapter-testsupport";
 import * as Kit from "../client";
 import * as puppeteer from "puppeteer";
 

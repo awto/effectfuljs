@@ -7,6 +7,7 @@ const fs = require("fs");
 const cacheId = require("../cacheId");
 const {
   normalizeDrive,
+  normalizePath,
   saved: { Function },
 } = require("../../state");
 
@@ -52,15 +53,9 @@ for (const i of builtIn) {
 
 let disabled = false;
 
-const root = path.resolve(config.srcRoot);
-
-const nodeModules = normalizeDrive(path.join(config.srcRoot, "node_modules"));
-
 require.extensions[".ts"] = require.extensions[".tsx"] = require.extensions[
   ".jsx"
 ] = require.extensions[".js"];
-
-const rootPath = normalizeDrive(fs.realpathSync(root));
 
 const debuggerPath = normalizeDrive(
   fs.realpathSync(path.join(__dirname, "../../"))
@@ -69,11 +64,11 @@ const debuggerPath = normalizeDrive(
 const requirePath =
   path.sep === "\\"
     ? function requirePath(rt) {
-        return rt || path.join(debuggerPath, "vscode").replace(/\\/g, "/");
-      }
+      return rt || path.join(debuggerPath, "vscode").replace(/\\/g, "/");
+    }
     : function requirePath(rt) {
-        return rt || path.join(debuggerPath, "vscode");
-      };
+      return rt || path.join(debuggerPath, "vscode");
+    };
 
 let cacheSaveScheduled = false;
 
@@ -160,22 +155,25 @@ due to a permission issue. Cache is disabled.`);
 
 const cacheData = loadCache();
 
+const appRoot = normalizePath(config.srcRoot)
+
 Mp._compile = function _compile(content, filename) {
   filename = normalizeDrive(filename);
   const ext = path.extname(filename);
+  const fileTest = normalizePath(filename)
+  const blackbox = config.blackbox.test(fileTest);
   if (
     disabled ||
     ext === ".json" ||
-    (config.instrumentDeps && filename.startsWith(config.runtimePackages)) ||
-    filename.startsWith(nodeModules)
-      ? !config.instrumentDeps
-      : !filename.startsWith(rootPath)
+    config.instrumentDeps && fileTest.startsWith(config.runtimePackages) ||
+    config.exclude && config.exclude.test(fileTest) ||
+    !(config.instrumentDeps && blackbox 
+      || fileTest.startsWith(appRoot) && config.include.test(fileTest))
   ) {
     if (config.verbose > 2)
       log(`DEBUGGER: loading without instrumentation ${filename}`);
     return savedCompile.call(this, content, filename);
   }
-  const blackbox = filename.startsWith(nodeModules);
   const moduleConfig = require("../defaults");
   const rt = requirePath(moduleConfig.runtime);
   if (config.verbose > 1) {
@@ -195,27 +193,27 @@ Mp._compile = function _compile(content, filename) {
       opts = new babel.OptionManager().init(
         config.zeroConfig
           ? {
-              presets: [
-                [
-                  preset,
-                  {
-                    blackbox,
-                    timeTravel: config.timeTravel,
-                    rt,
-                    staticBundler: false,
-                  },
-                ],
+            presets: [
+              [
+                preset,
+                {
+                  blackbox,
+                  timeTravel: config.timeTravel,
+                  rt,
+                  staticBundler: false,
+                },
               ],
-              babelrc: false,
-              configFile: false,
-              ...babelOpts,
-              filename,
-            }
+            ],
+            babelrc: false,
+            configFile: false,
+            ...babelOpts,
+            filename,
+          }
           : {
-              sourceRoot: path.dirname(filename),
-              ...deepClone(babelOpts),
-              filename,
-            }
+            sourceRoot: path.dirname(filename),
+            ...deepClone(babelOpts),
+            filename,
+          }
       );
       cacheKey = `${filename}@${cacheId}`;
       const env = babel.getEnv(false);

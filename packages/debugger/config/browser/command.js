@@ -48,6 +48,10 @@ exports.handler = function (argv) {
   process.env.EFFECTFUL_DEBUGGER_ZERO_CONFIG = argv.zeroConfig ? 1 : 0;
   if (argv.htmlTemplate)
     process.env.EFFECTFUL_DEBUGGER_HTML_TEMPLATE = argv.htmlTemplate;
+  process.env.EFFECTFUL_DEBUGGER_INCLUDE = argv.include;
+  process.env.EFFECTFUL_DEBUGGER_BLACKBOX = argv.blackbox;
+  if (argv.exclude)
+    process.env.EFFECTFUL_DEBUGGER_EXCLUDE = argv.exclude;
   process.env.EFFECTFUL_DEBUGGER_WEBPACK = 1;
   process.env.EFFECTFUL_DEBUGGER = 1;
   require("./server");

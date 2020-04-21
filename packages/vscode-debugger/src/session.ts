@@ -23,13 +23,13 @@ import subscribe from "./wscomms";
 const normalizeDrive =
   typeof process !== "undefined" && process.platform === "win32"
     ? function normalizeDrive(path: string) {
-        return path && path.length > 2 && path[1] === ":"
-          ? path.charAt(0).toUpperCase() + path.slice(1)
-          : path;
-      }
+      return path && path.length > 2 && path[1] === ":"
+        ? path.charAt(0).toUpperCase() + path.slice(1)
+        : path;
+    }
     : function (path: string) {
-        return path;
-      };
+      return path;
+    };
 
 function packageBase(name: string) {
   const f = name[0];
@@ -378,7 +378,7 @@ export class DebugSession extends SessionImpl {
   }
 
   private configurationCb?: () => void;
-
+  private configurationDone = false;
   protected sendErrorResponse(
     response: P.Response,
     code: number,
@@ -399,6 +399,7 @@ export class DebugSession extends SessionImpl {
   ): void {
     super.configurationDoneRequest(response, args);
     if (this.configurationCb) this.configurationCb();
+    this.configurationDone = true;
   }
 
   protected async launchRequest(
@@ -409,8 +410,8 @@ export class DebugSession extends SessionImpl {
       args.verbose
         ? Logger.LogLevel.Verbose
         : args.verbose === false
-        ? Logger.LogLevel.Stop
-        : Logger.LogLevel.Log,
+          ? Logger.LogLevel.Stop
+          : Logger.LogLevel.Log,
       false
     );
     let cwd = args.cwd;
@@ -538,8 +539,8 @@ export class DebugSession extends SessionImpl {
       const env: { [name: string]: string | null } = <any>{};
       const host =
         !args.debuggerHost ||
-        args.debuggerHost === "::" ||
-        args.debuggerHost === "0.0.0.0"
+          args.debuggerHost === "::" ||
+          args.debuggerHost === "0.0.0.0"
           ? "localhost"
           : args.debuggerHost;
       if (process.env["EFFECTFUL_DEBUGGER_VERBOSE"] == null)
@@ -549,12 +550,14 @@ export class DebugSession extends SessionImpl {
       if (process.env["EFFECTFUL_DEBUGGER_URL"] == null)
         env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${
           args.debuggerPort || 20011
-        }`;
+          }`;
       if (runtime) env["EFFECTFUL_DEBUGGER_RUNTIME"] = runtime;
       env["EFFECTFUL_DEBUGGER_OPEN"] = args.open ? String(args.open) : "0";
       env["EFFECTFUL_DEBUGGER_TIME_TRAVEL"] = args.timeTravel
         ? String(!!args.timeTravel)
         : "0";
+      if (args.srcRoot)
+        env["EFFECTFUL_DEBUGGER_SRC_ROOT"] = args.srcRoot;
       if (args.env) Object.assign(env, args.env);
       let term = this.supportsRunInTerminalRequest
         ? args.console
@@ -671,10 +674,12 @@ export class DebugSession extends SessionImpl {
     }
     if (this.remotes.size && !this.stopped) {
       // wait until configuration has finished (and configurationDoneRequest has been called)
-      await Promise.race([
-        new Promise((i) => (this.configurationCb = i)),
-        new Promise((i) => setTimeout(i, CONFIGURATION_DONE_REQUEST_TIMEOUT)),
-      ]);
+      if (!this.configurationDone) {
+        await Promise.race([
+          new Promise((i) => (this.configurationCb = i)),
+          new Promise((i) => setTimeout(i, CONFIGURATION_DONE_REQUEST_TIMEOUT)),
+        ]);
+      }
       logger.verbose("config done");
       for (const remote of this.remotes.values()) this.launchChild(remote);
     }

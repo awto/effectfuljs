@@ -1,8 +1,8 @@
 module.exports = function(_, opts) {
   return {
     plugins: [
-      require("./ts-no-consts"),
-      [require("@babel/plugin-transform-typescript").default, opts]
+      require.resolve("./ts-no-consts"),
+      [require.resolve("@babel/plugin-transform-typescript"), opts]
     ]
   };
 };
