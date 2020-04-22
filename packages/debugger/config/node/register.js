@@ -155,8 +155,6 @@ due to a permission issue. Cache is disabled.`);
 
 const cacheData = loadCache();
 
-const appRoot = normalizePath(config.srcRoot)
-
 Mp._compile = function _compile(content, filename) {
   filename = normalizeDrive(filename);
   const ext = path.extname(filename);
@@ -168,7 +166,7 @@ Mp._compile = function _compile(content, filename) {
     config.instrumentDeps && fileTest.startsWith(config.runtimePackages) ||
     config.exclude && config.exclude.test(fileTest) ||
     !(config.instrumentDeps && blackbox 
-      || fileTest.startsWith(appRoot) && config.include.test(fileTest))
+      || config.include.test(fileTest))
   ) {
     if (config.verbose > 2)
       log(`DEBUGGER: loading without instrumentation ${filename}`);

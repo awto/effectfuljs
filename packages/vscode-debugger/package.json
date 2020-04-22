@@ -210,7 +210,6 @@
             "name": "Launch Node application",
             "preset": "node",
             "cwd": "^\"\\${workspaceRoot}\"",
-            "srcRoot": "^\"\\${workspaceRoot}\"",
             "command": "node",
             "args": [
               "^\"\\${file}\""
@@ -252,7 +251,6 @@
               "name": "Launch Node application",
               "preset": "node",
               "cwd": "^\"\\${workspaceRoot}\"",
-              "srcRoot": "^\"\\${workspaceRoot}\"",
               "command": "node",
               "args": [
                 "^\"\\${file}\""

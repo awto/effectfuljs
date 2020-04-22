@@ -11,10 +11,10 @@ suite("Debugging on NodeJS", function() {
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
   const NODE_DATA_ROOT = path.join(DATA_ROOT, "vscode-node-debug/");
-  //  const CHROME_DATA_ROOT = path.join(DATA_ROOT, "vscode-chrome-debug/");
-
+  
   let dc: DebugClient;
   // process.env.EFFECTFUL_DEBUG_DEBUGGER = "1";
+  process.env.EFFECTFUL_DEBUGGER_EXCLUDE = "**/packages/{debugger,serialization,core,transducers}/**";
   process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
   process.env.EFFECTFUL_DEBUGGER_VERBOSE = process.env.EFFECTFUL_DEBUG_DEBUGGER
     ? "2"

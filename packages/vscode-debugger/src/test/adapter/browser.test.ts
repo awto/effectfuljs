@@ -13,6 +13,7 @@ const toBrowserPath: (p: string) => string =
       };
 process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
 process.env.EFFECTFUL_DEBUGGER_VERBOSE = "2"
+process.env.EFFECTFUL_DEBUGGER_EXCLUDE = "**/packages/{debugger,serialization,core,transducers}/**";
 
 suite("Debugging on Chrome", function() {
   this.timeout(0);

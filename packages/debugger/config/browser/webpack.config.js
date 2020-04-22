@@ -63,24 +63,20 @@ function blackboxFile(filename) {
     return false;
   if (!config.blackbox.test(filename))
     return false;
-  if (config.exclude && config.exclude.test(filaname))
+  if (config.exclude && config.exclude.test(filename))
     return false;
   return true;
 }
 
-const appRoot = normalizePath(paths.appSrc)
-
 function includeFile(filename) {
   filename = normalizePath(filename);
-  if (!filename.startsWith(appRoot))
-    return false;
   if (config.instrumentDeps && filename.startsWith(config.runtimePackages))
     return false;
   if (!config.include.test(filename))
     return false;
   if (config.blackbox.test(filename))
     return false;
-  if (config.exclude && config.exclude.test(filaname))
+  if (config.exclude && config.exclude.test(filename))
     return false;
   return true;
 }
