@@ -14,8 +14,6 @@ const {
 const babel = require("@babel/core");
 const preset = require("../babel/preset-zero-config");
 
-global.WebSocket = require("ws");
-
 const Module = module.constructor;
 
 const Mp = Module.prototype;
@@ -165,7 +163,7 @@ Mp._compile = function _compile(content, filename) {
     ext === ".json" ||
     config.instrumentDeps && fileTest.startsWith(config.runtimePackages) ||
     config.exclude && config.exclude.test(fileTest) ||
-    !(config.instrumentDeps && blackbox 
+    !(config.instrumentDeps && blackbox
       || config.include.test(fileTest))
   ) {
     if (config.verbose > 2)

@@ -584,15 +584,15 @@ suite("Debugging on NodeJS", function() {
   suite("output events", function() {
     const PROGRAM = path.join(NODE_DATA_ROOT, "programWithOutput.js");
 
-    test("stdout and stderr events should be complete and in correct order", function() {
+    test.skip("stdout and stderr events should be complete and in correct order", function() {
       return Promise.all([
         dc.configurationSequence(),
         dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose: false }),
         dc.assertOutput(
           "stdout",
           "Hello stdout 0\nHello stdout 1\nHello stdout 2\n"
-        )
-        //dc.assertOutput('stderr', 'Hello stderr 0\nHello stderr 1\nHello stderr 2\n')
+        ),
+        dc.assertOutput('stderr', 'Hello stderr 0\nHello stderr 1\nHello stderr 2\n')
       ]);
     });
   });

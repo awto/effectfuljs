@@ -60,6 +60,7 @@ function trace(...args: [any, ...any[]]) {
 let brkNext: State.Frame | null = null;
 let brkOut: State.Frame | null = null;
 let stepIn = false;
+let pauseNext = false;
 /**
  * saving break frame for async functions which may
  * be removed from the stack already
@@ -110,10 +111,10 @@ const saveFlags =
   State.BrkFlag.STMT | State.BrkFlag.DEBUGGER_STMT | State.BrkFlag.EXIT;
 
 context.needsBreak = config.timeTravel
-  ? function(brk: State.Brk, top: State.Frame) {
-      if (brk.flags & saveFlags) TT.checkpoint();
-      return defaultNeedsBreak(brk, top);
-    }
+  ? function (brk: State.Brk, top: State.Frame) {
+    if (brk.flags & saveFlags) TT.checkpoint();
+    return defaultNeedsBreak(brk, top);
+  }
   : defaultNeedsBreak;
 
 S.regOpaqueObject(context.needsBreak, "@effectful/debugger/vscode$brk");
@@ -178,8 +179,8 @@ const patchedConsole: any = assign(
   }
 );
 
-for(const name of Object.keys(patchedConsole))
-  Persist.regOpaqueObject(patchedConsole[name],`#patcheConsole#{name}`)
+for (const name of Object.keys(patchedConsole))
+  Persist.regOpaqueObject(patchedConsole[name], `#patcheConsole#{name}`)
 
 if (config.redirConsole) global.console = patchedConsole;
 
@@ -228,7 +229,7 @@ function dispatch(req: P.Request) {
   send(res);
 }
 
-context.onLoad = function(module: State.Module, hot: boolean) {
+context.onLoad = function (module: State.Module, hot: boolean) {
   const source = getSource(module);
   if (config.verbose) trace(`DEBUGGER: loading ${JSON.stringify(source)}`);
   if (module.fullPath) {
@@ -252,7 +253,7 @@ context.onLoad = function(module: State.Module, hot: boolean) {
 let launchCb: ((stop: boolean) => void) | undefined;
 let launchPromise: Promise<boolean> = new Promise<boolean>(i => (launchCb = i));
 
-context.onThread = async function() {
+context.onThread = async function () {
   if (context.top || context.activeTop) return;
   if (!context.queue.length) {
     if (!context.top && !context.activeTop) {
@@ -290,7 +291,7 @@ context.onThread = async function() {
   }
 };
 
-handlers.childRestart = function(res) {
+handlers.childRestart = function (res) {
   if (typeof window !== "undefined") window.location.reload();
   else {
     res.success = false;
@@ -298,7 +299,7 @@ handlers.childRestart = function(res) {
   }
 };
 
-handlers.launch = function() {};
+handlers.launch = function () { };
 
 let linStartAt1 = true;
 let colStartAt1 = true;
@@ -356,7 +357,7 @@ function getLocation(frameId = 0): Location {
   return res;
 }
 
-handlers.stackTrace = function(args, response) {
+handlers.stackTrace = function (args, response) {
   const startFrame =
     typeof args.startFrame === "number" ? toLocal(args.startFrame) : 0;
   const maxLevels = typeof args.levels === "number" ? args.levels : 1000;
@@ -419,7 +420,7 @@ function resetScopes() {
 
 const variablesSym = Symbol("@effectful/debugger/variables");
 
-handlers.scopes = function(args, response) {
+handlers.scopes = function (args, response) {
   const frameReference = args.frameId;
   const root = getFrame(frameReference);
   const scopes = [];
@@ -468,7 +469,7 @@ handlers.scopes = function(args, response) {
   }
 };
 
-handlers.variables = function(args, response) {
+handlers.variables = function (args, response) {
   let variables: VarValue[] = [];
   const val = curValById.get(args.variablesReference);
   if (val != null) {
@@ -516,7 +517,7 @@ function varValue(name: string, value: any): VarValue {
         if (meta) {
           valRepr = `${meta.origName}@${
             meta.module ? path.basename(meta.module.name) : "*"
-          }:${meta.location}`;
+            }:${meta.location}`;
         }
       }
     case "object":
@@ -557,17 +558,18 @@ function varValue(name: string, value: any): VarValue {
   function str(value: any): any {
     try {
       return String(value);
-    } catch (e) {}
+    } catch (e) { }
   }
 }
 
 function reset() {
   brkFrame = brkOut = brkNext = null;
   stepIn = false;
+  pauseNext = false;
   resetScopes();
 }
 
-handlers.childLaunch = function(args, res) {
+handlers.childLaunch = function (args, res) {
   setDirSep(args.dirSep);
   if (config.timeTravel) {
     TT.reset(!config.timeTravelDisabled);
@@ -601,9 +603,14 @@ function checkPause(
   | "breakpoint"
   | "stepOut"
   | "debugger_statement"
-  | "entry" {
+  | "entry"
+  | "interrupt" {
   if (!context.debug) return undefined;
   if (launchCb != null) return "entry";
+  if (pauseNext) {
+    pauseNext = false;
+    return "pause";
+  }
   const { breakpoint: bp } = brk;
   if (
     bp &&
@@ -617,9 +624,9 @@ function checkPause(
     if (brk.flags & State.BrkFlag.DEBUGGER_STMT) return "debugger_statement";
   } else if (brk.flags & State.BrkFlag.EXIT) {
     if (brkOut && brkOut === top) return "stepOut";
-    return undefined;
   }
-  // if (brkOut && brkOut.meta.finState === brkOut.goto) return "stepOut";
+  if (Comms.hasMessage())
+    return "interrupt";
   return undefined;
 }
 
@@ -642,31 +649,31 @@ function run(back?: boolean) {
 
 const step: (back?: boolean) => void = config.timeTravel
   ? function step(back?: boolean) {
-      if (back || journal.future) {
-        runningTrace = true;
-        const iter = back ? TT.undo : TT.redo;
-        let lastBrk = context.brk;
-        while (iter()) {
-          const { brk, top } = context;
-          if (brk === lastBrk) continue;
-          lastBrk = brk;
-          if (brk && top && (reason = checkPause(brk, top)) != null) {
-            context.onStop();
-            return;
-          }
+    if (back || journal.future) {
+      runningTrace = true;
+      const iter = back ? TT.undo : TT.redo;
+      let lastBrk = context.brk;
+      while (iter()) {
+        const { brk, top } = context;
+        if (brk === lastBrk) continue;
+        lastBrk = brk;
+        if (brk && top && (reason = checkPause(brk, top)) != null) {
+          context.onStop();
+          return;
         }
       }
-      runningTrace = false;
-      if (context.top) {
-        if (back) {
-          reason = "entry";
-          context.onStop();
-        } else Engine.step();
-      } else {
-        event("continued", {});
-        Engine.signalThread();
-      }
     }
+    runningTrace = false;
+    if (context.top) {
+      if (back) {
+        reason = "entry";
+        context.onStop();
+      } else Engine.step();
+    } else {
+      event("continued", {});
+      Engine.signalThread();
+    }
+  }
   : Engine.step;
 
 function signalStopped() {
@@ -675,24 +682,37 @@ function signalStopped() {
     "stopped",
     context.error
       ? {
-          reason: "exception",
-          description: "Paused on exception",
-          text: String(context.value)
-        }
+        reason: "exception",
+        description: "Paused on exception",
+        text: String(context.value)
+      }
       : {
-          reason,
-          description: runningTrace ? `${reason} from trace` : undefined
-        }
+        reason,
+        description: runningTrace ? `${reason} from trace` : undefined
+      }
   );
 }
 
-context.onStop = function(_description?: string) {
+context.onStop = function (_description?: string) {
   if (config.verbose) trace("DEBUGGER: stop signal");
   if (!context.top) return;
+  if (reason === "interrupt") {
+    reason = void 0;
+    setTimeout(interruptibleStep, 0);
+    return;
+  }
+
   context.activeTop = context.top;
   context.top = null;
   signalStopped();
 };
+
+function interruptibleStep() {
+  if (Comms.hasMessage())
+    setTimeout(interruptibleStep, 0)
+  else
+    Engine.step();
+}
 
 function cont(back?: boolean) {
   if (config.verbose)
@@ -700,8 +720,9 @@ function cont(back?: boolean) {
   if (!context.activeTop) event("continued", {});
 }
 
-handlers.pause = function(_, res) {
+handlers.pause = function (_, res) {
   send(res);
+  // pauseNext = true;
   stepIn = true;
   if (config.timeTravel) run(true);
 };
@@ -724,21 +745,21 @@ function checkTimeTravelEnabled(res: P.Response) {
   return false;
 }
 
-handlers.stepIn = function(_, res) {
+handlers.stepIn = function (_, res) {
   send(res);
   reset();
   stepIn = true;
   run();
 };
 
-handlers.reverseContinue = function(_, res) {
+handlers.reverseContinue = function (_, res) {
   if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
   run(true);
 };
 
-handlers.stepBack = function(_, res) {
+handlers.stepBack = function (_, res) {
   if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
@@ -746,13 +767,13 @@ handlers.stepBack = function(_, res) {
   run(true);
 };
 
-handlers.continue = function(_, res) {
+handlers.continue = function (_, res) {
   send(res);
   reset();
   run();
 };
 
-handlers.next = function(_, res) {
+handlers.next = function (_, res) {
   send(res);
   const top = brkFrame || context.activeTop;
   reset();
@@ -762,7 +783,7 @@ handlers.next = function(_, res) {
   run();
 };
 
-handlers.stepOut = function(_, res) {
+handlers.stepOut = function (_, res) {
   send(res);
   const top = brkFrame || context.activeTop;
   reset();
@@ -772,7 +793,7 @@ handlers.stepOut = function(_, res) {
   run();
 };
 
-handlers.childTerminate = function() {
+handlers.childTerminate = function () {
   Comms.close();
   if (
     typeof process !== "undefined" &&
@@ -905,7 +926,7 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
   return body;
 }
 
-handlers.childSetBreakpoints = function(args, res) {
+handlers.childSetBreakpoints = function (args, res) {
   res.body = setBreakpoints(args, args.sourceModified);
 };
 
@@ -920,11 +941,11 @@ function setExceptionBreakpoints(args: P.SetExceptionBreakpointsArguments) {
   }
 }
 
-handlers.childSetExceptionBreakpoints = function(args) {
+handlers.childSetExceptionBreakpoints = function (args) {
   setExceptionBreakpoints(args);
 };
 
-handlers.evaluate = function(args, res) {
+handlers.evaluate = function (args, res) {
   let val;
   const expr = args.expression.trim();
   if (expr.length) {
@@ -971,7 +992,7 @@ function compileEval(
     true,
     null
   );
-  return function(frame: State.Frame) {
+  return function (frame: State.Frame) {
     const savedDebug = context.debug;
     context.debug = false;
     const func = meta.func(frame);
@@ -983,7 +1004,7 @@ function compileEval(
   };
 }
 
-handlers.setExpression = function(args, res) {
+handlers.setExpression = function (args, res) {
   this.evaluate(
     assign({}, args, { expression: `${args.expression} = ${args.value}` }),
     res
@@ -992,12 +1013,12 @@ handlers.setExpression = function(args, res) {
 
 const sources = new Map<number, string>();
 
-handlers.source = function(args, res) {
+handlers.source = function (args, res) {
   const content = sources.get(args.sourceReference);
   res.body = { content };
 };
 
-context.onNewSource = function(id: number, code: string) {
+context.onNewSource = function (id: number, code: string) {
   sources.set(id, code);
   event("loadedSources", {
     reason: "new",
@@ -1015,7 +1036,7 @@ const LOGMESSAGE_VARIABLE_REGEXP = /{(.*?)}/g;
 function logMessageToExpression(msg: string) {
   msg = msg.replace(/%/g, "%%");
   let args: string[] = [];
-  let format = msg.replace(LOGMESSAGE_VARIABLE_REGEXP, function(_match, group) {
+  let format = msg.replace(LOGMESSAGE_VARIABLE_REGEXP, function (_match, group) {
     const a = group.trim();
     if (a) {
       args.push(`(${a})`);
@@ -1078,7 +1099,7 @@ export function capture(): S.JSONObject {
         document: (<any>global).document,
         extra: Persist.extra
       },
-      { ignore: "opaque", warnIgnored: true, alwaysByRef: true, verbose:config.debuggerDebug }
+      { ignore: "opaque", warnIgnored: true, alwaysByRef: true, verbose: config.debuggerDebug }
     );
     res.modules = modules;
     return res;
@@ -1147,7 +1168,7 @@ export function restore(json: S.JSONObject) {
     } = S.read(json, { ignore: "placeholder", warnIgnored: true }));
     for (const i of extra) Persist.extra.add(i);
     // reloading somehow breaks WebSockets 
-    setTimeout(function() {
+    setTimeout(function () {
       if (typeof document !== "undefined") {
         if (config.mutationObserver && TT.DOM && typeof window !== "undefined") {
           TT.DOM.observing.clear();

@@ -31,5 +31,7 @@ export default {
   expNoAccessOverloading: true,
   expInlineNext: false,
   /** for timeTravel debugging don't exit node process on program termination */
-  stopOnExit: false
+  stopOnExit: false,
+  /** communcations are in a separate thread */
+  expUseWorker: true
 };

@@ -36,6 +36,7 @@ class WS {
 }
 
 config.WebSocket = WS;
+config.expUseWorker = false;
 
 const { resetLoad } = require("../vscode/handlers");
 

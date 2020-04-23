@@ -167,8 +167,9 @@ suite("Debugging on Chrome", function() {
     ]);
     assert.equal(await getCur(), "2");
     assert.equal((await dc.scopeDescr())[0][1].value, 2);
-    await dc.continueRequest({ threadId: 0 }),
-      await Promise.all([
+    await dc.continueRequest({ threadId: 0 })
+    await new Promise(i => setTimeout(i, 500));
+    await Promise.all([
         dc.pauseRequest({ threadId: 0 }),
         dc.assertStoppedLocation("step", {
           path: COUNTER_TSX,

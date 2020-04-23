@@ -19,6 +19,11 @@
   "bin": {
     "edbg": "./bin/edbg.js"
   },
+  "browser": {
+    "worker_threads": false,
+    "ws": false,
+    "vm": false
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@macklinu/jest-environment-jsdom-fifteen": "^0.2.0",
