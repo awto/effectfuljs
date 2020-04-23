@@ -43,13 +43,14 @@ const sysConsole = console;
 const localConsole = config.localConsole
   ? console
   : {
-      log() {},
-      error() {},
-      warn() {},
-      dir() {},
-      time() {},
-      timeEnd() {}
-    };
+    log() { },
+    error() { },
+    warn() { },
+    dir() { },
+    group() { },
+    groupCollapsed() { },
+    groupEnd() { }
+  };
 
 context.debug = true;
 
@@ -119,18 +120,8 @@ context.needsBreak = config.timeTravel
 
 S.regOpaqueObject(context.needsBreak, "@effectful/debugger/vscode$brk");
 
-function output(category: string, args: any[], value?: any) {
+function output(category: string, args: any[], value?: any, group?: string) {
   const descr = value !== undefined ? varValue("console", value) : undefined;
-  // TODO: formatter
-  const top = context.top;
-  let source: P.Source | undefined;
-  let line: number | undefined;
-  let column: number | undefined;
-  if (top && top.brk) {
-    source = getSource(top.meta.module);
-    line = top.brk.line;
-    column = top.brk.column;
-  }
   event(
     "output",
     assign(
@@ -138,11 +129,9 @@ function output(category: string, args: any[], value?: any) {
       {
         category,
         output: (<any>util.format).apply(util.format, <any>args) + "\n",
+        group,
         value: descr && descr.value,
-        variablesReference: descr && descr.variablesReference,
-        source,
-        line,
-        column
+        variablesReference: descr && descr.variablesReference
       },
       getLocation()
     )
@@ -151,6 +140,7 @@ function output(category: string, args: any[], value?: any) {
 
 const patchedConsole: any = assign(
   {},
+  console,
   {
     log(...args: any[]) {
       localConsole.log.apply(localConsole, <any>args);
@@ -172,10 +162,18 @@ const patchedConsole: any = assign(
       localConsole.dir(arg);
       output("console", [], arg);
     },
-    // tslint:disable-next-line:no-console
-    time: console.time,
-    // tslint:disable-next-line:no-console
-    timeEnd: console.timeEnd
+    group(name: string) {
+      if (localConsole.group) localConsole.group(name);
+      output("stdout", [name], void 0, "start");
+    },
+    groupEnd() {
+      if (localConsole.groupEnd) localConsole.groupEnd();
+      output("stdout", [], void 0, "end");
+    },
+    groupCollapsed(name: string) {
+      if (localConsole.groupCollapsed) localConsole.groupCollapsed(name);
+      output("stdout", [name], void 0, "startCollapsed");
+    }
   }
 );
 
@@ -334,7 +332,7 @@ function getSource(module: State.Module) {
 }
 
 function getFrame(frameId = 0): State.Frame | null {
-  let cur = context.activeTop;
+  let cur = context.activeTop || context.top;
   for (let i = toLocal(frameId); cur; cur = cur /*.next*/.caller) {
     if (!cur.brk || cur.meta.blackbox) continue;
     if (i === 0) break;
