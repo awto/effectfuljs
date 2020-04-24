@@ -54,49 +54,62 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       if ($p === true) {
-        $.goto = 5;
-        $brk("3:4-4:18");
         $.state = 5;
       } else {
-        $.goto = 10;
+        $.goto = 12;
         continue;
       }
 
     case 5:
-      if ($l[0][1]) {
-        $.goto = 7;
-        $brk("3:11-3:18");
-        continue;
-      } else {
-        $.goto = 6;
-        $brk("4:9-4:18");
-        $.state = 6;
-      }
+      $.goto = 6;
+      $brk("3:4-4:18");
+      $.state = 6;
 
     case 6:
+      if ($l[0][1]) {
+        $.state = 7;
+      } else {
+        $.goto = 11;
+        continue;
+      }
+
+    case 7:
+      $.goto = 8;
+      $brk("3:11-3:18");
+      $.state = 8;
+
+    case 8:
+      $.goto = 9;
+      ($context.call = eff)(1);
+      $.state = 9;
+
+    case 9:
+      $.state = 10;
+
+    case 10:
       $.goto = 3;
       ($context.call = upd)();
       continue;
 
-    case 7:
-      $.goto = 8;
-      ($context.call = eff)(1);
-      $.state = 8;
-
-    case 8:
-      $.goto = 6;
+    case 11:
+      $.goto = 10;
+      $brk("4:9-4:18");
       continue;
 
-    case 9:
-      $.goto = 10;
+    case 12:
+      $.goto = 14;
+      continue;
+
+    case 13:
+      $.goto = 14;
       return $unhandled($.error);
 
-    case 10:
+    case 14:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "2:2-4:18", $s$2], [2, "2:15-2:21", $s$3], [0, "2:11-2:21", $s$3], [2, "2:23-2:30", $s$3], [4, "3:4-4:18", $s$3], [4, "3:11-3:18", $s$3], [2, "2:41-2:46", $s$3], [2, "3:11-3:17", $s$3], [0, null, $s$2], [16, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2]]);
+}, null, null, 1, [[4, "2:2-4:18", $s$2], [2, "2:15-2:21", $s$3], [0, "2:11-2:21", $s$3], [2, "2:23-2:30", $s$3], [0, null, $s$2], [4, "3:4-4:18", $s$3], [0, null, $s$2], [4, "3:11-3:18", $s$3], [2, "3:11-3:17", $s$3], [0, null, $s$2], [2, "2:41-2:46", $s$3], [4, "4:9-4:18", $s$3], [0, null, $s$2], [16, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2]]);
 
 $M.moduleExports();

@@ -50,38 +50,42 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       if ($l[0][1]) {
-        $.goto = 6;
-        $brk("3:9-3:18");
-        continue;
-      } else {
         $.state = 4;
+      } else {
+        $.goto = 6;
+        continue;
       }
 
     case 4:
       $.goto = 5;
-      $brk("4:2-4:9");
+      $brk("3:9-3:18");
       $.state = 5;
 
     case 5:
-      $.goto = 8;
-      ($context.call = eff6)();
+      $.result = 5;
+      $.goto = 9;
       continue;
 
     case 6:
-      $.result = 5;
-      $.goto = 8;
-      continue;
+      $.goto = 7;
+      $brk("4:2-4:9");
+      $.state = 7;
 
     case 7:
-      $.goto = 8;
-      return $unhandled($.error);
+      $.goto = 9;
+      ($context.call = eff6)();
+      continue;
 
     case 8:
+      $.goto = 9;
+      return $unhandled($.error);
+
+    case 9:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "2:2-2:9", $s$2], [2, "2:2-2:8", $s$2], [4, "3:2-3:18", $s$2], [4, "3:9-3:18", $s$2], [4, "4:2-4:9", $s$2], [2, "4:2-4:8", $s$2], [0, "3:16-3:17", $s$2], [16, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2]]);
+}, null, null, 1, [[4, "2:2-2:9", $s$2], [2, "2:2-2:8", $s$2], [4, "3:2-3:18", $s$2], [0, null, $s$2], [4, "3:9-3:18", $s$2], [0, "3:16-3:17", $s$2], [4, "4:2-4:9", $s$2], [2, "4:2-4:8", $s$2], [16, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2]]);
 
 $M.moduleExports();

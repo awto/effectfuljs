@@ -50,56 +50,64 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       if (t) {
-        $.goto = 8;
-        $brk("4:4-4:12");
-        continue;
-      } else {
-        $.goto = 3;
-        $brk("6:4-6:8");
         $.state = 3;
+      } else {
+        $.goto = 9;
+        continue;
       }
 
     case 3:
-      $lset($l, 1,
-      /*i*/
-      $l[1] + 1);
+      $.goto = 4;
+      $brk("4:4-4:12");
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      $brk("8:2-8:10");
+      ($context.call = eff1)($l[1]);
       $.state = 5;
 
     case 5:
       $.goto = 6;
-      ($context.call = eff2)($l[1]);
+      $brk("8:2-8:10");
       $.state = 6;
 
     case 6:
       $.goto = 7;
-      $brk("9:2-9:10");
+      ($context.call = eff2)($l[1]);
       $.state = 7;
 
     case 7:
-      $.goto = 10;
-      ($context.call = eff3)($l[1]);
-      continue;
+      $.goto = 8;
+      $brk("9:2-9:10");
+      $.state = 8;
 
     case 8:
-      $.goto = 4;
-      ($context.call = eff1)($l[1]);
+      $.goto = 12;
+      ($context.call = eff3)($l[1]);
       continue;
 
     case 9:
       $.goto = 10;
-      return $unhandled($.error);
+      $brk("6:4-6:8");
+      $.state = 10;
 
     case 10:
+      $lset($l, 1,
+      /*i*/
+      $l[1] + 1);
+      $.goto = 5;
+      continue;
+
+    case 11:
+      $.goto = 12;
+      return $unhandled($.error);
+
+    case 12:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "2:2-2:12", $s$2], [4, "3:2-7:3", $s$2], [4, "4:4-4:12", $s$2], [0, "6:4-6:7", $s$2], [4, "8:2-8:10", $s$2], [2, "8:2-8:9", $s$2], [4, "9:2-9:10", $s$2], [2, "9:2-9:9", $s$2], [2, "4:4-4:11", $s$2], [16, "10:1-10:1", $s$2], [16, "10:1-10:1", $s$2]]);
+}, null, null, 1, [[4, "2:2-2:12", $s$2], [4, "3:2-7:3", $s$2], [0, null, $s$2], [4, "4:4-4:12", $s$2], [2, "4:4-4:11", $s$2], [4, "8:2-8:10", $s$2], [2, "8:2-8:9", $s$2], [4, "9:2-9:10", $s$2], [2, "9:2-9:9", $s$2], [4, "6:4-6:8", $s$2], [0, "6:4-6:7", $s$2], [16, "10:1-10:1", $s$2], [16, "10:1-10:1", $s$2]]);
 
 $M.moduleExports();

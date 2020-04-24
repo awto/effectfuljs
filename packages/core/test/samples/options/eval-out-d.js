@@ -208,61 +208,68 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       if ($0l[0][0][0][4]) {
-        $0.goto = 7;
-        $0brk("15:8-15:26");
-        continue;
-      } else {
-        $0.goto = 2;
-        $0brk("18:8-18:16");
         $0.state = 2;
+      } else {
+        $0.goto = 9;
+        continue;
       }
 
     case 2:
       $0.goto = 3;
-      $0evalAt($0l[0][0][0][4]);
+      $0brk("15:8-15:26");
       $0.state = 3;
 
     case 3:
+      $0l[2] = something;
       $0.goto = 4;
-      $0brk("20:6-20:27");
+      $0brk("16:8-16:16");
       $0.state = 4;
 
     case 4:
       $0.goto = 5;
-      $0p = ($0context.call = $0l[1])($0l[0][6], $0l[0][0][0][4]);
+      $0evalAt($0l[2]);
       $0.state = 5;
 
     case 5:
       $0.goto = 6;
-      $0p = $0evalAt($0p);
+      $0brk("20:6-20:27");
       $0.state = 6;
 
     case 6:
-      $0.result = $0p;
-      $0.goto = 10;
-      continue;
+      $0.goto = 7;
+      $0p = ($0context.call = $0l[1])($0l[0][6], $0l[0][0][0][4]);
+      $0.state = 7;
 
     case 7:
-      $0l[2] = something;
       $0.goto = 8;
-      $0brk("16:8-16:16");
+      $0p = $0evalAt($0p);
       $0.state = 8;
 
     case 8:
-      $0.goto = 3;
-      $0evalAt($0l[2]);
+      $0.result = $0p;
+      $0.goto = 12;
       continue;
 
     case 9:
       $0.goto = 10;
-      return $0unhandled($0.error);
+      $0brk("18:8-18:16");
+      $0.state = 10;
 
     case 10:
+      $0.goto = 5;
+      $0evalAt($0l[0][0][0][4]);
+      continue;
+
+    case 11:
+      $0.goto = 12;
+      return $0unhandled($0.error);
+
+    case 12:
       return $0ret($0.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 3, [[4, "14:6-19:7", $s$6], [4, "15:8-15:26", $s$7], [2, "18:8-18:15", $s$6], [4, "20:6-20:27", $s$6], [2, "20:18-20:25", $s$6], [2, "20:13-20:26", $s$6], [0, null, $s$6], [4, "16:8-16:16", $s$7], [2, "16:8-16:15", $s$7], [16, "21:5-21:5", $s$6], [16, "21:5-21:5", $s$6]]);
+}, null, null, 3, [[4, "14:6-19:7", $s$6], [0, null, $s$6], [4, "15:8-15:26", $s$7], [4, "16:8-16:16", $s$7], [2, "16:8-16:15", $s$7], [4, "20:6-20:27", $s$6], [2, "20:18-20:25", $s$6], [2, "20:13-20:26", $s$6], [0, null, $s$6], [4, "18:8-18:16", $s$6], [2, "18:8-18:15", $s$6], [16, "21:5-21:5", $s$6], [16, "21:5-21:5", $s$6]]);
 
 $0M.moduleExports();

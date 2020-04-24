@@ -171,9 +171,9 @@ suite("Debugging on Chrome", function() {
     await new Promise(i => setTimeout(i, 500));
     await Promise.all([
         dc.pauseRequest({ threadId: 0 }),
-        dc.assertStoppedLocation("step", {
+        dc.assertStoppedLocation("pause", {
           path: COUNTER_TSX,
-          line: 6
+          line: 17
         })
       ]);
     assert.equal(await getCur(), "2");

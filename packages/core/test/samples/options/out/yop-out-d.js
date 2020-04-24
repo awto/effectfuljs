@@ -173,44 +173,47 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       if ($0l[1].async) {
-        $0.goto = 4;
-        $0brk("7:20-7:40");
-        continue;
-      } else {
         $0.state = 2;
+      } else {
+        $0.goto = 5;
+        continue;
       }
 
     case 2:
       $0.goto = 3;
-      $0brk("8:4-19:7");
+      $0brk("7:20-7:40");
       $0.state = 3;
 
     case 3:
-      $0.goto = 7;
-      $0mcall("run", M, QM, $0m$3($0));
-      continue;
+      $0.goto = 4;
+      $0p = $0mcall("async", $0l[1]);
+      $0.state = 4;
 
     case 4:
-      $0.goto = 5;
-      $0p = $0mcall("async", $0l[1]);
+      $0l[1] = $0p;
       $0.state = 5;
 
     case 5:
-      $0l[1] = $0p;
-      $0.goto = 2;
-      continue;
+      $0.goto = 6;
+      $0brk("8:4-19:7");
+      $0.state = 6;
 
     case 6:
-      $0.goto = 7;
-      return $0unhandled($0.error);
+      $0.goto = 8;
+      $0mcall("run", M, QM, $0m$3($0));
+      continue;
 
     case 7:
+      $0.goto = 8;
+      return $0unhandled($0.error);
+
+    case 8:
       return $0ret($0.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 2, [[4, "7:4-7:40", $s$3], [4, "7:20-7:40", $s$3], [4, "8:4-19:7", $s$3], [2, "8:4-19:6", $s$3], [2, "7:27-7:39", $s$3], [0, "7:20-7:39", $s$3], [16, "28:3-28:3", $s$3], [16, "28:3-28:3", $s$3]]),
+}, null, null, 2, [[4, "7:4-7:40", $s$3], [0, null, $s$3], [4, "7:20-7:40", $s$3], [2, "7:27-7:39", $s$3], [0, "7:20-7:39", $s$3], [4, "8:4-19:7", $s$3], [2, "8:4-19:6", $s$3], [16, "28:3-28:3", $s$3], [16, "28:3-28:3", $s$3]]),
     $0m$3 = $0M.fun("m$3", null, null, $0m$2, [], 0, 2, "8:14-19:5", 0, function ($0, $0l, $0p) {
   for (;;) switch ($0.state = $0.goto) {
     case 0:
@@ -415,44 +418,47 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       if ($0l[1].async) {
-        $0.goto = 4;
-        $0brk("30:20-30:40");
-        continue;
-      } else {
         $0.state = 2;
+      } else {
+        $0.goto = 5;
+        continue;
       }
 
     case 2:
       $0.goto = 3;
-      $0brk("31:4-49:7");
+      $0brk("30:20-30:40");
       $0.state = 3;
 
     case 3:
-      $0.goto = 7;
-      $0mcall("run", M, QM, $0m$8($0));
-      continue;
+      $0.goto = 4;
+      $0p = $0mcall("async", $0l[1]);
+      $0.state = 4;
 
     case 4:
-      $0.goto = 5;
-      $0p = $0mcall("async", $0l[1]);
+      $0l[1] = $0p;
       $0.state = 5;
 
     case 5:
-      $0l[1] = $0p;
-      $0.goto = 2;
-      continue;
+      $0.goto = 6;
+      $0brk("31:4-49:7");
+      $0.state = 6;
 
     case 6:
-      $0.goto = 7;
-      return $0unhandled($0.error);
+      $0.goto = 8;
+      $0mcall("run", M, QM, $0m$8($0));
+      continue;
 
     case 7:
+      $0.goto = 8;
+      return $0unhandled($0.error);
+
+    case 8:
       return $0ret($0.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 2, [[4, "30:4-30:40", $s$9], [4, "30:20-30:40", $s$9], [4, "31:4-49:7", $s$9], [2, "31:4-49:6", $s$9], [2, "30:27-30:39", $s$9], [0, "30:20-30:39", $s$9], [16, "58:3-58:3", $s$9], [16, "58:3-58:3", $s$9]]),
+}, null, null, 2, [[4, "30:4-30:40", $s$9], [0, null, $s$9], [4, "30:20-30:40", $s$9], [2, "30:27-30:39", $s$9], [0, "30:20-30:39", $s$9], [4, "31:4-49:7", $s$9], [2, "31:4-49:6", $s$9], [16, "58:3-58:3", $s$9], [16, "58:3-58:3", $s$9]]),
     $0m$8 = $0M.fun("m$8", null, null, $0m$7, [], 0, 1, "31:14-49:5", 0, function ($0, $0l, $0p) {
   for (;;) switch ($0.state = $0.goto) {
     case 0:
@@ -723,44 +729,47 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       if ($0l[1].async) {
-        $0.goto = 4;
-        $0brk("60:20-60:40");
-        continue;
-      } else {
         $0.state = 2;
+      } else {
+        $0.goto = 5;
+        continue;
       }
 
     case 2:
       $0.goto = 3;
-      $0brk("61:4-72:7");
+      $0brk("60:20-60:40");
       $0.state = 3;
 
     case 3:
-      $0.goto = 7;
-      $0mcall("run", M, QM, $0m$15($0));
-      continue;
+      $0.goto = 4;
+      $0p = $0mcall("async", $0l[1]);
+      $0.state = 4;
 
     case 4:
-      $0.goto = 5;
-      $0p = $0mcall("async", $0l[1]);
+      $0l[1] = $0p;
       $0.state = 5;
 
     case 5:
-      $0l[1] = $0p;
-      $0.goto = 2;
-      continue;
+      $0.goto = 6;
+      $0brk("61:4-72:7");
+      $0.state = 6;
 
     case 6:
-      $0.goto = 7;
-      return $0unhandled($0.error);
+      $0.goto = 8;
+      $0mcall("run", M, QM, $0m$15($0));
+      continue;
 
     case 7:
+      $0.goto = 8;
+      return $0unhandled($0.error);
+
+    case 8:
       return $0ret($0.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 2, [[4, "60:4-60:40", $s$17], [4, "60:20-60:40", $s$17], [4, "61:4-72:7", $s$17], [2, "61:4-72:6", $s$17], [2, "60:27-60:39", $s$17], [0, "60:20-60:39", $s$17], [16, "73:3-73:3", $s$17], [16, "73:3-73:3", $s$17]]),
+}, null, null, 2, [[4, "60:4-60:40", $s$17], [0, null, $s$17], [4, "60:20-60:40", $s$17], [2, "60:27-60:39", $s$17], [0, "60:20-60:39", $s$17], [4, "61:4-72:7", $s$17], [2, "61:4-72:6", $s$17], [16, "73:3-73:3", $s$17], [16, "73:3-73:3", $s$17]]),
     $0m$15 = $0M.fun("m$15", null, null, $0m$14, [], 0, 2, "61:14-72:5", 0, function ($0, $0l, $0p) {
   for (;;) switch ($0.state = $0.goto) {
     case 0:

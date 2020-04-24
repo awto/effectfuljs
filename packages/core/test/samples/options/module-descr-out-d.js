@@ -120,39 +120,99 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       if ($l[3] < $l[2].length) {
-        $l[4] = $l[2][$l[3]];
-        $1 = $l[4].enumerable;
-
-        if ($1) {
-          $.state = 2;
-        } else {
-          $1 = false;
-          $.state = 2;
-        }
+        $.state = 2;
       } else {
-        $.goto = 6;
+        $.goto = 8;
         continue;
       }
 
     case 2:
+      $l[4] = $l[2][$l[3]];
+      $1 = $l[4].enumerable;
+
+      if ($1) {
+        $.state = 3;
+      } else {
+        $.goto = 7;
+        continue;
+      }
+
+    case 3:
       $l[4].enumerable = $1;
       $l[4].configurable = true;
 
       if ("value" in $l[4]) {
-        $l[4].writable = true;
+        $.state = 4;
+      } else {
+        $.goto = 5;
+        continue;
+      }
+
+    case 4:
+      $l[4].writable = true;
+      $.state = 5;
+
+    case 5:
+      $.goto = 6;
+      $mcall("defineProperty", Object, $l[1], $l[4].key, $l[4]);
+      $.state = 6;
+
+    case 6:
+      $l[3] = $l[3] + 1;
+      $.goto = 1;
+      continue;
+
+    case 7:
+      $1 = false;
+      $.goto = 3;
+      continue;
+
+    case 8:
+      $.goto = 10;
+      continue;
+
+    case 9:
+      $.goto = 10;
+      return $unhandled($.error);
+
+    case 10:
+      return $ret($.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
+    $m$2 = $M.fun("m$2", "_createClass", null, $m$0, ["Constructor", "protoProps", "staticProps"], 0, 4, null, 0, function _createClass($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      if ($l[2]) {
+        $.state = 1;
+      } else {
+        $.goto = 2;
+        continue;
+      }
+
+    case 1:
+      $.goto = 2;
+      ($context.call = $l[0][1])($l[1].prototype, $l[2]);
+      $.state = 2;
+
+    case 2:
+      if ($l[3]) {
         $.state = 3;
       } else {
-        $.state = 3;
+        $.goto = 4;
+        continue;
       }
 
     case 3:
       $.goto = 4;
-      $mcall("defineProperty", Object, $l[1], $l[4].key, $l[4]);
+      ($context.call = $l[0][1])($l[1], $l[3]);
       $.state = 4;
 
     case 4:
-      $l[3] = $l[3] + 1;
-      $.goto = 1;
+      $.result = $l[1];
+      $.goto = 6;
       continue;
 
     case 5:
@@ -165,43 +225,7 @@ var $M = require("@effectful/debugger"),
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
-    $m$2 = $M.fun("m$2", "_createClass", null, $m$0, ["Constructor", "protoProps", "staticProps"], 0, 4, null, 0, function _createClass($, $l, $p) {
-  for (;;) switch ($.state = $.goto) {
-    case 0:
-      if ($l[2]) {
-        $.goto = 1;
-        ($context.call = $l[0][1])($l[1].prototype, $l[2]);
-        $.state = 1;
-      } else {
-        $.state = 1;
-      }
-
-    case 1:
-      if ($l[3]) {
-        $.goto = 2;
-        ($context.call = $l[0][1])($l[1], $l[3]);
-        $.state = 2;
-      } else {
-        $.state = 2;
-      }
-
-    case 2:
-      $.result = $l[1];
-      $.goto = 4;
-      continue;
-
-    case 3:
-      $.goto = 4;
-      return $unhandled($.error);
-
-    case 4:
-      return $ret($.result);
-
-    default:
-      throw new Error("Invalid state");
-  }
-}, null, null, 1, [[2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
+}, null, null, 1, [[0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
     $m$3 = $M.fun("m$3", "C", null, $m$0, ["a"], 0, 3, "3:0-10:1", 0, function C($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

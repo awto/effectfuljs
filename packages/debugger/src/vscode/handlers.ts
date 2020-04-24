@@ -440,12 +440,13 @@ handlers.scopes = function (args, response) {
           if (frame.self && frame.self !== global)
             variables.push(varValue("this", frame.self));
           const store = frame.$;
+          const curScope = brk.scopeDepth;
           // tslint:disable-next-line:forin
           for (const i in scope) {
             const [field, depth, loc] = scope[i];
             if (!loc || depth < scopeDepth) continue;
             let cur: any = store;
-            for (let j = depth; j > scopeDepth; --j) cur = cur[0];
+            for (let j = curScope; j > depth; --j) cur = cur[0];
             variables.push(varValue(i, cur[field]));
           }
         },
@@ -720,9 +721,8 @@ function cont(back?: boolean) {
 
 handlers.pause = function (_, res) {
   send(res);
-  // pauseNext = true;
-  stepIn = true;
-  if (config.timeTravel) run(true);
+  pauseNext = true;
+  if (config.timeTravel && !context.top) run(true);
 };
 
 function checkTimeTravelEnabled(res: P.Response) {

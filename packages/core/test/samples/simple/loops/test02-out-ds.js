@@ -87,46 +87,52 @@ var $M = require("@effectful/debugger"),
       $1 = $l[0][2] < 10;
 
       if ($1) {
-        $1 = $l[0][3] > -10;
         $.state = 9;
       } else {
-        $.state = 9;
-      }
-
-    case 9:
-      if ($1) {
         $.goto = 10;
-        $brk("6:4-6:20");
-        $.state = 10;
-      } else {
-        $l[0][4] = 15;
-        $.goto = 14;
         continue;
       }
 
+    case 9:
+      $1 = $l[0][3] > -10;
+      $.state = 10;
+
     case 10:
-      $.goto = 11;
-      $p = ($context.call = eff3)($l[0][2]);
-      $.state = 11;
+      if ($1) {
+        $.state = 11;
+      } else {
+        $.goto = 16;
+        continue;
+      }
 
     case 11:
-      $lset($l[0], 1,
-      /*k*/
-      $p);
       $.goto = 12;
-      $brk("7:4-7:14");
+      $brk("6:4-6:20");
       $.state = 12;
 
     case 12:
+      $.goto = 13;
+      $p = ($context.call = eff3)($l[0][2]);
+      $.state = 13;
+
+    case 13:
+      $lset($l[0], 1,
+      /*k*/
+      $p);
+      $.goto = 14;
+      $brk("7:4-7:14");
+      $.state = 14;
+
+    case 14:
       $1 = $l[0][1];
       $lset($l[0], 1,
       /*k*/
       $1 + 1);
-      $.goto = 13;
+      $.goto = 15;
       ($context.call = eff4)($1);
-      $.state = 13;
+      $.state = 15;
 
-    case 13:
+    case 15:
       $l = $.$ = $l.slice();
       $lset($l[0], 2,
       /*i*/
@@ -137,26 +143,30 @@ var $M = require("@effectful/debugger"),
       $.goto = 8;
       continue;
 
-    case 14:
+    case 16:
+      $l[0][4] = 18;
+      $.state = 17;
+
+    case 17:
       $l = $.$ = $l[0];
       $.goto = $l[4];
       continue;
 
-    case 15:
-      $.goto = 16;
+    case 18:
+      $.goto = 19;
       $brk("9:2-9:13");
-      $.state = 16;
+      $.state = 19;
 
-    case 16:
-      $.goto = 18;
+    case 19:
+      $.goto = 21;
       ($context.call = eff5)($l[2], $l[3]);
       continue;
 
-    case 17:
-      $.goto = 18;
+    case 20:
+      $.goto = 21;
       return $unhandled($.error);
 
-    case 18:
+    case 21:
       return $ret($.result);
 
     default:
@@ -164,6 +174,9 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 16:
+    case 15:
+    case 14:
     case 13:
     case 12:
     case 11:
@@ -173,16 +186,19 @@ var $M = require("@effectful/debugger"),
     case 7:
     case 6:
     case 5:
-      $l[0][4] = 17;
-      $.goto = 14;
+      $l[0][4] = 20;
+      $.goto = 17;
       break;
 
     default:
-      $.goto = 17;
+      $.goto = 20;
       break;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 16:
+    case 15:
+    case 14:
     case 13:
     case 12:
     case 11:
@@ -192,14 +208,14 @@ var $M = require("@effectful/debugger"),
     case 7:
     case 6:
     case 5:
-      $l[0][4] = 18;
-      $.goto = 14;
+      $l[0][4] = 21;
+      $.goto = 17;
       break;
 
     default:
-      $.goto = 18;
+      $.goto = 21;
       break;
   }
-}, 1, [[4, "3:2-3:9", $s$2], [2, "3:2-3:8", $s$2], [4, "4:2-4:8", $s$2], [4, "5:2-8:3", $s$2], [0, null, $s$2], [3, "5:15-5:21", $s$3], [3, "5:27-5:33", $s$3], [1, "5:23-5:33", $s$3], [1, "5:35-5:41", $s$2], [5, "6:4-6:20", $s$3], [3, "6:12-6:19", $s$3], [5, "7:4-7:14", $s$3], [3, "7:4-7:13", $s$3], [1, null, $s$2], [0, null, $s$2], [4, "9:2-9:13", $s$2], [2, "9:2-9:12", $s$2], [16, "10:1-10:1", $s$2], [16, "10:1-10:1", $s$2]]);
+}, 1, [[4, "3:2-3:9", $s$2], [2, "3:2-3:8", $s$2], [4, "4:2-4:8", $s$2], [4, "5:2-8:3", $s$2], [0, null, $s$2], [3, "5:15-5:21", $s$3], [3, "5:27-5:33", $s$3], [1, "5:23-5:33", $s$3], [1, "5:35-5:41", $s$2], [1, "5:45-5:52", $s$2], [1, null, $s$2], [5, "6:4-6:20", $s$3], [3, "6:12-6:19", $s$3], [5, "7:4-7:14", $s$3], [3, "7:4-7:13", $s$3], [1, null, $s$2], [1, null, $s$2], [0, null, $s$2], [4, "9:2-9:13", $s$2], [2, "9:2-9:12", $s$2], [16, "10:1-10:1", $s$2], [16, "10:1-10:1", $s$2]]);
 
 $M.moduleExports();

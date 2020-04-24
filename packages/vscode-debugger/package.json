@@ -15,10 +15,10 @@
     "url": "https://github.com/awto/effectfuljs/issues"
   },
   "keywords": [
-    "debugger",
     "javascript",
     "typescript",
-    "js"
+    "node",
+    "web"
   ],
   "categories": [
     "Debuggers"

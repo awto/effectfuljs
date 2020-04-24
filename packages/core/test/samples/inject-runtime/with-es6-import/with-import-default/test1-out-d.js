@@ -61,38 +61,50 @@ var $M = require("@effectful/debugger"),
       $1 = $l[1];
 
       if ($1) {
-        $1 = $l[1].__esModule;
         $.state = 1;
       } else {
-        $.state = 1;
+        $.goto = 2;
+        continue;
       }
 
     case 1:
-      if ($1) {
-        $.result = $l[1];
-        $.state = 2;
-      } else {
-        $.result = {
-          default: $l[1]
-        };
-        $.state = 2;
-      }
+      $1 = $l[1].__esModule;
+      $.state = 2;
 
     case 2:
+      if ($1) {
+        $.state = 3;
+      } else {
+        $.goto = 5;
+        continue;
+      }
+
+    case 3:
+      $.result = $l[1];
+      $.state = 4;
+
+    case 4:
+      $.goto = 7;
+      continue;
+
+    case 5:
+      $.result = {
+        default: $l[1]
+      };
       $.goto = 4;
       continue;
 
-    case 3:
-      $.goto = 4;
+    case 6:
+      $.goto = 7;
       return $unhandled($.error);
 
-    case 4:
+    case 7:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
+}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
     $m$2 = $M.fun("m$2", "a", null, $m$0, [], 0, 1, "3:0-6:1", 2, function a($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

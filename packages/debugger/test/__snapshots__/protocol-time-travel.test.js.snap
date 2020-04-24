@@ -6,7 +6,42 @@ Object {
   "stdout": "",
   "trace": Array [
     Object {
-      "reason": "step",
+      "reason": "pause",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "reverseContinuePlain.js",
+          "line": 16,
+          "name": "reverseContinuePlain.js",
+          "scopes": Array [
+            Object {
+              "[name]": "reverseContinuePlain.js",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                },
+              },
+              "i": "675411",
+              "j": "20",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "debugger_statement",
       "stack": Array [
         Object {
           "column": 1,
@@ -414,12 +449,12 @@ Object {
   "stdout": "",
   "trace": Array [
     Object {
-      "reason": "step",
+      "reason": "pause",
       "stack": Array [
         Object {
           "column": 1,
           "file": "reverseContinueCJS.js",
-          "line": 2,
+          "line": 3,
           "name": "reverseContinueCJS.js",
           "scopes": Array [
             Object {
@@ -585,7 +620,23 @@ Object {
   "stdout": "",
   "trace": Array [
     Object {
-      "reason": "step",
+      "reason": "pause",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "reverseContinueESM.js",
+          "line": 4,
+          "name": "reverseContinueESM.js",
+          "scopes": Array [
+            Object {
+              "[name]": "reverseContinueESM.js",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "debugger_statement",
       "stack": Array [
         Object {
           "column": 1,
@@ -686,12 +737,12 @@ Object {
   "stdout": "",
   "trace": Array [
     Object {
-      "reason": "step",
+      "reason": "pause",
       "stack": Array [
         Object {
-          "column": 3,
+          "column": 2,
           "file": "reverseContinueAsync.js",
-          "line": 19,
+          "line": 20,
           "name": "afunc1",
           "scopes": Array [
             Object {
@@ -1008,6 +1059,41 @@ Object {
   "stderr": "",
   "stdout": "",
   "trace": Array [
+    Object {
+      "reason": "pause",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackPlain.js",
+          "line": 15,
+          "name": "stepBackPlain.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackPlain.js",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                },
+              },
+              "i": "675411",
+              "j": "20",
+            },
+          ],
+        },
+      ],
+    },
     Object {
       "reason": "step",
       "stack": Array [
@@ -2629,6 +2715,22 @@ Object {
   "stdout": "",
   "trace": Array [
     Object {
+      "reason": "pause",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackCJS.js",
+          "line": 3,
+          "name": "stepBackCJS.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackCJS.js",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
       "reason": "step",
       "stack": Array [
         Object {
@@ -2870,6 +2972,22 @@ Object {
   "stdout": "",
   "trace": Array [
     Object {
+      "reason": "pause",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackESM.js",
+          "line": 4,
+          "name": "stepBackESM.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM.js",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
       "reason": "step",
       "stack": Array [
         Object {
@@ -3024,6 +3142,93 @@ Object {
   "stderr": "",
   "stdout": "",
   "trace": Array [
+    Object {
+      "reason": "pause",
+      "stack": Array [
+        Object {
+          "column": 2,
+          "file": "stepBackAsync.js",
+          "line": 19,
+          "name": "afunc1",
+          "scopes": Array [
+            Object {
+              "[name]": "afunc1",
+              "afunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "afunc2",
+                "prototype": Object {
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                },
+              },
+              "j": "3000",
+              "k": "100",
+            },
+            Object {
+              "[name]": "stepBackAsync.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                },
+              },
+              "i": "886411",
+              "j": "20",
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepBackAsync.js",
+          "line": 21,
+          "name": "stepBackAsync.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackAsync.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                },
+              },
+              "i": "886411",
+              "j": "20",
+            },
+          ],
+        },
+      ],
+    },
     Object {
       "reason": "step",
       "stack": Array [

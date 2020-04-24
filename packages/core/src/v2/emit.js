@@ -29,6 +29,7 @@ export function calcFrames(root) {
   lastFrame.block = null;
   let prevFrame = lastFrame;
   prevFrame.prevFrame = prevFrame.nextFrame = prevFrame;
+  const combineFrames = config.blackbox;
   const pureSym =
     Scope.pureSyms[flags & Scope.ASYNC_OR_GENERATOR_FUNCTION_FLAG];
   prevFrame.consequent = Kit.throwStmt(
@@ -162,7 +163,7 @@ export function calcFrames(root) {
     switch (exitKind) {
       case EXIT_BR: {
         if (lastEffBr) break;
-        jumpDirect(block.unwind ? unwind(br) : br);
+        jumpDirect(block.unwind ? unwind(br) : br, true);
         break;
       }
       case EXIT_COND: {
@@ -171,9 +172,9 @@ export function calcFrames(root) {
         Kit.append(branch, rhs);
         Kit.append(consequent, branch);
         consequent = Kit.appendBlock(Tag.consequent, branch);
-        jumpDirect(block.trueBr);
+        jumpDirect(block.trueBr, combineFrames);
         consequent = Kit.appendBlock(Tag.alternate, branch);
-        jumpDirect(block.falseBr);
+        jumpDirect(block.falseBr, combineFrames);
         break;
       }
       case EXIT_SWITCH: {
@@ -193,7 +194,7 @@ export function calcFrames(root) {
           }
           Kit.append(cases, switchCase);
           consequent.noSkip = true;
-          jumpDirect(i);
+          jumpDirect(i, combineFrames);
         }
         Kit.append(branch, cases);
         break;
@@ -273,12 +274,13 @@ export function calcFrames(root) {
     }
     return frame;
   }
-  function jumpDirect(br) {
+  function jumpDirect(br, combine) {
     let nextFrame = br.frame;
     if (!nextFrame) {
       br.nextJob = jobs;
       jobs = br;
       if (
+        combine &&
         (br.enters === 1 || (!consequent.parent && !consequent.firstChild)) &&
         br.finalizer === block.finalizer &&
         br.handler === block.handler &&
