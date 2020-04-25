@@ -13,6 +13,8 @@ This works by instrumenting JavaScript/TypeScript code and injecting necessary d
 
 ![](https://media.giphy.com/media/gjTckBLm4Pt1kG6Ydr/giphy.gif)
 
+There are more demos in [Slides](https://docs.google.com/presentation/d/e/2PACX-1vQJwvPd1R4bPD_626ScR2rIUGmaXdmSp58VSfqm-7zYPVxH1UytUotF-YOSmgkZ1SOXnD7UwWovtWpF/pub?start=true&loop=true&delayms=30000).
+
 ## Caveats
 
 The project is at its early stage. It requires runtime monkey patching and it isn't fully and properly done yet. So in big projects, it is quite unlikely everything works effortlessly (this, however, reduces debugging efforts).
@@ -221,7 +223,11 @@ The time-traveling trace is stored in `EDBG.journal` object, and it can be chang
 
 For example, to disable traveling through the trace and just make the program to run from the current point, run `EDBG.journal.future = null` in "Debug Console" tab or in some of your scripts.
 
-By default, it tracks only local variables, properties, and DOM changes. If something is changed in something external (e.g. DB, file, native module etc) it won't be tracked and changed, though, we'll still be able to travel through the program except resetting won't work for DBs. 
+There are a lot of more advanced usages, for example, comparing different runs of the same code, for example, failed test run with some last successful run.
+
+The journal object is stored and restored by `EDBG.capture`/`EDBG.restore` functions. If the goal is only post-mortem debugging we can safely ignore all the warnings about non-serializable values. But if we want to resurrect it from some point all of them must be fixed.
+
+By default, it tracks only local variables, properties, and DOM changes. If something is changed in something external (e.g. DB, file, native module, etc) it won't be tracked and changed, though, we'll still be able to travel through the program except resetting won't work for DBs. 
 
 External states may be still tracked using special handlers. For example, when we change DB we just call `EDBG.TimeTravel.record(f)` where `f` is a callback which resets the DB into the former state. This callback should in turn `record` the reset change so time forwarding works. This way time-traveling can be enabled even for multi-tier applications.
 
