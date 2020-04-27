@@ -160,6 +160,7 @@ export function calcFrames(root) {
         lhs = null;
       }
     }
+    frame.exitKind = exitKind;
     switch (exitKind) {
       case EXIT_BR: {
         if (lastEffBr) break;
@@ -255,6 +256,7 @@ export function calcFrames(root) {
     frame.nextEffExit = frame.prevEffExit = frame;
     frame.nextEffSkipExit = frame.prevEffSkipExit = frame;
     frame.nextPureExit = frame.prevPureExit = frame;
+    frame.exitKind = EXIT_BR;
     return frame;
   }
   function initTop() {

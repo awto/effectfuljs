@@ -1,14 +1,14 @@
 import * as State from "./state";
 import { persistModule } from "./instr/rt";
 import config from "./config";
-import { getCurModule } from "./engine";
+import { compileModule } from "./engine";
 
 const { context, token, thunkSymbol, saved } = State;
 
 const { defineProperty } = saved.Object;
 
 export function moduleExports() {
-  const mod = getCurModule();
+  const mod = compileModule();
   const topMeta = mod.topLevel;
   const cjs = mod.cjs;
   const hot = mod.version > 0;

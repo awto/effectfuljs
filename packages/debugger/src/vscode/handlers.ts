@@ -43,14 +43,14 @@ const sysConsole = console;
 const localConsole = config.localConsole
   ? console
   : {
-    log() { },
-    error() { },
-    warn() { },
-    dir() { },
-    group() { },
-    groupCollapsed() { },
-    groupEnd() { }
-  };
+      log() {},
+      error() {},
+      warn() {},
+      dir() {},
+      group() {},
+      groupCollapsed() {},
+      groupEnd() {}
+    };
 
 context.debug = true;
 
@@ -112,10 +112,10 @@ const saveFlags =
   State.BrkFlag.STMT | State.BrkFlag.DEBUGGER_STMT | State.BrkFlag.EXIT;
 
 context.needsBreak = config.timeTravel
-  ? function (brk: State.Brk, top: State.Frame) {
-    if (brk.flags & saveFlags) TT.checkpoint();
-    return defaultNeedsBreak(brk, top);
-  }
+  ? function(brk: State.Brk, top: State.Frame) {
+      if (brk.flags & saveFlags) TT.checkpoint();
+      return defaultNeedsBreak(brk, top);
+    }
   : defaultNeedsBreak;
 
 S.regOpaqueObject(context.needsBreak, "@effectful/debugger/vscode$brk");
@@ -138,47 +138,43 @@ function output(category: string, args: any[], value?: any, group?: string) {
   );
 }
 
-const patchedConsole: any = assign(
-  {},
-  console,
-  {
-    log(...args: any[]) {
-      localConsole.log.apply(localConsole, <any>args);
-      output("stdout", args);
-    },
-    error(...args: any) {
-      localConsole.error.apply(localConsole, <any>args);
-      output("stderr", args);
-    },
-    warn(...args: any) {
-      localConsole.warn.apply(localConsole, <any>args);
-      output("stderr", args);
-    },
-    info(...args: any[]) {
-      localConsole.log.apply(localConsole, <any>args);
-      output("stdout", args);
-    },
-    dir(arg: any) {
-      localConsole.dir(arg);
-      output("console", [], arg);
-    },
-    group(name: string) {
-      if (localConsole.group) localConsole.group(name);
-      output("stdout", [name], void 0, "start");
-    },
-    groupEnd() {
-      if (localConsole.groupEnd) localConsole.groupEnd();
-      output("stdout", [], void 0, "end");
-    },
-    groupCollapsed(name: string) {
-      if (localConsole.groupCollapsed) localConsole.groupCollapsed(name);
-      output("stdout", [name], void 0, "startCollapsed");
-    }
+const patchedConsole: any = assign({}, console, {
+  log(...args: any[]) {
+    localConsole.log.apply(localConsole, <any>args);
+    output("stdout", args);
+  },
+  error(...args: any) {
+    localConsole.error.apply(localConsole, <any>args);
+    output("stderr", args);
+  },
+  warn(...args: any) {
+    localConsole.warn.apply(localConsole, <any>args);
+    output("stderr", args);
+  },
+  info(...args: any[]) {
+    localConsole.log.apply(localConsole, <any>args);
+    output("stdout", args);
+  },
+  dir(arg: any) {
+    localConsole.dir(arg);
+    output("console", [], arg);
+  },
+  group(name: string) {
+    if (localConsole.group) localConsole.group(name);
+    output("stdout", [name], void 0, "start");
+  },
+  groupEnd() {
+    if (localConsole.groupEnd) localConsole.groupEnd();
+    output("stdout", [], void 0, "end");
+  },
+  groupCollapsed(name: string) {
+    if (localConsole.groupCollapsed) localConsole.groupCollapsed(name);
+    output("stdout", [name], void 0, "startCollapsed");
   }
-);
+});
 
 for (const name of Object.keys(patchedConsole))
-  Persist.regOpaqueObject(patchedConsole[name], `#patcheConsole#{name}`)
+  Persist.regOpaqueObject(patchedConsole[name], `#patcheConsole#{name}`);
 
 if (config.redirConsole) global.console = patchedConsole;
 
@@ -227,7 +223,7 @@ function dispatch(req: P.Request) {
   send(res);
 }
 
-context.onLoad = function (module: State.Module, hot: boolean) {
+context.onLoad = function(module: State.Module, hot: boolean) {
   const source = getSource(module);
   if (config.verbose) trace(`DEBUGGER: loading ${JSON.stringify(source)}`);
   if (module.fullPath) {
@@ -251,7 +247,7 @@ context.onLoad = function (module: State.Module, hot: boolean) {
 let launchCb: ((stop: boolean) => void) | undefined;
 let launchPromise: Promise<boolean> = new Promise<boolean>(i => (launchCb = i));
 
-context.onThread = async function () {
+context.onThread = async function() {
   if (context.top || context.activeTop) return;
   if (!context.queue.length) {
     if (!context.top && !context.activeTop) {
@@ -289,7 +285,7 @@ context.onThread = async function () {
   }
 };
 
-handlers.childRestart = function (res) {
+handlers.childRestart = function(res) {
   if (typeof window !== "undefined") window.location.reload();
   else {
     res.success = false;
@@ -297,7 +293,7 @@ handlers.childRestart = function (res) {
   }
 };
 
-handlers.launch = function () { };
+handlers.launch = function() {};
 
 let linStartAt1 = true;
 let colStartAt1 = true;
@@ -355,7 +351,7 @@ function getLocation(frameId = 0): Location {
   return res;
 }
 
-handlers.stackTrace = function (args, response) {
+handlers.stackTrace = function(args, response) {
   const startFrame =
     typeof args.startFrame === "number" ? toLocal(args.startFrame) : 0;
   const maxLevels = typeof args.levels === "number" ? args.levels : 1000;
@@ -418,7 +414,7 @@ function resetScopes() {
 
 const variablesSym = Symbol("@effectful/debugger/variables");
 
-handlers.scopes = function (args, response) {
+handlers.scopes = function(args, response) {
   const frameReference = args.frameId;
   const root = getFrame(frameReference);
   const scopes = [];
@@ -468,7 +464,7 @@ handlers.scopes = function (args, response) {
   }
 };
 
-handlers.variables = function (args, response) {
+handlers.variables = function(args, response) {
   let variables: VarValue[] = [];
   const val = curValById.get(args.variablesReference);
   if (val != null) {
@@ -516,7 +512,7 @@ function varValue(name: string, value: any): VarValue {
         if (meta) {
           valRepr = `${meta.origName}@${
             meta.module ? path.basename(meta.module.name) : "*"
-            }:${meta.location}`;
+          }:${meta.location}`;
         }
       }
     case "object":
@@ -557,7 +553,7 @@ function varValue(name: string, value: any): VarValue {
   function str(value: any): any {
     try {
       return String(value);
-    } catch (e) { }
+    } catch (e) {}
   }
 }
 
@@ -568,7 +564,7 @@ function reset() {
   resetScopes();
 }
 
-handlers.childLaunch = function (args, res) {
+handlers.childLaunch = function(args, res) {
   setDirSep(args.dirSep);
   if (config.timeTravel) {
     TT.reset(!config.timeTravelDisabled);
@@ -617,6 +613,7 @@ function checkPause(
     (!bp.hitCondition || bp.hitCondition(top) === bp.hits++)
   )
     return "breakpoint";
+  if (brk.flags & State.BrkFlag.EMPTY) return void 0;
   if (brk.flags & State.BrkFlag.STMT) {
     if (stepIn) return "step";
     if ((brkNext = firstActiveFrame(brkNext)) && brkNext === top) return "next";
@@ -624,9 +621,8 @@ function checkPause(
   } else if (brk.flags & State.BrkFlag.EXIT) {
     if (brkOut && brkOut === top) return "stepOut";
   }
-  if (Comms.hasMessage())
-    return "interrupt";
-  return undefined;
+  if (Comms.hasMessage()) return "interrupt";
+  return void 0;
 }
 
 let stepCount = 0;
@@ -648,31 +644,31 @@ function run(back?: boolean) {
 
 const step: (back?: boolean) => void = config.timeTravel
   ? function step(back?: boolean) {
-    if (back || journal.future) {
-      runningTrace = true;
-      const iter = back ? TT.undo : TT.redo;
-      let lastBrk = context.brk;
-      while (iter()) {
-        const { brk, top } = context;
-        if (brk === lastBrk) continue;
-        lastBrk = brk;
-        if (brk && top && (reason = checkPause(brk, top)) != null) {
-          context.onStop();
-          return;
+      if (back || journal.future) {
+        runningTrace = true;
+        const iter = back ? TT.undo : TT.redo;
+        let lastBrk = context.brk;
+        while (iter()) {
+          const { brk, top } = context;
+          if (brk === lastBrk) continue;
+          lastBrk = brk;
+          if (brk && top && (reason = checkPause(brk, top)) != null) {
+            context.onStop();
+            return;
+          }
         }
       }
+      runningTrace = false;
+      if (context.top) {
+        if (back) {
+          reason = "entry";
+          context.onStop();
+        } else Engine.step();
+      } else {
+        event("continued", {});
+        Engine.signalThread();
+      }
     }
-    runningTrace = false;
-    if (context.top) {
-      if (back) {
-        reason = "entry";
-        context.onStop();
-      } else Engine.step();
-    } else {
-      event("continued", {});
-      Engine.signalThread();
-    }
-  }
   : Engine.step;
 
 function signalStopped() {
@@ -681,18 +677,18 @@ function signalStopped() {
     "stopped",
     context.error
       ? {
-        reason: "exception",
-        description: "Paused on exception",
-        text: String(context.value)
-      }
+          reason: "exception",
+          description: "Paused on exception",
+          text: String(context.value)
+        }
       : {
-        reason,
-        description: runningTrace ? `${reason} from trace` : undefined
-      }
+          reason,
+          description: runningTrace ? `${reason} from trace` : undefined
+        }
   );
 }
 
-context.onStop = function (_description?: string) {
+context.onStop = function(_description?: string) {
   if (config.verbose) trace("DEBUGGER: stop signal");
   if (!context.top) return;
   if (reason === "interrupt") {
@@ -707,10 +703,8 @@ context.onStop = function (_description?: string) {
 };
 
 function interruptibleStep() {
-  if (Comms.hasMessage())
-    setTimeout(interruptibleStep, 0)
-  else
-    Engine.step();
+  if (Comms.hasMessage()) setTimeout(interruptibleStep, 0);
+  else Engine.step();
 }
 
 function cont(back?: boolean) {
@@ -719,7 +713,7 @@ function cont(back?: boolean) {
   if (!context.activeTop) event("continued", {});
 }
 
-handlers.pause = function (_, res) {
+handlers.pause = function(_, res) {
   send(res);
   pauseNext = true;
   if (config.timeTravel && !context.top) run(true);
@@ -743,21 +737,21 @@ function checkTimeTravelEnabled(res: P.Response) {
   return false;
 }
 
-handlers.stepIn = function (_, res) {
+handlers.stepIn = function(_, res) {
   send(res);
   reset();
   stepIn = true;
   run();
 };
 
-handlers.reverseContinue = function (_, res) {
+handlers.reverseContinue = function(_, res) {
   if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
   run(true);
 };
 
-handlers.stepBack = function (_, res) {
+handlers.stepBack = function(_, res) {
   if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
@@ -765,13 +759,13 @@ handlers.stepBack = function (_, res) {
   run(true);
 };
 
-handlers.continue = function (_, res) {
+handlers.continue = function(_, res) {
   send(res);
   reset();
   run();
 };
 
-handlers.next = function (_, res) {
+handlers.next = function(_, res) {
   send(res);
   const top = brkFrame || context.activeTop;
   reset();
@@ -781,7 +775,7 @@ handlers.next = function (_, res) {
   run();
 };
 
-handlers.stepOut = function (_, res) {
+handlers.stepOut = function(_, res) {
   send(res);
   const top = brkFrame || context.activeTop;
   reset();
@@ -791,7 +785,7 @@ handlers.stepOut = function (_, res) {
   run();
 };
 
-handlers.childTerminate = function () {
+handlers.childTerminate = function() {
   Comms.close();
   if (
     typeof process !== "undefined" &&
@@ -825,106 +819,91 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
   const modBreakpoints = module.breakpoints || (module.breakpoints = []);
   for (const i of modBreakpoints) i.breakpoint = null;
   modBreakpoints.length = 0;
-  const functions = Object.values(module.functions);
+  const lines = module.lines || [];
   for (const i of args.breakpoints) {
     const diff: P.Breakpoint = { id: i.id, line: i.line, verified: false };
     diffs.push(diff);
-    const { line } = i;
-    const allHits: State.Brk[] = [];
-    const exactHits: State.Brk[] = [];
-    for (const i of functions) {
-      if (
-        i.line == null ||
-        i.endLine == null ||
-        i.line > line ||
-        i.endLine < line
-      )
-        continue;
-      const states = i.statesByLine;
-      if (!states) continue;
-      let info;
-      let j;
-      for (j of states) {
-        if ((j.flags & State.BrkFlag.STMT) === 0) continue;
-        if (j.line <= line && j.endLine >= line) {
-          info = j;
-        }
-        if (j.line > line) break;
-      }
-      if (info) {
-        if (info.line === line) exactHits.push(info);
-      } else {
-        info = j;
-      }
-      if (info) allHits.push(info);
-    }
-    if (!allHits.length) continue;
-    let hits: State.Brk[] = exactHits;
-    if (!hits.length) {
-      if (allHits.length === 1) {
-        hits = allHits;
-      } else {
-        // trying to figure out the most narrow context
-        let minEndLine = 1 << 20;
-        let minEndCol = 1 << 20;
-        for (const i of allHits) {
-          if (i.endLine < minEndLine) {
-            minEndLine = i.endLine;
-            minEndCol = i.endColumn;
-          } else if (i.endLine === minEndLine) {
-            if (i.endColumn < minEndCol) {
-              minEndCol = i.endColumn;
-            }
-          }
-        }
-        hits = filter(
-          allHits,
-          i => i.endLine === minEndLine && i.endColumn === minEndCol
-        );
-        if (hits.length > 1) {
-          let maxLine = 0;
-          let maxCol = 0;
-          for (const i of allHits) {
-            if (i.line > maxLine) {
-              maxLine = i.line;
-              maxCol = i.column;
-            } else if (i.line === maxLine) {
-              maxCol = i.column;
-            }
-          }
-          hits = filter(hits, i => i.line === maxLine && i.column === maxCol);
-        }
-      }
-    }
-    diff.line = adjLine(hits[0].line);
-    diff.column = adjCol(hits[0].column);
+    const line = lines[linStartAt1 ? i.line : i.line + 1];
+    if (!line) continue;
     diff.verified = true;
-    for (const info of hits) {
-      modBreakpoints.push(info);
-      const func = info.meta;
-      let conditionExpr: string | undefined;
-      if (i.logMessage) conditionExpr = logMessageToExpression(i.logMessage);
-      if (i.condition)
-        conditionExpr = conditionExpr
-          ? `(${i.condition}) && ${conditionExpr}`
-          : `(${i.condition})`;
-      const condition = conditionExpr
-        ? <any>compileEval(conditionExpr, func, info)
-        : null;
-      info.breakpoint = {
-        condition,
-        hitCondition: i.hitCondition && compileEval(i.hitCondition, func, info),
-        hits: 0,
-        signal() {
-          event("breakpoint", { reason: "changed", breakpoint: diff });
+    let info: State.Brk | undefined;
+    const {column} = i
+    if (column == null) {
+      [info] = line;
+    } else {
+      for (const brk of line) {
+        const brkCol = adjCol(brk.column);
+        if (column === brkCol) {
+          info = brk;
+          break;
         }
-      };
+        if (column > brkCol && column <= adjCol(brk.endColumn))
+          info = brk;
+      }
     }
+    if (!info) continue;
+    diff.line = adjLine(info.line);
+    diff.column = adjCol(info.column);
+    diff.endLine = adjLine(info.endLine);
+    diff.endColumn = adjCol(info.endColumn);
+    modBreakpoints.push(info);
+    const func = info.meta;
+    let conditionExpr: string | undefined;
+    if (i.logMessage) conditionExpr = logMessageToExpression(i.logMessage);
+    if (i.condition)
+      conditionExpr = conditionExpr
+        ? `(${i.condition}) && ${conditionExpr}`
+        : `(${i.condition})`;
+    const condition = conditionExpr
+      ? <any>compileEval(conditionExpr, func, info)
+      : null;
+    info.breakpoint = {
+      condition,
+      hitCondition: i.hitCondition && compileEval(i.hitCondition, func, info),
+      hits: 0,
+      signal() {
+        event("breakpoint", { reason: "changed", breakpoint: diff });
+      }
+    };
   }
   return body;
 }
 
-handlers.childSetBreakpoints = function (args, res) {
+handlers.breakpointLocations = function(args, res) {
+  const source = args.source;
+  if (source.path) source.path = normalizeDir(source.path);
+  const id = source.path || source.sourceReference;
+  const breakpoints: P.BreakpointLocation[] = [];
+  res.body = { breakpoints };
+  const module = context.modules[id];
+  if (!module) return;
+  const lines = module.lines;
+  if (!lines) return;
+  let { line, endLine, column, endColumn } = args;
+  if (!endLine) endLine = line;
+  for (let i = line; i <= endLine; ++i) {
+    const brks = lines[linStartAt1 ? i : i + 1];
+    if (brks[0].line !== i) continue;
+    for (const brk of brks) {
+      if (!(brk.flags & State.BrkFlag.STMT) || brk.flags & State.BrkFlag.EMPTY) continue;
+      const cur = brk.line;
+      const brkCol = adjCol(brk.column);
+      if (
+        (column && cur === line && adjCol(brkCol) < column) ||
+        (endColumn && cur === endLine && adjCol(brkCol) > endColumn)
+      )
+        continue;
+      breakpoints.push({
+        line: adjLine(brk.line),
+        column: brkCol,
+        endLine: adjLine(brk.endLine),
+        endColumn: adjCol(brk.endColumn)
+      });
+    }
+  }
+};
+
+handlers.childSetBreakpoints = function(args, res) {
   res.body = setBreakpoints(args, args.sourceModified);
 };
 
@@ -939,11 +918,11 @@ function setExceptionBreakpoints(args: P.SetExceptionBreakpointsArguments) {
   }
 }
 
-handlers.childSetExceptionBreakpoints = function (args) {
+handlers.childSetExceptionBreakpoints = function(args) {
   setExceptionBreakpoints(args);
 };
 
-handlers.evaluate = function (args, res) {
+handlers.evaluate = function(args, res) {
   let val;
   const expr = args.expression.trim();
   if (expr.length) {
@@ -990,7 +969,7 @@ function compileEval(
     true,
     null
   );
-  return function (frame: State.Frame) {
+  return function(frame: State.Frame) {
     const savedDebug = context.debug;
     context.debug = false;
     const func = meta.func(frame);
@@ -1002,7 +981,7 @@ function compileEval(
   };
 }
 
-handlers.setExpression = function (args, res) {
+handlers.setExpression = function(args, res) {
   this.evaluate(
     assign({}, args, { expression: `${args.expression} = ${args.value}` }),
     res
@@ -1011,12 +990,12 @@ handlers.setExpression = function (args, res) {
 
 const sources = new Map<number, string>();
 
-handlers.source = function (args, res) {
+handlers.source = function(args, res) {
   const content = sources.get(args.sourceReference);
   res.body = { content };
 };
 
-context.onNewSource = function (id: number, code: string) {
+context.onNewSource = function(id: number, code: string) {
   sources.set(id, code);
   event("loadedSources", {
     reason: "new",
@@ -1034,7 +1013,7 @@ const LOGMESSAGE_VARIABLE_REGEXP = /{(.*?)}/g;
 function logMessageToExpression(msg: string) {
   msg = msg.replace(/%/g, "%%");
   let args: string[] = [];
-  let format = msg.replace(LOGMESSAGE_VARIABLE_REGEXP, function (_match, group) {
+  let format = msg.replace(LOGMESSAGE_VARIABLE_REGEXP, function(_match, group) {
     const a = group.trim();
     if (a) {
       args.push(`(${a})`);
@@ -1097,7 +1076,12 @@ export function capture(): S.JSONObject {
         document: (<any>global).document,
         extra: Persist.extra
       },
-      { ignore: "opaque", warnIgnored: true, alwaysByRef: true, verbose: config.debuggerDebug }
+      {
+        ignore: "opaque",
+        warnIgnored: true,
+        alwaysByRef: true,
+        verbose: config.debuggerDebug
+      }
     );
     res.modules = modules;
     return res;
@@ -1165,10 +1149,14 @@ export function restore(json: S.JSONObject) {
       extra
     } = S.read(json, { ignore: "placeholder", warnIgnored: true }));
     for (const i of extra) Persist.extra.add(i);
-    // reloading somehow breaks WebSockets 
-    setTimeout(function () {
+    // reloading somehow breaks WebSockets
+    setTimeout(function() {
       if (typeof document !== "undefined") {
-        if (config.mutationObserver && TT.DOM && typeof window !== "undefined") {
+        if (
+          config.mutationObserver &&
+          TT.DOM &&
+          typeof window !== "undefined"
+        ) {
           TT.DOM.observing.clear();
           TT.DOM.track(document.documentElement);
         }

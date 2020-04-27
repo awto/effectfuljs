@@ -2,13 +2,13 @@ export * from "./engine";
 export * from "./async";
 import { saved, context, journal } from "./state";
 import config from "./config";
-import { getCurModule } from "./engine";
+import { compileModule } from "./engine";
 if (config.globalNS && !(<any>global)[config.globalNS])
   (<any>global)[config.globalNS] = exports;
 export { context, journal, saved };
 
 export function moduleExports() {
-  const mod = getCurModule();
+  const mod = compileModule();
   const topMeta = mod.topLevel;
   const cjs = mod.cjs;
   if (config.verbose)

@@ -71,8 +71,7 @@ export function emptyBlock() {
     // a variable to hold a copy of an exception
     errCopy: null,
     finalizer: null,
-    // finalizerExit: false,
-    hasReturn: false,
+    blackbox: false,
     handler: null
   };
   res.nextBlock = res.prevBlock = res.nextItem = res.prevItem = res.block = res;
@@ -157,27 +156,13 @@ function defaultNeedsSave(doc) {
 }
 
 export function build(needsSave = defaultNeedsSave) {
-  let root,
-    func,
-    body,
-    blocks,
-    lastBlock,
-    lastItem,
-    curBrk,
-    curCnt,
-    brkLabels,
-    cntLabels;
-  let curFinalizer,
-    curScope,
-    startBlock,
-    retBlock,
-    errBlock,
-    curHandler,
-    retSym,
-    errSym;
+  let root, func, body, blocks, lastBlock, lastItem;
+  let curBrk, curCnt, brkLabels, cntLabels, curFinalizer, curScope;
+  let startBlock, retBlock, errBlock, curHandler, retSym, errSym;
   let finalizers, handlers, yieldSym, async, generator, lastInChain;
   const nsSym = Ctx.root.nsSym;
   const { patSym, ctxSym, localsSym } = Ctx.root;
+  const blackbox = config.blackbox;
 
   for (func = Ctx.root.firstChild; func; func = func.nextFunc) {
     root = func.funcDef;
@@ -196,6 +181,7 @@ export function build(needsSave = defaultNeedsSave) {
     startBlock.doc = body;
     retBlock = emptyBlock();
     errBlock = emptyBlock();
+    errBlock.blackbox = true;
     root.errBlock = errBlock;
     errBlock.exitKind = EXIT_TERM;
     curHandler = errBlock;
@@ -308,6 +294,7 @@ export function build(needsSave = defaultNeedsSave) {
           bodyBlock.br = iterBlock;
           bodyBlock.rec = true;
           const catchBlock = newBlock();
+          catchBlock.blackbox = true;
           testBlock.handler = bodyBlock.handler = catchBlock;
           handlers.add(catchBlock);
           setBlock(catchBlock);
@@ -476,20 +463,6 @@ export function build(needsSave = defaultNeedsSave) {
     Kit.append(res, Kit.tok(Tag.property, Tag.Identifier, { name: method }));
     return res;
   }
-  function iterNext(async, iterSym, itemSym, loc) {
-    if (!async && config.expLooseNext) {
-      const assign = Kit.assign(Tag.push);
-      Kit.append(assign, Scope.sysMemExpr(Tag.left, Scope.contextSym, "call"));
-      Kit.append(assign, iterMethod(Tag.right, iterSym, "next"));
-      push(newItem(null, assign, curScope));
-      const call = Kit.node(Tag.right, Tag.CallExpression);
-      Kit.append(call, iterMethod(Tag.callee, iterSym, "next"));
-      Kit.append(call, Kit.arr(Tag.arguments));
-      push(newItem(itemSym, call, curScope));
-      lastItem.eff = call.eff = true;
-    } else iterOp(async, Scope.iterNextSym, iterSym, itemSym, null);
-    lastItem.doc.node.loc = loc;
-  }
   function traverse(from, till) {
     let i = from;
     let j;
@@ -550,7 +523,6 @@ export function build(needsSave = defaultNeedsSave) {
           lastBlock.br = retBlock;
           lastBlock.unwind = true;
           setBlock(newBlock());
-          for (let j = curFinalizer; j; j = j.finalizer) j.hasReturn = true;
           continue;
         }
         case Tag.VariableDeclarator: {
@@ -764,7 +736,25 @@ export function build(needsSave = defaultNeedsSave) {
           setBlock(testBlock);
           const itemSym = tempSym(root, curScope);
           iterSym.releaseBlock = exitBlock;
-          iterNext(async, iterSym, itemSym, left.node.loc);
+          if (!forIn && !blackbox) {
+            const brk = Scope.brkExpr(left);
+            if (brk) push(newItem(null, brk, curScope));
+          }
+          if (!async && config.expLooseNext) {
+            const assign = Kit.assign(Tag.push);
+            Kit.append(
+              assign,
+              Scope.sysMemExpr(Tag.left, Scope.contextSym, "call")
+            );
+            Kit.append(assign, iterMethod(Tag.right, iterSym, "next"));
+            push(newItem(null, assign, curScope));
+            const call = Kit.node(Tag.right, Tag.CallExpression);
+            Kit.append(call, iterMethod(Tag.callee, iterSym, "next"));
+            Kit.append(call, Kit.arr(Tag.arguments));
+            push(newItem(itemSym, call, curScope));
+            lastItem.eff = call.eff = true;
+          } else iterOp(async, Scope.iterNextSym, iterSym, itemSym, null);
+          lastItem.doc.node.loc = left.node.loc;
           push(newItem(null, memExpr(Tag.right, itemSym, "done"), curScope));
           lastBlock.exitKind = EXIT_COND;
           lastBlock.trueBr = postfixBlock;

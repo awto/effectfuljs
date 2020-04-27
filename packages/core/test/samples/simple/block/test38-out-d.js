@@ -31,7 +31,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("2:2-2:21");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -44,7 +44,7 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $brk("2:12-2:21");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -54,7 +54,7 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $.goto = 5;
-      $brk("3:2-3:11");
+      $brk();
       $.state = 5;
 
     case 5:

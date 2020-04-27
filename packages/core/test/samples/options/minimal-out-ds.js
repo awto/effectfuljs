@@ -24,7 +24,7 @@ var $M = require("@effectful/debugger"),
       /*b*/
       $m$2($));
       $.goto = 1;
-      $brk("1:0-1:28");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -47,7 +47,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("4:2-4:9");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -57,7 +57,7 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $brk("5:2-5:9");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -67,7 +67,7 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $.goto = 5;
-      $brk("6:2-6:16");
+      $brk();
       $.state = 5;
 
     case 5:
@@ -95,7 +95,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("10:2-10:9");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -105,7 +105,7 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $brk("11:2-11:12");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -120,7 +120,7 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      $brk("12:2-12:9");
+      $brk();
       $.state = 6;
 
     case 6:
@@ -130,7 +130,7 @@ var $M = require("@effectful/debugger"),
 
     case 7:
       $.goto = 8;
-      $brk("13:2-13:12");
+      $brk();
       $.state = 8;
 
     case 8:
@@ -145,7 +145,7 @@ var $M = require("@effectful/debugger"),
 
     case 10:
       $.goto = 11;
-      $brk("14:2-14:11");
+      $brk();
       $.state = 11;
 
     case 11:

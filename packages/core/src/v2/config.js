@@ -30,6 +30,7 @@ Object.assign(config, {
   expLooseNext: true,
   expInlineCalls: false,
   expGlobalsEnv: false,
-  moduleParams: null
+  moduleParams: null,
+  switchFallthrough: true
 });
 export default config;

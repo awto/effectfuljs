@@ -35,13 +35,13 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("3:2-3:12");
+      $brk();
       $.state = 1;
 
     case 1:
       $l[1] = 0;
       $.goto = 2;
-      $brk("4:2-4:8");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -51,7 +51,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $brk("5:2-14:3");
+      $brk();
       $.state = 4;
 
     case 4:
@@ -69,13 +69,13 @@ var $M = require("@effectful/debugger"),
       if ($l[2] === $p) {
         $.state = 7;
       } else {
-        $.goto = 12;
+        $.goto = 13;
         continue;
       }
 
     case 7:
       $.goto = 8;
-      $brk("7:6-7:21");
+      $brk();
       $.state = 8;
 
     case 8:
@@ -85,80 +85,85 @@ var $M = require("@effectful/debugger"),
 
     case 9:
       $.goto = 10;
-      $brk("8:6-8:12");
+      $brk();
       $.state = 10;
 
     case 10:
       $.goto = 11;
-      $brk("15:2-15:9");
+      $brk();
       $.state = 11;
 
     case 11:
-      $.goto = 22;
+      $.goto = 12;
       ($context.call = eff)($l[1]);
-      continue;
+      $.state = 12;
 
     case 12:
-      $.goto = 13;
-      $p = ($context.call = check)($l[1] = $l[1] + 4);
-      $.state = 13;
+      $.goto = 23;
+      $brk();
+      continue;
 
     case 13:
+      $.goto = 14;
+      $p = ($context.call = check)($l[1] = $l[1] + 4);
+      $.state = 14;
+
+    case 14:
       if ($l[2] === $p) {
-        $.state = 14;
+        $.state = 15;
       } else {
-        $.goto = 17;
+        $.goto = 18;
         continue;
       }
 
-    case 14:
-      $.goto = 15;
-      $brk("10:6-10:21");
-      $.state = 15;
-
     case 15:
       $.goto = 16;
-      ($context.call = effB)($l[1] = $l[1] + 5);
+      $brk();
       $.state = 16;
 
     case 16:
-      $.goto = 10;
-      $brk("11:6-11:12");
-      continue;
+      $.goto = 17;
+      ($context.call = effB)($l[1] = $l[1] + 5);
+      $.state = 17;
 
     case 17:
-      $.goto = 18;
-      $p = ($context.call = check)($l[1] = $l[1] + 6);
-      $.state = 18;
+      $.goto = 10;
+      $brk();
+      continue;
 
     case 18:
+      $.goto = 19;
+      $p = ($context.call = check)($l[1] = $l[1] + 6);
+      $.state = 19;
+
+    case 19:
       if ($l[2] === $p) {
-        $.state = 19;
+        $.state = 20;
       } else {
         $.goto = 10;
         continue;
       }
 
-    case 19:
-      $.goto = 20;
-      $brk("13:6-13:27");
-      $.state = 20;
-
     case 20:
+      $.goto = 21;
+      $brk();
+      $.state = 21;
+
+    case 21:
       $.goto = 10;
       $mcall("log", console, "hi", $l[1]);
       continue;
 
-    case 21:
-      $.goto = 22;
+    case 22:
+      $.goto = 23;
       return $unhandled($.error);
 
-    case 22:
+    case 23:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "3:2-3:12", $s$2], [4, "4:2-4:8", $s$2], [2, "4:2-4:7", $s$2], [4, "5:2-14:3", $s$2], [2, "5:10-5:23", $s$2], [2, "6:9-6:24", $s$2], [0, null, $s$2], [4, "7:6-7:21", $s$2], [2, "7:6-7:20", $s$2], [4, "8:6-8:12", $s$2], [4, "15:2-15:9", $s$2], [2, "15:2-15:8", $s$2], [2, "9:9-9:24", $s$2], [0, null, $s$2], [4, "10:6-10:21", $s$2], [2, "10:6-10:20", $s$2], [4, "11:6-11:12", $s$2], [2, "12:9-12:24", $s$2], [0, null, $s$2], [4, "13:6-13:27", $s$2], [2, "13:6-13:26", $s$2], [16, "16:1-16:1", $s$2], [16, "16:1-16:1", $s$2]]);
+}, null, null, 1, [[4, "3:2-3:12", $s$2], [4, "4:2-4:8", $s$2], [2, "4:2-4:7", $s$2], [4, "5:2-14:3", $s$2], [2, "5:10-5:23", $s$2], [2, "6:9-6:24", $s$2], [0, null, $s$2], [4, "7:6-7:21", $s$2], [2, "7:6-7:20", $s$2], [4, "8:6-8:12", $s$2], [4, "15:2-15:9", $s$2], [2, "15:2-15:8", $s$2], [36, "16:1-16:1", $s$2], [2, "9:9-9:24", $s$2], [0, null, $s$2], [4, "10:6-10:21", $s$2], [2, "10:6-10:20", $s$2], [4, "11:6-11:12", $s$2], [2, "12:9-12:24", $s$2], [0, null, $s$2], [4, "13:6-13:27", $s$2], [2, "13:6-13:26", $s$2], [16, "16:1-16:1", $s$2], [16, "16:1-16:1", $s$2]]);
 
 $M.moduleExports();

@@ -37,91 +37,101 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("2:2-3:10");
+      $brk();
       $.state = 1;
 
     case 1:
       $l[1] = 0;
-      $l[2] = 0;
       $.goto = 2;
-      $brk("4:2-4:13");
+      $brk();
       $.state = 2;
 
     case 2:
+      $l[2] = 0;
       $.goto = 3;
-      ($context.call = eff0)($l[1], $l[2]);
+      $brk();
       $.state = 3;
 
     case 3:
       $.goto = 4;
-      $brk("5:2-5:17");
+      ($context.call = eff0)($l[1], $l[2]);
       $.state = 4;
 
     case 4:
+      $.goto = 5;
+      $brk();
+      $.state = 5;
+
+    case 5:
       $1 = $l[1];
       $l[1] = $1 + 1;
       $2 = $l[2];
       $l[2] = $2 + 1;
-      $.goto = 5;
-      ($context.call = eff1)($1, $2);
-      $.state = 5;
-
-    case 5:
       $.goto = 6;
-      $brk("6:2-6:10");
+      ($context.call = eff1)($1, $2);
       $.state = 6;
 
     case 6:
       $.goto = 7;
-      ($context.call = eff2)($l[1]);
+      $brk();
       $.state = 7;
 
     case 7:
       $.goto = 8;
-      $brk("7:2-7:9");
+      ($context.call = eff2)($l[1]);
       $.state = 8;
 
     case 8:
-      $l[1] = $l[1] + 1;
       $.goto = 9;
-      $brk("8:2-8:13");
+      $brk();
       $.state = 9;
 
     case 9:
+      $l[1] = $l[1] + 1;
       $.goto = 10;
-      ($context.call = eff3)(2, $l[2]);
+      $brk();
       $.state = 10;
 
     case 10:
       $.goto = 11;
-      $brk("9:2-9:20");
+      ($context.call = eff3)(2, $l[2]);
       $.state = 11;
 
     case 11:
       $.goto = 12;
-      ($context.call = eff4)($l[1] = $l[1] + 2, $l[2]);
+      $brk();
       $.state = 12;
 
     case 12:
       $.goto = 13;
-      $brk("10:2-10:10");
+      ($context.call = eff4)($l[1] = $l[1] + 2, $l[2]);
       $.state = 13;
 
     case 13:
-      $.goto = 15;
-      ($context.call = eff5)($l[2]);
-      continue;
+      $.goto = 14;
+      $brk();
+      $.state = 14;
 
     case 14:
       $.goto = 15;
-      return $unhandled($.error);
+      ($context.call = eff5)($l[2]);
+      $.state = 15;
 
     case 15:
+      $.goto = 17;
+      $brk();
+      continue;
+
+    case 16:
+      $.goto = 17;
+      return $unhandled($.error);
+
+    case 17:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "2:2-3:10", $s$2], [4, "4:2-4:13", $s$2], [2, "4:2-4:12", $s$2], [4, "5:2-5:17", $s$2], [2, "5:2-5:16", $s$2], [4, "6:2-6:10", $s$2], [2, "6:2-6:9", $s$2], [4, "7:2-7:9", $s$2], [4, "8:2-8:13", $s$2], [2, "8:2-8:12", $s$2], [4, "9:2-9:20", $s$2], [2, "9:2-9:19", $s$2], [4, "10:2-10:10", $s$2], [2, "10:2-10:9", $s$2], [16, "11:1-11:1", $s$2], [16, "11:1-11:1", $s$2]]);
+}, null, null, 1, [[4, "2:2-3:10", $s$2], [4, "3:4-3:9", $s$2], [4, "4:2-4:13", $s$2], [2, "4:2-4:12", $s$2], [4, "5:2-5:17", $s$2], [2, "5:2-5:16", $s$2], [4, "6:2-6:10", $s$2], [2, "6:2-6:9", $s$2], [4, "7:2-7:9", $s$2], [4, "8:2-8:13", $s$2], [2, "8:2-8:12", $s$2], [4, "9:2-9:20", $s$2], [2, "9:2-9:19", $s$2], [4, "10:2-10:10", $s$2], [2, "10:2-10:9", $s$2], [36, "11:1-11:1", $s$2], [16, "11:1-11:1", $s$2], [16, "11:1-11:1", $s$2]]);
 
 $M.moduleExports();

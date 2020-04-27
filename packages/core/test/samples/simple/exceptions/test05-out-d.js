@@ -36,57 +36,73 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("2:2-8:3");
+      $brk();
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $brk("3:4-3:11");
+      $brk();
       $.state = 2;
 
     case 2:
-      $l[2] = 8;
-      $.goto = 5;
+      $.goto = 3;
       ($context.call = eff)(1);
-      continue;
+      $.state = 3;
 
     case 3:
-      $l[1] = $.error;
-      $.error = void 0;
-      $.goto = 4;
-      $brk("5:4-5:19");
-      $.state = 4;
+      $l[2] = 11;
+      $.goto = 7;
+      $brk();
+      continue;
 
     case 4:
-      $l[2] = 8;
+      $l[1] = $.error;
+      $.error = void 0;
       $.goto = 5;
-      $mcall("log", console, $l[1]);
+      $brk();
       $.state = 5;
 
     case 5:
       $.goto = 6;
-      $brk("7:4-7:23");
+      $mcall("log", console, $l[1]);
       $.state = 6;
 
     case 6:
+      $l[2] = 11;
       $.goto = 7;
-      $mcall("log", console, "fin");
+      $brk();
       $.state = 7;
 
     case 7:
+      $.goto = 8;
+      $brk();
+      $.state = 8;
+
+    case 8:
+      $.goto = 9;
+      $mcall("log", console, "fin");
+      $.state = 9;
+
+    case 9:
+      $.goto = 10;
+      $brk();
+      $.state = 10;
+
+    case 10:
       $.error = $l[3];
       $.goto = $l[2];
       continue;
 
-    case 8:
-      $.goto = 10;
+    case 11:
+      $.goto = 13;
+      $brk();
       continue;
 
-    case 9:
-      $.goto = 10;
+    case 12:
+      $.goto = 13;
       return $unhandled($.error);
 
-    case 10:
+    case 13:
       return $ret($.result);
 
     default:
@@ -94,36 +110,40 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 3:
     case 2:
     case 1:
-      $.goto = 3;
+      $.goto = 4;
       break;
 
+    case 6:
+    case 5:
     case 4:
-    case 3:
       $l[3] = $.error;
-      $l[2] = 9;
-      $.goto = 5;
+      $l[2] = 12;
+      $.goto = 7;
       break;
 
     default:
-      $.goto = 9;
+      $.goto = 12;
       break;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 6:
+    case 5:
     case 4:
     case 3:
     case 2:
     case 1:
-      $l[2] = 10;
-      $.goto = 5;
+      $l[2] = 13;
+      $.goto = 7;
       break;
 
     default:
-      $.goto = 10;
+      $.goto = 13;
       break;
   }
-}, 1, [[4, "2:2-8:3", $s$2], [5, "3:4-3:11", $s$2], [3, "3:4-3:10", $s$2], [5, "5:4-5:19", $s$3], [3, "5:4-5:18", $s$3], [4, "7:4-7:23", $s$2], [2, "7:4-7:22", $s$2], [0, null, $s$2], [0, null, $s$2], [16, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2]]);
+}, 1, [[4, "2:2-8:3", $s$2], [5, "3:4-3:11", $s$2], [3, "3:4-3:10", $s$2], [37, "4:3-4:3", $s$2], [4, "5:4-5:19", $s$3], [2, "5:4-5:18", $s$3], [36, "6:3-6:3", $s$2], [4, "7:4-7:23", $s$2], [2, "7:4-7:22", $s$2], [36, "8:3-8:3", $s$2], [0, null, $s$2], [36, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2]]);
 
 $M.moduleExports();

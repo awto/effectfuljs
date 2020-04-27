@@ -30,17 +30,13 @@ const normalizeDrive =
           ? path.charAt(0).toUpperCase() + path.slice(1)
           : path;
       }
-    : function(path: string) {
+    : function (path: string) {
         return path;
       };
 
 function packageBase(name: string) {
   const f = name[0];
-  if (f === "@")
-    return name
-      .split("/")
-      .slice(0, 2)
-      .join("/");
+  if (f === "@") return name.split("/").slice(0, 2).join("/");
   if (f === "." || f === "/" || f === "~" || name[1] === ":") return f;
   return name.split("/")[0];
 }
@@ -203,7 +199,7 @@ export class DebugSession extends SessionImpl {
     response.body.supportsReadMemoryRequest = false;
     response.body.supportsDisassembleRequest = false;
     response.body.supportsCancelRequest = false;
-    response.body.supportsBreakpointLocationsRequest = false;
+    response.body.supportsBreakpointLocationsRequest = true;
     response.body.supportsStepInTargetsRequest = false;
     response.body.exceptionBreakpointFilters = [
       { filter: "all", label: "All Exceptions", default: false },
@@ -241,6 +237,9 @@ export class DebugSession extends SessionImpl {
         this.sendResponse(new Response(request));
         this.exceptionArgs = request.arguments;
         this.sendAll({ ...request, command: "childSetExceptionBreakpoints" });
+        return;
+      case "breakpointLocations":
+        this.doBreakpointsLocations(<P.BreakpointLocationsRequest>request);
         return;
       case "setBreakpoints":
         this.doSetBreakpoints(<P.SetBreakpointsRequest>request);
@@ -342,6 +341,10 @@ export class DebugSession extends SessionImpl {
         case "continue":
           (response.body || (response.body = {})).allThreadsContinued = false;
           break;
+        case "breakpointLocations":
+          const cb = this.breakpointLocationsCb?.get(response.request_seq);
+          if (cb) cb([thread.id, <P.BreakpointLocationsResponse>response]);
+          return;
         case "childSetExceptionBreakpoints":
         case "childTerminate":
         case "childRestart":
@@ -462,7 +465,8 @@ export class DebugSession extends SessionImpl {
         : require.resolve(runtimeBase);
     } catch (e) {
       if (e.code !== "MODULE_NOT_FOUND") {
-        if (progressId) // TODO: remove when finally works
+        if (progressId)
+          // TODO: remove when finally works
           this.sendEvent(new ProgressEndEvent(progressId));
         this.sendErrorResponse(
           response,
@@ -476,7 +480,12 @@ export class DebugSession extends SessionImpl {
       );
       let cb: (b: boolean) => void;
       if (progressId)
-        this.sendEvent(new ProgressUpdateEvent(progressId, "Installing runtime (this may take a few minutes but runs only once)"));
+        this.sendEvent(
+          new ProgressUpdateEvent(
+            progressId,
+            "Installing runtime (this may take a few minutes but runs only once)"
+          )
+        );
       const child = spawn(
         "npm",
         [
@@ -517,7 +526,8 @@ export class DebugSession extends SessionImpl {
       try {
         debuggerImpl = require.resolve(runtimeBase);
       } catch (e) {
-        if (progressId) // TODO: remove when finally works
+        if (progressId)
+          // TODO: remove when finally works
           this.sendEvent(new ProgressEndEvent(progressId));
         this.sendErrorResponse(
           response,
@@ -538,8 +548,7 @@ export class DebugSession extends SessionImpl {
         logger.verbose(`new debuggee: ${remote.id}`);
         this.remotes.set(remote.id, remote);
         remote.onclose = () => this.closeRemote(remote.id);
-        remote.onmessage = data =>
-          this.dispatchResponse(remote, <Message>data);
+        remote.onmessage = data => this.dispatchResponse(remote, <Message>data);
         remote.onerror = reason => logger.error(reason);
         if (this.launched) this.launchChild(remote);
         if (this.connectCb) this.connectCb();
@@ -548,9 +557,8 @@ export class DebugSession extends SessionImpl {
       args.debuggerPort || 20011
     );
     this.launchArgs = args;
-    if (args.verbose)
-      logger.verbose(`launch request ${JSON.stringify(args)}`);
-    if (!args.timeTravel || args.preset !== "node")
+    if (args.verbose) logger.verbose(`launch request ${JSON.stringify(args)}`);
+    if (args.preset !== "node")
       this.sendEvent(
         new CapabilitiesEvent({
           supportsStepBack: !!args.timeTravel,
@@ -576,8 +584,9 @@ export class DebugSession extends SessionImpl {
           ? String(args.verbose)
           : "0";
       if (process.env["EFFECTFUL_DEBUGGER_URL"] == null)
-        env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${args.debuggerPort ||
-          20011}`;
+        env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${
+          args.debuggerPort || 20011
+        }`;
       if (runtime) env["EFFECTFUL_DEBUGGER_RUNTIME"] = runtime;
       env["EFFECTFUL_DEBUGGER_OPEN"] = args.open ? String(args.open) : "0";
       env["EFFECTFUL_DEBUGGER_TIME_TRAVEL"] = args.timeTravel
@@ -627,9 +636,7 @@ export class DebugSession extends SessionImpl {
               this.sendErrorResponse(
                 response,
                 1001,
-                `Cannot launch debug target in terminal (${
-                  runResponse.message
-                }).`
+                `Cannot launch debug target in terminal (${runResponse.message}).`
               );
               this.terminate("terminal error: " + runResponse.message);
             }
@@ -695,7 +702,9 @@ export class DebugSession extends SessionImpl {
     if (!this.remotes.size) {
       logger.log("Awaiting a debuggee to connect back");
       if (progressId)
-        this.sendEvent(new ProgressUpdateEvent(progressId, "Awating a debuggee"));
+        this.sendEvent(
+          new ProgressUpdateEvent(progressId, "Awating a debuggee")
+        );
       await new Promise<Handler | undefined>(i => (this.connectCb = i));
       logger.verbose("first connection");
       this.connectCb = undefined;
@@ -714,7 +723,8 @@ export class DebugSession extends SessionImpl {
       logger.verbose("config done");
       for (const remote of this.remotes.values()) this.launchChild(remote);
     }
-    if (progressId) // TODO: remove when finally works
+    if (progressId)
+      // TODO: remove when finally works
       this.sendEvent(new ProgressEndEvent(progressId));
     if (this.stopped) {
       response.success = false;
@@ -753,6 +763,33 @@ export class DebugSession extends SessionImpl {
         )
       }
     });
+  }
+
+  private breakpointLocationsCb: Map<
+    number,
+    (arg: [number, P.BreakpointLocationsResponse]) => void
+  > = new Map();
+
+  private async doBreakpointsLocations(req: P.BreakpointLocationsRequest) {
+    const resp = <P.BreakpointLocationsResponse>new Response(req);
+    resp.body = { breakpoints: [] };
+    const awaiting: Set<number> = new Set(this.remotes.keys());
+    const args = <P.SetBreakpointsArguments>req.arguments;
+    if (args.source.path) args.source.path = normalizeDrive(args.source.path);
+    this.sendAll(req);
+
+    while (awaiting.size) {
+      const [remote, clientResp] = await new Promise(i =>
+        this.breakpointLocationsCb.set(req.seq, i)
+      );
+      awaiting.delete(remote);
+      if (clientResp.body.breakpoints.length) {
+        resp.body.breakpoints.push(...clientResp.body.breakpoints);
+        break;
+      }
+    }
+    this.breakpointLocationsCb.delete(req.seq);
+    this.sendResponse(resp);
   }
 
   private doSetBreakpoints(req: P.SetBreakpointsRequest): void {

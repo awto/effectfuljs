@@ -34,7 +34,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("2:2-8:3");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -48,74 +48,90 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = check)();
+      $brk();
       $.state = 4;
 
     case 4:
+      $.goto = 5;
+      $p = ($context.call = check)();
+      $.state = 5;
+
+    case 5:
       if ($p === true) {
-        $.state = 5;
+        $.state = 6;
       } else {
-        $.goto = 13;
+        $.goto = 16;
         continue;
       }
 
-    case 5:
-      $.goto = 6;
-      $brk("3:4-3:9");
-      $.state = 6;
-
     case 6:
       $.goto = 7;
-      ($context.call = b1)();
+      $brk();
       $.state = 7;
 
     case 7:
       $.goto = 8;
-      $brk("4:4-7:5");
+      ($context.call = b1)();
       $.state = 8;
 
     case 8:
+      $.goto = 9;
+      $brk();
+      $.state = 9;
+
+    case 9:
       if (v) {
-        $.state = 9;
+        $.state = 10;
       } else {
-        $.goto = 12;
+        $.goto = 15;
         continue;
       }
 
-    case 9:
-      $.goto = 10;
-      $brk("5:6-5:10");
-      $.state = 10;
-
     case 10:
       $.goto = 11;
-      ($context.call = e)();
+      $brk();
       $.state = 11;
 
     case 11:
       $.goto = 12;
-      $brk("6:6-6:15");
+      ($context.call = e)();
       $.state = 12;
 
     case 12:
+      $.goto = 13;
+      $brk();
+      $.state = 13;
+
+    case 13:
+      $.goto = 14;
+      $brk();
+      $.state = 14;
+
+    case 14:
       $.goto = 3;
       ($context.call = upd)();
       continue;
 
-    case 13:
-      $.goto = 15;
+    case 15:
+      $.goto = 13;
+      $brk();
       continue;
 
-    case 14:
-      $.goto = 15;
+    case 16:
+      $.goto = 18;
+      $brk();
+      continue;
+
+    case 17:
+      $.goto = 18;
       return $unhandled($.error);
 
-    case 15:
+    case 18:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "2:2-8:3", $s$2], [2, "2:15-2:21", $s$2], [0, "2:11-2:21", $s$2], [2, "2:23-2:30", $s$2], [0, null, $s$2], [4, "3:4-3:9", $s$2], [2, "3:4-3:8", $s$2], [4, "4:4-7:5", $s$2], [0, null, $s$2], [4, "5:6-5:10", $s$2], [2, "5:6-5:9", $s$2], [4, "6:6-6:15", $s$2], [2, "2:41-2:46", $s$2], [0, null, $s$2], [16, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2]]);
+}, null, null, 1, [[4, "2:2-8:3", $s$2], [2, "2:15-2:21", $s$2], [0, "2:11-2:21", $s$2], [4, "2:23-2:39", $s$2], [2, "2:23-2:30", $s$2], [0, null, $s$2], [4, "3:4-3:9", $s$2], [2, "3:4-3:8", $s$2], [4, "4:4-7:5", $s$2], [0, null, $s$2], [4, "5:6-5:10", $s$2], [2, "5:6-5:9", $s$2], [4, "6:6-6:15", $s$2], [4, "2:41-2:46", $s$2], [2, "2:41-2:46", $s$2], [36, "8:3-8:3", $s$2], [36, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2]]);
 
 $M.moduleExports();

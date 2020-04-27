@@ -2247,11 +2247,11 @@ Array [
             ],
             Array [
               "state",
-              9,
+              13,
             ],
             Array [
               "goto",
-              10,
+              14,
             ],
             Array [
               "done",
@@ -2280,7 +2280,7 @@ Array [
             Array [
               "brk",
               Object {
-                "$": "s#test/__fixtures__/counters.js#runCounters#7",
+                "$": "s#test/__fixtures__/counters.js#runCounters#11",
               },
             ],
             Array [

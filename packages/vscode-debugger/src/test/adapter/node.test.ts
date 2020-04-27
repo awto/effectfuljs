@@ -6,7 +6,7 @@ import { DebugProtocol } from "vscode-debugprotocol";
 import { DebugClient } from "./kit/client";
 
 suite("Debugging on NodeJS", function() {
-  this.timeout(0);
+  this.timeout(300000);
   const PROJECT_ROOT = path.join(__dirname, "../../..");
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
@@ -200,7 +200,7 @@ suite("Debugging on NodeJS", function() {
       assert.ok(bpResponse.body.breakpoints[0].verified);
       const [, req2] = await Promise.all([
         dc.continueRequest({ threadId: 0 }),
-        dc.assertStoppedLocation("breakpoint", { line: 4 })
+        dc.assertStoppedLocation("breakpoint", { line: 4, column: 3 })
       ]);
       const frame = req2.body.stackFrames[0];
       const source2 = <any>frame.source;
@@ -239,7 +239,7 @@ suite("Debugging on NodeJS", function() {
       );
     });
 
-    test.skip("should break on a specific column in a single line program", function() {
+    test("should break on a specific column in a single line program", function() {
       const SINGLE_LINE_PROGRAM = path.join(
         NODE_DATA_ROOT,
         "programSingleLine.js"
@@ -249,7 +249,7 @@ suite("Debugging on NodeJS", function() {
 
       return dc.hitBreakpoint(
         {
-          command: `node ${SINGLE_LINE_PROGRAM}`,
+          command: SINGLE_LINE_PROGRAM,
           preset: "node"
         },
         { path: SINGLE_LINE_PROGRAM, line: LINE, column: COLUMN }
@@ -700,8 +700,7 @@ suite("Debugging on NodeJS", function() {
         })
       ]);
       await dc.setBreakpointsRequest({
-        lines: [7],
-        breakpoints: [{ line: 7, column: 0 }],
+        breakpoints: [{ line: 7 }],
         source: { path: PROGRAM }
       });
       await Promise.all([
@@ -816,12 +815,12 @@ suite("Debugging on NodeJS", function() {
         })
       ]);
       await dc.setBreakpointsRequest({
-        lines: [2],
-        breakpoints: [{ line: 2, column: 0 }],
+        breakpoints: [{ line: 2 }],
         source: { path: MOD3 }
       });
       await Promise.all([
         dc.nextRequest({ threadId: 0 }),
+        // dc.assertStoppedLocation("next", { path: PROGRAM, line: 2 })
         dc.assertStoppedLocation("breakpoint", { path: MOD3, line: 2 })
       ]);
       await Promise.all([

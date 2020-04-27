@@ -364,7 +364,6 @@ function snapshotOnDone(res, onDone) {
 
 function traverse(mod, opts, request, cb) {
   const res = [];
-  let timeout = 0;
   launch(mod, opts, () =>
     cont(
       request,

@@ -35,7 +35,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("2:2-3:9");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -48,7 +48,7 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $brk("2:12-2:14");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -57,7 +57,7 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $.goto = 5;
-      $brk("4:2-4:11");
+      $brk();
       $.state = 5;
 
     case 5:
@@ -67,7 +67,7 @@ var $M = require("@effectful/debugger"),
 
     case 6:
       $.goto = 7;
-      $brk("3:7-3:9");
+      $brk();
       $.state = 7;
 
     case 7:
@@ -90,20 +90,20 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("8:2-14:3");
+      $brk();
       $.state = 1;
 
     case 1:
       if (true) {
         $.state = 2;
       } else {
-        $.goto = 7;
+        $.goto = 8;
         continue;
       }
 
     case 2:
       $.goto = 3;
-      $brk("9:4-9:21");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -113,7 +113,7 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $.goto = 5;
-      $brk("10:4-10:21");
+      $brk();
       $.state = 5;
 
     case 5:
@@ -122,39 +122,50 @@ var $M = require("@effectful/debugger"),
       $.state = 6;
 
     case 6:
-      $.goto = 12;
-      continue;
+      $.goto = 7;
+      $brk();
+      $.state = 7;
 
     case 7:
-      $.goto = 8;
-      $brk("12:4-12:21");
-      $.state = 8;
+      $.goto = 14;
+      $brk();
+      continue;
 
     case 8:
       $.goto = 9;
-      $mcall("log", console, "c");
+      $brk();
       $.state = 9;
 
     case 9:
       $.goto = 10;
-      $brk("13:4-13:21");
+      $mcall("log", console, "c");
       $.state = 10;
 
     case 10:
-      $.goto = 6;
-      $mcall("log", console, "d");
-      continue;
+      $.goto = 11;
+      $brk();
+      $.state = 11;
 
     case 11:
       $.goto = 12;
-      return $unhandled($.error);
+      $mcall("log", console, "d");
+      $.state = 12;
 
     case 12:
+      $.goto = 7;
+      $brk();
+      continue;
+
+    case 13:
+      $.goto = 14;
+      return $unhandled($.error);
+
+    case 14:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "8:2-14:3", $s$3], [0, null, $s$3], [4, "9:4-9:21", $s$3], [2, "9:4-9:20", $s$3], [4, "10:4-10:21", $s$3], [2, "10:4-10:20", $s$3], [0, null, $s$3], [4, "12:4-12:21", $s$3], [2, "12:4-12:20", $s$3], [4, "13:4-13:21", $s$3], [2, "13:4-13:20", $s$3], [16, "15:1-15:1", $s$3], [16, "15:1-15:1", $s$3]]);
+}, null, null, 1, [[4, "8:2-14:3", $s$3], [0, null, $s$3], [4, "9:4-9:21", $s$3], [2, "9:4-9:20", $s$3], [4, "10:4-10:21", $s$3], [2, "10:4-10:20", $s$3], [36, "11:3-11:3", $s$3], [36, "15:1-15:1", $s$3], [4, "12:4-12:21", $s$3], [2, "12:4-12:20", $s$3], [4, "13:4-13:21", $s$3], [2, "13:4-13:20", $s$3], [36, "14:3-14:3", $s$3], [16, "15:1-15:1", $s$3], [16, "15:1-15:1", $s$3]]);
 
 $M.moduleExports();

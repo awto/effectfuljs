@@ -152,9 +152,9 @@ describe("VSCode protocol handlers", function() {
     );
     const bps = [
       { line: 5 },
-      { line: 8, expLine: 11 },
+      { line: 8, expLine: 5 },
       { line: 12 },
-      { line: 4, expLine: 15 }
+      { line: 4, expLine: 5 }
     ];
     Kit.awaitEvent("breakpoint", function(event) {
       const bp = bps.find((i) => i.id === event.brekpoint.id);
@@ -166,8 +166,6 @@ describe("VSCode protocol handlers", function() {
       return false;
     });
     Kit.traverse(
-      /* requied with `expEagerModuleExport: false`:
-          (context.moduleId = require.resolve("./__fixtures__/breakpoints")),*/
       require("./__fixtures__/breakpoints"),
       {
         breakpoints: [

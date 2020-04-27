@@ -1883,6 +1883,41 @@ Object {
       ],
     },
     Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 3,
+          "file": "stepBackPlain.js",
+          "line": 2,
+          "name": "stepBackPlain.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackPlain.js",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                },
+              },
+              "i": "100",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
       "reason": "entry",
       "stack": Array [
         Object {
@@ -1911,6 +1946,41 @@ Object {
                 },
               },
               "i": "undefined",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 3,
+          "file": "stepBackPlain.js",
+          "line": 2,
+          "name": "stepBackPlain.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackPlain.js",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                },
+              },
+              "i": "100",
               "j": "undefined",
             },
           ],
@@ -4521,6 +4591,41 @@ Object {
       ],
     },
     Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 3,
+          "file": "stepBackAsync.js",
+          "line": 2,
+          "name": "stepBackAsync.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackAsync.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                },
+              },
+              "i": "100",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
       "reason": "entry",
       "stack": Array [
         Object {
@@ -4549,6 +4654,41 @@ Object {
                 },
               },
               "i": "undefined",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 3,
+          "file": "stepBackAsync.js",
+          "line": 2,
+          "name": "stepBackAsync.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackAsync.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                },
+              },
+              "i": "100",
               "j": "undefined",
             },
           ],

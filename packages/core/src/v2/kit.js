@@ -120,15 +120,15 @@ export function throwStmt(par, msg, name) {
 
 export const setSymName = config.debug
   ? function setSymName(sym, index, prefix) {
-      sym.index = index + 1;
-      sym.name = `${prefix || "_"}${
-        sym.orig ? sym.orig.replace(/\W/g, "_") + "$" : ""
+    sym.index = index + 1;
+    sym.name = `${prefix || "_"}${
+      sym.orig ? sym.orig.replace(/\W/g, "_") + "$" : ""
       }${index}`;
-    }
+  }
   : function setSymName(sym, index, prefix) {
-      sym.index = index + 1;
-      sym.name = `${prefix || "_"}${index}`;
-    };
+    sym.index = index + 1;
+    sym.name = `${prefix || "_"}${index}`;
+  };
 
 /**
  * assign `node.name` from `sym.name`
@@ -161,7 +161,7 @@ export function approxLoc(i) {
   let maxCol = 0;
   do {
     if (j.node && j.node.loc) {
-      const {start, end} = j.node.loc;
+      const { start, end } = j.node.loc;
       if (start.line <= minLine) {
         minLine = start.line;
         if (start.column < minCol)
@@ -173,10 +173,10 @@ export function approxLoc(i) {
           maxCol = end.column;
       }
     }
-  } while((j = next(j)) !== last)
+  } while ((j = next(j)) !== last)
   if (maxLine === 0)
     return null;
-  return {start:{line:minLine,column:minCol},end:{line:maxLine,column:maxCol}};
+  return { start: { line: minLine, column: minCol }, end: { line: maxLine, column: maxCol } };
 }
 
 export function consume(root) {

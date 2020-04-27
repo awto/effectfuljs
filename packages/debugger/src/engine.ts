@@ -21,7 +21,7 @@ import {
   BrkFlag,
   defaultErrHandler,
   defaultFinHandler,
-  thunkSymbol,
+  thunkSymbol
 } from "./state";
 import * as State from "./state";
 import * as TTCore from "./timeTravel/core";
@@ -33,6 +33,7 @@ import * as path from "path";
 import * as S from "@effectful/serialization";
 import { regOpaqueObject, regFun, ModuleDescriptor } from "./persist";
 import { isValidIdentifier } from "@babel/types";
+import { stat } from "fs";
 
 // tslint:disable-next-line
 const asap = require("asap");
@@ -51,9 +52,9 @@ let curModule: Module = undefined as any; // this is always used in context wher
 
 const recordFrame = config.timeTravel
   ? function recordFrame(top: Frame | null) {
-    if (top && journal.enabled) TT.recordFrame(top);
-  }
-  : function recordFrame() { };
+      if (top && journal.enabled) TT.recordFrame(top);
+    }
+  : function recordFrame() {};
 
 class ArgsTraps {
   func: Frame;
@@ -78,6 +79,36 @@ class ArgsTraps {
   }
 }
 
+const objectValues = Object.values;
+
+export function compileModule(): Module {
+  if (!curModule.topLevel || curModule.topLevel.blackbox) return curModule;
+  const funcs = objectValues(curModule.functions).reverse();
+  const lines = (curModule.lines = new Array(curModule.topLevel.endLine));
+  for (let meta of funcs) {
+    const states = meta.states;
+    for (const state of states) {
+      if (state.flags | State.BrkFlag.STMT && state.line) {
+        (lines[state.line] || (lines[state.line] = [])).push(state);
+      }
+    }
+    for (let x = states.length; --x; ) {
+      const state = states[x];
+      if (state.flags | State.BrkFlag.STMT && state.line) {
+        for (let j = state.line + 1, end = state.endLine; j <= end; ++j)
+          (lines[j] || (lines[j] = [])).push(state);
+      }
+    }
+  }
+  let cur = null;
+  for (let i = lines.length; i--; ) {
+    const line = lines[i];
+    if (!line) lines[i] = cur;
+    else cur = lines[i];
+  }
+  return curModule;
+}
+
 export function getCurModule(): Module {
   return curModule;
 }
@@ -87,7 +118,7 @@ export function argsWrap<T>(frame: Frame, value: Iterable<T>): T[] {
   defineProperty(arr, "callee", {
     writable: true,
     enumerable: false,
-    value: frame.func,
+    value: frame.func
   });
   return new Proxy(arr, new ArgsTraps(frame));
 }
@@ -205,7 +236,7 @@ export function fun(
       scopeDepth: scope[2],
       location: strLoc(line, column, endLine, endColumn),
       breakpoint: null,
-      logPoint: null,
+      logPoint: null
     };
     regOpaqueObject(brk, `s#${persistName}#${id}`);
     memo.push(brk);
@@ -258,7 +289,7 @@ export function fun(
   if (flags & Flag.HAS_ARGUMENTS)
     headLines.push(
       `${ctx}.args = ${
-      isArrow ? ctx + "$.args" : `${ctx}args(${ctx},arguments)`
+        isArrow ? ctx + "$.args" : `${ctx}args(${ctx},arguments)`
       }`
     );
   const api = curModule.api;
@@ -299,7 +330,7 @@ export function fun(
     `${ctx}m`,
     `${ctx}M`,
     `${ctx}clos`,
-    `${ctx}frame`,
+    `${ctx}frame`
   ];
   const cjs = curModule.cjs;
   const args = [
@@ -315,8 +346,8 @@ export function fun(
         ? api.frameAG
         : api.frameA
       : isGenerator
-        ? api.frameG
-        : api.frame,
+      ? api.frameG
+      : api.frame
   ];
   constrParams.push(`return (function(${ctx}$){
     return ${ctx}clos(${ctx}$,${ctx}m,(function ${funcName}(${meta.params.join()}) {
@@ -353,7 +384,7 @@ function strLoc(
 ) {
   return `${line || "?"}:${column == null ? "?" : column}-${endLine || "?"}:${
     endColumn == null ? "?" : endColumn
-    }`;
+  }`;
 }
 
 function buildScope(
@@ -379,7 +410,7 @@ function buildScope(
 
 export const clos: any = config.persistState
   ? function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
-    /*defineProperty(closure, "call", {
+      /*defineProperty(closure, "call", {
       configurable: true,
       value: defaultCall
     });
@@ -395,24 +426,24 @@ export const clos: any = config.persistState
       configurable: true,
       value: (<any>meta).descriptor
     });*/
-    closure.call = defaultCall;
-    closure.apply = defaultApply;
-    closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
-    closure[S.descriptorSymbol] = (<any>meta).descriptor;
-    return closure;
-  }
+      closure.call = defaultCall;
+      closure.apply = defaultApply;
+      closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
+      closure[S.descriptorSymbol] = (<any>meta).descriptor;
+      return closure;
+    }
   : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
-    closure.call = defaultCall;
-    closure.apply = defaultApply;
-    closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
-    return closure;
-  };
+      closure.call = defaultCall;
+      closure.apply = defaultApply;
+      closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
+      return closure;
+    };
 
 let threadScheduled = false;
 export function signalThread() {
   if (threadScheduled) return;
   threadScheduled = true;
-  asap(function () {
+  asap(function() {
     threadScheduled = false;
     context.onThread();
   });
@@ -472,7 +503,8 @@ export function step() {
     context.value = void 0;
     context.error = false;
     const top = context.top;
-    if (!top) throw new TypeError("nothing to run");
+    // if (!top) throw new TypeError("nothing to run");
+    if (!top) return context.value;
     if (top.brk && top.brk.flags & BrkFlag.EXIT) {
       if (!context.debug && top.restoreDebug) context.debug = true;
       popFrame(top);
@@ -572,7 +604,7 @@ function checkErrBrk(frame: Frame, e: any): boolean {
       if (config.debuggerDebug) {
         try {
           defineProperty(e, "_deb_stack", { value: stack.join("\n") });
-        } catch (e) { }
+        } catch (e) {}
       } else e.stack = stack.join("\n");
     }
     let needsStop = false;
@@ -594,7 +626,7 @@ function checkErrBrk(frame: Frame, e: any): boolean {
 }
 
 export function handle(frame: Frame, e: any) {
-  for (; ;) {
+  for (;;) {
     if (e === token) {
       if (frame.next) throw e;
       context.onStop();
@@ -628,7 +660,7 @@ export function evalAt(src: string) {
   const memo = meta.evalMemo || (meta.evalMemo = new saved.Map()); // : indirMemo;
   const key = `${src}@${meta.uniqName}@${state ? state.id : "*"}/${
     context.debug
-    }}`;
+  }}`;
   let resMeta = memo.get(key);
   if (!resMeta) {
     resMeta = compileEval(
@@ -684,7 +716,7 @@ export function compileEvalToString(
     const id = toGlobal(evalCnt++);
     if (!blackbox) context.onNewSource(id, code);
     const ast = babelParse(code, {
-      allowReturnOutsideFunction: true,
+      allowReturnOutsideFunction: true
     });
     if (params == null) {
       const body = <any>ast.program.body;
@@ -705,7 +737,7 @@ export function compileEvalToString(
         filename: `VM${id}.js`,
         iifeWrap: true,
         moduleExports: params == null ? "execModule" : "retModule",
-        constrParams: { code },
+        constrParams: { code }
       }),
       { compact: true }
     ).code;
@@ -721,6 +753,7 @@ export function compileEvalToString(
  * this is an API required for `compileEvalToString`
  */
 export function execModule() {
+  compileModule();
   return (context.call = curModule.topLevel.func(null))();
 }
 
@@ -729,6 +762,7 @@ export function execModule() {
  * this is an API required for `compileEvalToString`
  */
 export function retModule() {
+  compileModule();
   return curModule.topLevel.func(null);
 }
 
@@ -762,9 +796,10 @@ export const FunctionConstr = function Function(...args: any[]) {
 };
 FunctionConstr.prototype = Function.prototype;
 if (config.patchRT) {
-  const savedToString = Function.prototype.toString
+  const savedToString = Function.prototype.toString;
   saved.Object.defineProperty(FunctionConstr.prototype, "toString", {
-    configurable: true, writable: true,
+    configurable: true,
+    writable: true,
     value() {
       // nothing to see here
       let params: string = "";
@@ -774,7 +809,7 @@ if (config.patchRT) {
         return savedToString.call(this);
       return `function ${name || ""}(${params}) { [native code] }`;
     }
-  })
+  });
 }
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
 
@@ -808,7 +843,7 @@ export function compileEval(
     if (id == null) id = toGlobal(evalCnt++);
     if (!blackbox) context.onNewSource(id, code);
     const ast = babelParse(code, {
-      allowReturnOutsideFunction: true,
+      allowReturnOutsideFunction: true
     });
     if (params == null) {
       const body = <any>ast.program.body;
@@ -830,7 +865,7 @@ export function compileEval(
         moduleExports: null,
         iifeWrap: false,
         scopeDepth,
-        constrParams: null,
+        constrParams: null
       }),
       { compact: true }
     ).code;
@@ -857,8 +892,9 @@ export function compileEval(
       scopeDepth,
       id,
       params,
-      blackbox,
+      blackbox
     };
+    compileModule();
     const res = curModule.topLevel;
     return res;
   } finally {
@@ -898,7 +934,7 @@ export function makeFrame(closure: any, newTarget: any): Frame {
     result: void 0,
     error: void 0,
     self: void 0,
-    args: void 0,
+    args: void 0
   };
   return frame;
 }
@@ -925,13 +961,13 @@ export function popFrame(top: Frame) {
 
 export const frame: (closure: any, newTarget: any) => any = config.timeTravel
   ? function frame(closure: any, newTarget: any): any {
-    const top = context.top;
-    recordFrame(top);
-    return pushFrame(makeFrame(closure, newTarget));
-  }
+      const top = context.top;
+      recordFrame(top);
+      return pushFrame(makeFrame(closure, newTarget));
+    }
   : function frame(closure: any, newTarget: any) {
-    return pushFrame(makeFrame(closure, newTarget));
-  };
+      return pushFrame(makeFrame(closure, newTarget));
+    };
 
 export function checkExitBrk(top: Frame, value: any) {
   const meta = top.meta;
@@ -946,7 +982,7 @@ export function checkExitBrk(top: Frame, value: any) {
         brk,
         debug: context.debug,
         value: context.value,
-        stopOnEntry: true,
+        stopOnEntry: true
       });
       context.top = null;
       signalThread();
@@ -1004,7 +1040,7 @@ export function brk(): any {
         brk: p,
         debug: context.debug,
         value: context.value,
-        stopOnEntry,
+        stopOnEntry
       });
       context.top = null;
       signalThread();
@@ -1039,7 +1075,7 @@ export function then(
 }
 
 export function liftSync(fun: (this: any, ...args: any[]) => any): any {
-  return function (this: any) {
+  return function(this: any) {
     const savedDebug = context.debug;
     try {
       context.debug = false;

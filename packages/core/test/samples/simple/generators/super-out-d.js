@@ -43,7 +43,7 @@ var $M = require("@effectful/debugger"),
       $l[1] = $m$1($);
       $l[2] = $m$2($);
       $.goto = 1;
-      $brk("1:0-1:16");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -91,7 +91,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("4:8-10:24");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -102,7 +102,7 @@ var $M = require("@effectful/debugger"),
     case 2:
       $l[1] = $p;
       $.goto = 3;
-      $brk("13:8-19:24");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -113,6 +113,7 @@ var $M = require("@effectful/debugger"),
     case 4:
       $l[2] = $p;
       $.goto = 6;
+      $brk();
       continue;
 
     case 5:
@@ -125,20 +126,20 @@ var $M = require("@effectful/debugger"),
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "4:8-10:24", $s$3], [2, null, $s$3], [4, "13:8-19:24", $s$3], [2, null, $s$3], [0, null, $s$3], [16, "21:1-21:1", $s$3], [16, "21:1-21:1", $s$3]]),
+}, null, null, 1, [[4, "4:8-10:24", $s$3], [2, null, $s$3], [4, "13:8-19:24", $s$3], [2, null, $s$3], [36, "21:1-21:1", $s$3], [16, "21:1-21:1", $s$3], [16, "21:1-21:1", $s$3]]),
     $m$3 = $M.fun("m$3", null, null, $m$2, [], 0, 3, null, 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[1] = $m$4($);
       $l[2] = $l[1].prototype;
       $.goto = 1;
-      $brk("5:4-7:16");
+      $brk();
       $.state = 1;
 
     case 1:
       $l[2].method = $m$5($);
       $.goto = 2;
-      $brk("8:4-10:24");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -179,7 +180,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("6:6-6:22");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -202,7 +203,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("9:6-9:29");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -232,13 +233,13 @@ var $M = require("@effectful/debugger"),
     case 1:
       $l[3] = $l[2].prototype;
       $.goto = 2;
-      $brk("14:4-16:16");
+      $brk();
       $.state = 2;
 
     case 2:
       $l[3].method = $m$9($);
       $.goto = 3;
-      $brk("17:4-19:24");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -299,7 +300,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("15:6-15:48");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -331,7 +332,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("18:6-18:55");
+      $brk();
       $.state = 1;
 
     case 1:

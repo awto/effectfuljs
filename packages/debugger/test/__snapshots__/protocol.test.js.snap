@@ -544,6 +544,41 @@ Object {
       "reason": "step",
       "stack": Array [
         Object {
+          "column": 3,
+          "file": "stepInAsync.js",
+          "line": 2,
+          "name": "stepInAsync.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInAsync.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepInAsync.js:3:0-19:1",
+                },
+              },
+              "i": "100",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
           "column": 1,
           "file": "stepInAsync.js",
           "line": 20,
@@ -1896,6 +1931,58 @@ Object {
       "reason": "step",
       "stack": Array [
         Object {
+          "column": 3,
+          "file": "stepInAsyncGenerator.js",
+          "line": 2,
+          "name": "stepInAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "100",
+              "j": "undefined",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
           "column": 1,
           "file": "stepInAsyncGenerator.js",
           "line": 18,
@@ -1955,6 +2042,109 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "main",
+            },
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "100",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepInAsyncGenerator.js",
+          "line": 18,
+          "name": "stepInAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "100",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepInAsyncGenerator.js",
+          "line": 13,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -2119,13 +2309,14 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
+              "i": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -2290,13 +2481,14 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
+              "i": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -2538,13 +2730,14 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
+              "i": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -2871,13 +3064,14 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
+              "i": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -2976,6 +3170,109 @@ Object {
           "column": 5,
           "file": "stepInAsyncGenerator.js",
           "line": 14,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "3201",
+            },
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "101",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepInAsyncGenerator.js",
+          "line": 19,
+          "name": "stepInAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "101",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepInAsyncGenerator.js",
+          "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
@@ -3222,9 +3519,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
-          "line": 14,
+          "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
@@ -3394,9 +3691,182 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
-          "line": 14,
+          "line": 13,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "3201",
+            },
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepInAsyncGenerator.js",
+          "line": 19,
+          "name": "stepInAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepInAsyncGenerator.js",
+          "line": 6,
+          "name": "agfunc1",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc1",
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepInAsyncGenerator.js:7:2-10:3",
+                },
+              },
+              "j": "3000",
+              "k": "100",
+              "m": "undefined",
+            },
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepInAsyncGenerator.js",
+          "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
@@ -3531,6 +4001,7 @@ Object {
               },
               "j": "3000",
               "k": "100",
+              "m": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -3574,7 +4045,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
           "line": 6,
           "name": "agfunc1",
@@ -3600,6 +4071,7 @@ Object {
               },
               "j": "3000",
               "k": "100",
+              "m": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -3643,9 +4115,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
-          "line": 14,
+          "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
@@ -3788,6 +4260,7 @@ Object {
               },
               "j": "3000",
               "k": "100",
+              "m": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -3865,6 +4338,7 @@ Object {
               },
               "j": "3000",
               "k": "100",
+              "m": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -3908,7 +4382,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
           "line": 6,
           "name": "agfunc1",
@@ -3934,6 +4408,7 @@ Object {
               },
               "j": "3000",
               "k": "100",
+              "m": "undefined",
             },
             Object {
               "[name]": "stepInAsyncGenerator.js",
@@ -3977,9 +4452,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
-          "line": 14,
+          "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
@@ -4150,9 +4625,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
-          "line": 14,
+          "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
@@ -4356,6 +4831,282 @@ Object {
       "reason": "step",
       "stack": Array [
         Object {
+          "column": 20,
+          "file": "stepInAsyncGenerator.js",
+          "line": 13,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "24411",
+            },
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepInAsyncGenerator.js",
+          "line": 19,
+          "name": "stepInAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepInAsyncGenerator.js",
+          "line": 6,
+          "name": "agfunc1",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc1",
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepInAsyncGenerator.js:7:2-10:3",
+                },
+              },
+              "j": "3000",
+              "k": "100",
+              "m": "24411",
+            },
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepInAsyncGenerator.js",
+          "line": 13,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "24411",
+            },
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepInAsyncGenerator.js",
+          "line": 19,
+          "name": "stepInAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInAsyncGenerator.js",
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepInAsyncGenerator.js:3:0-11:1",
+                },
+              },
+              "i": "21311",
+              "j": "20",
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepInAsyncGenerator.js:12:0-17:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
           "column": 5,
           "file": "stepInAsyncGenerator.js",
           "line": 9,
@@ -4434,7 +5185,7 @@ Object {
           ],
         },
         Object {
-          "column": 56,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
           "line": 6,
           "name": "agfunc1",
@@ -4504,9 +5255,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepInAsyncGenerator.js",
-          "line": 14,
+          "line": 13,
           "name": "main",
           "scopes": Array [
             Object {
@@ -4751,6 +5502,39 @@ Object {
       "reason": "step",
       "stack": Array [
         Object {
+          "column": 3,
+          "file": "stepInGenerator.js",
+          "line": 2,
+          "name": "stepInGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "i": "100",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
           "column": 1,
           "file": "stepInGenerator.js",
           "line": 11,
@@ -4774,6 +5558,39 @@ Object {
                 "prototype": Object {},
               },
               "i": "100",
+              "j": "20",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 12,
+          "file": "stepInGenerator.js",
+          "line": 11,
+          "name": "stepInGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -4826,13 +5643,13 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "100",
+              "i": "undefined",
               "j": "20",
             },
           ],
         },
         Object {
-          "column": 1,
+          "column": 12,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -4854,7 +5671,7 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "100",
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -4907,13 +5724,13 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
         },
         Object {
-          "column": 1,
+          "column": 12,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -4935,7 +5752,7 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -4996,7 +5813,7 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -5044,13 +5861,13 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
         },
         Object {
-          "column": 1,
+          "column": 12,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -5072,7 +5889,7 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -5141,7 +5958,7 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -5197,7 +6014,7 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -5245,13 +6062,13 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
         },
         Object {
-          "column": 1,
+          "column": 12,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -5273,7 +6090,7 @@ Object {
                 "name": "gfunc1",
                 "prototype": Object {},
               },
-              "i": "101",
+              "i": "undefined",
               "j": "20",
             },
           ],
@@ -5287,6 +6104,39 @@ Object {
           "column": 3,
           "file": "stepInGenerator.js",
           "line": 12,
+          "name": "stepInGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "i": "3100",
+              "j": "20",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 12,
+          "file": "stepInGenerator.js",
+          "line": 11,
           "name": "stepInGenerator.js",
           "scopes": Array [
             Object {
@@ -5421,9 +6271,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepInGenerator.js",
-          "line": 12,
+          "line": 11,
           "name": "stepInGenerator.js",
           "scopes": Array [
             Object {
@@ -8080,7 +8930,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -8322,7 +9172,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -8444,9 +9294,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 14,
           "file": "stepOutGenerator.js",
-          "line": 10,
+          "line": 9,
           "name": "func1",
           "scopes": Array [
             Object {
@@ -8565,7 +9415,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -8687,9 +9537,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 14,
           "file": "stepOutGenerator.js",
-          "line": 10,
+          "line": 9,
           "name": "func1",
           "scopes": Array [
             Object {
@@ -8808,7 +9658,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -8990,7 +9840,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -9172,7 +10022,7 @@ Object {
           ],
         },
         Object {
-          "column": 28,
+          "column": 14,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -9233,7 +10083,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -9415,7 +10265,7 @@ Object {
           ],
         },
         Object {
-          "column": 28,
+          "column": 14,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -9476,7 +10326,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -9598,9 +10448,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 14,
           "file": "stepOutGenerator.js",
-          "line": 10,
+          "line": 9,
           "name": "func1",
           "scopes": Array [
             Object {
@@ -9659,7 +10509,7 @@ Object {
           ],
         },
         Object {
-          "column": 28,
+          "column": 14,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -9720,7 +10570,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -9842,9 +10692,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 14,
           "file": "stepOutGenerator.js",
-          "line": 10,
+          "line": 9,
           "name": "func1",
           "scopes": Array [
             Object {
@@ -9903,7 +10753,7 @@ Object {
           ],
         },
         Object {
-          "column": 28,
+          "column": 14,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -9964,7 +10814,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -10086,7 +10936,7 @@ Object {
           ],
         },
         Object {
-          "column": 28,
+          "column": 14,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -10147,7 +10997,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -10269,7 +11119,7 @@ Object {
           ],
         },
         Object {
-          "column": 26,
+          "column": 12,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -15413,9 +16263,411 @@ Object {
       "reason": "next",
       "stack": Array [
         Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "undefined",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 36,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
           "column": 5,
           "file": "stepOverAsyncGenerator.js",
           "line": 32,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "1",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -15815,9 +17067,411 @@ Object {
       "reason": "next",
       "stack": Array [
         Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "2",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
           "column": 5,
           "file": "stepOverAsyncGenerator.js",
           "line": 32,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "A",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -16214,9 +17868,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -16613,9 +18267,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -16913,9 +18567,310 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "B",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 21,
+          "name": "agfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc3",
+              "i": "undefined",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -17214,9 +19169,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -17515,9 +19470,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -17816,14 +19771,315 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
               "i": "A:1",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 21,
+          "name": "agfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc3",
+              "i": "1",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "B:1",
             },
             Object {
               "[name]": "stepOverAsyncGenerator.js",
@@ -18117,9 +20373,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -18418,9 +20674,9 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -18719,14 +20975,315 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
               "i": "A:2",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 21,
+          "name": "agfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc3",
+              "i": "2",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "B:2",
             },
             Object {
               "[name]": "stepOverAsyncGenerator.js",
@@ -19019,9 +21576,310 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "B:2",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 26,
+          "name": "agfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc3",
+              "i": "undefined",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
@@ -19320,14 +22178,315 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
               "i": "B:2",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 26,
+          "name": "agfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc3",
+              "i": "1",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "C:1",
             },
             Object {
               "[name]": "stepOverAsyncGenerator.js",
@@ -19621,14 +22780,315 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 20,
           "file": "stepOverAsyncGenerator.js",
-          "line": 32,
+          "line": 31,
           "name": "main",
           "scopes": Array [
             Object {
               "[name]": "main",
               "i": "C:1",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 1,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 37,
+          "name": "stepOverAsyncGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 26,
+          "name": "agfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "agfunc3",
+              "i": "2",
+            },
+            Object {
+              "[name]": "stepOverAsyncGenerator.js",
+              "afunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepOverAsyncGenerator.js:1:0-4:1",
+                },
+              },
+              "agfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc1",
+                "prototype": Object {
+                  "constructor": "agfunc1@stepOverAsyncGenerator.js:5:0-9:1",
+                },
+              },
+              "agfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc2",
+                "prototype": Object {
+                  "constructor": "agfunc2@stepOverAsyncGenerator.js:11:0-16:1",
+                },
+              },
+              "agfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "agfunc3",
+                "prototype": Object {
+                  "constructor": "agfunc3@stepOverAsyncGenerator.js:18:0-27:1",
+                },
+              },
+              "main": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "main",
+                "prototype": Object {
+                  "constructor": "main@stepOverAsyncGenerator.js:29:0-34:1",
+                },
+              },
+            },
+          ],
+        },
+        Object {
+          "column": 20,
+          "file": "stepOverAsyncGenerator.js",
+          "line": 31,
+          "name": "main",
+          "scopes": Array [
+            Object {
+              "[name]": "main",
+              "i": "C:2",
             },
             Object {
               "[name]": "stepOverAsyncGenerator.js",
@@ -19892,9 +23352,133 @@ Object {
       "reason": "next",
       "stack": Array [
         Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
           "column": 3,
           "file": "stepOverGenerator.js",
           "line": 23,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "1",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20016,9 +23600,133 @@ Object {
       "reason": "next",
       "stack": Array [
         Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "2",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
           "column": 3,
           "file": "stepOverGenerator.js",
           "line": 23,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "A",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20198,9 +23906,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20380,9 +24088,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20502,9 +24210,132 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 14,
+          "file": "stepOverGenerator.js",
+          "line": 15,
+          "name": "gfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "gfunc3",
+              "i": "undefined",
+            },
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B",
+            },
+          ],
+        },
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20625,9 +24456,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20748,9 +24579,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20801,6 +24632,129 @@ Object {
                 "prototype": Object {},
               },
               "i": "A:1",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 14,
+          "file": "stepOverGenerator.js",
+          "line": 15,
+          "name": "gfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "gfunc3",
+              "i": "1",
+            },
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B:1",
+            },
+          ],
+        },
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B:1",
             },
           ],
         },
@@ -20871,9 +24825,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -20994,9 +24948,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -21047,6 +25001,129 @@ Object {
                 "prototype": Object {},
               },
               "i": "A:2",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 14,
+          "file": "stepOverGenerator.js",
+          "line": 15,
+          "name": "gfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "gfunc3",
+              "i": "2",
+            },
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B:2",
+            },
+          ],
+        },
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B:2",
             },
           ],
         },
@@ -21116,9 +25193,132 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B:2",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 14,
+          "file": "stepOverGenerator.js",
+          "line": 19,
+          "name": "gfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "gfunc3",
+              "i": "undefined",
+            },
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "B:2",
+            },
+          ],
+        },
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -21239,9 +25439,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -21292,6 +25492,129 @@ Object {
                 "prototype": Object {},
               },
               "i": "B:2",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 14,
+          "file": "stepOverGenerator.js",
+          "line": 19,
+          "name": "gfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "gfunc3",
+              "i": "1",
+            },
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "C:1",
+            },
+          ],
+        },
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "C:1",
             },
           ],
         },
@@ -21362,9 +25685,9 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 12,
           "file": "stepOverGenerator.js",
-          "line": 23,
+          "line": 22,
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
@@ -21415,6 +25738,129 @@ Object {
                 "prototype": Object {},
               },
               "i": "C:1",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "next",
+      "stack": Array [
+        Object {
+          "column": 14,
+          "file": "stepOverGenerator.js",
+          "line": 19,
+          "name": "gfunc3",
+          "scopes": Array [
+            Object {
+              "[name]": "gfunc3",
+              "i": "2",
+            },
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "C:2",
+            },
+          ],
+        },
+        Object {
+          "column": 12,
+          "file": "stepOverGenerator.js",
+          "line": 22,
+          "name": "stepOverGenerator.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepOverGenerator.js",
+              "gfunc1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc1",
+                "prototype": Object {},
+              },
+              "gfunc2": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc2",
+                "prototype": Object {},
+              },
+              "gfunc3": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "0",
+                "name": "gfunc3",
+                "prototype": Object {},
+              },
+              "i": "C:2",
             },
           ],
         },
@@ -22286,40 +26732,6 @@ Object {
       "reason": "breakpoint",
       "stack": Array [
         Object {
-          "column": 1,
-          "file": "breakpoints.js",
-          "line": 15,
-          "name": "breakpoints.js",
-          "scopes": Array [
-            Object {
-              "[name]": "breakpoints.js",
-              "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "0",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@breakpoints.js:5:0-14:1",
-                },
-              },
-              "i": "2",
-            },
-          ],
-        },
-      ],
-    },
-    Object {
-      "reason": "breakpoint",
-      "stack": Array [
-        Object {
           "column": 20,
           "file": "breakpoints.js",
           "line": 5,
@@ -22387,107 +26799,6 @@ Object {
       "stack": Array [
         Object {
           "column": 1,
-          "file": "breakpoints.js",
-          "line": 11,
-          "name": "func2",
-          "scopes": Array [
-            Object {
-              "[name]": "func2",
-            },
-            Object {
-              "[name]": "func1",
-            },
-            Object {
-              "[name]": "breakpoints.js",
-              "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "0",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@breakpoints.js:5:0-14:1",
-                },
-              },
-              "i": "3",
-            },
-          ],
-        },
-        Object {
-          "column": 20,
-          "file": "breakpoints.js",
-          "line": 5,
-          "name": "func1",
-          "scopes": Array [
-            Object {
-              "[name]": "func1",
-            },
-            Object {
-              "[name]": "breakpoints.js",
-              "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "0",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@breakpoints.js:5:0-14:1",
-                },
-              },
-              "i": "3",
-            },
-          ],
-        },
-        Object {
-          "column": 1,
-          "file": "breakpoints.js",
-          "line": 16,
-          "name": "breakpoints.js",
-          "scopes": Array [
-            Object {
-              "[name]": "breakpoints.js",
-              "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "0",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@breakpoints.js:5:0-14:1",
-                },
-              },
-              "i": "3",
-            },
-          ],
-        },
-      ],
-    },
-    Object {
-      "reason": "breakpoint",
-      "stack": Array [
-        Object {
-          "column": 12,
           "file": "breakpoints.js",
           "line": 12,
           "name": "func2",
@@ -22579,107 +26890,6 @@ Object {
                 },
               },
               "i": "4",
-            },
-          ],
-        },
-      ],
-    },
-    Object {
-      "reason": "breakpoint",
-      "stack": Array [
-        Object {
-          "column": 12,
-          "file": "breakpoints.js",
-          "line": 12,
-          "name": "func2",
-          "scopes": Array [
-            Object {
-              "[name]": "func2",
-            },
-            Object {
-              "[name]": "func1",
-            },
-            Object {
-              "[name]": "breakpoints.js",
-              "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "0",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@breakpoints.js:5:0-14:1",
-                },
-              },
-              "i": "5",
-            },
-          ],
-        },
-        Object {
-          "column": 20,
-          "file": "breakpoints.js",
-          "line": 5,
-          "name": "func1",
-          "scopes": Array [
-            Object {
-              "[name]": "func1",
-            },
-            Object {
-              "[name]": "breakpoints.js",
-              "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "0",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@breakpoints.js:5:0-14:1",
-                },
-              },
-              "i": "5",
-            },
-          ],
-        },
-        Object {
-          "column": 1,
-          "file": "breakpoints.js",
-          "line": 16,
-          "name": "breakpoints.js",
-          "scopes": Array [
-            Object {
-              "[name]": "breakpoints.js",
-              "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
-                "length": "0",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@breakpoints.js:5:0-14:1",
-                },
-              },
-              "i": "5",
             },
           ],
         },
@@ -22803,6 +27013,41 @@ Object {
                 },
               },
               "i": "undefined",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 3,
+          "file": "stepInPlain.js",
+          "line": 2,
+          "name": "stepInPlain.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepInPlain.js",
+              "func1": Object {
+                "apply": Object {
+                  "length": "0",
+                  "name": "defaultApply",
+                  "prototype": "[object Object]",
+                },
+                "call": Object {
+                  "length": "0",
+                  "name": "defaultCall",
+                  "prototype": "[object Object]",
+                },
+                "length": "1",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@stepInPlain.js:3:0-11:1",
+                },
+              },
+              "i": "100",
               "j": "undefined",
             },
           ],

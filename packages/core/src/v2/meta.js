@@ -4,13 +4,19 @@ import * as Ctx from "./context";
 import config from "./config";
 const { Tag, next } = Kit;
 
-const DEBUG_BRKS = config.debug;
-
-export const brkSym = Scope.sysSym("brk");
+function prependBrkExpr(expr, ref) {
+  const brk = Scope.brkExpr(ref);
+  if (!brk) return;
+  const seq = Kit.node(expr.pos, Tag.SequenceExpression);
+  Kit.replace(expr, seq);
+  const arr = Kit.append(seq, Kit.arr(Tag.expressions));
+  expr.pos = brk.pos = Tag.push;
+  Kit.append(arr, brk);
+  Kit.append(arr, expr);
+}
 
 export function injectBrk() {
   const { root } = Ctx;
-  let debNum = 0;
   let i = root,
     n;
   do {
@@ -18,17 +24,24 @@ export function injectBrk() {
     switch (i.type) {
       case Tag.ArrowFunctionExpression:
         const body = i.firstChild.prevSibling;
-        if (body.type !== Tag.BlockStatement) {
-          const brk = brkExpr(body);
+        if (body.type !== Tag.BlockStatement) prependBrkExpr(body, body);
+        break;
+      case Tag.BlockStatement:
+        if (i.node.loc) {
+          const dummy = Kit.node(i.pos, Tag.EmptyStatement);
+          dummy.node.loc = { start: i.node.loc.end, end: i.node.loc.end };
+          const brk = Scope.brkExpr(dummy);
           if (brk) {
-            const seq = Kit.node(Tag.body, Tag.SequenceExpression);
-            Kit.replace(body, seq);
-            const arr = Kit.append(seq, Kit.arr(Tag.expressions));
-            body.pos = brk.pos = Tag.push;
-            Kit.append(arr, brk);
-            Kit.append(arr, body);
+            brk.brkFlags |= Scope.EMPTY_BRK_FLAG;
+            Kit.exprStmt(i.firstChild.prevSibling, brk);
           }
         }
+        break;
+      case Tag.VariableDeclarator:
+        if (i.parent.firstChild === i) break;
+        const init = i.firstChild.prevSibling;
+        if (init.pos !== Tag.init) break;
+        prependBrkExpr(init, i);
         break;
       case Tag.VariableDeclaration:
         if (i.pos === Tag.left || i.pos === Tag.init) break;
@@ -54,7 +67,33 @@ export function injectBrk() {
           Kit.detach(i);
           Kit.append(arr, i);
         }
-        const expr = brkExpr(i);
+        switch (i.type) {
+          case Tag.ForStatement:
+            {
+              let j = i.firstChild;
+              let next;
+              do {
+                next = j.nextSibling;
+                if (j.type === Tag.VariableDeclaration) continue;
+                if (j.pos === Tag.body) break;
+                prependBrkExpr(j, j);
+              } while ((j = next) !== i.firstChild);
+            }
+            break;
+          case Tag.DoWhileStatement:
+            {
+              let j = i.firstChild;
+              if (j.pos === Tag.test) prependBrkExpr(j, j);
+            }
+            break;
+          case Tag.WhileStatement:
+            {
+              let j = i.firstChild;
+              if (j.pos === Tag.test) prependBrkExpr(j, j);
+            }
+            break;
+        }
+        const expr = Scope.brkExpr(i);
         if (expr)
           Kit.append(
             Kit.insertBefore(i, Kit.node(Tag.push, Tag.ExpressionStatement)),
@@ -64,7 +103,7 @@ export function injectBrk() {
         break;
       }
       case Tag.DebuggerStatement: {
-        const expr = brkExpr(i);
+        const expr = Scope.brkExpr(i);
         if (expr)
           Kit.append(
             Kit.replace(i, Kit.node(Tag.push, Tag.ExpressionStatement)),
@@ -74,22 +113,6 @@ export function injectBrk() {
       }
     }
   } while ((i = n) !== root);
-  function brkExpr(i) {
-    const loc = Kit.approxLoc(i);
-    i.node.loc = loc;
-    if (!loc) return null;
-    const call = Kit.node(Tag.expression, Tag.CallExpression);
-    call.eff = true;
-    call.refDoc = i;
-    call.brkFlags |= Scope.STMT_BRK_FLAG;
-    const args = Kit.insertAfter(
-      Kit.append(call, Scope.sysId(Tag.callee, brkSym)),
-      Kit.arr(Tag.arguments, [])
-    );
-    if (DEBUG_BRKS) Kit.append(args, Kit.num(Tag.push, debNum++));
-    Kit.append(args, Kit.emitConst(Tag.push, Kit.locStr(loc)));
-    return call;
-  }
 }
 
 export function prepare(root) {
@@ -109,15 +132,16 @@ export function prepare(root) {
 }
 
 export function positions(root) {
-  const { lastFrame, errBlock } = root;
+  const { lastFrame } = root;
   for (let i = lastFrame.nextFrame; i !== lastFrame; i = i.nextFrame) {
     const { doc } = i;
     if (!doc) continue;
     const ref = doc.refDoc || doc;
     const { loc } = ref.node;
     let flags = doc.brkFlags || ref.brkFlags || 0;
-    if (i.block.finalizer || (i.block.handler && i.block.handler !== errBlock))
-      flags |= Scope.HAS_EH_BRK_FLAG;
+    let handler = i.block.handler;
+    while (handler && handler.blackbox) handler = handler.handler;
+    if (handler) flags |= Scope.HAS_EH_BRK_FLAG;
     i.metaArgs.push(flags, Kit.locStr(loc));
   }
 }

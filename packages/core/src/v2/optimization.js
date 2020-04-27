@@ -172,6 +172,7 @@ export function sortFrames(root) {
   schedule(errFrame);
   let cur = null;
   let pureExit = null;
+  const fallthrough = config.switchFallthrough;
   if (config.expInline) {
     for (let i = lastFrame.nextFrame; i !== lastFrame; i = i.nextFrame) {
       if (
@@ -217,22 +218,24 @@ export function sortFrames(root) {
     for (let i = job.nextPureExit; i !== job; i = i.nextPureExit)
       schedule(i.dst);
     if (cur) {
-      for (let i = cur.nextEffSkipExit; i !== cur; i = i.nextEffSkipExit) {
-        if (i.dst !== job) continue;
-        const assign = Kit.assign(Tag.expression);
-        Kit.append(assign, Kit.memExpr(Tag.left, ctxSym, "state"));
-        Kit.append(assign, Kit.num(Tag.right, id));
-        const cont = i.continueStmt;
-        cont.type = Tag.ExpressionStatement;
-        Kit.append(cont, assign);
-        if (i.noSkip)
-          Kit.insertAfter(cont, Kit.node(Tag.push, Tag.BreakStatement));
-      }
-      for (let i = cur.nextPureExit; i !== cur; i = i.nextPureExit) {
-        if (i.dst !== job) continue;
-        i.prevSibling.firstChild.prevSibling.node.name = "state";
-        if (i.noSkip) i.continueStmt.type = Tag.BreakStatement;
-        else Kit.detach(i.continueStmt);
+      if (fallthrough) {
+        for (let i = cur.nextEffSkipExit; i !== cur; i = i.nextEffSkipExit) {
+          if (i.dst !== job) continue;
+          const assign = Kit.assign(Tag.expression);
+          Kit.append(assign, Kit.memExpr(Tag.left, ctxSym, "state"));
+          Kit.append(assign, Kit.num(Tag.right, id));
+          const cont = i.continueStmt;
+          cont.type = Tag.ExpressionStatement;
+          Kit.append(cont, assign);
+          if (i.noSkip)
+            Kit.insertAfter(cont, Kit.node(Tag.push, Tag.BreakStatement));
+        }
+        for (let i = cur.nextPureExit; i !== cur; i = i.nextPureExit) {
+          if (i.dst !== job) continue;
+          i.prevSibling.firstChild.prevSibling.node.name = "state";
+          if (i.noSkip) i.continueStmt.type = Tag.BreakStatement;
+          else Kit.detach(i.continueStmt);
+        }
       }
       (job.prevFrame = cur).nextFrame = job;
     }

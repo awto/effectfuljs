@@ -19,7 +19,7 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[1] = $m$1($);
       $.goto = 1;
-      $brk("1:0-1:31");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -44,7 +44,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk("4:2-8:4");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -52,7 +52,7 @@ var $M = require("@effectful/debugger"),
       <EffT />
     </>;
       $.goto = 2;
-      $brk("9:2-14:4");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -67,7 +67,7 @@ var $M = require("@effectful/debugger"),
       {$p}
     </>;
       $.goto = 4;
-      $brk("15:2-23:4");
+      $brk();
       $.state = 4;
 
     case 4:
@@ -79,7 +79,7 @@ var $M = require("@effectful/debugger"),
       </EffC2>
     </C1>;
       $.goto = 5;
-      $brk("24:2-31:4");
+      $brk();
       $.state = 5;
 
     case 5:
