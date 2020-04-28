@@ -4,7 +4,7 @@
   "displayName": "Effectful JavaScript Debugger",
   "description": "Time-Traveling, Persistent State, Hot-Swapping, API and more",
   "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-  "version": "1.3.13",
+  "version": "1.3.14",
   "license": "MIT",
   "homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
   "icon": "icon.png",
@@ -209,12 +209,13 @@
                 "description": "Restart from previously stored snapshot, without restarting the whole process"
               },
               "onChange": {
-                "type":[
+                "type": [
                   "null",
                   "string"
                 ],
                 "enum": [
-                  "restart", "merge"
+                  "restart",
+                  "merge"
                 ],
                 "default": "restart",
                 "description": "what to do when sources changed during debugging"
@@ -284,7 +285,7 @@
   },
   "repository": {
     "type": "git",
-    "url":"https://github.com/awto/effectfuljs.git"
+    "url": "https://github.com/awto/effectfuljs.git"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -296,7 +297,7 @@
     "test:ide": "node ./testExtension.js"
   },
   "devDependencies": {
-    "@effectful/debugger": "^1.3.13",
+    "@effectful/debugger": "^1.3.14",
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.12.21",
     "@types/puppeteer": "^1.20.2",
