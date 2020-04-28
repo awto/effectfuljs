@@ -9,6 +9,8 @@ const { defineProperty } = saved.Object;
 
 export function moduleExports() {
   const mod = compileModule();
+  if (!mod)
+    return;
   const topMeta = mod.topLevel;
   const cjs = mod.cjs;
   const hot = mod.version > 0;

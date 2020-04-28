@@ -80,17 +80,6 @@ export class DebugSession extends SessionImpl {
   private lastThread = 0;
   private supportsProgress = false;
 
-  private hideProgress() {
-    if (this.progressCb) {
-      this.progressCb();
-      this.progressCb = void 0;
-    }
-  }
-  private showProgress(title: string) {
-    this.hideProgress();
-    if (this.progressHandler) this.progressCb = this.progressHandler(title);
-  }
-
   /**
    * Creates a new debug adapter that is used for one debug session.
    * We configure the default implementation of a debug adapter here.
@@ -384,7 +373,6 @@ export class DebugSession extends SessionImpl {
     if (this.stopped) return;
     this.stopped = true;
     if (this.connectCb) this.connectCb();
-    this.hideProgress();
     for (const i of this.remotes.values()) i.close();
     if (this.stopComms) this.stopComms();
     if (this.childProcess) this.childProcess.kill();
@@ -558,12 +546,12 @@ export class DebugSession extends SessionImpl {
     );
     this.launchArgs = args;
     if (args.verbose) logger.verbose(`launch request ${JSON.stringify(args)}`);
-    if (args.preset !== "node")
+    // if (args.preset !== "node")
       this.sendEvent(
         new CapabilitiesEvent({
           supportsStepBack: !!args.timeTravel,
           supportsRestartFrame: false,
-          supportsRestartRequest: args.preset !== "node"
+          supportsRestartRequest: !!args.fastRestart || args.preset !== "node"
         })
       );
     if (args.preset && !args.command) args.command = true;
@@ -708,7 +696,6 @@ export class DebugSession extends SessionImpl {
       await new Promise<Handler | undefined>(i => (this.connectCb = i));
       logger.verbose("first connection");
       this.connectCb = undefined;
-      this.hideProgress();
     }
     if (this.remotes.size && !this.stopped) {
       // wait until configuration has finished (and configurationDoneRequest has been called)
@@ -752,6 +739,8 @@ export class DebugSession extends SessionImpl {
         stopOnExit: args.stopOnExit,
         dirSep: path.sep,
         exceptions: this.exceptionArgs,
+        fastRestart: args.fastRestart,
+        onChange: args.onChange,
         breakpoints: [...this.breakpointsSrcs].map(
           ([srcPath, breakpoints]) => ({
             breakpoints: breakpoints.map(i => i.response),

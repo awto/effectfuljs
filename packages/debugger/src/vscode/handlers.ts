@@ -54,14 +54,20 @@ const localConsole = config.localConsole
 
 context.debug = true;
 
-function trace(...args: [any, ...any[]]) {
-  sysConsole.log.apply(sysConsole, args);
-}
-
 let brkNext: State.Frame | null = null;
 let brkOut: State.Frame | null = null;
 let stepIn = false;
 let pauseNext = false;
+let backward = false;
+const snapshots: Map<string, any> = new Map();
+
+const isBrowser = typeof window !== "undefined"
+
+function trace(...args: [any, ...any[]]) {
+  sysConsole.log.apply(sysConsole, args);
+}
+
+
 /**
  * saving break frame for async functions which may
  * be removed from the stack already
@@ -223,6 +229,10 @@ function dispatch(req: P.Request) {
   send(res);
 }
 
+let restartTimeout: any = 0;
+
+const RESTART_ON_CHANGE_TIMEOUT = signalStopped ? 500 : 0;
+
 context.onLoad = function(module: State.Module, hot: boolean) {
   const source = getSource(module);
   if (config.verbose) trace(`DEBUGGER: loading ${JSON.stringify(source)}`);
@@ -235,12 +245,18 @@ context.onLoad = function(module: State.Module, hot: boolean) {
         breakpoints: bps && setBreakpoints(bps).breakpoints
       });
     }
+    /*
     if (hot && context.brk) {
       event("stopped", {
         reason: "step",
         description: "approximated"
       });
     }
+    */
+    if (hot && config.onChange === "restart") {
+      clearTimeout(restartTimeout);
+      setTimeout(handlers.childRestart, RESTART_ON_CHANGE_TIMEOUT);
+    } 
   }
 };
 
@@ -251,7 +267,9 @@ context.onThread = async function() {
   if (context.top || context.activeTop) return;
   if (!context.queue.length) {
     if (!context.top && !context.activeTop) {
-      if (config.stopOnExit) signalStopped();
+      if (config.stopOnExit) {
+        signalStopped();
+      }
       else Comms.unref();
     }
     return;
@@ -278,7 +296,9 @@ context.onThread = async function() {
       context.activeTop = context.top;
       context.top = null;
       signalStopped();
+      onEntry();
     } else {
+      onEntry();
       step();
       cont();
     }
@@ -286,8 +306,15 @@ context.onThread = async function() {
 };
 
 handlers.childRestart = function(res) {
+  if (config.fastRestart) {
+    const snapshot = snapshots.get(config.fastRestart);
+    if (snapshot) {
+     restore(snapshot);
+     return;
+    }
+  }
   if (typeof window !== "undefined") window.location.reload();
-  else {
+  else if (res) {
     res.success = false;
     res.message = "restart isn't supported";
   }
@@ -561,6 +588,7 @@ function reset() {
   brkFrame = brkOut = brkNext = null;
   stepIn = false;
   pauseNext = false;
+  backward = false;
   resetScopes();
 }
 
@@ -583,6 +611,8 @@ handlers.childLaunch = function(args, res) {
   send(res);
   context.threadId = args.threadId;
   config.stopOnExit = args.stopOnExit;
+  config.fastRestart = args.fastRestart;
+  config.onChange = args.onChange;
   if (launchCb) launchCb(args.stopOnEntry);
   if (config.verbose) trace(`DEBUGGER: launch ${JSON.stringify(args)}`);
 };
@@ -601,7 +631,9 @@ function checkPause(
   | "entry"
   | "interrupt" {
   if (!context.debug) return undefined;
-  if (launchCb != null) return "entry";
+  if (launchCb != null) {
+    return "entry";
+  }
   if (pauseNext) {
     pauseNext = false;
     return "pause";
@@ -627,26 +659,26 @@ function checkPause(
 
 let stepCount = 0;
 
-function run(back?: boolean) {
+function run() {
   context.top = context.activeTop;
   context.brk = context.activeTop && context.activeTop.brk;
   if (config.verbose)
     trace(`DEBUGGER: run ${stateDescr(stepCount++, context.threadId, true)}`);
   context.activeTop = null;
   try {
-    step(back);
+    step();
   } catch (e) {
     // tslint:disable-next-line:no-console
     console.error(e);
   }
-  cont(back);
+  cont();
 }
 
-const step: (back?: boolean) => void = config.timeTravel
-  ? function step(back?: boolean) {
-      if (back || journal.future) {
+const step: () => void = config.timeTravel
+  ? function step() {
+      if (backward || journal.future) {
         runningTrace = true;
-        const iter = back ? TT.undo : TT.redo;
+        const iter = backward ? TT.undo : TT.redo;
         let lastBrk = context.brk;
         while (iter()) {
           const { brk, top } = context;
@@ -660,7 +692,7 @@ const step: (back?: boolean) => void = config.timeTravel
       }
       runningTrace = false;
       if (context.top) {
-        if (back) {
+        if (backward) {
           reason = "entry";
           context.onStop();
         } else Engine.step();
@@ -707,16 +739,19 @@ function interruptibleStep() {
   else Engine.step();
 }
 
-function cont(back?: boolean) {
+function cont() {
   if (config.verbose)
-    trace(`DEBUGGER: continue hasTop:${!!context.top}, back:${!!back}`);
+    trace(`DEBUGGER: continue hasTop:${!!context.top}, back:${!!backward}`);
   if (!context.activeTop) event("continued", {});
 }
 
 handlers.pause = function(_, res) {
   send(res);
   pauseNext = true;
-  if (config.timeTravel && !context.top) run(true);
+  if (config.timeTravel && !context.top) {
+    backward = true;
+    run();
+  }
 };
 
 function checkTimeTravelEnabled(res: P.Response) {
@@ -748,7 +783,8 @@ handlers.reverseContinue = function(_, res) {
   if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
-  run(true);
+  backward = true;
+  run();
 };
 
 handlers.stepBack = function(_, res) {
@@ -756,7 +792,8 @@ handlers.stepBack = function(_, res) {
   send(res);
   reset();
   stepIn = true;
-  run(true);
+  backward = true;
+  run();
 };
 
 handlers.continue = function(_, res) {
@@ -1042,7 +1079,7 @@ export function resetLoad() {
  * Returns `JSON.stringify` serializable object with the whole
  * current execution state
  */
-export function capture(): S.JSONObject {
+export function capture(silent?:boolean): S.JSONObject {
   const modules: any = [];
   const savedEnabled = journal.enabled;
   try {
@@ -1065,7 +1102,8 @@ export function capture(): S.JSONObject {
     }
     const res = S.write(
       {
-        activeTop: context.activeTop || context.top,
+        activeTop: context.activeTop,
+        top: context.top,
         syncStack: context.syncStack,
         queue: context.queue,
         debug: context.debug,
@@ -1078,7 +1116,7 @@ export function capture(): S.JSONObject {
       },
       {
         ignore: "opaque",
-        warnIgnored: true,
+        warnIgnored: !silent,
         alwaysByRef: true,
         verbose: config.debuggerDebug
       }
@@ -1095,10 +1133,10 @@ export function capture(): S.JSONObject {
  * `capture` the current state is discarded
  */
 export function restore(json: S.JSONObject) {
-  if (context.top && !context.activeTop)
-    throw new Error(
-      "NOT IMPLEMENTED YET: restoring state when an application runs"
-    ); // TODO: (pause it)
+  // if (context.top && !context.activeTop)
+  //  throw new Error(
+  //    "NOT IMPLEMENTED YET: restoring state when an application runs"
+  //  ); // TODO: (pause it)
   const savedEnabled = journal.enabled;
   let extra: Set<any>;
   try {
@@ -1135,6 +1173,7 @@ export function restore(json: S.JSONObject) {
     }
     ({
       activeTop: context.activeTop,
+      top: context.top,
       syncStack: context.syncStack,
       queue: context.queue,
       debug: context.debug,
@@ -1154,17 +1193,32 @@ export function restore(json: S.JSONObject) {
       if (typeof document !== "undefined") {
         if (
           config.mutationObserver &&
-          TT.DOM &&
-          typeof window !== "undefined"
+          TT.DOM
         ) {
           TT.DOM.observing.clear();
           TT.DOM.track(document.documentElement);
         }
       }
       if (context.activeTop) signalStopped();
-      else event("continued", {});
-    }, 1000);
+      else if (Persist.extra.size) {
+        const [m, t, a] = Persist.extra;
+        m.call(t, a);
+      } else {
+        context.activeTop = context.top;
+        reset();
+        run();      
+      }
+    }, isBrowser ? 0 : 1000);
   } finally {
     journal.enabled = savedEnabled;
   }
+}
+
+function onEntry() {
+  if (config.fastRestart === "entry")
+    snapshots.set("entry",capture(true));
+}
+
+export function snapshot(name:string) {
+  snapshots.set(name, capture(true));
 }

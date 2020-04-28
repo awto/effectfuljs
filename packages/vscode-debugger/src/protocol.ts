@@ -34,6 +34,8 @@ declare module "vscode-debugprotocol" {
       debuggerPort?: number;
       runtime?: string;
       srcRoot?: string;
+      fastRestart?: string;
+      onChange?: string;
     }
   }
 }

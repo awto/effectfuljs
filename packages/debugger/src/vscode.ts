@@ -6,8 +6,7 @@
     !(lib = (<any>global)[config.globalNS]) ||
     lib.runtime !== "vscode"
   ) {
-    const { capture, restore } = require("./vscode/handlers");
-    lib = { ...require("./main"), capture, restore };
+    lib = { ...require("./main"), ...require("./vscode/main") };
     if (config.globalNS) (<any>global)[config.globalNS] = lib;
     lib.Serialization.regModule(lib,"#EDBG");
     lib.runtime = "vscode";

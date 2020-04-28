@@ -11,10 +11,11 @@ suite("Debugging on NodeJS", function() {
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
   const NODE_DATA_ROOT = path.join(DATA_ROOT, "vscode-node-debug/");
-  
+
   let dc: DebugClient;
   // process.env.EFFECTFUL_DEBUG_DEBUGGER = "1";
-  process.env.EFFECTFUL_DEBUGGER_EXCLUDE = "**/packages/{debugger,serialization,core,transducers}/**";
+  process.env.EFFECTFUL_DEBUGGER_EXCLUDE =
+    "**/packages/{debugger,serialization,core,transducers}/**";
   process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
   process.env.EFFECTFUL_DEBUGGER_VERBOSE = process.env.EFFECTFUL_DEBUG_DEBUGGER
     ? "2"
@@ -74,7 +75,11 @@ suite("Debugging on NodeJS", function() {
       const PROGRAM = path.join(NODE_DATA_ROOT, "program.js");
       return Promise.all([
         dc.configurationSequence(),
-        dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose: false }),
+        dc.launch({
+          command: `node ${PROGRAM}`,
+          preset: "node",
+          verbose: false
+        }),
         dc.waitForEvent("terminated")
       ]);
     });
@@ -587,12 +592,19 @@ suite("Debugging on NodeJS", function() {
     test.skip("stdout and stderr events should be complete and in correct order", function() {
       return Promise.all([
         dc.configurationSequence(),
-        dc.launch({ command: `node ${PROGRAM}`, preset: "node", verbose: false }),
+        dc.launch({
+          command: `node ${PROGRAM}`,
+          preset: "node",
+          verbose: false
+        }),
         dc.assertOutput(
           "stdout",
           "Hello stdout 0\nHello stdout 1\nHello stdout 2\n"
         ),
-        dc.assertOutput('stderr', 'Hello stderr 0\nHello stderr 1\nHello stderr 2\n')
+        dc.assertOutput(
+          "stderr",
+          "Hello stderr 0\nHello stderr 1\nHello stderr 2\n"
+        )
       ]);
     });
   });
@@ -850,9 +862,9 @@ suite("Debugging on NodeJS", function() {
           verbose: false
         }),
         dc.assertStoppedLocation("entry", {
-        path: PROGRAM,
-        line: 7
-      })
+          path: PROGRAM,
+          line: 7
+        })
       ]);
       await Promise.all([
         dc.stepInRequest({ threadId: 0 }),
@@ -892,36 +904,102 @@ suite("Debugging on NodeJS", function() {
       await out;
     });
   });
+  suite("fast restart", function() {
+    test("should restart the program from the entry", async function() {
+      const PROGRAM = path.join(DATA_ROOT, "restart.js");
+      const out1 = await Promise.all([
+        dc.configurationSequence(),
+        dc.launch({
+          command: PROGRAM,
+          preset: "node",
+          stopOnExit: true,
+          fastRestart: "entry",
+          verbose: false
+        }),
+        dc.assertOutput("stdout", "BEFORE\nAFTER\n")
+      ]);
+      await Promise.all([
+        dc.restartRequest({}),
+        dc.assertOutput("stdout", "BEFORE\nAFTER\n")
+      ]);
+    });
+    test("should restart the program from a custom snapshot", async function() {
+      const PROGRAM = path.join(DATA_ROOT, "restart.js");
+      await Promise.all([
+        dc.configurationSequence(),
+        dc.launch({
+          command: PROGRAM,
+          preset: "node",
+          stopOnExit: true,
+          fastRestart: "snapshot1",
+          verbose: false
+        }),
+        dc.assertOutput("stdout", "BEFORE\nAFTER\n")
+      ]);
+      await Promise.all([
+        dc.restartRequest({}),
+        dc.assertOutput("stdout", "AFTER\n")
+      ]);
+    });
+  });
   suite("hot swapping", function() {
-    const PROGRAM = path.join(DATA_ROOT, "hot-swap-main.js");
-    teardown(() => util.promisify(fs.unlink)(PROGRAM));
-    async function copy(fn: string) {
+    async function copy(prog: string, fn: string) {
       await util.promisify(
         fs.writeFile
-      )(PROGRAM, await util.promisify(fs.readFile)(path.join(DATA_ROOT, fn), "utf-8"));
+      )(prog, await util.promisify(fs.readFile)(path.join(DATA_ROOT, fn), "utf-8"));
     }
     test("should change the functions code", async function() {
       const out = dc.assertOutput("stdout", "M:1\nN:2\n");
-      await copy("hot1.js");
-      await dc.hitBreakpoint(
-        {
-          command: `node ${PROGRAM}`,
-          preset: "node",
-          verbose: false
-        },
-        { path: PROGRAM, line: 2 }
-      );
-      await Promise.all([
-        dc.continueRequest({ threadId: 0 }),
-        dc.assertStoppedLocation("breakpoint", { path: PROGRAM, line: 2 })
-      ]);
-      await new Promise(i => setTimeout(i, 100));
-      await Promise.all([copy("hot2.js"), dc.waitForEvent("loadedSources")]);
-      await Promise.all([
-        dc.continueRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
-      await out;
+      const PROGRAM = path.join(DATA_ROOT, "hot-swap-main.js");
+      try {
+        await copy(PROGRAM, "hot1.js");
+        await dc.hitBreakpoint(
+          {
+            command: `node ${PROGRAM}`,
+            preset: "node",
+            verbose: false
+          },
+          { path: PROGRAM, line: 2 }
+        );
+        await Promise.all([
+          dc.continueRequest({ threadId: 0 }),
+          dc.assertStoppedLocation("breakpoint", { path: PROGRAM, line: 2 })
+        ]);
+        await new Promise(i => setTimeout(i, 100));
+        await Promise.all([
+          copy(PROGRAM, "hot2.js"),
+          dc.waitForEvent("loadedSources")
+        ]);
+        await Promise.all([
+          dc.continueRequest({ threadId: 0 }),
+          dc.waitForEvent("terminated")
+        ]);
+        await out;
+      } finally {
+        await util.promisify(fs.unlink)(PROGRAM);
+      }
+    });
+    test("should restart on file change if `onChange` is specified", async function() {
+      const PROGRAM = path.join(DATA_ROOT, "hot-restart.js");
+      await copy(PROGRAM, "restart.js");
+      try {
+        await Promise.all([
+          dc.configurationSequence(),
+          dc.launch({
+            command: PROGRAM,
+            preset: "node",
+            stopOnExit: true,
+            fastRestart: "entry",
+            verbose: false,
+            onChange: "restart"
+          }),
+          dc.assertOutput("stdout", "BEFORE\nAFTER\n")
+        ]);
+        await copy(PROGRAM, "restart2.js");
+        await dc.assertOutput("stdout", "NEW SOURCES\n");
+      } finally {
+        await util.promisify(fs.unlink)(PROGRAM);
+      }
     });
   });
   suite("child processes", function() {
@@ -937,9 +1015,9 @@ suite("Debugging on NodeJS", function() {
           stopOnEntry: true
         }),
         dc.assertStoppedLocation("entry", {
-        path: PROGRAM,
-        line: 1
-      })
+          path: PROGRAM,
+          line: 1
+        })
       ]);
       await dc.continueRequest({ threadId: 0 });
       const [t1] = await Promise.all([
@@ -1096,14 +1174,22 @@ suite("Debugging on NodeJS", function() {
         }),
         dc.assertStoppedLocation("debugger_statement", { line: 3 })
       ]);
-      await Promise.all([dc.continueRequest({ threadId: 0 }),
-                         dc.assertStoppedLocation("debugger_statement", { line: 3 })]);
-      await Promise.all([dc.continueRequest({ threadId: 0 }),
-                         dc.assertStoppedLocation("debugger_statement", { line: 3 })]);
-      await Promise.all([dc.continueRequest({ threadId: 0 }),
-                         dc.assertStoppedLocation("debugger_statement", { line: 3 })]);
-      await Promise.all([dc.continueRequest({ threadId: 0 }),
-                         dc.waitForEvent("terminated")]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("debugger_statement", { line: 3 })
+      ]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("debugger_statement", { line: 3 })
+      ]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.assertStoppedLocation("debugger_statement", { line: 3 })
+      ]);
+      await Promise.all([
+        dc.continueRequest({ threadId: 0 }),
+        dc.waitForEvent("terminated")
+      ]);
       await out;
     });
   });

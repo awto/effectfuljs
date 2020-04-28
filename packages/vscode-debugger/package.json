@@ -199,6 +199,25 @@
                 "type": "string",
                 "default": "^\"\\${workspaceRoot}\"",
                 "description": "The project's root, files outside of the root won't be instrumented"
+              },
+              "fastRestart": {
+                "type": [
+                  "null",
+                  "string"
+                ],
+                "default": "entry",
+                "description": "Restart from previously stored snapshot, without restarting the whole process"
+              },
+              "onChange": {
+                "type":[
+                  "null",
+                  "string"
+                ],
+                "enum": [
+                  "restart", "merge"
+                ],
+                "default": "restart",
+                "description": "what to do when sources changed during debugging"
               }
             }
           }
@@ -263,7 +282,10 @@
       }
     ]
   },
-  "repository": "https://github.com/awto/effectfuljs.git",
+  "repository": {
+    "type": "git",
+    "url":"https://github.com/awto/effectfuljs.git"
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",

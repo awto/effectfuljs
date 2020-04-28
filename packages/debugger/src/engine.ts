@@ -47,8 +47,10 @@ const SavedFunction = State.saved.Function;
 const savedApply = State.saved.FunctionMethods.apply;
 const savedCall = State.saved.FunctionMethods.call;
 const defineProperty = saved.Object.defineProperty;
+const savedToString = Function.prototype.toString;
 
 let curModule: Module = undefined as any; // this is always used in context where this is inited
+let moduleChanged = false;
 
 const recordFrame = config.timeTravel
   ? function recordFrame(top: Frame | null) {
@@ -81,7 +83,11 @@ class ArgsTraps {
 
 const objectValues = Object.values;
 
-export function compileModule(): Module {
+export function compileModule(): Module | null {
+  if (!moduleChanged)
+    return null;
+  if (curModule.version === void 0) curModule.version = 0;
+  else curModule.version++;
   if (!curModule.topLevel || curModule.topLevel.blackbox) return curModule;
   const funcs = objectValues(curModule.functions).reverse();
   const lines = (curModule.lines = new Array(curModule.topLevel.endLine));
@@ -158,6 +164,7 @@ export function module(
     cjs.__effectful_js_require = require;
   }
   regOpaqueObject(cjs, `cjs#${name}`);
+  moduleChanged = !curModule;
   if (!curModule) curModule = <any>{ functions: {} };
   regOpaqueObject(cjs, name + "$mod");
   context.modules[<any>(fullPath || id)] = curModule;
@@ -170,8 +177,6 @@ export function module(
   curModule.fullPath = fullPath;
   curModule.id = id;
   context.moduleId = (cjs && cjs.id) || null;
-  if (curModule.version === void 0) curModule.version = 0;
-  else curModule.version++;
   curModule.cjs = cjs;
   curModule.evalContext = evalContext;
   curModule.safePrefix = safePrefix;
@@ -202,7 +207,11 @@ export function fun(
   states: States
 ): (this: any, ...args: any[]) => any {
   let meta = curModule.functions[name];
-  if (!meta) meta = curModule.functions[name] = <FunctionDescr>{};
+  if (meta) {
+    if (savedToString.call(handler) === savedToString.call(meta.handler))
+      return meta.func;
+    moduleChanged = true;;
+  } else if (!meta) meta = curModule.functions[name] = <FunctionDescr>{};
   const top = !curModule.topLevel;
   if (top) curModule.topLevel = meta;
   if (!errHandler) errHandler = defaultErrHandler;
@@ -796,7 +805,6 @@ export const FunctionConstr = function Function(...args: any[]) {
 };
 FunctionConstr.prototype = Function.prototype;
 if (config.patchRT) {
-  const savedToString = Function.prototype.toString;
   saved.Object.defineProperty(FunctionConstr.prototype, "toString", {
     configurable: true,
     writable: true,

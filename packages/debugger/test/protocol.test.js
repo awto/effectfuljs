@@ -157,7 +157,7 @@ describe("VSCode protocol handlers", function() {
       { line: 4, expLine: 5 }
     ];
     Kit.awaitEvent("breakpoint", function(event) {
-      const bp = bps.find((i) => i.id === event.brekpoint.id);
+      const bp = bps.find(i => i.id === event.brekpoint.id);
       if (bp) {
         expect(bp.verified).toBe(true);
         expect(bp.line).toBe(bp.expLine || bp.line);
@@ -195,7 +195,7 @@ describe("VSCode protocol handlers", function() {
             Kit.command(
               "childSetBreakpoints",
               {
-                breakpoints: bps.map((i) => ({ line: i.line })),
+                breakpoints: bps.map(i => ({ line: i.line })),
                 source: { path: PROGRAM }
               },
               function(res) {
@@ -215,7 +215,7 @@ describe("VSCode protocol handlers", function() {
       },
       "continue",
       function() {
-        expect(bps.every((i) => i.verified)).toBe(true);
+        expect(bps.every(i => i.verified)).toBe(true);
         done();
       }
     );
@@ -297,7 +297,6 @@ describe("VSCode protocol handlers", function() {
     );
   });
   test("logpoint", function(done) {
-    const vals = [];
     Kit.traverse(
       require("./__fixtures__/logPoints"),
       {
@@ -323,7 +322,6 @@ describe("VSCode protocol handlers", function() {
     );
   });
   test("hit conditions", function(done) {
-    const vals = [];
     Kit.traverse(
       require("./__fixtures__/hitCond"),
       {
@@ -479,6 +477,126 @@ describe("VSCode protocol handlers", function() {
   test("stepping in Function constructor", function(done) {
     Kit.traverse(require("./__fixtures__/funconstr"), {}, "stepOut", done);
   });
+  test("breakpoints locations", function(done) {
+    Kit.launch(
+      require("./__fixtures__/columns"),
+      { stopOnEntry: true },
+      function() {
+        Kit.command(
+          "breakpointLocations",
+          {
+            line: 1,
+            source: {
+              path: path.resolve(
+                config.srcRoot,
+                require.resolve("./__fixtures__/columns")
+              )
+            }
+          },
+          function(ret) {
+            try {
+              expect(ret.breakpoints).toEqual([
+                {
+                  line: 1,
+                  column: 1,
+                  endLine: 1,
+                  endColumn: 11
+                },
+                {
+                  line: 1,
+                  column: 12,
+                  endLine: 1,
+                  endColumn: 51
+                },
+                {
+                  line: 1,
+                  column: 26,
+                  endLine: 1,
+                  endColumn: 30
+                },
+                {
+                  line: 1,
+                  column: 36,
+                  endLine: 1,
+                  endColumn: 51
+                },
+                {
+                  line: 1,
+                  column: 31,
+                  endLine: 1,
+                  endColumn: 34
+                },
+                {
+                  line: 1,
+                  column: 52,
+                  endLine: 1,
+                  endColumn: 84
+                },
+                {
+                  line: 1,
+                  column: 62,
+                  endLine: 1,
+                  endColumn: 66
+                },
+                {
+                  line: 1,
+                  column: 69,
+                  endLine: 1,
+                  endColumn: 84
+                },
+                {
+                  line: 1,
+                  column: 85,
+                  endLine: 1,
+                  endColumn: 172
+                },
+                {
+                  line: 1,
+                  column: 96,
+                  endLine: 1,
+                  endColumn: 126
+                },
+                {
+                  line: 1,
+                  column: 102,
+                  endLine: 1,
+                  endColumn: 107
+                },
+                {
+                  line: 1,
+                  column: 109,
+                  endLine: 1,
+                  endColumn: 126
+                },
+                {
+                  line: 1,
+                  column: 134,
+                  endLine: 1,
+                  endColumn: 170
+                },
+                {
+                  line: 1,
+                  column: 139,
+                  endLine: 1,
+                  endColumn: 155
+                },
+                {
+                  line: 1,
+                  column: 164,
+                  endLine: 1,
+                  endColumn: 169
+                }
+              ]);
+              done();
+            } catch (e) {
+              done(e);
+            }
+          }
+        );
+      }
+    );
+  });
+
   // this breaks Promises (leaves them in inconsistent state)
   // so works only if run last (TODO: adapt test)
   test.skip("pause", function(done) {

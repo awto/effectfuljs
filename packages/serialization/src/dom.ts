@@ -1,5 +1,7 @@
 import * as S from "./main";
 
+declare const InputDeviceCapabilities: any;
+
 const LocMap = Map;
 const LocWeakMap = WeakMap;
 
@@ -251,10 +253,12 @@ export function trackGlobalDocument() {
         name: "dom#Event",
         create(ctx: S.ReadContext, json: any): Event {
           const EventConstructor = ctx.step((<any>json).c);
-          const init: any = (<any>json).init;
-          for (const i of Object.keys(init)) {
-            const prop = init[i];
+          const jsonInit: any = (<any>json).init;
+          const init: any = {};
+          for (const i of Object.keys(jsonInit)) {
+            const prop = jsonInit[i];
             if (prop && typeof prop === "object") init[i] = ctx.step(prop);
+            else init[i] = prop;
           }
           return new EventConstructor(init.type, init);
         },
@@ -357,15 +361,15 @@ export function trackGlobalDocument() {
       overrideProps
     });
 
-  if ((<any>global).InputDeviceCapabilities) {
-    S.regConstructor((<any>global).InputDeviceCapabilities, {
+  if (typeof InputDeviceCapabilities !== "undefined") {
+    S.regConstructor(InputDeviceCapabilities, {
       name: "dom#InputDeviceCapabilities",
       write(_ctx, value) {
         return { fireTouchEvents: (<any>value).fireTouchEvents };
       },
       create(_ctx, json) {
         // TODO: don't care about object model for now
-        return new (<any>global).InputDeviceCapabilities({
+        return new InputDeviceCapabilities({
           fireTouchEvents: (<any>json).fireTouchEvents
         });
       },

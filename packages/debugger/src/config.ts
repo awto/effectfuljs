@@ -33,5 +33,8 @@ export default {
   /** for timeTravel debugging don't exit node process on program termination */
   stopOnExit: false,
   /** communcations are in a separate thread */
-  expUseWorker: true
+  expUseWorker: true,
+  /** storing snapshot till the first breakpoint, and using it on reloading */
+  fastRestart: <null|string>null,
+  onChange: <null|string>null
 };
