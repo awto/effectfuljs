@@ -530,7 +530,8 @@ export function build(needsSave = defaultNeedsSave) {
           const init = id.nextSibling;
           j = after(i);
           if (init.pos !== Tag.init) continue;
-          const assign = Scope.assign(Tag.right, init);
+          const assign = Scope.assign(Tag.right);
+          Kit.copyMeta(i, assign);
           assign.node.loc = i.node.loc;
           const sym = tempSym(root, curScope);
           enter(init, sym);
@@ -592,7 +593,8 @@ export function build(needsSave = defaultNeedsSave) {
             handlers.add(handlerBlock);
             setBlock(handlerBlock);
             if (handlerPat) {
-              const patAssign = Scope.assign(Tag.right, handlerPat);
+              const patAssign = Scope.assign(Tag.right);
+              Kit.copyMeta(handler, patAssign);
               Kit.detach(handlerPat);
               handlerPat.pos = Tag.left;
               Kit.append(patAssign, handlerPat);
@@ -779,7 +781,8 @@ export function build(needsSave = defaultNeedsSave) {
             Kit.append(left, obj);
             Kit.append(left, prop);
           }
-          const assign = Scope.assign(Tag.right, left);
+          const assign = Scope.assign(Tag.right);
+          Kit.copyMeta(left, assign);
           Kit.detach(left);
           Kit.append(assign, left);
           Dom.regPat(left);

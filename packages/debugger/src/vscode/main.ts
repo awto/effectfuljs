@@ -1,1 +1,1 @@
-export { capture, restore, snapshot } from "./handlers"
+export { capture, restore, save } from "./handlers";

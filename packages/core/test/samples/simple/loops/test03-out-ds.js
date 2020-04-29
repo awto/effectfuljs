@@ -124,7 +124,7 @@ var $M = require("@effectful/debugger"),
       $.state = 14;
 
     case 14:
-      $lset($l, 4,
+      $lset($l[0], 4,
       /*l*/
       $p);
       $.goto = 15;

@@ -13,6 +13,7 @@ function prependBrkExpr(expr, ref) {
   expr.pos = brk.pos = Tag.push;
   Kit.append(arr, brk);
   Kit.append(arr, expr);
+  Kit.copyMeta(expr, seq);
 }
 
 export function injectBrk() {

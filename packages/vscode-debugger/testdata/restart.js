@@ -1,4 +1,4 @@
 console.log("BEFORE");
 if (typeof EDBG !== "undefined")
-  EDBG.snapshot("snapshot1");
+  EDBG.save("snapshot1");
 console.log("AFTER");

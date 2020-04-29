@@ -61,12 +61,11 @@ let pauseNext = false;
 let backward = false;
 const snapshots: Map<string, any> = new Map();
 
-const isBrowser = typeof window !== "undefined"
+const isBrowser = typeof window !== "undefined";
 
 function trace(...args: [any, ...any[]]) {
   sysConsole.log.apply(sysConsole, args);
 }
-
 
 /**
  * saving break frame for async functions which may
@@ -256,7 +255,7 @@ context.onLoad = function(module: State.Module, hot: boolean) {
     if (hot && config.onChange === "restart") {
       clearTimeout(restartTimeout);
       setTimeout(handlers.childRestart, RESTART_ON_CHANGE_TIMEOUT);
-    } 
+    }
   }
 };
 
@@ -269,8 +268,7 @@ context.onThread = async function() {
     if (!context.top && !context.activeTop) {
       if (config.stopOnExit) {
         signalStopped();
-      }
-      else Comms.unref();
+      } else Comms.unref();
     }
     return;
   }
@@ -309,8 +307,8 @@ handlers.childRestart = function(res) {
   if (config.fastRestart) {
     const snapshot = snapshots.get(config.fastRestart);
     if (snapshot) {
-     restore(snapshot);
-     return;
+      restore(snapshot);
+      return;
     }
   }
   if (typeof window !== "undefined") window.location.reload();
@@ -864,7 +862,7 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
     if (!line) continue;
     diff.verified = true;
     let info: State.Brk | undefined;
-    const {column} = i
+    const { column } = i;
     if (column == null) {
       [info] = line;
     } else {
@@ -874,8 +872,7 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
           info = brk;
           break;
         }
-        if (column > brkCol && column <= adjCol(brk.endColumn))
-          info = brk;
+        if (column > brkCol && column <= adjCol(brk.endColumn)) info = brk;
       }
     }
     if (!info) continue;
@@ -922,7 +919,8 @@ handlers.breakpointLocations = function(args, res) {
     const brks = lines[linStartAt1 ? i : i + 1];
     if (brks[0].line !== i) continue;
     for (const brk of brks) {
-      if (!(brk.flags & State.BrkFlag.STMT) || brk.flags & State.BrkFlag.EMPTY) continue;
+      if (!(brk.flags & State.BrkFlag.STMT) || brk.flags & State.BrkFlag.EMPTY)
+        continue;
       const cur = brk.line;
       const brkCol = adjCol(brk.column);
       if (
@@ -1079,7 +1077,7 @@ export function resetLoad() {
  * Returns `JSON.stringify` serializable object with the whole
  * current execution state
  */
-export function capture(silent?:boolean): S.JSONObject {
+export function capture(silent?: boolean): S.JSONObject {
   const modules: any = [];
   const savedEnabled = journal.enabled;
   try {
@@ -1189,36 +1187,32 @@ export function restore(json: S.JSONObject) {
     } = S.read(json, { ignore: "placeholder", warnIgnored: true }));
     for (const i of extra) Persist.extra.add(i);
     // reloading somehow breaks WebSockets
-    setTimeout(function() {
-      if (typeof document !== "undefined") {
-        if (
-          config.mutationObserver &&
-          TT.DOM
-        ) {
-          TT.DOM.observing.clear();
-          TT.DOM.track(document.documentElement);
+    setTimeout(
+      function() {
+        if (typeof document !== "undefined") {
+          if (config.mutationObserver && TT.DOM) {
+            TT.DOM.observing.clear();
+            TT.DOM.track(document.documentElement);
+          }
         }
-      }
-      if (context.activeTop) signalStopped();
-      else if (Persist.extra.size) {
-        const [m, t, a] = Persist.extra;
-        m.call(t, a);
-      } else {
-        context.activeTop = context.top;
-        reset();
-        run();      
-      }
-    }, isBrowser ? 0 : 1000);
+        if (context.activeTop) signalStopped();
+        else {
+          context.activeTop = context.top;
+          reset();
+          run();
+        }
+      },
+      isBrowser ? 1000 : 0
+    );
   } finally {
     journal.enabled = savedEnabled;
   }
 }
 
 function onEntry() {
-  if (config.fastRestart === "entry")
-    snapshots.set("entry",capture(true));
+  if (config.fastRestart === "entry") snapshots.set("entry", capture(false));
 }
 
-export function snapshot(name:string) {
+export function save(name: string) {
   snapshots.set(name, capture(true));
 }
