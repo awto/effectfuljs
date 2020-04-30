@@ -35,6 +35,14 @@ export default {
   /** communcations are in a separate thread */
   expUseWorker: true,
   /** storing snapshot till the first breakpoint, and using it on reloading */
-  fastRestart: <null|string>null,
-  onChange: <null|string>null
+  fastRestart: <null | string | true>null,
+  onChange: <null | string>null,
+  /** executed when the program is restarted */
+  onRestart: <(() => void) | null>null,
+  /** executed after new version of the module's sources loaded  */
+  onModuleHotSwapping: <((module: any /* S.Module */) => void) | null>null,
+  /** executed after new version of any module's sources loaded, for each module */
+  onHotSwapping: <(() => void) | null>null,
+  /** executed before/after executing async job (event handler, setTimeout etc) */
+  onBeforeExec: <(() => void) | null>null
 };

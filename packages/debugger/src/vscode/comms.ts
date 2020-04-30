@@ -1,11 +1,15 @@
 import config from "../config";
-import { context } from "../state";
+import { context, normalizePath } from "../state";
 
 let cb: () => void;
-let connected: Promise<undefined> | null = new Promise((i) => (cb = i));
+let connected: Promise<undefined> | null = new Promise(i => (cb = i));
 let closed = false;
 
-enum WorkerType { None, Node, Web }
+enum WorkerType {
+  None,
+  Node,
+  Web
+}
 
 let workerType = WorkerType.None;
 
@@ -15,9 +19,9 @@ if (config.expUseWorker) {
     const Node = require("worker_threads");
     if (Node && Node.Worker) {
       workerType = WorkerType.Node;
-      Worker = Node.Worker
+      Worker = Node.Worker;
     }
-  } catch (e) { }
+  } catch (e) {}
 
   if (!Worker && (<any>global).Worker) {
     Worker = (<any>global).Worker;
@@ -26,26 +30,40 @@ if (config.expUseWorker) {
 }
 
 let code = `
-   ${workerType === WorkerType.Node ? `
+   ${
+     workerType === WorkerType.Node
+       ? `
    var impl = require("worker_threads"),
        port = impl.parentPort,
        status = new Int32Array(impl.workerData),
-       WebSocket = require("ws");
-   ` : ""}
-   ${workerType === WorkerType.None ? "" : `
+       WebSocket = require(require.resolve("ws",{paths:["${normalizePath(
+         __dirname
+       )}/../node_modules"]}));
+   `
+       : ""
+   }
+   ${
+     workerType === WorkerType.None
+       ? ""
+       : `
    function post(msg) {
      ++status[0];
      ${workerType === WorkerType.Node ? "port." : ""}postMessage(msg);
    }
-   `}
+   `
+   }
    const socket = new WebSocket("${config.url}");
    socket.onopen = function () { post({type:"connected"}); }
    socket.onerror = function(event) { post({type:"error",msg:event.message}); }
    socket.onmessage = function(event) { post({type:"message",msg:event.data}); }
    socket.onclose = function() { post({type:"close"}); };
-   ${workerType === WorkerType.Node
-    ? "port.on('message', "
-    : workerType === WorkerType.None ? "return [socket," : "onmessage = "}function(data) {
+   ${
+     workerType === WorkerType.Node
+       ? "port.on('message', "
+       : workerType === WorkerType.None
+       ? "return [socket,"
+       : "onmessage = "
+   }function(data) {
     ${workerType === WorkerType.Web ? "data = data.data;" : ""}
      switch(data.type) {
        case "close":
@@ -55,8 +73,13 @@ let code = `
          socket.send(data.msg);
          break;
      }
-   }${workerType === WorkerType.Node ? ")" : workerType === WorkerType.None ? "]" : ""};`
-  ;
+   }${
+     workerType === WorkerType.Node
+       ? ")"
+       : workerType === WorkerType.None
+       ? "]"
+       : ""
+   };`;
 
 if (workerType === WorkerType.Web) {
   code = `
@@ -64,7 +87,7 @@ if (workerType === WorkerType.Web) {
         var status = new Int32Array(initMsg.data);
         ${code}
       }
-    `
+    `;
 }
 
 const impl: {
@@ -76,7 +99,9 @@ const impl: {
   hasMessage: () => boolean;
 } = { close, ref: nop, unref: nop, send, hasMessage: nop };
 
-function nop() { return false }
+function nop() {
+  return false;
+}
 
 let post: any;
 
@@ -85,51 +110,52 @@ if (workerType === WorkerType.None) {
   if (!WebSocketImpl) {
     try {
       WebSocketImpl = require("ws");
-    } catch (e) { }
+    } catch (e) {}
   }
   let socket: any;
-  [socket, post] = new Function("WebSocket", "post", code)(WebSocketImpl, interpret);
-  impl.ref = function () {
-    if (socket._socket && socket._socket.ref)
-      socket._socket.ref();
-  }
-  impl.unref = function () {
-    if (socket._socket && socket._socket.unref)
-      socket._socket.unref();
-  }
+  [socket, post] = new Function("WebSocket", "post", code)(
+    WebSocketImpl,
+    interpret
+  );
+  impl.ref = function() {
+    if (socket._socket && socket._socket.ref) socket._socket.ref();
+  };
+  impl.unref = function() {
+    if (socket._socket && socket._socket.unref) socket._socket.unref();
+  };
 } else {
   const buf = new SharedArrayBuffer(4);
   const status = new Int32Array(buf);
-  impl.hasMessage = function () { return status[0] > 0; }
+  impl.hasMessage = function() {
+    return status[0] > 0;
+  };
   let worker: Worker;
   if (workerType === WorkerType.Node) {
     worker = new Worker(code, { eval: true, workerData: buf });
-    (<any>worker).on("message", function (data: any) {
+    (<any>worker).on("message", function(data: any) {
       --status[0];
       interpret(data);
     });
     impl.ref = function ref() {
       (<any>worker).ref();
-    }
+    };
     impl.unref = function unref() {
       (<any>worker).unref();
-    }
+    };
   } else {
     worker = new Worker(
-      URL.createObjectURL(
-        new Blob([code], { type: "text/javascript" })
-      )
+      URL.createObjectURL(new Blob([code], { type: "text/javascript" }))
     );
     (<Worker>worker).postMessage(buf);
-    worker.onmessage = function (msg: any) {
+    worker.onmessage = function(msg: any) {
       --status[0];
       const { data } = msg;
       interpret(data);
     };
   }
-  post = function (msg: any) {
+  post = function(msg: any) {
     worker.postMessage(msg);
-  }
+  };
 }
 
 function close() {
@@ -159,7 +185,7 @@ function interpret(data: any) {
       closed = true;
       break;
   }
-};
+}
 
 async function send(data: any, optional?: boolean) {
   const msg = JSON.stringify(data);

@@ -8,7 +8,7 @@ const cacheId = require("../cacheId");
 const {
   normalizeDrive,
   normalizePath,
-  saved: { Function },
+  saved: { Function }
 } = require("../../state");
 
 const babel = require("@babel/core");
@@ -20,7 +20,7 @@ const Mp = Module.prototype;
 
 const savedCompile = Mp._compile;
 
-const builtIn = Module.builtinModules.filter((i) => {
+const builtIn = Module.builtinModules.filter(i => {
   switch (i) {
     case "sys":
       return false;
@@ -35,8 +35,8 @@ babelOpts = {
   ...babelOpts,
   caller: {
     name: "@effectful/debugger",
-    ...(babelOpts.caller || {}),
-  },
+    ...(babelOpts.caller || {})
+  }
 };
 
 const log = (...args) => console.log(...args);
@@ -62,11 +62,11 @@ const debuggerPath = normalizeDrive(
 const requirePath =
   path.sep === "\\"
     ? function requirePath(rt) {
-      return rt || path.join(debuggerPath, "vscode").replace(/\\/g, "/");
-    }
+        return rt || path.join(debuggerPath, "vscode").replace(/\\/g, "/");
+      }
     : function requirePath(rt) {
-      return rt || path.join(debuggerPath, "vscode");
-    };
+        return rt || path.join(debuggerPath, "vscode");
+      };
 
 let cacheSaveScheduled = false;
 
@@ -76,7 +76,7 @@ const os = require("os");
 
 const DEFAULT_CACHE_DIR =
   findCacheDir({
-    name: "@effectful/debugger",
+    name: "@effectful/debugger"
   }) ||
   os.homedir() ||
   os.tmpdir();
@@ -107,6 +107,7 @@ function saveCache() {
   }
   try {
     makeDir.sync(path.dirname(FILENAME));
+    if (config.verbose > 1) log("DEBUGGER: saving babel cache");
     fs.writeFileSync(FILENAME, serialised);
   } catch (e) {
     switch (e.code) {
@@ -156,15 +157,14 @@ const cacheData = loadCache();
 Mp._compile = function _compile(content, filename) {
   filename = normalizeDrive(filename);
   const ext = path.extname(filename);
-  const fileTest = normalizePath(filename)
+  const fileTest = normalizePath(filename);
   const blackbox = config.blackbox.test(fileTest);
   if (
     disabled ||
     ext === ".json" ||
-    config.instrumentDeps && fileTest.startsWith(config.runtimePackages) ||
-    config.exclude && config.exclude.test(fileTest) ||
-    !(config.instrumentDeps && blackbox
-      || config.include.test(fileTest))
+    (config.instrumentDeps && fileTest.startsWith(config.runtimePackages)) ||
+    (config.exclude && config.exclude.test(fileTest)) ||
+    !((config.instrumentDeps && blackbox) || config.include.test(fileTest))
   ) {
     if (config.verbose > 2)
       log(`DEBUGGER: loading without instrumentation ${filename}`);
@@ -178,7 +178,6 @@ Mp._compile = function _compile(content, filename) {
     log(msg);
   }
   disabled = true;
-  let result;
   let cached;
   let code;
   let curMtime = mtime(filename);
@@ -189,27 +188,27 @@ Mp._compile = function _compile(content, filename) {
       opts = new babel.OptionManager().init(
         config.zeroConfig
           ? {
-            presets: [
-              [
-                preset,
-                {
-                  blackbox,
-                  timeTravel: config.timeTravel,
-                  rt,
-                  staticBundler: false,
-                },
+              presets: [
+                [
+                  preset,
+                  {
+                    blackbox,
+                    timeTravel: config.timeTravel,
+                    rt,
+                    staticBundler: false
+                  }
+                ]
               ],
-            ],
-            babelrc: false,
-            configFile: false,
-            ...babelOpts,
-            filename,
-          }
+              babelrc: false,
+              configFile: false,
+              ...babelOpts,
+              filename
+            }
           : {
-            sourceRoot: path.dirname(filename),
-            ...deepClone(babelOpts),
-            filename,
-          }
+              sourceRoot: path.dirname(filename),
+              ...deepClone(babelOpts),
+              filename
+            }
       );
       cacheKey = `${filename}@${cacheId}`;
       const env = babel.getEnv(false);
@@ -245,12 +244,12 @@ Mp._compile = function _compile(content, filename) {
       }
       code = cached.code;
     } else code = content;
-    require("./vm");
+    // require("./vm");
     if (config.hot && !blackbox) {
       let reloading = 0;
       if (config.verbose > 1)
         log(`DEBUGGER: enabling hot swapping for ${filename}`);
-      fs.watch(filename, { persistent: false, encoding: "utf-8" }, (type) => {
+      fs.watch(filename, { persistent: false, encoding: "utf-8" }, type => {
         const nextMtime = mtime(filename);
         if (config.verbose > 1)
           log(`DEBUGGER: updating ${filename}`, type, curMtime, nextMtime);
@@ -305,6 +304,5 @@ Mp._compile = function _compile(content, filename) {
   } finally {
     disabled = false;
   }
-  result = savedCompile.call(this, code, filename);
-  return result;
+  return savedCompile.call(this, code, filename);
 };

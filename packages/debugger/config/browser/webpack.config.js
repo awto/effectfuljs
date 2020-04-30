@@ -57,14 +57,10 @@ function isRuntimePath(filename) {
 
 function blackboxFile(filename) {
   filename = normalizePath(filename);
-  if (!config.instrumentDeps)
-    return false;
-  if (filename.startsWith(config.runtimePackages))
-    return false;
-  if (!config.blackbox.test(filename))
-    return false;
-  if (config.exclude && config.exclude.test(filename))
-    return false;
+  if (!config.instrumentDeps) return false;
+  if (filename.startsWith(config.runtimePackages)) return false;
+  if (!config.blackbox.test(filename)) return false;
+  if (config.exclude && config.exclude.test(filename)) return false;
   return true;
 }
 
@@ -72,15 +68,11 @@ function includeFile(filename) {
   filename = normalizePath(filename);
   if (config.instrumentDeps && filename.startsWith(config.runtimePackages))
     return false;
-  if (!config.include.test(filename))
-    return false;
-  if (config.blackbox.test(filename))
-    return false;
-  if (config.exclude && config.exclude.test(filename))
-    return false;
+  if (!config.include.test(filename)) return false;
+  if (config.blackbox.test(filename)) return false;
+  if (config.exclude && config.exclude.test(filename)) return false;
   return true;
 }
-
 
 const CONFIG_PATH = normalizeDrive(require.resolve("../../config"));
 
@@ -199,79 +191,79 @@ module.exports = {
             }
           },
           config.instrument &&
-          !config.zeroConfig && {
-            test: /\.(js|mjs|jsx|ts|tsx)$/,
-            exclude: isRuntimePath,
-            loader: require.resolve("babel-loader"),
-            compact,
-            options: {
-              cacheDirectory: cache,
-              cacheIdentifier,
-              cacheCompression: false,
-              sourceMaps: false
-            }
-          },
-          config.instrument &&
-          config.zeroConfig && {
-            test: includeFile,
-            loader: require.resolve("babel-loader"),
-            options: {
-              babelrc: false,
-              configFile: false,
+            !config.zeroConfig && {
+              test: /\.(js|mjs|jsx|ts|tsx)$/,
+              exclude: isRuntimePath,
+              loader: require.resolve("babel-loader"),
               compact,
-              passPerPreset: true,
-              presets: [
-                [
-                  preset,
-                  {
-                    rt,
-                    timeTravel,
-                    blackbox: false,
-                    preInstrumentedLibs: true,
-                    srcRoot
-                  }
-                ]
-              ],
-              cacheDirectory: cache,
-              cacheIdentifier,
-              cacheCompression: false,
-              sourceMaps: false
-            }
-          },
+              options: {
+                cacheDirectory: cache,
+                cacheIdentifier,
+                cacheCompression: false,
+                sourceMaps: false
+              }
+            },
           config.instrument &&
-          config.zeroConfig &&
-          config.instrumentDeps && {
-            test: blackboxFile,
-            exclude: [
-              /@babel(?:\/|\\{1,2})runtime/,
-              /@effectful(?:\/|\\{1,2})/,
-              /css-loader/,
-              /style-loader/
-            ].filter(Boolean),
-            loader: require.resolve("babel-loader"),
-            options: {
-              babelrc: false,
-              configFile: false,
-              compact: false,
-              passPerPreset: true,
-              presets: [
-                [
-                  preset,
-                  {
-                    rt,
-                    blackbox: true,
-                    timeTravel,
-                    preInstrumentedLibs: true,
-                    srcRoot
-                  }
-                ]
-              ],
-              cacheDirectory: cache,
-              cacheIdentifier,
-              cacheCompression: false,
-              sourceMaps: false
-            }
-          },
+            config.zeroConfig && {
+              test: includeFile,
+              loader: require.resolve("babel-loader"),
+              options: {
+                babelrc: false,
+                configFile: false,
+                compact,
+                passPerPreset: true,
+                presets: [
+                  [
+                    preset,
+                    {
+                      rt,
+                      timeTravel,
+                      blackbox: false,
+                      preInstrumentedLibs: true,
+                      srcRoot
+                    }
+                  ]
+                ],
+                cacheDirectory: cache,
+                cacheIdentifier,
+                cacheCompression: false,
+                sourceMaps: false
+              }
+            },
+          config.instrument &&
+            config.zeroConfig &&
+            config.instrumentDeps && {
+              test: blackboxFile,
+              exclude: [
+                /@babel(?:\/|\\{1,2})runtime/,
+                /@effectful(?:\/|\\{1,2})/,
+                /css-loader/,
+                /style-loader/
+              ].filter(Boolean),
+              loader: require.resolve("babel-loader"),
+              options: {
+                babelrc: false,
+                configFile: false,
+                compact: false,
+                passPerPreset: true,
+                presets: [
+                  [
+                    preset,
+                    {
+                      rt,
+                      blackbox: true,
+                      timeTravel,
+                      preInstrumentedLibs: true,
+                      srcRoot
+                    }
+                  ]
+                ],
+                cacheDirectory: cache,
+                cacheIdentifier,
+                cacheCompression: false,
+                sourceMaps: false
+              }
+            },
           {
             test: cssRegex,
             exclude: cssModuleRegex,

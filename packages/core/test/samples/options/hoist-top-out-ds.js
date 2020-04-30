@@ -474,7 +474,7 @@ var $M = require("@effectful/debugger"),
 
     case 13:
       $.goto = 14;
-      $p = $mcall("from", Array, $l[3]);
+      $p = $mcall("from", Array, $l[1]);
       $.state = 14;
 
     case 14:

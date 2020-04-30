@@ -59,8 +59,6 @@ let brkOut: State.Frame | null = null;
 let stepIn = false;
 let pauseNext = false;
 let backward = false;
-const snapshots: Map<string, any> = new Map();
-
 const isBrowser = typeof window !== "undefined";
 
 function trace(...args: [any, ...any[]]) {
@@ -230,7 +228,7 @@ function dispatch(req: P.Request) {
 
 let restartTimeout: any = 0;
 
-const RESTART_ON_CHANGE_TIMEOUT = signalStopped ? 500 : 0;
+const RESTART_ON_CHANGE_TIMEOUT = isBrowser ? 500 : 0;
 
 context.onLoad = function(module: State.Module, hot: boolean) {
   const source = getSource(module);
@@ -244,17 +242,17 @@ context.onLoad = function(module: State.Module, hot: boolean) {
         breakpoints: bps && setBreakpoints(bps).breakpoints
       });
     }
-    /*
-    if (hot && context.brk) {
-      event("stopped", {
-        reason: "step",
-        description: "approximated"
-      });
-    }
-    */
-    if (hot && config.onChange === "restart") {
-      clearTimeout(restartTimeout);
-      setTimeout(handlers.childRestart, RESTART_ON_CHANGE_TIMEOUT);
+    if (hot) {
+      if (config.onModuleHotSwapping)
+        Engine.liftSync(config.onModuleHotSwapping)(module);
+      // console.log("LOADING", module.fullPath, hot, !!config.onHotSwapping);
+      if (config.onHotSwapping) {
+        clearTimeout(restartTimeout);
+        setTimeout(
+          Engine.liftSync(config.onHotSwapping),
+          RESTART_ON_CHANGE_TIMEOUT
+        );
+      }
     }
   }
 };
@@ -298,18 +296,38 @@ context.onThread = async function() {
     } else {
       onEntry();
       step();
-      cont();
+      if (!context.activeTop) event("continued", {});
     }
   }
 };
 
+let entrySnapshot: any;
+
+function onEntry() {
+  if (config.fastRestart === "entry") entrySnapshot = capture(true);
+}
+
+export function restart() {
+  if (config.onRestart) {
+    const savedDebug = context.debug;
+    try {
+      context.debug = false;
+      config.onRestart();
+    } finally {
+      context.debug = savedDebug;
+    }
+    return;
+  }
+  if (entrySnapshot) {
+    restore(entrySnapshot);
+    return;
+  }
+}
+
 handlers.childRestart = function(res) {
   if (config.fastRestart) {
-    const snapshot = snapshots.get(config.fastRestart);
-    if (snapshot) {
-      restore(snapshot);
-      return;
-    }
+    restart();
+    return;
   }
   if (typeof window !== "undefined") window.location.reload();
   else if (res) {
@@ -610,7 +628,7 @@ handlers.childLaunch = function(args, res) {
   context.threadId = args.threadId;
   config.stopOnExit = args.stopOnExit;
   config.fastRestart = args.fastRestart;
-  config.onChange = args.onChange;
+  if (args.onChange === "restart") config.onHotSwapping = restart;
   if (launchCb) launchCb(args.stopOnEntry);
   if (config.verbose) trace(`DEBUGGER: launch ${JSON.stringify(args)}`);
 };
@@ -669,7 +687,7 @@ function run() {
     // tslint:disable-next-line:no-console
     console.error(e);
   }
-  cont();
+  if (!context.activeTop) event("continued", {});
 }
 
 const step: () => void = config.timeTravel
@@ -737,19 +755,17 @@ function interruptibleStep() {
   else Engine.step();
 }
 
-function cont() {
-  if (config.verbose)
-    trace(`DEBUGGER: continue hasTop:${!!context.top}, back:${!!backward}`);
-  if (!context.activeTop) event("continued", {});
-}
-
-handlers.pause = function(_, res) {
-  send(res);
+function pause() {
   pauseNext = true;
   if (config.timeTravel && !context.top) {
     backward = true;
     run();
   }
+}
+
+handlers.pause = function(_, res) {
+  send(res);
+  pause();
 };
 
 function checkTimeTravelEnabled(res: P.Response) {
@@ -794,10 +810,14 @@ handlers.stepBack = function(_, res) {
   run();
 };
 
-handlers.continue = function(_, res) {
-  send(res);
+export function cont() {
   reset();
   run();
+}
+
+handlers.continue = function(_, res) {
+  send(res);
+  cont();
 };
 
 handlers.next = function(_, res) {
@@ -1169,23 +1189,9 @@ export function restore(json: S.JSONObject) {
       module = Engine.getCurModule();
       if (!module || !module.cjs) continue;
     }
-    ({
-      activeTop: context.activeTop,
-      top: context.top,
-      syncStack: context.syncStack,
-      queue: context.queue,
-      debug: context.debug,
-      brk: context.brk,
-      brkFrame,
-      journal: {
-        now: journal.now,
-        past: journal.past,
-        future: journal.future,
-        enabled: journal.enabled
-      },
-      extra
-    } = S.read(json, { ignore: "placeholder", warnIgnored: true }));
-    for (const i of extra) Persist.extra.add(i);
+    const state = S.read(json, { ignore: "placeholder", warnIgnored: true });
+    for (const i of state.extra) Persist.extra.add(i);
+    context.value = null;
     // reloading somehow breaks WebSockets
     setTimeout(
       function() {
@@ -1195,6 +1201,21 @@ export function restore(json: S.JSONObject) {
             TT.DOM.track(document.documentElement);
           }
         }
+        ({
+          activeTop: context.activeTop,
+          top: context.top,
+          syncStack: context.syncStack,
+          queue: context.queue,
+          debug: context.debug,
+          brk: context.brk,
+          brkFrame,
+          journal: {
+            now: journal.now,
+            past: journal.past,
+            future: journal.future,
+            enabled: journal.enabled
+          }
+        } = state);
         if (context.activeTop) signalStopped();
         else {
           context.activeTop = context.top;
@@ -1207,12 +1228,4 @@ export function restore(json: S.JSONObject) {
   } finally {
     journal.enabled = savedEnabled;
   }
-}
-
-function onEntry() {
-  if (config.fastRestart === "entry") snapshots.set("entry", capture(false));
-}
-
-export function save(name: string) {
-  snapshots.set(name, capture(true));
 }

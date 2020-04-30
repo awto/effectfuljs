@@ -8,7 +8,7 @@
   ) {
     lib = { ...require("./main"), ...require("./vscode/main") };
     if (config.globalNS) (<any>global)[config.globalNS] = lib;
-    lib.Serialization.regModule(lib,"#EDBG");
+    lib.Serialization.regModule(lib, "#EDBG");
     lib.runtime = "vscode";
   }
   lib.Serialization.updateInitialSnapshot(global);

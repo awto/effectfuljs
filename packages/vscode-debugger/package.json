@@ -201,9 +201,10 @@
                 "description": "The project's root, files outside of the root won't be instrumented"
               },
               "fastRestart": {
-                "type": [
-                  "null",
-                  "string"
+                "enum": [
+                  null,
+                  true,
+                  "entry"
                 ],
                 "default": "entry",
                 "description": "Restart from previously stored snapshot, without restarting the whole process"

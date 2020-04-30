@@ -23,10 +23,10 @@ declare module "vscode-debugprotocol" {
       keepRunning?: boolean;
       open?: boolean | string;
       console?:
-      | boolean
-      | "internalConsole"
-      | "integratedTerminal"
-      | "externalTerminal";
+        | boolean
+        | "internalConsole"
+        | "integratedTerminal"
+        | "externalTerminal";
       indexJs?: string | null;
       htmlTemplate?: string | null;
       reconnectTimeout?: number;

@@ -321,7 +321,7 @@ function cont(request, onStop, onDone) {
       if (terminated) return onDone();
       if (onStop.length < 2) return onStop(_req);
       return stackSnapshot(
-        (snapshot) => (snapshot ? onStop(_req, snapshot) : onDone()),
+        snapshot => (snapshot ? onStop(_req, snapshot) : onDone()),
         request
       );
     } catch (e) {

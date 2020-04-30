@@ -192,7 +192,7 @@ export class DebugSession extends SessionImpl {
     response.body.supportsStepInTargetsRequest = false;
     response.body.exceptionBreakpointFilters = [
       { filter: "all", label: "All Exceptions", default: false },
-      { filter: "uncaught", label: "Uncaught Exceptions", default: false }
+      { filter: "uncaught", label: "Uncaught Exceptions", default: true }
     ];
     this.sendResponse(response);
     this.sendEvent(new InitializedEvent());
@@ -547,13 +547,13 @@ export class DebugSession extends SessionImpl {
     this.launchArgs = args;
     if (args.verbose) logger.verbose(`launch request ${JSON.stringify(args)}`);
     // if (args.preset !== "node")
-      this.sendEvent(
-        new CapabilitiesEvent({
-          supportsStepBack: !!args.timeTravel,
-          supportsRestartFrame: false,
-          supportsRestartRequest: !!args.fastRestart || args.preset !== "node"
-        })
-      );
+    this.sendEvent(
+      new CapabilitiesEvent({
+        supportsStepBack: !!args.timeTravel,
+        supportsRestartFrame: false,
+        supportsRestartRequest: !!args.fastRestart || args.preset !== "node"
+      })
+    );
     if (args.preset && !args.command) args.command = true;
     let errMessage: string | undefined;
     let key: string | undefined;

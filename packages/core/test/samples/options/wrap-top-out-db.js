@@ -262,7 +262,7 @@ var $M = require("@effectful/debugger"),
     case 7:
       if ($1) {
         $.goto = 13;
-        $p = $mcall("from", Array, $l[3]);
+        $p = $mcall("from", Array, $l[1]);
         continue;
       } else {
         $.state = 8;

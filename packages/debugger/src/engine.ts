@@ -84,8 +84,7 @@ class ArgsTraps {
 const objectValues = Object.values;
 
 export function compileModule(): Module | null {
-  if (!moduleChanged)
-    return null;
+  if (!moduleChanged) return null;
   if (curModule.version === void 0) curModule.version = 0;
   else curModule.version++;
   if (!curModule.topLevel || curModule.topLevel.blackbox) return curModule;
@@ -210,7 +209,7 @@ export function fun(
   if (meta) {
     if (savedToString.call(handler) === savedToString.call(meta.handler))
       return meta.func;
-    moduleChanged = true;;
+    moduleChanged = true;
   } else if (!meta) meta = curModule.functions[name] = <FunctionDescr>{};
   const top = !curModule.topLevel;
   if (top) curModule.topLevel = meta;
@@ -454,6 +453,7 @@ export function signalThread() {
   threadScheduled = true;
   asap(function() {
     threadScheduled = false;
+    if (config.onBeforeExec) liftSync(config.onBeforeExec)();
     context.onThread();
   });
 }
@@ -536,7 +536,7 @@ export function loop(value: any): any {
         context.onStop();
         return e;
       }
-      if (checkErrBrk(<Frame>top, e)) {
+      if (!(<Frame>top).meta.blackbox && checkErrBrk(<Frame>top, e)) {
         context.value = e;
         context.error = true;
         context.onStop();
@@ -646,7 +646,7 @@ export function handle(frame: Frame, e: any) {
     const meta = frame.meta;
     frame.error = e;
     meta.errHandler(frame, frame.$);
-    if (checkErrBrk(frame, e)) {
+    if (!meta.blackbox && checkErrBrk(frame, e)) {
       context.value = e;
       context.error = true;
       if (frame.next) throw token;
