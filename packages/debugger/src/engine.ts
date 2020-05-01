@@ -751,7 +751,7 @@ export function compileEvalToString(
       { compact: true }
     ).code;
     indirMemo.set(key, tgt);
-    return `(function() { ${tgt}; })()`;
+    return `/*!EDBG!*/(function() { ${tgt}; })()`;
   } finally {
     journal.enabled = savedEnabled;
   }

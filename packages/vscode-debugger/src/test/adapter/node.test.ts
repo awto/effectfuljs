@@ -76,7 +76,7 @@ suite("Debugging on NodeJS", function () {
       return Promise.all([
         dc.configurationSequence(),
         dc.launch({
-          command: `node ${PROGRAM}`,
+          command: PROGRAM,
           preset: "node",
           verbose: false
         }),
@@ -1156,7 +1156,7 @@ suite("Debugging on NodeJS", function () {
       await dc.waitForEvent("terminated");
     });
   });
-  suite.skip("node vm", function () {
+  suite("node vm", function () {
     const PROGRAM = path.join(DATA_ROOT, "vm-code.js");
     test("should enter each module only once on `step in`", async function () {
       const out = dc.assertOutput(

@@ -18,7 +18,7 @@ config.srcRoot = normalizeDrive(
 config.runtimePackages = normalizePath(
   fs.realpathSync(
     process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES ||
-    path.join(__dirname, "..", "..", "..")
+      path.join(__dirname, "..", "..", "..")
   )
 );
 
@@ -61,10 +61,15 @@ config.instrumentDeps = isTrue(
   true
 );
 
-
-config.blackbox = mm.makeRe(process.env.EFFECTFUL_DEBUGGER_BLACKBOX || "**/node_modules/**/*.?(m)js");
-config.include = mm.makeRe(process.env.EFFECTFUL_DEBUGGER_INCLUDE || "**/*.[jte]s?(x)")
-config.exclude = process.env.EFFECTFUL_DEBUGGER_EXCLUDE ? mm.makeRe(process.env.EFFECTFUL_DEBUGGER_EXCLUDE) : null;
+config.blackbox = mm.makeRe(
+  process.env.EFFECTFUL_DEBUGGER_BLACKBOX || "**/node_modules/**/*.?(m)js"
+);
+config.include = mm.makeRe(
+  process.env.EFFECTFUL_DEBUGGER_INCLUDE || "**/*.[jte]s?(x)"
+);
+config.exclude = process.env.EFFECTFUL_DEBUGGER_EXCLUDE
+  ? mm.makeRe(process.env.EFFECTFUL_DEBUGGER_EXCLUDE)
+  : null;
 
 if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
 

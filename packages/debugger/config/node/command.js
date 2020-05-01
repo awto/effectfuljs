@@ -5,14 +5,20 @@ exports.command = "node";
 exports.describe =
   "runs a command line with all `node` invocations are intercepted by the debugger";
 
-exports.builder = function (yargs) {
-  yargs.option("command", {
-    alias: ["c", "_"],
-    describe: "Command string to execute",
-  });
+exports.builder = function(yargs) {
+  yargs
+    .option("command", {
+      alias: ["c", "_"],
+      describe: "Command string to execute"
+    })
+    .option("patch-vm", {
+      describe: 'patches module "vm" to support',
+      default: false,
+      type: "boolean"
+    });
 };
 
-exports.handler = function (argv) {
+exports.handler = function(argv) {
   const command = argv.command ? [argv.command] : argv._.slice(1);
   if (command.length) {
     const ext = path.extname(command[0]);
@@ -27,6 +33,8 @@ exports.handler = function (argv) {
   config.runtime = argv.runtime;
   config.cache = argv.cache;
   config.verbose = argv.verbose;
+  config.instrument = argv.instrument;
+  config.instrumentDeps = argv.instrumentDeps;
   if (argv.url) config.url = argv.url;
   const env = {
     NODE_ENV: process.env.NODE_ENV || "development",
@@ -43,8 +51,8 @@ exports.handler = function (argv) {
     EFFECTFUL_DEBUGGER_INCLUDE: argv.include,
     EFFECTFUL_DEBUGGER_BLACKBOX: argv.blackbox,
     EFFECTFUL_DEBUGGER_EXCLUDE: argv.exclude,
-    EFFECTFUL_DEBUGGER_INSTRUMENT: config.instrument,
-    EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: config.instrumentDeps,
+    EFFECTFUL_DEBUGGER_INSTRUMENT: argv.instrument,
+    EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: argv.instrumentDeps
   };
   if (config.runtimePackages)
     env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES = config.runtimePackages;
