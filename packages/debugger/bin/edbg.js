@@ -75,4 +75,9 @@ require("yargs")
   })
   .command(require("../config/node/command"))
   .command(require("../config/browser/command"))
+  .option("patch-vm", {
+    describe: 'patches module "vm" to support',
+    default: true,
+    type: "boolean"
+  })
   .help("help").argv;

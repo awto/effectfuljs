@@ -11,7 +11,7 @@ suite("Debugging on NodeJS", function () {
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
   const NODE_DATA_ROOT = path.join(DATA_ROOT, "vscode-node-debug/");
-
+  
   let dc: DebugClient;
   // process.env.EFFECTFUL_DEBUG_DEBUGGER = "1";
   process.env.EFFECTFUL_DEBUGGER_EXCLUDE =
@@ -20,7 +20,6 @@ suite("Debugging on NodeJS", function () {
   process.env.EFFECTFUL_DEBUGGER_VERBOSE = process.env.EFFECTFUL_DEBUG_DEBUGGER
     ? "2"
     : "0";
-
   setup(function () {
     dc = new DebugClient(DEBUG_ADAPTER);
     return dc.start();

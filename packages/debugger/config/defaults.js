@@ -75,6 +75,8 @@ if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
 
 config.expEagerModuleExport = false;
 
+config.patchVM = isTrue(process.env.EFFECTFUL_DEBUGGER_PATCH_VM);
+
 module.exports = config;
 
 function isTrue(str, defaultValue = false) {

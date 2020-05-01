@@ -1,11 +1,6 @@
-const Function = global.Function;
-const config = require("../defaults");
-const path = require("path");
-const fs = require("fs");
 const Persist = require("../../persist");
 // require("./vm");
-
-const babel = require("@babel/core");
+const config = require("../defaults");
 
 const compile = require("./compile");
 
@@ -31,6 +26,7 @@ for (const i of builtIn) {
 Mp._compile = function _compile(content, filename) {
   const code = compile(content, filename, this);
   if (!code) return savedCompile.call(this, content, filename);
-  require("./vm");
+  if (config.patchVM)
+    require("./vm");
   return savedCompile.call(this, code, filename);
 };

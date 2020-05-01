@@ -10,11 +10,6 @@ exports.builder = function(yargs) {
     .option("command", {
       alias: ["c", "_"],
       describe: "Command string to execute"
-    })
-    .option("patch-vm", {
-      describe: 'patches module "vm" to support',
-      default: false,
-      type: "boolean"
     });
 };
 
@@ -52,7 +47,8 @@ exports.handler = function(argv) {
     EFFECTFUL_DEBUGGER_BLACKBOX: argv.blackbox,
     EFFECTFUL_DEBUGGER_EXCLUDE: argv.exclude,
     EFFECTFUL_DEBUGGER_INSTRUMENT: argv.instrument,
-    EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: argv.instrumentDeps
+    EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: argv.instrumentDeps,
+    EFFECTFUL_DEBUGGER_PATCH_VM: argv.patchVm
   };
   if (config.runtimePackages)
     env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES = config.runtimePackages;
