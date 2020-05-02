@@ -264,9 +264,7 @@ context.onThread = async function() {
   if (context.top || context.activeTop) return;
   if (!context.queue.length) {
     if (!context.top && !context.activeTop) {
-      if (config.stopOnExit) {
-        signalStopped();
-      } else Comms.unref();
+      if (!config.stopOnExit) Comms.unref();
     }
     return;
   }
@@ -284,9 +282,13 @@ context.onThread = async function() {
       launchCb = undefined;
       if (stop) reason = "entry";
     }
-    if (job.stopOnEntry && !stop && (reason = checkPause(context.brk, top)))
+    if (
+      job.stopOnEntry &&
+      !stop &&
+      (reason = checkPause(context.brk, top)) &&
+      reason !== "interrupt"
+    )
       stop = true;
-    // journal.enabled = config.timeTravel;
     TT.checkpoint();
     if (stop) {
       context.activeTop = context.top;
@@ -610,10 +612,16 @@ function reset() {
 
 handlers.childLaunch = function(args, res) {
   setDirSep(args.dirSep);
+  config.timeTravelDisabled = !!args.timeTravelDisabled;
   if (config.timeTravel) {
     TT.reset(!config.timeTravelDisabled);
     if (config.mutationObserver && TT.DOM && typeof window !== "undefined")
       TT.DOM.track(document.documentElement);
+  } else if (args.timeTravel) {
+    // tslint:disable-next-line:no-console
+    console.warn(
+      "Time traveling is enabled in the launch.json, but the sources aren't compiled to support it"
+    );
   }
   res.body = {
     breakpoints:
@@ -697,7 +705,16 @@ const step: () => void = config.timeTravel
         const iter = backward ? TT.undo : TT.redo;
         let lastBrk = context.brk;
         while (iter()) {
-          const { brk, top } = context;
+          const { top } = context;
+          if (
+            context.error &&
+            Engine.checkErrBrk(<State.Frame>top, context.value)
+          ) {
+            reason = "exception";
+            context.onStop();
+            return;
+          }
+          const { brk } = context;
           if (brk === lastBrk) continue;
           lastBrk = brk;
           if (brk && top && (reason = checkPause(brk, top)) != null) {
@@ -862,10 +879,10 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
     // tslint:disable-next-line:no-console
     console.log(
       "DEBUGGER: setBreakpoints",
-      args,
-      [id],
-      Object.keys(context.modules),
-      module ? "FOUND" : "NOT FOUND"
+      id,
+      JSON.stringify(args),
+      module ? "<module loaded>" : "<module not loaded>",
+      JSON.stringify(Object.keys(context.modules))
     );
   if (sourceUpdate || !module) {
     for (const i of args.breakpoints) diffs.push({ id: i.id, verified: false });
@@ -1127,7 +1144,7 @@ export function capture(silent?: boolean): S.JSONObject {
         debug: context.debug,
         brk: context.brk,
         brkFrame,
-        journal,
+        journal: { ...journal },
         global,
         document: (<any>global).document,
         extra: Persist.extra

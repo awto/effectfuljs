@@ -546,7 +546,6 @@ export class DebugSession extends SessionImpl {
     );
     this.launchArgs = args;
     if (args.verbose) logger.verbose(`launch request ${JSON.stringify(args)}`);
-    // if (args.preset !== "node")
     this.sendEvent(
       new CapabilitiesEvent({
         supportsStepBack: !!args.timeTravel,
@@ -588,7 +587,11 @@ export class DebugSession extends SessionImpl {
       if (term === true) term = "externalTerminal";
       else if (!term) term = "internalConsole";
       const reuse = args.reuse && term === "internalConsole";
-      env["EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES"] = debuggerDeps;
+      if (!env["EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES"])
+        env["EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES"] = debuggerDeps;
+      if (args.include) env["EFFECTFUL_DEBUGGER_INCLUDE"] = args.include;
+      if (args.blackbox) env["EFFECTFUL_DEBUGGER_BLACKBOX"] = args.blackbox;
+      if (args.exclude) env["EFFECTFUL_DEBUGGER_EXCLUDE"] = args.exclude;
       if (args.preset === "node") {
         let node_path = debuggerDeps;
         if (env.NODE_PATH) node_path += path.delimiter + env.NODE_PATH;

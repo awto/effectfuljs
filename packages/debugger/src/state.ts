@@ -300,6 +300,8 @@ export interface Job {
   stopOnEntry?: boolean;
 }
 
+export const undef = { _undef: true };
+
 /** global storage for the whole state of the running program */
 export const context: State = {
   debug: false,
@@ -324,7 +326,7 @@ export const context: State = {
   onStop: nop,
   activeTop: null,
   threadId: 0,
-  exception: null
+  exception: undef
 };
 
 export function nop() {

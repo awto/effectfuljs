@@ -21,7 +21,8 @@ import {
   BrkFlag,
   defaultErrHandler,
   defaultFinHandler,
-  thunkSymbol
+  thunkSymbol,
+  undef
 } from "./state";
 import * as State from "./state";
 import * as TTCore from "./timeTravel/core";
@@ -33,7 +34,6 @@ import * as path from "path";
 import * as S from "@effectful/serialization";
 import { regOpaqueObject, regFun, ModuleDescriptor } from "./persist";
 import { isValidIdentifier } from "@babel/types";
-import { stat } from "fs";
 
 // tslint:disable-next-line
 const asap = require("asap");
@@ -536,7 +536,11 @@ export function loop(value: any): any {
         context.onStop();
         return e;
       }
-      if (!(<Frame>top).meta.blackbox && checkErrBrk(<Frame>top, e)) {
+      if (
+        !(<Frame>top).meta.blackbox &&
+        context.exception !== e &&
+        checkErrBrk(<Frame>top, e)
+      ) {
         context.value = e;
         context.error = true;
         context.onStop();
@@ -598,40 +602,37 @@ function hasEH(frame: Frame): boolean {
   return (frame.meta.states[frame.state].flags & BrkFlag.HAS_EH) !== 0;
 }
 
-function checkErrBrk(frame: Frame, e: any): boolean {
+export function checkErrBrk(frame: Frame, e: any): boolean {
   if (!context.debug) return false;
-  if (e && context.exception !== e) {
-    context.exception = e;
-    if (e.stack) {
-      const stack = [String(e)];
-      for (let i: Frame | null = frame; i; i = i.next) {
-        if (i.brk)
-          stack.push(
-            `    at ${i.meta.origName} (${i.meta.module.name}:${i.brk.line}:${i.brk.column})`
-          );
-      }
-      if (config.debuggerDebug) {
-        try {
-          defineProperty(e, "_deb_stack", { value: stack.join("\n") });
-        } catch (e) {}
-      } else e.stack = stack.join("\n");
+  context.exception = e;
+  if (e.stack) {
+    const stack = [String(e)];
+    for (let i: Frame | null = frame; i; i = i.next) {
+      if (i.brk)
+        stack.push(
+          `    at ${i.meta.origName} (${i.meta.module.name}:${i.brk.line}:${i.brk.column})`
+        );
     }
-    let needsStop = false;
-    if (context.brkOnAnyException) {
-      needsStop = true;
-    } else if (context.brkOnUncaughtException) {
-      // avoiding running finally blocks
-      needsStop = true;
-      for (let i: Frame | null = frame; i; i = i.next) {
-        if (hasEH(i)) {
-          needsStop = false;
-          break;
-        }
-      }
-    }
-    return needsStop;
+    if (config.debuggerDebug) {
+      try {
+        defineProperty(e, "_deb_stack", { value: stack.join("\n") });
+      } catch (e) {}
+    } else e.stack = stack.join("\n");
   }
-  return false;
+  let needsStop = false;
+  if (context.brkOnAnyException) {
+    needsStop = true;
+  } else if (context.brkOnUncaughtException) {
+    // avoiding running finally blocks
+    needsStop = true;
+    for (let i: Frame | null = frame; i; i = i.next) {
+      if (hasEH(i)) {
+        needsStop = false;
+        break;
+      }
+    }
+  }
+  return needsStop;
 }
 
 export function handle(frame: Frame, e: any) {
@@ -646,7 +647,7 @@ export function handle(frame: Frame, e: any) {
     const meta = frame.meta;
     frame.error = e;
     meta.errHandler(frame, frame.$);
-    if (!meta.blackbox && checkErrBrk(frame, e)) {
+    if (!meta.blackbox && e !== context.exception && checkErrBrk(frame, e)) {
       context.value = e;
       context.error = true;
       if (frame.next) throw token;
@@ -1095,7 +1096,7 @@ export function liftSync(fun: (this: any, ...args: any[]) => any): any {
 }
 
 export function raise(e: any) {
-  context.exception = null;
+  context.exception = undef;
   throw e;
 }
 

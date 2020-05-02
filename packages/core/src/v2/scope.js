@@ -1024,3 +1024,8 @@ export function brkExpr(i) {
   if (DEBUG_BRKS) Kit.append(args, Kit.emitConst(Tag.push, Kit.locStr(loc)));
   return call;
 }
+
+export function isSysCall(i) {
+  const callee = i.firstChild;
+  return callee.type === Tag.Identifier && callee.sym && callee.sym.lib;
+}

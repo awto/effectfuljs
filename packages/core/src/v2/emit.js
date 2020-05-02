@@ -304,8 +304,8 @@ export function calcFrames(root) {
       Kit.memExpr(Tag.left, ctxSym, "goto"),
       (ref = frameRef(Tag.right, nextFrame))
     );
-    (frame.nextPureExit = (ref.nextPureExit =
-      frame.nextPureExit).prevPureExit = ref).prevPureExit = frame;
+    (frame.prevPureExit = (ref.prevPureExit =
+      frame.prevPureExit).nextPureExit = ref).nextPureExit = frame;
     Kit.append(
       consequent,
       (ref.continueStmt = Kit.node(Tag.push, Tag.ContinueStatement))

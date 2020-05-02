@@ -78,7 +78,7 @@
               },
               "timeTravelDisabled": {
                 "type": "boolean",
-                "description": "Don't start time traveling trace collection immediately (awaits API call)",
+                "description": "Don't start time traveling trace collection immediately (use `EDBG.journal.enabled = true` to enable in code)",
                 "default": true
               },
               "command": {
@@ -220,6 +220,21 @@
                 ],
                 "default": "restart",
                 "description": "what to do when sources changed during debugging"
+              },
+              "include": {
+                "type": "string",
+                "default": "",
+                "description": "a glob for selecting files which will be transpiled"
+              },
+              "blackbox": {
+                "type": "string",
+                "default": "",
+                "description": "a glob for selecting files which will be transpiled in blackbox mode"
+              },
+              "exclude": {
+                "type": "string",
+                "default": "",
+                "description": "a glob for selecting files which won't be transpiled"
               }
             }
           }

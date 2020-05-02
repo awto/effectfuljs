@@ -4,7 +4,7 @@ import * as DOM from "./dom";
 import { Record } from "../state";
 import * as State from "../state";
 import * as S from "@effectful/serialization";
-import { record2, record4, record8 } from "./binds";
+import { record2, record4, record5, record8 } from "./binds";
 export const journal = State.journal;
 const context = State.context;
 
@@ -71,26 +71,29 @@ export const redo: () => Record | null = config.timeTravel
     };
 
 function recordContext() {
-  record4(
+  record5(
     resetContextOp,
     context.top,
     context.debug,
     context.brk,
-    context.value
+    context.value,
+    context.error
   );
 }
 
 function resetContextOp(this: any) {
-  const { a: top, b: debug, c: brk, d: value } = this;
+  const { a: top, b: debug, c: brk, d: value, e: error } = this;
   this.a = context.top;
   this.b = context.debug;
   this.c = context.brk;
   this.d = context.value;
+  this.e = context.error;
   record(this);
   context.top = top;
   context.debug = debug;
   context.brk = brk;
   context.value = value;
+  context.error = error;
 }
 
 S.regOpaqueObject(resetContextOp, "@effectful/debug/reset#ctx");

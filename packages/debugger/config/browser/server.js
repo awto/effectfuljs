@@ -30,6 +30,8 @@ async function main() {
   const proxyConfig = prepareProxy(proxySetting, paths.appPublic);
   const devServerOptions = {
     hot: true,
+    hotOnly: true,
+    liveReload: false,
     stats: { colors: false },
     progress: false,
     open: defaults.open,

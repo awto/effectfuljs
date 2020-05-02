@@ -173,7 +173,7 @@ function interpret(data: any) {
       break;
     case "message":
       if (config.verbose)
-        sysConsole.log(`DEBUGGER: RECV ${data.message} to ${context.threadId}`);
+        sysConsole.log(`DEBUGGER: RECV ${data.msg} to ${context.threadId}`);
       if (impl.onmessage) impl.onmessage(JSON.parse(data.msg));
       break;
     case "error":

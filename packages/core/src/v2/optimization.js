@@ -180,8 +180,8 @@ export function sortFrames(root) {
         i.nextEffSkipExit === i &&
         i.nextEffExit === i &&
         i.nextDynExit === i &&
-        (pureExit = i.nextPureExit) !== i &&
-        pureExit.nextPureExit === i &&
+        (pureExit = i.prevPureExit) !== i &&
+        pureExit.prevPureExit === i &&
         i.consequent.firstChild === pureExit.parent.parent
       ) {
         const dst = pureExit.dst;
@@ -215,7 +215,7 @@ export function sortFrames(root) {
     for (let i = job.nextEffExit; i !== job; i = i.nextEffExit) schedule(i.dst);
     for (let i = job.nextEffSkipExit; i !== job; i = i.nextEffSkipExit)
       schedule(i.dst);
-    for (let i = job.nextPureExit; i !== job; i = i.nextPureExit)
+    for (let i = job.prevPureExit; i !== job; i = i.prevPureExit)
       schedule(i.dst);
     if (cur) {
       if (fallthrough) {
@@ -230,7 +230,7 @@ export function sortFrames(root) {
           if (i.noSkip)
             Kit.insertAfter(cont, Kit.node(Tag.push, Tag.BreakStatement));
         }
-        for (let i = cur.nextPureExit; i !== cur; i = i.nextPureExit) {
+        for (let i = cur.prevPureExit; i !== cur; i = i.prevPureExit) {
           if (i.dst !== job) continue;
           i.prevSibling.firstChild.prevSibling.node.name = "state";
           if (i.noSkip) i.continueStmt.type = Tag.BreakStatement;
