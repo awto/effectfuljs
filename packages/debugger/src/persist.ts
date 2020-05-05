@@ -89,21 +89,6 @@ export function regFun(meta: FunctionDescr) {
     },
     typeofHint: "function"
   });
-  S.regDescriptor<any>({
-    name: `f@${meta.persistName}`,
-    readContent(ctx, json, value) {
-      value.$ = ctx.step((<any>json).$);
-    },
-    create(ctx, json) {
-      const closure = ctx.step((<any>json).constr);
-      const proto = closure[dataSymbol];
-      return Object.create(proto);
-    },
-    write() {
-      return {};
-    },
-    propsSnapshot: true
-  });
   (<any>meta).descriptor = funcDescr;
   regOpaqueObject(constr, `c#${meta.persistName}`);
   regOpaqueObject(meta, `i#${meta.persistName}`);

@@ -6,7 +6,7 @@ import { DebugProtocol } from "vscode-debugprotocol";
 import { DebugClient } from "./kit/client";
 
 suite("Debugging on NodeJS", function () {
-  this.timeout(300000);
+  this.timeout(30000000);
   const PROJECT_ROOT = path.join(__dirname, "../../..");
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
@@ -175,10 +175,8 @@ suite("Debugging on NodeJS", function () {
           source2 && source.sourceReference === source2.sourceReference,
           "same dynamic source reference"
         );
-        await Promise.all([
-          dc.continueRequest({ threadId: 0 }),
-          dc.waitForEvent("terminated")
-        ]);
+        dc.continueRequest({ threadId: 0 })
+        await dc.waitForEvent("terminated");
       });
     test(`should stop on a conditional breakpoint in eval`, async function () {
       const PROGRAM = path.join(DATA_ROOT, "evalCond.js");
@@ -473,9 +471,7 @@ suite("Debugging on NodeJS", function () {
           .then(response => {
             return dc.configurationDoneRequest();
           }),
-
         dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
-
         dc.waitForEvent("terminated")
       ]);
     });
@@ -544,9 +540,7 @@ suite("Debugging on NodeJS", function () {
           .then(response => {
             return dc.configurationDoneRequest();
           }),
-
         dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
-
         dc.waitForEvent("terminated")
       ]);
     });
@@ -578,10 +572,8 @@ suite("Debugging on NodeJS", function () {
         dc.continueRequest({ threadId: 0 }),
         dc.assertStoppedInEvalLocation("exception", 2)
       ]);
-      await Promise.all([
-        dc.continueRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.continueRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
     });
   });
 
@@ -658,10 +650,8 @@ suite("Debugging on NodeJS", function () {
           line: 10
         })
       ]);
-      await Promise.all([
-        dc.stepInRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.stepInRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
     });
     test("should exit function on `step out`", async function () {
       await dc.hitBreakpoint(
@@ -692,10 +682,8 @@ suite("Debugging on NodeJS", function () {
           line: 11
         })
       ]);
-      await Promise.all([
-        dc.stepOutRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.stepOutRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
     });
     test("should exit function on `step over`", async function () {
       await Promise.all([
@@ -735,10 +723,8 @@ suite("Debugging on NodeJS", function () {
           line: 10
         })
       ]);
-      await Promise.all([
-        dc.nextRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.nextRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
     });
   });
   suite("`require` stepping", function () {
@@ -778,10 +764,8 @@ suite("Debugging on NodeJS", function () {
         dc.stepInRequest({ threadId: 0 }),
         dc.assertStoppedLocation("step", { path: PROGRAM, line: 2 })
       ]);
-      await Promise.all([
-        dc.stepInRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.stepInRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
     });
     test("should exit modules top level on `step out`", async function () {
       await dc.hitBreakpoint(
@@ -807,10 +791,8 @@ suite("Debugging on NodeJS", function () {
         dc.stepOutRequest({ threadId: 0 }),
         dc.assertStoppedLocation("stepOut", { path: PROGRAM, line: 3 })
       ]);
-      await Promise.all([
-        dc.stepOutRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.stepOutRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
     });
     test("should exit function on `step over`", async function () {
       await Promise.all([
@@ -842,10 +824,8 @@ suite("Debugging on NodeJS", function () {
         dc.nextRequest({ threadId: 0 }),
         dc.assertStoppedLocation("next", { path: PROGRAM, line: 2 })
       ]);
-      await Promise.all([
-        dc.nextRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.nextRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
     });
   });
   suite("async", function () {
@@ -896,10 +876,8 @@ suite("Debugging on NodeJS", function () {
         dc.stepInRequest({ threadId: 0 }),
         dc.assertStoppedLocation("step", { path: PROGRAM, line: 9 })
       ]);
-      await Promise.all([
-        dc.nextRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.nextRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
       await out;
     });
   });
@@ -970,10 +948,8 @@ suite("Debugging on NodeJS", function () {
           copy(PROGRAM, "hot2.js"),
           dc.waitForEvent("loadedSources")
         ]);
-        await Promise.all([
-          dc.continueRequest({ threadId: 0 }),
-          dc.waitForEvent("terminated")
-        ]);
+        dc.continueRequest({ threadId: 0 }),
+        await dc.waitForEvent("terminated")
         await out;
       } finally {
         await util.promisify(fs.unlink)(PROGRAM);
@@ -1151,7 +1127,7 @@ suite("Debugging on NodeJS", function () {
         ],
         [{ i: "I1", k: "K1+1-1", "[name]": "scopes.js" }]
       ]);
-      await dc.continueRequest({ threadId: 0 });
+      dc.continueRequest({ threadId: 0 });
       await dc.waitForEvent("terminated");
     });
   });
@@ -1188,10 +1164,8 @@ suite("Debugging on NodeJS", function () {
         dc.continueRequest({ threadId: 0 }),
         dc.assertStoppedLocation("debugger_statement", { line: 3 })
       ]);
-      await Promise.all([
-        dc.continueRequest({ threadId: 0 }),
-        dc.waitForEvent("terminated")
-      ]);
+      dc.continueRequest({ threadId: 0 });
+      await dc.waitForEvent("terminated");
       await out;
     });
   });

@@ -6,10 +6,11 @@ import {
   ILocation
 } from "vscode-debugadapter-testsupport/lib/debugClient";
 
+
 export class DebugClient extends Support.DebugClient {
   constructor(executable: string) {
     super("node", executable, "effectful", {}, true);
-    this.defaultTimeout = 1000000;
+    this.defaultTimeout = 100000;
   }
 
   private assertPartialLocationsEqualCopy(

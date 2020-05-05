@@ -59,7 +59,6 @@ let progressCnt = 0;
 export class DebugSession extends SessionImpl {
   private remotes: Map<number, Handler> = new Map();
   private connectCb?: (h?: Handler) => void;
-  private progressCb?: () => void;
   public progressHandler?: (n: string) => () => void;
   public showError?: (n: string) => void;
   private childProcess: ChildProcess | undefined;
@@ -142,11 +141,10 @@ export class DebugSession extends SessionImpl {
     }
     if (hadThread) this.sendEvent(new ThreadEvent("exited", remoteId));
     if (!this.remotes.size) {
-      if (this.awaitReconnect) {
-        if (this.awaitReconnect < 0) return;
-        await new Promise(i => setTimeout(i, this.awaitReconnect));
-        if (this.remotes.size) return;
-      }
+      const reconnect = this.awaitReconnect || 0
+      if (reconnect < 0) return;
+      await new Promise(i => setTimeout(i, reconnect));
+      if (this.remotes.size) return;
       this.terminate(
         this.exitCode
           ? `the main command exited with exit code ${this.exitCode}`

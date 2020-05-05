@@ -264,7 +264,12 @@ context.onThread = async function() {
   if (context.top || context.activeTop) return;
   if (!context.queue.length) {
     if (!context.top && !context.activeTop) {
-      if (!config.stopOnExit) Comms.unref();
+      if (!config.stopOnExit) {
+        setTimeout(function() {
+          if (!context.queue.length && !context.top && !context.activeTop)
+            Comms.unref();
+        }, 0)        
+      }
     }
     return;
   }
