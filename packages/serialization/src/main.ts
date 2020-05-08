@@ -142,7 +142,9 @@ export interface WriteOptions {
    * current reference's id assignment state,
    * this can be copied between writes to keep same refs ids
    */
-  sharedRefs?: Map<any, SharedRefInfo>;
+  sharedRefsMap?: Map<any, SharedRefInfo>;
+  /* resulting refs by their id */
+  sharedRefs?: SharedRefInfo[];
   /**
    * holds information about seen local Symbols, it can be copied between runs
    */
@@ -158,6 +160,8 @@ export interface WriteOptions {
    */
   alwaysByRef?: boolean;
   verbose?: boolean;
+  /** if this array is initialized it will be filled with the shared object's values */
+  refs?: any[];
 }
 
 /** Options to amend `write` behavior */
@@ -174,7 +178,7 @@ export interface ReadOptions {
    */
   knownSyms?: Map<symbol, SymbolDescr>;
   /** references to shared object values */
-  shared?: any[];
+  refs?: any[];
 }
 
 /** `JSON.stringify` serializable value */
@@ -369,13 +373,15 @@ export function write(value: object, opts: WriteOptions = {}): JSONObject {
   const ctx = new WriteContext(opts);
   const res: JSONArray = [];
   res.push(ctx.step(value, res, 0));
-  const { refs } = ctx;
+  const { sharedRefs: refs } = ctx;
   const alwaysByRef = opts.alwaysByRef;
   const x: any[] = [];
+  const resRefs = opts.refs;
   for (let job; (job = ctx.jobs) != null; ) {
     if (job.started) {
       if (alwaysByRef) {
         if (job.ref) job.ref.r = x.push(job.data) - 1;
+        if (resRefs) resRefs.push(job.value);
       } else refs.push(job);
       job = ctx.jobs = job.nextJob;
       continue;
@@ -386,11 +392,13 @@ export function write(value: object, opts: WriteOptions = {}): JSONObject {
     );
   }
   if (!alwaysByRef && refs.length) {
-    for (const info of refs)
+    for (const info of refs) {
       if (info.ref) {
         info.ref.r = x.push(info.data) - 1;
         if (info.parent) (<any>info.parent)[<any>info.index] = info.ref;
       } else if (info.parent) (<any>info.parent)[<any>info.index] = info.data;
+    }
+    if (resRefs != null) for (const info of refs) resRefs.push(info.value);
   }
   return x.length
     ? savedObject.assign({ x }, <JSONObject>res[0])
@@ -509,16 +517,17 @@ interface SharedRefInfo {
  * invocation for nested values
  */
 export class WriteContext {
-  sharedRefs: Map<any, SharedRefInfo>;
-  refs: SharedRefInfo[];
+  sharedRefsMap: Map<any, SharedRefInfo>;
+  sharedRefs: SharedRefInfo[];
   opts: WriteOptions;
   symsByName?: Map<string, SymbolDescr[]>;
   knownSyms?: Map<symbol, SymbolDescr>;
   jobs?: SharedRefInfo;
 
   constructor(opts: WriteOptions) {
-    this.sharedRefs = opts.sharedRefs || (opts.sharedRefs = new LocMap());
-    this.refs = [];
+    this.sharedRefsMap =
+      opts.sharedRefsMap || (opts.sharedRefsMap = new LocMap());
+    this.sharedRefs = opts.sharedRefs || [];
     this.opts = opts;
     this.symsByName = opts.symsByName || (opts.symsByName = new LocMap());
     this.knownSyms = opts.knownSyms || (opts.knownSyms = new LocMap());
@@ -594,7 +603,7 @@ export class ReadContext {
     this.opts = opts;
     const len = sharedJsons.length;
     this.sharedJsons = sharedJsons;
-    this.sharedVals = opts.shared || (opts.shared = Array(len).fill(undef));
+    this.sharedVals = opts.refs || (opts.refs = Array(len).fill(undef));
     this.sharedDescriptors = Array(len);
   }
   /**
@@ -683,9 +692,9 @@ function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
       parent: JSONArray | JSONObject,
       index: string | number
     ): JSONValue {
-      let info = ctx.sharedRefs.get(value);
+      let info = ctx.sharedRefsMap.get(value);
       if (info == null) {
-        ctx.sharedRefs.set(
+        ctx.sharedRefsMap.set(
           value,
           (ctx.jobs = info = {
             ref: null,

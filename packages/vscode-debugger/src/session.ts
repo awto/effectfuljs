@@ -741,6 +741,7 @@ export class DebugSession extends SessionImpl {
         dirSep: path.sep,
         exceptions: this.exceptionArgs,
         fastRestart: args.fastRestart,
+        timeTravelDisabled: args.timeTravelDisabled,
         onChange: args.onChange,
         breakpoints: [...this.breakpointsSrcs].map(
           ([srcPath, breakpoints]) => ({

@@ -24,7 +24,7 @@ const helpers = {
   Operations
 };
 
-const rescopeVisitor = { Identifier() { } };
+const rescopeVisitor = { Identifier() {} };
 
 export function run(transform, state) {
   state.file.scope.path.traverse(rescopeVisitor);
@@ -131,9 +131,9 @@ function createMacro(macro, options = {}) {
     if (!isBabelMacrosCall) {
       throw new Error(
         `The macro you imported from "${source}" is being executed outside the context of compilation with babel-plugin-macros. ` +
-        `This indicates that you don't have the babel plugin "babel-plugin-macros" configured correctly. ` +
-        `Please see the documentation for how to configure babel-plugin-macros properly: ` +
-        "https://github.com/kentcdodds/babel-plugin-macros/blob/master/other/docs/user.md"
+          `This indicates that you don't have the babel plugin "babel-plugin-macros" configured correctly. ` +
+          `Please see the documentation for how to configure babel-plugin-macros properly: ` +
+          "https://github.com/kentcdodds/babel-plugin-macros/blob/master/other/docs/user.md"
       );
     }
     return macro(args);

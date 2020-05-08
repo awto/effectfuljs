@@ -7,7 +7,7 @@ import {
   produceNode,
   replace,
   detach,
-  assign,
+  assign as assignImpl,
   append,
   prepend,
   insertAfter,
@@ -56,7 +56,6 @@ export {
   pipe,
   replace,
   detach,
-  assign,
   append,
   prepend,
   insertAfter,
@@ -97,6 +96,14 @@ export function exprStmt(par, doc) {
   append(par, res);
   copyMeta(doc, res);
   return doc;
+}
+
+export function assign(pos) {
+  const ret = assignImpl(pos);
+  ret.isBlockScope = false;
+  ret.isExpr = true;
+  ret.isStmt = false;
+  return ret;
 }
 
 export function assignStmt(par, l, r) {

@@ -214,6 +214,8 @@ EDBG.restore(JSON.parse(require("fs").readFileSync("state.json","utf-8")))
 
 DOM is also serializable, for now, only events added with `addEventListener` (and not by setters or HTML attribute) will be serialized.
 
+Both `EDBG.caputre` and `EDBG.restore` have an optional second parameter. It is an array of known objects. If we need to restore state in the same context with all the shared objects preserved, we just pass an empty array to the second argument of `EDBG.capture`, store it somewhere, and pass the same array to the second argument of `EDBG.restore` call. This way all the references between objects will be preserved. Otherwise, it will create clones of each captured object.
+
 ## Time traveling
 
 If `"timeTravel:true"` in `.vscode/launch.json` it will start collecting traces that can be used to step and run backward in VSCode debugger. The traces are serializable if the state is serializable.

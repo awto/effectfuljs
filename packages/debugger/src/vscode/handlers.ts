@@ -309,9 +309,10 @@ context.onThread = async function() {
 };
 
 let entrySnapshot: any;
+const entryRefs: any[] = [];
 
 function onEntry() {
-  if (config.fastRestart === "entry") entrySnapshot = capture(true);
+  if (config.fastRestart === "entry") entrySnapshot = capture(true, entryRefs);
 }
 
 export function restart() {
@@ -326,7 +327,7 @@ export function restart() {
     return;
   }
   if (entrySnapshot) {
-    restore(entrySnapshot);
+    restore(entrySnapshot, entryRefs);
     return;
   }
 }
@@ -342,8 +343,6 @@ handlers.childRestart = function(res) {
     res.message = "restart isn't supported";
   }
 };
-
-handlers.launch = function() {};
 
 let linStartAt1 = true;
 let colStartAt1 = true;
@@ -1119,7 +1118,7 @@ export function resetLoad() {
  * Returns `JSON.stringify` serializable object with the whole
  * current execution state
  */
-export function capture(silent?: boolean): S.JSONObject {
+export function capture(silent?: boolean, refs?: any): S.JSONObject {
   const modules: any = [];
   const savedEnabled = journal.enabled;
   try {
@@ -1158,7 +1157,8 @@ export function capture(silent?: boolean): S.JSONObject {
         ignore: "opaque",
         warnIgnored: !silent,
         alwaysByRef: true,
-        verbose: config.debuggerDebug
+        verbose: config.debuggerDebug,
+        refs
       }
     );
     res.modules = modules;
@@ -1172,46 +1172,16 @@ export function capture(silent?: boolean): S.JSONObject {
  * Restores execution state from an object previously returned by
  * `capture` the current state is discarded
  */
-export function restore(json: S.JSONObject) {
-  // if (context.top && !context.activeTop)
-  //  throw new Error(
-  //    "NOT IMPLEMENTED YET: restoring state when an application runs"
-  //  ); // TODO: (pause it)
+export function restore(json: S.JSONObject, refs?: any[]) {
+  // TODO: properly pause it if it runs
   const savedEnabled = journal.enabled;
-  let extra: Set<any>;
   try {
     journal.enabled = false;
-    for (const i of (<any>json).modules) {
-      let module = context.modules[i.id];
-      const { params } = i;
-      if (params) {
-        const parent = params.parent && context.modules[params.parent];
-        Engine.compileEval(
-          params.code,
-          parent,
-          params.evalContext,
-          params.scopeDepth,
-          params.blackbox,
-          params.params,
-          params.id
-        );
-        continue;
-      }
-      if (!i.cjs) continue;
-      if (!module || !module.cjs) {
-        for (const parent of i.parents) {
-          // this assumes parent modules are loaded first
-          const parentModule = context.modulesById[parent];
-          if (parentModule && parentModule.cjs) {
-            parentModule.cjs.__effectful_js_require(i.cjs);
-            break;
-          }
-        }
-      }
-      module = Engine.getCurModule();
-      if (!module || !module.cjs) continue;
-    }
-    const state = S.read(json, { ignore: "placeholder", warnIgnored: true });
+    const state = S.read(json, {
+      ignore: "placeholder",
+      warnIgnored: true,
+      refs
+    });
     for (const i of state.extra) Persist.extra.add(i);
     context.value = null;
     // reloading somehow breaks WebSockets
@@ -1222,6 +1192,37 @@ export function restore(json: S.JSONObject) {
             TT.DOM.observing.clear();
             TT.DOM.track(document.documentElement);
           }
+        }
+        journal.enabled = false;
+        for (const i of (<any>json).modules) {
+          let module = context.modules[i.id];
+          const { params } = i;
+          if (params) {
+            const parent = params.parent && context.modules[params.parent];
+            Engine.compileEval(
+              params.code,
+              parent,
+              params.evalContext,
+              params.scopeDepth,
+              params.blackbox,
+              params.params,
+              params.id
+            );
+            continue;
+          }
+          if (!i.cjs) continue;
+          if (!module || !module.cjs) {
+            for (const parent of i.parents) {
+              // this assumes parent modules are loaded first
+              const parentModule = context.modulesById[parent];
+              if (parentModule && parentModule.cjs) {
+                parentModule.cjs.__effectful_js_require(i.cjs);
+                break;
+              }
+            }
+          }
+          module = Engine.getCurModule();
+          if (!module || !module.cjs) continue;
         }
         ({
           activeTop: context.activeTop,

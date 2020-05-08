@@ -27,7 +27,7 @@
             "blackbox": true,
             "rt": "../apiMin",
             "pureModule": true,
-            preInstrumentedLibs: ".."
+            "preInstrumentedLibs": ".."
           }
         ]
       ]
