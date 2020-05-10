@@ -13,7 +13,7 @@
   "scripts": {
     "test": "tslint -t verbose --project . && mocha",
     "build": "tsc --outDir .",
-    "docs": "typedoc --mode file --out api --theme markdown --excludePrivate src --readme none"
+    "docs": "rimraf api && typedoc --plugin typedoc-plugin-markdown --out api --excludePrivate src --readme none"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -23,7 +23,10 @@
     "@babel/register": "^7.4.4",
     "jsdom": "^15.1.1",
     "mocha": "^5.1.0",
+    "rimraf": "^3.0.2",
     "tslint": "^5.17.0",
+    "typedoc": "^0.17.6",
+    "typedoc-plugin-markdown": "^2.2.17",
     "typescript": "^3.5.1"
   },
   "dependencies": {

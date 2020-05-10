@@ -153,7 +153,7 @@ re-exports modules from "@effectful/debugger" changing anything we need.
 
 The debugger's API can be accessed by `EDBG` global variables.
 
-The whole application state is stored in `EDBG.context` object. It stores the current stack, variables, async events queue, etc. It can be changed just in place without any setters/getters. Check `interface State` in [state.ts](../debugger/src/state.ts) for more details.
+The whole application state is stored in `EDBG.context` object. It stores the current stack, variables, async events queue, etc. It can be changed just in place without any setters/getters. Check interface [State](../debugger/api/interfaces/_state_.state.md) for more details.
 
 The state can be accessed via "Debug Console" in VSCode, or from some dev scripts. This way may be used to mock functions or even a part of the functions or run some custom debugging scenarios.
 
@@ -214,6 +214,8 @@ EDBG.restore(JSON.parse(require("fs").readFileSync("state.json","utf-8")))
 
 DOM is also serializable, for now, only events added with `addEventListener` (and not by setters or HTML attribute) will be serialized.
 
+There is an optional parameter to set serialization options from [@effectful/serialization](../serialization). For `EDBG.capture` it is its first argument which has type [WriteOptions](../serialization/api/interfaces/writeoptions.md), and for `EDBG.restore` it is its second parameter and it has type [ReadOptions](../serialization/api/interfaces/readoptions.md).
+
 Both `EDBG.caputre` and `EDBG.restore` have an optional second parameter. It is an array of known objects. If we need to restore state in the same context with all the shared objects preserved, we just pass an empty array to the second argument of `EDBG.capture`, store it somewhere, and pass the same array to the second argument of `EDBG.restore` call. This way all the references between objects will be preserved. Otherwise, it will create clones of each captured object.
 
 ## Time traveling
@@ -222,13 +224,13 @@ If `"timeTravel:true"` in `.vscode/launch.json` it will start collecting traces 
 
 If the custom configuration is used the `"timeTravel:true"` must be also passed to the babel's plugin. The property values should be the same in both babel options and `launch.config`.
 
-The time-traveling trace is stored in `EDBG.journal` object, and it can be changed and analyzed without any getter/setter. Its type is described in `interface Journal` in [state.ts](../debugger/src/state.ts).
+The time-traveling trace is stored in `EDBG.journal` object, and it can be changed and analyzed without any getter/setter. Its type is described in [interface Journal](../debugger/api/interfaces/_state_.journal.md).
 
 For example, to disable traveling through the trace and just make the program to run from the current point, run `EDBG.journal.future = null` in "Debug Console" tab or in some of your scripts.
 
 There are a lot of more advanced usages, for example, comparing different runs of the same code, for example, failed test run with some last successful run.
 
-The journal object is stored and restored by `EDBG.capture`/`EDBG.restore` functions. If the goal is only post-mortem debugging we can safely ignore all the warnings about non-serializable values. But if we want to resurrect it from some point all of them must be fixed. If you pass `true` to `EDBG.capture` it won't output any warnings.
+The journal object is stored and restored by `EDBG.capture`/`EDBG.restore` functions. If the goal is only post-mortem debugging we can safely ignore all the warnings about non-serializable values. But if we want to resurrect it from some point all of them must be fixed. If you pass `{warnIgnored:false}` to `EDBG.capture` it won't output any warnings.
 
 By default, it tracks only local variables, properties, and DOM changes. If something is changed in something external (e.g. DB, file, native module, etc) it won't be tracked and changed, though, we'll still be able to travel through the program except resetting won't work for DBs.
 

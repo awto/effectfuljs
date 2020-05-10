@@ -14,7 +14,8 @@
     "build:rt": "babel --extensions \".ts,.js\" --out-dir . src",
     "build:deps": "node ./buildDeps",
     "build-loose": "npm run build:rt && npm run build:deps",
-    "link-test": "node ./test/makeLinks"
+    "link-test": "node ./test/makeLinks",
+    "docs": "rimraf api && typedoc --plugin typedoc-plugin-markdown --out api --excludePrivate src --readme none"
   },
   "bin": {
     "edbg": "./bin/edbg.js"
@@ -37,7 +38,11 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-is": "^16.8.6",
+    "rimraf": "^3.0.2",
+    "tsdoc": "^0.0.4",
     "tslint": "^6.0.0",
+    "typedoc": "^0.17.6",
+    "typedoc-plugin-markdown": "^2.2.17",
     "typescript": "^3.8.3"
   },
   "dependencies": {
