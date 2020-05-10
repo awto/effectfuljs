@@ -18,4 +18,4 @@
 
 • **$$typeof**? : *undefined | symbol*
 
-Defined in src/main.ts:248
+Defined in src/main.ts:241

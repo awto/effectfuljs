@@ -6,7 +6,8 @@
   "version": "0.0.0",
   "scripts": {
     "test": "cross-env BABEL_DISABLE_CACHE=1 lerna run test --stream",
-    "build": "lerna run docs && lerna run build && lerna run build-loose && npm run prepare-test",
+    "docs": "lerna run docs",
+    "build": "lerna run build && lerna run build-loose && npm run prepare-test",
     "prepare": "lerna bootstrap --no-ci && npm run build",
     "prepare-test": "lerna run prepare-test && lerna run link-test"
   },

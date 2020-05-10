@@ -24,7 +24,7 @@ Describes how write values of a type
 
 • **write**: *function*
 
-Defined in src/main.ts:335
+Defined in src/main.ts:328
 
 Sets `value` into `parent` on `index` position
 

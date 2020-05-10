@@ -22,7 +22,7 @@
 
 • **column**? : *undefined | number*
 
-Defined in debugger/src/vscode/handlers.ts:91
+Defined in debugger/src/vscode/handlers.ts:93
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 • **endColumn**? : *undefined | number*
 
-Defined in debugger/src/vscode/handlers.ts:93
+Defined in debugger/src/vscode/handlers.ts:95
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 • **endLine**? : *undefined | number*
 
-Defined in debugger/src/vscode/handlers.ts:92
+Defined in debugger/src/vscode/handlers.ts:94
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 • **line**? : *undefined | number*
 
-Defined in debugger/src/vscode/handlers.ts:90
+Defined in debugger/src/vscode/handlers.ts:92
 
 ___
 
@@ -54,4 +54,4 @@ ___
 
 • **source**? : *P.Source*
 
-Defined in debugger/src/vscode/handlers.ts:89
+Defined in debugger/src/vscode/handlers.ts:91

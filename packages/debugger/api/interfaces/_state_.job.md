@@ -24,7 +24,7 @@ a part of context stores information about currently executing function
 
 • **brk**: *[Brk](_state_.brk.md) | null*
 
-Defined in debugger/src/state.ts:298
+Defined in debugger/src/state.ts:299
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 • **debug**: *boolean*
 
-Defined in debugger/src/state.ts:297
+Defined in debugger/src/state.ts:298
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 • **stopOnEntry**? : *undefined | false | true*
 
-Defined in debugger/src/state.ts:300
+Defined in debugger/src/state.ts:301
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 • **top**: *[Frame](_state_.frame.md) | null*
 
-Defined in debugger/src/state.ts:296
+Defined in debugger/src/state.ts:297
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 • **value**: *any*
 
-Defined in debugger/src/state.ts:299
+Defined in debugger/src/state.ts:300

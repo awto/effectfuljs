@@ -20,7 +20,7 @@
 
 • **id**: *number*
 
-Defined in src/main.ts:1397
+Defined in src/main.ts:1364
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **name**: *string*
 
-Defined in src/main.ts:1396
+Defined in src/main.ts:1363
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **value**: *symbol*
 
-Defined in src/main.ts:1398
+Defined in src/main.ts:1365

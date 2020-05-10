@@ -48,7 +48,7 @@ ___
 
 ### `Let` observing
 
-• **observing**: *Set‹[ElementExt](../interfaces/_timetravel_dom_.elementext.md)›* = new Set<ElementExt>()
+• **observing**: *[Set](_vscode_handlers_.md#const-set)‹[ElementExt](../interfaces/_timetravel_dom_.elementext.md)›* = new Set<ElementExt>()
 
 Defined in debugger/src/timeTravel/dom.ts:14
 

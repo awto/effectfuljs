@@ -41,7 +41,7 @@
 
 • **activeTop**: *[Frame](_state_.frame.md) | null*
 
-Defined in debugger/src/state.ts:284
+Defined in debugger/src/state.ts:285
 
 `top` of currently debugging thread,
 the value is saved here while some blackbox thread may run
@@ -52,7 +52,7 @@ ___
 
 • **brk**: *[Brk](_state_.brk.md) | null*
 
-Defined in debugger/src/state.ts:244
+Defined in debugger/src/state.ts:245
 
 current breakpoint id
 
@@ -62,7 +62,7 @@ ___
 
 • **brkOnAnyException**: *boolean*
 
-Defined in debugger/src/state.ts:277
+Defined in debugger/src/state.ts:278
 
 stop on any exceptions
 
@@ -72,7 +72,7 @@ ___
 
 • **brkOnUncaughtException**: *boolean*
 
-Defined in debugger/src/state.ts:279
+Defined in debugger/src/state.ts:280
 
 stop on uncaught exceptions
 
@@ -82,7 +82,7 @@ ___
 
 • **call**: *any*
 
-Defined in debugger/src/state.ts:271
+Defined in debugger/src/state.ts:272
 
 reference of a function which is expected to be called
 
@@ -92,7 +92,7 @@ ___
 
 • **debug**: *boolean*
 
-Defined in debugger/src/state.ts:233
+Defined in debugger/src/state.ts:234
 
 stopping on break points if `true`, otherwise ignoring them
 
@@ -102,7 +102,7 @@ ___
 
 • **error**: *boolean*
 
-Defined in debugger/src/state.ts:259
+Defined in debugger/src/state.ts:260
 
 in error state
 
@@ -112,7 +112,7 @@ ___
 
 • **exception**: *any*
 
-Defined in debugger/src/state.ts:261
+Defined in debugger/src/state.ts:262
 
 currently propagating exception
 
@@ -122,7 +122,7 @@ ___
 
 • **moduleId**: *string | null*
 
-Defined in debugger/src/state.ts:273
+Defined in debugger/src/state.ts:274
 
 module id which is expected to be required
 
@@ -132,7 +132,7 @@ ___
 
 • **modules**: *object*
 
-Defined in debugger/src/state.ts:246
+Defined in debugger/src/state.ts:247
 
 loaded modules (by full path)
 
@@ -146,7 +146,7 @@ ___
 
 • **modulesById**: *object*
 
-Defined in debugger/src/state.ts:248
+Defined in debugger/src/state.ts:249
 
 loaded modules (by CommonJs id)
 
@@ -160,7 +160,7 @@ ___
 
 • **needsBreak**: *function*
 
-Defined in debugger/src/state.ts:269
+Defined in debugger/src/state.ts:270
 
 queries if the engine should stop on this `brk`
 
@@ -182,7 +182,7 @@ ___
 
 • **onLoad**? : *undefined | function*
 
-Defined in debugger/src/state.ts:265
+Defined in debugger/src/state.ts:266
 
 a callback called when some module's sources are changed
 
@@ -192,7 +192,7 @@ ___
 
 • **onNewSource**: *function*
 
-Defined in debugger/src/state.ts:286
+Defined in debugger/src/state.ts:287
 
 some new generated source can be debugged
 
@@ -213,7 +213,7 @@ ___
 
 • **onStop**: *function*
 
-Defined in debugger/src/state.ts:288
+Defined in debugger/src/state.ts:289
 
 stopping on a breakpoint
 
@@ -227,7 +227,7 @@ ___
 
 • **onThread**: *function*
 
-Defined in debugger/src/state.ts:257
+Defined in debugger/src/state.ts:258
 
 this is called if something a new thread is added into `queue`
 or some thread was finished (so the caller can proceed with
@@ -242,7 +242,7 @@ ___
 
 • **queue**: *[Job](_state_.job.md)[]*
 
-Defined in debugger/src/state.ts:252
+Defined in debugger/src/state.ts:253
 
 next functions to run
 
@@ -252,7 +252,7 @@ ___
 
 • **running**: *boolean*
 
-Defined in debugger/src/state.ts:242
+Defined in debugger/src/state.ts:243
 
 the engine now runs some code and expects a breakpoint
 otherwise it is some new thread which isn't tracked by the debugger
@@ -263,9 +263,9 @@ ___
 
 ###  suspended
 
-• **suspended**: *Set‹[Frame](_state_.frame.md)›*
+• **suspended**: *[Set](../modules/_vscode_handlers_.md#const-set)‹[Frame](_state_.frame.md)›*
 
-Defined in debugger/src/state.ts:275
+Defined in debugger/src/state.ts:276
 
 currently suspended but not exited frames (e.g. on `await` expressions)
 
@@ -275,7 +275,7 @@ ___
 
 • **syncStack**: *[Job](_state_.job.md)[]*
 
-Defined in debugger/src/state.ts:250
+Defined in debugger/src/state.ts:251
 
 saved context for synchronous functions
 
@@ -285,7 +285,7 @@ ___
 
 • **terminated**: *boolean*
 
-Defined in debugger/src/state.ts:235
+Defined in debugger/src/state.ts:236
 
 everything is done
 
@@ -295,7 +295,7 @@ ___
 
 • **threadId**: *number*
 
-Defined in debugger/src/state.ts:291
+Defined in debugger/src/state.ts:292
 
 unique number of this execution context
 
@@ -305,7 +305,7 @@ ___
 
 • **top**: *[Frame](_state_.frame.md) | null*
 
-Defined in debugger/src/state.ts:267
+Defined in debugger/src/state.ts:268
 
 current execution stack
 
@@ -315,6 +315,6 @@ ___
 
 • **value**: *any*
 
-Defined in debugger/src/state.ts:263
+Defined in debugger/src/state.ts:264
 
 a current value to be passed into the top of `stack` (or an exception if `error:true`)

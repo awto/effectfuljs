@@ -26,7 +26,7 @@
 
 \+ **new ValueConstructor**(...`args`: any[]): *T*
 
-Defined in src/main.ts:322
+Defined in src/main.ts:315
 
 **Parameters:**
 
@@ -42,4 +42,4 @@ Name | Type |
 
 • **name**? : *undefined | string*
 
-Defined in src/main.ts:322
+Defined in src/main.ts:315

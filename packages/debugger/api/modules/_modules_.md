@@ -15,6 +15,7 @@
 ### Functions
 
 * [moduleExports](_modules_.md#moduleexports)
+* [runTopLevel](_modules_.md#runtoplevel)
 
 ## Variables
 
@@ -124,6 +125,22 @@ Defined in debugger/src/modules.ts:6
 
 ▸ **moduleExports**(): *void*
 
-Defined in debugger/src/modules.ts:10
+Defined in debugger/src/modules.ts:22
 
 **Returns:** *void*
+
+___
+
+###  runTopLevel
+
+▸ **runTopLevel**(`mod`: [Module](../interfaces/_state_.module.md)): *any*
+
+Defined in debugger/src/modules.ts:10
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`mod` | [Module](../interfaces/_state_.module.md) |
+
+**Returns:** *any*

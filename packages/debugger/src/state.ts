@@ -148,6 +148,7 @@ export interface Module {
   closSyms: { [name: string]: any };
   params: null | { [name: string]: any };
   lines?: Brk[][];
+  exports: any;
 }
 
 /** function's description */
@@ -376,6 +377,14 @@ export const saved = {
  * of the function's call
  */
 export const thunkSymbol = Symbol("@effectful/debugger/thunk");
+
+export function returnToken() {
+  return token;
+}
+
+export function throwToken() {
+  throw token;
+}
 
 export const token = { _effectToken: true };
 

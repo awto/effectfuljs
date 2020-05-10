@@ -20,7 +20,7 @@
 
 • **__effectful_js_require**: *any*
 
-Defined in debugger/src/engine.ts:136
+Defined in debugger/src/engine.ts:139
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **hot**? : *undefined | object*
 
-Defined in debugger/src/engine.ts:133
+Defined in debugger/src/engine.ts:136
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **id**: *string*
 
-Defined in debugger/src/engine.ts:132
+Defined in debugger/src/engine.ts:135

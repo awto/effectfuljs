@@ -16,6 +16,7 @@ module's description
 * [cjs](_state_.module.md#cjs)
 * [closSyms](_state_.module.md#clossyms)
 * [evalContext](_state_.module.md#optional-evalcontext)
+* [exports](_state_.module.md#exports)
 * [fullPath](_state_.module.md#optional-fullpath)
 * [functions](_state_.module.md#functions)
 * [id](_state_.module.md#optional-id)
@@ -65,6 +66,14 @@ ___
 Defined in debugger/src/state.ts:144
 
 parent's variables for eval
+
+___
+
+###  exports
+
+• **exports**: *any*
+
+Defined in debugger/src/state.ts:151
 
 ___
 

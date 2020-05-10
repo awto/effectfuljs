@@ -19,7 +19,7 @@
 
 ▸ **allocate**(): *number*
 
-Defined in debugger/src/state.ts:387
+Defined in debugger/src/state.ts:396
 
 **Returns:** *number*
 
@@ -29,7 +29,7 @@ ___
 
 ▸ **free**(`descriptor`: number): *void*
 
-Defined in debugger/src/state.ts:386
+Defined in debugger/src/state.ts:395
 
 **Parameters:**
 

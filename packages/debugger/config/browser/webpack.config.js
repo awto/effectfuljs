@@ -318,6 +318,17 @@ module.exports = {
     ]
   },
   plugins: [
+    process.env.EFFECTFUL_PROGRESS_ID &&
+      new webpack.ProgressPlugin(function(percentage, title, ...args) {
+        const prefix = `${process.env.EFFECTFUL_PROGRESS_ID}${Math.ceil(
+          100 * percentage
+        )}:`;
+        if (title === "building") {
+          console.log(`${prefix}`);
+          return;
+        }
+        console.log(`${prefix}${title}`);
+      }),
     new HtmlWebpackPlugin(
       paths.appHtml && {
         inject: true,
@@ -349,7 +360,7 @@ module.exports = {
       }
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-  ],
+  ].filter(Boolean),
   devtool: "hidden-source-map",
   node: {
     module: "empty",

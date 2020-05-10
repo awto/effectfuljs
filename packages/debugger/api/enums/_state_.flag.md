@@ -23,7 +23,7 @@
 
 • **ARROW_FUNCTION**: = 1 << 2
 
-Defined in debugger/src/state.ts:513
+Defined in debugger/src/state.ts:522
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 • **ASYNC_FUNCTION**: = 1 << 0
 
-Defined in debugger/src/state.ts:511
+Defined in debugger/src/state.ts:520
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 • **BLACKBOX**: = 1 << 7
 
-Defined in debugger/src/state.ts:517
+Defined in debugger/src/state.ts:526
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 • **FILE_TOP_LEVEL**: = 1 << 5
 
-Defined in debugger/src/state.ts:516
+Defined in debugger/src/state.ts:525
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 • **GENERATOR_FUNCTION**: = 1 << 1
 
-Defined in debugger/src/state.ts:512
+Defined in debugger/src/state.ts:521
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 • **HAS_ARGUMENTS**: = 1 << 4
 
-Defined in debugger/src/state.ts:515
+Defined in debugger/src/state.ts:524
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 • **HAS_DICTIONARY_SCOPE**: = 1 << 10
 
-Defined in debugger/src/state.ts:520
+Defined in debugger/src/state.ts:529
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 • **HAS_FUNCTION_SENT**: = 1 << 9
 
-Defined in debugger/src/state.ts:519
+Defined in debugger/src/state.ts:528
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 • **HAS_THIS**: = 1 << 3
 
-Defined in debugger/src/state.ts:514
+Defined in debugger/src/state.ts:523
 
 ___
 
@@ -95,4 +95,4 @@ ___
 
 • **SLOPPY**: = 1 << 8
 
-Defined in debugger/src/state.ts:518
+Defined in debugger/src/state.ts:527

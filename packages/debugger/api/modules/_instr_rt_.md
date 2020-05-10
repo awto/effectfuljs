@@ -23,13 +23,12 @@
 * [iterFin](_instr_rt_.md#iterfin)
 * [map](_instr_rt_.md#map)
 * [mapForEach](_instr_rt_.md#mapforeach)
-* [persistModule](_instr_rt_.md#persistmodule)
 * [reduce](_instr_rt_.md#reduce)
 * [reduceRight](_instr_rt_.md#reduceright)
 * [reify](_instr_rt_.md#reify)
 * [setForEach](_instr_rt_.md#setforeach)
 * [some](_instr_rt_.md#some)
-* [wrapExport](_instr_rt_.md#wrapexport)
+* [wrapModule](_instr_rt_.md#wrapmodule)
 
 ## Type aliases
 
@@ -37,7 +36,14 @@
 
 Ƭ **Callback**: *function*
 
-Defined in debugger/src/instr/rt.ts:13
+Defined in debugger/src/instr/rt.ts:10
+
+Not transpiled high-order functions won't work, because when it calls its callback
+it returns an effectful value and not immediately starts its execution
+
+This file contains quick and dirty patches for the runtime's higher order functions
+
+TODO: transpile core-js instead
 
 #### Type declaration:
 
@@ -58,7 +64,7 @@ Name | Type |
 
 ▸ **arrayFrom**<**T**, **U**, **This**>(`iter`: Iterable‹T›, `mapFn?`: [Callback](_instr_rt_.md#callback)‹This, T, U›, `self?`: This): *U[] | T[]*
 
-Defined in debugger/src/instr/rt.ts:34
+Defined in debugger/src/instr/rt.ts:31
 
 **Type parameters:**
 
@@ -84,7 +90,7 @@ ___
 
 ▸ **chainM**<**A**, **B**>(`arg`: A, `func`: function): *B*
 
-Defined in debugger/src/instr/rt.ts:206
+Defined in debugger/src/instr/rt.ts:169
 
 **Type parameters:**
 
@@ -114,7 +120,7 @@ ___
 
 ▸ **every**<**T**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, boolean›, `self?`: This): *boolean*
 
-Defined in debugger/src/instr/rt.ts:142
+Defined in debugger/src/instr/rt.ts:139
 
 **Type parameters:**
 
@@ -138,7 +144,7 @@ ___
 
 ▸ **filter**<**T**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, boolean›, `self?`: This): *T[]*
 
-Defined in debugger/src/instr/rt.ts:50
+Defined in debugger/src/instr/rt.ts:47
 
 **Type parameters:**
 
@@ -162,7 +168,7 @@ ___
 
 ▸ **find**<**T**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, boolean›, `self?`: This): *T | undefined*
 
-Defined in debugger/src/instr/rt.ts:61
+Defined in debugger/src/instr/rt.ts:58
 
 **Type parameters:**
 
@@ -186,7 +192,7 @@ ___
 
 ▸ **findIndex**<**T**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, boolean›, `self?`: This): *number*
 
-Defined in debugger/src/instr/rt.ts:70
+Defined in debugger/src/instr/rt.ts:67
 
 **Type parameters:**
 
@@ -210,7 +216,7 @@ ___
 
 ▸ **flatMap**<**T**, **U**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, U | ReadonlyArray‹U››, `self?`: This): *U[]*
 
-Defined in debugger/src/instr/rt.ts:80
+Defined in debugger/src/instr/rt.ts:77
 
 **Type parameters:**
 
@@ -236,7 +242,7 @@ ___
 
 ▸ **forEach**<**T**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, void›, `self?`: This): *void*
 
-Defined in debugger/src/instr/rt.ts:88
+Defined in debugger/src/instr/rt.ts:85
 
 **Type parameters:**
 
@@ -260,7 +266,7 @@ ___
 
 ▸ **iterErr**(`iter`: any, `reason`: any): *any*
 
-Defined in debugger/src/instr/rt.ts:210
+Defined in debugger/src/instr/rt.ts:173
 
 **Parameters:**
 
@@ -277,7 +283,7 @@ ___
 
 ▸ **iterErrM**(`iter`: any, `reason`: any): *Promise‹any›*
 
-Defined in debugger/src/instr/rt.ts:216
+Defined in debugger/src/instr/rt.ts:179
 
 **Parameters:**
 
@@ -294,7 +300,7 @@ ___
 
 ▸ **iterFin**(`iter`: any, `value`: any): *any*
 
-Defined in debugger/src/instr/rt.ts:222
+Defined in debugger/src/instr/rt.ts:185
 
 **Parameters:**
 
@@ -311,7 +317,7 @@ ___
 
 ▸ **map**<**T**, **U**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, U›, `self?`: This): *U[]*
 
-Defined in debugger/src/instr/rt.ts:20
+Defined in debugger/src/instr/rt.ts:17
 
 **Type parameters:**
 
@@ -337,7 +343,7 @@ ___
 
 ▸ **mapForEach**<**K**, **V**, **This**>(`this`: [Map](_engine_.md#const-map)‹K, V›, `callback`: function, `self?`: This): *void*
 
-Defined in debugger/src/instr/rt.ts:162
+Defined in debugger/src/instr/rt.ts:157
 
 **Type parameters:**
 
@@ -370,40 +376,11 @@ Name | Type |
 
 ___
 
-###  persistModule
-
-▸ **persistModule**(`topLevel`: function, `name`: string, `cjsModule`: any, `exports`: any): *any*
-
-Defined in debugger/src/instr/rt.ts:191
-
-**Parameters:**
-
-▪ **topLevel**: *function*
-
-▸ (`cjsModule`: any, `exports`: any): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`cjsModule` | any |
-`exports` | any |
-
-▪ **name**: *string*
-
-▪ **cjsModule**: *any*
-
-▪ **exports**: *any*
-
-**Returns:** *any*
-
-___
-
 ###  reduce
 
 ▸ **reduce**<**T**>(`this`: T[], `callback`: function, `initial?`: T): *T*
 
-Defined in debugger/src/instr/rt.ts:97
+Defined in debugger/src/instr/rt.ts:94
 
 **Type parameters:**
 
@@ -436,7 +413,7 @@ ___
 
 ▸ **reduceRight**<**T**>(`this`: T[], `callback`: function, `initial?`: T): *T*
 
-Defined in debugger/src/instr/rt.ts:115
+Defined in debugger/src/instr/rt.ts:112
 
 **Type parameters:**
 
@@ -469,7 +446,7 @@ ___
 
 ▸ **reify**<**T**>(`v`: T): *T*
 
-Defined in debugger/src/instr/rt.ts:202
+Defined in debugger/src/instr/rt.ts:165
 
 **Type parameters:**
 
@@ -487,9 +464,9 @@ ___
 
 ###  setForEach
 
-▸ **setForEach**<**T**, **This**>(`this`: Set‹T›, `callback`: function, `self?`: This): *void*
+▸ **setForEach**<**T**, **This**>(`this`: [Set](_vscode_handlers_.md#const-set)‹T›, `callback`: function, `self?`: This): *void*
 
-Defined in debugger/src/instr/rt.ts:152
+Defined in debugger/src/instr/rt.ts:149
 
 **Type parameters:**
 
@@ -499,11 +476,11 @@ Defined in debugger/src/instr/rt.ts:152
 
 **Parameters:**
 
-▪ **this**: *Set‹T›*
+▪ **this**: *[Set](_vscode_handlers_.md#const-set)‹T›*
 
 ▪ **callback**: *function*
 
-▸ (`this`: This | undefined, `k`: T, `v`: T, `cont`: Set‹T›): *void*
+▸ (`this`: This | undefined, `k`: T, `v`: T, `cont`: [Set](_vscode_handlers_.md#const-set)‹T›): *void*
 
 **Parameters:**
 
@@ -512,7 +489,7 @@ Name | Type |
 `this` | This &#124; undefined |
 `k` | T |
 `v` | T |
-`cont` | Set‹T› |
+`cont` | [Set](_vscode_handlers_.md#const-set)‹T› |
 
 ▪`Optional`  **self**: *This*
 
@@ -524,7 +501,7 @@ ___
 
 ▸ **some**<**T**, **This**>(`this`: T[], `callback`: [Callback](_instr_rt_.md#callback)‹This, T, boolean›, `self?`: This): *boolean*
 
-Defined in debugger/src/instr/rt.ts:132
+Defined in debugger/src/instr/rt.ts:129
 
 **Type parameters:**
 
@@ -544,20 +521,17 @@ Name | Type |
 
 ___
 
-###  wrapExport
+###  wrapModule
 
-▸ **wrapExport**(`top`: any, `mod`: any): *any*
+▸ **wrapModule**(`mod`: any, `cjsModule`: any): *any*
 
-Defined in debugger/src/instr/rt.ts:176
-
-wraps a top module's export, returns a function which on each call
-returns `exports` object, but the value is memoized on its first call
+Defined in debugger/src/instr/rt.ts:190
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`top` | any |
 `mod` | any |
+`cjsModule` | any |
 
 **Returns:** *any*

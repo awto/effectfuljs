@@ -1,1 +1,1 @@
-export { capture, restore, restart, cont } from "./handlers";
+export { capture, restore, restart, cont, event } from "./handlers";

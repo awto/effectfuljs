@@ -19,7 +19,6 @@ Describes how to read values of a type
 * [create](_main_.readdescriptor.md#create)
 * [read](_main_.readdescriptor.md#read)
 * [readContent](_main_.readdescriptor.md#readcontent)
-* [reset](_main_.readdescriptor.md#reset)
 
 ## Properties
 
@@ -82,7 +81,7 @@ ___
 
 • **readContent**: *function*
 
-Defined in src/main.ts:244
+Defined in src/main.ts:237
 
 The second part of `read`, creates children and sets them into `value`.
 This is needed to avoid infinite loops on recursive values.
@@ -104,31 +103,3 @@ Name | Type |
 `ctx` | [ReadContext](../classes/_main_.readcontext.md) |
 `json` | [JSONValue](../modules/_main_.md#jsonvalue) |
 `value` | T |
-
-___
-
-###  reset
-
-• **reset**: *function*
-
-Defined in src/main.ts:236
-
-Like `create` but for values which are already built, and only must be reset to some initial sate
-
-**`param`** recursive reads handling for sub-values
-
-**`param`** input JSON
-
-**`param`** resulting JS value
-
-#### Type declaration:
-
-▸ (`ctx`: [ReadContext](../classes/_main_.readcontext.md), `value`: T, `json`: [JSONValue](../modules/_main_.md#jsonvalue)): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`ctx` | [ReadContext](../classes/_main_.readcontext.md) |
-`value` | T |
-`json` | [JSONValue](../modules/_main_.md#jsonvalue) |

@@ -23,7 +23,7 @@
 
 • **indexedVariables**? : *undefined | number*
 
-Defined in debugger/src/vscode/handlers.ts:102
+Defined in debugger/src/vscode/handlers.ts:104
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 • **name**: *string*
 
-Defined in debugger/src/vscode/handlers.ts:97
+Defined in debugger/src/vscode/handlers.ts:99
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 • **namedVariables**? : *undefined | number*
 
-Defined in debugger/src/vscode/handlers.ts:101
+Defined in debugger/src/vscode/handlers.ts:103
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 • **type**: *string*
 
-Defined in debugger/src/vscode/handlers.ts:99
+Defined in debugger/src/vscode/handlers.ts:101
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 • **value**: *string*
 
-Defined in debugger/src/vscode/handlers.ts:98
+Defined in debugger/src/vscode/handlers.ts:100
 
 ___
 
@@ -63,4 +63,4 @@ ___
 
 • **variablesReference**: *number*
 
-Defined in debugger/src/vscode/handlers.ts:100
+Defined in debugger/src/vscode/handlers.ts:102

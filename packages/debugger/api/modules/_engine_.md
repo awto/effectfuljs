@@ -204,7 +204,7 @@ ___
       return closure;
     }
 
-Defined in debugger/src/engine.ts:419
+Defined in debugger/src/engine.ts:427
 
 ___
 
@@ -244,7 +244,7 @@ ___
 
 • **evalCnt**: *number* = 0
 
-Defined in debugger/src/engine.ts:705
+Defined in debugger/src/engine.ts:713
 
 ___
 
@@ -254,7 +254,7 @@ ___
   ? TTCore.forInIterator
   : State.forInIterator
 
-Defined in debugger/src/engine.ts:1071
+Defined in debugger/src/engine.ts:1079
 
 ___
 
@@ -270,7 +270,7 @@ ___
       return pushFrame(makeFrame(closure, newTarget));
     }
 
-Defined in debugger/src/engine.ts:971
+Defined in debugger/src/engine.ts:979
 
 #### Type declaration:
 
@@ -289,7 +289,7 @@ ___
 
 • **functionConstrMemo**: *[Map](_engine_.md#const-map)‹string, object›* = new saved.Map<string, FunctionDescr>()
 
-Defined in debugger/src/engine.ts:779
+Defined in debugger/src/engine.ts:787
 
 ___
 
@@ -305,7 +305,7 @@ ___
 
 • **indirMemo**: *[Map](_engine_.md#const-map)‹string, string›* = new saved.Map<string, string>()
 
-Defined in debugger/src/engine.ts:707
+Defined in debugger/src/engine.ts:715
 
 ___
 
@@ -321,7 +321,7 @@ ___
 
 • **locationRE**: *RegExp‹›* = /^(\d+):(\d+)-(\d+):(\d+)$/
 
-Defined in debugger/src/engine.ts:691
+Defined in debugger/src/engine.ts:699
 
 ___
 
@@ -329,7 +329,7 @@ ___
 
 • **metaCount**: *number* = 0
 
-Defined in debugger/src/engine.ts:188
+Defined in debugger/src/engine.ts:192
 
 ___
 
@@ -381,7 +381,7 @@ ___
 
 • **savedEval**: *eval* = eval
 
-Defined in debugger/src/engine.ts:781
+Defined in debugger/src/engine.ts:789
 
 ___
 
@@ -397,7 +397,7 @@ ___
 
 • **threadScheduled**: *boolean* = false
 
-Defined in debugger/src/engine.ts:450
+Defined in debugger/src/engine.ts:458
 
 ___
 
@@ -417,7 +417,7 @@ ___
 
 • **undefLoc**: *number[]* = [0, 0, 0, 0]
 
-Defined in debugger/src/engine.ts:693
+Defined in debugger/src/engine.ts:701
 
 ## Functions
 
@@ -425,7 +425,7 @@ Defined in debugger/src/engine.ts:693
 
 ▸ **FunctionConstr**(...`args`: any[]): *any*
 
-Defined in debugger/src/engine.ts:783
+Defined in debugger/src/engine.ts:791
 
 **Parameters:**
 
@@ -441,7 +441,7 @@ ___
 
 ▸ **argsWrap**<**T**>(`frame`: [Frame](../interfaces/_state_.frame.md), `value`: Iterable‹T›): *T[]*
 
-Defined in debugger/src/engine.ts:121
+Defined in debugger/src/engine.ts:124
 
 **Type parameters:**
 
@@ -462,7 +462,7 @@ ___
 
 ▸ **brk**(): *any*
 
-Defined in debugger/src/engine.ts:1035
+Defined in debugger/src/engine.ts:1043
 
 **Returns:** *any*
 
@@ -472,7 +472,7 @@ ___
 
 ▸ **buildScope**(`scope`: [Scope](_state_.md#scope), `parent`: object): *[ScopeInfo](../interfaces/_state_.scopeinfo.md)*
 
-Defined in debugger/src/engine.ts:398
+Defined in debugger/src/engine.ts:406
 
 **Parameters:**
 
@@ -489,7 +489,7 @@ ___
 
 ▸ **byLine**(`a`: [Brk](../interfaces/_state_.brk.md), `b`: [Brk](../interfaces/_state_.brk.md)): *number*
 
-Defined in debugger/src/engine.ts:383
+Defined in debugger/src/engine.ts:391
 
 **Parameters:**
 
@@ -506,7 +506,7 @@ ___
 
 ▸ **checkErrBrk**(`frame`: [Frame](../interfaces/_state_.frame.md), `e`: any): *boolean*
 
-Defined in debugger/src/engine.ts:605
+Defined in debugger/src/engine.ts:613
 
 **Parameters:**
 
@@ -523,7 +523,7 @@ ___
 
 ▸ **checkExitBrk**(`top`: [Frame](../interfaces/_state_.frame.md), `value`: any): *void*
 
-Defined in debugger/src/engine.ts:981
+Defined in debugger/src/engine.ts:989
 
 **Parameters:**
 
@@ -540,7 +540,7 @@ ___
 
 ▸ **compileEval**(`code`: string, `mod`: [Module](../interfaces/_state_.module.md) | null, `evalContext`: object | null, `scopeDepth`: number | null, `blackbox`: boolean, `params`: string[] | null, `id?`: undefined | number): *[FunctionDescr](_state_.md#functiondescr)*
 
-Defined in debugger/src/engine.ts:841
+Defined in debugger/src/engine.ts:849
 
 **Parameters:**
 
@@ -562,7 +562,7 @@ ___
 
 ▸ **compileEvalToString**(`code`: string, `params`: string[] | null): *string*
 
-Defined in debugger/src/engine.ts:714
+Defined in debugger/src/engine.ts:722
 
 Like `compileEval` but returns a self-sufficient string, which can be
 passed to, say, "vm". However, it doesn't memoize meta-data construction
@@ -593,7 +593,7 @@ ___
 
 ▸ **copyScope**(): *any[]*
 
-Defined in debugger/src/engine.ts:486
+Defined in debugger/src/engine.ts:494
 
 **Returns:** *any[]*
 
@@ -603,7 +603,7 @@ ___
 
 ▸ **defaultApply**(`this`: any): *any*
 
-Defined in debugger/src/engine.ts:461
+Defined in debugger/src/engine.ts:469
 
 **Parameters:**
 
@@ -619,7 +619,7 @@ ___
 
 ▸ **defaultCall**(`this`: any): *any*
 
-Defined in debugger/src/engine.ts:468
+Defined in debugger/src/engine.ts:476
 
 **Parameters:**
 
@@ -635,7 +635,7 @@ ___
 
 ▸ **evalAt**(`src`: string): *any*
 
-Defined in debugger/src/engine.ts:666
+Defined in debugger/src/engine.ts:674
 
 **Parameters:**
 
@@ -651,7 +651,7 @@ ___
 
 ▸ **execModule**(): *any*
 
-Defined in debugger/src/engine.ts:765
+Defined in debugger/src/engine.ts:773
 
 executes a top level function for a current module
 this is an API required for `compileEvalToString`
@@ -664,7 +664,7 @@ ___
 
 ▸ **force**(`value`: any): *any*
 
-Defined in debugger/src/engine.ts:1140
+Defined in debugger/src/engine.ts:1148
 
 if `value` is a lazy thunk it is executed and its result is returned
 otherwise `value` is returned as is
@@ -683,7 +683,7 @@ ___
 
 ▸ **fun**(`name`: string, `origName`: string | null, `calleeName`: number | null, `parentConstr`: function | null, `params`: string[], `localsNum`: number, `varsNum`: number, `loc`: string | null, `flags`: number, `handler`: function, `errHandler`: [StateMap](_state_.md#statemap), `finHandler`: [StateMap](_state_.md#statemap), `scopeDepth`: number, `states`: [States](_state_.md#states)): *function*
 
-Defined in debugger/src/engine.ts:192
+Defined in debugger/src/engine.ts:196
 
 **Parameters:**
 
@@ -741,7 +741,7 @@ ___
 
 ▸ **getCurModule**(): *[Module](../interfaces/_state_.module.md)*
 
-Defined in debugger/src/engine.ts:117
+Defined in debugger/src/engine.ts:120
 
 **Returns:** *[Module](../interfaces/_state_.module.md)*
 
@@ -751,7 +751,7 @@ ___
 
 ▸ **handle**(`frame`: [Frame](../interfaces/_state_.frame.md), `e`: any): *any*
 
-Defined in debugger/src/engine.ts:638
+Defined in debugger/src/engine.ts:646
 
 **Parameters:**
 
@@ -768,7 +768,7 @@ ___
 
 ▸ **hasEH**(`frame`: [Frame](../interfaces/_state_.frame.md)): *boolean*
 
-Defined in debugger/src/engine.ts:601
+Defined in debugger/src/engine.ts:609
 
 checks if the current frame's state has an exception handler
 
@@ -786,7 +786,7 @@ ___
 
 ▸ **hasLine**(`b`: [Brk](../interfaces/_state_.brk.md)): *boolean*
 
-Defined in debugger/src/engine.ts:379
+Defined in debugger/src/engine.ts:387
 
 **Parameters:**
 
@@ -802,7 +802,7 @@ ___
 
 ▸ **indirEval**(`code`: string): *any*
 
-Defined in debugger/src/engine.ts:825
+Defined in debugger/src/engine.ts:833
 
 **Parameters:**
 
@@ -818,7 +818,7 @@ ___
 
 ▸ **isDelayedResult**(`value`: any): *boolean*
 
-Defined in debugger/src/engine.ts:914
+Defined in debugger/src/engine.ts:922
 
 **Parameters:**
 
@@ -834,7 +834,7 @@ ___
 
 ▸ **iterErr**(`iter`: any, `reason`: any): *any*
 
-Defined in debugger/src/engine.ts:1118
+Defined in debugger/src/engine.ts:1126
 
 **Parameters:**
 
@@ -851,7 +851,7 @@ ___
 
 ▸ **iterErrUndef**(): *TypeError*
 
-Defined in debugger/src/engine.ts:1123
+Defined in debugger/src/engine.ts:1131
 
 **Returns:** *TypeError*
 
@@ -861,7 +861,7 @@ ___
 
 ▸ **iterFin**(`iter`: any, `value`: any): *any*
 
-Defined in debugger/src/engine.ts:1127
+Defined in debugger/src/engine.ts:1135
 
 **Parameters:**
 
@@ -878,7 +878,7 @@ ___
 
 ▸ **iterNext**(`iter`: any, `value`: any): *any*
 
-Defined in debugger/src/engine.ts:1132
+Defined in debugger/src/engine.ts:1140
 
 **Parameters:**
 
@@ -895,7 +895,7 @@ ___
 
 ▸ **iterator**<**T**>(`v`: Iterable‹T›): *Iterator‹T, any, undefined›*
 
-Defined in debugger/src/engine.ts:1061
+Defined in debugger/src/engine.ts:1069
 
 **Type parameters:**
 
@@ -915,7 +915,7 @@ ___
 
 ▸ **iteratorM**<**T**>(`v`: AsyncIterable‹T›): *any*
 
-Defined in debugger/src/engine.ts:1065
+Defined in debugger/src/engine.ts:1073
 
 **Type parameters:**
 
@@ -935,7 +935,7 @@ ___
 
 ▸ **liftSync**(`fun`: function): *any*
 
-Defined in debugger/src/engine.ts:1086
+Defined in debugger/src/engine.ts:1094
 
 **Parameters:**
 
@@ -958,7 +958,7 @@ ___
 
 ▸ **location**(`str`: string): *number[]*
 
-Defined in debugger/src/engine.ts:696
+Defined in debugger/src/engine.ts:704
 
 parses location string into a tuple with a line, a column, a last last and a last column
 
@@ -976,7 +976,7 @@ ___
 
 ▸ **loop**(`value`: any): *any*
 
-Defined in debugger/src/engine.ts:527
+Defined in debugger/src/engine.ts:535
 
 **Parameters:**
 
@@ -992,7 +992,7 @@ ___
 
 ▸ **makeFrame**(`closure`: any, `newTarget`: any): *[Frame](../interfaces/_state_.frame.md)*
 
-Defined in debugger/src/engine.ts:918
+Defined in debugger/src/engine.ts:926
 
 **Parameters:**
 
@@ -1009,7 +1009,7 @@ ___
 
 ▸ **mcall**(`prop`: string, ...`args`: [any, any]): *any*
 
-Defined in debugger/src/engine.ts:496
+Defined in debugger/src/engine.ts:504
 
 **Parameters:**
 
@@ -1026,7 +1026,7 @@ ___
 
 ▸ **module**(`this`: any, `modName`: string | number, `evalContext`: object | undefined, `cjs`: [CjsModule](../interfaces/_engine_.cjsmodule.md) | undefined, `require`: any, `safePrefix`: string, `closSyms`: object, `params`: object | null): *[Module](../interfaces/_state_.module.md)*
 
-Defined in debugger/src/engine.ts:139
+Defined in debugger/src/engine.ts:142
 
 **Parameters:**
 
@@ -1049,7 +1049,7 @@ ___
 
 ▸ **popFrame**(`top`: [Frame](../interfaces/_state_.frame.md)): *void*
 
-Defined in debugger/src/engine.ts:965
+Defined in debugger/src/engine.ts:973
 
 **Parameters:**
 
@@ -1065,7 +1065,7 @@ ___
 
 ▸ **popScope**(): *any*
 
-Defined in debugger/src/engine.ts:491
+Defined in debugger/src/engine.ts:499
 
 **Returns:** *any*
 
@@ -1075,7 +1075,7 @@ ___
 
 ▸ **pushFrame**(`frame`: [Frame](../interfaces/_state_.frame.md)): *any*
 
-Defined in debugger/src/engine.ts:951
+Defined in debugger/src/engine.ts:959
 
 **Parameters:**
 
@@ -1091,7 +1091,7 @@ ___
 
 ▸ **pushScope**(`varsNum`: number): *any[]*
 
-Defined in debugger/src/engine.ts:479
+Defined in debugger/src/engine.ts:487
 
 **Parameters:**
 
@@ -1107,7 +1107,7 @@ ___
 
 ▸ **raise**(`e`: any): *void*
 
-Defined in debugger/src/engine.ts:1098
+Defined in debugger/src/engine.ts:1106
 
 **Parameters:**
 
@@ -1123,7 +1123,7 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in debugger/src/engine.ts:1108
+Defined in debugger/src/engine.ts:1116
 
 resets module's states (for tests)
 
@@ -1135,7 +1135,7 @@ ___
 
 ▸ **resume**(`frame`: [Frame](../interfaces/_state_.frame.md), `e`: any): *any*
 
-Defined in debugger/src/engine.ts:577
+Defined in debugger/src/engine.ts:585
 
 resumes execution of the current stack
 
@@ -1154,7 +1154,7 @@ ___
 
 ▸ **resumeLocal**(`frame`: [Frame](../interfaces/_state_.frame.md), `e`: any): *any*
 
-Defined in debugger/src/engine.ts:589
+Defined in debugger/src/engine.ts:597
 
 like `resume` but appends the frame to the current stack
 
@@ -1173,7 +1173,7 @@ ___
 
 ▸ **ret**(`value`: any): *any*
 
-Defined in debugger/src/engine.ts:1004
+Defined in debugger/src/engine.ts:1012
 
 **Parameters:**
 
@@ -1189,7 +1189,7 @@ ___
 
 ▸ **retModule**(): *any*
 
-Defined in debugger/src/engine.ts:774
+Defined in debugger/src/engine.ts:782
 
 returns a top level function for a current module
 this is an API required for `compileEvalToString`
@@ -1202,7 +1202,7 @@ ___
 
 ▸ **signalThread**(): *void*
 
-Defined in debugger/src/engine.ts:451
+Defined in debugger/src/engine.ts:459
 
 **Returns:** *void*
 
@@ -1212,7 +1212,7 @@ ___
 
 ▸ **step**(): *any*
 
-Defined in debugger/src/engine.ts:508
+Defined in debugger/src/engine.ts:516
 
 runs a computation until it encounters some breakpoint (returns `token)
 or finishes the whole computation (returns the resulting value or throws an exception)
@@ -1225,7 +1225,7 @@ ___
 
 ▸ **strLoc**(`line?`: undefined | number, `column?`: undefined | number, `endLine?`: undefined | number, `endColumn?`: undefined | number): *string*
 
-Defined in debugger/src/engine.ts:387
+Defined in debugger/src/engine.ts:395
 
 **Parameters:**
 
@@ -1244,7 +1244,7 @@ ___
 
 ▸ **then**(`p`: Promise‹any›, `onResolve`: function, `onReject?`: undefined | function): *any*
 
-Defined in debugger/src/engine.ts:1075
+Defined in debugger/src/engine.ts:1083
 
 **Parameters:**
 
@@ -1270,7 +1270,7 @@ ___
 
 ▸ **unhandled**(`e`: any): *void*
 
-Defined in debugger/src/engine.ts:1021
+Defined in debugger/src/engine.ts:1029
 
 **Parameters:**
 
@@ -1286,7 +1286,7 @@ ___
 
 ▸ **wrapBuiltinFunc**(`func`: any): *any*
 
-Defined in debugger/src/engine.ts:473
+Defined in debugger/src/engine.ts:481
 
 **Parameters:**
 
@@ -1302,10 +1302,10 @@ Name | Type |
 
 ### ▪ **parentTag**: *object*
 
-Defined in debugger/src/engine.ts:190
+Defined in debugger/src/engine.ts:194
 
 ###  _parentTag
 
 • **_parentTag**: *boolean* = true
 
-Defined in debugger/src/engine.ts:190
+Defined in debugger/src/engine.ts:194

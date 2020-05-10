@@ -168,7 +168,7 @@ ___
 
 • **iter**: *AsyncIterable‹any›*
 
-Defined in debugger/src/state.ts:507
+Defined in debugger/src/state.ts:516
 
 ___
 
@@ -214,7 +214,7 @@ ___
 
 *Overrides [Frame](_state_.frame.md).[onReject](_state_.frame.md#onreject)*
 
-Defined in debugger/src/state.ts:504
+Defined in debugger/src/state.ts:513
 
 #### Type declaration:
 
@@ -234,7 +234,7 @@ ___
 
 *Overrides [Frame](_state_.frame.md).[onResolve](_state_.frame.md#onresolve)*
 
-Defined in debugger/src/state.ts:503
+Defined in debugger/src/state.ts:512
 
 #### Type declaration:
 
@@ -264,7 +264,7 @@ ___
 
 *Overrides [Frame](_state_.frame.md).[promise](_state_.frame.md#promise)*
 
-Defined in debugger/src/state.ts:505
+Defined in debugger/src/state.ts:514
 
 ___
 
@@ -272,7 +272,7 @@ ___
 
 • **queue**: *function[]*
 
-Defined in debugger/src/state.ts:502
+Defined in debugger/src/state.ts:511
 
 ___
 
@@ -306,7 +306,7 @@ ___
 
 *Overrides [Frame](_state_.frame.md).[running](_state_.frame.md#running)*
 
-Defined in debugger/src/state.ts:501
+Defined in debugger/src/state.ts:510
 
 ___
 
@@ -326,7 +326,7 @@ ___
 
 • **sent**: *any*
 
-Defined in debugger/src/state.ts:506
+Defined in debugger/src/state.ts:515
 
 ___
 

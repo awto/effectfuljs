@@ -38,7 +38,7 @@
 
 • **default$**? : *undefined | false | true*
 
-Defined in src/main.ts:278
+Defined in src/main.ts:271
 
 If !== false the descriptor will add property `$` equal to `name` by default
 
@@ -48,7 +48,7 @@ ___
 
 • **defaultPrototype**? : *any*
 
-Defined in src/main.ts:306
+Defined in src/main.ts:299
 
 if an object has this prototype it won't be recorded
 
@@ -58,7 +58,7 @@ ___
 
 • **globalName**? : *undefined | string*
 
-Defined in src/main.ts:315
+Defined in src/main.ts:308
 
 if it is a value in a global scope this will store its name
 
@@ -68,7 +68,7 @@ ___
 
 • **inheritance**? : *[Inheritance](../enums/_main_.inheritance.md)*
 
-Defined in src/main.ts:318
+Defined in src/main.ts:311
 
 can this descriptor be inherited
 
@@ -78,7 +78,7 @@ ___
 
 • **name**? : *undefined | string*
 
-Defined in src/main.ts:253
+Defined in src/main.ts:246
 
 Unique type name
 
@@ -88,7 +88,7 @@ ___
 
 • **overrideProps**? : *undefined | object*
 
-Defined in src/main.ts:286
+Defined in src/main.ts:279
 
 if `props !== false` this is a predicate to specify which properties should be output.
 
@@ -98,7 +98,7 @@ ___
 
 • **props**? : *undefined | false | true*
 
-Defined in src/main.ts:267
+Defined in src/main.ts:260
 
 If !== false the descriptor will traverse own properties too
 
@@ -108,7 +108,7 @@ ___
 
 • **propsDescrMask**? : *undefined | number*
 
-Defined in src/main.ts:301
+Defined in src/main.ts:294
 
 mask for property descriptor flags (configurable:1,enumerable:2,writable:4,no value = 8)
 
@@ -118,7 +118,7 @@ ___
 
 • **propsSnapshot**? : *undefined | false | true*
 
-Defined in src/main.ts:273
+Defined in src/main.ts:266
 
 Make a snapshot of its original property values and won't write
 them if they aren't changed
@@ -129,7 +129,7 @@ ___
 
 • **refAware**? : *undefined | false | true*
 
-Defined in src/main.ts:262
+Defined in src/main.ts:255
 
 If !== false, the descriptor recognizes shared objects and uses only references for them.
 The default is `true`.
@@ -140,7 +140,7 @@ ___
 
 • **snapshot**? : *undefined | object*
 
-Defined in src/main.ts:312
+Defined in src/main.ts:305
 
 for descriptors traversing properties with stores
 original values which shouldn't be output
@@ -151,7 +151,7 @@ ___
 
 • **strictName**? : *undefined | false | true*
 
-Defined in src/main.ts:289
+Defined in src/main.ts:282
 
 don't change the `name` to make it unique
 
@@ -161,7 +161,7 @@ ___
 
 • **typeofHint**? : *undefined | string*
 
-Defined in src/main.ts:283
+Defined in src/main.ts:276
 
 `typeof value` for the values this serializes
 
@@ -171,7 +171,7 @@ ___
 
 • **typeofTag**? : *undefined | symbol*
 
-Defined in src/main.ts:256
+Defined in src/main.ts:249
 
 dispatching descriptor by value of `$$typeof` property
 
@@ -181,7 +181,7 @@ ___
 
 • **value**? : *T*
 
-Defined in src/main.ts:298
+Defined in src/main.ts:291
 
 constant value
 
@@ -191,7 +191,7 @@ ___
 
 • **valueConstructor**? : *[ValueConstructor](_main_.valueconstructor.md)‹T›*
 
-Defined in src/main.ts:295
+Defined in src/main.ts:288
 
 Serialized value's constructor
 
@@ -201,6 +201,6 @@ ___
 
 • **valuePrototype**? : *object | null | false*
 
-Defined in src/main.ts:292
+Defined in src/main.ts:285
 
 a prototype to be assigned with `Object.setPrototype` in reads

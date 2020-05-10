@@ -22,7 +22,7 @@
 
 • **Ap**: *any[]* = Array.prototype
 
-Defined in debugger/src/rt.ts:10
+Defined in debugger/src/rt.ts:11
 
 ___
 
@@ -30,15 +30,15 @@ ___
 
 • **Mp**: *[Map](_engine_.md#const-map)‹any, any›* = Map.prototype
 
-Defined in debugger/src/rt.ts:13
+Defined in debugger/src/rt.ts:14
 
 ___
 
 ### `Const` Sp
 
-• **Sp**: *Set‹any›* = Set.prototype
+• **Sp**: *[Set](_vscode_handlers_.md#const-set)‹any›* = Set.prototype
 
-Defined in debugger/src/rt.ts:12
+Defined in debugger/src/rt.ts:13
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 • **Tp**: *any* = Object.getPrototypeOf(Int8Array.prototype)
 
-Defined in debugger/src/rt.ts:11
+Defined in debugger/src/rt.ts:12
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 • **context**: *[State](../interfaces/_state_.state.md)* = Engine.context
 
-Defined in debugger/src/rt.ts:8
+Defined in debugger/src/rt.ts:9
 
 ## Functions
 
@@ -62,7 +62,7 @@ Defined in debugger/src/rt.ts:8
 
 ▸ **switchDefault**(`proto`: any, `name`: string, `debugImpl`: function): *void*
 
-Defined in debugger/src/rt.ts:15
+Defined in debugger/src/rt.ts:16
 
 **Parameters:**
 

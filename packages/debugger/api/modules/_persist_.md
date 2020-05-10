@@ -65,7 +65,7 @@ ___
   },
   readContent(ctx, json: any, module: any) {
     if (module.cjs && json.exports) {
-      module.cjs.exports = ctx.step(json.exports);
+      module.exports = module.cjs.exports = ctx.step(json.exports);
     }
   },
   write(ctx, module: any) {
@@ -114,7 +114,7 @@ ___
 
 ### `Const` extra
 
-• **extra**: *Set‹any›* = new Set()
+• **extra**: *[Set](_vscode_handlers_.md#const-set)‹any›* = new Set()
 
 Defined in debugger/src/persist.ts:152
 
@@ -149,9 +149,9 @@ ___
 ### `Const` regOpaqueObject
 
 • **regOpaqueObject**: *[nop](_persist_.md#nop) | (Anonymous function)* = config.persistState
-  ? function (obj: any, name: string) {
-    S.regOpaqueObject(obj, name, noProps);
-  }
+  ? function(obj: any, name: string) {
+      S.regOpaqueObject(obj, name, noProps);
+    }
   : nop
 
 Defined in debugger/src/persist.ts:27

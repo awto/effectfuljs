@@ -20,6 +20,7 @@
 * [LOGMESSAGE_VARIABLE_REGEXP](_vscode_handlers_.md#const-logmessage_variable_regexp)
 * [Map](_vscode_handlers_.md#const-map)
 * [RESTART_ON_CHANGE_TIMEOUT](_vscode_handlers_.md#const-restart_on_change_timeout)
+* [Set](_vscode_handlers_.md#const-set)
 * [assign](_vscode_handlers_.md#assign)
 * [backward](_vscode_handlers_.md#let-backward)
 * [brkFrame](_vscode_handlers_.md#let-brkframe)
@@ -30,6 +31,7 @@
 * [curDirSep](_vscode_handlers_.md#let-curdirsep)
 * [curIdByVal](_vscode_handlers_.md#const-curidbyval)
 * [curValById](_vscode_handlers_.md#const-curvalbyid)
+* [defineProperty](_vscode_handlers_.md#defineproperty)
 * [entrySnapshot](_vscode_handlers_.md#let-entrysnapshot)
 * [handlers](_vscode_handlers_.md#const-handlers)
 * [isBrowser](_vscode_handlers_.md#const-isbrowser)
@@ -103,31 +105,31 @@
 
 • **"../state"**:
 
-Defined in debugger/src/vscode/handlers.ts:18
+Defined in debugger/src/vscode/handlers.ts:20
 
 ###  Module
 
 • **Module**:
 
-Defined in debugger/src/vscode/handlers.ts:19
+Defined in debugger/src/vscode/handlers.ts:21
 
 ### `Optional` breakpoints
 
 • **breakpoints**? : *[Brk](../interfaces/_state_.brk.md)[]*
 
-Defined in debugger/src/vscode/handlers.ts:21
+Defined in debugger/src/vscode/handlers.ts:23
 
 ### `Optional` debuggerSource
 
 • **debuggerSource**? : *P.Source*
 
-Defined in debugger/src/vscode/handlers.ts:20
+Defined in debugger/src/vscode/handlers.ts:22
 
 ### `Optional` functionsSorted
 
 • **functionsSorted**? : *[NonBlackboxFunctionDescr](_state_.md#nonblackboxfunctiondescr)[]*
 
-Defined in debugger/src/vscode/handlers.ts:22
+Defined in debugger/src/vscode/handlers.ts:24
 
 ___
 
@@ -135,19 +137,19 @@ ___
 
 • **"../timeTravel/core"**:
 
-Defined in debugger/src/vscode/handlers.ts:26
+Defined in debugger/src/vscode/handlers.ts:28
 
 ###  Snapshot
 
 • **Snapshot**:
 
-Defined in debugger/src/vscode/handlers.ts:27
+Defined in debugger/src/vscode/handlers.ts:29
 
 ### `Optional` context
 
 • **context**? : *State.Job*
 
-Defined in debugger/src/vscode/handlers.ts:28
+Defined in debugger/src/vscode/handlers.ts:30
 
 ___
 
@@ -155,25 +157,25 @@ ___
 
 • **"./protocol"**:
 
-Defined in debugger/src/vscode/handlers.ts:32
+Defined in debugger/src/vscode/handlers.ts:34
 
 ###  DebugProtocol
 
 • **DebugProtocol**:
 
-Defined in debugger/src/vscode/handlers.ts:33
+Defined in debugger/src/vscode/handlers.ts:35
 
 ###  Response
 
 • **Response**:
 
-Defined in debugger/src/vscode/handlers.ts:34
+Defined in debugger/src/vscode/handlers.ts:36
 
 ### `Optional` sent
 
 • **sent**? : *undefined | false | true*
 
-Defined in debugger/src/vscode/handlers.ts:35
+Defined in debugger/src/vscode/handlers.ts:37
 
 ## Variables
 
@@ -181,7 +183,7 @@ Defined in debugger/src/vscode/handlers.ts:35
 
 • **LOGMESSAGE_VARIABLE_REGEXP**: *RegExp‹›* = /{(.*?)}/g
 
-Defined in debugger/src/vscode/handlers.ts:1087
+Defined in debugger/src/vscode/handlers.ts:1089
 
 ___
 
@@ -189,7 +191,7 @@ ___
 
 • **Map**: *MapConstructor* = State.saved.Map
 
-Defined in debugger/src/vscode/handlers.ts:16
+Defined in debugger/src/vscode/handlers.ts:18
 
 ___
 
@@ -197,7 +199,15 @@ ___
 
 • **RESTART_ON_CHANGE_TIMEOUT**: *0 | 500* = isBrowser ? 500 : 0
 
-Defined in debugger/src/vscode/handlers.ts:231
+Defined in debugger/src/vscode/handlers.ts:233
+
+___
+
+### `Const` Set
+
+• **Set**: *SetConstructor* = State.saved.Set
+
+Defined in debugger/src/vscode/handlers.ts:17
 
 ___
 
@@ -205,7 +215,7 @@ ___
 
 • **assign**: *assign*
 
-Defined in debugger/src/vscode/handlers.ts:14
+Defined in debugger/src/vscode/handlers.ts:15
 
 ___
 
@@ -213,7 +223,7 @@ ___
 
 • **backward**: *boolean* = false
 
-Defined in debugger/src/vscode/handlers.ts:61
+Defined in debugger/src/vscode/handlers.ts:63
 
 ___
 
@@ -221,7 +231,7 @@ ___
 
 • **brkFrame**: *[Frame](../interfaces/_state_.frame.md) | null* = null
 
-Defined in debugger/src/vscode/handlers.ts:73
+Defined in debugger/src/vscode/handlers.ts:75
 
 saving break frame for async functions which may
 be removed from the stack already
@@ -233,7 +243,7 @@ ___
 
 • **brkNext**: *[Frame](../interfaces/_state_.frame.md) | null* = null
 
-Defined in debugger/src/vscode/handlers.ts:57
+Defined in debugger/src/vscode/handlers.ts:59
 
 ___
 
@@ -241,7 +251,7 @@ ___
 
 • **brkOut**: *[Frame](../interfaces/_state_.frame.md) | null* = null
 
-Defined in debugger/src/vscode/handlers.ts:58
+Defined in debugger/src/vscode/handlers.ts:60
 
 ___
 
@@ -249,7 +259,7 @@ ___
 
 • **colStartAt1**: *boolean* = true
 
-Defined in debugger/src/vscode/handlers.ts:348
+Defined in debugger/src/vscode/handlers.ts:350
 
 ___
 
@@ -257,7 +267,7 @@ ___
 
 • **context**: *[State](../interfaces/_state_.state.md)*
 
-Defined in debugger/src/vscode/handlers.ts:41
+Defined in debugger/src/vscode/handlers.ts:43
 
 ___
 
@@ -265,7 +275,7 @@ ___
 
 • **curDirSep**: *string* = path.sep
 
-Defined in debugger/src/vscode/handlers.ts:77
+Defined in debugger/src/vscode/handlers.ts:79
 
 ___
 
@@ -273,7 +283,7 @@ ___
 
 • **curIdByVal**: *[Map](_engine_.md#const-map)‹any, any›* = new Map()
 
-Defined in debugger/src/vscode/handlers.ts:440
+Defined in debugger/src/vscode/handlers.ts:442
 
 ___
 
@@ -281,7 +291,15 @@ ___
 
 • **curValById**: *[Map](_engine_.md#const-map)‹any, any›* = new Map()
 
-Defined in debugger/src/vscode/handlers.ts:439
+Defined in debugger/src/vscode/handlers.ts:441
+
+___
+
+###  defineProperty
+
+• **defineProperty**: *defineProperty*
+
+Defined in debugger/src/vscode/handlers.ts:15
 
 ___
 
@@ -289,7 +307,7 @@ ___
 
 • **entrySnapshot**: *any*
 
-Defined in debugger/src/vscode/handlers.ts:311
+Defined in debugger/src/vscode/handlers.ts:313
 
 ___
 
@@ -297,7 +315,7 @@ ___
 
 • **handlers**: *object*
 
-Defined in debugger/src/vscode/handlers.ts:218
+Defined in debugger/src/vscode/handlers.ts:220
 
 #### Type declaration:
 
@@ -318,7 +336,7 @@ ___
 
 • **isBrowser**: *boolean* = typeof window !== "undefined"
 
-Defined in debugger/src/vscode/handlers.ts:62
+Defined in debugger/src/vscode/handlers.ts:64
 
 ___
 
@@ -326,7 +344,7 @@ ___
 
 • **journal**: *[Journal](../interfaces/_state_.journal.md)*
 
-Defined in debugger/src/vscode/handlers.ts:41
+Defined in debugger/src/vscode/handlers.ts:43
 
 ___
 
@@ -337,7 +355,7 @@ ___
   Map<number, P.SetBreakpointsArguments>
 >()
 
-Defined in debugger/src/vscode/handlers.ts:78
+Defined in debugger/src/vscode/handlers.ts:80
 
 ___
 
@@ -345,7 +363,7 @@ ___
 
 • **launchCb**: *function | undefined*
 
-Defined in debugger/src/vscode/handlers.ts:260
+Defined in debugger/src/vscode/handlers.ts:262
 
 ___
 
@@ -353,7 +371,7 @@ ___
 
 • **launchPromise**: *Promise‹boolean›* = new Promise<boolean>(i => (launchCb = i))
 
-Defined in debugger/src/vscode/handlers.ts:261
+Defined in debugger/src/vscode/handlers.ts:263
 
 ___
 
@@ -361,7 +379,7 @@ ___
 
 • **linStartAt1**: *boolean* = true
 
-Defined in debugger/src/vscode/handlers.ts:347
+Defined in debugger/src/vscode/handlers.ts:349
 
 ___
 
@@ -379,7 +397,7 @@ ___
       groupEnd() {}
     }
 
-Defined in debugger/src/vscode/handlers.ts:43
+Defined in debugger/src/vscode/handlers.ts:45
 
 ___
 
@@ -420,7 +438,7 @@ ___
   }
 })
 
-Defined in debugger/src/vscode/handlers.ts:144
+Defined in debugger/src/vscode/handlers.ts:146
 
 ___
 
@@ -428,7 +446,7 @@ ___
 
 • **pauseNext**: *boolean* = false
 
-Defined in debugger/src/vscode/handlers.ts:60
+Defined in debugger/src/vscode/handlers.ts:62
 
 ___
 
@@ -436,7 +454,7 @@ ___
 
 • **reason**: *string | undefined*
 
-Defined in debugger/src/vscode/handlers.ts:105
+Defined in debugger/src/vscode/handlers.ts:107
 
 ___
 
@@ -444,7 +462,7 @@ ___
 
 • **restartTimeout**: *any* = 0
 
-Defined in debugger/src/vscode/handlers.ts:229
+Defined in debugger/src/vscode/handlers.ts:231
 
 ___
 
@@ -452,7 +470,7 @@ ___
 
 • **runningTrace**: *boolean* = false
 
-Defined in debugger/src/vscode/handlers.ts:106
+Defined in debugger/src/vscode/handlers.ts:108
 
 ___
 
@@ -460,7 +478,7 @@ ___
 
 • **saveFlags**: *number* = State.BrkFlag.STMT | State.BrkFlag.DEBUGGER_STMT | State.BrkFlag.EXIT
 
-Defined in debugger/src/vscode/handlers.ts:114
+Defined in debugger/src/vscode/handlers.ts:116
 
 ___
 
@@ -468,7 +486,7 @@ ___
 
 • **sources**: *[Map](_engine_.md#const-map)‹number, string›* = new Map<number, string>()
 
-Defined in debugger/src/vscode/handlers.ts:1067
+Defined in debugger/src/vscode/handlers.ts:1069
 
 ___
 
@@ -512,7 +530,7 @@ ___
     }
   : Engine.step
 
-Defined in debugger/src/vscode/handlers.ts:705
+Defined in debugger/src/vscode/handlers.ts:707
 
 #### Type declaration:
 
@@ -524,7 +542,7 @@ ___
 
 • **stepCount**: *number* = 0
 
-Defined in debugger/src/vscode/handlers.ts:688
+Defined in debugger/src/vscode/handlers.ts:690
 
 ___
 
@@ -532,7 +550,7 @@ ___
 
 • **stepIn**: *boolean* = false
 
-Defined in debugger/src/vscode/handlers.ts:59
+Defined in debugger/src/vscode/handlers.ts:61
 
 ___
 
@@ -540,7 +558,7 @@ ___
 
 • **sysConsole**: *Console* = console
 
-Defined in debugger/src/vscode/handlers.ts:42
+Defined in debugger/src/vscode/handlers.ts:44
 
 ___
 
@@ -548,7 +566,7 @@ ___
 
 • **toLocal**: *[toLocal](_state_.md#tolocal)* = State.toLocal
 
-Defined in debugger/src/vscode/handlers.ts:444
+Defined in debugger/src/vscode/handlers.ts:446
 
 ___
 
@@ -556,7 +574,7 @@ ___
 
 • **varCount**: *number* = 100
 
-Defined in debugger/src/vscode/handlers.ts:441
+Defined in debugger/src/vscode/handlers.ts:443
 
 ___
 
@@ -564,7 +582,7 @@ ___
 
 • **variablesSym**: *unique symbol* = Symbol("@effectful/debugger/variables")
 
-Defined in debugger/src/vscode/handlers.ts:464
+Defined in debugger/src/vscode/handlers.ts:466
 
 ## Functions
 
@@ -572,7 +590,7 @@ Defined in debugger/src/vscode/handlers.ts:464
 
 ▸ **adjCol**(`num`: number): *number*
 
-Defined in debugger/src/vscode/handlers.ts:354
+Defined in debugger/src/vscode/handlers.ts:356
 
 **Parameters:**
 
@@ -588,7 +606,7 @@ ___
 
 ▸ **adjLine**(`num`: number): *number*
 
-Defined in debugger/src/vscode/handlers.ts:350
+Defined in debugger/src/vscode/handlers.ts:352
 
 **Parameters:**
 
@@ -604,7 +622,7 @@ ___
 
 ▸ **capture**(`opts`: WriteOptions): *JSONObject*
 
-Defined in debugger/src/vscode/handlers.ts:1121
+Defined in debugger/src/vscode/handlers.ts:1123
 
 Returns `JSON.stringify` serializable object with the whole
 current execution state
@@ -623,7 +641,7 @@ ___
 
 ▸ **checkPause**(`brk`: [Brk](../interfaces/_state_.brk.md), `top`: [Frame](../interfaces/_state_.frame.md)): *undefined | "pause" | "step" | "next" | "breakpoint" | "stepOut" | "debugger_statement" | "entry" | "interrupt"*
 
-Defined in debugger/src/vscode/handlers.ts:648
+Defined in debugger/src/vscode/handlers.ts:650
 
 **Parameters:**
 
@@ -640,7 +658,7 @@ ___
 
 ▸ **checkTimeTravelEnabled**(`res`: P.Response): *boolean*
 
-Defined in debugger/src/vscode/handlers.ts:792
+Defined in debugger/src/vscode/handlers.ts:794
 
 **Parameters:**
 
@@ -656,7 +674,7 @@ ___
 
 ▸ **compileEval**(`code`: string, `parentMeta`: State.FunctionDescr, `brk`: [Brk](../interfaces/_state_.brk.md)): *function*
 
-Defined in debugger/src/vscode/handlers.ts:1035
+Defined in debugger/src/vscode/handlers.ts:1037
 
 **Parameters:**
 
@@ -682,7 +700,7 @@ ___
 
 ▸ **cont**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:834
+Defined in debugger/src/vscode/handlers.ts:836
 
 **Returns:** *void*
 
@@ -692,7 +710,7 @@ ___
 
 ▸ **defaultNeedsBreak**(`brk`: [Brk](../interfaces/_state_.brk.md), `top`: [Frame](../interfaces/_state_.frame.md)): *boolean*
 
-Defined in debugger/src/vscode/handlers.ts:108
+Defined in debugger/src/vscode/handlers.ts:110
 
 **Parameters:**
 
@@ -709,7 +727,7 @@ ___
 
 ▸ **dispatch**(`req`: P.Request): *void*
 
-Defined in debugger/src/vscode/handlers.ts:222
+Defined in debugger/src/vscode/handlers.ts:224
 
 **Parameters:**
 
@@ -725,7 +743,7 @@ ___
 
 ▸ **event**(`name`: string, `body`: any): *void*
 
-Defined in debugger/src/vscode/handlers.ts:214
+Defined in debugger/src/vscode/handlers.ts:216
 
 **Parameters:**
 
@@ -742,7 +760,7 @@ ___
 
 ▸ **firstActiveFrame**(`frame`: [Frame](../interfaces/_state_.frame.md) | null): *[Frame](../interfaces/_state_.frame.md) | null*
 
-Defined in debugger/src/vscode/handlers.ts:191
+Defined in debugger/src/vscode/handlers.ts:193
 
 **Parameters:**
 
@@ -758,7 +776,7 @@ ___
 
 ▸ **getFrame**(`frameId`: number): *[Frame](../interfaces/_state_.frame.md) | null*
 
-Defined in debugger/src/vscode/handlers.ts:379
+Defined in debugger/src/vscode/handlers.ts:381
 
 **Parameters:**
 
@@ -774,7 +792,7 @@ ___
 
 ▸ **getLocation**(`frameId`: number): *[Location](../interfaces/_vscode_handlers_.location.md)*
 
-Defined in debugger/src/vscode/handlers.ts:389
+Defined in debugger/src/vscode/handlers.ts:391
 
 **Parameters:**
 
@@ -790,7 +808,7 @@ ___
 
 ▸ **getSource**(`module`: [Module](../interfaces/_state_.module.md)): *undefined | Source*
 
-Defined in debugger/src/vscode/handlers.ts:358
+Defined in debugger/src/vscode/handlers.ts:360
 
 **Parameters:**
 
@@ -806,7 +824,7 @@ ___
 
 ▸ **interruptibleStep**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:774
+Defined in debugger/src/vscode/handlers.ts:776
 
 **Returns:** *void*
 
@@ -816,7 +834,7 @@ ___
 
 ▸ **logMessageToExpression**(`msg`: string): *string*
 
-Defined in debugger/src/vscode/handlers.ts:1089
+Defined in debugger/src/vscode/handlers.ts:1091
 
 **Parameters:**
 
@@ -832,7 +850,7 @@ ___
 
 ▸ **newVarRef**(): *number*
 
-Defined in debugger/src/vscode/handlers.ts:452
+Defined in debugger/src/vscode/handlers.ts:454
 
 **Returns:** *number*
 
@@ -842,7 +860,7 @@ ___
 
 ▸ **nextFrame**(`frame`: [Frame](../interfaces/_state_.frame.md)): *[Frame](../interfaces/_state_.frame.md) | null*
 
-Defined in debugger/src/vscode/handlers.ts:184
+Defined in debugger/src/vscode/handlers.ts:186
 
 **Parameters:**
 
@@ -858,7 +876,7 @@ ___
 
 ▸ **normalizeDir**(`v`: string): *string*
 
-Defined in debugger/src/vscode/handlers.ts:75
+Defined in debugger/src/vscode/handlers.ts:77
 
 **Parameters:**
 
@@ -874,7 +892,7 @@ ___
 
 ▸ **onEntry**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:313
+Defined in debugger/src/vscode/handlers.ts:315
 
 **Returns:** *void*
 
@@ -884,7 +902,7 @@ ___
 
 ▸ **output**(`category`: string, `args`: any[], `value?`: any, `group?`: undefined | string): *void*
 
-Defined in debugger/src/vscode/handlers.ts:126
+Defined in debugger/src/vscode/handlers.ts:128
 
 **Parameters:**
 
@@ -903,7 +921,7 @@ ___
 
 ▸ **pause**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:779
+Defined in debugger/src/vscode/handlers.ts:781
 
 **Returns:** *void*
 
@@ -913,7 +931,7 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:609
+Defined in debugger/src/vscode/handlers.ts:611
 
 **Returns:** *void*
 
@@ -923,7 +941,7 @@ ___
 
 ▸ **resetLoad**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:1108
+Defined in debugger/src/vscode/handlers.ts:1110
 
 the function is needed only for testing in same process
 
@@ -935,7 +953,7 @@ ___
 
 ▸ **resetScopes**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:456
+Defined in debugger/src/vscode/handlers.ts:458
 
 **Returns:** *void*
 
@@ -945,7 +963,7 @@ ___
 
 ▸ **response**(`request`: P.Request, `message?`: undefined | string): *object*
 
-Defined in debugger/src/vscode/handlers.ts:196
+Defined in debugger/src/vscode/handlers.ts:198
 
 **Parameters:**
 
@@ -974,7 +992,7 @@ ___
 
 ▸ **restart**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:318
+Defined in debugger/src/vscode/handlers.ts:320
 
 **Returns:** *void*
 
@@ -984,7 +1002,7 @@ ___
 
 ▸ **restore**(`json`: JSONObject, `opts`: ReadOptions): *void*
 
-Defined in debugger/src/vscode/handlers.ts:1185
+Defined in debugger/src/vscode/handlers.ts:1180
 
 Restores execution state from an object previously returned by
 `capture` the current state is discarded
@@ -1004,7 +1022,7 @@ ___
 
 ▸ **run**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:690
+Defined in debugger/src/vscode/handlers.ts:692
 
 **Returns:** *void*
 
@@ -1014,7 +1032,7 @@ ___
 
 ▸ **send**(`v`: P.Response): *void*
 
-Defined in debugger/src/vscode/handlers.ts:207
+Defined in debugger/src/vscode/handlers.ts:209
 
 **Parameters:**
 
@@ -1030,7 +1048,7 @@ ___
 
 ▸ **setBreakpoints**(`args`: any, `sourceUpdate?`: undefined | false | true): *any*
 
-Defined in debugger/src/vscode/handlers.ts:874
+Defined in debugger/src/vscode/handlers.ts:876
 
 **Parameters:**
 
@@ -1047,7 +1065,7 @@ ___
 
 ▸ **setDirSep**(`sep`: string | undefined): *void*
 
-Defined in debugger/src/vscode/handlers.ts:83
+Defined in debugger/src/vscode/handlers.ts:85
 
 **Parameters:**
 
@@ -1063,7 +1081,7 @@ ___
 
 ▸ **setExceptionBreakpoints**(`args`: P.SetExceptionBreakpointsArguments): *void*
 
-Defined in debugger/src/vscode/handlers.ts:986
+Defined in debugger/src/vscode/handlers.ts:988
 
 **Parameters:**
 
@@ -1079,7 +1097,7 @@ ___
 
 ▸ **signalStopped**(): *void*
 
-Defined in debugger/src/vscode/handlers.ts:743
+Defined in debugger/src/vscode/handlers.ts:745
 
 **Returns:** *void*
 
@@ -1089,7 +1107,7 @@ ___
 
 ▸ **trace**(...`args`: [any, any]): *void*
 
-Defined in debugger/src/vscode/handlers.ts:64
+Defined in debugger/src/vscode/handlers.ts:66
 
 **Parameters:**
 
@@ -1105,7 +1123,7 @@ ___
 
 ▸ **varValue**(`name`: string, `value`: any): *[VarValue](../interfaces/_vscode_handlers_.varvalue.md)*
 
-Defined in debugger/src/vscode/handlers.ts:554
+Defined in debugger/src/vscode/handlers.ts:556
 
 **Parameters:**
 
@@ -1122,22 +1140,22 @@ Name | Type |
 
 ### ▪ **globalScope**: *object*
 
-Defined in debugger/src/vscode/handlers.ts:446
+Defined in debugger/src/vscode/handlers.ts:448
 
 ###  expensive
 
 • **expensive**: *boolean* = true
 
-Defined in debugger/src/vscode/handlers.ts:449
+Defined in debugger/src/vscode/handlers.ts:451
 
 ###  name
 
 • **name**: *string* = "Global"
 
-Defined in debugger/src/vscode/handlers.ts:447
+Defined in debugger/src/vscode/handlers.ts:449
 
 ###  variablesReference
 
 • **variablesReference**: *number* = State.toGlobal(1)
 
-Defined in debugger/src/vscode/handlers.ts:448
+Defined in debugger/src/vscode/handlers.ts:450

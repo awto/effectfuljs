@@ -34,7 +34,7 @@
 
 \+ **new ForInIterator**(`obj`: any, `fields`: string[]): *[ForInIterator](_state_.foriniterator.md)*
 
-Defined in debugger/src/state.ts:469
+Defined in debugger/src/state.ts:478
 
 **Parameters:**
 
@@ -51,7 +51,7 @@ Name | Type |
 
 • **fields**: *string[]*
 
-Defined in debugger/src/state.ts:467
+Defined in debugger/src/state.ts:476
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 • **obj**: *any*
 
-Defined in debugger/src/state.ts:469
+Defined in debugger/src/state.ts:478
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 • **pos**: *number*
 
-Defined in debugger/src/state.ts:468
+Defined in debugger/src/state.ts:477
 
 ## Methods
 
@@ -75,7 +75,7 @@ Defined in debugger/src/state.ts:468
 
 ▸ **[Symbol.iterator]**(): *this*
 
-Defined in debugger/src/state.ts:475
+Defined in debugger/src/state.ts:484
 
 **Returns:** *this*
 
@@ -85,6 +85,6 @@ ___
 
 ▸ **next**(): *IteratorResult‹string›*
 
-Defined in debugger/src/state.ts:478
+Defined in debugger/src/state.ts:487
 
 **Returns:** *IteratorResult‹string›*

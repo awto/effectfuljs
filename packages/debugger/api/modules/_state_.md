@@ -60,6 +60,8 @@
 * [idsStore](_state_.md#idsstore)
 * [nop](_state_.md#nop)
 * [patchNative](_state_.md#patchnative)
+* [returnToken](_state_.md#returntoken)
+* [throwToken](_state_.md#throwtoken)
 * [toGlobal](_state_.md#toglobal)
 * [toLocal](_state_.md#tolocal)
 * [toThread](_state_.md#tothread)
@@ -78,7 +80,7 @@
 
 Ƭ **FunctionDescr**: *object*
 
-Defined in debugger/src/state.ts:154
+Defined in debugger/src/state.ts:155
 
 function's description
 
@@ -170,7 +172,7 @@ ___
 
 Ƭ **Handler**: *function*
 
-Defined in debugger/src/state.ts:421
+Defined in debugger/src/state.ts:430
 
 handler function
 
@@ -191,7 +193,7 @@ ___
 
 Ƭ **Item**: *object*
 
-Defined in debugger/src/state.ts:498
+Defined in debugger/src/state.ts:507
 
 #### Type declaration:
 
@@ -205,7 +207,7 @@ ___
 
 Ƭ **NonBlackboxFunctionDescr**: *[FunctionDescr](_state_.md#functiondescr) & object*
 
-Defined in debugger/src/state.ts:196
+Defined in debugger/src/state.ts:197
 
 ___
 
@@ -213,7 +215,7 @@ ___
 
 Ƭ **Scope**: *any[] & object | object*
 
-Defined in debugger/src/state.ts:213
+Defined in debugger/src/state.ts:214
 
 passed to this runtime by compiler
 
@@ -223,7 +225,7 @@ ___
 
 Ƭ **StateMap**: *function | undefined*
 
-Defined in debugger/src/state.ts:418
+Defined in debugger/src/state.ts:427
 
 catch/finally handler state ids mapping
 
@@ -233,7 +235,7 @@ ___
 
 Ƭ **States**: *[number, string, [Scope](_state_.md#scope)][]*
 
-Defined in debugger/src/state.ts:424
+Defined in debugger/src/state.ts:433
 
 breakpoint positions
 
@@ -243,7 +245,7 @@ ___
 
 Ƭ **VarInfo**: *[number, number, string | null]*
 
-Defined in debugger/src/state.ts:204
+Defined in debugger/src/state.ts:205
 
 describse variable scope (decl depth, function depth, location)
 
@@ -253,7 +255,7 @@ describse variable scope (decl depth, function depth, location)
 
 • **MAX_ID**: *number* = 1 << (32 - THREAD_BITS)
 
-Defined in debugger/src/state.ts:430
+Defined in debugger/src/state.ts:439
 
 ___
 
@@ -261,7 +263,7 @@ ___
 
 • **THREAD_BITS**: *10* = 10
 
-Defined in debugger/src/state.ts:426
+Defined in debugger/src/state.ts:435
 
 ___
 
@@ -269,7 +271,7 @@ ___
 
 • **THREAD_MASK**: *number* = ~(-1 << THREAD_BITS)
 
-Defined in debugger/src/state.ts:428
+Defined in debugger/src/state.ts:437
 
 ___
 
@@ -277,7 +279,7 @@ ___
 
 • **dataSymbol**: *unique symbol* = Symbol("@effectful/debugger/data")
 
-Defined in debugger/src/state.ts:383
+Defined in debugger/src/state.ts:392
 
 function's meta-data property name
 
@@ -287,7 +289,7 @@ ___
 
 • **isWindows**: *boolean* = typeof process !== "undefined" && process.platform === "win32"
 
-Defined in debugger/src/state.ts:445
+Defined in debugger/src/state.ts:454
 
 ___
 
@@ -303,7 +305,7 @@ ___
       return path;
     }
 
-Defined in debugger/src/state.ts:448
+Defined in debugger/src/state.ts:457
 
 ___
 
@@ -317,7 +319,7 @@ ___
       return path;
     }
 
-Defined in debugger/src/state.ts:458
+Defined in debugger/src/state.ts:467
 
 ___
 
@@ -325,7 +327,7 @@ ___
 
 • **thunkSymbol**: *unique symbol* = Symbol("@effectful/debugger/thunk")
 
-Defined in debugger/src/state.ts:378
+Defined in debugger/src/state.ts:379
 
 marks functions represeting a lazy value, the value is result
 of the function's call
@@ -336,7 +338,7 @@ of the function's call
 
 ▸ **defaultErrHandler**(`f`: [Frame](../interfaces/_state_.frame.md)): *void*
 
-Defined in debugger/src/state.ts:523
+Defined in debugger/src/state.ts:532
 
 **Parameters:**
 
@@ -352,7 +354,7 @@ ___
 
 ▸ **defaultFinHandler**(`f`: [Frame](../interfaces/_state_.frame.md)): *void*
 
-Defined in debugger/src/state.ts:527
+Defined in debugger/src/state.ts:536
 
 **Parameters:**
 
@@ -368,7 +370,7 @@ ___
 
 ▸ **forInIterator**(`obj`: object): *Iterable‹string›*
 
-Defined in debugger/src/state.ts:487
+Defined in debugger/src/state.ts:496
 
 **Parameters:**
 
@@ -384,7 +386,7 @@ ___
 
 ▸ **idsStore**(`bits`: number): *[IdsStore](../interfaces/_state_.idsstore.md)*
 
-Defined in debugger/src/state.ts:391
+Defined in debugger/src/state.ts:400
 
 generates number from 0 till `1 << bits`, reuses numbers from `release` call
 
@@ -402,7 +404,7 @@ ___
 
 ▸ **nop**(): *boolean*
 
-Defined in debugger/src/state.ts:332
+Defined in debugger/src/state.ts:333
 
 **Returns:** *boolean*
 
@@ -412,7 +414,7 @@ ___
 
 ▸ **patchNative**(`obj`: any, `name`: string | symbol, `value`: any): *void*
 
-Defined in debugger/src/state.ts:531
+Defined in debugger/src/state.ts:540
 
 **Parameters:**
 
@@ -426,11 +428,33 @@ Name | Type |
 
 ___
 
+###  returnToken
+
+▸ **returnToken**(): *object*
+
+Defined in debugger/src/state.ts:381
+
+**Returns:** *object*
+
+* **_effectToken**: *boolean* = true
+
+___
+
+###  throwToken
+
+▸ **throwToken**(): *void*
+
+Defined in debugger/src/state.ts:385
+
+**Returns:** *void*
+
+___
+
 ###  toGlobal
 
 ▸ **toGlobal**(`local`: number): *number*
 
-Defined in debugger/src/state.ts:432
+Defined in debugger/src/state.ts:441
 
 **Parameters:**
 
@@ -446,7 +470,7 @@ ___
 
 ▸ **toLocal**(`local`: number): *number*
 
-Defined in debugger/src/state.ts:437
+Defined in debugger/src/state.ts:446
 
 **Parameters:**
 
@@ -462,7 +486,7 @@ ___
 
 ▸ **toThread**(`local`: number): *number*
 
-Defined in debugger/src/state.ts:441
+Defined in debugger/src/state.ts:450
 
 **Parameters:**
 
@@ -478,7 +502,7 @@ Name | Type |
 
 ### ▪ **context**: *object*
 
-Defined in debugger/src/state.ts:306
+Defined in debugger/src/state.ts:307
 
 global storage for the whole state of the running program
 
@@ -486,49 +510,49 @@ global storage for the whole state of the running program
 
 • **activeTop**: *null* = null
 
-Defined in debugger/src/state.ts:327
+Defined in debugger/src/state.ts:328
 
 ###  brk
 
 • **brk**: *null* = null
 
-Defined in debugger/src/state.ts:310
+Defined in debugger/src/state.ts:311
 
 ###  brkOnAnyException
 
 • **brkOnAnyException**: *false* = false
 
-Defined in debugger/src/state.ts:322
+Defined in debugger/src/state.ts:323
 
 ###  brkOnUncaughtException
 
 • **brkOnUncaughtException**: *false* = false
 
-Defined in debugger/src/state.ts:323
+Defined in debugger/src/state.ts:324
 
 ###  call
 
 • **call**: *null* = null
 
-Defined in debugger/src/state.ts:317
+Defined in debugger/src/state.ts:318
 
 ###  debug
 
 • **debug**: *false* = false
 
-Defined in debugger/src/state.ts:307
+Defined in debugger/src/state.ts:308
 
 ###  error
 
 • **error**: *false* = false
 
-Defined in debugger/src/state.ts:315
+Defined in debugger/src/state.ts:316
 
 ###  exception
 
 • **exception**: *object* = undef
 
-Defined in debugger/src/state.ts:329
+Defined in debugger/src/state.ts:330
 
 #### Type declaration:
 
@@ -538,13 +562,13 @@ Defined in debugger/src/state.ts:329
 
 • **moduleId**: *null* = null
 
-Defined in debugger/src/state.ts:321
+Defined in debugger/src/state.ts:322
 
 ###  modules
 
 • **modules**: *object*
 
-Defined in debugger/src/state.ts:312
+Defined in debugger/src/state.ts:313
 
 #### Type declaration:
 
@@ -552,7 +576,7 @@ Defined in debugger/src/state.ts:312
 
 • **modulesById**: *object*
 
-Defined in debugger/src/state.ts:313
+Defined in debugger/src/state.ts:314
 
 #### Type declaration:
 
@@ -560,73 +584,73 @@ Defined in debugger/src/state.ts:313
 
 • **needsBreak**: *[nop](_state_.md#nop)* = nop
 
-Defined in debugger/src/state.ts:318
+Defined in debugger/src/state.ts:319
 
 ###  onNewSource
 
 • **onNewSource**: *[nop](_state_.md#nop)* = nop
 
-Defined in debugger/src/state.ts:324
+Defined in debugger/src/state.ts:325
 
 ###  onStop
 
 • **onStop**: *[nop](_state_.md#nop)* = nop
 
-Defined in debugger/src/state.ts:326
+Defined in debugger/src/state.ts:327
 
 ###  onThread
 
 • **onThread**: *[nop](_state_.md#nop)* = nop
 
-Defined in debugger/src/state.ts:325
+Defined in debugger/src/state.ts:326
 
 ###  queue
 
 • **queue**: *never[]* = []
 
-Defined in debugger/src/state.ts:316
+Defined in debugger/src/state.ts:317
 
 ###  running
 
 • **running**: *false* = false
 
-Defined in debugger/src/state.ts:309
+Defined in debugger/src/state.ts:310
 
 ###  suspended
 
-• **suspended**: *Set‹[Frame](../interfaces/_state_.frame.md)›* = new Set()
+• **suspended**: *[Set](_vscode_handlers_.md#const-set)‹[Frame](../interfaces/_state_.frame.md)›* = new Set()
 
-Defined in debugger/src/state.ts:320
+Defined in debugger/src/state.ts:321
 
 ###  syncStack
 
 • **syncStack**: *never[]* = []
 
-Defined in debugger/src/state.ts:314
+Defined in debugger/src/state.ts:315
 
 ###  terminated
 
 • **terminated**: *false* = false
 
-Defined in debugger/src/state.ts:308
+Defined in debugger/src/state.ts:309
 
 ###  threadId
 
 • **threadId**: *number* = 0
 
-Defined in debugger/src/state.ts:328
+Defined in debugger/src/state.ts:329
 
 ###  top
 
 • **top**: *null* = null
 
-Defined in debugger/src/state.ts:311
+Defined in debugger/src/state.ts:312
 
 ###  value
 
 • **value**: *undefined* = void 0
 
-Defined in debugger/src/state.ts:319
+Defined in debugger/src/state.ts:320
 
 ___
 
@@ -666,7 +690,7 @@ ___
 
 ### ▪ **saved**: *object*
 
-Defined in debugger/src/state.ts:337
+Defined in debugger/src/state.ts:338
 
 original global objects monkey-patched by this runtime
 
@@ -674,47 +698,47 @@ original global objects monkey-patched by this runtime
 
 • **Function**: *FunctionConstructor*
 
-Defined in debugger/src/state.ts:343
+Defined in debugger/src/state.ts:344
 
 ###  Map
 
 • **Map**: *MapConstructor*
 
-Defined in debugger/src/state.ts:367
+Defined in debugger/src/state.ts:368
 
 ###  Promise
 
 • **Promise**: *PromiseConstructor*
 
-Defined in debugger/src/state.ts:340
+Defined in debugger/src/state.ts:341
 
 ###  Proxy
 
 • **Proxy**: *ProxyConstructor*
 
-Defined in debugger/src/state.ts:339
+Defined in debugger/src/state.ts:340
 
 ###  Set
 
 • **Set**: *SetConstructor*
 
-Defined in debugger/src/state.ts:368
+Defined in debugger/src/state.ts:369
 
 ###  console
 
 • **console**: *Console*
 
-Defined in debugger/src/state.ts:338
+Defined in debugger/src/state.ts:339
 
 ###  eval
 
 • **eval**: *eval* = eval
 
-Defined in debugger/src/state.ts:342
+Defined in debugger/src/state.ts:343
 
 ▪ **Array**: *object*
 
-Defined in debugger/src/state.ts:358
+Defined in debugger/src/state.ts:359
 
 * **pop**: *pop* = Array.prototype.pop
 
@@ -732,7 +756,7 @@ Defined in debugger/src/state.ts:358
 
 ▪ **FunctionMethods**: *object*
 
-Defined in debugger/src/state.ts:344
+Defined in debugger/src/state.ts:345
 
 * **apply**: *apply* = Function.prototype.apply
 
@@ -742,7 +766,7 @@ Defined in debugger/src/state.ts:344
 
 ▪ **Object**: *object*
 
-Defined in debugger/src/state.ts:354
+Defined in debugger/src/state.ts:355
 
 * **assign**: *assign* = Object.assign
 
@@ -750,13 +774,13 @@ Defined in debugger/src/state.ts:354
 
 ▪ **Reflect**: *object*
 
-Defined in debugger/src/state.ts:369
+Defined in debugger/src/state.ts:370
 
 * **construct**: *construct* = Reflect.construct
 
 ▪ **promiseMethods**: *object*
 
-Defined in debugger/src/state.ts:349
+Defined in debugger/src/state.ts:350
 
 * **catch**: *catch* = Promise.prototype.catch
 
@@ -770,13 +794,13 @@ ___
 
 ### ▪ **token**: *object*
 
-Defined in debugger/src/state.ts:380
+Defined in debugger/src/state.ts:389
 
 ###  _effectToken
 
 • **_effectToken**: *boolean* = true
 
-Defined in debugger/src/state.ts:380
+Defined in debugger/src/state.ts:389
 
 ___
 
@@ -784,10 +808,10 @@ ___
 
 ### ▪ **undef**: *object*
 
-Defined in debugger/src/state.ts:303
+Defined in debugger/src/state.ts:304
 
 ###  _undef
 
 • **_undef**: *boolean* = true
 
-Defined in debugger/src/state.ts:303
+Defined in debugger/src/state.ts:304

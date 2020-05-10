@@ -25,7 +25,7 @@
 
 • **data**: *[JSONObject](_main_.jsonobject.md) | null*
 
-Defined in src/main.ts:514
+Defined in src/main.ts:506
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 • **descriptor**? : *[Descriptor](../modules/_main_.md#descriptor)‹any›*
 
-Defined in src/main.ts:518
+Defined in src/main.ts:510
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 • **index**? : *string | number*
 
-Defined in src/main.ts:516
+Defined in src/main.ts:508
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 • **nextJob**? : *[SharedRefInfo](_main_.sharedrefinfo.md)*
 
-Defined in src/main.ts:519
+Defined in src/main.ts:511
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 • **parent**? : *[JSONObject](_main_.jsonobject.md) | [JSONArray](_main_.jsonarray.md)*
 
-Defined in src/main.ts:515
+Defined in src/main.ts:507
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 • **ref**: *[JSONObject](_main_.jsonobject.md) | null*
 
-Defined in src/main.ts:513
+Defined in src/main.ts:505
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 • **started**? : *undefined | false | true*
 
-Defined in src/main.ts:520
+Defined in src/main.ts:512
 
 ___
 
@@ -81,4 +81,4 @@ ___
 
 • **value**? : *any*
 
-Defined in src/main.ts:517
+Defined in src/main.ts:509

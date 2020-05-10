@@ -1,11 +1,27 @@
 const config = require("@effectful/core/v2/config").default;
 const transform = require("@effectful/core/v2/presets/debugger").default;
+const path = require("path");
+
 let VERBOSE =
   process.env.EFFECTFUL_DEBUGGER_VERBOSE || process.env.EFFECTFUL_VERBOSE;
 
 if (VERBOSE) {
   VERBOSE = VERBOSE[0].toLowerCase() === "t" || (!isNaN(VERBOSE) && +VERBOSE);
 } else VERBOSE = false;
+
+const progressPrefix = process.env.EFFECTFUL_PROGRESS_ID;
+let progressUpdate = function() {};
+if (progressPrefix) {
+  progressUpdate = function fn() {
+    if (config.filename)
+      console.log(
+        `${progressPrefix}:${config.blackbox ? "% " : ""}${path.relative(
+          config.srcRoot,
+          config.filename
+        )}`
+      );
+  };
+}
 
 const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
   ast
@@ -24,7 +40,10 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
     config.moduleAliases = Object.assign(moduleAliases, config.moduleAliases);
   }
   if (VERBOSE)
-    console.log(`TRANSFORMING:${config.filename} ${config.blackbox ? "BLACKBOX":""}`);
+    console.log(
+      `TRANSFORMING:${config.filename} ${config.blackbox ? "BLACKBOX" : ""}`
+    );
+  progressUpdate();
   transform(ast);
 });
 

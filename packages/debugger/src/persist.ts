@@ -8,7 +8,7 @@ import {
 } from "./state";
 import * as S from "@effectful/serialization";
 import config from "./config";
-function nop() { }
+function nop() {}
 
 export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
 export const regAutoOpaqueConstr = config.persistState
@@ -25,9 +25,9 @@ const {
 } = S;
 
 export const regOpaqueObject = config.persistState
-  ? function (obj: any, name: string) {
-    S.regOpaqueObject(obj, name, noProps);
-  }
+  ? function(obj: any, name: string) {
+      S.regOpaqueObject(obj, name, noProps);
+    }
   : nop;
 export const regDescriptor = config.persistState ? S.regDescriptor : nop;
 export const regConstructor = config.persistState ? S.regConstructor : nop;
@@ -51,7 +51,7 @@ export const ModuleDescriptor = S.regDescriptor<any>({
   },
   readContent(ctx, json: any, module: any) {
     if (module.cjs && json.exports) {
-      module.cjs.exports = ctx.step(json.exports);
+      module.exports = module.cjs.exports = ctx.step(json.exports);
     }
   },
   write(ctx, module: any) {

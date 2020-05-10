@@ -7,9 +7,6 @@
  * TODO: transpile core-js instead
  */
 
-import { ManagedSet, ManagedMap } from "../timeTravel/es";
-import { thunkSymbol } from "../state";
-
 type Callback<This, T, R> = (
   this: This | undefined,
   elem: T,
@@ -157,46 +154,12 @@ export function setForEach<T, This>(
   for (const i of this) callback.call(self, i, i, this);
 }
 
-(<any>ManagedSet.prototype).forEach = setForEach;
-
 export function mapForEach<K, V, This>(
   this: Map<K, V>,
   callback: (this: This | undefined, v: V, k: K, cont: Map<K, V>) => void,
   self?: This
 ): void {
   for (const [k, v] of this) callback.call(self, v, k, this);
-}
-
-(<any>ManagedMap.prototype).forEach = mapForEach;
-
-/**
- * wraps a top module's export, returns a function which on each call
- * returns `exports` object, but the value is memoized on its first call
- */
-export function wrapExport(top: any, mod: any): any {
-  let loaded = false;
-  const res: any = function exportsThunk() {
-    if (!loaded) {
-      mod.exports = {};
-      loaded = true;
-      top();
-    }
-    return mod.exports;
-  };
-  mod.exports = res;
-  res[thunkSymbol] = true;
-  return res;
-}
-
-export function persistModule(
-  topLevel: (cjsModule: any, exports: any) => void,
-  name: string,
-  cjsModule: any,
-  exports: any
-): any {
-  topLevel(cjsModule, exports);
-  exports = cjsModule.exports;
-  return exports;
 }
 
 function reify<T>(v: T): T {
@@ -222,4 +185,10 @@ export async function iterErrM(iter: any, reason: any) {
 export function iterFin(iter: any, value: any) {
   if (iter.return) return iter.return(value);
   return { value, done: true };
+}
+
+export function wrapModule(mod: any, cjsModule: any): any {
+  const topMeta = mod.topLevel.func(null);
+  topMeta(cjsModule, cjsModule.exports);
+  return (mod.exports = cjsModule.exports);
 }

@@ -158,7 +158,7 @@ ___
 
 ### `Const` ManagedSet
 
-• **ManagedSet**: *Set* = class Set<T> {
+• **ManagedSet**: *[Set](_vscode_handlers_.md#const-set)* = class Set<T> {
   inner: SavedMap<T, SetEntry<T>>;
   list: SetEntry<T>;
   constructor(iter?: Iterable<T>) {

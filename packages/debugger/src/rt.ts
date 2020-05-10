@@ -4,6 +4,7 @@ import * as Instr from "./instr/rt";
 import * as Engine from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
 import { saved } from "./state";
+import { ManagedSet, ManagedMap } from "./timeTravel/es";
 
 const context = Engine.context;
 
@@ -26,11 +27,12 @@ function switchDefault(
       if (context.call === impl)
         return (
           // TODO: move to faster apply
-          (context.call = debugImpl.apply), debugImpl.apply(this, <any>arguments)
+          (context.call = debugImpl.apply),
+          debugImpl.apply(this, <any>arguments)
         );
       return (context.call = null), defImpl.apply(this, <any>arguments);
     }
-  })
+  });
 }
 
 if (config.patchRT) {
@@ -65,3 +67,7 @@ if (config.patchRT) {
   global.eval = Engine.indirEval;
   if (config.expFunctionConstr) (<any>global).Function = Engine.FunctionConstr;
 }
+
+(<any>ManagedSet.prototype).forEach = Instr.setForEach;
+
+(<any>ManagedMap.prototype).forEach = Instr.mapForEach;

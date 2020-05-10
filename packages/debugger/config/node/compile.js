@@ -200,7 +200,19 @@ module.exports = function compile(content, filename, module) {
           }
           log(msg);
         }
-        cached = babel.transformSync(content, opts);
+        const event =
+          (global[config.globalNS] && global[config.globalNS].event) ||
+          function() {};
+        const progressId = `Compiling: ${path.relative(
+          config.srcRoot,
+          filename
+        )}`;
+        event("progressStart", { progressId, title: progressId });
+        try {
+          cached = babel.transformSync(content, opts);
+        } finally {
+          event("progressEnd", { progressId });
+        }
         if (cacheData) {
           cacheData[cacheKey] = cached;
           cached.mtime = mtime(filename);
@@ -238,12 +250,20 @@ module.exports = function compile(content, filename, module) {
         reloading = setTimeout(() => {
           reloading = 0;
           if (config.verbose) console.log(`DEBUGGER: Reloading ${filename}`);
+          const progressId = `Re-compiling: ${path.relative(
+            config.srcRoot,
+            filename
+          )}`;
           try {
             disabled = true;
             let run;
+            const event =
+              (global[config.globalNS] && global[config.globalNS].event) ||
+              function() {};
             try {
               content = fs.readFileSync(filename, "utf-8");
               if (config.instrument) {
+                event("progressStart", { progressId, title: progressId });
                 cached = babel.transformSync(content, opts);
                 if (cacheData) {
                   cacheData[cacheKey] = cached;
@@ -260,6 +280,7 @@ module.exports = function compile(content, filename, module) {
                 code
               );
             } finally {
+              event("progressEnd", { progressId });
               disabled = false;
             }
             run(

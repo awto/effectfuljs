@@ -34,7 +34,7 @@ invocation for nested values
 
 \+ **new WriteContext**(`opts`: [WriteOptions](../interfaces/_main_.writeoptions.md)): *[WriteContext](_main_.writecontext.md)*
 
-Defined in src/main.ts:533
+Defined in src/main.ts:525
 
 **Parameters:**
 
@@ -50,7 +50,7 @@ Name | Type |
 
 • **jobs**? : *[SharedRefInfo](../interfaces/_main_.sharedrefinfo.md)*
 
-Defined in src/main.ts:533
+Defined in src/main.ts:525
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 • **knownSyms**? : *Map‹symbol, [SymbolDescr](../interfaces/_main_.symboldescr.md)›*
 
-Defined in src/main.ts:532
+Defined in src/main.ts:524
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 • **opts**: *[WriteOptions](../interfaces/_main_.writeoptions.md)*
 
-Defined in src/main.ts:530
+Defined in src/main.ts:522
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 • **sharedRefs**: *[SharedRefInfo](../interfaces/_main_.sharedrefinfo.md)[]*
 
-Defined in src/main.ts:529
+Defined in src/main.ts:521
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 • **sharedRefsMap**: *Map‹any, [SharedRefInfo](../interfaces/_main_.sharedrefinfo.md)›*
 
-Defined in src/main.ts:528
+Defined in src/main.ts:520
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 • **symsByName**? : *Map‹string, [SymbolDescr](../interfaces/_main_.symboldescr.md)[]›*
 
-Defined in src/main.ts:531
+Defined in src/main.ts:523
 
 ## Methods
 
@@ -98,7 +98,7 @@ Defined in src/main.ts:531
 
 ▸ **step**(`value`: any, `parent`: [JSONArray](../interfaces/_main_.jsonarray.md) | [JSONObject](../interfaces/_main_.jsonobject.md), `key`: number | string): *[JSONValue](../modules/_main_.md#jsonvalue)*
 
-Defined in src/main.ts:551
+Defined in src/main.ts:543
 
 Invokes write recursively for nested values
 

@@ -34,7 +34,7 @@ for nested values
 
 \+ **new ReadContext**(`opts`: [ReadOptions](../interfaces/_main_.readoptions.md), `sharedJsons`: [JSONValue](../modules/_main_.md#jsonvalue)[]): *[ReadContext](_main_.readcontext.md)*
 
-Defined in src/main.ts:607
+Defined in src/main.ts:599
 
 **Parameters:**
 
@@ -51,7 +51,7 @@ Name | Type |
 
 • **knownSyms**: *Map‹symbol, [SymbolDescr](../interfaces/_main_.symboldescr.md)›*
 
-Defined in src/main.ts:603
+Defined in src/main.ts:595
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 • **opts**: *[ReadOptions](../interfaces/_main_.readoptions.md)*
 
-Defined in src/main.ts:607
+Defined in src/main.ts:599
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 • **sharedDescriptors**: *[Descriptor](../modules/_main_.md#descriptor)[]*
 
-Defined in src/main.ts:606
+Defined in src/main.ts:598
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 • **sharedJsons**: *[JSONValue](../modules/_main_.md#jsonvalue)[]*
 
-Defined in src/main.ts:604
+Defined in src/main.ts:596
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 • **sharedVals**: *any[]*
 
-Defined in src/main.ts:605
+Defined in src/main.ts:597
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 • **symsByName**? : *Map‹string, [SymbolDescr](../interfaces/_main_.symboldescr.md)[]›*
 
-Defined in src/main.ts:602
+Defined in src/main.ts:594
 
 ## Methods
 
@@ -99,7 +99,7 @@ Defined in src/main.ts:602
 
 ▸ **step**(`json`: [JSONValue](../modules/_main_.md#jsonvalue)): *any*
 
-Defined in src/main.ts:621
+Defined in src/main.ts:613
 
 Invokes read recursively for nested values
 

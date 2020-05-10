@@ -12,8 +12,7 @@ import {
   OutputEvent,
   DebugSession as SessionImpl,
   ProgressStartEvent,
-  ProgressEndEvent,
-  ProgressUpdateEvent
+  ProgressEndEvent
 } from "vscode-debugadapter";
 
 import { DebugProtocol as P } from "./protocol";
@@ -141,7 +140,7 @@ export class DebugSession extends SessionImpl {
     }
     if (hadThread) this.sendEvent(new ThreadEvent("exited", remoteId));
     if (!this.remotes.size) {
-      const reconnect = this.awaitReconnect || 0
+      const reconnect = this.awaitReconnect || 0;
       if (reconnect < 0) return;
       await new Promise(i => setTimeout(i, reconnect));
       if (this.remotes.size) return;
@@ -416,11 +415,6 @@ export class DebugSession extends SessionImpl {
     );
     let cwd = args.cwd;
     let progressId = this.supportsProgress && `LAUNCH$${progressCnt++}`;
-    if (progressId) {
-      const start = new ProgressStartEvent(progressId, "Launching");
-      (<any>start.body).requestId = response.request_seq;
-      this.sendEvent(start);
-    }
     if (!cwd) {
       if (args.preset === "browser") {
         this.sendErrorResponse(
@@ -451,9 +445,6 @@ export class DebugSession extends SessionImpl {
         : require.resolve(runtimeBase);
     } catch (e) {
       if (e.code !== "MODULE_NOT_FOUND") {
-        if (progressId)
-          // TODO: remove when finally works
-          this.sendEvent(new ProgressEndEvent(progressId));
         this.sendErrorResponse(
           response,
           1002,
@@ -467,9 +458,9 @@ export class DebugSession extends SessionImpl {
       let cb: (b: boolean) => void;
       if (progressId)
         this.sendEvent(
-          new ProgressUpdateEvent(
-            progressId,
-            "Installing runtime (this may take a few minutes but runs only once)"
+          new ProgressStartEvent(
+            `i$${progressId}`,
+            "Installing runtime (please wait, this may take a few minutes)"
           )
         );
       const child = spawn(
@@ -500,6 +491,7 @@ export class DebugSession extends SessionImpl {
         logger.log("install: " + String(data));
       });
       child.on("exit", code => {
+        if (progressId) this.sendEvent(new ProgressEndEvent(`i$${progressId}`));
         if (!code) return cb(false);
         this.sendErrorResponse(
           response,
@@ -512,9 +504,6 @@ export class DebugSession extends SessionImpl {
       try {
         debuggerImpl = require.resolve(runtimeBase);
       } catch (e) {
-        if (progressId)
-          // TODO: remove when finally works
-          this.sendEvent(new ProgressEndEvent(progressId));
         this.sendErrorResponse(
           response,
           1002,
@@ -525,8 +514,6 @@ export class DebugSession extends SessionImpl {
     }
     logger.log(`Using ${runtime} from ${debuggerImpl}`);
     debuggerImpl = path.dirname(normalizeDrive(debuggerImpl));
-    if (progressId)
-      this.sendEvent(new ProgressUpdateEvent(progressId, "Building"));
     const edbgJs = path.join(debuggerImpl, "bin", "edbg.js");
     const debuggerDeps = path.resolve(path.join(debuggerImpl, "..", ".."));
     this.stopComms = subscribe(
@@ -640,6 +627,11 @@ export class DebugSession extends SessionImpl {
           child = runningCommands.get(key);
         }
         let startBuf: string[] = [];
+        let progressPrefix: string | null = null;
+        if (progressId && preset === "browser")
+          progressPrefix = env[
+            "EFFECTFUL_PROGRESS_ID"
+          ] = `@progress@${progressId}:`;
         if (!child) {
           const spawnArgs: any = {
             cwd,
@@ -648,6 +640,9 @@ export class DebugSession extends SessionImpl {
           };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
+          let webpackProgress: string | null = null;
+          let lastPercentage = 0;
+          let message = "";
           logger.verbose(
             `SPAWN: ${command} ${launchArgs.join(" ")} ${JSON.stringify({
               ...spawnArgs,
@@ -660,12 +655,58 @@ export class DebugSession extends SessionImpl {
               1001,
               `Cannot launch debug target in terminal (${data.message}).`
             );
+            if (webpackProgress)
+              this.sendEvent(
+                new ProgressEndEvent(webpackProgress, message)
+              );
             this.terminate("spawn error: " + data.message);
           });
           child.stdout.on("data", data => {
             const txt = String(data);
-            if (preset === "browser") logger.log(`webpack: ${txt}`);
-            else if (args.verbose) logger.verbose(txt);
+            if (preset === "browser") {
+              if (progressPrefix && txt.startsWith(progressPrefix)) {
+                const m = txt
+                  .substring(progressPrefix.length)
+                  .match(/^(\d*)\:(.*)/);
+                if (m) {
+                  const percentage = m[1].length ? +m[1] : lastPercentage;
+                  message = m[2].length ? m[2] : message;
+                  if (percentage === 100 && webpackProgress) {
+                    this.sendEvent(
+                      new ProgressEndEvent(webpackProgress, message)
+                    );
+                    webpackProgress = null;
+                    lastPercentage = 0;
+                  } else if (webpackProgress) {
+                    this.sendEvent(<P.Event>{
+                      type: "event",
+                      event: "progressUpdate",
+                      body: {
+                        progressId: webpackProgress,
+                        message,
+                        percentage: lastPercentage = Math.max(
+                          lastPercentage,
+                          percentage
+                        )
+                      }
+                    });
+                  } else {
+                    webpackProgress = `b$${progressId}`;
+                    this.sendEvent(<P.Event>{
+                      type: "event",
+                      event: "progressStart",
+                      body: {
+                        progressId: webpackProgress,
+                        title: "Building",
+                        percentage
+                      }
+                    });
+                  }
+                }
+                return;
+              }
+              logger.log(`webpack: ${txt}`);
+            } else if (args.verbose) logger.verbose(txt);
             if (!this.launched) startBuf.push(txt);
           });
           child.stderr.on("data", data => {
@@ -679,6 +720,8 @@ export class DebugSession extends SessionImpl {
             if (!this.launched && startBuf.length) {
               errMessage = startBuf.join("");
             }
+            if (webpackProgress)
+              this.sendEvent(new ProgressEndEvent(webpackProgress));
             logger.verbose(`command "${command}" exited with ${code}`);
             if (args.reuse && key) runningCommands.delete(key);
             this.closeRemote(0);
@@ -692,7 +735,7 @@ export class DebugSession extends SessionImpl {
       logger.log("Awaiting a debuggee to connect back");
       if (progressId)
         this.sendEvent(
-          new ProgressUpdateEvent(progressId, "Awating a debuggee")
+          new ProgressStartEvent(`s$${progressId}`, "Awating a debuggee")
         );
       await new Promise<Handler | undefined>(i => (this.connectCb = i));
       logger.verbose("first connection");
@@ -700,8 +743,6 @@ export class DebugSession extends SessionImpl {
     }
     if (this.remotes.size && !this.stopped) {
       // wait until configuration has finished (and configurationDoneRequest has been called)
-      if (progressId)
-        this.sendEvent(new ProgressUpdateEvent(progressId, "Configuring"));
       if (!this.configurationDone) {
         await Promise.race([
           new Promise(i => (this.configurationCb = i)),
@@ -711,9 +752,7 @@ export class DebugSession extends SessionImpl {
       logger.verbose("config done");
       for (const remote of this.remotes.values()) this.launchChild(remote);
     }
-    if (progressId)
-      // TODO: remove when finally works
-      this.sendEvent(new ProgressEndEvent(progressId));
+    if (progressId) this.sendEvent(new ProgressEndEvent(`s$${progressId}`));
     if (this.stopped) {
       response.success = false;
       this.sendErrorResponse(

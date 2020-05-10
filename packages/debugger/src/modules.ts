@@ -1,5 +1,5 @@
 import * as State from "./state";
-import { persistModule } from "./instr/rt";
+import { wrapModule } from "./instr/rt";
 import config from "./config";
 import { compileModule } from "./engine";
 
@@ -7,11 +7,21 @@ const { context, token, thunkSymbol, saved } = State;
 
 const { defineProperty } = saved.Object;
 
+export function runTopLevel(mod: State.Module) {
+  const cjs = mod.cjs;
+  context.call = mod.cjs && mod.cjs.id === context.moduleId ? wrapModule : null;
+  context.moduleId = null;
+  if (wrapModule(mod, cjs) === token)
+    defineProperty(cjs.exports, thunkSymbol, {
+      value: State.returnToken,
+      configurable: true
+    });
+  return cjs.exports;
+}
+
 export function moduleExports() {
   const mod = compileModule();
-  if (!mod)
-    return;
-  const topMeta = mod.topLevel;
+  if (!mod) return;
   const cjs = mod.cjs;
   const hot = mod.version > 0;
   if (config.verbose)
@@ -20,14 +30,13 @@ export function moduleExports() {
     );
   if (context.onLoad) context.onLoad(mod, hot);
   if (hot) return;
-  const fun = topMeta.func(null);
-  context.call = cjs && cjs.id === context.moduleId ? persistModule : null;
-  context.moduleId = null;
   try {
-    if (persistModule(fun, mod.name, cjs, cjs.exports) !== token) return;
-    defineProperty(cjs.exports, thunkSymbol, { value: 1, configurable: true });
+    runTopLevel(mod);
   } catch (e) {
     if (e !== token) throw e;
-    defineProperty(cjs.exports, thunkSymbol, { value: 2, configurable: true });
+    defineProperty(cjs.exports, thunkSymbol, {
+      value: State.throwToken,
+      configurable: true
+    });
   }
 }

@@ -76,10 +76,8 @@
 * [bind](_main_.md#bind)
 * [defaultCreate](_main_.md#defaultcreate)
 * [defaultRead](_main_.md#defaultread)
-* [defaultReset](_main_.md#defaultreset)
 * [defaultWrite](_main_.md#defaultwrite)
 * [descrFlags](_main_.md#descrflags)
-* [getFirst](_main_.md#getfirst)
 * [getJsonDescriptor](_main_.md#getjsondescriptor)
 * [getObjectDescriptor](_main_.md#let-getobjectdescriptor)
 * [getState](_main_.md#getstate)
@@ -143,7 +141,7 @@
 
 Ƭ **Descriptor**: *[WriteDescriptor](../interfaces/_main_.writedescriptor.md)‹T› & [ReadDescriptor](../interfaces/_main_.readdescriptor.md)‹T› & [DescriptorOpts](../interfaces/_main_.descriptoropts.md)‹T›*
 
-Defined in src/main.ts:343
+Defined in src/main.ts:336
 
 ___
 
@@ -151,7 +149,7 @@ ___
 
 Ƭ **IncompleteDescriptor**: *[DescriptorOpts](../interfaces/_main_.descriptoropts.md)‹T› & object*
 
-Defined in src/main.ts:350
+Defined in src/main.ts:343
 
 simplified version of a descriptor where missed properties can be calculated
 
@@ -179,15 +177,12 @@ Defined in src/main.ts:185
   readContent(ctx: ReadContext, json: JSONValue, value: unknown[]) {
     for (const i of <JSONArray>json) value.push(ctx.step(i));
   },
-  reset(_ctx, value) {
-    value.length = 0;
-  },
   props: false,
   default$: false,
   globalName: "Array"
 })
 
-Defined in src/main.ts:1579
+Defined in src/main.ts:1546
 
 ___
 
@@ -217,7 +212,7 @@ ___
         props: false
       })
 
-Defined in src/main.ts:1453
+Defined in src/main.ts:1420
 
 ___
 
@@ -235,7 +230,7 @@ ___
   inheritance: Inheritance.Never
 })
 
-Defined in src/main.ts:480
+Defined in src/main.ts:472
 
 ___
 
@@ -267,7 +262,7 @@ ___
 
 • **NaNDescriptor**: *[WriteDescriptor](../interfaces/_main_.writedescriptor.md)‹number› & [ReadDescriptor](../interfaces/_main_.readdescriptor.md)‹number› & [DescriptorOpts](../interfaces/_main_.descriptoropts.md)‹number›* = specValueDescriptor("NaN", NaN)
 
-Defined in src/main.ts:1442
+Defined in src/main.ts:1409
 
 ___
 
@@ -288,7 +283,7 @@ ___
   default$: false
 })
 
-Defined in src/main.ts:1020
+Defined in src/main.ts:1005
 
 ___
 
@@ -306,7 +301,7 @@ ___
   refAware: false
 })
 
-Defined in src/main.ts:1035
+Defined in src/main.ts:1020
 
 ___
 
@@ -325,7 +320,7 @@ ___
   name: "Object"
 })
 
-Defined in src/main.ts:1069
+Defined in src/main.ts:1054
 
 ___
 
@@ -347,7 +342,7 @@ ___
   default$: false
 })
 
-Defined in src/main.ts:1074
+Defined in src/main.ts:1059
 
 ___
 
@@ -376,7 +371,7 @@ ___
   props: false
 })
 
-Defined in src/main.ts:1960
+Defined in src/main.ts:1908
 
 shorter format for properties descriptors
 
@@ -391,7 +386,7 @@ ___
   }
 })
 
-Defined in src/main.ts:1090
+Defined in src/main.ts:1075
 
 ___
 
@@ -405,7 +400,7 @@ ___
   props: false
 })
 
-Defined in src/main.ts:1445
+Defined in src/main.ts:1412
 
 ___
 
@@ -413,7 +408,7 @@ ___
 
 • **UndefDescriptor**: *[WriteDescriptor](../interfaces/_main_.writedescriptor.md)‹undefined› & [ReadDescriptor](../interfaces/_main_.readdescriptor.md)‹undefined› & [DescriptorOpts](../interfaces/_main_.descriptoropts.md)‹undefined›* = specValueDescriptor("undefined", void 0)
 
-Defined in src/main.ts:1443
+Defined in src/main.ts:1410
 
 ___
 
@@ -452,7 +447,7 @@ ___
   }
 }
 
-Defined in src/main.ts:1648
+Defined in src/main.ts:1612
 
 ___
 
@@ -488,7 +483,7 @@ ___
   }
 }
 
-Defined in src/main.ts:1618
+Defined in src/main.ts:1582
 
 ___
 
@@ -506,7 +501,7 @@ ___
 
 • **boundArgsSymbol**: *unique symbol* = Symbol("@effectful/bind/args")
 
-Defined in src/main.ts:466
+Defined in src/main.ts:458
 
 ___
 
@@ -514,7 +509,7 @@ ___
 
 • **boundFunSymbol**: *unique symbol* = Symbol("@effectful/bind/fun")
 
-Defined in src/main.ts:467
+Defined in src/main.ts:459
 
 ___
 
@@ -522,7 +517,7 @@ ___
 
 • **boundThisSymbol**: *unique symbol* = Symbol("@effectful/bind/this")
 
-Defined in src/main.ts:465
+Defined in src/main.ts:457
 
 ___
 
@@ -572,7 +567,7 @@ ___
 
 • **emptyArr**: *any[]* = []
 
-Defined in src/main.ts:422
+Defined in src/main.ts:414
 
 Converts JSON Object returned by [write](_main_.md#write) back to JS Object
 
@@ -593,7 +588,7 @@ ___
 • **notSerializablePlaceholder**: *any* = new Proxy(function () {},
 notSerializableTraps)
 
-Defined in src/main.ts:1956
+Defined in src/main.ts:1904
 
 an object which is replaces all not serializable values after read
 
@@ -603,7 +598,7 @@ ___
 
 • **notSerializableTraps**: *any*
 
-Defined in src/main.ts:1920
+Defined in src/main.ts:1868
 
 ___
 
@@ -619,7 +614,7 @@ ___
 
 • **undefinedSymbol**: *unique symbol* = Symbol("@effectful/serialization/undefined")
 
-Defined in src/main.ts:1393
+Defined in src/main.ts:1360
 
 ## Functions
 
@@ -627,7 +622,7 @@ Defined in src/main.ts:1393
 
 ▸ **bind**(`func`: function, `self`: any, ...`args`: any[]): *function*
 
-Defined in src/main.ts:500
+Defined in src/main.ts:492
 
 like `Function.prototype.bind` but returs serializable object if all
 arguments are serializable
@@ -668,7 +663,7 @@ ___
 
 ▸ **defaultCreate**<**T**>(`this`: [Descriptor](_main_.md#descriptor)‹T›, `ctx`: [ReadContext](../classes/_main_.readcontext.md), `json`: [JSONValue](_main_.md#jsonvalue)): *T*
 
-Defined in src/main.ts:641
+Defined in src/main.ts:633
 
 **Type parameters:**
 
@@ -690,7 +685,7 @@ ___
 
 ▸ **defaultRead**<**T**>(`this`: [ReadDescriptor](../interfaces/_main_.readdescriptor.md)‹T›, `ctx`: [ReadContext](../classes/_main_.readcontext.md), `json`: [JSONValue](_main_.md#jsonvalue)): *T*
 
-Defined in src/main.ts:1330
+Defined in src/main.ts:1297
 
 **Type parameters:**
 
@@ -708,21 +703,11 @@ Name | Type |
 
 ___
 
-###  defaultReset
-
-▸ **defaultReset**(): *void*
-
-Defined in src/main.ts:666
-
-**Returns:** *void*
-
-___
-
 ###  defaultWrite
 
 ▸ **defaultWrite**<**T**>(`this`: [Descriptor](_main_.md#descriptor)‹T›, `ctx`: [WriteContext](../classes/_main_.writecontext.md), `value`: T): *[JSONValue](_main_.md#jsonvalue)*
 
-Defined in src/main.ts:626
+Defined in src/main.ts:618
 
 **Type parameters:**
 
@@ -744,7 +729,7 @@ ___
 
 ▸ **descrFlags**(`descr`: PropertyDescriptor): *number*
 
-Defined in src/main.ts:1118
+Defined in src/main.ts:1103
 
 **Parameters:**
 
@@ -756,31 +741,11 @@ Name | Type |
 
 ___
 
-###  getFirst
-
-▸ **getFirst**<**T**>(`v`: [T]): *T*
-
-Defined in src/main.ts:1326
-
-**Type parameters:**
-
-▪ **T**
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`v` | [T] |
-
-**Returns:** *T*
-
-___
-
 ###  getJsonDescriptor
 
 ▸ **getJsonDescriptor**(`ctx`: [ReadContext](../classes/_main_.readcontext.md), `json`: [JSONValue](_main_.md#jsonvalue)): *[Descriptor](_main_.md#descriptor)*
 
-Defined in src/main.ts:1547
+Defined in src/main.ts:1514
 
 **Parameters:**
 
@@ -797,7 +762,7 @@ ___
 
 ▸ **getObjectDescriptor**<**T**>(`value`: T): *[Descriptor](_main_.md#descriptor)‹T› | undefined*
 
-Defined in src/main.ts:1480
+Defined in src/main.ts:1447
 
 **Type parameters:**
 
@@ -827,7 +792,7 @@ ___
 
 ▸ **getValueDescriptor**(`value`: any): *[Descriptor](_main_.md#descriptor) | undefined*
 
-Defined in src/main.ts:1512
+Defined in src/main.ts:1479
 
 **Parameters:**
 
@@ -843,7 +808,7 @@ ___
 
 ▸ **guessDescriptorName**(`descriptor`: [DescriptorOpts](../interfaces/_main_.descriptoropts.md)): *string*
 
-Defined in src/main.ts:891
+Defined in src/main.ts:876
 
 Tries to derive name for the `descriptor`.
 
@@ -861,7 +826,7 @@ ___
 
 ▸ **guessObjectName**(`value`: any): *string*
 
-Defined in src/main.ts:880
+Defined in src/main.ts:865
 
 Tries to derive name for the `value`
 
@@ -912,7 +877,7 @@ ___
 
 ▸ **iterableDescriptor**<**T**>(`descriptor`: [IncompleteDescriptor](_main_.md#incompletedescriptor)‹T›): *[IncompleteDescriptor](_main_.md#incompletedescriptor)‹T›*
 
-Defined in src/main.ts:1597
+Defined in src/main.ts:1561
 
 **Type parameters:**
 
@@ -932,7 +897,7 @@ ___
 
 ▸ **makeBind**(): *function*
 
-Defined in src/main.ts:469
+Defined in src/main.ts:461
 
 **Returns:** *function*
 
@@ -950,7 +915,7 @@ ___
 
 ▸ **notSerializableRead**(`this`: [Descriptor](_main_.md#descriptor)): *any*
 
-Defined in src/main.ts:1047
+Defined in src/main.ts:1032
 
 **Parameters:**
 
@@ -966,7 +931,7 @@ ___
 
 ▸ **parse**(`json`: string): *any*
 
-Defined in src/main.ts:461
+Defined in src/main.ts:453
 
 `JSON.parse` followed by `read`
 
@@ -984,7 +949,7 @@ ___
 
 ▸ **propFlags**(`snapshot`: object | undefined, `pred`: object, `name`: string, `descr`: PropertyDescriptor, `mask`: number): *number | undefined*
 
-Defined in src/main.ts:1129
+Defined in src/main.ts:1114
 
 **Parameters:**
 
@@ -1004,7 +969,7 @@ ___
 
 ▸ **propsDescriptor**<**T**>(`descriptor`: [Descriptor](_main_.md#descriptor)‹T›): *[Descriptor](_main_.md#descriptor)‹T›*
 
-Defined in src/main.ts:1270
+Defined in src/main.ts:1255
 
 wraps descriptor by adding its own property into the saved dictionary
 
@@ -1026,7 +991,7 @@ ___
 
 ▸ **read**(`json`: [JSONObject](../interfaces/_main_.jsonobject.md), `opts`: [ReadOptions](../interfaces/_main_.readoptions.md)): *any*
 
-Defined in src/main.ts:424
+Defined in src/main.ts:416
 
 **Parameters:**
 
@@ -1043,7 +1008,7 @@ ___
 
 ▸ **readPropDescriptor**(`ctx`: [ReadContext](../classes/_main_.readcontext.md), `pjson`: [JSONValue](_main_.md#jsonvalue), `flags`: number, `get`: [JSONValue](_main_.md#jsonvalue), `set`: [JSONValue](_main_.md#jsonvalue), `pdescr`: PropertyDescriptor): *PropertyDescriptor*
 
-Defined in src/main.ts:1205
+Defined in src/main.ts:1190
 
 **Parameters:**
 
@@ -1064,7 +1029,7 @@ ___
 
 ▸ **readPropName**(`ctx`: [ReadContext](../classes/_main_.readcontext.md), `key`: any): *any*
 
-Defined in src/main.ts:1193
+Defined in src/main.ts:1178
 
 **Parameters:**
 
@@ -1081,7 +1046,7 @@ ___
 
 ▸ **readProps**<**T**>(`ctx`: [ReadContext](../classes/_main_.readcontext.md), `props`: any[], `value`: T): *void*
 
-Defined in src/main.ts:1228
+Defined in src/main.ts:1213
 
 Reading serialized `Object.defineProperty` descriptors from JSON
 
@@ -1105,7 +1070,7 @@ ___
 
 ▸ **readSym**(`ctx`: [ReadContext](../classes/_main_.readcontext.md), `json`: [JSONValue](_main_.md#jsonvalue)): *symbol*
 
-Defined in src/main.ts:1401
+Defined in src/main.ts:1368
 
 **Parameters:**
 
@@ -1122,7 +1087,7 @@ ___
 
 ▸ **rebindGlobal**(): *void*
 
-Defined in src/main.ts:1847
+Defined in src/main.ts:1795
 
 **Returns:** *void*
 
@@ -1132,7 +1097,7 @@ ___
 
 ▸ **refAwareDescriptor**<**T**>(`descriptor`: [Descriptor](_main_.md#descriptor)‹T›): *[Descriptor](_main_.md#descriptor)‹T›*
 
-Defined in src/main.ts:688
+Defined in src/main.ts:677
 
 Enhances descriptor by adding reference handling. It some value is referenced
 in more than one sub-value it will have a unique value id instead of the
@@ -1156,7 +1121,7 @@ ___
 
 ▸ **regAutoOpaqueConstr**(`constr`: any, `silent?`: undefined | false | true): *object*
 
-Defined in src/main.ts:1825
+Defined in src/main.ts:1773
 
 Opaque object will be added automatically if not known object built with
 `constr` is encountered when writing.
@@ -1178,7 +1143,7 @@ ___
 
 ▸ **regConstructor**<**T**>(`constr`: [ValueConstructor](../interfaces/_main_.valueconstructor.md)‹T›, `descriptor`: [IncompleteDescriptor](_main_.md#incompletedescriptor)‹T›): *[Descriptor](_main_.md#descriptor)‹T›*
 
-Defined in src/main.ts:997
+Defined in src/main.ts:982
 
 Registers `prototype` of `constructor` as opaque value and use it
 as the value's type in output. It also adds resulting `descriptorSymbol`
@@ -1205,7 +1170,7 @@ ___
 
 ▸ **regDescriptor**<**T**>(`descriptor`: [IncompleteDescriptor](_main_.md#incompletedescriptor)‹T›): *[Descriptor](_main_.md#descriptor)‹T›*
 
-Defined in src/main.ts:762
+Defined in src/main.ts:751
 
 Adds a descriptor to an internal global registry for creating value instances
 by type names on reading.
@@ -1237,7 +1202,7 @@ ___
 
 ▸ **regGlobal**(): *void*
 
-Defined in src/main.ts:1878
+Defined in src/main.ts:1826
 
 Monkey patching platform objects to make them serializable,
 run it as soon as possible if a global serialization is needed
@@ -1250,7 +1215,7 @@ ___
 
 ▸ **regNewConstructor**<**T**>(`constr`: [ValueConstructor](../interfaces/_main_.valueconstructor.md)‹T›, `descriptor`: [IncompleteDescriptor](_main_.md#incompletedescriptor)‹T›): *[Descriptor](_main_.md#descriptor)*
 
-Defined in src/main.ts:1055
+Defined in src/main.ts:1040
 
 same as `regConstructor` but it also uses `constr` with new to build the object
 
@@ -1273,7 +1238,7 @@ ___
 
 ▸ **regObjectDescriptorGetter**(`impl`: function): *void*
 
-Defined in src/main.ts:1504
+Defined in src/main.ts:1471
 
 **Parameters:**
 
@@ -1295,7 +1260,7 @@ ___
 
 ▸ **regOpaqueObject**(`value`: any, `name`: string, `descriptor`: [IncompleteDescriptor](_main_.md#incompletedescriptor)‹any›): *[Descriptor](_main_.md#descriptor)*
 
-Defined in src/main.ts:916
+Defined in src/main.ts:901
 
 This function registers `value` as opaque. The library outputs names instead
 of stored data for them. The values should be registered with the same name
@@ -1318,7 +1283,7 @@ ___
 
 ▸ **regOpaquePrim**<**T**>(`value`: T, `name`: string): *[Descriptor](_main_.md#descriptor)‹T›*
 
-Defined in src/main.ts:959
+Defined in src/main.ts:944
 
 Same as `regOpaqueObject` but doesn't add `[descriptorSymbol]` property and
 stores value->descriptor mapping in an internal global registry instead.
@@ -1344,7 +1309,7 @@ ___
 
 ▸ **regOpaqueRec**(`value`: any, `prefix`: string, `opts`: object): *void*
 
-Defined in src/main.ts:1780
+Defined in src/main.ts:1728
 
 registers an object as opaque along with all other
 values accessible from this object
@@ -1370,7 +1335,7 @@ ___
 
 ▸ **regPrim**<**T**>(`descriptor`: [Descriptor](_main_.md#descriptor)‹T›, `value`: any, `name`: string): *[WriteDescriptor](../interfaces/_main_.writedescriptor.md)‹T› & [ReadDescriptor](../interfaces/_main_.readdescriptor.md)‹T› & [DescriptorOpts](../interfaces/_main_.descriptoropts.md)‹T›*
 
-Defined in src/main.ts:976
+Defined in src/main.ts:961
 
 **Type parameters:**
 
@@ -1392,7 +1357,7 @@ ___
 
 ▸ **regPropertyDescriptor**(`p`: PropertyDescriptor): *void*
 
-Defined in src/main.ts:1983
+Defined in src/main.ts:1931
 
 **Parameters:**
 
@@ -1408,7 +1373,7 @@ ___
 
 ▸ **regValueDescriptorGetter**(`impl`: function): *void*
 
-Defined in src/main.ts:1541
+Defined in src/main.ts:1508
 
 **Parameters:**
 
@@ -1468,7 +1433,7 @@ ___
 
 ▸ **specValueDescriptor**<**T**>(`name`: string, `value`: T): *[Descriptor](_main_.md#descriptor)‹T›*
 
-Defined in src/main.ts:1427
+Defined in src/main.ts:1394
 
 **Type parameters:**
 
@@ -1489,7 +1454,7 @@ ___
 
 ▸ **stringify**(`value`: any, `replacer?`: undefined | function, `spaces?`: string | number): *string*
 
-Defined in src/main.ts:452
+Defined in src/main.ts:444
 
 `write` followed by `JSON.stringify`,
 with same parameters as for `JSON.stringify`
@@ -1510,7 +1475,7 @@ ___
 
 ▸ **updateInitialSnapshot**(`value`: any): *void*
 
-Defined in src/main.ts:864
+Defined in src/main.ts:849
 
 updates `snapshot` with the current values of its properties
 
@@ -1528,7 +1493,7 @@ ___
 
 ▸ **write**(`value`: object, `opts`: [WriteOptions](../interfaces/_main_.writeoptions.md)): *[JSONObject](../interfaces/_main_.jsonobject.md)*
 
-Defined in src/main.ts:378
+Defined in src/main.ts:370
 
 Converts JS Plain Object into JSON Object
 
@@ -1550,7 +1515,7 @@ ___
 
 ▸ **writeProp**(`ctx`: [WriteContext](../classes/_main_.writecontext.md), `info`: [JSONArray](../interfaces/_main_.jsonarray.md), `descr`: PropertyDescriptor, `flags`: number): *[JSONArray](../interfaces/_main_.jsonarray.md) | undefined*
 
-Defined in src/main.ts:1099
+Defined in src/main.ts:1084
 
 **Parameters:**
 
@@ -1569,7 +1534,7 @@ ___
 
 ▸ **writeProps**(`ctx`: [WriteContext](../classes/_main_.writecontext.md), `descrs`: object, `pred`: object, `mask`: number, `snapshot?`: undefined | object): *[JSONArray](../interfaces/_main_.jsonarray.md)‹›[]*
 
-Defined in src/main.ts:1152
+Defined in src/main.ts:1137
 
 Writing serialized `Object.defineProperty` descriptors to JSON
 
@@ -1591,7 +1556,7 @@ ___
 
 ▸ **writeSym**(`ctx`: [WriteContext](../classes/_main_.writecontext.md), `sym`: symbol, `parent`: [JSONArray](../interfaces/_main_.jsonarray.md) | [JSONObject](../interfaces/_main_.jsonobject.md), `index`: number | string, `ignore?`: undefined | false | true): *[JSONValue](_main_.md#jsonvalue)*
 
-Defined in src/main.ts:1357
+Defined in src/main.ts:1324
 
 **Parameters:**
 
@@ -1611,13 +1576,13 @@ Name | Type |
 
 ### ▪ **NotSerializableToken**: *object*
 
-Defined in src/main.ts:1097
+Defined in src/main.ts:1082
 
 ###  _notSerializable
 
 • **_notSerializable**: *boolean* = true
 
-Defined in src/main.ts:1097
+Defined in src/main.ts:1082
 
 ___
 
@@ -1625,7 +1590,7 @@ ___
 
 ### ▪ **ObjectPropertiesDescriptor**: *object*
 
-Defined in src/main.ts:1246
+Defined in src/main.ts:1231
 
 A descriptor for `Object.getOwnPropertyDescriptors` object
 
@@ -1633,7 +1598,7 @@ A descriptor for `Object.getOwnPropertyDescriptors` object
 
 ▸ **create**(): *object*
 
-Defined in src/main.ts:1252
+Defined in src/main.ts:1237
 
 **Returns:** *object*
 
@@ -1641,7 +1606,7 @@ Defined in src/main.ts:1252
 
 ▸ **readContent**(`ctx`: [ReadContext](../classes/_main_.readcontext.md), `json`: [JSONValue](_main_.md#jsonvalue), `value`: any): *void*
 
-Defined in src/main.ts:1255
+Defined in src/main.ts:1240
 
 **Parameters:**
 
@@ -1657,7 +1622,7 @@ Name | Type |
 
 ▸ **write**(`ctx`: [WriteContext](../classes/_main_.writecontext.md), `value`: any): *[JSONValue](_main_.md#jsonvalue)*
 
-Defined in src/main.ts:1247
+Defined in src/main.ts:1232
 
 **Parameters:**
 
@@ -1674,19 +1639,19 @@ ___
 
 ### ▪ **OpaqueDescriptor**: *object*
 
-Defined in src/main.ts:1340
+Defined in src/main.ts:1307
 
 ###  default$
 
 • **default$**: *false* = false
 
-Defined in src/main.ts:1349
+Defined in src/main.ts:1316
 
 ###  create
 
 ▸ **create**(): *any*
 
-Defined in src/main.ts:1346
+Defined in src/main.ts:1313
 
 **Returns:** *any*
 
@@ -1694,7 +1659,7 @@ Defined in src/main.ts:1346
 
 ▸ **write**(`ctx`: [WriteContext](../classes/_main_.writecontext.md)‹›, `value`: any): *[JSONValue](_main_.md#jsonvalue)*
 
-Defined in src/main.ts:1341
+Defined in src/main.ts:1308
 
 **Parameters:**
 
@@ -1711,13 +1676,13 @@ ___
 
 ### ▪ **OpaquePrimDescriptor**: *object*
 
-Defined in src/main.ts:1352
+Defined in src/main.ts:1319
 
 ###  props
 
 • **props**: *false* = false
 
-Defined in src/main.ts:1354
+Defined in src/main.ts:1321
 
 ___
 
@@ -1739,7 +1704,7 @@ ___
 
 ### ▪ **descriptorTemplate**: *object*
 
-Defined in src/main.ts:671
+Defined in src/main.ts:661
 
 default implementaiton of [Descriptor](_main_.md#descriptor)
 
@@ -1747,31 +1712,25 @@ default implementaiton of [Descriptor](_main_.md#descriptor)
 
 • **create**: *[defaultCreate](_main_.md#defaultcreate)* = defaultCreate
 
-Defined in src/main.ts:674
+Defined in src/main.ts:664
 
 ###  read
 
 • **read**: *[defaultRead](_main_.md#defaultread)* = defaultRead
 
-Defined in src/main.ts:672
-
-###  reset
-
-• **reset**: *[defaultReset](_main_.md#defaultreset)* = defaultReset
-
-Defined in src/main.ts:675
+Defined in src/main.ts:662
 
 ###  write
 
 • **write**: *[defaultWrite](_main_.md#defaultwrite)* = defaultWrite
 
-Defined in src/main.ts:673
+Defined in src/main.ts:663
 
 ###  readContent
 
 ▸ **readContent**(`ctx`: [ReadContext](../classes/_main_.readcontext.md), `json`: [JSONValue](_main_.md#jsonvalue), `value`: any): *void*
 
-Defined in src/main.ts:676
+Defined in src/main.ts:665
 
 **Parameters:**
 
@@ -1919,10 +1878,10 @@ ___
 
 ### ▪ **undef**: *object*
 
-Defined in src/main.ts:595
+Defined in src/main.ts:587
 
 ###  _undef
 
 • **_undef**: *boolean* = true
 
-Defined in src/main.ts:595
+Defined in src/main.ts:587

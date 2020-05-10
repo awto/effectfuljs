@@ -84,7 +84,10 @@ class ArgsTraps {
 const objectValues = Object.values;
 
 export function compileModule(): Module | null {
-  if (!moduleChanged) return null;
+  if (!moduleChanged) {
+    if (curModule.exports) curModule.cjs.exports = curModule.exports;
+    return null;
+  }
   if (curModule.version === void 0) curModule.version = 0;
   else curModule.version++;
   if (!curModule.topLevel || curModule.topLevel.blackbox) return curModule;
@@ -165,6 +168,7 @@ export function module(
   regOpaqueObject(cjs, `cjs#${name}`);
   moduleChanged = !curModule;
   if (!curModule) curModule = <any>{ functions: {} };
+  (<any>curModule).topLevel = null;
   regOpaqueObject(cjs, name + "$mod");
   context.modules[<any>(fullPath || id)] = curModule;
   (<any>curModule)[S.descriptorSymbol] = ModuleDescriptor;
@@ -205,13 +209,17 @@ export function fun(
   scopeDepth: number,
   states: States
 ): (this: any, ...args: any[]) => any {
+  const top = !curModule.topLevel;
   let meta = curModule.functions[name];
   if (meta) {
-    if (savedToString.call(handler) === savedToString.call(meta.handler))
+    if (savedToString.call(handler) === savedToString.call(meta.handler)) {
+      if (top) curModule.topLevel = meta;
+      meta.handler = handler;
       return meta.func;
+    }
+    // if (savedToString.call(handler) === savedToString.call(meta.handler)) {
     moduleChanged = true;
   } else if (!meta) meta = curModule.functions[name] = <FunctionDescr>{};
-  const top = !curModule.topLevel;
   if (top) curModule.topLevel = meta;
   if (!errHandler) errHandler = defaultErrHandler;
   if (!finHandler) finHandler = defaultFinHandler;
@@ -1139,11 +1147,10 @@ export function iterNext(iter: any, value: any) {
  */
 export function force(value: any): any {
   if (!value) return value;
-  const code = value[thunkSymbol];
-  if (!code) return value;
-  defineProperty(value, thunkSymbol, { value: 0, configurable: true });
-  if (code === 1) return token;
-  throw token;
+  const thunk = value[thunkSymbol];
+  if (!thunk) return value;
+  defineProperty(value, thunkSymbol, { value: null, configurable: true });
+  return thunk();
 }
 
 export { config };

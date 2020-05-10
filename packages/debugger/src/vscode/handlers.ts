@@ -1,6 +1,7 @@
 import config from "../config";
 import * as State from "../state";
 import * as Engine from "../engine";
+import { runTopLevel } from "../modules";
 import * as TT from "../timeTravel/main";
 import * as path from "path";
 import { DebugProtocol as P } from "./protocol";
@@ -11,8 +12,9 @@ import * as util from "util";
 import { map, filter } from "../kit";
 import * as Persist from "../persist";
 
-const { assign } = State.saved.Object;
+const { assign, defineProperty } = State.saved.Object;
 
+const Set = State.saved.Set;
 const Map = State.saved.Map;
 
 declare module "../state" {
@@ -211,7 +213,7 @@ function send(v: P.Response) {
   }
 }
 
-function event(name: string, body: any) {
+export function event(name: string, body: any) {
   Comms.send({ seq: 0, type: "event", event: name, body });
 }
 
@@ -268,7 +270,7 @@ context.onThread = async function() {
         setTimeout(function() {
           if (!context.queue.length && !context.top && !context.activeTop)
             Comms.unref();
-        }, 0)        
+        }, 0);
       }
     }
     return;
@@ -309,10 +311,10 @@ context.onThread = async function() {
 };
 
 let entrySnapshot: any;
-const entryRefs: any[] = [];
 
 function onEntry() {
-  if (config.fastRestart === "entry") entrySnapshot = capture(true, entryRefs);
+  if (config.fastRestart === "entry")
+    entrySnapshot = capture({ warnIgnored: true });
 }
 
 export function restart() {
@@ -327,7 +329,7 @@ export function restart() {
     return;
   }
   if (entrySnapshot) {
-    restore(entrySnapshot, entryRefs);
+    restore(entrySnapshot);
     return;
   }
 }
@@ -1118,9 +1120,10 @@ export function resetLoad() {
  * Returns `JSON.stringify` serializable object with the whole
  * current execution state
  */
-export function capture(silent?: boolean, refs?: any): S.JSONObject {
-  const modules: any = [];
+export function capture(opts: S.WriteOptions = {}): S.JSONObject {
+  const modules: any[] = [];
   const savedEnabled = journal.enabled;
+  const modulesExports: any[] = [];
   try {
     journal.enabled = false;
     // tslint:disable-next-line:forin
@@ -1136,8 +1139,8 @@ export function capture(silent?: boolean, refs?: any): S.JSONObject {
         else if (module.cjs.parents) parents.push(...module.cjs.parents);
         descr.parents = parents;
         descr.cjs = module.cjs.id;
-        // descr.children = module.cjs.children;
       }
+      modulesExports.push(module);
     }
     const res = S.write(
       {
@@ -1151,15 +1154,17 @@ export function capture(silent?: boolean, refs?: any): S.JSONObject {
         journal: { ...journal },
         global,
         document: (<any>global).document,
-        extra: Persist.extra
+        extra: Persist.extra,
+        modules: modulesExports
       },
-      {
-        ignore: "opaque",
-        warnIgnored: !silent,
-        alwaysByRef: true,
-        verbose: config.debuggerDebug,
-        refs
-      }
+      assign(
+        {
+          ignore: "opaque",
+          alwaysByRef: true,
+          verbose: config.debuggerDebug
+        },
+        opts
+      )
     );
     res.modules = modules;
     return res;
@@ -1172,17 +1177,22 @@ export function capture(silent?: boolean, refs?: any): S.JSONObject {
  * Restores execution state from an object previously returned by
  * `capture` the current state is discarded
  */
-export function restore(json: S.JSONObject, refs?: any[]) {
+export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
   // TODO: properly pause it if it runs
   const savedEnabled = journal.enabled;
   try {
     journal.enabled = false;
-    const state = S.read(json, {
-      ignore: "placeholder",
-      warnIgnored: true,
-      refs
-    });
-    for (const i of state.extra) Persist.extra.add(i);
+    const state = S.read(
+      json,
+      assign(
+        {
+          ignore: "placeholder",
+          warnIgnored: true
+        },
+        opts
+      )
+    );
+    if (state.extra) for (const i of state.extra) Persist.extra.add(i);
     context.value = null;
     // reloading somehow breaks WebSockets
     setTimeout(
@@ -1194,8 +1204,10 @@ export function restore(json: S.JSONObject, refs?: any[]) {
           }
         }
         journal.enabled = false;
+        const loadedModules = new Set<string>();
         for (const i of (<any>json).modules) {
           let module = context.modules[i.id];
+          loadedModules.add(i.id);
           const { params } = i;
           if (params) {
             const parent = params.parent && context.modules[params.parent];
@@ -1224,6 +1236,7 @@ export function restore(json: S.JSONObject, refs?: any[]) {
           module = Engine.getCurModule();
           if (!module || !module.cjs) continue;
         }
+        let modulesExports: any;
         ({
           activeTop: context.activeTop,
           top: context.top,
@@ -1237,8 +1250,30 @@ export function restore(json: S.JSONObject, refs?: any[]) {
             past: journal.past,
             future: journal.future,
             enabled: journal.enabled
-          }
+          },
+          modules: modulesExports
         } = state);
+        if (modulesExports)
+          for (const m of modulesExports) {
+            m.cjs.exports = m.exports;
+          }
+        // tslint:disable-next-line:forin
+        for (const id in context.modules) {
+          const module = context.modules[id];
+          if (loadedModules.has(id)) {
+            if (module.cjs) module.exports = module.cjs.exports;
+            continue;
+          }
+          if (!module.cjs) continue;
+          defineProperty(
+            (module.exports = module.cjs.exports = {}),
+            State.thunkSymbol,
+            {
+              value: runTopLevel.bind(null, module),
+              configurable: true
+            }
+          );
+        }
         if (context.activeTop) signalStopped();
         else {
           context.activeTop = context.top;
