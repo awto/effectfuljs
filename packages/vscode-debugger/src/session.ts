@@ -464,6 +464,10 @@ export class DebugSession extends SessionImpl {
             "Installing runtime (please wait, this may take a few minutes)"
           )
         );
+      const env = { ...process.env };
+      const execDir = path.dirname(process.execPath);
+      if (env.PATH) env.PATH = `${env.PATH}${path.delimiter}{execDir}`;
+      else env.PATH = execDir;
       const child = spawn(
         "npm",
         [
@@ -474,7 +478,7 @@ export class DebugSession extends SessionImpl {
           "--no-audit",
           runtimeBase
         ],
-        { shell: true, cwd: path.join(__dirname, "..") }
+        { shell: true, cwd: path.join(__dirname, ".."), env }
       );
       child.on("error", data => {
         this.sendErrorResponse(
