@@ -1,13 +1,17 @@
 const Lib = require("../src/main");
 const assert = require("assert");
 
-describe("plain object output", function() {
-  context("for `JSON.stringify` serializable objects", function() {
-    it("should have resembling structure", function() {
+describe("plain object output", function () {
+  context("for `JSON.stringify` serializable objects", function () {
+    it("should have resembling structure", function () {
       const obj1 = { a: 1, b: "b", c: true };
       const res = Lib.write(obj1);
       const exp1 = {
-        f: [["a", 1], ["b", "b"], ["c", true]]
+        f: [
+          ["a", 1],
+          ["b", "b"],
+          ["c", true]
+        ]
       };
       assert.deepStrictEqual(res, exp1);
       assert.equal(Lib.stringify(obj1), JSON.stringify(res));
@@ -16,8 +20,8 @@ describe("plain object output", function() {
       assert.deepStrictEqual(Lib.write(obj2), exp2);
       assert.equal(Lib.stringify(obj2), JSON.stringify(exp2));
     });
-    context("with `alwaysByRef: true`", function() {
-      it("should use references environment", function() {
+    context("with `alwaysByRef: true`", function () {
+      it("should use references environment", function () {
         const obj1 = { a: { a: 1 }, b: { b: "b" }, c: { c: true } };
         const res = Lib.write(obj1, { alwaysByRef: true });
         const exp1 = {
@@ -27,7 +31,11 @@ describe("plain object output", function() {
             { f: [["b", "b"]] },
             { f: [["a", 1]] },
             {
-              f: [["a", { r: 2 }], ["b", { r: 1 }], ["c", { r: 0 }]]
+              f: [
+                ["a", { r: 2 }],
+                ["b", { r: 1 }],
+                ["c", { r: 0 }]
+              ]
             }
           ]
         };
@@ -38,7 +46,7 @@ describe("plain object output", function() {
       });
     });
   });
-  it("should have correct format for shared values", function() {
+  it("should have correct format for shared values", function () {
     const root = { val: "hi" };
     root.rec1 = { obj1: root, obj2: root, obj3: { obj: root } };
     root.rec2 = root;
@@ -66,12 +74,16 @@ describe("plain object output", function() {
   });
 });
 
-describe("special values", function() {
-  it("should correctly restore them", function() {
+describe("special values", function () {
+  it("should correctly restore them", function () {
     const root = { undef: undefined, nul: null, nan: NaN };
     const res = Lib.write(root);
     assert.deepStrictEqual(res, {
-      f: [["undef", { $: "undefined" }], ["nul", null], ["nan", { $: "NaN" }]]
+      f: [
+        ["undef", { $: "undefined" }],
+        ["nul", null],
+        ["nan", { $: "NaN" }]
+      ]
     });
     const { undef, nul, nan } = Lib.read(res);
     assert.strictEqual(undef, undefined);
@@ -80,8 +92,8 @@ describe("special values", function() {
   });
 });
 
-describe("reading plain object", function() {
-  it("should correctly assign shared values", function() {
+describe("reading plain object", function () {
+  it("should correctly assign shared values", function () {
     const obj = Lib.read({
       r: 0,
       x: [
@@ -103,25 +115,10 @@ describe("reading plain object", function() {
         }
       ]
     });
-    assert.strictEqual(
-      Object.keys(obj)
-        .sort()
-        .join(),
-      "rec1,rec2,val"
-    );
+    assert.strictEqual(Object.keys(obj).sort().join(), "rec1,rec2,val");
     assert.strictEqual(obj.val, "hi");
-    assert.strictEqual(
-      Object.keys(obj.rec1)
-        .sort()
-        .join(),
-      "obj1,obj2,obj3"
-    );
-    assert.strictEqual(
-      Object.keys(obj.rec1.obj3)
-        .sort()
-        .join(),
-      "obj"
-    );
+    assert.strictEqual(Object.keys(obj.rec1).sort().join(), "obj1,obj2,obj3");
+    assert.strictEqual(Object.keys(obj.rec1.obj3).sort().join(), "obj");
     assert.strictEqual(obj.rec2, obj);
     assert.strictEqual(obj.rec1.obj1, obj);
     assert.strictEqual(obj.rec1.obj2, obj);
@@ -129,18 +126,22 @@ describe("reading plain object", function() {
   });
 });
 
-describe("object with parent", function() {
+describe("object with parent", function () {
   function MyObj() {
     this.a = 1;
     this.b = "b";
     this.c = true;
   }
   Lib.regConstructor(MyObj);
-  it("should output `$` attribute", function() {
+  it("should output `$` attribute", function () {
     const obj1 = new MyObj();
     assert.deepEqual(Lib.write(obj1), {
       $: "MyObj",
-      f: [["a", 1], ["b", "b"], ["c", true]]
+      f: [
+        ["a", 1],
+        ["b", "b"],
+        ["c", true]
+      ]
     });
     function Object() {
       this.a = obj1;
@@ -152,33 +153,36 @@ describe("object with parent", function() {
         [
           "a",
           {
-            f: [["a", 1], ["b", "b"], ["c", true]],
+            f: [
+              ["a", 1],
+              ["b", "b"],
+              ["c", true]
+            ],
             $: "MyObj"
           }
         ]
       ]
     });
   });
-  it("should use `$` attribute to resolve a type on read", function() {
+  it("should use `$` attribute to resolve a type on read", function () {
     const obj1 = Lib.read({
       $: "MyObj",
-      f: [["a", 1], ["b", "b"], ["c", true]]
+      f: [
+        ["a", 1],
+        ["b", "b"],
+        ["c", true]
+      ]
     });
     assert.strictEqual(obj1.constructor, MyObj);
-    assert.equal(
-      Object.keys(obj1)
-        .sort()
-        .join(),
-      "a,b,c"
-    );
+    assert.equal(Object.keys(obj1).sort().join(), "a,b,c");
     assert.strictEqual(obj1.a, 1);
     assert.strictEqual(obj1.b, "b");
     assert.strictEqual(obj1.c, true);
   });
-  context("for shared values", function() {
+  context("for shared values", function () {
     function Obj2() {}
     Lib.regConstructor(Obj2);
-    it("should write shared values in `shared` map", function() {
+    it("should write shared values in `shared` map", function () {
       const root = new Obj2();
       root.l1 = new Obj2();
       root.l1.back = root.l1;
@@ -188,7 +192,7 @@ describe("object with parent", function() {
         x: [{ f: [["back", { r: 0 }]], $: "Obj2" }]
       });
     });
-    it("should use `#shared` keys to resolve prototypes on read", function() {
+    it("should use `#shared` keys to resolve prototypes on read", function () {
       const obj1 = Lib.read({
         f: [["l1", { r: 0 }]],
         $: "Obj2",
@@ -203,8 +207,8 @@ describe("object with parent", function() {
   });
 });
 
-describe("prototypes chain", function() {
-  it("should correctly store and recover all references", function() {
+describe("prototypes chain", function () {
+  it("should correctly store and recover all references", function () {
     class C1 {
       constructor(p) {
         this.p1 = p;
@@ -268,7 +272,10 @@ describe("prototypes chain", function() {
       p: {
         $: "C4"
       },
-      f: [["a", "A"], ["b", "B"]]
+      f: [
+        ["a", "A"],
+        ["b", "B"]
+      ]
     });
     const obj3 = Lib.read(res2);
     assert.ok(obj3 instanceof C3);
@@ -282,8 +289,8 @@ describe("prototypes chain", function() {
   });
 });
 
-describe("property's descriptor", function() {
-  it("should correctly store and recover all settings", function() {
+describe("property's descriptor", function () {
+  it("should correctly store and recover all settings", function () {
     const a = {};
     let setCalled = 0;
     let getCalled = 0;
@@ -374,9 +381,9 @@ describe("property's descriptor", function() {
   });
 });
 
-describe("arrays serialization", function() {
-  context("without shared references", function() {
-    it("should be similar to `JSON.stringify`/`JSON.parse`", function() {
+describe("arrays serialization", function () {
+  context("without shared references", function () {
+    it("should be similar to `JSON.stringify`/`JSON.parse`", function () {
       const obj = { arr: [1, "a", [true, [false, null]], undefined] };
       const res = Lib.write(obj);
       assert.deepStrictEqual(res, {
@@ -385,11 +392,11 @@ describe("arrays serialization", function() {
       const back = Lib.read(res);
       assert.deepStrictEqual(obj, back);
     });
-    it("doesn't support Array as root", function() {
+    it("doesn't support Array as root", function () {
       assert.throws(() => Lib.write([1, 2]), TypeError);
     });
   });
-  it("should handle shared references", function() {
+  it("should handle shared references", function () {
     const obj = { arr: [1, "a", [true, [false, null]], undefined] };
     obj.arr.push(obj.arr);
     const res = Lib.write(obj);
@@ -404,9 +411,9 @@ describe("arrays serialization", function() {
   });
 });
 
-describe("`Set` serialization", function() {
-  context("without shared references", function() {
-    it("should output `JSON.stringify` serializable object", function() {
+describe("`Set` serialization", function () {
+  context("without shared references", function () {
+    it("should output `JSON.stringify` serializable object", function () {
       const arr = [1, "a", [true, [false, null]], undefined];
       const obj = { set: new Set(arr) };
       obj.set.someNum = 100;
@@ -418,7 +425,10 @@ describe("`Set` serialization", function() {
           {
             $: "Set",
             l: [1, "a", [true, [false, null]], { $: "undefined" }],
-            f: [["someNum", 100], ["self", { r: 0 }]]
+            f: [
+              ["someNum", 100],
+              ["self", { r: 0 }]
+            ]
           }
         ]
       });
@@ -426,7 +436,7 @@ describe("`Set` serialization", function() {
       assert.deepStrictEqual(obj, back);
     });
   });
-  it("should handle shared references", function() {
+  it("should handle shared references", function () {
     const obj = new Set([1, "a", [true, [false, null]], undefined]);
     obj.add(obj);
     const res = Lib.write(obj);
@@ -446,9 +456,9 @@ describe("`Set` serialization", function() {
   });
 });
 
-describe("`Map` serialization", function() {
-  context("without shared references", function() {
-    it("should output `JSON.stringify` serializable object", function() {
+describe("`Map` serialization", function () {
+  context("without shared references", function () {
+    it("should output `JSON.stringify` serializable object", function () {
       const arr = [[1, "a"], [true, [false, null]], [undefined]];
       const obj = { map: new Map(arr) };
       const res = Lib.write(obj);
@@ -468,7 +478,7 @@ describe("`Map` serialization", function() {
       assert.deepStrictEqual(obj, back);
     });
   });
-  it("should handle shared references", function() {
+  it("should handle shared references", function () {
     const obj = new Map([[1, "a"], [true, [false, null]], [undefined]]);
     obj.set(obj, obj);
     const res = Lib.write(obj);
@@ -489,29 +499,29 @@ describe("`Map` serialization", function() {
   });
 });
 
-describe("opaque objects serialization", function() {
-  it("should throw for not registered objects", function() {
+describe("opaque objects serialization", function () {
+  it("should throw for not registered objects", function () {
     function a() {}
     assert.throws(() => Lib.write({ a }), TypeError);
   });
-  it("should not throw if `ignore:true`", function() {
+  it("should not throw if `ignore:true`", function () {
     function a() {}
     assert.deepStrictEqual(Lib.write({ a }, { ignore: true }), {});
   });
-  it("should output object's name if registered", function() {
+  it("should output object's name if registered", function () {
     function a() {}
     Lib.regOpaqueObject(a);
     assert.deepStrictEqual(Lib.write({ a }), { f: [["a", { $: "a" }]] });
     Lib.regOpaqueObject(a);
     assert.deepStrictEqual(Lib.read({ f: [["a", { $: "a" }]] }), { a });
-    (function() {
+    (function () {
       function a() {}
       Lib.regOpaqueObject(a);
       assert.deepStrictEqual(Lib.write({ a }), { f: [["a", { $: "a_1" }]] });
       assert.deepStrictEqual(Lib.read({ f: [["a", { $: "a_1" }]] }), { a });
     })();
   });
-  it("should not serialize properties specified before its registration", function() {
+  it("should not serialize properties specified before its registration", function () {
     const obj = {
       prop1: "p1",
       [Symbol.for("sym#a")]: "s1",
@@ -558,8 +568,8 @@ describe("opaque objects serialization", function() {
   });
 });
 
-describe("opaque primitive value serialization", function() {
-  it("should output object's name if registered", function() {
+describe("opaque primitive value serialization", function () {
+  it("should output object's name if registered", function () {
     const a = Symbol("a");
     Lib.regOpaquePrim(a, "sa");
     assert.ok(!a[Lib.descriptorSymbol]);
@@ -570,7 +580,7 @@ describe("opaque primitive value serialization", function() {
     assert.deepStrictEqual(Lib.read({ f: [["a", { $: "sa" }]] }), {
       a
     });
-    (function() {
+    (function () {
       const a = Symbol("a");
       Lib.regOpaquePrim(a, "sa");
       assert.deepStrictEqual(Lib.write({ a }), {
@@ -581,8 +591,8 @@ describe("opaque primitive value serialization", function() {
   });
 });
 
-describe("Symbols serialization", function() {
-  it("should keep values", function() {
+describe("Symbols serialization", function () {
+  it("should keep values", function () {
     const a1 = Symbol("a");
     const a2 = Symbol("a");
     const b = Symbol("b");
@@ -620,7 +630,7 @@ describe("Symbols serialization", function() {
   });
 });
 
-describe("type with `$$typeof` attribute", function() {
+describe("type with `$$typeof` attribute", function () {
   Lib.regDescriptor({
     name: "hundred",
     typeofTag: 100,
@@ -632,7 +642,7 @@ describe("type with `$$typeof` attribute", function() {
     },
     props: false
   });
-  it("should use overriden methods", function() {
+  it("should use overriden methods", function () {
     assert.deepStrictEqual(Lib.write({ $$typeof: 100 }), {
       $: "hundred"
     });
@@ -640,8 +650,8 @@ describe("type with `$$typeof` attribute", function() {
   });
 });
 
-describe("bind function arguments", function() {
-  it("should be serializable", function() {
+describe("bind function arguments", function () {
+  it("should be serializable", function () {
     const obj = {};
     function f1(a1, a2, a3) {
       return [this, a1, a2, a3];
@@ -722,8 +732,8 @@ describe("bind function arguments", function() {
   });
 });
 
-describe("RegExp", function() {
-  it("should be serializable", function() {
+describe("RegExp", function () {
+  it("should be serializable", function () {
     const re1 = /\w+/;
     const re2 = /ho/g;
     const s1 = "uho-ho-ho";
@@ -745,8 +755,8 @@ describe("RegExp", function() {
   });
 });
 
-describe("not serializable values", function() {
-  it("should throw an exception if `ignore:falsy`", function() {
+describe("not serializable values", function () {
+  it("should throw an exception if `ignore:falsy`", function () {
     function A() {}
     try {
       Lib.write({ A });
@@ -760,19 +770,19 @@ describe("not serializable values", function() {
     }
     assert.fail("should throw");
   });
-  it("should be ignored if `ignore:true`", function() {
+  it("should be ignored if `ignore:true`", function () {
     function A() {}
     const d = Lib.write({ A }, { ignore: true });
     const r = Lib.read(d);
     assert.deepEqual(r, {});
   });
-  it('should register an opaque descriptor `ignore:"opaque"`', function() {
+  it('should register an opaque descriptor `ignore:"opaque"`', function () {
     function A() {}
     const d = Lib.write({ A, b: A }, { ignore: "opaque" });
     const r = Lib.read(d);
     assert.deepEqual(r, { A, b: A });
   });
-  it("should register an opaque descriptor with auto-opaque descriptor", function() {
+  it("should register an opaque descriptor with auto-opaque descriptor", function () {
     function A() {}
     Lib.regAutoOpaqueConstr(A, true);
     const a = new A();
@@ -780,7 +790,7 @@ describe("not serializable values", function() {
     const r = Lib.read(d);
     assert.deepEqual(r, { a, b: a });
   });
-  it('should be converted into a not usable placeholder if `ignore:"placeholder"`', function() {
+  it('should be converted into a not usable placeholder if `ignore:"placeholder"`', function () {
     function A() {}
     const d = Lib.write({ A }, { ignore: "placeholder" });
     const r = Lib.read(d);
@@ -795,8 +805,8 @@ describe("not serializable values", function() {
   });
 });
 
-describe("TypedArray", function() {
-  it("should be serializable", function() {
+describe("TypedArray", function () {
+  it("should be serializable", function () {
     const arr1 = new Int32Array([1, 2, 3, 4, 5]);
     const arr2 = new Uint32Array(arr1.buffer, 8);
     const d = Lib.write({ arr1, arr2 }, {});
@@ -842,14 +852,81 @@ describe("TypedArray", function() {
   });
 });
 
-describe("WeakSet/WeakMap", function() {
-  it("should be serializable", function() {
+describe("WeakSet/WeakMap", function () {
+  it("should be serializable", function () {
+    const set = new WeakSet();
+    const map = new WeakMap();
+    const map2 = new WeakMap();
+    const obj1 = {};
+    const obj2 = {};
+    Lib.regOpaqueObject(obj1, "w#obj1");
+    set.add(obj1).add(obj2);
+    map.set(obj1, "obj1").set(obj2, "obj2");
+    map2.set(obj1, "2obj1");
+    assert.ok(set.has(obj1));
+    assert.ok(map.has(obj1));
+    assert.strictEqual(map.get(obj1), "obj1");
+    assert.strictEqual(map.get({}), void 0);
+    const d = Lib.write({ set, map, map2, obj1, obj2 });
+    assert.deepStrictEqual(d, {
+      x: [{}, { $: "w#obj1" }],
+      f: [
+        ["set", { v: [{ r: 0 }, { r: 1 }], $: "WeakSet" }],
+        [
+          "map",
+          {
+            k: [{ r: 1 }, { r: 0 }],
+            v: ["obj1", "obj2"],
+            $: "WeakMap"
+          }
+        ],
+        [
+          "map2",
+          {
+            k: [{ r: 1 }],
+            v: ["2obj1"],
+            $: "WeakMap"
+          }
+        ],
+        ["obj1", { r: 1 }],
+        ["obj2", { r: 0 }]
+      ]
+    });
+    const {
+      set: rset,
+      map: rmap,
+      map2: rmap2,
+      obj1: robj1,
+      obj2: robj2
+    } = Lib.read(d);
+    assert.strictEqual(robj1, obj1);
+    assert.notStrictEqual(robj2, obj2);
+    assert.ok(rset.has(obj1));
+    assert.ok(set.delete(obj1));
+    assert.ok(!set.has(obj1));
+    assert.ok(rset.has(obj1));
+    assert.ok(rset.has(robj2));
+    assert.ok(!rset.has(obj2));
+    assert.ok(!set.has(robj2));
+    assert.strictEqual(rmap.get(obj1), "obj1");
+    assert.strictEqual(rmap2.get(obj1), "2obj1");
+    assert.ok(map.delete(obj1));
+    assert.strictEqual(rmap.get(obj1), "obj1");
+    assert.ok(rset.delete(robj2));
+    assert.ok(!rset.has(robj2));
+    assert.ok(!rset.delete(robj2));
+    assert.ok(!rset.has(robj2));
+  });
+});
+
+describe("WeakSet/WeakMap workaround", function () {
+  it("should be serializable", function () {
     const set = new Lib.WeakSetWorkaround();
     const map = new Lib.WeakMapWorkaround();
     const map2 = new Lib.WeakMapWorkaround();
     const obj1 = {};
     const obj2 = {};
-    Lib.regOpaqueObject(obj1, "w#obj1");
+    Lib.regOpaqueObject(obj1, "w##obj1");
     set.add(obj1).add(obj2);
     map.set(obj1, "obj1").set(obj2, "obj2");
     map2.set(obj1, "2obj1");
@@ -864,27 +941,27 @@ describe("WeakSet/WeakMap", function() {
           "set",
           {
             f: [["prop", { name: "@effectful/weakset", $: "Symbol" }]],
-            $: "WeakSet"
+            $: "WeakSet#"
           }
         ],
         [
           "map",
           {
             f: [["prop", { name: "@effectful/weakmap", $: "Symbol" }]],
-            $: "WeakMap"
+            $: "WeakMap#"
           }
         ],
         [
           "map2",
           {
             f: [["prop", { name: "@effectful/weakmap", id: 1, $: "Symbol" }]],
-            $: "WeakMap"
+            $: "WeakMap#"
           }
         ],
         [
           "obj1",
           {
-            $: "w#obj1",
+            $: "w##obj1",
             f: [
               [{ name: "@effectful/weakset" }, true, 2],
               [{ name: "@effectful/weakmap" }, "obj1", 2],
@@ -930,8 +1007,8 @@ describe("WeakSet/WeakMap", function() {
   });
 });
 
-describe("BigInt", function() {
-  it("should be serializable", function() {
+describe("BigInt", function () {
+  it("should be serializable", function () {
     const num = 2n ** 10000n;
     const doc = Lib.write({ num });
     assert.equal(doc.f[0][0], "num");

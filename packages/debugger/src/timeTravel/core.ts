@@ -2,7 +2,6 @@ import config from "../config";
 import { journal, Record, saved, context, ForInIterator, patchNative as patch } from "../state";
 import { record1, record2, record3, record4 } from "./binds";
 import { regOpaqueObject } from "../persist";
-import { descriptorSymbol } from "@effectful/serialization";
 
 const SavedSet = Set;
 
@@ -121,7 +120,6 @@ function getOrCreateObjKeys(
     };
   }
   for (const i of objectSaved.getOwnPropertySymbols(obj)) {
-    if (i === descriptorSymbol) continue;
     const { next } = symKeys;
     symMap[<any>i] = symKeys.next = next.prev = {
       name: <any>i,
@@ -230,7 +228,6 @@ function addKey(
   enumerable: boolean,
   optional: boolean
 ): boolean {
-  if (<any>name === descriptorSymbol) return false;
   const ty = typeof name;
   if (ty !== "number") {
     if (ty === "string") {
@@ -261,7 +258,6 @@ function addNotIntKey(
   optional: boolean
 ): boolean {
   if (typeof name === "symbol") {
-    if (name === descriptorSymbol) return false;
     const descr = getOrCreateObjKeys(obj, optional);
     if (!descr) return false;
     addKeyImpl(name, descr.symMap, descr.symKeys, <any>{

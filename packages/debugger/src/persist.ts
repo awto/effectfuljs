@@ -131,7 +131,7 @@ function makeBind(): (...args: any[]) => any {
     for (const i of rest) arr[++index] = i;
     return savedCall.apply(fun, <any>arr);
   }
-  if (config.persistState) (<any>bind)[descriptorSymbol] = BindDescriptor;
+  if (BindDescriptor) S.setObjectDescriptor(bind, BindDescriptor);
   return bind;
 }
 

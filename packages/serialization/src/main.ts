@@ -15,25 +15,18 @@ const savedObject = {
 };
 
 // tslint:disable-next-line
-const savedConsol = { log: console.log, warn: console.warn };
+const savedConsole = { log: console.log, warn: console.warn };
 
-export enum Inheritance {
-  // [descriptorSymbol] can be anywher in the prototype chain
-  Full,
-  // [descriptorSymbol] can be only in this object
-  Never,
-  // [descriptorSymbol] can be only in this object's prototype
-  Constructor
-}
+const weakMapSet = WeakMap.prototype.set;
 
 function showStack(ctx: WriteContext, key: string | number, value: any) {
-  savedConsol.warn("SF#0: ", key, value);
+  savedConsole.warn("SF#0: ", key, value);
   let i = ctx.jobs;
   let num = 0;
   for (;;) {
     while (i && !i.started) i = i.nextJob;
     if (!i) break;
-    savedConsol.warn(`SF#${++num}:`, i.index, ":", i.value);
+    savedConsole.warn(`SF#${++num}:`, i.index, ":", i.value);
     if (num > 200) break;
     i = i.nextJob;
   }
@@ -42,12 +35,6 @@ function showStack(ctx: WriteContext, key: string | number, value: any) {
 const LocMap = Map;
 const LocWeakMap = WeakMap;
 const LocSet = Set;
-
-const hasPropDefault = Object.prototype.hasOwnProperty;
-
-function hasProp(obj: any, name: symbol): boolean {
-  return hasPropDefault.call(obj, name);
-}
 
 export interface State {
   /** name for a property storing descriptor */
@@ -58,6 +45,8 @@ export interface State {
   byValue: Map<any, Descriptor>;
   /** descriptors registered by some value */
   byObject: WeakMap<any, Descriptor>;
+  /** descriptors registered by its prototype value */
+  byPrototype: WeakMap<any, Descriptor>;
   /**
    * react uses `$$typeof` property for its values, it is the mapping
    * @private
@@ -65,15 +54,12 @@ export interface State {
   byTypeOfProp: Map<symbol, Descriptor>;
 }
 
-export const options = {
-  descriptorSymForOpaque: true
-};
-
 export interface IncompleteState {
   symbol?: symbol;
   byName?: Map<string, Descriptor>;
   byValue?: Map<any, Descriptor>;
   byObject?: WeakMap<any, Descriptor>;
+  byPrototype?: WeakMap<any, Descriptor>;
   byTypeOfProp?: Map<symbol, Descriptor>;
 }
 
@@ -85,6 +71,7 @@ function initializeState(init: IncompleteState): State {
   if (!init.byName) init.byName = new LocMap();
   if (!init.byValue) init.byValue = new LocMap();
   if (!init.byObject) init.byObject = new LocWeakMap();
+  if (!init.byPrototype) init.byPrototype = new LocWeakMap();
   if (!init.byTypeOfProp) init.byTypeOfProp = new LocMap();
   return <State>init;
 }
@@ -102,6 +89,7 @@ export let descriptorSymbol: symbol = state.symbol;
 let descriptorByName: Map<string, Descriptor> = state.byName;
 let descriptorByValue: Map<any, Descriptor> = state.byValue;
 let descriptorByObject: WeakMap<any, Descriptor> = state.byObject;
+let descriptorByPrototype: WeakMap<any, Descriptor> = state.byPrototype;
 let descriptorByTypeOfProp: Map<symbol, Descriptor> = state.byTypeOfProp;
 
 /**
@@ -115,6 +103,7 @@ export function resetState(init: IncompleteState = {}) {
   descriptorByName = state.byName;
   descriptorByValue = state.byValue;
   descriptorByObject = state.byObject;
+  descriptorByPrototype = state.byPrototype;
   descriptorByTypeOfProp = state.byTypeOfProp;
 }
 
@@ -162,6 +151,8 @@ export interface WriteOptions {
   verbose?: boolean;
   /** if this array is initialized it will be filled with the shared object's values */
   refs?: any[];
+  weakMaps?: [WeakMap<any, any>, JSONObject][];
+  weakSets?: [WeakSet<any>, JSONObject][];
 }
 
 /** Options to amend `write` behavior */
@@ -306,9 +297,6 @@ export interface DescriptorOpts<T = unknown> {
 
   /** if it is a value in a global scope this will store its name */
   globalName?: string;
-
-  /** can this descriptor be inherited */
-  inheritance?: Inheritance;
 }
 
 interface ValueConstructor<T = unknown> {
@@ -377,6 +365,7 @@ export function write(value: object, opts: WriteOptions = {}): JSONObject {
   const alwaysByRef = opts.alwaysByRef;
   const x: any[] = [];
   const resRefs = opts.refs;
+  const weakMaps = ctx.weakMaps;
   for (let job; (job = ctx.jobs) != null; ) {
     if (job.started) {
       if (alwaysByRef) {
@@ -387,9 +376,29 @@ export function write(value: object, opts: WriteOptions = {}): JSONObject {
       continue;
     }
     job.started = true;
+    const value = job.value;
     job.data = <JSONObject>(
-      (<any>job.descriptor).write(ctx, job.value, job.parent, job.index)
+      (<any>job.descriptor).write(ctx, value, job.parent, job.index)
     );
+    for (const [map, json] of weakMaps) {
+      if (map.has(value)) {
+        const { k, v } = <any>json;
+        k.push(ctx.step(value, k, k.length));
+        v.push(ctx.step(map.get(value), v, v.length));
+      }
+    }
+  }
+  if (ctx.weakSets.length) {
+    for (const info of ctx.sharedRefs.values()) {
+      const value = info.value;
+      const ty = typeof info.value;
+      if (ty !== "object" && ty !== "function") continue;
+      for (const [wm, val] of ctx.weakSets) {
+        if (!wm.has(info.value)) continue;
+        if (!info.ref) info.ref = {};
+        (<any>val).v.push(info.ref);
+      }
+    }
   }
   if (!alwaysByRef && refs.length) {
     for (const info of refs) {
@@ -465,8 +474,12 @@ function makeBind(): (...args: any[]) => any {
       ...rest
     ]);
   }
-  (<any>bind)[descriptorSymbol] = BindDescriptor;
+  weakMapSet.call(descriptorByObject, bind, BindDescriptor);
   return bind;
+}
+
+export function setObjectDescriptor(object: any, descriptor: Descriptor) {
+  weakMapSet.call(descriptorByObject, object, descriptor);
 }
 
 export const BindDescriptor = regDescriptor({
@@ -477,8 +490,7 @@ export const BindDescriptor = regDescriptor({
   write() {
     return {};
   },
-  overrideProps: { ...funcOverrideProps, prototype: false },
-  inheritance: Inheritance.Never
+  overrideProps: { ...funcOverrideProps, prototype: false }
 });
 
 /**
@@ -523,6 +535,8 @@ export class WriteContext {
   symsByName?: Map<string, SymbolDescr[]>;
   knownSyms?: Map<symbol, SymbolDescr>;
   jobs?: SharedRefInfo;
+  weakMaps: [WeakMap<any, any>, JSONObject][];
+  weakSets: [WeakSet<any>, JSONObject][];
 
   constructor(opts: WriteOptions) {
     this.sharedRefsMap =
@@ -531,6 +545,8 @@ export class WriteContext {
     this.opts = opts;
     this.symsByName = opts.symsByName || (opts.symsByName = new LocMap());
     this.knownSyms = opts.knownSyms || (opts.knownSyms = new LocMap());
+    this.weakMaps = opts.weakMaps || (opts.weakMaps = []);
+    this.weakSets = opts.weakSets || (opts.weakSets = []);
     this.jobs = void 0;
   }
   /**
@@ -554,9 +570,9 @@ export class WriteContext {
           `not serializable value "${value}" at "${key}" of "${parent}"`
         );
       // tslint:disable-next-line
-      if (opts.warnIgnored && console.warn) {
+      if (opts.warnIgnored && savedConsole.warn) {
         // tslint:disable-next-line
-        console.warn("not serializable value", value);
+        savedConsole.warn("not serializable value", value);
       }
       if (opts.ignore === true) return NotSerializableToken;
       if (opts.ignore === "opaque") {
@@ -793,18 +809,14 @@ export function regDescriptor<T>(
   let i = 0;
   if (!descriptor.strictName)
     for (; descriptorByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
-  let final: Descriptor = savedObject.assign(
-    { inheritance: Inheritance.Full },
-    descriptor,
-    {
-      read: readImpl,
-      readContent: readContentImpl,
-      create: createImpl,
-      write: writeImpl,
-      name: uniq,
-      overrideProps
-    }
-  );
+  let final: Descriptor = savedObject.assign({}, descriptor, {
+    read: readImpl,
+    readContent: readContentImpl,
+    create: createImpl,
+    write: writeImpl,
+    name: uniq,
+    overrideProps
+  });
   if (descriptor.props !== false) final = propsDescriptor(final);
   if (descriptor.default$ !== false && uniq !== "Object") {
     const saved = final;
@@ -891,8 +903,7 @@ function guessDescriptorName(descriptor: DescriptorOpts): string {
 /**
  * This function registers `value` as opaque. The library outputs names instead
  * of stored data for them. The values should be registered with the same name
- * on writing and reading sides. Adds `[descriptorSymbol]` property to the
- * value.
+ * on writing and reading sides.
  *
  * @param value
  * @param name
@@ -904,12 +915,8 @@ export function regOpaqueObject(
   descriptor: IncompleteDescriptor<any> = { props: true, propsSnapshot: true }
 ): Descriptor {
   if (!value) return <any>null;
-  const useSymbol = options.descriptorSymForOpaque !== false;
-  if (useSymbol && hasProp(value, descriptorSymbol))
-    return value[descriptorSymbol];
   let descr: Descriptor | undefined;
   if ((descr = descriptorByObject.get(value)) != null) return descr;
-
   descr = regDescriptor(
     savedObject.assign(
       {},
@@ -919,26 +926,12 @@ export function regOpaqueObject(
       { value }
     )
   );
-  descr.inheritance = Inheritance.Never;
-  if (useSymbol) {
-    try {
-      savedObject.defineProperty(value, descriptorSymbol, {
-        value: descr,
-        configurable: true,
-        writable: true
-      });
-      return descr;
-    } catch (e) {
-      // not extensible
-    }
-  }
-  descriptorByObject.set(value, descr);
+  weakMapSet.call(descriptorByObject, value, descr);
   return descr;
 }
 
 /**
- * Same as `regOpaqueObject` but doesn't add `[descriptorSymbol]` property and
- * stores value->descriptor mapping in an internal global registry instead.
+ * Same as `regOpaqueObject` but for non-object types, uses `Map` registry instead of `WeakMap`
  * @see regOpaqObject
  */
 export function regOpaquePrim<T>(
@@ -972,7 +965,7 @@ export function regPrim<T>(
 
 /**
  * Registers `prototype` of `constructor` as opaque value and use it
- * as the value's type in output. It also adds resulting `descriptorSymbol`
+ * as the value's type in output.
  * into a prototype.
  *
  * @see regOpaqueObject
@@ -981,7 +974,8 @@ export function regPrim<T>(
  */
 export function regConstructor<T>(
   constr: ValueConstructor<T>,
-  descriptor: IncompleteDescriptor<T> = {}
+  descriptor: IncompleteDescriptor<T> = {},
+  inherit?: boolean
 ): Descriptor<T> {
   const descr = regDescriptor(
     savedObject.assign(
@@ -994,11 +988,12 @@ export function regConstructor<T>(
       }
     )
   );
-  savedObject.defineProperty(constr.prototype, descriptorSymbol, {
-    value: descr,
-    configurable: true,
-    writable: true
-  });
+  if (inherit)
+    savedObject.defineProperty(constr.prototype, descriptorSymbol, {
+      value: descr,
+      configurable: true
+    });
+  else weakMapSet.call(descriptorByPrototype, constr.prototype, descr);
   return descr;
 }
 
@@ -1032,7 +1027,7 @@ const NotSerializablePlaceholderDescriptor = regDescriptor({
 function notSerializableRead(this: Descriptor) {
   if (this.name === "NotSerializable") return notSerializablePlaceholder;
   const res: any = function () {};
-  res[descriptorSymbol] = this.name;
+  weakMapSet.call(descriptorByObject, res, this);
   return new Proxy(res, notSerializableTraps);
 }
 
@@ -1201,11 +1196,7 @@ function readPropDescriptor(
   if ((flags & 8) === 0) pdescr.value = ctx.step(pjson);
   if (get) pdescr.get = ctx.step(get);
   if (set) pdescr.set = ctx.step(set);
-  savedObject.defineProperty(pdescr, descriptorSymbol, {
-    value: PropertyDescriptorDescriptor,
-    configurable: true,
-    writable: true
-  });
+  weakMapSet.call(descriptorByObject, pdescr, PropertyDescriptorDescriptor);
   return pdescr;
 }
 
@@ -1447,25 +1438,15 @@ export let getObjectDescriptor: (
 ) => Descriptor | undefined = function getObjectDescriptorImpl<
   T extends WithTypeofTag
 >(value: T): Descriptor<T> | undefined {
-  const descriptor = (<any>value)[descriptorSymbol];
-  if (descriptor) {
-    if (
-      !descriptor.inheritance ||
-      (descriptor.inheritance === Inheritance.Never &&
-        Object.prototype.hasOwnProperty.call(value, descriptorSymbol)) ||
-      (descriptor.inheritance === Inheritance.Constructor &&
-        Object.prototype.hasOwnProperty.call(
-          Object.getPrototypeOf(value),
-          descriptorSymbol
-        ))
-    )
-      return descriptor;
-  }
-  if (value.$$typeof) {
-    const res = descriptorByTypeOfProp.get(value.$$typeof);
-    if (res) return res;
-  }
-  return;
+  let descriptor = descriptorByObject.get(value);
+  if (descriptor) return descriptor;
+  const proto = Object.getPrototypeOf(value);
+  descriptor = descriptorByPrototype.get(proto);
+  if (descriptor) return descriptor;
+  if (proto && proto !== Object && descriptorSymbol in proto)
+    return (<any>proto)[descriptorSymbol];
+  if (value.$$typeof) descriptor = descriptorByTypeOfProp.get(value.$$typeof);
+  return descriptor;
 };
 
 export function regObjectDescriptorGetter(
@@ -1489,12 +1470,7 @@ export let getValueDescriptor: (
       return PrimDescriptor;
     case "object":
       if (!value) return PrimDescriptor;
-      return (
-        getObjectDescriptor(value) ||
-        (options.descriptorSymForOpaque === false &&
-          descriptorByObject.get(value)) ||
-        PojsoDescriptor
-      );
+      return getObjectDescriptor(value) || PojsoDescriptor;
     case "function":
       return getObjectDescriptor(value);
     case "symbol":
@@ -1642,28 +1618,53 @@ export const WeakMapWorkaround = class WeakMap {
   }
 };
 
-regConstructor(WeakSetWorkaround, { name: "WeakSet" });
-regConstructor(WeakMapWorkaround, { name: "WeakMap" });
+regConstructor(WeakSetWorkaround, { name: "WeakSet#" });
+regConstructor(WeakMapWorkaround, { name: "WeakMap#" });
+
+const weakSetAdd = WeakSet.prototype.add;
 
 regConstructor(WeakSet, {
-  name: "WeakSet#Empty",
-  write() {
-    return {};
+  name: "WeakSet",
+  write(ctx, value) {
+    const res = { v: [] };
+    ctx.weakSets.push([value, res]);
+    return res;
   },
   create() {
     return new WeakSet();
+  },
+  readContent(ctx, json, value) {
+    const { v } = <any>json;
+    for (const i of v) weakSetAdd.call(value, ctx.step(i));
   }
 });
 
-regConstructor(WeakMap, {
-  name: "WeakMap#Empty",
-  write() {
-    return {};
+export const WeakMapDescriptor: IncompleteDescriptor<WeakMap<any, any>> = {
+  name: "WeakMap",
+  write(ctx, value) {
+    const k: any[] = [];
+    const v: any[] = [];
+    const res = { k, v };
+    for (const i of ctx.sharedRefsMap.values()) {
+      if (value.has(i.value)) {
+        k.push(ctx.step(i.value, k, k.length));
+        v.push(ctx.step(value.get(i.value), v, v.length));
+      }
+    }
+    ctx.weakMaps.push([value, res]);
+    return res;
   },
   create() {
     return new WeakMap();
+  },
+  readContent(ctx, json, value) {
+    const { k, v } = <any>json;
+    for (let i = 0, len = k.length; i < len; ++i)
+      weakMapSet.call(value, ctx.step(k[i]), ctx.step(v[i]));
   }
-});
+};
+
+regConstructor(WeakMap, WeakMapDescriptor);
 
 regNewConstructor<Set<unknown>>(
   LocSet,
@@ -1736,12 +1737,11 @@ export function regOpaqueRec(
   if (
     !value ||
     !(typeof value === "function" || typeof value === "object") ||
-    hasProp(value, descriptorSymbol)
+    descriptorByObject.has(value)
   )
     return;
   const descrs = savedObject.getOwnPropertyDescriptors(value);
   for (const i of savedObject.getOwnPropertySymbols(descrs)) {
-    if (i === descriptorSymbol) continue;
     reg(descrs[<any>i], `${prefix}#${String(i)}`);
   }
   regOpaqueObject(value, prefix, opts.descriptor || { props: false });
@@ -1793,7 +1793,7 @@ export function regAutoOpaqueConstr(constr: any, silent?: boolean) {
 }
 
 export function rebindGlobal() {
-  if ((<any>global)[descriptorSymbol]) return;
+  if (descriptorByObject.has(global)) return;
   const oldState = state;
   ObjectConstr = (<any>global).Object;
   state = <State>{
@@ -1808,11 +1808,7 @@ export function rebindGlobal() {
       const value = (<any>global)[descriptor.globalName];
       if (!value) continue;
       descriptor = savedObject.assign({}, descriptor, { value });
-      savedObject.defineProperty(value, descriptorSymbol, {
-        configurable: true,
-        writable: true,
-        value: descriptor
-      });
+      weakMapSet.call(descriptorByObject, value, descriptor);
     }
     state.byName.set(name, descriptor);
   }
@@ -1824,15 +1820,14 @@ export function rebindGlobal() {
  * run it as soon as possible if a global serialization is needed
  */
 export function regGlobal() {
-  if ((<any>global)[descriptorSymbol]) return;
+  if (descriptorByObject.has(global)) return;
   regOpaqueObject(<any>global, "#global");
   for (const name of Object.getOwnPropertyNames(global)) {
     try {
       const obj = (<any>global)[name];
       if (!obj) continue;
-
       if (typeof obj !== "function" && typeof obj !== "object") continue;
-      if (Object.prototype.hasOwnProperty.call(obj, descriptorSymbol)) continue;
+      if (descriptorByObject.has(obj)) continue;
       if (name === "location") {
         regOpaqueObject((<any>global).location, "location", { props: false });
         continue;
@@ -1845,7 +1840,7 @@ export function regGlobal() {
         if (typeof descr.value !== "function") continue;
         regOpaqueObject(descr.value, `#G#${name}#{j}`);
       }
-      if (typeof obj === "function") {
+      if (typeof obj === "function" && obj.prototype) {
         for (const j of Object.getOwnPropertyNames(obj.prototype)) {
           if (j === "prototype") continue;
           const descr = <any>(
@@ -1882,20 +1877,20 @@ for (const i of [
   "setPrototypeOf"
 ]) {
   notSerializableTraps[i] = function (target: any) {
+    const descriptor = descriptorByObject.get(target);
     throw new TypeError(
       `${i} in a not restored object${
-        target[descriptorSymbol] ? ` (${target[descriptorSymbol].name})` : ""
+        descriptor ? ` (${descriptor.name})` : ""
       }`
     );
   };
 }
 
 notSerializableTraps.get = function (target: any, prop: any) {
-  if (prop === descriptorSymbol)
-    return target[descriptorSymbol] || NotSerializableDescriptor;
+  const descriptor = descriptorByObject.get(target);
   throw new TypeError(
     `getting ${prop} in a not restored object${
-      target[descriptorSymbol] ? ` (${target[descriptorSymbol].name})` : ""
+      descriptor ? ` (${descriptor.name})` : ""
     }`
   );
 };
@@ -1927,14 +1922,6 @@ export const PropertyDescriptorDescriptor = regDescriptor({
   name: "PD",
   props: false
 });
-
-export function regPropertyDescriptor(p: PropertyDescriptor) {
-  savedObject.defineProperty(p, descriptorSymbol, {
-    value: PropertyDescriptorDescriptor,
-    configurable: true,
-    writable: true
-  });
-}
 
 regConstructor(String, {
   create(_ctx, json) {

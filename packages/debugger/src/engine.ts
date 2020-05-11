@@ -171,7 +171,7 @@ export function module(
   (<any>curModule).topLevel = null;
   regOpaqueObject(cjs, name + "$mod");
   context.modules[<any>(fullPath || id)] = curModule;
-  (<any>curModule)[S.descriptorSymbol] = ModuleDescriptor;
+  S.setObjectDescriptor(curModule, ModuleDescriptor);
   if (cjs) {
     context.modulesById[cjs.id] = curModule;
     regOpaqueObject(cjs, `${cjs.id}$mod`);
@@ -445,7 +445,7 @@ export const clos: any = config.persistState
       closure.call = defaultCall;
       closure.apply = defaultApply;
       closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
-      closure[S.descriptorSymbol] = (<any>meta).descriptor;
+      S.setObjectDescriptor(closure, (<any>meta).descriptor);
       return closure;
     }
   : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {

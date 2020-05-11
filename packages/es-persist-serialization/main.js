@@ -28,7 +28,6 @@ export {
   regConstructor,
   regOpaqueObject,
   bind,
-  descriptorSymbol,
   parse,
   stringify,
   regDescriptor,

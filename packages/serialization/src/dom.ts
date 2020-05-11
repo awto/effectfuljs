@@ -187,16 +187,16 @@ export function trackGlobalDocument() {
   if (typeof document === "undefined") return;
   // ignoring jsdom props (not needed if jsdom is transpiled too)
   const el = document.createElement("div");
-  el.addEventListener("test-event", function() {});
+  el.addEventListener("test-event", function () {});
   el.innerHTML = `<div id="root"><p>hello, world!</p></div>`;
   const _children = el.children;
   const _attrs = el.attributes;
   for (const i of Object.getOwnPropertySymbols(el)) overrideProps[i] = false;
   for (const i of Object.getOwnPropertySymbols(document))
     overrideProps[i] = false;
-  defineProperty(document, S.descriptorSymbol, {
-    configurable: true,
-    value: S.regDescriptor({
+  S.getState().byObject.set(
+    document,
+    S.regDescriptor({
       name: "global#document",
       write(ctx, value: Document) {
         const json: S.JSONObject = {};
@@ -214,7 +214,7 @@ export function trackGlobalDocument() {
       },
       overrideProps: { ...overrideProps, location: false, [eventsSym]: false }
     })
-  });
+  );
   if (typeof NodeList !== "undefined") {
     S.regConstructor(NodeList, { name: "dom#NodeList", overrideProps });
   }
@@ -222,30 +222,35 @@ export function trackGlobalDocument() {
     S.regConstructor(NodeList, { name: "dom#EventTarget", overrideProps });
   }
   if (typeof Element !== "undefined") {
-    S.regConstructor(Element, {
-      name: "dom#Element",
-      write(ctx, value: Element, par, key) {
-        const json: S.JSONObject = { tag: value.tagName };
-        const nodes: S.JSONArray = (json.c = []);
-        for (const i of nodeListIter(value.childNodes))
-          nodes.push(ctx.step(i, nodes, nodes.length));
-        const attrs: S.JSONObject = (json.a = {});
-        for (const i of nodeListIter(value.attributes)) attrs[i.name] = i.value;
-        const events = value[eventsSym];
-        if (events) json.ev = ctx.step(events, json, "ev");
-        return json;
+    S.regConstructor(
+      Element,
+      {
+        name: "dom#Element",
+        write(ctx, value: Element, par, key) {
+          const json: S.JSONObject = { tag: value.tagName };
+          const nodes: S.JSONArray = (json.c = []);
+          for (const i of nodeListIter(value.childNodes))
+            nodes.push(ctx.step(i, nodes, nodes.length));
+          const attrs: S.JSONObject = (json.a = {});
+          for (const i of nodeListIter(value.attributes))
+            attrs[i.name] = i.value;
+          const events = value[eventsSym];
+          if (events) json.ev = ctx.step(events, json, "ev");
+          return json;
+        },
+        create(_, json) {
+          return document.createElement((<any>json).tag);
+        },
+        readContent(ctx, json, value) {
+          const obj = <any>json;
+          for (const i of obj.c) value.appendChild(ctx.step(i));
+          for (const n in obj.a) value.setAttribute(n, obj.a[n]);
+          if (obj.ev) restoreEvents(value, ctx.step(obj.ev));
+        },
+        overrideProps: { ...overrideProps, [eventsSym]: false }
       },
-      create(_, json) {
-        return document.createElement((<any>json).tag);
-      },
-      readContent(ctx, json, value) {
-        const obj = <any>json;
-        for (const i of obj.c) value.appendChild(ctx.step(i));
-        for (const n in obj.a) value.setAttribute(n, obj.a[n]);
-        if (obj.ev) restoreEvents(value, ctx.step(obj.ev));
-      },
-      overrideProps: { ...overrideProps, [eventsSym]: false }
-    });
+      true
+    );
   }
   if (typeof Event !== "undefined")
     defineProperty(Event.prototype, S.descriptorSymbol, {
@@ -340,26 +345,30 @@ export function trackGlobalDocument() {
     });
 
   if (typeof Document !== "undefined")
-    S.regConstructor(Document, {
-      name: "dom#Document",
-      write(_, value) {
-        const s = new XMLSerializer();
-        return {
-          text: s.serializeToString(value),
-          type: value.contentType
-        };
+    S.regConstructor(
+      Document,
+      {
+        name: "dom#Document",
+        write(_, value) {
+          const s = new XMLSerializer();
+          return {
+            text: s.serializeToString(value),
+            type: value.contentType
+          };
+        },
+        create(_, json: S.JSONValue): Document {
+          return new DOMParser().parseFromString(
+            (<any>json).text,
+            (<any>json).type
+          );
+        },
+        readContent(ctx, json, value) {
+          value.replaceChild(ctx.step((<any>json).el), value.documentElement);
+        },
+        overrideProps
       },
-      create(_, json: S.JSONValue): Document {
-        return new DOMParser().parseFromString(
-          (<any>json).text,
-          (<any>json).type
-        );
-      },
-      readContent(ctx, json, value) {
-        value.replaceChild(ctx.step((<any>json).el), value.documentElement);
-      },
-      overrideProps
-    });
+      true
+    );
 
   if (typeof InputDeviceCapabilities !== "undefined") {
     S.regConstructor(InputDeviceCapabilities, {
