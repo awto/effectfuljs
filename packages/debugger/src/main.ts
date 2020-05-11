@@ -33,13 +33,11 @@ Persist.regModule(Api, "@effectful/debugger/api");
 Persist.regModule(ApiMin, "@effectful/debugger/apiMin");
 
 for (const i of Object.values(RT)) {
-  const meta = i && (<any>i)[State.dataSymbol];
+  const meta = i && State.functions.get(<any>i);
   if (meta) meta.canSkip = true;
 }
 const Serialization: any = { ...S, ...Persist };
 export { Serialization };
-S.regOpaquePrim(State.dataSymbol, "@effectful/debugger/data");
-S.regOpaquePrim(State.thunkSymbol, "@effectful/debugger/thunk");
 S.regOpaqueObject(Symbol.for, "Symbol.for");
 S.regOpaqueObject(Symbol.keyFor, "Symbol.keyFor");
 S.regOpaquePrim(Symbol.iterator, "SymbolStatic.iterator");
@@ -48,7 +46,6 @@ S.regOpaquePrim(Symbol.toStringTag, "SymbolStatic.asyncIterator");
 S.regOpaqueObject(Serialization, "@effectful/debugger/serialization");
 S.regOpaqueObject(SerializationDom, "@effectful/debugger/serialization/dom");
 
-export { thunkSymbol } from "./state";
 export * from "./api";
 
 export { TimeTravel, Engine };

@@ -44,10 +44,14 @@ if (typeof Node !== "undefined") {
         value: Core.noOrderDelete
       });
     }
-    Core.objectSaved.defineProperty(i.prototype, Core.KeysMapSymbol, {
-      configurable: true,
-      value: false
-    });
+    Core.objectSaved.defineProperty(
+      i.prototype,
+      Core.DisableKeysHistorySymbol,
+      {
+        configurable: true,
+        value: true
+      }
+    );
   }
 }
 

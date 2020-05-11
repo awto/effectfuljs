@@ -229,6 +229,8 @@ export type Scope = any[] &
       }
   );
 
+type AnyFunc = (...args: any[]) => any;
+
 export interface State {
   /** stopping on break points if `true`, otherwise ignoring them */
   debug: boolean;
@@ -287,9 +289,24 @@ export interface State {
   onNewSource: (id: number, code: string) => void;
   /** stopping on a breakpoint */
   onStop: () => void;
-
   /** unique number of this execution context */
   threadId: number;
+}
+
+/** known closures */
+export const closures = new WeakMap<AnyFunc, Closure>();
+export const functions = new WeakMap<AnyFunc, FunctionDescr>();
+export const thunks = new WeakMap<any, AnyFunc>();
+export const binds = new WeakMap<
+  AnyFunc,
+  { self: any; args: any[]; fun: AnyFunc }
+>();
+export const objectKeys = new WeakMap<any, KeysDescr>();
+
+export interface Closure {
+  meta: FunctionDescr;
+  parent: Frame | null;
+  $: any[] | null;
 }
 
 /** a part of context stores information about currently executing function */
@@ -369,14 +386,16 @@ export const saved = {
   Set,
   Reflect: {
     construct: Reflect.construct
+  },
+  WeakMap: {
+    set: WeakMap.prototype.set,
+    delete: WeakMap.prototype.delete
+  },
+  WeakSet: {
+    add: WeakSet.prototype.add,
+    delete: WeakSet.prototype.delete
   }
 };
-
-/**
- * marks functions represeting a lazy value, the value is result
- * of the function's call
- */
-export const thunkSymbol = Symbol("@effectful/debugger/thunk");
 
 export function returnToken() {
   return token;
@@ -387,9 +406,6 @@ export function throwToken() {
 }
 
 export const token = { _effectToken: true };
-
-/** function's meta-data property name */
-export const dataSymbol = Symbol("@effectful/debugger/data");
 
 interface IdsStore {
   free(descriptor: number): void;
@@ -543,4 +559,20 @@ export function patchNative(obj: any, name: string | symbol, value: any) {
     writable: true,
     value
   });
+}
+
+/** object's keys insertion order list */
+export interface KeysOrder {
+  name: string;
+  next: KeysOrder;
+  prev: KeysOrder;
+  enumerable: boolean;
+}
+
+/** object's keys orders description */
+export interface KeysDescr {
+  strKeys: KeysOrder;
+  strMap: { [name: string]: KeysOrder };
+  symKeys: KeysOrder;
+  symMap: { [name: string]: KeysOrder };
 }

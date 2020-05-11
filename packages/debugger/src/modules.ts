@@ -3,19 +3,15 @@ import { wrapModule } from "./instr/rt";
 import config from "./config";
 import { compileModule } from "./engine";
 
-const { context, token, thunkSymbol, saved } = State;
-
-const { defineProperty } = saved.Object;
+const { context, token, saved } = State;
+const weakMapSet = saved.WeakMap.set;
 
 export function runTopLevel(mod: State.Module) {
   const cjs = mod.cjs;
   context.call = mod.cjs && mod.cjs.id === context.moduleId ? wrapModule : null;
   context.moduleId = null;
   if (wrapModule(mod, cjs) === token)
-    defineProperty(cjs.exports, thunkSymbol, {
-      value: State.returnToken,
-      configurable: true
-    });
+    weakMapSet.call(State.thunks, cjs.exports, State.returnToken);
   return cjs.exports;
 }
 
@@ -34,9 +30,6 @@ export function moduleExports() {
     runTopLevel(mod);
   } catch (e) {
     if (e !== token) throw e;
-    defineProperty(cjs.exports, thunkSymbol, {
-      value: State.throwToken,
-      configurable: true
-    });
+    weakMapSet.call(State.thunks, cjs.exports, State.throwToken);
   }
 }

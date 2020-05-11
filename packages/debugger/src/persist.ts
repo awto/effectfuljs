@@ -1,14 +1,18 @@
-import {
-  context,
-  dataSymbol,
-  FunctionDescr,
-  defaultErrHandler,
-  defaultFinHandler,
-  saved
-} from "./state";
+import * as State from "./state";
 import * as S from "@effectful/serialization";
 import config from "./config";
 function nop() {}
+
+const {
+  context,
+  defaultErrHandler,
+  defaultFinHandler,
+  saved,
+  closures,
+  binds
+} = State;
+
+const weakMapSet = saved.WeakMap.set;
 
 export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
 export const regAutoOpaqueConstr = config.persistState
@@ -16,13 +20,6 @@ export const regAutoOpaqueConstr = config.persistState
   : nop;
 
 const noProps = { props: false, propsSnapshot: false };
-
-const {
-  boundFunSymbol,
-  boundThisSymbol,
-  boundArgsSymbol,
-  descriptorSymbol
-} = S;
 
 export const regOpaqueObject = config.persistState
   ? function(obj: any, name: string) {
@@ -62,7 +59,7 @@ export const ModuleDescriptor = S.regDescriptor<any>({
   props: false
 });
 
-export function regFun(meta: FunctionDescr) {
+export function regFun(meta: State.FunctionDescr) {
   const constr = meta.func;
   const funcDescr = S.regDescriptor<any>({
     name: `p#${meta.persistName}`,
@@ -70,20 +67,19 @@ export function regFun(meta: FunctionDescr) {
       return constr();
     },
     readContent(ctx, json, value) {
-      let data = value[dataSymbol];
+      let data = <State.ProtoFrame>closures.get(value);
       data.$ = ctx.step((<any>json).$$);
       data.parent = ctx.step((<any>json).p);
     },
     write(ctx, value) {
       const json: any = {};
-      const proto = value[dataSymbol];
+      const proto = <State.ProtoFrame>closures.get(value);
       json.$$ = ctx.step(proto.$, json, "$$");
       json.p = ctx.step(proto.parent, json, "p");
       return json;
     },
     // TODO: save the props in snapshot so they can be updated
     overrideProps: {
-      [dataSymbol]: false,
       call: false,
       apply: false
     },
@@ -120,12 +116,10 @@ const savedCall = saved.FunctionMethods.call;
 
 function makeBind(): (...args: any[]) => any {
   function bind(...rest: any[]): any {
-    const fun = (<any>bind)[boundFunSymbol];
+    const { fun, self, args: boundArgs } = <any>binds.get(bind);
     context.call = context.call === bind ? fun : null;
-    const boundArgs: any[] = (<any>bind)[boundArgsSymbol];
-    // avoiding spreads because they are monkey patched
     const arr: any[] = Array(rest.length + boundArgs.length + 1);
-    arr[0] = (<any>bind)[boundThisSymbol];
+    arr[0] = self;
     let index = 0;
     for (const i of boundArgs) arr[++index] = i;
     for (const i of rest) arr[++index] = i;
@@ -142,11 +136,26 @@ if (config.patchRT && config.persistState) {
     ...args: any[]
   ): (...args: any[]) => any {
     const res = <any>makeBind();
-    res[boundFunSymbol] = this;
-    res[boundThisSymbol] = self;
-    res[boundArgsSymbol] = args;
+    weakMapSet.call(binds, res, { fun: this, self, args });
     return res;
   };
 }
 
 export const extra: Set<any> = new Set();
+
+function opaqueWeakMap(map: WeakMap<any, any>, name: string) {
+  const descr: S.IncompleteDescriptor<WeakMap<any, any>> = saved.Object.assign(
+    {},
+    S.WeakMapDescriptor
+  );
+  descr.name = name;
+  descr.create = function() {
+    return map;
+  };
+  S.setObjectDescriptor(map, S.regDescriptor(descr));
+}
+
+opaqueWeakMap(State.functions, "@effectful/debugger/context/functions");
+opaqueWeakMap(closures, "@effectful/debugger/context/closures");
+opaqueWeakMap(binds, "@effectful/debugger/context/binds");
+opaqueWeakMap(State.objectKeys, "@effectful/debugger/context/objectKeys");

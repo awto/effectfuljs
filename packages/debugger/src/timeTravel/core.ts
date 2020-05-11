@@ -1,7 +1,18 @@
 import config from "../config";
-import { journal, Record, saved, context, ForInIterator, patchNative as patch } from "../state";
+import {
+  journal,
+  Record,
+  saved,
+  context,
+  ForInIterator,
+  patchNative as patch,
+  KeysDescr,
+  KeysOrder,
+  objectKeys
+} from "../state";
 import { record1, record2, record3, record4 } from "./binds";
 import { regOpaqueObject } from "../persist";
+const weakMapSet = saved.WeakMap.set;
 
 const SavedSet = Set;
 
@@ -20,7 +31,7 @@ export function checkpoint(): Record {
   if (now) now.prev = journal.past;
   journal.past = now;
   return (journal.now = {
-    prev: null,
+    prev: null
   });
 }
 
@@ -34,13 +45,13 @@ export interface Callable {
  */
 export const record: <T extends Callable>(f: T) => void = config.timeTravel
   ? function record(f: any) {
-    if (!f) return;
-    const { now } = journal;
-    if (!now) return;
-    (<any>f).prev = now.operations || null;
-    now.operations = f;
-  }
-  : function () { };
+      if (!f) return;
+      const { now } = journal;
+      if (!now) return;
+      (<any>f).prev = now.operations || null;
+      now.operations = f;
+    }
+  : function() {};
 
 export const objectSaved = {
   freeze: Object.freeze,
@@ -60,44 +71,25 @@ export const objectSaved = {
   getOwnPropertyDescriptors: Object.getOwnPropertyDescriptors,
   getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor,
   getPrototypeOf: Object.getPrototypeOf,
-  create: Object.create,
+  create: Object.create
 };
-
-interface KeysOrder {
-  name: string;
-  next: KeysOrder;
-  prev: KeysOrder;
-  enumerable: boolean;
-}
-
-interface KeysDescr {
-  strKeys: KeysOrder;
-  strMap: { [name: string]: KeysOrder };
-  symKeys: KeysOrder;
-  symMap: { [name: string]: KeysOrder };
-}
-
-export const KeysMapSymbol = Symbol.for("@effectful/debugger/keys");
 
 function isInt(str: string): boolean {
   return String(Math.ceil(Math.abs(<any>str))) === str;
 }
 
-function getObjKeys(obj: any): KeysDescr | undefined {
-  if (!obj) return undefined;
-  const value = obj[KeysMapSymbol];
-  if (
-    value === false ||
-    Object.prototype.hasOwnProperty.call(obj, KeysMapSymbol)
-  )
-    return value;
-  return void 0;
+export const DisableKeysHistorySymbol = Symbol.for("@effectful/no-keys");
+
+function getObjKeys(obj: any): KeysDescr | false | undefined {
+  if (!obj) return void 0;
+  if (DisableKeysHistorySymbol in obj) return false;
+  return objectKeys.get(obj);
 }
 
 function getOrCreateObjKeys(
   obj: any,
   optional: boolean
-): KeysDescr | undefined {
+): KeysDescr | undefined | false {
   let descr = getObjKeys(obj);
   if (descr != null || optional) return descr;
   let strKeys: KeysOrder = <any>{ name: null };
@@ -116,7 +108,7 @@ function getOrCreateObjKeys(
       enumerable:
         (<any>objectSaved.getOwnPropertyDescriptor(obj, i)).enumerable === true,
       next,
-      prev: strKeys,
+      prev: strKeys
     };
   }
   for (const i of objectSaved.getOwnPropertySymbols(obj)) {
@@ -126,13 +118,19 @@ function getOrCreateObjKeys(
       enumerable:
         (<any>objectSaved.getOwnPropertyDescriptor(obj, i)).enumerable === true,
       next,
-      prev: symKeys,
+      prev: symKeys
     };
   }
-  objectSaved.defineProperty(obj, KeysMapSymbol, {
-    configurable: true,
-    value: descr = { strKeys, strMap, symKeys, symMap },
-  });
+  weakMapSet.call(
+    objectKeys,
+    obj,
+    (descr = {
+      strKeys,
+      strMap,
+      symKeys,
+      symMap
+    })
+  );
   return descr;
 }
 
@@ -236,7 +234,7 @@ function addKey(
         if (!descr) return false;
         addKeyImpl(name, descr.strMap, descr.strKeys, <any>{
           name,
-          enumerable,
+          enumerable
         });
       }
     } else {
@@ -244,7 +242,7 @@ function addKey(
       if (!descr) return false;
       addKeyImpl(name, descr.symMap, descr.symKeys, <any>{
         name,
-        enumerable,
+        enumerable
       });
     }
   }
@@ -262,14 +260,14 @@ function addNotIntKey(
     if (!descr) return false;
     addKeyImpl(name, descr.symMap, descr.symKeys, <any>{
       name,
-      enumerable,
+      enumerable
     });
   } else {
     const descr = getOrCreateObjKeys(obj, optional);
     if (!descr) return false;
     addKeyImpl(name, descr.strMap, descr.strKeys, <any>{
       name,
-      enumerable,
+      enumerable
     });
   }
   return true;
@@ -312,7 +310,7 @@ function objectGetOwnPropertyDescriptors(
   return res;
 }
 
-function objectKeys(obj: any): string[] {
+function getObjectKeys(obj: any): string[] {
   const descr = getObjKeys(obj);
   if (!descr) return objectSaved.keys(obj);
   const keys = objectSaved.keys(obj);
@@ -357,7 +355,7 @@ export function forInIterator(obj: any): Iterable<string> {
 }
 
 function objectEntries(obj: any): string[] {
-  const ks = objectKeys(obj);
+  const ks = getObjectKeys(obj);
   const len = ks.length;
   const res = new Array(len);
   for (let i = 0; i < len; ++i) {
@@ -392,8 +390,8 @@ export const set: (
   name: string /* | symbol | number */,
   value: any
 ) => any = config.timeTravel
-    ? config.expNoAccessOverloading
-      ? function set(obj: any, name: string, value: any) {
+  ? config.expNoAccessOverloading
+    ? function set(obj: any, name: string, value: any) {
         if (journal.enabled) {
           if (Array.isArray(obj)) return arraySet(obj, name, value);
           let descr: PropertyDescriptor | undefined = void 0;
@@ -419,7 +417,7 @@ export const set: (
         }
         return (obj[name] = value);
       }
-      : function set(obj: any, name: string, value: any) {
+    : function set(obj: any, name: string, value: any) {
         if (journal.enabled) {
           const setter = obj[SetSymbol];
           if (setter) return setter(obj, name, value);
@@ -430,7 +428,7 @@ export const set: (
         }
         return (obj[name] = value);
       }
-    : function set(obj: any, name: string, value: any) {
+  : function set(obj: any, name: string, value: any) {
       return (obj[name] = value);
     };
 
@@ -439,8 +437,8 @@ export const del: (
   obj: any,
   name: string /* | symbol | number */
 ) => any = config.timeTravel
-    ? config.expNoAccessOverloading
-      ? function del(obj: any, name: string) {
+  ? config.expNoAccessOverloading
+    ? function del(obj: any, name: string) {
         if (journal.enabled) {
           const cur = defaultGetOwnPropertyDescriptor(obj, name);
           if (cur) {
@@ -450,7 +448,7 @@ export const del: (
         }
         return delete obj[name];
       }
-      : function del(obj: any, name: string) {
+    : function del(obj: any, name: string) {
         if (journal.enabled) {
           const deleter = obj[DeleteSymbol];
           if (deleter) return deleter(obj, name);
@@ -462,7 +460,7 @@ export const del: (
         }
         return delete obj[name];
       }
-    : function del(obj: any, name: string) {
+  : function del(obj: any, name: string) {
       return delete obj[name];
     };
 
@@ -679,7 +677,7 @@ export const typedArraySaved = {
   sort: TAp.sort,
   set: TAp.set,
   fill: TAp.fill,
-  reverse: TAp.reverse,
+  reverse: TAp.reverse
 };
 
 function spliceOp(this: any) {
@@ -767,12 +765,12 @@ function typedArrayPropSet(arr: any[], name: string, value: any) {
 if (!config.expNoAccessOverloading) {
   objectSaved.defineProperty(Array.prototype, SetSymbol, {
     value: arraySet,
-    configurable: true,
+    configurable: true
   });
 
   objectSaved.defineProperty(TAp, SetSymbol, {
     value: typedArrayPropSet,
-    configurable: true,
+    configurable: true
   });
   Object.defineProperty(global, SetSymbol, { value: simpleSet });
 }
@@ -1019,7 +1017,7 @@ if (config.timeTravel && config.patchRT) {
   patch(Object, "getOwnPropertyDescriptors", objectGetOwnPropertyDescriptors);
   patch(Object, "getOwnPropertyNames", objectGetOwnPropertyNames);
   patch(Object, "getOwnPropertySymbols", objectGetOwnPropertySymbols);
-  patch(Object, "keys", objectKeys);
+  patch(Object, "keys", getObjectKeys);
   patch(Object, "entries", objectEntries);
   patch(Object, "create", objectCreate);
   patch(Ap, "push", arrayPush);

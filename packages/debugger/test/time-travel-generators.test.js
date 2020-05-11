@@ -3,6 +3,7 @@ const trace = require("./run");
 trace.silent = true;
 const D = require("../main");
 const S = require("@effectful/serialization");
+const State = require("../state");
 const Ctx = D.context;
 S.regGlobal();
 
@@ -56,7 +57,11 @@ test("generator functions time traveling", function() {
       now: j.now,
       future: j.future,
       past: j.past,
-      data: Ctx.top
+      data: Ctx.top,
+      closures: State.closures,
+      functions: State.functions,
+      binds: State.binds,
+      objectKeys: State.objectKeys
     });
     D.TimeTravel.reset();
     const restored = S.read(data);
@@ -166,7 +171,14 @@ test("async function's time traveling", async function() {
     journal.enabled = false;
     console.log("WRITE");
     const data = JSON.stringify(
-      S.write({ j: { ...journal }, data: r1 }, { ignore: "placeholder" })
+      S.write({ 
+        j: { ...journal }, 
+        data: r1,
+        closures: State.closures,
+        functions: State.functions,
+        binds: State.binds,
+        objectKeys: State.objectKeys
+       }, { ignore: "placeholder" })
     );
     journal.enabled = true;
     D.TimeTravel.redo();
@@ -295,7 +307,14 @@ test("async generator functions time traveling", async function() {
     journal.enabled = false;
     console.log("WRITE");
     const data = JSON.stringify(
-      S.write({ j: { ...journal }, data: r1 }, { ignore: "placeholder" })
+      S.write({ 
+        j: { ...journal }, 
+        data: r1,
+        closures: State.closures,
+        functions: State.functions,
+        binds: State.binds,
+        objectKeys: State.objectKeys
+       }, { ignore: "placeholder" })
     );
     journal.enabled = true;
     D.TimeTravel.redo();

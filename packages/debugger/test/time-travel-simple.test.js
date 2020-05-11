@@ -1,6 +1,7 @@
 require("./setup-time-travel");
 const trace = require("./run");
 const D = require("../main");
+const State = require("../state");
 const S = require("@effectful/serialization");
 const context = D.context;
 
@@ -134,7 +135,8 @@ describe("time traveling", function() {
       now: j.now,
       future: j.future,
       past: j.past,
-      data: v
+      data: v,
+      objectKeys: State.objectKeys
     });
     expect(JSON.stringify(data)).toMatchSnapshot();
     const restored = S.read(data);

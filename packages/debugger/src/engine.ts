@@ -21,9 +21,9 @@ import {
   BrkFlag,
   defaultErrHandler,
   defaultFinHandler,
-  thunkSymbol,
   undef
 } from "./state";
+
 import * as State from "./state";
 import * as TTCore from "./timeTravel/core";
 import * as TT from "./timeTravel/main";
@@ -42,12 +42,14 @@ const Map = saved.Map;
 
 const globalNS = config.globalNS;
 
-const { journal, context, token, dataSymbol } = State;
+const { journal, context, token, closures, functions, thunks } = State;
 const SavedFunction = State.saved.Function;
 const savedApply = State.saved.FunctionMethods.apply;
 const savedCall = State.saved.FunctionMethods.call;
 const defineProperty = saved.Object.defineProperty;
 const savedToString = Function.prototype.toString;
+const weakMapSet = saved.WeakMap.set;
+const weakMapDelete = saved.WeakMap.delete;
 
 let curModule: Module = undefined as any; // this is always used in context where this is inited
 let moduleChanged = false;
@@ -225,7 +227,7 @@ export function fun(
   if (!finHandler) finHandler = defaultFinHandler;
   const names = [origName || "*"];
   let parent: FunctionDescr | null = null;
-  if (parentConstr) parent = (<any>parentConstr)[dataSymbol];
+  if (parentConstr) parent = <FunctionDescr>functions.get(parentConstr);
   for (let p = parent; p; p = p.parent) names.unshift(p.name);
   const fullName = `${curModule.name}:${names.join(".")}@${loc || "?"}`;
   const uniqName = `${curModule.name}#${name}`;
@@ -378,7 +380,7 @@ export function fun(
     constrParams
   ).apply(null, args);
   meta.func = constr;
-  (<any>constr)[dataSymbol] = meta;
+  weakMapSet.call(functions, constr, meta);
   if (config.expFunctionConstr) constr.constructor = FunctionConstr;
   if (config.persistState) regFun(meta);
   return meta.func;
@@ -433,25 +435,25 @@ export const clos: any = config.persistState
     defineProperty(closure, "apply", {
       configurable: true,
       value: defaultApply
-    });
-    defineProperty(closure, dataSymbol, {
-      configurable: true,
-      value: { meta, parent, $: parent && parent.$ }
-    });
-    defineProperty(closure, S.descriptorSymbol, {
-      configurable: true,
-      value: (<any>meta).descriptor
     });*/
       closure.call = defaultCall;
       closure.apply = defaultApply;
-      closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
+      weakMapSet.call(closures, closure, {
+        meta,
+        parent,
+        $: parent && parent.$
+      });
       S.setObjectDescriptor(closure, (<any>meta).descriptor);
       return closure;
     }
   : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
       closure.call = defaultCall;
       closure.apply = defaultApply;
-      closure[dataSymbol] = { meta, parent, $: parent && parent.$ };
+      weakMapSet.call(closures, closure, {
+        meta,
+        parent,
+        $: parent && parent.$
+      });
       return closure;
     };
 
@@ -821,7 +823,7 @@ if (config.patchRT) {
       // nothing to see here
       let params: string = "";
       let name = this.name;
-      const data = this[dataSymbol];
+      const data = closures.get(this);
       if (data && data.meta && !data.meta.blackbox)
         return savedToString.call(this);
       return `function ${name || ""}(${params}) { [native code] }`;
@@ -924,7 +926,7 @@ export function isDelayedResult(value: any): boolean {
 }
 
 export function makeFrame(closure: any, newTarget: any): Frame {
-  const { meta, $, parent } = <ProtoFrame>closure[dataSymbol];
+  const { meta, $, parent } = <ProtoFrame>closures.get(closure);
   let $g = parent ? parent.$g : global;
   // uses globals AND eval
   // if (meta.flags & Flag.HAS_DICTIONARY_SCOPE) $g = Object.create($g);
@@ -1147,9 +1149,10 @@ export function iterNext(iter: any, value: any) {
  */
 export function force(value: any): any {
   if (!value) return value;
-  const thunk = value[thunkSymbol];
+  const thunk = thunks.get(value);
   if (!thunk) return value;
-  defineProperty(value, thunkSymbol, { value: null, configurable: true });
+  // defineProperty(value, thunkSymbol, { value: null, configurable: true });
+  weakMapDelete.call(thunks, value);
   return thunk();
 }
 

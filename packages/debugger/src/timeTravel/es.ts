@@ -7,9 +7,9 @@ import { journal, context, patchNative as patch } from "../state";
 import * as S from "@effectful/serialization";
 import { Core } from "./main";
 
-const record = config.timeTravel ? TTCore.record : function () { };
-const record2 = config.timeTravel ? Binds.record2 : function () { };
-const record3 = config.timeTravel ? Binds.record3 : function () { };
+const record = config.timeTravel ? TTCore.record : function() {};
+const record2 = config.timeTravel ? Binds.record2 : function() {};
+const record3 = config.timeTravel ? Binds.record3 : function() {};
 
 const SavedMap = Map;
 const Ap = Array.prototype;
@@ -328,6 +328,94 @@ export const ManagedSet = class Set<T> {
 
 regConstructor(ManagedSet, { name: "#MSet" });
 
+const WMp = WeakMap.prototype;
+
+export const weakMapSaved = {
+  set: WMp.set,
+  delete: WMp.delete
+};
+
+function weakMapSetOp(this: any) {
+  const { a: map, b: k, c: v } = this;
+  this.call = weakMapDeleteOp;
+  record(this);
+  weakMapSaved.set.call(map, k, v);
+}
+
+regOpaqueObject(weakMapSetOp, "#set$wmap");
+
+function weakMapSet<K extends object, V>(this: WeakMap<K, V>, k: K, v: V) {
+  if (journal.enabled && context.call === weakMapSet) {
+    if (this.has(k)) {
+      const old = this.get(k);
+      if (old !== v) record3(weakMapSetOp, this, k, this.get(k));
+    } else record3(weakMapDeleteOp, this, k, v);
+  }
+  return weakMapSaved.set.call(this, k, v);
+}
+
+regOpaqueObject(weakMapSetOp, "#set$wmap");
+
+function weakMapDeleteOp(this: any) {
+  const { a: map, b: k } = this;
+  this.call = weakMapSetOp;
+  record(this);
+  weakMapSaved.delete.call(map, k);
+}
+
+regOpaqueObject(weakMapDeleteOp, "#del$wmap");
+
+function weakMapDelete<K extends object, V>(this: WeakMap<K, V>, k: K) {
+  if (journal.enabled && context.call === weakMapDelete && this.has(k))
+    record3(weakMapSetOp, this, k, this.get(k));
+  return weakMapSaved.delete.call(this, k);
+}
+
+const WSp = WeakSet.prototype;
+
+export const weakSetSaved = {
+  add: WSp.add,
+  delete: WSp.delete
+};
+
+function weakSetAddOp(this: any) {
+  const { a: set, b: v } = this;
+  this.call = weakSetDeleteOp;
+  record(this);
+  return weakSetSaved.add.call(set, v);
+}
+
+regOpaqueObject(weakSetAddOp, "#add$wset");
+
+function weakSetAdd<T extends object>(this: WeakSet<T>, v: T) {
+  if (journal.enabled && context.call === weakSetAdd && !this.has(v))
+    record2(weakSetDeleteOp, this, v);
+  return weakSetSaved.add.call(this, v);
+}
+
+function weakSetDeleteOp(this: any) {
+  const { a: set, b: v } = this;
+  this.call = weakSetAddOp;
+  record(this);
+  weakSetSaved.delete.call(set, v);
+}
+
+regOpaqueObject(weakSetDeleteOp, "#del$wset");
+
+function weakSetDelete<T extends object>(this: WeakSet<T>, v: T) {
+  if (journal.enabled && context.call === weakSetDelete && this.has(v))
+    record2(weakSetAddOp, this, v);
+  return weakSetSaved.delete.call(this, v);
+}
+
+if (config.timeTravel && config.patchRT) {
+  WMp.delete = weakMapDelete;
+  WMp.set = weakMapSet;
+  WSp.delete = weakSetDelete;
+  WSp.add = weakSetAdd;
+}
+
+/*
 if (config.timeTravel) {
   S.WeakMapWorkaround.prototype.set = function set(key: any, value: any) {
     switch (typeof key) {
@@ -337,7 +425,7 @@ if (config.timeTravel) {
         Object.defineProperty(key, this.prop, {
           configurable: true,
           writable: true,
-          value,
+          value
         });
         break;
       default:
@@ -363,7 +451,7 @@ if (config.timeTravel) {
         Object.defineProperty(value, this.prop, {
           configurable: true,
           writable: true,
-          value: true,
+          value: true
         });
         break;
       default:
@@ -372,10 +460,11 @@ if (config.timeTravel) {
     return this;
   };
 }
+*/
 
 if ((config.timeTravel || config.persistState) && config.patchRT) {
-  patch(global, "WeakMap", S.WeakMapWorkaround);
-  patch(global, "WeakSet", S.WeakSetWorkaround);
+  // patch(global, "WeakMap", S.WeakMapWorkaround);
+  // patch(global, "WeakSet", S.WeakSetWorkaround);
   patch(Ap, Symbol.iterator, arrayIterator);
   patch(global, "Map", ManagedMap);
   patch(global, "Set", ManagedSet);

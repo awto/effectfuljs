@@ -13,7 +13,7 @@ import { map, filter } from "../kit";
 import * as Persist from "../persist";
 
 const { assign, defineProperty } = State.saved.Object;
-
+const weakMapSet = State.saved.WeakMap.set;
 const Set = State.saved.Set;
 const Map = State.saved.Map;
 
@@ -557,7 +557,7 @@ function varValue(name: string, value: any): VarValue {
   let valRepr = value;
   switch (typeof value) {
     case "function":
-      const descr = value[State.dataSymbol];
+      const descr = State.closures.get(value);
       if (descr) {
         const meta = descr.meta;
         if (meta) {
@@ -1148,14 +1148,17 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
         top: context.top,
         syncStack: context.syncStack,
         queue: context.queue,
-        debug: context.debug,
         brk: context.brk,
         brkFrame,
         journal: { ...journal },
         global,
         document: (<any>global).document,
         extra: Persist.extra,
-        modules: modulesExports
+        modules: modulesExports,
+        closures: State.closures,
+        functions: State.functions,
+        thunks: State.thunks,
+        binds: State.binds
       },
       assign(
         {
@@ -1242,7 +1245,6 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
           top: context.top,
           syncStack: context.syncStack,
           queue: context.queue,
-          debug: context.debug,
           brk: context.brk,
           brkFrame,
           journal: {
@@ -1265,9 +1267,9 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
             continue;
           }
           if (!module.cjs) continue;
-          defineProperty(
+          weakMapSet.call(
+            State.thunks,
             (module.exports = module.cjs.exports = {}),
-            State.thunkSymbol,
             {
               value: runTopLevel.bind(null, module),
               configurable: true
