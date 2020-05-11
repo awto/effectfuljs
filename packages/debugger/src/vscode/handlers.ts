@@ -1185,6 +1185,38 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
   const savedEnabled = journal.enabled;
   try {
     journal.enabled = false;
+    const loadedModules = new Set<string>();
+    for (const i of (<any>json).modules) {
+      let module = context.modules[i.id];
+      loadedModules.add(i.id);
+      const { params } = i;
+      if (params) {
+        const parent = params.parent && context.modules[params.parent];
+        Engine.compileEval(
+          params.code,
+          parent,
+          params.evalContext,
+          params.scopeDepth,
+          params.blackbox,
+          params.params,
+          params.id
+        );
+        continue;
+      }
+      if (!i.cjs) continue;
+      if (!module || !module.cjs) {
+        for (const parent of i.parents) {
+          // this assumes parent modules are loaded first
+          const parentModule = context.modulesById[parent];
+          if (parentModule && parentModule.cjs) {
+            parentModule.cjs.__effectful_js_require(i.cjs);
+            break;
+          }
+        }
+      }
+      module = Engine.getCurModule();
+      if (!module || !module.cjs) continue;
+    }
     const state = S.read(
       json,
       assign(
@@ -1207,38 +1239,6 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
           }
         }
         journal.enabled = false;
-        const loadedModules = new Set<string>();
-        for (const i of (<any>json).modules) {
-          let module = context.modules[i.id];
-          loadedModules.add(i.id);
-          const { params } = i;
-          if (params) {
-            const parent = params.parent && context.modules[params.parent];
-            Engine.compileEval(
-              params.code,
-              parent,
-              params.evalContext,
-              params.scopeDepth,
-              params.blackbox,
-              params.params,
-              params.id
-            );
-            continue;
-          }
-          if (!i.cjs) continue;
-          if (!module || !module.cjs) {
-            for (const parent of i.parents) {
-              // this assumes parent modules are loaded first
-              const parentModule = context.modulesById[parent];
-              if (parentModule && parentModule.cjs) {
-                parentModule.cjs.__effectful_js_require(i.cjs);
-                break;
-              }
-            }
-          }
-          module = Engine.getCurModule();
-          if (!module || !module.cjs) continue;
-        }
         let modulesExports: any;
         ({
           activeTop: context.activeTop,
@@ -1270,10 +1270,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
           weakMapSet.call(
             State.thunks,
             (module.exports = module.cjs.exports = {}),
-            {
-              value: runTopLevel.bind(null, module),
-              configurable: true
-            }
+            runTopLevel.bind(null, module)
           );
         }
         if (context.activeTop) signalStopped();

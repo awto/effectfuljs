@@ -82,7 +82,7 @@ export const DisableKeysHistorySymbol = Symbol.for("@effectful/no-keys");
 
 function getObjKeys(obj: any): KeysDescr | false | undefined {
   if (!obj) return void 0;
-  if (DisableKeysHistorySymbol in obj) return false;
+  if (obj[DisableKeysHistorySymbol]) return false;
   return objectKeys.get(obj);
 }
 
