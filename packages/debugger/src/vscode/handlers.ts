@@ -523,7 +523,7 @@ handlers.variables = function(args, response) {
       val[variablesSym](variables);
     } else if (Array.isArray(val)) {
       for (
-        let i = args.start || 0, len = args.count || val.length;
+        let i = args.start || 0, len = args.count ? i + args.count : val.length;
         i < len;
         ++i
       )

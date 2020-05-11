@@ -208,6 +208,7 @@ export class DebugSession extends SessionImpl {
       this.closeRemote(threadId);
       return false;
     }
+    this.lastThread = threadId;
     thread.send(msg);
     return true;
   }
@@ -264,7 +265,6 @@ export class DebugSession extends SessionImpl {
       case "reverseContinue":
         const args: any = request.arguments;
         if (args.threadId != null) {
-          this.lastThread = args.threadId;
           if (this.sendToThread(args.threadId, request)) return;
           break;
         }
@@ -318,6 +318,7 @@ export class DebugSession extends SessionImpl {
         case "stopped":
         case "thread":
           (<any>ev).body.threadId = thread.id;
+          this.lastThread = thread.id;
           (<any>ev).body.allThreadsContinued = false;
       }
       this.sendEvent(ev);
@@ -656,9 +657,7 @@ export class DebugSession extends SessionImpl {
               `Cannot launch debug target in terminal (${data.message}).`
             );
             if (webpackProgress)
-              this.sendEvent(
-                new ProgressEndEvent(webpackProgress, message)
-              );
+              this.sendEvent(new ProgressEndEvent(webpackProgress, message));
             this.terminate("spawn error: " + data.message);
           });
           child.stdout.on("data", data => {
