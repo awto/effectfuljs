@@ -31,6 +31,8 @@ Object.assign(config, {
   expInlineCalls: false,
   expGlobalsEnv: false,
   moduleParams: null,
-  switchFallthrough: true
+  switchFallthrough: true,
+  inlineTrampolineLoop: true,
+  optimizeFrames: true
 });
 export default config;

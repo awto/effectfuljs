@@ -541,7 +541,7 @@ handlers.variables = function(args, response) {
       if (proto !== null && proto !== Object.prototype)
         variables.push(varValue("__proto__", proto));
       for (
-        let i = args.start || 0, len = args.count ? args.count - 1 : arr.length;
+        let i = args.start || 0, len = args.count ? i + args.count : arr.length;
         i < len;
         ++i
       ) {
@@ -780,7 +780,7 @@ function interruptibleStep() {
 
 function pause() {
   pauseNext = true;
-  if (config.timeTravel && !context.top) {
+  if (config.timeTravel && !context.top && !context.queue.length) {
     backward = true;
     run();
   }

@@ -29,7 +29,7 @@ export function calcFrames(root) {
   lastFrame.block = null;
   let prevFrame = lastFrame;
   prevFrame.prevFrame = prevFrame.nextFrame = prevFrame;
-  const combineFrames = config.blackbox;
+  const combineFrames = config.blackbox && config.optimizeFrames;
   const pureSym =
     Scope.pureSyms[flags & Scope.ASYNC_OR_GENERATOR_FUNCTION_FLAG];
   prevFrame.consequent = Kit.throwStmt(
@@ -49,6 +49,8 @@ export function calcFrames(root) {
   injectSysCall(pureSym, Kit.memExpr(Tag.left, ctxSym, "result"));
   end.frame = resFrame;
   initTop();
+  const trampoline = config.inlineTrampolineLoop;
+  const tagContinue = trampoline ? Tag.ContinueStatement : Tag.ReturnStatement;
   const errFrame = (errBlock.frame = frame = newFrame(
     (consequent = Kit.arr(Tag.consequent))
   ));
@@ -135,7 +137,8 @@ export function calcFrames(root) {
         } else {
           (frame.nextEffSkipExit = (ref.nextEffSkipExit =
             frame.nextEffSkipExit).prevEffSkipExit = ref).prevEffSkipExit = frame;
-          if (lhs) Kit.assignStmt(consequent, Kit.id(Tag.left, patSym), rhs);
+          if (lhs && trampoline)
+            Kit.assignStmt(consequent, Kit.id(Tag.left, patSym), rhs);
           else Kit.exprStmt(consequent, rhs);
         }
         if (lhs === patSym) lhs = null;
@@ -143,7 +146,7 @@ export function calcFrames(root) {
         if (!i.result && !i.stmt)
           Kit.append(
             consequent,
-            (ref.continueStmt = Kit.node(Tag.push, Tag.ContinueStatement))
+            (ref.continueStmt = Kit.node(Tag.push, tagContinue))
           );
         consequent = nextConsequent;
         frame = nextFrame;
@@ -216,7 +219,7 @@ export function calcFrames(root) {
         );
         (frame.nextDynExit = (block.nextDynExit =
           frame.nextDynExit).prevDynExit = block).prevDynExit = frame;
-        Kit.append(consequent, Kit.node(Tag.push, Tag.ContinueStatement));
+        Kit.append(consequent, Kit.node(Tag.push, tagContinue));
         break;
       }
     }
@@ -308,7 +311,7 @@ export function calcFrames(root) {
       frame.prevPureExit).nextPureExit = ref).nextPureExit = frame;
     Kit.append(
       consequent,
-      (ref.continueStmt = Kit.node(Tag.push, Tag.ContinueStatement))
+      (ref.continueStmt = Kit.node(Tag.push, tagContinue))
     );
     ref.noSkip = consequent.noSkip;
   }
@@ -398,9 +401,14 @@ function handler(root) {
       Kit.append(decls, decl);
     }
   }
-  const loop = Kit.node(Tag.push, Tag.ForStatement);
-  Kit.append(funcBody, loop);
-  Kit.append(loop, sw);
+  if (config.inlineTrampolineLoop) {
+    const loop = Kit.node(Tag.push, Tag.ForStatement);
+    Kit.append(funcBody, loop);
+    Kit.append(loop, sw);
+  } else {
+    sw.pos = Tag.push;
+    Kit.append(funcBody, sw);
+  }
   return func;
 }
 

@@ -55,6 +55,19 @@ interface BreakpointInfo {
 
 let progressCnt = 0;
 
+const INSTAL_INSTRUCTION = `
+Please, install "@effectful/debugger" manually:
+
+ $ npm install -g @effectful/debugger
+
+And link it to your project:
+ 
+ $ npm link @effectful/debugger
+
+WARNING: Installing it as your project local dependency won't work.
+The runtime and the project dependencies shouldn't be deduped together.
+`;
+
 export class DebugSession extends SessionImpl {
   private remotes: Map<number, Handler> = new Map();
   private connectCb?: (h?: Handler) => void;
@@ -484,7 +497,7 @@ export class DebugSession extends SessionImpl {
         this.sendErrorResponse(
           response,
           1003,
-          `Cannot install ${runtimeBase} (${data.message}).`
+          `Cannot install ${runtimeBase} (${data.message}). ${INSTAL_INSTRUCTION}`
         );
         this.terminate("install error: " + data.message);
         cb(true);
@@ -501,7 +514,7 @@ export class DebugSession extends SessionImpl {
         this.sendErrorResponse(
           response,
           1003,
-          `Cannot install ${runtimeBase} (Exit code: ${code}).`
+          `Cannot install ${runtimeBase} (Exit code: ${code}). ${INSTAL_INSTRUCTION}`
         );
         cb(true);
       });
@@ -512,7 +525,7 @@ export class DebugSession extends SessionImpl {
         this.sendErrorResponse(
           response,
           1002,
-          `Couldn't resolve the debuggers runtime - ${e}`
+          `Couldn't resolve the debuggers runtime - ${e} ${INSTAL_INSTRUCTION}`
         );
         return;
       }
