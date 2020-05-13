@@ -40,9 +40,7 @@ export default {
   /** executed when the program is restarted */
   onRestart: <(() => void) | null>null,
   /** executed after new version of the module's sources loaded  */
-  onModuleHotSwapping: <((module: any /* S.Module */) => void) | null>null,
-  /** executed after new version of any module's sources loaded, for each module */
-  onHotSwapping: <(() => void) | null>null,
+  onHotSwapping: <((module: any /* S.Module */) => void) | null>null,
   /** executed before/after executing async job (event handler, setTimeout etc) */
   onBeforeExec: <(() => void) | null>null
 };

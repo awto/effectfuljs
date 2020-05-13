@@ -576,3 +576,27 @@ export interface KeysDescr {
   symKeys: KeysOrder;
   symMap: { [name: string]: KeysOrder };
 }
+
+export const statusBuf = new SharedArrayBuffer(4);
+
+let interruptTimeoutHandler: any = 0;
+let afterInterruptCallback: null | (() => void) = null;
+
+export function afterInterrupt(cb: () => void) {
+  clearTimeout(interruptTimeoutHandler);
+  afterInterruptCallback = cb;
+  interruptTimeoutHandler = setTimeout(resumeAfterInterrupt, 0);
+}
+
+export function resumeAfterInterrupt() {
+  if (afterInterruptCallback) {
+    interruptTimeoutHandler = 0;
+    afterInterruptCallback();
+    afterInterruptCallback = null;
+  }
+}
+
+export function cancelInterrupt() {
+  clearTimeout(interruptTimeoutHandler);
+  interruptTimeoutHandler = 0;
+}

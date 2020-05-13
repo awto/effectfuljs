@@ -561,6 +561,7 @@ export class DebugSession extends SessionImpl {
     let key: string | undefined;
     if (args.reconnectTimeout)
       this.awaitReconnect = args.reconnectTimeout * 1000;
+    let webpackProgress: string | null = null;
     if (args.command) {
       const env: { [name: string]: string | null } = <any>{};
       const host =
@@ -658,7 +659,6 @@ export class DebugSession extends SessionImpl {
           };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn(command, launchArgs, spawnArgs);
-          let webpackProgress: string | null = null;
           let lastPercentage = 0;
           let message = "";
           logger.verbose(
@@ -769,6 +769,7 @@ export class DebugSession extends SessionImpl {
       for (const remote of this.remotes.values()) this.launchChild(remote);
     }
     if (progressId) this.sendEvent(new ProgressEndEvent(`s$${progressId}`));
+    if (webpackProgress) this.sendEvent(new ProgressEndEvent(webpackProgress));
     if (this.stopped) {
       response.success = false;
       this.sendErrorResponse(

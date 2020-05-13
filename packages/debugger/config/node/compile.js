@@ -3,10 +3,43 @@ const path = require("path");
 const deepClone = require("lodash/cloneDeep");
 const fs = require("fs");
 const cacheId = require("../cacheId");
-const { normalizeDrive, normalizePath } = require("../../state");
+const {
+  normalizeDrive,
+  normalizePath,
+  cancelInterrupt,
+  statusBuf
+} = require("../../state");
 
 const babel = require("@babel/core");
 const preset = require("../babel/preset-zero-config");
+
+let watch = function(filename, handler) {
+  fs.watch(filename, { persistent: false, encoding: "utf-8" }, type => {
+    handler(type);
+  });
+};
+if (!process.env.EFFECTFUL_DISABLE_WATCH_WORKER) {
+  try {
+    const { Worker } = require("worker_threads");
+    const worker = new Worker(path.join(__dirname, "reloadWorker.js"), {
+      workerData: statusBuf
+    });
+    const status = new Int32Array(statusBuf);
+    const files = new Map();
+    worker.on("message", function({ type, filename }) {
+      --status[0];
+      const handler = files.get(filename);
+      if (handler) handler(type);
+    });
+    watch = function(filename, handler) {
+      files.set(filename, handler);
+      worker.postMessage(filename);
+    };
+    worker.unref();
+  } catch (e) {
+    console.error("couldn't set up a file watching worker", e);
+  }
+}
 
 let babelOpts = config.babelOpts || {};
 
@@ -235,7 +268,7 @@ module.exports = function compile(content, filename, module) {
       let reloading = 0;
       if (config.verbose > 1)
         console.log(`DEBUGGER: enabling hot swapping for ${filename}`);
-      fs.watch(filename, { persistent: false, encoding: "utf-8" }, type => {
+      watch(filename, type => {
         const nextMtime = mtime(filename);
         if (config.verbose > 1)
           console.log(
@@ -247,6 +280,7 @@ module.exports = function compile(content, filename, module) {
         if (type !== "change" || curMtime === nextMtime) return;
         curMtime = nextMtime;
         if (reloading) clearTimeout(reloading);
+        cancelInterrupt();
         reloading = setTimeout(() => {
           reloading = 0;
           if (config.verbose) console.log(`DEBUGGER: Reloading ${filename}`);

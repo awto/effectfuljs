@@ -224,13 +224,20 @@ const handlers: {
 function dispatch(req: P.Request) {
   const res = response(req);
   const handler = handlers[req.command];
-  if (handler) handler(req.arguments, res);
+  if (handler) {
+    try {
+      handler(req.arguments, res);
+    } catch (e) {
+      // tslint:disable-next-line:no-console
+      console.error("DEBUGGER ERROR", e);
+    }
+  }
   send(res);
 }
 
 let restartTimeout: any = 0;
 
-const RESTART_ON_CHANGE_TIMEOUT = isBrowser ? 500 : 0;
+const RESTART_TIMEOUT = isBrowser ? 500 : 0;
 
 context.onLoad = function(module: State.Module, hot: boolean) {
   const source = getSource(module);
@@ -245,16 +252,8 @@ context.onLoad = function(module: State.Module, hot: boolean) {
       });
     }
     if (hot) {
-      if (config.onModuleHotSwapping)
-        Engine.liftSync(config.onModuleHotSwapping)(module);
-      // console.log("LOADING", module.fullPath, hot, !!config.onHotSwapping);
-      if (config.onHotSwapping) {
-        clearTimeout(restartTimeout);
-        setTimeout(
-          Engine.liftSync(config.onHotSwapping),
-          RESTART_ON_CHANGE_TIMEOUT
-        );
-      }
+      if (config.onHotSwapping) config.onHotSwapping(module);
+      else State.resumeAfterInterrupt();
     }
   }
 };
@@ -317,6 +316,13 @@ function onEntry() {
     entrySnapshot = capture({ warnIgnored: true });
 }
 
+function scheduleRestart() {
+  State.cancelInterrupt();
+  clearTimeout(restartTimeout);
+  restartTimeout = 0;
+  restartTimeout = setTimeout(restart, RESTART_TIMEOUT);
+}
+
 export function restart() {
   if (config.onRestart) {
     const savedDebug = context.debug;
@@ -336,7 +342,7 @@ export function restart() {
 
 handlers.childRestart = function(res) {
   if (config.fastRestart) {
-    restart();
+    scheduleRestart();
     return;
   }
   if (typeof window !== "undefined") window.location.reload();
@@ -642,7 +648,7 @@ handlers.childLaunch = function(args, res) {
   context.threadId = args.threadId;
   config.stopOnExit = args.stopOnExit;
   config.fastRestart = args.fastRestart;
-  if (args.onChange === "restart") config.onHotSwapping = restart;
+  if (args.onChange === "restart") config.onHotSwapping = scheduleRestart;
   if (launchCb) launchCb(args.stopOnEntry);
   if (config.verbose) trace(`DEBUGGER: launch ${JSON.stringify(args)}`);
 };
@@ -683,7 +689,10 @@ function checkPause(
   } else if (brk.flags & State.BrkFlag.EXIT) {
     if (brkOut && brkOut === top) return "stepOut";
   }
-  if (Comms.hasMessage()) return "interrupt";
+  if (Comms.hasMessage()) {
+    if (config.verbose) trace("DEBUGGER: interrupt");
+    return "interrupt";
+  }
   return void 0;
 }
 
@@ -764,17 +773,16 @@ context.onStop = function(_description?: string) {
   if (!context.top) return;
   if (reason === "interrupt") {
     reason = void 0;
-    setTimeout(interruptibleStep, 0);
+    State.afterInterrupt(interruptibleStep);
     return;
   }
-
   context.activeTop = context.top;
   context.top = null;
   signalStopped();
 };
 
 function interruptibleStep() {
-  if (Comms.hasMessage()) setTimeout(interruptibleStep, 0);
+  if (Comms.hasMessage()) State.afterInterrupt(interruptibleStep);
   else Engine.step();
 }
 
@@ -1181,8 +1189,10 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
  * `capture` the current state is discarded
  */
 export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
-  // TODO: properly pause it if it runs
   const savedEnabled = journal.enabled;
+  State.cancelInterrupt();
+  clearTimeout(restartTimeout);
+  restartTimeout = 0;
   try {
     journal.enabled = false;
     const loadedModules = new Set<string>();

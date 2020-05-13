@@ -1,5 +1,5 @@
 import config from "../config";
-import { context, normalizePath } from "../state";
+import { context, normalizePath, statusBuf } from "../state";
 
 let cb: () => void;
 let connected: Promise<undefined> | null = new Promise(i => (cb = i));
@@ -124,14 +124,13 @@ if (workerType === WorkerType.None) {
     if (socket._socket && socket._socket.unref) socket._socket.unref();
   };
 } else {
-  const buf = new SharedArrayBuffer(4);
-  const status = new Int32Array(buf);
+  const status = new Int32Array(statusBuf);
   impl.hasMessage = function() {
     return status[0] > 0;
   };
   let worker: Worker;
   if (workerType === WorkerType.Node) {
-    worker = new Worker(code, { eval: true, workerData: buf });
+    worker = new Worker(code, { eval: true, workerData: statusBuf });
     (<any>worker).on("message", function(data: any) {
       --status[0];
       interpret(data);
@@ -146,7 +145,7 @@ if (workerType === WorkerType.None) {
     worker = new Worker(
       URL.createObjectURL(new Blob([code], { type: "text/javascript" }))
     );
-    (<Worker>worker).postMessage(buf);
+    (<Worker>worker).postMessage(statusBuf);
     worker.onmessage = function(msg: any) {
       --status[0];
       const { data } = msg;
