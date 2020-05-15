@@ -27,7 +27,7 @@ if (!process.env.EFFECTFUL_DISABLE_WATCH_WORKER) {
     const status = new Int32Array(statusBuf);
     const files = new Map();
     worker.on("message", function({ type, filename }) {
-      --status[0];
+      Atomics.add(status, 0, -1);
       const handler = files.get(filename);
       if (handler) handler(type);
     });

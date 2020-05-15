@@ -12,7 +12,7 @@ import * as util from "util";
 import { map, filter } from "../kit";
 import * as Persist from "../persist";
 
-const { assign, defineProperty } = State.saved.Object;
+const { assign } = State.saved.Object;
 const weakMapSet = State.saved.WeakMap.set;
 const Set = State.saved.Set;
 const Map = State.saved.Map;

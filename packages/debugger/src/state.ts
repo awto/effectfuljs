@@ -577,7 +577,17 @@ export interface KeysDescr {
   symMap: { [name: string]: KeysOrder };
 }
 
-export const statusBuf = new SharedArrayBuffer(4);
+let statusBufImpl: SharedArrayBuffer = <any>null;
+
+try {
+  statusBufImpl = new SharedArrayBuffer(4);
+} catch (e) {
+  // this may be disabled in some browsers due to Spectre
+  // tslint:disable-next-line
+  console.warn("no SharedArrayBuffer, so pausing running code won't work");
+}
+
+export const statusBuf = statusBufImpl;
 
 let interruptTimeoutHandler: any = 0;
 let afterInterruptCallback: null | (() => void) = null;
