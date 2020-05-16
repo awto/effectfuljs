@@ -252,8 +252,15 @@ context.onLoad = function(module: State.Module, hot: boolean) {
       });
     }
     if (hot) {
-      if (config.onHotSwapping) config.onHotSwapping(module);
-      else State.resumeAfterInterrupt();
+      if (config.onHotSwapping) {
+        const savedDebug = context.debug;
+        try {
+          context.debug = false;
+          config.onHotSwapping(module);
+        } finally {
+          context.debug = true;
+        }
+      } else State.resumeAfterInterrupt();
     }
   }
 };

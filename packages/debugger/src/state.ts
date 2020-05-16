@@ -1,9 +1,10 @@
-// ensuring it is loaded before anything patched
-import "@effectful/serialization";
-import "@effectful/serialization/dom";
 /**
  * Full state of a currently running program
  */
+// ensuring it is loaded before anything patched
+import "@effectful/serialization";
+import "@effectful/serialization/dom";
+
 export interface Env {
   /** local variables */
   $: any[];

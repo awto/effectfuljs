@@ -216,7 +216,7 @@ DOM is also serializable, for now, only events added with `addEventListener` (an
 
 There is an optional parameter to set serialization options from [@effectful/serialization](../serialization). For `EDBG.capture` it is its first argument which has type [WriteOptions](../serialization/api/interfaces/writeoptions.md), and for `EDBG.restore` it is its second parameter and it has type [ReadOptions](../serialization/api/interfaces/readoptions.md).
 
-Both `EDBG.caputre` and `EDBG.restore` have an optional second parameter. It is an array of known objects. If we need to restore state in the same context with all the shared objects preserved, we just pass an empty array to the second argument of `EDBG.capture`, store it somewhere, and pass the same array to the second argument of `EDBG.restore` call. This way all the references between objects will be preserved. Otherwise, it will create clones of each captured object.
+Each `EDBG.restore` starts execution right after corresponding `EDBG.capture`. But instead of the actual the state it returns `null` to signal it is a forked run.
 
 ## Time traveling
 
@@ -236,6 +236,35 @@ By default, it tracks only local variables, properties, and DOM changes. If some
 
 External states may be still tracked using special handlers. For example, when we change DB we just call `EDBG.TimeTravel.record(f)` where `f` is a callback which resets the DB into the former state. This callback should in turn `record` the reset change so time forwarding works. This way time-traveling can be enabled even for multi-tier applications.
 
+## Hot-swapping/Fast restarting
+
+The debugger will load new sources when their file is saved. but will try to keep the old application state.  
+
+For now, the state merging isn't very efficient - variables are saved by their positions and the current execution position may be shifted into a wrong location. This should be improved in some future version.  Anyway, for small changes, this is works well enough. 
+
+There is also an option to restart the process from some point after some heavy loading. This is especially useful when debugging node. We can skip long-running operations of process restart and modules loading.
+
+To specify the way the debugger handles file changes set `"onChange"` option in `launch.json`. Now it can have two values - `"restart"` or `"merge"`, to make it restart the program or keep the current execution position respectively.
+
+To make it restart faster set `launch.json` option `"fastRestart"` to `"entry"` or `true`. If it is `"entry"` the debugger's runtime stores the state before running any user code. In Node, this is the way to avoid process restarts and modules reloading.
+
+To restart from some later location (for example, after some heavy initialization), we can run something like this snippet in code (or even in a conditional breakpoint).
+
+```
+if (typeof EDBG !== "undefined") {
+  const state = EDBG.capture({ warnIgnored: false });
+  if (state) {
+    EDBG.config.onHotSwapping = EDBG.config.onRestart = () =>
+      EDBG.restore(state);
+  }
+  EDBG.journal.enabled = true;
+}
+```
+
+This snippet calls `restore` on restart (`onRestart` callback) and after some project file is changed and loaded file (`onHotSwapping` callback). 
+
+Add `"timeTravelDisabled": true` so the initialization won't collect time-traveling traces, and only enable it when it is interesting. In the snippet above it is ` EDBG.journal.enabled = true;` line.
+
 ## Interoperating with runtime/native modules
 
 The debugger requires all third party libraries to be transpiled. This is possible only for JavaScript, so it isn't possible for runtime and native node modules or WebAssembly.
@@ -247,6 +276,10 @@ DOM event handler is one of the examples of calling JS code from a native part (
 Calling JS asynchronously works fine and doesn't need a wrapper. Only synchronous code may not work because it needs thread blocking. For example, it cannot stop inside the event handler called by `dispatchEvent` doesn't work, and it is why development version React doesn't work well, so in the demos, I use production React version which doesn't rely on `dispatchEvent`.
 
 Even now, even if our program's logic heavily depends on the propagation of events we can still use time-traveling, and debug after the event handling is finished.
+
+## Firefox
+
+For preventing Spectre attack Firefox disabled `SharedArrayBuffer`. But it is used by the debugger to pause running code (when, for example, it is frozen due to some error/. To enable shared memory in Firefox, navigate to `about:config` -> `I accept the risk!` -> set `javascript.options.shared_memory` to true. 
 
 ## Not _yet_ done
 

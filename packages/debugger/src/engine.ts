@@ -928,8 +928,6 @@ export function isDelayedResult(value: any): boolean {
 export function makeFrame(closure: any, newTarget: any): Frame {
   const { meta, $, parent } = <ProtoFrame>closures.get(closure);
   let $g = parent ? parent.$g : global;
-  // uses globals AND eval
-  // if (meta.flags & Flag.HAS_DICTIONARY_SCOPE) $g = Object.create($g);
   const frame: Frame = {
     $,
     $g,
