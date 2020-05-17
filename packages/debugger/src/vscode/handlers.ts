@@ -615,9 +615,12 @@ function varValue(name: string, value: any): VarValue {
       };
   }
   function str(value: any): any {
+    if (value === void 0) return "undefined";
     try {
       return String(value);
-    } catch (e) {}
+    } catch (e) {
+      return String(e);
+    }
   }
 }
 
@@ -1159,8 +1162,7 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
     }
     const res = S.write(
       {
-        activeTop: context.activeTop,
-        top: context.top,
+        top: context.activeTop || context.top,
         syncStack: context.syncStack,
         queue: context.queue,
         brk: context.brk,
@@ -1258,8 +1260,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
         journal.enabled = false;
         let modulesExports: any;
         ({
-          activeTop: context.activeTop,
-          top: context.top,
+          top: context.activeTop,
           syncStack: context.syncStack,
           queue: context.queue,
           brk: context.brk,
@@ -1290,10 +1291,16 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
             runTopLevel.bind(null, module)
           );
         }
-        if (context.activeTop) signalStopped();
+        const top = context.activeTop;
+        reset();
+        if (
+          top &&
+          context.brk &&
+          (reason = checkPause(context.brk, top)) &&
+          reason !== "interrupt"
+        )
+          signalStopped();
         else {
-          context.activeTop = context.top;
-          reset();
           run();
         }
       },

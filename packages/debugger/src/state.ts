@@ -600,14 +600,16 @@ export function afterInterrupt(cb: () => void) {
 }
 
 export function resumeAfterInterrupt() {
-  if (afterInterruptCallback) {
+  const callback = afterInterruptCallback;
+  if (callback) {
     interruptTimeoutHandler = 0;
-    afterInterruptCallback();
     afterInterruptCallback = null;
+    callback();
   }
 }
 
 export function cancelInterrupt() {
   clearTimeout(interruptTimeoutHandler);
+  afterInterruptCallback = null;
   interruptTimeoutHandler = 0;
 }
