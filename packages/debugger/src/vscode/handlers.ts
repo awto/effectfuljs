@@ -619,7 +619,7 @@ function varValue(name: string, value: any): VarValue {
     try {
       return String(value);
     } catch (e) {
-      return String(e);
+      return "";
     }
   }
 }
