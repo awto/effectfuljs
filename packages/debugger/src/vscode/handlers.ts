@@ -779,7 +779,7 @@ function signalStopped() {
 }
 
 context.onStop = function(_description?: string) {
-  if (config.verbose) trace("DEBUGGER: stop signal");
+  if (config.verbose) trace(`DEBUGGER: stop signal ${reason || "?"}`);
   if (!context.top) return;
   if (reason === "interrupt") {
     reason = void 0;

@@ -106,13 +106,14 @@ const impl: {
   ref: () => void;
   unref: () => void;
   hasMessage: () => boolean;
-} = { close, ref: nop, unref: nop, send, hasMessage: nop };
+} = { close: nop, ref: nop, unref: nop, send, hasMessage: nop };
 
 function nop() {
   return false;
 }
 
 let post: any;
+let close: any;
 
 if (workerType === WorkerType.None) {
   let WebSocketImpl = (<any>config).WebSocket || (<any>global).WebSocket;
@@ -121,11 +122,12 @@ if (workerType === WorkerType.None) {
       WebSocketImpl = require("ws");
     } catch (e) {}
   }
-  let socket: any;
-  [socket, post] = new Function("WebSocket", "post", code)(
+  const [socket, redir] = new Function("WebSocket", "post", code)(
     WebSocketImpl,
     interpret
   );
+  post = function(msg:any) { redir({ type: "send", msg }); }
+  close = function() { redir({ type: "close" }); }
   impl.ref = function() {
     if (socket._socket && socket._socket.ref) socket._socket.ref();
   };
@@ -133,10 +135,12 @@ if (workerType === WorkerType.None) {
     if (socket._socket && socket._socket.unref) socket._socket.unref();
   };
 } else if (workerType === WorkerType.Ext) {
-  extWorker(statusBuf, interpret, config);
+  extWorker(statusBuf);
   impl.ref = (<any>global)[`${config.globalNS}#comms#ref`] || function() {};
   impl.unref = (<any>global)[`${config.globalNS}#comms#unref`] || function() {};
   post = (<any>global)[`${config.globalNS}#comms#post`];
+  close = (<any>global)[`${config.globalNS}#comms#close`];
+  (<any>global)[`${config.globalNS}#comms#interpret`] = interpret;
 } else {
   const status = new Int32Array(statusBuf);
   impl.hasMessage = function() {
@@ -167,12 +171,11 @@ if (workerType === WorkerType.None) {
     };
   }
   post = function(msg: any) {
-    worker.postMessage(msg);
+    worker.postMessage({ type: "send", msg });
   };
-}
-
-function close() {
-  post({ type: "close" });
+  close = function() {
+    worker.postMessage({ type: "close" });
+  };
 }
 
 const sysConsole = console;
@@ -196,6 +199,7 @@ function interpret(data: any) {
     case "close":
       context.debug = false;
       closed = true;
+      close();
       break;
   }
 }
@@ -213,7 +217,9 @@ async function send(data: any, optional?: boolean) {
     if (optional) return;
     await connected;
   }
-  post({ type: "send", msg });
+  post(msg);
 }
+
+impl.close = close;
 
 export default impl;

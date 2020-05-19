@@ -8,7 +8,8 @@ const weakMapSet = saved.WeakMap.set;
 
 export function runTopLevel(mod: State.Module) {
   const cjs = mod.cjs;
-  context.call = mod.cjs && mod.cjs.id === context.moduleId ? wrapModule : null;
+  const id = (mod.cjs && mod.cjs.id) || "anonymous";
+  context.call = id === context.moduleId ? wrapModule : null;
   context.moduleId = null;
   if (wrapModule(mod, cjs) === token)
     weakMapSet.call(State.thunks, cjs.exports, State.returnToken);
