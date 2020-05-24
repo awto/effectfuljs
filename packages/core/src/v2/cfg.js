@@ -19,9 +19,6 @@ export const EXIT_SWITCH = 2;
 export const EXIT_DYN_BR = 3;
 export const EXIT_TERM = 4;
 
-export const BLOCK_FINALIZER_INIT = 1;
-export const BLOCK_HANDLER_INIT = 2;
-
 const { tempId, tempSym, newSym } = Scope;
 
 export function emptyBlock() {
@@ -276,6 +273,7 @@ export function build(needsSave = defaultNeedsSave) {
             tempId(Tag.push, yieldResSym, curScope)
           );
           lastItem.doc.node.loc = doc.node.loc;
+          lastItem.doc.refDoc = doc;
           const testBlock = (lastBlock.br = newBlock());
           setBlock(testBlock);
           push(newItem(null, memExpr(Tag.right, itemSym, "done"), curScope));
@@ -291,6 +289,7 @@ export function build(needsSave = defaultNeedsSave) {
           pushIterValue(async, nextValSym, itemSym);
           pushYield(async, yieldResSym, nextValSym);
           lastItem.eff = lastItem.result = true;
+          lastItem.doc.refDoc = doc;
           bodyBlock.br = iterBlock;
           bodyBlock.rec = true;
           const catchBlock = newBlock();
@@ -336,6 +335,7 @@ export function build(needsSave = defaultNeedsSave) {
           pushIterValue(async, retValSym, retItemSym);
           pushYield(async, yieldResSym, retValSym);
           lastItem.eff = lastItem.result = true;
+          lastItem.doc.refDoc = doc;
           lastBlock.br = iterBlock;
           lastBlock.rec = true;
           testBlock.finalizer = iterBlock.finalizer = bodyBlock.finalizer = finBlock;
@@ -518,6 +518,7 @@ export function build(needsSave = defaultNeedsSave) {
               enter(arg, sym);
               push(opItem(retSym, Scope.awaitSym, sym));
               lastItem.eff = lastItem.result = true;
+              lastItem.doc.refDoc = i;
             } else enter(arg, retSym);
           }
           lastBlock.br = retBlock;
@@ -551,6 +552,7 @@ export function build(needsSave = defaultNeedsSave) {
           enter(arg, sym);
           push(opItem(null, Scope.raiseSym, sym));
           lastItem.result = lastItem.eff = true;
+          lastItem.doc.refDoc = i;
           continue;
         }
         case Tag.TryStatement: {
@@ -694,6 +696,7 @@ export function build(needsSave = defaultNeedsSave) {
             )
           );
           lastItem.eff = true;
+          lastItem.doc.refDoc = right;
           const enterBlock = lastBlock;
           const bodyBlock = newBlock();
           if (i.isScopeNode) {
@@ -709,6 +712,7 @@ export function build(needsSave = defaultNeedsSave) {
             const finalizer = newFinalizerBlock();
             setBlock(finalizer);
             iterOp(async, Scope.iterFinSym, iterSym, null, null);
+            lastItem.doc.refDoc = right;
             lastBlock.br = finalizer.tail;
             bodyBlock.finalizer = finalizer;
           }
@@ -757,6 +761,7 @@ export function build(needsSave = defaultNeedsSave) {
             lastItem.eff = call.eff = true;
           } else iterOp(async, Scope.iterNextSym, iterSym, itemSym, null);
           lastItem.doc.node.loc = left.node.loc;
+          lastItem.doc.refDoc = right;
           push(newItem(null, memExpr(Tag.right, itemSym, "done"), curScope));
           lastBlock.exitKind = EXIT_COND;
           lastBlock.trueBr = postfixBlock;

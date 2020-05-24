@@ -127,15 +127,15 @@ export function throwStmt(par, msg, name) {
 
 export const setSymName = config.debug
   ? function setSymName(sym, index, prefix) {
-    sym.index = index + 1;
-    sym.name = `${prefix || "_"}${
-      sym.orig ? sym.orig.replace(/\W/g, "_") + "$" : ""
+      sym.index = index + 1;
+      sym.name = `${prefix || "_"}${
+        sym.orig ? sym.orig.replace(/\W/g, "_") + "$" : ""
       }${index}`;
-  }
+    }
   : function setSymName(sym, index, prefix) {
-    sym.index = index + 1;
-    sym.name = `${prefix || "_"}${index}`;
-  };
+      sym.index = index + 1;
+      sym.name = `${prefix || "_"}${index}`;
+    };
 
 /**
  * assign `node.name` from `sym.name`
@@ -157,8 +157,7 @@ export function locStr(loc) {
 
 export function approxLoc(i) {
   let loc = i.node.loc;
-  if (loc)
-    return loc;
+  if (loc) return loc;
   loc = {};
   const last = after(i);
   let j = i;
@@ -171,19 +170,19 @@ export function approxLoc(i) {
       const { start, end } = j.node.loc;
       if (start.line <= minLine) {
         minLine = start.line;
-        if (start.column < minCol)
-          minCol = start.column;
+        if (start.column < minCol) minCol = start.column;
       }
       if (end.line >= maxLine) {
         maxLine = end.line;
-        if (end.column > maxCol)
-          maxCol = end.column;
+        if (end.column > maxCol) maxCol = end.column;
       }
     }
-  } while ((j = next(j)) !== last)
-  if (maxLine === 0)
-    return null;
-  return { start: { line: minLine, column: minCol }, end: { line: maxLine, column: maxCol } };
+  } while ((j = next(j)) !== last);
+  if (maxLine === 0) return null;
+  return {
+    start: { line: minLine, column: minCol },
+    end: { line: maxLine, column: maxCol }
+  };
 }
 
 export function consume(root) {

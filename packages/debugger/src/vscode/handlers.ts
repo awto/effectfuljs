@@ -281,9 +281,10 @@ function startThreadImpl(job: State.Job, top: State.Frame, brk: State.Brk) {
   context.brk = job.brk;
   context.value = job.value;
   if (firstThread) {
-    stop = !!config.stopOnEntry;
+    if (config.stopOnEntry) stop = true;
     firstThread = false;
-  } else if ((reason = checkPause(brk, top)) && reason !== "interrupt")
+  } 
+  if (!stop && (reason = checkPause(brk, top)) && reason !== "interrupt")
     stop = true;
   TT.checkpoint();
   if (stop) {

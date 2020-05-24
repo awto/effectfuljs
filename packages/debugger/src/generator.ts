@@ -9,12 +9,13 @@ import {
   checkExitBrk,
   unhandled,
   handle,
-  wrapBuiltinFunc
+  wrapBuiltinFunc,
+  FunctionConstr
 } from "./engine";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
 const { context, saved } = State;
 
-const { defineProperty } = saved.Object;
+const { defineProperty, setPrototypeOf } = saved.Object;
 
 class IterableThis {
   [Symbol.iterator]() {
@@ -85,6 +86,8 @@ function GeneratorFunction() {}
 regOpaqueObject(GeneratorFunction);
 
 function GeneratorFunctionPrototype() {}
+
+setPrototypeOf(GeneratorFunctionPrototype, FunctionConstr.prototype);
 
 regOpaqueObject(GeneratorFunctionPrototype);
 

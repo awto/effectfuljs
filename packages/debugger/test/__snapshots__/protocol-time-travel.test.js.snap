@@ -17,16 +17,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -52,16 +42,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -95,16 +75,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -117,16 +87,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -147,16 +107,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -169,16 +119,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -199,16 +139,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -234,16 +164,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -277,16 +197,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -299,16 +209,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -329,16 +229,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -351,16 +241,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -381,16 +261,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -416,16 +286,6 @@ Object {
             Object {
               "[name]": "reverseContinuePlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -748,16 +608,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -770,16 +620,6 @@ Object {
             Object {
               "[name]": "reverseContinueAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -800,16 +640,6 @@ Object {
             Object {
               "[name]": "reverseContinueAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -838,16 +668,6 @@ Object {
             Object {
               "[name]": "(anonymous)",
               "m": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": Object {
@@ -874,16 +694,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -896,16 +706,6 @@ Object {
             Object {
               "[name]": "reverseContinueAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -931,16 +731,6 @@ Object {
             Object {
               "[name]": "reverseContinueAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -969,16 +759,6 @@ Object {
             Object {
               "[name]": "(anonymous)",
               "m": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": Object {
@@ -1005,16 +785,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -1027,16 +797,6 @@ Object {
             Object {
               "[name]": "reverseContinueAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -1071,16 +831,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1106,16 +856,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1141,16 +881,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1184,16 +914,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1206,16 +926,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1236,16 +946,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1258,16 +958,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1288,16 +978,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1339,16 +1019,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1361,16 +1031,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1399,16 +1059,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1421,16 +1071,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1451,16 +1091,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1473,16 +1103,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1503,16 +1123,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1546,16 +1156,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1568,16 +1168,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1598,16 +1188,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1620,16 +1200,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1650,16 +1220,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1685,16 +1245,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1707,16 +1257,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1737,16 +1277,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1772,16 +1302,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -1794,16 +1314,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1824,16 +1334,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1859,16 +1359,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1894,16 +1384,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1929,16 +1409,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1964,16 +1434,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -1999,16 +1459,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2034,16 +1484,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2056,16 +1496,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2086,16 +1516,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2121,16 +1541,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2143,16 +1553,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2173,16 +1573,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2216,16 +1606,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2238,16 +1618,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2268,16 +1638,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2290,16 +1650,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2320,16 +1670,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2371,16 +1711,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2393,16 +1723,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2431,16 +1751,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2453,16 +1763,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2483,16 +1783,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2505,16 +1795,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2535,16 +1815,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2578,16 +1848,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2600,16 +1860,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2630,16 +1880,6 @@ Object {
             Object {
               "[name]": "func1",
               "func2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func2",
                 "prototype": Object {
@@ -2652,16 +1892,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2682,16 +1912,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2717,16 +1937,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -2752,16 +1962,6 @@ Object {
             Object {
               "[name]": "stepBackPlain.js",
               "func1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "func1",
                 "prototype": Object {
@@ -3224,16 +2424,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3246,16 +2436,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3276,16 +2456,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3311,16 +2481,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3333,16 +2493,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3363,16 +2513,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3406,16 +2546,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3428,16 +2558,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3458,16 +2578,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3480,16 +2590,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3510,16 +2610,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3548,16 +2638,6 @@ Object {
             Object {
               "[name]": "(anonymous)",
               "m": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": Object {
@@ -3584,16 +2664,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3606,16 +2676,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3641,16 +2701,6 @@ Object {
             Object {
               "[name]": "(anonymous)",
               "m": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": Object {
@@ -3677,16 +2727,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3699,16 +2739,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3745,16 +2775,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3767,16 +2787,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3805,16 +2815,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3827,16 +2827,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3857,16 +2847,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3879,16 +2859,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3909,16 +2879,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -3960,16 +2920,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -3982,16 +2932,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4020,16 +2960,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4042,16 +2972,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4072,16 +2992,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4094,16 +3004,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4124,16 +3024,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4167,16 +3057,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4189,16 +3069,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4219,16 +3089,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4241,16 +3101,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4271,16 +3121,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4306,16 +3146,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4328,16 +3158,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4358,16 +3178,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4393,16 +3203,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4415,16 +3215,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4445,16 +3235,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4480,16 +3260,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4502,16 +3272,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4532,16 +3292,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4567,16 +3317,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4602,16 +3342,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4637,16 +3367,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4672,16 +3392,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4707,16 +3417,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4742,16 +3442,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4764,16 +3454,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4794,16 +3474,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4829,16 +3499,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4851,16 +3511,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4881,16 +3531,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4916,16 +3556,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -4938,16 +3568,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -4968,16 +3588,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5011,16 +3621,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5033,16 +3633,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5063,16 +3653,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5085,16 +3665,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5115,16 +3685,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5166,16 +3726,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5188,16 +3738,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5226,16 +3766,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5248,16 +3778,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5278,16 +3798,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5300,16 +3810,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5330,16 +3830,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5365,16 +3855,6 @@ Object {
             Object {
               "[name]": "(anonymous)",
               "m": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": Object {
@@ -5401,16 +3881,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5423,16 +3893,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5469,16 +3929,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5491,16 +3941,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5529,16 +3969,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5551,16 +3981,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5581,16 +4001,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5603,16 +4013,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5633,16 +4033,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5671,16 +4061,6 @@ Object {
             Object {
               "[name]": "(anonymous)",
               "m": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": Object {
@@ -5707,16 +4087,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5729,16 +4099,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5772,16 +4132,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5794,16 +4144,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5824,16 +4164,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5846,16 +4176,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5876,16 +4196,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5911,16 +4221,6 @@ Object {
             Object {
               "[name]": "afunc1",
               "afunc2": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc2",
                 "prototype": Object {
@@ -5933,16 +4233,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {
@@ -5963,16 +4253,6 @@ Object {
             Object {
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
-                "apply": Object {
-                  "length": "0",
-                  "name": "defaultApply",
-                  "prototype": "[object Object]",
-                },
-                "call": Object {
-                  "length": "0",
-                  "name": "defaultCall",
-                  "prototype": "[object Object]",
-                },
                 "length": "1",
                 "name": "afunc1",
                 "prototype": Object {

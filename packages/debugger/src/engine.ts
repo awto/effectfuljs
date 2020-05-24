@@ -434,13 +434,11 @@ export const clos: any = config.persistState
         $: parent && parent.$
       });
       setPrototypeOf(closure, FunctionConstr.prototype);
-      //closure.call = defaultCall;
-      //closure.apply = defaultApply;
       S.setObjectDescriptor(closure, (<any>meta).descriptor);
       return closure;
     }
   : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
-      // setPrototypeOf(closure, FunctionConstr.prototype);
+      setPrototypeOf(closure, FunctionConstr.prototype);
       weakMapSet.call(closures, closure, {
         meta,
         parent,
@@ -806,6 +804,7 @@ export const FunctionConstr = function Function(...args: any[]) {
   return res;
 };
 if (config.patchRT) {
+  setPrototypeOf(FunctionConstr, {});
   saved.Object.defineProperty(FunctionConstr.prototype, "bind", {
     configurable: true,
     writable: true,
@@ -835,7 +834,9 @@ if (config.patchRT) {
     value: defaultApply
   });
 }
+
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
+regOpaqueObject(FunctionConstr.prototype, "@effectful/debugger/Function/p");
 
 export function indirEval(code: string): any {
   if (!context.debug || context.call !== indirEval) return savedEval(code);
