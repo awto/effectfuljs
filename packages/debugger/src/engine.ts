@@ -32,7 +32,7 @@ import babelGenerate from "@babel/generator";
 import * as T from "./transform";
 import * as path from "path";
 import * as S from "@effectful/serialization";
-import { regOpaqueObject, regFun, ModuleDescriptor } from "./persist";
+import { regOpaqueObject, regFun, ModuleDescriptor, defaultBind } from "./persist";
 import { isValidIdentifier } from "@babel/types";
 
 // tslint:disable-next-line
@@ -54,6 +54,12 @@ const setPrototypeOf = saved.Object.setPrototypeOf;
 
 let curModule: Module = undefined as any; // this is always used in context where this is inited
 let moduleChanged = false;
+
+export function wrapBuiltinFunc(func: any) {
+  func.call = defaultCall;
+  func.apply = defaultApply;
+  return func;
+}
 
 const recordFrame = config.timeTravel
   ? function recordFrame(top: Frame | null) {
@@ -433,7 +439,9 @@ export const clos: any = config.persistState
         parent,
         $: parent && parent.$
       });
-      setPrototypeOf(closure, FunctionConstr.prototype);
+      // setPrototypeOf(closure, FunctionConstr.prototype);
+      closure.apply = defaultApply;
+      closure.call = defaultCall;
       S.setObjectDescriptor(closure, (<any>meta).descriptor);
       return closure;
     }
@@ -463,18 +471,13 @@ function defaultApply(this: any) {
   return savedApply.apply(this, <any>arguments);
 }
 
-regOpaqueObject(defaultApply, "@effectful/debugger/apply");
+wrapBuiltinFunc(defaultApply);
 
 function defaultCall(this: any) {
   context.call = context.call === defaultCall ? this : null;
   return savedCall.apply(this, <any>arguments);
 }
 
-export function wrapBuiltinFunc(func: any) {
-  func.call = defaultCall;
-  func.apply = defaultApply;
-  return func;
-}
 
 export function pushScope(varsNum: number) {
   const top = <Frame>context.top;
@@ -499,7 +502,7 @@ export function mcall(prop: string, ...args: [any, ...any[]]) {
   return savedCall.apply((context.call = func), args);
 }
 
-regOpaqueObject(defaultCall, "@effectful/debugger/call");
+wrapBuiltinFunc(defaultCall);
 
 /**
  * runs a computation until it encounters some breakpoint (returns `token)
@@ -804,11 +807,11 @@ export const FunctionConstr = function Function(...args: any[]) {
   return res;
 };
 if (config.patchRT) {
-  setPrototypeOf(FunctionConstr, {});
+  FunctionConstr.prototype = Function.prototype;
   saved.Object.defineProperty(FunctionConstr.prototype, "bind", {
     configurable: true,
     writable: true,
-    value: SavedFunction.prototype.bind
+    value: defaultBind
   });
   saved.Object.defineProperty(FunctionConstr.prototype, "toString", {
     configurable: true,
@@ -823,20 +826,14 @@ if (config.patchRT) {
       return `function ${name || ""}(${params}) { [native code] }`;
     }
   });
-  saved.Object.defineProperty(FunctionConstr.prototype, "call", {
-    configurable: true,
-    writable: true,
-    value: defaultCall
-  });
-  saved.Object.defineProperty(FunctionConstr.prototype, "apply", {
-    configurable: true,
-    writable: true,
-    value: defaultApply
-  });
 }
 
+wrapBuiltinFunc(FunctionConstr);
+
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
-regOpaqueObject(FunctionConstr.prototype, "@effectful/debugger/Function/p");
+regOpaqueObject(defaultCall, "@effectful/debugger/call");
+regOpaqueObject(defaultApply, "@effectful/debugger/apply");
+regOpaqueObject(defaultBind, "@effectful/debugger/bind");
 
 export function indirEval(code: string): any {
   if (!context.debug || context.call !== indirEval) return savedEval(code);

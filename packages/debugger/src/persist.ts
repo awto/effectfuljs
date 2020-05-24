@@ -129,8 +129,7 @@ function makeBind(): (...args: any[]) => any {
   return bind;
 }
 
-if (config.patchRT && config.persistState) {
-  Function.prototype.bind = function bind(
+export const defaultBind = config.persistState ? function bind(
     this: any,
     self: any,
     ...args: any[]
@@ -138,8 +137,7 @@ if (config.patchRT && config.persistState) {
     const res = <any>makeBind();
     weakMapSet.call(binds, res, { fun: this, self, args });
     return res;
-  };
-}
+  } : Function.prototype.bind;
 
 export const extra: Set<any> = new Set();
 

@@ -215,7 +215,7 @@ test("async function's time traveling", async function() {
   }
 });
 
-test("async generator functions time traveling", async function() {
+test.only("async generator functions time traveling", async function() {
   const savedConsole = global.console;
   const calls = [];
   try {
