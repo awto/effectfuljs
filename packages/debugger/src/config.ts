@@ -30,6 +30,7 @@ export default {
   keepContainersOrder: true,
   expNoAccessOverloading: true,
   expInlineNext: false,
+  stopOnEntry: false,
   /** for timeTravel debugging don't exit node process on program termination */
   stopOnExit: false,
   /** communcations are in a separate thread */

@@ -17,7 +17,7 @@ There are more demos in [Slides](https://docs.google.com/presentation/d/e/2PACX-
 
 ## Caveats
 
-The project is at its early stage. It requires runtime monkey patching and it isn't fully and properly done yet. So in big projects, it is quite unlikely everything works effortlessly (this, however, reduces debugging efforts).
+The debugger requires runtime monkey patching and it isn't fully and properly done yet. So in big projects, it is quite unlikely everything works effortlessly (this, however, reduces debugging efforts).
 
 Performance is obviously worse comparing to not instrumented code, especially when time-traveling is enabled.
 
@@ -238,9 +238,9 @@ External states may be still tracked using special handlers. For example, when w
 
 ## Hot-swapping/Fast restarting
 
-The debugger will load new sources when their file is saved. but will try to keep the old application state.  
+The debugger will load new sources when their file is saved. but will try to keep the old application state.
 
-For now, the state merging isn't very efficient - variables are saved by their positions and the current execution position may be shifted into a wrong location. This should be improved in some future version.  Anyway, for small changes, this is works well enough. 
+For now, the state merging isn't very efficient - variables are saved by their positions and the current execution position may be shifted into a wrong location. This should be improved in some future version. Anyway, for small changes, this is works well enough.
 
 There is also an option to restart the process from some point after some heavy loading. This is especially useful when debugging node. We can skip long-running operations of process restart and modules loading.
 
@@ -261,9 +261,9 @@ if (typeof EDBG !== "undefined") {
 }
 ```
 
-This snippet calls `restore` on restart (`onRestart` callback) and after some project file is changed and loaded file (`onHotSwapping` callback). 
+This snippet calls `restore` on restart (`onRestart` callback) and after some project file is changed and loaded file (`onHotSwapping` callback).
 
-Add `"timeTravelDisabled": true` so the initialization won't collect time-traveling traces, and only enable it when it is interesting. In the snippet above it is ` EDBG.journal.enabled = true;` line.
+Add `"timeTravelDisabled": true` so the initialization won't collect time-traveling traces, and only enable it when it is interesting. In the snippet above it is `EDBG.journal.enabled = true;` line.
 
 ## Interoperating with runtime/native modules
 
@@ -279,7 +279,7 @@ Even now, even if our program's logic heavily depends on the propagation of even
 
 ## Firefox
 
-For preventing Spectre attack Firefox disabled `SharedArrayBuffer`. But it is used by the debugger to pause running code (when, for example, it is frozen due to some error/. To enable shared memory in Firefox, navigate to `about:config` -> `I accept the risk!` -> set `javascript.options.shared_memory` to true. 
+For preventing Spectre attack Firefox disabled `SharedArrayBuffer`. But it is used by the debugger to pause running code (when, for example, it is frozen due to some error/. To enable shared memory in Firefox, navigate to `about:config` -> `I accept the risk!` -> set `javascript.options.shared_memory` to true.
 
 ## Not _yet_ done
 

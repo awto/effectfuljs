@@ -1,8 +1,7 @@
 import config from "../config";
 import { context, normalizePath, statusBuf } from "../state";
 
-let cb: () => void;
-let connected: Promise<undefined> | null = new Promise(i => (cb = i));
+let connectionQueue: any[] | null = [];
 let closed = false;
 
 enum WorkerType {
@@ -183,9 +182,10 @@ const sysConsole = console;
 function interpret(data: any) {
   switch (data.type) {
     case "connected":
-      connected = null;
+      const queue = connectionQueue;
+      connectionQueue = null;
       if (config.verbose) sysConsole.log("DEBUGGER: connected");
-      cb();
+      if (queue) for (const i of queue) post(i);
       break;
     case "message":
       if (config.verbose)
@@ -204,7 +204,7 @@ function interpret(data: any) {
   }
 }
 
-async function send(data: any, optional?: boolean) {
+function send(data: any, optional?: boolean) {
   const msg = JSON.stringify(data);
   if (config.verbose && data.event !== "output")
     sysConsole.log(`DEBUGGER: SEND ${msg} from ${context.threadId}`);
@@ -213,11 +213,10 @@ async function send(data: any, optional?: boolean) {
       sysConsole.log("DEBUGGER: sending into a closed socket");
     return;
   }
-  if (connected) {
+  if (connectionQueue) {
     if (optional) return;
-    await connected;
-  }
-  post(msg);
+    connectionQueue.push(msg);
+  } else post(msg);
 }
 
 impl.close = close;

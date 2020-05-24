@@ -43,13 +43,14 @@ const Map = saved.Map;
 const globalNS = config.globalNS;
 
 const { journal, context, token, closures, functions, thunks } = State;
-const SavedFunction = State.saved.Function;
-const savedApply = State.saved.FunctionMethods.apply;
-const savedCall = State.saved.FunctionMethods.call;
+const SavedFunction = saved.Function;
+const savedApply = saved.FunctionMethods.apply;
+const savedCall = saved.FunctionMethods.call;
 const defineProperty = saved.Object.defineProperty;
 const savedToString = Function.prototype.toString;
 const weakMapSet = saved.WeakMap.set;
 const weakMapDelete = saved.WeakMap.delete;
+const setPrototypeOf = saved.Object.setPrototypeOf;
 
 let curModule: Module = undefined as any; // this is always used in context where this is inited
 let moduleChanged = false;
@@ -219,7 +220,6 @@ export function fun(
       meta.handler = handler;
       return meta.func;
     }
-    // if (savedToString.call(handler) === savedToString.call(meta.handler)) {
     moduleChanged = true;
   } else if (!meta) meta = curModule.functions[name] = <FunctionDescr>{};
   if (top) curModule.topLevel = meta;
@@ -428,27 +428,19 @@ function buildScope(
 
 export const clos: any = config.persistState
   ? function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
-      /*defineProperty(closure, "call", {
-      configurable: true,
-      value: defaultCall
-    });
-    defineProperty(closure, "apply", {
-      configurable: true,
-      value: defaultApply
-    });*/
-      closure.call = defaultCall;
-      closure.apply = defaultApply;
       weakMapSet.call(closures, closure, {
         meta,
         parent,
         $: parent && parent.$
       });
+      setPrototypeOf(closure, FunctionConstr.prototype);
+      //closure.call = defaultCall;
+      //closure.apply = defaultApply;
       S.setObjectDescriptor(closure, (<any>meta).descriptor);
       return closure;
     }
   : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
-      closure.call = defaultCall;
-      closure.apply = defaultApply;
+      // setPrototypeOf(closure, FunctionConstr.prototype);
       weakMapSet.call(closures, closure, {
         meta,
         parent,
@@ -522,7 +514,6 @@ export function step() {
     context.value = void 0;
     context.error = false;
     const top = context.top;
-    // if (!top) throw new TypeError("nothing to run");
     if (!top) return context.value;
     if (top.brk && top.brk.flags & BrkFlag.EXIT) {
       if (!context.debug && top.restoreDebug) context.debug = true;
@@ -814,8 +805,12 @@ export const FunctionConstr = function Function(...args: any[]) {
   res.constructor = Function;
   return res;
 };
-FunctionConstr.prototype = Function.prototype;
 if (config.patchRT) {
+  saved.Object.defineProperty(FunctionConstr.prototype, "bind", {
+    configurable: true,
+    writable: true,
+    value: SavedFunction.prototype.bind
+  });
   saved.Object.defineProperty(FunctionConstr.prototype, "toString", {
     configurable: true,
     writable: true,
@@ -828,6 +823,16 @@ if (config.patchRT) {
         return savedToString.call(this);
       return `function ${name || ""}(${params}) { [native code] }`;
     }
+  });
+  saved.Object.defineProperty(FunctionConstr.prototype, "call", {
+    configurable: true,
+    writable: true,
+    value: defaultCall
+  });
+  saved.Object.defineProperty(FunctionConstr.prototype, "apply", {
+    configurable: true,
+    writable: true,
+    value: defaultApply
   });
 }
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
@@ -999,7 +1004,7 @@ export function checkExitBrk(top: Frame, value: any) {
         brk,
         debug: context.debug,
         value: context.value,
-        stopOnEntry: true
+        stopOnEntry: false
       });
       context.top = null;
       signalThread();

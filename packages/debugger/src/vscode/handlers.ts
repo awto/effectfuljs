@@ -265,10 +265,40 @@ context.onLoad = function(module: State.Module, hot: boolean) {
   }
 };
 
-let launchCb: ((stop: boolean) => void) | undefined;
-let launchPromise: Promise<boolean> = new Promise<boolean>(i => (launchCb = i));
+let awaitingThreads:
+  | {
+      job: State.Job;
+      top: State.Frame;
+      brk: State.Brk;
+    }[]
+  | null = [];
 
-context.onThread = async function() {
+let firstThread = true;
+
+function startThreadImpl(job: State.Job, top: State.Frame, brk: State.Brk) {
+  let stop = false;
+  context.debug = job.debug;
+  context.brk = job.brk;
+  context.value = job.value;
+  if (firstThread) {
+    stop = !!config.stopOnEntry;
+    firstThread = false;
+  } else if ((reason = checkPause(brk, top)) && reason !== "interrupt")
+    stop = true;
+  TT.checkpoint();
+  if (stop) {
+    context.activeTop = context.top;
+    context.top = null;
+    signalStopped();
+    onEntry();
+  } else {
+    onEntry();
+    step();
+    if (!context.activeTop) event("continued", {});
+  }
+}
+
+context.onThread = function() {
   if (context.top || context.activeTop) return;
   if (!context.queue.length) {
     if (!context.top && !context.activeTop) {
@@ -285,34 +315,12 @@ context.onThread = async function() {
   const job = <State.Job>context.queue.shift();
   if (config.verbose) trace("DEBUGGER: new thread");
   const top = <State.Frame>(context.top = job.top);
-  context.debug = job.debug;
-  context.brk = job.brk;
-  context.value = job.value;
   if (context.brk) {
-    let stop = false;
-    if (launchCb) {
-      stop = await launchPromise;
-      launchCb = undefined;
-      if (stop) reason = "entry";
+    if (awaitingThreads) {
+      awaitingThreads.push({ top, job, brk: context.brk });
+      return;
     }
-    if (
-      job.stopOnEntry &&
-      !stop &&
-      (reason = checkPause(context.brk, top)) &&
-      reason !== "interrupt"
-    )
-      stop = true;
-    TT.checkpoint();
-    if (stop) {
-      context.activeTop = context.top;
-      context.top = null;
-      signalStopped();
-      onEntry();
-    } else {
-      onEntry();
-      step();
-      if (!context.activeTop) event("continued", {});
-    }
+    startThreadImpl(job, top, context.brk);
   }
 };
 
@@ -658,8 +666,16 @@ handlers.childLaunch = function(args, res) {
   context.threadId = args.threadId;
   config.stopOnExit = args.stopOnExit;
   config.fastRestart = args.fastRestart;
+  config.stopOnEntry = !!args.stopOnEntry;
   if (args.onChange === "restart") config.onHotSwapping = scheduleRestart;
-  if (launchCb) launchCb(args.stopOnEntry);
+  if (awaitingThreads) {
+    const threads = awaitingThreads;
+    awaitingThreads = null;
+    for (const i of threads) {
+      i.job.stopOnEntry = !!args.stopOnEntry;
+      startThreadImpl(i.job, i.top, i.brk);
+    }
+  }
   if (config.verbose) trace(`DEBUGGER: launch ${JSON.stringify(args)}`);
 };
 
@@ -677,9 +693,7 @@ function checkPause(
   | "entry"
   | "interrupt" {
   if (!context.debug) return undefined;
-  if (launchCb != null) {
-    return "entry";
-  }
+  if (awaitingThreads != null) return "entry";
   if (pauseNext) {
     pauseNext = false;
     return "pause";
@@ -1126,7 +1140,7 @@ function logMessageToExpression(msg: string) {
 
 /** the function is needed only for testing in same process */
 export function resetLoad() {
-  launchPromise = new Promise<boolean>(i => (launchCb = i));
+  awaitingThreads = [];
   varCount = 100;
   resetScopes();
   sources.clear();

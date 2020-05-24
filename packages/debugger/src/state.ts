@@ -372,7 +372,8 @@ export const saved = {
   },
   Object: {
     defineProperty: Object.defineProperty,
-    assign: Object.assign
+    assign: Object.assign,
+    setPrototypeOf: Object.setPrototypeOf
   },
   Array: {
     shift: Array.prototype.shift,
