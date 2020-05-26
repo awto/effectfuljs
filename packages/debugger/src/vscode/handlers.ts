@@ -280,10 +280,11 @@ function startThreadImpl(job: State.Job, top: State.Frame, brk: State.Brk) {
   context.debug = job.debug;
   context.brk = job.brk;
   context.value = job.value;
-  if (firstThread) {
+  const entry = firstThread;
+  if (entry) {
     if (config.stopOnEntry) stop = true;
     firstThread = false;
-  } 
+  }
   if (!stop && (reason = checkPause(brk, top)) && reason !== "interrupt")
     stop = true;
   TT.checkpoint();
@@ -291,9 +292,9 @@ function startThreadImpl(job: State.Job, top: State.Frame, brk: State.Brk) {
     context.activeTop = context.top;
     context.top = null;
     signalStopped();
-    onEntry();
+    if (entry) onEntry();
   } else {
-    onEntry();
+    if (entry) onEntry();
     step();
     if (!context.activeTop) event("continued", {});
   }
@@ -1182,7 +1183,12 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
         queue: context.queue,
         brk: context.brk,
         brkFrame,
-        journal: { ...journal },
+        journal: {
+          now: journal.now,
+          past: journal.past,
+          future: journal.future,
+          enabled: savedEnabled
+        },
         global,
         document: (<any>global).document,
         extra: Persist.extra,
