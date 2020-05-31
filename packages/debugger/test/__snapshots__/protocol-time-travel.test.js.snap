@@ -1519,7 +1519,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 10,
           "file": "stepBackPlain.js",
           "line": 8,
           "name": "func2",
@@ -2687,7 +2687,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 10,
           "file": "stepBackPlain.js",
           "line": 8,
           "name": "func2",
@@ -4109,7 +4109,7 @@ Object {
           ],
         },
         Object {
-          "column": 7,
+          "column": 14,
           "file": "stepBackAsync.js",
           "line": 9,
           "name": "(anonymous)",
@@ -4185,7 +4185,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 16,
           "file": "stepBackAsync.js",
           "line": 8,
           "name": "afunc2",
@@ -4253,7 +4253,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepBackAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -4428,7 +4428,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 16,
           "file": "stepBackAsync.js",
           "line": 8,
           "name": "afunc2",
@@ -4496,7 +4496,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepBackAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -4663,7 +4663,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepBackAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -5619,7 +5619,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepBackAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -5794,7 +5794,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 16,
           "file": "stepBackAsync.js",
           "line": 8,
           "name": "afunc2",
@@ -5862,7 +5862,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepBackAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -6061,7 +6061,7 @@ Object {
           ],
         },
         Object {
-          "column": 7,
+          "column": 14,
           "file": "stepBackAsync.js",
           "line": 9,
           "name": "(anonymous)",
@@ -6137,7 +6137,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 16,
           "file": "stepBackAsync.js",
           "line": 8,
           "name": "afunc2",
@@ -6205,7 +6205,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepBackAsync.js",
           "line": 6,
           "name": "afunc1",

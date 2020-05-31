@@ -1,5 +1,5 @@
 import { parse as babelParse } from "@babel/parser";
-import { produceNode, append, node, num, arr, tok, clone,dft } from "./core";
+import { produceNode, append, node, num, arr, tok, clone, dft } from "./core";
 import { invariant, Tag } from "./types";
 
 const memo = new Map();
@@ -145,6 +145,11 @@ export function template(pos, code, ...syms) {
 
 /** converts compile time constant into a list of tokens */
 export function emitConst(pos, value) {
+  if (value === void 0) {
+    const res = tok(pos, Tag.UnaryExpression, { operator: "void" });
+    append(res, num(Tag.argument, 0));
+    return res;
+  }
   switch (typeof value) {
     case "number":
       return num(pos, value);
@@ -165,9 +170,11 @@ export function emitConst(pos, value) {
       const res = node(pos, Tag.ObjectExpression);
       const props = arr(Tag.properties);
       for (const name in value) {
+        const v = value[name];
+        if (v === void 0) continue;
         const prop = node(Tag.push, Tag.ObjectProperty);
         append(prop, tok(Tag.key, Tag.Identifier, { name }));
-        append(prop, emitConst(Tag.value, value[name]));
+        append(prop, emitConst(Tag.value, v));
         append(props, prop);
       }
       append(res, props);

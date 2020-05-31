@@ -440,7 +440,8 @@ handlers.stackTrace = function(args, response) {
   for (let i = startFrame; i < Math.min(endFrame, visibleFrames.length); i++) {
     const f = visibleFrames[i];
     const meta = f.meta;
-    const { brk } = f;
+    let brk = meta.states[f.state];
+    if (!brk.line && f.brk) brk = f.brk;
     const name = meta.origName;
     const sf = {
       id: State.toGlobal(i),
@@ -497,7 +498,8 @@ handlers.scopes = function(args, response) {
   response.body = { scopes };
   function walk(frame: State.Frame, top: boolean) {
     const meta = frame.meta;
-    const { brk } = frame;
+    let brk = meta.states[frame.state];
+    if (!brk.line && frame.brk) brk = frame.brk;
     const scopeDepth = meta.scopeDepth;
     if (brk && brk.scope) {
       const ref = newVarRef();

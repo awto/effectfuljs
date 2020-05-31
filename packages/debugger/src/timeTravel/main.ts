@@ -4,7 +4,7 @@ import * as DOM from "./dom";
 import { Record } from "../state";
 import * as State from "../state";
 import * as S from "@effectful/serialization";
-import { record2, record4, record5, record8 } from "./binds";
+import { record2, record5, record9 } from "./binds";
 export const journal = State.journal;
 const context = State.context;
 
@@ -149,12 +149,14 @@ function restoreFrameFullOp(this: any) {
 S.regOpaqueObject(restoreFrameFullOp, "#frame");
 
 function restoreFrameOp(this: any) {
-  const { a: frame, b: goto, c: brk, d: $ } = this;
+  const { a: frame, b: goto, c: state, d: brk, e: $ } = this;
   this.b = frame.goto;
-  this.c = frame.brk;
-  this.d = frame.$;
+  this.c = frame.state;
+  this.d = frame.brk;
+  this.e = frame.$;
   record(this);
   frame.goto = goto;
+  frame.state = state;
   frame.brk = brk;
   frame.timestamp = journal.now;
   frame.$ = $;
@@ -166,22 +168,25 @@ function restoreGeneratorFrameOp(this: any) {
   const {
     a: frame,
     b: goto,
-    c: brk,
-    d: $,
-    e: running,
-    f: sent,
-    g: next,
-    h: caller
+    c: state,
+    d: brk,
+    e: $,
+    f: running,
+    g: sent,
+    h: next,
+    i: caller
   } = this;
   this.b = frame.goto;
-  this.c = frame.brk;
-  this.d = frame.$;
-  this.e = frame.running;
-  this.f = frame.sent;
-  this.g = frame.next;
-  this.h = frame.caller;
+  this.c = frame.state;
+  this.d = frame.brk;
+  this.e = frame.$;
+  this.f = frame.running;
+  this.g = frame.sent;
+  this.h = frame.next;
+  this.i = frame.caller;
   record(this);
   frame.goto = goto;
+  frame.state = state;
   frame.brk = brk;
   frame.$ = $;
   frame.running = running;
@@ -208,10 +213,11 @@ export function recordFrame(frame: State.Frame) {
           State.saved.Object.assign({}, frame)
         );
       } else {
-        record8(
+        record9(
           restoreGeneratorFrameOp,
           frame,
           frame.goto,
+          frame.state,
           frame.brk,
           frame.$,
           (<State.GeneratorFrame>frame).running,
@@ -228,7 +234,7 @@ export function recordFrame(frame: State.Frame) {
           State.saved.Object.assign({}, frame)
         );
       } else {
-        record4(restoreFrameOp, frame, frame.goto, frame.brk, frame.$);
+        record5(restoreFrameOp, frame, frame.goto, frame.state, frame.brk, frame.$);
       }
     }
   }

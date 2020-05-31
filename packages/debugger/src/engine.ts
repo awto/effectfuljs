@@ -32,7 +32,12 @@ import babelGenerate from "@babel/generator";
 import * as T from "./transform";
 import * as path from "path";
 import * as S from "@effectful/serialization";
-import { regOpaqueObject, regFun, ModuleDescriptor, defaultBind } from "./persist";
+import {
+  regOpaqueObject,
+  regFun,
+  ModuleDescriptor,
+  defaultBind
+} from "./persist";
 import { isValidIdentifier } from "@babel/types";
 
 // tslint:disable-next-line
@@ -478,7 +483,6 @@ function defaultCall(this: any) {
   return savedCall.apply(this, <any>arguments);
 }
 
-
 export function pushScope(varsNum: number) {
   const top = <Frame>context.top;
   const cur = Array(varsNum);
@@ -512,10 +516,12 @@ export function step() {
   try {
     context.running = true;
     const value = context.value;
+    const top = context.top;
+    const error = context.error;
     context.value = void 0;
     context.error = false;
-    const top = context.top;
-    if (!top) return context.value;
+    if (!top) return value;
+    if (error) top.meta.errHandler(top, top.$);
     if (top.brk && top.brk.flags & BrkFlag.EXIT) {
       if (!context.debug && top.restoreDebug) context.debug = true;
       popFrame(top);
@@ -538,6 +544,7 @@ export function loop(value: any): any {
         context.onStop();
         return e;
       }
+      (<Frame>top).error = e;
       if (
         !(<Frame>top).meta.blackbox &&
         context.exception !== e &&
@@ -546,10 +553,6 @@ export function loop(value: any): any {
         context.value = e;
         context.error = true;
         context.onStop();
-        if (top) {
-          top.error = e;
-          top.meta.errHandler(top, top.$);
-        }
         return token;
       }
       top = context.top;
@@ -607,7 +610,7 @@ function hasEH(frame: Frame): boolean {
 export function checkErrBrk(frame: Frame, e: any): boolean {
   if (!context.debug) return false;
   context.exception = e;
-  if (e.stack) {
+  if (e && e.stack) {
     const stack = [String(e)];
     for (let i: Frame | null = frame; i; i = i.next) {
       if (i.brk)
@@ -648,7 +651,6 @@ export function handle(frame: Frame, e: any) {
     // tslint:disable-next-line:no-console
     const meta = frame.meta;
     frame.error = e;
-    meta.errHandler(frame, frame.$);
     if (!meta.blackbox && e !== context.exception && checkErrBrk(frame, e)) {
       context.value = e;
       context.error = true;
@@ -656,6 +658,7 @@ export function handle(frame: Frame, e: any) {
       context.onStop();
       return token;
     }
+    meta.errHandler(frame, frame.$);
     try {
       recordFrame(frame);
       return frame.meta.handler(frame, frame.$, null);

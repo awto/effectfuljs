@@ -1019,7 +1019,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepInAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -1194,7 +1194,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 16,
           "file": "stepInAsync.js",
           "line": 8,
           "name": "afunc2",
@@ -1262,7 +1262,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepInAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -1461,7 +1461,7 @@ Object {
           ],
         },
         Object {
-          "column": 7,
+          "column": 14,
           "file": "stepInAsync.js",
           "line": 9,
           "name": "(anonymous)",
@@ -1537,7 +1537,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 16,
           "file": "stepInAsync.js",
           "line": 8,
           "name": "afunc2",
@@ -1605,7 +1605,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 9,
           "file": "stepInAsync.js",
           "line": 6,
           "name": "afunc1",
@@ -3290,7 +3290,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 11,
           "file": "stepInAsyncGenerator.js",
           "line": 8,
           "name": "agfunc2",
@@ -4187,7 +4187,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
@@ -4388,7 +4388,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
@@ -4679,7 +4679,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
@@ -4896,7 +4896,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 11,
           "file": "stepInAsyncGenerator.js",
           "line": 8,
           "name": "agfunc2",
@@ -5068,7 +5068,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
@@ -5269,7 +5269,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepInAsyncGenerator.js",
           "line": 13,
           "name": "main",
@@ -6449,7 +6449,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -6542,7 +6542,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -6699,7 +6699,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -6808,7 +6808,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 11,
           "file": "stepInGenerator.js",
           "line": 7,
           "name": "gfunc2",
@@ -6928,7 +6928,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -7159,7 +7159,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepInGenerator.js",
           "line": 11,
           "name": "stepInGenerator.js",
@@ -10230,7 +10230,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -10520,7 +10520,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -10666,7 +10666,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 9,
           "name": "func1",
@@ -10811,7 +10811,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -10957,7 +10957,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 9,
           "name": "func1",
@@ -11102,7 +11102,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -11320,7 +11320,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -11538,7 +11538,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -11611,7 +11611,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -11829,7 +11829,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -11902,7 +11902,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -12048,7 +12048,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 9,
           "name": "func1",
@@ -12121,7 +12121,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -12194,7 +12194,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -12340,7 +12340,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 9,
           "name": "func1",
@@ -12413,7 +12413,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -12486,7 +12486,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -12632,7 +12632,7 @@ Object {
           ],
         },
         Object {
-          "column": 14,
+          "column": 19,
           "file": "stepOutGenerator.js",
           "line": 16,
           "name": "func2",
@@ -12705,7 +12705,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -12851,7 +12851,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOutGenerator.js",
           "line": 19,
           "name": "stepOutGenerator.js",
@@ -21566,7 +21566,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -21927,7 +21927,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -22288,7 +22288,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -23010,7 +23010,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -23732,7 +23732,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -24454,7 +24454,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -25175,7 +25175,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -25536,7 +25536,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -25897,7 +25897,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -26619,7 +26619,7 @@ Object {
           ],
         },
         Object {
-          "column": 20,
+          "column": 25,
           "file": "stepOverAsyncGenerator.js",
           "line": 31,
           "name": "main",
@@ -27374,7 +27374,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -27592,7 +27592,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -27738,7 +27738,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -27885,7 +27885,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -28032,7 +28032,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -28179,7 +28179,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -28326,7 +28326,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -28473,7 +28473,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -28620,7 +28620,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -28767,7 +28767,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -28913,7 +28913,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -29060,7 +29060,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -29207,7 +29207,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -29354,7 +29354,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -29501,7 +29501,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -29648,7 +29648,7 @@ Object {
           ],
         },
         Object {
-          "column": 12,
+          "column": 17,
           "file": "stepOverGenerator.js",
           "line": 22,
           "name": "stepOverGenerator.js",
@@ -31523,7 +31523,7 @@ Object {
           ],
         },
         Object {
-          "column": 5,
+          "column": 10,
           "file": "stepInPlain.js",
           "line": 8,
           "name": "func2",
@@ -31945,7 +31945,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 10,
           "file": "evalDir.js",
           "line": 5,
           "name": "dirEvalFunc",
@@ -32327,7 +32327,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 10,
           "file": "evalIndir.js",
           "line": 7,
           "name": "a",
@@ -32414,7 +32414,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 10,
           "file": "evalIndir.js",
           "line": 7,
           "name": "a",
@@ -32500,7 +32500,7 @@ Object {
           ],
         },
         Object {
-          "column": 3,
+          "column": 10,
           "file": "evalIndir.js",
           "line": 7,
           "name": "a",

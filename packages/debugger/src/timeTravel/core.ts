@@ -396,16 +396,14 @@ export const set: (
           if (Array.isArray(obj)) return arraySet(obj, name, value);
           let descr: PropertyDescriptor | undefined = void 0;
           let descrObj: any;
-          if (name in obj) {
-            descrObj = obj;
-            while (descrObj && descrObj !== Object.prototype) {
-              descr = Object.getOwnPropertyDescriptor(descrObj, name);
-              if (descr) break;
-              descrObj = Object.getPrototypeOf(descrObj);
-            }
-            if (descr && (descr.set || !descr.writable))
-              return (obj[name] = value);
+          descrObj = obj;
+          while (descrObj && descrObj !== Object.prototype) {
+            descr = Object.getOwnPropertyDescriptor(descrObj, name);
+            if (descr) break;
+            descrObj = Object.getPrototypeOf(descrObj);
           }
+          if (descr && (descr.set || !descr.writable))
+            return (obj[name] = value);
           const isIntIndex =
             typeof name !== "symbol" && isInt(String(<any>name));
           if (descrObj === obj) {
