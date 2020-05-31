@@ -510,6 +510,9 @@ export const restElement = Object.assign({}, restElementAssignment, {
   fieldsMap: new Map(restElementAssignment.fieldsMap)
 });
 restElement.fieldsMap.set(Tag.argument, patField);
+// babel 7.10 broke this
+const binaryExpression = symInfo(Tag.BinaryExpression)
+binaryExpression.fieldsMap.set(Tag.left, binaryExpression.fieldsMap.get(Tag.right))
 
 export function isNode(node) {
   if (node == null) return false;
