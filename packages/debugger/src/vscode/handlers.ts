@@ -2,20 +2,29 @@ import config from "../config";
 import * as State from "../state";
 import * as Engine from "../engine";
 import { runTopLevel } from "../modules";
+import { objectKeysDict, proxies, wrappers, sealed, notExtensible, frozen } from "../timeTravel/objects";
 import * as TT from "../timeTravel/main";
 import * as path from "path";
 import { DebugProtocol as P } from "./protocol";
 import * as S from "@effectful/serialization";
 import Comms from "./comms";
-import { stateDescr } from "../standalone";
 import * as util from "util";
 import { map, filter } from "../kit";
 import * as Persist from "../persist";
 
-const { assign } = State.saved.Object;
-const weakMapSet = State.saved.WeakMap.set;
-const Set = State.saved.Set;
-const Map = State.saved.Map;
+const savedObject = State.native.Object;
+
+const {
+  assign,
+  getOwnPropertyDescriptors,
+  keys: getKeys,
+  values: getValues,
+  getPrototypeOf
+} = savedObject;
+
+const weakMapSet = State.native.WeakMap.set;
+const Set = State.native.Set;
+const Map = State.native.Map;
 
 declare module "../state" {
   interface Module {
@@ -125,6 +134,11 @@ context.needsBreak = config.timeTravel
 
 S.regOpaqueObject(context.needsBreak, "@effectful/debugger/vscode$brk");
 
+function symToStr(val: any): any {
+  if (typeof val === "symbol") return val.toString();
+  return val;
+}
+
 function output(category: string, args: any[], value?: any, group?: string) {
   const descr = value !== undefined ? varValue("console", value) : undefined;
   event(
@@ -133,7 +147,8 @@ function output(category: string, args: any[], value?: any, group?: string) {
       {},
       {
         category,
-        output: (<any>util.format).apply(util.format, <any>args) + "\n",
+        output:
+          (<any>util.format).apply(util.format, <any>args.map(symToStr)) + "\n",
         group,
         value: descr && descr.value,
         variablesReference: descr && descr.variablesReference
@@ -178,7 +193,7 @@ const patchedConsole: any = assign({}, console, {
   }
 });
 
-for (const name of Object.keys(patchedConsole))
+for (const name of getKeys(patchedConsole))
   Persist.regOpaqueObject(patchedConsole[name], `#patcheConsole#{name}`);
 
 if (config.redirConsole) global.console = patchedConsole;
@@ -282,7 +297,10 @@ function startThreadImpl(job: State.Job, top: State.Frame, brk: State.Brk) {
   context.value = job.value;
   const entry = firstThread;
   if (entry) {
-    if (config.stopOnEntry) stop = true;
+    if (config.stopOnEntry) {
+      stop = true;
+      reason = "entry";
+    }
     firstThread = false;
   }
   if (!stop && (reason = checkPause(brk, top)) && reason !== "interrupt")
@@ -352,6 +370,7 @@ export function restart() {
     return;
   }
   if (entrySnapshot) {
+    firstThread = true;
     restore(entrySnapshot);
     return;
   }
@@ -503,7 +522,7 @@ handlers.scopes = function(args, response) {
     const scopeDepth = meta.scopeDepth;
     if (brk && brk.scope) {
       const ref = newVarRef();
-      const names = Object.keys(brk.scope);
+      const names = getKeys(brk.scope);
       const scopeDescr = {
         [variablesSym](variables: VarValue[]) {
           if (top && context.error)
@@ -544,7 +563,13 @@ handlers.variables = function(args, response) {
   let variables: VarValue[] = [];
   const val = curValById.get(args.variablesReference);
   if (val != null) {
-    if (val[variablesSym] != null) {
+    const unwrapped = proxies && proxies.get(val);
+    if (unwrapped) {
+      variables.push(varValue("[Target]", unwrapped.target));
+      variables.push(varValue("[Handler]", unwrapped.traps));
+      if (unwrapped.revoked != null)
+        variables.push(varValue("[IsRevoked]", unwrapped.revoked));
+    } else if (Object.prototype.hasOwnProperty.call(val, variablesSym)) {
       val[variablesSym](variables);
     } else if (Array.isArray(val)) {
       for (
@@ -555,14 +580,14 @@ handlers.variables = function(args, response) {
         variables.push(varValue(i, val[i]));
       variables.push(varValue("length", val.length));
     } else {
-      const descrs = Object.getOwnPropertyDescriptors(val);
+      const descrs = getOwnPropertyDescriptors(val);
       const arr = [];
       // tslint:disable-next-line:forin
       for (const i in descrs) {
         const descr = descrs[i];
-        if ("value" in descr) arr.push([i, descr.value]);
+        if ("value" in descr) arr.push([str(i), descr.value]);
       }
-      const proto = Object.getPrototypeOf(val);
+      const proto = getPrototypeOf(val);
       if (proto !== null && proto !== Object.prototype)
         variables.push(varValue("__proto__", proto));
       for (
@@ -578,17 +603,24 @@ handlers.variables = function(args, response) {
   response.body = { variables };
 };
 
+function unwrapProxy<T>(value: T): T {
+  if (!value) return value;
+  const unwrapped = proxies?.get(value);
+  return unwrapped ? unwrapped.obj : value;
+}
+
 function varValue(name: string, value: any): VarValue {
-  let valRepr = value;
   switch (typeof value) {
     case "function":
       const descr = State.closures.get(value);
       if (descr) {
         const meta = descr.meta;
         if (meta) {
-          valRepr = `${meta.origName}@${
-            meta.module ? path.basename(meta.module.name) : "*"
-          }:${meta.location}`;
+          value = `${proxies && proxies.has(value) ? "Proxy " : ""}${
+            meta.origName
+          }@${meta.module ? path.basename(meta.module.name) : "*"}:${
+            meta.location
+          }`;
         }
       }
     case "object":
@@ -599,20 +631,30 @@ function varValue(name: string, value: any): VarValue {
           curIdByVal.set(value, ref);
           curValById.set(ref, value);
         }
+        const unwrapped = proxies?.get(value);
+        if (unwrapped) value = unwrapped.obj;
+        let type = "Object";
+        for (let i = value; i; i = unwrapProxy(getPrototypeOf(i))) {
+          const constr = Object.getOwnPropertyDescriptor(i, "constructor");
+          if (constr && "value" in constr) {
+            type = constr.value.enumerable;
+            break;
+          }
+        }
         const res: VarValue = {
           name: String(name),
-          value: str(valRepr),
-          type: value.constructor && value.constructor.name,
+          value: (unwrapped ? "Proxy " : "") + str(value),
+          type,
           variablesReference: ref
         };
         if (Array.isArray(value)) {
           res.indexedVariables = value.length;
         } else {
           res.namedVariables = filter(
-            Object.values(Object.getOwnPropertyDescriptors(value)),
+            getValues(getOwnPropertyDescriptors(value)),
             i => "value" in i
           ).length;
-          const proto = Object.getPrototypeOf(value);
+          const proto = getPrototypeOf(value);
           if (proto !== null && proto !== Object.prototype)
             res.namedVariables++;
         }
@@ -626,13 +668,20 @@ function varValue(name: string, value: any): VarValue {
         variablesReference: 0
       };
   }
-  function str(value: any): any {
-    if (value === void 0) return "undefined";
-    try {
-      return String(value);
-    } catch (e) {
-      return "";
-    }
+}
+
+function str(value: any): any {
+  if (value === void 0) return "undefined";
+  if (typeof value === "symbol")
+    return value.toString();
+  const savedDebug = context.debug;
+  try {
+    context.debug = false;
+    return String(value);
+  } catch (e) {
+    return "";
+  } finally {
+    context.debug = savedDebug;
   }
 }
 
@@ -697,11 +746,10 @@ function checkPause(
   | "entry"
   | "interrupt" {
   if (!context.debug) return undefined;
-  if (awaitingThreads != null) return "entry";
-  if (pauseNext) {
-    pauseNext = false;
+  if (awaitingThreads != null || (firstThread && config.stopOnEntry))
+    return "entry";
+  if (pauseNext)
     return "pause";
-  }
   const { breakpoint: bp } = brk;
   if (
     bp &&
@@ -725,6 +773,41 @@ function checkPause(
 }
 
 let stepCount = 0;
+
+function stateDescr(
+    stepId: number,
+    threadId: number,
+    verbose?: boolean
+  ): string {
+    const res = [];
+    res.push(
+      `#${threadId}: Step #${stepId}@${context.brk ? "stopped" : "running"} = ${str(
+        context.value
+      )} ${context.error ? "ERROR" : ""}`
+    );
+    res.push(`#${threadId}:   Stack:`);
+    for (let j = context.top || context.activeTop; j; j = j.next) {
+      const verboseInfo = verbose ? ` [${j.state}=>${j.goto}]` : "";
+      res.push(
+        `#${threadId}:     ${j.constructor.name}@${j.meta.module.name}:${
+          j.brk ? j.brk.location : "?"
+        }${verboseInfo}`
+      );
+    }
+    if (context.top && context.top.brk) {
+      res.push(`#${threadId}:   Variables:`);
+      // tslint:disable-next-line:forin
+      for (const j in context.top.brk.scope) {
+        const [name, decl] = context.top.brk.scope[j];
+        res.push(
+          `#${threadId}:    ${name}@${decl}: ${str(context.top.$[name])} = ${str(
+            context.top.$[name]
+          )}`
+        );
+      }
+    }
+   return res.join();
+  }
 
 function run() {
   context.top = context.activeTop;
@@ -924,7 +1007,7 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
       id,
       JSON.stringify(args),
       module ? "<module loaded>" : "<module not loaded>",
-      JSON.stringify(Object.keys(context.modules))
+      JSON.stringify(getKeys(context.modules))
     );
   if (sourceUpdate || !module) {
     for (const i of args.breakpoints) diffs.push({ id: i.id, verified: false });
@@ -1042,7 +1125,7 @@ handlers.evaluate = function(args, res) {
   if (expr.length) {
     try {
       if (args.frameId == null) {
-        val = State.saved.eval(expr);
+        val = State.native.eval(expr);
       } else {
         const frame = getFrame(args.frameId);
         if (!frame || !frame.brk) val = "`eval` isn't available";
@@ -1198,7 +1281,14 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
         closures: State.closures,
         functions: State.functions,
         thunks: State.thunks,
-        binds: State.binds
+        binds: State.binds,
+        objectKeysDict,
+        proxies,
+        wrappers,
+        sealed,
+        notExtensible,
+        error: context.error,
+        frozen
       },
       assign(
         {
@@ -1287,6 +1377,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
           syncStack: context.syncStack,
           queue: context.queue,
           brk: context.brk,
+          error: context.error,
           brkFrame,
           journal: {
             now: journal.now,
@@ -1318,14 +1409,12 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
         reset();
         if (
           top &&
-          context.brk &&
-          (reason = checkPause(context.brk, top)) &&
+          (reason = checkPause(top.meta.states[top.state], top)) &&
           reason !== "interrupt"
-        )
+        ) {
+          firstThread = false;
           signalStopped();
-        else {
-          run();
-        }
+        } else run();
       },
       isBrowser ? 1000 : 0
     );

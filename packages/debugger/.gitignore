@@ -1,5 +1,7 @@
 /instr
-/deps
+/deps-n
+/deps-t
+/deps-aliases.json
 /timeTravel
 /trace
 /*.js
@@ -13,4 +15,7 @@
 !preset.js
 !jest.config.js
 !react.js
-
+!core-js*.js
+!deps-index-template.js
+!polyfills.js
+tmp-*

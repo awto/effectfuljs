@@ -1,6 +1,7 @@
 const D = require("../main");
 const Engine = require("../engine");
 const S = require("@effectful/serialization");
+const {native} = require("../state");
 
 const Ctx = D.context;
 
@@ -36,7 +37,7 @@ function call(fun) {
 
 function activeOnThread() {
   if (Ctx.queue.length === 0) return;
-  Object.assign(Ctx, Ctx.queue.shift());
+  native.Object.assign(Ctx, Ctx.queue.shift());
   loop();
 }
 
@@ -57,7 +58,7 @@ async function callAsync(fun) {
 
 function trace(value) {
   if (value !== Engine.token) return value;
-  Object.assign(Ctx, Ctx.queue.shift());
+  native.Object.assign(Ctx, Ctx.queue.shift());
   return loop();
 }
 

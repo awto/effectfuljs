@@ -344,6 +344,20 @@ export function trackGlobalDocument() {
       overrideProps
     });
 
+  if ((<any>global).CSS2Properties)
+    S.regConstructor((<any>global).CSS2Properties, {
+      name: "dom#CSS2Properties",
+      write(_, value) {
+        return { text: (<any>value).cssText };
+      },
+      create(_, json) {
+        const dummy = document.createElement("div");
+        dummy.style.cssText = (<any>json).text;
+        return dummy.style;
+      },
+      overrideProps
+    });
+
   if (typeof Document !== "undefined")
     S.regConstructor(
       Document,

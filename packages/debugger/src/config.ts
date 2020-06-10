@@ -28,7 +28,6 @@ export default {
   globalNS: "EDBG",
   keepObjectKeysOrder: true,
   keepContainersOrder: true,
-  expNoAccessOverloading: true,
   expInlineNext: false,
   stopOnEntry: false,
   /** for timeTravel debugging don't exit node process on program termination */
@@ -43,5 +42,7 @@ export default {
   /** executed after new version of the module's sources loaded  */
   onHotSwapping: <((module: any /* S.Module */) => void) | null>null,
   /** executed before/after executing async job (event handler, setTimeout etc) */
-  onBeforeExec: <(() => void) | null>null
+  onBeforeExec: <(() => void) | null>null,
+  /** stepping into implicit calls support */
+  implicitCalls: true
 };

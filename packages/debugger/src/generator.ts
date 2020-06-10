@@ -9,13 +9,12 @@ import {
   checkExitBrk,
   unhandled,
   handle,
-  wrapBuiltinFunc,
   FunctionConstr
 } from "./engine";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
-const { context, saved } = State;
+const { context, native } = State;
 
-const { defineProperty, setPrototypeOf } = saved.Object;
+const { defineProperty, setPrototypeOf } = native.Object;
 
 class IterableThis {
   [Symbol.iterator]() {
@@ -64,13 +63,13 @@ function next(this: any, value: any) {
 }
 
 defineProperty(Gp, "return", {
-  value: wrapBuiltinFunc(function ret(this: any, r: any) {
+  value: function ret(this: any, r: any) {
     context.call = context.call === ret ? next : null;
     const frame = this._frame;
     frame.meta.finHandler(frame, frame.$);
     frame.result = r;
     return this.next(r);
-  }),
+  },
   configurable: true,
   writable: true
 });
@@ -113,18 +112,37 @@ export function closG($$: any, meta: FunctionDescr, closure: any) {
 
 export const frameG: (
   closure: any,
+  meta: any,
+  parent: any,
+  vars: any[] | null,
   newTarget: any
 ) => GeneratorFrame = config.expInlineNext
-  ? function frameG(closure: any, newTarget: any) {
-      const frame = <GeneratorFrame>makeFrame(closure, newTarget);
+  ? function frameG(
+      closure: any,
+      meta: any,
+      parent: any,
+      vars: any[] | null,
+      newTarget: any
+    ) {
+      const frame = <GeneratorFrame>(
+        makeFrame(closure, meta, parent, vars, newTarget)
+      );
       const iter = Object.create(closure.prototype);
       frame.iter = iter;
       iter.next = (<any>frame.meta).nextImpl;
       iter._frame = frame;
       return frame;
     }
-  : function frameG(closure: any, newTarget: any) {
-      const frame = <GeneratorFrame>makeFrame(closure, newTarget);
+  : function frameG(
+      closure: any,
+      meta: any,
+      parent: any,
+      vars: any[] | null,
+      newTarget: any
+    ) {
+      const frame = <GeneratorFrame>(
+        makeFrame(closure, meta, parent, vars, newTarget)
+      );
       const iter = Object.create(closure.prototype);
       frame.iter = iter;
       iter._frame = frame;

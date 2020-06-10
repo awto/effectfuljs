@@ -84,4 +84,12 @@ describe("VSCode protocol handlers with time traveling", function() {
       done
     );
   });
+  test("`step in` into Proxies/setters/getters", function(done) {
+    Kit.traverse(
+      require("./__fixtures__/tt/proxies"),
+      { stopOnEntry: true },
+      "stepIn",
+      done
+    );
+  });
 });

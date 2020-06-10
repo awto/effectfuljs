@@ -12,6 +12,8 @@ import * as ApiMin from "./apiMin";
 import * as TimeTravel from "./timeTravel/main";
 import * as TimeTravelCore from "./timeTravel/core";
 import * as TimeTravelDom from "./timeTravel/dom";
+import * as TimeTravelObjects from "./timeTravel/objects";
+import * as TimeTravelFrame from "./timeTravel/frame";
 import * as SerializationDom from "@effectful/serialization/dom";
 import * as ES from "./timeTravel/es";
 
@@ -28,6 +30,8 @@ Persist.regModule(Persist, "@effectful/debugger/persist");
 Persist.regModule(Async, "@effectful/debugger/async");
 Persist.regModule(TimeTravelCore, "@effectful/debugger/timeTravel/core");
 Persist.regModule(TimeTravelDom, "@effectful/debugger/timeTravel/dom");
+Persist.regModule(TimeTravelObjects, "@effectful/debugger/timeTravel/objects");
+Persist.regModule(TimeTravelFrame, "@effectful/debugger/timeTravel/frame");
 Persist.regModule(TimeTravel, "@effectful/debugger/trace/main");
 Persist.regModule(Api, "@effectful/debugger/api");
 Persist.regModule(ApiMin, "@effectful/debugger/apiMin");

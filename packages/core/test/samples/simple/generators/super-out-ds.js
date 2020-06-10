@@ -8,6 +8,7 @@ var $M = require("@effectful/debugger"),
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
+    $get = $M.get,
     $set = $M.set,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -72,27 +73,45 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = $mcall("create", Object, $l[2].prototype);
+      $p = $get($l[2], "prototype");
       $.state = 1;
 
     case 1:
-      $set($l[1], "prototype", $p);
-      $set($l[1].prototype, "constructor", $l[1]);
-      $set($l[1], "__proto__", $l[2]);
-      $.goto = 3;
-      continue;
+      $.goto = 2;
+      $p = $mcall("create", Object, $p);
+      $.state = 2;
 
     case 2:
       $.goto = 3;
-      return $unhandled($.error);
+      $set($l[1], "prototype", $p);
+      $.state = 3;
 
     case 3:
+      $.goto = 4;
+      $p = $get($l[1], "prototype");
+      $.state = 4;
+
+    case 4:
+      $.goto = 5;
+      $set($p, "constructor", $l[1]);
+      $.state = 5;
+
+    case 5:
+      $.goto = 7;
+      $set($l[1], "__proto__", $l[2]);
+      continue;
+
+    case 6:
+      $.goto = 7;
+      return $unhandled($.error);
+
+    case 7:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
+}, null, null, 1, [[2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
     $m$2 = $M.fun("m$2", "aa", null, $m$0, [], 0, 3, "3:0-21:1", 1, function aa($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -137,42 +156,55 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 1, [[4, "4:8-10:24", $s$3], [2, null, $s$3], [4, "13:8-19:24", $s$3], [2, null, $s$3], [36, "21:1-21:1", $s$3], [16, "21:1-21:1", $s$3], [16, "21:1-21:1", $s$3]]),
-    $m$3 = $M.fun("m$3", null, null, $m$2, [], 0, 3, null, 0, function ($, $l, $p) {
+    $m$3 = $M.fun("m$3", null, null, $m$2, [], 0, 3, "5:4-10:24", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $lset($l, 1,
       /*A*/
       $m$4($));
-      $lset($l, 2,
-      /*_proto*/
-      $l[1].prototype);
       $.goto = 1;
-      $brk();
+      $p = $get($l[1], "prototype");
       $.state = 1;
 
     case 1:
-      $set($l[2], "method", $m$5($));
+      $lset($l, 2,
+      /*_proto*/
+      $p);
       $.goto = 2;
       $brk();
       $.state = 2;
 
     case 2:
-      $set($l[1], "smethod", $m$6($));
-      $.result = $l[1];
-      $.goto = 4;
-      continue;
+      $.goto = 3;
+      $set($l[2], "method", $m$5($));
+      $.state = 3;
 
     case 3:
       $.goto = 4;
-      return $unhandled($.error);
+      $brk();
+      $.state = 4;
 
     case 4:
+      $.goto = 5;
+      $set($l[1], "smethod", $m$6($));
+      $.state = 5;
+
+    case 5:
+      $.result = $l[1];
+      $.goto = 7;
+      continue;
+
+    case 6:
+      $.goto = 7;
+      return $unhandled($.error);
+
+    case 7:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 2, [[4, "5:4-7:16", $s$4], [4, "8:4-10:24", $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
+}, null, null, 2, [[2, null, $s$4], [4, "5:4-7:16", $s$4], [2, null, $s$4], [4, "8:4-10:24", $s$4], [2, null, $s$4], [0, null, $s$4], [16, "10:24-10:24", $s$4], [16, "10:24-10:24", $s$4]]),
     $m$4 = $M.fun("m$4", "A", null, $m$3, [], 0, 1, null, 0, function A($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -236,7 +268,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 3, [[4, "9:6-9:29", $s$7], [0, "9:13-9:28", $s$7], [16, "10:5-10:5", $s$7], [16, "10:5-10:5", $s$7]]),
-    $m$7 = $M.fun("m$7", null, null, $m$2, ["_A"], 0, 4, null, 0, function ($, $l, $p) {
+    $m$7 = $M.fun("m$7", null, null, $m$2, ["_A"], 0, 4, "14:4-19:24", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $lset($l, 2,
@@ -247,36 +279,49 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $lset($l, 3,
-      /*_proto2*/
-      $l[2].prototype);
       $.goto = 2;
-      $brk();
+      $p = $get($l[2], "prototype");
       $.state = 2;
 
     case 2:
-      $set($l[3], "method", $m$9($));
+      $lset($l, 3,
+      /*_proto2*/
+      $p);
       $.goto = 3;
       $brk();
       $.state = 3;
 
     case 3:
-      $set($l[2], "smethod", $m$10($));
-      $.result = $l[2];
-      $.goto = 5;
-      continue;
+      $.goto = 4;
+      $set($l[3], "method", $m$9($));
+      $.state = 4;
 
     case 4:
       $.goto = 5;
-      return $unhandled($.error);
+      $brk();
+      $.state = 5;
 
     case 5:
+      $.goto = 6;
+      $set($l[2], "smethod", $m$10($));
+      $.state = 6;
+
+    case 6:
+      $.result = $l[2];
+      $.goto = 8;
+      continue;
+
+    case 7:
+      $.goto = 8;
+      return $unhandled($.error);
+
+    case 8:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 2, [[2, null, $s$8], [4, "14:4-16:16", $s$8], [4, "17:4-19:24", $s$8], [0, null, $s$8], [16, null, $s$8], [16, null, $s$8]]),
+}, null, null, 2, [[2, null, $s$8], [2, null, $s$8], [4, "14:4-16:16", $s$8], [2, null, $s$8], [4, "17:4-19:24", $s$8], [2, null, $s$8], [0, null, $s$8], [16, "19:24-19:24", $s$8], [16, "19:24-19:24", $s$8]]),
     $m$8 = $M.fun("m$8", "B", null, $m$7, [], 0, 1, null, 24, function B($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -323,29 +368,39 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = $mcall("call", $l[0][1].prototype.method, $.self);
+      $p = $get($l[0][1], "prototype");
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      return $awt($p);
+      $p = $get($p, "method");
+      $.state = 3;
 
     case 3:
-      $.result = "from B " + $p;
-      $.goto = 5;
-      continue;
+      $.goto = 4;
+      $p = $mcall("call", $p, $.self);
+      $.state = 4;
 
     case 4:
       $.goto = 5;
-      return $unhandledA($.error);
+      return $awt($p);
 
     case 5:
+      $.result = "from B " + $p;
+      $.goto = 7;
+      continue;
+
+    case 6:
+      $.goto = 7;
+      return $unhandledA($.error);
+
+    case 7:
       return $retA($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 3, [[4, "15:6-15:48", $s$10], [2, null, $s$10], [2, "15:26-15:46", $s$10], [0, "15:13-15:47", $s$10], [16, "16:5-16:5", $s$10], [16, "16:5-16:5", $s$10]]),
+}, null, null, 3, [[4, "15:6-15:48", $s$10], [2, null, $s$10], [2, null, $s$10], [2, null, $s$10], [2, "15:26-15:46", $s$10], [0, "15:13-15:47", $s$10], [16, "16:5-16:5", $s$10], [16, "16:5-16:5", $s$10]]),
     $m$10 = $M.fun("m$10", "smethod", null, $m$7, [], 0, 1, "17:4-19:5", 9, function smethod($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -355,28 +410,33 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = $mcall("call", $l[0][1].method, $.self);
+      $p = $get($l[0][1], "method");
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      return $awt($p);
+      $p = $mcall("call", $p, $.self);
+      $.state = 3;
 
     case 3:
-      $.result = "static from B " + $p;
-      $.goto = 5;
-      continue;
+      $.goto = 4;
+      return $awt($p);
 
     case 4:
-      $.goto = 5;
-      return $unhandledA($.error);
+      $.result = "static from B " + $p;
+      $.goto = 6;
+      continue;
 
     case 5:
+      $.goto = 6;
+      return $unhandledA($.error);
+
+    case 6:
       return $retA($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 3, [[4, "18:6-18:55", $s$11], [2, null, $s$11], [2, "18:33-18:53", $s$11], [0, "18:13-18:54", $s$11], [16, "19:5-19:5", $s$11], [16, "19:5-19:5", $s$11]]);
+}, null, null, 3, [[4, "18:6-18:55", $s$11], [2, null, $s$11], [2, null, $s$11], [2, "18:33-18:53", $s$11], [0, "18:13-18:54", $s$11], [16, "19:5-19:5", $s$11], [16, "19:5-19:5", $s$11]]);
 
 $M.moduleExports();

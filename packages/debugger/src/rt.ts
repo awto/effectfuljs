@@ -2,9 +2,11 @@
 import config from "./config";
 import * as Instr from "./instr/rt";
 import * as Engine from "./engine";
-import { regOpaqueObject } from "@effectful/serialization";
-import { saved } from "./state";
+import { regOpaqueObject, regModule } from "./persist";
+import { native } from "./state";
+import * as TT from "./timeTravel/objects";
 import { ManagedSet, ManagedMap } from "./timeTravel/es";
+import { patchNative as patch } from "./state";
 
 const context = Engine.context;
 
@@ -20,54 +22,95 @@ function switchDefault(
 ) {
   const defImpl: any = proto[name];
   // asNative(debugImpl, name);
-  saved.Object.defineProperty(proto, name, {
+  regOpaqueObject(
+    value,
+    "@effectful/debugger/polyfill/${proto.constructor.name}#${name}"
+  );
+  native.Object.defineProperty(proto, name, {
     configurable: true,
     writable: true,
-    value: function impl() {
-      if (context.call === impl)
-        return (
-          // TODO: move to faster apply
-          (context.call = debugImpl.apply),
-          debugImpl.apply(this, <any>arguments)
-        );
-      return (context.call = null), defImpl.apply(this, <any>arguments);
-    }
+    value
   });
+  function value(this: any) {
+    if (context.call === value)
+      return (
+        // TODO: move to faster apply
+        (context.call = debugImpl.apply), debugImpl.apply(this, <any>arguments)
+      );
+    return (context.call = null), defImpl.apply(this, <any>arguments);
+  }
 }
 
+const deps = config.timeTravel ? require("./deps-t") : require("./deps-n");
+const { CoreJS, Promise } = deps;
+
+regModule(CoreJS.ArrayPrototype, "@effectful/debugger/CoreJS/ArrayPrototype");
+regModule(CoreJS.Array, "@effectful/debugger/CoreJS/Array");
+regModule(Ap, "@effectful/debugger/Native/ArrayPrototype");
+regModule(Tp, "@effectful/debugger/Native/TypedArrayPrototype");
+
 if (config.patchRT) {
-  const Promise = (global.Promise = Engine.force(
-    config.timeTravel ? require("./deps/promise-t") : require("./deps/promise")
-  ));
+  global.Promise = Promise;
+  const CAp = CoreJS.ArrayPrototype;
+  const CTp = CoreJS.ArrayPrototype;
   regOpaqueObject(Promise, "global#Promise");
   regOpaqueObject(Promise.prototype, "global#Promise#");
-  switchDefault(Tp, "map", Instr.map);
-  switchDefault(Ap, "map", Instr.map);
-  switchDefault(Tp, "filter", Instr.filter);
-  switchDefault(Ap, "filter", Instr.filter);
-  switchDefault(Tp, "find", Instr.find);
-  switchDefault(Ap, "find", Instr.find);
-  switchDefault(Tp, "findIndex", Instr.findIndex);
-  switchDefault(Ap, "findIndex", Instr.findIndex);
-  switchDefault(Tp, "flatMap", Instr.flatMap);
-  switchDefault(Ap, "flatMap", Instr.flatMap);
-  switchDefault(Tp, "forEach", Instr.forEach);
-  switchDefault(Ap, "forEach", Instr.forEach);
+  for (const i of [
+    "map",
+    "filter",
+    "find",
+    "findIndex",
+    "flatMap",
+    "forEach",
+    "reduce",
+    "reduceRight",
+    "some",
+    "every"
+  ]) {
+    switchDefault(Tp, i, CTp[i]);
+    switchDefault(Ap, i, CAp[i]);
+  }
+  switchDefault(Array, "from", CoreJS.Array.from);
   switchDefault(Sp, "forEach", Instr.setForEach);
   switchDefault(Mp, "forEach", Instr.mapForEach);
-  switchDefault(Tp, "reduce", Instr.reduce);
-  switchDefault(Ap, "reduce", Instr.reduce);
-  switchDefault(Tp, "reduceRight", Instr.reduceRight);
-  switchDefault(Ap, "reduceRight", Instr.reduceRight);
-  switchDefault(Tp, "some", Instr.some);
-  switchDefault(Ap, "some", Instr.some);
-  switchDefault(Tp, "every", Instr.every);
-  switchDefault(Ap, "every", Instr.every);
-  switchDefault(Array, "from", Instr.arrayFrom);
   global.eval = Engine.indirEval;
   if (config.expFunctionConstr) (<any>global).Function = Engine.FunctionConstr;
+  if (config.timeTravel /*&& config.implicitCalls*/)
+    (<any>global).Proxy = TT.PatchedProxy;
 }
 
 (<any>ManagedSet.prototype).forEach = Instr.setForEach;
-
 (<any>ManagedMap.prototype).forEach = Instr.mapForEach;
+
+if (config.timeTravel && config.patchRT) {
+  TT.patchWithPolifil(Ap, "push", TT.arrayPush, CoreJS.ArrayPrototype.push);
+  TT.patchWithPolifil(Ap, "pop", TT.arrayPop, CoreJS.ArrayPrototype.pop);
+  TT.patchWithPolifil(
+    Ap,
+    "unshift",
+    TT.arrayUnshift,
+    CoreJS.ArrayPrototype.unshift
+  );
+  TT.patchWithPolifil(Ap, "shift", TT.arrayShift, CoreJS.ArrayPrototype.shift);
+  patch(Ap, "sort", TT.arraySort);
+  patch(Ap, "reverse", TT.arrayReverse);
+  TT.patchWithPolifil(
+    Ap,
+    "splice",
+    TT.arraySplice,
+    CoreJS.ArrayPrototype.splice
+  );
+  TT.patchWithPolifil(Ap, "slice", Ap.slice, CoreJS.ArrayPrototype.slice);
+  TT.patchWithPolifil(Ap, "concat", Ap.concat, CoreJS.ArrayPrototype.concat);
+  TT.patchWithPolifil(Ap, "flat", Ap.flat, CoreJS.ArrayPrototype.flat);
+  TT.patchWithPolifil(
+    Ap,
+    "copyWithin",
+    Ap.copyWithin,
+    CoreJS.ArrayPrototype.copyWithin
+  );
+  patch(Tp, "set", TT.typedArraySet);
+  patch(Tp, "sort", TT.typedArraySort);
+  patch(Tp, "reverse", TT.typedArrayReverse);
+  patch(Tp, "fill", TT.typedArrayFill);
+}

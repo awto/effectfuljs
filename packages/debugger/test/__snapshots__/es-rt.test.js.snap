@@ -113,15 +113,15 @@ Array [
     undefined,
   ],
   Array [
-    "forEachTest@0[0]:true",
+    "forEachTest@1[0]:true",
     1,
   ],
   Array [
-    "forEachTest@1[1]:true",
+    "forEachTest@2[1]:true",
     2,
   ],
   Array [
-    "forEachTest@2[2]:true",
+    "forEachTest@3[2]:true",
     3,
   ],
   Array [
@@ -129,25 +129,16 @@ Array [
     undefined,
   ],
   Array [
-    "forEachTest@0[0]:true",
-    Array [
-      1,
-      "a",
-    ],
+    "forEachTest@1[0]:true",
+    "a",
   ],
   Array [
-    "forEachTest@1[1]:true",
-    Array [
-      2,
-      "b",
-    ],
+    "forEachTest@2[1]:true",
+    "b",
   ],
   Array [
-    "forEachTest@2[2]:true",
-    Array [
-      3,
-      "c",
-    ],
+    "forEachTest@3[2]:true",
+    "c",
   ],
   Array [
     "> forEach:Map",
@@ -392,25 +383,16 @@ Array [
 exports[`ECMAScript containers stepping Map#forEach 1`] = `
 Array [
   Array [
-    "forEachTest@0[0]:true",
-    Array [
-      1,
-      "a",
-    ],
+    "forEachTest@1[0]:true",
+    "a",
   ],
   Array [
-    "forEachTest@1[1]:true",
-    Array [
-      2,
-      "b",
-    ],
+    "forEachTest@2[1]:true",
+    "b",
   ],
   Array [
-    "forEachTest@2[2]:true",
-    Array [
-      3,
-      "c",
-    ],
+    "forEachTest@3[2]:true",
+    "c",
   ],
   Array [
     "> forEach:Map",
@@ -422,15 +404,15 @@ Array [
 exports[`ECMAScript containers stepping Set#forEach 1`] = `
 Array [
   Array [
-    "forEachTest@0[0]:true",
+    "forEachTest@1[0]:true",
     1,
   ],
   Array [
-    "forEachTest@1[1]:true",
+    "forEachTest@2[1]:true",
     2,
   ],
   Array [
-    "forEachTest@2[2]:true",
+    "forEachTest@3[2]:true",
     3,
   ],
   Array [

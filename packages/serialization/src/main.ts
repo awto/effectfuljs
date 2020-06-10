@@ -2,7 +2,7 @@
  * # Serialization library for @effectful toolchain
  */
 
-const savedObject = {
+const savedObject = Object /* {
   defineProperty: Object.defineProperty,
   getOwnPropertyDescriptors: Object.getOwnPropertyDescriptors,
   assign: Object.assign,
@@ -12,7 +12,7 @@ const savedObject = {
   getOwnPropertySymbols: Object.getOwnPropertySymbols,
   getOwnPropertyNames: Object.getOwnPropertyNames,
   getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor
-};
+}*/;
 
 // tslint:disable-next-line
 const savedConsole = { log: console.log, warn: console.warn };
@@ -20,13 +20,13 @@ const savedConsole = { log: console.log, warn: console.warn };
 const weakMapSet = WeakMap.prototype.set;
 
 function showStack(ctx: WriteContext, key: string | number, value: any) {
-  savedConsole.warn("SF#0: ", key, value);
+  savedConsole.warn("Not serializable ", key, debCtx, value);
   let i = ctx.jobs;
   let num = 0;
   for (;;) {
     while (i && !i.started) i = i.nextJob;
     if (!i) break;
-    savedConsole.warn(`SF#${++num}:`, i.index, ":", i.value);
+    savedConsole.warn(`SF#${++num}:`, i.index, i.debCtx, ":", i.value);
     if (num > 200) break;
     i = i.nextJob;
   }
@@ -390,7 +390,6 @@ export function write(value: object, opts: WriteOptions = {}): JSONObject {
   }
   if (ctx.weakSets.length) {
     for (const info of ctx.sharedRefs.values()) {
-      const value = info.value;
       const ty = typeof info.value;
       if (ty !== "object" && ty !== "function") continue;
       for (const [wm, val] of ctx.weakSets) {
@@ -522,7 +521,10 @@ interface SharedRefInfo {
   descriptor?: Descriptor<any>;
   nextJob?: SharedRefInfo;
   started?: boolean;
+  debCtx?: any;
 }
+
+let debCtx: any = null;
 
 /**
  * An object passed to Descriptor's `write` method to support recursive
@@ -567,12 +569,14 @@ export class WriteContext {
       if (opts.warnIgnored && opts.verbose) showStack(this, key, value);
       if (!opts.ignore)
         throw new TypeError(
-          `not serializable value "${value}" at "${key}" of "${parent}"`
+          `not serializable value "${value}" at "${key}"(${debCtx}) of "${parent}"`
         );
       // tslint:disable-next-line
-      if (opts.warnIgnored && savedConsole.warn) {
+      if (opts.warnIgnored && savedConsole.warn && !opts.verbose) {
         // tslint:disable-next-line
-        savedConsole.warn("not serializable value", value);
+        savedConsole.warn(
+          `not serializable value "${value}" at "${key}"(${debCtx}) of "${parent}"`
+        );
       }
       if (opts.ignore === true) return NotSerializableToken;
       if (opts.ignore === "opaque") {
@@ -628,6 +632,13 @@ export class ReadContext {
    */
   step(json: JSONValue): any {
     return getJsonDescriptor(this, json).read(this, json);
+  }
+  /**
+   * Invokes create recursively for nested values.
+   * @param json - value to read
+   */
+  createStep(json: JSONValue) {
+    return getJsonDescriptor(this, json).create(this, json);
   }
 }
 
@@ -720,7 +731,8 @@ function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
             descriptor,
             index,
             nextJob: ctx.jobs,
-            started: false
+            started: false,
+            debCtx
           })
         );
         ctx.jobs = info;
@@ -1138,12 +1150,13 @@ export function writeProps(
 ) {
   const props = [];
   let flags: number;
-  for (const name in descrs) {
+  for (const name of savedObject.getOwnPropertyNames(descrs)) {
     const descr = descrs[name];
     if (
       (flags = <number>propFlags(snapshot, pred, name, descr, mask)) === void 0
     )
       continue;
+    debCtx = name;
     const propInfo = writeProp(ctx, [name], descr, flags);
     if (propInfo) props.push(propInfo);
   }
@@ -1154,6 +1167,7 @@ export function writeProps(
       void 0
     )
       continue;
+    debCtx = name;
     const propJson: JSONArray = [];
     const sym = writeSym(
       ctx,
@@ -1167,6 +1181,7 @@ export function writeProps(
     writeProp(ctx, propJson, descr, flags);
     if (propJson.length) props.push(propJson);
   }
+  debCtx = null;
   return props;
 }
 
@@ -1440,7 +1455,7 @@ export let getObjectDescriptor: (
 >(value: T): Descriptor<T> | undefined {
   let descriptor = descriptorByObject.get(value);
   if (descriptor) return descriptor;
-  const proto = Object.getPrototypeOf(value);
+  const proto = savedObject.getPrototypeOf(value);
   descriptor = descriptorByPrototype.get(proto);
   if (descriptor) return descriptor;
   if (proto && proto !== Object && descriptorSymbol in proto)
@@ -1564,7 +1579,7 @@ export const WeakSetWorkaround = class WeakSet {
     switch (typeof value) {
       case "function":
       case "object":
-        Object.defineProperty(value, this.prop, {
+        savedObject.defineProperty(value, this.prop, {
           configurable: true,
           writable: true,
           value: true
@@ -1594,7 +1609,7 @@ export const WeakMapWorkaround = class WeakMap {
     switch (typeof key) {
       case "function":
       case "object":
-        Object.defineProperty(key, this.prop, {
+        savedObject.defineProperty(key, this.prop, {
           configurable: true,
           writable: true,
           value
@@ -1623,7 +1638,7 @@ regConstructor(WeakMapWorkaround, { name: "WeakMap#" });
 
 const weakSetAdd = WeakSet.prototype.add;
 
-regConstructor(WeakSet, {
+export const WeakSetDescriptor = regConstructor(WeakSet, {
   name: "WeakSet",
   write(ctx, value) {
     const res = { v: [] };
@@ -1821,19 +1836,24 @@ export function rebindGlobal() {
  */
 export function regGlobal() {
   if (descriptorByObject.has(global)) return;
-  regOpaqueObject(<any>global, "#global");
-  for (const name of Object.getOwnPropertyNames(global)) {
+  regOpaqueObject(<any>global, "#global", {
+    props: true,
+    propsSnapshot: true,
+    overrideProps: { AnonymousContent: false }
+  });
+  for (const name of savedObject.getOwnPropertyNames(global)) {
     try {
       const obj = (<any>global)[name];
       if (!obj) continue;
       if (typeof obj !== "function" && typeof obj !== "object") continue;
-      if (descriptorByObject.has(obj)) continue;
       if (name === "location") {
         regOpaqueObject((<any>global).location, "location", { props: false });
         continue;
       }
+      const descr = descriptorByObject.get(obj);
+      if (descr && descr.props === false) continue;
       regOpaqueObject(obj, `#${name}`);
-      for (const i of Object.getOwnPropertyNames(obj)) {
+      for (const i of savedObject.getOwnPropertyNames(obj)) {
         // not registering prototypes to avoid unintended descriptor's inheritance
         if (i === "prototype") continue;
         const descr = <any>savedObject.getOwnPropertyDescriptor(obj, i);
@@ -1841,7 +1861,7 @@ export function regGlobal() {
         regOpaqueObject(descr.value, `#G#${name}#{j}`);
       }
       if (typeof obj === "function" && obj.prototype) {
-        for (const j of Object.getOwnPropertyNames(obj.prototype)) {
+        for (const j of savedObject.getOwnPropertyNames(obj.prototype)) {
           if (j === "prototype") continue;
           const descr = <any>(
             savedObject.getOwnPropertyDescriptor(obj.prototype, j)

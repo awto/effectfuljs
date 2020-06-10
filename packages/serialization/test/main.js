@@ -764,7 +764,7 @@ describe("not serializable values", function () {
       assert.equal(e.constructor, TypeError);
       assert.equal(
         e.message,
-        `not serializable value "function A() {}" at "1" of "A"`
+        `not serializable value "function A() {}" at "1"(A) of "A"`
       );
       return;
     }

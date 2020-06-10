@@ -1,12 +1,9 @@
-import * as rt from "../../instr/rt";
-
 let j = 0;
 
 export function mapTest(v) {
   j = 0;
   const self = {};
-  return rt.map.call(
-    v,
+  return v.map(
     function(i, x, t) {
       console.log(`map@${x}[${j++}]:${t === v}/${self === this}`, i);
       return i + x;
@@ -18,8 +15,7 @@ export function mapTest(v) {
 export function flatMapTest(v) {
   j = 0;
   const self = {};
-  return rt.flatMap.call(
-    v,
+  return v.flatMap(
     function(i, x, t) {
       console.log(`flatMap@${x}[${j++}]:${t === v}/${self === this}`, i);
       return [i, x, i + x];
@@ -31,8 +27,7 @@ export function flatMapTest(v) {
 export function filterTest(v) {
   j = 0;
   const self = {};
-  return rt.filter.call(
-    v,
+  return v.filter(
     function(i, x, t) {
       console.log(`filter@${x}[${j++}]:${t === v}/${self === this}`, i);
       return i !== 2;
@@ -44,8 +39,7 @@ export function filterTest(v) {
 export function findIndexTest(v) {
   j = 0;
   const self = {};
-  return rt.findIndex.call(
-    v,
+  return v.findIndex(
     function(i, x, t) {
       console.log(`findIndex@${x}[${j++}]:${t === v}/${self === this}`, i);
       return i === 2;
@@ -57,8 +51,7 @@ export function findIndexTest(v) {
 export function forEachTest(v) {
   j = 0;
   const self = {};
-  return rt.forEach.call(
-    v,
+  return v.forEach(
     function(i, x, t) {
       console.log(`forEachTest@${x}[${j++}]:${t === v}`, i);
     },
@@ -68,7 +61,7 @@ export function forEachTest(v) {
 
 export function reduceTest(v) {
   j = 0;
-  return [rt.reduce.call(v, run, "~"), rt.reduce.call(v, run)];
+  return [v.reduce(run, "~"), v.reduce(run)];
   function run(acc, i, x, t) {
     console.log(`reduce:${acc}@${x}[${j++}]:${t === v}`, i);
     return `${acc}/${i}`;
@@ -77,7 +70,7 @@ export function reduceTest(v) {
 
 export function reduceRightTest(v) {
   j = 0;
-  return [rt.reduceRight.call(v, run, "~"), rt.reduceRight.call(v, run)];
+  return [v.reduceRight(run, "~"), v.reduceRight(run)];
   function run(acc, i, x, t) {
     console.log(`reduceRight:${acc}@${x}[${j++}]:${t === v}`, i);
     return `${acc}/${i}`;
@@ -99,16 +92,14 @@ export function typedArraySortTest(v, w) {
 export function someTest(v) {
   const self = {};
   return [
-    rt.some.call(
-      v,
+    v.some(
       function(i, x, t) {
         console.log(`some@${x}[${j++}]:${t === v}/${self === this}`, i);
         return i === 2;
       },
       self
     ),
-    rt.some.call(
-      v,
+    v.some(
       function(i, x, t) {
         return false;
       },
@@ -120,16 +111,14 @@ export function someTest(v) {
 export function everyTest(v) {
   const self = {};
   return [
-    rt.every.call(
-      v,
+    v.every(
       function(i, x, t) {
         console.log(`every@${x}[${j++}]:${t === v}/${self === this}`, i);
         return i !== 2;
       },
       self
     ),
-    rt.every.call(
-      v,
+    v.every(
       function(i, x, t) {
         return true;
       },

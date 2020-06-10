@@ -504,7 +504,7 @@ Array [
 ]
 `;
 
-exports[`generator functions time traveling 1`] = `
+exports[`pure generator functions time traveling 1`] = `
 Array [
   Array [
     "CHECKPOINT",

@@ -160,7 +160,11 @@ module.exports = {
         paths.appSrc,
         appPackageJson ? [paths.appPackageJson] : []
       )
-    ]
+    ],
+    alias: {
+      [path.resolve(__dirname, `../../deps${timeTravel ? "-n" : "-t"}`) +
+      "$"]: "empty"
+    }
   },
   resolveLoader: {
     plugins: [PnpWebpackPlugin.moduleLoader(module)]
@@ -195,9 +199,9 @@ module.exports = {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               exclude: isRuntimePath,
               loader: require.resolve("babel-loader"),
-              compact,
               options: {
                 cacheDirectory: cache,
+                compact,
                 cacheIdentifier,
                 cacheCompression: false,
                 sourceMaps: false
@@ -361,7 +365,8 @@ module.exports = {
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ].filter(Boolean),
-  devtool: "hidden-source-map",
+  // devtool: "hidden-source-map",
+  devtool: false,
   node: {
     module: "empty",
     dgram: "empty",

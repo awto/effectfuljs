@@ -7,16 +7,21 @@ const {
   context,
   defaultErrHandler,
   defaultFinHandler,
-  saved,
+  native,
   closures,
-  binds
+  binds,
+  undef
 } = State;
 
-const weakMapSet = saved.WeakMap.set;
+const weakMapSet = native.WeakMap.set;
+const nativeCall = native.FunctionMethods.call;
 
 export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
 export const regAutoOpaqueConstr = config.persistState
   ? S.regAutoOpaqueConstr
+  : nop;
+export const setObjectDescriptor = config.persistState
+  ? S.setObjectDescriptor
   : nop;
 
 const noProps = { props: false, propsSnapshot: false };
@@ -59,8 +64,33 @@ export const ModuleDescriptor = S.regDescriptor<any>({
   props: false
 });
 
+export const FunctionDescriptor = S.regDescriptor<any>({
+  name: "#F",
+  create(ctx, json) {
+    const meta = ctx.createStep((<any>json).m);
+    const parentJson = (<any>json).p;
+    let parent: State.Frame | null = null;
+    if (parentJson) {
+      parent = <State.Frame>ctx.createStep(parentJson);
+      parent.$ = ctx.createStep((<any>json).v);
+    }
+    return meta.func(parent);
+  },
+  write(ctx, value) {
+    const json: S.JSONObject = {};
+    const descr = <State.Closure>State.closures.get(value);
+    json.m = ctx.step(descr.meta, json, "m");
+    if (descr.parent) {
+      json.p = ctx.step(descr.parent, json, "p");
+      json.v = ctx.step(descr.parent.$, json, "v");
+    }
+    return json;
+  }
+});
+
 export function regFun(meta: State.FunctionDescr) {
   const constr = meta.func;
+  /*
   const funcDescr = S.regDescriptor<any>({
     name: `p#${meta.persistName}`,
     create() {
@@ -86,6 +116,7 @@ export function regFun(meta: State.FunctionDescr) {
     typeofHint: "function"
   });
   (<any>meta).descriptor = funcDescr;
+  */
   regOpaqueObject(constr, `c#${meta.persistName}`);
   regOpaqueObject(meta, `i#${meta.persistName}`);
   regOpaqueObject(meta.handler, `h#${meta.persistName}`);
@@ -112,37 +143,37 @@ const BindDescriptor = regDescriptor({
   }
 });
 
-const savedCall = saved.FunctionMethods.call;
-
 function makeBind(): (...args: any[]) => any {
-  function bind(...rest: any[]): any {
+  function bind(this: any, ...rest: any[]): any {
     const { fun, self, args: boundArgs } = <any>binds.get(bind);
-    context.call = context.call === bind ? fun : null;
+    if (context.call === bind) context.call = fun;
     const arr: any[] = Array(rest.length + boundArgs.length + 1);
-    arr[0] = self;
+    arr[0] = self === undef ? this : self;
     let index = 0;
     for (const i of boundArgs) arr[++index] = i;
     for (const i of rest) arr[++index] = i;
-    return savedCall.apply(fun, <any>arr);
+    return (<any>nativeCall).nativeApply(fun, <any>arr);
   }
   if (BindDescriptor) S.setObjectDescriptor(bind, BindDescriptor);
   return bind;
 }
 
-export const defaultBind = config.persistState ? function bind(
-    this: any,
-    self: any,
-    ...args: any[]
-  ): (...args: any[]) => any {
-    const res = <any>makeBind();
-    weakMapSet.call(binds, res, { fun: this, self, args });
-    return res;
-  } : Function.prototype.bind;
+export const defaultBind = config.persistState
+  ? function bind(
+      this: any,
+      self: any,
+      ...args: any[]
+    ): (...args: any[]) => any {
+      const res = <any>makeBind();
+      weakMapSet.call(binds, res, { fun: this, self, args });
+      return res;
+    }
+  : Function.prototype.bind;
 
 export const extra: Set<any> = new Set();
 
-function opaqueWeakMap(map: WeakMap<any, any>, name: string) {
-  const descr: S.IncompleteDescriptor<WeakMap<any, any>> = saved.Object.assign(
+export function opaqueWeakMap(map: WeakMap<any, any>, name: string) {
+  const descr: S.IncompleteDescriptor<WeakMap<any, any>> = native.Object.assign(
     {},
     S.WeakMapDescriptor
   );
@@ -153,7 +184,18 @@ function opaqueWeakMap(map: WeakMap<any, any>, name: string) {
   S.setObjectDescriptor(map, S.regDescriptor(descr));
 }
 
+export function opaqueWeakSet(set: WeakSet<any>, name: string) {
+  const descr: S.IncompleteDescriptor<WeakSet<any>> = native.Object.assign(
+    {},
+    S.WeakSetDescriptor
+  );
+  descr.name = name;
+  descr.create = function() {
+    return set;
+  };
+  S.setObjectDescriptor(set, S.regDescriptor(descr));
+}
+
 opaqueWeakMap(State.functions, "@effectful/debugger/context/functions");
 opaqueWeakMap(closures, "@effectful/debugger/context/closures");
 opaqueWeakMap(binds, "@effectful/debugger/context/binds");
-opaqueWeakMap(State.objectKeys, "@effectful/debugger/context/objectKeys");

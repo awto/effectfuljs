@@ -35,7 +35,7 @@ module.exports = {
           "../../transform",
           {
             rt: `${__dirname}/../../api`,
-            preInstrumentedLibs: "../../../..",
+            preInstrumentedLibs: `${__dirname}/../../deps-n`,
             timeTravel: false
           }
         ]

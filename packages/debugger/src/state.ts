@@ -4,6 +4,7 @@
 // ensuring it is loaded before anything patched
 import "@effectful/serialization";
 import "@effectful/serialization/dom";
+import config from "./config"
 
 export interface Env {
   /** local variables */
@@ -45,7 +46,7 @@ export interface Frame extends ProtoFrame, Env {
   /** like `next` but keeps real caller for coroutines */
   caller: Frame | null;
   /** set `context.debug = true` on exit */
-  restoreDebug: boolean;
+  restoreDebug: any;
   /** called if function exits with some resulting value */
   onResolve: ((value: any) => void) | null;
   /** called if function exits with some exception */
@@ -302,12 +303,10 @@ export const binds = new WeakMap<
   AnyFunc,
   { self: any; args: any[]; fun: AnyFunc }
 >();
-export const objectKeys = new WeakMap<any, KeysDescr>();
 
 export interface Closure {
   meta: FunctionDescr;
   parent: Frame | null;
-  $: any[] | null;
 }
 
 /** a part of context stores information about currently executing function */
@@ -352,8 +351,15 @@ export function nop() {
   return false;
 }
 
+declare global {
+  interface Function {
+    nativeCall(this:any,...args:any[]):any;
+    nativeApply(this:any,self:any,args:any[]):any;
+  }
+}
+
 /** original global objects monkey-patched by this runtime */
-export const saved = {
+export const native = {
   console,
   Proxy,
   Promise,
@@ -365,7 +371,7 @@ export const saved = {
     apply: Function.prototype.apply,
     bind: Function.prototype.bind
   },
-  promiseMethods: {
+  PromiseMethods: {
     then: Promise.prototype.then,
     catch: Promise.prototype.catch,
     finally: Promise.prototype.finally
@@ -373,7 +379,23 @@ export const saved = {
   Object: {
     defineProperty: Object.defineProperty,
     assign: Object.assign,
-    setPrototypeOf: Object.setPrototypeOf
+    setPrototypeOf: Object.setPrototypeOf,
+    freeze: Object.freeze,
+    isFrozen: Object.isFrozen,
+    seal: Object.seal,
+    isSealed: Object.isSealed,
+    preventExtensions: Object.preventExtensions,
+    isExtensible: Object.isExtensible,
+    defineProperties: Object.defineProperties,
+    entries: Object.entries,
+    keys: Object.keys,
+    values: Object.values,
+    getOwnPropertyNames: Object.getOwnPropertyNames,
+    getOwnPropertySymbols: Object.getOwnPropertySymbols,
+    getOwnPropertyDescriptors: Object.getOwnPropertyDescriptors,
+    getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor,
+    getPrototypeOf: Object.getPrototypeOf,
+    create: Object.create
   },
   Array: {
     shift: Array.prototype.shift,
@@ -387,7 +409,19 @@ export const saved = {
   Map,
   Set,
   Reflect: {
-    construct: Reflect.construct
+    construct: Reflect.construct,
+    apply: Reflect.apply,
+    get: Reflect.get,
+    set: Reflect.set,
+    has: Reflect.has,
+    defineProperty: Reflect.defineProperty,
+    deleteProperty: Reflect.deleteProperty,
+    getOwnPropertyDescriptor: Reflect.getOwnPropertyDescriptor,
+    ownKeys: Reflect.ownKeys,
+    isExtensible: Reflect.isExtensible,
+    preventExtensions: Reflect.preventExtensions,
+    setPrototypeOf: Reflect.setPrototypeOf,
+    getPrototypeOf: Reflect.getPrototypeOf
   },
   WeakMap: {
     set: WeakMap.prototype.set,
@@ -556,27 +590,11 @@ export function defaultFinHandler(f: Frame) {
 }
 
 export function patchNative(obj: any, name: string | symbol, value: any) {
-  saved.Object.defineProperty(obj, name, {
+  native.Object.defineProperty(obj, name, {
     configurable: true,
     writable: true,
     value
   });
-}
-
-/** object's keys insertion order list */
-export interface KeysOrder {
-  name: string;
-  next: KeysOrder;
-  prev: KeysOrder;
-  enumerable: boolean;
-}
-
-/** object's keys orders description */
-export interface KeysDescr {
-  strKeys: KeysOrder;
-  strMap: { [name: string]: KeysOrder };
-  symKeys: KeysOrder;
-  symMap: { [name: string]: KeysOrder };
 }
 
 let statusBufImpl: SharedArrayBuffer = <any>null;
@@ -586,7 +604,9 @@ try {
 } catch (e) {
   // this may be disabled in some browsers due to Spectre
   // tslint:disable-next-line
-  console.warn("no SharedArrayBuffer, so pausing running code won't work");
+  console.warn(
+    "DEBUGGER: no SharedArrayBuffer, so pausing running code won't work"
+  );
 }
 
 export const statusBuf = statusBufImpl;
@@ -613,4 +633,24 @@ export function cancelInterrupt() {
   clearTimeout(interruptTimeoutHandler);
   afterInterruptCallback = null;
   interruptTimeoutHandler = 0;
+}
+
+if (config.patchRT) {
+  Object.defineProperty(Function.prototype, "nativeCall", {
+    configurable: true,
+    writable: true,
+    value: native.FunctionMethods.call
+  });
+
+  Object.defineProperty(Function.prototype, "nativeApply", {
+    configurable: true,
+    writable: true,
+    value: native.FunctionMethods.apply
+  });
+
+  Object.defineProperty(Function.prototype, "nativeBind", {
+    configurable: true,
+    writable: true,
+    value: native.FunctionMethods.bind
+  });
 }

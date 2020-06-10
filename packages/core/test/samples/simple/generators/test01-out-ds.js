@@ -16,6 +16,7 @@ var $M = require("@effectful/debugger"),
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
+    $get = $M.get,
     $set = $M.set,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -1310,7 +1311,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 1, [[4, "61:4-61:12", $s$13], [2, "61:4-61:11", $s$13], [36, "62:3-62:3", $s$13], [16, "62:3-62:3", $s$13], [16, "62:3-62:3", $s$13]]),
-    $m$9 = $M.fun("m$9", null, null, $m$0, ["a", "b"], 0, 3, null, 1, function ($, $l, $p) {
+    $m$9 = $M.fun("m$9", null, null, $m$0, ["a", "b"], 0, 3, "63:11-65:15", 1, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -1336,8 +1337,8 @@ var $M = require("@effectful/debugger"),
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "64:4-64:12", $s$14], [2, "64:4-64:11", $s$14], [36, "65:3-65:3", $s$14], [16, null, $s$14], [16, null, $s$14]]),
-    $m$10 = $M.fun("m$10", null, null, $m$0, [], 0, 3, null, 0, function ($, $l, $p) {
+}, null, null, 1, [[4, "64:4-64:12", $s$14], [2, "64:4-64:11", $s$14], [36, "65:3-65:3", $s$14], [16, "65:15-65:15", $s$14], [16, "65:15-65:15", $s$14]]),
+    $m$10 = $M.fun("m$10", null, null, $m$0, [], 0, 3, "69:2-74:16", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $lset($l, 1,
@@ -1348,31 +1349,44 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $set($l[1], "a", $m$12($));
-      $lset($l, 2,
-      /*_proto*/
-      $l[1].prototype);
       $.goto = 2;
-      $brk();
+      $set($l[1], "a", $m$12($));
       $.state = 2;
 
     case 2:
-      $set($l[2], "b", $m$13($));
-      $.result = $l[1];
-      $.goto = 4;
-      continue;
+      $.goto = 3;
+      $p = $get($l[1], "prototype");
+      $.state = 3;
 
     case 3:
+      $lset($l, 2,
+      /*_proto*/
+      $p);
       $.goto = 4;
-      return $unhandled($.error);
+      $brk();
+      $.state = 4;
 
     case 4:
+      $.goto = 5;
+      $set($l[2], "b", $m$13($));
+      $.state = 5;
+
+    case 5:
+      $.result = $l[1];
+      $.goto = 7;
+      continue;
+
+    case 6:
+      $.goto = 7;
+      return $unhandled($.error);
+
+    case 7:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "69:2-71:16", $s$15], [4, "72:2-74:9", $s$15], [0, null, $s$15], [16, null, $s$15], [16, null, $s$15]]),
+}, null, null, 1, [[4, "69:2-71:16", $s$15], [2, null, $s$15], [2, null, $s$15], [4, "72:2-74:9", $s$15], [2, null, $s$15], [0, null, $s$15], [16, "74:16-74:16", $s$15], [16, "74:16-74:16", $s$15]]),
     $m$11 = $M.fun("m$11", "A", null, $m$10, [], 0, 1, null, 0, function A($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

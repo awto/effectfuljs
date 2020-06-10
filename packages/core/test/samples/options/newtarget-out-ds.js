@@ -57,22 +57,26 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
+      $.goto = 2;
       $set($.self, "a", $l[1]);
-      $.goto = 3;
+      $.state = 2;
+
+    case 2:
+      $.goto = 4;
       $brk();
       continue;
 
-    case 2:
-      $.goto = 3;
+    case 3:
+      $.goto = 4;
       return $unhandled($.error);
 
-    case 3:
+    case 4:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "4:2-4:13", $s$2], [36, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2]]),
+}, null, null, 1, [[4, "4:2-4:13", $s$2], [2, "4:2-4:12", $s$2], [36, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2], [16, "5:1-5:1", $s$2]]),
     $m$2 = $M.fun("m$2", "b", null, $m$0, [], 0, 1, "7:0-9:1", 0, function b($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

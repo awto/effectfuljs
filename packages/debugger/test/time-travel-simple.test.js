@@ -2,6 +2,7 @@ require("./setup-time-travel");
 const trace = require("./run");
 const D = require("../main");
 const State = require("../state");
+const Objects = require("../timeTravel/objects");
 const S = require("@effectful/serialization");
 const context = D.context;
 
@@ -136,8 +137,10 @@ describe("time traveling", function() {
       future: j.future,
       past: j.past,
       data: v,
-      objectKeys: State.objectKeys
-    });
+      objectKeysDict: Objects.objectKeysDict,
+      binds: State.binds,
+      wrappers: Objects.wrappers
+    },{alwaysByRef:true});
     expect(JSON.stringify(data)).toMatchSnapshot();
     const restored = S.read(data);
     const v2 = restored.data;
@@ -787,7 +790,7 @@ describe("time traveling", function() {
       const logs = [];
       global.console = {
         log(...args) {
-          D.TimeTravel.Core.arraySaved.push.call(logs, args);
+          State.native.Array.push.call(logs, args);
         }
       };
       const mod = trace(D.force(require("./__fixtures__/counters")));

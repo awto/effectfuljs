@@ -59,6 +59,7 @@ export function split() {
     i.eff = false;
     i.brkFlags = 0;
     const { node } = i;
+    if (!node.loc) node.loc = Kit.approxLoc(i);
     const root = Kit.tok(Tag.root, Tag.Root, node);
     root.origFunc = i;
     root.module = i.root;
@@ -99,6 +100,8 @@ export function split() {
     }
     Kit.replace(i, Kit.memExpr(i.pos, ctxSym, "self"));
   }
+  for (let i = fileRoot.nextNewTarget; i !== fileRoot; i = i.nextNewTarget)
+    Kit.replace(i, Kit.memExpr(i.pos, ctxSym, "newTarget"));
   for (
     let i = fileRoot.nextArgumentsExpression;
     i !== fileRoot;
@@ -445,9 +448,10 @@ export function index(root) {
   root.nextAssignmentExpression = root.prevAssignmentExpression = root;
   root.nextUpdateExpression = root.prevUpdateExpression = root;
   root.nextDeleteExpression = root.prevDeleteExpression = root;
-  root.nextMemberExpression = root.prevMemberExpression = root;
+  root.nextGetterExpression = root.prevGetterExpression = root;
   root.nextThisExpression = root.prevThisExpression = root;
   root.nextFunctionSentExpression = root.prevFunctionSentExpression = root;
+  root.nextNewTarget = root.prevNewTarget = root;
   root.parentStmt = null;
   root.funcs = null;
   root.loops = null;
@@ -568,14 +572,23 @@ export function index(root) {
         break;
       case Tag.MetaProperty:
         isExpr = true;
-        if (
-          i.node.meta.name === "function" &&
-          i.node.property.name === "sent"
-        ) {
-          const before = root.prevFunctionSentExpression;
-          i.nextFunctionSentExpression = root;
-          root.prevFunctionSentExpression = before.nextFunctionSentExpression = i;
-          i.prevFunctionSentExpression = before;
+        switch (i.node.meta.name) {
+          case "function":
+            if (i.node.property.name === "sent") {
+              const before = root.prevFunctionSentExpression;
+              i.nextFunctionSentExpression = root;
+              root.prevFunctionSentExpression = before.nextFunctionSentExpression = i;
+              i.prevFunctionSentExpression = before;
+            }
+            break;
+          case "new":
+            if (i.node.property.name === "target") {
+              const before = root.prevNewTarget;
+              i.nextNewTarget = root;
+              root.prevFunctionSentExpression = before.nextNewTarget = i;
+              i.prevNewTarget = before;
+            }
+            break;
         }
         break;
       case Tag.NewExpression:
@@ -627,12 +640,36 @@ export function index(root) {
       case Tag.ObjectExpression:
       case Tag.LogicalExpression:
       case Tag.ConditionalExpression:
-      case Tag.MemberExpression:
       case Tag.BindExpression:
       case Tag.TaggedTemplateExpression:
       case Tag.BinaryExpression:
         isExpr = true;
+        if (i.node.operator === "in") {
+          const before = root.prevGetterExpression;
+          i.nextGetterExpression = root;
+          root.prevGetterExpression = before.nextGetterExpression = i;
+          i.prevGetterExpression = before;
+        }
         break;
+      case Tag.MemberExpression: {
+        isExpr = true;
+        const pty = parent.type;
+        if (
+          (i.pos === Tag.left &&
+            (pty === Tag.AssignmentExpression ||
+              pty === Tag.ForInStatement ||
+              pty === Tag.ForOfStatement)) ||
+          pty === Tag.CallExpression ||
+          pty === Tag.UpdateExpression ||
+          (pty === Tag.UnaryExpression && parent.node.operator === "delete")
+        )
+          break;
+        const before = root.prevGetterExpression;
+        i.nextGetterExpression = root;
+        root.prevGetterExpression = before.nextGetterExpression = i;
+        i.prevGetterExpression = before;
+        break;
+      }
       case Tag.ImportDeclaration:
       case Tag.ExportNamedDeclaration:
       case Tag.ExportDefaultDeclaration:

@@ -27,16 +27,13 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
   ast
 ) {
   if (config.preInstrumentedLibs) {
-    const root = config.preInstrumentedLibs.substr
-      ? config.preInstrumentedLibs
-      : "@effectful/debugger";
+    const root =
+      config.preInstrumentedLibs && config.preInstrumentedLibs.substr
+        ? config.preInstrumentedLibs
+        : `@effectful/debugger/deps${config.timeTravel ? "-t" : "-n"}`;
     const moduleAliases = {};
-    for (const i in require("./deps.json")) {
-      const suffix = config.timeTravel ? "-t" : "";
-      const path = `${root}/deps/${i.replace(/\//g, "-")}${suffix}`;
-      moduleAliases[i] = path;
-      if (i.includes("/")) moduleAliases[`${i}.js`] = path;
-    }
+    for (const [src, dst] of Object.entries(require("./deps-aliases.json")))
+      moduleAliases[src] = path.join(root, dst);
     config.moduleAliases = Object.assign(moduleAliases, config.moduleAliases);
   }
   if (VERBOSE)

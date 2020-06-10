@@ -8,46 +8,46 @@ require("yargs")
   .option("cache", {
     describe: "babel cache",
     default: true,
-    type: "boolean",
+    type: "boolean"
   })
   .option("url", {
     describe: "a URL of a listening VSCode debugger",
     alias: "u",
-    type: "string",
+    type: "string"
   })
   .option("runtime", {
     alias: "r",
-    type: "string",
+    type: "string"
   })
   .option("time-travel", {
     describe: "compile with traveling trace",
     alias: ["t"],
     default: false,
-    type: "boolean",
+    type: "boolean"
   })
   .option("time-travel-disabled", {
     describe: "do not collect time traveling trace",
     default: false,
-    type: "boolean",
+    type: "boolean"
   })
   .option("verbose", {
     describe: "outputs additional debug information",
     default: 0,
-    type: "number",
+    type: "number"
   })
   .option("src-root", {
     type: "string",
-    describe: "sources root folder location",
+    describe: "sources root folder location"
   })
   .option("runtime-packages", {
     type: "string",
-    describe: "debugger's own packages root (for NODE_PATH)",
+    describe: "debugger's own packages root (for NODE_PATH)"
   })
   .option("zero-config", {
     alias: ["z", "zero_config"],
     describe: "default babel plugins set for .ts/.js",
     default: true,
-    type: "boolean",
+    type: "boolean"
   })
   .option("include", {
     describe: "glob for files to instrument",
@@ -66,12 +66,18 @@ require("yargs")
   .option("instrument", {
     describe: "instrument sources before loading",
     default: true,
-    type: "boolean",
+    type: "boolean"
   })
   .option("instrument-deps", {
     describe: "instrument third-party sources in node_modules",
     default: true,
-    type: "boolean",
+    type: "boolean"
+  })
+  .option("implicit-calls", {
+    describe:
+      "enable stepping into implicit calls (setters/getters, Proxy etc)",
+    default: true,
+    type: "boolean"
   })
   .command(require("../config/node/command"))
   .command(require("../config/browser/command"))

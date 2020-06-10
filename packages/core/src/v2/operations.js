@@ -76,6 +76,9 @@ export function normalizeAssign() {
       lhs = memExpr(computed, prop, tempProp, obj, tempObj, scope);
       Kit.replace(arg, lhs);
       larg = memExpr(computed, prop, tempProp, obj, tempObj, scope);
+      larg.nextGetterExpression = file;
+      file.prevGetterExpression = (larg.prevGetterExpression =
+        file.prevGetterExpression).nextGetterExpression = larg;
     } else if (arg.type === Tag.Identifier) {
       lhs = arg;
       lhs.pos = Tag.left;
@@ -160,6 +163,49 @@ export function setters() {
   }
 }
 
+export function implicitCalls() {
+  const file = Ctx.root;
+  const getSym = Scope.sysSym("get");
+  const hasSym = Scope.sysSym("has");
+  for (
+    let i = file.nextDeleteExpression;
+    i !== file;
+    i = i.nextDeleteExpression
+  ) {
+    if (i.firstChild.type === Tag.MemberExpression) i.eff = true;
+  }
+  for (
+    let i = file.nextAssignmentExpression;
+    i !== file;
+    i = i.nextAssignmentExpression
+  ) {
+    if (i.firstChild.type === Tag.MemberExpression) i.eff = true;
+  }
+  for (
+    let i = file.nextGetterExpression;
+    i !== file;
+    i = i.nextGetterExpression
+  ) {
+    const obj = i.firstChild;
+    const prop = obj.nextSibling;
+    Kit.detach(obj);
+    Kit.detach(prop);
+    const sym = i.type === Tag.MemberExpression ? getSym : hasSym;
+    i.type = Tag.CallExpression;
+    Kit.append(i, Scope.sysId(Tag.callee, sym));
+    const args = Kit.append(i, Kit.arr(Tag.arguments));
+    obj.pos = Tag.push;
+    prop.pos = Tag.push;
+    if (sym === getSym && !i.node.computed) {
+      prop.type = Tag.StringLiteral;
+      prop.node = { value: prop.node.name };
+    }
+    Kit.append(args, obj);
+    Kit.append(args, prop);
+    i.eff = true;
+  }
+}
+
 /** replaces delete operations with API calls */
 export function deleters() {
   const file = Ctx.root;
@@ -170,8 +216,9 @@ export function deleters() {
     let i = file.nextDeleteExpression;
     i !== file;
     i = i.nextDeleteExpression
-  )
+  ) {
     replaceModOp(i, Kit.detach(i.firstChild), null, opSym, opLocSym, opGlobSym);
+  }
 }
 
 function replaceModOp(i, arg, rarg, opSym, opLocSym, opGlobSym) {

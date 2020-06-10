@@ -647,7 +647,6 @@ export function constrs(decls) {
     }
     Kit.append(args, Kit.num(Tag.push, locals));
     const numVars =
-      // func.scopeDecls.size +
       func.symScopePool.varCount + (paramsFirst ? 0 : func.params.size) + 1;
     Kit.append(args, Kit.num(Tag.push, numVars));
     Kit.append(args, Kit.emitConst(Tag.push, Kit.locStr(func.node.loc)));

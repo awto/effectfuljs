@@ -11,7 +11,7 @@ import { scopeInit, unhandledA } from "./async";
 import { regOpaqueObject, regConstructor } from "@effectful/serialization";
 
 const { context } = State;
-const { defineProperty } = State.saved.Object;
+const { defineProperty } = State.native.Object;
 
 class AsyncIterableThis {
   [Symbol.asyncIterator]() {
@@ -111,8 +111,16 @@ function dequeue(frame: AsyncGeneratorFrame) {
   else frame.running = false;
 }
 
-export function frameAG(closure: any, newTarget: any) {
-  const frame = <AsyncGeneratorFrame>makeFrame(closure, newTarget);
+export function frameAG(
+  closure: any,
+  meta: any,
+  parent: any,
+  vars: any[] | null,
+  newTarget: any
+) {
+  const frame = <AsyncGeneratorFrame>(
+    makeFrame(closure, meta, parent, vars, newTarget)
+  );
   const iter = new AsyncGenerator(frame);
   frame.iter = <any>iter;
   frame.next = null;

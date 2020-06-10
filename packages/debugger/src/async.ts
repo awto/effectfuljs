@@ -1,4 +1,4 @@
-import { Frame, saved } from "./state";
+import { Frame, native } from "./state";
 import * as State from "./state";
 import {
   checkExitBrk,
@@ -21,7 +21,7 @@ let AsyncFunctionPrototype: any;
 
 try {
   AsyncFunctionPrototype = Object.getPrototypeOf(
-    saved.eval("(async function(){})")
+    native.eval("(async function(){})")
   );
 } catch (e) {
   function AsyncFunction() {}
@@ -40,8 +40,14 @@ export function scopeInit(
 
 regOpaqueObject(scopeInit, "@effectful/debugger/scopeInit");
 
-export function frameA(proto: any, newTarget: any) {
-  const frame = <AsyncFrame>frameImpl(proto, newTarget);
+export function frameA(
+  proto: any,
+  meta: any,
+  parent: any,
+  vars: any[] | null,
+  newTarget: any
+) {
+  const frame = <AsyncFrame>frameImpl(proto, meta, parent, vars, newTarget);
   context.call = <any>Promise;
   frame.promise = new Promise(scopeInit.bind(frame));
   return frame;

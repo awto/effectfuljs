@@ -7,6 +7,7 @@ var $M = require("@effectful/debugger"),
     $unhandledG = $M.unhandledG,
     $brk = $M.brk,
     $lset = $M.lset,
+    $get = $M.get,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
@@ -60,58 +61,61 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 0, [[4, "1:0-1:38", $s$1], [2, null, $s$1], [2, null, $s$1], [0, null, $s$1], [16, "7:0-7:0", $s$1], [16, "7:0-7:0", $s$1]]),
-    $m$1 = $M.fun("m$1", "_interopRequireDefault", null, $m$0, ["obj"], 1, 2, null, 0, function _interopRequireDefault($, $l, $p) {
-  var $1;
-
+    $m$1 = $M.fun("m$1", "_interopRequireDefault", null, $m$0, ["obj"], 0, 3, null, 0, function _interopRequireDefault($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
-      $1 = $l[1];
+      $l[2] = $l[1];
 
-      if ($1) {
+      if ($l[2]) {
         $.state = 1;
       } else {
-        $.goto = 2;
+        $.goto = 3;
         continue;
       }
 
     case 1:
-      $1 = $l[1].__esModule;
+      $.goto = 2;
+      $p = $get($l[1], "__esModule");
       $.state = 2;
 
     case 2:
-      if ($1) {
-        $.state = 3;
+      $l[2] = $p;
+      $.state = 3;
+
+    case 3:
+      if ($l[2]) {
+        $.state = 4;
       } else {
-        $.goto = 5;
+        $.goto = 6;
         continue;
       }
 
-    case 3:
-      $.result = $l[1];
-      $.state = 4;
-
     case 4:
-      $.goto = 7;
-      continue;
+      $.result = $l[1];
+      $.state = 5;
 
     case 5:
-      $.result = {
-        default: $l[1]
-      };
-      $.goto = 4;
+      $.goto = 8;
       continue;
 
     case 6:
-      $.goto = 7;
-      return $unhandled($.error);
+      $.result = {
+        default: $l[1]
+      };
+      $.goto = 5;
+      continue;
 
     case 7:
+      $.goto = 8;
+      return $unhandled($.error);
+
+    case 8:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
+}, null, null, 1, [[0, null, $s$2], [2, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
     $m$2 = $M.fun("m$2", "a", null, $m$0, [], 0, 1, "3:0-6:1", 2, function a($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

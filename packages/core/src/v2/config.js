@@ -33,6 +33,7 @@ Object.assign(config, {
   moduleParams: null,
   switchFallthrough: true,
   inlineTrampolineLoop: true,
-  optimizeFrames: true
+  optimizeFrames: true,
+  implictCalls: true
 });
 export default config;

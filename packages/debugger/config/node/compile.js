@@ -191,7 +191,14 @@ module.exports = function compile(content, filename, module) {
   let curMtime = mtime(filename);
   let opts;
   let cacheKey;
+  const State = require("../../state");
+  const context = State.context;
+  const journal = State.journal;
+  const savedDebug = context.debug;
+  const savedJournalEnabled = journal.enabled;
   try {
+    context.debug = false;
+    journal.enabled = false;
     if (config.instrument) {
       opts = new babel.OptionManager().init(
         config.zeroConfig
@@ -288,8 +295,15 @@ module.exports = function compile(content, filename, module) {
             config.srcRoot,
             filename
           )}`;
+          const State = require("../../state");
+          const context = State.context;
+          const journal = State.journal;
+          const savedDebug = context.debug;
+          const savedJournalEnabled = journal.enabled;
           try {
             disabled = true;
+            context.debug = false;
+            journal.enabled = false;
             let run;
             const event =
               (global[config.globalNS] && global[config.globalNS].event) ||
@@ -315,6 +329,8 @@ module.exports = function compile(content, filename, module) {
               );
             } finally {
               event("progressEnd", { progressId });
+              journal.enabled = savedJournalEnabled;
+              journal.savedDebug = savedDebug;
               disabled = false;
             }
             run(
@@ -330,7 +346,6 @@ module.exports = function compile(content, filename, module) {
         }, 500);
       });
     }
-
     if (config.verbose > 1) {
       if (config.verbose > 2)
         log(`DEBUGGER:compiled ${filename}: ${JSON.stringify(code)}`);
@@ -338,6 +353,8 @@ module.exports = function compile(content, filename, module) {
     }
   } finally {
     disabled = false;
+    context.debug = savedDebug;
+    journal.enabled = savedJournalEnabled;
   }
   return code;
 };

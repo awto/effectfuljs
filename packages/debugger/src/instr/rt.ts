@@ -7,134 +7,14 @@
  * TODO: transpile core-js instead
  */
 
+import { context, native } from "../state";
+
 type Callback<This, T, R> = (
   this: This | undefined,
   elem: T,
   index: number,
   arr: T[]
 ) => R;
-
-export function map<T, U, This = undefined>(
-  this: T[],
-  callback: Callback<This, T, U>,
-  self?: This
-): U[] {
-  const res = new Array<U>(this.length);
-  let x = 0;
-  for (const i of this) {
-    let cur = x++;
-    res[cur] = callback.call(self, i, cur, this);
-  }
-  return res;
-}
-
-export function arrayFrom<T, U = T, This = undefined>(
-  iter: Iterable<T>,
-  mapFn?: Callback<This, T, U>,
-  self?: This
-) {
-  if (mapFn) {
-    const arr: U[] = [];
-    let x = 0;
-    for (const i of iter) arr.push(mapFn.call(self, i, x++, <any>arr));
-    return arr;
-  }
-  const arr: T[] = [];
-  for (const i of iter) arr.push(i);
-  return arr;
-}
-
-export function filter<T, This = undefined>(
-  this: T[],
-  callback: Callback<This, T, boolean>,
-  self?: This
-): T[] {
-  const res: T[] = [];
-  let x = 0;
-  for (const i of this) if (callback.call(self, i, x++, this)) res.push(i);
-  return res;
-}
-
-export function find<T, This = undefined>(
-  this: T[],
-  callback: Callback<This, T, boolean>,
-  self?: This
-): T | undefined {
-  let x = 0;
-  for (const i of this) if (callback.call(self, i, x++, this)) return i;
-}
-
-export function findIndex<T, This = undefined>(
-  this: T[],
-  callback: Callback<This, T, boolean>,
-  self?: This
-): number {
-  let x = 0;
-  for (const i of this) if (callback.call(self, i, x++, this)) return x;
-  return -1;
-}
-
-export function flatMap<T, U, This = undefined>(
-  this: T[],
-  callback: Callback<This, T, U | ReadonlyArray<U>>,
-  self?: This
-): U[] {
-  return (<any>map).call(this, callback, self).flat();
-}
-
-export function forEach<T, This = undefined>(
-  this: T[],
-  callback: Callback<This, T, void>,
-  self?: This
-): void {
-  let x = 0;
-  for (const i of this) callback.call(self, i, x++, this);
-}
-
-export function reduce<T>(
-  this: T[],
-  callback: (prev: T, cur: T, index: number, arr: T[]) => T,
-  initial?: T
-) {
-  let x = 0;
-  let acc = <T>initial;
-  const len = this.length;
-  if (arguments.length !== 2) {
-    if (len === 0)
-      throw new TypeError("Reduce of empty array with no initial value");
-    x = 1;
-    acc = this[0];
-  }
-  for (; x < len; ++x) acc = callback(acc, this[x], x, this);
-  return acc;
-}
-
-export function reduceRight<T>(
-  this: T[],
-  callback: (prev: T, cur: T, index: number, arr: T[]) => T,
-  initial?: T
-) {
-  let acc = <T>initial;
-  const len = this.length;
-  let x = len - 1;
-  if (arguments.length !== 2) {
-    if (len === 0)
-      throw new TypeError("Reduce of empty array with no initial value");
-    acc = this[x--];
-  }
-  for (; x >= 0; --x) acc = callback(acc, this[x], x, this);
-  return acc;
-}
-
-export function some<T, This>(
-  this: T[],
-  callback: Callback<This, T, boolean>,
-  self?: This
-): boolean {
-  let x = 0;
-  for (const i of this) if (callback.call(self, i, x++, this)) return true;
-  return false;
-}
 
 export function every<T, This>(
   this: T[],
@@ -192,3 +72,126 @@ export function wrapModule(mod: any, cjsModule: any): any {
   topMeta(cjsModule, cjsModule.exports);
   return (mod.exports = cjsModule.exports);
 }
+
+export function objectAssign(
+  this: (obj: any, prop: string | symbol | number, val: any) => void
+) {
+  const dest = arguments[0];
+  for (let i = 1, len = arguments.length; i < len; ++i) {
+    const value = arguments[i];
+    if (!value) continue;
+    const keys = Reflect.ownKeys(value);
+    for (let j = 0, len = keys.length; j < len; ++j) {
+      const name = keys[j];
+      const descr = <any>Object.getOwnPropertyDescriptor(value, name);
+      if (descr.enumerable)
+        this(dest, name, descr.get ? descr.get.call(value) : descr.value);
+    }
+  }
+  return dest;
+}
+
+export function objectDefineProperties(
+  obj: any,
+  descrs: { [name: string]: PropertyDescriptor }
+) {
+  const keys = Reflect.ownKeys(descrs);
+  for (let i = 0, len = keys.length; i < len; ++i) {
+    const prop = <any>keys[i];
+    Object.defineProperty(obj, prop, descrs[prop]);
+  }
+  return obj;
+}
+
+export function objectGetOwnPropertyDescriptors(
+  obj: any
+): { [name: string]: PropertyDescriptor } {
+  const ret: { [name: string]: PropertyDescriptor } = {};
+  const keys = Reflect.ownKeys(obj);
+  for (let i = 0, len = keys.length; i < len; ++i) {
+    const prop = <any>keys[i];
+    ret[prop] = <PropertyDescriptor>Object.getOwnPropertyDescriptor(obj, prop);
+  }
+  return ret;
+}
+
+export function objectEntries(
+  this: (obj: any, prop: string) => any,
+  obj: any
+): [string, any][] {
+  const ret: [string, any][] = [];
+  const keys = Reflect.ownKeys(obj);
+  for (let i = 0, len = keys.length; i < len; ++i) {
+    const prop = <any>keys[i];
+    ret.push([prop, this(obj, prop)]);
+  }
+  return ret;
+}
+
+export function objectValues(
+  this: (obj: any, prop: string) => any,
+  obj: any
+): any[] {
+  const ret: any[] = [];
+  const keys = Reflect.ownKeys(obj);
+  for (let i = 0, len = keys.length; i < len; ++i) {
+    const prop = <any>keys[i];
+    ret.push(this(obj, prop));
+  }
+  return ret;
+}
+
+declare function dummy(): any;
+
+export function mcallCont(
+  func: (args: any, prop: string, func: any) => any,
+  prop: string,
+  args: any
+): any {
+  return func(args, prop, dummy());
+}
+
+export function getOwnPropertySymbols(obj: object): symbol[] {
+  const full = Reflect.ownKeys(obj);
+  const res: symbol[] = [];
+  for (let i = 0, len = full.length; i < len; ++i) {
+    const v = full[i];
+    if (typeof v === "symbol") res.push(v);
+  }
+  return res;
+}
+
+export function getOwnPropertyNames(obj: object): string[] {
+  const full = Reflect.ownKeys(obj);
+  const res: string[] = [];
+  for (let i = 0, len = full.length; i < len; ++i) {
+    const v = full[i];
+    if (typeof v !== "symbol") res.push(<any>v);
+  }
+  return res;
+}
+
+export function objectKeys(obj: object): string[] {
+  const full = Reflect.ownKeys(obj);
+  const res: string[] = [];
+  for (let i = 0, len = full.length; i < len; ++i) {
+    const v = full[i];
+    if (typeof v === "symbol") continue;
+    const descr = Object.getOwnPropertyDescriptor(obj, v);
+    if ((<PropertyDescriptor>descr).enumerable) res.push(<any>v);
+  }
+  return res;
+}
+
+export function objectGetOwnPropertyDescriptor(wrappers: WeakMap<any,any>, obj: object, name:string|symbol|number):PropertyDescriptor | undefined {
+  const res = native.Object.getOwnPropertyDescriptor(obj, name);
+  if (wrappers && res) {
+    let {set, get} = res;
+    if (set && (set = wrappers.get(set)))
+      res.set = set;
+    if (get && (get = wrappers.get(get)))
+      res.get = get;
+  }
+  return res;
+}
+

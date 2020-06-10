@@ -1,6 +1,5 @@
-import config from "../config";
 import * as State from "../state";
-import * as Core from "./core";
+import * as Objects from "./objects";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
 import { nodeListIter } from "@effectful/serialization/dom";
 import { Operation } from "../state";
@@ -28,25 +27,9 @@ interface ElementExt extends Element {
  */
 if (typeof Node !== "undefined") {
   for (const i of [Node, NodeList]) {
-    if (!config.expNoAccessOverloading) {
-      Core.objectSaved.defineProperty(i.prototype, Core.SetSymbol, {
-        configurable: true,
-        value(node: any, name: any, value: any) {
-          if (journal.enabled) {
-            const proto = Object.getPrototypeOf(node);
-            if (!(name in proto)) Core.recordProp(node, name);
-          }
-          return (node[name] = value);
-        }
-      });
-      Core.objectSaved.defineProperty(i.prototype, Core.DeleteSymbol, {
-        configurable: true,
-        value: Core.noOrderDelete
-      });
-    }
-    Core.objectSaved.defineProperty(
+    State.native.Object.defineProperty(
       i.prototype,
-      Core.DisableKeysHistorySymbol,
+      Objects.DisableKeysHistorySymbol,
       {
         configurable: true,
         value: true

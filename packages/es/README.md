@@ -1,17 +1,13 @@
 # @effectful/es
 
-The two-level syntax for effects based on ECMAScript async, generator and
+The two-level abstract syntax for effects based on ECMAScript async, generator and
 async generator functions syntax overloading.
 
 The project is a babel plugin for integrating new custom computational effects
 into JavaScript.
 
-The first level is plain JavaScript constructs, and the second level
-is async, generators and async generators function syntax. By means of the plugin
-default implementations for the effectful(second) level syntax can be overloaded.
-
-As a proof of concept, there are default implementations of corresponding ECMAScript
-standard effects.
+By default, it is yet another implementation of ECMAScript async, generator
+and async generator functions, but it also can be extended.
 
 The project is a part of [EffectfulJS](https://github.com/awto/effectfuljs) tool chain.
 
@@ -20,11 +16,11 @@ The project is a part of [EffectfulJS](https://github.com/awto/effectfuljs) tool
 
 Here is a list of things not available with native or other transpiler implementations:
 
- * Abstract API - can be re-implemented or amended for your purposes, next items are consequences of this one
+ * Abstract API - can be re-implemented or amended for your purposes
  * Custome Concrete API for better performance
  * [Persistent state](https://github.com/awto/effectfuljs/tree/master/packages/es-persist)
- * Implicit parallelism - Docs SOON
- * Deriving program's graph for static analysis - SOON
+ * Implicit parallelism
+ * Deriving program's graph for static analysis
 
 ## Usage
 

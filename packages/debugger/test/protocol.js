@@ -4,7 +4,7 @@
  */
 const config = require("../config").default;
 const path = require("path");
-const { context, saved, journal } = require("../state");
+const { context, native, journal } = require("../state");
 
 let socket;
 
@@ -14,13 +14,13 @@ let eventsCbs = {};
 let responsesCbs = {};
 let reverseRequestsCbs = {};
 let terminated = false;
-const savedSetImmediate = setImmediate;
-const savedClearImmediate = clearImmediate;
+const nativeSetImmediate = setImmediate;
+const nativeClearImmediate = clearImmediate;
 let loaded = false;
 
-const savedConsole = saved.console;
+const nativeConsole = native.console;
 const trace = config.debuggerDebug
-  ? (...args) => savedConsole.log.apply(savedConsole, args)
+  ? (...args) => nativeConsole.log.apply(nativeConsole, args)
   : () => {};
 
 class WS {
@@ -30,7 +30,7 @@ class WS {
     return socket;
   }
   send(msg) {
-    savedSetImmediate(recv, msg);
+    nativeSetImmediate(recv, msg);
   }
   close() {}
 }
@@ -46,7 +46,7 @@ function recv(msg) {
   switch (data.type) {
     case "request":
       if ((cbs = reverseRequestsCbs[data.event]))
-        while (cbs.length) saved.Array.pop.call(cbs, data.body);
+        while (cbs.length) native.Array.pop.call(cbs, data.body);
       break;
     case "response":
       if ((cbs = responsesCbs[data.request_seq])) {
@@ -58,16 +58,15 @@ function recv(msg) {
       let eventName = data.event;
       if ((cbs = eventsCbs[eventName])) {
         while (cbs.length) {
-          const f = saved.Array.pop.call(cbs, data.body);
+          const f = native.Array.pop.call(cbs, data.body);
           setImmediate(function() {
             f(data.body);
-            // if (f(data.body) === false) saved.Array.unshift.call(cbs, f);
           });
         }
       }
       switch (data.event) {
         case "output":
-          saved.Array.push(outputBuf, data.body);
+          native.Array.push(outputBuf, data.body);
           break;
         case "terminated":
           terminated = true;
@@ -110,7 +109,7 @@ function send(data) {
 function request(req, cb) {
   const seq = (req.seq = ++curSeq);
   trace("request:", req);
-  savedSetImmediate(send, req);
+  nativeSetImmediate(send, req);
   responsesCbs[seq] = cb;
 }
 
@@ -247,7 +246,7 @@ function stackSnapshot(cb, nm) {
 const immediateHandlers = new Set();
 
 global.setImmediate = function(fun, ...params) {
-  const h = savedSetImmediate(function() {
+  const h = nativeSetImmediate(function() {
     immediateHandlers.delete(h);
     return fun(...params);
   });
@@ -257,7 +256,7 @@ global.setImmediate = function(fun, ...params) {
 
 global.clearImmediate = function(h) {
   immediateHandlers.delete(h);
-  return savedClearImmediate(h);
+  return nativeClearImmediate(h);
 };
 
 const savedOnThread = context.onThread;
@@ -334,7 +333,7 @@ function shutdown(res, cb) {
   terminated = true;
   let cbs = eventsCbs["stopped"];
   if (cbs)
-    while (cbs.length) saved.Array.pop.call(cbs, { reason: "terminated" });
+    while (cbs.length) native.Array.pop.call(cbs, { reason: "terminated" });
   expect({
     stdout: output("stdout"),
     stderr: output("stderr"),

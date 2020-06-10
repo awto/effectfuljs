@@ -5,6 +5,7 @@ module.exports = function(api) {
     presets: [
       {
         plugins: [
+          [require.resolve("@babel/plugin-transform-property-mutators")],
           [
             "@babel/plugin-transform-modules-commonjs",
             {

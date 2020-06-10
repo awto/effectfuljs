@@ -4,16 +4,17 @@ trace.silent = true;
 const D = require("../main");
 const S = require("@effectful/serialization");
 const State = require("../state");
+const Objects = require("../timeTravel/objects");
 const Ctx = D.context;
 S.regGlobal();
 
-test("generator functions time traveling", function() {
+test("pure generator functions time traveling", function() {
   const savedConsole = global.console;
   const calls = [];
   try {
     global.console = {
       log(...args) {
-        D.TimeTravel.Core.arraySaved.push.call(calls, args);
+        State.native.Array.push.call(calls, args);
       },
       error: console.error
     };
@@ -61,7 +62,7 @@ test("generator functions time traveling", function() {
       closures: State.closures,
       functions: State.functions,
       binds: State.binds,
-      objectKeys: State.objectKeys
+      objectKeysDict: Objects.objectKeysDict
     });
     D.TimeTravel.reset();
     const restored = S.read(data);
@@ -85,7 +86,7 @@ test("async function's time traveling", async function() {
   try {
     global.console = {
       log(...args) {
-        D.TimeTravel.Core.arraySaved.push.call(calls, args);
+        State.native.Array.push.call(calls, args);
       },
       error: console.error
     };
@@ -177,7 +178,7 @@ test("async function's time traveling", async function() {
         closures: State.closures,
         functions: State.functions,
         binds: State.binds,
-        objectKeys: State.objectKeys
+        objectKeysDict: Objects.objectKeysDict
        }, { ignore: "placeholder" })
     );
     journal.enabled = true;
@@ -215,13 +216,13 @@ test("async function's time traveling", async function() {
   }
 });
 
-test.only("async generator functions time traveling", async function() {
+test("async generator functions time traveling", async function() {
   const savedConsole = global.console;
   const calls = [];
   try {
     global.console = {
       log(...args) {
-        D.TimeTravel.Core.arraySaved.push.call(calls, args);
+        State.native.Array.push.call(calls, args);
       },
       error: console.error
     };
@@ -313,7 +314,7 @@ test.only("async generator functions time traveling", async function() {
         closures: State.closures,
         functions: State.functions,
         binds: State.binds,
-        objectKeys: State.objectKeys
+        objectKeysDict: Objects.objectKeysDict
        }, { ignore: "placeholder" })
     );
     journal.enabled = true;

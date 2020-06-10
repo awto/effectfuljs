@@ -22,4 +22,6 @@ src
 /buildDeps.js
 jest.config.js
 api
-
+/core-js*.js
+/deps-index-template.js
+/polyfills.js

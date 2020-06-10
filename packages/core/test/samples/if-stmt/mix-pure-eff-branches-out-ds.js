@@ -5,6 +5,7 @@ var $M = require("@effectful/debugger"),
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
+    $get = $M.get,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
@@ -734,9 +735,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 1, [[4, "53:2-53:23", $s$11], [2, "53:6-53:14", $s$11], [0, null, $s$11], [4, "53:16-53:23", $s$11], [4, "54:2-54:19", $s$11], [2, "54:2-54:18", $s$11], [4, "55:2-55:9", $s$11], [2, "55:2-55:8", $s$11], [4, "56:2-56:19", $s$11], [2, "56:2-56:18", $s$11], [36, "57:1-57:1", $s$11], [16, "57:1-57:1", $s$11], [16, "57:1-57:1", $s$11]]),
-    $m$11 = $M.fun("m$11", "a1", null, $m$0, ["a", "b", "c", "d"], 1, 7, "59:0-83:1", 0, function a1($, $l, $p) {
-  var $1;
-
+    $m$11 = $M.fun("m$11", "a1", null, $m$0, ["a", "b", "c", "d"], 0, 8, "59:0-83:1", 0, function a1($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -763,7 +762,7 @@ var $M = require("@effectful/debugger"),
       if (nb) {
         $.state = 4;
       } else {
-        $.goto = 23;
+        $.goto = 26;
         continue;
       }
 
@@ -784,15 +783,15 @@ var $M = require("@effectful/debugger"),
           break;
 
         case "compositionend":
-          $.goto = 17;
+          $.goto = 18;
           continue;
 
         case "compositionupdate":
-          $.goto = 19;
+          $.goto = 21;
           continue;
 
         default:
-          $.goto = 21;
+          $.goto = 24;
           continue;
       }
 
@@ -802,78 +801,75 @@ var $M = require("@effectful/debugger"),
       $.state = 8;
 
     case 8:
-      $lset($l, 5,
-      /*e*/
-      sb.compositionStart);
       $.goto = 9;
-      $brk();
+      $p = $get(sb, "compositionStart");
       $.state = 9;
 
     case 9:
+      $lset($l, 5,
+      /*e*/
+      $p);
+      $.goto = 10;
+      $brk();
       $.state = 10;
 
     case 10:
-      $.goto = 11;
-      $brk();
       $.state = 11;
 
     case 11:
-      if (null === $l[6]) {
-        $.state = 12;
-      } else {
-        $.goto = 14;
-        continue;
-      }
+      $.goto = 12;
+      $brk();
+      $.state = 12;
 
     case 12:
-      $.result = $l[2];
-      $.state = 13;
-
-    case 13:
-      $.goto = 35;
-      continue;
-
-    case 14:
-      if (null === $l[2]) {
-        $.state = 15;
+      if (null === $l[6]) {
+        $.state = 13;
       } else {
-        $.goto = 16;
+        $.goto = 15;
         continue;
       }
 
-    case 15:
-      $.result = $l[6];
-      $.goto = 13;
+    case 13:
+      $.result = $l[2];
+      $.state = 14;
+
+    case 14:
+      $.goto = 41;
       continue;
 
+    case 15:
+      if (null === $l[2]) {
+        $.state = 16;
+      } else {
+        $.goto = 17;
+        continue;
+      }
+
     case 16:
-      $.result = [$l[6], $l[2]];
-      $.goto = 13;
+      $.result = $l[6];
+      $.goto = 14;
       continue;
 
     case 17:
-      $.goto = 18;
-      $brk();
-      $.state = 18;
+      $.result = [$l[6], $l[2]];
+      $.goto = 14;
+      continue;
 
     case 18:
-      $lset($l, 5,
-      /*e*/
-      sb.compositionEnd);
-      $.goto = 9;
+      $.goto = 19;
       $brk();
-      continue;
+      $.state = 19;
 
     case 19:
       $.goto = 20;
-      $brk();
+      $p = $get(sb, "compositionEnd");
       $.state = 20;
 
     case 20:
       $lset($l, 5,
       /*e*/
-      sb.compositionUpdate);
-      $.goto = 9;
+      $p);
+      $.goto = 10;
       $brk();
       continue;
 
@@ -883,92 +879,125 @@ var $M = require("@effectful/debugger"),
       $.state = 22;
 
     case 22:
-      $lset($l, 5,
-      /*e*/
-      void 0);
-      $.goto = 9;
-      $brk();
-      continue;
+      $.goto = 23;
+      $p = $get(sb, "compositionUpdate");
+      $.state = 23;
 
     case 23:
-      $.goto = 24;
-      $brk();
-      $.state = 24;
-
-    case 24:
-      if (wb) {
-        $.state = 25;
-      } else {
-        $.goto = 30;
-        continue;
-      }
-
-    case 25:
-      $.goto = 26;
-      $p = ($context.call = ub)($l[1], $l[3]);
-      $.state = 26;
-
-    case 26:
-      if ($p) {
-        $.state = 27;
-      } else {
-        $.goto = 28;
-        continue;
-      }
-
-    case 27:
       $lset($l, 5,
       /*e*/
-      sb.compositionEnd);
-      $.state = 28;
-
-    case 28:
-      $.state = 29;
-
-    case 29:
+      $p);
       $.goto = 10;
       $brk();
       continue;
 
-    case 30:
-      $1 = "keydown" === $l[1];
+    case 24:
+      $.goto = 25;
+      $brk();
+      $.state = 25;
 
-      if ($1) {
-        $.state = 31;
+    case 25:
+      $lset($l, 5,
+      /*e*/
+      void 0);
+      $.goto = 10;
+      $brk();
+      continue;
+
+    case 26:
+      $.goto = 27;
+      $brk();
+      $.state = 27;
+
+    case 27:
+      if (wb) {
+        $.state = 28;
+      } else {
+        $.goto = 34;
+        continue;
+      }
+
+    case 28:
+      $.goto = 29;
+      $p = ($context.call = ub)($l[1], $l[3]);
+      $.state = 29;
+
+    case 29:
+      if ($p) {
+        $.state = 30;
       } else {
         $.goto = 32;
         continue;
       }
 
+    case 30:
+      $.goto = 31;
+      $p = $get(sb, "compositionEnd");
+      $.state = 31;
+
     case 31:
-      $1 = 229 === $l[3].keyCode;
+      $lset($l, 5,
+      /*e*/
+      $p);
       $.state = 32;
 
     case 32:
-      if ($1) {
-        $.state = 33;
-      } else {
-        $.goto = 29;
-        continue;
-      }
+      $.state = 33;
 
     case 33:
-      $lset($l, 5,
-      /*e*/
-      sb.compositionStart);
-      $.goto = 29;
+      $.goto = 11;
+      $brk();
       continue;
 
     case 34:
-      $.goto = 35;
-      return $unhandled($.error);
+      $l[7] = "keydown" === $l[1];
+
+      if ($l[7]) {
+        $.state = 35;
+      } else {
+        $.goto = 37;
+        continue;
+      }
 
     case 35:
+      $.goto = 36;
+      $p = $get($l[3], "keyCode");
+      $.state = 36;
+
+    case 36:
+      $l[7] = 229 === $p;
+      $.state = 37;
+
+    case 37:
+      if ($l[7]) {
+        $.state = 38;
+      } else {
+        $.goto = 33;
+        continue;
+      }
+
+    case 38:
+      $.goto = 39;
+      $p = $get(sb, "compositionStart");
+      $.state = 39;
+
+    case 39:
+      $lset($l, 5,
+      /*e*/
+      $p);
+      $.goto = 33;
+      continue;
+
+    case 40:
+      $.goto = 41;
+      return $unhandled($.error);
+
+    case 41:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, "60:2-60:17", $s$12], [4, "61:2-61:17", $s$12], [4, "62:2-81:3", $s$12], [0, null, $s$12], [4, "63:4-76:5", $s$12], [4, "64:6-74:7", $s$12], [0, null, $s$12], [4, "66:10-66:34", $s$12], [4, "67:10-67:18", $s$12], [0, null, $s$12], [4, "82:2-82:50", $s$12], [0, null, $s$12], [0, null, $s$12], [0, null, $s$12], [0, null, $s$12], [0, null, $s$12], [0, "82:43-82:49", $s$12], [4, "69:10-69:32", $s$12], [4, "70:10-70:18", $s$12], [4, "72:10-72:35", $s$12], [4, "73:10-73:18", $s$12], [4, "75:6-75:17", $s$12], [36, "76:5-76:5", $s$12], [4, "78:4-80:74", $s$12], [0, null, $s$12], [2, "79:8-79:16", $s$12], [0, null, $s$12], [0, "79:21-79:42", $s$12], [0, null, $s$12], [36, "81:3-81:3", $s$12], [0, "80:8-80:23", $s$12], [0, "80:27-80:44", $s$12], [0, null, $s$12], [0, "80:49-80:72", $s$12], [16, "83:1-83:1", $s$12], [16, "83:1-83:1", $s$12]]);
+}, null, null, 1, [[4, "60:2-60:17", $s$12], [4, "61:2-61:17", $s$12], [4, "62:2-81:3", $s$12], [0, null, $s$12], [4, "63:4-76:5", $s$12], [4, "64:6-74:7", $s$12], [0, null, $s$12], [4, "66:10-66:34", $s$12], [2, "66:14-66:33", $s$12], [4, "67:10-67:18", $s$12], [0, null, $s$12], [4, "82:2-82:50", $s$12], [0, null, $s$12], [0, null, $s$12], [0, null, $s$12], [0, null, $s$12], [0, null, $s$12], [0, "82:43-82:49", $s$12], [4, "69:10-69:32", $s$12], [2, "69:14-69:31", $s$12], [4, "70:10-70:18", $s$12], [4, "72:10-72:35", $s$12], [2, "72:14-72:34", $s$12], [4, "73:10-73:18", $s$12], [4, "75:6-75:17", $s$12], [36, "76:5-76:5", $s$12], [4, "78:4-80:74", $s$12], [0, null, $s$12], [2, "79:8-79:16", $s$12], [0, null, $s$12], [2, "79:25-79:42", $s$12], [0, "79:21-79:42", $s$12], [0, null, $s$12], [36, "81:3-81:3", $s$12], [0, "80:8-80:23", $s$12], [2, "80:35-80:44", $s$12], [0, "80:27-80:44", $s$12], [0, null, $s$12], [2, "80:53-80:72", $s$12], [0, "80:49-80:72", $s$12], [16, "83:1-83:1", $s$12], [16, "83:1-83:1", $s$12]]);
 
 $M.moduleExports();

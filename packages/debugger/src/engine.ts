@@ -11,12 +11,11 @@ import {
   Scope,
   ScopeInfo,
   VarInfo,
-  ProtoFrame,
   StateMap,
   States,
   normalizeDrive,
   toGlobal,
-  saved,
+  native,
   Flag,
   BrkFlag,
   defaultErrHandler,
@@ -25,46 +24,47 @@ import {
 } from "./state";
 
 import * as State from "./state";
-import * as TTCore from "./timeTravel/core";
-import * as TT from "./timeTravel/main";
+import * as TT from "./timeTravel/frame";
 import { parse as babelParse } from "@babel/parser";
 import babelGenerate from "@babel/generator";
 import * as T from "./transform";
 import * as path from "path";
-import * as S from "@effectful/serialization";
+import { setObjectDescriptor } from "@effectful/serialization";
 import {
   regOpaqueObject,
   regFun,
   ModuleDescriptor,
-  defaultBind
+  defaultBind,
+  FunctionDescriptor
 } from "./persist";
 import { isValidIdentifier } from "@babel/types";
 
 // tslint:disable-next-line
 const asap = require("asap");
 
-const Map = saved.Map;
+const Map = native.Map;
 
 const globalNS = config.globalNS;
 
 const { journal, context, token, closures, functions, thunks } = State;
-const SavedFunction = saved.Function;
-const savedApply = saved.FunctionMethods.apply;
-const savedCall = saved.FunctionMethods.call;
-const defineProperty = saved.Object.defineProperty;
-const savedToString = Function.prototype.toString;
-const weakMapSet = saved.WeakMap.set;
-const weakMapDelete = saved.WeakMap.delete;
-const setPrototypeOf = saved.Object.setPrototypeOf;
+const nativeFunction = native.Function;
+if ((<any>native.FunctionMethods).nativeCall)
+  throw new Error("DEBUGGER: INTERNAL: reloaing runtime");
+const nativeApply = native.FunctionMethods.apply;
+if (nativeApply.name === "defaultApply")
+  throw new Error("DEBUGGER: INTERNAL: nativeApply")
+const nativeCall = native.FunctionMethods.call;
+if (nativeCall.name === "defaultCall")
+  throw new Error("DEBUGGER: INTERNAL: nativeCall")
+const defineProperty = native.Object.defineProperty;
+const nativeToString = Function.prototype.toString;
+const weakMapSet = native.WeakMap.set;
+const weakMapDelete = native.WeakMap.delete;
+const setPrototypeOf = native.Object.setPrototypeOf;
+const reflectApply = native.Reflect.apply;
 
 let curModule: Module = undefined as any; // this is always used in context where this is inited
 let moduleChanged = false;
-
-export function wrapBuiltinFunc(func: any) {
-  func.call = defaultCall;
-  func.apply = defaultApply;
-  return func;
-}
 
 const recordFrame = config.timeTravel
   ? function recordFrame(top: Frame | null) {
@@ -74,8 +74,10 @@ const recordFrame = config.timeTravel
 
 class ArgsTraps {
   func: Frame;
+  $: any[];
   constructor(func: Frame) {
     this.func = func;
+    this.$ = func.$;
   }
   set(target: any[], prop: any, value: any) {
     if (typeof prop === "symbol" || isNaN(prop))
@@ -87,10 +89,9 @@ class ArgsTraps {
   get(target: any[], prop: any): any {
     if (typeof prop === "symbol" || isNaN(prop))
       return Reflect.get(target, prop);
-    const { func } = this;
-    const meta = func.meta;
+    const meta = this.func.meta;
     const index = +prop;
-    if (meta.params.length > index) return func.$[meta.shift + index];
+    if (meta.params.length > index) return this.$[meta.shift + index];
     return Reflect.get(target, prop);
   }
 }
@@ -142,7 +143,7 @@ export function argsWrap<T>(frame: Frame, value: Iterable<T>): T[] {
     enumerable: false,
     value: frame.func
   });
-  return new Proxy(arr, new ArgsTraps(frame));
+  return new native.Proxy(arr, new ArgsTraps(frame));
 }
 
 interface CjsModule {
@@ -185,7 +186,7 @@ export function module(
   (<any>curModule).topLevel = null;
   regOpaqueObject(cjs, name + "$mod");
   context.modules[<any>(fullPath || id)] = curModule;
-  S.setObjectDescriptor(curModule, ModuleDescriptor);
+  setObjectDescriptor(curModule, ModuleDescriptor);
   if (cjs) {
     context.modulesById[cjs.id] = curModule;
     regOpaqueObject(cjs, `${cjs.id}$mod`);
@@ -226,7 +227,7 @@ export function fun(
   const top = !curModule.topLevel;
   let meta = curModule.functions[name];
   if (meta) {
-    if (savedToString.call(handler) === savedToString.call(meta.handler)) {
+    if (nativeToString.call(handler) === nativeToString.call(meta.handler)) {
       if (top) curModule.topLevel = meta;
       meta.handler = handler;
       return meta.func;
@@ -240,8 +241,8 @@ export function fun(
   let parent: FunctionDescr | null = null;
   if (parentConstr) parent = <FunctionDescr>functions.get(parentConstr);
   for (let p = parent; p; p = p.parent) names.unshift(p.name);
-  const fullName = `${curModule.name}:${names.join(".")}@${loc || "?"}`;
-  const uniqName = `${curModule.name}#${name}`;
+  const uniqName = `${curModule.name}#${names.join(".")}`;
+  const fullName = `${uniqName}@${loc || "?"}`;
   let persistName = parent ? parent.persistName : curModule.name;
   if (!top) persistName += "#" + (origName || "*");
   const memo: Brk[] = [];
@@ -379,17 +380,18 @@ export function fun(
       : api.frame
   ];
   constrParams.push(`return (function(${ctx}$){
+    var ${ctx}$$ = ${ctx}$ && ${ctx}$.$;
     return ${ctx}clos(${ctx}$,${ctx}m,(function ${funcName}(${meta.params.join()}) {
       ${flags & Flag.SLOPPY ? "" : '"use strict";'}
-      var ${ctx} = ${ctx}frame(${funcName},new.target);
+      var ${ctx} = ${ctx}frame(${funcName},${ctx}m,${ctx}$,${ctx}$$,new.target);
       ${headLines.join("\n")}
       ${headCode}
       }));
 })`);
-  const constr: any = saved.Reflect.construct(
-    SavedFunction,
+  const constr: any = reflectApply(native.Reflect.construct(
+    nativeFunction,
     constrParams
-  ).apply(null, args);
+  ), null, args);
   meta.func = constr;
   weakMapSet.call(functions, constr, meta);
   if (config.expFunctionConstr) constr.constructor = FunctionConstr;
@@ -441,21 +443,19 @@ export const clos: any = config.persistState
   ? function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
       weakMapSet.call(closures, closure, {
         meta,
-        parent,
-        $: parent && parent.$
+        parent
       });
-      // setPrototypeOf(closure, FunctionConstr.prototype);
-      closure.apply = defaultApply;
-      closure.call = defaultCall;
-      S.setObjectDescriptor(closure, (<any>meta).descriptor);
+      setObjectDescriptor(
+        closure,
+        FunctionDescriptor /*(<any>meta).descriptor*/
+      );
       return closure;
     }
   : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
       setPrototypeOf(closure, FunctionConstr.prototype);
       weakMapSet.call(closures, closure, {
         meta,
-        parent,
-        $: parent && parent.$
+        parent
       });
       return closure;
     };
@@ -472,15 +472,13 @@ export function signalThread() {
 }
 
 function defaultApply(this: any) {
-  context.call = context.call === defaultApply ? this : null;
-  return savedApply.apply(this, <any>arguments);
+  if (context.call === defaultApply) context.call = this;
+  return reflectApply(<any>nativeApply, this, <any>arguments);
 }
 
-wrapBuiltinFunc(defaultApply);
-
 function defaultCall(this: any) {
-  context.call = context.call === defaultCall ? this : null;
-  return savedCall.apply(this, <any>arguments);
+  if (context.call === defaultCall) context.call = this;
+  return reflectApply(<any>nativeCall,this, <any>arguments);
 }
 
 export function pushScope(varsNum: number) {
@@ -500,13 +498,11 @@ export function popScope() {
   return (top.$ = top.$[0]);
 }
 
-export function mcall(prop: string, ...args: [any, ...any[]]) {
+export function mcallDefault(prop: string, ...args: [any, ...any[]]) {
   const func = args[0][prop];
   if (!func) throw new TypeError(`${prop} isn't a function`);
-  return savedCall.apply((context.call = func), args);
-}
-
-wrapBuiltinFunc(defaultCall);
+  return reflectApply(<any>nativeCall,context.call = func, args);
+  }
 
 /**
  * runs a computation until it encounters some breakpoint (returns `token)
@@ -523,7 +519,13 @@ export function step() {
     if (!top) return value;
     if (error) top.meta.errHandler(top, top.$);
     if (top.brk && top.brk.flags & BrkFlag.EXIT) {
-      if (!context.debug && top.restoreDebug) context.debug = true;
+      if (!context.debug) {
+        const restoreDebug = top.restoreDebug;
+        if (restoreDebug !== undef) {
+          context.debug = true;
+          context.call = restoreDebug;
+        }
+      }
       popFrame(top);
     }
     return loop(value);
@@ -672,10 +674,10 @@ export function evalAt(src: string) {
   const top = <Frame>context.top;
   const meta = top.meta;
   const state = top.meta.states[top.state];
-  const memo = meta.evalMemo || (meta.evalMemo = new saved.Map()); // : indirMemo;
-  const key = `${src}@${meta.uniqName}@${state ? state.id : "*"}/${
-    context.debug
-  }}`;
+  const memo = meta.evalMemo || (meta.evalMemo = new native.Map()); // : indirMemo;
+  const key = `${src}@${meta.module.name}@${meta.uniqName}@${
+    state ? state.id : "*"
+  }/${context.debug}}`;
   let resMeta = memo.get(key);
   if (!resMeta) {
     resMeta = compileEval(
@@ -690,7 +692,7 @@ export function evalAt(src: string) {
   }
   const func = resMeta.func(top);
   context.call = func;
-  return savedCall.call(func, top.self);
+  return nativeCall.call(func, top.self);
 }
 
 const locationRE = /^(\d+):(\d+)-(\d+):(\d+)$/;
@@ -709,7 +711,7 @@ export function location(str: string): number[] {
 
 let evalCnt = 0;
 
-const indirMemo = new saved.Map<string, string>();
+const indirMemo = new native.Map<string, string>();
 
 /**
  * Like `compileEval` but returns a self-sufficient string, which can be
@@ -722,6 +724,7 @@ export function compileEvalToString(
 ): string {
   const savedEnabled = journal.enabled;
   try {
+    journal.enabled = false;
     const top = context.top;
     const meta = top && top.meta;
     const blackbox = !meta || meta.blackbox;
@@ -781,7 +784,7 @@ export function retModule() {
   return curModule.topLevel.func(null);
 }
 
-const functionConstrMemo = new saved.Map<string, FunctionDescr>();
+const functionConstrMemo = new native.Map<string, FunctionDescr>();
 
 const savedEval = eval;
 
@@ -805,18 +808,32 @@ export const FunctionConstr = function Function(...args: any[]) {
     res = meta.func(null);
     // const txt = compileEvalToString(code, args);
     // res = savedEval(txt);
-  } else res = saved.Reflect.construct(SavedFunction, args);
+  } else res = native.Reflect.construct(nativeFunction, args);
   res.constructor = Function;
   return res;
 };
 if (config.patchRT) {
   FunctionConstr.prototype = Function.prototype;
-  saved.Object.defineProperty(FunctionConstr.prototype, "bind", {
+
+  defineProperty(FunctionConstr.prototype, "call", {
+    configurable: true,
+    writable: true,
+    value: defaultCall
+  });
+
+  defineProperty(FunctionConstr.prototype, "apply", {
+    configurable: true,
+    writable: true,
+    value: defaultApply
+  });
+
+  defineProperty(FunctionConstr.prototype, "bind", {
     configurable: true,
     writable: true,
     value: defaultBind
   });
-  saved.Object.defineProperty(FunctionConstr.prototype, "toString", {
+
+  defineProperty(FunctionConstr.prototype, "toString", {
     configurable: true,
     writable: true,
     value() {
@@ -825,13 +842,11 @@ if (config.patchRT) {
       let name = this.name;
       const data = closures.get(this);
       if (data && data.meta && !data.meta.blackbox)
-        return savedToString.call(this);
+        return nativeToString.call(this);
       return `function ${name || ""}(${params}) { [native code] }`;
     }
   });
 }
-
-wrapBuiltinFunc(FunctionConstr);
 
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
 regOpaqueObject(defaultCall, "@effectful/debugger/call");
@@ -850,7 +865,7 @@ export function indirEval(code: string): any {
   );
   const func = meta.func(null);
   context.call = func;
-  return savedCall.call(func, void 0);
+  return nativeCall.call(func, void 0);
   // return savedEval(compileEvalToString(code, null));
 }
 
@@ -865,6 +880,7 @@ export function compileEval(
 ): FunctionDescr {
   const savedEnabled = journal.enabled;
   try {
+    journal.enabled = false;
     if (id == null) id = toGlobal(evalCnt++);
     if (!blackbox) context.onNewSource(id, code);
     const ast = babelParse(code, {
@@ -895,7 +911,7 @@ export function compileEval(
       { compact: true }
     ).code;
     const cjs = mod && mod.cjs;
-    new SavedFunction(
+    new nativeFunction(
       "exports",
       "require",
       "module",
@@ -931,9 +947,14 @@ export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
-export function makeFrame(closure: any, newTarget: any): Frame {
-  const { meta, $, parent } = <ProtoFrame>closures.get(closure);
-  let $g = parent ? parent.$g : global;
+export function makeFrame(
+  closure: any,
+  meta: State.FunctionDescr,
+  parent: State.Frame | null,
+  $: any,
+  newTarget: any
+): Frame {
+  let $g = global;
   const frame: Frame = {
     $,
     $g,
@@ -944,11 +965,11 @@ export function makeFrame(closure: any, newTarget: any): Frame {
     running: false,
     parent,
     func: closure,
-    newTarget: newTarget != null,
+    newTarget,
     brk: null,
     next: null,
     caller: null,
-    restoreDebug: false,
+    restoreDebug: undef,
     awaiting: token,
     onResolve: null,
     onReject: null,
@@ -967,12 +988,11 @@ export function pushFrame(frame: Frame): any {
   frame.next = frame.caller = next;
   if (context.debug && next) {
     if (context.call !== frame.func) {
-      frame.restoreDebug = true;
+      frame.restoreDebug = context.call;
       context.debug = false;
     }
   }
   const res = (context.top = frame);
-  context.call = null;
   return res;
 }
 
@@ -982,14 +1002,32 @@ export function popFrame(top: Frame) {
   else recordFrame(next);
 }
 
-export const frame: (closure: any, newTarget: any) => any = config.timeTravel
-  ? function frame(closure: any, newTarget: any): any {
+export const frame: (
+  closure: any,
+  meta: any,
+  parent: any,
+  vars: any[] | null,
+  newTarget: any
+) => any = config.timeTravel
+  ? function frame(
+      closure: any,
+      meta: any,
+      parent: any,
+      vars: any[] | null,
+      newTarget: any
+    ): any {
       const top = context.top;
       recordFrame(top);
-      return pushFrame(makeFrame(closure, newTarget));
+      return pushFrame(makeFrame(closure, meta, parent, vars, newTarget));
     }
-  : function frame(closure: any, newTarget: any) {
-      return pushFrame(makeFrame(closure, newTarget));
+  : function frame(
+      closure: any,
+      meta: any,
+      parent: any,
+      vars: any[] | null,
+      newTarget: any
+    ) {
+      return pushFrame(makeFrame(closure, meta, parent, vars, newTarget));
     };
 
 export function checkExitBrk(top: Frame, value: any) {
@@ -1027,7 +1065,10 @@ export function ret(value: any): any {
   }
   if (context.debug) {
     checkExitBrk(top, value);
-  } else if (top.restoreDebug) context.debug = true;
+  } else if (top.restoreDebug !== undef) {
+    context.debug = true;
+    context.call = top.restoreDebug;
+  }
   popFrame(top);
   return value;
 }
@@ -1041,7 +1082,13 @@ export function unhandled(e: any) {
   }
   top.error = void 0;
   top.done = true;
-  if (!context.debug && top.restoreDebug) context.debug = true;
+  if (!context.debug) {
+    const restoreDebug = top.restoreDebug;
+    if (restoreDebug !== undef) {
+      context.debug = true;
+      context.call = restoreDebug;
+    }
+  }
   popFrame(top);
   throw e;
 }
@@ -1082,10 +1129,6 @@ export function iteratorM<T>(v: AsyncIterable<T>) {
     : ((context.call = (<any>v)[Symbol.iterator]), (<any>v)[Symbol.iterator]());
 }
 
-export const forInIterator = config.timeTravel
-  ? TTCore.forInIterator
-  : State.forInIterator;
-
 export function then(
   p: Promise<any>,
   onResolve: (value: any) => any,
@@ -1102,7 +1145,7 @@ export function liftSync(fun: (this: any, ...args: any[]) => any): any {
     const savedDebug = context.debug;
     try {
       context.debug = false;
-      return fun.apply(this, <any>arguments);
+      return (<any>fun).nativeApply(this, <any>arguments);
     } finally {
       context.debug = savedDebug;
     }
@@ -1115,8 +1158,6 @@ export function raise(e: any) {
 }
 
 export { token, context };
-
-export { del, set, gset, gdel, lset, ldel } from "./timeTravel/core";
 
 /** resets module's states (for tests) */
 export function reset() {
@@ -1159,5 +1200,8 @@ export function force(value: any): any {
   weakMapDelete.call(thunks, value);
   return thunk();
 }
+
+regOpaqueObject(nativeCall, "@effectful/debugger/native/call");
+regOpaqueObject(nativeApply, "@effectful/debugger/native/apply");
 
 export { config };

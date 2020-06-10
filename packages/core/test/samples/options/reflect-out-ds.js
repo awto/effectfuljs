@@ -5,6 +5,7 @@ var $M = require("@effectful/debugger"),
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
+    $get = $M.get,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
@@ -247,53 +248,58 @@ var $M = require("@effectful/debugger"),
 
     case 6:
       $.goto = 7;
-      $mcall("equal", $p.to, 3);
+      $p = $get($p, "to");
       $.state = 7;
 
     case 7:
       $.goto = 8;
-      $brk();
+      $mcall("equal", $p, 3);
       $.state = 8;
 
     case 8:
       $.goto = 9;
-      ($context.call = done)();
+      $brk();
       $.state = 9;
 
     case 9:
       $.goto = 10;
-      $brk();
+      ($context.call = done)();
       $.state = 10;
 
     case 10:
-      $.goto = 15;
+      $.goto = 11;
+      $brk();
+      $.state = 11;
+
+    case 11:
+      $.goto = 16;
       $brk();
       continue;
 
-    case 11:
+    case 12:
       $lset($l, 2,
       /*err*/
       $.error);
       $.error = void 0;
-      $.goto = 12;
-      $brk();
-      $.state = 12;
-
-    case 12:
       $.goto = 13;
-      ($context.call = done)($l[2]);
+      $brk();
       $.state = 13;
 
     case 13:
-      $.goto = 10;
+      $.goto = 14;
+      ($context.call = done)($l[2]);
+      $.state = 14;
+
+    case 14:
+      $.goto = 11;
       $brk();
       continue;
 
-    case 14:
-      $.goto = 15;
+    case 15:
+      $.goto = 16;
       return $unhandled($.error);
 
-    case 15:
+    case 16:
       return $ret($.result);
 
     default:
@@ -301,20 +307,21 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 10:
     case 9:
     case 8:
     case 7:
     case 6:
     case 5:
     case 4:
-      $.goto = 11;
+      $.goto = 12;
       break;
 
     default:
-      $.goto = 14;
+      $.goto = 15;
       break;
   }
-}, null, 2, [[4, "18:4-18:35", $s$5], [2, "18:19-18:33", $s$5], [2, "18:17-18:34", $s$5], [4, "19:4-24:5", $s$5], [5, "20:6-20:33", $s$5], [3, "20:6-20:20", $s$5], [3, "20:6-20:32", $s$5], [5, "21:6-21:13", $s$5], [3, "21:6-21:12", $s$5], [37, "22:5-22:5", $s$5], [36, "25:3-25:3", $s$5], [4, "23:6-23:16", $s$6], [2, "23:6-23:15", $s$6], [36, "24:5-24:5", $s$5], [16, "25:3-25:3", $s$5], [16, "25:3-25:3", $s$5]]),
+}, null, 2, [[4, "18:4-18:35", $s$5], [2, "18:19-18:33", $s$5], [2, "18:17-18:34", $s$5], [4, "19:4-24:5", $s$5], [5, "20:6-20:33", $s$5], [3, "20:6-20:20", $s$5], [3, "20:6-20:23", $s$5], [3, "20:6-20:32", $s$5], [5, "21:6-21:13", $s$5], [3, "21:6-21:12", $s$5], [37, "22:5-22:5", $s$5], [36, "25:3-25:3", $s$5], [4, "23:6-23:16", $s$6], [2, "23:6-23:15", $s$6], [36, "24:5-24:5", $s$5], [16, "25:3-25:3", $s$5], [16, "25:3-25:3", $s$5]]),
     $m$5 = $M.fun("m$5", "addLater", null, $m$3, ["a", "b"], 0, 4, "27:2-33:3", 0, function addLater($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -346,21 +353,26 @@ var $M = require("@effectful/debugger"),
       $.state = 5;
 
     case 5:
-      $.result = $l[3].promise;
-      $.goto = 7;
-      continue;
+      $.goto = 6;
+      $p = $get($l[3], "promise");
+      $.state = 6;
 
     case 6:
-      $.goto = 7;
-      return $unhandled($.error);
+      $.result = $p;
+      $.goto = 8;
+      continue;
 
     case 7:
+      $.goto = 8;
+      return $unhandled($.error);
+
+    case 8:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 2, [[4, "28:4-28:29", $s$7], [2, "28:19-28:28", $s$7], [4, "29:4-31:7", $s$7], [2, "29:4-31:6", $s$7], [4, "32:4-32:28", $s$7], [0, "32:11-32:27", $s$7], [16, "33:3-33:3", $s$7], [16, "33:3-33:3", $s$7]]),
+}, null, null, 2, [[4, "28:4-28:29", $s$7], [2, "28:19-28:28", $s$7], [4, "29:4-31:7", $s$7], [2, "29:4-31:6", $s$7], [4, "32:4-32:28", $s$7], [2, "32:11-32:27", $s$7], [0, null, $s$7], [16, "33:3-33:3", $s$7], [16, "33:3-33:3", $s$7]]),
     $m$6 = $M.fun("m$6", null, null, $m$5, [], 0, 1, "29:21-31:5", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

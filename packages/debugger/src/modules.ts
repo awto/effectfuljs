@@ -1,10 +1,10 @@
+import config from "./config";
 import * as State from "./state";
 import { wrapModule } from "./instr/rt";
-import config from "./config";
 import { compileModule } from "./engine";
 
-const { context, token, saved } = State;
-const weakMapSet = saved.WeakMap.set;
+const { context, token, native } = State;
+const weakMapSet = native.WeakMap.set;
 
 export function runTopLevel(mod: State.Module) {
   const cjs = mod.cjs;
@@ -22,7 +22,7 @@ export function moduleExports() {
   const cjs = mod.cjs;
   const hot = mod.version > 0;
   if (config.verbose)
-    saved.console.log(
+    native.console.log(
       `DEBUGGER: exporting:"${cjs.id}", "${context.moduleId}", fullPath:"${mod.fullPath}", name:"${mod.name}"`
     );
   if (context.onLoad) context.onLoad(mod, hot);
