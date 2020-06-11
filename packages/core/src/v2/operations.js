@@ -64,8 +64,8 @@ export function normalizeAssign() {
     append(seq, i);
     append(seqExpr, seq);
     let lhs, larg;
-    const scope = i.parentFunc;
-    const root = scope.funcDef;
+    const scope = Scope.parentScope(i);
+    const root = i.parentFunc.funcDef;
     if (arg.type === Tag.MemberExpression) {
       let tempObj, tempProp;
       const obj = arg.firstChild;

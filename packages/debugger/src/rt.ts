@@ -113,4 +113,12 @@ if (config.timeTravel && config.patchRT) {
   patch(Tp, "sort", TT.typedArraySort);
   patch(Tp, "reverse", TT.typedArrayReverse);
   patch(Tp, "fill", TT.typedArrayFill);
+  TT.patchWithPolifil(Object, "assign", TT.objectAssign, CoreJS.objectAssign);
+  TT.patchWithPolifil(
+    Object,
+    "entries",
+    TT.objectEntries,
+    CoreJS.objectEntries
+  );
+  TT.patchWithPolifil(Object, "values", TT.objectValues, CoreJS.objectValues);
 }

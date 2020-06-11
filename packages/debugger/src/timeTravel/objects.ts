@@ -524,31 +524,27 @@ export function forInIterator(obj: any): Iterable<string> {
   }
 }
 
-export const objectEntries = config.implicitCalls
-  ? Instr.objectEntries.bind(get)
-  : function entries(obj: any): [string, any][] {
-      const ks = objectGetKeysImpl(obj);
-      const len = ks.length;
-      const res = new Array(len);
-      for (let i = 0; i < len; ++i) {
-        const key = ks[i];
-        res[i] = [key, obj[key]];
-      }
-      return res;
-    };
+export function objectEntries(obj: any): [string, any][] {
+  const ks = objectGetKeysImpl(obj);
+  const len = ks.length;
+  const res = new Array(len);
+  for (let i = 0; i < len; ++i) {
+    const key = ks[i];
+    res[i] = [key, obj[key]];
+  }
+  return res;
+}
 
-export const objectValues = config.implicitCalls
-  ? Instr.objectValues.bind(get)
-  : function entries(obj: any): any[] {
-      const ks = objectGetKeysImpl(obj);
-      const len = ks.length;
-      const res = new Array(len);
-      for (let i = 0; i < len; ++i) {
-        const key = ks[i];
-        res[i] = obj[key];
-      }
-      return res;
-    };
+export function objectValues(obj: any): any[] {
+  const ks = objectGetKeysImpl(obj);
+  const len = ks.length;
+  const res = new Array(len);
+  for (let i = 0; i < len; ++i) {
+    const key = ks[i];
+    res[i] = obj[key];
+  }
+  return res;
+}
 
 function forceConfigurable(props: {
   [name: string]: PropertyDescriptor;
@@ -858,23 +854,20 @@ const objectDefineProperties = config.implicitCalls
       return obj;
     };
 
-const objectAssign = config.implicitCalls
-  ? Instr.objectAssign.bind(<any>set)
-  : function objectAssign(dest: any, ...args: any[]) {
-      if (context.call !== objectAssign)
-        return nativeObject.assign(dest, ...args);
-      for (const value of args) {
-        if (!value) continue;
-        for (const name of nativeReflect.ownKeys(value)) {
-          const descr = <any>(
-            (context.call = Object.getOwnPropertyDescriptor)(value, name)
-          );
-          if (descr.enumerable)
-            dest[name] = descr.get ? descr.get.nativeCall(value) : descr.value;
-        }
-      }
-      return dest;
-    };
+export function objectAssign(dest: any, ...args: any[]) {
+  if (context.call !== objectAssign) return nativeObject.assign(dest, ...args);
+  for (const value of args) {
+    if (!value) continue;
+    for (const name of nativeReflect.ownKeys(value)) {
+      const descr = <any>(
+        (context.call = Object.getOwnPropertyDescriptor)(value, name)
+      );
+      if (descr.enumerable)
+        set(dest, <any>name, descr.get ? descr.get.call(value) : descr.value)
+    }
+  }
+  return dest;
+}
 
 /** records current property value but don't try to keep insertion order */
 export function recordProp(target: any, name: any) {
@@ -984,7 +977,7 @@ function wrapProxyTrapMethod(name: string, defaultImpl: any) {
     ((<any>trapsWrapper)[name] = function(this: ProxyData, ...args: any[]) {
       const method = (<any>this.traps)[name];
       if (!method)
-        return nativeApply((<any>nativeReflect)[method], Reflect, args);
+        return nativeApply((<any>nativeReflect)[name], nativeReflect, args);
       if (context.debug && context.call === defaultImpl) context.call = method;
       return nativeApply(method, this.traps, args);
     }),
@@ -1086,14 +1079,11 @@ if (config.timeTravel && config.patchRT) {
   patch(Object, "setPrototypeOf", objectSetPrototypeOf);
   patch(Object, "defineProperty", objectDefineProperty);
   patch(Object, "defineProperties", objectDefineProperties);
-  patch(Object, "assign", objectAssign);
   patch(Object, "getOwnPropertyDescriptors", objectGetOwnPropertyDescriptors);
   patch(Object, "getOwnPropertyDescriptor", objectGetOwnPropertyDescriptor);
   patch(Object, "getOwnPropertyNames", objectGetOwnPropertyNames);
   patch(Object, "getOwnPropertySymbols", objectGetOwnPropertySymbols);
   patch(Object, "keys", objectKeys);
-  patch(Object, "values", objectValues);
-  patch(Object, "entries", objectEntries);
   patch(Object, "create", objectCreate);
 }
 

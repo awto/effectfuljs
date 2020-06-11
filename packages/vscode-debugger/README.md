@@ -281,10 +281,19 @@ Even now, even if our program's logic heavily depends on the propagation of even
 
 For preventing Spectre attack Firefox disabled `SharedArrayBuffer`. But it is used by the debugger to pause running code (when, for example, it is frozen due to some error/. To enable shared memory in Firefox, navigate to `about:config` -> `I accept the risk!` -> set `javascript.options.shared_memory` to true.
 
+## Implicit calls
+
+Stepping into JavaScript Proxies/setters and getters are supported only in code compiled with time-traveling enabled. If time-traveling isn't needed it can be disabled with following in "launch.json": `{"timeTravel":true, "timeTravelDisabled":true}`
+
+Stepping into casts and other functions called implicitly by runtime synchronously isn't supported yet.
+
+## Eval
+
+Function constructors, eval expression, and "vm" node module are supported. However `eval` cannot yet add variables into calling scope yet. But it still can change the calling scope variables if they are declared there.
+
 ## Not _yet_ done
 
-- stepping into setters, getters, proxy traps, casts,
-  runtime called callbacks, dynamic imports
+- stepping into casts, runtime called callbacks, dynamic imports
 - `with` statements
 - `eval` which adds new variables into its calling scope (changing variables from parent scopes works)
 - function breakpoints

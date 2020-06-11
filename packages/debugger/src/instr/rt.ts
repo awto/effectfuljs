@@ -73,24 +73,6 @@ export function wrapModule(mod: any, cjsModule: any): any {
   return (mod.exports = cjsModule.exports);
 }
 
-export function objectAssign(
-  this: (obj: any, prop: string | symbol | number, val: any) => void
-) {
-  const dest = arguments[0];
-  for (let i = 1, len = arguments.length; i < len; ++i) {
-    const value = arguments[i];
-    if (!value) continue;
-    const keys = Reflect.ownKeys(value);
-    for (let j = 0, len = keys.length; j < len; ++j) {
-      const name = keys[j];
-      const descr = <any>Object.getOwnPropertyDescriptor(value, name);
-      if (descr.enumerable)
-        this(dest, name, descr.get ? descr.get.call(value) : descr.value);
-    }
-  }
-  return dest;
-}
-
 export function objectDefineProperties(
   obj: any,
   descrs: { [name: string]: PropertyDescriptor }
@@ -111,32 +93,6 @@ export function objectGetOwnPropertyDescriptors(
   for (let i = 0, len = keys.length; i < len; ++i) {
     const prop = <any>keys[i];
     ret[prop] = <PropertyDescriptor>Object.getOwnPropertyDescriptor(obj, prop);
-  }
-  return ret;
-}
-
-export function objectEntries(
-  this: (obj: any, prop: string) => any,
-  obj: any
-): [string, any][] {
-  const ret: [string, any][] = [];
-  const keys = Reflect.ownKeys(obj);
-  for (let i = 0, len = keys.length; i < len; ++i) {
-    const prop = <any>keys[i];
-    ret.push([prop, this(obj, prop)]);
-  }
-  return ret;
-}
-
-export function objectValues(
-  this: (obj: any, prop: string) => any,
-  obj: any
-): any[] {
-  const ret: any[] = [];
-  const keys = Reflect.ownKeys(obj);
-  for (let i = 0, len = keys.length; i < len; ++i) {
-    const prop = <any>keys[i];
-    ret.push(this(obj, prop));
   }
   return ret;
 }
