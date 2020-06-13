@@ -153,12 +153,12 @@ var $M = require("@effectful/debugger"),
     case 13:
       $l[7] = $p;
       $.goto = 14;
-      $p = $get($l[7], $l[6]);
+      $p = $get($l[7], $l[5]);
       $.state = 14;
 
     case 14:
       $.goto = 15;
-      $p = $set($l[7], $l[6], $p - 1);
+      $p = $set($l[7], $l[5], $p - 1);
       $.state = 15;
 
     case 15:

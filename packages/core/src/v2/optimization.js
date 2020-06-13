@@ -114,10 +114,10 @@ export function assignBindVar(root) {
     for (let j = i.rhs; j != null; j = j.prevRHS) {
       const cfgItem = j.cfgItem;
       if (cfgItem.eff || cfgItem.last || cfgItem.doc !== j) continue;
-      const sym = j.sym;
+      const sym = cfgItem.sym;
       if (sym) {
         // used only once
-        if (sym.lhs.prevLHS != null) continue;
+        if (sym.lhs.prevLHS != null || sym.loop !== i.loop) continue;
         sym.varSym = i.varSym;
       }
       j.cfgItem = null;

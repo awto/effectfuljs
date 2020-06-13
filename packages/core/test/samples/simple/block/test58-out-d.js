@@ -101,7 +101,7 @@ var $M = require("@effectful/debugger"),
 
     case 12:
       $.goto = 13;
-      ($context.call = eff1)($l[2], $l[3], $p);
+      ($context.call = eff1)($l[2], $1, $p);
       $.state = 13;
 
     case 13:
