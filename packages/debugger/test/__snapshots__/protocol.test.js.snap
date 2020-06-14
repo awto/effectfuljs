@@ -1001,6 +1001,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -1085,6 +1091,12 @@ Object {
           "name": "stepInAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepInAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -2155,6 +2167,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
             },
             Object {
@@ -5242,6 +5260,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "3201",
+              },
               "[name]": "main",
               "i": "3201",
             },
@@ -5343,6 +5365,10 @@ Object {
           "name": "stepInAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "3201",
+              },
               "[name]": "stepInAsyncGenerator.js",
               "agfunc1": Object {
                 "0": "a",
@@ -6149,6 +6175,12 @@ Object {
           "name": "agfunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "agfunc1",
               "agfunc2": Object {
                 "0": "a",
@@ -6294,6 +6326,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
               "i": "3201",
             },
@@ -6395,6 +6433,12 @@ Object {
           "name": "stepInAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepInAsyncGenerator.js",
               "agfunc1": Object {
                 "0": "a",
@@ -8014,6 +8058,10 @@ Object {
           "name": "agfunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "24411",
+              },
               "[name]": "agfunc1",
               "agfunc2": Object {
                 "0": "a",
@@ -8160,6 +8208,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "24411",
+              },
               "[name]": "main",
               "i": "3201",
             },
@@ -8261,6 +8313,10 @@ Object {
           "name": "stepInAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "24411",
+              },
               "[name]": "stepInAsyncGenerator.js",
               "agfunc1": Object {
                 "0": "a",
@@ -8363,6 +8419,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "24411",
+              },
               "[name]": "main",
               "i": "24411",
             },
@@ -8464,6 +8524,10 @@ Object {
           "name": "stepInAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "24411",
+              },
               "[name]": "stepInAsyncGenerator.js",
               "agfunc1": Object {
                 "0": "a",
@@ -9621,6 +9685,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
             },
             Object {
@@ -9721,6 +9791,12 @@ Object {
           "name": "stepInAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepInAsyncGenerator.js",
               "agfunc1": Object {
                 "0": "a",
@@ -10941,6 +11017,10 @@ Object {
           "name": "stepInGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "3100",
+              },
               "[name]": "stepInGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -11296,6 +11376,10 @@ Object {
           "name": "stepInGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepInGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -11616,6 +11700,12 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "func1",
             },
             Object {
@@ -11764,6 +11854,12 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "func2",
             },
             Object {
@@ -11912,6 +12008,12 @@ Object {
           "name": "sub",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "sub",
             },
             Object {
@@ -12063,6 +12165,12 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "func3",
             },
             Object {
@@ -12211,6 +12319,12 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "0": "f",
@@ -12361,6 +12475,16 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "0",
+                "_W": "null",
+                "_X": Object {
+                  "onFulfilled": "function bind() { [native code] }",
+                  "onRejected": "function bind() { [native code] }",
+                  "promise": "[object Object]",
+                },
+              },
               "[name]": "func1",
             },
             Object {
@@ -12509,6 +12633,16 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "0",
+                "_W": "null",
+                "_X": Object {
+                  "onFulfilled": "function bind() { [native code] }",
+                  "onRejected": "function bind() { [native code] }",
+                  "promise": "[object Object]",
+                },
+              },
               "[name]": "func3",
             },
             Object {
@@ -12657,6 +12791,16 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "0",
+                "_W": "null",
+                "_X": Object {
+                  "onFulfilled": "function bind() { [native code] }",
+                  "onRejected": "function bind() { [native code] }",
+                  "promise": "[object Object]",
+                },
+              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "0": "f",
@@ -12807,6 +12951,12 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "func1",
             },
             Object {
@@ -12955,6 +13105,12 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "func3",
             },
             Object {
@@ -13103,6 +13259,12 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "0": "f",
@@ -13253,6 +13415,12 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "func1",
             },
             Object {
@@ -13401,6 +13569,12 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "func2",
             },
             Object {
@@ -13549,6 +13723,12 @@ Object {
           "name": "sub",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "sub",
             },
             Object {
@@ -13700,6 +13880,12 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "func3",
             },
             Object {
@@ -13848,6 +14034,12 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "0": "f",
@@ -13998,6 +14190,12 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "func1",
             },
             Object {
@@ -14146,6 +14344,12 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "func2",
             },
             Object {
@@ -14294,6 +14498,12 @@ Object {
           "name": "sub",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "sub",
             },
             Object {
@@ -14445,6 +14655,12 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "func3",
             },
             Object {
@@ -14593,6 +14809,12 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "0": "f",
@@ -14743,6 +14965,12 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "func2",
             },
             Object {
@@ -14891,6 +15119,12 @@ Object {
           "name": "sub",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "sub",
             },
             Object {
@@ -15042,6 +15276,12 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "func3",
             },
             Object {
@@ -15190,6 +15430,12 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "0": "f",
@@ -15357,6 +15603,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func0",
             },
             Object {
@@ -15483,6 +15733,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func1",
             },
             Object {
@@ -15609,6 +15863,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func2",
             },
             Object {
@@ -15735,6 +15993,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -15863,6 +16125,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func0",
             },
             Object {
@@ -15989,6 +16255,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func1",
             },
             Object {
@@ -16115,6 +16385,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func2",
             },
             Object {
@@ -16241,6 +16515,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -16369,6 +16647,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func0",
             },
             Object {
@@ -16495,6 +16777,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func1",
               "i": "1",
             },
@@ -16622,6 +16908,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func2",
             },
             Object {
@@ -16748,6 +17038,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -16876,6 +17170,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func0",
             },
             Object {
@@ -17002,6 +17300,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func1",
               "i": "2",
             },
@@ -17129,6 +17431,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func2",
             },
             Object {
@@ -17255,6 +17561,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -17383,6 +17693,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func1",
             },
             Object {
@@ -17509,6 +17823,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func2",
             },
             Object {
@@ -17635,6 +17953,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -17763,6 +18085,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func0",
             },
             Object {
@@ -17889,6 +18215,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func1",
             },
             Object {
@@ -18015,6 +18345,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func2",
               "i": "1",
             },
@@ -18142,6 +18476,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -18270,6 +18608,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func0",
             },
             Object {
@@ -18396,6 +18738,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func1",
             },
             Object {
@@ -18522,6 +18868,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func2",
               "i": "2",
             },
@@ -18649,6 +18999,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -18777,6 +19131,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func0",
             },
             Object {
@@ -18903,6 +19261,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func1",
               "i": "1",
             },
@@ -19030,6 +19392,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "func2",
               "i": "1",
             },
@@ -19157,6 +19523,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -19285,6 +19655,10 @@ Object {
           "name": "func0",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func0",
             },
             Object {
@@ -19411,6 +19785,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func1",
               "i": "2",
             },
@@ -19538,6 +19916,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func2",
               "i": "2",
             },
@@ -19665,6 +20047,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -19793,6 +20179,10 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func1",
             },
             Object {
@@ -19919,6 +20309,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func2",
               "i": "2",
             },
@@ -20046,6 +20440,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -20174,6 +20572,10 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "func2",
             },
             Object {
@@ -20300,6 +20702,10 @@ Object {
           "name": "stepOutGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOutGenerator.js",
               "func0": Object {
                 "0": "f",
@@ -26558,6 +26964,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
             },
             Object {
@@ -26677,6 +27089,12 @@ Object {
           "name": "stepOverAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOverAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -26798,6 +27216,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "j": "15",
             },
@@ -26918,6 +27342,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
             },
             Object {
@@ -27037,6 +27467,12 @@ Object {
           "name": "stepOverAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOverAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -27518,6 +27954,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "j": "15",
             },
@@ -27638,6 +28080,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
             },
             Object {
@@ -27757,6 +28205,12 @@ Object {
           "name": "stepOverAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOverAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -27878,6 +28332,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "main",
             },
             Object {
@@ -27997,6 +28457,12 @@ Object {
           "name": "stepOverAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepOverAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -28118,6 +28584,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
             },
             Object {
@@ -28237,6 +28709,12 @@ Object {
           "name": "stepOverAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOverAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -29790,6 +30268,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "main",
               "i": "1",
             },
@@ -30027,6 +30509,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -30740,6 +31226,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "main",
               "i": "2",
             },
@@ -30977,6 +31467,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -31690,6 +32184,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A",
+              },
               "[name]": "main",
               "i": "A",
             },
@@ -31927,6 +32425,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -34534,6 +35036,12 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "agfunc3",
             },
             Object {
@@ -34770,6 +35278,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
               "i": "B",
             },
@@ -35007,6 +35521,12 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -35957,6 +36477,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "agfunc3",
               "i": "1",
             },
@@ -36194,6 +36718,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "main",
               "i": "B",
             },
@@ -36431,6 +36959,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -36669,6 +37201,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:1",
+              },
               "[name]": "agfunc3",
               "i": "1",
             },
@@ -36906,6 +37442,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:1",
+              },
               "[name]": "main",
               "i": "A:1",
             },
@@ -37143,6 +37683,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:1",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -37381,6 +37925,12 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "agfunc3",
               "i": "1",
             },
@@ -37618,6 +38168,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "main",
               "i": "A:1",
             },
@@ -37855,6 +38411,12 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -38093,6 +38655,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:1",
+              },
               "[name]": "agfunc3",
               "i": "1",
             },
@@ -38330,6 +38896,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:1",
+              },
               "[name]": "main",
               "i": "B:1",
             },
@@ -38567,6 +39137,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:1",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -38805,6 +39379,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "agfunc3",
               "i": "2",
             },
@@ -39042,6 +39620,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "main",
               "i": "B:1",
             },
@@ -39279,6 +39861,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -39517,6 +40103,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:2",
+              },
               "[name]": "agfunc3",
               "i": "2",
             },
@@ -39754,6 +40344,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:2",
+              },
               "[name]": "main",
               "i": "A:2",
             },
@@ -39991,6 +40585,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:2",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -40229,6 +40827,12 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "agfunc3",
               "i": "2",
             },
@@ -40466,6 +41070,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "main",
               "i": "A:2",
             },
@@ -40703,6 +41313,12 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "1",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -40941,6 +41557,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:2",
+              },
               "[name]": "agfunc3",
               "i": "2",
             },
@@ -41178,6 +41798,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:2",
+              },
               "[name]": "main",
               "i": "B:2",
             },
@@ -41415,6 +42039,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:2",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -41653,6 +42281,12 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "agfunc3",
             },
             Object {
@@ -41889,6 +42523,12 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "main",
               "i": "B:2",
             },
@@ -42126,6 +42766,12 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -43076,6 +43722,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "agfunc3",
               "i": "1",
             },
@@ -43313,6 +43963,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "main",
               "i": "B:2",
             },
@@ -43550,6 +44204,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -43788,6 +44446,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:1",
+              },
               "[name]": "agfunc3",
               "i": "1",
             },
@@ -44025,6 +44687,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:1",
+              },
               "[name]": "main",
               "i": "C:1",
             },
@@ -44262,6 +44928,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:1",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -44500,6 +45170,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "agfunc3",
               "i": "2",
             },
@@ -44737,6 +45411,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "main",
               "i": "C:1",
             },
@@ -44974,6 +45652,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -45212,6 +45894,10 @@ Object {
           "name": "agfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:2",
+              },
               "[name]": "agfunc3",
               "i": "2",
             },
@@ -45449,6 +46135,10 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:2",
+              },
               "[name]": "main",
               "i": "C:2",
             },
@@ -45686,6 +46376,10 @@ Object {
           "name": "stepOverAsyncGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:2",
+              },
               "[name]": "stepOverAsyncGenerator.js",
               "afunc1": Object {
                 "0": "a",
@@ -45933,6 +46627,10 @@ Object {
           "name": "gfunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A",
+              },
               "[name]": "gfunc2",
             },
             Object {
@@ -46065,6 +46763,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A",
+              },
               "[name]": "gfunc3",
             },
             Object {
@@ -46197,6 +46899,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -46729,6 +47435,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "gfunc3",
             },
             Object {
@@ -46861,6 +47571,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -47262,6 +47976,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "gfunc3",
               "i": "1",
             },
@@ -47395,6 +48113,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -47529,6 +48251,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:1",
+              },
               "[name]": "gfunc3",
               "i": "1",
             },
@@ -47662,6 +48388,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:1",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -47796,6 +48526,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:1",
+              },
               "[name]": "gfunc3",
               "i": "1",
             },
@@ -47929,6 +48663,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:1",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -48063,6 +48801,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "gfunc3",
               "i": "2",
             },
@@ -48196,6 +48938,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -48330,6 +49076,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:2",
+              },
               "[name]": "gfunc3",
               "i": "2",
             },
@@ -48463,6 +49213,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "A:2",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -48597,6 +49351,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:2",
+              },
               "[name]": "gfunc3",
               "i": "2",
             },
@@ -48730,6 +49488,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "B:2",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -48864,6 +49626,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "gfunc3",
             },
             Object {
@@ -48996,6 +49762,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "true",
+                "value": "undefined",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -49397,6 +50167,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "gfunc3",
               "i": "1",
             },
@@ -49530,6 +50304,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "1",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -49664,6 +50442,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:1",
+              },
               "[name]": "gfunc3",
               "i": "1",
             },
@@ -49797,6 +50579,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:1",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -49931,6 +50717,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "gfunc3",
               "i": "2",
             },
@@ -50064,6 +50854,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "2",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",
@@ -50198,6 +50992,10 @@ Object {
           "name": "gfunc3",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:2",
+              },
               "[name]": "gfunc3",
               "i": "2",
             },
@@ -50331,6 +51129,10 @@ Object {
           "name": "stepOverGenerator.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "done": "false",
+                "value": "C:2",
+              },
               "[name]": "stepOverGenerator.js",
               "gfunc1": Object {
                 "0": "g",

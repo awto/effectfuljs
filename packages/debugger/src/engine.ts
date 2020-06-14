@@ -52,10 +52,10 @@ if ((<any>native.FunctionMethods).nativeCall)
   throw new Error("DEBUGGER: INTERNAL: reloaing runtime");
 const nativeApply = native.FunctionMethods.apply;
 if (nativeApply.name === "defaultApply")
-  throw new Error("DEBUGGER: INTERNAL: nativeApply")
+  throw new Error("DEBUGGER: INTERNAL: nativeApply");
 const nativeCall = native.FunctionMethods.call;
 if (nativeCall.name === "defaultCall")
-  throw new Error("DEBUGGER: INTERNAL: nativeCall")
+  throw new Error("DEBUGGER: INTERNAL: nativeCall");
 const defineProperty = native.Object.defineProperty;
 const nativeToString = Function.prototype.toString;
 const weakMapSet = native.WeakMap.set;
@@ -388,10 +388,11 @@ export function fun(
       ${headCode}
       }));
 })`);
-  const constr: any = reflectApply(native.Reflect.construct(
-    nativeFunction,
-    constrParams
-  ), null, args);
+  const constr: any = reflectApply(
+    native.Reflect.construct(nativeFunction, constrParams),
+    null,
+    args
+  );
   meta.func = constr;
   weakMapSet.call(functions, constr, meta);
   if (config.expFunctionConstr) constr.constructor = FunctionConstr;
@@ -478,7 +479,7 @@ function defaultApply(this: any) {
 
 function defaultCall(this: any) {
   if (context.call === defaultCall) context.call = this;
-  return reflectApply(<any>nativeCall,this, <any>arguments);
+  return reflectApply(<any>nativeCall, this, <any>arguments);
 }
 
 export function pushScope(varsNum: number) {
@@ -501,8 +502,8 @@ export function popScope() {
 export function mcallDefault(prop: string, ...args: [any, ...any[]]) {
   const func = args[0][prop];
   if (!func) throw new TypeError(`${prop} isn't a function`);
-  return reflectApply(<any>nativeCall,context.call = func, args);
-  }
+  return reflectApply(<any>nativeCall, (context.call = func), args);
+}
 
 /**
  * runs a computation until it encounters some breakpoint (returns `token)
@@ -1056,7 +1057,6 @@ export function checkExitBrk(top: Frame, value: any) {
 export function ret(value: any): any {
   const top = <Frame>context.top;
   if (top.newTarget && (!value || typeof value !== "object")) value = top.self;
-  // top.state = top.goto = 0;
   top.result = void 0;
   top.done = true;
   if (top.onResolve) {

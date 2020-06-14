@@ -39,6 +39,7 @@ var $M = require("@effectful/debugger"),
       $l[2] = 0;
       $1 = $l[1];
       $l[1] = $1 + 1;
+      $l[3] = $1;
       $.goto = 1;
       $p = ($context.call = eff4)($l[1], $l[2]);
       $.state = 1;
@@ -58,7 +59,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = eff2)($1, $l[4], $p);
+      $p = ($context.call = eff2)($l[3], $l[4], $p);
       $.state = 4;
 
     case 4:

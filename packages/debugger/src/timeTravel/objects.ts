@@ -342,7 +342,7 @@ export const set: (
 
 function continueMCall(args: [any, ...any[]], prop: string, func: any) {
   if (!func) throw new TypeError(`${prop} isn't a function`);
-  return nativeApply(nativeCall, context.call = func, args);
+  return nativeApply(nativeCall, (context.call = func), args);
 }
 
 const mcallContClosure = <State.ProtoFrame>State.closures.get(Instr.mcallCont);
@@ -376,22 +376,22 @@ export const mcall: (
         throw e;
       }
       if (!func) throw new TypeError(`${prop} isn't a function`);
-      return nativeApply(nativeCall, context.call = func, args);
+      return nativeApply(nativeCall, (context.call = func), args);
     }
   : function mcall(prop: string, ...args: [any, ...any[]]) {
       const func = args[0][prop];
       if (!func) throw new TypeError(`${prop} isn't a function`);
-      return nativeApply(nativeCall, context.call = func, args);
+      return nativeApply(nativeCall, (context.call = func), args);
     };
 
-export function get(obj: any, prop: string): any {
+export function get(value: any, property: string): any {
   context.call = get;
-  return obj[prop];
+  return value[property];
 }
 
-export function has(prop: string, obj: any): any {
+export function has(property: string, value: any): any {
   context.call = has;
-  return prop in obj;
+  return property in value;
 }
 
 function objectGetOwnPropertyNames(obj: any): string[] {
@@ -429,20 +429,21 @@ function objectGetOwnPropertySymbols(obj: any): symbol[] {
   return res;
 }
 
-function objectGetOwnPropertyDescriptor(obj: object, name:string|symbol|number):PropertyDescriptor | undefined {
+function objectGetOwnPropertyDescriptor(
+  obj: object,
+  name: string | symbol | number
+): PropertyDescriptor | undefined {
   const unwrapped = proxies?.get(obj);
   if (unwrapped && wrappers) {
     if (context.call === objectGetOwnPropertyDescriptor)
       context.call = Instr.objectGetOwnPropertyDescriptor;
-    return Instr.objectGetOwnPropertyDescriptor(wrappers, obj, name)
+    return Instr.objectGetOwnPropertyDescriptor(wrappers, obj, name);
   }
   const res = nativeObject.getOwnPropertyDescriptor(obj, name);
   if (wrappers && res) {
-    let {set, get} = res;
-    if (set && (set = wrappers.get(set)))
-      res.set = set;
-    if (get && (get = wrappers.get(get)))
-      res.get = get;
+    let { set, get } = res;
+    if (set && (set = wrappers.get(set))) res.set = set;
+    if (get && (get = wrappers.get(get))) res.get = get;
   }
   return res;
 }
@@ -503,7 +504,10 @@ export function forInIterator(obj: any): Iterable<string> {
     const descr = getObjKeys(obj);
     // tslint:disable-next-line:forin
     for (const i in obj) {
-      if (descr && (!isInt(i) || !Object.prototype.hasOwnProperty.nativeCall(obj, i)))
+      if (
+        descr &&
+        (!isInt(i) || !Object.prototype.hasOwnProperty.nativeCall(obj, i))
+      )
         break;
       if (!seen.has(i)) {
         seen.add(i);
@@ -676,12 +680,10 @@ function objectPreventExtensions(obj: any) {
   }
   // weakAdd.call(notExtensible, obj);
   if (!extWarned) {
-      extWarned = true;
-      // tslint:disable-next-line:no-console
-      console.warn(
-        "DEBUGGER: Object.preventExtensions is ignored for now"
-      );
-    }
+    extWarned = true;
+    // tslint:disable-next-line:no-console
+    console.warn("DEBUGGER: Object.preventExtensions is ignored for now");
+  }
   weakAdd.nativeCall(notExtensible, obj);
   return obj;
 }
@@ -935,8 +937,7 @@ const trapsWrapper: ProxyHandler<any> = {
       if (context.debug && context.call === this.proxy) context.call = method;
       return method.nativeCall(this.traps, target, self, args);
     }
-    if (context.debug && context.call === this.proxy)
-      context.call = target;
+    if (context.debug && context.call === this.proxy) context.call = target;
     return nativeReflect.apply(target, self, args);
   },
   construct(this: ProxyData, target: any, args: any[], newTarget?: any) {
@@ -945,8 +946,7 @@ const trapsWrapper: ProxyHandler<any> = {
       if (context.debug && context.call === this.proxy) context.call = method;
       return method.nativeCall(this.traps, target, args, newTarget);
     }
-    if (context.debug && context.call === this.proxy)
-      context.call = target;
+    if (context.debug && context.call === this.proxy) context.call = target;
     return nativeReflect.construct(target, args, newTarget);
   }
 };
@@ -1398,18 +1398,18 @@ function reflectPreventExtension(obj: any) {
   }
 }
 
-function reflectOwnKeys(obj: any) {
-  const unwrap = proxies?.get(obj);
+function reflectOwnKeys(value: any) {
+  const unwrap = proxies?.get(value);
   if (unwrap) {
     if (unwrap.flags & ProxyTrapFlags.OwnKeys) {
       context.call = objectKeys;
-      return <any>nativeReflect.ownKeys(obj);
+      return <any>nativeReflect.ownKeys(value);
     }
-    obj = unwrap.obj;
+    value = unwrap.obj;
   }
-  let descr = getObjKeys(obj);
-  if (!descr) return nativeReflect.ownKeys(obj);
-  const res = nativeObject.getOwnPropertyNames(obj).filter(isInt);
+  let descr = getObjKeys(value);
+  if (!descr) return nativeReflect.ownKeys(value);
+  const res = nativeObject.getOwnPropertyNames(value).filter(isInt);
   const keys = descr.strKeys;
   for (let i = keys.prev; i !== keys; i = i.prev) res.push(i.name);
   const symKeys = descr.symKeys;

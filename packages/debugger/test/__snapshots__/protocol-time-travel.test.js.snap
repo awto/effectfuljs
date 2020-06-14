@@ -1252,6 +1252,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
             },
             Object {
@@ -1476,6 +1482,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
             },
             Object {
@@ -4450,6 +4462,12 @@ Object {
           "name": "stepBackCJS.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepBackCJS.js",
             },
           ],
@@ -4754,6 +4772,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -4842,6 +4866,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "1",
+                "_W": "undefined",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -4895,6 +4925,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -4983,6 +5019,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -5036,6 +5078,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -5132,6 +5180,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -5220,6 +5274,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -5273,6 +5333,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
             },
             Object {
@@ -5423,6 +5489,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
               "m": Object {
                 "0": "(",
@@ -5565,6 +5637,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
               "m": "100",
               "this": Object {
@@ -5669,6 +5747,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -5765,6 +5849,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -5853,6 +5943,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -5906,6 +6002,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
               "m": "100",
               "this": Object {
@@ -6010,6 +6112,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -6106,6 +6214,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -6194,6 +6308,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -6247,6 +6367,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -6343,6 +6469,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -6431,6 +6563,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -6484,6 +6622,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -6572,6 +6716,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -7454,6 +7604,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -7542,6 +7698,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -7595,6 +7757,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -7691,6 +7859,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -7779,6 +7953,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -7832,6 +8012,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
               "m": "100",
               "this": Object {
@@ -7936,6 +8122,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -8032,6 +8224,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -8120,6 +8318,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -8173,6 +8377,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
               "m": Object {
                 "0": "(",
@@ -8315,6 +8525,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
               "m": "100",
               "this": Object {
@@ -8419,6 +8635,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -8515,6 +8737,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -8603,6 +8831,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -8656,6 +8890,12 @@ Object {
           "name": "(anonymous)",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "(anonymous)",
             },
             Object {
@@ -8806,6 +9046,12 @@ Object {
           "name": "afunc2",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc2",
               "m": "100",
               "this": Object {
@@ -8902,6 +9148,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -8990,6 +9242,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",
@@ -9043,6 +9301,12 @@ Object {
           "name": "afunc1",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "afunc1",
               "afunc2": Object {
                 "0": "a",
@@ -9131,6 +9395,12 @@ Object {
           "name": "stepBackAsync.js",
           "scopes": Array [
             Object {
+              "@result": Object {
+                "_U": "0",
+                "_V": "0",
+                "_W": "null",
+                "_X": "null",
+              },
               "[name]": "stepBackAsync.js",
               "afunc1": Object {
                 "0": "a",

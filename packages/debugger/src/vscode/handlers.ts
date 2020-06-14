@@ -2,7 +2,15 @@ import config from "../config";
 import * as State from "../state";
 import * as Engine from "../engine";
 import { runTopLevel } from "../modules";
-import { objectKeysDict, proxies, wrappers, sealed, notExtensible, frozen } from "../timeTravel/objects";
+import {
+  objectKeysDict,
+  proxies,
+  wrappers,
+  sealed,
+  notExtensible,
+  frozen
+} from "../timeTravel/objects";
+import { ManagedMap, ManagedSet } from "../timeTravel/es";
 import * as TT from "../timeTravel/main";
 import * as path from "path";
 import { DebugProtocol as P } from "./protocol";
@@ -506,7 +514,7 @@ function resetScopes() {
   curIdByVal.set(global, globalScope.variablesReference);
 }
 
-const variablesSym = Symbol("@effectful/debugger/variables");
+const variablesViewSym = Symbol("@effectful/debugger/variables");
 
 handlers.scopes = function(args, response) {
   const frameReference = args.frameId;
@@ -524,9 +532,13 @@ handlers.scopes = function(args, response) {
       const ref = newVarRef();
       const names = getKeys(brk.scope);
       const scopeDescr = {
-        [variablesSym](variables: VarValue[]) {
-          if (top && context.error)
-            variables.push(varValue("@error", context.value));
+        [variablesViewSym](variables: VarValue[]) {
+          if (top) {
+            if (context.error)
+              variables.push(varValue("@error", context.exception));
+            else if (context.value !== void 0)
+              variables.push(varValue("@result", context.value));
+          }
           const { scope } = brk;
           if (frame.self && frame.self !== global)
             variables.push(varValue("this", frame.self));
@@ -559,18 +571,59 @@ handlers.scopes = function(args, response) {
   }
 };
 
+const varBriefViewByClasses = new WeakMap();
+const varViewByClasses = new WeakMap();
+
+function iterableVariablesBriefView(
+  val: { size: number; constructor: { name: string } },
+  res: VarValue
+) {
+  res.value = `${val.constructor.name}(${val.size})`;
+}
+
+function iterableVariablesView(
+  val: Iterable<any>,
+  variables: VarValue[],
+  start: number,
+  count: number
+) {
+  let x = 0;
+  for (const i of val) {
+    if (x++ < start) continue;
+    variables.push(varValue(String(x), i));
+    if (x >= start + count) return;
+  }
+}
+
+varBriefViewByClasses
+  .set(ManagedMap.prototype, iterableVariablesBriefView)
+  .set(ManagedSet.prototype, iterableVariablesBriefView)
+  .set(Map.prototype, iterableVariablesBriefView)
+  .set(Set.prototype, iterableVariablesBriefView);
+
+varViewByClasses
+  .set(ManagedMap.prototype, iterableVariablesView)
+  .set(ManagedSet.prototype, iterableVariablesView)
+  .set(Map.prototype, iterableVariablesView)
+  .set(Set.prototype, iterableVariablesView);
+
 handlers.variables = function(args, response) {
   let variables: VarValue[] = [];
   const val = curValById.get(args.variablesReference);
   if (val != null) {
     const unwrapped = proxies && proxies.get(val);
+    let custom;
     if (unwrapped) {
       variables.push(varValue("[Target]", unwrapped.target));
       variables.push(varValue("[Handler]", unwrapped.traps));
       if (unwrapped.revoked != null)
         variables.push(varValue("[IsRevoked]", unwrapped.revoked));
-    } else if (Object.prototype.hasOwnProperty.call(val, variablesSym)) {
-      val[variablesSym](variables);
+    } else if (
+      (custom = varViewByClasses.get(unwrapProxy(Object.getPrototypeOf(val))))
+    ) {
+      custom(val, variables, args.start, args.count);
+    } else if (Object.prototype.hasOwnProperty.call(val, variablesViewSym)) {
+      val[variablesViewSym](variables);
     } else if (Array.isArray(val)) {
       for (
         let i = args.start || 0, len = args.count ? i + args.count : val.length;
@@ -643,11 +696,16 @@ function varValue(name: string, value: any): VarValue {
         }
         const res: VarValue = {
           name: String(name),
-          value: (unwrapped ? "Proxy " : "") + str(value),
+          value: str(value),
           type,
           variablesReference: ref
         };
-        if (Array.isArray(value)) {
+        const custom = varBriefViewByClasses.get(
+          unwrapProxy(getPrototypeOf(value))
+        );
+        if (custom) {
+          custom(value, res);
+        } else if (Array.isArray(value)) {
           res.indexedVariables = value.length;
         } else {
           res.namedVariables = filter(
@@ -658,6 +716,7 @@ function varValue(name: string, value: any): VarValue {
           if (proto !== null && proto !== Object.prototype)
             res.namedVariables++;
         }
+        if (unwrapped) res.value = "Proxy " + res.value;
         return res;
       }
     default:
@@ -672,8 +731,7 @@ function varValue(name: string, value: any): VarValue {
 
 function str(value: any): any {
   if (value === void 0) return "undefined";
-  if (typeof value === "symbol")
-    return value.toString();
+  if (typeof value === "symbol") return value.toString();
   const savedDebug = context.debug;
   try {
     context.debug = false;
@@ -748,8 +806,7 @@ function checkPause(
   if (!context.debug) return undefined;
   if (awaitingThreads != null || (firstThread && config.stopOnEntry))
     return "entry";
-  if (pauseNext)
-    return "pause";
+  if (pauseNext) return "pause";
   const { breakpoint: bp } = brk;
   if (
     bp &&
@@ -775,39 +832,39 @@ function checkPause(
 let stepCount = 0;
 
 function stateDescr(
-    stepId: number,
-    threadId: number,
-    verbose?: boolean
-  ): string {
-    const res = [];
+  stepId: number,
+  threadId: number,
+  verbose?: boolean
+): string {
+  const res = [];
+  res.push(
+    `#${threadId}: Step #${stepId}@${
+      context.brk ? "stopped" : "running"
+    } = ${str(context.value)} ${context.error ? "ERROR" : ""}`
+  );
+  res.push(`#${threadId}:   Stack:`);
+  for (let j = context.top || context.activeTop; j; j = j.next) {
+    const verboseInfo = verbose ? ` [${j.state}=>${j.goto}]` : "";
     res.push(
-      `#${threadId}: Step #${stepId}@${context.brk ? "stopped" : "running"} = ${str(
-        context.value
-      )} ${context.error ? "ERROR" : ""}`
+      `#${threadId}:     ${j.constructor.name}@${j.meta.module.name}:${
+        j.brk ? j.brk.location : "?"
+      }${verboseInfo}`
     );
-    res.push(`#${threadId}:   Stack:`);
-    for (let j = context.top || context.activeTop; j; j = j.next) {
-      const verboseInfo = verbose ? ` [${j.state}=>${j.goto}]` : "";
+  }
+  if (context.top && context.top.brk) {
+    res.push(`#${threadId}:   Variables:`);
+    // tslint:disable-next-line:forin
+    for (const j in context.top.brk.scope) {
+      const [name, decl] = context.top.brk.scope[j];
       res.push(
-        `#${threadId}:     ${j.constructor.name}@${j.meta.module.name}:${
-          j.brk ? j.brk.location : "?"
-        }${verboseInfo}`
+        `#${threadId}:    ${name}@${decl}: ${str(context.top.$[name])} = ${str(
+          context.top.$[name]
+        )}`
       );
     }
-    if (context.top && context.top.brk) {
-      res.push(`#${threadId}:   Variables:`);
-      // tslint:disable-next-line:forin
-      for (const j in context.top.brk.scope) {
-        const [name, decl] = context.top.brk.scope[j];
-        res.push(
-          `#${threadId}:    ${name}@${decl}: ${str(context.top.$[name])} = ${str(
-            context.top.$[name]
-          )}`
-        );
-      }
-    }
-   return res.join();
   }
+  return res.join();
+}
 
 function run() {
   context.top = context.activeTop;

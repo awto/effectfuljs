@@ -110,14 +110,16 @@ export function assignBindVar(root) {
       sym.nextRelease = forRelease[max];
       forRelease[max] = sym;
     }
+  }
+  for (let i = root.orderedBinds; i; i = i.nextOrderedBind) {
     // removing simple var copies
     for (let j = i.rhs; j != null; j = j.prevRHS) {
       const cfgItem = j.cfgItem;
       if (cfgItem.eff || cfgItem.last || cfgItem.doc !== j) continue;
-      const sym = cfgItem.sym;
+      const sym = cfgItem.sym.varSym;
       if (sym) {
         // used only once
-        if (sym.lhs.prevLHS != null || sym.loop !== i.loop) continue;
+        if (sym.lhs.prevLHS != null || sym.pool !== i.varSym.pool) continue;
         sym.varSym = i.varSym;
       }
       j.cfgItem = null;

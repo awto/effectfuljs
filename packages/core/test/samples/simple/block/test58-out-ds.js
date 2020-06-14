@@ -106,13 +106,14 @@ var $M = require("@effectful/debugger"),
       $lset($l, 1,
       /*i*/
       $1 + 1);
+      $l[3] = $1;
       $.goto = 12;
       $p = ($context.call = eff3)($l[1]);
       $.state = 12;
 
     case 12:
       $.goto = 13;
-      ($context.call = eff1)($l[2], $1, $p);
+      ($context.call = eff1)($l[2], $l[3], $p);
       $.state = 13;
 
     case 13:

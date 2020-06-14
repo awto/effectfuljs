@@ -58,6 +58,7 @@ export function retA(value: any): any {
   context.call = top.onResolve;
   top.onResolve(value);
   top.done = true;
+  top.result = void 0;
   if (context.debug) {
     checkExitBrk(top, top.promise);
   } else if (top.restoreDebug) context.debug = true;
