@@ -178,7 +178,7 @@ export class DebugSession extends SessionImpl {
     response.body = response.body || {};
     response.body.supportsConfigurationDoneRequest = true;
     response.body.supportsStepBack = true;
-    response.body.supportsSetVariable = true;
+    response.body.supportsSetVariable = false;
     response.body.supportsSetExpression = true;
     response.body.supportsTerminateRequest = true;
     response.body.supportTerminateDebuggee = true;
@@ -553,7 +553,8 @@ export class DebugSession extends SessionImpl {
       new CapabilitiesEvent({
         supportsStepBack: !!args.timeTravel,
         supportsRestartFrame: false,
-        supportsRestartRequest: !!args.fastRestart || args.preset !== "node"
+        supportsRestartRequest: !!args.fastRestart || args.preset !== "node",
+        supportsEvaluateForHovers: !!args.timeTravel
       })
     );
     if (args.preset && !args.command) args.command = true;

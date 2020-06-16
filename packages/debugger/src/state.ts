@@ -443,6 +443,8 @@ export function throwToken() {
 
 export const token = { _effectToken: true };
 
+export const sideEffectToken = {_sideEffectToken:true}
+
 interface IdsStore {
   free(descriptor: number): void;
   allocate(): number;

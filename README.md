@@ -2,44 +2,46 @@
 
 [![Build Status](https://travis-ci.org/awto/effectfuljs.svg?branch=master)](https://travis-ci.org/awto/effectfuljs)
 
-This is a tool to build JavaScript to JavaScript transpilers(babel plugins) 
+This is a tool to build JavaScript to JavaScript transpilers(babel plugins)
 along with a few predefined ones. It extends JavaScript language with
 various computation effects by means of runtime libraries but without any syntax extension.
 
 There are such libraries for:
 
- * EcmaScript effects extensions (async functions, generators and
-   async generators)
-   * **_Why not native or other transpilers_**
-     * Abstract API -
-       [@effectful/es](packages/es)
-     * Persistent state -
-       [@effectful/es-persist](packages/es-persist)
-     * Concrete API -
-       [@effectful/es-inline](packages/es-inline),
-       the best performance
-     * Implicit parallelism
-     * Deriving program's static graphs for analysis and conversion to other
-       languages - WIP
- * Multi-prompt delimited continuations -
-   [@effectful/cc](packages/cc)
- * Logical programming - WIP [Old version](https://github.com/awto/mfjs-logic)
- * Debugger API -
-    [@effectful/debugger](packages/debugger) and VSCode plugin [effectful/debugger](packages/vscode-debugger)
+- EcmaScript effects extensions (async functions, generators and
+  async generators)
+  - **_Why not native or other transpilers_**
+    - Abstract API -
+      [@effectful/es](packages/es)
+    - Persistent state -
+      [@effectful/es-persist](packages/es-persist)
+    - Concrete API -
+      [@effectful/es-inline](packages/es-inline),
+      the best performance
+    - Implicit parallelism
+    - Deriving program's static graphs for analysis and conversion to other
+      languages - WIP
+- Multi-prompt delimited continuations -
+  [@effectful/cc](packages/cc)
+- Logical programming - WIP [Old version](https://github.com/awto/mfjs-logic)
+- Debugger API -
+  [@effectful/debugger](packages/debugger) and VSCode plugin [effectful/debugger](packages/vscode-debugger)
 
 Not yet implemented:
-  * probabilistic programming
-  * parallel and distributed programming
-  * persistent continuations
-  * adaptive computations
-  * reactive programming (with RxJS) - [Old version](https://github.com/awto/mfjs-rx)
+
+- algebraic effects
+- probabilistic programming
+- parallel and distributed programming
+- persistent continuations
+- adaptive computations
+- reactive programming (with RxJS) - [Old version](https://github.com/awto/mfjs-rx)
 
 They are typically small libraries, some of them are just tiny
 wrappers around well-known interfaces, such as Promises or
 Observables.
 
 The compiler converts ES2018 to ES2018 and doesn't need any syntax
-extensions.  So it may be applied to results of other compilers
+extensions. So it may be applied to results of other compilers
 targeting JS such as CoffeeScript, TypeScript etc.
 
 ## Usage
@@ -56,7 +58,7 @@ $ npm install --save <lib name>
 $ npm install --save-dev @effectful/core
 ```
 
-If the babel plugin is in `transform.js`  of `<lib name>` package,  `.babelrc` can be:
+If the babel plugin is in `transform.js` of `<lib name>` package, `.babelrc` can be:
 
 ```
 {
@@ -70,14 +72,14 @@ The package can also contain `macro.js` file for zero-configuration using
 
 Check the libraries documentation for exact details:
 
- * [@effectful/js](packages/js)
+- [@effectful/js](packages/js)
   compiles to the most abstract code, single or double level depending
-  on parameters 
- * [@effectful/es](packages/es)
+  on parameters
+- [@effectful/es](packages/es)
   for two-levels syntax either concrete ECMAScript compatible effects
   or abstract for async, generator and async generators semantics
-  overloading.  
- * [@effectful/es-inline](packages/es)
+  overloading.
+- [@effectful/es-inline](packages/es)
   A shortcut for [@effectful/es](packages/es)
   with concrete ECMAScript effects implementations.
 
@@ -87,13 +89,12 @@ setting needed lower level options described in
 [config.js](packages/core/src/config.js)
 thus generated code uses different runtime interfaces.
 
-
 ## Examples
 
 These examples are not the full list of features. The project is
 abstract, with a lot of different applications.
 
-###  Persistent state
+### Persistent state
 
 Save all your application state in DB or file. The state includes the point
 where it executes now along with all variables values implementing any
@@ -110,7 +111,7 @@ e.g. email-confirmation, or it should await some exact date. No needs to
 bother implementing all these details, just write a very simple script
 describing the business logic and nothing else.
 
-Here's some shop business logic example. 
+Here's some shop business logic example.
 
 ```javascript
 function order(customer, item) {
@@ -150,7 +151,7 @@ possible to specify only some region. For example, for the persistent state,
 this allows saving not the whole application state, which may be big, but only
 some interesting part.
 
-Check [@effectful/cc](packages/es) for 
+Check [@effectful/cc](packages/es) for
 more details.
 
 ## Implicit parallelism
@@ -174,7 +175,7 @@ If these operations are independent they can be executed in parallel:
 
 ```javascript
 async function a() {
-  const [a, b] = await Promise.all([A,B]);
+  const [a, b] = await Promise.all([A, B]);
 }
 ```
 
@@ -207,15 +208,16 @@ async function parDemo() {
   let a;
   const [b, c] = await Promise.all([
     (async () => {
-       a = await A;
-       b = await B(a);
+      a = await A;
+      b = await B(a);
     })(),
-    C]);
+    C
+  ]);
 }
 ```
 
 This is obviously significantly more complex, error-prone, harder to read and
-maintain. It will become even much worse with some next small changes. They may 
+maintain. It will become even much worse with some next small changes. They may
 require almost full function rewrite.
 
 Fortunately, EffectfulJS can do the transformation automatically, just specify
@@ -248,22 +250,26 @@ the source code it looks like a single value variable:
 
 ```javascript
 function drawBox(root) {
-  const down = event(root, "mousedown")
+  const down = event(root, "mousedown");
   if (down && down.button === 0) {
-    const move = event(root, "mousemove")
-    const up = event(root, "up")
-    const cur = move || up
-    const box = <div className={up ? "box" : "drawing"}>
-                     style={{
-                       left: Math.min(down.x, cur.x) + pageXOffset,
-                       top: Math.min(down.y, cur.y) + pageYOffset,
-                       width: Math.abs(down.x - cur.x), 
-                       height: Math.abs(down.y - cur.y)}}></div>
-    const del = event(box, "contextMenu")
-    if (!del)
-      root.appendChild(box)
-    if (!move)
-      return
+    const move = event(root, "mousemove");
+    const up = event(root, "up");
+    const cur = move || up;
+    const box = (
+      <div className={up ? "box" : "drawing"}>
+        style=
+        {{
+          left: Math.min(down.x, cur.x) + pageXOffset,
+          top: Math.min(down.y, cur.y) + pageYOffset,
+          width: Math.abs(down.x - cur.x),
+          height: Math.abs(down.y - cur.y)
+        }}
+        >
+      </div>
+    );
+    const del = event(box, "contextMenu");
+    if (!del) root.appendChild(box);
+    if (!move) return;
   }
 }
 ```
@@ -282,7 +288,7 @@ some list in two. Here is an almost literal translation of its implementation in
 JavaScript:
 
 ```javascript
-function append(a,b,r) {
+function append(a, b, r) {
   const [h, t, rt] = newRefs();
   unify(a, cons(h, t));
   unify(r, cons(h, rt));
@@ -301,34 +307,36 @@ automatically.
 
 ```javascript
 function PaymentForm() {
-  const [cost, discount, finalCost] = newRefs()
-  constraint(finalCost === cost * discount / 100)
-  return <form action="/pay">
-    <input type="text" name="cost"      value={cost}/>
-    <input type="text" name="discount"  value={discount}/>
-    <input type="text" name="finalCost" value={finalCost}/>
-    <input type="submit" value="Pay"/>
-  </form>
+  const [cost, discount, finalCost] = newRefs();
+  constraint(finalCost === (cost * discount) / 100);
+  return (
+    <form action="/pay">
+      <input type="text" name="cost" value={cost} />
+      <input type="text" name="discount" value={discount} />
+      <input type="text" name="finalCost" value={finalCost} />
+      <input type="submit" value="Pay" />
+    </form>
+  );
 }
 ```
 
 The same can be done with the new React hooks, which is an implementation of
 computational effect relying on runtime only. Transpiler like EffectfulJS
-doesn't have runtime-only limitations, namely, 
-[React Hooks Rules](https://reactjs.org/docs/hooks-rules.html). 
-They significantly reduce the number of useful use cases. Some complex program 
-logic may be simplified with loops, conditions and other common JavaScript 
+doesn't have runtime-only limitations, namely,
+[React Hooks Rules](https://reactjs.org/docs/hooks-rules.html).
+They significantly reduce the number of useful use cases. Some complex program
+logic may be simplified with loops, conditions and other common JavaScript
 constructs.
 
 ## How it works
 
 The compiler stratifies input JavaScript code into two levels. The
-first level (*pure*) contains JS constructs (expressions, statements)
-kept as is in generated code.  The second level (*effectful*) contains
+first level (_pure_) contains JS constructs (expressions, statements)
+kept as is in generated code. The second level (_effectful_) contains
 effectful constructs. The compiler converts them into abstract
 function calls.
 
-I'm abusing term *pure* here. The statements or expressions on this
+I'm abusing term _pure_ here. The statements or expressions on this
 level can have any side effect already implemented in
 JavaScript. Namely IO, references, exceptions, loops, breaks, returns,
 etc.
@@ -337,11 +345,11 @@ The levels may be either explicit or implicit in syntax (two-level or
 single-level syntax resp.).
 
 Async functions or generators syntax can be used for marking
-expressions of explicit *effectful* level.
+expressions of explicit _effectful_ level.
 
-```javascript 
-async function a() { 
-  console.log("x:",await getX()); 
+```javascript
+async function a() {
+  console.log("x:", await getX());
 }
 ```
 
@@ -354,10 +362,12 @@ implementations.
 
 This is an example of one of a few possible outputs:
 
-```javascript 
-function a() { 
-    return M.chain(getX(), _1);
-    function _1(a) { console.log("x:",a) }
+```javascript
+function a() {
+  return M.chain(getX(), _1);
+  function _1(a) {
+    console.log("x:", a);
+  }
 }
 ```
 
@@ -379,13 +389,13 @@ anything about them to use the libraries.
 With the implicit single-level mode the same code may be even more
 succinct:
 
-```javascript 
-function() { 
-  console.log("x:",getX()); 
-} 
+```javascript
+function() {
+  console.log("x:",getX());
+}
 ```
 
-There are more examples of input/output in the 
+There are more examples of input/output in the
 [test folder](packages/js/test/samples).
 
 It is arguable if explicit or implicit levels separation is
@@ -394,8 +404,6 @@ succinct and more readable code is good, but if effects are heavy
 making them explicit may be better. So EffectfulJS compiler supports
 both options.
 
-
 ## LICENSE
 
 Distributed under the terms of The MIT License (MIT).
-

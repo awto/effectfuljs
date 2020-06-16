@@ -147,6 +147,34 @@ function symToStr(val: any): any {
   return val;
 }
 
+const noSideEffects = config.timeTravel
+  ? function noSideEffects(
+      func: (this: any, ...args: any[]) => any
+    ): (this: any, ...args: any[]) => any {
+      return function(this: any): any {
+        const savedDebug = context.debug;
+        const savedEnabled = journal.enabled;
+        const savedFuture = journal.future;
+        const savedNow = journal.now;
+        try {
+          context.debug = false;
+          journal.enabled = true;
+          TT.checkpoint();
+          return State.native.Reflect.apply(func, this, <any>arguments);
+        } finally {
+          while (journal.now !== savedNow) TT.undo();
+          journal.future = savedFuture;
+          journal.enabled = savedEnabled;
+          context.debug = savedDebug;
+        }
+      };
+    }
+  : function noSideEffects(
+      func: (this: any, args: any[]) => any
+    ): (this: any, args: any[]) => any {
+      return func;
+    };
+
 function output(category: string, args: any[], value?: any, group?: string) {
   const descr = value !== undefined ? varValue("console", value) : undefined;
   event(
@@ -252,7 +280,7 @@ function dispatch(req: P.Request) {
       handler(req.arguments, res);
     } catch (e) {
       // tslint:disable-next-line:no-console
-      console.error("DEBUGGER ERROR", e);
+      console.error("DEBUGGER ERROR", e, e.stack);
     }
   }
   send(res);
@@ -579,6 +607,7 @@ function iterableVariablesBriefView(
   res: VarValue
 ) {
   res.value = `${val.constructor.name}(${val.size})`;
+  res.indexedVariables = val.size;
 }
 
 function iterableVariablesView(
@@ -663,13 +692,14 @@ function unwrapProxy<T>(value: T): T {
 }
 
 function varValue(name: string, value: any): VarValue {
+  let textValue = "";
   switch (typeof value) {
     case "function":
       const descr = State.closures.get(value);
       if (descr) {
         const meta = descr.meta;
         if (meta) {
-          value = `${proxies && proxies.has(value) ? "Proxy " : ""}${
+          textValue = `${proxies && proxies.has(value) ? "Proxy " : ""}${
             meta.origName
           }@${meta.module ? path.basename(meta.module.name) : "*"}:${
             meta.location
@@ -696,7 +726,7 @@ function varValue(name: string, value: any): VarValue {
         }
         const res: VarValue = {
           name: String(name),
-          value: str(value),
+          value: textValue || str(value),
           type,
           variablesReference: ref
         };
@@ -729,18 +759,19 @@ function varValue(name: string, value: any): VarValue {
   }
 }
 
+const toString = noSideEffects(function toString(value: any): string {
+  try {
+    return String(value);
+  } catch (e) {
+    if (e === State.sideEffectToken) return "the expression has side-effects";
+    return "";
+  }
+});
+
 function str(value: any): any {
   if (value === void 0) return "undefined";
   if (typeof value === "symbol") return value.toString();
-  const savedDebug = context.debug;
-  try {
-    context.debug = false;
-    return String(value);
-  } catch (e) {
-    return "";
-  } finally {
-    context.debug = savedDebug;
-  }
+  return toString(value);
 }
 
 function reset() {
@@ -850,18 +881,6 @@ function stateDescr(
         j.brk ? j.brk.location : "?"
       }${verboseInfo}`
     );
-  }
-  if (context.top && context.top.brk) {
-    res.push(`#${threadId}:   Variables:`);
-    // tslint:disable-next-line:forin
-    for (const j in context.top.brk.scope) {
-      const [name, decl] = context.top.brk.scope[j];
-      res.push(
-        `#${threadId}:    ${name}@${decl}: ${str(context.top.$[name])} = ${str(
-          context.top.$[name]
-        )}`
-      );
-    }
   }
   return res.join();
 }
@@ -1190,14 +1209,16 @@ handlers.evaluate = function(args, res) {
           let savedDebug = context.debug;
           try {
             context.debug = false;
-            val = compileEval(expr, frame.meta, frame.brk)(frame);
+            let fun = compileEval(expr, frame.meta, frame.brk);
+            if (args.context === "hover") fun = noSideEffects(fun);
+            val = fun(frame);
           } finally {
             context.debug = savedDebug;
           }
         }
       }
     } catch (e) {
-      val = String(e);
+      val = str(e);
     }
   } else val = "";
   const descr = varValue("eval", val);

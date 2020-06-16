@@ -756,7 +756,9 @@ export function compileEvalToString(
         filename: `VM${id}.js`,
         iifeWrap: true,
         moduleExports: params == null ? "execModule" : "retModule",
-        constrParams: { code }
+        constrParams: { code },
+        timeTravel: config.timeTravel,
+        implicitCalls: config.implicitCalls
       }),
       { compact: true }
     ).code;
@@ -907,7 +909,9 @@ export function compileEval(
         moduleExports: null,
         iifeWrap: false,
         scopeDepth,
-        constrParams: null
+        constrParams: null,
+        timeTravel: config.timeTravel,
+        implicitCalls: config.implicitCalls
       }),
       { compact: true }
     ).code;
@@ -1102,7 +1106,8 @@ export function brk(): any {
   if (
     top &&
     (p = top.brk = context.brk = top.meta.states[top.state]) &&
-    ((stopOnEntry = needsBreak(p, top)) || (stopped && context.activeTop))
+    ((stopOnEntry = needsBreak(p, top)) || (stopped && context.activeTop)) &&
+    context.debug
   ) {
     if (stopped) {
       context.queue.push({
