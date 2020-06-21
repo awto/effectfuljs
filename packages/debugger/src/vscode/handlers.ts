@@ -39,6 +39,7 @@ declare module "../state" {
     debuggerSource?: P.Source;
     breakpoints?: Brk[];
     functionsSorted?: NonBlackboxFunctionDescr[];
+    require: (name: string) => any;
   }
 }
 
@@ -1418,8 +1419,9 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
         for (const parent of i.parents) {
           // this assumes parent modules are loaded first
           const parentModule = context.modulesById[parent];
-          if (parentModule && parentModule.cjs) {
-            parentModule.cjs.__effectful_js_require(i.cjs);
+          if (parentModule) {
+            const req = parentModule.require;
+            if (req) req(i.cjs);
             break;
           }
         }

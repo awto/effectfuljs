@@ -223,6 +223,7 @@ module.exports = {
                       rt,
                       timeTravel,
                       blackbox: false,
+                      staticBundler: true,
                       preInstrumentedLibs: true,
                       srcRoot
                     }
@@ -256,6 +257,7 @@ module.exports = {
                     {
                       rt,
                       blackbox: true,
+                      staticBundler: true,
                       timeTravel,
                       preInstrumentedLibs: true,
                       srcRoot

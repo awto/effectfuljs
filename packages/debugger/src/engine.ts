@@ -151,7 +151,6 @@ interface CjsModule {
   hot?: {
     accept(): void;
   };
-  __effectful_js_require: any;
 }
 
 export function module(
@@ -178,7 +177,6 @@ export function module(
   if (!require) require = <any>closSyms["__webpack_require__"];
   if (cjs) {
     if (cjs.hot) cjs.hot.accept();
-    cjs.__effectful_js_require = require;
   }
   regOpaqueObject(cjs, `cjs#${name}`);
   moduleChanged = !curModule;
@@ -192,6 +190,7 @@ export function module(
     regOpaqueObject(cjs, `${cjs.id}$mod`);
   }
   curModule.name = name;
+  curModule.require = require;
   curModule.fullPath = fullPath;
   curModule.id = id;
   context.moduleId = (cjs && cjs.id) || null;
@@ -926,7 +925,7 @@ export function compileEval(
     )(
       // exports,
       mod && (<any>mod).exports,
-      cjs && (cjs.__effectful_js_require || cjs.require),
+      mod && mod.require || cjs && cjs.require,
       mod,
       mod ? mod.fullPath : ".",
       mod && mod.fullPath ? path.dirname(mod.fullPath) : ""

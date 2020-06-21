@@ -333,9 +333,10 @@ module.exports = function compile(content, filename, module) {
               journal.savedDebug = savedDebug;
               disabled = false;
             }
+            const emodule = context.modulesById[module.id];
             run(
               module.exports,
-              module.__effectful_js_require,
+              emodule && emodule.require,
               module,
               filename,
               path.dirname(filename)
