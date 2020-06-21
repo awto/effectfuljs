@@ -2481,7 +2481,7 @@ function f_33(ctx, r) {
 
 function clasClosure_2(clasClosure) {
   var a;
-  clasClosure._B = class B extends A {
+  clasClosure._B = class B extends clasClosure._A {
     constructor() {
       var _clasClosure = clasClosure;
       _clasClosure._cnt++;
@@ -2534,7 +2534,7 @@ function f_42(ctx, r) {
 
 function clasClosure_3(clasClosure) {
   var a;
-  clasClosure._B1 = class B extends A {
+  clasClosure._B1 = class B extends clasClosure._A {
     constructor() {
       var _clasClosure = clasClosure;
       _clasClosure._cnt += 2;

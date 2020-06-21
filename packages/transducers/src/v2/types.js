@@ -165,8 +165,6 @@ export const symbolDefFor = OBJ_SYMBOLS
         };
         if (kind === "node") sym.esType = name;
         sym.sym = sym;
-      } else {
-        invariant(kind === sym.kind);
       }
       return sym;
     }
@@ -192,8 +190,6 @@ export const symbolDefFor = OBJ_SYMBOLS
         symbols[sym] = def;
       } else {
         def = symInfo(sym);
-        invariant(def);
-        invariant(kind === def.kind);
       }
       return def;
     }
@@ -218,8 +214,6 @@ export const symbolDefFor = OBJ_SYMBOLS
         symbols.set(sym, def);
       } else {
         def = symInfo(sym);
-        invariant(def);
-        invariant(kind === def.kind);
       }
       return def;
     };
@@ -324,12 +318,13 @@ for (const i in VISITOR_KEYS) {
             fieldsMap: new Map([[Tag.push, elem]])
           };
         } else if (chain[0].type === "string") {
-          invariant(chain[1].oneOf);
-          enumValues = chain[1].oneOf;
+          if (chain[1].oneOf)
+            enumValues = chain[1].oneOf;
           atomicType = "string";
           ty = null;
         } else {
-          throw new Error("not implemented");
+          ty = chain[0]
+          // throw new Error("not implemented");
         }
       }
     }
@@ -339,8 +334,8 @@ for (const i in VISITOR_KEYS) {
       } else if (ty.oneOfNodeTypes != null) {
         for (const k of ty.oneOfNodeTypes) {
           const p = Tag[k];
-          invariant(p);
-          nt.add(p);
+          if(p)
+            nt.add(p);
         }
       } else if (ty.oneOf != null) {
         const first = ty.oneOf.filter(i => i != null)[0];
@@ -357,8 +352,8 @@ for (const i in VISITOR_KEYS) {
             nillable = true;
           } else {
             const p = Tag[k];
-            invariant(p);
-            nt.add(p);
+            if (p)
+              nt.add(p);
           }
         }
       } else {
@@ -367,8 +362,7 @@ for (const i in VISITOR_KEYS) {
     }
     if (enumValues != null) {
       nillable = nillable || enumValues.indexOf(null) !== -1;
-      enumValues = enumValues.filter(i => i != null);
-      invariant(enumValues.filter(v => v.substr == null).length === 0);
+      enumValues = enumValues.filter(i => i != null);  
     }
     const expr = nt.has(Tag.Expression),
       lval = nt.has(Tag.LVal) || nt.has(Tag.PatternLike) || pos === Tag.local;
@@ -471,6 +465,8 @@ export const assignmentOpDefault = Object.assign({}, assignmentOpEq, {
 }
 export const assignmentPattern = symInfo(Tag.AssignmentPattern);
 export const objectProperty = symInfo(Tag.ObjectProperty);
+const keyProperty = objectProperty.fieldsMap.get(Tag.key)
+objectProperty.fieldsMap.set(Tag.key, Object.assign({}, keyProperty, {expr:false}));
 export const assignmentProperty = symbolDefFor("AssignmentProperty", "node");
 export const objectAssignmentPattern = symInfo(Tag.ObjectPattern);
 export const objectPattern = Object.assign({}, objectAssignmentPattern, {

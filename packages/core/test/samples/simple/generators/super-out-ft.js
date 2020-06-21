@@ -64,7 +64,7 @@ function aa_1(aa) {
     }
 
   };
-  aa._B = class B extends A {
+  aa._B = class B extends aa._A {
     method() {
       var ctx = M.context();
       ctx._aa = aa;
