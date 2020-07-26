@@ -1020,8 +1020,7 @@ context.onStop = function(_description?: string) {
 };
 
 function interruptibleStep() {
-  if (Comms.hasMessage()) State.afterInterrupt(interruptibleStep);
-  else Engine.step();
+  if (Comms.hasMessage()) State.afterInterrupt(interruptibleStep); else step();
 }
 
 function pause() {
