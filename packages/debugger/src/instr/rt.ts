@@ -7,7 +7,7 @@
  * TODO: transpile core-js instead
  */
 
-import { context, native } from "../state";
+import { native } from "../state";
 
 type Callback<This, T, R> = (
   this: This | undefined,
@@ -107,6 +107,19 @@ export function mcallCont(
   return func(args, prop, dummy());
 }
 
+export function useArrCopy(
+  copy: (this: any[]) => any[],
+  transform: (this: any[], ...args: any[]) => any,
+  set: (target: any, prop: any, value: any) => any
+): (this: any[], ...args: any[]) => any {
+  return function(this: any[]) {
+    const tmp = copy.apply(this);
+    const res = transform.apply(tmp, <any>arguments);
+    for (let i = 0, len = res.length; i < len; ++i) set(this, i, res[i]);
+    return this;
+  };
+}
+
 export function getOwnPropertySymbols(obj: object): symbol[] {
   const full = Reflect.ownKeys(obj);
   const res: symbol[] = [];
@@ -139,15 +152,16 @@ export function objectKeys(obj: object): string[] {
   return res;
 }
 
-export function objectGetOwnPropertyDescriptor(wrappers: WeakMap<any,any>, obj: object, name:string|symbol|number):PropertyDescriptor | undefined {
+export function objectGetOwnPropertyDescriptor(
+  wrappers: WeakMap<any, any>,
+  obj: object,
+  name: string | symbol | number
+): PropertyDescriptor | undefined {
   const res = native.Object.getOwnPropertyDescriptor(obj, name);
   if (wrappers && res) {
-    let {set, get} = res;
-    if (set && (set = wrappers.get(set)))
-      res.set = set;
-    if (get && (get = wrappers.get(get)))
-      res.get = get;
+    let { set, get } = res;
+    if (set && (set = wrappers.get(set))) res.set = set;
+    if (get && (get = wrappers.get(get))) res.get = get;
   }
   return res;
 }
-

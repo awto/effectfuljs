@@ -1,23 +1,19 @@
 const path = require("core-js-pure/internals/path");
+const isObject = require("core-js-pure/internals/is-object");
+const isArray = require("core-js-pure/internals/is-array");
+const toAbsoluteIndex = require("core-js-pure/internals/to-absolute-index");
+const toLength = require("core-js-pure/internals/to-length");
+const toIndexedObject = require("core-js-pure/internals/to-indexed-object");
+const createProperty = require("core-js-pure/internals/create-property");
+const max = Math.max;
 
 path.ArrayPrototype.push = function push() {
-  let ilen = this.length,
-    alen = arguments.length;
-  for (let i = 0; i < alen; ++i) {
-    this[ilen + i] = arguments[i];
-  }
-  return ilen + alen;
+  path.ArrayPrototype.splice.apply(this, [this.length, 0].concat(arguments));
+  return this.length;
 };
 
 path.ArrayPrototype.pop = function pop() {
-  let len = this.length;
-  if (len) {
-    --len;
-    const ret = this[len];
-    this.length = len;
-    return ret;
-  }
-  return void 0;
+  return path.ArrayPrototype.splice.call(this, -1, 1)[0];
 };
 
 path.ArrayPrototype.shift = function shift() {
@@ -25,9 +21,7 @@ path.ArrayPrototype.shift = function shift() {
 };
 
 path.ArrayPrototype.unshift = function unshift() {
-  const arr = Array.from(arguments);
-  arr.unshift(0, 0);
-  path.ArrayPrototype.splice.apply(this, arr);
+  path.ArrayPrototype.splice.apply(this, [0, 0].concat(arguments));
   return this.length;
 };
 
@@ -65,4 +59,30 @@ path.objectValues = function objectValues(obj) {
     ret.push(obj[prop]);
   }
   return ret;
+};
+
+path.ArrayPrototype.slice2 = function slice(start, end) {
+  var O = toIndexedObject(this);
+  var length = toLength(O.length);
+  var k = toAbsoluteIndex(start, length);
+  var fin = toAbsoluteIndex(end === undefined ? length : end, length);
+  var Constructor, result, n;
+  if (isArray(O)) {
+    Constructor = O.constructor;
+    if (
+      typeof Constructor == "function" &&
+      (Constructor === Array || isArray(Constructor.prototype))
+    ) {
+      Constructor = undefined;
+    } else if (isObject(Constructor)) {
+      Constructor = Constructor[SPECIES];
+      if (Constructor === null) Constructor = undefined;
+    }
+  }
+  result = new (Constructor === undefined ? Array : Constructor)(
+    max(fin - k, 0)
+  );
+  for (n = 0; k < fin; k++, n++) if (k in O) createProperty(result, n, O[k]);
+  result.length = n;
+  return result;
 };

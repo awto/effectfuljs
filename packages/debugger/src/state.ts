@@ -4,7 +4,7 @@
 // ensuring it is loaded before anything patched
 import "@effectful/serialization";
 import "@effectful/serialization/dom";
-import config from "./config"
+import config from "./config";
 
 export interface Env {
   /** local variables */
@@ -293,6 +293,8 @@ export interface State {
   onStop: () => void;
   /** unique number of this execution context */
   threadId: number;
+  /* signals we need to stop on next breakpoint with the reason */
+  stopNext: string | null;
 }
 
 /** known closures */
@@ -344,7 +346,8 @@ export const context: State = {
   onStop: nop,
   activeTop: null,
   threadId: 0,
-  exception: undef
+  exception: undef,
+  stopNext: null
 };
 
 export function nop() {
@@ -353,8 +356,8 @@ export function nop() {
 
 declare global {
   interface Function {
-    nativeCall(this:any,...args:any[]):any;
-    nativeApply(this:any,self:any,args:any[]):any;
+    nativeCall(this: any, ...args: any[]): any;
+    nativeApply(this: any, self: any, args: any[]): any;
   }
 }
 
@@ -404,7 +407,8 @@ export const native = {
     pop: Array.prototype.pop,
     splice: Array.prototype.splice,
     sort: Array.prototype.sort,
-    reverse: Array.prototype.reverse
+    reverse: Array.prototype.reverse,
+    slice: Array.prototype.slice
   },
   Map,
   Set,
@@ -443,7 +447,7 @@ export function throwToken() {
 
 export const token = { _effectToken: true };
 
-export const sideEffectToken = {_sideEffectToken:true}
+export const sideEffectToken = { _sideEffectToken: true };
 
 interface IdsStore {
   free(descriptor: number): void;

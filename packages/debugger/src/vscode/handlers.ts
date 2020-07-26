@@ -8,7 +8,9 @@ import {
   wrappers,
   sealed,
   notExtensible,
-  frozen
+  frozen,
+  setDataBreakpoint,
+  resetDataBreakpoints
 } from "../timeTravel/objects";
 import { ManagedMap, ManagedSet } from "../timeTravel/es";
 import * as TT from "../timeTravel/main";
@@ -19,6 +21,7 @@ import Comms from "./comms";
 import * as util from "util";
 import { map, filter } from "../kit";
 import * as Persist from "../persist";
+import { debug } from "console";
 
 const savedObject = State.native.Object;
 
@@ -425,6 +428,57 @@ handlers.childRestart = function(res) {
   }
 };
 
+handlers.dataBreakpointInfo = function({ variablesReference, name }, response) {
+  response.body = {
+    dataId: null,
+    accessTypes: undefined
+  };
+  const val = curValById.get(variablesReference);
+  const locRef = toLocal(variablesReference);
+  if (val && proxies) {
+    response.body.dataId = `${State.toThread(
+      variablesReference
+    )}@${locRef}#${name}`;
+    response.body.description = name;
+    response.body.accessTypes = ["write"]; // ["read", "write", "readWrite"];
+    response.body.canPersist = false; // locRef === 1;
+  }
+};
+
+const emptyArr: any[] = [];
+
+handlers.setDataBreakpoints = function(args, response) {
+  response.body = { breakpoints: [] };
+  resetDataBreakpoints();
+  for (const i of args.breakpoints) {
+    let [, locRef, name] = i.dataId.match(/@(\d+)#(.+)$/) || emptyArr;
+    let verified = !isNaN(locRef);
+    if (verified) {
+      const ref = State.toGlobal(+locRef);
+      let val = curValById.get(ref);
+      if (!val) {
+        verified = false;
+      } else {
+        if (val[variablesViewSym]) {
+          const scope = val.scope[name];
+          val = val.val;
+          if (!scope) verified = false;
+          else name = scope[0];
+        }
+        if (verified)
+          verified = setDataBreakpoint(
+            val,
+            name,
+            i.condition && ignoreError(compileEvalOnTop(i.condition), false),
+            i.hitCondition &&
+              ignoreError(compileEvalOnTop(i.hitCondition), undefined)
+          );
+      }
+    }
+    response.body.breakpoints.push({ id: i.id, verified });
+  }
+};
+
 let linStartAt1 = true;
 let colStartAt1 = true;
 
@@ -560,6 +614,7 @@ handlers.scopes = function(args, response) {
     if (brk && brk.scope) {
       const ref = newVarRef();
       const names = getKeys(brk.scope);
+
       const scopeDescr = {
         [variablesViewSym](variables: VarValue[]) {
           if (top) {
@@ -568,9 +623,9 @@ handlers.scopes = function(args, response) {
             else if (context.value !== void 0)
               variables.push(varValue("@result", context.value));
           }
-          const { scope } = brk;
           if (frame.self && frame.self !== global)
             variables.push(varValue("this", frame.self));
+          const { scope } = brk;
           const store = frame.$;
           const curScope = brk.scopeDepth;
           // tslint:disable-next-line:forin
@@ -582,6 +637,8 @@ handlers.scopes = function(args, response) {
             variables.push(varValue(i, cur[field]));
           }
         },
+        val: frame.$,
+        scope: brk.scope,
         ref,
         response: {
           name: meta.origName,
@@ -822,23 +879,16 @@ handlers.childLaunch = function(args, res) {
   if (config.verbose) trace(`DEBUGGER: launch ${JSON.stringify(args)}`);
 };
 
-function checkPause(
-  brk: State.Brk,
-  top: State.Frame
-):
-  | undefined
-  | "pause"
-  | "step"
-  | "next"
-  | "breakpoint"
-  | "stepOut"
-  | "debugger_statement"
-  | "entry"
-  | "interrupt" {
+function checkPause(brk: State.Brk, top: State.Frame): undefined | string {
   if (!context.debug) return undefined;
   if (awaitingThreads != null || (firstThread && config.stopOnEntry))
     return "entry";
   if (pauseNext) return "pause";
+  const { stopNext } = context;
+  if (stopNext) {
+    context.stopNext = null;
+    return stopNext;
+  }
   const { breakpoint: bp } = brk;
   if (
     bp &&
@@ -1128,11 +1178,13 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
         ? `(${i.condition}) && ${conditionExpr}`
         : `(${i.condition})`;
     const condition = conditionExpr
-      ? <any>compileEval(conditionExpr, func, info)
+      ? <any>ignoreError(compileEval(conditionExpr, func, info), false)
       : null;
     info.breakpoint = {
       condition,
-      hitCondition: i.hitCondition && compileEval(i.hitCondition, func, info),
+      hitCondition:
+        i.hitCondition &&
+        ignoreError(compileEval(i.hitCondition, func, info), undefined),
       hits: 0,
       signal() {
         event("breakpoint", { reason: "changed", breakpoint: diff });
@@ -1231,6 +1283,33 @@ handlers.evaluate = function(args, res) {
     indexedVariables: descr.indexedVariables
   };
 };
+
+function ignoreError(
+  fun: (frame: State.Frame) => any,
+  dflt: any
+): (frame: State.Frame) => any {
+  return function(frame: State.Frame) {
+    try {
+      return fun(frame);
+    } catch (e) {
+      if (config.verbose) {
+        // tslint:disable-next-line:no-console
+        console.error("ignored error", e);
+      }
+      return dflt;
+    }
+  };
+}
+
+function compileEvalOnTop(code: string): (frame: State.Frame) => any {
+  const frame = context.top || context.activeTop;
+  if (!frame) return <any>new State.native.Function(code);
+  return compileEval(
+    code,
+    frame.meta,
+    frame.brk || frame.meta.states[frame.state]
+  );
+}
 
 function compileEval(
   code: string,
@@ -1394,40 +1473,43 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
   State.cancelInterrupt();
   clearTimeout(restartTimeout);
   restartTimeout = 0;
+  if (!json) return;
   try {
     journal.enabled = false;
     const loadedModules = new Set<string>();
-    for (const i of (<any>json).modules) {
-      let module = context.modules[i.id];
-      loadedModules.add(i.id);
-      const { params } = i;
-      if (params) {
-        const parent = params.parent && context.modules[params.parent];
-        Engine.compileEval(
-          params.code,
-          parent,
-          params.evalContext,
-          params.scopeDepth,
-          params.blackbox,
-          params.params,
-          params.id
-        );
-        continue;
-      }
-      if (!i.cjs) continue;
-      if (!module || !module.cjs) {
-        for (const parent of i.parents) {
-          // this assumes parent modules are loaded first
-          const parentModule = context.modulesById[parent];
-          if (parentModule) {
-            const req = parentModule.require;
-            if (req) req(i.cjs);
-            break;
+    if (json.modules) {
+      for (const i of (<any>json).modules) {
+        let module = context.modules[i.id];
+        loadedModules.add(i.id);
+        const { params } = i;
+        if (params) {
+          const parent = params.parent && context.modules[params.parent];
+          Engine.compileEval(
+            params.code,
+            parent,
+            params.evalContext,
+            params.scopeDepth,
+            params.blackbox,
+            params.params,
+            params.id
+          );
+          continue;
+        }
+        if (!i.cjs) continue;
+        if (!module || !module.cjs) {
+          for (const parent of i.parents) {
+            // this assumes parent modules are loaded first
+            const parentModule = context.modulesById[parent];
+            if (parentModule) {
+              const req = parentModule.require;
+              if (req) req(i.cjs);
+              break;
+            }
           }
         }
+        module = Engine.getCurModule();
+        if (!module || !module.cjs) continue;
       }
-      module = Engine.getCurModule();
-      if (!module || !module.cjs) continue;
     }
     const state = S.read(
       json,

@@ -48,14 +48,16 @@ const globalNS = config.globalNS;
 
 const { journal, context, token, closures, functions, thunks } = State;
 const nativeFunction = native.Function;
-if ((<any>native.FunctionMethods).nativeCall)
-  throw new Error("DEBUGGER: INTERNAL: reloaing runtime");
+
+// if ((<any>native.FunctionMethods).nativeCall)
+//  throw new Error("DEBUGGER: INTERNAL: reloaing runtime");
 const nativeApply = native.FunctionMethods.apply;
-if (nativeApply.name === "defaultApply")
-  throw new Error("DEBUGGER: INTERNAL: nativeApply");
+// if (nativeApply.name === "defaultApply")
+//  throw new Error("DEBUGGER: INTERNAL: nativeApply");
 const nativeCall = native.FunctionMethods.call;
-if (nativeCall.name === "defaultCall")
-  throw new Error("DEBUGGER: INTERNAL: nativeCall");
+// if (nativeCall.name === "defaultCall")
+//  throw new Error("DEBUGGER: INTERNAL: nativeCall");
+
 const defineProperty = native.Object.defineProperty;
 const nativeToString = Function.prototype.toString;
 const weakMapSet = native.WeakMap.set;
@@ -925,7 +927,7 @@ export function compileEval(
     )(
       // exports,
       mod && (<any>mod).exports,
-      mod && mod.require || cjs && cjs.require,
+      (mod && mod.require) || (cjs && cjs.require),
       mod,
       mod ? mod.fullPath : ".",
       mod && mod.fullPath ? path.dirname(mod.fullPath) : ""
@@ -951,7 +953,7 @@ export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
-export function makeFrame(
+function makeFrameImpl(
   closure: any,
   meta: State.FunctionDescr,
   parent: State.Frame | null,
@@ -986,6 +988,21 @@ export function makeFrame(
   };
   return frame;
 }
+
+export const makeFrame =
+  config.timeTravel && config.implicitCalls
+    ? function makeFrame(
+        closure: any,
+        meta: State.FunctionDescr,
+        parent: State.Frame | null,
+        $: any,
+        newTarget: any
+      ): Frame {
+        const frame = makeFrameImpl(closure, meta, parent, $, newTarget);
+        if ($) $.slice = native.Array.slice;
+        return frame;
+      }
+    : makeFrameImpl;
 
 export function pushFrame(frame: Frame): any {
   const next = context.top;

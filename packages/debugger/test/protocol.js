@@ -189,7 +189,7 @@ function varValue(variablesReference, level, cb) {
   });
 }
 
-function stackSnapshot(cb, nm) {
+function stackSnapshot(cb) {
   _stackSnapshot();
   function _stackSnapshot() {
     if (terminated) cb(false);
@@ -319,9 +319,8 @@ function cont(request, onStop, onDone) {
     try {
       if (terminated) return onDone();
       if (onStop.length < 2) return onStop(_req);
-      return stackSnapshot(
-        snapshot => (snapshot ? onStop(_req, snapshot) : onDone()),
-        request
+      return stackSnapshot(snapshot =>
+        snapshot ? onStop(_req, snapshot) : onDone()
       );
     } catch (e) {
       return onDone(e);

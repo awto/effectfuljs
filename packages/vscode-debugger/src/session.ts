@@ -16,11 +16,15 @@ import {
 } from "vscode-debugadapter";
 
 import { DebugProtocol as P } from "./protocol";
-import { toThread, Handler } from "./comms";
+import { toThread, Handler as CommsHandler } from "./comms";
 import { Message } from "vscode-debugadapter/lib/messages";
 import { spawn, ChildProcess } from "child_process";
 import * as path from "path";
 import subscribe from "./wscomms";
+
+interface Handler extends CommsHandler {
+  dataBreakpoints?: Set<P.Breakpoint>;
+}
 
 const normalizeDrive =
   typeof process !== "undefined" && process.platform === "win32"
@@ -143,7 +147,8 @@ export class DebugSession extends SessionImpl {
   }
 
   private async closeRemote(remoteId: number) {
-    const hadThread = this.remotes.delete(remoteId);
+    const remote = this.remotes.get(remoteId);
+    this.remotes.delete(remoteId);
     for (const i of this.breakpointsIds.values()) {
       i.remotes.delete(remoteId);
       if (!i.remotes.size) {
@@ -151,7 +156,20 @@ export class DebugSession extends SessionImpl {
         this.sendEvent(new BreakpointEvent("changed", i.response));
       }
     }
-    if (hadThread) this.sendEvent(new ThreadEvent("exited", remoteId));
+    if (remote) {
+      if (remote.dataBreakpoints) {
+        for (const i of remote.dataBreakpoints) {
+          i.verified = false;
+          this.sendEvent(
+            new Event("breakpoint", {
+              reason: "changed",
+              breakpoint: { id: i.id, verified: false }
+            })
+          );
+        }
+      }
+      this.sendEvent(new ThreadEvent("exited", remoteId));
+    }
     if (!this.remotes.size) {
       const reconnect = this.awaitReconnect || 0;
       if (reconnect < 0) return;
@@ -261,6 +279,46 @@ export class DebugSession extends SessionImpl {
             return;
         }
         break;
+      case "setDataBreakpoints":
+        {
+          const args: any = request.arguments;
+          const byThread = new Map<number, P.DataBreakpoint[]>();
+          const responseBreakpoints: P.Breakpoint[] = [];
+          for (const i of args.breakpoints) {
+            if (i.enabled === false) continue;
+            const threadId: number = +(i.dataId?.match(/^(\d+)/) || [])[1];
+            if (isNaN(threadId)) continue;
+            const remote = this.remotes.get(threadId);
+            if (!remote) {
+              responseBreakpoints.push({ id: i.id, verified: false });
+              this.sendEvent(
+                new Event("breakpoint", {
+                  reason: "removed",
+                  breakpoint: { id: i.id }
+                })
+              );
+              continue;
+            }
+            let bps = byThread.get(threadId);
+            if (!bps) {
+              bps = [];
+              byThread.set(threadId, bps);
+            }
+            bps.push(i);
+            (
+              remote.dataBreakpoints || (remote.dataBreakpoints = new Set())
+            ).add(i);
+            responseBreakpoints.push({ id: i.id, verified: true });
+          }
+          for (const threadId of this.remotes.keys()) {
+            args.breakpoints = byThread.get(threadId) || [];
+            this.sendToThread(threadId, request);
+          }
+          const response = <P.SetDataBreakpointsResponse>new Response(request);
+          response.body = { breakpoints: responseBreakpoints };
+          this.sendResponse(response);
+        }
+        break;
       case "continue":
       case "next":
       case "stackTrace":
@@ -276,6 +334,7 @@ export class DebugSession extends SessionImpl {
       case "evaluate":
       case "setExpression":
       case "reverseContinue":
+      case "dataBreakpointInfo":
         const args: any = request.arguments;
         if (args.threadId != null) {
           if (this.sendToThread(args.threadId, request)) return;
@@ -348,6 +407,7 @@ export class DebugSession extends SessionImpl {
         case "childSetExceptionBreakpoints":
         case "childTerminate":
         case "childRestart":
+        case "setDataBreakpoints":
           return;
         case "childLaunch":
           if (!thread.name) thread.name = `Thread ${thread.id}`;
@@ -554,7 +614,8 @@ export class DebugSession extends SessionImpl {
         supportsStepBack: !!args.timeTravel,
         supportsRestartFrame: false,
         supportsRestartRequest: !!args.fastRestart || args.preset !== "node",
-        supportsEvaluateForHovers: !!args.timeTravel
+        supportsEvaluateForHovers: !!args.timeTravel,
+        supportsDataBreakpoints: !!args.timeTravel
       })
     );
     if (args.preset && !args.command) args.command = true;

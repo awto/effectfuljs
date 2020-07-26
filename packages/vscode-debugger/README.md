@@ -8,6 +8,7 @@ VSCode debugger for JavaScript/TypeScript. Besides the typical debugger's featur
 - Programmable API
 - Hot mocking of functions or even parts of a function
 - Hot code swapping
+- Data breakpoints
 
 This works by instrumenting JavaScript/TypeScript code and injecting necessary debugging API calls into it. It is implemented using [EffectfulJS](https://github.com/awto/effectfuljs).
 
@@ -264,6 +265,10 @@ if (typeof EDBG !== "undefined") {
 This snippet calls `restore` on restart (`onRestart` callback) and after some project file is changed and loaded file (`onHotSwapping` callback).
 
 Add `"timeTravelDisabled": true` so the initialization won't collect time-traveling traces, and only enable it when it is interesting. In the snippet above it is `EDBG.journal.enabled = true;` line.
+
+## Data breakpoints
+
+Data breakpoints require time traveling to work. It can be disabled if not needed with `"timeTravelDisabled": true` option. However, they are especially useful with time traveling. If you need to know what set some value, add a data breakpoint to it and run the execution backward. 
 
 ## Interoperating with runtime/native modules
 

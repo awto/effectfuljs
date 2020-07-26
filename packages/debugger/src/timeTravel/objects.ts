@@ -43,7 +43,7 @@ export interface KeysDescr {
   symMap: { [name: string]: KeysOrder };
 }
 
-enum ProxyTrapFlags {
+export enum ProxyTrapFlags {
   Set = 1 << 0,
   SetPrototypeOf = 1 << 1,
   DefineProperty = 1 << 2,
@@ -74,11 +74,81 @@ interface ProxyData {
   revoked?: boolean;
 }
 
+interface DataBreakpointInfo {
+  hits: number;
+  hitCondition?: (top: State.Frame) => number;
+  condition?: (top: State.Frame) => boolean;
+}
+
 const proxies: WeakMap<any, ProxyData> | null = config.implicitCalls
   ? new WeakMap()
   : null;
 
-export { proxies };
+interface DataBreakpointsDict {
+  [name: string]: DataBreakpointInfo;
+}
+
+let dataBreakpoints: WeakMap<any, DataBreakpointsDict> | null = null;
+
+export { proxies, dataBreakpoints };
+
+export function resetDataBreakpoints() {
+  dataBreakpoints = null;
+}
+
+function checkDataBreakpointActive(bp?: DataBreakpointInfo) {
+  const top = <State.Frame>context.top;
+  if (
+    !bp ||
+    (bp.condition && !bp.condition(top)) ||
+    (bp.hitCondition && bp.hitCondition(top) !== bp.hits++)
+  )
+    return false;
+  context.stopNext = "data breakpoint";
+  return true;
+}
+
+function checkDataBreakpointFromTo(
+  arr: any[],
+  from: number,
+  lengthChanged: boolean,
+  to: number = arr.length
+) {
+  const dict = dataBreakpoints?.get(arr);
+  if (!dict) return;
+  if (lengthChanged && checkDataBreakpointActive(dict["length"])) return;
+  for (let i = from; i < to; ++i)
+    if (checkDataBreakpointActive(dict[i])) return;
+}
+
+function checkDataBreakpoint(target: any, prop: any) {
+  if (!dataBreakpoints) return;
+  const dict = dataBreakpoints.get(target);
+  if (!dict) return;
+  checkDataBreakpointActive(dict[prop]);
+}
+
+export function setDataBreakpoint(
+  target: any,
+  prop: any,
+  condition?: (f: State.Frame) => boolean,
+  hitCondition?: (f: State.Frame) => number
+): boolean {
+  if (!proxies) return false;
+  if (!dataBreakpoints) dataBreakpoints = new WeakMap();
+  let bps = dataBreakpoints.get(target);
+  if (!bps) {
+    bps = {};
+    weakMapSet.call(dataBreakpoints, target, bps);
+  }
+  const bp: DataBreakpointInfo = {
+    hits: 0,
+    condition,
+    hitCondition
+  };
+  bps[prop] = bp;
+  return true;
+}
 
 if (proxies) opaqueWeakMap(proxies, "@effectful/debugger/proxies");
 
@@ -310,6 +380,7 @@ function setImpl(target: any, name: string, value: any, receiver: any) {
       if (descr) break;
       descrObj = Object.getPrototypeOf(descrObj);
     }
+    if (dataBreakpoints) checkDataBreakpoint(descrObj, name);
     if (descr && (descr.set || !descr.writable)) {
       context.call = set;
       return nativeReflectSet(target, name, value, receiver);
@@ -576,6 +647,7 @@ export const del: (
   name: string /* | symbol | number */
 ) => any = config.timeTravel
   ? function del(obj: any, name: string) {
+      if (dataBreakpoints) checkDataBreakpoint(obj, name);
       if (journal.enabled) {
         const unwrapped = proxies?.get(obj);
         if (unwrapped) {
@@ -601,6 +673,7 @@ export const del: (
 
 function propSetOp(this: any) {
   const { a: target, b: name, c: value } = this;
+  if (dataBreakpoints) checkDataBreakpoint(target, name);
   if (Object.prototype.hasOwnProperty.nativeCall(target, name)) {
     this.c = target[name];
   } else {
@@ -615,6 +688,7 @@ regOpaqueObject(propSetOp, "#pset");
 
 function propDelOp(this: any) {
   const { a: obj, b: name } = this;
+  if (dataBreakpoints) checkDataBreakpoint(obj, name);
   if (Object.prototype.hasOwnProperty.nativeCall(obj, name)) {
     this.call = propSetOp;
     this.c = obj[name];
@@ -627,6 +701,7 @@ regOpaqueObject(propDelOp, "#pdel");
 
 function delOp(this: any) {
   const { a: obj, b: name } = this;
+  if (dataBreakpoints) checkDataBreakpoint(obj, name);
   const cur = defaultGetOwnPropertyDescriptor(obj, name);
   if (cur) {
     this.call = objectDefinePropertyOp;
@@ -700,6 +775,7 @@ function objectIsExtensible(obj: any) {
 
 function objectSetPrototypeOfOp(this: any) {
   const { a: obj, b: proto } = this;
+  if (dataBreakpoints) checkDataBreakpoint(obj, "__proto__");
   this.b = nativeObject.getPrototypeOf(obj);
   record(this);
   nativeObject.setPrototypeOf(obj, proto);
@@ -708,6 +784,7 @@ function objectSetPrototypeOfOp(this: any) {
 regOpaqueObject(objectSetPrototypeOfOp, "#setp");
 
 function objectSetPrototypeOf(obj: any, prototype: any) {
+  if (dataBreakpoints) checkDataBreakpoint(obj, "__proto__");
   if (journal.enabled && context.call === objectSetPrototypeOf) {
     const unwrapped = proxies?.get(obj);
     if (unwrapped) {
@@ -777,6 +854,7 @@ function reflectDefineProperty(
   name: string,
   descr: PropertyDescriptor
 ): boolean {
+  if (dataBreakpoints) checkDataBreakpoint(obj, name);
   const unwrapped = proxies?.get(obj);
   if (unwrapped) {
     if (unwrapped.flags & ProxyTrapFlags.DefineProperty)
@@ -828,6 +906,7 @@ function objectDefineProperty(
 
 function objectDefinePropertyOp(this: any) {
   const { a: obj, b: name, c: descr } = this;
+  if (dataBreakpoints) checkDataBreakpoint(obj, name);
   const cur = defaultGetOwnPropertyDescriptor(obj, name);
   if (cur) {
     this.c = cur;
@@ -865,7 +944,7 @@ export function objectAssign(dest: any, ...args: any[]) {
         (context.call = Object.getOwnPropertyDescriptor)(value, name)
       );
       if (descr.enumerable)
-        set(dest, <any>name, descr.get ? descr.get.call(value) : descr.value)
+        set(dest, <any>name, descr.get ? descr.get.call(value) : descr.value);
     }
   }
   return dest;
@@ -880,6 +959,7 @@ export function recordProp(target: any, name: any) {
 
 function simpleSetOp(this: any) {
   const { a: target, b: name, c: value } = this;
+  if (dataBreakpoints) checkDataBreakpoint(target, name);
   this.c = target[name];
   record(this);
   target[name] = value;
@@ -893,6 +973,7 @@ regOpaqueObject(simpleSetOp, "#set$obj");
  *   - don't delete
  */
 export function simpleSet(target: any, name: any, value: any) {
+  if (dataBreakpoints) checkDataBreakpoint(target, name);
   if (journal.enabled) record3(simpleSetOp, target, name, target[name]);
   return (target[name] = value);
 }
@@ -1100,10 +1181,20 @@ export const nativeTypedArray = {
 
 function spliceOp(this: any) {
   let { a: arr, b: start, c: del, d: ins } = this;
-  this.c = ins.length;
+  const insNum = (this.c = ins.length);
   nativeArray.unshift.nativeCall(ins, start, del);
   const res = nativeApply(nativeArray.splice, arr, ins);
   this.d = Array.from(res);
+  if (dataBreakpoints) {
+    const diff = insNum - del;
+    const len = arr.length;
+    checkDataBreakpointFromTo(
+      arr,
+      start,
+      diff !== 0,
+      diff === 0 ? start + del : diff < 0 ? len : len + diff
+    );
+  }
   record(this);
 }
 
@@ -1119,24 +1210,8 @@ function spliceImpl(arr: any[], start: number, del: number, ins: any[]) {
   return res;
 }
 
-function arraySetLength(arr: any[], value: number) {
-  const len = arr.length;
-  const ins: any[] = [];
-  let start;
-  let del;
-  if (len < value) {
-    del = 0;
-    start = len;
-    ins.length = value - len;
-  } else {
-    del = len - value;
-    start = value;
-  }
-  spliceImpl(arr, start, del, ins);
-  return value;
-}
-
 function arraySet(arr: any[], name: string, value: any) {
+  if (dataBreakpoints) checkDataBreakpoint(arr, name);
   const unwrapped = proxies?.get(arr);
   if (unwrapped) {
     if (unwrapped.flags & ProxyTrapFlags.Set) {
@@ -1145,20 +1220,42 @@ function arraySet(arr: any[], name: string, value: any) {
     }
     arr = unwrapped.obj;
   }
-  if (name === "length") return arraySetLength(arr, value);
+  if (name === "length") {
+    const len = arr.length;
+    if (len === value) return len;
+    const ins: any[] = [];
+    let start;
+    let del;
+    let end;
+    if (len < value) {
+      del = 0;
+      start = len;
+      ins.length = value - len;
+      end = value;
+    } else {
+      del = len - value;
+      start = value;
+      end = len;
+    }
+    if (dataBreakpoints) checkDataBreakpointFromTo(arr, start, true, end);
+    spliceImpl(arr, start, del, ins);
+    return value;
+  }
   if (typeof name !== "symbol" && isInt(String(<any>name))) {
     const index = +name;
     const len = arr.length;
     const diff = index - len;
-    if (diff === 0) {
-      record1(arrayPopOp, arr);
-      arr[index] = value;
-      return value;
-    }
-    if (diff > 0) {
+    if (diff >= 0) {
+      if (dataBreakpoints) checkDataBreakpoint(arr, "length");
+      if (diff === 0) {
+        record1(arrayPopOp, arr);
+        arr[index] = value;
+        return value;
+      }
       const ins = [];
       ins[diff] = value;
       spliceImpl(arr, len, 0, ins);
+      if (dataBreakpoints) checkDataBreakpointFromTo(arr, len, true);
       return value;
     }
     record3(simpleSetOp, arr, name, arr[index]);
@@ -1175,6 +1272,10 @@ function arraySet(arr: any[], name: string, value: any) {
 
 function arrayPopOp(this: any) {
   this.b = nativeArray.pop.nativeCall(this.a);
+  if (dataBreakpoints) {
+    const len = this.a.length;
+    checkDataBreakpointFromTo(this.a, len, true, len + 1);
+  }
   this.call = arrayPush1Op;
   record(this);
 }
@@ -1184,6 +1285,10 @@ regOpaqueObject(arrayPopOp, "#arr$pop");
 export function arrayPop(this: any[]): any {
   if (this.length) {
     const res = nativeArray.pop.nativeCall(this);
+    if (dataBreakpoints) {
+      const len = this.length;
+      checkDataBreakpointFromTo(this, len, true, len + 1);
+    }
     if (journal.enabled && context.call === arrayPop) {
       context.call = null;
       record2(arrayPush1Op, this, res);
@@ -1198,18 +1303,22 @@ function arrayPush1Op(this: any) {
   this.b = null;
   this.call = arrayPopOp;
   record(this);
-  arr[arr.length] = value;
+  const len = arr.length;
+  arr[len] = value;
+  if (dataBreakpoints) checkDataBreakpointFromTo(arr, len, true, len + 1);
 }
 
 regOpaqueObject(arrayPush1Op, "#arr$push1");
 
 export function arrayPush(this: any[]): number {
+  const fromLen = this.length;
+  const argLen = arguments.length;
   const res = nativeApply(nativeArray.push, this, arguments);
+  if (dataBreakpoints) checkDataBreakpointFromTo(this, fromLen, argLen !== 0);
   if (journal.enabled && context.call === arrayPush) {
     context.call = null;
-    const len = arguments.length;
-    if (len === 1) record1(arrayPopOp, this);
-    else record4(spliceOp, this, this.length - len, len, []);
+    if (argLen === 1) record1(arrayPopOp, this);
+    else record4(spliceOp, this, fromLen, argLen, []);
   }
   return res;
 }
@@ -1217,6 +1326,7 @@ export function arrayPush(this: any[]): number {
 regOpaqueObject(arrayPush, "#arr$push");
 
 function arrayShiftOp(this: any) {
+  if (dataBreakpoints) checkDataBreakpointFromTo(this.a, 0, true);
   const res = nativeArray.shift.nativeCall(this.a);
   this.b = res;
   this.call = arrayUnshift1Op;
@@ -1226,7 +1336,9 @@ function arrayShiftOp(this: any) {
 regOpaqueObject(arrayShiftOp, "#arr$shift");
 
 export function arrayShift(this: any[]): any {
-  if (this.length) {
+  const len = this.length;
+  if (len) {
+    if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, true, len);
     const res = nativeArray.shift.nativeCall(this);
     if (journal.enabled && context.call === arrayShift) {
       context.call = null;
@@ -1242,6 +1354,7 @@ function arrayUnshift1Op(this: any) {
   (<any>nativeArray.unshift).nativeCall(arr, value);
   this.call = arrayShiftOp;
   this.b = null;
+  if (dataBreakpoints) checkDataBreakpointFromTo(arr, 0, true);
   record(this);
 }
 
@@ -1254,11 +1367,14 @@ export function arrayUnshift(this: any[]): number {
     if (alen === 1) record1(arrayShiftOp, this);
     else record4(spliceOp, this, 0, alen, []);
   }
-  return nativeApply(nativeArray.unshift, this, arguments);
+  const res = nativeApply(nativeArray.unshift, this, arguments);
+  if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, true);
+  return res;
 }
 
 function arrayReverseOp(this: any) {
   record(this);
+  if (dataBreakpoints) checkDataBreakpointFromTo(this.a, 0, false);
   nativeArray.reverse.nativeCall(this.a);
 }
 
@@ -1267,6 +1383,7 @@ export function arrayReverse(this: any[]): any[] {
     context.call = null;
     record1(arrayReverseOp, this);
   }
+  if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, false);
   return nativeArray.reverse.nativeCall(this);
 }
 
@@ -1277,6 +1394,7 @@ export function arraySort(this: any[], pred: any): any[] {
     context.call = null;
     record4(spliceOp, this, 0, this.length, Array.from(this));
   }
+  if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, false);
   return nativeArray.sort.nativeCall(this, pred);
 }
 
@@ -1286,6 +1404,21 @@ export function arraySplice(
   del: number,
   ...ins: any[]
 ) {
+  if (dataBreakpoints) {
+    const diff = ins.length - (del || 0);
+    const changed = diff !== 0;
+    const start = from < 0 ? this.length + from : from;
+    checkDataBreakpointFromTo(
+      this,
+      start,
+      changed,
+      changed
+        ? diff < 0
+          ? this.length
+          : this.length + diff
+        : start + (del || 0)
+    );
+  }
   if (journal.enabled && context.call === arraySplice) {
     context.call = null;
     return spliceImpl(this, from, del, ins);
@@ -1456,4 +1589,14 @@ export function patchWithPolifil(
     `@effectful/debugger/${proto.constructor.name}#${name}`
   );
   patch(proto, name, impl);
+}
+
+export function patchWithCopy(proto: any, name: string) {
+  const orig = proto[name];
+  return patchWithPolifil(
+    proto,
+    name,
+    orig,
+    Instr.useArrCopy(proto.slice, orig, arraySet)
+  );
 }

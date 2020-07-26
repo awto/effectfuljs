@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { DebugSession } from "./session";
 import * as Net from "net";
 
-const EMBED_DEBUG_ADAPTER = false;
+const EMBED_DEBUG_ADAPTER = true;
 
 function progress(title: string): () => void {
   let cb = () => {};

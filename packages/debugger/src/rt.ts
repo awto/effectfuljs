@@ -100,7 +100,7 @@ if (config.timeTravel && config.patchRT) {
     TT.arraySplice,
     CoreJS.ArrayPrototype.splice
   );
-  TT.patchWithPolifil(Ap, "slice", Ap.slice, CoreJS.ArrayPrototype.slice);
+  TT.patchWithPolifil(Ap, "slice", Ap.slice, CoreJS.ArrayPrototype.slice2);
   TT.patchWithPolifil(Ap, "concat", Ap.concat, CoreJS.ArrayPrototype.concat);
   TT.patchWithPolifil(Ap, "flat", Ap.flat, CoreJS.ArrayPrototype.flat);
   TT.patchWithPolifil(
@@ -109,6 +109,8 @@ if (config.timeTravel && config.patchRT) {
     Ap.copyWithin,
     CoreJS.ArrayPrototype.copyWithin
   );
+  TT.patchWithCopy(Ap, "reverse");
+  TT.patchWithCopy(Ap, "sort");
   patch(Tp, "set", TT.typedArraySet);
   patch(Tp, "sort", TT.typedArraySort);
   patch(Tp, "reverse", TT.typedArrayReverse);
