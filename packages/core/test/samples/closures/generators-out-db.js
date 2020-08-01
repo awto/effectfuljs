@@ -99,6 +99,8 @@ var $M = require("@effectful/debugger"),
     $m$2 = $M.fun("m$2", "mfs", null, $m$1, ["s"], 0, 4, "4:2-15:3", 130, function mfs($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
+      $l[2] = void 0;
+      $l[3] = void 0;
       $.result = $m$3($);
       $.goto = 2;
       continue;
@@ -113,7 +115,7 @@ var $M = require("@effectful/debugger"),
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 2, [[0, null, $s$3], [16, "15:3-15:3", $s$3], [16, "15:3-15:3", $s$3]]),
+}, null, null, 2, [[0, "5:8-5:9", $s$3], [16, "15:3-15:3", $s$3], [16, "15:3-15:3", $s$3]]),
     $m$3 = $M.fun("m$3", "kk", null, $m$2, ["k"], 0, 2, "6:11-14:5", 128, function kk($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -135,6 +137,7 @@ var $M = require("@effectful/debugger"),
     $m$4 = $M.fun("m$4", "vv", null, $m$3, ["ww"], 0, 3, "7:13-13:7", 130, function vv($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
+      $l[2] = void 0;
       $.goto = 2;
       return $yld($m$5($));
 

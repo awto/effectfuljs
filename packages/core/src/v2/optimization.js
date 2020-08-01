@@ -140,7 +140,7 @@ export function composeItems(root) {
     const rhs = i.rhs;
     if (rhs != null && rhs.prevRHS == null) {
       let itemNode = rhs;
-      for (let j = rhs; (j = j.parent); itemNode = j) { }
+      for (let j = rhs; (j = j.parent); itemNode = j) {}
       const item = itemNode.cfgItem;
       const prev = item.prevItem;
       if (!prev.eff && prev.sym === i) {

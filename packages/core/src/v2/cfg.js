@@ -530,18 +530,23 @@ export function build(needsSave = defaultNeedsSave) {
           const id = i.firstChild;
           const init = id.nextSibling;
           j = after(i);
-          if (init.pos !== Tag.init) continue;
+          if (init.pos !== Tag.init && i.parent.parent.node.kind === "var")
+            continue;
           const assign = Scope.assign(Tag.right);
           Kit.copyMeta(i, assign);
           assign.node.loc = i.node.loc;
-          const sym = tempSym(root, curScope);
-          enter(init, sym);
           Kit.detach(id);
           id.pos = Tag.left;
-          Kit.detach(init);
           Kit.append(assign, id);
           Dom.regPat(id);
-          Kit.append(assign, tempId(Tag.right, sym, curScope));
+          if (init.pos === Tag.init) {
+            const sym = tempSym(root, curScope);
+            enter(init, sym);
+            Kit.detach(init);
+            Kit.append(assign, tempId(Tag.right, sym, curScope));
+          } else {
+            Kit.append(assign, Kit.void0(Tag.right));
+          }
           push(newItem(null, assign, curScope));
           continue;
         }
@@ -733,10 +738,6 @@ export function build(needsSave = defaultNeedsSave) {
           curFinalizer = bodyBlock.finalizer;
           const testBlock = newBlock();
           const postfixBlock = newBlock();
-          if (i.isScopeNode) {
-            pushCopyScope();
-            curScope.copyScopeOp = lastItem;
-          }
           postfixBlock.br = scopeCleanupBlock;
           firstBlock.br = testBlock;
           setBlock(testBlock);

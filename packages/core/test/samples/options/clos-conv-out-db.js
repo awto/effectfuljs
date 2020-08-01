@@ -26,6 +26,7 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[2] = $m$1($);
       $l[3] = $m$3($);
+      $l[1] = void 0;
       $.goto = 1;
       ($context.call = eff_top)();
       $.state = 1;

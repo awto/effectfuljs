@@ -373,6 +373,9 @@ var $M = require("@effectful/debugger"),
 
   for (;;) switch ($.state = $.goto) {
     case 0:
+      $l[1] = void 0;
+      $l[2] = void 0;
+      $l[3] = void 0;
       $1 = $l[1];
       $l[1] = $1 + 1;
       $.goto = 1;

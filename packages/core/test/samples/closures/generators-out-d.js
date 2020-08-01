@@ -120,6 +120,8 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
+      $l[2] = void 0;
+      $l[3] = void 0;
       $.goto = 2;
       $brk();
       $.state = 2;
@@ -171,6 +173,7 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
+      $l[2] = void 0;
       $.goto = 2;
       $brk();
       $.state = 2;

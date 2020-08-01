@@ -134,13 +134,13 @@ export function cfgToDot(root, name = "") {
     if (i.br) {
       lines.push(
         `  ${i.deb_id} -> ${dest(i.br)}[style="${
-        i.unwind ? "dashed" : "solid"
-        }",color=${i.rec ? "red" : "black"}];`
+          i.unwind ? "dashed" : "solid"
+        }",color=${i.rec ? "yellow" : "black"}];`
       );
     }
     if (i.handler)
       lines.push(
-        `  ${i.deb_id} -> ${i.handler.deb_id}[style=dotted,color=green];`
+        `  ${i.deb_id} -> ${i.handler.deb_id}[style=dotted,color=red];`
       );
     if (i.finalizer)
       lines.push(

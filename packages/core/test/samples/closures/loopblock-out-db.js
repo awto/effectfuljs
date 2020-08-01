@@ -70,7 +70,6 @@ var $M = require("@effectful/debugger"),
       $.state = 5;
 
     case 5:
-      $l = $.$ = $l.slice();
       $.state = 6;
 
     case 6:

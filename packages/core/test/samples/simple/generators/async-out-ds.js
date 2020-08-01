@@ -880,7 +880,6 @@ var $M = require("@effectful/debugger"),
       $.state = 4;
 
     case 4:
-      $l = $.$ = $l.slice();
       $.state = 5;
 
     case 5:
@@ -1093,7 +1092,6 @@ var $M = require("@effectful/debugger"),
       $.state = 5;
 
     case 5:
-      $l = $.$ = $l.slice();
       $.state = 6;
 
     case 6:
@@ -1206,7 +1204,6 @@ var $M = require("@effectful/debugger"),
       $.state = 26;
 
     case 26:
-      $l = $.$ = $l.slice();
       $.state = 27;
 
     case 27:
@@ -1327,7 +1324,6 @@ var $M = require("@effectful/debugger"),
       $.state = 49;
 
     case 49:
-      $l = $.$ = $l.slice();
       $.state = 50;
 
     case 50:
@@ -1448,7 +1444,6 @@ var $M = require("@effectful/debugger"),
       $.state = 72;
 
     case 72:
-      $l = $.$ = $l.slice();
       $.state = 73;
 
     case 73:
@@ -1574,7 +1569,6 @@ var $M = require("@effectful/debugger"),
       $.state = 96;
 
     case 96:
-      $l = $.$ = $l.slice();
       $.state = 97;
 
     case 97:
@@ -1700,7 +1694,6 @@ var $M = require("@effectful/debugger"),
       $.state = 120;
 
     case 120:
-      $l = $.$ = $l.slice();
       $.state = 121;
 
     case 121:
@@ -1834,7 +1827,6 @@ var $M = require("@effectful/debugger"),
       $.state = 146;
 
     case 146:
-      $l = $.$ = $l.slice();
       $.state = 147;
 
     case 147:
@@ -2081,7 +2073,6 @@ var $M = require("@effectful/debugger"),
       $.state = 191;
 
     case 191:
-      $l = $.$ = $l.slice();
       $.state = 192;
 
     case 192:
@@ -2143,7 +2134,6 @@ var $M = require("@effectful/debugger"),
       $.state = 203;
 
     case 203:
-      $l = $.$ = $l.slice();
       $.state = 204;
 
     case 204:
@@ -3431,7 +3421,6 @@ var $M = require("@effectful/debugger"),
       $.state = 7;
 
     case 7:
-      $l = $.$ = $l.slice();
       $.state = 8;
 
     case 8:
@@ -3480,7 +3469,6 @@ var $M = require("@effectful/debugger"),
       $.state = 16;
 
     case 16:
-      $l = $.$ = $l.slice();
       $.state = 17;
 
     case 17:

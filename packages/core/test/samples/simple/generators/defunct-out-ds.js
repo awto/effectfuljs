@@ -380,7 +380,6 @@ var $M = require("@effectful/debugger"),
       $.state = 3;
 
     case 3:
-      $l = $.$ = $l.slice();
       $.state = 4;
 
     case 4:
