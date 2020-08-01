@@ -458,7 +458,7 @@ var $M = require("@effectful/debugger"),
       $.state = 18;
 
     case 18:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, void 0, $l[4], void 0, void 0, void 0, void 0, void 0, void 0];
       $.goto = 4;
       continue;
 

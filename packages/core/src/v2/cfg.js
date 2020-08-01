@@ -530,7 +530,12 @@ export function build(needsSave = defaultNeedsSave) {
           const id = i.firstChild;
           const init = id.nextSibling;
           j = after(i);
-          if (init.pos !== Tag.init && i.parent.parent.node.kind === "var")
+          if (
+            init.pos !== Tag.init &&
+            (!i.parentLoop ||
+              i.parentLoop.isScopeNode ||
+              i.parent.parent.node.kind === "var")
+          )
             continue;
           const assign = Scope.assign(Tag.right);
           Kit.copyMeta(i, assign);
@@ -689,6 +694,7 @@ export function build(needsSave = defaultNeedsSave) {
           const rsym = tempSym(root, curScope);
           enter(right, rsym);
           const iterSym = tempSym(root, curScope);
+          i.loopScope.add(iterSym);
           push(
             opItem(
               iterSym,
@@ -961,23 +967,24 @@ export function build(needsSave = defaultNeedsSave) {
     Kit.append(closOp, Kit.num(Tag.property, 0));
     push(newItem(localsSym, op, null));
   }
-  function pushCopyScope() {
-    const op = Kit.assign(Tag.push);
-    Kit.append(op, Kit.memExpr(Tag.left, ctxSym, "$"));
-    const sliceOp = Kit.node(Tag.right, Tag.CallExpression);
-    Kit.append(sliceOp, Kit.memExpr(Tag.callee, localsSym, "slice"));
-    Kit.append(sliceOp, Kit.arr(Tag.arguments));
-    Kit.append(op, sliceOp);
-    push(newItem(localsSym, op, null));
-  }
-  function pushPushScope() {
+  function pushScope(parentExpr) {
     const op = Kit.assign(Tag.push);
     Kit.append(op, Kit.memExpr(Tag.left, ctxSym, "$"));
     const arrExpr = Kit.append(op, Kit.node(Tag.right, Tag.ArrayExpression));
     const exprs = Kit.append(arrExpr, Kit.arr(Tag.elements));
-    Kit.append(exprs, Kit.id(Tag.push, localsSym));
+    Kit.append(exprs, parentExpr);
     push(newItem(localsSym, op, null));
     return exprs;
+  }
+  function pushCopyScope() {
+    // debugger;
+    const memExpr = Kit.tok(Tag.push, Tag.MemberExpression, { computed: true });
+    Kit.append(memExpr, Kit.id(Tag.object, localsSym));
+    Kit.append(memExpr, Kit.num(Tag.property, 0));
+    return pushScope(memExpr);
+  }
+  function pushPushScope() {
+    return pushScope(Kit.id(Tag.push, localsSym));
   }
   function loop(i, init, test, update, body, postTest) {
     const exitBlock = newBlock();
@@ -1047,10 +1054,7 @@ export function build(needsSave = defaultNeedsSave) {
       traverse(body, after(body));
       cntLabels = parLabels;
     } else traverse(body, after(body));
-    if (i.isScopeNode) {
-      pushCopyScope();
-      curScope.copyScopeOp = lastItem;
-    }
+    if (i.isScopeNode) i.copyScopeExpr = pushCopyScope();
     curCnt = parCnt;
     curBrk = parBrk;
     lastBlock.br = cnt;

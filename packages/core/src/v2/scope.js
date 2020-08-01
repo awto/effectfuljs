@@ -458,7 +458,7 @@ export function index(root) {
   for (let i = root.firstChild; i !== root; i = next(i)) {
     const parent = i.parent;
     const isFunc = parent.isFuncScope;
-    const isLoop = parent.isLoopScope;
+    const isLoop = !!parent.loopScope;
     let parentBlock = (i.parentBlock = parent.isBlockScope
       ? parent
       : parent.parentBlock);
@@ -513,7 +513,7 @@ export function index(root) {
       case Tag.WhileStatement:
       case Tag.DoWhileStatement:
       case Tag.ForStatement: {
-        i.isLoopScope = true;
+        i.loopScope = new Set();
         isBlockScope = true;
         i.isScopeNode = loopsSubscopeAlways;
         isStmt = true;
@@ -909,10 +909,19 @@ function assignSym(root) {
   }
   for (let i = idDecls; i; i = i.nextIdDecl) {
     const { sym } = i;
-    if (i.pos === Tag.id && i.parent.type === Tag.VariableDeclarator)
+    const parent = i.parent;
+    if (i.pos === Tag.id && parent.type === Tag.VariableDeclarator) {
       sym.hasWrite = sym.singleWrite =
         i.nextSibling.pos === Tag.init && i.parentLoop == null;
-    else sym.hasWrite = sym.singleWrite = true;
+      if (i.parentLoop) {
+        const decl = parent.parent.parent;
+        if (decl.pos === Tag.init && decl.node.kind !== "var") {
+          const maybeLoop = decl.parent;
+          if (maybeLoop.type === Tag.ForStatement)
+            maybeLoop.loopScope.add(i.sym);
+        }
+      }
+    } else sym.hasWrite = sym.singleWrite = true;
   }
   for (let i = root.nextId; i !== root; i = i.nextId) {
     const name = i.node.name;

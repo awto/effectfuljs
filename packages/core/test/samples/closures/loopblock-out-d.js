@@ -167,7 +167,7 @@ var $M = require("@effectful/debugger"),
       $.state = 23;
 
     case 23:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, void 0, void 0, $l[5], void 0, void 0, void 0, void 0];
       $.goto = 8;
       continue;
 

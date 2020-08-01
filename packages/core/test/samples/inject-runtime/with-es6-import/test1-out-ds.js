@@ -424,7 +424,7 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 44:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], $l[1], void 0, void 0];
       $.goto = 22;
       continue;
 

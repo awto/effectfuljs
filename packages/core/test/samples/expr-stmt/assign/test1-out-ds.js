@@ -446,7 +446,7 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 18:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0];
       $lset($l[0], 4,
       /*_n*/
       true);
@@ -807,7 +807,7 @@ var $M = require("@effectful/debugger"),
       $.state = 22;
 
     case 22:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0]];
       $.goto = 14;
       continue;
 
@@ -984,7 +984,7 @@ var $M = require("@effectful/debugger"),
       $.state = 14;
 
     case 14:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0]];
       $.goto = 11;
       continue;
 
@@ -1411,7 +1411,7 @@ var $M = require("@effectful/debugger"),
       $.state = 10;
 
     case 10:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0]];
       $lset($l[0], 3,
       /*i*/
       $l[0][3] + 1);

@@ -864,7 +864,7 @@ var $M = require("@effectful/debugger"),
       return $yld($l[1]);
 
     case 12:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 5;
       continue;
 

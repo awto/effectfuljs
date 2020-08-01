@@ -593,7 +593,7 @@ var $M = require("@effectful/debugger"),
     case 2:
       if ($l[1] < 10) {
         $l[0][1][$l[1]] = $m$13($);
-        $l = $.$ = $l.slice();
+        $l = $.$ = [$l[0], $l[1], void 0];
         $.goto = 2;
         continue;
       } else {
@@ -695,7 +695,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $l[2][$l[3]] = $p;
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], $l[1], void 0, void 0, void 0];
       $.goto = 2;
       continue;
 
@@ -805,7 +805,7 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $l[2][$l[3]] = $p;
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], $l[1], void 0, void 0, void 0];
       $.goto = 2;
       continue;
 

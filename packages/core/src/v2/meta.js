@@ -151,11 +151,27 @@ export function scopes(decls) {
   const file = Ctx.root;
   let num = 0;
   const rootScopeDepth = config.scopeDepth;
+  const localsSym = file.localsSym;
   for (let i = file.scopes; i; i = i.nextScope) {
     const exprs = i.pushScopeExpr;
     if (exprs) {
+      const copyExprs = i.copyScopeExpr;
       const numVars = i.scopeDecls.size + i.symScopePool.varCount;
-      for (let i = 0; i < numVars; ++i) Kit.append(exprs, Kit.void0(Tag.push));
+      const loopScopeIdxs = new Set();
+      for (const j of i.loopScope) loopScopeIdxs.add(j.varSym.index - 1);
+      for (let i = 0; i < numVars; ++i) {
+        Kit.append(exprs, Kit.void0(Tag.push));
+        if (loopScopeIdxs.has(i)) {
+          const memExpr = Kit.tok(Tag.push, Tag.MemberExpression, {
+            computed: true
+          });
+          Kit.append(memExpr, Kit.id(Tag.object, localsSym));
+          Kit.append(memExpr, Kit.num(Tag.property, i + 1));
+          Kit.append(copyExprs, memExpr);
+        } else {
+          Kit.append(copyExprs, Kit.void0(Tag.push));
+        }
+      }
     }
   }
   for (let i = file.firstChild; i; i = i.nextFunc) {

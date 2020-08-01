@@ -37,9 +37,6 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $lset($l, 1,
-      /*i*/
-      void 0);
       $.goto = 2;
       $brk();
       $.state = 2;

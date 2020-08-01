@@ -5,9 +5,8 @@ const toAbsoluteIndex = require("core-js-pure/internals/to-absolute-index");
 const toLength = require("core-js-pure/internals/to-length");
 const toIndexedObject = require("core-js-pure/internals/to-indexed-object");
 const createProperty = require("core-js-pure/internals/create-property");
-const wellKnownSymbol = require("../internals/well-known-symbol");
 const max = Math.max;
-const SPECIES = wellKnownSymbol("species");
+const SPECIES = Symbol.species;
 
 path.ArrayPrototype.push = function push() {
   path.ArrayPrototype.splice.apply(this, [this.length, 0].concat(arguments));

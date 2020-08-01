@@ -953,7 +953,7 @@ export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
-function makeFrameImpl(
+export function makeFrame(
   closure: any,
   meta: State.FunctionDescr,
   parent: State.Frame | null,
@@ -988,21 +988,6 @@ function makeFrameImpl(
   };
   return frame;
 }
-
-export const makeFrame =
-  config.timeTravel && config.implicitCalls
-    ? function makeFrame(
-        closure: any,
-        meta: State.FunctionDescr,
-        parent: State.Frame | null,
-        $: any,
-        newTarget: any
-      ): Frame {
-        const frame = makeFrameImpl(closure, meta, parent, $, newTarget);
-        if ($) $.slice = native.Array.slice;
-        return frame;
-      }
-    : makeFrameImpl;
 
 export function pushFrame(frame: Frame): any {
   const next = context.top;

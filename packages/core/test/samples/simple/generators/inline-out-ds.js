@@ -1320,7 +1320,7 @@ var $M = require("@effectful/debugger"),
       $.state = 12;
 
     case 12:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 4;
       continue;
 
@@ -1480,7 +1480,7 @@ var $M = require("@effectful/debugger"),
       $.state = 14;
 
     case 14:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 4;
       continue;
 
@@ -1643,7 +1643,7 @@ var $M = require("@effectful/debugger"),
       $.state = 12;
 
     case 12:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 4;
       continue;
 
@@ -1803,7 +1803,7 @@ var $M = require("@effectful/debugger"),
       $.state = 14;
 
     case 14:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 4;
       continue;
 
@@ -1973,7 +1973,7 @@ var $M = require("@effectful/debugger"),
       $.state = 14;
 
     case 14:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 4;
       continue;
 
@@ -2276,7 +2276,7 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 24:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 16;
       continue;
 
@@ -2672,7 +2672,7 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 24:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 16;
       continue;
 
@@ -3068,7 +3068,7 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 24:
-      $l = $.$ = $l.slice();
+      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
       $.goto = 16;
       continue;
 
