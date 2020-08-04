@@ -137,7 +137,7 @@ string literal parameter ("par" or "seq"):
 import * as M from "@effectful/es"
 
 async function parDemo() {
-  M.pofile("par");
+  M.profile("par");
   const a = await A;
   {
     M.profile("seq")
