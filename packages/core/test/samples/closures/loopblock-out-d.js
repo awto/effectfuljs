@@ -4,6 +4,7 @@ var $M = require("@effectful/debugger"),
     $context = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
+    $raise = $M.raise,
     $brk = $M.brk,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -108,8 +109,8 @@ var $M = require("@effectful/debugger"),
       $.state = 12;
 
     case 12:
-      $l[0][3] = 27;
-      $.goto = 26;
+      $l[0][3] = 29;
+      $.goto = 28;
       continue;
 
     case 13:
@@ -172,39 +173,45 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 24:
-      $.goto = 25;
-      $iterFin($l[5]);
-      $.state = 25;
+      return $raise($.error);
 
     case 25:
+      $.goto = 26;
+      $iterFin($l[5]);
+      $.state = 26;
+
+    case 26:
       $.goto = $l[4];
       continue;
 
-    case 26:
+    case 27:
+      return $raise($.error);
+
+    case 28:
       $l = $.$ = $l[0];
       $.goto = $l[3];
       continue;
 
-    case 27:
-      $.goto = 28;
-      $brk();
-      $.state = 28;
-
-    case 28:
-      $.goto = 29;
-      ($context.call = eff)(8, $l[2], $l[1]);
-      $.state = 29;
-
     case 29:
-      $.goto = 31;
+      $.goto = 30;
       $brk();
-      continue;
+      $.state = 30;
 
     case 30:
       $.goto = 31;
-      return $unhandled($.error);
+      ($context.call = eff)(8, $l[2], $l[1]);
+      $.state = 31;
 
     case 31:
+      $.goto = 33;
+      $brk();
+      continue;
+
+    case 32:
+      $.goto = 33;
+      return $unhandled($.error);
+
+    case 33:
       return $ret($.result);
 
     default:
@@ -212,12 +219,13 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 26:
     case 25:
     case 24:
     case 12:
     case 7:
-      $l[0][3] = 30;
-      $.goto = 26;
+      $.goto = 28;
+      $l[0][3] = 27;
       break;
 
     case 23:
@@ -235,23 +243,22 @@ var $M = require("@effectful/debugger"),
     case 10:
     case 9:
     case 8:
-      $l[4] = 26;
-      $l[0][3] = 30;
-      $.goto = 24;
+      $.goto = 25;
+      $l[4] = 24;
       break;
 
     default:
-      $.goto = 30;
-      break;
+      $.goto = 32;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 26:
     case 25:
     case 24:
     case 12:
     case 7:
-      $l[0][3] = 31;
-      $.goto = 26;
+      $l[0][3] = 33;
+      $.goto = 28;
       break;
 
     case 23:
@@ -269,16 +276,16 @@ var $M = require("@effectful/debugger"),
     case 10:
     case 9:
     case 8:
-      $l[4] = 26;
-      $l[0][3] = 31;
-      $.goto = 24;
+      $l[4] = 28;
+      $l[0][3] = 33;
+      $.goto = 25;
       break;
 
     default:
-      $.goto = 31;
+      $.goto = 33;
       break;
   }
-}, 1, [[4, "2:2-2:9", $s$2], [2, "2:2-2:8", $s$2], [4, "3:2-3:12", $s$2], [4, "4:2-22:3", $s$2], [2, "4:16-4:25", $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$2], [0, null, $s$2], [4, "4:11-4:12", $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [4, "5:4-5:17", $s$3], [2, "5:4-5:16", $s$3], [4, "6:4-7:16", $s$3], [4, "7:6-7:15", $s$3], [4, "8:4-8:8", $s$3], [4, "9:4-20:7", $s$3], [2, "9:4-20:6", $s$3], [4, "21:4-21:20", $s$3], [2, "21:4-21:19", $s$3], [36, "22:3-22:3", $s$2], [0, null, $s$2], [2, "4:16-4:25", $s$3], [0, null, $s$2], [0, null, $s$2], [4, "23:2-23:15", $s$2], [2, "23:2-23:14", $s$2], [36, "24:1-24:1", $s$2], [16, "24:1-24:1", $s$2], [16, "24:1-24:1", $s$2]]),
+}, 1, [[4, "2:2-2:9", $s$2], [2, "2:2-2:8", $s$2], [4, "3:2-3:12", $s$2], [4, "4:2-22:3", $s$2], [2, "4:16-4:25", $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$3], [0, null, $s$3], [4, "4:11-4:12", $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [4, "5:4-5:17", $s$3], [2, "5:4-5:16", $s$3], [4, "6:4-7:16", $s$3], [4, "7:6-7:15", $s$3], [4, "8:4-8:8", $s$3], [4, "9:4-20:7", $s$3], [2, "9:4-20:6", $s$3], [4, "21:4-21:20", $s$3], [2, "21:4-21:19", $s$3], [36, "22:3-22:3", $s$3], [0, null, $s$3], [0, null, $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$3], [0, null, $s$2], [0, null, $s$2], [4, "23:2-23:15", $s$2], [2, "23:2-23:14", $s$2], [36, "24:1-24:1", $s$2], [16, "24:1-24:1", $s$2], [16, "24:1-24:1", $s$2]]),
     $m$2 = $M.fun("m$2", "b", null, $m$1, ["k"], 2, 3, "9:8-20:5", 0, function b($, $l, $p) {
   var $2, $1;
 

@@ -285,6 +285,8 @@ export function methodCalls() {
     const callee = i.firstChild;
     if (callee.type !== Tag.MemberExpression) continue;
     const obj = callee.firstChild;
+    // helping webpack
+    if (obj.type === Tag.Identifier && obj.sym === Scope.requireSym) continue;
     const args = callee.nextSibling;
     Kit.replace(callee, Scope.sysId(callee.pos, opSym));
     let prop = Kit.detach(obj.nextSibling);
@@ -304,6 +306,16 @@ export function assignCall() {
   const opSym = Scope.contextSym;
   for (let i = root.nextCallExpression; i !== root; i = i.nextCallExpression) {
     const callee = i.firstChild;
+    if (callee.type === Tag.Import) continue;
+    let calleeObj;
+    if (callee.type === Tag.MemberExpression) {
+      calleeObj = callee.firstChild;
+      if (
+        calleeObj.type === Tag.Identifier &&
+        calleeObj.sym === Scope.requireSym
+      )
+        continue;
+    }
     if (
       i.type === Tag.CallExpression &&
       callee.type === Tag.Identifier &&

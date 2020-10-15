@@ -54,6 +54,7 @@ export function calcFrames(root) {
   const errFrame = (errBlock.frame = frame = newFrame(
     (consequent = Kit.arr(Tag.consequent))
   ));
+  let commonErrDynFrame = null;
   Kit.assignStmt(
     consequent,
     Kit.memExpr(Tag.left, ctxSym, "goto"),
@@ -205,13 +206,6 @@ export function calcFrames(root) {
       }
       case EXIT_DYN_BR: {
         const { ibr, errCopy } = block;
-        if (errCopy) {
-          Kit.assignStmt(
-            consequent,
-            Kit.memExpr(Tag.left, ctxSym, "error"),
-            Scope.idExpr(Tag.right, errCopy, block.scope)
-          );
-        }
         Kit.assignStmt(
           consequent,
           Kit.memExpr(Tag.left, ctxSym, "goto"),
@@ -220,6 +214,15 @@ export function calcFrames(root) {
         (frame.nextDynExit = (block.nextDynExit =
           frame.nextDynExit).prevDynExit = block).prevDynExit = frame;
         Kit.append(consequent, Kit.node(Tag.push, tagContinue));
+        if (errCopy || !commonErrDynFrame) {
+          block.errDynFrame = newFrame((consequent = Kit.arr(Tag.consequent)));
+          injectSysCall(
+            Scope.raiseSym,
+            errCopy
+              ? Scope.idExpr(Tag.right, errCopy, block.scope)
+              : Kit.memExpr(Tag.left, ctxSym, "error")
+          );
+        } else block.errDynFrame = commonErrDynFrame;
         break;
       }
     }
@@ -259,6 +262,7 @@ export function calcFrames(root) {
     frame.nextEffExit = frame.prevEffExit = frame;
     frame.nextEffSkipExit = frame.prevEffSkipExit = frame;
     frame.nextPureExit = frame.prevPureExit = frame;
+    frame.brkFlags = 0;
     frame.exitKind = EXIT_BR;
     return frame;
   }
@@ -378,7 +382,7 @@ function handler(root) {
   );
   const func = Kit.node(Tag.push, Tag.FunctionExpression);
   const idSym = root.origFunc.idSym;
-  if (/*config.debug && */ idSym && !idSym.anonymous) {
+  if (idSym && !idSym.anonymous) {
     let name = idSym.orig;
     if (root.origFunc.type === Tag.File)
       name = name.replace(/(?:^\d)|\W/g, "_");
@@ -425,83 +429,96 @@ function errHandler(root) {
   const { handlers, finalizers, errBlock } = root;
   if (!handlers.size && !finalizers.size)
     return Kit.node(Tag.push, Tag.NullLiteral);
+  const ctxSym = Ctx.root.ctxSym;
   const { lastFrame, errFrame } = root;
-  const rootScope = root.origFunc;
   const assignTemp = config.expInjectTempSetters ? assignTempOp : assignTempDir;
   handlers.add(errBlock);
-  for (const i of handlers) i.handlersMap = new Map();
+  const cases = Kit.arr(Tag.cases);
+  let consequent = null;
+  let byFinalizer = new Map();
+  let byHandler = new Map();
   for (let i = lastFrame.prevFrame; i !== lastFrame; i = i.prevFrame) {
     const { block } = i;
     const { scope, finalizer, handler } = block;
     if ((!handler || handler === errBlock) && !finalizer) continue;
-    const rootHandler = handler || errBlock;
-    const byScope = rootHandler.handlersMap;
-    let byFinalizer = byScope.get(scope);
-    if (!byFinalizer) byScope.set(scope, (byFinalizer = new Map()));
-    let frames = byFinalizer.get(finalizer);
-    if (!frames) byFinalizer.set(finalizer, (frames = new Set()));
-    frames.add(i);
-  }
-  const cases = Kit.arr(Tag.cases);
-  let consequent = null;
-  for (const i of handlers) {
-    const byScope = i.handlersMap;
-    for (let [scope, byFinalizer] of byScope) {
-      for (const frames of byFinalizer.values()) {
-        let j;
-        for (j of frames) {
-          const switchCase = Kit.append(
-            cases,
-            Kit.node(Tag.push, Tag.SwitchCase)
-          );
-          Kit.append(switchCase, Kit.num(Tag.test, j.id));
-          Kit.append(switchCase, (consequent = Kit.arr(Tag.consequent)));
-        }
-        gotoUnwind(
-          consequent,
-          i.frame,
-          j.block,
-          i.finalizer,
-          scope,
-          true,
-          assignTemp
+    let frames;
+    if (!finalizer || handler.finalizer === finalizer) {
+      frames = byHandler.get(handler);
+      if (!frames) byHandler.set(handler, (frames = []));
+    } else {
+      let byScope = byFinalizer.get(finalizer);
+      if (!byScope)
+        byFinalizer.set(
+          finalizer,
+          (byScope = new Map([[scope, (frames = [])]]))
         );
+      else {
+        frames = byScope.get(scope);
+        if (!frames) byScope.set(scope, (frames = []));
       }
     }
+    frames.push(i);
+  }
+  for (const [finalizer, byScope] of byFinalizer) {
+    for (const [scope, frames] of byScope) {
+      frameCaseTests(frames);
+      Kit.assignStmt(
+        consequent,
+        Kit.memExpr(Tag.left, ctxSym, "goto"),
+        Kit.num(Tag.right, finalizer.frame.id)
+      );
+      const tail = finalizer.tail;
+      assignTemp(
+        consequent,
+        tail.ibr,
+        scope,
+        Kit.num(Tag.right, (tail.errDynFrame || errFrame).id)
+      );
+      if (tail.errCopy)
+        assignTemp(
+          consequent,
+          tail.errCopy,
+          scope,
+          Kit.memExpr(Tag.right, ctxSym, "error")
+        );
+      Kit.append(consequent, Kit.node(Tag.push, Tag.BreakStatement));
+    }
+  }
+  for (const [handler, frames] of byHandler) {
+    frameCaseTests(frames);
+    Kit.assignStmt(
+      consequent,
+      Kit.memExpr(Tag.left, ctxSym, "goto"),
+      Kit.num(Tag.right, handler.frame.id)
+    );
+    Kit.append(consequent, Kit.node(Tag.push, Tag.BreakStatement));
   }
   const switchCase = Kit.node(Tag.push, Tag.SwitchCase);
   consequent = Kit.append(switchCase, Kit.arr(Tag.consequent));
-  gotoUnwind(consequent, errFrame, null, null, rootScope, true, assignTemp);
+  Kit.assignStmt(
+    consequent,
+    Kit.memExpr(Tag.left, ctxSym, "goto"),
+    Kit.num(Tag.right, errFrame.id)
+  );
   Kit.append(cases, switchCase);
   return mapFunc(cases);
+
+  function frameCaseTests(frames) {
+    for (const frame of frames) {
+      const switchCase = Kit.append(cases, Kit.node(Tag.push, Tag.SwitchCase));
+      Kit.append(switchCase, Kit.num(Tag.test, frame.id));
+      Kit.append(switchCase, (consequent = Kit.arr(Tag.consequent)));
+    }
+  }
 }
 
-function gotoUnwind(
-  consequent,
-  dst,
-  from,
-  till,
-  scope,
-  injectErrCopy,
-  assignTemp
-) {
+function gotoUnwind(consequent, dst, from, till, scope, assignTemp) {
   let cont = dst;
   let i;
   const ctxSym = Ctx.root.ctxSym;
   if (from && (i = from.finalizer) !== till) {
     let n, last;
     cont = i.frame;
-    const tail = i.tail;
-    if (injectErrCopy) {
-      const errCopy = tail.errCopy;
-      if (errCopy)
-        assignTemp(
-          consequent,
-          errCopy,
-          scope,
-          Kit.memExpr(Tag.right, ctxSym, "error")
-        );
-    }
     do {
       n = i.finalizer;
       last = n === till;
@@ -559,7 +576,6 @@ function finHandler(root) {
         j.block,
         null,
         j.block.scope,
-        false,
         assignTemp
       );
     }
@@ -567,7 +583,7 @@ function finHandler(root) {
   const switchCase = Kit.node(Tag.push, Tag.SwitchCase);
   Kit.append(cases, switchCase);
   Kit.append(switchCase, (consequent = Kit.arr(Tag.consequent)));
-  gotoUnwind(consequent, resFrame, null, null, rootScope, false, assignTemp);
+  gotoUnwind(consequent, resFrame, null, null, rootScope, assignTemp);
   return mapFunc(cases);
 }
 
@@ -734,6 +750,8 @@ export function module() {
   Kit.append(args, Kit.emitConst(Tag.push, config.moduleParams));
   Meta.scopes(decls);
   constrs(decls);
+  if (config.outFileDirective)
+    Kit.exprStmt(block, Kit.str(Tag.expression, config.outFileDirective))
   if (decls.firstChild) Kit.append(Kit.append(block, Kit.varDecl()), decls);
   if (config.moduleExports)
     Kit.append(

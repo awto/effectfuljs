@@ -70,7 +70,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 4;
-      break;
   }
 }, null, 1, [[0, null, $s$2], [3, "3:4-3:10", $s$2], [0, null, $s$2], [2, "5:4-5:18", $s$3], [16, "7:1-7:1", $s$2], [16, "7:1-7:1", $s$2]]);
 

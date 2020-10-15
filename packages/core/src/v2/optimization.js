@@ -209,7 +209,10 @@ export function sortFrames(root) {
     const { block } = job;
     if (block) {
       const { finalizer, handler } = block;
-      if (finalizer) schedule(finalizer.frame);
+      if (finalizer) {
+        schedule(finalizer.frame);
+        if (finalizer.tail.errDynFrame) schedule(finalizer.tail.errDynFrame);
+      }
       if (handler) schedule(handler.frame);
     }
     for (let i = job.nextDynExit; i !== job; i = i.nextDynExit)

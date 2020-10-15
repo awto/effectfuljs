@@ -158,7 +158,8 @@ export function newSym(name) {
     varSym: null,
     frameLocal: false,
     temp: false,
-    param: false
+    param: false,
+    metaArgs: null
   };
   res.varSym = res;
   return res;
@@ -872,14 +873,21 @@ function assignSym(root) {
         break;
       case Tag.param:
         block = declClause.parentBlock;
+        unordered = false;
         break;
       case Tag.params:
         block = declClause.parentFunc;
+        unordered = false;
         break;
     }
     const name = i.node.name;
     if (block) {
-      if (sloppyProgram && unordered && block.type === Tag.File) {
+      if (
+        sloppyProgram &&
+        evalParams == null &&
+        unordered &&
+        block.type === Tag.File
+      ) {
         sym = fileGlobals.get(name);
         if (!sym) {
           sym = newSym(name, true);
@@ -889,7 +897,7 @@ function assignSym(root) {
         }
       } else {
         sym = block.blockVars.get(name);
-        if (sym && !(sym.unordered && unordered))
+        if (sym && !sym.unordered && !unordered)
           throw Kit.error(`Identifier ${name} has already been declared`, i);
         if (!sym) sym = newSym(name);
         block.blockVars.set(name, sym);

@@ -1,3 +1,4 @@
+// *- SKIP
 M.option({
   defunct: true,
   contextState: true,

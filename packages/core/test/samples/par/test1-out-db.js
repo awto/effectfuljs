@@ -1342,14 +1342,14 @@ var $M = require("@effectful/debugger"),
         $.state = 1;
       } else {
         $l[15] = Symbol.iterator;
-        $.goto = 20;
+        $.goto = 22;
         $p = ($context.call = Object)($l[1]);
         continue;
       }
 
     case 1:
       if ($l[14]) {
-        $.goto = 22;
+        $.goto = 24;
         continue;
       } else {
         $.state = 2;
@@ -1386,8 +1386,8 @@ var $M = require("@effectful/debugger"),
       }
 
     case 7:
-      $l[10] = 19;
-      $.goto = 12;
+      $l[10] = 21;
+      $.goto = 13;
       continue;
 
     case 8:
@@ -1418,68 +1418,74 @@ var $M = require("@effectful/debugger"),
       $.error = void 0;
       $l[5] = true;
       $l[6] = $l[9];
-      $l[10] = 19;
-      $.state = 12;
+      $l[10] = 21;
+      $.goto = 13;
+      continue;
 
     case 12:
-      $.state = 13;
+      return $raise($l[11]);
 
     case 13:
+      $.state = 14;
+
+    case 14:
       $1 = !$l[4];
 
       if ($1) {
         $1 = $l[7]["return"] != null;
-        $.state = 14;
-      } else {
-        $.state = 14;
-      }
-
-    case 14:
-      if ($1) {
-        $.goto = 15;
-        $mcall("return", $l[7]);
         $.state = 15;
       } else {
         $.state = 15;
       }
 
     case 15:
-      $l[12] = 18;
-      $.state = 16;
-
-    case 16:
-      if ($l[5]) {
-        $.goto = 17;
-        return $raise($l[6]);
+      if ($1) {
+        $.goto = 16;
+        $mcall("return", $l[7]);
+        $.state = 16;
       } else {
-        $.state = 17;
+        $.state = 16;
       }
 
+    case 16:
+      $l[12] = 20;
+      $.goto = 18;
+      continue;
+
     case 17:
-      $.error = $l[13];
+      return $raise($l[13]);
+
+    case 18:
+      if ($l[5]) {
+        $.goto = 19;
+        return $raise($l[6]);
+      } else {
+        $.state = 19;
+      }
+
+    case 19:
       $.goto = $l[12];
       continue;
 
-    case 18:
-      $.error = $l[11];
+    case 20:
       $.goto = $l[10];
       continue;
 
-    case 19:
+    case 21:
       $.result = $l[3];
-      $.goto = 22;
+      $.goto = 24;
       continue;
 
-    case 20:
+    case 22:
       $l[14] = !($l[15] in $p);
       $.goto = 1;
       continue;
 
-    case 21:
-      $.goto = 22;
+    case 23:
+      $.goto = 24;
       return $unhandled($.error);
 
-    case 22:
+    case 24:
       return $ret($.result);
 
     default:
@@ -1487,6 +1493,20 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 16:
+    case 15:
+    case 14:
+      $.goto = 18;
+      $l[12] = 17;
+      $l[13] = $.error;
+      break;
+
+    case 11:
+      $.goto = 13;
+      $l[10] = 12;
+      $l[11] = $.error;
+      break;
+
     case 10:
     case 9:
     case 8:
@@ -1498,23 +1518,8 @@ var $M = require("@effectful/debugger"),
       $.goto = 11;
       break;
 
-    case 15:
-    case 14:
-    case 13:
-      $l[13] = $.error;
-      $l[12] = 21;
-      $.goto = 16;
-      break;
-
-    case 11:
-      $l[11] = $.error;
-      $l[10] = 21;
-      $.goto = 12;
-      break;
-
     default:
-      $.goto = 21;
-      break;
+      $.goto = 23;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -1527,22 +1532,22 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 4:
     case 3:
-      $l[10] = 22;
-      $.goto = 12;
+      $l[10] = 24;
+      $.goto = 13;
       break;
 
+    case 16:
     case 15:
     case 14:
-    case 13:
-      $l[12] = 22;
-      $.goto = 16;
+      $l[12] = 24;
+      $.goto = 18;
       break;
 
     default:
-      $.goto = 22;
+      $.goto = 24;
       break;
   }
-}, 1, [[2, null, $s$7], [0, null, $s$7], [0, null, $s$7], [3, null, $s$7], [1, null, $s$7], [3, null, $s$7], [3, null, $s$7], [1, null, $s$7], [1, null, $s$7], [1, null, $s$7], [1, null, $s$7], [0, null, $s$8], [0, null, $s$7], [0, null, $s$7], [2, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [16, null, $s$7], [16, null, $s$7]]),
+}, 1, [[2, null, $s$7], [0, null, $s$7], [0, null, $s$7], [3, null, $s$7], [1, null, $s$7], [3, null, $s$7], [3, null, $s$7], [1, null, $s$7], [1, null, $s$7], [1, null, $s$7], [1, null, $s$7], [0, null, $s$8], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [2, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [0, null, $s$7], [16, null, $s$7], [16, null, $s$7]]),
     $m$6 = $M.fun("m$6", "_arrayWithHoles", null, $m$0, ["arr"], 0, 2, null, 128, function _arrayWithHoles($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -5795,7 +5800,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 8;
-      break;
   }
 }, null, 1, [[2, "679:2-679:12", $s$82], [3, "681:4-681:13", $s$82], [3, "682:4-682:13", $s$82], [2, "687:2-687:11", $s$82], [2, "684:10-684:16", $s$83], [2, "684:4-684:16", $s$83], [2, "685:10-685:16", $s$83], [2, "685:4-685:16", $s$83], [16, "688:1-688:1", $s$82], [16, "688:1-688:1", $s$82]]),
     $m$75 = $M.fun("m$75", "p66", null, $m$0, [], 0, 2, "690:0-700:1", 129, function p66($, $l, $p) {
@@ -5855,7 +5859,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 8;
-      break;
   }
 }, null, 1, [[2, "692:2-692:12", $s$84], [3, "694:4-694:13", $s$84], [3, "695:4-695:13", $s$84], [0, null, $s$84], [2, "697:10-697:16", $s$85], [2, "697:4-697:16", $s$85], [2, "698:10-698:16", $s$85], [2, "698:4-698:16", $s$85], [16, "700:1-700:1", $s$84], [16, "700:1-700:1", $s$84]]),
     $m$76 = $M.fun("m$76", "p67", null, $m$0, [], 0, 2, "702:0-710:1", 129, function p67($, $l, $p) {
@@ -5901,7 +5904,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 5;
-      break;
   }
 }, null, 1, [[2, "704:2-704:12", $s$86], [3, "706:4-706:13", $s$86], [3, "707:4-707:13", $s$86], [2, "709:2-709:11", $s$86], [0, "708:11-708:12", $s$87], [16, "710:1-710:1", $s$86], [16, "710:1-710:1", $s$86]]),
     $m$77 = $M.fun("m$77", "p68", null, $m$0, [], 0, 3, "712:0-726:1", 129, function p68($, $l, $p) {
@@ -5958,11 +5960,6 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 3:
-    case 2:
-      $.goto = 6;
-      break;
-
     case 7:
     case 6:
     case 4:
@@ -5970,9 +5967,13 @@ var $M = require("@effectful/debugger"),
       $.goto = 8;
       break;
 
+    case 3:
+    case 2:
+      $.goto = 6;
+      break;
+
     default:
       $.goto = 9;
-      break;
   }
 }, null, 1, [[0, null, $s$88], [3, "715:4-715:14", $s$88], [3, "717:6-717:15", $s$88], [3, "718:6-718:15", $s$88], [3, "722:4-722:13", $s$88], [0, null, $s$88], [3, "720:12-720:18", $s$89], [3, "720:6-720:18", $s$89], [2, "724:4-724:13", $s$90], [16, "726:1-726:1", $s$88], [16, "726:1-726:1", $s$88]]),
     $m$78 = $M.fun("m$78", "p69", null, $m$0, [], 0, 3, "728:0-741:1", 129, function p69($, $l, $p) {
@@ -6028,11 +6029,6 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 3:
-    case 2:
-      $.goto = 6;
-      break;
-
     case 7:
     case 6:
     case 4:
@@ -6040,9 +6036,13 @@ var $M = require("@effectful/debugger"),
       $.goto = 8;
       break;
 
+    case 3:
+    case 2:
+      $.goto = 6;
+      break;
+
     default:
       $.goto = 9;
-      break;
   }
 }, null, 1, [[0, null, $s$91], [3, "731:4-731:14", $s$91], [3, "733:6-733:15", $s$91], [3, "734:6-734:15", $s$91], [1, null, $s$91], [0, null, $s$91], [3, "736:12-736:18", $s$92], [3, "736:6-736:18", $s$92], [2, "739:4-739:13", $s$93], [16, "741:1-741:1", $s$91], [16, "741:1-741:1", $s$91]]),
     $m$79 = $M.fun("m$79", "p70", null, $m$0, [], 0, 2, "743:0-755:1", 129, function p70($, $l, $p) {
@@ -6097,7 +6097,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 7;
-      break;
   }
 }, null, 1, [[2, "744:2-744:16", $s$94], [0, "746:5-746:10", $s$94], [3, "748:6-748:15", $s$94], [3, "749:6-749:15", $s$94], [2, "754:2-754:11", $s$94], [2, "751:12-751:18", $s$95], [2, "751:6-751:18", $s$95], [16, "755:1-755:1", $s$94], [16, "755:1-755:1", $s$94]]),
     $m$80 = $M.fun("m$80", "p71", null, $m$0, [], 0, 7, "757:0-788:1", 129, function p71($, $l, $p) {
@@ -6218,14 +6217,14 @@ var $M = require("@effectful/debugger"),
       return $awt(t_c_f_1);
 
     case 4:
-      $.goto = 14;
+      $.goto = 15;
       return $awt(t_5_f_3);
 
     case 5:
       if (break_or_cont) {
         if (or_cont) {
           $l[1] = 2;
-          $.goto = 9;
+          $.goto = 10;
           continue;
         } else {
           $.goto = 8;
@@ -6240,36 +6239,39 @@ var $M = require("@effectful/debugger"),
       return $awt(t_c_c_1);
 
     case 7:
-      $l[1] = 12;
-      $.goto = 9;
+      $l[1] = 13;
+      $.goto = 10;
       return $awt(t_5_c_3);
 
     case 8:
       $l[1] = 3;
-      $.state = 9;
+      $.goto = 10;
+      continue;
 
     case 9:
-      $.goto = 10;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 10:
       $.goto = 11;
-      return $awt(f_2);
+      return $awt(f_1);
 
     case 11:
-      $.error = $l[2];
+      $.goto = 12;
+      return $awt(f_2);
+
+    case 12:
       $.goto = $l[1];
       continue;
 
-    case 12:
+    case 13:
       $.goto = 2;
       continue;
 
-    case 13:
-      $.goto = 14;
+    case 14:
+      $.goto = 15;
       return $unhandledA($.error);
 
-    case 14:
+    case 15:
       return $retA($.result);
 
     default:
@@ -6281,14 +6283,13 @@ var $M = require("@effectful/debugger"),
     case 7:
     case 6:
     case 5:
+      $.goto = 10;
+      $l[1] = 9;
       $l[2] = $.error;
-      $l[1] = 13;
-      $.goto = 9;
       break;
 
     default:
-      $.goto = 13;
-      break;
+      $.goto = 14;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -6296,15 +6297,15 @@ var $M = require("@effectful/debugger"),
     case 7:
     case 6:
     case 5:
-      $l[1] = 14;
-      $.goto = 9;
+      $l[1] = 15;
+      $.goto = 10;
       break;
 
     default:
-      $.goto = 14;
+      $.goto = 15;
       break;
   }
-}, 1, [[2, "792:2-792:15", $s$97], [2, "793:2-793:15", $s$97], [0, null, $s$97], [2, "807:2-807:15", $s$97], [2, "808:2-808:15", $s$97], [0, null, $s$97], [2, "800:6-800:19", $s$97], [2, "801:6-801:19", $s$97], [0, null, $s$97], [2, "803:6-803:15", $s$97], [2, "804:6-804:15", $s$97], [0, null, $s$97], [0, null, $s$97], [16, "809:1-809:1", $s$97], [16, "809:1-809:1", $s$97]]),
+}, 1, [[2, "792:2-792:15", $s$97], [2, "793:2-793:15", $s$97], [0, null, $s$97], [2, "807:2-807:15", $s$97], [2, "808:2-808:15", $s$97], [0, null, $s$97], [2, "800:6-800:19", $s$97], [2, "801:6-801:19", $s$97], [0, null, $s$97], [0, null, $s$97], [2, "803:6-803:15", $s$97], [2, "804:6-804:15", $s$97], [0, null, $s$97], [0, null, $s$97], [16, "809:1-809:1", $s$97], [16, "809:1-809:1", $s$97]]),
     $m$82 = $M.fun("m$82", "p73", null, $m$0, [], 0, 3, "811:0-822:1", 129, function p73($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -6316,32 +6317,34 @@ var $M = require("@effectful/debugger"),
       return $awt(t_c_c_1);
 
     case 2:
-      $l[1] = 6;
-      $.goto = 3;
+      $l[1] = 7;
+      $.goto = 4;
       return $awt(t_5_c_3);
 
     case 3:
-      $.goto = 4;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 4:
       $.goto = 5;
-      return $awt(f_2);
+      return $awt(f_1);
 
     case 5:
-      $.error = $l[2];
+      $.goto = 6;
+      return $awt(f_2);
+
+    case 6:
       $.goto = $l[1];
       continue;
 
-    case 6:
-      $.goto = 8;
+    case 7:
+      $.goto = 9;
       return $awt(t_c_f_1);
 
-    case 7:
-      $.goto = 8;
+    case 8:
+      $.goto = 9;
       return $unhandledA($.error);
 
-    case 8:
+    case 9:
       return $retA($.result);
 
     default:
@@ -6351,28 +6354,27 @@ var $M = require("@effectful/debugger"),
   switch ($.state) {
     case 2:
     case 1:
+      $.goto = 4;
+      $l[1] = 3;
       $l[2] = $.error;
-      $l[1] = 7;
-      $.goto = 3;
       break;
 
     default:
-      $.goto = 7;
-      break;
+      $.goto = 8;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 2:
     case 1:
-      $l[1] = 8;
-      $.goto = 3;
+      $l[1] = 9;
+      $.goto = 4;
       break;
 
     default:
-      $.goto = 8;
+      $.goto = 9;
       break;
   }
-}, 1, [[2, "813:2-813:15", $s$98], [2, "815:4-815:17", $s$98], [2, "816:4-816:17", $s$98], [2, "818:4-818:13", $s$98], [2, "819:4-819:13", $s$98], [0, null, $s$98], [2, "821:2-821:15", $s$98], [16, "822:1-822:1", $s$98], [16, "822:1-822:1", $s$98]]),
+}, 1, [[2, "813:2-813:15", $s$98], [2, "815:4-815:17", $s$98], [2, "816:4-816:17", $s$98], [0, null, $s$98], [2, "818:4-818:13", $s$98], [2, "819:4-819:13", $s$98], [0, null, $s$98], [2, "821:2-821:15", $s$98], [16, "822:1-822:1", $s$98], [16, "822:1-822:1", $s$98]]),
     $m$83 = $M.fun("m$83", "p74", null, $m$0, [], 0, 3, "824:0-833:1", 129, function p74($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -6384,24 +6386,26 @@ var $M = require("@effectful/debugger"),
       return $awt(t_c_c_1);
 
     case 2:
-      $l[1] = 4;
-      $.goto = 3;
+      $l[1] = 5;
+      $.goto = 4;
       return $awt(t_5_c_3);
 
     case 3:
-      $.error = $l[2];
+      return $raise($l[2]);
+
+    case 4:
       $.goto = $l[1];
       continue;
 
-    case 4:
-      $.goto = 6;
+    case 5:
+      $.goto = 7;
       return $awt(t_c_f_1);
 
-    case 5:
-      $.goto = 6;
+    case 6:
+      $.goto = 7;
       return $unhandledA($.error);
 
-    case 6:
+    case 7:
       return $retA($.result);
 
     default:
@@ -6411,28 +6415,27 @@ var $M = require("@effectful/debugger"),
   switch ($.state) {
     case 2:
     case 1:
+      $.goto = 4;
+      $l[1] = 3;
       $l[2] = $.error;
-      $l[1] = 5;
-      $.goto = 3;
       break;
 
     default:
-      $.goto = 5;
-      break;
+      $.goto = 6;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 2:
     case 1:
-      $l[1] = 6;
-      $.goto = 3;
+      $l[1] = 7;
+      $.goto = 4;
       break;
 
     default:
-      $.goto = 6;
+      $.goto = 7;
       break;
   }
-}, 1, [[2, "826:2-826:15", $s$99], [2, "828:4-828:17", $s$99], [2, "829:4-829:17", $s$99], [0, null, $s$99], [2, "832:2-832:15", $s$99], [16, "833:1-833:1", $s$99], [16, "833:1-833:1", $s$99]]),
+}, 1, [[2, "826:2-826:15", $s$99], [2, "828:4-828:17", $s$99], [2, "829:4-829:17", $s$99], [0, null, $s$99], [0, null, $s$99], [2, "832:2-832:15", $s$99], [16, "833:1-833:1", $s$99], [16, "833:1-833:1", $s$99]]),
     $m$84 = $M.fun("m$84", "p75", null, $m$0, [], 0, 1, "835:0-846:1", 129, function p75($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -6546,7 +6549,7 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       if (cond_2) {
-        $.goto = 81;
+        $.goto = 84;
         return $awt(t_5_b_8);
       } else {
         $.state = 2;
@@ -6555,7 +6558,7 @@ var $M = require("@effectful/debugger"),
     case 2:
       if (cond_1) {
         if (re_cond) {
-          $.goto = 80;
+          $.goto = 83;
           return $awt(t_c_c_2);
         } else {
           $.state = 3;
@@ -6575,11 +6578,11 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       if (check_1) {
-        $.goto = 79;
+        $.goto = 82;
         continue;
       } else {
         if (check_3) {
-          $.goto = 77;
+          $.goto = 80;
           continue;
         } else {
           $.state = 6;
@@ -6593,10 +6596,10 @@ var $M = require("@effectful/debugger"),
     case 7:
       if (cond_m_1) {
         if (cond_m_2) {
-          $.goto = 75;
+          $.goto = 78;
           continue;
         } else {
-          $.goto = 76;
+          $.goto = 79;
           return $awt(m_1);
         }
       } else {
@@ -6609,7 +6612,7 @@ var $M = require("@effectful/debugger"),
 
     case 9:
       if (conct_T_t1) {
-        $.goto = 69;
+        $.goto = 71;
         continue;
       } else {
         $.state = 10;
@@ -6628,7 +6631,7 @@ var $M = require("@effectful/debugger"),
         if (t_5_4) {
           $.state = 13;
         } else {
-          $.goto = 68;
+          $.goto = 70;
           return $awt(t_5_b_9);
         }
       } else {
@@ -6659,7 +6662,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 14:
-      $.goto = 68;
+      $.goto = 70;
       continue;
 
     case 15:
@@ -6703,9 +6706,9 @@ var $M = require("@effectful/debugger"),
     case 24:
       if ($p) {
         if (p2) {
-          $l[5] = 63;
-          $l[3] = 67;
-          $.goto = 32;
+          $l[5] = 65;
+          $l[3] = 69;
+          $.goto = 33;
           continue;
         } else {
           $.goto = 31;
@@ -6722,9 +6725,9 @@ var $M = require("@effectful/debugger"),
 
     case 26:
       if ($p) {
-        $l[5] = 63;
-        $l[3] = 83;
-        $.goto = 32;
+        $l[5] = 65;
+        $l[3] = 86;
+        $.goto = 33;
         continue;
       } else {
         $.state = 27;
@@ -6737,9 +6740,9 @@ var $M = require("@effectful/debugger"),
     case 28:
       if ($p) {
         $.result = 10;
-        $l[5] = 63;
-        $l[3] = 83;
-        $.goto = 32;
+        $l[5] = 65;
+        $l[3] = 86;
+        $.goto = 33;
         continue;
       } else {
         $.state = 29;
@@ -6750,8 +6753,8 @@ var $M = require("@effectful/debugger"),
       return $awt(s_3);
 
     case 30:
-      $l[5] = 35;
-      $.goto = 32;
+      $l[5] = 36;
+      $.goto = 33;
       return $awt(p_2);
 
     case 31:
@@ -6759,266 +6762,272 @@ var $M = require("@effectful/debugger"),
       return $awt(p_1_1);
 
     case 32:
-      $.goto = 33;
-      return $awt(p_3);
+      return $raise($l[6]);
 
     case 33:
       $.goto = 34;
-      return $awt(p_4);
+      return $awt(p_3);
 
     case 34:
-      $.error = $l[6];
+      $.goto = 35;
+      return $awt(p_4);
+
+    case 35:
       $.goto = $l[5];
       continue;
 
-    case 35:
-      $.goto = 36;
+    case 36:
+      $.goto = 37;
       return $awt(p_5);
 
-    case 36:
+    case 37:
       if (t_5_1) {
-        $.goto = 38;
+        $.goto = 39;
         return $awt(t_5_b_1);
       } else {
-        $.state = 37;
+        $.state = 38;
       }
 
-    case 37:
-      $l[3] = 66;
-      $.goto = 63;
+    case 38:
+      $l[3] = 68;
+      $.goto = 65;
       return $awt(p_6);
 
-    case 38:
-      $.goto = 39;
+    case 39:
+      $.goto = 40;
       return $awt(t_5_b_2);
 
-    case 39:
+    case 40:
       if (t_5_2) {
         if (t_5_3) {
-          $.goto = 62;
+          $.goto = 63;
           return $awt(t_5_b_3);
         } else {
-          $.goto = 48;
+          $.goto = 49;
           return $awt(t_5_b_5);
         }
       } else {
         if (t_5_3) {
-          $.goto = 47;
+          $.goto = 48;
           return $awt(t_5_b_3);
         } else {
           if (t_5_4) {
-            $l[3] = 67;
-            $.goto = 63;
+            $l[3] = 69;
+            $.goto = 65;
             continue;
           } else {
-            $.state = 40;
+            $.state = 41;
           }
         }
       }
 
-    case 40:
+    case 41:
       if (t_5_4_1) {
         $l[3] = 20;
-        $.goto = 63;
-        continue;
-      } else {
-        $.state = 41;
-      }
-
-    case 41:
-      if (t_5_5) {
-        $.goto = 46;
+        $.goto = 65;
         continue;
       } else {
         $.state = 42;
       }
 
     case 42:
-      $.goto = 43;
-      return $awt(t_5_b_5);
+      if (t_5_5) {
+        $.goto = 47;
+        continue;
+      } else {
+        $.state = 43;
+      }
 
     case 43:
       $.goto = 44;
-      return $awt(t_5_b_6);
+      return $awt(t_5_b_5);
 
     case 44:
       $.goto = 45;
-      return $awt(t_5_b_7);
-
-    case 45:
-      $.goto = 37;
-      return $awt(t_5_b_8);
-
-    case 46:
-      $.goto = 46;
-      return $awt(l_1_1);
-
-    case 47:
-      $.goto = 44;
-      return $awt(t_5_b_4);
-
-    case 48:
-      $.goto = 49;
       return $awt(t_5_b_6);
 
+    case 45:
+      $.goto = 46;
+      return $awt(t_5_b_7);
+
+    case 46:
+      $.goto = 38;
+      return $awt(t_5_b_8);
+
+    case 47:
+      $.goto = 47;
+      return $awt(l_1_1);
+
+    case 48:
+      $.goto = 45;
+      return $awt(t_5_b_4);
+
     case 49:
+      $.goto = 50;
+      return $awt(t_5_b_6);
+
+    case 50:
       if (t_p_1) {
         if (t_5_4) {
           if (t_c_1) {
             if (t_8_1) {
-              $.goto = 60;
+              $.goto = 61;
               return $awt(t_5_b_7);
             } else {
-              $.state = 50;
+              $.state = 51;
             }
           } else {
-            $.goto = 58;
+            $.goto = 59;
             return $awt(t_c_c_1);
           }
         } else {
-          $.goto = 57;
+          $.goto = 58;
           return $awt(t_5_b_9);
         }
       } else {
-        $.goto = 56;
+        $.goto = 57;
         return $awt(t_k_2);
       }
 
-    case 50:
-      $.state = 51;
-
     case 51:
-      $.goto = 52;
-      return $awt(t_k_1);
+      $.state = 52;
 
     case 52:
       $.goto = 53;
-      return $awt(t_k_4);
+      return $awt(t_k_1);
 
     case 53:
       $.goto = 54;
-      return $awt(t_k_5);
+      return $awt(t_k_4);
 
     case 54:
       $.goto = 55;
-      return $awt(t_f_1);
+      return $awt(t_k_5);
 
     case 55:
-      $.goto = 44;
-      return $awt(t_f_2);
+      $.goto = 56;
+      return $awt(t_f_1);
 
     case 56:
-      $.goto = 52;
-      return $awt(t_k_3);
+      $.goto = 45;
+      return $awt(t_f_2);
 
     case 57:
-      $.goto = 51;
-      return $awt(t_5_b_X);
+      $.goto = 53;
+      return $awt(t_k_3);
 
     case 58:
-      $.goto = 59;
-      return $awt(t_c_c_2);
+      $.goto = 52;
+      return $awt(t_5_b_X);
 
     case 59:
-      $.goto = 50;
-      return $awt(t_5_c_3);
+      $.goto = 60;
+      return $awt(t_c_c_2);
 
     case 60:
-      $.goto = 61;
-      return $awt(t_5_b_8);
+      $.goto = 51;
+      return $awt(t_5_c_3);
 
     case 61:
-      $.goto = 59;
-      continue;
+      $.goto = 62;
+      return $awt(t_5_b_8);
 
     case 62:
-      $.goto = 54;
-      return $awt(t_5_b_4);
+      $.goto = 60;
+      continue;
 
     case 63:
-      $.goto = 64;
-      return $awt(p_7);
+      $.goto = 55;
+      return $awt(t_5_b_4);
 
     case 64:
-      $.goto = 65;
-      return $awt(p_8);
+      return $raise($l[4]);
 
     case 65:
-      $.error = $l[4];
+      $.goto = 66;
+      return $awt(p_7);
+
+    case 66:
+      $.goto = 67;
+      return $awt(p_8);
+
+    case 67:
       $.goto = $l[3];
       continue;
 
-    case 66:
+    case 68:
       $.goto = 20;
       return $awt(f_1);
 
-    case 67:
-      $.goto = 83;
+    case 69:
+      $.goto = 86;
       continue;
 
-    case 68:
+    case 70:
       $.goto = 19;
       return $awt(t_k_1);
 
-    case 69:
-      $.goto = 70;
-      return $awt(tf_T_1);
-
-    case 70:
-      $l[1] = 74;
-      $.goto = 71;
-      return $awt(tf_T_2);
-
     case 71:
       $.goto = 72;
-      return $awt(tf_T_f_1);
+      return $awt(tf_T_1);
 
     case 72:
-      $.goto = 73;
-      return $awt(tf_T_f_2);
+      $l[1] = 77;
+      $.goto = 74;
+      return $awt(tf_T_2);
 
     case 73:
-      $.error = $l[2];
+      return $raise($l[2]);
+
+    case 74:
+      $.goto = 75;
+      return $awt(tf_T_f_1);
+
+    case 75:
+      $.goto = 76;
+      return $awt(tf_T_f_2);
+
+    case 76:
       $.goto = $l[1];
       continue;
 
-    case 74:
+    case 77:
       $.goto = 10;
       continue;
 
-    case 75:
+    case 78:
       $.goto = 8;
       return $awt(m_3);
 
-    case 76:
-      $.goto = 75;
+    case 79:
+      $.goto = 78;
       return $awt(m_2);
 
-    case 77:
-      $.goto = 78;
+    case 80:
+      $.goto = 81;
       return $awt(j_1);
 
-    case 78:
-      $.goto = 77;
+    case 81:
+      $.goto = 80;
       return $awt(j_2);
 
-    case 79:
-      $.goto = 79;
+    case 82:
+      $.goto = 82;
       return $awt(i_1);
 
-    case 80:
+    case 83:
       $.goto = 3;
       return $awt(t_c_c_3);
 
-    case 81:
+    case 84:
       $.goto = 1;
       return $awt(t_5_b_9);
 
-    case 82:
-      $.goto = 83;
+    case 85:
+      $.goto = 86;
       return $unhandledA($.error);
 
-    case 83:
+    case 86:
       return $retA($.result);
 
     default:
@@ -7026,13 +7035,14 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 70:
-    case 69:
+    case 72:
+    case 71:
+      $.goto = 74;
+      $l[1] = 73;
       $l[2] = $.error;
-      $l[1] = 82;
-      $.goto = 71;
       break;
 
+    case 63:
     case 62:
     case 61:
     case 60:
@@ -7065,9 +7075,9 @@ var $M = require("@effectful/debugger"),
     case 33:
     case 32:
     case 21:
+      $.goto = 65;
+      $l[3] = 64;
       $l[4] = $.error;
-      $l[3] = 82;
-      $.goto = 63;
       break;
 
     case 31:
@@ -7080,24 +7090,23 @@ var $M = require("@effectful/debugger"),
     case 24:
     case 23:
     case 22:
+      $.goto = 33;
+      $l[5] = 32;
       $l[6] = $.error;
-      $l[5] = 63;
-      $l[3] = 82;
-      $.goto = 32;
       break;
 
     default:
-      $.goto = 82;
-      break;
+      $.goto = 85;
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 70:
-    case 69:
-      $l[1] = 83;
-      $.goto = 71;
+    case 72:
+    case 71:
+      $l[1] = 86;
+      $.goto = 74;
       break;
 
+    case 63:
     case 62:
     case 61:
     case 60:
@@ -7130,8 +7139,8 @@ var $M = require("@effectful/debugger"),
     case 33:
     case 32:
     case 21:
-      $l[3] = 83;
-      $.goto = 63;
+      $l[3] = 86;
+      $.goto = 65;
       break;
 
     case 31:
@@ -7144,16 +7153,16 @@ var $M = require("@effectful/debugger"),
     case 24:
     case 23:
     case 22:
-      $l[5] = 63;
-      $l[3] = 83;
-      $.goto = 32;
+      $l[5] = 65;
+      $l[3] = 86;
+      $.goto = 33;
       break;
 
     default:
-      $.goto = 83;
+      $.goto = 86;
       break;
   }
-}, 1, [[2, "870:2-870:11", $s$102], [2, "872:4-872:17", $s$102], [2, "877:6-877:19", $s$102], [2, "880:4-880:17", $s$102], [2, "881:4-881:17", $s$102], [0, null, $s$102], [2, "896:2-896:11", $s$102], [2, "900:6-900:15", $s$102], [2, "905:2-905:13", $s$102], [0, null, $s$102], [2, "915:2-915:13", $s$102], [2, "916:2-916:11", $s$102], [2, "936:6-936:19", $s$102], [2, "931:10-931:23", $s$102], [0, null, $s$102], [2, "923:14-923:27", $s$102], [0, null, $s$102], [2, "924:14-924:27", $s$102], [2, "933:8-933:21", $s$102], [2, "942:2-942:13", $s$102], [0, null, $s$102], [0, null, $s$102], [2, "946:8-946:17", $s$102], [2, "947:12-947:21", $s$102], [0, null, $s$102], [2, "953:14-953:23", $s$102], [0, null, $s$102], [2, "954:14-954:23", $s$102], [0, null, $s$102], [2, "955:10-955:19", $s$102], [2, "957:8-957:17", $s$102], [2, "949:10-949:21", $s$102], [2, "959:8-959:17", $s$102], [2, "960:8-960:17", $s$102], [0, null, $s$102], [2, "962:6-962:15", $s$102], [2, "964:8-964:21", $s$102], [2, "1024:6-1024:15", $s$102], [2, "965:8-965:21", $s$102], [2, "968:12-968:25", $s$102], [0, null, $s$102], [0, null, $s$102], [2, "1017:12-1017:25", $s$102], [2, "1018:12-1018:25", $s$102], [2, "1021:8-1021:21", $s$102], [2, "1022:8-1022:21", $s$102], [2, "1014:16-1014:27", $s$102], [2, "1006:12-1006:25", $s$102], [2, "972:12-972:25", $s$102], [2, "978:22-978:35", $s$102], [0, null, $s$102], [2, "993:14-993:25", $s$102], [2, "998:12-998:23", $s$102], [2, "999:12-999:23", $s$102], [2, "1001:10-1001:21", $s$102], [2, "1002:10-1002:21", $s$102], [2, "996:14-996:25", $s$102], [2, "991:16-991:29", $s$102], [2, "985:20-985:33", $s$102], [2, "987:18-987:31", $s$102], [2, "979:22-979:35", $s$102], [0, null, $s$102], [2, "969:12-969:25", $s$102], [2, "1026:6-1026:15", $s$102], [2, "1027:6-1027:15", $s$102], [0, null, $s$102], [2, "1029:4-1029:13", $s$102], [0, null, $s$102], [2, "938:4-938:15", $s$102], [2, "908:6-908:18", $s$102], [2, "909:6-909:18", $s$102], [2, "911:6-911:20", $s$102], [2, "912:6-912:20", $s$102], [0, null, $s$102], [0, null, $s$102], [2, "903:4-903:13", $s$102], [2, "901:6-901:15", $s$102], [2, "891:8-891:17", $s$102], [2, "892:8-892:17", $s$102], [2, "886:6-886:15", $s$102], [2, "878:6-878:19", $s$102], [2, "873:4-873:17", $s$102], [16, "1031:1-1031:1", $s$102], [16, "1031:1-1031:1", $s$102]]),
+}, 1, [[2, "870:2-870:11", $s$102], [2, "872:4-872:17", $s$102], [2, "877:6-877:19", $s$102], [2, "880:4-880:17", $s$102], [2, "881:4-881:17", $s$102], [0, null, $s$102], [2, "896:2-896:11", $s$102], [2, "900:6-900:15", $s$102], [2, "905:2-905:13", $s$102], [0, null, $s$102], [2, "915:2-915:13", $s$102], [2, "916:2-916:11", $s$102], [2, "936:6-936:19", $s$102], [2, "931:10-931:23", $s$102], [0, null, $s$102], [2, "923:14-923:27", $s$102], [0, null, $s$102], [2, "924:14-924:27", $s$102], [2, "933:8-933:21", $s$102], [2, "942:2-942:13", $s$102], [0, null, $s$102], [0, null, $s$102], [2, "946:8-946:17", $s$102], [2, "947:12-947:21", $s$102], [0, null, $s$102], [2, "953:14-953:23", $s$102], [0, null, $s$102], [2, "954:14-954:23", $s$102], [0, null, $s$102], [2, "955:10-955:19", $s$102], [2, "957:8-957:17", $s$102], [2, "949:10-949:21", $s$102], [0, null, $s$102], [2, "959:8-959:17", $s$102], [2, "960:8-960:17", $s$102], [0, null, $s$102], [2, "962:6-962:15", $s$102], [2, "964:8-964:21", $s$102], [2, "1024:6-1024:15", $s$102], [2, "965:8-965:21", $s$102], [2, "968:12-968:25", $s$102], [0, null, $s$102], [0, null, $s$102], [2, "1017:12-1017:25", $s$102], [2, "1018:12-1018:25", $s$102], [2, "1021:8-1021:21", $s$102], [2, "1022:8-1022:21", $s$102], [2, "1014:16-1014:27", $s$102], [2, "1006:12-1006:25", $s$102], [2, "972:12-972:25", $s$102], [2, "978:22-978:35", $s$102], [0, null, $s$102], [2, "993:14-993:25", $s$102], [2, "998:12-998:23", $s$102], [2, "999:12-999:23", $s$102], [2, "1001:10-1001:21", $s$102], [2, "1002:10-1002:21", $s$102], [2, "996:14-996:25", $s$102], [2, "991:16-991:29", $s$102], [2, "985:20-985:33", $s$102], [2, "987:18-987:31", $s$102], [2, "979:22-979:35", $s$102], [0, null, $s$102], [2, "969:12-969:25", $s$102], [0, null, $s$102], [2, "1026:6-1026:15", $s$102], [2, "1027:6-1027:15", $s$102], [0, null, $s$102], [2, "1029:4-1029:13", $s$102], [0, null, $s$102], [2, "938:4-938:15", $s$102], [2, "908:6-908:18", $s$102], [2, "909:6-909:18", $s$102], [0, null, $s$102], [2, "911:6-911:20", $s$102], [2, "912:6-912:20", $s$102], [0, null, $s$102], [0, null, $s$102], [2, "903:4-903:13", $s$102], [2, "901:6-901:15", $s$102], [2, "891:8-891:17", $s$102], [2, "892:8-892:17", $s$102], [2, "886:6-886:15", $s$102], [2, "878:6-878:19", $s$102], [2, "873:4-873:17", $s$102], [16, "1031:1-1031:1", $s$102], [16, "1031:1-1031:1", $s$102]]),
     $m$87 = $M.fun("m$87", "p78", null, $m$0, [], 0, 1, "1033:0-1041:1", 129, function p78($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -7437,7 +7446,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $.goto = 9;
+      $.goto = 10;
       continue;
 
     case 5:
@@ -7445,19 +7454,22 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 6:
-      $.goto = 7;
-      $iterFin($l[3]);
-      $.state = 7;
+      return $raise($.error);
 
     case 7:
+      $.goto = 8;
+      $iterFin($l[3]);
+      $.state = 8;
+
+    case 8:
       $.goto = $l[2];
       continue;
 
-    case 8:
-      $.goto = 9;
+    case 9:
+      $.goto = 10;
       return $unhandledA($.error);
 
-    case 9:
+    case 10:
       return $retA($.result);
 
     default:
@@ -7468,28 +7480,27 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[2] = 8;
-      $.goto = 6;
+      $.goto = 7;
+      $l[2] = 6;
       break;
 
     default:
-      $.goto = 8;
-      break;
+      $.goto = 9;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 5:
     case 3:
     case 2:
-      $l[2] = 9;
-      $.goto = 6;
+      $l[2] = 10;
+      $.goto = 7;
       break;
 
     default:
-      $.goto = 9;
+      $.goto = 10;
       break;
   }
-}, 1, [[2, "1123:18-1123:20", $s$112], [0, null, $s$111], [2, "1123:18-1123:20", $s$112], [2, "1124:10-1124:15", $s$112], [0, null, $s$111], [2, "1124:4-1124:15", $s$112], [2, "1123:18-1123:20", $s$112], [0, null, $s$111], [16, "1126:1-1126:1", $s$111], [16, "1126:1-1126:1", $s$111]]),
+}, 1, [[2, "1123:18-1123:20", $s$112], [0, null, $s$111], [2, "1123:18-1123:20", $s$112], [2, "1124:10-1124:15", $s$112], [0, null, $s$111], [2, "1124:4-1124:15", $s$112], [0, null, $s$111], [2, "1123:18-1123:20", $s$112], [0, null, $s$111], [16, "1126:1-1126:1", $s$111], [16, "1126:1-1126:1", $s$111]]),
     $m$95 = $M.fun("m$95", "p86", null, $m$0, [], 0, 6, "1128:0-1136:1", 129, function p86($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -7512,7 +7523,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[1] = $p.value;
-        $.goto = 12;
+        $.goto = 13;
         $p = ($context.call = bd_2)($l[1]);
         continue;
       }
@@ -7543,7 +7554,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 16;
+      $.goto = 18;
       continue;
 
     case 9:
@@ -7551,32 +7562,38 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 10:
-      $.goto = 11;
-      $iterFin($l[5]);
-      $.state = 11;
+      return $raise($.error);
 
     case 11:
+      $.goto = 12;
+      $iterFin($l[5]);
+      $.state = 12;
+
+    case 12:
       $.goto = $l[4];
       continue;
 
-    case 12:
+    case 13:
       $.goto = 2;
       return $awt($p);
 
-    case 13:
-      $.goto = 14;
-      $iterFin($l[5]);
-      $.state = 14;
-
     case 14:
-      $.goto = $l[3];
-      continue;
+      return $raise($.error);
 
     case 15:
       $.goto = 16;
-      return $unhandledA($.error);
+      $iterFin($l[5]);
+      $.state = 16;
 
     case 16:
+      $.goto = $l[3];
+      continue;
+
+    case 17:
+      $.goto = 18;
+      return $unhandledA($.error);
+
+    case 18:
       return $retA($.result);
 
     default:
@@ -7584,45 +7601,44 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 12:
+    case 13:
     case 3:
     case 2:
-      $l[3] = 15;
-      $.goto = 13;
+      $.goto = 15;
+      $l[3] = 14;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[4] = 15;
-      $.goto = 10;
+      $.goto = 11;
+      $l[4] = 10;
       break;
 
     default:
-      $.goto = 15;
-      break;
+      $.goto = 17;
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 12:
+    case 13:
     case 3:
     case 2:
-      $l[3] = 16;
-      $.goto = 13;
+      $l[3] = 18;
+      $.goto = 15;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[4] = 16;
-      $.goto = 10;
+      $l[4] = 18;
+      $.goto = 11;
       break;
 
     default:
-      $.goto = 16;
+      $.goto = 18;
       break;
   }
-}, 1, [[2, "1130:18-1130:23", $s$114], [0, null, $s$113], [2, "1130:18-1130:23", $s$114], [2, "1131:10-1131:17", $s$114], [2, "1133:18-1133:23", $s$115], [0, null, $s$113], [2, "1133:18-1133:23", $s$115], [2, "1134:10-1134:17", $s$115], [0, null, $s$113], [2, "1134:4-1134:17", $s$115], [2, "1133:18-1133:23", $s$115], [0, null, $s$113], [2, "1131:4-1131:17", $s$114], [2, "1130:18-1130:23", $s$114], [0, null, $s$113], [16, "1136:1-1136:1", $s$113], [16, "1136:1-1136:1", $s$113]]),
+}, 1, [[2, "1130:18-1130:23", $s$114], [0, null, $s$113], [2, "1130:18-1130:23", $s$114], [2, "1131:10-1131:17", $s$114], [2, "1133:18-1133:23", $s$115], [0, null, $s$113], [2, "1133:18-1133:23", $s$115], [2, "1134:10-1134:17", $s$115], [0, null, $s$113], [2, "1134:4-1134:17", $s$115], [0, null, $s$113], [2, "1133:18-1133:23", $s$115], [0, null, $s$113], [2, "1131:4-1131:17", $s$114], [0, null, $s$113], [2, "1130:18-1130:23", $s$114], [0, null, $s$113], [16, "1136:1-1136:1", $s$113], [16, "1136:1-1136:1", $s$113]]),
     $m$96 = $M.fun("m$96", "p87", null, $m$0, [], 0, 7, "1138:0-1145:1", 129, function p87($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -7651,7 +7667,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $.goto = 16;
+      $.goto = 18;
       continue;
 
     case 5:
@@ -7688,28 +7704,34 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 11:
-      $.goto = 12;
-      $iterFin($l[6]);
-      $.state = 12;
+      return $raise($.error);
 
     case 12:
+      $.goto = 13;
+      $iterFin($l[6]);
+      $.state = 13;
+
+    case 13:
       $.goto = $l[4];
       continue;
 
-    case 13:
-      $.goto = 14;
-      $iterFin($l[5]);
-      $.state = 14;
-
     case 14:
-      $.goto = $l[3];
-      continue;
+      return $raise($.error);
 
     case 15:
       $.goto = 16;
-      return $unhandledA($.error);
+      $iterFin($l[5]);
+      $.state = 16;
 
     case 16:
+      $.goto = $l[3];
+      continue;
+
+    case 17:
+      $.goto = 18;
+      return $unhandledA($.error);
+
+    case 18:
       return $retA($.result);
 
     default:
@@ -7717,6 +7739,7 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 13:
     case 12:
     case 11:
     case 9:
@@ -7724,24 +7747,23 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[3] = 15;
-      $.goto = 13;
+      $.goto = 15;
+      $l[3] = 14;
       break;
 
     case 10:
     case 8:
     case 7:
-      $l[4] = 13;
-      $l[3] = 15;
-      $.goto = 11;
+      $.goto = 12;
+      $l[4] = 11;
       break;
 
     default:
-      $.goto = 15;
-      break;
+      $.goto = 17;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 13:
     case 12:
     case 11:
     case 9:
@@ -7749,23 +7771,23 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[3] = 16;
-      $.goto = 13;
+      $l[3] = 18;
+      $.goto = 15;
       break;
 
     case 10:
     case 8:
     case 7:
-      $l[4] = 13;
-      $l[3] = 16;
-      $.goto = 11;
+      $l[4] = 15;
+      $l[3] = 18;
+      $.goto = 12;
       break;
 
     default:
-      $.goto = 16;
+      $.goto = 18;
       break;
   }
-}, 1, [[2, "1140:18-1140:23", $s$117], [0, null, $s$116], [2, "1140:18-1140:23", $s$117], [2, "1141:20-1141:28", $s$118], [0, null, $s$116], [2, "1141:20-1141:28", $s$118], [0, null, $s$116], [2, "1141:20-1141:28", $s$118], [2, "1142:12-1142:22", $s$118], [0, null, $s$116], [2, "1142:6-1142:22", $s$118], [2, "1141:20-1141:28", $s$118], [0, null, $s$116], [2, "1140:18-1140:23", $s$117], [0, null, $s$116], [16, "1145:1-1145:1", $s$116], [16, "1145:1-1145:1", $s$116]]),
+}, 1, [[2, "1140:18-1140:23", $s$117], [0, null, $s$116], [2, "1140:18-1140:23", $s$117], [2, "1141:20-1141:28", $s$118], [0, null, $s$116], [2, "1141:20-1141:28", $s$118], [0, null, $s$116], [2, "1141:20-1141:28", $s$118], [2, "1142:12-1142:22", $s$118], [0, null, $s$116], [2, "1142:6-1142:22", $s$118], [0, null, $s$116], [2, "1141:20-1141:28", $s$118], [0, null, $s$116], [0, null, $s$116], [2, "1140:18-1140:23", $s$117], [0, null, $s$116], [16, "1145:1-1145:1", $s$116], [16, "1145:1-1145:1", $s$116]]),
     $m$97 = $M.fun("m$97", "p88", null, $m$0, [], 0, 1, "1147:0-1167:1", 129, function p88($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -7834,7 +7856,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[1] = $p.value;
-        $.goto = 12;
+        $.goto = 13;
         $p = ($context.call = iter1_2)($l[1]);
         continue;
       }
@@ -7865,7 +7887,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 23;
+      $.goto = 26;
       continue;
 
     case 9:
@@ -7873,70 +7895,79 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 10:
-      $.goto = 11;
-      $iterFin($l[7]);
-      $.state = 11;
+      return $raise($.error);
 
     case 11:
+      $.goto = 12;
+      $iterFin($l[7]);
+      $.state = 12;
+
+    case 12:
       $.goto = $l[6];
       continue;
 
-    case 12:
-      $.goto = 13;
-      $p = $iterator($p);
-      $.state = 13;
-
     case 13:
-      $l[8] = $p;
+      $.goto = 14;
+      $p = $iterator($p);
       $.state = 14;
 
     case 14:
-      $context.call = $l[8].next;
-      $.goto = 15;
-      $p = $l[8].next();
+      $l[8] = $p;
       $.state = 15;
 
     case 15:
+      $context.call = $l[8].next;
+      $.goto = 16;
+      $p = $l[8].next();
+      $.state = 16;
+
+    case 16:
       if ($p.done) {
-        $.state = 16;
+        $.state = 17;
       } else {
         $l[2] = $p.value;
-        $.goto = 17;
+        $.goto = 18;
         $p = ($context.call = bd_1)($l[1], $l[2]);
         continue;
       }
 
-    case 16:
+    case 17:
       $.goto = 2;
       continue;
 
-    case 17:
-      $.goto = 14;
+    case 18:
+      $.goto = 15;
       return $awt($p);
 
-    case 18:
-      $.goto = 19;
-      $iterFin($l[8]);
-      $.state = 19;
-
     case 19:
-      $.goto = $l[5];
-      continue;
+      return $raise($.error);
 
     case 20:
       $.goto = 21;
-      $iterFin($l[7]);
+      $iterFin($l[8]);
       $.state = 21;
 
     case 21:
-      $.goto = $l[4];
+      $.goto = $l[5];
       continue;
 
     case 22:
-      $.goto = 23;
-      return $unhandledA($.error);
+      return $raise($.error);
 
     case 23:
+      $.goto = 24;
+      $iterFin($l[7]);
+      $.state = 24;
+
+    case 24:
+      $.goto = $l[4];
+      continue;
+
+    case 25:
+      $.goto = 26;
+      return $unhandledA($.error);
+
+    case 26:
       return $retA($.result);
 
     default:
@@ -7944,69 +7975,69 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 21:
+    case 20:
     case 19:
-    case 18:
-    case 16:
+    case 17:
+    case 14:
     case 13:
-    case 12:
     case 3:
     case 2:
+      $.goto = 23;
       $l[4] = 22;
-      $.goto = 20;
       break;
 
-    case 17:
+    case 18:
+    case 16:
     case 15:
-    case 14:
-      $l[5] = 20;
-      $l[4] = 22;
-      $.goto = 18;
+      $.goto = 20;
+      $l[5] = 19;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[6] = 22;
-      $.goto = 10;
+      $.goto = 11;
+      $l[6] = 10;
       break;
 
     default:
-      $.goto = 22;
-      break;
+      $.goto = 25;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 21:
+    case 20:
     case 19:
-    case 18:
-    case 16:
+    case 17:
+    case 14:
     case 13:
-    case 12:
     case 3:
     case 2:
-      $l[4] = 23;
-      $.goto = 20;
+      $l[4] = 26;
+      $.goto = 23;
       break;
 
-    case 17:
+    case 18:
+    case 16:
     case 15:
-    case 14:
-      $l[5] = 20;
-      $l[4] = 23;
-      $.goto = 18;
+      $l[5] = 23;
+      $l[4] = 26;
+      $.goto = 20;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[6] = 23;
-      $.goto = 10;
+      $l[6] = 26;
+      $.goto = 11;
       break;
 
     default:
-      $.goto = 23;
+      $.goto = 26;
       break;
   }
-}, 1, [[2, "1171:18-1171:25", $s$121], [0, null, $s$120], [2, "1171:18-1171:25", $s$121], [2, "1172:20-1172:30", $s$122], [2, "1176:18-1176:25", $s$123], [0, null, $s$120], [2, "1176:18-1176:25", $s$123], [2, "1177:10-1177:17", $s$123], [0, null, $s$120], [2, "1177:4-1177:17", $s$123], [2, "1176:18-1176:25", $s$123], [0, null, $s$120], [2, "1172:20-1172:30", $s$122], [0, null, $s$120], [2, "1172:20-1172:30", $s$122], [2, "1173:12-1173:22", $s$122], [0, null, $s$120], [2, "1173:6-1173:22", $s$122], [2, "1172:20-1172:30", $s$122], [0, null, $s$120], [2, "1171:18-1171:25", $s$121], [0, null, $s$120], [16, "1179:1-1179:1", $s$120], [16, "1179:1-1179:1", $s$120]]),
+}, 1, [[2, "1171:18-1171:25", $s$121], [0, null, $s$120], [2, "1171:18-1171:25", $s$121], [2, "1172:20-1172:30", $s$122], [2, "1176:18-1176:25", $s$123], [0, null, $s$120], [2, "1176:18-1176:25", $s$123], [2, "1177:10-1177:17", $s$123], [0, null, $s$120], [2, "1177:4-1177:17", $s$123], [0, null, $s$120], [2, "1176:18-1176:25", $s$123], [0, null, $s$120], [2, "1172:20-1172:30", $s$122], [0, null, $s$120], [2, "1172:20-1172:30", $s$122], [2, "1173:12-1173:22", $s$122], [0, null, $s$120], [2, "1173:6-1173:22", $s$122], [0, null, $s$120], [2, "1172:20-1172:30", $s$122], [0, null, $s$120], [0, null, $s$120], [2, "1171:18-1171:25", $s$121], [0, null, $s$120], [16, "1179:1-1179:1", $s$120], [16, "1179:1-1179:1", $s$120]]),
     $m$99 = $M.fun("m$99", "p90", null, $m$0, [], 0, 9, "1181:0-1192:1", 129, function p90($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -8029,7 +8060,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[1] = $p.value;
-        $.goto = 12;
+        $.goto = 13;
         $p = ($context.call = iter1_2)($l[1]);
         continue;
       }
@@ -8060,7 +8091,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 25;
+      $.goto = 28;
       continue;
 
     case 9:
@@ -8068,79 +8099,88 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 10:
-      $.goto = 11;
-      $iterFin($l[7]);
-      $.state = 11;
+      return $raise($.error);
 
     case 11:
+      $.goto = 12;
+      $iterFin($l[7]);
+      $.state = 12;
+
+    case 12:
       $.goto = $l[6];
       continue;
 
-    case 12:
-      $.goto = 13;
-      $p = $iterator($p);
-      $.state = 13;
-
     case 13:
-      $l[8] = $p;
+      $.goto = 14;
+      $p = $iterator($p);
       $.state = 14;
 
     case 14:
-      $context.call = $l[8].next;
-      $.goto = 15;
-      $p = $l[8].next();
+      $l[8] = $p;
       $.state = 15;
 
     case 15:
+      $context.call = $l[8].next;
+      $.goto = 16;
+      $p = $l[8].next();
+      $.state = 16;
+
+    case 16:
       if ($p.done) {
-        $.state = 16;
+        $.state = 17;
       } else {
         $l[2] = $p.value;
-        $.goto = 17;
+        $.goto = 18;
         $p = ($context.call = bd_1_1)($l[1], $l[2]);
         continue;
       }
 
-    case 16:
+    case 17:
       $.goto = 2;
       continue;
 
-    case 17:
-      $.goto = 18;
-      return $awt($p);
-
     case 18:
       $.goto = 19;
-      $p = ($context.call = bd_1_2)($l[1], $l[2]);
-      $.state = 19;
-
-    case 19:
-      $.goto = 14;
       return $awt($p);
 
+    case 19:
+      $.goto = 20;
+      $p = ($context.call = bd_1_2)($l[1], $l[2]);
+      $.state = 20;
+
     case 20:
-      $.goto = 21;
-      $iterFin($l[8]);
-      $.state = 21;
+      $.goto = 15;
+      return $awt($p);
 
     case 21:
-      $.goto = $l[5];
-      continue;
+      return $raise($.error);
 
     case 22:
       $.goto = 23;
-      $iterFin($l[7]);
+      $iterFin($l[8]);
       $.state = 23;
 
     case 23:
-      $.goto = $l[4];
+      $.goto = $l[5];
       continue;
 
     case 24:
-      $.goto = 25;
-      return $unhandledA($.error);
+      return $raise($.error);
 
     case 25:
+      $.goto = 26;
+      $iterFin($l[7]);
+      $.state = 26;
+
+    case 26:
+      $.goto = $l[4];
+      continue;
+
+    case 27:
+      $.goto = 28;
+      return $unhandledA($.error);
+
+    case 28:
       return $retA($.result);
 
     default:
@@ -8148,73 +8188,73 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 23:
+    case 22:
     case 21:
-    case 20:
-    case 16:
+    case 17:
+    case 14:
     case 13:
-    case 12:
     case 3:
     case 2:
+      $.goto = 25;
       $l[4] = 24;
-      $.goto = 22;
       break;
 
+    case 20:
     case 19:
     case 18:
-    case 17:
+    case 16:
     case 15:
-    case 14:
-      $l[5] = 22;
-      $l[4] = 24;
-      $.goto = 20;
+      $.goto = 22;
+      $l[5] = 21;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[6] = 24;
-      $.goto = 10;
+      $.goto = 11;
+      $l[6] = 10;
       break;
 
     default:
-      $.goto = 24;
-      break;
+      $.goto = 27;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 23:
+    case 22:
     case 21:
-    case 20:
-    case 16:
+    case 17:
+    case 14:
     case 13:
-    case 12:
     case 3:
     case 2:
-      $l[4] = 25;
-      $.goto = 22;
+      $l[4] = 28;
+      $.goto = 25;
       break;
 
+    case 20:
     case 19:
     case 18:
-    case 17:
+    case 16:
     case 15:
-    case 14:
-      $l[5] = 22;
-      $l[4] = 25;
-      $.goto = 20;
+      $l[5] = 25;
+      $l[4] = 28;
+      $.goto = 22;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[6] = 25;
-      $.goto = 10;
+      $l[6] = 28;
+      $.goto = 11;
       break;
 
     default:
-      $.goto = 25;
+      $.goto = 28;
       break;
   }
-}, 1, [[2, "1183:18-1183:25", $s$125], [0, null, $s$124], [2, "1183:18-1183:25", $s$125], [2, "1184:20-1184:30", $s$126], [2, "1189:18-1189:25", $s$127], [0, null, $s$124], [2, "1189:18-1189:25", $s$127], [2, "1190:10-1190:17", $s$127], [0, null, $s$124], [2, "1190:4-1190:17", $s$127], [2, "1189:18-1189:25", $s$127], [0, null, $s$124], [2, "1184:20-1184:30", $s$126], [0, null, $s$124], [2, "1184:20-1184:30", $s$126], [2, "1185:12-1185:24", $s$126], [0, null, $s$124], [2, "1185:6-1185:24", $s$126], [2, "1186:12-1186:24", $s$126], [2, "1186:6-1186:24", $s$126], [2, "1184:20-1184:30", $s$126], [0, null, $s$124], [2, "1183:18-1183:25", $s$125], [0, null, $s$124], [16, "1192:1-1192:1", $s$124], [16, "1192:1-1192:1", $s$124]]),
+}, 1, [[2, "1183:18-1183:25", $s$125], [0, null, $s$124], [2, "1183:18-1183:25", $s$125], [2, "1184:20-1184:30", $s$126], [2, "1189:18-1189:25", $s$127], [0, null, $s$124], [2, "1189:18-1189:25", $s$127], [2, "1190:10-1190:17", $s$127], [0, null, $s$124], [2, "1190:4-1190:17", $s$127], [0, null, $s$124], [2, "1189:18-1189:25", $s$127], [0, null, $s$124], [2, "1184:20-1184:30", $s$126], [0, null, $s$124], [2, "1184:20-1184:30", $s$126], [2, "1185:12-1185:24", $s$126], [0, null, $s$124], [2, "1185:6-1185:24", $s$126], [2, "1186:12-1186:24", $s$126], [2, "1186:6-1186:24", $s$126], [0, null, $s$124], [2, "1184:20-1184:30", $s$126], [0, null, $s$124], [0, null, $s$124], [2, "1183:18-1183:25", $s$125], [0, null, $s$124], [16, "1192:1-1192:1", $s$124], [16, "1192:1-1192:1", $s$124]]),
     $m$100 = $M.fun("m$100", "p91", null, $m$0, [], 0, 9, "1194:0-1205:1", 129, function p91($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -8237,7 +8277,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[1] = $p.value;
-        $.goto = 14;
+        $.goto = 15;
         $p = ($context.call = iter1_2)($l[1]);
         continue;
       }
@@ -8268,7 +8308,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 27;
+      $.goto = 30;
       continue;
 
     case 9:
@@ -8285,79 +8325,88 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 12:
-      $.goto = 13;
-      $iterFin($l[7]);
-      $.state = 13;
+      return $raise($.error);
 
     case 13:
+      $.goto = 14;
+      $iterFin($l[7]);
+      $.state = 14;
+
+    case 14:
       $.goto = $l[6];
       continue;
 
-    case 14:
-      $.goto = 15;
-      $p = $iterator($p);
-      $.state = 15;
-
     case 15:
-      $l[8] = $p;
+      $.goto = 16;
+      $p = $iterator($p);
       $.state = 16;
 
     case 16:
-      $context.call = $l[8].next;
-      $.goto = 17;
-      $p = $l[8].next();
+      $l[8] = $p;
       $.state = 17;
 
     case 17:
+      $context.call = $l[8].next;
+      $.goto = 18;
+      $p = $l[8].next();
+      $.state = 18;
+
+    case 18:
       if ($p.done) {
-        $.state = 18;
+        $.state = 19;
       } else {
         $l[2] = $p.value;
-        $.goto = 19;
+        $.goto = 20;
         $p = ($context.call = bd_1_2)($l[1], $l[2]);
         continue;
       }
 
-    case 18:
+    case 19:
       $.goto = 2;
       continue;
 
-    case 19:
-      $.goto = 20;
-      return $awt($p);
-
     case 20:
       $.goto = 21;
-      $p = ($context.call = bd_1_1)($l[1], $l[2], $p);
-      $.state = 21;
-
-    case 21:
-      $.goto = 16;
       return $awt($p);
 
+    case 21:
+      $.goto = 22;
+      $p = ($context.call = bd_1_1)($l[1], $l[2], $p);
+      $.state = 22;
+
     case 22:
-      $.goto = 23;
-      $iterFin($l[8]);
-      $.state = 23;
+      $.goto = 17;
+      return $awt($p);
 
     case 23:
-      $.goto = $l[5];
-      continue;
+      return $raise($.error);
 
     case 24:
       $.goto = 25;
-      $iterFin($l[7]);
+      $iterFin($l[8]);
       $.state = 25;
 
     case 25:
-      $.goto = $l[4];
+      $.goto = $l[5];
       continue;
 
     case 26:
-      $.goto = 27;
-      return $unhandledA($.error);
+      return $raise($.error);
 
     case 27:
+      $.goto = 28;
+      $iterFin($l[7]);
+      $.state = 28;
+
+    case 28:
+      $.goto = $l[4];
+      continue;
+
+    case 29:
+      $.goto = 30;
+      return $unhandledA($.error);
+
+    case 30:
       return $retA($.result);
 
     default:
@@ -8365,25 +8414,25 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 25:
+    case 24:
     case 23:
-    case 22:
-    case 18:
+    case 19:
+    case 16:
     case 15:
-    case 14:
     case 3:
     case 2:
+      $.goto = 27;
       $l[4] = 26;
-      $.goto = 24;
       break;
 
+    case 22:
     case 21:
     case 20:
-    case 19:
+    case 18:
     case 17:
-    case 16:
-      $l[5] = 24;
-      $l[4] = 26;
-      $.goto = 22;
+      $.goto = 24;
+      $l[5] = 23;
       break;
 
     case 11:
@@ -8391,35 +8440,35 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[6] = 26;
-      $.goto = 12;
+      $.goto = 13;
+      $l[6] = 12;
       break;
 
     default:
-      $.goto = 26;
-      break;
+      $.goto = 29;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 25:
+    case 24:
     case 23:
-    case 22:
-    case 18:
+    case 19:
+    case 16:
     case 15:
-    case 14:
     case 3:
     case 2:
-      $l[4] = 27;
-      $.goto = 24;
+      $l[4] = 30;
+      $.goto = 27;
       break;
 
+    case 22:
     case 21:
     case 20:
-    case 19:
+    case 18:
     case 17:
-    case 16:
-      $l[5] = 24;
-      $l[4] = 27;
-      $.goto = 22;
+      $l[5] = 27;
+      $l[4] = 30;
+      $.goto = 24;
       break;
 
     case 11:
@@ -8427,15 +8476,15 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[6] = 27;
-      $.goto = 12;
+      $l[6] = 30;
+      $.goto = 13;
       break;
 
     default:
-      $.goto = 27;
+      $.goto = 30;
       break;
   }
-}, 1, [[2, "1196:18-1196:25", $s$129], [0, null, $s$128], [2, "1196:18-1196:25", $s$129], [2, "1197:20-1197:30", $s$130], [2, "1201:18-1201:25", $s$131], [0, null, $s$128], [2, "1201:18-1201:25", $s$131], [2, "1202:10-1202:19", $s$131], [0, null, $s$128], [2, "1202:4-1202:19", $s$131], [2, "1203:10-1203:19", $s$131], [2, "1203:4-1203:19", $s$131], [2, "1201:18-1201:25", $s$131], [0, null, $s$128], [2, "1197:20-1197:30", $s$130], [0, null, $s$128], [2, "1197:20-1197:30", $s$130], [2, "1198:31-1198:43", $s$130], [0, null, $s$128], [2, "1198:25-1198:43", $s$130], [2, "1198:12-1198:44", $s$130], [2, "1198:6-1198:44", $s$130], [2, "1197:20-1197:30", $s$130], [0, null, $s$128], [2, "1196:18-1196:25", $s$129], [0, null, $s$128], [16, "1205:1-1205:1", $s$128], [16, "1205:1-1205:1", $s$128]]),
+}, 1, [[2, "1196:18-1196:25", $s$129], [0, null, $s$128], [2, "1196:18-1196:25", $s$129], [2, "1197:20-1197:30", $s$130], [2, "1201:18-1201:25", $s$131], [0, null, $s$128], [2, "1201:18-1201:25", $s$131], [2, "1202:10-1202:19", $s$131], [0, null, $s$128], [2, "1202:4-1202:19", $s$131], [2, "1203:10-1203:19", $s$131], [2, "1203:4-1203:19", $s$131], [0, null, $s$128], [2, "1201:18-1201:25", $s$131], [0, null, $s$128], [2, "1197:20-1197:30", $s$130], [0, null, $s$128], [2, "1197:20-1197:30", $s$130], [2, "1198:31-1198:43", $s$130], [0, null, $s$128], [2, "1198:25-1198:43", $s$130], [2, "1198:12-1198:44", $s$130], [2, "1198:6-1198:44", $s$130], [0, null, $s$128], [2, "1197:20-1197:30", $s$130], [0, null, $s$128], [0, null, $s$128], [2, "1196:18-1196:25", $s$129], [0, null, $s$128], [16, "1205:1-1205:1", $s$128], [16, "1205:1-1205:1", $s$128]]),
     $m$101 = $M.fun("m$101", "p92", null, $m$0, [], 0, 9, "1207:0-1219:1", 129, function p92($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -8464,7 +8513,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $.goto = 27;
+      $.goto = 30;
       continue;
 
     case 5:
@@ -8487,7 +8536,7 @@ var $M = require("@effectful/debugger"),
         $.state = 9;
       } else {
         $l[2] = $p.value;
-        $.goto = 19;
+        $.goto = 20;
         $p = ($context.call = bd_1_1)($l[1], $l[2]);
         continue;
       }
@@ -8535,50 +8584,59 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 17:
-      $.goto = 18;
-      $iterFin($l[8]);
-      $.state = 18;
+      return $raise($.error);
 
     case 18:
+      $.goto = 19;
+      $iterFin($l[8]);
+      $.state = 19;
+
+    case 19:
       $.goto = $l[6];
       continue;
 
-    case 19:
-      $.goto = 20;
-      return $awt($p);
-
     case 20:
       $.goto = 21;
-      $p = ($context.call = bd_1_2)($l[1], $l[2]);
-      $.state = 21;
+      return $awt($p);
 
     case 21:
+      $.goto = 22;
+      $p = ($context.call = bd_1_2)($l[1], $l[2]);
+      $.state = 22;
+
+    case 22:
       $.goto = 7;
       return $awt($p);
 
-    case 22:
-      $.goto = 23;
-      $iterFin($l[8]);
-      $.state = 23;
-
     case 23:
-      $.goto = $l[5];
-      continue;
+      return $raise($.error);
 
     case 24:
       $.goto = 25;
-      $iterFin($l[7]);
+      $iterFin($l[8]);
       $.state = 25;
 
     case 25:
-      $.goto = $l[4];
+      $.goto = $l[5];
       continue;
 
     case 26:
-      $.goto = 27;
-      return $unhandledA($.error);
+      return $raise($.error);
 
     case 27:
+      $.goto = 28;
+      $iterFin($l[7]);
+      $.state = 28;
+
+    case 28:
+      $.goto = $l[4];
+      continue;
+
+    case 29:
+      $.goto = 30;
+      return $unhandledA($.error);
+
+    case 30:
       return $retA($.result);
 
     default:
@@ -8586,8 +8644,10 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 25:
+    case 24:
     case 23:
-    case 22:
+    case 19:
     case 18:
     case 17:
     case 13:
@@ -8597,18 +8657,17 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
+      $.goto = 27;
       $l[4] = 26;
-      $.goto = 24;
       break;
 
+    case 22:
     case 21:
     case 20:
-    case 19:
     case 8:
     case 7:
-      $l[5] = 24;
-      $l[4] = 26;
-      $.goto = 22;
+      $.goto = 24;
+      $l[5] = 23;
       break;
 
     case 16:
@@ -8616,19 +8675,19 @@ var $M = require("@effectful/debugger"),
     case 14:
     case 12:
     case 11:
-      $l[6] = 24;
-      $l[4] = 26;
-      $.goto = 17;
+      $.goto = 18;
+      $l[6] = 17;
       break;
 
     default:
-      $.goto = 26;
-      break;
+      $.goto = 29;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 25:
+    case 24:
     case 23:
-    case 22:
+    case 19:
     case 18:
     case 17:
     case 13:
@@ -8638,18 +8697,18 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[4] = 27;
-      $.goto = 24;
+      $l[4] = 30;
+      $.goto = 27;
       break;
 
+    case 22:
     case 21:
     case 20:
-    case 19:
     case 8:
     case 7:
-      $l[5] = 24;
-      $l[4] = 27;
-      $.goto = 22;
+      $l[5] = 27;
+      $l[4] = 30;
+      $.goto = 24;
       break;
 
     case 16:
@@ -8657,16 +8716,16 @@ var $M = require("@effectful/debugger"),
     case 14:
     case 12:
     case 11:
-      $l[6] = 24;
-      $l[4] = 27;
-      $.goto = 17;
+      $l[6] = 27;
+      $l[4] = 30;
+      $.goto = 18;
       break;
 
     default:
-      $.goto = 27;
+      $.goto = 30;
       break;
   }
-}, 1, [[2, "1209:18-1209:25", $s$133], [0, null, $s$132], [2, "1209:18-1209:25", $s$133], [2, "1210:20-1210:30", $s$134], [0, null, $s$132], [2, "1210:20-1210:30", $s$134], [0, null, $s$132], [2, "1210:20-1210:30", $s$134], [2, "1211:12-1211:24", $s$134], [2, "1214:20-1214:27", $s$135], [0, null, $s$132], [2, "1214:20-1214:27", $s$135], [2, "1215:12-1215:21", $s$135], [0, null, $s$132], [2, "1215:6-1215:21", $s$135], [2, "1216:12-1216:21", $s$135], [2, "1216:6-1216:21", $s$135], [2, "1214:20-1214:27", $s$135], [0, null, $s$132], [2, "1211:6-1211:24", $s$134], [2, "1212:12-1212:24", $s$134], [2, "1212:6-1212:24", $s$134], [2, "1210:20-1210:30", $s$134], [0, null, $s$132], [2, "1209:18-1209:25", $s$133], [0, null, $s$132], [16, "1219:1-1219:1", $s$132], [16, "1219:1-1219:1", $s$132]]),
+}, 1, [[2, "1209:18-1209:25", $s$133], [0, null, $s$132], [2, "1209:18-1209:25", $s$133], [2, "1210:20-1210:30", $s$134], [0, null, $s$132], [2, "1210:20-1210:30", $s$134], [0, null, $s$132], [2, "1210:20-1210:30", $s$134], [2, "1211:12-1211:24", $s$134], [2, "1214:20-1214:27", $s$135], [0, null, $s$132], [2, "1214:20-1214:27", $s$135], [2, "1215:12-1215:21", $s$135], [0, null, $s$132], [2, "1215:6-1215:21", $s$135], [2, "1216:12-1216:21", $s$135], [2, "1216:6-1216:21", $s$135], [0, null, $s$132], [2, "1214:20-1214:27", $s$135], [0, null, $s$132], [2, "1211:6-1211:24", $s$134], [2, "1212:12-1212:24", $s$134], [2, "1212:6-1212:24", $s$134], [0, null, $s$132], [2, "1210:20-1210:30", $s$134], [0, null, $s$132], [0, null, $s$132], [2, "1209:18-1209:25", $s$133], [0, null, $s$132], [16, "1219:1-1219:1", $s$132], [16, "1219:1-1219:1", $s$132]]),
     $m$102 = $M.fun("m$102", "p93", null, $m$0, [], 0, 7, "1221:0-1232:1", 129, function p93($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -8690,7 +8749,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[2] = $p.value;
-        $.goto = 14;
+        $.goto = 15;
         $p = ($context.call = bd_1_1)($l[2]);
         continue;
       }
@@ -8721,7 +8780,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 20;
+      $.goto = 22;
       continue;
 
     case 9:
@@ -8739,42 +8798,48 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 12:
-      $.goto = 13;
-      $iterFin($l[6]);
-      $.state = 13;
+      return $raise($.error);
 
     case 13:
+      $.goto = 14;
+      $iterFin($l[6]);
+      $.state = 14;
+
+    case 14:
       $.goto = $l[5];
       continue;
 
-    case 14:
-      $.goto = 15;
+    case 15:
+      $.goto = 16;
       return $awt($p);
 
-    case 15:
-      $l[1] = $l[1] + $p;
-      $.goto = 16;
-      $p = ($context.call = bd_1_2)($l[2], $l[1]);
-      $.state = 16;
-
     case 16:
+      $l[1] = $l[1] + $p;
+      $.goto = 17;
+      $p = ($context.call = bd_1_2)($l[2], $l[1]);
+      $.state = 17;
+
+    case 17:
       $.goto = 2;
       return $awt($p);
 
-    case 17:
-      $.goto = 18;
-      $iterFin($l[6]);
-      $.state = 18;
-
     case 18:
-      $.goto = $l[4];
-      continue;
+      return $raise($.error);
 
     case 19:
       $.goto = 20;
-      return $unhandledA($.error);
+      $iterFin($l[6]);
+      $.state = 20;
 
     case 20:
+      $.goto = $l[4];
+      continue;
+
+    case 21:
+      $.goto = 22;
+      return $unhandledA($.error);
+
+    case 22:
       return $retA($.result);
 
     default:
@@ -8782,13 +8847,13 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 17:
     case 16:
     case 15:
-    case 14:
     case 3:
     case 2:
-      $l[4] = 19;
-      $.goto = 17;
+      $.goto = 19;
+      $l[4] = 18;
       break;
 
     case 11:
@@ -8796,23 +8861,22 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[5] = 19;
-      $.goto = 12;
+      $.goto = 13;
+      $l[5] = 12;
       break;
 
     default:
-      $.goto = 19;
-      break;
+      $.goto = 21;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 17:
     case 16:
     case 15:
-    case 14:
     case 3:
     case 2:
-      $l[4] = 20;
-      $.goto = 17;
+      $l[4] = 22;
+      $.goto = 19;
       break;
 
     case 11:
@@ -8820,15 +8884,15 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[5] = 20;
-      $.goto = 12;
+      $l[5] = 22;
+      $.goto = 13;
       break;
 
     default:
-      $.goto = 20;
+      $.goto = 22;
       break;
   }
-}, 1, [[2, "1224:18-1224:25", $s$137], [0, null, $s$136], [2, "1224:18-1224:25", $s$137], [2, "1225:17-1225:26", $s$137], [2, "1228:18-1228:25", $s$138], [0, null, $s$136], [2, "1228:18-1228:25", $s$138], [2, "1229:17-1229:26", $s$138], [0, null, $s$136], [2, "1229:11-1229:26", $s$138], [2, "1230:10-1230:19", $s$138], [2, "1230:4-1230:19", $s$138], [2, "1228:18-1228:25", $s$138], [0, null, $s$136], [2, "1225:11-1225:26", $s$137], [2, "1226:10-1226:24", $s$137], [2, "1226:4-1226:24", $s$137], [2, "1224:18-1224:25", $s$137], [0, null, $s$136], [16, "1232:1-1232:1", $s$136], [16, "1232:1-1232:1", $s$136]]),
+}, 1, [[2, "1224:18-1224:25", $s$137], [0, null, $s$136], [2, "1224:18-1224:25", $s$137], [2, "1225:17-1225:26", $s$137], [2, "1228:18-1228:25", $s$138], [0, null, $s$136], [2, "1228:18-1228:25", $s$138], [2, "1229:17-1229:26", $s$138], [0, null, $s$136], [2, "1229:11-1229:26", $s$138], [2, "1230:10-1230:19", $s$138], [2, "1230:4-1230:19", $s$138], [0, null, $s$136], [2, "1228:18-1228:25", $s$138], [0, null, $s$136], [2, "1225:11-1225:26", $s$137], [2, "1226:10-1226:24", $s$137], [2, "1226:4-1226:24", $s$137], [0, null, $s$136], [2, "1224:18-1224:25", $s$137], [0, null, $s$136], [16, "1232:1-1232:1", $s$136], [16, "1232:1-1232:1", $s$136]]),
     $m$103 = $M.fun("m$103", "p94", null, $m$0, [], 0, 8, "1234:0-1246:1", 129, function p94($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -8852,7 +8916,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[2] = $p.value;
-        $.goto = 14;
+        $.goto = 15;
         $p = ($context.call = bd_1_1)($l[2]);
         continue;
       }
@@ -8883,7 +8947,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 20;
+      $.goto = 22;
       continue;
 
     case 9:
@@ -8901,42 +8965,48 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 12:
-      $.goto = 13;
-      $iterFin($l[7]);
-      $.state = 13;
+      return $raise($.error);
 
     case 13:
+      $.goto = 14;
+      $iterFin($l[7]);
+      $.state = 14;
+
+    case 14:
       $.goto = $l[6];
       continue;
 
-    case 14:
-      $.goto = 15;
+    case 15:
+      $.goto = 16;
       return $awt($p);
 
-    case 15:
-      $l[1] = $l[1] + $p;
-      $.goto = 16;
-      $p = ($context.call = bd_1_2)($l[2], $l[1]);
-      $.state = 16;
-
     case 16:
+      $l[1] = $l[1] + $p;
+      $.goto = 17;
+      $p = ($context.call = bd_1_2)($l[2], $l[1]);
+      $.state = 17;
+
+    case 17:
       $.goto = 2;
       return $awt($p);
 
-    case 17:
-      $.goto = 18;
-      $iterFin($l[7]);
-      $.state = 18;
-
     case 18:
-      $.goto = $l[5];
-      continue;
+      return $raise($.error);
 
     case 19:
       $.goto = 20;
-      return $unhandledA($.error);
+      $iterFin($l[7]);
+      $.state = 20;
 
     case 20:
+      $.goto = $l[5];
+      continue;
+
+    case 21:
+      $.goto = 22;
+      return $unhandledA($.error);
+
+    case 22:
       return $retA($.result);
 
     default:
@@ -8944,13 +9014,13 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 17:
     case 16:
     case 15:
-    case 14:
     case 3:
     case 2:
-      $l[5] = 19;
-      $.goto = 17;
+      $.goto = 19;
+      $l[5] = 18;
       break;
 
     case 11:
@@ -8958,23 +9028,22 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[6] = 19;
-      $.goto = 12;
+      $.goto = 13;
+      $l[6] = 12;
       break;
 
     default:
-      $.goto = 19;
-      break;
+      $.goto = 21;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 17:
     case 16:
     case 15:
-    case 14:
     case 3:
     case 2:
-      $l[5] = 20;
-      $.goto = 17;
+      $l[5] = 22;
+      $.goto = 19;
       break;
 
     case 11:
@@ -8982,15 +9051,15 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[6] = 20;
-      $.goto = 12;
+      $l[6] = 22;
+      $.goto = 13;
       break;
 
     default:
-      $.goto = 20;
+      $.goto = 22;
       break;
   }
-}, 1, [[2, "1237:18-1237:25", $s$140], [0, null, $s$139], [2, "1237:18-1237:25", $s$140], [2, "1238:18-1238:27", $s$140], [2, "1242:18-1242:25", $s$141], [0, null, $s$139], [2, "1242:18-1242:25", $s$141], [2, "1243:18-1243:27", $s$141], [0, null, $s$139], [2, "1243:12-1243:27", $s$141], [2, "1244:10-1244:19", $s$141], [2, "1244:4-1244:19", $s$141], [2, "1242:18-1242:25", $s$141], [0, null, $s$139], [2, "1238:12-1238:27", $s$140], [2, "1239:10-1239:25", $s$140], [2, "1239:4-1239:25", $s$140], [2, "1237:18-1237:25", $s$140], [0, null, $s$139], [16, "1246:1-1246:1", $s$139], [16, "1246:1-1246:1", $s$139]]),
+}, 1, [[2, "1237:18-1237:25", $s$140], [0, null, $s$139], [2, "1237:18-1237:25", $s$140], [2, "1238:18-1238:27", $s$140], [2, "1242:18-1242:25", $s$141], [0, null, $s$139], [2, "1242:18-1242:25", $s$141], [2, "1243:18-1243:27", $s$141], [0, null, $s$139], [2, "1243:12-1243:27", $s$141], [2, "1244:10-1244:19", $s$141], [2, "1244:4-1244:19", $s$141], [0, null, $s$139], [2, "1242:18-1242:25", $s$141], [0, null, $s$139], [2, "1238:12-1238:27", $s$140], [2, "1239:10-1239:25", $s$140], [2, "1239:4-1239:25", $s$140], [0, null, $s$139], [2, "1237:18-1237:25", $s$140], [0, null, $s$139], [16, "1246:1-1246:1", $s$139], [16, "1246:1-1246:1", $s$139]]),
     $m$104 = $M.fun("m$104", "p95", null, $m$0, [], 0, 1, "1248:0-1259:1", 129, function p95($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -9059,7 +9128,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $.goto = 15;
+      $.goto = 17;
       continue;
 
     case 5:
@@ -9091,28 +9160,34 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 10:
-      $.goto = 11;
-      $iterFin($l[6]);
-      $.state = 11;
+      return $raise($.error);
 
     case 11:
+      $.goto = 12;
+      $iterFin($l[6]);
+      $.state = 12;
+
+    case 12:
       $.goto = $l[4];
       continue;
 
-    case 12:
-      $.goto = 13;
-      $iterFin($l[5]);
-      $.state = 13;
-
     case 13:
-      $.goto = $l[3];
-      continue;
+      return $raise($.error);
 
     case 14:
       $.goto = 15;
-      return $unhandledA($.error);
+      $iterFin($l[5]);
+      $.state = 15;
 
     case 15:
+      $.goto = $l[3];
+      continue;
+
+    case 16:
+      $.goto = 17;
+      return $unhandledA($.error);
+
+    case 17:
       return $retA($.result);
 
     default:
@@ -9120,53 +9195,53 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 12:
     case 11:
     case 10:
     case 8:
     case 5:
     case 3:
     case 2:
-      $l[3] = 14;
-      $.goto = 12;
+      $.goto = 14;
+      $l[3] = 13;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[4] = 12;
-      $l[3] = 14;
-      $.goto = 10;
+      $.goto = 11;
+      $l[4] = 10;
       break;
 
     default:
-      $.goto = 14;
-      break;
+      $.goto = 16;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 12:
     case 11:
     case 10:
     case 8:
     case 5:
     case 3:
     case 2:
-      $l[3] = 15;
-      $.goto = 12;
+      $l[3] = 17;
+      $.goto = 14;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[4] = 12;
-      $l[3] = 15;
-      $.goto = 10;
+      $l[4] = 14;
+      $l[3] = 17;
+      $.goto = 11;
       break;
 
     default:
-      $.goto = 15;
+      $.goto = 17;
       break;
   }
-}, 1, [[2, "1263:18-1263:25", $s$144], [0, null, $s$143], [2, "1263:18-1263:25", $s$144], [2, "1264:20-1264:27", $s$145], [0, null, $s$143], [0, null, $s$143], [2, "1264:20-1264:27", $s$145], [2, "1265:12-1265:18", $s$145], [0, null, $s$143], [2, "1265:6-1265:18", $s$145], [2, "1264:20-1264:27", $s$145], [0, null, $s$143], [2, "1263:18-1263:25", $s$144], [0, null, $s$143], [16, "1268:1-1268:1", $s$143], [16, "1268:1-1268:1", $s$143]]),
+}, 1, [[2, "1263:18-1263:25", $s$144], [0, null, $s$143], [2, "1263:18-1263:25", $s$144], [2, "1264:20-1264:27", $s$145], [0, null, $s$143], [0, null, $s$143], [2, "1264:20-1264:27", $s$145], [2, "1265:12-1265:18", $s$145], [0, null, $s$143], [2, "1265:6-1265:18", $s$145], [0, null, $s$143], [2, "1264:20-1264:27", $s$145], [0, null, $s$143], [0, null, $s$143], [2, "1263:18-1263:25", $s$144], [0, null, $s$143], [16, "1268:1-1268:1", $s$143], [16, "1268:1-1268:1", $s$143]]),
     $m$106 = $M.fun("m$106", "p97", null, $m$0, [], 0, 8, "1270:0-1279:1", 129, function p97($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -9196,7 +9271,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $.goto = 18;
+      $.goto = 20;
       continue;
 
     case 5:
@@ -9243,28 +9318,34 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 13:
-      $.goto = 14;
-      $iterFin($l[7]);
-      $.state = 14;
+      return $raise($.error);
 
     case 14:
+      $.goto = 15;
+      $iterFin($l[7]);
+      $.state = 15;
+
+    case 15:
       $.goto = $l[5];
       continue;
 
-    case 15:
-      $.goto = 16;
-      $iterFin($l[6]);
-      $.state = 16;
-
     case 16:
-      $.goto = $l[4];
-      continue;
+      return $raise($.error);
 
     case 17:
       $.goto = 18;
-      return $unhandledA($.error);
+      $iterFin($l[6]);
+      $.state = 18;
 
     case 18:
+      $.goto = $l[4];
+      continue;
+
+    case 19:
+      $.goto = 20;
+      return $unhandledA($.error);
+
+    case 20:
       return $retA($.result);
 
     default:
@@ -9272,6 +9353,7 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 15:
     case 14:
     case 13:
     case 9:
@@ -9279,8 +9361,8 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[4] = 17;
-      $.goto = 15;
+      $.goto = 17;
+      $l[4] = 16;
       break;
 
     case 12:
@@ -9288,17 +9370,16 @@ var $M = require("@effectful/debugger"),
     case 10:
     case 8:
     case 7:
-      $l[5] = 15;
-      $l[4] = 17;
-      $.goto = 13;
+      $.goto = 14;
+      $l[5] = 13;
       break;
 
     default:
-      $.goto = 17;
-      break;
+      $.goto = 19;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 15:
     case 14:
     case 13:
     case 9:
@@ -9306,8 +9387,8 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[4] = 18;
-      $.goto = 15;
+      $l[4] = 20;
+      $.goto = 17;
       break;
 
     case 12:
@@ -9315,16 +9396,16 @@ var $M = require("@effectful/debugger"),
     case 10:
     case 8:
     case 7:
-      $l[5] = 15;
-      $l[4] = 18;
-      $.goto = 13;
+      $l[5] = 17;
+      $l[4] = 20;
+      $.goto = 14;
       break;
 
     default:
-      $.goto = 18;
+      $.goto = 20;
       break;
   }
-}, 1, [[2, "1273:18-1273:25", $s$147], [0, null, $s$146], [2, "1273:18-1273:25", $s$147], [2, "1274:20-1274:30", $s$148], [0, null, $s$146], [2, "1274:20-1274:30", $s$148], [0, null, $s$146], [2, "1274:20-1274:30", $s$148], [2, "1275:19-1275:28", $s$148], [0, null, $s$146], [2, "1275:13-1275:28", $s$148], [2, "1276:12-1276:21", $s$148], [2, "1276:6-1276:21", $s$148], [2, "1274:20-1274:30", $s$148], [0, null, $s$146], [2, "1273:18-1273:25", $s$147], [0, null, $s$146], [16, "1279:1-1279:1", $s$146], [16, "1279:1-1279:1", $s$146]]),
+}, 1, [[2, "1273:18-1273:25", $s$147], [0, null, $s$146], [2, "1273:18-1273:25", $s$147], [2, "1274:20-1274:30", $s$148], [0, null, $s$146], [2, "1274:20-1274:30", $s$148], [0, null, $s$146], [2, "1274:20-1274:30", $s$148], [2, "1275:19-1275:28", $s$148], [0, null, $s$146], [2, "1275:13-1275:28", $s$148], [2, "1276:12-1276:21", $s$148], [2, "1276:6-1276:21", $s$148], [0, null, $s$146], [2, "1274:20-1274:30", $s$148], [0, null, $s$146], [0, null, $s$146], [2, "1273:18-1273:25", $s$147], [0, null, $s$146], [16, "1279:1-1279:1", $s$146], [16, "1279:1-1279:1", $s$146]]),
     $m$107 = $M.fun("m$107", "p98", null, $m$0, [], 0, 8, "1281:0-1290:1", 129, function p98($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -9354,7 +9435,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $.goto = 18;
+      $.goto = 20;
       continue;
 
     case 5:
@@ -9401,28 +9482,34 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 13:
-      $.goto = 14;
-      $iterFin($l[7]);
-      $.state = 14;
+      return $raise($.error);
 
     case 14:
+      $.goto = 15;
+      $iterFin($l[7]);
+      $.state = 15;
+
+    case 15:
       $.goto = $l[5];
       continue;
 
-    case 15:
-      $.goto = 16;
-      $iterFin($l[6]);
-      $.state = 16;
-
     case 16:
-      $.goto = $l[4];
-      continue;
+      return $raise($.error);
 
     case 17:
       $.goto = 18;
-      return $unhandledA($.error);
+      $iterFin($l[6]);
+      $.state = 18;
 
     case 18:
+      $.goto = $l[4];
+      continue;
+
+    case 19:
+      $.goto = 20;
+      return $unhandledA($.error);
+
+    case 20:
       return $retA($.result);
 
     default:
@@ -9430,6 +9517,7 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 15:
     case 14:
     case 13:
     case 9:
@@ -9437,8 +9525,8 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[4] = 17;
-      $.goto = 15;
+      $.goto = 17;
+      $l[4] = 16;
       break;
 
     case 12:
@@ -9446,17 +9534,16 @@ var $M = require("@effectful/debugger"),
     case 10:
     case 8:
     case 7:
-      $l[5] = 15;
-      $l[4] = 17;
-      $.goto = 13;
+      $.goto = 14;
+      $l[5] = 13;
       break;
 
     default:
-      $.goto = 17;
-      break;
+      $.goto = 19;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 15:
     case 14:
     case 13:
     case 9:
@@ -9464,8 +9551,8 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 3:
     case 2:
-      $l[4] = 18;
-      $.goto = 15;
+      $l[4] = 20;
+      $.goto = 17;
       break;
 
     case 12:
@@ -9473,16 +9560,16 @@ var $M = require("@effectful/debugger"),
     case 10:
     case 8:
     case 7:
-      $l[5] = 15;
-      $l[4] = 18;
-      $.goto = 13;
+      $l[5] = 17;
+      $l[4] = 20;
+      $.goto = 14;
       break;
 
     default:
-      $.goto = 18;
+      $.goto = 20;
       break;
   }
-}, 1, [[2, "1283:18-1283:25", $s$150], [0, null, $s$149], [2, "1283:18-1283:25", $s$150], [2, "1285:20-1285:30", $s$151], [0, null, $s$149], [2, "1285:20-1285:30", $s$151], [0, null, $s$149], [2, "1285:20-1285:30", $s$151], [2, "1286:19-1286:28", $s$151], [0, null, $s$149], [2, "1286:13-1286:28", $s$151], [2, "1287:12-1287:21", $s$151], [2, "1287:6-1287:21", $s$151], [2, "1285:20-1285:30", $s$151], [0, null, $s$149], [2, "1283:18-1283:25", $s$150], [0, null, $s$149], [16, "1290:1-1290:1", $s$149], [16, "1290:1-1290:1", $s$149]]),
+}, 1, [[2, "1283:18-1283:25", $s$150], [0, null, $s$149], [2, "1283:18-1283:25", $s$150], [2, "1285:20-1285:30", $s$151], [0, null, $s$149], [2, "1285:20-1285:30", $s$151], [0, null, $s$149], [2, "1285:20-1285:30", $s$151], [2, "1286:19-1286:28", $s$151], [0, null, $s$149], [2, "1286:13-1286:28", $s$151], [2, "1287:12-1287:21", $s$151], [2, "1287:6-1287:21", $s$151], [0, null, $s$149], [2, "1285:20-1285:30", $s$151], [0, null, $s$149], [0, null, $s$149], [2, "1283:18-1283:25", $s$150], [0, null, $s$149], [16, "1290:1-1290:1", $s$149], [16, "1290:1-1290:1", $s$149]]),
     $m$108 = $M.fun("m$108", "p99", null, $m$0, [], 0, 9, "1292:0-1302:1", 129, function p99($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -9505,7 +9592,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[1] = $p.value;
-        $.goto = 12;
+        $.goto = 13;
         $p = ($context.call = iter2_1)($l[1]);
         continue;
       }
@@ -9536,7 +9623,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 23;
+      $.goto = 26;
       continue;
 
     case 9:
@@ -9544,70 +9631,79 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 10:
-      $.goto = 11;
-      $iterFin($l[7]);
-      $.state = 11;
+      return $raise($.error);
 
     case 11:
+      $.goto = 12;
+      $iterFin($l[7]);
+      $.state = 12;
+
+    case 12:
       $.goto = $l[6];
       continue;
 
-    case 12:
-      $.goto = 13;
-      $p = $iterator($p);
-      $.state = 13;
-
     case 13:
-      $l[8] = $p;
+      $.goto = 14;
+      $p = $iterator($p);
       $.state = 14;
 
     case 14:
-      $context.call = $l[8].next;
-      $.goto = 15;
-      $p = $l[8].next();
+      $l[8] = $p;
       $.state = 15;
 
     case 15:
+      $context.call = $l[8].next;
+      $.goto = 16;
+      $p = $l[8].next();
+      $.state = 16;
+
+    case 16:
       if ($p.done) {
-        $.state = 16;
+        $.state = 17;
       } else {
         $l[2] = $p.value;
-        $.goto = 17;
+        $.goto = 18;
         $p = ($context.call = bd_1)($l[1], $l[2]);
         continue;
       }
 
-    case 16:
+    case 17:
       $.goto = 2;
       continue;
 
-    case 17:
-      $.goto = 14;
+    case 18:
+      $.goto = 15;
       return $awt($p);
 
-    case 18:
-      $.goto = 19;
-      $iterFin($l[8]);
-      $.state = 19;
-
     case 19:
-      $.goto = $l[5];
-      continue;
+      return $raise($.error);
 
     case 20:
       $.goto = 21;
-      $iterFin($l[7]);
+      $iterFin($l[8]);
       $.state = 21;
 
     case 21:
-      $.goto = $l[4];
+      $.goto = $l[5];
       continue;
 
     case 22:
-      $.goto = 23;
-      return $unhandledA($.error);
+      return $raise($.error);
 
     case 23:
+      $.goto = 24;
+      $iterFin($l[7]);
+      $.state = 24;
+
+    case 24:
+      $.goto = $l[4];
+      continue;
+
+    case 25:
+      $.goto = 26;
+      return $unhandledA($.error);
+
+    case 26:
       return $retA($.result);
 
     default:
@@ -9615,69 +9711,69 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 21:
+    case 20:
     case 19:
-    case 18:
-    case 16:
+    case 17:
+    case 14:
     case 13:
-    case 12:
     case 3:
     case 2:
+      $.goto = 23;
       $l[4] = 22;
-      $.goto = 20;
       break;
 
-    case 17:
+    case 18:
+    case 16:
     case 15:
-    case 14:
-      $l[5] = 20;
-      $l[4] = 22;
-      $.goto = 18;
+      $.goto = 20;
+      $l[5] = 19;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[6] = 22;
-      $.goto = 10;
+      $.goto = 11;
+      $l[6] = 10;
       break;
 
     default:
-      $.goto = 22;
-      break;
+      $.goto = 25;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 21:
+    case 20:
     case 19:
-    case 18:
-    case 16:
+    case 17:
+    case 14:
     case 13:
-    case 12:
     case 3:
     case 2:
-      $l[4] = 23;
-      $.goto = 20;
+      $l[4] = 26;
+      $.goto = 23;
       break;
 
-    case 17:
+    case 18:
+    case 16:
     case 15:
-    case 14:
-      $l[5] = 20;
-      $l[4] = 23;
-      $.goto = 18;
+      $l[5] = 23;
+      $l[4] = 26;
+      $.goto = 20;
       break;
 
     case 9:
     case 7:
     case 6:
-      $l[6] = 23;
-      $.goto = 10;
+      $l[6] = 26;
+      $.goto = 11;
       break;
 
     default:
-      $.goto = 23;
+      $.goto = 26;
       break;
   }
-}, 1, [[2, "1294:18-1294:25", $s$153], [0, null, $s$152], [2, "1294:18-1294:25", $s$153], [2, "1295:20-1295:30", $s$154], [2, "1299:18-1299:25", $s$155], [0, null, $s$152], [2, "1299:18-1299:25", $s$155], [2, "1300:10-1300:17", $s$155], [0, null, $s$152], [2, "1300:4-1300:17", $s$155], [2, "1299:18-1299:25", $s$155], [0, null, $s$152], [2, "1295:20-1295:30", $s$154], [0, null, $s$152], [2, "1295:20-1295:30", $s$154], [2, "1296:12-1296:22", $s$154], [0, null, $s$152], [2, "1296:6-1296:22", $s$154], [2, "1295:20-1295:30", $s$154], [0, null, $s$152], [2, "1294:18-1294:25", $s$153], [0, null, $s$152], [16, "1302:1-1302:1", $s$152], [16, "1302:1-1302:1", $s$152]]),
+}, 1, [[2, "1294:18-1294:25", $s$153], [0, null, $s$152], [2, "1294:18-1294:25", $s$153], [2, "1295:20-1295:30", $s$154], [2, "1299:18-1299:25", $s$155], [0, null, $s$152], [2, "1299:18-1299:25", $s$155], [2, "1300:10-1300:17", $s$155], [0, null, $s$152], [2, "1300:4-1300:17", $s$155], [0, null, $s$152], [2, "1299:18-1299:25", $s$155], [0, null, $s$152], [2, "1295:20-1295:30", $s$154], [0, null, $s$152], [2, "1295:20-1295:30", $s$154], [2, "1296:12-1296:22", $s$154], [0, null, $s$152], [2, "1296:6-1296:22", $s$154], [0, null, $s$152], [2, "1295:20-1295:30", $s$154], [0, null, $s$152], [0, null, $s$152], [2, "1294:18-1294:25", $s$153], [0, null, $s$152], [16, "1302:1-1302:1", $s$152], [16, "1302:1-1302:1", $s$152]]),
     $m$109 = $M.fun("m$109", "r01", null, $m$0, [], 0, 11, "1304:0-1316:1", 129, function r01($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -9700,7 +9796,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $l[1] = $p.value;
-        $.goto = 19;
+        $.goto = 21;
         $p = ($context.call = iter2_1)($l[1]);
         continue;
       }
@@ -9731,7 +9827,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 8:
-      $.goto = 30;
+      $.goto = 34;
       continue;
 
     case 9:
@@ -9768,79 +9864,91 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 15:
-      $.goto = 16;
-      $iterFin($l[10]);
-      $.state = 16;
+      return $raise($.error);
 
     case 16:
+      $.goto = 17;
+      $iterFin($l[10]);
+      $.state = 17;
+
+    case 17:
       $.goto = $l[8];
       continue;
 
-    case 17:
-      $.goto = 18;
-      $iterFin($l[9]);
-      $.state = 18;
-
     case 18:
-      $.goto = $l[7];
-      continue;
+      return $raise($.error);
 
     case 19:
       $.goto = 20;
-      $p = $iterator($p);
+      $iterFin($l[9]);
       $.state = 20;
 
     case 20:
-      $l[10] = $p;
-      $.state = 21;
+      $.goto = $l[7];
+      continue;
 
     case 21:
-      $context.call = $l[10].next;
       $.goto = 22;
-      $p = $l[10].next();
+      $p = $iterator($p);
       $.state = 22;
 
     case 22:
+      $l[10] = $p;
+      $.state = 23;
+
+    case 23:
+      $context.call = $l[10].next;
+      $.goto = 24;
+      $p = $l[10].next();
+      $.state = 24;
+
+    case 24:
       if ($p.done) {
-        $.state = 23;
+        $.state = 25;
       } else {
         $l[2] = $p.value;
-        $.goto = 24;
+        $.goto = 26;
         $p = ($context.call = bd_1)($l[1], $l[2]);
         continue;
       }
 
-    case 23:
+    case 25:
       $.goto = 2;
       continue;
 
-    case 24:
-      $.goto = 21;
+    case 26:
+      $.goto = 23;
       return $awt($p);
 
-    case 25:
-      $.goto = 26;
-      $iterFin($l[10]);
-      $.state = 26;
+    case 27:
+      return $raise($.error);
 
-    case 26:
+    case 28:
+      $.goto = 29;
+      $iterFin($l[10]);
+      $.state = 29;
+
+    case 29:
       $.goto = $l[6];
       continue;
 
-    case 27:
-      $.goto = 28;
-      $iterFin($l[9]);
-      $.state = 28;
+    case 30:
+      return $raise($.error);
 
-    case 28:
+    case 31:
+      $.goto = 32;
+      $iterFin($l[9]);
+      $.state = 32;
+
+    case 32:
       $.goto = $l[5];
       continue;
 
-    case 29:
-      $.goto = 30;
+    case 33:
+      $.goto = 34;
       return $unhandledA($.error);
 
-    case 30:
+    case 34:
       return $retA($.result);
 
     default:
@@ -9848,25 +9956,26 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 26:
+    case 29:
+    case 28:
+    case 27:
     case 25:
-    case 23:
-    case 20:
-    case 19:
-    case 3:
-    case 2:
-      $l[5] = 29;
-      $.goto = 27;
-      break;
-
-    case 24:
     case 22:
     case 21:
-      $l[6] = 27;
-      $l[5] = 29;
-      $.goto = 25;
+    case 3:
+    case 2:
+      $.goto = 31;
+      $l[5] = 30;
       break;
 
+    case 26:
+    case 24:
+    case 23:
+      $.goto = 28;
+      $l[6] = 27;
+      break;
+
+    case 17:
     case 16:
     case 15:
     case 13:
@@ -9874,43 +9983,43 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[7] = 29;
-      $.goto = 17;
+      $.goto = 19;
+      $l[7] = 18;
       break;
 
     case 14:
     case 12:
     case 11:
-      $l[8] = 17;
-      $l[7] = 29;
-      $.goto = 15;
+      $.goto = 16;
+      $l[8] = 15;
       break;
 
     default:
-      $.goto = 29;
-      break;
+      $.goto = 33;
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 26:
+    case 29:
+    case 28:
+    case 27:
     case 25:
-    case 23:
-    case 20:
-    case 19:
-    case 3:
-    case 2:
-      $l[5] = 30;
-      $.goto = 27;
-      break;
-
-    case 24:
     case 22:
     case 21:
-      $l[6] = 27;
-      $l[5] = 30;
-      $.goto = 25;
+    case 3:
+    case 2:
+      $l[5] = 34;
+      $.goto = 31;
       break;
 
+    case 26:
+    case 24:
+    case 23:
+      $l[6] = 31;
+      $l[5] = 34;
+      $.goto = 28;
+      break;
+
+    case 17:
     case 16:
     case 15:
     case 13:
@@ -9918,23 +10027,23 @@ var $M = require("@effectful/debugger"),
     case 9:
     case 7:
     case 6:
-      $l[7] = 30;
-      $.goto = 17;
+      $l[7] = 34;
+      $.goto = 19;
       break;
 
     case 14:
     case 12:
     case 11:
-      $l[8] = 17;
-      $l[7] = 30;
-      $.goto = 15;
+      $l[8] = 19;
+      $l[7] = 34;
+      $.goto = 16;
       break;
 
     default:
-      $.goto = 30;
+      $.goto = 34;
       break;
   }
-}, 1, [[2, "1306:18-1306:25", $s$157], [0, null, $s$156], [2, "1306:18-1306:25", $s$157], [2, "1307:20-1307:30", $s$158], [2, "1311:18-1311:25", $s$159], [0, null, $s$156], [2, "1311:18-1311:25", $s$159], [2, "1312:20-1312:30", $s$160], [0, null, $s$156], [2, "1312:20-1312:30", $s$160], [0, null, $s$156], [2, "1312:20-1312:30", $s$160], [2, "1313:12-1313:22", $s$160], [0, null, $s$156], [2, "1313:6-1313:22", $s$160], [2, "1312:20-1312:30", $s$160], [0, null, $s$156], [2, "1311:18-1311:25", $s$159], [0, null, $s$156], [2, "1307:20-1307:30", $s$158], [0, null, $s$156], [2, "1307:20-1307:30", $s$158], [2, "1308:12-1308:22", $s$158], [0, null, $s$156], [2, "1308:6-1308:22", $s$158], [2, "1307:20-1307:30", $s$158], [0, null, $s$156], [2, "1306:18-1306:25", $s$157], [0, null, $s$156], [16, "1316:1-1316:1", $s$156], [16, "1316:1-1316:1", $s$156]]),
+}, 1, [[2, "1306:18-1306:25", $s$157], [0, null, $s$156], [2, "1306:18-1306:25", $s$157], [2, "1307:20-1307:30", $s$158], [2, "1311:18-1311:25", $s$159], [0, null, $s$156], [2, "1311:18-1311:25", $s$159], [2, "1312:20-1312:30", $s$160], [0, null, $s$156], [2, "1312:20-1312:30", $s$160], [0, null, $s$156], [2, "1312:20-1312:30", $s$160], [2, "1313:12-1313:22", $s$160], [0, null, $s$156], [2, "1313:6-1313:22", $s$160], [0, null, $s$156], [2, "1312:20-1312:30", $s$160], [0, null, $s$156], [0, null, $s$156], [2, "1311:18-1311:25", $s$159], [0, null, $s$156], [2, "1307:20-1307:30", $s$158], [0, null, $s$156], [2, "1307:20-1307:30", $s$158], [2, "1308:12-1308:22", $s$158], [0, null, $s$156], [2, "1308:6-1308:22", $s$158], [0, null, $s$156], [2, "1307:20-1307:30", $s$158], [0, null, $s$156], [0, null, $s$156], [2, "1306:18-1306:25", $s$157], [0, null, $s$156], [16, "1316:1-1316:1", $s$156], [16, "1316:1-1316:1", $s$156]]),
     $m$110 = $M.fun("m$110", "r02", null, $m$0, [], 0, 1, "1318:0-1337:1", 129, function r02($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10027,32 +10136,34 @@ var $M = require("@effectful/debugger"),
       return $awt(b_1);
 
     case 2:
-      $l[1] = 6;
-      $.goto = 3;
+      $l[1] = 7;
+      $.goto = 4;
       return $awt(b_2);
 
     case 3:
-      $.goto = 4;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 4:
       $.goto = 5;
-      return $awt(f_2);
+      return $awt(f_1);
 
     case 5:
-      $.error = $l[2];
+      $.goto = 6;
+      return $awt(f_2);
+
+    case 6:
       $.goto = $l[1];
       continue;
 
-    case 6:
-      $.goto = 8;
+    case 7:
+      $.goto = 9;
       continue;
 
-    case 7:
-      $.goto = 8;
+    case 8:
+      $.goto = 9;
       return $unhandledA($.error);
 
-    case 8:
+    case 9:
       return $retA($.result);
 
     default:
@@ -10062,28 +10173,27 @@ var $M = require("@effectful/debugger"),
   switch ($.state) {
     case 2:
     case 1:
+      $.goto = 4;
+      $l[1] = 3;
       $l[2] = $.error;
-      $l[1] = 7;
-      $.goto = 3;
       break;
 
     default:
-      $.goto = 7;
-      break;
+      $.goto = 8;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 2:
     case 1:
-      $l[1] = 8;
-      $.goto = 3;
+      $l[1] = 9;
+      $.goto = 4;
       break;
 
     default:
-      $.goto = 8;
+      $.goto = 9;
       break;
   }
-}, 1, [[0, null, $s$163], [2, "1364:4-1364:13", $s$163], [2, "1365:4-1365:13", $s$163], [2, "1367:4-1367:13", $s$163], [2, "1368:4-1368:13", $s$163], [0, null, $s$163], [0, null, $s$163], [16, "1370:1-1370:1", $s$163], [16, "1370:1-1370:1", $s$163]]),
+}, 1, [[0, null, $s$163], [2, "1364:4-1364:13", $s$163], [2, "1365:4-1365:13", $s$163], [0, null, $s$163], [2, "1367:4-1367:13", $s$163], [2, "1368:4-1368:13", $s$163], [0, null, $s$163], [0, null, $s$163], [16, "1370:1-1370:1", $s$163], [16, "1370:1-1370:1", $s$163]]),
     $m$113 = $M.fun("m$113", "r05", null, $m$0, [], 0, 3, "1372:0-1381:1", 129, function r05($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10099,27 +10209,30 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.result = $p;
-      $l[1] = 8;
-      $.state = 4;
+      $l[1] = 9;
+      $.goto = 5;
+      continue;
 
     case 4:
-      $.goto = 5;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 5:
       $.goto = 6;
-      return $awt(f_2);
+      return $awt(f_1);
 
     case 6:
-      $.error = $l[2];
+      $.goto = 7;
+      return $awt(f_2);
+
+    case 7:
       $.goto = $l[1];
       continue;
 
-    case 7:
-      $.goto = 8;
+    case 8:
+      $.goto = 9;
       return $unhandledA($.error);
 
-    case 8:
+    case 9:
       return $retA($.result);
 
     default:
@@ -10130,29 +10243,28 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 5;
+      $l[1] = 4;
       $l[2] = $.error;
-      $l[1] = 7;
-      $.goto = 4;
       break;
 
     default:
-      $.goto = 7;
-      break;
+      $.goto = 8;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 3:
     case 2:
     case 1:
-      $l[1] = 8;
-      $.goto = 4;
+      $l[1] = 9;
+      $.goto = 5;
       break;
 
     default:
-      $.goto = 8;
+      $.goto = 9;
       break;
   }
-}, 1, [[0, null, $s$164], [2, "1375:4-1375:13", $s$164], [2, "1376:11-1376:20", $s$164], [0, null, $s$164], [2, "1378:4-1378:13", $s$164], [2, "1379:4-1379:13", $s$164], [0, null, $s$164], [16, "1381:1-1381:1", $s$164], [16, "1381:1-1381:1", $s$164]]),
+}, 1, [[0, null, $s$164], [2, "1375:4-1375:13", $s$164], [2, "1376:11-1376:20", $s$164], [0, null, $s$164], [0, null, $s$164], [2, "1378:4-1378:13", $s$164], [2, "1379:4-1379:13", $s$164], [0, null, $s$164], [16, "1381:1-1381:1", $s$164], [16, "1381:1-1381:1", $s$164]]),
     $m$114 = $M.fun("m$114", "r06", null, $m$0, [], 0, 5, "1383:0-1395:1", 129, function r06($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10171,33 +10283,38 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $.result = $p;
-      $l[3] = 7;
-      $l[1] = 10;
-      $.state = 5;
+      $l[3] = 9;
+      $l[1] = 12;
+      $.goto = 6;
+      continue;
 
     case 5:
-      $.goto = 6;
-      return $awt(f_1);
+      return $raise($l[4]);
 
     case 6:
-      $.error = $l[4];
+      $.goto = 7;
+      return $awt(f_1);
+
+    case 7:
       $.goto = $l[3];
       continue;
 
-    case 7:
-      $.goto = 8;
-      return $awt(f_2);
-
     case 8:
-      $.error = $l[2];
-      $.goto = $l[1];
-      continue;
+      return $raise($l[2]);
 
     case 9:
       $.goto = 10;
-      return $unhandledA($.error);
+      return $awt(f_2);
 
     case 10:
+      $.goto = $l[1];
+      continue;
+
+    case 11:
+      $.goto = 12;
+      return $unhandledA($.error);
+
+    case 12:
       return $retA($.result);
 
     default:
@@ -10205,49 +10322,49 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 7:
     case 6:
     case 5:
     case 1:
+      $.goto = 9;
+      $l[1] = 8;
       $l[2] = $.error;
-      $l[1] = 9;
-      $.goto = 7;
       break;
 
     case 4:
     case 3:
     case 2:
+      $.goto = 6;
+      $l[3] = 5;
       $l[4] = $.error;
-      $l[3] = 7;
-      $l[1] = 9;
-      $.goto = 5;
       break;
 
     default:
-      $.goto = 9;
-      break;
+      $.goto = 11;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 7:
     case 6:
     case 5:
     case 1:
-      $l[1] = 10;
-      $.goto = 7;
+      $l[1] = 12;
+      $.goto = 9;
       break;
 
     case 4:
     case 3:
     case 2:
-      $l[3] = 7;
-      $l[1] = 10;
-      $.goto = 5;
+      $l[3] = 9;
+      $l[1] = 12;
+      $.goto = 6;
       break;
 
     default:
-      $.goto = 10;
+      $.goto = 12;
       break;
   }
-}, 1, [[0, null, $s$165], [0, null, $s$165], [2, "1387:6-1387:15", $s$165], [2, "1388:13-1388:22", $s$165], [0, null, $s$165], [2, "1390:6-1390:15", $s$165], [0, null, $s$165], [2, "1393:4-1393:13", $s$165], [0, null, $s$165], [16, "1395:1-1395:1", $s$165], [16, "1395:1-1395:1", $s$165]]),
+}, 1, [[0, null, $s$165], [0, null, $s$165], [2, "1387:6-1387:15", $s$165], [2, "1388:13-1388:22", $s$165], [0, null, $s$165], [0, null, $s$165], [2, "1390:6-1390:15", $s$165], [0, null, $s$165], [0, null, $s$165], [2, "1393:4-1393:13", $s$165], [0, null, $s$165], [16, "1395:1-1395:1", $s$165], [16, "1395:1-1395:1", $s$165]]),
     $m$115 = $M.fun("m$115", "r07", null, $m$0, [], 0, 3, "1397:0-1409:1", 129, function r07($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10260,36 +10377,38 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       if (something) {
-        $l[1] = 6;
-        $.goto = 4;
+        $l[1] = 7;
+        $.goto = 5;
         continue;
       } else {
         $.state = 3;
       }
 
     case 3:
-      $l[1] = 6;
-      $.goto = 4;
+      $l[1] = 7;
+      $.goto = 5;
       return $awt(b_2);
 
     case 4:
-      $.goto = 5;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 5:
-      $.error = $l[2];
+      $.goto = 6;
+      return $awt(f_1);
+
+    case 6:
       $.goto = $l[1];
       continue;
 
-    case 6:
-      $.goto = 8;
+    case 7:
+      $.goto = 9;
       return $awt(s_1);
 
-    case 7:
-      $.goto = 8;
+    case 8:
+      $.goto = 9;
       return $unhandledA($.error);
 
-    case 8:
+    case 9:
       return $retA($.result);
 
     default:
@@ -10300,29 +10419,28 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 5;
+      $l[1] = 4;
       $l[2] = $.error;
-      $l[1] = 7;
-      $.goto = 4;
       break;
 
     default:
-      $.goto = 7;
-      break;
+      $.goto = 8;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 3:
     case 2:
     case 1:
-      $l[1] = 8;
-      $.goto = 4;
+      $l[1] = 9;
+      $.goto = 5;
       break;
 
     default:
-      $.goto = 8;
+      $.goto = 9;
       break;
   }
-}, 1, [[0, "1399:5-1399:10", $s$166], [2, "1401:6-1401:15", $s$166], [0, null, $s$166], [2, "1403:6-1403:15", $s$166], [2, "1405:6-1405:15", $s$166], [0, null, $s$166], [2, "1408:2-1408:11", $s$166], [16, "1409:1-1409:1", $s$166], [16, "1409:1-1409:1", $s$166]]),
+}, 1, [[0, "1399:5-1399:10", $s$166], [2, "1401:6-1401:15", $s$166], [0, null, $s$166], [2, "1403:6-1403:15", $s$166], [0, null, $s$166], [2, "1405:6-1405:15", $s$166], [0, null, $s$166], [2, "1408:2-1408:11", $s$166], [16, "1409:1-1409:1", $s$166], [16, "1409:1-1409:1", $s$166]]),
     $m$116 = $M.fun("m$116", "r08", null, $m$0, [], 0, 7, "1411:0-1432:1", 129, function r08($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10345,10 +10463,10 @@ var $M = require("@effectful/debugger"),
         return $awt(b_2);
       } else {
         if (somethingElse) {
-          $l[5] = 10;
-          $l[3] = 13;
-          $l[1] = 15;
-          $.goto = 7;
+          $l[5] = 12;
+          $l[3] = 16;
+          $l[1] = 18;
+          $.goto = 8;
           continue;
         } else {
           $.state = 5;
@@ -10356,62 +10474,70 @@ var $M = require("@effectful/debugger"),
       }
 
     case 5:
-      $l[5] = 9;
-      $.goto = 7;
+      $l[5] = 10;
+      $.goto = 8;
       continue;
 
     case 6:
       $.result = $p;
-      $l[5] = 10;
-      $l[3] = 13;
-      $l[1] = 17;
-      $.state = 7;
+      $l[5] = 12;
+      $l[3] = 16;
+      $l[1] = 20;
+      $.goto = 8;
+      continue;
 
     case 7:
-      $.goto = 8;
-      return $awt(f_1);
+      return $raise($l[6]);
 
     case 8:
-      $.error = $l[6];
+      $.goto = 9;
+      return $awt(f_1);
+
+    case 9:
       $.goto = $l[5];
       continue;
 
-    case 9:
-      $l[3] = 12;
-      $.goto = 10;
+    case 10:
+      $l[3] = 14;
+      $.goto = 12;
       return $awt(b_3);
 
-    case 10:
-      $.goto = 11;
+    case 11:
+      return $raise($l[4]);
+
+    case 12:
+      $.goto = 13;
       return $awt(f_2);
 
-    case 11:
-      $.error = $l[4];
+    case 13:
       $.goto = $l[3];
       continue;
 
-    case 12:
-      $l[1] = 15;
-      $.state = 13;
-
-    case 13:
-      $.goto = 14;
-      return $awt(f_3);
-
     case 14:
-      $.error = $l[2];
-      $.goto = $l[1];
+      $l[1] = 18;
+      $.goto = 16;
       continue;
 
     case 15:
-      $.goto = 17;
-      return $awt(s_1);
+      return $raise($l[2]);
 
     case 16:
       $.goto = 17;
-      return $unhandledA($.error);
+      return $awt(f_3);
 
     case 17:
+      $.goto = $l[1];
+      continue;
+
+    case 18:
+      $.goto = 20;
+      return $awt(s_1);
+
+    case 19:
+      $.goto = 20;
+      return $unhandledA($.error);
+
+    case 20:
       return $retA($.result);
 
     default:
@@ -10419,74 +10545,74 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 14:
+    case 13:
     case 12:
     case 11:
-    case 10:
     case 1:
+      $.goto = 16;
+      $l[1] = 15;
       $l[2] = $.error;
-      $l[1] = 16;
-      $.goto = 13;
       break;
 
+    case 10:
     case 9:
     case 8:
     case 7:
     case 2:
+      $.goto = 12;
+      $l[3] = 11;
       $l[4] = $.error;
-      $l[3] = 13;
-      $l[1] = 16;
-      $.goto = 10;
       break;
 
     case 6:
     case 5:
     case 4:
     case 3:
+      $.goto = 8;
+      $l[5] = 7;
       $l[6] = $.error;
-      $l[5] = 10;
-      $l[3] = 13;
-      $l[1] = 16;
-      $.goto = 7;
       break;
 
     default:
-      $.goto = 16;
-      break;
+      $.goto = 19;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 14:
+    case 13:
     case 12:
     case 11:
-    case 10:
     case 1:
-      $l[1] = 17;
-      $.goto = 13;
+      $l[1] = 20;
+      $.goto = 16;
       break;
 
+    case 10:
     case 9:
     case 8:
     case 7:
     case 2:
-      $l[3] = 13;
-      $l[1] = 17;
-      $.goto = 10;
+      $l[3] = 16;
+      $l[1] = 20;
+      $.goto = 12;
       break;
 
     case 6:
     case 5:
     case 4:
     case 3:
-      $l[5] = 10;
-      $l[3] = 13;
-      $l[1] = 17;
-      $.goto = 7;
+      $l[5] = 12;
+      $l[3] = 16;
+      $l[1] = 20;
+      $.goto = 8;
       break;
 
     default:
-      $.goto = 17;
+      $.goto = 20;
       break;
   }
-}, 1, [[0, null, $s$167], [0, "1414:7-1414:12", $s$167], [0, null, $s$167], [2, "1417:10-1417:19", $s$167], [2, "1418:32-1418:41", $s$167], [0, null, $s$167], [0, null, $s$167], [2, "1421:10-1421:19", $s$167], [0, null, $s$167], [2, "1423:8-1423:17", $s$167], [2, "1425:8-1425:17", $s$167], [0, null, $s$167], [0, null, $s$167], [2, "1428:6-1428:15", $s$167], [0, null, $s$167], [2, "1431:2-1431:11", $s$167], [16, "1432:1-1432:1", $s$167], [16, "1432:1-1432:1", $s$167]]),
+}, 1, [[0, null, $s$167], [0, "1414:7-1414:12", $s$167], [0, null, $s$167], [2, "1417:10-1417:19", $s$167], [2, "1418:32-1418:41", $s$167], [0, null, $s$167], [0, null, $s$167], [0, null, $s$167], [2, "1421:10-1421:19", $s$167], [0, null, $s$167], [2, "1423:8-1423:17", $s$167], [0, null, $s$167], [2, "1425:8-1425:17", $s$167], [0, null, $s$167], [0, null, $s$167], [0, null, $s$167], [2, "1428:6-1428:15", $s$167], [0, null, $s$167], [2, "1431:2-1431:11", $s$167], [16, "1432:1-1432:1", $s$167], [16, "1432:1-1432:1", $s$167]]),
     $m$117 = $M.fun("m$117", "r09", null, $m$0, [], 0, 3, "1434:0-1447:1", 129, function r09($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10508,27 +10634,30 @@ var $M = require("@effectful/debugger"),
       }
 
     case 3:
-      $l[1] = 6;
-      $.state = 4;
+      $l[1] = 7;
+      $.goto = 5;
+      continue;
 
     case 4:
-      $.goto = 5;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 5:
-      $.error = $l[2];
+      $.goto = 6;
+      return $awt(f_1);
+
+    case 6:
       $.goto = $l[1];
       continue;
 
-    case 6:
-      $.goto = 8;
+    case 7:
+      $.goto = 9;
       return $awt(s_1);
 
-    case 7:
-      $.goto = 8;
+    case 8:
+      $.goto = 9;
       return $unhandledA($.error);
 
-    case 8:
+    case 9:
       return $retA($.result);
 
     default:
@@ -10539,29 +10668,28 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 5;
+      $l[1] = 4;
       $l[2] = $.error;
-      $l[1] = 7;
-      $.goto = 4;
       break;
 
     default:
-      $.goto = 7;
-      break;
+      $.goto = 8;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 3:
     case 2:
     case 1:
-      $l[1] = 8;
-      $.goto = 4;
+      $l[1] = 9;
+      $.goto = 5;
       break;
 
     default:
-      $.goto = 8;
+      $.goto = 9;
       break;
   }
-}, 1, [[2, "1437:4-1437:13", $s$168], [2, "1439:6-1439:15", $s$168], [2, "1440:23-1440:34", $s$168], [0, null, $s$168], [2, "1443:6-1443:15", $s$168], [0, null, $s$168], [2, "1446:2-1446:11", $s$168], [16, "1447:1-1447:1", $s$168], [16, "1447:1-1447:1", $s$168]]),
+}, 1, [[2, "1437:4-1437:13", $s$168], [2, "1439:6-1439:15", $s$168], [2, "1440:23-1440:34", $s$168], [0, null, $s$168], [0, null, $s$168], [2, "1443:6-1443:15", $s$168], [0, null, $s$168], [2, "1446:2-1446:11", $s$168], [16, "1447:1-1447:1", $s$168], [16, "1447:1-1447:1", $s$168]]),
     $m$118 = $M.fun("m$118", "r10", null, $m$0, [], 0, 3, "1449:0-1458:1", 129, function r10($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10572,32 +10700,34 @@ var $M = require("@effectful/debugger"),
       return $awt(b_1);
 
     case 2:
-      $l[1] = 6;
-      $.goto = 3;
+      $l[1] = 7;
+      $.goto = 4;
       return $awt(b_2);
 
     case 3:
-      $.goto = 4;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 4:
       $.goto = 5;
-      return $awt(f_2);
+      return $awt(f_1);
 
     case 5:
-      $.error = $l[2];
+      $.goto = 6;
+      return $awt(f_2);
+
+    case 6:
       $.goto = $l[1];
       continue;
 
-    case 6:
-      $.goto = 8;
+    case 7:
+      $.goto = 9;
       continue;
 
-    case 7:
-      $.goto = 8;
+    case 8:
+      $.goto = 9;
       return $unhandledA($.error);
 
-    case 8:
+    case 9:
       return $retA($.result);
 
     default:
@@ -10607,28 +10737,27 @@ var $M = require("@effectful/debugger"),
   switch ($.state) {
     case 2:
     case 1:
+      $.goto = 4;
+      $l[1] = 3;
       $l[2] = $.error;
-      $l[1] = 7;
-      $.goto = 3;
       break;
 
     default:
-      $.goto = 7;
-      break;
+      $.goto = 8;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 2:
     case 1:
-      $l[1] = 8;
-      $.goto = 3;
+      $l[1] = 9;
+      $.goto = 4;
       break;
 
     default:
-      $.goto = 8;
+      $.goto = 9;
       break;
   }
-}, 1, [[0, null, $s$169], [2, "1452:4-1452:13", $s$169], [2, "1453:4-1453:13", $s$169], [2, "1455:4-1455:13", $s$169], [2, "1456:4-1456:13", $s$169], [0, null, $s$169], [0, null, $s$169], [16, "1458:1-1458:1", $s$169], [16, "1458:1-1458:1", $s$169]]),
+}, 1, [[0, null, $s$169], [2, "1452:4-1452:13", $s$169], [2, "1453:4-1453:13", $s$169], [0, null, $s$169], [2, "1455:4-1455:13", $s$169], [2, "1456:4-1456:13", $s$169], [0, null, $s$169], [0, null, $s$169], [16, "1458:1-1458:1", $s$169], [16, "1458:1-1458:1", $s$169]]),
     $m$119 = $M.fun("m$119", "r11", null, $m$0, [], 0, 3, "1460:0-1469:1", 129, function r11($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10670,14 +10799,13 @@ var $M = require("@effectful/debugger"),
   switch ($.state) {
     case 2:
     case 1:
-      $l[2] = $.error;
-      $l[1] = 6;
       $.goto = 3;
+      $l[1] = 6;
+      $l[2] = $.error;
       break;
 
     default:
       $.goto = 6;
-      break;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -10710,64 +10838,72 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       if (something) {
-        $l[5] = 9;
-        $l[3] = 12;
-        $l[1] = 14;
-        $.goto = 6;
+        $l[5] = 11;
+        $l[3] = 15;
+        $l[1] = 17;
+        $.goto = 7;
         continue;
       } else {
         $.state = 5;
       }
 
     case 5:
-      $l[5] = 8;
-      $.state = 6;
+      $l[5] = 9;
+      $.goto = 7;
+      continue;
 
     case 6:
-      $.goto = 7;
-      return $awt(f_1);
+      return $raise($l[6]);
 
     case 7:
-      $.error = $l[6];
+      $.goto = 8;
+      return $awt(f_1);
+
+    case 8:
       $.goto = $l[5];
       continue;
 
-    case 8:
-      $l[3] = 11;
-      $.goto = 9;
+    case 9:
+      $l[3] = 13;
+      $.goto = 11;
       return $awt(b_3);
 
-    case 9:
-      $.goto = 10;
+    case 10:
+      return $raise($l[4]);
+
+    case 11:
+      $.goto = 12;
       return $awt(f_2);
 
-    case 10:
-      $.error = $l[4];
+    case 12:
       $.goto = $l[3];
       continue;
 
-    case 11:
-      $l[1] = 14;
-      $.state = 12;
-
-    case 12:
-      $.goto = 13;
-      return $awt(f_3);
-
     case 13:
-      $.error = $l[2];
-      $.goto = $l[1];
+      $l[1] = 17;
+      $.goto = 15;
       continue;
 
     case 14:
-      $.goto = 16;
-      return $awt(s_1);
+      return $raise($l[2]);
 
     case 15:
       $.goto = 16;
-      return $unhandledA($.error);
+      return $awt(f_3);
 
     case 16:
+      $.goto = $l[1];
+      continue;
+
+    case 17:
+      $.goto = 19;
+      return $awt(s_1);
+
+    case 18:
+      $.goto = 19;
+      return $unhandledA($.error);
+
+    case 19:
       return $retA($.result);
 
     default:
@@ -10775,72 +10911,72 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 13:
+    case 12:
     case 11:
     case 10:
-    case 9:
     case 1:
+      $.goto = 15;
+      $l[1] = 14;
       $l[2] = $.error;
-      $l[1] = 15;
-      $.goto = 12;
       break;
 
+    case 9:
     case 8:
     case 7:
     case 6:
     case 2:
+      $.goto = 11;
+      $l[3] = 10;
       $l[4] = $.error;
-      $l[3] = 12;
-      $l[1] = 15;
-      $.goto = 9;
       break;
 
     case 5:
     case 4:
     case 3:
+      $.goto = 7;
+      $l[5] = 6;
       $l[6] = $.error;
-      $l[5] = 9;
-      $l[3] = 12;
-      $l[1] = 15;
-      $.goto = 6;
       break;
 
     default:
-      $.goto = 15;
-      break;
+      $.goto = 18;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 13:
+    case 12:
     case 11:
     case 10:
-    case 9:
     case 1:
-      $l[1] = 16;
-      $.goto = 12;
+      $l[1] = 19;
+      $.goto = 15;
       break;
 
+    case 9:
     case 8:
     case 7:
     case 6:
     case 2:
-      $l[3] = 12;
-      $l[1] = 16;
-      $.goto = 9;
+      $l[3] = 15;
+      $l[1] = 19;
+      $.goto = 11;
       break;
 
     case 5:
     case 4:
     case 3:
-      $l[5] = 9;
-      $l[3] = 12;
-      $l[1] = 16;
-      $.goto = 6;
+      $l[5] = 11;
+      $l[3] = 15;
+      $l[1] = 19;
+      $.goto = 7;
       break;
 
     default:
-      $.goto = 16;
+      $.goto = 19;
       break;
   }
-}, 1, [[0, null, $s$171], [0, "1474:7-1474:12", $s$171], [0, null, $s$171], [2, "1477:10-1477:19", $s$171], [0, null, $s$171], [0, null, $s$171], [2, "1480:10-1480:19", $s$171], [0, null, $s$171], [2, "1482:8-1482:17", $s$171], [2, "1484:8-1484:17", $s$171], [0, null, $s$171], [0, null, $s$171], [2, "1487:6-1487:15", $s$171], [0, null, $s$171], [2, "1490:2-1490:11", $s$171], [16, "1491:1-1491:1", $s$171], [16, "1491:1-1491:1", $s$171]]),
+}, 1, [[0, null, $s$171], [0, "1474:7-1474:12", $s$171], [0, null, $s$171], [2, "1477:10-1477:19", $s$171], [0, null, $s$171], [0, null, $s$171], [0, null, $s$171], [2, "1480:10-1480:19", $s$171], [0, null, $s$171], [2, "1482:8-1482:17", $s$171], [0, null, $s$171], [2, "1484:8-1484:17", $s$171], [0, null, $s$171], [0, null, $s$171], [0, null, $s$171], [2, "1487:6-1487:15", $s$171], [0, null, $s$171], [2, "1490:2-1490:11", $s$171], [16, "1491:1-1491:1", $s$171], [16, "1491:1-1491:1", $s$171]]),
     $m$121 = $M.fun("m$121", "r13", null, $m$0, [], 0, 5, "1493:0-1506:1", 129, function r13($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10862,48 +10998,53 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $l[3] = 8;
-      $.goto = 6;
+      $l[3] = 9;
+      $.goto = 7;
       continue;
 
     case 5:
       $.result = $p;
-      $l[3] = 9;
-      $l[1] = 13;
-      $.state = 6;
+      $l[3] = 11;
+      $l[1] = 15;
+      $.goto = 7;
+      continue;
 
     case 6:
-      $.goto = 7;
-      return $awt(f_1);
+      return $raise($l[4]);
 
     case 7:
-      $.error = $l[4];
+      $.goto = 8;
+      return $awt(f_1);
+
+    case 8:
       $.goto = $l[3];
       continue;
 
-    case 8:
-      $l[1] = 11;
-      $.goto = 9;
+    case 9:
+      $l[1] = 13;
+      $.goto = 11;
       return $awt(b_3);
 
-    case 9:
-      $.goto = 10;
+    case 10:
+      return $raise($l[2]);
+
+    case 11:
+      $.goto = 12;
       return $awt(f_2);
 
-    case 10:
-      $.error = $l[2];
+    case 12:
       $.goto = $l[1];
       continue;
 
-    case 11:
-      $.goto = 13;
+    case 13:
+      $.goto = 15;
       continue;
 
-    case 12:
-      $.goto = 13;
+    case 14:
+      $.goto = 15;
       return $unhandledA($.error);
 
-    case 13:
+    case 15:
       return $retA($.result);
 
     default:
@@ -10911,53 +11052,53 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 9:
     case 8:
     case 7:
     case 6:
     case 1:
+      $.goto = 11;
+      $l[1] = 10;
       $l[2] = $.error;
-      $l[1] = 12;
-      $.goto = 9;
       break;
 
     case 5:
     case 4:
     case 3:
     case 2:
+      $.goto = 7;
+      $l[3] = 6;
       $l[4] = $.error;
-      $l[3] = 9;
-      $l[1] = 12;
-      $.goto = 6;
       break;
 
     default:
-      $.goto = 12;
-      break;
+      $.goto = 14;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 9:
     case 8:
     case 7:
     case 6:
     case 1:
-      $l[1] = 13;
-      $.goto = 9;
+      $l[1] = 15;
+      $.goto = 11;
       break;
 
     case 5:
     case 4:
     case 3:
     case 2:
-      $l[3] = 9;
-      $l[1] = 13;
-      $.goto = 6;
+      $l[3] = 11;
+      $l[1] = 15;
+      $.goto = 7;
       break;
 
     default:
-      $.goto = 13;
+      $.goto = 15;
       break;
   }
-}, 1, [[0, null, $s$172], [0, null, $s$172], [2, "1497:6-1497:15", $s$172], [2, "1498:28-1498:37", $s$172], [0, null, $s$172], [0, null, $s$172], [2, "1500:6-1500:15", $s$172], [0, null, $s$172], [2, "1502:4-1502:13", $s$172], [2, "1504:4-1504:13", $s$172], [0, null, $s$172], [0, null, $s$172], [16, "1506:1-1506:1", $s$172], [16, "1506:1-1506:1", $s$172]]),
+}, 1, [[0, null, $s$172], [0, null, $s$172], [2, "1497:6-1497:15", $s$172], [2, "1498:28-1498:37", $s$172], [0, null, $s$172], [0, null, $s$172], [0, null, $s$172], [2, "1500:6-1500:15", $s$172], [0, null, $s$172], [2, "1502:4-1502:13", $s$172], [0, null, $s$172], [2, "1504:4-1504:13", $s$172], [0, null, $s$172], [0, null, $s$172], [16, "1506:1-1506:1", $s$172], [16, "1506:1-1506:1", $s$172]]),
     $m$122 = $M.fun("m$122", "r14", null, $m$0, [], 0, 3, "1508:0-1519:1", 129, function r14($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -10977,33 +11118,36 @@ var $M = require("@effectful/debugger"),
       }
 
     case 3:
-      $l[1] = 7;
-      $.goto = 5;
+      $l[1] = 8;
+      $.goto = 6;
       continue;
 
     case 4:
       $.result = $p;
-      $l[1] = 9;
-      $.state = 5;
+      $l[1] = 10;
+      $.goto = 6;
+      continue;
 
     case 5:
-      $.goto = 6;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 6:
-      $.error = $l[2];
+      $.goto = 7;
+      return $awt(f_1);
+
+    case 7:
       $.goto = $l[1];
       continue;
 
-    case 7:
-      $.goto = 9;
+    case 8:
+      $.goto = 10;
       return $awt(s_1);
 
-    case 8:
-      $.goto = 9;
+    case 9:
+      $.goto = 10;
       return $unhandledA($.error);
 
-    case 9:
+    case 10:
       return $retA($.result);
 
     default:
@@ -11015,14 +11159,13 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 6;
+      $l[1] = 5;
       $l[2] = $.error;
-      $l[1] = 8;
-      $.goto = 5;
       break;
 
     default:
-      $.goto = 8;
-      break;
+      $.goto = 9;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -11030,15 +11173,15 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[1] = 9;
-      $.goto = 5;
+      $l[1] = 10;
+      $.goto = 6;
       break;
 
     default:
-      $.goto = 9;
+      $.goto = 10;
       break;
   }
-}, 1, [[0, "1510:5-1510:10", $s$173], [2, "1512:6-1512:15", $s$173], [2, "1513:28-1513:37", $s$173], [0, null, $s$173], [0, null, $s$173], [2, "1515:6-1515:15", $s$173], [0, null, $s$173], [2, "1518:2-1518:11", $s$173], [16, "1519:1-1519:1", $s$173], [16, "1519:1-1519:1", $s$173]]),
+}, 1, [[0, "1510:5-1510:10", $s$173], [2, "1512:6-1512:15", $s$173], [2, "1513:28-1513:37", $s$173], [0, null, $s$173], [0, null, $s$173], [0, null, $s$173], [2, "1515:6-1515:15", $s$173], [0, null, $s$173], [2, "1518:2-1518:11", $s$173], [16, "1519:1-1519:1", $s$173], [16, "1519:1-1519:1", $s$173]]),
     $m$123 = $M.fun("m$123", "r15", null, $m$0, [], 0, 5, "1521:0-1540:1", 129, function r15($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -11059,45 +11202,161 @@ var $M = require("@effectful/debugger"),
       }
 
     case 3:
-      $l[1] = 6;
-      $.state = 4;
+      $l[1] = 7;
+      $.goto = 5;
+      continue;
 
     case 4:
-      $.goto = 5;
-      return $awt(f_1);
+      return $raise($l[2]);
 
     case 5:
-      $.error = $l[2];
+      $.goto = 6;
+      return $awt(f_1);
+
+    case 6:
       $.goto = $l[1];
       continue;
 
-    case 6:
-      $.state = 7;
-
     case 7:
-      $.goto = 8;
-      return $awt(p_2);
+      $.state = 8;
 
     case 8:
+      $.goto = 9;
+      return $awt(p_2);
+
+    case 9:
       if (something_2) {
-        $.goto = 9;
+        $.goto = 10;
         return $awt(p_t_2);
       } else {
-        $.goto = 9;
+        $.goto = 10;
         return $awt(p_e_2);
       }
 
+    case 10:
+      $l[3] = 14;
+      $.goto = 12;
+      continue;
+
+    case 11:
+      return $raise($l[4]);
+
+    case 12:
+      $.goto = 13;
+      return $awt(f_2);
+
+    case 13:
+      $.goto = $l[3];
+      continue;
+
+    case 14:
+      $.goto = 16;
+      return $awt(s_1);
+
+    case 15:
+      $.goto = 16;
+      return $unhandledA($.error);
+
+    case 16:
+      return $retA($.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, function ($, $l) {
+  switch ($.state) {
+    case 10:
     case 9:
-      $l[3] = 12;
-      $.state = 10;
+    case 8:
+      $.goto = 12;
+      $l[3] = 11;
+      $l[4] = $.error;
+      break;
+
+    case 3:
+    case 2:
+    case 1:
+      $.goto = 5;
+      $l[1] = 4;
+      $l[2] = $.error;
+      break;
+
+    default:
+      $.goto = 15;
+  }
+}, function ($, $l) {
+  switch ($.state) {
+    case 3:
+    case 2:
+    case 1:
+      $l[1] = 16;
+      $.goto = 5;
+      break;
+
+    case 10:
+    case 9:
+    case 8:
+      $l[3] = 16;
+      $.goto = 12;
+      break;
+
+    default:
+      $.goto = 16;
+      break;
+  }
+}, 1, [[0, "1523:5-1523:10", $s$174], [2, "1525:6-1525:15", $s$174], [2, "1526:23-1526:34", $s$174], [0, null, $s$174], [0, null, $s$174], [2, "1529:6-1529:15", $s$174], [0, null, $s$174], [0, null, $s$174], [2, "1532:6-1532:15", $s$174], [2, "1533:23-1533:34", $s$174], [0, null, $s$174], [0, null, $s$174], [2, "1536:6-1536:15", $s$174], [0, null, $s$174], [2, "1539:2-1539:11", $s$174], [16, "1540:1-1540:1", $s$174], [16, "1540:1-1540:1", $s$174]]),
+    $m$124 = $M.fun("m$124", "r16", null, $m$0, [], 0, 5, "1542:0-1559:1", 129, function r16($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      "par";
+      $.state = 1;
+
+    case 1:
+      $.state = 2;
+
+    case 2:
+      $.goto = 3;
+      return $awt(b_1);
+
+    case 3:
+      if (something) {
+        $l[3] = 8;
+        $.goto = 6;
+        continue;
+      } else {
+        $.state = 4;
+      }
+
+    case 4:
+      $l[3] = 8;
+      $.goto = 6;
+      continue;
+
+    case 5:
+      return $raise($l[4]);
+
+    case 6:
+      $.goto = 7;
+      return $awt(f_1);
+
+    case 7:
+      $.goto = $l[3];
+      continue;
+
+    case 8:
+      $l[1] = 12;
+      $.goto = 10;
+      continue;
+
+    case 9:
+      return $raise($l[2]);
 
     case 10:
       $.goto = 11;
       return $awt(f_2);
 
     case 11:
-      $.error = $l[4];
-      $.goto = $l[3];
+      $.goto = $l[1];
       continue;
 
     case 12:
@@ -11116,156 +11375,51 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 9:
     case 8:
     case 7:
-      $l[4] = $.error;
-      $l[3] = 13;
+    case 6:
+    case 5:
+    case 1:
       $.goto = 10;
+      $l[1] = 9;
+      $l[2] = $.error;
       break;
 
+    case 4:
     case 3:
     case 2:
-    case 1:
-      $l[2] = $.error;
-      $l[1] = 13;
-      $.goto = 4;
+      $.goto = 6;
+      $l[3] = 5;
+      $l[4] = $.error;
       break;
 
     default:
       $.goto = 13;
-      break;
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 3:
-    case 2:
-    case 1:
-      $l[1] = 14;
-      $.goto = 4;
-      break;
-
-    case 9:
     case 8:
     case 7:
-      $l[3] = 14;
+    case 6:
+    case 5:
+    case 1:
+      $l[1] = 14;
       $.goto = 10;
+      break;
+
+    case 4:
+    case 3:
+    case 2:
+      $l[3] = 10;
+      $l[1] = 14;
+      $.goto = 6;
       break;
 
     default:
       $.goto = 14;
       break;
   }
-}, 1, [[0, "1523:5-1523:10", $s$174], [2, "1525:6-1525:15", $s$174], [2, "1526:23-1526:34", $s$174], [0, null, $s$174], [2, "1529:6-1529:15", $s$174], [0, null, $s$174], [0, null, $s$174], [2, "1532:6-1532:15", $s$174], [2, "1533:23-1533:34", $s$174], [0, null, $s$174], [2, "1536:6-1536:15", $s$174], [0, null, $s$174], [2, "1539:2-1539:11", $s$174], [16, "1540:1-1540:1", $s$174], [16, "1540:1-1540:1", $s$174]]),
-    $m$124 = $M.fun("m$124", "r16", null, $m$0, [], 0, 5, "1542:0-1559:1", 129, function r16($, $l, $p) {
-  for (;;) switch ($.state = $.goto) {
-    case 0:
-      "par";
-      $.state = 1;
-
-    case 1:
-      $.state = 2;
-
-    case 2:
-      $.goto = 3;
-      return $awt(b_1);
-
-    case 3:
-      if (something) {
-        $l[3] = 7;
-        $.goto = 5;
-        continue;
-      } else {
-        $.state = 4;
-      }
-
-    case 4:
-      $l[3] = 7;
-      $.state = 5;
-
-    case 5:
-      $.goto = 6;
-      return $awt(f_1);
-
-    case 6:
-      $.error = $l[4];
-      $.goto = $l[3];
-      continue;
-
-    case 7:
-      $l[1] = 10;
-      $.state = 8;
-
-    case 8:
-      $.goto = 9;
-      return $awt(f_2);
-
-    case 9:
-      $.error = $l[2];
-      $.goto = $l[1];
-      continue;
-
-    case 10:
-      $.goto = 12;
-      return $awt(s_1);
-
-    case 11:
-      $.goto = 12;
-      return $unhandledA($.error);
-
-    case 12:
-      return $retA($.result);
-
-    default:
-      throw new Error("Invalid state");
-  }
-}, function ($, $l) {
-  switch ($.state) {
-    case 7:
-    case 6:
-    case 5:
-    case 1:
-      $l[2] = $.error;
-      $l[1] = 11;
-      $.goto = 8;
-      break;
-
-    case 4:
-    case 3:
-    case 2:
-      $l[4] = $.error;
-      $l[3] = 8;
-      $l[1] = 11;
-      $.goto = 5;
-      break;
-
-    default:
-      $.goto = 11;
-      break;
-  }
-}, function ($, $l) {
-  switch ($.state) {
-    case 7:
-    case 6:
-    case 5:
-    case 1:
-      $l[1] = 12;
-      $.goto = 8;
-      break;
-
-    case 4:
-    case 3:
-    case 2:
-      $l[3] = 8;
-      $l[1] = 12;
-      $.goto = 5;
-      break;
-
-    default:
-      $.goto = 12;
-      break;
-  }
-}, 1, [[0, "1544:5-1544:10", $s$175], [0, null, $s$175], [2, "1548:10-1548:19", $s$175], [0, null, $s$175], [0, null, $s$175], [2, "1551:10-1551:19", $s$175], [0, null, $s$175], [0, null, $s$175], [2, "1555:6-1555:15", $s$175], [0, null, $s$175], [2, "1558:2-1558:11", $s$175], [16, "1559:1-1559:1", $s$175], [16, "1559:1-1559:1", $s$175]]),
+}, 1, [[0, "1544:5-1544:10", $s$175], [0, null, $s$175], [2, "1548:10-1548:19", $s$175], [0, null, $s$175], [0, null, $s$175], [0, null, $s$175], [2, "1551:10-1551:19", $s$175], [0, null, $s$175], [0, null, $s$175], [0, null, $s$175], [2, "1555:6-1555:15", $s$175], [0, null, $s$175], [2, "1558:2-1558:11", $s$175], [16, "1559:1-1559:1", $s$175], [16, "1559:1-1559:1", $s$175]]),
     $m$125 = $M.fun("m$125", "r17", null, $m$0, [], 0, 3, "1561:0-1569:1", 129, function r17($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -11286,33 +11440,35 @@ var $M = require("@effectful/debugger"),
       $.state = 4;
 
     case 4:
-      $l[1] = 8;
-      $.goto = 5;
+      $l[1] = 9;
+      $.goto = 6;
       return $awt($p);
 
     case 5:
-      $.goto = 6;
-      $p = ($context.call = send)("f_1");
-      $.state = 6;
+      return $raise($l[2]);
 
     case 6:
       $.goto = 7;
-      return $awt($p);
+      $p = ($context.call = send)("f_1");
+      $.state = 7;
 
     case 7:
-      $.error = $l[2];
+      $.goto = 8;
+      return $awt($p);
+
+    case 8:
       $.goto = $l[1];
       continue;
 
-    case 8:
-      $.goto = 10;
+    case 9:
+      $.goto = 11;
       continue;
 
-    case 9:
-      $.goto = 10;
+    case 10:
+      $.goto = 11;
       return $unhandledA($.error);
 
-    case 10:
+    case 11:
       return $retA($.result);
 
     default:
@@ -11324,14 +11480,13 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 6;
+      $l[1] = 5;
       $l[2] = $.error;
-      $l[1] = 9;
-      $.goto = 5;
       break;
 
     default:
-      $.goto = 9;
-      break;
+      $.goto = 10;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -11339,15 +11494,15 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[1] = 10;
-      $.goto = 5;
+      $l[1] = 11;
+      $.goto = 6;
       break;
 
     default:
-      $.goto = 10;
+      $.goto = 11;
       break;
   }
-}, 1, [[0, null, $s$176], [2, "1564:10-1564:21", $s$176], [2, "1564:4-1564:21", $s$176], [2, "1565:10-1565:21", $s$176], [2, "1565:4-1565:21", $s$176], [2, "1567:10-1567:21", $s$176], [2, "1567:4-1567:21", $s$176], [0, null, $s$176], [0, null, $s$176], [16, "1569:1-1569:1", $s$176], [16, "1569:1-1569:1", $s$176]]),
+}, 1, [[0, null, $s$176], [2, "1564:10-1564:21", $s$176], [2, "1564:4-1564:21", $s$176], [2, "1565:10-1565:21", $s$176], [2, "1565:4-1565:21", $s$176], [0, null, $s$176], [2, "1567:10-1567:21", $s$176], [2, "1567:4-1567:21", $s$176], [0, null, $s$176], [0, null, $s$176], [16, "1569:1-1569:1", $s$176], [16, "1569:1-1569:1", $s$176]]),
     $m$126 = $M.fun("m$126", "r18", null, $m$0, ["k"], 0, 4, "1571:0-1610:1", 129, function r18($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -11652,33 +11807,35 @@ var $M = require("@effectful/debugger"),
       $.state = 16;
 
     case 16:
-      $l[3] = 20;
-      $.goto = 17;
+      $l[3] = 21;
+      $.goto = 18;
       return $awt($p);
 
     case 17:
-      $.goto = 18;
-      $p = ($context.call = f_1)($l[1]);
-      $.state = 18;
+      return $raise($l[4]);
 
     case 18:
       $.goto = 19;
-      return $awt($p);
+      $p = ($context.call = f_1)($l[1]);
+      $.state = 19;
 
     case 19:
-      $.error = $l[4];
+      $.goto = 20;
+      return $awt($p);
+
+    case 20:
       $.goto = $l[3];
       continue;
 
-    case 20:
-      $.goto = 22;
+    case 21:
+      $.goto = 23;
       continue;
 
-    case 21:
-      $.goto = 22;
+    case 22:
+      $.goto = 23;
       return $unhandledA($.error);
 
-    case 22:
+    case 23:
       return $retA($.result);
 
     default:
@@ -11702,14 +11859,13 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 18;
+      $l[3] = 17;
       $l[4] = $.error;
-      $l[3] = 21;
-      $.goto = 17;
       break;
 
     default:
-      $.goto = 21;
-      break;
+      $.goto = 22;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -11729,15 +11885,15 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[3] = 22;
-      $.goto = 17;
+      $l[3] = 23;
+      $.goto = 18;
       break;
 
     default:
-      $.goto = 22;
+      $.goto = 23;
       break;
   }
-}, 1, [[0, "1614:6-1614:11", $s$178], [2, "1617:10-1617:16", $s$178], [2, "1617:4-1617:16", $s$178], [2, "1618:14-1618:20", $s$178], [2, "1618:8-1618:20", $s$178], [2, "1619:10-1619:16", $s$178], [2, "1619:4-1619:16", $s$178], [2, "1620:14-1620:20", $s$178], [2, "1620:8-1620:20", $s$178], [2, "1621:10-1621:16", $s$178], [2, "1621:4-1621:16", $s$178], [2, "1622:10-1622:16", $s$178], [2, "1622:4-1622:16", $s$178], [2, "1624:10-1624:16", $s$178], [2, "1624:4-1624:16", $s$178], [2, "1625:10-1625:16", $s$178], [2, "1625:4-1625:16", $s$178], [2, "1627:10-1627:16", $s$178], [2, "1627:4-1627:16", $s$178], [0, null, $s$178], [0, null, $s$178], [16, "1629:1-1629:1", $s$178], [16, "1629:1-1629:1", $s$178]]),
+}, 1, [[0, "1614:6-1614:11", $s$178], [2, "1617:10-1617:16", $s$178], [2, "1617:4-1617:16", $s$178], [2, "1618:14-1618:20", $s$178], [2, "1618:8-1618:20", $s$178], [2, "1619:10-1619:16", $s$178], [2, "1619:4-1619:16", $s$178], [2, "1620:14-1620:20", $s$178], [2, "1620:8-1620:20", $s$178], [2, "1621:10-1621:16", $s$178], [2, "1621:4-1621:16", $s$178], [2, "1622:10-1622:16", $s$178], [2, "1622:4-1622:16", $s$178], [2, "1624:10-1624:16", $s$178], [2, "1624:4-1624:16", $s$178], [2, "1625:10-1625:16", $s$178], [2, "1625:4-1625:16", $s$178], [0, null, $s$178], [2, "1627:10-1627:16", $s$178], [2, "1627:4-1627:16", $s$178], [0, null, $s$178], [0, null, $s$178], [16, "1629:1-1629:1", $s$178], [16, "1629:1-1629:1", $s$178]]),
     $m$128 = $M.fun("m$128", "r20", null, $m$0, ["i"], 0, 8, "1631:0-1648:1", 129, function r20($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -11776,91 +11932,99 @@ var $M = require("@effectful/debugger"),
       $.state = 8;
 
     case 8:
-      $l[2] = 10;
-      $.goto = 9;
+      $l[2] = 11;
+      $.goto = 10;
       return $awt($p);
 
     case 9:
-      $.error = $l[3];
+      return $raise($l[3]);
+
+    case 10:
       $.goto = $l[2];
       continue;
 
-    case 10:
-      $l[1] = 10;
-      $.state = 11;
-
     case 11:
+      $l[1] = 10;
       $.state = 12;
 
     case 12:
-      $.goto = 13;
-      $p = ($context.call = e_2)($l[1]);
       $.state = 13;
 
     case 13:
       $.goto = 14;
-      return $awt($p);
+      $p = ($context.call = e_2)($l[1]);
+      $.state = 14;
 
     case 14:
       $.goto = 15;
-      $p = ($context.call = f_2)($p, $l[1]);
-      $.state = 15;
+      return $awt($p);
 
     case 15:
       $.goto = 16;
-      return $awt($p);
+      $p = ($context.call = f_2)($p, $l[1]);
+      $.state = 16;
 
     case 16:
       $.goto = 17;
-      $p = ($context.call = e_3)($l[1]);
-      $.state = 17;
+      return $awt($p);
 
     case 17:
       $.goto = 18;
-      return $awt($p);
+      $p = ($context.call = e_3)($l[1]);
+      $.state = 18;
 
     case 18:
       $.goto = 19;
-      $p = ($context.call = f_3)($p, $l[1]);
-      $.state = 19;
+      return $awt($p);
 
     case 19:
       $.goto = 20;
-      return $awt($p);
+      $p = ($context.call = f_3)($p, $l[1]);
+      $.state = 20;
 
     case 20:
-      $l[1] = $l[1] - $p;
-      $l[6] = 23;
-      $.state = 21;
+      $.goto = 21;
+      return $awt($p);
 
     case 21:
-      $.goto = 22;
-      $mcall("log", console, $l[1]);
-      $.state = 22;
-
-    case 22:
-      $.error = $l[7];
-      $.goto = $l[6];
+      $l[1] = $l[1] - $p;
+      $l[6] = 25;
+      $.goto = 23;
       continue;
 
+    case 22:
+      return $raise($l[7]);
+
     case 23:
-      $l[4] = 25;
+      $.goto = 24;
+      $mcall("log", console, $l[1]);
       $.state = 24;
 
     case 24:
-      $.error = $l[5];
-      $.goto = $l[4];
+      $.goto = $l[6];
       continue;
 
     case 25:
+      $l[4] = 28;
       $.goto = 27;
       continue;
 
     case 26:
-      $.goto = 27;
-      return $unhandledA($.error);
+      return $raise($l[5]);
 
     case 27:
+      $.goto = $l[4];
+      continue;
+
+    case 28:
+      $.goto = 30;
+      continue;
+
+    case 29:
+      $.goto = 30;
+      return $unhandledA($.error);
+
+    case 30:
       return $retA($.result);
 
     default:
@@ -11868,15 +12032,17 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 25:
+    case 24:
     case 23:
     case 22:
-    case 21:
-    case 11:
-      $l[5] = $.error;
+    case 12:
+      $.goto = 27;
       $l[4] = 26;
-      $.goto = 24;
+      $l[5] = $.error;
       break;
 
+    case 21:
     case 20:
     case 19:
     case 18:
@@ -11885,11 +12051,9 @@ var $M = require("@effectful/debugger"),
     case 15:
     case 14:
     case 13:
-    case 12:
+      $.goto = 23;
+      $l[6] = 22;
       $l[7] = $.error;
-      $l[6] = 24;
-      $l[4] = 26;
-      $.goto = 21;
       break;
 
     case 8:
@@ -11900,14 +12064,13 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 10;
+      $l[2] = 9;
       $l[3] = $.error;
-      $l[2] = 26;
-      $.goto = 9;
       break;
 
     default:
-      $.goto = 26;
-      break;
+      $.goto = 29;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -11919,18 +12082,20 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[2] = 27;
-      $.goto = 9;
+      $l[2] = 30;
+      $.goto = 10;
       break;
 
+    case 25:
+    case 24:
     case 23:
     case 22:
-    case 21:
-    case 11:
-      $l[4] = 27;
-      $.goto = 24;
+    case 12:
+      $l[4] = 30;
+      $.goto = 27;
       break;
 
+    case 21:
     case 20:
     case 19:
     case 18:
@@ -11939,17 +12104,16 @@ var $M = require("@effectful/debugger"),
     case 15:
     case 14:
     case 13:
-    case 12:
-      $l[6] = 24;
-      $l[4] = 27;
-      $.goto = 21;
+      $l[6] = 27;
+      $l[4] = 30;
+      $.goto = 23;
       break;
 
     default:
-      $.goto = 27;
+      $.goto = 30;
       break;
   }
-}, 1, [[0, null, $s$179], [2, "1634:20-1634:26", $s$179], [2, "1634:14-1634:26", $s$179], [2, "1634:10-1634:30", $s$179], [2, "1634:4-1634:30", $s$179], [2, "1635:20-1635:26", $s$179], [2, "1635:14-1635:26", $s$179], [2, "1635:10-1635:30", $s$179], [2, "1635:4-1635:30", $s$179], [0, null, $s$179], [0, "1638:2-1638:8", $s$179], [0, null, $s$179], [2, "1641:22-1641:28", $s$179], [2, "1641:16-1641:28", $s$179], [2, "1641:12-1641:32", $s$179], [2, "1641:6-1641:32", $s$179], [2, "1642:27-1642:33", $s$179], [2, "1642:21-1642:33", $s$179], [2, "1642:17-1642:37", $s$179], [2, "1642:11-1642:37", $s$179], [0, "1642:6-1642:37", $s$179], [2, "1644:6-1644:20", $s$179], [0, null, $s$179], [0, null, $s$179], [0, null, $s$179], [0, null, $s$179], [16, "1648:1-1648:1", $s$179], [16, "1648:1-1648:1", $s$179]]),
+}, 1, [[0, null, $s$179], [2, "1634:20-1634:26", $s$179], [2, "1634:14-1634:26", $s$179], [2, "1634:10-1634:30", $s$179], [2, "1634:4-1634:30", $s$179], [2, "1635:20-1635:26", $s$179], [2, "1635:14-1635:26", $s$179], [2, "1635:10-1635:30", $s$179], [2, "1635:4-1635:30", $s$179], [0, null, $s$179], [0, null, $s$179], [0, "1638:2-1638:8", $s$179], [0, null, $s$179], [2, "1641:22-1641:28", $s$179], [2, "1641:16-1641:28", $s$179], [2, "1641:12-1641:32", $s$179], [2, "1641:6-1641:32", $s$179], [2, "1642:27-1642:33", $s$179], [2, "1642:21-1642:33", $s$179], [2, "1642:17-1642:37", $s$179], [2, "1642:11-1642:37", $s$179], [0, "1642:6-1642:37", $s$179], [0, null, $s$179], [2, "1644:6-1644:20", $s$179], [0, null, $s$179], [0, null, $s$179], [0, null, $s$179], [0, null, $s$179], [0, null, $s$179], [16, "1648:1-1648:1", $s$179], [16, "1648:1-1648:1", $s$179]]),
     $m$129 = $M.fun("m$129", "r21", null, $m$0, ["i"], 0, 6, "1650:0-1673:1", 129, function r21($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -11974,89 +12138,93 @@ var $M = require("@effectful/debugger"),
       $.state = 5;
 
     case 5:
-      $l[4] = 8;
-      $.goto = 6;
+      $l[4] = 9;
+      $.goto = 7;
       return $awt($p);
 
     case 6:
-      $.goto = 7;
-      return $awt(f_i);
+      return $raise($l[5]);
 
     case 7:
-      $.error = $l[5];
+      $.goto = 8;
+      return $awt(f_i);
+
+    case 8:
       $.goto = $l[4];
       continue;
 
-    case 8:
-      $.goto = 9;
-      $p = ($context.call = i_2)($l[1]);
-      $.state = 9;
-
     case 9:
       $.goto = 10;
-      return $awt($p);
+      $p = ($context.call = i_2)($l[1]);
+      $.state = 10;
 
     case 10:
       $.goto = 11;
-      $p = ($context.call = i_1)($p);
-      $.state = 11;
+      return $awt($p);
 
     case 11:
       $.goto = 12;
-      return $awt($p);
+      $p = ($context.call = i_1)($p);
+      $.state = 12;
 
     case 12:
-      $l[1] = $p;
       $.goto = 13;
-      $p = ($context.call = e_3)($l[1]);
-      $.state = 13;
+      return $awt($p);
 
     case 13:
+      $l[1] = $p;
       $.goto = 14;
-      return $awt($p);
+      $p = ($context.call = e_3)($l[1]);
+      $.state = 14;
 
     case 14:
       $.goto = 15;
-      $p = ($context.call = e_4)($l[1]);
-      $.state = 15;
+      return $awt($p);
 
     case 15:
       $.goto = 16;
-      return $awt($p);
+      $p = ($context.call = e_4)($l[1]);
+      $.state = 16;
 
     case 16:
-      $l[1] = 20;
       $.goto = 17;
-      $p = ($context.call = e_5)($l[1]);
-      $.state = 17;
+      return $awt($p);
 
     case 17:
+      $l[1] = 20;
       $.goto = 18;
-      return $awt($p);
+      $p = ($context.call = e_5)($l[1]);
+      $.state = 18;
 
     case 18:
       $.goto = 19;
-      $p = ($context.call = e_6)($l[1]);
-      $.state = 19;
+      return $awt($p);
 
     case 19:
+      $.goto = 20;
+      $p = ($context.call = e_6)($l[1]);
+      $.state = 20;
+
+    case 20:
       $.goto = 2;
       return $awt($p);
 
-    case 20:
-      $.goto = 21;
-      return $awt(f_1);
-
     case 21:
-      $.error = $l[3];
-      $.goto = $l[2];
-      continue;
+      return $raise($l[3]);
 
     case 22:
       $.goto = 23;
-      return $unhandledA($.error);
+      return $awt(f_1);
 
     case 23:
+      $.goto = $l[2];
+      continue;
+
+    case 24:
+      $.goto = 25;
+      return $unhandledA($.error);
+
+    case 25:
       return $retA($.result);
 
     default:
@@ -12064,6 +12232,7 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 20:
     case 19:
     case 18:
     case 17:
@@ -12081,25 +12250,24 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 22;
+      $l[2] = 21;
       $l[3] = $.error;
-      $l[2] = 22;
-      $.goto = 20;
       break;
 
     case 5:
     case 4:
+      $.goto = 7;
+      $l[4] = 6;
       $l[5] = $.error;
-      $l[4] = 20;
-      $l[2] = 22;
-      $.goto = 6;
       break;
 
     default:
-      $.goto = 22;
-      break;
+      $.goto = 24;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 20:
     case 19:
     case 18:
     case 17:
@@ -12117,22 +12285,22 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[2] = 23;
-      $.goto = 20;
+      $l[2] = 25;
+      $.goto = 22;
       break;
 
     case 5:
     case 4:
-      $l[4] = 20;
-      $l[2] = 23;
-      $.goto = 6;
+      $l[4] = 22;
+      $l[2] = 25;
+      $.goto = 7;
       break;
 
     default:
-      $.goto = 23;
+      $.goto = 25;
       break;
   }
-}, 1, [[0, null, $s$180], [0, "1653:7-1653:12", $s$180], [2, "1655:14-1655:20", $s$180], [2, "1655:8-1655:20", $s$180], [2, "1657:16-1657:22", $s$180], [2, "1657:10-1657:22", $s$180], [2, "1659:10-1659:19", $s$180], [0, null, $s$180], [2, "1661:28-1661:34", $s$180], [2, "1661:22-1661:34", $s$180], [2, "1661:18-1661:35", $s$180], [2, "1661:12-1661:35", $s$180], [2, "1662:14-1662:20", $s$180], [2, "1662:8-1662:20", $s$180], [2, "1663:14-1663:20", $s$180], [2, "1663:8-1663:20", $s$180], [2, "1665:14-1665:20", $s$180], [2, "1665:8-1665:20", $s$180], [2, "1666:14-1666:20", $s$180], [2, "1666:8-1666:20", $s$180], [2, "1671:4-1671:13", $s$180], [0, null, $s$180], [16, "1673:1-1673:1", $s$180], [16, "1673:1-1673:1", $s$180]]),
+}, 1, [[0, null, $s$180], [0, "1653:7-1653:12", $s$180], [2, "1655:14-1655:20", $s$180], [2, "1655:8-1655:20", $s$180], [2, "1657:16-1657:22", $s$180], [2, "1657:10-1657:22", $s$180], [0, null, $s$180], [2, "1659:10-1659:19", $s$180], [0, null, $s$180], [2, "1661:28-1661:34", $s$180], [2, "1661:22-1661:34", $s$180], [2, "1661:18-1661:35", $s$180], [2, "1661:12-1661:35", $s$180], [2, "1662:14-1662:20", $s$180], [2, "1662:8-1662:20", $s$180], [2, "1663:14-1663:20", $s$180], [2, "1663:8-1663:20", $s$180], [2, "1665:14-1665:20", $s$180], [2, "1665:8-1665:20", $s$180], [2, "1666:14-1666:20", $s$180], [2, "1666:8-1666:20", $s$180], [0, null, $s$180], [2, "1671:4-1671:13", $s$180], [0, null, $s$180], [16, "1673:1-1673:1", $s$180], [16, "1673:1-1673:1", $s$180]]),
     $m$130 = $M.fun("m$130", "r22", null, $m$0, [], 0, 2, "1675:0-1686:1", 129, function r22($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -12241,89 +12409,93 @@ var $M = require("@effectful/debugger"),
       $.state = 5;
 
     case 5:
-      $l[4] = 8;
-      $.goto = 6;
+      $l[4] = 9;
+      $.goto = 7;
       return $awt($p);
 
     case 6:
-      $.goto = 7;
-      return $awt(f_i);
+      return $raise($l[5]);
 
     case 7:
-      $.error = $l[5];
+      $.goto = 8;
+      return $awt(f_i);
+
+    case 8:
       $.goto = $l[4];
       continue;
 
-    case 8:
-      $.goto = 9;
-      $p = ($context.call = i_2)($l[1]);
-      $.state = 9;
-
     case 9:
       $.goto = 10;
-      return $awt($p);
+      $p = ($context.call = i_2)($l[1]);
+      $.state = 10;
 
     case 10:
       $.goto = 11;
-      $p = ($context.call = i_1)($p);
-      $.state = 11;
+      return $awt($p);
 
     case 11:
       $.goto = 12;
-      return $awt($p);
+      $p = ($context.call = i_1)($p);
+      $.state = 12;
 
     case 12:
-      $l[1] = $p;
       $.goto = 13;
-      $p = ($context.call = e_3)($l[1]);
-      $.state = 13;
+      return $awt($p);
 
     case 13:
+      $l[1] = $p;
       $.goto = 14;
-      return $awt($p);
+      $p = ($context.call = e_3)($l[1]);
+      $.state = 14;
 
     case 14:
       $.goto = 15;
-      $p = ($context.call = e_4)($l[1]);
-      $.state = 15;
+      return $awt($p);
 
     case 15:
       $.goto = 16;
-      return $awt($p);
+      $p = ($context.call = e_4)($l[1]);
+      $.state = 16;
 
     case 16:
-      $l[1] = 20;
       $.goto = 17;
-      $p = ($context.call = e_5)($l[1]);
-      $.state = 17;
+      return $awt($p);
 
     case 17:
+      $l[1] = 20;
       $.goto = 18;
-      return $awt($p);
+      $p = ($context.call = e_5)($l[1]);
+      $.state = 18;
 
     case 18:
       $.goto = 19;
-      $p = ($context.call = e_6)($l[1]);
-      $.state = 19;
+      return $awt($p);
 
     case 19:
+      $.goto = 20;
+      $p = ($context.call = e_6)($l[1]);
+      $.state = 20;
+
+    case 20:
       $.goto = 2;
       return $awt($p);
 
-    case 20:
-      $.goto = 21;
-      return $awt(f_1);
-
     case 21:
-      $.error = $l[3];
-      $.goto = $l[2];
-      continue;
+      return $raise($l[3]);
 
     case 22:
       $.goto = 23;
-      return $unhandledA($.error);
+      return $awt(f_1);
 
     case 23:
+      $.goto = $l[2];
+      continue;
+
+    case 24:
+      $.goto = 25;
+      return $unhandledA($.error);
+
+    case 25:
       return $retA($.result);
 
     default:
@@ -12331,6 +12503,7 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 20:
     case 19:
     case 18:
     case 17:
@@ -12348,25 +12521,24 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
+      $.goto = 22;
+      $l[2] = 21;
       $l[3] = $.error;
-      $l[2] = 22;
-      $.goto = 20;
       break;
 
     case 5:
     case 4:
+      $.goto = 7;
+      $l[4] = 6;
       $l[5] = $.error;
-      $l[4] = 20;
-      $l[2] = 22;
-      $.goto = 6;
       break;
 
     default:
-      $.goto = 22;
-      break;
+      $.goto = 24;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 20:
     case 19:
     case 18:
     case 17:
@@ -12384,22 +12556,22 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[2] = 23;
-      $.goto = 20;
+      $l[2] = 25;
+      $.goto = 22;
       break;
 
     case 5:
     case 4:
-      $l[4] = 20;
-      $l[2] = 23;
-      $.goto = 6;
+      $l[4] = 22;
+      $l[2] = 25;
+      $.goto = 7;
       break;
 
     default:
-      $.goto = 23;
+      $.goto = 25;
       break;
   }
-}, 1, [[0, null, $s$182], [0, "1691:7-1691:12", $s$182], [2, "1696:14-1696:20", $s$182], [2, "1696:8-1696:20", $s$182], [2, "1698:16-1698:22", $s$182], [2, "1698:10-1698:22", $s$182], [2, "1700:10-1700:19", $s$182], [0, null, $s$182], [2, "1702:28-1702:34", $s$182], [2, "1702:22-1702:34", $s$182], [2, "1702:18-1702:35", $s$182], [2, "1702:12-1702:35", $s$182], [2, "1703:14-1703:20", $s$182], [2, "1703:8-1703:20", $s$182], [2, "1704:14-1704:20", $s$182], [2, "1704:8-1704:20", $s$182], [2, "1706:14-1706:20", $s$182], [2, "1706:8-1706:20", $s$182], [2, "1707:14-1707:20", $s$182], [2, "1707:8-1707:20", $s$182], [2, "1712:4-1712:13", $s$182], [0, null, $s$182], [16, "1714:1-1714:1", $s$182], [16, "1714:1-1714:1", $s$182]]),
+}, 1, [[0, null, $s$182], [0, "1691:7-1691:12", $s$182], [2, "1696:14-1696:20", $s$182], [2, "1696:8-1696:20", $s$182], [2, "1698:16-1698:22", $s$182], [2, "1698:10-1698:22", $s$182], [0, null, $s$182], [2, "1700:10-1700:19", $s$182], [0, null, $s$182], [2, "1702:28-1702:34", $s$182], [2, "1702:22-1702:34", $s$182], [2, "1702:18-1702:35", $s$182], [2, "1702:12-1702:35", $s$182], [2, "1703:14-1703:20", $s$182], [2, "1703:8-1703:20", $s$182], [2, "1704:14-1704:20", $s$182], [2, "1704:8-1704:20", $s$182], [2, "1706:14-1706:20", $s$182], [2, "1706:8-1706:20", $s$182], [2, "1707:14-1707:20", $s$182], [2, "1707:8-1707:20", $s$182], [0, null, $s$182], [2, "1712:4-1712:13", $s$182], [0, null, $s$182], [16, "1714:1-1714:1", $s$182], [16, "1714:1-1714:1", $s$182]]),
     $m$132 = $M.fun("m$132", "r24", null, $m$0, ["i"], 0, 4, "1716:0-1732:1", 129, function r24($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -12417,80 +12589,82 @@ var $M = require("@effectful/debugger"),
       $.state = 3;
 
     case 3:
-      $l[2] = 6;
-      $.goto = 4;
+      $l[2] = 7;
+      $.goto = 5;
       return $awt($p);
 
     case 4:
-      $.goto = 5;
-      return $awt(f_i);
+      return $raise($l[3]);
 
     case 5:
-      $.error = $l[3];
+      $.goto = 6;
+      return $awt(f_i);
+
+    case 6:
       $.goto = $l[2];
       continue;
 
-    case 6:
-      $.goto = 7;
-      $p = ($context.call = i_2)($l[1]);
-      $.state = 7;
-
     case 7:
       $.goto = 8;
-      return $awt($p);
+      $p = ($context.call = i_2)($l[1]);
+      $.state = 8;
 
     case 8:
       $.goto = 9;
-      $p = ($context.call = i_1)($p);
-      $.state = 9;
+      return $awt($p);
 
     case 9:
       $.goto = 10;
-      return $awt($p);
+      $p = ($context.call = i_1)($p);
+      $.state = 10;
 
     case 10:
-      $l[1] = $p;
       $.goto = 11;
-      $p = ($context.call = e_3)($l[1]);
-      $.state = 11;
+      return $awt($p);
 
     case 11:
+      $l[1] = $p;
       $.goto = 12;
-      return $awt($p);
+      $p = ($context.call = e_3)($l[1]);
+      $.state = 12;
 
     case 12:
       $.goto = 13;
-      $p = ($context.call = e_4)($l[1]);
-      $.state = 13;
+      return $awt($p);
 
     case 13:
       $.goto = 14;
-      return $awt($p);
+      $p = ($context.call = e_4)($l[1]);
+      $.state = 14;
 
     case 14:
-      $l[1] = 20;
       $.goto = 15;
-      $p = ($context.call = e_5)($l[1]);
-      $.state = 15;
+      return $awt($p);
 
     case 15:
+      $l[1] = 20;
       $.goto = 16;
-      return $awt($p);
+      $p = ($context.call = e_5)($l[1]);
+      $.state = 16;
 
     case 16:
       $.goto = 17;
-      $p = ($context.call = e_6)($l[1]);
-      $.state = 17;
+      return $awt($p);
 
     case 17:
+      $.goto = 18;
+      $p = ($context.call = e_6)($l[1]);
+      $.state = 18;
+
+    case 18:
       $.goto = 0;
       return $awt($p);
 
-    case 18:
-      $.goto = 19;
+    case 19:
+      $.goto = 20;
       return $unhandledA($.error);
 
-    case 19:
+    case 20:
       return $retA($.result);
 
     default:
@@ -12500,28 +12674,27 @@ var $M = require("@effectful/debugger"),
   switch ($.state) {
     case 3:
     case 2:
+      $.goto = 5;
+      $l[2] = 4;
       $l[3] = $.error;
-      $l[2] = 18;
-      $.goto = 4;
       break;
 
     default:
-      $.goto = 18;
-      break;
+      $.goto = 19;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 3:
     case 2:
-      $l[2] = 19;
-      $.goto = 4;
+      $l[2] = 20;
+      $.goto = 5;
       break;
 
     default:
-      $.goto = 19;
+      $.goto = 20;
       break;
   }
-}, 1, [[2, "1719:10-1719:16", $s$183], [2, "1719:4-1719:16", $s$183], [2, "1721:12-1721:18", $s$183], [2, "1721:6-1721:18", $s$183], [2, "1723:6-1723:15", $s$183], [0, null, $s$183], [2, "1725:24-1725:30", $s$183], [2, "1725:18-1725:30", $s$183], [2, "1725:14-1725:31", $s$183], [2, "1725:8-1725:31", $s$183], [2, "1726:10-1726:16", $s$183], [2, "1726:4-1726:16", $s$183], [2, "1727:10-1727:16", $s$183], [2, "1727:4-1727:16", $s$183], [2, "1729:10-1729:16", $s$183], [2, "1729:4-1729:16", $s$183], [2, "1730:10-1730:16", $s$183], [2, "1730:4-1730:16", $s$183], [16, "1732:1-1732:1", $s$183], [16, "1732:1-1732:1", $s$183]]),
+}, 1, [[2, "1719:10-1719:16", $s$183], [2, "1719:4-1719:16", $s$183], [2, "1721:12-1721:18", $s$183], [2, "1721:6-1721:18", $s$183], [0, null, $s$183], [2, "1723:6-1723:15", $s$183], [0, null, $s$183], [2, "1725:24-1725:30", $s$183], [2, "1725:18-1725:30", $s$183], [2, "1725:14-1725:31", $s$183], [2, "1725:8-1725:31", $s$183], [2, "1726:10-1726:16", $s$183], [2, "1726:4-1726:16", $s$183], [2, "1727:10-1727:16", $s$183], [2, "1727:4-1727:16", $s$183], [2, "1729:10-1729:16", $s$183], [2, "1729:4-1729:16", $s$183], [2, "1730:10-1730:16", $s$183], [2, "1730:4-1730:16", $s$183], [16, "1732:1-1732:1", $s$183], [16, "1732:1-1732:1", $s$183]]),
     $m$133 = $M.fun("m$133", "r25", null, $m$0, [], 0, 2, "1734:0-1742:1", 129, function r25($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -14379,7 +14552,7 @@ var $M = require("@effectful/debugger"),
         $.state = 10;
       } else {
         $l[3] = $p.value;
-        $.goto = 78;
+        $.goto = 86;
         $p = $iterator(something_2);
         continue;
       }
@@ -14405,7 +14578,7 @@ var $M = require("@effectful/debugger"),
         $.state = 14;
       } else {
         $l[5] = $p.value;
-        $.goto = 53;
+        $.goto = 57;
         $p = $iterator(something_2);
         continue;
       }
@@ -14435,7 +14608,7 @@ var $M = require("@effectful/debugger"),
         $.state = 19;
       } else {
         $l[11] = $p.value;
-        $.goto = 40;
+        $.goto = 42;
         $p = $iterator(something_2);
         continue;
       }
@@ -14461,7 +14634,7 @@ var $M = require("@effectful/debugger"),
         $.state = 23;
       } else {
         $l[12] = $p.value;
-        $.goto = 37;
+        $.goto = 38;
         $p = ($context.call = a_1)($l[12]);
         continue;
       }
@@ -14473,7 +14646,7 @@ var $M = require("@effectful/debugger"),
     case 24:
       if (something_1) {
         "seq";
-        $.goto = 36;
+        $.goto = 37;
         return $awt(a_1);
       } else {
         $.goto = 25;
@@ -14485,7 +14658,7 @@ var $M = require("@effectful/debugger"),
 
     case 25:
       if (something_1) {
-        $.goto = 34;
+        $.goto = 35;
         continue;
       } else {
         "par";
@@ -14506,7 +14679,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 27:
-      $.goto = 98;
+      $.goto = 109;
       return $awt($p);
 
     case 28:
@@ -14533,351 +14706,384 @@ var $M = require("@effectful/debugger"),
       return $awt(a_2);
 
     case 32:
-      $.goto = 33;
-      $iterFin($l[25]);
-      $.state = 33;
+      return $raise($.error);
 
     case 33:
+      $.goto = 34;
+      $iterFin($l[25]);
+      $.state = 34;
+
+    case 34:
       $.goto = $l[24];
       continue;
 
-    case 34:
+    case 35:
       if (something_2) {
         if (a) {
-          $.goto = 34;
+          $.goto = 35;
           return $awt(a_1);
         } else {
-          $.state = 35;
+          $.state = 36;
         }
       } else {
         $.goto = 25;
         continue;
       }
 
-    case 35:
-      $.goto = 34;
-      return $awt(a_2);
-
     case 36:
-      $.goto = 24;
+      $.goto = 35;
       return $awt(a_2);
 
     case 37:
+      $.goto = 24;
+      return $awt(a_2);
+
+    case 38:
       $.goto = 21;
       return $awt($p);
 
-    case 38:
-      $.goto = 39;
-      $iterFin($l[25]);
-      $.state = 39;
-
     case 39:
-      $.goto = $l[23];
-      continue;
+      return $raise($.error);
 
     case 40:
-      $l[26] = $p;
+      $.goto = 41;
+      $iterFin($l[25]);
       $.state = 41;
 
     case 41:
-      $context.call = $l[26].next;
-      $.goto = 42;
-      $p = $l[26].next();
-      $.state = 42;
+      $.goto = $l[23];
+      continue;
 
     case 42:
+      $l[26] = $p;
+      $.state = 43;
+
+    case 43:
+      $context.call = $l[26].next;
+      $.goto = 44;
+      $p = $l[26].next();
+      $.state = 44;
+
+    case 44:
       if ($p.done) {
-        $.state = 43;
+        $.state = 45;
       } else {
         $l[10] = $p.value;
-        $.goto = 44;
+        $.goto = 46;
         $p = ($context.call = a_1)($l[11], $l[10]);
         continue;
       }
 
-    case 43:
+    case 45:
       $.goto = 17;
       continue;
-
-    case 44:
-      $.goto = 45;
-      return $awt($p);
-
-    case 45:
-      $l[10] = 20;
-      $.goto = 46;
-      $p = ($context.call = a_2)($l[11], $l[10]);
-      $.state = 46;
 
     case 46:
       $.goto = 47;
       return $awt($p);
 
     case 47:
-      $l[10] = 30;
+      $l[10] = 20;
       $.goto = 48;
-      $p = ($context.call = a_3)($l[11], $l[10]);
+      $p = ($context.call = a_2)($l[11], $l[10]);
       $.state = 48;
 
     case 48:
-      $.goto = 41;
+      $.goto = 49;
       return $awt($p);
 
     case 49:
+      $l[10] = 30;
       $.goto = 50;
-      $iterFin($l[26]);
+      $p = ($context.call = a_3)($l[11], $l[10]);
       $.state = 50;
 
     case 50:
+      $.goto = 43;
+      return $awt($p);
+
+    case 51:
+      return $raise($.error);
+
+    case 52:
+      $.goto = 53;
+      $iterFin($l[26]);
+      $.state = 53;
+
+    case 53:
       $.goto = $l[22];
       continue;
 
-    case 51:
-      $.goto = 52;
-      $iterFin($l[25]);
-      $.state = 52;
+    case 54:
+      return $raise($.error);
 
-    case 52:
+    case 55:
+      $.goto = 56;
+      $iterFin($l[25]);
+      $.state = 56;
+
+    case 56:
       $.goto = $l[21];
       continue;
 
-    case 53:
-      $l[26] = $p;
-      $.state = 54;
-
-    case 54:
-      $context.call = $l[26].next;
-      $.goto = 55;
-      $p = $l[26].next();
-      $.state = 55;
-
-    case 55:
-      if ($p.done) {
-        $.state = 56;
-      } else {
-        $l[6] = $p.value;
-        $.goto = 57;
-        $p = $iterator(something_3);
-        continue;
-      }
-
-    case 56:
-      $.goto = 12;
-      continue;
-
     case 57:
-      $l[27] = $p;
+      $l[26] = $p;
       $.state = 58;
 
     case 58:
-      $context.call = $l[27].next;
+      $context.call = $l[26].next;
       $.goto = 59;
-      $p = $l[27].next();
+      $p = $l[26].next();
       $.state = 59;
 
     case 59:
       if ($p.done) {
         $.state = 60;
       } else {
-        $l[7] = $p.value;
+        $l[6] = $p.value;
         $.goto = 61;
-        $p = $iterator(something_4);
+        $p = $iterator(something_3);
         continue;
       }
 
     case 60:
-      $.goto = 54;
-      return $awt(a_5);
+      $.goto = 12;
+      continue;
 
     case 61:
-      $l[28] = $p;
+      $l[27] = $p;
       $.state = 62;
 
     case 62:
-      $context.call = $l[28].next;
+      $context.call = $l[27].next;
       $.goto = 63;
-      $p = $l[28].next();
+      $p = $l[27].next();
       $.state = 63;
 
     case 63:
       if ($p.done) {
         $.state = 64;
       } else {
-        $l[8] = $p.value;
-        $l[9] = 0;
+        $l[7] = $p.value;
         $.goto = 65;
-        $p = ($context.call = a_1)($l[5], $l[6], $l[7], $l[8], $l[9]);
+        $p = $iterator(something_4);
         continue;
       }
 
     case 64:
       $.goto = 58;
-      return $awt(a_4);
+      return $awt(a_5);
 
     case 65:
-      $.goto = 66;
-      return $awt($p);
+      $l[28] = $p;
+      $.state = 66;
 
     case 66:
-      $l[9] = 200;
+      $context.call = $l[28].next;
       $.goto = 67;
-      $p = ($context.call = a_2)($l[5], $l[6], $l[7], $l[8], $l[9]);
+      $p = $l[28].next();
       $.state = 67;
 
     case 67:
-      $.goto = 68;
-      return $awt($p);
+      if ($p.done) {
+        $.state = 68;
+      } else {
+        $l[8] = $p.value;
+        $l[9] = 0;
+        $.goto = 69;
+        $p = ($context.call = a_1)($l[5], $l[6], $l[7], $l[8], $l[9]);
+        continue;
+      }
 
     case 68:
-      $l[9] = 300;
-      $.goto = 69;
-      $p = ($context.call = a_3)($l[5], $l[6], $l[7], $l[8], $l[9]);
-      $.state = 69;
+      $.goto = 62;
+      return $awt(a_4);
 
     case 69:
-      $.goto = 62;
+      $.goto = 70;
       return $awt($p);
 
     case 70:
+      $l[9] = 200;
       $.goto = 71;
-      $iterFin($l[28]);
+      $p = ($context.call = a_2)($l[5], $l[6], $l[7], $l[8], $l[9]);
       $.state = 71;
 
     case 71:
-      $.goto = $l[20];
-      continue;
+      $.goto = 72;
+      return $awt($p);
 
     case 72:
+      $l[9] = 300;
       $.goto = 73;
-      $iterFin($l[27]);
+      $p = ($context.call = a_3)($l[5], $l[6], $l[7], $l[8], $l[9]);
       $.state = 73;
 
     case 73:
-      $.goto = $l[19];
-      continue;
+      $.goto = 66;
+      return $awt($p);
 
     case 74:
-      $.goto = 75;
-      $iterFin($l[26]);
-      $.state = 75;
+      return $raise($.error);
 
     case 75:
-      $.goto = $l[18];
-      continue;
+      $.goto = 76;
+      $iterFin($l[28]);
+      $.state = 76;
 
     case 76:
-      $.goto = 77;
-      $iterFin($l[25]);
-      $.state = 77;
-
-    case 77:
-      $.goto = $l[17];
+      $.goto = $l[20];
       continue;
 
+    case 77:
+      return $raise($.error);
+
     case 78:
-      $l[26] = $p;
+      $.goto = 79;
+      $iterFin($l[27]);
       $.state = 79;
 
     case 79:
-      $context.call = $l[26].next;
-      $.goto = 80;
-      $p = $l[26].next();
-      $.state = 80;
+      $.goto = $l[19];
+      continue;
 
     case 80:
+      return $raise($.error);
+
+    case 81:
+      $.goto = 82;
+      $iterFin($l[26]);
+      $.state = 82;
+
+    case 82:
+      $.goto = $l[18];
+      continue;
+
+    case 83:
+      return $raise($.error);
+
+    case 84:
+      $.goto = 85;
+      $iterFin($l[25]);
+      $.state = 85;
+
+    case 85:
+      $.goto = $l[17];
+      continue;
+
+    case 86:
+      $l[26] = $p;
+      $.state = 87;
+
+    case 87:
+      $context.call = $l[26].next;
+      $.goto = 88;
+      $p = $l[26].next();
+      $.state = 88;
+
+    case 88:
       if ($p.done) {
-        $.state = 81;
+        $.state = 89;
       } else {
         $l[4] = $p.value;
-        $.goto = 82;
+        $.goto = 90;
         $p = $iterator(something_3);
         continue;
       }
 
-    case 81:
+    case 89:
       $.goto = 8;
       continue;
 
-    case 82:
+    case 90:
       $l[27] = $p;
-      $.state = 83;
+      $.state = 91;
 
-    case 83:
+    case 91:
       $context.call = $l[27].next;
-      $.goto = 84;
+      $.goto = 92;
       $p = $l[27].next();
-      $.state = 84;
+      $.state = 92;
 
-    case 84:
+    case 92:
       if ($p.done) {
-        $.state = 85;
+        $.state = 93;
       } else {
         $l[2] = $p.value;
-        $.goto = 86;
+        $.goto = 94;
         $p = ($context.call = a_1)($l[3], $l[4], $l[2]);
         continue;
       }
 
-    case 85:
-      $.goto = 79;
-      continue;
-
-    case 86:
-      $.goto = 87;
-      return $awt($p);
-
-    case 87:
-      $l[4] = 20;
-      $.goto = 88;
-      $p = ($context.call = a_2)($l[3], $l[4], $l[2]);
-      $.state = 88;
-
-    case 88:
-      $.goto = 89;
-      return $awt($p);
-
-    case 89:
-      $l[4] = 30;
-      $.goto = 90;
-      $p = ($context.call = a_3)($l[3], $l[4], $l[2]);
-      $.state = 90;
-
-    case 90:
-      $.goto = 83;
-      return $awt($p);
-
-    case 91:
-      $.goto = 92;
-      $iterFin($l[27]);
-      $.state = 92;
-
-    case 92:
-      $.goto = $l[16];
-      continue;
-
     case 93:
-      $.goto = 94;
-      $iterFin($l[26]);
-      $.state = 94;
+      $.goto = 87;
+      continue;
 
     case 94:
-      $.goto = $l[15];
-      continue;
+      $.goto = 95;
+      return $awt($p);
 
     case 95:
+      $l[4] = 20;
       $.goto = 96;
-      $iterFin($l[25]);
+      $p = ($context.call = a_2)($l[3], $l[4], $l[2]);
       $.state = 96;
 
     case 96:
+      $.goto = 97;
+      return $awt($p);
+
+    case 97:
+      $l[4] = 30;
+      $.goto = 98;
+      $p = ($context.call = a_3)($l[3], $l[4], $l[2]);
+      $.state = 98;
+
+    case 98:
+      $.goto = 91;
+      return $awt($p);
+
+    case 99:
+      return $raise($.error);
+
+    case 100:
+      $.goto = 101;
+      $iterFin($l[27]);
+      $.state = 101;
+
+    case 101:
+      $.goto = $l[16];
+      continue;
+
+    case 102:
+      return $raise($.error);
+
+    case 103:
+      $.goto = 104;
+      $iterFin($l[26]);
+      $.state = 104;
+
+    case 104:
+      $.goto = $l[15];
+      continue;
+
+    case 105:
+      return $raise($.error);
+
+    case 106:
+      $.goto = 107;
+      $iterFin($l[25]);
+      $.state = 107;
+
+    case 107:
       $.goto = $l[14];
       continue;
 
-    case 97:
-      $.goto = 98;
+    case 108:
+      $.goto = 109;
       return $unhandledA($.error);
 
-    case 98:
+    case 109:
       return $retA($.result);
 
     default:
@@ -14885,249 +15091,250 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 94:
-    case 93:
-    case 81:
-    case 78:
+    case 104:
+    case 103:
+    case 102:
+    case 89:
+    case 86:
     case 9:
     case 8:
-      $l[14] = 97;
-      $.goto = 95;
+      $.goto = 106;
+      $l[14] = 105;
       break;
 
-    case 92:
-    case 91:
-    case 85:
-    case 82:
-    case 80:
-    case 79:
-      $l[15] = 95;
-      $l[14] = 97;
-      $.goto = 93;
-      break;
-
+    case 101:
+    case 100:
+    case 99:
+    case 93:
     case 90:
-    case 89:
     case 88:
     case 87:
-    case 86:
-    case 84:
-    case 83:
-      $l[16] = 93;
-      $l[15] = 95;
-      $l[14] = 97;
-      $.goto = 91;
+      $.goto = 103;
+      $l[15] = 102;
       break;
 
-    case 75:
-    case 74:
-    case 56:
-    case 53:
-    case 13:
-    case 12:
-      $l[17] = 97;
-      $.goto = 76;
+    case 98:
+    case 97:
+    case 96:
+    case 95:
+    case 94:
+    case 92:
+    case 91:
+      $.goto = 100;
+      $l[16] = 99;
       break;
 
-    case 73:
-    case 72:
+    case 82:
+    case 81:
+    case 80:
     case 60:
     case 57:
-    case 55:
-    case 54:
-      $l[18] = 76;
-      $l[17] = 97;
-      $.goto = 74;
+    case 13:
+    case 12:
+      $.goto = 84;
+      $l[17] = 83;
       break;
 
-    case 71:
-    case 70:
+    case 79:
+    case 78:
+    case 77:
     case 64:
     case 61:
     case 59:
     case 58:
-      $l[19] = 74;
-      $l[18] = 76;
-      $l[17] = 97;
-      $.goto = 72;
+      $.goto = 81;
+      $l[18] = 80;
       break;
 
-    case 69:
+    case 76:
+    case 75:
+    case 74:
     case 68:
-    case 67:
-    case 66:
     case 65:
     case 63:
     case 62:
-      $l[20] = 72;
-      $l[19] = 74;
-      $l[18] = 76;
-      $l[17] = 97;
-      $.goto = 70;
+      $.goto = 78;
+      $l[19] = 77;
+      break;
+
+    case 73:
+    case 72:
+    case 71:
+    case 70:
+    case 69:
+    case 67:
+    case 66:
+      $.goto = 75;
+      $l[20] = 74;
+      break;
+
+    case 53:
+    case 52:
+    case 51:
+    case 45:
+    case 42:
+    case 18:
+    case 17:
+      $.goto = 55;
+      $l[21] = 54;
       break;
 
     case 50:
     case 49:
-    case 43:
-    case 40:
-    case 18:
-    case 17:
-      $l[21] = 97;
-      $.goto = 51;
-      break;
-
     case 48:
     case 47:
     case 46:
-    case 45:
     case 44:
-    case 42:
-    case 41:
+    case 43:
+      $.goto = 52;
       $l[22] = 51;
-      $l[21] = 97;
-      $.goto = 49;
       break;
 
-    case 37:
+    case 38:
     case 22:
     case 21:
-      $l[23] = 97;
-      $.goto = 38;
+      $.goto = 40;
+      $l[23] = 39;
       break;
 
     case 30:
     case 29:
-      $l[24] = 97;
-      $.goto = 32;
+      $.goto = 33;
+      $l[24] = 32;
       break;
 
     default:
-      $.goto = 97;
-      break;
+      $.goto = 108;
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 94:
-    case 93:
-    case 81:
-    case 78:
+    case 104:
+    case 103:
+    case 102:
+    case 89:
+    case 86:
     case 9:
     case 8:
-      $l[14] = 98;
-      $.goto = 95;
+      $l[14] = 109;
+      $.goto = 106;
       break;
 
-    case 92:
-    case 91:
-    case 85:
-    case 82:
-    case 80:
-    case 79:
-      $l[15] = 95;
-      $l[14] = 98;
-      $.goto = 93;
-      break;
-
+    case 101:
+    case 100:
+    case 99:
+    case 93:
     case 90:
-    case 89:
     case 88:
     case 87:
-    case 86:
-    case 84:
-    case 83:
-      $l[16] = 93;
-      $l[15] = 95;
-      $l[14] = 98;
-      $.goto = 91;
+      $l[15] = 106;
+      $l[14] = 109;
+      $.goto = 103;
       break;
 
-    case 75:
-    case 74:
-    case 56:
-    case 53:
-    case 13:
-    case 12:
-      $l[17] = 98;
-      $.goto = 76;
+    case 98:
+    case 97:
+    case 96:
+    case 95:
+    case 94:
+    case 92:
+    case 91:
+      $l[16] = 103;
+      $l[15] = 106;
+      $l[14] = 109;
+      $.goto = 100;
       break;
 
-    case 73:
-    case 72:
+    case 82:
+    case 81:
+    case 80:
     case 60:
     case 57:
-    case 55:
-    case 54:
-      $l[18] = 76;
-      $l[17] = 98;
-      $.goto = 74;
+    case 13:
+    case 12:
+      $l[17] = 109;
+      $.goto = 84;
       break;
 
-    case 71:
-    case 70:
+    case 79:
+    case 78:
+    case 77:
     case 64:
     case 61:
     case 59:
     case 58:
-      $l[19] = 74;
-      $l[18] = 76;
-      $l[17] = 98;
-      $.goto = 72;
+      $l[18] = 84;
+      $l[17] = 109;
+      $.goto = 81;
       break;
 
-    case 69:
+    case 76:
+    case 75:
+    case 74:
     case 68:
-    case 67:
-    case 66:
     case 65:
     case 63:
     case 62:
-      $l[20] = 72;
-      $l[19] = 74;
-      $l[18] = 76;
-      $l[17] = 98;
-      $.goto = 70;
+      $l[19] = 81;
+      $l[18] = 84;
+      $l[17] = 109;
+      $.goto = 78;
+      break;
+
+    case 73:
+    case 72:
+    case 71:
+    case 70:
+    case 69:
+    case 67:
+    case 66:
+      $l[20] = 78;
+      $l[19] = 81;
+      $l[18] = 84;
+      $l[17] = 109;
+      $.goto = 75;
+      break;
+
+    case 53:
+    case 52:
+    case 51:
+    case 45:
+    case 42:
+    case 18:
+    case 17:
+      $l[21] = 109;
+      $.goto = 55;
       break;
 
     case 50:
     case 49:
-    case 43:
-    case 40:
-    case 18:
-    case 17:
-      $l[21] = 98;
-      $.goto = 51;
-      break;
-
     case 48:
     case 47:
     case 46:
-    case 45:
     case 44:
-    case 42:
-    case 41:
-      $l[22] = 51;
-      $l[21] = 98;
-      $.goto = 49;
+    case 43:
+      $l[22] = 55;
+      $l[21] = 109;
+      $.goto = 52;
       break;
 
-    case 37:
+    case 38:
     case 22:
     case 21:
-      $l[23] = 98;
-      $.goto = 38;
+      $l[23] = 109;
+      $.goto = 40;
       break;
 
     case 30:
     case 29:
-      $l[24] = 98;
-      $.goto = 32;
+      $l[24] = 109;
+      $.goto = 33;
       break;
 
     default:
-      $.goto = 98;
+      $.goto = 109;
       break;
   }
-}, 1, [[2, "2136:10-2136:16", $s$212], [2, "2136:4-2136:16", $s$212], [2, "2138:10-2138:16", $s$212], [2, "2138:4-2138:16", $s$212], [2, "2140:10-2140:16", $s$212], [2, "2140:4-2140:16", $s$212], [2, "2145:20-2145:31", $s$213], [0, null, $s$211], [2, "2145:20-2145:31", $s$213], [2, "2146:22-2146:33", $s$214], [2, "2159:20-2159:31", $s$215], [0, null, $s$211], [2, "2159:20-2159:31", $s$215], [2, "2160:22-2160:33", $s$216], [2, "2175:4-2175:13", $s$211], [2, "2180:20-2180:31", $s$218], [0, null, $s$211], [2, "2180:20-2180:31", $s$218], [2, "2181:16-2181:27", $s$218], [2, "2192:20-2192:31", $s$219], [0, null, $s$211], [2, "2192:20-2192:31", $s$219], [2, "2193:12-2193:18", $s$219], [0, "2197:5-2197:10", $s$211], [2, "2200:6-2200:15", $s$211], [0, null, $s$211], [2, "2222:24-2222:35", $s$220], [2, "2229:2-2229:17", $s$211], [0, null, $s$211], [2, "2222:24-2222:35", $s$220], [2, "2223:10-2223:19", $s$220], [2, "2226:6-2226:15", $s$211], [2, "2222:24-2222:35", $s$220], [0, null, $s$211], [2, "2209:10-2209:19", $s$211], [2, "2212:8-2212:17", $s$211], [2, "2201:6-2201:15", $s$211], [2, "2193:6-2193:18", $s$219], [2, "2192:20-2192:31", $s$219], [0, null, $s$211], [0, null, $s$211], [2, "2181:16-2181:27", $s$218], [2, "2182:14-2182:23", $s$218], [0, null, $s$211], [2, "2182:8-2182:23", $s$218], [2, "2184:14-2184:23", $s$218], [2, "2184:8-2184:23", $s$218], [2, "2186:14-2186:23", $s$218], [2, "2186:8-2186:23", $s$218], [2, "2181:16-2181:27", $s$218], [0, null, $s$211], [2, "2180:20-2180:31", $s$218], [0, null, $s$211], [0, null, $s$211], [2, "2160:22-2160:33", $s$216], [2, "2161:24-2161:35", $s$221], [0, null, $s$211], [0, null, $s$211], [2, "2161:24-2161:35", $s$221], [2, "2162:26-2162:37", $s$222], [2, "2172:8-2172:17", $s$216], [0, null, $s$211], [2, "2162:26-2162:37", $s$222], [2, "2164:18-2164:36", $s$222], [2, "2170:10-2170:19", $s$221], [2, "2164:12-2164:36", $s$222], [2, "2166:18-2166:36", $s$222], [2, "2166:12-2166:36", $s$222], [2, "2168:18-2168:36", $s$222], [2, "2168:12-2168:36", $s$222], [2, "2162:26-2162:37", $s$222], [0, null, $s$211], [2, "2161:24-2161:35", $s$221], [0, null, $s$211], [2, "2160:22-2160:33", $s$216], [0, null, $s$211], [2, "2159:20-2159:31", $s$215], [0, null, $s$211], [0, null, $s$211], [2, "2146:22-2146:33", $s$214], [2, "2147:18-2147:29", $s$214], [0, null, $s$211], [0, null, $s$211], [2, "2147:18-2147:29", $s$214], [2, "2148:16-2148:28", $s$214], [0, null, $s$211], [2, "2148:10-2148:28", $s$214], [2, "2150:16-2150:28", $s$214], [2, "2150:10-2150:28", $s$214], [2, "2152:16-2152:28", $s$214], [2, "2152:10-2152:28", $s$214], [2, "2147:18-2147:29", $s$214], [0, null, $s$211], [2, "2146:22-2146:33", $s$214], [0, null, $s$211], [2, "2145:20-2145:31", $s$213], [0, null, $s$211], [16, "2230:1-2230:1", $s$211], [16, "2230:1-2230:1", $s$211]]),
+}, 1, [[2, "2136:10-2136:16", $s$212], [2, "2136:4-2136:16", $s$212], [2, "2138:10-2138:16", $s$212], [2, "2138:4-2138:16", $s$212], [2, "2140:10-2140:16", $s$212], [2, "2140:4-2140:16", $s$212], [2, "2145:20-2145:31", $s$213], [0, null, $s$211], [2, "2145:20-2145:31", $s$213], [2, "2146:22-2146:33", $s$214], [2, "2159:20-2159:31", $s$215], [0, null, $s$211], [2, "2159:20-2159:31", $s$215], [2, "2160:22-2160:33", $s$216], [2, "2175:4-2175:13", $s$211], [2, "2180:20-2180:31", $s$218], [0, null, $s$211], [2, "2180:20-2180:31", $s$218], [2, "2181:16-2181:27", $s$218], [2, "2192:20-2192:31", $s$219], [0, null, $s$211], [2, "2192:20-2192:31", $s$219], [2, "2193:12-2193:18", $s$219], [0, "2197:5-2197:10", $s$211], [2, "2200:6-2200:15", $s$211], [0, null, $s$211], [2, "2222:24-2222:35", $s$220], [2, "2229:2-2229:17", $s$211], [0, null, $s$211], [2, "2222:24-2222:35", $s$220], [2, "2223:10-2223:19", $s$220], [2, "2226:6-2226:15", $s$211], [0, null, $s$211], [2, "2222:24-2222:35", $s$220], [0, null, $s$211], [2, "2209:10-2209:19", $s$211], [2, "2212:8-2212:17", $s$211], [2, "2201:6-2201:15", $s$211], [2, "2193:6-2193:18", $s$219], [0, null, $s$211], [2, "2192:20-2192:31", $s$219], [0, null, $s$211], [0, null, $s$211], [2, "2181:16-2181:27", $s$218], [2, "2182:14-2182:23", $s$218], [0, null, $s$211], [2, "2182:8-2182:23", $s$218], [2, "2184:14-2184:23", $s$218], [2, "2184:8-2184:23", $s$218], [2, "2186:14-2186:23", $s$218], [2, "2186:8-2186:23", $s$218], [0, null, $s$211], [2, "2181:16-2181:27", $s$218], [0, null, $s$211], [0, null, $s$211], [2, "2180:20-2180:31", $s$218], [0, null, $s$211], [0, null, $s$211], [2, "2160:22-2160:33", $s$216], [2, "2161:24-2161:35", $s$221], [0, null, $s$211], [0, null, $s$211], [2, "2161:24-2161:35", $s$221], [2, "2162:26-2162:37", $s$222], [2, "2172:8-2172:17", $s$216], [0, null, $s$211], [2, "2162:26-2162:37", $s$222], [2, "2164:18-2164:36", $s$222], [2, "2170:10-2170:19", $s$221], [2, "2164:12-2164:36", $s$222], [2, "2166:18-2166:36", $s$222], [2, "2166:12-2166:36", $s$222], [2, "2168:18-2168:36", $s$222], [2, "2168:12-2168:36", $s$222], [0, null, $s$211], [2, "2162:26-2162:37", $s$222], [0, null, $s$211], [0, null, $s$211], [2, "2161:24-2161:35", $s$221], [0, null, $s$211], [0, null, $s$211], [2, "2160:22-2160:33", $s$216], [0, null, $s$211], [0, null, $s$211], [2, "2159:20-2159:31", $s$215], [0, null, $s$211], [0, null, $s$211], [2, "2146:22-2146:33", $s$214], [2, "2147:18-2147:29", $s$214], [0, null, $s$211], [0, null, $s$211], [2, "2147:18-2147:29", $s$214], [2, "2148:16-2148:28", $s$214], [0, null, $s$211], [2, "2148:10-2148:28", $s$214], [2, "2150:16-2150:28", $s$214], [2, "2150:10-2150:28", $s$214], [2, "2152:16-2152:28", $s$214], [2, "2152:10-2152:28", $s$214], [0, null, $s$211], [2, "2147:18-2147:29", $s$214], [0, null, $s$211], [0, null, $s$211], [2, "2146:22-2146:33", $s$214], [0, null, $s$211], [0, null, $s$211], [2, "2145:20-2145:31", $s$213], [0, null, $s$211], [16, "2230:1-2230:1", $s$211], [16, "2230:1-2230:1", $s$211]]),
     $m$152 = $M.fun("m$152", "r44", null, $m$0, [], 0, 9, "2232:0-2286:1", 129, function r44($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -15238,7 +15445,7 @@ var $M = require("@effectful/debugger"),
       if (something_4) {
         $.state = 18;
       } else {
-        $.goto = 40;
+        $.goto = 43;
         continue;
       }
 
@@ -15337,22 +15544,19 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 33:
-      $.goto = 34;
-      $iterFin($l[8]);
-      $.state = 34;
+      return $raise($.error);
 
     case 34:
+      $.goto = 35;
+      $iterFin($l[8]);
+      $.state = 35;
+
+    case 35:
       $.goto = $l[6];
       continue;
 
-    case 35:
-      $.goto = 36;
-      $iterFin($l[7]);
-      $.state = 36;
-
     case 36:
-      $.goto = $l[5];
-      continue;
+      return $raise($.error);
 
     case 37:
       $.goto = 38;
@@ -15360,14 +15564,26 @@ var $M = require("@effectful/debugger"),
       $.state = 38;
 
     case 38:
-      $.goto = $l[4];
+      $.goto = $l[5];
       continue;
 
     case 39:
-      $.goto = 40;
-      return $unhandledA($.error);
+      return $raise($.error);
 
     case 40:
+      $.goto = 41;
+      $iterFin($l[7]);
+      $.state = 41;
+
+    case 41:
+      $.goto = $l[4];
+      continue;
+
+    case 42:
+      $.goto = 43;
+      return $unhandledA($.error);
+
+    case 43:
       return $retA($.result);
 
     default:
@@ -15375,63 +15591,63 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 35:
     case 34:
     case 33:
     case 32:
     case 29:
     case 7:
     case 6:
-      $l[5] = 39;
-      $.goto = 35;
+      $.goto = 37;
+      $l[5] = 36;
       break;
 
     case 31:
     case 30:
-      $l[6] = 35;
-      $l[5] = 39;
-      $.goto = 33;
+      $.goto = 34;
+      $l[6] = 33;
       break;
 
     case 3:
     case 2:
+      $.goto = 40;
       $l[4] = 39;
-      $.goto = 37;
       break;
 
     default:
-      $.goto = 39;
-      break;
+      $.goto = 42;
   }
 }, function ($, $l) {
   switch ($.state) {
     case 3:
     case 2:
-      $l[4] = 40;
-      $.goto = 37;
+      $l[4] = 43;
+      $.goto = 40;
       break;
 
+    case 35:
     case 34:
     case 33:
     case 32:
     case 29:
     case 7:
     case 6:
-      $l[5] = 40;
-      $.goto = 35;
+      $l[5] = 43;
+      $.goto = 37;
       break;
 
     case 31:
     case 30:
-      $l[6] = 35;
-      $l[5] = 40;
-      $.goto = 33;
+      $l[6] = 37;
+      $l[5] = 43;
+      $.goto = 34;
       break;
 
     default:
-      $.goto = 40;
+      $.goto = 43;
       break;
   }
-}, 1, [[2, "2235:20-2235:31", $s$224], [0, null, $s$223], [2, "2235:20-2235:31", $s$224], [2, "2236:6-2236:15", $s$224], [2, "2241:20-2241:31", $s$225], [0, null, $s$223], [2, "2241:20-2241:31", $s$225], [2, "2242:22-2242:37", $s$226], [0, "2248:5-2248:10", $s$223], [2, "2250:10-2250:19", $s$223], [0, "2254:5-2254:10", $s$223], [2, "2256:6-2256:15", $s$223], [0, "2262:5-2262:10", $s$223], [2, "2264:6-2264:15", $s$223], [0, "2271:5-2271:10", $s$223], [2, "2272:11-2272:28", $s$223], [0, null, $s$223], [0, null, $s$223], [2, "2282:8-2282:17", $s$223], [2, "2273:13-2273:30", $s$223], [2, "2274:8-2274:17", $s$223], [2, "2266:12-2266:21", $s$223], [0, null, $s$223], [0, null, $s$223], [2, "2257:10-2257:19", $s$223], [0, null, $s$223], [2, "2258:6-2258:15", $s$223], [0, null, $s$223], [0, null, $s$223], [0, null, $s$223], [2, "2242:22-2242:37", $s$226], [2, "2243:8-2243:17", $s$226], [0, null, $s$223], [2, "2242:22-2242:37", $s$226], [0, null, $s$223], [2, "2241:20-2241:31", $s$225], [0, null, $s$223], [2, "2235:20-2235:31", $s$224], [0, null, $s$223], [16, "2286:1-2286:1", $s$223], [16, "2286:1-2286:1", $s$223]]),
+}, 1, [[2, "2235:20-2235:31", $s$224], [0, null, $s$223], [2, "2235:20-2235:31", $s$224], [2, "2236:6-2236:15", $s$224], [2, "2241:20-2241:31", $s$225], [0, null, $s$223], [2, "2241:20-2241:31", $s$225], [2, "2242:22-2242:37", $s$226], [0, "2248:5-2248:10", $s$223], [2, "2250:10-2250:19", $s$223], [0, "2254:5-2254:10", $s$223], [2, "2256:6-2256:15", $s$223], [0, "2262:5-2262:10", $s$223], [2, "2264:6-2264:15", $s$223], [0, "2271:5-2271:10", $s$223], [2, "2272:11-2272:28", $s$223], [0, null, $s$223], [0, null, $s$223], [2, "2282:8-2282:17", $s$223], [2, "2273:13-2273:30", $s$223], [2, "2274:8-2274:17", $s$223], [2, "2266:12-2266:21", $s$223], [0, null, $s$223], [0, null, $s$223], [2, "2257:10-2257:19", $s$223], [0, null, $s$223], [2, "2258:6-2258:15", $s$223], [0, null, $s$223], [0, null, $s$223], [0, null, $s$223], [2, "2242:22-2242:37", $s$226], [2, "2243:8-2243:17", $s$226], [0, null, $s$223], [0, null, $s$223], [2, "2242:22-2242:37", $s$226], [0, null, $s$223], [0, null, $s$223], [2, "2241:20-2241:31", $s$225], [0, null, $s$223], [0, null, $s$223], [2, "2235:20-2235:31", $s$224], [0, null, $s$223], [16, "2286:1-2286:1", $s$223], [16, "2286:1-2286:1", $s$223]]),
     $m$153 = $M.fun("m$153", "r45", null, $m$0, [], 0, 1, "2288:0-2338:1", 129, function r45($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -15827,7 +16043,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 4:
-      $.goto = 29;
+      $.goto = 32;
       continue;
 
     case 5:
@@ -15928,37 +16144,46 @@ var $M = require("@effectful/debugger"),
       return $awt($p);
 
     case 22:
-      $.goto = 23;
-      $iterFin($l[10]);
-      $.state = 23;
+      return $raise($.error);
 
     case 23:
+      $.goto = 24;
+      $iterFin($l[10]);
+      $.state = 24;
+
+    case 24:
       $.goto = $l[7];
       continue;
 
-    case 24:
-      $.goto = 25;
-      $iterFin($l[9]);
-      $.state = 25;
-
     case 25:
-      $.goto = $l[6];
-      continue;
+      return $raise($.error);
 
     case 26:
       $.goto = 27;
-      $iterFin($l[8]);
+      $iterFin($l[9]);
       $.state = 27;
 
     case 27:
-      $.goto = $l[5];
+      $.goto = $l[6];
       continue;
 
     case 28:
-      $.goto = 29;
-      return $unhandledA($.error);
+      return $raise($.error);
 
     case 29:
+      $.goto = 30;
+      $iterFin($l[8]);
+      $.state = 30;
+
+    case 30:
+      $.goto = $l[5];
+      continue;
+
+    case 31:
+      $.goto = 32;
+      return $unhandledA($.error);
+
+    case 32:
       return $retA($.result);
 
     default:
@@ -15966,25 +16191,26 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 27:
+    case 26:
     case 25:
-    case 24:
     case 8:
     case 5:
     case 3:
     case 2:
+      $.goto = 29;
       $l[5] = 28;
-      $.goto = 26;
       break;
 
+    case 24:
     case 23:
     case 22:
     case 12:
     case 9:
     case 7:
     case 6:
-      $l[6] = 26;
-      $l[5] = 28;
-      $.goto = 24;
+      $.goto = 26;
+      $l[6] = 25;
       break;
 
     case 21:
@@ -15998,37 +16224,36 @@ var $M = require("@effectful/debugger"),
     case 13:
     case 11:
     case 10:
-      $l[7] = 24;
-      $l[6] = 26;
-      $l[5] = 28;
-      $.goto = 22;
+      $.goto = 23;
+      $l[7] = 22;
       break;
 
     default:
-      $.goto = 28;
-      break;
+      $.goto = 31;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 27:
+    case 26:
     case 25:
-    case 24:
     case 8:
     case 5:
     case 3:
     case 2:
-      $l[5] = 29;
-      $.goto = 26;
+      $l[5] = 32;
+      $.goto = 29;
       break;
 
+    case 24:
     case 23:
     case 22:
     case 12:
     case 9:
     case 7:
     case 6:
-      $l[6] = 26;
-      $l[5] = 29;
-      $.goto = 24;
+      $l[6] = 29;
+      $l[5] = 32;
+      $.goto = 26;
       break;
 
     case 21:
@@ -16042,17 +16267,17 @@ var $M = require("@effectful/debugger"),
     case 13:
     case 11:
     case 10:
-      $l[7] = 24;
-      $l[6] = 26;
-      $l[5] = 29;
-      $.goto = 22;
+      $l[7] = 26;
+      $l[6] = 29;
+      $l[5] = 32;
+      $.goto = 23;
       break;
 
     default:
-      $.goto = 29;
+      $.goto = 32;
       break;
   }
-}, 1, [[2, "2379:19-2379:27", $s$232], [0, null, $s$231], [2, "2379:19-2379:27", $s$232], [2, "2380:21-2380:27", $s$233], [0, null, $s$231], [0, null, $s$231], [2, "2380:21-2380:27", $s$233], [2, "2381:23-2381:33", $s$234], [0, null, $s$231], [0, null, $s$231], [2, "2381:23-2381:33", $s$234], [2, "2383:18-2383:70", $s$234], [0, null, $s$231], [2, "2383:12-2383:70", $s$234], [0, null, $s$231], [2, "2384:18-2384:69", $s$234], [2, "2384:12-2384:69", $s$234], [0, null, $s$231], [2, "2385:14-2385:51", $s$234], [2, "2385:8-2385:51", $s$234], [2, "2387:14-2387:51", $s$234], [2, "2387:8-2387:51", $s$234], [2, "2381:23-2381:33", $s$234], [0, null, $s$231], [2, "2380:21-2380:27", $s$233], [0, null, $s$231], [2, "2379:19-2379:27", $s$232], [0, null, $s$231], [16, "2391:1-2391:1", $s$231], [16, "2391:1-2391:1", $s$231]]),
+}, 1, [[2, "2379:19-2379:27", $s$232], [0, null, $s$231], [2, "2379:19-2379:27", $s$232], [2, "2380:21-2380:27", $s$233], [0, null, $s$231], [0, null, $s$231], [2, "2380:21-2380:27", $s$233], [2, "2381:23-2381:33", $s$234], [0, null, $s$231], [0, null, $s$231], [2, "2381:23-2381:33", $s$234], [2, "2383:18-2383:70", $s$234], [0, null, $s$231], [2, "2383:12-2383:70", $s$234], [0, null, $s$231], [2, "2384:18-2384:69", $s$234], [2, "2384:12-2384:69", $s$234], [0, null, $s$231], [2, "2385:14-2385:51", $s$234], [2, "2385:8-2385:51", $s$234], [2, "2387:14-2387:51", $s$234], [2, "2387:8-2387:51", $s$234], [0, null, $s$231], [2, "2381:23-2381:33", $s$234], [0, null, $s$231], [0, null, $s$231], [2, "2380:21-2380:27", $s$233], [0, null, $s$231], [0, null, $s$231], [2, "2379:19-2379:27", $s$232], [0, null, $s$231], [16, "2391:1-2391:1", $s$231], [16, "2391:1-2391:1", $s$231]]),
     $m$156 = $M.fun("m$156", "r48", null, $m$0, [], 0, 2, "2393:0-2399:1", 129, function r48($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

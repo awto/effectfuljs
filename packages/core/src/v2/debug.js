@@ -110,9 +110,9 @@ export function cfgToDot(root, name = "") {
   if (!end.deb_id) end.deb_id = "END";
   cfgBlock(beg);
   for (let i = beg; i !== end; i = i.nextBlock) {
-    const labels = [`<<${i.id}>>:\\l`];
+    const labels = [`<<${i.id}${i.scope ? ` {${i.scope.id}}` : "{}"}>>:\\l`];
     for (let j = i.nextItem; j !== i; j = j.nextItem)
-      labels.push(`${j.deb_}\\l`);
+      labels.push(`${j.deb_}${j.scope ? ` {${j.scope.id}}` : "{}"}\\l`);
     let finExpr = "";
     if (i.exitExpr) finExpr = `${str(i.exitExpr)}/`;
     if (i.cond) labels.push(`${finExpr}?`);

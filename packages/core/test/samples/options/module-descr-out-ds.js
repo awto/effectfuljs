@@ -6,6 +6,7 @@ var $M = require("@effectful/debugger"),
     $unhandled = $M.unhandled,
     $unhandledA = $M.unhandledA,
     $unhandledG = $M.unhandledG,
+    $raise = $M.raise,
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
@@ -239,23 +240,27 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 16:
-      $l[0][5] = 18;
-      $.state = 17;
+      $l[0][5] = 19;
+      $.goto = 18;
+      continue;
 
     case 17:
+      return $raise($.error);
+
+    case 18:
       $l = $.$ = $l[0];
       $.goto = $l[5];
       continue;
 
-    case 18:
-      $.goto = 20;
+    case 19:
+      $.goto = 21;
       continue;
 
-    case 19:
-      $.goto = 20;
+    case 20:
+      $.goto = 21;
       return $unhandled($.error);
 
-    case 20:
+    case 21:
       return $ret($.result);
 
     default:
@@ -279,13 +284,12 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[0][5] = 19;
-      $.goto = 17;
+      $.goto = 18;
+      $l[0][5] = 17;
       break;
 
     default:
-      $.goto = 19;
-      break;
+      $.goto = 20;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -305,15 +309,15 @@ var $M = require("@effectful/debugger"),
     case 3:
     case 2:
     case 1:
-      $l[0][5] = 20;
-      $.goto = 17;
+      $l[0][5] = 21;
+      $.goto = 18;
       break;
 
     default:
-      $.goto = 20;
+      $.goto = 21;
       break;
   }
-}, 1, [[0, null, $s$2], [0, null, $s$3], [2, null, $s$3], [0, null, $s$2], [2, null, $s$3], [2, null, $s$3], [0, null, $s$2], [2, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$2], [2, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
+}, 1, [[0, null, $s$2], [0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [2, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [2, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
     $m$2 = $M.fun("m$2", "_createClass", null, $m$0, ["Constructor", "protoProps", "staticProps"], 0, 4, null, 0, function _createClass($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
@@ -447,7 +451,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 11;
-      break;
   }
 }, null, 1, [[4, "4:2-9:3", $s$5], [5, "5:4-5:26", $s$5], [3, "5:14-5:24", $s$5], [3, "5:4-5:25", $s$5], [5, "6:4-6:16", $s$5], [3, "6:4-6:15", $s$5], [37, "7:3-7:3", $s$5], [36, "10:1-10:1", $s$5], [4, "8:4-8:17", $s$6], [2, "8:4-8:16", $s$6], [36, "9:3-9:3", $s$5], [16, "10:1-10:1", $s$5], [16, "10:1-10:1", $s$5]]),
     $m$4 = $M.fun("m$4", null, null, $m$0, [], 0, 3, "13:2-27:12", 0, function ($, $l, $p) {

@@ -108,6 +108,8 @@ function defaultNeedsSave(doc) {
     case Tag.StringLiteral:
     case Tag.BooleanLiteral:
     case Tag.NumericLiteral:
+    case Tag.Import:
+    case Tag.Super:
       return false;
     case Tag.Identifier:
       const sym = doc.sym;
@@ -973,11 +975,10 @@ export function build(needsSave = defaultNeedsSave) {
     const arrExpr = Kit.append(op, Kit.node(Tag.right, Tag.ArrayExpression));
     const exprs = Kit.append(arrExpr, Kit.arr(Tag.elements));
     Kit.append(exprs, parentExpr);
-    push(newItem(localsSym, op, null));
+    push(newItem(localsSym, op, curScope));
     return exprs;
   }
   function pushCopyScope() {
-    // debugger;
     const memExpr = Kit.tok(Tag.push, Tag.MemberExpression, { computed: true });
     Kit.append(memExpr, Kit.id(Tag.object, localsSym));
     Kit.append(memExpr, Kit.num(Tag.property, 0));
@@ -993,9 +994,9 @@ export function build(needsSave = defaultNeedsSave) {
     let scopeCleanupBlock = exitBlock;
     if (i.isScopeNode) {
       const prevEnter = lastBlock;
-      i.pushScopeExpr = pushPushScope();
       const finalizer = newFinalizerBlock();
       curScope = i;
+      i.pushScopeExpr = pushPushScope();
       setBlock(finalizer);
       finalizer.br = finalizer.tail;
       finalizer.tail.scope = parScope;

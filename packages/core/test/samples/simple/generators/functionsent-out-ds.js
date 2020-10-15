@@ -8,6 +8,7 @@ var $M = require("@effectful/debugger"),
     $retG = $M.retG,
     $unhandled = $M.unhandled,
     $unhandledG = $M.unhandledG,
+    $raise = $M.raise,
     $brk = $M.brk,
     $lset = $M.lset,
     $mcall = $M.mcall,
@@ -130,7 +131,7 @@ var $M = require("@effectful/debugger"),
       $.state = 16;
 
     case 16:
-      $.goto = 29;
+      $.goto = 30;
       $brk();
       continue;
 
@@ -163,40 +164,44 @@ var $M = require("@effectful/debugger"),
 
     case 22:
       $.error = $M.iterErrUndef();
-      $l[2] = 28;
-      $.state = 23;
+      $l[2] = 29;
+      $.goto = 24;
+      continue;
 
     case 23:
-      $.goto = 24;
-      $p = $iterFin($l[3], $.result);
-      $.state = 24;
+      return $raise($.error);
 
     case 24:
+      $.goto = 25;
+      $p = $iterFin($l[3], $.result);
+      $.state = 25;
+
+    case 25:
       if ($p.done) {
-        $.state = 25;
+        $.state = 26;
       } else {
-        $.goto = 26;
+        $.goto = 27;
         continue;
       }
 
-    case 25:
+    case 26:
       $.goto = $l[2];
       continue;
 
-    case 26:
-      $.goto = 27;
+    case 27:
+      $.goto = 28;
       return $yld($p.value);
 
-    case 27:
+    case 28:
       $l[5] = $p;
       $.goto = 5;
       continue;
 
-    case 28:
-      $.goto = 29;
+    case 29:
+      $.goto = 30;
       return $unhandledG($.error);
 
-    case 29:
+    case 30:
       return $retG($.result);
 
     default:
@@ -204,23 +209,22 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 22:
+    case 19:
+    case 6:
+    case 5:
+      $.goto = 24;
+      $l[2] = 23;
+      break;
+
     case 18:
     case 17:
     case 7:
       $.goto = 19;
       break;
 
-    case 22:
-    case 19:
-    case 6:
-    case 5:
-      $l[2] = 28;
-      $.goto = 23;
-      break;
-
     default:
-      $.goto = 28;
-      break;
+      $.goto = 29;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -231,14 +235,14 @@ var $M = require("@effectful/debugger"),
     case 7:
     case 6:
     case 5:
-      $l[2] = 29;
-      $.goto = 23;
+      $l[2] = 30;
+      $.goto = 24;
       break;
 
     default:
-      $.goto = 29;
+      $.goto = 30;
       break;
   }
-}, 1, [[4, "4:2-4:30", $s$2], [2, "4:10-4:29", $s$2], [4, "5:2-5:34", $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [0, null, $s$2], [4, "6:2-6:32", $s$2], [2, "6:2-6:31", $s$2], [4, "7:2-7:21", $s$2], [2, "7:14-7:19", $s$2], [2, "7:2-7:20", $s$2], [4, "8:2-8:21", $s$2], [2, "8:14-8:19", $s$2], [2, "8:2-8:20", $s$2], [36, "9:1-9:1", $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [16, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2]]);
+}, 1, [[4, "4:2-4:30", $s$2], [2, "4:10-4:29", $s$2], [4, "5:2-5:34", $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [0, null, $s$2], [4, "6:2-6:32", $s$2], [2, "6:2-6:31", $s$2], [4, "7:2-7:21", $s$2], [2, "7:14-7:19", $s$2], [2, "7:2-7:20", $s$2], [4, "8:2-8:21", $s$2], [2, "8:14-8:19", $s$2], [2, "8:2-8:20", $s$2], [36, "9:1-9:1", $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [2, "5:2-5:33", $s$2], [0, null, $s$2], [16, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2]]);
 
 $M.moduleExports();

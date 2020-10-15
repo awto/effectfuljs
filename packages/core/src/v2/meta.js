@@ -120,8 +120,6 @@ export function prepare(root) {
   const { lastFrame } = root;
   const res = (root.stateArgs = []);
   const resFrame = lastFrame.nextFrame;
-  resFrame.brkFlags |= Scope.EXIT_BRK_FLAG;
-  resFrame.nextFrame.brkFlags |= Scope.EXIT_BRK_FLAG;
   for (let i = resFrame; i !== lastFrame; i = i.nextFrame) {
     res.push((i.metaArgs = []));
     let { doc } = i;
@@ -139,7 +137,7 @@ export function positions(root) {
     if (!doc) continue;
     const ref = doc.refDoc || doc;
     const { loc } = ref.node;
-    let flags = doc.brkFlags || ref.brkFlags || 0;
+    let flags = (doc.brkFlags || ref.brkFlags || 0) | i.brkFlags;
     let handler = i.block.handler;
     while (handler && handler.blackbox) handler = handler.handler;
     if (handler) flags |= Scope.HAS_EH_BRK_FLAG;
@@ -179,10 +177,11 @@ export function scopes(decls) {
     const { lastFrame } = root;
     const rootScope = root.origFunc;
     for (let i = lastFrame.nextFrame; i !== lastFrame; i = i.nextFrame) {
-      const { doc } = i;
-      let block = rootScope;
-      if (doc) block = (doc.refDoc || doc).parentBlock || rootScope;
-      i.metaArgs.push(block && getBlockDescr(block));
+      let { doc } = i;
+      doc = doc.refDoc || doc;
+      const scope =
+        (doc && doc.parentBlock) || (i.block && i.block.scope) || rootScope;
+      i.metaArgs.push(scope && getBlockDescr(scope));
     }
   }
   function getBlockDescr(block) {
@@ -199,8 +198,11 @@ export function scopes(decls) {
     res = block.blockDescrSym = Scope.newSym();
     res.orig = res.name = `$s$${++num}`;
     for (const i of blockDecls)
-      if (i.bound)
-        vars[i.orig] = [i.index, Kit.locStr(i.declPos && i.declPos.node.loc)];
+      if (i.bound) {
+        const args = [i.index, Kit.locStr(i.declPos && i.declPos.node.loc)];
+        vars[i.orig] = args;
+        if (i.metaArgs) args.push(...i.metaArgs);
+      }
     const decl = Kit.node(Tag.push, Tag.VariableDeclarator);
     let depth = rootScopeDepth;
     if (parentBlock) {

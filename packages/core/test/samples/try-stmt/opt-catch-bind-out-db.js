@@ -73,7 +73,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 4;
-      break;
   }
 }, null, 1, [[0, null, $s$2], [3, "3:4-3:10", $s$2], [0, null, $s$2], [2, "5:4-5:10", $s$2], [16, "7:1-7:1", $s$2], [16, "7:1-7:1", $s$2]]),
     $m$2 = $M.fun("m$2", "a2", null, $m$0, ["a", "b"], 0, 3, "9:0-15:1", 128, function a2($, $l, $p) {
@@ -113,7 +112,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 4;
-      break;
   }
 }, null, 1, [[0, null, $s$3], [3, "11:4-11:10", $s$3], [0, null, $s$3], [0, null, $s$3], [16, "15:1-15:1", $s$3], [16, "15:1-15:1", $s$3]]);
 

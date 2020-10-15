@@ -6,7 +6,6 @@ Object.assign(config, {
   // information about the current scope
   evalContext: null,
   evalParams: null,
-  directEval: false,
   // uses the global variable as API namespace
   ns: null,
   // assumes the output is passed to some static bandler like webpack or parcel,
@@ -34,6 +33,9 @@ Object.assign(config, {
   switchFallthrough: true,
   inlineTrampolineLoop: true,
   optimizeFrames: true,
-  implictCalls: true
+  implictCalls: true,
+  // adds the string (if specified) as the first file statement
+  // this way compiled files can be distinguished
+  outFileDirective: null
 });
 export default config;

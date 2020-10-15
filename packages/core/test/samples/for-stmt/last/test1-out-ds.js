@@ -2,6 +2,7 @@ var $M = require("@effectful/debugger"),
     $context = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
+    $raise = $M.raise,
     $brk = $M.brk,
     $lset = $M.lset,
     $get = $M.get,
@@ -150,24 +151,28 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 18:
-      $l[0][5] = 20;
-      $.state = 19;
+      $l[0][5] = 21;
+      $.goto = 20;
+      continue;
 
     case 19:
+      return $raise($.error);
+
+    case 20:
       $l = $.$ = $l[0];
       $.goto = $l[5];
       continue;
 
-    case 20:
-      $.goto = 22;
+    case 21:
+      $.goto = 23;
       $brk();
       continue;
 
-    case 21:
-      $.goto = 22;
+    case 22:
+      $.goto = 23;
       return $unhandled($.error);
 
-    case 22:
+    case 23:
       return $ret($.result);
 
     default:
@@ -190,13 +195,12 @@ var $M = require("@effectful/debugger"),
     case 6:
     case 5:
     case 4:
-      $l[0][5] = 21;
-      $.goto = 19;
+      $.goto = 20;
+      $l[0][5] = 19;
       break;
 
     default:
-      $.goto = 21;
-      break;
+      $.goto = 22;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -215,14 +219,14 @@ var $M = require("@effectful/debugger"),
     case 6:
     case 5:
     case 4:
-      $l[0][5] = 22;
-      $.goto = 19;
+      $l[0][5] = 23;
+      $.goto = 20;
       break;
 
     default:
-      $.goto = 22;
+      $.goto = 23;
       break;
   }
-}, 1, [[4, "2:2-2:21", $s$2], [4, "3:2-3:18", $s$2], [4, "4:2-7:3", $s$2], [0, null, $s$2], [4, "4:7-4:30", $s$3], [2, "4:20-4:30", $s$3], [0, "4:14-4:30", $s$3], [4, "4:32-4:39", $s$3], [0, null, $s$2], [4, "5:4-5:15", $s$3], [2, "5:8-5:14", $s$3], [4, "6:4-6:22", $s$3], [2, "6:8-6:14", $s$3], [0, null, $s$2], [4, "6:16-6:22", $s$3], [36, "7:3-7:3", $s$2], [4, "4:41-4:44", $s$3], [0, "4:41-4:44", $s$3], [0, null, $s$2], [0, null, $s$2], [36, "8:1-8:1", $s$2], [16, "8:1-8:1", $s$2], [16, "8:1-8:1", $s$2]]);
+}, 1, [[4, "2:2-2:21", $s$2], [4, "3:2-3:18", $s$2], [4, "4:2-7:3", $s$2], [0, null, $s$2], [4, "4:7-4:30", $s$3], [2, "4:20-4:30", $s$3], [0, "4:14-4:30", $s$3], [4, "4:32-4:39", $s$3], [0, null, $s$3], [4, "5:4-5:15", $s$3], [2, "5:8-5:14", $s$3], [4, "6:4-6:22", $s$3], [2, "6:8-6:14", $s$3], [0, null, $s$3], [4, "6:16-6:22", $s$3], [36, "7:3-7:3", $s$3], [4, "4:41-4:44", $s$3], [0, "4:41-4:44", $s$3], [0, null, $s$3], [0, null, $s$2], [0, null, $s$2], [36, "8:1-8:1", $s$2], [16, "8:1-8:1", $s$2], [16, "8:1-8:1", $s$2]]);
 
 $M.moduleExports();

@@ -10,7 +10,7 @@ import * as Meta from "./meta";
 import * as Operations from "./operations";
 import * as path from "path";
 
-const defaults = { ...config };
+export const defaultConfig = { ...config };
 
 const helpers = {
   context,
@@ -61,7 +61,7 @@ export function babelPlugin(transform) {
       },
       visitor: {
         Program(_path, state) {
-          Object.assign(config, defaults, args, { babel });
+          Object.assign(config, defaultConfig, args, { babel });
           const file = state.file;
           if (file) {
             const opts = file.opts;

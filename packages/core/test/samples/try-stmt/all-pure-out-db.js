@@ -1,6 +1,7 @@
 var $M = require("@effectful/debugger"),
     $ret = $M.ret,
     $unhandled = $M.unhandled,
+    $raise = $M.raise,
     $mcall = $M.mcall,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -81,7 +82,6 @@ var $M = require("@effectful/debugger"),
 
     default:
       $.goto = 4;
-      break;
   }
 }, null, 1, [[2, "2:2-2:19", $s$2], [3, "4:4-4:24", $s$2], [2, "8:2-8:20", $s$2], [2, "6:4-6:31", $s$3], [16, "9:1-9:1", $s$2], [16, "9:1-9:1", $s$2]]),
     $m$2 = $M.fun("m$2", "b", null, $m$0, [], 0, 4, "11:0-21:1", 128, function b($, $l, $p) {
@@ -92,18 +92,89 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $l[2] = 5;
-      $.goto = 3;
+      $l[2] = 6;
+      $.goto = 4;
       $mcall("log", console, "inner");
       continue;
 
     case 2:
       $l[1] = $.error;
       $.error = void 0;
-      $l[2] = 5;
-      $.goto = 3;
+      $l[2] = 6;
+      $.goto = 4;
       $mcall("log", console, "exception", $l[1]);
-      $.state = 3;
+      continue;
+
+    case 3:
+      return $raise($l[3]);
+
+    case 4:
+      $.goto = 5;
+      $mcall("log", console, "fin");
+      $.state = 5;
+
+    case 5:
+      $.goto = $l[2];
+      continue;
+
+    case 6:
+      $.goto = 8;
+      $mcall("log", console, "out");
+      continue;
+
+    case 7:
+      $.goto = 8;
+      return $unhandled($.error);
+
+    case 8:
+      return $ret($.result);
+
+    default:
+      throw new Error("Invalid state");
+  }
+}, function ($, $l) {
+  switch ($.state) {
+    case 2:
+      $.goto = 4;
+      $l[2] = 3;
+      $l[3] = $.error;
+      break;
+
+    case 1:
+      $.goto = 2;
+      break;
+
+    default:
+      $.goto = 7;
+  }
+}, function ($, $l) {
+  switch ($.state) {
+    case 2:
+    case 1:
+      $l[2] = 8;
+      $.goto = 4;
+      break;
+
+    default:
+      $.goto = 8;
+      break;
+  }
+}, 1, [[2, "12:2-12:19", $s$4], [3, "14:4-14:24", $s$4], [2, "16:4-16:31", $s$5], [0, null, $s$4], [2, "18:4-18:22", $s$4], [0, null, $s$4], [2, "20:2-20:20", $s$4], [16, "21:1-21:1", $s$4], [16, "21:1-21:1", $s$4]]),
+    $m$3 = $M.fun("m$3", "c", null, $m$0, [], 0, 3, "23:0-31:1", 128, function c($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      $.goto = 1;
+      $mcall("log", console, "in");
+      $.state = 1;
+
+    case 1:
+      $l[1] = 5;
+      $.goto = 3;
+      $mcall("log", console, "inner");
+      continue;
+
+    case 2:
+      return $raise($l[2]);
 
     case 3:
       $.goto = 4;
@@ -111,8 +182,7 @@ var $M = require("@effectful/debugger"),
       $.state = 4;
 
     case 4:
-      $.error = $l[3];
-      $.goto = $l[2];
+      $.goto = $l[1];
       continue;
 
     case 5:
@@ -133,24 +203,18 @@ var $M = require("@effectful/debugger"),
 }, function ($, $l) {
   switch ($.state) {
     case 1:
-      $.goto = 2;
-      break;
-
-    case 2:
-      $l[3] = $.error;
-      $l[2] = 6;
       $.goto = 3;
+      $l[1] = 2;
+      $l[2] = $.error;
       break;
 
     default:
       $.goto = 6;
-      break;
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 2:
     case 1:
-      $l[2] = 7;
+      $l[1] = 7;
       $.goto = 3;
       break;
 
@@ -158,68 +222,6 @@ var $M = require("@effectful/debugger"),
       $.goto = 7;
       break;
   }
-}, 1, [[2, "12:2-12:19", $s$4], [3, "14:4-14:24", $s$4], [2, "16:4-16:31", $s$5], [2, "18:4-18:22", $s$4], [0, null, $s$4], [2, "20:2-20:20", $s$4], [16, "21:1-21:1", $s$4], [16, "21:1-21:1", $s$4]]),
-    $m$3 = $M.fun("m$3", "c", null, $m$0, [], 0, 3, "23:0-31:1", 128, function c($, $l, $p) {
-  for (;;) switch ($.state = $.goto) {
-    case 0:
-      $.goto = 1;
-      $mcall("log", console, "in");
-      $.state = 1;
-
-    case 1:
-      $l[1] = 4;
-      $.goto = 2;
-      $mcall("log", console, "inner");
-      $.state = 2;
-
-    case 2:
-      $.goto = 3;
-      $mcall("log", console, "fin");
-      $.state = 3;
-
-    case 3:
-      $.error = $l[2];
-      $.goto = $l[1];
-      continue;
-
-    case 4:
-      $.goto = 6;
-      $mcall("log", console, "out");
-      continue;
-
-    case 5:
-      $.goto = 6;
-      return $unhandled($.error);
-
-    case 6:
-      return $ret($.result);
-
-    default:
-      throw new Error("Invalid state");
-  }
-}, function ($, $l) {
-  switch ($.state) {
-    case 1:
-      $l[2] = $.error;
-      $l[1] = 5;
-      $.goto = 2;
-      break;
-
-    default:
-      $.goto = 5;
-      break;
-  }
-}, function ($, $l) {
-  switch ($.state) {
-    case 1:
-      $l[1] = 6;
-      $.goto = 2;
-      break;
-
-    default:
-      $.goto = 6;
-      break;
-  }
-}, 1, [[2, "24:2-24:19", $s$6], [2, "26:4-26:24", $s$6], [2, "28:4-28:22", $s$6], [0, null, $s$6], [2, "30:2-30:20", $s$6], [16, "31:1-31:1", $s$6], [16, "31:1-31:1", $s$6]]);
+}, 1, [[2, "24:2-24:19", $s$6], [2, "26:4-26:24", $s$6], [0, null, $s$6], [2, "28:4-28:22", $s$6], [0, null, $s$6], [2, "30:2-30:20", $s$6], [16, "31:1-31:1", $s$6], [16, "31:1-31:1", $s$6]]);
 
 $M.moduleExports();

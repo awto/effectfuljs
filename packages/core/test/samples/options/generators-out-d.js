@@ -10,6 +10,7 @@ var $M = require("@effectful/debugger"),
     $retG = $M.retG,
     $unhandled = $M.unhandled,
     $unhandledG = $M.unhandledG,
+    $raise = $M.raise,
     $brk = $M.brk,
     $mcall = $M.mcall,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
@@ -439,7 +440,7 @@ var $M = require("@effectful/debugger"),
       }
 
     case 6:
-      $.goto = 19;
+      $.goto = 20;
       $brk();
       continue;
 
@@ -472,40 +473,44 @@ var $M = require("@effectful/debugger"),
 
     case 12:
       $.error = $M.iterErrUndef();
-      $l[1] = 18;
-      $.state = 13;
+      $l[1] = 19;
+      $.goto = 14;
+      continue;
 
     case 13:
-      $.goto = 14;
-      $p = $iterFin($l[2], $.result);
-      $.state = 14;
+      return $raise($.error);
 
     case 14:
+      $.goto = 15;
+      $p = $iterFin($l[2], $.result);
+      $.state = 15;
+
+    case 15:
       if ($p.done) {
-        $.state = 15;
+        $.state = 16;
       } else {
-        $.goto = 16;
+        $.goto = 17;
         continue;
       }
 
-    case 15:
+    case 16:
       $.goto = $l[1];
       continue;
 
-    case 16:
-      $.goto = 17;
+    case 17:
+      $.goto = 18;
       return $yld($p.value);
 
-    case 17:
+    case 18:
       $l[3] = $p;
       $.goto = 3;
       continue;
 
-    case 18:
-      $.goto = 19;
+    case 19:
+      $.goto = 20;
       return $unhandledG($.error);
 
-    case 19:
+    case 20:
       return $retG($.result);
 
     default:
@@ -513,23 +518,22 @@ var $M = require("@effectful/debugger"),
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 12:
+    case 9:
+    case 4:
+    case 3:
+      $.goto = 14;
+      $l[1] = 13;
+      break;
+
     case 8:
     case 7:
     case 5:
       $.goto = 9;
       break;
 
-    case 12:
-    case 9:
-    case 4:
-    case 3:
-      $l[1] = 18;
-      $.goto = 13;
-      break;
-
     default:
-      $.goto = 18;
-      break;
+      $.goto = 19;
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -540,14 +544,14 @@ var $M = require("@effectful/debugger"),
     case 5:
     case 4:
     case 3:
-      $l[1] = 19;
-      $.goto = 13;
+      $l[1] = 20;
+      $.goto = 14;
       break;
 
     default:
-      $.goto = 19;
+      $.goto = 20;
       break;
   }
-}, 1, [[4, "5:2-5:11", $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [0, null, $s$5], [36, "6:1-6:1", $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [16, "6:1-6:1", $s$5], [16, "6:1-6:1", $s$5]]);
+}, 1, [[4, "5:2-5:11", $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [0, null, $s$5], [36, "6:1-6:1", $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [2, "5:2-5:10", $s$5], [0, null, $s$5], [16, "6:1-6:1", $s$5], [16, "6:1-6:1", $s$5]]);
 
 $M.moduleExports();
