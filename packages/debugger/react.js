@@ -13,7 +13,7 @@ if (
     : require("./deps-n/scheduler/cjs/scheduler.production.min.js");
   const S = require("@effectful/serialization");
   S.regOpaqueRec(scheduler, "@effectful/react/scheduler");
-  const { closures } = require("./state");
+  const { closures, context } = require("./state");
   if (typeof MessageChannel !== "undefined") {
     let count = 0;
     const someFunction = closures.get(
@@ -24,8 +24,14 @@ if (
         S.regOpaqueObject(i, `@effectful/scheduler/msg#${count++}`);
     }
   }
-
   lib = require("./vscode");
+  const savedOnLoad = context.onLoad;
+  context.onLoad = function(module, hot) {
+    try {
+    } finally {
+      if (savedOnLoad) savedOnLoad(module, hot);
+    }
+  };
 } else lib.Serialization.updateInitialSnapshot(global);
 
 module.exports = lib;

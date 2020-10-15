@@ -125,8 +125,12 @@ if (workerType === WorkerType.None) {
     WebSocketImpl,
     interpret
   );
-  post = function(msg:any) { redir({ type: "send", msg }); }
-  close = function() { redir({ type: "close" }); }
+  post = function(msg: any) {
+    redir({ type: "send", msg });
+  };
+  close = function() {
+    redir({ type: "close" });
+  };
   impl.ref = function() {
     if (socket._socket && socket._socket.ref) socket._socket.ref();
   };
@@ -194,10 +198,10 @@ function interpret(data: any) {
       break;
     case "error":
       sysConsole.error("DEBUGGER: network error", data.msg);
-      context.debug = false;
+      context.enabled = false;
       break;
     case "close":
-      context.debug = false;
+      context.enabled = false;
       closed = true;
       close();
       break;

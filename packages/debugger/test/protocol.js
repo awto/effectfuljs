@@ -79,7 +79,6 @@ function recv(msg) {
 }
 
 require("../vscode");
-const D = require("../main");
 
 function teardown() {
   outputBuf.length = 0;
@@ -155,9 +154,8 @@ function setBreakpoint(loc, cb) {
   }
 }
 
-function launch(mod, opts, cb) {
+function launch(_mod, opts, cb) {
   socket.onopen();
-  D.force(mod);
   return stopAfterCommand(
     "childLaunch",
     {
@@ -264,7 +262,7 @@ const savedOnThread = context.onThread;
 context.onThread = function() {
   if (
     loaded &&
-    context.activeTop === null &&
+    context.pausedTop === null &&
     context.queue.length === 0 &&
     immediateHandlers.size === 0 &&
     context.suspended.size === 0

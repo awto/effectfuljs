@@ -13,7 +13,7 @@ function recordContext() {
   record5(
     resetContextOp,
     context.top,
-    context.debug,
+    context.enabled,
     context.brk,
     context.value,
     context.error
@@ -21,15 +21,15 @@ function recordContext() {
 }
 
 function resetContextOp(this: any) {
-  const { a: top, b: debug, c: brk, d: value, e: error } = this;
+  const { a: top, b: enabled, c: brk, d: value, e: error } = this;
   this.a = context.top;
-  this.b = context.debug;
+  this.b = context.enabled;
   this.c = context.brk;
   this.d = context.value;
   this.e = context.error;
   record(this);
   context.top = top;
-  context.debug = debug;
+  context.enabled = enabled;
   context.brk = brk;
   context.value = value;
   context.error = error;
@@ -141,7 +141,14 @@ export function recordFrame(frame: State.Frame) {
           State.native.Object.assign({}, frame)
         );
       } else {
-        record5(restoreFrameOp, frame, frame.goto, frame.state, frame.brk, frame.$);
+        record5(
+          restoreFrameOp,
+          frame,
+          frame.goto,
+          frame.state,
+          frame.brk,
+          frame.$
+        );
       }
     }
   }

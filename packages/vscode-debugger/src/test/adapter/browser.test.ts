@@ -13,9 +13,10 @@ const toBrowserPath: (p: string) => string =
       };
 process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
 // process.env.EFFECTFUL_DEBUGGER_VERBOSE = "2"
-process.env.EFFECTFUL_DEBUGGER_EXCLUDE = "**/packages/{debugger,serialization,core,transducers}/**";
+process.env.EFFECTFUL_DEBUGGER_EXCLUDE =
+  "**/packages/{debugger,serialization,core,transducers}/**";
 
-suite("Debugging on Chrome", function() {
+suite("Debugging on Chrome", function () {
   this.timeout(0);
   const PROJECT_ROOT = path.join(__dirname, "../../..");
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
@@ -31,7 +32,7 @@ suite("Debugging on Chrome", function() {
 
   teardown(() => dc.stop());
 
-  test("`step in`", async function() {
+  test("`step in`", async function () {
     const PROGRAM = toBrowserPath(path.join(DATA_ROOT, "stepsModule.js"));
     const MOD2 = toBrowserPath(path.join(DATA_ROOT, "stepsModule2.js"));
     const MOD3 = toBrowserPath(path.join(DATA_ROOT, "stepsModule3.js"));
@@ -88,7 +89,7 @@ suite("Debugging on Chrome", function() {
       })
     ]);
   });
-  test("should stop on a breakpoint", function() {
+  test("should stop on a breakpoint", function () {
     const PROGRAM = toBrowserPath(path.join(NODE_DATA_ROOT, "program.js"));
     const BREAKPOINT_LINE = 2;
     dc.defaultTimeout = 30000;
@@ -104,7 +105,7 @@ suite("Debugging on Chrome", function() {
       )
     ]);
   });
-  test("should step through react application", async function() {
+  test("should step through react application", async function () {
     const PACKAGE = path.join(DATA_ROOT, "react-counter");
     const COUNTER_TSX = toBrowserPath(path.join(PACKAGE, "src", "Counter.tsx"));
     dc.defaultTimeout = 60000;
@@ -167,15 +168,15 @@ suite("Debugging on Chrome", function() {
     ]);
     assert.equal(await getCur(), "2");
     assert.equal((await dc.scopeDescr())[0][1].value, 2);
-    await dc.continueRequest({ threadId: 0 })
+    await dc.continueRequest({ threadId: 0 });
     await new Promise(i => setTimeout(i, 500));
     await Promise.all([
-        dc.pauseRequest({ threadId: 0 }),
-        dc.assertStoppedLocation("pause", {
-          path: COUNTER_TSX,
-          line: 17
-        })
-      ]);
+      dc.pauseRequest({ threadId: 0 }),
+      dc.assertStoppedLocation("pause", {
+        path: COUNTER_TSX,
+        line: 17
+      })
+    ]);
     assert.equal(await getCur(), "2");
     await Promise.all([
       dc.reverseContinueRequest({ threadId: 0 }),

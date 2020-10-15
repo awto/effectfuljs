@@ -3,9 +3,6 @@
 exports[`async function's time traveling 1`] = `
 Array [
   Array [
-    "CHECKPOINT",
-  ],
-  Array [
     "I",
     0,
     0,
@@ -17,9 +14,6 @@ Array [
     "J",
     0,
     100,
-  ],
-  Array [
-    "CHECKPOINT",
   ],
   Array [
     "I",
@@ -38,9 +32,6 @@ Array [
     "J",
     1,
     300,
-  ],
-  Array [
-    "CHECKPOINT",
   ],
   Array [
     "I",
@@ -96,11 +87,6 @@ Array [
     "CHECKPOINT/3",
   ],
   Array [
-    "I",
-    2,
-    300,
-  ],
-  Array [
     "CONT 2",
     undefined,
   ],
@@ -109,17 +95,18 @@ Array [
   ],
   Array [
     "J",
-    2,
-    602,
+    1,
+    402,
   ],
   Array [
-    "EXIT:",
-    602,
+    "I",
+    2,
+    402,
   ],
   Array [
     "A:R3/2",
-    602,
-    1204,
+    402,
+    402,
   ],
   Array [
     "UNDO3",
@@ -130,16 +117,16 @@ Array [
   Array [
     "J",
     2,
-    603,
+    705,
   ],
   Array [
     "EXIT:",
-    603,
+    705,
   ],
   Array [
     "A:R3/3",
-    603,
-    1206,
+    705,
+    1410,
   ],
   Array [
     "UNDO4",
@@ -150,16 +137,16 @@ Array [
   Array [
     "J",
     2,
-    604,
+    706,
   ],
   Array [
     "EXIT:",
-    604,
+    706,
   ],
   Array [
     "A:R3/4",
-    604,
-    1208,
+    706,
+    1412,
   ],
   Array [
     "UNDO5",
@@ -173,16 +160,16 @@ Array [
   Array [
     "J",
     2,
-    605,
+    707,
   ],
   Array [
     "EXIT:",
-    605,
+    707,
   ],
   Array [
     "A:R3/5",
-    605,
-    1210,
+    707,
+    1414,
   ],
   Array [
     "UNDO 6",
@@ -193,16 +180,16 @@ Array [
   Array [
     "J",
     2,
-    606,
+    708,
   ],
   Array [
     "EXIT:",
-    606,
+    708,
   ],
   Array [
     "A:R3/6",
-    606,
-    1212,
+    708,
+    1416,
   ],
   Array [
     "UNDO 7",
@@ -213,16 +200,16 @@ Array [
   Array [
     "J",
     2,
-    607,
+    709,
   ],
   Array [
     "EXIT:",
-    607,
+    709,
   ],
   Array [
     "A:R3/7",
-    607,
-    1214,
+    709,
+    1418,
   ],
 ]
 `;
@@ -230,9 +217,6 @@ Array [
 exports[`async generator functions time traveling 1`] = `
 Array [
   Array [
-    "CHECKPOINT",
-  ],
-  Array [
     "I",
     0,
     0,
@@ -249,9 +233,6 @@ Array [
     "J",
     0,
     100,
-  ],
-  Array [
-    "CHECKPOINT",
   ],
   Array [
     "I",
@@ -275,9 +256,6 @@ Array [
     "J",
     1,
     300,
-  ],
-  Array [
-    "CHECKPOINT",
   ],
   Array [
     "I",
@@ -343,11 +321,6 @@ Array [
     "CHECKPOINT/3",
   ],
   Array [
-    "I",
-    2,
-    300,
-  ],
-  Array [
     "CONT 2",
     undefined,
   ],
@@ -356,22 +329,23 @@ Array [
   ],
   Array [
     "K",
-    602,
-    602,
+    402,
+    402,
   ],
   Array [
     "J",
-    2,
-    602,
+    1,
+    402,
   ],
   Array [
-    "EXIT:",
-    602,
+    "I",
+    2,
+    402,
   ],
   Array [
     "A:R3/2",
-    602,
-    1204,
+    402,
+    402,
   ],
   Array [
     "UNDO3",
@@ -381,22 +355,22 @@ Array [
   ],
   Array [
     "K",
-    603,
-    603,
+    705,
+    705,
   ],
   Array [
     "J",
     2,
-    603,
+    705,
   ],
   Array [
     "EXIT:",
-    603,
+    705,
   ],
   Array [
     "A:R3/3",
-    603,
-    1206,
+    705,
+    1410,
   ],
   Array [
     "UNDO4",
@@ -406,22 +380,22 @@ Array [
   ],
   Array [
     "K",
-    604,
-    604,
+    706,
+    706,
   ],
   Array [
     "J",
     2,
-    604,
+    706,
   ],
   Array [
     "EXIT:",
-    604,
+    706,
   ],
   Array [
     "A:R3/4",
-    604,
-    1208,
+    706,
+    1412,
   ],
   Array [
     "UNDO5",
@@ -434,22 +408,22 @@ Array [
   ],
   Array [
     "K",
-    605,
-    605,
+    707,
+    707,
   ],
   Array [
     "J",
     2,
-    605,
+    707,
   ],
   Array [
     "EXIT:",
-    605,
+    707,
   ],
   Array [
     "A:R3/5",
-    605,
-    1210,
+    707,
+    1414,
   ],
   Array [
     "UNDO 6",
@@ -459,22 +433,22 @@ Array [
   ],
   Array [
     "K",
-    606,
-    606,
+    708,
+    708,
   ],
   Array [
     "J",
     2,
-    606,
+    708,
   ],
   Array [
     "EXIT:",
-    606,
+    708,
   ],
   Array [
     "A:R3/6",
-    606,
-    1212,
+    708,
+    1416,
   ],
   Array [
     "UNDO 7",
@@ -484,31 +458,28 @@ Array [
   ],
   Array [
     "K",
-    607,
-    607,
+    709,
+    709,
   ],
   Array [
     "J",
     2,
-    607,
+    709,
   ],
   Array [
     "EXIT:",
-    607,
+    709,
   ],
   Array [
     "A:R3/7",
-    607,
-    1214,
+    709,
+    1418,
   ],
 ]
 `;
 
 exports[`pure generator functions time traveling 1`] = `
 Array [
-  Array [
-    "CHECKPOINT",
-  ],
   Array [
     "I",
     0,
@@ -518,9 +489,6 @@ Array [
     "C",
     1,
     0,
-  ],
-  Array [
-    "CHECKPOINT",
   ],
   Array [
     "I",
@@ -531,9 +499,6 @@ Array [
     "C",
     3,
     1,
-  ],
-  Array [
-    "CHECKPOINT",
   ],
   Array [
     "I",
@@ -550,86 +515,26 @@ Array [
     10,
   ],
   Array [
-    "I",
-    2,
-    3,
-  ],
-  Array [
-    "C",
-    10,
-    6,
-  ],
-  Array [
     "DONE 2",
-    10,
-  ],
-  Array [
-    "I",
-    0,
-    0,
-  ],
-  Array [
-    "C",
-    1,
-    0,
-  ],
-  Array [
-    "CHECKPOINT",
-  ],
-  Array [
-    "I",
-    1,
-    1,
-  ],
-  Array [
-    "C",
-    3,
-    1,
-  ],
-  Array [
-    "CHECKPOINT",
-  ],
-  Array [
-    "I",
-    2,
-    3,
-  ],
-  Array [
-    "C",
-    10,
-    6,
+    Object {
+      "done": true,
+      "value": undefined,
+    },
   ],
   Array [
     "DONE 3",
-    10,
-  ],
-  Array [
-    "I",
-    2,
-    3,
-  ],
-  Array [
-    "C",
-    10,
-    6,
+    Object {
+      "done": true,
+      "value": undefined,
+    },
   ],
   Array [
     "DONE 4",
-    10,
-  ],
-  Array [
-    "I",
-    2,
-    3,
-  ],
-  Array [
-    "C",
-    10,
-    6,
+    undefined,
   ],
   Array [
     "DONE 5",
-    10,
+    undefined,
   ],
 ]
 `;

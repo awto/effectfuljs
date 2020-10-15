@@ -390,7 +390,7 @@ function setImpl(target: any, name: string, value: any, receiver: any) {
       record3(propSetOp, target, name, target[name]);
     } else {
       record2(propDelOp, target, name);
-      if (!isIntIndex) addNotIntKey(target, name, true, !context.debug);
+      if (!isIntIndex) addNotIntKey(target, name, true, !context.enabled);
     }
   }
   context.call = set;
@@ -627,7 +627,7 @@ function forceConfigurable(props: {
   const res: { [name: string]: PropertyDescriptor } = {};
   for (const i of nativeReflect.ownKeys(props)) {
     let p = props[<any>i];
-    if (!p.configurable && !p.writable) p = nativeObject.assign({}, p);
+    if (!p.configurable) p = nativeObject.assign({}, p, { configurable: true });
     res[<any>i] = p;
   }
   return res;
@@ -757,7 +757,9 @@ function objectPreventExtensions(obj: any) {
   if (!extWarned) {
     extWarned = true;
     // tslint:disable-next-line:no-console
-    console.warn("DEBUGGER: Object.preventExtensions is ignored for now");
+    console.warn(
+      "DEBUGGER: Object.preventExtensions is ignored (not implemented yet)"
+    );
   }
   weakAdd.nativeCall(notExtensible, obj);
   return obj;
@@ -806,7 +808,7 @@ function objectDefinePropertyNoRec(
   descr: PropertyDescriptor,
   cur: PropertyDescriptor | undefined
 ) {
-  if (!descr.configurable && !descr.writable)
+  if (!descr.configurable)
     descr = nativeObject.assign({}, descr, { configurable: true });
   try {
     if (!cur || cur.configurable)
@@ -879,14 +881,14 @@ function reflectDefineProperty(
 }
 
 function setterWrap(this: any, method: any, value: any) {
-  if (context.debug && context.call === set) context.call = method;
+  if (context.enabled && context.call === set) context.call = method;
   return method.call(this, value);
 }
 
 regOpaqueObject(setterWrap, "@effectful/debugger/setter");
 
 function getterWrap(this: any, method: any) {
-  if (context.debug && context.call === get) context.call = method;
+  if (context.enabled && context.call === get) context.call = method;
   return method.call(this);
 }
 
@@ -1015,19 +1017,19 @@ const trapsWrapper: ProxyHandler<any> = {
   apply(this: ProxyData, target: any, self: any, args: any[]) {
     const method = this.traps.apply;
     if (method) {
-      if (context.debug && context.call === this.proxy) context.call = method;
+      if (context.enabled && context.call === this.proxy) context.call = method;
       return method.nativeCall(this.traps, target, self, args);
     }
-    if (context.debug && context.call === this.proxy) context.call = target;
+    if (context.enabled && context.call === this.proxy) context.call = target;
     return nativeReflect.apply(target, self, args);
   },
   construct(this: ProxyData, target: any, args: any[], newTarget?: any) {
     const method = this.traps.construct;
     if (method) {
-      if (context.debug && context.call === this.proxy) context.call = method;
+      if (context.enabled && context.call === this.proxy) context.call = method;
       return method.nativeCall(this.traps, target, args, newTarget);
     }
-    if (context.debug && context.call === this.proxy) context.call = target;
+    if (context.enabled && context.call === this.proxy) context.call = target;
     return nativeReflect.construct(target, args, newTarget);
   }
 };
@@ -1059,7 +1061,8 @@ function wrapProxyTrapMethod(name: string, defaultImpl: any) {
       const method = (<any>this.traps)[name];
       if (!method)
         return nativeApply((<any>nativeReflect)[name], nativeReflect, args);
-      if (context.debug && context.call === defaultImpl) context.call = method;
+      if (context.enabled && context.call === defaultImpl)
+        context.call = method;
       return nativeApply(method, this.traps, args);
     }),
     `@effectful/debugger/trap#${name}`

@@ -5,7 +5,7 @@ import config from "./config";
 import { compileModule } from "./engine";
 export { context, journal, native };
 export { forInIterator } from "./state";
-export { mcallDefault as mcall } from "./engine";
+export { __effectful_mcall as mcall } from "./engine";
 
 export function moduleExports() {
   const mod = compileModule();

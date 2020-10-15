@@ -1,6 +1,7 @@
 if (!global.it) global.it = global.test;
 require("../../es/test/kit/skip")();
 const trace = require("./run");
+const S = require("../state");
 const D = require("../main");
 const { context } = D;
 const baseIt = global.it || global.test;
@@ -76,7 +77,7 @@ global.it = function patchedIt(descr, fun) {
   );
 };
 
-global.describe = D.liftSync(baseDescribe);
+global.describe = S.liftSync(baseDescribe);
 
 global.skipTests = {
   // the loops are there but in another function

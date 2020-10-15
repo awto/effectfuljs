@@ -5,6 +5,8 @@
 import "@effectful/serialization";
 import "@effectful/serialization/dom";
 import config from "./config";
+// tslint:disable-next-line
+const asap = require("asap");
 
 export interface Env {
   /** local variables */
@@ -46,7 +48,7 @@ export interface Frame extends ProtoFrame, Env {
   /** like `next` but keeps real caller for coroutines */
   caller: Frame | null;
   /** set `context.debug = true` on exit */
-  restoreDebug: any;
+  restoreEnabled: any;
   /** called if function exits with some resulting value */
   onResolve: ((value: any) => void) | null;
   /** called if function exits with some exception */
@@ -235,16 +237,18 @@ type AnyFunc = (...args: any[]) => any;
 
 export interface State {
   /** stopping on break points if `true`, otherwise ignoring them */
-  debug: boolean;
+  enabled: boolean;
   /** everything is done */
   terminated: boolean;
   /**
    * the engine now runs some code and expects a breakpoint
    * otherwise it is some new thread which isn't tracked by the debugger
-   * and on next breakpoint it is suspended in `queue`, to run after
-   * with `running: true` (if the breakpoints aren't ignored by `debug:false`)
+   * and on a next non-blackbox function call it is suspended in `queue`, to run after
+   * with `running: true` (if the breakpoints aren't ignored by `enabled:false`)
    */
   running: boolean;
+  /** child launch request is received and handled */
+  launched: boolean;
   /** current breakpoint id */
   brk: Brk | null;
   /** loaded modules (by full path) */
@@ -255,11 +259,10 @@ export interface State {
   syncStack: Job[];
   /** next functions to run */
   queue: Job[];
-  /**
-   * this is called if something a new thread is added into `queue`
-   * or some thread was finished (so the caller can proceed with
-   */
+  /** this is called if a thread scheduled in async `queue` is started or some thread was finished */
   onThread: () => void;
+  /** executed immediately if some code is started (e.g. some async handler) */
+  onFirstFrame: () => void;
   /** in error state */
   error: boolean;
   /** currently propagating exception */
@@ -286,7 +289,7 @@ export interface State {
    * `top` of currently debugging thread,
    * the value is saved here while some blackbox thread may run
    */
-  activeTop: Frame | null;
+  pausedTop: Frame | null;
   /** some new generated source can be debugged */
   onNewSource: (id: number, code: string) => void;
   /** stopping on a breakpoint */
@@ -315,24 +318,24 @@ export interface Closure {
 export interface Job {
   top: Frame | null;
   debug: boolean;
-  brk: Brk | null;
   value: any;
-  stopOnEntry?: boolean;
+  // stopOnEntry?: boolean;
 }
 
 export const undef = { _undef: true };
 
 /** global storage for the whole state of the running program */
 export const context: State = {
-  debug: false,
+  enabled: false,
   terminated: false,
   running: false,
+  error: false,
+  launched: false,
   brk: null,
   top: null,
   modules: {},
   modulesById: {},
   syncStack: [],
-  error: false,
   queue: [],
   call: null,
   needsBreak: nop,
@@ -343,8 +346,9 @@ export const context: State = {
   brkOnUncaughtException: false,
   onNewSource: nop,
   onThread: nop,
+  onFirstFrame: nop,
   onStop: nop,
-  activeTop: null,
+  pausedTop: null,
   threadId: 0,
   exception: undef,
   stopNext: null
@@ -363,7 +367,8 @@ declare global {
 
 /** original global objects monkey-patched by this runtime */
 export const native = {
-  console,
+  // tslint:disable-next-line:no-console
+  console: { log: console.log, error: console.error, warn: console.warn },
   Proxy,
   Promise,
   // tslint:disable-next-line:object-literal-shorthand
@@ -408,7 +413,10 @@ export const native = {
     splice: Array.prototype.splice,
     sort: Array.prototype.sort,
     reverse: Array.prototype.reverse,
-    slice: Array.prototype.slice
+    slice: Array.prototype.slice,
+    from: Array.from,
+    filter: Array.prototype.filter,
+    map: Array.prototype.map
   },
   Map,
   Set,
@@ -434,7 +442,9 @@ export const native = {
   WeakSet: {
     add: WeakSet.prototype.add,
     delete: WeakSet.prototype.delete
-  }
+  },
+  setInterval,
+  setTimeout
 };
 
 export function returnToken() {
@@ -584,7 +594,9 @@ export enum Flag {
   BLACKBOX = 1 << 7,
   SLOPPY = 1 << 8,
   HAS_FUNCTION_SENT = 1 << 9,
-  HAS_DICTIONARY_SCOPE = 1 << 10
+  HAS_DICTIONARY_SCOPE = 1 << 10,
+  // report uncaught
+  EXCEPTION_BOUNDARY = 1 << 11
 }
 
 export function defaultErrHandler(f: Frame) {
@@ -595,7 +607,10 @@ export function defaultFinHandler(f: Frame) {
   f.state = f.goto = f.meta.finState;
 }
 
+export const nativeFuncs = new WeakSet<any>();
+
 export function patchNative(obj: any, name: string | symbol, value: any) {
+  nativeFuncs.add(value);
   native.Object.defineProperty(obj, name, {
     configurable: true,
     writable: true,
@@ -619,6 +634,16 @@ export const statusBuf = statusBufImpl;
 
 let interruptTimeoutHandler: any = 0;
 let afterInterruptCallback: null | (() => void) = null;
+let eventQueuePaused = false;
+
+export function pauseEventQueue() {
+  eventQueuePaused = true;
+}
+
+export function resumeEventQueue() {
+  eventQueuePaused = false;
+  signalThread();
+}
 
 export function afterInterrupt(cb: () => void) {
   clearTimeout(interruptTimeoutHandler);
@@ -641,6 +666,34 @@ export function cancelInterrupt() {
   interruptTimeoutHandler = 0;
 }
 
+let threadScheduled = false;
+
+export function liftSync(fun: (this: any, ...args: any[]) => any): any {
+  return function(this: any) {
+    const savedDebug = context.enabled;
+    try {
+      context.enabled = false;
+      return (<any>fun).nativeApply(this, <any>arguments);
+    } finally {
+      context.enabled = savedDebug;
+    }
+  };
+}
+
+/**
+ * scheduling some job (usually async calls) in managable event queue
+ */
+export function signalThread() {
+  if (threadScheduled) return;
+  threadScheduled = true;
+  asap(function thread() {
+    threadScheduled = false;
+    if (eventQueuePaused) return;
+    if (config.onBeforeExec) liftSync(config.onBeforeExec)();
+    context.onThread();
+  });
+}
+
 if (config.patchRT) {
   Object.defineProperty(Function.prototype, "nativeCall", {
     configurable: true,
@@ -660,3 +713,38 @@ if (config.patchRT) {
     value: native.FunctionMethods.bind
   });
 }
+
+/** for debugger's debug */
+export function metaDescr(meta: FunctionDescr): string {
+  if (!meta) return "<NO META>";
+  return `${meta.origName}/${meta.name}@${meta.module.name}:${meta.line}`;
+}
+function frameLocaction(frame: Frame, state: number): string {
+  const brk = frame.meta.states[state];
+  if (brk) return `${state}@${brk.line}:${brk.column}`;
+  return `${state}`;
+}
+
+function frameInfoDescr(frame: Frame) {
+  if (!frame) return "<NO FRAME>";
+  return `${metaDescr(frame.meta)},S:${frameLocaction(
+    frame,
+    frame.state
+  )},G:${frameLocaction(frame, frame.goto)}`;
+}
+
+export function stackDescr(top = context.top || context.pausedTop): string[] {
+  const res = [];
+  for (let i = top; i; i = i.next) {
+    res.push(frameInfoDescr(i));
+  }
+  for (let i = 0, len = res.length; i < len; ++i)
+    res[i] = `F${len - i}:${res[i]}`;
+  return res;
+}
+
+export function trace(...args: [any, ...any[]]) {
+  native.console.log.apply(native.console, args);
+}
+
+if (config.verbose) Error.stackTraceLimit = Infinity;

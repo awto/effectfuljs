@@ -28,7 +28,7 @@ export function nodeListIter<T>(nl: {
 /** stores event handlers in EventTarget */
 export const eventsSym = Symbol.for("@effectful/debugger/events");
 
-type EventMap = Map<
+export type EventsMap = Map<
   string,
   Map<
     EventListenerOrEventListenerObject,
@@ -38,13 +38,17 @@ type EventMap = Map<
 
 declare global {
   interface EventTarget {
-    [eventsSym]: EventMap;
+    [eventsSym]: EventsMap;
   }
+}
+
+export function getEventsMap(target: EventTarget) {
+  return target[eventsSym];
 }
 
 const overrideProps: any = { [S.descriptorSymbol]: false };
 
-function restoreEvents(et: EventTarget, map: EventMap) {
+function restoreEvents(et: EventTarget, map: EventsMap) {
   cleanupEvents(et);
   for (const [type, byType] of map)
     for (const [listener, byListener] of byType)

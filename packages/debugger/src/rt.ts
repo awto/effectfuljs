@@ -3,7 +3,7 @@ import config from "./config";
 import * as Instr from "./instr/rt";
 import * as Engine from "./engine";
 import { regOpaqueObject, regModule } from "./persist";
-import { native } from "./state";
+import { native, nativeFuncs } from "./state";
 import * as TT from "./timeTravel/objects";
 import { ManagedSet, ManagedMap } from "./timeTravel/es";
 import { patchNative as patch } from "./state";
@@ -26,11 +26,13 @@ function switchDefault(
     value,
     "@effectful/debugger/polyfill/${proto.constructor.name}#${name}"
   );
+  nativeFuncs.add(value);
   native.Object.defineProperty(proto, name, {
     configurable: true,
     writable: true,
     value
   });
+
   function value(this: any) {
     if (context.call === value)
       return (

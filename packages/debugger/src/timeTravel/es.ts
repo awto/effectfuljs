@@ -4,8 +4,6 @@ import * as TTCore from "./core";
 import { regOpaqueObject, regConstructor } from "../persist";
 import * as Binds from "./binds";
 import { journal, context, patchNative as patch } from "../state";
-import * as S from "@effectful/serialization";
-import { Core } from "./main";
 
 const record = config.timeTravel ? TTCore.record : function() {};
 const record2 = config.timeTravel ? Binds.record2 : function() {};
@@ -92,18 +90,19 @@ type SavedMap<K, V> = Map<K, V>;
 
 class MapKeysIterator<K, V> implements Iterator<K>, Iterable<K> {
   list: MapEntry<K, V>;
-  cur: MapEntry<K, V>;
+  prev: MapEntry<K, V>;
   constructor(list: MapEntry<K, V>) {
     this.list = list;
-    this.cur = list.prev;
+    this.prev = list;
   }
   [Symbol.iterator]() {
     return this;
   }
   next(): IteratorResult<K> {
-    const { cur, list } = this;
-    if (list === cur) return { done: true, value: void 0 };
-    this.cur = cur.prev;
+    const { prev } = this;
+    const cur = prev.prev;
+    if (cur === this.list) return { done: true, value: void 0 };
+    this.prev = cur;
     return { done: false, value: cur.k };
   }
 }
@@ -112,18 +111,19 @@ regConstructor(MapKeysIterator, { name: "#MapKeysIterator" });
 
 class MapValuesIterator<K, V> implements Iterator<V>, Iterable<V> {
   list: MapEntry<K, V>;
-  cur: MapEntry<K, V>;
+  prev: MapEntry<K, V>;
   constructor(list: MapEntry<K, V>) {
     this.list = list;
-    this.cur = list.prev;
+    this.prev = list;
   }
   [Symbol.iterator]() {
     return this;
   }
   next(): IteratorResult<V> {
-    const { cur, list } = this;
-    if (list === cur) return { done: true, value: void 0 };
-    this.cur = cur.prev;
+    const { prev } = this;
+    const cur = prev.prev;
+    if (cur === this.list) return { done: true, value: void 0 };
+    this.prev = cur;
     return { done: false, value: cur.v };
   }
 }
@@ -132,18 +132,19 @@ regConstructor(MapKeysIterator, { name: "#MapValuesIterator" });
 
 class MapEntriesIterator<K, V> implements Iterator<[K, V]>, Iterable<[K, V]> {
   list: MapEntry<K, V>;
-  cur: MapEntry<K, V>;
+  prev: MapEntry<K, V>;
   constructor(list: MapEntry<K, V>) {
     this.list = list;
-    this.cur = list.prev;
+    this.prev = list;
   }
   [Symbol.iterator]() {
     return this;
   }
   next(): IteratorResult<[K, V]> {
-    const { cur, list } = this;
-    if (list === cur) return { done: true, value: void 0 };
-    this.cur = cur.prev;
+    const { prev } = this;
+    const cur = prev.prev;
+    if (cur === this.list) return { done: true, value: void 0 };
+    this.prev = cur;
     return { done: false, value: [cur.k, cur.v] };
   }
 }
@@ -414,53 +415,6 @@ if (config.timeTravel && config.patchRT) {
   WSp.delete = weakSetDelete;
   WSp.add = weakSetAdd;
 }
-
-/*
-if (config.timeTravel) {
-  S.WeakMapWorkaround.prototype.set = function set(key: any, value: any) {
-    switch (typeof key) {
-      case "function":
-      case "object":
-        context.call = context.call === set ? Object.defineProperty : null;
-        Object.defineProperty(key, this.prop, {
-          configurable: true,
-          writable: true,
-          value
-        });
-        break;
-      default:
-        throw TypeError("Invalid value used in weak map");
-    }
-    return this;
-  };
-
-  S.WeakSetWorkaround.prototype.delete = S.WeakMapWorkaround.prototype.delete = function del(
-    key: any
-  ) {
-    if (!this.has(key)) return false;
-    if (context.call === del) Core.del(key, <any>this.prop);
-    else delete key[this.prop];
-    return true;
-  };
-
-  S.WeakSetWorkaround.prototype.add = function add(value: any) {
-    switch (typeof value) {
-      case "function":
-      case "object":
-        context.call = context.call === add ? Object.defineProperty : null;
-        Object.defineProperty(value, this.prop, {
-          configurable: true,
-          writable: true,
-          value: true
-        });
-        break;
-      default:
-        throw TypeError("Invalid value used in weak set");
-    }
-    return this;
-  };
-}
-*/
 
 if ((config.timeTravel || config.persistState) && config.patchRT) {
   // patch(global, "WeakMap", S.WeakMapWorkaround);

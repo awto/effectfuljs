@@ -26,6 +26,8 @@ if (progressPrefix) {
 const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
   ast
 ) {
+  if (typeof config.exclude === "function" && config.exclude(config.filename))
+    return;
   if (config.preInstrumentedLibs) {
     const root =
       config.preInstrumentedLibs && config.preInstrumentedLibs.substr
@@ -36,12 +38,26 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
       moduleAliases[src] = path.join(root, dst);
     config.moduleAliases = Object.assign(moduleAliases, config.moduleAliases);
   }
-  if (VERBOSE)
+  if (typeof config.blackbox === "function")
+    config.blackbox = config.blackbox(config.filename);
+  if (VERBOSE) {
     console.log(
-      `TRANSFORMING:${config.filename} ${config.blackbox ? "BLACKBOX" : ""}`
+      `Instrumenting ${config.filename} ${
+        config.blackbox ? "BLACKBOX" : ""
+      }...${config.deb_src} ${config.caller}`
     );
+    console.time(`Instrumented ${config.filename}`);
+  }
   progressUpdate();
-  transform(ast);
+  try {
+    transform(ast);
+  } catch (e) {
+    console.log("ERR", e);
+    throw e;
+  }
+  if (VERBOSE) {
+    console.timeEnd(`Instrumented ${config.filename}`);
+  }
 });
 
 module.exports = plugin;

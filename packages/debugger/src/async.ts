@@ -48,8 +48,10 @@ export function frameA(
   newTarget: any
 ) {
   const frame = <AsyncFrame>frameImpl(proto, meta, parent, vars, newTarget);
+  const savedCall = context.call;
   context.call = <any>Promise;
   frame.promise = new Promise(scopeInit.bind(frame));
+  context.call = savedCall;
   return frame;
 }
 
@@ -59,9 +61,9 @@ export function retA(value: any): any {
   top.onResolve(value);
   top.done = true;
   top.result = void 0;
-  if (context.debug) {
+  if (context.enabled) {
     checkExitBrk(top, top.promise);
-  } else if (top.restoreDebug) context.debug = true;
+  } else if (top.restoreEnabled !== State.undef) context.enabled = true;
   popFrame(top);
   return top.promise;
 }
@@ -71,7 +73,8 @@ export function unhandledA(reason: any): any {
   context.call = top.onReject;
   top.onReject(reason);
   top.done = true;
-  if (!context.debug && top.restoreDebug) context.debug = true;
+  if (!context.enabled && top.restoreEnabled !== State.undef)
+    context.enabled = true;
   popFrame(top);
   return top.promise;
 }
@@ -98,7 +101,8 @@ export function awt(asyncValue: any): any {
   context.suspended.add(top);
   top.awaiting = asyncValue;
   then(asyncValue, awtOnResolve.bind(top), awtOnReject.bind(top));
-  if (!context.debug && top.restoreDebug) context.debug = true;
+  if (!context.enabled && top.restoreEnabled !== State.undef)
+    context.enabled = true;
   popFrame(top);
   top.next = null;
   return (context.value = top.promise);

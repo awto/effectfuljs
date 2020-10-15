@@ -7,6 +7,7 @@ exports[`default transpiler 1`] = `
     $context = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
+    $raise = $M.raise,
     $brk = $M.brk,
     $mcall = $M.mcall,
     $m = $M.module(\\"test/__fixtures__/transform/code.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
@@ -241,7 +242,7 @@ exports[`default transpiler 1`] = `
       if ($p.done) {
         $.state = 13;
       } else {
-        $.goto = 28;
+        $.goto = 29;
         continue;
       }
 
@@ -298,7 +299,7 @@ exports[`default transpiler 1`] = `
       $.state = 23;
 
     case 23:
-      $.goto = 37;
+      $.goto = 39;
       $brk(\\"23:1-23:1\\");
       continue;
 
@@ -320,56 +321,62 @@ exports[`default transpiler 1`] = `
       continue;
 
     case 26:
-      $.goto = 27;
-      $iterFin($l[11]);
-      $.state = 27;
+      return $raise($.error);
 
     case 27:
+      $.goto = 28;
+      $iterFin($l[11]);
+      $.state = 28;
+
+    case 28:
       $.goto = $l[10];
       continue;
 
-    case 28:
+    case 29:
       $l[5
       /*i*/
       ] = $p.value;
-      $.goto = 29;
-      $brk(\\"16:6-16:19\\");
-      $.state = 29;
-
-    case 29:
       $.goto = 30;
+      $brk(\\"16:6-16:19\\");
+      $.state = 30;
+
+    case 30:
+      $.goto = 31;
       $mcall(\\"proc2\\", $l[0][2
       /*mod*/
       ], $l[5
       /*i*/
       ]);
-      $.state = 30;
+      $.state = 31;
 
-    case 30:
+    case 31:
       $.goto = 10;
       $brk(\\"17:5-17:5\\");
       continue;
 
-    case 31:
-      $.goto = 32;
-      $iterFin($l[11]);
-      $.state = 32;
-
     case 32:
+      return $raise($.error);
+
+    case 33:
+      $.goto = 34;
+      $iterFin($l[11]);
+      $.state = 34;
+
+    case 34:
       $.goto = $l[9];
       continue;
 
-    case 33:
+    case 35:
       $l[8
       /*e*/
       ] = $.error;
       $.error = void 0;
-      $.goto = 34;
+      $.goto = 36;
       $brk(\\"21:4-21:24\\");
-      $.state = 34;
+      $.state = 36;
 
-    case 34:
-      $.goto = 35;
+    case 36:
+      $.goto = 37;
       $mcall(\\"proc4\\", $l[0][2
       /*mod*/
       ], $l[8
@@ -379,18 +386,18 @@ exports[`default transpiler 1`] = `
       ], $l[6
       /*i*/
       ]);
-      $.state = 35;
+      $.state = 37;
 
-    case 35:
+    case 37:
       $.goto = 23;
       $brk(\\"22:3-22:3\\");
       continue;
 
-    case 36:
-      $.goto = 37;
+    case 38:
+      $.goto = 39;
       return $unhandled($.error);
 
-    case 37:
+    case 39:
       return $ret($.result);
 
     default:
@@ -398,8 +405,31 @@ exports[`default transpiler 1`] = `
   }
 }, function ($, $l) {
   switch ($.state) {
-    case 32:
     case 31:
+    case 30:
+    case 29:
+    case 13:
+    case 12:
+    case 11:
+    case 10:
+      $.goto = 33;
+      $l[9] = 32;
+      break;
+
+    case 25:
+    case 24:
+    case 20:
+    case 19:
+    case 18:
+    case 17:
+      $.goto = 27;
+      $l[10] = 26;
+      break;
+
+    case 34:
+    case 33:
+    case 32:
+    case 28:
     case 27:
     case 26:
     case 22:
@@ -415,45 +445,23 @@ exports[`default transpiler 1`] = `
     case 4:
     case 3:
     case 2:
-      $.goto = 33;
-      break;
-
-    case 30:
-    case 29:
-    case 28:
-    case 13:
-    case 12:
-    case 11:
-    case 10:
-      $l[9] = 33;
-      $.goto = 31;
-      break;
-
-    case 25:
-    case 24:
-    case 20:
-    case 19:
-    case 18:
-    case 17:
-      $l[10] = 33;
-      $.goto = 26;
+      $.goto = 35;
       break;
 
     default:
-      $.goto = 36;
-      break;
+      $.goto = 38;
   }
 }, function ($, $l) {
   switch ($.state) {
+    case 31:
     case 30:
     case 29:
-    case 28:
     case 13:
     case 12:
     case 11:
     case 10:
-      $l[9] = 37;
-      $.goto = 31;
+      $l[9] = 39;
+      $.goto = 33;
       break;
 
     case 25:
@@ -462,15 +470,15 @@ exports[`default transpiler 1`] = `
     case 19:
     case 18:
     case 17:
-      $l[10] = 37;
-      $.goto = 26;
+      $l[10] = 39;
+      $.goto = 27;
       break;
 
     default:
-      $.goto = 37;
+      $.goto = 39;
       break;
   }
-}, 1, [[4, \\"10:2-10:14\\", $s$2], [4, \\"11:2-22:3\\", $s$2], [5, \\"12:4-12:18\\", $s$3], [5, \\"13:4-13:11\\", $s$3], [5, \\"14:4-14:42\\", $s$3], [3, \\"14:14-14:24\\", $s$3], [3, \\"14:4-14:41\\", $s$3], [5, \\"15:4-17:5\\", $s$3], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [5, \\"15:15-15:16\\", $s$4], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [1, null, $s$2], [5, \\"18:4-18:42\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"18:13-18:14\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [1, null, $s$2], [5, \\"19:4-19:17\\", $s$3], [37, \\"20:3-20:3\\", $s$2], [36, \\"23:1-23:1\\", $s$2], [5, \\"18:29-18:42\\", $s$3], [3, \\"18:29-18:41\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"16:6-16:19\\", $s$4], [3, \\"16:6-16:18\\", $s$4], [37, \\"17:5-17:5\\", $s$2], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [4, \\"21:4-21:24\\", $s$5], [2, \\"21:4-21:23\\", $s$5], [36, \\"22:3-22:3\\", $s$2], [16, \\"23:1-23:1\\", $s$2], [16, \\"23:1-23:1\\", $s$2]]),
+}, 1, [[4, \\"10:2-10:14\\", $s$2], [4, \\"11:2-22:3\\", $s$2], [5, \\"12:4-12:18\\", $s$3], [5, \\"13:4-13:11\\", $s$3], [5, \\"14:4-14:42\\", $s$3], [3, \\"14:14-14:24\\", $s$3], [3, \\"14:4-14:41\\", $s$3], [5, \\"15:4-17:5\\", $s$3], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [5, \\"15:15-15:16\\", $s$4], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [1, null, $s$2], [5, \\"18:4-18:42\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"18:13-18:14\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [1, null, $s$2], [5, \\"19:4-19:17\\", $s$3], [37, \\"20:3-20:3\\", $s$2], [36, \\"23:1-23:1\\", $s$2], [5, \\"18:29-18:42\\", $s$3], [3, \\"18:29-18:41\\", $s$3], [1, null, $s$2], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"16:6-16:19\\", $s$4], [3, \\"16:6-16:18\\", $s$4], [37, \\"17:5-17:5\\", $s$2], [1, null, $s$2], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [4, \\"21:4-21:24\\", $s$5], [2, \\"21:4-21:23\\", $s$5], [36, \\"22:3-22:3\\", $s$2], [16, \\"23:1-23:1\\", $s$2], [16, \\"23:1-23:1\\", $s$2]]),
     $m$fn1$2 = $M.fun(\\"m$fn1$2\\", \\"fn1\\", null, $m$code_js$0, [], 0, 3, \\"25:14-28:1\\", 0, function fn1($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

@@ -11,8 +11,7 @@ export function runTopLevel(mod: State.Module) {
   const id = (mod.cjs && mod.cjs.id) || "anonymous";
   context.call = id === context.moduleId ? wrapModule : null;
   context.moduleId = null;
-  if (wrapModule(mod, cjs) === token)
-    weakMapSet.call(State.thunks, cjs.exports, State.returnToken);
+  wrapModule(mod, cjs);
   return cjs.exports;
 }
 
@@ -27,10 +26,17 @@ export function moduleExports() {
     );
   if (context.onLoad) context.onLoad(mod, hot);
   if (hot) return;
+  const running = context.running;
   try {
+    context.running = true;
     runTopLevel(mod);
   } catch (e) {
-    if (e !== token) throw e;
-    weakMapSet.call(State.thunks, cjs.exports, State.throwToken);
+    if (e === token) {
+      weakMapSet.call(State.thunks, cjs.exports, State.throwToken);
+    } else {
+      throw e;
+    }
+  } finally {
+    context.running = running;
   }
 }

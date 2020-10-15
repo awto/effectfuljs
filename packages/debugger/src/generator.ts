@@ -152,7 +152,8 @@ export const frameG: (
 export function yld(value: any): any {
   const frame = <GeneratorFrame>context.top;
   const res = (context.value = { value, done: false });
-  if (!context.debug && frame.restoreDebug) context.debug = true;
+  if (!context.enabled && frame.restoreEnabled !== State.undef)
+    context.enabled = true;
   popFrame(frame);
   frame.running = false;
   return res;
@@ -164,8 +165,8 @@ export function retG(value: any): any {
   frame.result = void 0;
   frame.running = false;
   frame.done = true;
-  if (context.debug) checkExitBrk(frame, res);
-  else if (frame.restoreDebug) context.debug = true;
+  if (context.enabled) checkExitBrk(frame, res);
+  else if (frame.restoreEnabled !== State.undef) context.enabled = true;
   popFrame(frame);
   return res;
 }

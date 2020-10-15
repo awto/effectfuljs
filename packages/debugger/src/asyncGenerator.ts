@@ -149,9 +149,9 @@ export function retAG(value: any): any {
   top.done = true;
   top.result = void 0;
   dequeue(top);
-  if (context.debug) {
+  if (context.enabled) {
     checkExitBrk(top, top.promise);
-  } else if (top.restoreDebug) context.debug = true;
+  } else if (top.restoreEnabled !== State.undef) context.enabled = true;
   popFrame(top);
   return top.promise;
 }

@@ -20,7 +20,9 @@ import {
   BrkFlag,
   defaultErrHandler,
   defaultFinHandler,
-  undef
+  undef,
+  signalThread,
+  trace
 } from "./state";
 
 import * as State from "./state";
@@ -39,24 +41,13 @@ import {
 } from "./persist";
 import { isValidIdentifier } from "@babel/types";
 
-// tslint:disable-next-line
-const asap = require("asap");
-
-const Map = native.Map;
-
 const globalNS = config.globalNS;
 
 const { journal, context, token, closures, functions, thunks } = State;
 const nativeFunction = native.Function;
 
-// if ((<any>native.FunctionMethods).nativeCall)
-//  throw new Error("DEBUGGER: INTERNAL: reloaing runtime");
 const nativeApply = native.FunctionMethods.apply;
-// if (nativeApply.name === "defaultApply")
-//  throw new Error("DEBUGGER: INTERNAL: nativeApply");
 const nativeCall = native.FunctionMethods.call;
-// if (nativeCall.name === "defaultCall")
-//  throw new Error("DEBUGGER: INTERNAL: nativeCall");
 
 const defineProperty = native.Object.defineProperty;
 const nativeToString = Function.prototype.toString;
@@ -139,7 +130,7 @@ export function getCurModule(): Module {
 }
 
 export function argsWrap<T>(frame: Frame, value: Iterable<T>): T[] {
-  const arr = Array.from(value);
+  const arr = native.Array.from(value);
   defineProperty(arr, "callee", {
     writable: true,
     enumerable: false,
@@ -179,6 +170,9 @@ export function module(
   if (!require) require = <any>closSyms["__webpack_require__"];
   if (cjs) {
     if (cjs.hot) cjs.hot.accept();
+    // something is loaded with node and webpack for example
+    if (curModule && (!curModule.cjs || curModule.cjs.id !== cjs.id))
+      curModule = <any>void 0;
   }
   regOpaqueObject(cjs, `cjs#${name}`);
   moduleChanged = !curModule;
@@ -339,8 +333,8 @@ export function fun(
             frame.sent = value;
             frame.running = true;
             context.call = context.call === next ? frame.func : null;
-            pushFrame(frame);
             try {
+              pushFrame(frame);
               return meta.handler(frame, frame.$, value);
             } catch (e) {
               return handle(frame, e);
@@ -350,8 +344,13 @@ export function fun(
     }
     headCode = `return ${ctx}.iter`;
   } else {
-    headCode = `try { return ${ctx}.meta.handler(${ctx}, ${ctx}.$, null); } 
-                catch(e) {return ${ctx}M.handle(${ctx},e);}`;
+    headCode = `
+      try {
+        ${ctx}pushFrame(${ctx});
+        return ${ctx}.meta.handler(${ctx}, ${ctx}.$, null);
+      } catch(e) {
+        return ${ctx}M.handle(${ctx}, e);
+      }`;
   }
   const constrParams = [
     "module",
@@ -361,7 +360,8 @@ export function fun(
     `${ctx}m`,
     `${ctx}M`,
     `${ctx}clos`,
-    `${ctx}frame`
+    `${ctx}frame`,
+    `${ctx}pushFrame`
   ];
   const cjs = curModule.cjs;
   const args = [
@@ -378,7 +378,8 @@ export function fun(
         : api.frameA
       : isGenerator
       ? api.frameG
-      : api.frame
+      : api.frame,
+    pushFrame
   ];
   constrParams.push(`return (function(${ctx}$){
     var ${ctx}$$ = ${ctx}$ && ${ctx}$.$;
@@ -462,24 +463,13 @@ export const clos: any = config.persistState
       return closure;
     };
 
-let threadScheduled = false;
-export function signalThread() {
-  if (threadScheduled) return;
-  threadScheduled = true;
-  asap(function() {
-    threadScheduled = false;
-    if (config.onBeforeExec) liftSync(config.onBeforeExec)();
-    context.onThread();
-  });
-}
-
-function defaultApply(this: any) {
-  if (context.call === defaultApply) context.call = this;
+function __effectful__apply(this: any) {
+  if (context.call === __effectful__apply) context.call = this;
   return reflectApply(<any>nativeApply, this, <any>arguments);
 }
 
-function defaultCall(this: any) {
-  if (context.call === defaultCall) context.call = this;
+function __effectful__call(this: any) {
+  if (context.call === __effectful__call) context.call = this;
   return reflectApply(<any>nativeCall, this, <any>arguments);
 }
 
@@ -500,7 +490,7 @@ export function popScope() {
   return (top.$ = top.$[0]);
 }
 
-export function mcallDefault(prop: string, ...args: [any, ...any[]]) {
+export function __effectful_mcall(prop: string, ...args: [any, ...any[]]) {
   const func = args[0][prop];
   if (!func) throw new TypeError(`${prop} isn't a function`);
   return reflectApply(<any>nativeCall, (context.call = func), args);
@@ -521,10 +511,10 @@ export function step() {
     if (!top) return value;
     if (error) top.meta.errHandler(top, top.$);
     if (top.brk && top.brk.flags & BrkFlag.EXIT) {
-      if (!context.debug) {
-        const restoreDebug = top.restoreDebug;
+      if (!context.enabled) {
+        const restoreDebug = top.restoreEnabled;
         if (restoreDebug !== undef) {
-          context.debug = true;
+          context.enabled = true;
           context.call = restoreDebug;
         }
       }
@@ -612,7 +602,7 @@ function hasEH(frame: Frame): boolean {
 }
 
 export function checkErrBrk(frame: Frame, e: any): boolean {
-  if (!context.debug) return false;
+  if (!context.enabled) return false;
   context.exception = e;
   if (e && e.stack) {
     const stack = [String(e)];
@@ -636,7 +626,7 @@ export function checkErrBrk(frame: Frame, e: any): boolean {
     needsStop = true;
     for (let i: Frame | null = frame; i; i = i.next) {
       if (hasEH(i)) {
-        needsStop = false;
+        needsStop = (i.meta.flags & Flag.EXCEPTION_BOUNDARY) !== 0;
         break;
       }
     }
@@ -647,9 +637,8 @@ export function checkErrBrk(frame: Frame, e: any): boolean {
 export function handle(frame: Frame, e: any) {
   for (;;) {
     if (e === token) {
-      if (frame.next) throw e;
-      context.onStop();
-      return token;
+      if (context.running || frame.next) throw e;
+      return e;
     }
     if (frame !== context.top) throw e;
     // tslint:disable-next-line:no-console
@@ -658,7 +647,10 @@ export function handle(frame: Frame, e: any) {
     if (!meta.blackbox && e !== context.exception && checkErrBrk(frame, e)) {
       context.value = e;
       context.error = true;
-      if (frame.next) throw token;
+      if (frame.next) {
+        context.onStop();
+        throw token;
+      }
       context.onStop();
       return token;
     }
@@ -676,10 +668,10 @@ export function evalAt(src: string) {
   const top = <Frame>context.top;
   const meta = top.meta;
   const state = top.meta.states[top.state];
-  const memo = meta.evalMemo || (meta.evalMemo = new native.Map()); // : indirMemo;
+  const memo = meta.evalMemo || (meta.evalMemo = new native.Map());
   const key = `${src}@${meta.module.name}@${meta.uniqName}@${
     state ? state.id : "*"
-  }/${context.debug}}`;
+  }/${context.enabled}}`;
   let resMeta = memo.get(key);
   if (!resMeta) {
     resMeta = compileEval(
@@ -687,7 +679,7 @@ export function evalAt(src: string) {
       meta.module,
       state.scope,
       state.scopeDepth + 1,
-      !context.debug,
+      !context.enabled,
       null
     );
     memo.set(key, resMeta);
@@ -750,7 +742,6 @@ export function compileEvalToString(
         pureModule: true,
         evalContext: null,
         evalParams: params,
-        directEval: false,
         rt: false,
         ns: globalNS,
         relativeName: id,
@@ -794,9 +785,9 @@ const savedEval = eval;
 
 export const FunctionConstr = function Function(...args: any[]) {
   let res: any;
-  if (context.debug && context.call === Function) {
+  if (context.enabled && context.call === Function) {
     const code = args.pop();
-    const key = `${code}@Fn@/${context.debug}/${args.join()}`;
+    const key = `${code}@Fn@/${context.enabled}/${args.join()}`;
     let meta = functionConstrMemo.get(key);
     if (!meta) {
       meta = compileEval(
@@ -804,14 +795,12 @@ export const FunctionConstr = function Function(...args: any[]) {
         (context.top && context.top.meta && context.top.meta.module) || null,
         null,
         0,
-        !context.debug,
+        !context.enabled,
         args
       );
       functionConstrMemo.set(key, meta);
     }
     res = meta.func(null);
-    // const txt = compileEvalToString(code, args);
-    // res = savedEval(txt);
   } else res = native.Reflect.construct(nativeFunction, args);
   res.constructor = Function;
   return res;
@@ -822,13 +811,13 @@ if (config.patchRT) {
   defineProperty(FunctionConstr.prototype, "call", {
     configurable: true,
     writable: true,
-    value: defaultCall
+    value: __effectful__call
   });
 
   defineProperty(FunctionConstr.prototype, "apply", {
     configurable: true,
     writable: true,
-    value: defaultApply
+    value: __effectful__apply
   });
 
   defineProperty(FunctionConstr.prototype, "bind", {
@@ -836,16 +825,18 @@ if (config.patchRT) {
     writable: true,
     value: defaultBind
   });
-
   defineProperty(FunctionConstr.prototype, "toString", {
     configurable: true,
     writable: true,
     value() {
-      // nothing to see here
+      // nothing to see here (lodash refuses to work with not native functions)
       let params: string = "";
       let name = this.name;
       const data = closures.get(this);
-      if (data && data.meta && !data.meta.blackbox)
+      if (
+        (data && data.meta && !data.meta.blackbox) ||
+        !State.nativeFuncs.has(this)
+      )
         return nativeToString.call(this);
       return `function ${name || ""}(${params}) { [native code] }`;
     }
@@ -853,24 +844,31 @@ if (config.patchRT) {
 }
 
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
-regOpaqueObject(defaultCall, "@effectful/debugger/call");
-regOpaqueObject(defaultApply, "@effectful/debugger/apply");
+regOpaqueObject(__effectful__call, "@effectful/debugger/call");
+regOpaqueObject(__effectful__apply, "@effectful/debugger/apply");
 regOpaqueObject(defaultBind, "@effectful/debugger/bind");
 
 export function indirEval(code: string): any {
-  if (!context.debug || context.call !== indirEval) return savedEval(code);
+  if (!context.enabled || context.call !== indirEval) return savedEval(code);
   const meta = compileEval(
     code,
     context.top ? context.top.meta.module : null,
     null,
     0,
-    !context.debug,
+    !context.enabled,
     null
   );
   const func = meta.func(null);
   context.call = func;
   return nativeCall.call(func, void 0);
-  // return savedEval(compileEvalToString(code, null));
+}
+
+function trim(n: string) {
+  return n.trim();
+}
+
+function splitParams(param: string): string[] {
+  return param.split(",").map(trim);
 }
 
 export function compileEval(
@@ -883,6 +881,7 @@ export function compileEval(
   id?: number
 ): FunctionDescr {
   const savedEnabled = journal.enabled;
+  blackbox = blackbox || !context.top || context.top.meta.blackbox;
   try {
     journal.enabled = false;
     if (id == null) id = toGlobal(evalCnt++);
@@ -894,6 +893,8 @@ export function compileEval(
       const body = <any>ast.program.body;
       if (body.length === 1 && body[0].type === "ExpressionStatement")
         body[0] = { type: "ReturnStatement", argument: body[0].expression };
+    } else {
+      params = (<string[]>[]).concat(...params.map(splitParams));
     }
     const tgt = babelGenerate(
       T.run(ast, {
@@ -902,7 +903,6 @@ export function compileEval(
         pureModule: true,
         evalContext,
         evalParams: params,
-        directEval: evalContext != null,
         rt: false,
         ns: globalNS,
         relativeName: id,
@@ -975,7 +975,7 @@ export function makeFrame(
     brk: null,
     next: null,
     caller: null,
-    restoreDebug: undef,
+    restoreEnabled: undef,
     awaiting: token,
     onResolve: null,
     onReject: null,
@@ -989,16 +989,72 @@ export function makeFrame(
   return frame;
 }
 
+let TOP_LINES_STACK_NUM = 2;
+
+function isStackFrameLine(line: string) {
+  return (
+    line.trim().length > 0 &&
+    !/\binternal[/\\\\]|__effectful__|\(events\.js\:|\(net\.js\:|\bprocess\/browser\.js|\bdrainQueue\b/g.test(
+      line
+    )
+  );
+}
+
+function numFrames(e: any): number {
+  let s = String(e.stack)
+    .split("\n")
+    .filter(isStackFrameLine);
+  return s.length;
+}
+
+// maybe there is a better way, but we need to know if the function call is async
+// we just compare stack trace lines size here
+setTimeout(function setupTopNumFrames() {
+  TOP_LINES_STACK_NUM = numFrames(new Error("__effectful__stack")) + 1;
+}, 0);
+
+function scheduleCurrentThread() {
+  context.queue.push({
+    top: context.top,
+    debug: context.enabled,
+    value: context.value
+  });
+  context.top = null;
+  signalThread();
+  if (config.verbose)
+    trace(`DEBUGGER: schedule a thread: ${State.stackDescr().join(" ==> ")}`);
+  throw token;
+}
+
 export function pushFrame(frame: Frame): any {
   const next = context.top;
   frame.next = frame.caller = next;
-  if (context.debug && next) {
-    if (context.call !== frame.func) {
-      frame.restoreDebug = context.call;
-      context.debug = false;
+  const res = (context.top = frame);
+  if (next) {
+    if (context.enabled) {
+      if (!context.launched && !frame.meta.blackbox) {
+        State.pauseEventQueue();
+        scheduleCurrentThread();
+      }
+      if (context.call !== frame.func) {
+        frame.restoreEnabled = context.call;
+        context.enabled = false;
+      }
+    }
+  } else {
+    context.onFirstFrame();
+    if (!context.running && context.enabled) {
+      // so suddenly some transpiled function is executed
+      // we could use `caller === null` but it could be called from a strict mode
+      // on FF this is one line, but on Chrome two
+      // the condition probably not always works
+      if (numFrames(new Error("__effectful__stack")) <= TOP_LINES_STACK_NUM) {
+        // we don't want that code to run if something is stopped on a breakpoint already
+        // this way order of async functions is preserved
+        if (context.pausedTop || context.queue.length) scheduleCurrentThread();
+      }
     }
   }
-  const res = (context.top = frame);
   return res;
 }
 
@@ -1024,17 +1080,9 @@ export const frame: (
     ): any {
       const top = context.top;
       recordFrame(top);
-      return pushFrame(makeFrame(closure, meta, parent, vars, newTarget));
+      return makeFrame(closure, meta, parent, vars, newTarget);
     }
-  : function frame(
-      closure: any,
-      meta: any,
-      parent: any,
-      vars: any[] | null,
-      newTarget: any
-    ) {
-      return pushFrame(makeFrame(closure, meta, parent, vars, newTarget));
-    };
+  : makeFrame;
 
 export function checkExitBrk(top: Frame, value: any) {
   const meta = top.meta;
@@ -1043,36 +1091,29 @@ export function checkExitBrk(top: Frame, value: any) {
   if (brk && context.needsBreak(brk, top, value)) {
     context.value = value;
     context.error = false;
-    if (!context.running) {
-      context.queue.push({
-        top: context.top,
-        brk,
-        debug: context.debug,
-        value: context.value,
-        stopOnEntry: false
-      });
-      context.top = null;
-      signalThread();
-    }
-    // context.top = top;
+    context.onStop();
     throw token;
   }
 }
 
 export function ret(value: any): any {
   const top = <Frame>context.top;
-  if (top.newTarget && (!value || typeof value !== "object")) value = top.self;
+  if (
+    top.newTarget &&
+    (!value || (typeof value !== "object" && typeof value !== "function"))
+  )
+    value = top.self;
   top.result = void 0;
   top.done = true;
   if (top.onResolve) {
     context.call = top.onResolve;
     top.onResolve(value);
   }
-  if (context.debug) {
+  if (context.enabled) {
     checkExitBrk(top, value);
-  } else if (top.restoreDebug !== undef) {
-    context.debug = true;
-    context.call = top.restoreDebug;
+  } else if (top.restoreEnabled !== undef) {
+    context.enabled = true;
+    context.call = top.restoreEnabled;
   }
   popFrame(top);
   return value;
@@ -1087,10 +1128,10 @@ export function unhandled(e: any) {
   }
   top.error = void 0;
   top.done = true;
-  if (!context.debug) {
-    const restoreDebug = top.restoreDebug;
+  if (!context.enabled) {
+    const restoreDebug = top.restoreEnabled;
     if (restoreDebug !== undef) {
-      context.debug = true;
+      context.enabled = true;
       context.call = restoreDebug;
     }
   }
@@ -1099,28 +1140,16 @@ export function unhandled(e: any) {
 }
 
 export function brk(): any {
-  if (context.debug === false) return;
+  if (context.enabled === false) return;
   const { needsBreak, top } = context;
   let p: Brk;
-  let stopOnEntry = false;
-  let stopped = !context.running;
   if (
     top &&
     (p = top.brk = context.brk = top.meta.states[top.state]) &&
-    ((stopOnEntry = needsBreak(p, top)) || (stopped && context.activeTop)) &&
-    context.debug
+    needsBreak(p, top) &&
+    context.enabled
   ) {
-    if (stopped) {
-      context.queue.push({
-        top: context.top,
-        brk: p,
-        debug: context.debug,
-        value: context.value,
-        stopOnEntry
-      });
-      context.top = null;
-      signalThread();
-    }
+    context.onStop();
     throw token;
   }
 }
@@ -1146,18 +1175,6 @@ export function then(
   return res.then(onResolve, onReject);
 }
 
-export function liftSync(fun: (this: any, ...args: any[]) => any): any {
-  return function(this: any) {
-    const savedDebug = context.debug;
-    try {
-      context.debug = false;
-      return (<any>fun).nativeApply(this, <any>arguments);
-    } finally {
-      context.debug = savedDebug;
-    }
-  };
-}
-
 export function raise(e: any) {
   context.exception = undef;
   throw e;
@@ -1170,10 +1187,11 @@ export function reset() {
   metaCount = 0;
   indirMemo.clear();
   functionConstrMemo.clear();
-  context.activeTop = context.top = null;
+  context.pausedTop = context.top = null;
   context.running = false;
   context.brk = null;
   context.queue.length = 0;
+  context.launched = false;
 }
 
 export function iterErr(iter: any, reason: any) {

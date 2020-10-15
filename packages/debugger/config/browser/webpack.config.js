@@ -244,7 +244,7 @@ module.exports = {
                 /@effectful(?:\/|\\{1,2})/,
                 /css-loader/,
                 /style-loader/
-              ].filter(Boolean),
+              ],
               loader: require.resolve("babel-loader"),
               options: {
                 babelrc: false,
@@ -325,7 +325,7 @@ module.exports = {
   },
   plugins: [
     process.env.EFFECTFUL_PROGRESS_ID &&
-      new webpack.ProgressPlugin(function(percentage, title, ...args) {
+      new webpack.ProgressPlugin(function(percentage, title) {
         const prefix = `${process.env.EFFECTFUL_PROGRESS_ID}${Math.ceil(
           100 * percentage
         )}:`;

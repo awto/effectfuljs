@@ -66,17 +66,20 @@ async function main() {
       (async () => {
         await lib("asap", "asap.js", "**/*.js");
         await lib("promise", "lib/index.js", "lib/**/*.js");
+        await lib("lodash", "lodash.js", "**/*.js");
+        await lib("lodash.sortby", "index.js", "**/*.js");
       })(),
       (async () => {
         await lib("object-assign", "index.js");
-        await lib("react", "cjs/react.production.min.js");
-        await lib("scheduler", "cjs/scheduler.production.min.js");
+        await lib("react", "cjs/react.development.js");
+        await lib("scheduler", "cjs/scheduler.development.js");
+        await lib("scheduler/tracing", "cjs/scheduler-tracing.development.js");
+        await lib("react-dom", "cjs/react-dom.development.js");
         await lib(
-          "scheduler/tracing",
-          "cjs/scheduler-tracing.production.min.js"
+          "react-dom/server",
+          "cjs/react-dom-server.node.development.js"
         );
-        await lib("react-dom", "cjs/react-dom.production.min.js");
-        await lib("react-is", "cjs/react-is.production.min.js");
+        await lib("react-is", "cjs/react-is.development.js");
       })()
     ]);
     await fs.writeFile("deps-aliases.json", JSON.stringify(alias, null, 2));
@@ -157,7 +160,8 @@ async function main() {
     }
 
     async function lib(name, main, include) {
-      const root = name.split("/")[0];
+      const rootPath = name.split("/");
+      const root = rootPath[0];
       if (include) {
         await dirs();
       } else {
@@ -167,12 +171,12 @@ async function main() {
 
       async function compile(relPath) {
         const src = path.join(__dirname, "node_modules", root, relPath);
-        const dst = path.join(__dirname, "deps" + tag, root, relPath);
+        const dst = path.join(__dirname, "deps" + tag, name, relPath);
         if (process.env.EFFECTFUL_VERBOSE)
           console.log(`compiling ${src} into ${dst}`);
         mkdirp(path.dirname(dst), { recursive: true });
         const moduleAliases = {};
-        const depsRoot = Array(relPath.split("/").length)
+        const depsRoot = Array(relPath.split("/").length + rootPath.length - 1)
           .fill("..")
           .join("/");
         for (const [lib, relPath] of Object.entries(alias))
@@ -216,11 +220,12 @@ async function main() {
           try {
             files = await fs.readdir(src);
           } catch (error) {
-            console.log(`could not read dir ${dir}`, error);
+            console.log(`could not read dir ${src}`, error);
           }
           await Promise.all(
             files.map(async function(i) {
               const f = path.join(src, i);
+              let s;
               try {
                 s = await fs.stat(f);
               } catch (error1) {

@@ -6,11 +6,10 @@ exports.describe =
   "runs a command line with all `node` invocations are intercepted by the debugger";
 
 exports.builder = function(yargs) {
-  yargs
-    .option("command", {
-      alias: ["c", "_"],
-      describe: "Command string to execute"
-    });
+  yargs.option("command", {
+    alias: ["c", "_"],
+    describe: "Command string to execute"
+  });
 };
 
 exports.handler = function(argv) {

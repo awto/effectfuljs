@@ -4702,16 +4702,6 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "1",
-                "_V": "0",
-                "_W": "null",
-                "_X": Object {
-                  "onFulfilled": "function bind() { [native code] }",
-                  "onRejected": "function bind() { [native code] }",
-                  "promise": "[object Object]",
-                },
-              },
               "[name]": "func1",
             },
             Object {
@@ -4755,16 +4745,6 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "1",
-                "_V": "0",
-                "_W": "null",
-                "_X": Object {
-                  "onFulfilled": "function bind() { [native code] }",
-                  "onRejected": "function bind() { [native code] }",
-                  "promise": "[object Object]",
-                },
-              },
               "[name]": "func3",
             },
             Object {
@@ -4808,16 +4788,6 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "1",
-                "_V": "0",
-                "_W": "null",
-                "_X": Object {
-                  "onFulfilled": "function bind() { [native code] }",
-                  "onRejected": "function bind() { [native code] }",
-                  "promise": "[object Object]",
-                },
-              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "length": "0",
@@ -5012,12 +4982,6 @@ Object {
           "name": "func1",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "0",
-                "_V": "0",
-                "_W": "null",
-                "_X": "null",
-              },
               "[name]": "func1",
             },
             Object {
@@ -5061,12 +5025,6 @@ Object {
           "name": "func2",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "0",
-                "_V": "0",
-                "_W": "null",
-                "_X": "null",
-              },
               "[name]": "func2",
             },
             Object {
@@ -5110,12 +5068,6 @@ Object {
           "name": "sub",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "0",
-                "_V": "0",
-                "_W": "null",
-                "_X": "null",
-              },
               "[name]": "sub",
             },
             Object {
@@ -5162,12 +5114,6 @@ Object {
           "name": "func3",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "0",
-                "_V": "0",
-                "_W": "null",
-                "_X": "null",
-              },
               "[name]": "func3",
             },
             Object {
@@ -5211,12 +5157,6 @@ Object {
           "name": "stepOutAsync.js",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "0",
-                "_V": "0",
-                "_W": "null",
-                "_X": "null",
-              },
               "[name]": "stepOutAsync.js",
               "func0": Object {
                 "length": "0",
@@ -9549,12 +9489,6 @@ Object {
           "name": "main",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "1",
-                "_V": "1",
-                "_W": "undefined",
-                "_X": "null",
-              },
               "[name]": "main",
             },
             Object {
@@ -9592,12 +9526,6 @@ Object {
           "name": "stepOverAsync.js",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "1",
-                "_V": "1",
-                "_W": "undefined",
-                "_X": "null",
-              },
               "[name]": "stepOverAsync.js",
               "afunc1": Object {
                 "length": "1",

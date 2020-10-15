@@ -21,9 +21,9 @@ import Comms from "./comms";
 import * as util from "util";
 import { map, filter } from "../kit";
 import * as Persist from "../persist";
-import { debug } from "console";
 
 const savedObject = State.native.Object;
+const trace = State.trace;
 
 const {
   assign,
@@ -75,7 +75,7 @@ const localConsole = config.localConsole
       groupEnd() {}
     };
 
-context.debug = true;
+context.enabled = true;
 
 let brkNext: State.Frame | null = null;
 let brkOut: State.Frame | null = null;
@@ -83,10 +83,6 @@ let stepIn = false;
 let pauseNext = false;
 let backward = false;
 const isBrowser = typeof window !== "undefined";
-
-function trace(...args: [any, ...any[]]) {
-  sysConsole.log.apply(sysConsole, args);
-}
 
 /**
  * saving break frame for async functions which may
@@ -156,12 +152,12 @@ const noSideEffects = config.timeTravel
       func: (this: any, ...args: any[]) => any
     ): (this: any, ...args: any[]) => any {
       return function(this: any): any {
-        const savedDebug = context.debug;
+        const savedDebug = context.enabled;
         const savedEnabled = journal.enabled;
         const savedFuture = journal.future;
         const savedNow = journal.now;
         try {
-          context.debug = false;
+          context.enabled = false;
           journal.enabled = true;
           TT.checkpoint();
           return State.native.Reflect.apply(func, this, <any>arguments);
@@ -169,7 +165,7 @@ const noSideEffects = config.timeTravel
           while (journal.now !== savedNow) TT.undo();
           journal.future = savedFuture;
           journal.enabled = savedEnabled;
-          context.debug = savedDebug;
+          context.enabled = savedDebug;
         }
       };
     }
@@ -294,101 +290,104 @@ let restartTimeout: any = 0;
 
 const RESTART_TIMEOUT = isBrowser ? 500 : 0;
 
+const savedOnLoad = context.onLoad;
+
 context.onLoad = function(module: State.Module, hot: boolean) {
-  const source = getSource(module);
-  if (config.verbose) trace(`DEBUGGER: loading ${JSON.stringify(source)}`);
-  if (module.fullPath) {
-    const bps = knownBreakpoints.get(module.fullPath);
-    if (hot || bps) {
-      event("loadedSources", {
-        reason: "changed",
-        source,
-        breakpoints: bps && setBreakpoints(bps).breakpoints
-      });
+  try {
+    const source = getSource(module);
+    if (config.verbose) trace(`DEBUGGER: loading ${JSON.stringify(source)}`);
+    if (module.fullPath) {
+      const bps = knownBreakpoints.get(module.fullPath);
+      if (hot || bps) {
+        event("loadedSources", {
+          reason: "changed",
+          source,
+          breakpoints: bps && setBreakpoints(bps).breakpoints
+        });
+      }
+      if (hot) {
+        if (config.onHotSwapping) {
+          // const savedDebug = context.debug;
+          try {
+            context.enabled = false;
+            config.onHotSwapping(module);
+          } finally {
+            context.enabled = true;
+          }
+        } else State.resumeAfterInterrupt();
+      }
     }
-    if (hot) {
-      if (config.onHotSwapping) {
-        const savedDebug = context.debug;
-        try {
-          context.debug = false;
-          config.onHotSwapping(module);
-        } finally {
-          context.debug = true;
-        }
-      } else State.resumeAfterInterrupt();
-    }
+  } finally {
+    if (savedOnLoad) savedOnLoad(module, hot);
   }
 };
 
-let awaitingThreads:
-  | {
-      job: State.Job;
-      top: State.Frame;
-      brk: State.Brk;
-    }[]
-  | null = [];
-
 let firstThread = true;
 
-function startThreadImpl(job: State.Job, top: State.Frame, brk: State.Brk) {
-  let stop = false;
-  context.debug = job.debug;
-  context.brk = job.brk;
+function startThreadImpl(job: State.Job, brk: State.Brk | null) {
+  // let stop = false;
+  reason = void 0;
+  context.enabled = job.debug;
+  context.brk = brk;
   context.value = job.value;
-  const entry = firstThread;
-  if (entry) {
-    if (config.stopOnEntry) {
-      stop = true;
-      reason = "entry";
-    }
-    firstThread = false;
-  }
-  if (!stop && (reason = checkPause(brk, top)) && reason !== "interrupt")
-    stop = true;
   TT.checkpoint();
-  if (stop) {
-    context.activeTop = context.top;
-    context.top = null;
-    signalStopped();
-    if (entry) onEntry();
-  } else {
-    if (entry) onEntry();
+  try {
     step();
-    if (!context.activeTop) event("continued", {});
+  } catch (e) {
+    // tslint:disable-next-line:no-console
+    console.error(e);
+    event("continued", {});
+    return;
   }
+  if (!context.pausedTop) event("continued", {});
 }
 
+let cancelExit: any = 0;
+let unref = false;
+
+context.onFirstFrame = function() {
+  if (cancelExit !== 0) {
+    clearTimeout(cancelExit);
+    cancelExit = 0;
+  }
+  if (!config.stopOnExit && unref) {
+    Comms.ref();
+    unref = false;
+  }
+};
+
 context.onThread = function() {
-  if (context.top || context.activeTop) return;
-  if (!context.queue.length) {
-    if (!context.top && !context.activeTop) {
-      if (!config.stopOnExit) {
-        setTimeout(function() {
-          if (!context.queue.length && !context.top && !context.activeTop)
-            Comms.unref();
-        }, 0);
-      }
+  if (context.top || context.pausedTop) return;
+  if (!context.queue.length && !context.top && !context.pausedTop) {
+    if (!config.stopOnExit) {
+      cancelExit = setTimeout(function() {
+        cancelExit = 0;
+        if (!context.queue.length && !context.top && !context.pausedTop) {
+          Comms.unref();
+          unref = true;
+        }
+      }, 0);
     }
     return;
   }
-  if (!config.stopOnExit) Comms.ref();
   const job = <State.Job>context.queue.shift();
-  if (config.verbose) trace("DEBUGGER: new thread");
-  const top = <State.Frame>(context.top = job.top);
-  if (context.brk) {
-    if (awaitingThreads) {
-      awaitingThreads.push({ top, job, brk: context.brk });
-      return;
-    }
-    startThreadImpl(job, top, context.brk);
-  }
+  if (config.verbose)
+    trace("DEBUGGER: new thread", State.stackDescr(job.top).join(" ==> "));
+  context.top = job.top;
+  startThreadImpl(job, context.brk);
 };
 
 let entrySnapshot: any;
 
 function onEntry() {
-  if (config.fastRestart === "entry")
-    entrySnapshot = capture({ warnIgnored: true });
+  const savedDebug = context.enabled;
+  try {
+    context.enabled = false;
+    if (config.fastRestart === "entry")
+      entrySnapshot = capture({ warnIgnored: true });
+  } finally {
+    context.enabled = savedDebug;
+  }
 }
 
 function scheduleRestart() {
@@ -400,12 +399,12 @@ function scheduleRestart() {
 
 export function restart() {
   if (config.onRestart) {
-    const savedDebug = context.debug;
+    const savedDebug = context.enabled;
     try {
-      context.debug = false;
+      context.enabled = false;
       config.onRestart();
     } finally {
-      context.debug = savedDebug;
+      context.enabled = savedDebug;
     }
     return;
   }
@@ -512,7 +511,7 @@ function getSource(module: State.Module) {
 }
 
 function getFrame(frameId = 0): State.Frame | null {
-  let cur = context.activeTop || context.top;
+  let cur = context.pausedTop || context.top;
   for (let i = toLocal(frameId); cur; cur = cur /*.next*/.caller) {
     if (!cur.brk || cur.meta.blackbox) continue;
     if (i === 0) break;
@@ -541,9 +540,9 @@ handlers.stackTrace = function(args, response) {
   const maxLevels = typeof args.levels === "number" ? args.levels : 1000;
   const endFrame = startFrame + maxLevels;
   const visibleFrames = [];
-  const top = brkFrame || context.activeTop;
+  const top = brkFrame || context.pausedTop;
   for (let i = top; i; i = i /*.next*/.caller) {
-    if (i.brk == null || i.meta.blackbox) continue;
+    if (i.meta.blackbox || !i.meta.states[i.state]) continue;
     visibleFrames.push(i);
   }
   const stackFrames = [];
@@ -867,22 +866,20 @@ handlers.childLaunch = function(args, res) {
   config.stopOnExit = args.stopOnExit;
   config.fastRestart = args.fastRestart;
   config.stopOnEntry = !!args.stopOnEntry;
+
   if (args.onChange === "restart") config.onHotSwapping = scheduleRestart;
-  if (awaitingThreads) {
-    const threads = awaitingThreads;
-    awaitingThreads = null;
-    for (const i of threads) {
-      i.job.stopOnEntry = !!args.stopOnEntry;
-      startThreadImpl(i.job, i.top, i.brk);
-    }
-  }
   if (config.verbose) trace(`DEBUGGER: launch ${JSON.stringify(args)}`);
+  context.launched = true;
+  State.resumeEventQueue();
 };
 
 function checkPause(brk: State.Brk, top: State.Frame): undefined | string {
-  if (!context.debug) return undefined;
-  if (awaitingThreads != null || (firstThread && config.stopOnEntry))
-    return "entry";
+  if (!context.enabled) return undefined;
+  if (firstThread) {
+    firstThread = false;
+    onEntry();
+    if (config.stopOnEntry) return "entry";
+  }
   if (pauseNext) return "pause";
   const { stopNext } = context;
   if (stopNext) {
@@ -904,10 +901,12 @@ function checkPause(brk: State.Brk, top: State.Frame): undefined | string {
   } else if (brk.flags & State.BrkFlag.EXIT) {
     if (brkOut && brkOut === top) return "stepOut";
   }
+  /*
   if (Comms.hasMessage()) {
     if (config.verbose) trace("DEBUGGER: interrupt");
     return "interrupt";
   }
+  */
   return void 0;
 }
 
@@ -925,7 +924,7 @@ function stateDescr(
     } = ${str(context.value)} ${context.error ? "ERROR" : ""}`
   );
   res.push(`#${threadId}:   Stack:`);
-  for (let j = context.top || context.activeTop; j; j = j.next) {
+  for (let j = context.top || context.pausedTop; j; j = j.next) {
     const verboseInfo = verbose ? ` [${j.state}=>${j.goto}]` : "";
     res.push(
       `#${threadId}:     ${j.constructor.name}@${j.meta.module.name}:${
@@ -937,18 +936,20 @@ function stateDescr(
 }
 
 function run() {
-  context.top = context.activeTop;
-  context.brk = context.activeTop && context.activeTop.brk;
+  context.top = context.pausedTop;
+  context.brk = context.pausedTop && context.pausedTop.brk;
+  reason = void 0;
   if (config.verbose)
     trace(`DEBUGGER: run ${stateDescr(stepCount++, context.threadId, true)}`);
-  context.activeTop = null;
+  context.pausedTop = null;
+  if (!backward) State.resumeEventQueue();
   try {
     step();
   } catch (e) {
     // tslint:disable-next-line:no-console
     console.error(e);
   }
-  if (!context.activeTop) event("continued", {});
+  if (!context.pausedTop) event("continued", {});
 }
 
 const step: () => void = config.timeTravel
@@ -967,12 +968,19 @@ const step: () => void = config.timeTravel
             context.onStop();
             return;
           }
-          const { brk } = context;
-          if (brk === lastBrk) continue;
-          lastBrk = brk;
-          if (brk && top && (reason = checkPause(brk, top)) != null) {
-            context.onStop();
-            return;
+          if (top) {
+            const meta = top.meta;
+            if (!meta.blackbox) {
+              const brk = top.meta.states[top.state];
+              if (brk) {
+                if (brk === lastBrk) continue;
+                lastBrk = brk;
+                if ((reason = checkPause(brk, top)) != null) {
+                  context.onStop();
+                  return;
+                }
+              }
+            }
           }
         }
       }
@@ -984,7 +992,7 @@ const step: () => void = config.timeTravel
         } else Engine.step();
       } else {
         event("continued", {});
-        Engine.signalThread();
+        State.signalThread();
       }
     }
   : Engine.step;
@@ -1006,21 +1014,26 @@ function signalStopped() {
   );
 }
 
-context.onStop = function(_description?: string) {
+context.onStop = function onStop(_description?: string) {
   if (config.verbose) trace(`DEBUGGER: stop signal ${reason || "?"}`);
   if (!context.top) return;
+  State.pauseEventQueue();
   if (reason === "interrupt") {
     reason = void 0;
     State.afterInterrupt(interruptibleStep);
     return;
   }
-  context.activeTop = context.top;
+  context.pausedTop = context.top;
   context.top = null;
   signalStopped();
 };
 
 function interruptibleStep() {
-  if (Comms.hasMessage()) State.afterInterrupt(interruptibleStep); else step();
+  if (Comms.hasMessage()) State.afterInterrupt(interruptibleStep);
+  else {
+    State.resumeEventQueue();
+    step();
+  }
 }
 
 function pause() {
@@ -1090,7 +1103,7 @@ handlers.continue = function(_, res) {
 
 handlers.next = function(_, res) {
   send(res);
-  const top = brkFrame || context.activeTop;
+  const top = brkFrame || context.pausedTop;
   reset();
   brkNext = top;
   if (brkNext && brkNext.brk && brkNext.brk.flags & State.BrkFlag.EXIT)
@@ -1100,7 +1113,7 @@ handlers.next = function(_, res) {
 
 handlers.stepOut = function(_, res) {
   send(res);
-  const top = brkFrame || context.activeTop;
+  const top = brkFrame || context.pausedTop;
   reset();
   brkOut = top;
   if (brkOut && brkOut.brk && brkOut.brk.flags & State.BrkFlag.EXIT)
@@ -1207,6 +1220,7 @@ handlers.breakpointLocations = function(args, res) {
   if (!endLine) endLine = line;
   for (let i = line; i <= endLine; ++i) {
     const brks = lines[linStartAt1 ? i : i + 1];
+    if (!brks) break;
     if (brks[0].line !== i) continue;
     for (const brk of brks) {
       if (!(brk.flags & State.BrkFlag.STMT) || brk.flags & State.BrkFlag.EMPTY)
@@ -1258,14 +1272,14 @@ handlers.evaluate = function(args, res) {
         const frame = getFrame(args.frameId);
         if (!frame || !frame.brk) val = "`eval` isn't available";
         else {
-          let savedDebug = context.debug;
+          let savedDebug = context.enabled;
           try {
-            context.debug = false;
+            context.enabled = false;
             let fun = compileEval(expr, frame.meta, frame.brk);
             if (args.context === "hover") fun = noSideEffects(fun);
             val = fun(frame);
           } finally {
-            context.debug = savedDebug;
+            context.enabled = savedDebug;
           }
         }
       }
@@ -1301,7 +1315,7 @@ function ignoreError(
 }
 
 function compileEvalOnTop(code: string): (frame: State.Frame) => any {
-  const frame = context.top || context.activeTop;
+  const frame = context.top || context.pausedTop;
   if (!frame) return <any>new State.native.Function(code);
   return compileEval(
     code,
@@ -1324,13 +1338,13 @@ function compileEval(
     null
   );
   return function(frame: State.Frame) {
-    const savedDebug = context.debug;
-    context.debug = false;
+    const savedDebug = context.enabled;
+    context.enabled = false;
     const func = meta.func(frame);
     try {
       return func();
     } finally {
-      context.debug = savedDebug;
+      context.enabled = savedDebug;
     }
   };
 }
@@ -1384,7 +1398,6 @@ function logMessageToExpression(msg: string) {
 
 /** the function is needed only for testing in same process */
 export function resetLoad() {
-  awaitingThreads = [];
   varCount = 100;
   resetScopes();
   sources.clear();
@@ -1420,7 +1433,7 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
     }
     const res = S.write(
       {
-        top: context.activeTop || context.top,
+        top: context.pausedTop || context.top,
         syncStack: context.syncStack,
         queue: context.queue,
         brk: context.brk,
@@ -1534,7 +1547,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
         journal.enabled = false;
         let modulesExports: any;
         ({
-          top: context.activeTop,
+          top: context.pausedTop,
           syncStack: context.syncStack,
           queue: context.queue,
           brk: context.brk,
@@ -1566,7 +1579,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
             runTopLevel.bind(null, module)
           );
         }
-        const top = context.activeTop;
+        const top = context.pausedTop;
         reset();
         if (
           top &&

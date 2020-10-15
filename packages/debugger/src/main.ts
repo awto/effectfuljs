@@ -16,6 +16,7 @@ import * as TimeTravelObjects from "./timeTravel/objects";
 import * as TimeTravelFrame from "./timeTravel/frame";
 import * as SerializationDom from "@effectful/serialization/dom";
 import * as ES from "./timeTravel/es";
+import * as Dom from "./dom";
 
 S.regOpaqueObject(State.context, "@effectful/context", { props: false });
 Persist.regConstructor(State.ForInIterator, { name: "@effectful/forIn" });
@@ -35,6 +36,7 @@ Persist.regModule(TimeTravelFrame, "@effectful/debugger/timeTravel/frame");
 Persist.regModule(TimeTravel, "@effectful/debugger/trace/main");
 Persist.regModule(Api, "@effectful/debugger/api");
 Persist.regModule(ApiMin, "@effectful/debugger/apiMin");
+Persist.regModule(Dom, "@effectful/debugger/dom");
 
 for (const i of Object.values(RT)) {
   const meta = i && State.functions.get(<any>i);

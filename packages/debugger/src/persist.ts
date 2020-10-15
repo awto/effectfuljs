@@ -144,9 +144,9 @@ const BindDescriptor = regDescriptor({
 });
 
 function makeBind(): (...args: any[]) => any {
-  function bind(this: any, ...rest: any[]): any {
-    const { fun, self, args: boundArgs } = <any>binds.get(bind);
-    if (context.call === bind) context.call = fun;
+  function __effectful__Bind(this: any, ...rest: any[]): any {
+    const { fun, self, args: boundArgs } = <any>binds.get(__effectful__Bind);
+    if (context.call === __effectful__Bind) context.call = fun;
     const arr: any[] = Array(rest.length + boundArgs.length + 1);
     arr[0] = self === undef ? this : self;
     let index = 0;
@@ -154,8 +154,8 @@ function makeBind(): (...args: any[]) => any {
     for (const i of rest) arr[++index] = i;
     return (<any>nativeCall).nativeApply(fun, <any>arr);
   }
-  if (BindDescriptor) S.setObjectDescriptor(bind, BindDescriptor);
-  return bind;
+  if (BindDescriptor) S.setObjectDescriptor(__effectful__Bind, BindDescriptor);
+  return __effectful__Bind;
 }
 
 export const defaultBind = config.persistState

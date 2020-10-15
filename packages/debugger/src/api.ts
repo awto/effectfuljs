@@ -37,6 +37,5 @@ if (config.globalNS && (<any>global)[config.globalNS]) {
     ldel,
     mcall
   });
-  if (config.globalNS)
-  (<any>global)[config.globalNS] = module.exports;
+  if (config.globalNS) (<any>global)[config.globalNS] = module.exports;
 }
