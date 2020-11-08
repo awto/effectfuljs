@@ -9,11 +9,17 @@ config.timeTravelDisabled = isTrue(
   process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED
 );
 
-const { normalizeDrive, normalizePath } = require("../state");
+const { normalizePath } = require("../state");
 
-config.srcRoot = normalizeDrive(
-  fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || ".")
+config.srcRoot = fs.realpathSync(
+  process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || "."
 );
+
+const packageJSON = fs.realpathSync(
+  require("find-up").sync("package.json", { cwd: config.srcRoot })
+);
+
+config.packageRoot = packageJSON ? path.dirname(packageJSON) : config.srcRoot;
 
 config.runtimePackages = normalizePath(
   fs.realpathSync(
@@ -71,11 +77,14 @@ config.exclude = process.env.EFFECTFUL_DEBUGGER_EXCLUDE
   ? mm.makeRe(process.env.EFFECTFUL_DEBUGGER_EXCLUDE)
   : null;
 
-if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) config.debuggerDebug = true;
+if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) {
+  config.debuggerDebug = true;
+  Error.stackTraceLimit = Infinity;
+}
 
 config.expEagerModuleExport = false;
 
-config.patchVM = isTrue(process.env.EFFECTFUL_DEBUGGER_PATCH_VM);
+config.patchVM = isTrue(process.env.EFFECTFUL_DEBUGGER_PATCH_VM, true);
 
 module.exports = config;
 

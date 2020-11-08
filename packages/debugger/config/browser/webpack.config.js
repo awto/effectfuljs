@@ -12,8 +12,8 @@ const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
 const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeModulesPlugin");
 const ManifestPlugin = require("webpack-manifest-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
-const config = require("../defaults");
-const cacheIdentifier = require("../cacheId");
+const config = require("../deriveConfig");
+const { key: cacheIdentifier, dir: cacheDirectory } = require("../cacheId");
 const preset = require("../babel/preset-zero-config");
 const { paths, modules, getClientEnvironment } = require("./cra");
 const postcssNormalize = require("postcss-normalize");
@@ -23,13 +23,15 @@ const appPackageJson = paths.appPackageJson
   : false;
 const { normalizeDrive, normalizePath } = require("../../state");
 
-const { runtime, cache, srcRoot, timeTravel } = config;
+const { runtime, srcRoot, timeTravel } = config;
 
 const rt = runtime || "@effectful/debugger";
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
 );
+
+const isWebpack5 = parseInt(webpack.version) === 5;
 
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -125,6 +127,8 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
   return loaders;
 };
 
+console.log("config.runtimePackages", config.runtimePackages);
+
 module.exports = {
   mode: "development",
   entry: [
@@ -134,7 +138,6 @@ module.exports = {
   output: {
     pathinfo: true,
     filename: "static/js/bundle.js",
-    futureEmitAssets: true,
     chunkFilename: "static/js/[name].chunk.js",
     publicPath: publicPath,
     // devtoolModuleFilenameTemplate: info =>
@@ -172,7 +175,7 @@ module.exports = {
   module: {
     strictExportPresence: true,
     rules: [
-      { parser: { requireEnsure: false } },
+      { parser: { amd: false, requireEnsure: false } },
       {
         oneOf: [
           {
@@ -200,7 +203,7 @@ module.exports = {
               exclude: isRuntimePath,
               loader: require.resolve("babel-loader"),
               options: {
-                cacheDirectory: cache,
+                cacheDirectory,
                 compact,
                 cacheIdentifier,
                 cacheCompression: false,
@@ -229,7 +232,7 @@ module.exports = {
                     }
                   ]
                 ],
-                cacheDirectory: cache,
+                cacheDirectory,
                 cacheIdentifier,
                 cacheCompression: false,
                 sourceMaps: false
@@ -264,7 +267,7 @@ module.exports = {
                     }
                   ]
                 ],
-                cacheDirectory: cache,
+                cacheDirectory,
                 cacheIdentifier,
                 cacheCompression: false,
                 sourceMaps: false
@@ -367,17 +370,15 @@ module.exports = {
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ].filter(Boolean),
-  // devtool: "hidden-source-map",
   devtool: false,
-  node: {
-    module: "empty",
-    dgram: "empty",
-    dns: "mock",
-    fs: "empty",
-    http2: "empty",
-    net: "empty",
-    tls: "empty",
-    child_process: "empty"
-  },
   performance: false
 };
+
+if (isWebpack5) {
+  module.exports.resolve.fallback = {
+    path: require.resolve("path-browserify"),
+    domain: require.resolve("domain-browser")
+  };
+} else {
+  module.exports.output.futureEmitAssets = true;
+}

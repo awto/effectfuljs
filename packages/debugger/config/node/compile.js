@@ -1,4 +1,4 @@
-const config = require("../defaults");
+const config = require("../deriveConfig");
 const path = require("path");
 const deepClone = require("lodash/cloneDeep");
 const fs = require("fs");
@@ -12,6 +12,10 @@ const {
 
 const babel = require("@babel/core");
 const preset = require("../babel/preset-zero-config");
+
+const CACHE_FILENAME =
+  process.env.BABEL_CACHE_PATH ||
+  path.join(cacheId.dir, `.babel.${babel.version}.${babel.getEnv()}.json`);
 
 let watch = function(filename, handler) {
   fs.watch(filename, { persistent: false, encoding: "utf-8" }, type => {
@@ -78,23 +82,7 @@ const requirePath =
 
 let cacheSaveScheduled = false;
 
-const findCacheDir = require("find-cache-dir");
 const makeDir = require("make-dir");
-const os = require("os");
-
-const DEFAULT_CACHE_DIR =
-  findCacheDir({
-    name: "@effectful/debugger"
-  }) ||
-  os.homedir() ||
-  os.tmpdir();
-
-const DEFAULT_FILENAME = path.join(
-  DEFAULT_CACHE_DIR,
-  `.babel.${babel.version}.${babel.getEnv()}.json`
-);
-
-const FILENAME = process.env.BABEL_CACHE_PATH || DEFAULT_FILENAME;
 
 // copy-pasted from @babel/register but with ability to merge
 function saveCache() {
@@ -114,20 +102,22 @@ function saveCache() {
     }
   }
   try {
-    makeDir.sync(path.dirname(FILENAME));
-    if (config.verbose > 1) log("DEBUGGER: saving babel cache");
-    fs.writeFileSync(FILENAME, serialised);
+    makeDir.sync(path.dirname(CACHE_FILENAME));
+    if (config.verbose > 1) {
+      log("DEBUGGER: saving babel cache");
+    }
+    fs.writeFileSync(CACHE_FILENAME, serialised);
   } catch (e) {
     switch (e.code) {
       case "EACCES":
       case "EPERM":
-        console.warn(`Babel could not write cache to file: ${FILENAME} 
+        console.warn(`Babel could not write cache to file: ${CACHE_FILENAME} 
 due to a permission issue. Cache is disabled.`);
         config.cache = false;
         break;
 
       case "EROFS":
-        console.warn(`Babel could not write cache to file: ${FILENAME} 
+        console.warn(`Babel could not write cache to file: ${CACHE_FILENAME} 
 because it resides in a readonly filesystem. Cache is disabled.`);
         config.cache = false;
         break;
@@ -142,21 +132,21 @@ function loadCache() {
   if (!config.cache) return null;
   let cacheContent;
   try {
-    cacheContent = fs.readFileSync(FILENAME);
+    cacheContent = fs.readFileSync(CACHE_FILENAME);
   } catch (e) {
     switch (e.code) {
       case "EACCES":
-        console.warn(`Babel could not read cache file: ${FILENAME}
+        console.warn(`Babel could not read cache file: ${CACHE_FILENAME}
 due to a permission issue. Cache is disabled.`);
         config.cache = false;
       default:
-        return null;
+        return {};
     }
   }
   try {
     return JSON.parse(cacheContent);
   } catch (_unused) {
-    return null;
+    return {};
   }
 }
 
@@ -178,7 +168,7 @@ module.exports = function compile(content, filename, module) {
       log(`DEBUGGER: loading without instrumentation ${filename}`);
     return null;
   }
-  const moduleConfig = require("../defaults");
+  const moduleConfig = require("../deriveConfig");
   const rt = requirePath(moduleConfig.runtime);
   if (config.verbose > 1) {
     let msg = `DEBUGGER: compiling ${filename}, filename:${filename}, rt:${rt}`;
@@ -225,7 +215,7 @@ module.exports = function compile(content, filename, module) {
               filename
             }
       );
-      cacheKey = `${filename}@${cacheId}`;
+      cacheKey = `${filename}@${cacheId.key}`;
       const env = babel.getEnv(false);
       if (env) cacheKey += `@${env}`;
       cached = cacheData && cacheData[cacheKey];
@@ -254,8 +244,11 @@ module.exports = function compile(content, filename, module) {
           event("progressEnd", { progressId });
         }
         if (cacheData) {
-          cacheData[cacheKey] = cached;
           cached.mtime = mtime(filename);
+          cacheData[cacheKey] = {
+            mtime: cached.mtime,
+            code: cached.code
+          };
         }
         if (config.cache && !cacheSaveScheduled) {
           cacheSaveScheduled = true;
@@ -314,7 +307,10 @@ module.exports = function compile(content, filename, module) {
                 event("progressStart", { progressId, title: progressId });
                 cached = babel.transformSync(content, opts);
                 if (cacheData) {
-                  cacheData[cacheKey] = cached;
+                  cacheData[cacheKey] = {
+                    mtime: curMtime,
+                    code: cached.code
+                  };
                   cached.mtime = curMtime;
                 }
                 code = cached.code;
@@ -334,6 +330,7 @@ module.exports = function compile(content, filename, module) {
               disabled = false;
             }
             const emodule = context.modulesById[module.id];
+            State.resumeEventQueue();
             run(
               module.exports,
               emodule && emodule.require,

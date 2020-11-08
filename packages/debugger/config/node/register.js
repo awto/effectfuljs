@@ -1,6 +1,6 @@
 const Persist = require("../../persist");
 // require("./vm");
-const config = require("../defaults");
+const config = require("../deriveConfig");
 
 const compile = require("./compile");
 
@@ -26,7 +26,6 @@ for (const i of builtIn) {
 Mp._compile = function _compile(content, filename) {
   const code = compile(content, filename, this);
   if (!code) return savedCompile.call(this, content, filename);
-  if (config.patchVM)
-    require("./vm");
+  if (config.patchVM) require("./vm");
   return savedCompile.call(this, code, filename);
 };

@@ -1,8 +1,17 @@
-const config = require("./defaults");
 const babel = require("@babel/core");
+
+const path = require("path");
+const config = require("./deriveConfig");
 const version = require("../package.json").version;
-module.exports = `${JSON.stringify({
-  babel: babel.version,
-  timeTravel: config.timeTravel,
-  version
-})}`;
+
+module.exports = {
+  version,
+  dir:
+    (config.cache && process.env.EFFECTFUL_DEBUGGER_CACHE_DIR) ||
+    path.join(config.packageRoot, "node_modules", ".cache"),
+  key: `${JSON.stringify({
+    babel: babel.version,
+    timeTravel: config.timeTravel,
+    version
+  })}`
+};

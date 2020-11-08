@@ -2,7 +2,7 @@ const { normalizeDrive, isWindows } = require("../../state");
 
 const path = require("path");
 const fs = require("fs");
-const defaults = require("../defaults");
+const defaults = require("../deriveConfig");
 let paths;
 let modules;
 let getClientEnvironment;

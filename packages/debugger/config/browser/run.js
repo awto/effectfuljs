@@ -1,6 +1,5 @@
 if (!process.env.BABEL_ENV) process.env.BABEL_ENV = "development";
 if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
-// require("react-scripts/config/env");
 const { paths } = require("./cra");
 
 const appPackageJson = paths.appPackageJson
@@ -18,7 +17,7 @@ const {
 const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
 const webpackConfig = require("./webpack.config");
-const defaults = require("../defaults");
+const defaults = require("../deriveConfig");
 
 async function main() {
   const port = await choosePort(defaults.host, defaults.port);
