@@ -1,11 +1,11 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $raise = $M.raise,
     $brk = $M.brk,
-    $lset = $M.lset,
     $get = $M.get,
+    $lset = $M.lset,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
@@ -76,7 +76,7 @@ var $M = require("@effectful/debugger"),
       /*i*/
       0);
       $.goto = 6;
-      $p = $get($l[0][5], "lenght");
+      $p = ($x.call = $get, $l[0][5].lenght);
       $.state = 6;
 
     case 6:
@@ -117,7 +117,7 @@ var $M = require("@effectful/debugger"),
       /*j*/
       0);
       $.goto = 13;
-      $p = $get($l[0][0][5], "length");
+      $p = ($x.call = $get, $l[0][0][5].length);
       $.state = 13;
 
     case 13:
@@ -146,7 +146,7 @@ var $M = require("@effectful/debugger"),
 
     case 17:
       $.goto = 18;
-      $p = $get($l[0][0][5], $l[0][0][2]);
+      $p = ($x.call = $get, $l[0][0][5][$l[0][0][2]]);
       $.state = 18;
 
     case 18:
@@ -159,7 +159,7 @@ var $M = require("@effectful/debugger"),
 
     case 19:
       $.goto = 20;
-      ($context.call = eff)($l[0][0][1]);
+      ($x.call = eff)($l[0][0][1]);
       $.state = 20;
 
     case 20:
@@ -200,7 +200,7 @@ var $M = require("@effectful/debugger"),
 
     case 27:
       $.goto = 28;
-      ($context.call = eff)(2);
+      ($x.call = eff)(2);
       $.state = 28;
 
     case 28:
@@ -241,7 +241,7 @@ var $M = require("@effectful/debugger"),
 
     case 35:
       $.goto = 36;
-      ($context.call = eff)(3);
+      ($x.call = eff)(3);
       $.state = 36;
 
     case 36:

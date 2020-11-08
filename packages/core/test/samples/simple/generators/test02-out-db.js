@@ -4,7 +4,7 @@ var $M = require("@effectful/debugger"),
     $iterErr = $M.iterErr,
     $iterFin = $M.iterFin,
     $iterNext = $M.iterNext,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retG = $M.retG,
     $unhandled = $M.unhandled,
@@ -424,12 +424,12 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = ($context.call = $l[0][5])();
+      $p = ($x.call = $l[0][5])();
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = $p)();
+      $p = ($x.call = $p)();
       $.state = 2;
 
     case 2:

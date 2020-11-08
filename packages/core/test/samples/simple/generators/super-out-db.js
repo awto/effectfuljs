@@ -1,6 +1,6 @@
 var $M = require("@effectful/debugger"),
     $awt = $M.awt,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retA = $M.retA,
     $unhandled = $M.unhandled,
@@ -85,13 +85,13 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = /*#__PURE__*/($context.call = $m$3($))();
+      $p = /*#__PURE__*/($x.call = $m$3($))();
       $.state = 1;
 
     case 1:
       $l[1] = $p;
       $.goto = 2;
-      $p = /*#__PURE__*/($context.call = $m$7($))($l[1]);
+      $p = /*#__PURE__*/($x.call = $m$7($))($l[1]);
       $.state = 2;
 
     case 2:
@@ -190,7 +190,7 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[2] = $m$8($);
       $.goto = 1;
-      ($context.call = $l[0][0][1])($l[2], $l[1]);
+      ($x.call = $l[0][0][1])($l[2], $l[1]);
       $.state = 1;
 
     case 1:

@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
@@ -36,28 +36,28 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[1] = 0;
       $.goto = 1;
-      ($context.call = eff0)();
+      ($x.call = eff0)();
       $.state = 1;
 
     case 1:
       $l[1] = $l[1] + 2;
       $.goto = 2;
-      ($context.call = effM)();
+      ($x.call = effM)();
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      ($context.call = effN)();
+      ($x.call = effN)();
       $.state = 3;
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = effI1)($l[1] = $l[1] + 1);
+      $p = ($x.call = effI1)($l[1] = $l[1] + 1);
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      $p = ($context.call = eff2)($p);
+      $p = ($x.call = eff2)($p);
       $.state = 5;
 
     case 5:
@@ -66,48 +66,48 @@ var $M = require("@effectful/debugger"),
       $l[1] = $1 + 1;
       $l[3] = $1;
       $.goto = 6;
-      $p = ($context.call = eff3)($l[1]);
+      $p = ($x.call = eff3)($l[1]);
       $.state = 6;
 
     case 6:
       $.goto = 7;
-      ($context.call = eff1)($l[2], $l[3], $p);
+      ($x.call = eff1)($l[2], $l[3], $p);
       $.state = 7;
 
     case 7:
       $.goto = 8;
-      $p = ($context.call = effN)();
+      $p = ($x.call = effN)();
       $.state = 8;
 
     case 8:
       $.goto = 9;
-      $p = ($context.call = effI)($p);
+      $p = ($x.call = effI)($p);
       $.state = 9;
 
     case 9:
       $.goto = 10;
-      ($context.call = effM)($p);
+      ($x.call = effM)($p);
       $.state = 10;
 
     case 10:
       $.goto = 11;
-      $p = ($context.call = effI)();
+      $p = ($x.call = effI)();
       $.state = 11;
 
     case 11:
       $l[2] = $p;
       $.goto = 12;
-      $p = ($context.call = effJ)();
+      $p = ($x.call = effJ)();
       $.state = 12;
 
     case 12:
       $.goto = 13;
-      ($context.call = eff4)($l[2], $p);
+      ($x.call = eff4)($l[2], $p);
       $.state = 13;
 
     case 13:
       $.goto = 15;
-      ($context.call = eff5)();
+      ($x.call = eff5)();
       continue;
 
     case 14:

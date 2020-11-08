@@ -1,14 +1,14 @@
 var $M = require("@effectful/debugger"),
     $awt = $M.awt,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retA = $M.retA,
     $unhandled = $M.unhandled,
     $unhandledA = $M.unhandledA,
     $brk = $M.brk,
+    $get = $M.get,
     $lset = $M.lset,
     $mcall = $M.mcall,
-    $get = $M.get,
     $set = $M.set,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -73,7 +73,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = $get($l[2], "prototype");
+      $p = ($x.call = $get, $l[2].prototype);
       $.state = 1;
 
     case 1:
@@ -88,7 +88,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = $get($l[1], "prototype");
+      $p = ($x.call = $get, $l[1].prototype);
       $.state = 4;
 
     case 4:
@@ -121,7 +121,7 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = /*#__PURE__*/($context.call = $m$3($))();
+      $p = /*#__PURE__*/($x.call = $m$3($))();
       $.state = 2;
 
     case 2:
@@ -134,7 +134,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = /*#__PURE__*/($context.call = $m$7($))($l[1]);
+      $p = /*#__PURE__*/($x.call = $m$7($))($l[1]);
       $.state = 4;
 
     case 4:
@@ -163,7 +163,7 @@ var $M = require("@effectful/debugger"),
       /*A*/
       $m$4($));
       $.goto = 1;
-      $p = $get($l[1], "prototype");
+      $p = ($x.call = $get, $l[1].prototype);
       $.state = 1;
 
     case 1:
@@ -275,12 +275,12 @@ var $M = require("@effectful/debugger"),
       /*B*/
       $m$8($));
       $.goto = 1;
-      ($context.call = $l[0][0][1])($l[2], $l[1]);
+      ($x.call = $l[0][0][1])($l[2], $l[1]);
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $p = $get($l[2], "prototype");
+      $p = ($x.call = $get, $l[2].prototype);
       $.state = 2;
 
     case 2:
@@ -368,12 +368,12 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = $get($l[0][1], "prototype");
+      $p = ($x.call = $get, $l[0][1].prototype);
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      $p = $get($p, "method");
+      $p = ($x.call = $get, $p.method);
       $.state = 3;
 
     case 3:
@@ -410,7 +410,7 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = $get($l[0][1], "method");
+      $p = ($x.call = $get, $l[0][1].method);
       $.state = 2;
 
     case 2:

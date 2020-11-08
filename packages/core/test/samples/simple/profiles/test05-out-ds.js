@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $brk = $M.brk,
@@ -62,7 +62,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      ($context.call = p1)();
+      ($x.call = p1)();
       $.state = 4;
 
     case 4:
@@ -72,7 +72,7 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      ($context.call = p2)();
+      ($x.call = p2)();
       $.state = 6;
 
     case 6:
@@ -92,7 +92,7 @@ var $M = require("@effectful/debugger"),
 
     case 9:
       $.goto = 10;
-      ($context.call = p2)();
+      ($x.call = p2)();
       $.state = 10;
 
     case 10:
@@ -102,7 +102,7 @@ var $M = require("@effectful/debugger"),
 
     case 11:
       $.goto = 12;
-      ($context.call = p3)();
+      ($x.call = p3)();
       $.state = 12;
 
     case 12:
@@ -140,7 +140,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      ($context.call = e1)();
+      ($x.call = e1)();
       $.state = 4;
 
     case 4:
@@ -150,7 +150,7 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      ($context.call = e2)();
+      ($x.call = e2)();
       $.state = 6;
 
     case 6:
@@ -178,7 +178,7 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      ($context.call = p4)();
+      ($x.call = p4)();
       $.state = 2;
 
     case 2:
@@ -188,7 +188,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      ($context.call = p5)();
+      ($x.call = p5)();
       $.state = 4;
 
     case 4:
@@ -198,12 +198,12 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      $p = ($context.call = e1)();
+      $p = ($x.call = e1)();
       $.state = 6;
 
     case 6:
       $.goto = 7;
-      ($context.call = M)($p);
+      ($x.call = M)($p);
       $.state = 7;
 
     case 7:
@@ -213,12 +213,12 @@ var $M = require("@effectful/debugger"),
 
     case 8:
       $.goto = 9;
-      $p = ($context.call = e)(2);
+      $p = ($x.call = e)(2);
       $.state = 9;
 
     case 9:
       $.goto = 10;
-      ($context.call = M)($p);
+      ($x.call = M)($p);
       $.state = 10;
 
     case 10:

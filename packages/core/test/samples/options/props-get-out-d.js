@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $brk = $M.brk,
@@ -85,12 +85,12 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = $l[1])();
+      $p = ($x.call = $l[1])();
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      ($context.call = che)($l[0][1] = $p);
+      ($x.call = che)($l[0][1] = $p);
       $.state = 5;
 
     case 5:
@@ -100,7 +100,7 @@ var $M = require("@effectful/debugger"),
 
     case 6:
       $.goto = 7;
-      ($context.call = me)();
+      ($x.call = me)();
       $.state = 7;
 
     case 7:
@@ -126,7 +126,7 @@ var $M = require("@effectful/debugger"),
 
     case 10:
       $.goto = 11;
-      ($context.call = be)();
+      ($x.call = be)();
       $.state = 11;
 
     case 11:
@@ -144,7 +144,7 @@ var $M = require("@effectful/debugger"),
 
     case 13:
       $.goto = 14;
-      $p = ($context.call = c_fun)("a");
+      $p = ($x.call = c_fun)("a");
       $.state = 14;
 
     case 14:
@@ -155,23 +155,23 @@ var $M = require("@effectful/debugger"),
     case 15:
       $l[4] = $p;
       $.goto = 16;
-      $p = ($context.call = d_fun)("c");
+      $p = ($x.call = d_fun)("c");
       $.state = 16;
 
     case 16:
       $l[5] = $p;
       $.goto = 17;
-      $p = new ($context.call = process.D)("e");
+      $p = new ($x.call = process.D)("e");
       $.state = 17;
 
     case 17:
       $.goto = 18;
-      $p = ($context.call = $l[4])($l[5], "d", $p);
+      $p = ($x.call = $l[4])($l[5], "d", $p);
       $.state = 18;
 
     case 18:
       $.goto = 19;
-      $p = ($context.call = a_fun)($p);
+      $p = ($x.call = a_fun)($p);
       $.state = 19;
 
     case 19:
@@ -213,13 +213,13 @@ var $M = require("@effectful/debugger"),
 
     case 25:
       $.goto = 26;
-      $p = ($context.call = $l[1])();
+      $p = ($x.call = $l[1])();
       $.state = 26;
 
     case 26:
       $l[4] = $p;
       $.goto = 27;
-      $p = ($context.call = $l[0][1])();
+      $p = ($x.call = $l[0][1])();
       $.state = 27;
 
     case 27:

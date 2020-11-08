@@ -1,11 +1,12 @@
 var $M = require("@effectful/debugger"),
     $yld = $M.yld,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retG = $M.retG,
     $unhandled = $M.unhandled,
     $unhandledG = $M.unhandledG,
     $brk = $M.brk,
+    $force = $M.force,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
@@ -24,7 +25,7 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = ($context.moduleId = require.resolve("@effectful/generators"), $M.force(require("@effectful/generators")));
+      $p = ($x.moduleId = require.resolve("@effectful/generators"), $force(require("@effectful/generators")));
       $.state = 2;
 
     case 2:

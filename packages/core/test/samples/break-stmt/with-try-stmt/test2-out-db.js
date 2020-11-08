@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
@@ -44,7 +44,7 @@ var $M = require("@effectful/debugger"),
       $l[1] = $.error;
       $.error = void 0;
       $.goto = 4;
-      ($context.call = eff)(3);
+      ($x.call = eff)(3);
       $.state = 4;
 
     case 4:

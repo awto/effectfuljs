@@ -5,16 +5,17 @@ var $M = require("@effectful/debugger"),
     $iterErr = $M.iterErr,
     $iterFin = $M.iterFin,
     $iterNext = $M.iterNext,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retG = $M.retG,
     $unhandled = $M.unhandled,
     $unhandledG = $M.unhandledG,
     $raise = $M.raise,
     $brk = $M.brk,
+    $force = $M.force,
+    $get = $M.get,
     $lset = $M.lset,
     $mcall = $M.mcall,
-    $get = $M.get,
     $set = $M.set,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -57,12 +58,12 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = ($context.moduleId = require.resolve("@effectful/es"), $M.force(require("@effectful/es")));
+      $p = ($x.moduleId = require.resolve("@effectful/es"), $force(require("@effectful/es")));
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      $p = ($context.call = $l[3])($p);
+      $p = ($x.call = $l[3])($p);
       $.state = 3;
 
     case 3:
@@ -100,7 +101,7 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $p = new ($context.call = WeakMap)();
+      $p = new ($x.call = WeakMap)();
       $.state = 3;
 
     case 3:
@@ -159,7 +160,7 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = $get($l[1], "__esModule");
+      $p = ($x.call = $get, $l[1].__esModule);
       $.state = 2;
 
     case 2:
@@ -206,7 +207,7 @@ var $M = require("@effectful/debugger"),
 
     case 8:
       $.goto = 9;
-      $p = ($context.call = $l[0][2])();
+      $p = ($x.call = $l[0][2])();
       $.state = 9;
 
     case 9:
@@ -254,7 +255,7 @@ var $M = require("@effectful/debugger"),
       /*newObj*/
       {});
       $.goto = 16;
-      $p = $get(Object, "defineProperty");
+      $p = ($x.call = $get, Object.defineProperty);
       $.state = 16;
 
     case 16:
@@ -269,7 +270,7 @@ var $M = require("@effectful/debugger"),
 
     case 17:
       $.goto = 18;
-      $p = $get(Object, "getOwnPropertyDescriptor");
+      $p = ($x.call = $get, Object.getOwnPropertyDescriptor);
       $.state = 18;
 
     case 18:
@@ -293,7 +294,7 @@ var $M = require("@effectful/debugger"),
       $.state = 22;
 
     case 22:
-      $context.call = $l[1].next;
+      $x.call = $l[1].next;
       $.goto = 23;
       $p = $l[1].next();
       $.state = 23;
@@ -316,12 +317,12 @@ var $M = require("@effectful/debugger"),
       /*key*/
       $p.value);
       $.goto = 26;
-      $p = $get(Object, "prototype");
+      $p = ($x.call = $get, Object.prototype);
       $.state = 26;
 
     case 26:
       $.goto = 27;
-      $p = $get($p, "hasOwnProperty");
+      $p = ($x.call = $get, $p.hasOwnProperty);
       $.state = 27;
 
     case 27:
@@ -369,7 +370,7 @@ var $M = require("@effectful/debugger"),
 
     case 33:
       $.goto = 34;
-      $p = $get($l[0][6], "get");
+      $p = ($x.call = $get, $l[0][6].get);
       $.state = 34;
 
     case 34:
@@ -388,7 +389,7 @@ var $M = require("@effectful/debugger"),
 
     case 36:
       $.goto = 37;
-      $p = $get($l[0][6], "set");
+      $p = ($x.call = $get, $l[0][6].set);
       $.state = 37;
 
     case 37:
@@ -415,7 +416,7 @@ var $M = require("@effectful/debugger"),
 
     case 41:
       $.goto = 42;
-      $p = $get($l[0][1], $l[0][5]);
+      $p = ($x.call = $get, $l[0][1][$l[0][5]]);
       $.state = 42;
 
     case 42:

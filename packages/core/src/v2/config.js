@@ -28,6 +28,7 @@ Object.assign(config, {
   // neglects possible side effects of `next` getters
   expLooseNext: true,
   expInlineCalls: false,
+  inlineImplicitOps: true,
   expGlobalsEnv: false,
   moduleParams: null,
   switchFallthrough: true,

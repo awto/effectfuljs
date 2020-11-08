@@ -7,6 +7,9 @@ import * as path from "path";
 
 const { Tag, append, num, insertAfter, insertBefore, arr, node } = Kit;
 
+export const forceSym = Scope.sysSym("force");
+export const dynImportSym = Scope.sysSym("dynImport");
+
 function needsResult(doc) {
   switch (doc.pos) {
     case Tag.update:
@@ -150,12 +153,19 @@ export function setters() {
   const opSym = Scope.sysSym("set");
   const opLocSym = Scope.sysSym("lset");
   const opGlobSym = Scope.sysSym("gset");
+  const { staticBundler } = config;
   for (
     let i = file.nextAssignmentExpression;
     i !== file;
     i = i.nextAssignmentExpression
   ) {
     const arg = i.firstChild;
+    if (
+      staticBundler &&
+      arg.type === Tag.Identifier &&
+      arg.sym === Scope.__webpack_public_path__Sym
+    )
+      continue;
     const rarg = arg.nextSibling;
     Kit.detach(arg);
     Kit.detach(rarg);
@@ -163,10 +173,12 @@ export function setters() {
   }
 }
 
+const getSym = Scope.sysSym("get");
+const hasSym = Scope.sysSym("has");
+
 export function implicitCalls() {
   const file = Ctx.root;
-  const getSym = Scope.sysSym("get");
-  const hasSym = Scope.sysSym("has");
+  const inline = config.inlineImplicitOps;
   for (
     let i = file.nextDeleteExpression;
     i !== file;
@@ -188,9 +200,13 @@ export function implicitCalls() {
   ) {
     const obj = i.firstChild;
     const prop = obj.nextSibling;
+    // supporting process.env.??? replacements hack
+    if (obj.type === Tag.Identifier && obj.sym === Scope.processSym) continue;
+    i.eff = true;
+    if (inline) continue;
+    const sym = i.type === Tag.MemberExpression ? getSym : hasSym;
     Kit.detach(obj);
     Kit.detach(prop);
-    const sym = i.type === Tag.MemberExpression ? getSym : hasSym;
     i.type = Tag.CallExpression;
     Kit.append(i, Scope.sysId(Tag.callee, sym));
     const args = Kit.append(i, Kit.arr(Tag.arguments));
@@ -202,7 +218,26 @@ export function implicitCalls() {
     }
     Kit.append(args, obj);
     Kit.append(args, prop);
-    i.eff = true;
+  }
+}
+
+export function implicitCallsInlined() {
+  const file = Ctx.root;
+  for (
+    let i = file.nextGetterExpression;
+    i !== file;
+    i = i.nextGetterExpression
+  ) {
+    if (!i.eff) continue;
+    const sym = i.type === Tag.MemberExpression ? getSym : hasSym;
+    const seq = node(i.pos, Tag.SequenceExpression);
+    Scope.replaceRhs(i, seq);
+    const exprs = append(seq, arr(Tag.expressions));
+    const assign = append(exprs, Kit.assign(Tag.push));
+    append(assign, Scope.sysMemExpr(Tag.left, Scope.contextSym, "call"));
+    append(assign, Scope.sysId(Tag.right, sym));
+    append(exprs, i);
+    i.pos = Tag.push;
   }
 }
 
@@ -300,13 +335,20 @@ export function methodCalls() {
 /** replaces `a(...args)` with `(context.call = a)(...args)` */
 export function assignCall() {
   const { root } = Ctx;
-  const { nsSym, ctxSym } = root;
+  const { ctxSym } = root;
   const aliases = config.moduleAliases || {};
   const relAlias = aliases["."];
   const opSym = Scope.contextSym;
   for (let i = root.nextCallExpression; i !== root; i = i.nextCallExpression) {
     const callee = i.firstChild;
-    if (callee.type === Tag.Import) continue;
+    if (callee.type === Tag.Import) {
+      const wrap = node(Tag.push, Tag.CallExpression);
+      append(wrap, Scope.sysId(Tag.callee, dynImportSym));
+      Scope.replaceRhs(i, wrap);
+      i.pos = Tag.push;
+      Kit.append(append(wrap, arr(Tag.arguments)), i);
+      continue;
+    }
     let calleeObj;
     if (callee.type === Tag.MemberExpression) {
       calleeObj = callee.firstChild;
@@ -352,7 +394,8 @@ export function assignCall() {
         insertAfter(
           append(
             append(exprs, node(Tag.push, Tag.CallExpression)),
-            Kit.memExpr(Tag.callee, nsSym, "force")
+            // Kit.memExpr(Tag.callee, nsSym, "force")
+            Scope.sysId(Tag.callee, forceSym)
           ),
           arr(Tag.arguments)
         ),

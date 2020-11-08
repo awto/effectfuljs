@@ -5,7 +5,7 @@ var $M = require("@effectful/debugger"),
     $iterErr = $M.iterErr,
     $iterFin = $M.iterFin,
     $iterNext = $M.iterNext,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retA = $M.retA,
     $retG = $M.retG,
@@ -14,9 +14,9 @@ var $M = require("@effectful/debugger"),
     $unhandledG = $M.unhandledG,
     $raise = $M.raise,
     $brk = $M.brk,
+    $get = $M.get,
     $lset = $M.lset,
     $mcall = $M.mcall,
-    $get = $M.get,
     $set = $M.set,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -127,7 +127,7 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      $p = /*#__PURE__*/($context.call = $m$10($))();
+      $p = /*#__PURE__*/($x.call = $m$10($))();
       $.state = 6;
 
     case 6:
@@ -188,7 +188,7 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      $p = ($context.call = some)($lset($l, 1,
+      $p = ($x.call = some)($lset($l, 1,
       /*i*/
       $l[1] + 2), $l[2]);
       $.state = 6;
@@ -608,7 +608,7 @@ var $M = require("@effectful/debugger"),
 
     case 21:
       $.goto = 22;
-      $p = ($context.call = a2)();
+      $p = ($x.call = a2)();
       $.state = 22;
 
     case 22:
@@ -798,7 +798,7 @@ var $M = require("@effectful/debugger"),
     case 1:
       $l = $.$ = [$l, void 0, void 0, void 0, void 0, void 0];
       $.goto = 2;
-      $p = ($context.call = $l[0][0][2])();
+      $p = ($x.call = $l[0][0][2])();
       $.state = 2;
 
     case 2:
@@ -819,7 +819,7 @@ var $M = require("@effectful/debugger"),
       $.state = 6;
 
     case 6:
-      $context.call = $l[3].next;
+      $x.call = $l[3].next;
       $.goto = 7;
       $p = $l[3].next();
       $.state = 7;
@@ -1002,7 +1002,7 @@ var $M = require("@effectful/debugger"),
       /*i*/
       $1 + 1);
       $.goto = 10;
-      $p = new ($context.call = Error)(`AAAAAAAAA${$1}`);
+      $p = new ($x.call = Error)(`AAAAAAAAA${$1}`);
       $.state = 10;
 
     case 10:
@@ -1379,7 +1379,7 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $p = $get($l[1], "prototype");
+      $p = ($x.call = $get, $l[1].prototype);
       $.state = 3;
 
     case 3:

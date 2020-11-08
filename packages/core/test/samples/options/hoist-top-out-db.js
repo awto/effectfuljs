@@ -1,11 +1,12 @@
 var $M = require("@effectful/debugger"),
     $awt = $M.awt,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retA = $M.retA,
     $unhandled = $M.unhandled,
     $unhandledA = $M.unhandledA,
     $raise = $M.raise,
+    $force = $M.force,
     $mcall = $M.mcall,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -89,12 +90,12 @@ var $M = require("@effectful/debugger"),
       module.exports.__esModule = true;
       module.exports.a = void 0;
       $.goto = 1;
-      $p = ($context.moduleId = require.resolve("some"), $M.force(require("some")));
+      $p = ($x.moduleId = require.resolve("some"), $force(require("some")));
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = $l[2])($p);
+      $p = ($x.call = $l[2])($p);
       $.state = 2;
 
     case 2:
@@ -105,7 +106,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = $l[3])($l[1].default, 2);
+      $p = ($x.call = $l[3])($l[1].default, 2);
       $.state = 4;
 
     case 4:
@@ -114,14 +115,14 @@ var $M = require("@effectful/debugger"),
       module.exports.a = $l[10];
       $l[17] = $m$12($);
       $.goto = 5;
-      $p = /*#__PURE__*/($context.call = $m$9($))();
+      $p = /*#__PURE__*/($x.call = $m$9($))();
       $.state = 5;
 
     case 5:
       $l[12] = $p;
       $l[13] = $l[10];
       $.goto = 6;
-      $p = ($context.call = $l[3])($l[12], 3);
+      $p = ($x.call = $l[3])($l[12], 3);
       $.state = 6;
 
     case 6:
@@ -186,7 +187,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = ($context.call = $l[0][8])($l[1]);
+      $p = ($x.call = $l[0][8])($l[1]);
       $.state = 1;
 
     case 1:
@@ -196,7 +197,7 @@ var $M = require("@effectful/debugger"),
         $.state = 2;
       } else {
         $.goto = 7;
-        $p = ($context.call = $l[0][7])($l[1], $l[2]);
+        $p = ($x.call = $l[0][7])($l[1], $l[2]);
         continue;
       }
 
@@ -205,7 +206,7 @@ var $M = require("@effectful/debugger"),
         $.state = 3;
       } else {
         $.goto = 6;
-        $p = ($context.call = $l[0][5])($l[1], $l[2]);
+        $p = ($x.call = $l[0][5])($l[1], $l[2]);
         continue;
       }
 
@@ -214,7 +215,7 @@ var $M = require("@effectful/debugger"),
         $.state = 4;
       } else {
         $.goto = 5;
-        $p = ($context.call = $l[0][4])();
+        $p = ($x.call = $l[0][4])();
         continue;
       }
 
@@ -252,7 +253,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = new ($context.call = TypeError)("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+      $p = new ($x.call = TypeError)("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
       $.state = 1;
 
     case 1:
@@ -285,7 +286,7 @@ var $M = require("@effectful/debugger"),
     case 1:
       if (typeof $l[1] === "string") {
         $.goto = 14;
-        $p = ($context.call = $l[0][6])($l[1], $l[2]);
+        $p = ($x.call = $l[0][6])($l[1], $l[2]);
         continue;
       } else {
         $.state = 2;
@@ -353,7 +354,7 @@ var $M = require("@effectful/debugger"),
     case 9:
       if ($l[4]) {
         $.goto = 11;
-        $p = ($context.call = $l[0][6])($l[1], $l[2]);
+        $p = ($x.call = $l[0][6])($l[1], $l[2]);
         continue;
       } else {
         $.state = 10;
@@ -419,7 +420,7 @@ var $M = require("@effectful/debugger"),
     case 2:
       $l[3] = 0;
       $.goto = 3;
-      $p = new ($context.call = Array)($l[2]);
+      $p = new ($x.call = Array)($l[2]);
       $.state = 3;
 
     case 3:
@@ -461,7 +462,7 @@ var $M = require("@effectful/debugger"),
       } else {
         $l[15] = Symbol.iterator;
         $.goto = 22;
-        $p = ($context.call = Object)($l[1]);
+        $p = ($x.call = Object)($l[1]);
         continue;
       }
 
@@ -791,12 +792,12 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = new ($context.call = $l[0][0][12])();
+      $p = new ($x.call = $l[0][0][12])();
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = eff_1)($p);
+      $p = ($x.call = eff_1)($p);
       $.state = 2;
 
     case 2:
@@ -805,7 +806,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = eff_2)($l[0][0][10], $l[0][0][13]);
+      $p = ($x.call = eff_2)($l[0][0][10], $l[0][0][13]);
       $.state = 4;
 
     case 4:

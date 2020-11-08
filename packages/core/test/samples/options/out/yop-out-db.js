@@ -1,7 +1,8 @@
 var $0M = require("@effectful/debugger"),
-    $0context = $0M.context,
+    $0x = $0M.context,
     $0ret = $0M.ret,
     $0unhandled = $0M.unhandled,
+    $0force = $0M.force,
     $0mcall = $0M.mcall,
     $0m = $0M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$0", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -62,30 +63,30 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      $0p = ($0context.moduleId = require.resolve("@effectfuljs/core"), $0M.force(require("@effectfuljs/core")));
+      $0p = ($0x.moduleId = require.resolve("@effectfuljs/core"), $0force(require("@effectfuljs/core")));
       $0.state = 1;
 
     case 1:
       M = $0p;
       $0.goto = 2;
-      $0p = ($0context.moduleId = require.resolve("Q"), $0M.force(require("Q")));
+      $0p = ($0x.moduleId = require.resolve("Q"), $0force(require("Q")));
       $0.state = 2;
 
     case 2:
       Q = $0p;
       $0.goto = 3;
-      $0p = ($0context.moduleId = require.resolve("@effectfuljs/promise"), $0M.force(require("@effectfuljs/promise")));
+      $0p = ($0x.moduleId = require.resolve("@effectfuljs/promise"), $0force(require("@effectfuljs/promise")));
       $0.state = 3;
 
     case 3:
       $0.goto = 4;
-      $0p = ($0context.call = $0p)(Q);
+      $0p = ($0x.call = $0p)(Q);
       $0.state = 4;
 
     case 4:
       QM = $0p;
       $0.goto = 6;
-      ($0context.call = describe)("yop", $0m$1($0));
+      ($0x.call = describe)("yop", $0m$1($0));
       continue;
 
     case 5:
@@ -103,17 +104,17 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      ($0context.call = it)("should yield fiber until promise is resolved", $0m$2($0));
+      ($0x.call = it)("should yield fiber until promise is resolved", $0m$2($0));
       $0.state = 1;
 
     case 1:
       $0.goto = 2;
-      ($0context.call = it)("should throw reasons from rejected promises into fiber", $0m$7($0));
+      ($0x.call = it)("should throw reasons from rejected promises into fiber", $0m$7($0));
       $0.state = 2;
 
     case 2:
       $0.goto = 4;
-      ($0context.call = it)("should work just fine with passed a value instead of a promise", $0m$14($0));
+      ($0x.call = it)("should work just fine with passed a value instead of a promise", $0m$14($0));
       continue;
 
     case 3:
@@ -165,12 +166,12 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      $0p = ($0context.call = $0l[0][2])(1, 2);
+      $0p = ($0x.call = $0l[0][2])(1, 2);
       $0.state = 1;
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.call = M)($0p);
+      $0p = ($0x.call = M)($0p);
       $0.state = 2;
 
     case 2:
@@ -202,7 +203,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.call = expect)($0l[0][1]);
+      $0p = ($0x.call = expect)($0l[0][1]);
       $0.state = 2;
 
     case 2:
@@ -212,7 +213,7 @@ var $0M = require("@effectful/debugger"),
 
     case 3:
       $0.goto = 4;
-      ($0context.call = $0l[0][0][1])();
+      ($0x.call = $0l[0][0][1])();
       $0.state = 4;
 
     case 4:
@@ -223,7 +224,7 @@ var $0M = require("@effectful/debugger"),
       $0l[2] = $0.error;
       $0.error = void 0;
       $0.goto = 4;
-      ($0context.call = $0l[0][0][1])($0l[2]);
+      ($0x.call = $0l[0][0][1])($0l[2]);
       continue;
 
     case 6:
@@ -356,12 +357,12 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      $0p = ($0context.call = $0l[0][0][2])();
+      $0p = ($0x.call = $0l[0][0][2])();
       $0.state = 1;
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.call = M)($0p);
+      $0p = ($0x.call = M)($0p);
       $0.state = 2;
 
     case 2:
@@ -397,7 +398,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.call = expect)($0l[1].message);
+      $0p = ($0x.call = expect)($0l[1].message);
       $0.state = 2;
 
     case 2:
@@ -407,7 +408,7 @@ var $0M = require("@effectful/debugger"),
 
     case 3:
       $0.goto = 4;
-      ($0context.call = $0l[0][0][0][1])();
+      ($0x.call = $0l[0][0][0][1])();
       $0.state = 4;
 
     case 4:
@@ -424,7 +425,7 @@ var $0M = require("@effectful/debugger"),
       $0l[2] = $0.error;
       $0.error = void 0;
       $0.goto = 4;
-      ($0context.call = $0l[0][0][0][1])($0l[2]);
+      ($0x.call = $0l[0][0][0][1])($0l[2]);
       continue;
 
     case 7:
@@ -454,12 +455,12 @@ var $0M = require("@effectful/debugger"),
     case 0:
       $0l[1] = $0l[0][0][0][1];
       $0.goto = 1;
-      $0p = new ($0context.call = Error)("yop should have thrown reason from rejected promise");
+      $0p = new ($0x.call = Error)("yop should have thrown reason from rejected promise");
       $0.state = 1;
 
     case 1:
       $0.goto = 3;
-      ($0context.call = $0l[1])($0p);
+      ($0x.call = $0l[1])($0p);
       continue;
 
     case 2:
@@ -506,7 +507,7 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      $0p = new ($0context.call = Error)("promise rejected");
+      $0p = new ($0x.call = Error)("promise rejected");
       $0.state = 1;
 
     case 1:
@@ -561,7 +562,7 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      $0p = ($0context.call = M)(1 + 2);
+      $0p = ($0x.call = M)(1 + 2);
       $0.state = 1;
 
     case 1:
@@ -593,7 +594,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.call = expect)($0l[0][1]);
+      $0p = ($0x.call = expect)($0l[0][1]);
       $0.state = 2;
 
     case 2:
@@ -603,7 +604,7 @@ var $0M = require("@effectful/debugger"),
 
     case 3:
       $0.goto = 4;
-      ($0context.call = $0l[0][0][1])();
+      ($0x.call = $0l[0][0][1])();
       $0.state = 4;
 
     case 4:
@@ -614,7 +615,7 @@ var $0M = require("@effectful/debugger"),
       $0l[2] = $0.error;
       $0.error = void 0;
       $0.goto = 4;
-      ($0context.call = $0l[0][0][1])($0l[2]);
+      ($0x.call = $0l[0][0][1])($0l[2]);
       continue;
 
     case 6:

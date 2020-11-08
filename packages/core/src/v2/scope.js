@@ -138,6 +138,7 @@ export function newSym(name) {
   const res = {
     name,
     orig: name,
+    alias: null,
     id: `${name}_${num}`,
     fieldName: null,
     strict: false,
@@ -195,7 +196,7 @@ export function id(pos, sym, scope) {
 }
 
 export function ensureUnique(sym) {
-  sym.name = Ctx.root.safePrefix + sym.orig;
+  sym.name = Ctx.root.safePrefix + (sym.alias || sym.orig);
 }
 
 /** injects functions constructors calls */
@@ -418,6 +419,8 @@ export const copyScopeSym = sysSym("copyScope");
 export const contextSym = sysSym("context");
 export const shiftPropSym = sysSym("shiftSym");
 export const callSym = sysSym("call");
+
+contextSym.alias = "x";
 
 export function tempSym(root, scope) {
   const sym = newSym();
@@ -771,6 +774,8 @@ export const unhandledSyms = {
 export const moduleSym = newSym("module");
 export const exportsSym = newSym("exports");
 export const raiseSym = sysSym("raise");
+export const processSym = newSym("process");
+export const __webpack_public_path__Sym = newSym("__webpack_public_path__");
 
 export const globals = [
   ["undefined", undefinedSym],
@@ -782,8 +787,9 @@ export const globals = [
   ["require", requireSym],
   ["module", moduleSym],
   ["exports", exportsSym],
-  ["process", newSym("process")],
-  ["window", newSym("window")]
+  ["process", processSym],
+  ["window", newSym("window")],
+  ["__webpack_public_path__", __webpack_public_path__Sym]
 ];
 
 function assignSym(root) {

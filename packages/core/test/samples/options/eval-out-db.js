@@ -1,5 +1,5 @@
 var $0M = require("@effectful/debugger"),
-    $0context = $0M.context,
+    $0x = $0M.context,
     $0ret = $0M.ret,
     $0unhandled = $0M.unhandled,
     $0evalAt = $0M.evalAt,
@@ -61,7 +61,7 @@ var $0M = require("@effectful/debugger"),
       $0l[3] = $0m$3($0);
       $0l[4] = $0m$4($0);
       $0.goto = 1;
-      $0p = ($0context.call = $0l[5])();
+      $0p = ($0x.call = $0l[5])();
       $0.state = 1;
 
     case 1:
@@ -97,7 +97,7 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      $0p = ($0context.call = $0l[1])($0l[6], $0l[0][0][4]);
+      $0p = ($0x.call = $0l[1])($0l[6], $0l[0][0][4]);
       $0.state = 1;
 
     case 1:
@@ -125,7 +125,7 @@ var $0M = require("@effectful/debugger"),
   for (;;) switch ($0.state = $0.goto) {
     case 0:
       $0.goto = 1;
-      $0p = ($0context.call = $0l[1])($0l[0][5], $0l[0][0][4]);
+      $0p = ($0x.call = $0l[1])($0l[0][5], $0l[0][0][4]);
       $0.state = 1;
 
     case 1:
@@ -149,7 +149,7 @@ var $0M = require("@effectful/debugger"),
     case 0:
       $0l[2] = $0m$5($0);
       $0.goto = 1;
-      $0p = ($0context.call = $0l[0][5])();
+      $0p = ($0x.call = $0l[0][5])();
       $0.state = 1;
 
     case 1:
@@ -184,7 +184,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.call = $0l[1])($0l[0][6], $0l[0][0][0][4]);
+      $0p = ($0x.call = $0l[1])($0l[0][6], $0l[0][0][0][4]);
       $0.state = 2;
 
     case 2:

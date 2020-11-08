@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $brk = $M.brk,
@@ -42,7 +42,7 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $p = ($context.call = eff)(1);
+      $p = ($x.call = eff)(1);
       $.state = 3;
 
     case 3:
@@ -67,7 +67,7 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      ($context.call = effB)(1);
+      ($x.call = effB)(1);
       $.state = 6;
 
     case 6:
@@ -87,7 +87,7 @@ var $M = require("@effectful/debugger"),
 
     case 9:
       $.goto = 10;
-      ($context.call = effB)(2);
+      ($x.call = effB)(2);
       $.state = 10;
 
     case 10:
@@ -102,7 +102,7 @@ var $M = require("@effectful/debugger"),
 
     case 12:
       $.goto = 7;
-      ($context.call = effB)(3);
+      ($x.call = effB)(3);
       continue;
 
     case 13:

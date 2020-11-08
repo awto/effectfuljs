@@ -1,11 +1,12 @@
 var $0M = require("@effectful/debugger"),
-    $0context = $0M.context,
+    $0x = $0M.context,
     $0ret = $0M.ret,
     $0unhandled = $0M.unhandled,
     $0brk = $0M.brk,
+    $0force = $0M.force,
+    $0get = $0M.get,
     $0lset = $0M.lset,
     $0mcall = $0M.mcall,
-    $0get = $0M.get,
     $0gset = $0M.gset,
     $0m = $0M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$0", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
@@ -71,7 +72,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.moduleId = require.resolve("@effectfuljs/core"), $0M.force(require("@effectfuljs/core")));
+      $0p = ($0x.moduleId = require.resolve("@effectfuljs/core"), $0force(require("@effectfuljs/core")));
       $0.state = 2;
 
     case 2:
@@ -82,7 +83,7 @@ var $0M = require("@effectful/debugger"),
 
     case 3:
       $0.goto = 4;
-      $0p = ($0context.moduleId = require.resolve("Q"), $0M.force(require("Q")));
+      $0p = ($0x.moduleId = require.resolve("Q"), $0force(require("Q")));
       $0.state = 4;
 
     case 4:
@@ -93,12 +94,12 @@ var $0M = require("@effectful/debugger"),
 
     case 5:
       $0.goto = 6;
-      $0p = ($0context.moduleId = require.resolve("@effectfuljs/promise"), $0M.force(require("@effectfuljs/promise")));
+      $0p = ($0x.moduleId = require.resolve("@effectfuljs/promise"), $0force(require("@effectfuljs/promise")));
       $0.state = 6;
 
     case 6:
       $0.goto = 7;
-      $0p = ($0context.call = $0p)(Q);
+      $0p = ($0x.call = $0p)(Q);
       $0.state = 7;
 
     case 7:
@@ -109,7 +110,7 @@ var $0M = require("@effectful/debugger"),
 
     case 8:
       $0.goto = 10;
-      ($0context.call = describe)("yop", $0m$1($0));
+      ($0x.call = describe)("yop", $0m$1($0));
       continue;
 
     case 9:
@@ -132,7 +133,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      ($0context.call = it)("should yield fiber until promise is resolved", $0m$2($0));
+      ($0x.call = it)("should yield fiber until promise is resolved", $0m$2($0));
       $0.state = 2;
 
     case 2:
@@ -142,7 +143,7 @@ var $0M = require("@effectful/debugger"),
 
     case 3:
       $0.goto = 4;
-      ($0context.call = it)("should throw reasons from rejected promises into fiber", $0m$7($0));
+      ($0x.call = it)("should throw reasons from rejected promises into fiber", $0m$7($0));
       $0.state = 4;
 
     case 4:
@@ -152,7 +153,7 @@ var $0M = require("@effectful/debugger"),
 
     case 5:
       $0.goto = 6;
-      ($0context.call = it)("should work just fine with passed a value instead of a promise", $0m$14($0));
+      ($0x.call = it)("should work just fine with passed a value instead of a promise", $0m$14($0));
       $0.state = 6;
 
     case 6:
@@ -183,7 +184,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = $0get($0l[1], "async");
+      $0p = ($0x.call = $0get, $0l[1].async);
       $0.state = 2;
 
     case 2:
@@ -250,12 +251,12 @@ var $0M = require("@effectful/debugger"),
 
     case 2:
       $0.goto = 3;
-      $0p = ($0context.call = $0l[0][2])(1, 2);
+      $0p = ($0x.call = $0l[0][2])(1, 2);
       $0.state = 3;
 
     case 3:
       $0.goto = 4;
-      $0p = ($0context.call = M)($0p);
+      $0p = ($0x.call = M)($0p);
       $0.state = 4;
 
     case 4:
@@ -301,12 +302,12 @@ var $0M = require("@effectful/debugger"),
 
     case 3:
       $0.goto = 4;
-      $0p = ($0context.call = expect)($0l[0][1]);
+      $0p = ($0x.call = expect)($0l[0][1]);
       $0.state = 4;
 
     case 4:
       $0.goto = 5;
-      $0p = $0get($0p, "to");
+      $0p = ($0x.call = $0get, $0p.to);
       $0.state = 5;
 
     case 5:
@@ -321,7 +322,7 @@ var $0M = require("@effectful/debugger"),
 
     case 7:
       $0.goto = 8;
-      ($0context.call = $0l[0][0][1])();
+      ($0x.call = $0l[0][0][1])();
       $0.state = 8;
 
     case 8:
@@ -345,7 +346,7 @@ var $0M = require("@effectful/debugger"),
 
     case 11:
       $0.goto = 12;
-      ($0context.call = $0l[0][0][1])($0l[2]);
+      ($0x.call = $0l[0][0][1])($0l[2]);
       $0.state = 12;
 
     case 12:
@@ -416,7 +417,7 @@ var $0M = require("@effectful/debugger"),
 
     case 6:
       $0.goto = 7;
-      $0p = $0get($0l[3], "promise");
+      $0p = ($0x.call = $0get, $0l[3].promise);
       $0.state = 7;
 
     case 7:
@@ -475,7 +476,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = $0get($0l[1], "async");
+      $0p = ($0x.call = $0get, $0l[1].async);
       $0.state = 2;
 
     case 2:
@@ -565,12 +566,12 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = ($0context.call = $0l[0][0][2])();
+      $0p = ($0x.call = $0l[0][0][2])();
       $0.state = 2;
 
     case 2:
       $0.goto = 3;
-      $0p = ($0context.call = M)($0p);
+      $0p = ($0x.call = M)($0p);
       $0.state = 3;
 
     case 3:
@@ -613,17 +614,17 @@ var $0M = require("@effectful/debugger"),
 
     case 2:
       $0.goto = 3;
-      $0p = $0get($0l[1], "message");
+      $0p = ($0x.call = $0get, $0l[1].message);
       $0.state = 3;
 
     case 3:
       $0.goto = 4;
-      $0p = ($0context.call = expect)($0p);
+      $0p = ($0x.call = expect)($0p);
       $0.state = 4;
 
     case 4:
       $0.goto = 5;
-      $0p = $0get($0p, "to");
+      $0p = ($0x.call = $0get, $0p.to);
       $0.state = 5;
 
     case 5:
@@ -638,7 +639,7 @@ var $0M = require("@effectful/debugger"),
 
     case 7:
       $0.goto = 8;
-      ($0context.call = $0l[0][0][0][1])();
+      ($0x.call = $0l[0][0][0][1])();
       $0.state = 8;
 
     case 8:
@@ -672,7 +673,7 @@ var $0M = require("@effectful/debugger"),
 
     case 13:
       $0.goto = 14;
-      ($0context.call = $0l[0][0][0][1])($0l[2]);
+      ($0x.call = $0l[0][0][0][1])($0l[2]);
       $0.state = 14;
 
     case 14:
@@ -717,12 +718,12 @@ var $0M = require("@effectful/debugger"),
     case 1:
       $0l[1] = $0l[0][0][0][1];
       $0.goto = 2;
-      $0p = new ($0context.call = Error)("yop should have thrown reason from rejected promise");
+      $0p = new ($0x.call = Error)("yop should have thrown reason from rejected promise");
       $0.state = 2;
 
     case 2:
       $0.goto = 3;
-      ($0context.call = $0l[1])($0p);
+      ($0x.call = $0l[1])($0p);
       $0.state = 3;
 
     case 3:
@@ -778,7 +779,7 @@ var $0M = require("@effectful/debugger"),
 
     case 6:
       $0.goto = 7;
-      $0p = $0get($0l[1], "promise");
+      $0p = ($0x.call = $0get, $0l[1].promise);
       $0.state = 7;
 
     case 7:
@@ -806,7 +807,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = new ($0context.call = Error)("promise rejected");
+      $0p = new ($0x.call = Error)("promise rejected");
       $0.state = 2;
 
     case 2:
@@ -839,7 +840,7 @@ var $0M = require("@effectful/debugger"),
 
     case 1:
       $0.goto = 2;
-      $0p = $0get($0l[1], "async");
+      $0p = ($0x.call = $0get, $0l[1].async);
       $0.state = 2;
 
     case 2:
@@ -906,7 +907,7 @@ var $0M = require("@effectful/debugger"),
 
     case 2:
       $0.goto = 3;
-      $0p = ($0context.call = M)(1 + 2);
+      $0p = ($0x.call = M)(1 + 2);
       $0.state = 3;
 
     case 3:
@@ -952,12 +953,12 @@ var $0M = require("@effectful/debugger"),
 
     case 3:
       $0.goto = 4;
-      $0p = ($0context.call = expect)($0l[0][1]);
+      $0p = ($0x.call = expect)($0l[0][1]);
       $0.state = 4;
 
     case 4:
       $0.goto = 5;
-      $0p = $0get($0p, "to");
+      $0p = ($0x.call = $0get, $0p.to);
       $0.state = 5;
 
     case 5:
@@ -972,7 +973,7 @@ var $0M = require("@effectful/debugger"),
 
     case 7:
       $0.goto = 8;
-      ($0context.call = $0l[0][0][1])();
+      ($0x.call = $0l[0][0][1])();
       $0.state = 8;
 
     case 8:
@@ -996,7 +997,7 @@ var $0M = require("@effectful/debugger"),
 
     case 11:
       $0.goto = 12;
-      ($0context.call = $0l[0][0][1])($0l[2]);
+      ($0x.call = $0l[0][0][1])($0l[2]);
       $0.state = 12;
 
     case 12:

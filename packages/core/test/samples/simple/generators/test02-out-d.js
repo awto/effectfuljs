@@ -4,7 +4,7 @@ var $M = require("@effectful/debugger"),
     $iterErr = $M.iterErr,
     $iterFin = $M.iterFin,
     $iterNext = $M.iterNext,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retG = $M.retG,
     $unhandled = $M.unhandled,
@@ -602,12 +602,12 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = $l[0][5])();
+      $p = ($x.call = $l[0][5])();
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      $p = ($context.call = $p)();
+      $p = ($x.call = $p)();
       $.state = 3;
 
     case 3:

@@ -1,11 +1,12 @@
 var $M = require("@effectful/debugger"),
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $raise = $M.raise,
     $brk = $M.brk,
+    $get = $M.get,
     $lset = $M.lset,
     $mcall = $M.mcall,
-    $get = $M.get,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
   __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
@@ -73,7 +74,7 @@ var $M = require("@effectful/debugger"),
       /*j*/
       0);
       $.goto = 6;
-      $p = $get($l[0][4], "length");
+      $p = ($x.call = $get, $l[0][4].length);
       $.state = 6;
 
     case 6:
@@ -102,7 +103,7 @@ var $M = require("@effectful/debugger"),
 
     case 10:
       $.goto = 11;
-      $p = $get($l[0][4], $l[0][2]);
+      $p = ($x.call = $get, $l[0][4][$l[0][2]]);
       $.state = 11;
 
     case 11:

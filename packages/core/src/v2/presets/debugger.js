@@ -25,6 +25,7 @@ export default function debuggerTransform(ast) {
   if (config.timeTravel) {
     Operations.setters();
     Operations.deleters();
+    if (config.inlineImplicitOps) Operations.implicitCallsInlined();
   }
   Optimization.prepare();
   if (!config.expInlineCalls) Operations.methodCalls();

@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $mcall = $M.mcall,
@@ -44,12 +44,12 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      ($context.call = p1)();
+      ($x.call = p1)();
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      ($context.call = p2)();
+      ($x.call = p2)();
       $.state = 3;
 
     case 3:
@@ -59,12 +59,12 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $.goto = 5;
-      ($context.call = p2)();
+      ($x.call = p2)();
       $.state = 5;
 
     case 5:
       $.goto = 7;
-      ($context.call = p3)();
+      ($x.call = p3)();
       continue;
 
     case 6:
@@ -87,12 +87,12 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      ($context.call = e1)();
+      ($x.call = e1)();
       $.state = 2;
 
     case 2:
       $.goto = 4;
-      ($context.call = e2)();
+      ($x.call = e2)();
       continue;
 
     case 3:
@@ -110,32 +110,32 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      ($context.call = p4)();
+      ($x.call = p4)();
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      ($context.call = p5)();
+      ($x.call = p5)();
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      $p = ($context.call = e1)();
+      $p = ($x.call = e1)();
       $.state = 3;
 
     case 3:
       $.goto = 4;
-      ($context.call = M)($p);
+      ($x.call = M)($p);
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      $p = ($context.call = e)(2);
+      $p = ($x.call = e)(2);
       $.state = 5;
 
     case 5:
       $.goto = 7;
-      ($context.call = M)($p);
+      ($x.call = M)($p);
       continue;
 
     case 6:

@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $m = $M.module("file.js", null, typeof module === "undefined" ? null : module, null, "$", {
@@ -41,26 +41,26 @@ var $M = require("@effectful/debugger"),
       $l[1] = 0;
       $l[2] = 0;
       $.goto = 1;
-      ($context.call = eff1)($l[1], $l[2]);
+      ($x.call = eff1)($l[1], $l[2]);
       $.state = 1;
 
     case 1:
       $l[1] = $l[1] + 1;
       $l[2] = $l[2] + 1;
       $.goto = 2;
-      ($context.call = $m$2($))($l[1], $l[2]);
+      ($x.call = $m$2($))($l[1], $l[2]);
       $.state = 2;
 
     case 2:
       $l[1] = $l[1] + 1;
       $l[2] = $l[2] + 1;
       $.goto = 3;
-      ($context.call = eff5)($l[1], $l[2]);
+      ($x.call = eff5)($l[1], $l[2]);
       $.state = 3;
 
     case 3:
       $.goto = 5;
-      ($context.call = eff6)($l[1], $l[2]);
+      ($x.call = eff6)($l[1], $l[2]);
       continue;
 
     case 4:
@@ -79,7 +79,7 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[3] = 0;
       $.goto = 1;
-      ($context.call = eff2)($l[1], $l[0][2], $l[2], $l[3]);
+      ($x.call = eff2)($l[1], $l[0][2], $l[2], $l[3]);
       $.state = 1;
 
     case 1:
@@ -88,12 +88,12 @@ var $M = require("@effectful/debugger"),
       $l[2] = $l[2] + 1;
       $l[3] = $l[3] + 1;
       $.goto = 2;
-      ($context.call = eff3)($l[1], $l[0][2], $l[2], $l[3]);
+      ($x.call = eff3)($l[1], $l[0][2], $l[2], $l[3]);
       $.state = 2;
 
     case 2:
       $.goto = 4;
-      ($context.call = eff4)($l[1], $l[0][2], $l[2], $l[3]);
+      ($x.call = eff4)($l[1], $l[0][2], $l[2], $l[3]);
       continue;
 
     case 3:

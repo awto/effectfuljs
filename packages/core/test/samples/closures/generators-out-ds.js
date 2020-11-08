@@ -1,6 +1,6 @@
 var $M = require("@effectful/debugger"),
     $yld = $M.yld,
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $retG = $M.retG,
     $unhandled = $M.unhandled,
@@ -253,7 +253,7 @@ var $M = require("@effectful/debugger"),
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = $l[0][0][2])($l[0][0][0][1], $l[0][0][0][0][2], $l[0][0][0][0][0][1], $l[1], $l[0][0][1], $l[0][1]);
+      $p = ($x.call = $l[0][0][2])($l[0][0][0][1], $l[0][0][0][0][2], $l[0][0][0][0][0][1], $l[1], $l[0][0][1], $l[0][1]);
       $.state = 2;
 
     case 2:

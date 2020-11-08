@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $mcall = $M.mcall,
@@ -94,7 +94,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = ($context.call = eff)($l[1]);
+      $p = ($x.call = eff)($l[1]);
       $.state = 1;
 
     case 1:
@@ -133,7 +133,7 @@ var $M = require("@effectful/debugger"),
 
     case 7:
       $.goto = 8;
-      $p = new ($context.call = A)({
+      $p = new ($x.call = A)({
         a: $l[1]
       });
       $.state = 8;
@@ -158,12 +158,12 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      ($context.call = eff)($l[1]);
+      ($x.call = eff)($l[1]);
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = eff)($l[1]);
+      $p = ($x.call = eff)($l[1]);
       $.state = 2;
 
     case 2:
@@ -202,7 +202,7 @@ var $M = require("@effectful/debugger"),
 
     case 8:
       $.goto = 9;
-      $p = new ($context.call = A)({
+      $p = new ($x.call = A)({
         a: $l[1]
       });
       $.state = 9;
@@ -227,12 +227,12 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      ($context.call = eff)($l[1]);
+      ($x.call = eff)($l[1]);
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = eff)($l[1]);
+      $p = ($x.call = eff)($l[1]);
       $.state = 2;
 
     case 2:
@@ -264,7 +264,7 @@ var $M = require("@effectful/debugger"),
 
     case 7:
       $.goto = 8;
-      $p = new ($context.call = A)({
+      $p = new ($x.call = A)({
         a: $l[1]
       });
       $.state = 8;
@@ -290,12 +290,12 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[1] = B.B;
       $.goto = 1;
-      $p = new ($context.call = A)(a);
+      $p = new ($x.call = A)(a);
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      new ($context.call = $l[1])($p);
+      new ($x.call = $l[1])($p);
       $.state = 2;
 
     case 2:
@@ -307,17 +307,17 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = eff)();
+      $p = ($x.call = eff)();
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      new ($context.call = $p.Z)(b);
+      new ($x.call = $p.Z)(b);
       $.state = 5;
 
     case 5:
       $.goto = 7;
-      new ($context.call = {
+      new ($x.call = {
         a: a
       }.a)();
       continue;
@@ -338,12 +338,12 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[1] = B.B;
       $.goto = 1;
-      $p = new ($context.call = A)(a);
+      $p = new ($x.call = A)(a);
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      new ($context.call = $l[1])($p);
+      new ($x.call = $l[1])($p);
       $.state = 2;
 
     case 2:
@@ -355,17 +355,17 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = eff)();
+      $p = ($x.call = eff)();
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      new ($context.call = $p.Z)(b);
+      new ($x.call = $p.Z)(b);
       $.state = 5;
 
     case 5:
       $.goto = 7;
-      new ($context.call = {
+      new ($x.call = {
         a: a
       }.a)();
       continue;
@@ -386,12 +386,12 @@ var $M = require("@effectful/debugger"),
     case 0:
       $l[1] = B.B;
       $.goto = 1;
-      $p = new ($context.call = A)(a);
+      $p = new ($x.call = A)(a);
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      new ($context.call = $l[1])($p);
+      new ($x.call = $l[1])($p);
       $.state = 2;
 
     case 2:
@@ -403,17 +403,17 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = eff)();
+      $p = ($x.call = eff)();
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      new ($context.call = $p.Z)(b);
+      new ($x.call = $p.Z)(b);
       $.state = 5;
 
     case 5:
       $.goto = 7;
-      new ($context.call = {
+      new ($x.call = {
         a: a
       }.a)();
       continue;

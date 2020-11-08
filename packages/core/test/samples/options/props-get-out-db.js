@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $mcall = $M.mcall,
@@ -63,17 +63,17 @@ var $M = require("@effectful/debugger"),
       $l[1] = 2;
       $l[2] = 3;
       $.goto = 1;
-      $p = ($context.call = $l[1])();
+      $p = ($x.call = $l[1])();
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      ($context.call = che)($l[0][1] = $p);
+      ($x.call = che)($l[0][1] = $p);
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      ($context.call = me)();
+      ($x.call = me)();
       $.state = 3;
 
     case 3:
@@ -84,13 +84,13 @@ var $M = require("@effectful/debugger"),
       $l[3] = $1[$2] = $1[$2] - 1;
       c = $l[3];
       $.goto = 4;
-      ($context.call = be)();
+      ($x.call = be)();
       $.state = 4;
 
     case 4:
       if (process === 1000) {
         $.goto = 9;
-        $p = ($context.call = c_fun)("a");
+        $p = ($x.call = c_fun)("a");
         continue;
       } else {
         $l[4] = 2;
@@ -113,13 +113,13 @@ var $M = require("@effectful/debugger"),
 
     case 6:
       $.goto = 7;
-      $p = ($context.call = $l[1])();
+      $p = ($x.call = $l[1])();
       $.state = 7;
 
     case 7:
       $l[4] = $p;
       $.goto = 8;
-      $p = ($context.call = $l[0][1])();
+      $p = ($x.call = $l[0][1])();
       $.state = 8;
 
     case 8:
@@ -135,23 +135,23 @@ var $M = require("@effectful/debugger"),
     case 10:
       $l[4] = $p;
       $.goto = 11;
-      $p = ($context.call = d_fun)("c");
+      $p = ($x.call = d_fun)("c");
       $.state = 11;
 
     case 11:
       $l[5] = $p;
       $.goto = 12;
-      $p = new ($context.call = process.D)("e");
+      $p = new ($x.call = process.D)("e");
       $.state = 12;
 
     case 12:
       $.goto = 13;
-      $p = ($context.call = $l[4])($l[5], "d", $p);
+      $p = ($x.call = $l[4])($l[5], "d", $p);
       $.state = 13;
 
     case 13:
       $.goto = 14;
-      $p = ($context.call = a_fun)($p);
+      $p = ($x.call = a_fun)($p);
       $.state = 14;
 
     case 14:

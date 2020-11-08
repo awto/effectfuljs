@@ -1,5 +1,5 @@
 var $M = require("@effectful/debugger"),
-    $context = $M.context,
+    $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $mcall = $M.mcall,
@@ -51,7 +51,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      ($context.call = eff)("a");
+      ($x.call = eff)("a");
       $.state = 1;
 
     case 1:
@@ -61,12 +61,12 @@ var $M = require("@effectful/debugger"),
 
     case 2:
       $.goto = 3;
-      $p = ($context.call = eff)(1);
+      $p = ($x.call = eff)(1);
       $.state = 3;
 
     case 3:
       $.goto = 4;
-      ($context.call = M)($p);
+      ($x.call = M)($p);
       $.state = 4;
 
     case 4:
@@ -99,12 +99,12 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      ($context.call = eff)(1);
+      ($x.call = eff)(1);
       $.state = 1;
 
     case 1:
       $.goto = 3;
-      ($context.call = eff)(2);
+      ($x.call = eff)(2);
       continue;
 
     case 2:
@@ -146,12 +146,12 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $p = ($context.call = $l[0][1])(1, 2);
+      $p = ($x.call = $l[0][1])(1, 2);
       $.state = 1;
 
     case 1:
       $.goto = 2;
-      $p = ($context.call = M)($p);
+      $p = ($x.call = M)($p);
       $.state = 2;
 
     case 2:
@@ -160,7 +160,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $.goto = 4;
-      $p = ($context.call = expect)($l[1]);
+      $p = ($x.call = expect)($l[1]);
       $.state = 4;
 
     case 4:
@@ -170,7 +170,7 @@ var $M = require("@effectful/debugger"),
 
     case 5:
       $.goto = 6;
-      ($context.call = done)();
+      ($x.call = done)();
       $.state = 6;
 
     case 6:
@@ -181,7 +181,7 @@ var $M = require("@effectful/debugger"),
       $l[2] = $.error;
       $.error = void 0;
       $.goto = 6;
-      ($context.call = done)($l[2]);
+      ($x.call = done)($l[2]);
       continue;
 
     case 8:
