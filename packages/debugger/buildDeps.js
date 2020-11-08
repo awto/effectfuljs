@@ -115,11 +115,6 @@ async function main() {
       );
       await webpack({
         mode: "none",
-        node: {
-          global: false,
-          process: false,
-          setImmediate: false
-        },
         entry: [path.join(__dirname, tempFile)],
         devtool: false,
         module: {

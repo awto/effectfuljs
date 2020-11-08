@@ -21,6 +21,9 @@ import { Message } from "vscode-debugadapter/lib/messages";
 import { spawn, ChildProcess } from "child_process";
 import * as path from "path";
 import subscribe from "./wscomms";
+import { totalmem } from "os";
+
+const MAX_OLD_SPACE = Math.floor(totalmem() / (4 * 1024 * 1024));
 
 interface Handler extends CommsHandler {
   dataBreakpoints?: Set<P.Breakpoint>;
@@ -94,6 +97,7 @@ export class DebugSession extends SessionImpl {
   private breakpointsResponse?: P.SetBreakpointsResponse;
   private lastThread = 0;
   private supportsProgress = false;
+  private knownThreadNames: { [name: string]: number } = {};
 
   /**
    * Creates a new debug adapter that is used for one debug session.
@@ -410,12 +414,18 @@ export class DebugSession extends SessionImpl {
         case "setDataBreakpoints":
           return;
         case "childLaunch":
-          if (!thread.name) thread.name = `Thread ${thread.id}`;
-          this.sendEvent(new ThreadEvent("started", thread.id));
-          if (response.body && response.body.breakpoints) {
+          if (response.body) {
+            if (!thread.name) {
+              let threadName = response.body.name || "Thread";
+              const count = this.knownThreadNames[threadName] || 0;
+              this.knownThreadNames[threadName] = count + 1;
+              if (count !== 0) threadName += `[${count}]`;
+              thread.name = threadName;
+            }
             for (const i of response.body.breakpoints)
               this.mergeResponseBreakpoints(i.breakpoints, thread.id);
           }
+          this.sendEvent(new ThreadEvent("started", thread.id));
           return;
         case "childSetBreakpoints":
           if (!this.breakpointsResponseRemotes) return;
@@ -489,19 +499,26 @@ export class DebugSession extends SessionImpl {
     );
     let cwd = args.cwd;
     let progressId = this.supportsProgress && `LAUNCH$${progressCnt++}`;
+    const preset = args.preset || "node";
+    const isWebpack = preset === "browser" || preset === "next";
+    const isNode = preset === "node" || preset === "next";
+    const needsLaunch = preset !== "listener";
     if (!cwd) {
-      if (args.preset === "browser") {
+      if (isWebpack) {
         this.sendErrorResponse(
           response,
           1001,
-          '"browser" preset needs "cwd" parameter,' +
+          `"${preset}" preset needs "cwd" parameter,` +
             'please add it to launch.json (for example `..,"cwd":"${workspaceFolder}"...`)'
         );
         return;
       }
       cwd = args.cwd = process.cwd();
     }
-    const runtime = args.runtime || "@effectful/debugger";
+    const runtime =
+      args.runtime ||
+      (preset === "next" && "@effectful/debugger/react") ||
+      "@effectful/debugger";
     const runtimeBase = packageBase(runtime);
     let debuggerImpl: string;
     const resolvePaths: string[] = require.resolve.paths && [
@@ -592,7 +609,7 @@ export class DebugSession extends SessionImpl {
     }
     logger.log(`Using ${runtime} from ${debuggerImpl}`);
     debuggerImpl = path.dirname(normalizeDrive(debuggerImpl));
-    const edbgJs = path.join(debuggerImpl, "bin", "edbg.js");
+    const runJs = path.join(debuggerImpl, "config", preset, "run.js");
     const debuggerDeps = path.resolve(path.join(debuggerImpl, "..", ".."));
     this.stopComms = subscribe(
       (remote: Handler) => {
@@ -618,13 +635,11 @@ export class DebugSession extends SessionImpl {
         supportsDataBreakpoints: !!args.timeTravel
       })
     );
-    if (args.preset && !args.command) args.command = true;
     let errMessage: string | undefined;
-    let key: string | undefined;
     if (args.reconnectTimeout)
       this.awaitReconnect = args.reconnectTimeout * 1000;
     let webpackProgress: string | null = null;
-    if (args.command) {
+    if (needsLaunch) {
       const env: { [name: string]: string | null } = <any>{};
       const host =
         !args.debuggerHost ||
@@ -658,31 +673,25 @@ export class DebugSession extends SessionImpl {
       if (args.include) env["EFFECTFUL_DEBUGGER_INCLUDE"] = args.include;
       if (args.blackbox) env["EFFECTFUL_DEBUGGER_BLACKBOX"] = args.blackbox;
       if (args.exclude) env["EFFECTFUL_DEBUGGER_EXCLUDE"] = args.exclude;
-      if (args.preset === "node") {
-        let node_path = debuggerDeps;
-        if (env.NODE_PATH) node_path += path.delimiter + env.NODE_PATH;
-        env.NODE_PATH = node_path;
+      if (isNode) {
+        const node_path = [debuggerDeps];
+        if (env.NODE_PATH) node_path.push(env.NODE_PATH);
+        if (preset === "next") node_path.push(path.join(cwd, "node_modules"));
+        env.NODE_PATH = node_path.join(path.delimiter);
       } else if (args.preset === "browser") {
         if (args.indexJs) env.EFFECTFUL_DEBUGGER_INDEX_JS = args.indexJs;
         if (args.htmlTemplate)
           env.EFFECTFUL_DEBUGGER_HTML_TEMPLATE = args.htmlTemplate;
       }
-      const launchArgs = [...(args.args || [])];
-      let preset = args.preset;
-      if (preset === true) preset = "node";
-      let command = args.command;
-      if (command === true) command = "";
-      if (preset) {
-        if (command.length) launchArgs.unshift(command);
-        launchArgs.unshift(edbgJs, preset);
-        command = "node";
-      }
+      const launchArgs = [`--max-old-space-size=${MAX_OLD_SPACE}`, runJs];
+      if (args.command) launchArgs.push(args.command);
+      if (args.args) launchArgs.push(...args.args);
       if (term === "externalTerminal" || term === "integratedTerminal") {
         const termArgs: P.RunInTerminalRequestArguments = {
           kind: term === "integratedTerminal" ? "integrated" : "external",
           title: "Effectful Debug Console",
           cwd,
-          args: [command, ...launchArgs],
+          args: ["node", ...launchArgs],
           env
         };
         this.runInTerminalRequest(
@@ -701,15 +710,16 @@ export class DebugSession extends SessionImpl {
         );
       } else {
         let child: ChildProcess | undefined;
-        key = command;
+        const cmdline = launchArgs.slice(1).join(" ");
+        let key = cmdline;
         const timeTravel = !!args.timeTravel;
         if (reuse) {
-          key = `${key}@${cwd}/${timeTravel}/${JSON.stringify(env)}`;
+          key = `${cmdline}@${cwd}/${timeTravel}/${JSON.stringify(env)}`;
           child = runningCommands.get(key);
         }
         let startBuf: string[] = [];
         let progressPrefix: string | null = null;
-        if (progressId && preset === "browser")
+        if (progressId && isWebpack)
           progressPrefix = env[
             "EFFECTFUL_PROGRESS_ID"
           ] = `@progress@${progressId}:`;
@@ -717,14 +727,14 @@ export class DebugSession extends SessionImpl {
           const spawnArgs: any = {
             cwd,
             env: { ...process.env, ...env },
-            shell: preset !== "browser"
+            shell: !isWebpack
           };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
-          child = spawn(command, launchArgs, spawnArgs);
+          child = spawn("node", launchArgs, spawnArgs);
           let lastPercentage = 0;
           let message = "";
           logger.verbose(
-            `SPAWN: ${command} ${launchArgs.join(" ")} ${JSON.stringify({
+            `SPAWN: node ${cmdline} ${JSON.stringify({
               ...spawnArgs,
               env
             })}`
@@ -741,7 +751,7 @@ export class DebugSession extends SessionImpl {
           });
           child.stdout.on("data", data => {
             const txt = String(data);
-            if (preset === "browser") {
+            if (isWebpack) {
               if (progressPrefix && txt.startsWith(progressPrefix)) {
                 const m = txt
                   .substring(progressPrefix.length)
@@ -789,7 +799,7 @@ export class DebugSession extends SessionImpl {
           });
           child.stderr.on("data", data => {
             const txt = String(data);
-            if (preset === "browser") {
+            if (isWebpack) {
               this.sendEvent(new OutputEvent(`webpack: ${txt}`, "stderr"));
             } else if (args.verbose) logger.error(txt);
             if (!this.launched) startBuf.push(txt);
@@ -800,7 +810,7 @@ export class DebugSession extends SessionImpl {
             }
             if (webpackProgress)
               this.sendEvent(new ProgressEndEvent(webpackProgress));
-            logger.verbose(`command "${command}" exited with ${code}`);
+            logger.verbose(`command "${cmdline}" exited with ${code}`);
             if (args.reuse && key) runningCommands.delete(key);
             this.closeRemote(0);
           });
@@ -979,8 +989,8 @@ export class DebugSession extends SessionImpl {
   protected threadsRequest(response: P.ThreadsResponse): void {
     // runtime supports now threads so just return a default thread.
     response.body = {
-      threads: [...this.remotes.keys()].map(
-        id => new Thread(id, `thread ${id}`)
+      threads: [...this.remotes].map(
+        ([id, thread]) => new Thread(id, thread.name || `Thread ${id}`)
       )
     };
 

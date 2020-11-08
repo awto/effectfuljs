@@ -82,11 +82,7 @@
                 "default": true
               },
               "command": {
-                "type": [
-                  "string",
-                  "boolean"
-                ],
-                "default": false,
+                "type": "string",
                 "description": "A command to run on launch"
               },
               "cwd": {
@@ -129,21 +125,20 @@
                 "default": {}
               },
               "preset": {
-                "type": [
-                  "string",
-                  "boolean"
-                ],
+                "type": "string",
                 "enum": [
                   "node",
                   "browser",
-                  false
+                  "next",
+                  "listener"
                 ],
                 "enumDescriptions": [
                   "Run a command as a local process, intercepting all node processes to debug",
                   "Run Create React App based project in a browser",
-                  "Just run the command, expceting the debugger's integration is implemented there"
+                  "Run NextJS project",
+                  "Awaits debuggee connections"
                 ],
-                "default": "run",
+                "default": "node",
                 "description": "Zero-config presets"
               },
               "open": {
@@ -260,6 +255,7 @@
               "type": "effectful",
               "request": "launch",
               "name": "Listen for incoming connections",
+              "preset": "listener",
               "reconnectTimeout": -1,
               "console": "integratedTerminal",
               "env": {}
@@ -271,10 +267,11 @@
             "body": {
               "type": "effectful",
               "request": "launch",
-              "name": "Launch Browser application",
+              "name": "Browser application",
               "preset": "browser",
               "cwd": "^\"\\${workspaceRoot}\"",
               "reconnectTimeout": 5,
+              "timeTravel": true,
               "open": true
             }
           },
@@ -284,13 +281,28 @@
             "body": {
               "type": "effectful",
               "request": "launch",
-              "name": "Launch Node application",
+              "name": "Node application",
               "preset": "node",
               "cwd": "^\"\\${workspaceRoot}\"",
               "command": "node",
               "args": [
                 "^\"\\${file}\""
               ],
+              "console": "integratedTerminal",
+              "timeTravel": true,
+              "env": {}
+            }
+          },
+          {
+            "label": "Effectful: NextJS",
+            "description": "Launch NextJS project",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "NextJS application",
+              "preset": "next",
+              "cwd": "^\"\\${workspaceRoot}\"",
+              "timeTravel": true,
               "console": "integratedTerminal",
               "env": {}
             }

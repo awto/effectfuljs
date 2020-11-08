@@ -11,7 +11,7 @@ suite("Debugging on NodeJS", function () {
   const DEBUG_ADAPTER = path.join(PROJECT_ROOT, "./out/debugAdapter.js");
   const DATA_ROOT = path.join(PROJECT_ROOT, "testdata/");
   const NODE_DATA_ROOT = path.join(DATA_ROOT, "vscode-node-debug/");
-  
+
   let dc: DebugClient;
   // process.env.EFFECTFUL_DEBUG_DEBUGGER = "1";
   process.env.EFFECTFUL_DEBUGGER_EXCLUDE =
@@ -175,7 +175,7 @@ suite("Debugging on NodeJS", function () {
           source2 && source.sourceReference === source2.sourceReference,
           "same dynamic source reference"
         );
-        dc.continueRequest({ threadId: 0 })
+        dc.continueRequest({ threadId: 0 });
         await dc.waitForEvent("terminated");
       });
     test(`should stop on a conditional breakpoint in eval`, async function () {
@@ -948,8 +948,8 @@ suite("Debugging on NodeJS", function () {
           copy(PROGRAM, "hot2.js"),
           dc.waitForEvent("loadedSources")
         ]);
-        dc.continueRequest({ threadId: 0 }),
-        await dc.waitForEvent("terminated")
+        dc.continueRequest({ threadId: 0 });
+        await dc.waitForEvent("terminated");
         await out;
       } finally {
         await util.promisify(fs.unlink)(PROGRAM);

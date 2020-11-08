@@ -11,8 +11,8 @@ declare module "vscode-debugprotocol" {
       stopOnEntry?: boolean;
       stopOnExit?: boolean;
       verbose?: boolean;
-      command?: string | boolean;
-      preset?: string | boolean;
+      command?: string;
+      preset?: string;
       reuse?: boolean;
       cwd?: string;
       env?: { [name: string]: string | undefined };
