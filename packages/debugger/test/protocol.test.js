@@ -596,6 +596,10 @@ describe("VSCode protocol handlers", function() {
       }
     );
   });
+  test("suspending `setTimeout`/`setInterval`", function(done) {
+    jest.setTimeout(50000);
+    Kit.traverse(require("./__fixtures__/timeouts"), {}, "continue", done);
+  });
 
   // this breaks Promises (leaves them in inconsistent state)
   // so works only if run last (TODO: adapt test)

@@ -20,7 +20,8 @@
     "prefer-const": false,
     "no-conditional-assignment": false,
     "no-string-literal": false,
-    "no-var-requires": false
+    "no-var-requires": false,
+    "variable-name": false
   },
   "rulesDirectory": []
 }

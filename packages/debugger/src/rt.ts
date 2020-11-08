@@ -2,7 +2,7 @@
 import config from "./config";
 import * as Instr from "./instr/rt";
 import * as Engine from "./engine";
-import { regOpaqueObject, regModule } from "./persist";
+import { regOpaqueObject, regModule, regConstructor } from "./persist";
 import { native, nativeFuncs } from "./state";
 import * as TT from "./timeTravel/objects";
 import { ManagedSet, ManagedMap } from "./timeTravel/es";
@@ -44,7 +44,7 @@ function switchDefault(
 }
 
 const deps = config.timeTravel ? require("./deps-t") : require("./deps-n");
-const { CoreJS, Promise } = deps;
+const { CoreJS } = deps;
 
 regModule(CoreJS.ArrayPrototype, "@effectful/debugger/CoreJS/ArrayPrototype");
 regModule(CoreJS.Array, "@effectful/debugger/CoreJS/Array");
@@ -52,11 +52,11 @@ regModule(Ap, "@effectful/debugger/Native/ArrayPrototype");
 regModule(Tp, "@effectful/debugger/Native/TypedArrayPrototype");
 
 if (config.patchRT) {
-  global.Promise = Promise;
+  global.Promise = deps.Promise;
   const CAp = CoreJS.ArrayPrototype;
   const CTp = CoreJS.ArrayPrototype;
-  regOpaqueObject(Promise, "global#Promise");
-  regOpaqueObject(Promise.prototype, "global#Promise#");
+  regOpaqueObject(deps.Promise, "global#Promise");
+  regOpaqueObject(deps.Promise.prototype, "global#Promise#");
   for (const i of [
     "map",
     "filter",
@@ -125,4 +125,182 @@ if (config.timeTravel && config.patchRT) {
     CoreJS.objectEntries
   );
   TT.patchWithPolifil(Object, "values", TT.objectValues, CoreJS.objectValues);
+}
+
+const nativeSetTimeout = native.setTimeout;
+
+let countNum = 0;
+
+class TimeoutHandlerImpl {
+  _nativeId: any;
+  _id: number;
+  _canceled: boolean;
+  handler: TimeoutHandler;
+  constructor() {
+    this._id = ++countNum;
+    this._canceled = false;
+    this.handler = <any>null;
+  }
+  _reset(nativeId: any) {
+    if (
+      this._nativeId &&
+      typeof nativeId &&
+      nativeId.unref &&
+      !this._nativeId.hasRef()
+    )
+      nativeId.unref();
+    this._nativeId = nativeId;
+  }
+  [Symbol.toPrimitive]() {
+    return this._id;
+  }
+}
+
+const timeouts = new WeakMap<TimeoutHandler, TimeoutHandlerImpl>();
+
+class TimeoutHandler {
+  constructor(impl: TimeoutHandlerImpl) {
+    timeouts.set(this, impl);
+    impl.handler = this;
+  }
+  hasRef() {
+    return this.impl()._nativeId.hasRef();
+  }
+  ref() {
+    return this.impl()._nativeId.ref();
+  }
+  unref() {
+    return this.impl()._nativeId.unref();
+  }
+  impl(): TimeoutHandlerImpl {
+    return <any>timeouts.get(this);
+  }
+}
+
+regConstructor(TimeoutHandler);
+
+/**
+ * when the code is stopped on breakpoint it releases main thread, and so `setTimeout`
+ * callback may be scheduled before it is cleared, so we must check if it is cleared or not
+ * before its execution
+ */
+function setTimeoutImpl(
+  callback: (...args: any[]) => any,
+  delay?: number,
+  ...args: any[]
+) {
+  if (context.enabled && context.call === setTimeoutImpl) {
+    const handlerImpl = new TimeoutHandlerImpl();
+    const handler = new TimeoutHandler(handlerImpl);
+    handlerImpl._reset(
+      nativeSetTimeout(
+        Instr.setTimeoutCallback.bind(null, callback, handler),
+        delay,
+        ...args
+      )
+    );
+    return handler;
+  }
+  return nativeSetTimeout(callback, delay, ...args);
+}
+
+const nativeClearTimeout = native.clearTimeout;
+
+function clearTimeoutImpl(id: any) {
+  if (id instanceof TimeoutHandler) {
+    const impl = id.impl();
+    impl._canceled = true;
+    nativeClearTimeout(impl._nativeId);
+  } else {
+    nativeClearTimeout(id);
+  }
+}
+
+function scheduleInterval(
+  callback: (...args: any[]) => any,
+  id: TimeoutHandlerImpl,
+  delay: number | undefined,
+  args: any[]
+) {
+  id._reset(
+    nativeSetTimeout(
+      Instr.setTimeoutCallback.bind(
+        null,
+        resetInterval.bind(null, callback, id.handler),
+        id.handler
+      ),
+      delay,
+      ...args
+    )
+  );
+}
+
+function resetInterval(
+  callback: (...args: any[]) => any,
+  id: TimeoutHandler,
+  delay?: number,
+  ...args: any[]
+) {
+  const impl = id.impl();
+  scheduleInterval(callback, impl, delay, args);
+  (context.call = callback)(...args);
+}
+
+regOpaqueObject(resetInterval, "@effectful/debugger/restartInterval");
+
+const nativeSetInterval = native.setInterval;
+
+function setIntervalImpl(
+  callback: (...args: any[]) => any,
+  delay?: number,
+  ...args: any[]
+) {
+  if (context.enabled && context.call === setIntervalImpl) {
+    const handlerImpl = new TimeoutHandlerImpl();
+    const handler = new TimeoutHandler(handlerImpl);
+    scheduleInterval(callback, handlerImpl, delay, args);
+    return handler;
+  }
+  return nativeSetInterval(callback, delay, ...args);
+}
+
+let setImmediateImpl: any;
+const nativeSetImmediate = native.setImmediate;
+if (nativeSetImmediate) {
+  setImmediateImpl = function setTimeoutImpl(
+    callback: (...args: any[]) => any,
+    ...args: any[]
+  ) {
+    if (context.enabled && context.call === setTimeoutImpl) {
+      const handlerImpl = new TimeoutHandlerImpl();
+      const handler = new TimeoutHandler(handlerImpl);
+      handlerImpl._reset(
+        nativeSetImmediate(
+          Instr.setTimeoutCallback.bind(null, callback, handler),
+          ...args
+        )
+      );
+      return handler;
+    }
+    return nativeSetImmediate(callback, ...args);
+  };
+}
+
+export {
+  setTimeoutImpl as setTimeout,
+  clearTimeoutImpl as clearTimeout,
+  setIntervalImpl as setInterval,
+  clearTimeoutImpl as clearInterval,
+  setImmediateImpl as setImmediate
+};
+
+if (config.patchRT) {
+  (<any>global).setTimeout = setTimeoutImpl;
+  (<any>global).clearTimeout = clearTimeoutImpl;
+  (<any>global).setInterval = setIntervalImpl;
+  (<any>global).clearInterval = clearTimeoutImpl;
+  if (setImmediateImpl) {
+    (<any>global).setImmediate = setImmediateImpl;
+    (<any>global).clearImmediate = clearTimeoutImpl;
+  }
 }

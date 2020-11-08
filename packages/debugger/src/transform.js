@@ -42,9 +42,7 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
     config.blackbox = config.blackbox(config.filename);
   if (VERBOSE) {
     console.log(
-      `Instrumenting ${config.filename} ${
-        config.blackbox ? "BLACKBOX" : ""
-      }...${config.deb_src} ${config.caller}`
+      `Instrumenting ${config.filename} ${config.blackbox ? "BLACKBOX" : ""}...`
     );
     console.time(`Instrumented ${config.filename}`);
   }
@@ -52,7 +50,6 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
   try {
     transform(ast);
   } catch (e) {
-    console.log("ERR", e);
     throw e;
   }
   if (VERBOSE) {

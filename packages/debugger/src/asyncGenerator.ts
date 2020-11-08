@@ -39,8 +39,8 @@ function runQueue(
   rj: (reason: any) => any
 ) {
   this.sent = value;
-  this.onResolve = rs;
-  this.onReject = rj;
+  this.onReturn = rs;
+  this.onError = rj;
   step(this, value);
 }
 
@@ -111,16 +111,8 @@ function dequeue(frame: AsyncGeneratorFrame) {
   else frame.running = false;
 }
 
-export function frameAG(
-  closure: any,
-  meta: any,
-  parent: any,
-  vars: any[] | null,
-  newTarget: any
-) {
-  const frame = <AsyncGeneratorFrame>(
-    makeFrame(closure, meta, parent, vars, newTarget)
-  );
+export function frameAG(closure: State.Closure, newTarget: any) {
+  const frame = <AsyncGeneratorFrame>makeFrame(closure, newTarget);
   const iter = new AsyncGenerator(frame);
   frame.iter = <any>iter;
   frame.next = null;
@@ -133,8 +125,8 @@ export function yldAG(value: any): any {
   const top = <AsyncGeneratorFrame>context.top;
   context.suspended.delete(top);
   top.awaiting = token;
-  context.call = top.onResolve;
-  top.onResolve((context.value = { value, done: false }));
+  context.call = top.onReturn;
+  top.onReturn((context.value = { value, done: false }));
   popFrame(top);
   dequeue(top);
   return top.promise;
@@ -144,8 +136,8 @@ export function retAG(value: any): any {
   const top = <AsyncGeneratorFrame>context.top;
   context.suspended.delete(top);
   top.awaiting = token;
-  context.call = top.onResolve;
-  top.onResolve({ value, done: true });
+  context.call = top.onReturn;
+  top.onReturn({ value, done: true });
   top.done = true;
   top.result = void 0;
   dequeue(top);

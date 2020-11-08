@@ -25,14 +25,27 @@ export function moduleExports() {
       `DEBUGGER: exporting:"${cjs.id}", "${context.moduleId}", fullPath:"${mod.fullPath}", name:"${mod.name}"`
     );
   if (context.onLoad) context.onLoad(mod, hot);
-  if (hot) return;
+  if (hot && config.hot === true) return;
   const running = context.running;
+  const top = context.top;
   try {
     context.running = true;
     runTopLevel(mod);
   } catch (e) {
-    if (e === token) {
-      weakMapSet.call(State.thunks, cjs.exports, State.throwToken);
+    if (e === token && !hot) {
+      let tail = context.pausedTop;
+      weakMapSet.call(State.thunks, cjs.exports, tail);
+      if (tail) {
+        while (tail) {
+          const next: State.Frame | null = tail.next;
+          if (next === top) {
+            tail.next = null;
+            break;
+          }
+          tail = next;
+        }
+        context.top = top;
+      }
     } else {
       throw e;
     }

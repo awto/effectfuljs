@@ -13,6 +13,7 @@ if (config.globalNS && (<any>global)[config.globalNS]) {
   const AsyncGenerator = require("./asyncGenerator");
   const { moduleExports } = require("./modules");
   const { forInIterator } = require("./timeTravel/main");
+  const { dynImport } = require("./instr/rt");
   const {
     del,
     set,
@@ -35,7 +36,8 @@ if (config.globalNS && (<any>global)[config.globalNS]) {
     gdel,
     lset,
     ldel,
-    mcall
+    mcall,
+    dynImport
   });
   if (config.globalNS) (<any>global)[config.globalNS] = module.exports;
 }

@@ -13,9 +13,12 @@ export default {
   verbose: 0,
   /** URL to connect back to debugger adapter */
   url: "ws://localhost:20011",
+  /** the debuggee package root */
+  root: ".",
+  /** the debuggee package sources location folder */
   srcRoot: ".",
   /** module's hot swapping is enabled */
-  hot: true,
+  hot: <boolean | "exports">true,
   /** webpack-dev-server listening port */
   port: 12345,
   /** redirect `console` methods into the debug stream  */

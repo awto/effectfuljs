@@ -43,18 +43,30 @@ import { isValidIdentifier } from "@babel/types";
 
 const globalNS = config.globalNS;
 
-const { journal, context, token, closures, functions, thunks } = State;
+const {
+  journal,
+  context,
+  token,
+  closures,
+  functions,
+  thunks,
+  CLOSURE_PARENT,
+  CLOSURE_VARS,
+  CLOSURE_META,
+  CLOSURE_FUNC
+} = State;
 const nativeFunction = native.Function;
+const nativeObject = native.Object;
 
-const nativeApply = native.FunctionMethods.apply;
-const nativeCall = native.FunctionMethods.call;
+const __effectful__nativeApply = native.FunctionMethods.apply;
+const __effectful__nativeCall = native.FunctionMethods.call;
 
-const defineProperty = native.Object.defineProperty;
+const defineProperty = nativeObject.defineProperty;
 const nativeToString = Function.prototype.toString;
 const weakMapSet = native.WeakMap.set;
 const weakMapDelete = native.WeakMap.delete;
-const setPrototypeOf = native.Object.setPrototypeOf;
-const reflectApply = native.Reflect.apply;
+const setPrototypeOf = nativeObject.setPrototypeOf;
+const __effectful__reflectApply = native.Reflect.apply;
 
 let curModule: Module = undefined as any; // this is always used in context where this is inited
 let moduleChanged = false;
@@ -159,6 +171,7 @@ export function module(
   let fullPath: string | undefined;
   let name: string;
   let id: number | undefined;
+  curModule = <any>null;
   if (typeof modName === "number") {
     id = modName;
     name = `#eval_${id}.js`;
@@ -166,17 +179,22 @@ export function module(
     name = modName;
     fullPath = normalizeDrive(path.join(config.srcRoot, name));
   }
-  curModule = context.modules[<any>(fullPath || id)];
+  let prevVersion =
+    config.hot === false ? null : context.modules[<any>(fullPath || id)];
+  if (config.hot === true) curModule = <any>prevVersion;
   if (!require) require = <any>closSyms["__webpack_require__"];
   if (cjs) {
     if (cjs.hot) cjs.hot.accept();
     // something is loaded with node and webpack for example
-    if (curModule && (!curModule.cjs || curModule.cjs.id !== cjs.id))
-      curModule = <any>void 0;
+    if (prevVersion && (!prevVersion.cjs || prevVersion.cjs.id !== cjs.id))
+      prevVersion = curModule = <any>null;
   }
   regOpaqueObject(cjs, `cjs#${name}`);
   moduleChanged = !curModule;
-  if (!curModule) curModule = <any>{ functions: {} };
+  if (!curModule) {
+    curModule = <any>{ functions: {}, prevVersion };
+    if (prevVersion) prevVersion.prevVersion = null;
+  }
   (<any>curModule).topLevel = null;
   regOpaqueObject(cjs, name + "$mod");
   context.modules[<any>(fullPath || id)] = curModule;
@@ -196,6 +214,7 @@ export function module(
   curModule.api = this;
   curModule.closSyms = closSyms;
   curModule.params = params;
+  curModule.onReload = null;
   return curModule;
 }
 
@@ -291,6 +310,7 @@ export function fun(
   meta.statesByLine = memo.filter(hasLine).sort(byLine);
   meta.deps = [];
   meta.scopeDepth = scopeDepth;
+  meta.onReload = null;
   if (parent) parent.deps.push(meta);
   const headLines: string[] = [];
   const ctx = curModule.safePrefix;
@@ -320,33 +340,11 @@ export function fun(
   const api = curModule.api;
   let headCode;
   if (isGenerator) {
-    if (config.expInlineNext) {
-      (<any>meta).nextImpl = new Function(
-        "pushFrame",
-        "handle",
-        "meta",
-        "context",
-        `return function next(value) {
-            const frame = this._frame;
-            if (frame.running)
-              throw new Error("Generator is already running");
-            frame.sent = value;
-            frame.running = true;
-            context.call = context.call === next ? frame.func : null;
-            try {
-              pushFrame(frame);
-              return meta.handler(frame, frame.$, value);
-            } catch (e) {
-              return handle(frame, e);
-            }
-          }`
-      )(api.pushFrame, api.handle, meta, context);
-    }
     headCode = `return ${ctx}.iter`;
   } else {
     headCode = `
       try {
-        ${ctx}pushFrame(${ctx});
+        ${ctx}pushFrame(${ctx},${funcName});
         return ${ctx}.meta.handler(${ctx}, ${ctx}.$, null);
       } catch(e) {
         return ${ctx}M.handle(${ctx}, e);
@@ -379,18 +377,18 @@ export function fun(
       : isGenerator
       ? api.frameG
       : api.frame,
-    pushFrame
+    api.pushFrame
   ];
   constrParams.push(`return (function(${ctx}$){
-    var ${ctx}$$ = ${ctx}$ && ${ctx}$.$;
-    return ${ctx}clos(${ctx}$,${ctx}m,(function ${funcName}(${meta.params.join()}) {
+    var ${ctx}x = [${ctx}$,${ctx}$ && ${ctx}$.$,${ctx}m,function ${funcName}(${meta.params.join()}) {
       ${flags & Flag.SLOPPY ? "" : '"use strict";'}
-      var ${ctx} = ${ctx}frame(${funcName},${ctx}m,${ctx}$,${ctx}$$,new.target);
+      var ${ctx} = ${ctx}frame(${ctx}x,new.target);
       ${headLines.join("\n")}
       ${headCode}
-      }));
+    }]
+    return ${ctx}clos(${ctx}x);
 })`);
-  const constr: any = reflectApply(
+  const constr: any = __effectful__reflectApply(
     native.Reflect.construct(nativeFunction, constrParams),
     null,
     args
@@ -443,34 +441,35 @@ function buildScope(
 }
 
 export const clos: any = config.persistState
-  ? function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
-      weakMapSet.call(closures, closure, {
-        meta,
-        parent
-      });
-      setObjectDescriptor(
-        closure,
-        FunctionDescriptor /*(<any>meta).descriptor*/
-      );
-      return closure;
+  ? function clos(closure: State.Closure) {
+      const func = closure[CLOSURE_FUNC];
+      weakMapSet.call(closures, func, closure);
+      setObjectDescriptor(func, FunctionDescriptor /*(<any>meta).descriptor*/);
+      return func;
     }
-  : function clos(parent: Frame | null, meta: FunctionDescr, closure: any) {
-      setPrototypeOf(closure, FunctionConstr.prototype);
-      weakMapSet.call(closures, closure, {
-        meta,
-        parent
-      });
-      return closure;
+  : function clos(closure: State.Closure) {
+      const func = closure[CLOSURE_FUNC];
+      setPrototypeOf(func, FunctionConstr.prototype);
+      weakMapSet.call(closures, func, closure);
+      return func;
     };
 
 function __effectful__apply(this: any) {
   if (context.call === __effectful__apply) context.call = this;
-  return reflectApply(<any>nativeApply, this, <any>arguments);
+  return __effectful__reflectApply(
+    <any>__effectful__nativeApply,
+    this,
+    <any>arguments
+  );
 }
 
 function __effectful__call(this: any) {
   if (context.call === __effectful__call) context.call = this;
-  return reflectApply(<any>nativeCall, this, <any>arguments);
+  return __effectful__reflectApply(
+    <any>__effectful__nativeCall,
+    this,
+    <any>arguments
+  );
 }
 
 export function pushScope(varsNum: number) {
@@ -493,7 +492,11 @@ export function popScope() {
 export function __effectful_mcall(prop: string, ...args: [any, ...any[]]) {
   const func = args[0][prop];
   if (!func) throw new TypeError(`${prop} isn't a function`);
-  return reflectApply(<any>nativeCall, (context.call = func), args);
+  return __effectful__reflectApply(
+    <any>__effectful__nativeCall,
+    (context.call = func),
+    args
+  );
 }
 
 /**
@@ -686,7 +689,7 @@ export function evalAt(src: string) {
   }
   const func = resMeta.func(top);
   context.call = func;
-  return nativeCall.call(func, top.self);
+  return __effectful__nativeCall.call(func, top.self);
 }
 
 const locationRE = /^(\d+):(\d+)-(\d+):(\d+)$/;
@@ -825,22 +828,23 @@ if (config.patchRT) {
     writable: true,
     value: defaultBind
   });
-  defineProperty(FunctionConstr.prototype, "toString", {
-    configurable: true,
-    writable: true,
-    value() {
-      // nothing to see here (lodash refuses to work with not native functions)
-      let params: string = "";
-      let name = this.name;
-      const data = closures.get(this);
-      if (
-        (data && data.meta && !data.meta.blackbox) ||
-        !State.nativeFuncs.has(this)
-      )
-        return nativeToString.call(this);
-      return `function ${name || ""}(${params}) { [native code] }`;
-    }
-  });
+  if (!config.debuggerDebug)
+    defineProperty(FunctionConstr.prototype, "toString", {
+      configurable: true,
+      writable: true,
+      value() {
+        // nothing to see here (lodash refuses to work with not native functions)
+        let params: string = "";
+        let name = this.name;
+        const data = closures.get(this);
+        if (
+          (data && data[CLOSURE_META] && !data[CLOSURE_META].blackbox) ||
+          !State.nativeFuncs.has(this)
+        )
+          return nativeToString.call(this);
+        return `function ${name || ""}(${params}) { [native code] }`;
+      }
+    });
 }
 
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
@@ -860,7 +864,7 @@ export function indirEval(code: string): any {
   );
   const func = meta.func(null);
   context.call = func;
-  return nativeCall.call(func, void 0);
+  return __effectful__nativeCall.call(func, void 0);
 }
 
 function trim(n: string) {
@@ -953,32 +957,27 @@ export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
-export function makeFrame(
-  closure: any,
-  meta: State.FunctionDescr,
-  parent: State.Frame | null,
-  $: any,
-  newTarget: any
-): Frame {
+export function makeFrame(closure: State.Closure, newTarget: any): Frame {
   let $g = global;
   const frame: Frame = {
-    $,
+    $: <any>closure[CLOSURE_VARS],
+    closure,
+    func: closure[CLOSURE_FUNC],
     $g,
-    meta,
+    meta: closure[CLOSURE_META],
     state: 0,
     goto: 0,
     done: false,
     running: false,
-    parent,
-    func: closure,
+    parent: closure[CLOSURE_PARENT],
     newTarget,
     brk: null,
     next: null,
     caller: null,
     restoreEnabled: undef,
     awaiting: token,
-    onResolve: null,
-    onReject: null,
+    onReturn: null,
+    onError: null,
     promise: null,
     timestamp: journal.now,
     result: void 0,
@@ -1009,7 +1008,8 @@ function numFrames(e: any): number {
 
 // maybe there is a better way, but we need to know if the function call is async
 // we just compare stack trace lines size here
-setTimeout(function setupTopNumFrames() {
+const nativeSetTimeout = native.setTimeout;
+nativeSetTimeout(function setupTopNumFrames() {
   TOP_LINES_STACK_NUM = numFrames(new Error("__effectful__stack")) + 1;
 }, 0);
 
@@ -1019,14 +1019,14 @@ function scheduleCurrentThread() {
     debug: context.enabled,
     value: context.value
   });
-  context.top = null;
-  signalThread();
   if (config.verbose)
     trace(`DEBUGGER: schedule a thread: ${State.stackDescr().join(" ==> ")}`);
+  context.top = null;
+  signalThread();
   throw token;
 }
 
-export function pushFrame(frame: Frame): any {
+export function pushFrame(frame: Frame, redir: any): any {
   const next = context.top;
   frame.next = frame.caller = next;
   const res = (context.top = frame);
@@ -1036,7 +1036,8 @@ export function pushFrame(frame: Frame): any {
         State.pauseEventQueue();
         scheduleCurrentThread();
       }
-      if (context.call !== frame.func) {
+      if (context.call !== redir) {
+        // maybe it is called via older version
         frame.restoreEnabled = context.call;
         context.enabled = false;
       }
@@ -1065,22 +1066,13 @@ export function popFrame(top: Frame) {
 }
 
 export const frame: (
-  closure: any,
-  meta: any,
-  parent: any,
-  vars: any[] | null,
+  closure: State.Closure,
   newTarget: any
 ) => any = config.timeTravel
-  ? function frame(
-      closure: any,
-      meta: any,
-      parent: any,
-      vars: any[] | null,
-      newTarget: any
-    ): any {
+  ? function frame(closure: State.Closure, newTarget: any): any {
       const top = context.top;
       recordFrame(top);
-      return makeFrame(closure, meta, parent, vars, newTarget);
+      return makeFrame(closure, newTarget);
     }
   : makeFrame;
 
@@ -1105,9 +1097,9 @@ export function ret(value: any): any {
     value = top.self;
   top.result = void 0;
   top.done = true;
-  if (top.onResolve) {
-    context.call = top.onResolve;
-    top.onResolve(value);
+  if (top.onReturn) {
+    context.call = top.onReturn;
+    top.onReturn(value);
   }
   if (context.enabled) {
     checkExitBrk(top, value);
@@ -1122,9 +1114,9 @@ export function ret(value: any): any {
 export function unhandled(e: any) {
   const top = <Frame>context.top;
   // top.state = top.goto = 0;
-  if (top.onReject) {
-    context.call = top.onReject;
-    top.onReject(e);
+  if (top.onError) {
+    context.call = top.onError;
+    top.onError(e);
   }
   top.error = void 0;
   top.done = true;
@@ -1219,13 +1211,23 @@ export function iterNext(iter: any, value: any) {
 export function force(value: any): any {
   if (!value) return value;
   const thunk = thunks.get(value);
-  if (!thunk) return value;
+  const topLevel = <Frame>context.top;
+  if (thunk === void 0) {
+    return value;
+  }
+
   // defineProperty(value, thunkSymbol, { value: null, configurable: true });
   weakMapDelete.call(thunks, value);
-  return thunk();
+  let tail = thunk;
+  if (tail) {
+    while (tail.next) tail = tail.next;
+    tail.next = context.top;
+    context.top = thunk;
+  }
+  throw token;
 }
 
-regOpaqueObject(nativeCall, "@effectful/debugger/native/call");
-regOpaqueObject(nativeApply, "@effectful/debugger/native/apply");
+regOpaqueObject(__effectful__nativeCall, "@effectful/debugger/native/call");
+regOpaqueObject(__effectful__nativeApply, "@effectful/debugger/native/apply");
 
 export { config };

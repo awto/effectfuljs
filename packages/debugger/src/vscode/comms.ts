@@ -16,7 +16,6 @@ let workerType = WorkerType.None;
 // for simplified embedding
 const extWorker = (<any>global)[`${config.globalNS}#comms`];
 let Worker: any;
-
 if (extWorker) {
   workerType = WorkerType.Ext;
 } else if (statusBuf && config.expUseWorker) {

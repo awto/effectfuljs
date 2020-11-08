@@ -8,12 +8,13 @@ import {
   popFrame
 } from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
+import config from "./config";
 
 const { context, token } = State;
 
 interface AsyncFrame extends Frame {
-  onResolve: (arg: any) => void;
-  onReject: (arg: any) => void;
+  onReturn: (arg: any) => void;
+  onError: (arg: any) => void;
   promise: Promise<any>;
 }
 
@@ -34,20 +35,14 @@ export function scopeInit(
   rs: (value: any) => void,
   rj: (value: any) => void
 ) {
-  this.onResolve = rs;
-  this.onReject = rj;
+  this.onReturn = rs;
+  this.onError = rj;
 }
 
 regOpaqueObject(scopeInit, "@effectful/debugger/scopeInit");
 
-export function frameA(
-  proto: any,
-  meta: any,
-  parent: any,
-  vars: any[] | null,
-  newTarget: any
-) {
-  const frame = <AsyncFrame>frameImpl(proto, meta, parent, vars, newTarget);
+export function frameA(closure: State.Closure, newTarget: any) {
+  const frame = <AsyncFrame>frameImpl(closure, newTarget);
   const savedCall = context.call;
   context.call = <any>Promise;
   frame.promise = new Promise(scopeInit.bind(frame));
@@ -57,8 +52,8 @@ export function frameA(
 
 export function retA(value: any): any {
   const top = <AsyncFrame>context.top;
-  context.call = top.onResolve;
-  top.onResolve(value);
+  context.call = top.onReturn;
+  top.onReturn(value);
   top.done = true;
   top.result = void 0;
   if (context.enabled) {
@@ -70,8 +65,8 @@ export function retA(value: any): any {
 
 export function unhandledA(reason: any): any {
   const top = <AsyncFrame>context.top;
-  context.call = top.onReject;
-  top.onReject(reason);
+  context.call = top.onError;
+  top.onError(reason);
   top.done = true;
   if (!context.enabled && top.restoreEnabled !== State.undef)
     context.enabled = true;

@@ -17,7 +17,7 @@ let send, sendErr, evaluate;
   let cont;
   let done;
   let former;
-  evaluate = async function(promise) {
+  evaluate = async function (promise) {
     if (output) {
       console.error("parallel call", former);
       throw new Error("simultaneous `evaluate` call");
@@ -46,7 +46,7 @@ let send, sendErr, evaluate;
     const j = pack(arg, timeout, result);
     return j && wrapCancel(j, new Promise(c => (j.cont = c)));
   };
-  sendErr = function(arg, timeout = 0) {
+  sendErr = function (arg, timeout = 0) {
     const j = pack(arg, timeout);
     return wrapCancel(
       j,
@@ -69,7 +69,6 @@ let send, sendErr, evaluate;
   async function readLoop() {
     do {
       await new Promise(c => setTimeout(c, 0));
-      let tup = [];
       if (cancelJobs.length) output.push(`! ${cancelJobs.join()}@${t}`);
       cancelJobs.length = 0;
       if (scheduleJobs.length)
@@ -96,8 +95,8 @@ let send, sendErr, evaluate;
   }
 }
 
-describe("async `try/catch`", function() {
-  it("should conform to ES", async function() {
+describe("async `try/catch`", function () {
+  it("should conform to ES", async function () {
     assert.deepEqual(
       await evaluate(
         (async function ex1() {
@@ -267,9 +266,9 @@ describe("async `try/catch`", function() {
   });
 });
 
-describe("implicitly parallel async function", function() {
-  context("block of independent computations", function() {
-    it("should run simultaneously", async function() {
+describe("implicitly parallel async function", function () {
+  context("block of independent computations", function () {
+    it("should run simultaneously", async function () {
       assert.deepEqual(
         await evaluate(
           (async function a1() {
@@ -281,8 +280,8 @@ describe("implicitly parallel async function", function() {
         ["> a_1,a_2@0", "< a_1@0", "< a_2@0"]
       );
     });
-    context("inside `try/finally`", function() {
-      it("should execute `finally` block after `try` body", async function() {
+    context("inside `try/finally`", function () {
+      it("should execute `finally` block after `try` body", async function () {
         assert.deepEqual(
           await evaluate(
             (async function a2() {
@@ -299,8 +298,8 @@ describe("implicitly parallel async function", function() {
         );
       });
     });
-    context("insite `try/catch`", function() {
-      it("should cancel running threads on throw", async function() {
+    context("insite `try/catch`", function () {
+      it("should cancel running threads on throw", async function () {
         async function a() {
           "par";
           try {
@@ -339,8 +338,8 @@ describe("implicitly parallel async function", function() {
       });
     });
   });
-  context('with nested "seq" blocks', function() {
-    it("should run them sequentially", async function() {
+  context('with nested "seq" blocks', function () {
+    it("should run them sequentially", async function () {
       async function a() {
         "par";
         {
@@ -365,8 +364,8 @@ describe("implicitly parallel async function", function() {
       ]);
     });
   });
-  context("computations use a common variable updated in between", function() {
-    it("should run them simultaneously with corresponding var's values", async function() {
+  context("computations use a common variable updated in between", function () {
+    it("should run them simultaneously with corresponding var's values", async function () {
       assert.deepEqual(
         await evaluate(
           (async function a3() {
@@ -421,9 +420,9 @@ describe("implicitly parallel async function", function() {
       );
     });
   });
-  context("with loops", function() {
-    context("with single frame body", function() {
-      it("should run each iteration in parallel", async function() {
+  context("with loops", function () {
+    context("with single frame body", function () {
+      it("should run each iteration in parallel", async function () {
         assert.deepEqual(
           await evaluate(
             (async function a6() {
@@ -444,8 +443,8 @@ describe("implicitly parallel async function", function() {
         );
       });
     });
-    context("with a few independent computations body", function() {
-      it("should run the body an each iteration in parallel", async function() {
+    context("with a few independent computations body", function () {
+      it("should run the body an each iteration in parallel", async function () {
         assert.deepEqual(
           await evaluate(
             (async function a7() {
@@ -471,8 +470,8 @@ describe("implicitly parallel async function", function() {
           ]
         );
       });
-      context("with a few dependent computations body", function() {
-        it("should run each iteration in parallel but the body sequentially", async function() {
+      context("with a few dependent computations body", function () {
+        it("should run each iteration in parallel but the body sequentially", async function () {
           assert.deepEqual(
             await evaluate(
               (async function a8() {
@@ -501,8 +500,8 @@ describe("implicitly parallel async function", function() {
       });
       context(
         "some computations with dependencies on the former iteration",
-        function() {
-          it("should run dependent computation sequentially but independent ones in parallel", async function() {
+        function () {
+          it("should run dependent computation sequentially but independent ones in parallel", async function () {
             assert.deepEqual(
               await evaluate(
                 (async function a9() {
@@ -532,7 +531,7 @@ describe("implicitly parallel async function", function() {
       );
     });
   });
-  context("when next parallel changes variables values", function() {
+  context("when next parallel changes variables values", function () {
     it("should use correct values for variables", async function* a() {
       assert.deepEqual(
         await evaluate(
@@ -712,8 +711,8 @@ describe("implicitly parallel async function", function() {
       );
     });
   });
-  context("with variable values withing same fork", function() {
-    it("should set variable values like in sequential execution", async function() {
+  context("with variable values withing same fork", function () {
+    it("should set variable values like in sequential execution", async function () {
       async function a(v1, v2, t1, t2, t3, t4) {
         "par";
         let j = 0;
@@ -793,8 +792,8 @@ describe("implicitly parallel async function", function() {
         "< a:15/0@30"
       ]);
     });
-    context("with loops", function() {
-      it("should set variable values like in sequential execution", async function() {
+    context("with loops", function () {
+      it("should set variable values like in sequential execution", async function () {
         async function a(v1, v2, t1, t2, t3, t4, t5, t6, t7, t8) {
           "par";
           for (const i of [1, 2]) {
@@ -905,8 +904,8 @@ describe("implicitly parallel async function", function() {
         );
       });
     });
-    context("with nested loops", function() {
-      it("should set variable values like in sequential execution", async function() {
+    context("with nested loops", function () {
+      it("should set variable values like in sequential execution", async function () {
         async function a(t) {
           "par";
           for (const i1 of [10, 20]) {

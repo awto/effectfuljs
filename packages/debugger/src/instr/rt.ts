@@ -7,7 +7,8 @@
  * TODO: transpile core-js instead
  */
 
-import { native } from "../state";
+import { native, mergeModule, context } from "../state";
+import { force } from "../engine";
 
 type Callback<This, T, R> = (
   this: This | undefined,
@@ -70,7 +71,9 @@ export function iterFin(iter: any, value: any) {
 export function wrapModule(mod: any, cjsModule: any): any {
   const topMeta = mod.topLevel.func(null);
   topMeta(cjsModule, cjsModule.exports);
-  return (mod.exports = cjsModule.exports);
+  mod.exports = cjsModule.exports;
+  if (mod.prevVersion) mergeModule(mod, mod.prevVersion);
+  return mod.exports;
 }
 
 export function objectDefineProperties(
@@ -164,4 +167,17 @@ export function objectGetOwnPropertyDescriptor(
     if (get && (get = wrappers.get(get))) res.get = get;
   }
   return res;
+}
+
+export async function dynImport(promise: Promise<any>): Promise<any> {
+  return force(await promise);
+}
+
+export function runJobs<T>(jobs: Iterable<(job: T) => void>, arg: T) {
+  for (const i of jobs) i(arg);
+}
+
+export function setTimeoutCallback(callback: (...args: any[]) => any, id: any) {
+  if (!id.impl()._canceled)
+    callback.apply(void 0, native.Array.slice.call(arguments, 2));
 }

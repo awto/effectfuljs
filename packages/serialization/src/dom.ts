@@ -110,12 +110,13 @@ export function addEventListener(
   listener: EventListenerOrEventListenerObject,
   options?: boolean | AddEventListenerOptions
 ) {
+  const self = this || global;
   if (typeof options === "boolean") {
     options = { capture: options };
   } else if (!options) options = {};
   const once = options.once;
   if (savedAddEventListener) {
-    savedAddEventListener.call(this, type, listener, {
+    savedAddEventListener.call(self, type, listener, {
       capture: options.capture,
       passive: options.passive
     });
@@ -132,13 +133,13 @@ export function addEventListener(
           })
         );
       }
-      savedAddEventListener.call(this, type, onceHandler, {
+      savedAddEventListener.call(self, type, onceHandler, {
         once: true,
         capture: options.capture
       });
     }
   }
-  const byType = this[eventsSym] || (this[eventsSym] = new LocMap());
+  const byType = self[eventsSym] || (self[eventsSym] = new LocMap());
   let byListener = byType.get(type);
   if (!byListener) byType.set(type, (byListener = new LocMap()));
   let byCapture = byListener.get(listener);
@@ -158,12 +159,13 @@ export function removeEventListener(
   listener: EventListenerOrEventListenerObject,
   options?: boolean | EventListenerOptions
 ) {
+  const self = this || global;
   if (typeof options === "boolean") {
     options = { capture: options };
   } else if (!options) options = {};
   if (savedRemoveEventListener)
-    savedRemoveEventListener.call(this, type, listener, options);
-  const byType = this[eventsSym];
+    savedRemoveEventListener.call(self, type, listener, options);
+  const byType = self[eventsSym];
   if (!byType) return;
   const byListener = byType.get(type);
   if (!byListener) return;

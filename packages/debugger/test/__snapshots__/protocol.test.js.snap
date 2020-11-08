@@ -16537,6 +16537,203 @@ Object {
 }
 `;
 
+exports[`VSCode protocol handlers suspending \`setTimeout\`/\`setInterval\` 1`] = `
+Object {
+  "stderr": "",
+  "stdout": "",
+  "trace": Array [
+    Object {
+      "reason": "debugger_statement",
+      "stack": Array [
+        Object {
+          "column": 3,
+          "file": "timeouts.js",
+          "line": 7,
+          "name": "to1",
+          "scopes": Array [
+            Object {
+              "[name]": "to1",
+              "intervalCount": "undefined",
+              "intervalHandler": "undefined",
+              "timeoutHandler": Object {},
+            },
+            Object {
+              "[name]": "timeouts.js",
+              "delayTermination": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "delayTermination",
+                "prototype": Object {
+                  "constructor": "function delayTermination() {
+  delayedTermination = true;
+}",
+                },
+              },
+              "signalTerminated": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "signalTerminated",
+                "prototype": Object {
+                  "constructor": "function signalTerminated() {
+  delayedTermination = false;
+}",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "debugger_statement",
+      "stack": Array [
+        Object {
+          "column": 5,
+          "file": "timeouts.js",
+          "line": 11,
+          "name": "to3",
+          "scopes": Array [
+            Object {
+              "[name]": "to3",
+            },
+            Object {
+              "[name]": "to1",
+              "intervalCount": "0",
+              "intervalHandler": Object {},
+              "timeoutHandler": Object {},
+            },
+            Object {
+              "[name]": "timeouts.js",
+              "delayTermination": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "delayTermination",
+                "prototype": Object {
+                  "constructor": "function delayTermination() {
+  delayedTermination = true;
+}",
+                },
+              },
+              "signalTerminated": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "signalTerminated",
+                "prototype": Object {
+                  "constructor": "function signalTerminated() {
+  delayedTermination = false;
+}",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "debugger_statement",
+      "stack": Array [
+        Object {
+          "column": 5,
+          "file": "timeouts.js",
+          "line": 11,
+          "name": "to3",
+          "scopes": Array [
+            Object {
+              "[name]": "to3",
+            },
+            Object {
+              "[name]": "to1",
+              "intervalCount": "1",
+              "intervalHandler": Object {},
+              "timeoutHandler": Object {},
+            },
+            Object {
+              "[name]": "timeouts.js",
+              "delayTermination": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "delayTermination",
+                "prototype": Object {
+                  "constructor": "function delayTermination() {
+  delayedTermination = true;
+}",
+                },
+              },
+              "signalTerminated": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "signalTerminated",
+                "prototype": Object {
+                  "constructor": "function signalTerminated() {
+  delayedTermination = false;
+}",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "debugger_statement",
+      "stack": Array [
+        Object {
+          "column": 9,
+          "file": "timeouts.js",
+          "line": 15,
+          "name": "waitSome",
+          "scopes": Array [
+            Object {
+              "[name]": "waitSome",
+            },
+            Object {
+              "[name]": "to3",
+            },
+            Object {
+              "[name]": "to1",
+              "intervalCount": "2",
+              "intervalHandler": Object {},
+              "timeoutHandler": Object {},
+            },
+            Object {
+              "[name]": "timeouts.js",
+              "delayTermination": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "delayTermination",
+                "prototype": Object {
+                  "constructor": "function delayTermination() {
+  delayedTermination = true;
+}",
+                },
+              },
+              "signalTerminated": Object {
+                "arguments": "null",
+                "caller": "null",
+                "length": "0",
+                "name": "signalTerminated",
+                "prototype": Object {
+                  "constructor": "function signalTerminated() {
+  delayedTermination = false;
+}",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
+`;
+
 exports[`VSCode protocol handlers uncaught exception breakpoints 1`] = `
 Object {
   "stderr": "",

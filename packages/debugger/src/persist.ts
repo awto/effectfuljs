@@ -10,11 +10,13 @@ const {
   native,
   closures,
   binds,
-  undef
+  undef,
+  CLOSURE_META,
+  CLOSURE_PARENT
 } = State;
 
 const weakMapSet = native.WeakMap.set;
-const nativeCall = native.FunctionMethods.call;
+const __effectful__nativeCall = native.FunctionMethods.call;
 
 export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
 export const regAutoOpaqueConstr = config.persistState
@@ -79,10 +81,11 @@ export const FunctionDescriptor = S.regDescriptor<any>({
   write(ctx, value) {
     const json: S.JSONObject = {};
     const descr = <State.Closure>State.closures.get(value);
-    json.m = ctx.step(descr.meta, json, "m");
-    if (descr.parent) {
-      json.p = ctx.step(descr.parent, json, "p");
-      json.v = ctx.step(descr.parent.$, json, "v");
+    json.m = ctx.step(descr[CLOSURE_META], json, "m");
+    const parent = descr[CLOSURE_PARENT];
+    if (parent) {
+      json.p = ctx.step(parent, json, "p");
+      json.v = ctx.step(parent.$, json, "v");
     }
     return json;
   }
@@ -152,7 +155,10 @@ function makeBind(): (...args: any[]) => any {
     let index = 0;
     for (const i of boundArgs) arr[++index] = i;
     for (const i of rest) arr[++index] = i;
-    return (<any>nativeCall).nativeApply(fun, <any>arr);
+    return (<any>__effectful__nativeCall).__effectful__nativeApply(
+      fun,
+      <any>arr
+    );
   }
   if (BindDescriptor) S.setObjectDescriptor(__effectful__Bind, BindDescriptor);
   return __effectful__Bind;

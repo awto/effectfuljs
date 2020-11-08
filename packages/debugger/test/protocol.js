@@ -14,8 +14,7 @@ let eventsCbs = {};
 let responsesCbs = {};
 let reverseRequestsCbs = {};
 let terminated = false;
-const nativeSetImmediate = setImmediate;
-const nativeClearImmediate = clearImmediate;
+let delayedTermination = false;
 let loaded = false;
 
 const nativeConsole = native.console;
@@ -59,7 +58,7 @@ function recv(msg) {
       if ((cbs = eventsCbs[eventName])) {
         while (cbs.length) {
           const f = native.Array.pop.call(cbs, data.body);
-          setImmediate(function() {
+          wrappedSetImmediate(function() {
             f(data.body);
           });
         }
@@ -226,9 +225,7 @@ function stackSnapshot(cb) {
                   return;
                 }
                 const j = scopeArr[scopeNum++];
-                const scope = varValue(j.variablesReference, 2, function(
-                  scope
-                ) {
+                varValue(j.variablesReference, 2, function(scope) {
                   scopes.push(scope);
                   scope["[name]"] = j.name;
                   traverseScopes();
@@ -241,38 +238,42 @@ function stackSnapshot(cb) {
   }
 }
 
-const immediateHandlers = new Set();
+const timeoutIds = new Set();
 
-global.setImmediate = function(fun, ...params) {
-  const h = nativeSetImmediate(function() {
-    immediateHandlers.delete(h);
-    return fun(...params);
-  });
-  immediateHandlers.add(h);
-  return h;
-};
+function setRedir(impl) {
+  return function redir(callback, ...params) {
+    let h;
+    params.unshift(function callbackWrap() {
+      timeoutIds.delete(h);
+      if (context.call === callbackWrap) context.call = callback;
+      return callback.apply(this, arguments);
+    });
+    if (context.call === redir) context.call = impl;
+    h = impl.apply(this, params);
+    timeoutIds.add(h);
+    return h;
+  };
+}
 
-global.clearImmediate = function(h) {
-  immediateHandlers.delete(h);
-  return nativeClearImmediate(h);
-};
+const nativeSetImmediate = native.setImmediate;
+const wrappedSetImmediate = setRedir(native.setImmediate);
 
 const savedOnThread = context.onThread;
 
 context.onThread = function() {
   if (
+    !delayedTermination &&
     loaded &&
     context.pausedTop === null &&
     context.queue.length === 0 &&
-    immediateHandlers.size === 0 &&
+    timeoutIds.size === 0 &&
     context.suspended.size === 0
   ) {
-    if (socket) {
-      terminated = true;
+    terminated = true;
+    if (socket)
       socket.send(
         JSON.stringify({ type: "event", event: "stopped", body: {} })
       );
-    }
   }
   savedOnThread();
 };
@@ -358,8 +359,17 @@ function snapshotOnDone(res, onDone) {
   };
 }
 
+function delayTermination() {
+  delayedTermination = true;
+}
+
+function signalTerminated() {
+  delayedTermination = false;
+}
+
 function traverse(mod, opts, request, cb) {
   const res = [];
+  delayedTermination = false;
   launch(mod, opts, () =>
     cont(
       request,
@@ -413,3 +423,5 @@ exports.setBreakpoint = setBreakpoint;
 exports.traverse = traverse;
 exports.traverseBack = traverseBack;
 exports.varValue = varValue;
+exports.delayTermination = delayTermination;
+exports.signalTerminated = signalTerminated;

@@ -54,7 +54,7 @@ S.regOpaqueObject(SerializationDom, "@effectful/debugger/serialization/dom");
 
 export * from "./api";
 
-export { TimeTravel, Engine };
+export { TimeTravel, Engine, State };
 import config from "./config";
 
 export { config };

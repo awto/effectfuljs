@@ -27,6 +27,7 @@ export interface ProtoFrame extends Env {
 
 /** function's call desciption */
 export interface Frame extends ProtoFrame, Env {
+  closure: Closure;
   /** current state */
   state: number;
   /** next iteration state */
@@ -50,10 +51,10 @@ export interface Frame extends ProtoFrame, Env {
   /** set `context.debug = true` on exit */
   restoreEnabled: any;
   /** called if function exits with some resulting value */
-  onResolve: ((value: any) => void) | null;
+  onReturn: ((value: any) => void) | null;
   /** called if function exits with some exception */
-  onReject: ((reason: any) => void) | null;
-  /** the promise to settle on `onResolve`/`onReject` */
+  onError: ((reason: any) => void) | null;
+  /** the promise to settle on `onReturn`/`onError` */
   promise: Promise<any> | null;
   /** when this frame was last updated */
   timestamp: Record | null;
@@ -153,6 +154,8 @@ export interface Module {
   params: null | { [name: string]: any };
   lines?: Brk[][];
   exports: any;
+  onReload: null | ((next: Module) => void);
+  prevVersion: Module | null;
 }
 
 /** function's description */
@@ -196,6 +199,7 @@ export type FunctionDescr = {
   shift: number;
   deps: FunctionDescr[];
   scopeDepth: number;
+  onReload: null | ((prev: Closure, next: Closure) => void);
 };
 
 export type NonBlackboxFunctionDescr = FunctionDescr & {
@@ -303,16 +307,25 @@ export interface State {
 /** known closures */
 export const closures = new WeakMap<AnyFunc, Closure>();
 export const functions = new WeakMap<AnyFunc, FunctionDescr>();
-export const thunks = new WeakMap<any, AnyFunc>();
+export const thunks = new WeakMap<any, Frame | null>();
 export const binds = new WeakMap<
   AnyFunc,
   { self: any; args: any[]; fun: AnyFunc }
 >();
 
+const CLOSURE_PARENT = 0;
+const CLOSURE_VARS = 1;
+const CLOSURE_META = 2;
+const CLOSURE_FUNC = 3;
+
 export interface Closure {
-  meta: FunctionDescr;
-  parent: Frame | null;
+  [CLOSURE_PARENT]: Frame | null;
+  [CLOSURE_VARS]: any[] | null;
+  [CLOSURE_META]: FunctionDescr;
+  [CLOSURE_FUNC]: () => any;
 }
+
+export { CLOSURE_PARENT, CLOSURE_VARS, CLOSURE_META, CLOSURE_FUNC };
 
 /** a part of context stores information about currently executing function */
 export interface Job {
@@ -360,8 +373,8 @@ export function nop() {
 
 declare global {
   interface Function {
-    nativeCall(this: any, ...args: any[]): any;
-    nativeApply(this: any, self: any, args: any[]): any;
+    __effectful__nativeCall(this: any, ...args: any[]): any;
+    __effectful__nativeApply(this: any, self: any, args: any[]): any;
   }
 }
 
@@ -444,7 +457,11 @@ export const native = {
     delete: WeakSet.prototype.delete
   },
   setInterval,
-  setTimeout
+  setTimeout,
+  clearTimeout,
+  clearInterval,
+  setImmediate: typeof setImmediate !== "undefined" && setImmediate,
+  clearImmediate: typeof clearImmediate !== "undefined" && clearImmediate
 };
 
 export function returnToken() {
@@ -577,8 +594,8 @@ export type Item = { value: any; done: boolean };
 export interface AsyncGeneratorFrame extends Frame {
   running: boolean;
   queue: (() => void)[];
-  onResolve: (value: any) => void;
-  onReject: (reason: any) => void;
+  onReturn: (value: any) => void;
+  onError: (reason: any) => void;
   promise: Promise<Item>;
   sent: any;
   iter: AsyncIterable<any>;
@@ -673,7 +690,7 @@ export function liftSync(fun: (this: any, ...args: any[]) => any): any {
     const savedDebug = context.enabled;
     try {
       context.enabled = false;
-      return (<any>fun).nativeApply(this, <any>arguments);
+      return (<any>fun).__effectful__nativeApply(this, <any>arguments);
     } finally {
       context.enabled = savedDebug;
     }
@@ -695,26 +712,26 @@ export function signalThread() {
 }
 
 if (config.patchRT) {
-  Object.defineProperty(Function.prototype, "nativeCall", {
+  Object.defineProperty(Function.prototype, "__effectful__nativeCall", {
     configurable: true,
     writable: true,
     value: native.FunctionMethods.call
   });
 
-  Object.defineProperty(Function.prototype, "nativeApply", {
+  Object.defineProperty(Function.prototype, "__effectful__nativeApply", {
     configurable: true,
     writable: true,
     value: native.FunctionMethods.apply
   });
 
-  Object.defineProperty(Function.prototype, "nativeBind", {
+  Object.defineProperty(Function.prototype, "__effectful__nativeBind", {
     configurable: true,
     writable: true,
     value: native.FunctionMethods.bind
   });
 }
 
-/** for debugger's debug */
+/** # for debugger's debug */
 export function metaDescr(meta: FunctionDescr): string {
   if (!meta) return "<NO META>";
   return `${meta.origName}/${meta.name}@${meta.module.name}:${meta.line}`;
@@ -727,10 +744,12 @@ function frameLocaction(frame: Frame, state: number): string {
 
 function frameInfoDescr(frame: Frame) {
   if (!frame) return "<NO FRAME>";
-  return `${metaDescr(frame.meta)},S:${frameLocaction(
+  return `${frame.restoreEnabled !== undef ? "! " : "  "}${metaDescr(
+    frame.meta
+  )},S:${frameLocaction(frame, frame.state)},G:${frameLocaction(
     frame,
-    frame.state
-  )},G:${frameLocaction(frame, frame.goto)}`;
+    frame.goto
+  )}`;
 }
 
 export function stackDescr(top = context.top || context.pausedTop): string[] {
@@ -748,3 +767,36 @@ export function trace(...args: [any, ...any[]]) {
 }
 
 if (config.verbose) Error.stackTraceLimit = Infinity;
+
+export function mergeVersions(from: any, to: any) {
+  if (typeof from !== "object" || typeof to !== "object") return;
+  for (const i of native.Object.keys(to)) {
+    const fromProp = from[i];
+    const toProp = to[i];
+    if (typeof fromProp !== "function" || typeof toProp !== "function")
+      continue;
+    const fromClos = closures.get(fromProp);
+    const toClos = closures.get(toProp);
+    if (!fromClos || !toClos) return;
+    const fromMeta = fromClos[CLOSURE_META];
+    const toMeta = toClos[CLOSURE_META];
+    if (fromMeta.onReload) {
+      fromMeta.onReload(fromClos, toClos);
+    } else native.Object.assign(fromMeta, toMeta);
+    native.Object.assign(fromClos, toClos);
+    closures.set(fromProp, toClos);
+  }
+}
+
+export function mergeModule(mod: Module, prevMod: Module) {
+  if (!prevMod) return;
+  const cjs = mod.cjs;
+  const prevCjs = prevMod.cjs;
+  if (!cjs || !prevCjs) return;
+  if (prevMod.onReload) {
+    mod.onReload = prevMod.onReload;
+    prevMod.onReload(mod);
+  } else {
+    mergeVersions(prevCjs.exports, cjs.exports);
+  }
+}

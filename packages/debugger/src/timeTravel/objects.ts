@@ -14,10 +14,10 @@ import * as Instr from "../instr/rt";
 import * as Engine from "../engine";
 
 const { record } = Core;
-const { journal, context, native, token } = State;
+const { journal, context, native, token, CLOSURE_META, CLOSURE_PARENT } = State;
 const { record1, record2, record3, record4 } = Binds;
-const nativeCall = native.FunctionMethods.call;
-const nativeApply = native.Reflect.apply;
+const __effectful__nativeCall = native.FunctionMethods.call;
+const __effectful__nativeApply = native.Reflect.apply;
 
 function isInt(str: string): boolean {
   return String(Math.ceil(Math.abs(<any>str))) === str;
@@ -156,7 +156,7 @@ const weakMapSet = native.WeakMap.set;
 
 const NativeSet = Set;
 
-export const nativeObject = native.Object;
+const nativeObject = native.Object;
 
 export const DisableKeysHistorySymbol = Symbol.for("@effectful/no-keys");
 
@@ -204,7 +204,7 @@ function getOrCreateObjKeys(
       prev: symKeys
     };
   }
-  weakMapSet.nativeCall(
+  weakMapSet.__effectful__nativeCall(
     objectKeysDict,
     obj,
     (descr = {
@@ -413,10 +413,14 @@ export const set: (
 
 function continueMCall(args: [any, ...any[]], prop: string, func: any) {
   if (!func) throw new TypeError(`${prop} isn't a function`);
-  return nativeApply(nativeCall, (context.call = func), args);
+  return __effectful__nativeApply(
+    __effectful__nativeCall,
+    (context.call = func),
+    args
+  );
 }
 
-const mcallContClosure = <State.ProtoFrame>State.closures.get(Instr.mcallCont);
+const mcallContClosure = <State.Closure>State.closures.get(Instr.mcallCont);
 
 export const mcall: (
   prop: string,
@@ -430,13 +434,7 @@ export const mcall: (
         func = args[0][prop];
       } catch (e) {
         if (e === token) {
-          const frame = Engine.makeFrame(
-            Instr.mcallCont,
-            mcallContClosure.meta,
-            mcallContClosure.parent,
-            (<any>mcallContClosure.parent).$,
-            void 0
-          );
+          const frame = Engine.makeFrame(mcallContClosure, void 0);
           let after = <State.Frame>context.top;
           while (after.next !== top) after = <State.Frame>after.next;
           frame.goto = 1;
@@ -447,12 +445,20 @@ export const mcall: (
         throw e;
       }
       if (!func) throw new TypeError(`${prop} isn't a function`);
-      return nativeApply(nativeCall, (context.call = func), args);
+      return __effectful__nativeApply(
+        __effectful__nativeCall,
+        (context.call = func),
+        args
+      );
     }
   : function mcall(prop: string, ...args: [any, ...any[]]) {
       const func = args[0][prop];
       if (!func) throw new TypeError(`${prop} isn't a function`);
-      return nativeApply(nativeCall, (context.call = func), args);
+      return __effectful__nativeApply(
+        __effectful__nativeCall,
+        (context.call = func),
+        args
+      );
     };
 
 export function get(value: any, property: string): any {
@@ -577,7 +583,8 @@ export function forInIterator(obj: any): Iterable<string> {
     for (const i in obj) {
       if (
         descr &&
-        (!isInt(i) || !Object.prototype.hasOwnProperty.nativeCall(obj, i))
+        (!isInt(i) ||
+          !Object.prototype.hasOwnProperty.__effectful__nativeCall(obj, i))
       )
         break;
       if (!seen.has(i)) {
@@ -674,7 +681,7 @@ export const del: (
 function propSetOp(this: any) {
   const { a: target, b: name, c: value } = this;
   if (dataBreakpoints) checkDataBreakpoint(target, name);
-  if (Object.prototype.hasOwnProperty.nativeCall(target, name)) {
+  if (Object.prototype.hasOwnProperty.__effectful__nativeCall(target, name)) {
     this.c = target[name];
   } else {
     this.call = propDelOp;
@@ -689,7 +696,7 @@ regOpaqueObject(propSetOp, "#pset");
 function propDelOp(this: any) {
   const { a: obj, b: name } = this;
   if (dataBreakpoints) checkDataBreakpoint(obj, name);
-  if (Object.prototype.hasOwnProperty.nativeCall(obj, name)) {
+  if (Object.prototype.hasOwnProperty.__effectful__nativeCall(obj, name)) {
     this.call = propSetOp;
     this.c = obj[name];
     record(this);
@@ -725,7 +732,7 @@ opaqueWeakSet(notExtensible, "@effectful/debugger/notExtensible");
 const weakAdd = WeakSet.prototype.add;
 
 function objectFreeze(obj: any) {
-  weakAdd.nativeCall(frozen, obj);
+  weakAdd.__effectful__nativeCall(frozen, obj);
   return obj;
 }
 
@@ -736,7 +743,7 @@ function objectIsFrozen(obj: any) {
 }
 
 function objectSeal(obj: any) {
-  weakAdd.nativeCall(sealed, obj);
+  weakAdd.__effectful__nativeCall(sealed, obj);
   return obj;
 }
 
@@ -761,7 +768,7 @@ function objectPreventExtensions(obj: any) {
       "DEBUGGER: Object.preventExtensions is ignored (not implemented yet)"
     );
   }
-  weakAdd.nativeCall(notExtensible, obj);
+  weakAdd.__effectful__nativeCall(notExtensible, obj);
   return obj;
 }
 
@@ -903,7 +910,7 @@ function objectDefineProperty(
   if (context.call === objectDefineProperty)
     context.call = reflectDefineProperty;
   reflectDefineProperty(obj, name, descr);
-  return descr;
+  return obj;
 }
 
 function objectDefinePropertyOp(this: any) {
@@ -1018,7 +1025,7 @@ const trapsWrapper: ProxyHandler<any> = {
     const method = this.traps.apply;
     if (method) {
       if (context.enabled && context.call === this.proxy) context.call = method;
-      return method.nativeCall(this.traps, target, self, args);
+      return method.__effectful__nativeCall(this.traps, target, self, args);
     }
     if (context.enabled && context.call === this.proxy) context.call = target;
     return nativeReflect.apply(target, self, args);
@@ -1027,7 +1034,12 @@ const trapsWrapper: ProxyHandler<any> = {
     const method = this.traps.construct;
     if (method) {
       if (context.enabled && context.call === this.proxy) context.call = method;
-      return method.nativeCall(this.traps, target, args, newTarget);
+      return method.__effectful__nativeCall(
+        this.traps,
+        target,
+        args,
+        newTarget
+      );
     }
     if (context.enabled && context.call === this.proxy) context.call = target;
     return nativeReflect.construct(target, args, newTarget);
@@ -1060,10 +1072,14 @@ function wrapProxyTrapMethod(name: string, defaultImpl: any) {
     ((<any>trapsWrapper)[name] = function(this: ProxyData, ...args: any[]) {
       const method = (<any>this.traps)[name];
       if (!method)
-        return nativeApply((<any>nativeReflect)[name], nativeReflect, args);
+        return __effectful__nativeApply(
+          (<any>nativeReflect)[name],
+          nativeReflect,
+          args
+        );
       if (context.enabled && context.call === defaultImpl)
         context.call = method;
-      return nativeApply(method, this.traps, args);
+      return __effectful__nativeApply(method, this.traps, args);
     }),
     `@effectful/debugger/trap#${name}`
   );
@@ -1097,7 +1113,7 @@ function wrapRevoke(
   func: (this: any) => any
 ) {
   descr.revoked = false;
-  return func.nativeCall(this);
+  return func.__effectful__nativeCall(this);
 }
 
 regOpaqueObject(wrapRevoke, "@effectful/debugger/proxy#revoke");
@@ -1185,8 +1201,8 @@ export const nativeTypedArray = {
 function spliceOp(this: any) {
   let { a: arr, b: start, c: del, d: ins } = this;
   const insNum = (this.c = ins.length);
-  nativeArray.unshift.nativeCall(ins, start, del);
-  const res = nativeApply(nativeArray.splice, arr, ins);
+  nativeArray.unshift.__effectful__nativeCall(ins, start, del);
+  const res = __effectful__nativeApply(nativeArray.splice, arr, ins);
   this.d = Array.from(res);
   if (dataBreakpoints) {
     const diff = insNum - del;
@@ -1207,8 +1223,8 @@ function spliceImpl(arr: any[], start: number, del: number, ins: any[]) {
   const nextDel = ins.length;
   if (start < 0) start = arr.length + start;
   if (del == null) del = arr.length - start;
-  nativeArray.unshift.nativeCall(ins, start, del);
-  const res = nativeApply(nativeArray.splice, arr, ins);
+  nativeArray.unshift.__effectful__nativeCall(ins, start, del);
+  const res = __effectful__nativeApply(nativeArray.splice, arr, ins);
   record4(spliceOp, arr, start, nextDel, Array.from(res));
   return res;
 }
@@ -1274,7 +1290,7 @@ function arraySet(arr: any[], name: string, value: any) {
 }
 
 function arrayPopOp(this: any) {
-  this.b = nativeArray.pop.nativeCall(this.a);
+  this.b = nativeArray.pop.__effectful__nativeCall(this.a);
   if (dataBreakpoints) {
     const len = this.a.length;
     checkDataBreakpointFromTo(this.a, len, true, len + 1);
@@ -1287,7 +1303,7 @@ regOpaqueObject(arrayPopOp, "#arr$pop");
 
 export function arrayPop(this: any[]): any {
   if (this.length) {
-    const res = nativeArray.pop.nativeCall(this);
+    const res = nativeArray.pop.__effectful__nativeCall(this);
     if (dataBreakpoints) {
       const len = this.length;
       checkDataBreakpointFromTo(this, len, true, len + 1);
@@ -1316,7 +1332,7 @@ regOpaqueObject(arrayPush1Op, "#arr$push1");
 export function arrayPush(this: any[]): number {
   const fromLen = this.length;
   const argLen = arguments.length;
-  const res = nativeApply(nativeArray.push, this, arguments);
+  const res = __effectful__nativeApply(nativeArray.push, this, arguments);
   if (dataBreakpoints) checkDataBreakpointFromTo(this, fromLen, argLen !== 0);
   if (journal.enabled && context.call === arrayPush) {
     context.call = null;
@@ -1330,7 +1346,7 @@ regOpaqueObject(arrayPush, "#arr$push");
 
 function arrayShiftOp(this: any) {
   if (dataBreakpoints) checkDataBreakpointFromTo(this.a, 0, true);
-  const res = nativeArray.shift.nativeCall(this.a);
+  const res = nativeArray.shift.__effectful__nativeCall(this.a);
   this.b = res;
   this.call = arrayUnshift1Op;
   record(this);
@@ -1342,7 +1358,7 @@ export function arrayShift(this: any[]): any {
   const len = this.length;
   if (len) {
     if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, true, len);
-    const res = nativeArray.shift.nativeCall(this);
+    const res = nativeArray.shift.__effectful__nativeCall(this);
     if (journal.enabled && context.call === arrayShift) {
       context.call = null;
       record2(arrayUnshift1Op, this, res);
@@ -1354,7 +1370,7 @@ export function arrayShift(this: any[]): any {
 
 function arrayUnshift1Op(this: any) {
   const { a: arr, b: value } = this;
-  (<any>nativeArray.unshift).nativeCall(arr, value);
+  (<any>nativeArray.unshift).__effectful__nativeCall(arr, value);
   this.call = arrayShiftOp;
   this.b = null;
   if (dataBreakpoints) checkDataBreakpointFromTo(arr, 0, true);
@@ -1370,7 +1386,7 @@ export function arrayUnshift(this: any[]): number {
     if (alen === 1) record1(arrayShiftOp, this);
     else record4(spliceOp, this, 0, alen, []);
   }
-  const res = nativeApply(nativeArray.unshift, this, arguments);
+  const res = __effectful__nativeApply(nativeArray.unshift, this, arguments);
   if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, true);
   return res;
 }
@@ -1378,7 +1394,7 @@ export function arrayUnshift(this: any[]): number {
 function arrayReverseOp(this: any) {
   record(this);
   if (dataBreakpoints) checkDataBreakpointFromTo(this.a, 0, false);
-  nativeArray.reverse.nativeCall(this.a);
+  nativeArray.reverse.__effectful__nativeCall(this.a);
 }
 
 export function arrayReverse(this: any[]): any[] {
@@ -1387,7 +1403,7 @@ export function arrayReverse(this: any[]): any[] {
     record1(arrayReverseOp, this);
   }
   if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, false);
-  return nativeArray.reverse.nativeCall(this);
+  return nativeArray.reverse.__effectful__nativeCall(this);
 }
 
 regOpaqueObject(arrayReverseOp, "#arr$reverse");
@@ -1398,7 +1414,7 @@ export function arraySort(this: any[], pred: any): any[] {
     record4(spliceOp, this, 0, this.length, Array.from(this));
   }
   if (dataBreakpoints) checkDataBreakpointFromTo(this, 0, false);
-  return nativeArray.sort.nativeCall(this, pred);
+  return nativeArray.sort.__effectful__nativeCall(this, pred);
 }
 
 export function arraySplice(
@@ -1426,7 +1442,7 @@ export function arraySplice(
     context.call = null;
     return spliceImpl(this, from, del, ins);
   }
-  return nativeApply(nativeArray.splice, this, arguments);
+  return __effectful__nativeApply(nativeArray.splice, this, arguments);
 }
 
 function typedArraySetOp(this: any) {
@@ -1480,13 +1496,17 @@ export function typedArrayFill(
   return nativeTypedArray.fill.call(this, value, offset);
 }
 
-function reflectApply(target: any, self: any, args: any[]) {
-  if (context.call === reflectApply) context.call = target;
+function __effectful__reflectApply(target: any, self: any, args: any[]) {
+  if (context.call === __effectful__reflectApply) context.call = target;
   return nativeReflect.apply(target, self, args);
 }
 
-function reflectConstruct(target: any, args: any[], newTarget: any) {
-  if (context.call === reflectConstruct) context.call = target;
+function __effectful__reflectConstruct(
+  target: any,
+  args: any[],
+  newTarget: any
+) {
+  if (context.call === __effectful__reflectConstruct) context.call = target;
   return arguments.length < 3
     ? nativeReflect.construct(target, args)
     : nativeReflect.construct(target, args, newTarget);
@@ -1561,8 +1581,8 @@ function reflectSet(target: any, name: string, value: any, receiver?: any) {
 regOpaqueObject(reflectSet, "@effectful/debugger/reflectSet");
 
 if (config.timeTravel && config.patchRT) {
-  patch(Reflect, "apply", reflectApply);
-  patch(Reflect, "construct", reflectConstruct);
+  patch(Reflect, "apply", __effectful__reflectApply);
+  patch(Reflect, "construct", __effectful__reflectConstruct);
   patch(Reflect, "defineProperty", reflectDefineProperty);
   patch(Reflect, "set", reflectSet);
   patch(Reflect, "deleteProperty", del);
@@ -1585,7 +1605,7 @@ export function patchWithPolifil(
   function impl(this: any) {
     const method: any = proxies?.has(this) ? polyfillImpl : defaultImpl;
     if (context.call === impl) context.call = method;
-    return nativeApply(method, this, arguments);
+    return __effectful__nativeApply(method, this, arguments);
   }
   regOpaqueObject(
     impl,

@@ -22,7 +22,9 @@ import * as util from "util";
 import { map, filter } from "../kit";
 import * as Persist from "../persist";
 
-const savedObject = State.native.Object;
+const { native } = State;
+const savedObject = native.Object;
+const nativeSetTimeout = native.setTimeout;
 const trace = State.trace;
 
 const {
@@ -360,7 +362,7 @@ context.onThread = function() {
   if (context.top || context.pausedTop) return;
   if (!context.queue.length && !context.top && !context.pausedTop) {
     if (!config.stopOnExit) {
-      cancelExit = setTimeout(function() {
+      cancelExit = nativeSetTimeout(function() {
         cancelExit = 0;
         if (!context.queue.length && !context.top && !context.pausedTop) {
           Comms.unref();
@@ -394,7 +396,7 @@ function scheduleRestart() {
   State.cancelInterrupt();
   clearTimeout(restartTimeout);
   restartTimeout = 0;
-  restartTimeout = setTimeout(restart, RESTART_TIMEOUT);
+  restartTimeout = nativeSetTimeout(restart, RESTART_TIMEOUT);
 }
 
 export function restart() {
@@ -754,7 +756,7 @@ function varValue(name: string, value: any): VarValue {
     case "function":
       const descr = State.closures.get(value);
       if (descr) {
-        const meta = descr.meta;
+        const meta = descr[State.CLOSURE_META];
         if (meta) {
           textValue = `${proxies && proxies.has(value) ? "Proxy " : ""}${
             meta.origName
@@ -842,6 +844,10 @@ function reset() {
 handlers.childLaunch = function(args, res) {
   setDirSep(args.dirSep);
   config.timeTravelDisabled = !!args.timeTravelDisabled;
+  let name = "Thread";
+  if (typeof process !== "undefined" && process.argv && process.argv.length)
+    name = path.basename(process.argv[0], ".exe");
+  else if (typeof window !== "undefined") name = window.location.pathname;
   if (config.timeTravel) {
     TT.reset(!config.timeTravelDisabled);
     if (config.mutationObserver && TT.DOM && typeof window !== "undefined")
@@ -853,6 +859,7 @@ handlers.childLaunch = function(args, res) {
     );
   }
   res.body = {
+    name,
     breakpoints:
       args.breakpoints && map(args.breakpoints, (v: any) => setBreakpoints(v))
   };
@@ -1536,7 +1543,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
     if (state.extra) for (const i of state.extra) Persist.extra.add(i);
     context.value = null;
     // reloading somehow breaks WebSockets
-    setTimeout(
+    nativeSetTimeout(
       function() {
         if (typeof document !== "undefined") {
           if (config.mutationObserver && TT.DOM) {

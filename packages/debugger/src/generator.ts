@@ -1,6 +1,5 @@
 import { FunctionDescr, GeneratorFrame } from "./state";
 import * as State from "./state";
-import config from "./config";
 import {
   pushFrame,
   popFrame,
@@ -12,7 +11,7 @@ import {
   FunctionConstr
 } from "./engine";
 import { regConstructor, regOpaqueObject } from "@effectful/serialization";
-const { context, native } = State;
+const { context, native, CLOSURE_FUNC } = State;
 
 const { defineProperty, setPrototypeOf } = native.Object;
 
@@ -53,8 +52,8 @@ function next(this: any, value: any) {
   if (frame.running) throw new Error("Generator is already running");
   frame.sent = value;
   frame.running = true;
-  context.call = context.call === next ? frame.func : null;
-  pushFrame(frame);
+  pushFrame(frame, next);
+  context.call = null;
   try {
     return frame.meta.handler(frame, frame.$, value);
   } catch (e) {
@@ -110,44 +109,13 @@ export function closG($$: any, meta: FunctionDescr, closure: any) {
   return res;
 }
 
-export const frameG: (
-  closure: any,
-  meta: any,
-  parent: any,
-  vars: any[] | null,
-  newTarget: any
-) => GeneratorFrame = config.expInlineNext
-  ? function frameG(
-      closure: any,
-      meta: any,
-      parent: any,
-      vars: any[] | null,
-      newTarget: any
-    ) {
-      const frame = <GeneratorFrame>(
-        makeFrame(closure, meta, parent, vars, newTarget)
-      );
-      const iter = Object.create(closure.prototype);
-      frame.iter = iter;
-      iter.next = (<any>frame.meta).nextImpl;
-      iter._frame = frame;
-      return frame;
-    }
-  : function frameG(
-      closure: any,
-      meta: any,
-      parent: any,
-      vars: any[] | null,
-      newTarget: any
-    ) {
-      const frame = <GeneratorFrame>(
-        makeFrame(closure, meta, parent, vars, newTarget)
-      );
-      const iter = Object.create(closure.prototype);
-      frame.iter = iter;
-      iter._frame = frame;
-      return frame;
-    };
+export function frameG(closure: State.Closure, newTarget: any) {
+  const frame = <GeneratorFrame>makeFrame(closure, newTarget);
+  const iter = Object.create(closure[CLOSURE_FUNC].prototype);
+  frame.iter = iter;
+  iter._frame = frame;
+  return frame;
+}
 
 export function yld(value: any): any {
   const frame = <GeneratorFrame>context.top;
