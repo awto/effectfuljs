@@ -64,7 +64,6 @@ declare module "./protocol" {
 
 Comms.onmessage = dispatch;
 const { context, journal } = State;
-const sysConsole = console;
 const localConsole = config.localConsole
   ? console
   : {
@@ -84,14 +83,8 @@ let brkOut: State.Frame | null = null;
 let stepIn = false;
 let pauseNext = false;
 let backward = false;
-const isBrowser = typeof window !== "undefined";
-
-/**
- * saving break frame for async functions which may
- * be removed from the stack already
- * TODO: implement this in the engine
- */
-let brkFrame: State.Frame | null = null;
+let stopped = false;
+const isBrowser = State.isBrowser;
 
 let normalizeDir = (v: string) =>
   State.normalizeDrive(path.resolve(config.srcRoot, v));
@@ -123,12 +116,11 @@ interface VarValue {
   indexedVariables?: number;
 }
 
-let reason: string | undefined;
 let runningTrace: boolean = false;
 
 function defaultNeedsBreak(brk: State.Brk, top: State.Frame) {
-  reason = checkPause(brk, top);
-  brkFrame = reason ? top : null;
+  const reason = checkPause(brk, top);
+  top.stopReason = reason;
   return reason != null;
 }
 
@@ -309,7 +301,6 @@ context.onLoad = function(module: State.Module, hot: boolean) {
       }
       if (hot) {
         if (config.onHotSwapping) {
-          // const savedDebug = context.debug;
           try {
             context.enabled = false;
             config.onHotSwapping(module);
@@ -327,8 +318,6 @@ context.onLoad = function(module: State.Module, hot: boolean) {
 let firstThread = true;
 
 function startThreadImpl(job: State.Job, brk: State.Brk | null) {
-  // let stop = false;
-  reason = void 0;
   context.enabled = job.debug;
   context.brk = brk;
   context.value = job.value;
@@ -514,7 +503,7 @@ function getSource(module: State.Module) {
 
 function getFrame(frameId = 0): State.Frame | null {
   let cur = context.pausedTop || context.top;
-  for (let i = toLocal(frameId); cur; cur = cur /*.next*/.caller) {
+  for (let i = toLocal(frameId); cur; cur = cur.caller) {
     if (!cur.brk || cur.meta.blackbox) continue;
     if (i === 0) break;
     --i;
@@ -542,8 +531,8 @@ handlers.stackTrace = function(args, response) {
   const maxLevels = typeof args.levels === "number" ? args.levels : 1000;
   const endFrame = startFrame + maxLevels;
   const visibleFrames = [];
-  const top = brkFrame || context.pausedTop;
-  for (let i = top; i; i = i /*.next*/.caller) {
+  const top = context.pausedTop;
+  for (let i = top; i; i = i.caller) {
     if (i.meta.blackbox || !i.meta.states[i.state]) continue;
     visibleFrames.push(i);
   }
@@ -615,7 +604,6 @@ handlers.scopes = function(args, response) {
     if (brk && brk.scope) {
       const ref = newVarRef();
       const names = getKeys(brk.scope);
-
       const scopeDescr = {
         [variablesViewSym](variables: VarValue[]) {
           if (top) {
@@ -834,8 +822,9 @@ function str(value: any): any {
 }
 
 function reset() {
-  brkFrame = brkOut = brkNext = null;
+  brkOut = brkNext = null;
   stepIn = false;
+  stopped = false;
   pauseNext = false;
   backward = false;
   resetScopes();
@@ -880,8 +869,8 @@ handlers.childLaunch = function(args, res) {
   State.resumeEventQueue();
 };
 
-function checkPause(brk: State.Brk, top: State.Frame): undefined | string {
-  if (!context.enabled) return undefined;
+function checkPause(brk: State.Brk, top: State.Frame): null | string {
+  if (!context.enabled) return null;
   if (firstThread) {
     firstThread = false;
     onEntry();
@@ -900,7 +889,7 @@ function checkPause(brk: State.Brk, top: State.Frame): undefined | string {
     (!bp.hitCondition || bp.hitCondition(top) === bp.hits++)
   )
     return "breakpoint";
-  if (brk.flags & State.BrkFlag.EMPTY) return void 0;
+  if (brk.flags & State.BrkFlag.EMPTY) return null;
   if (brk.flags & State.BrkFlag.STMT) {
     if (stepIn) return "step";
     if ((brkNext = firstActiveFrame(brkNext)) && brkNext === top) return "next";
@@ -908,13 +897,11 @@ function checkPause(brk: State.Brk, top: State.Frame): undefined | string {
   } else if (brk.flags & State.BrkFlag.EXIT) {
     if (brkOut && brkOut === top) return "stepOut";
   }
-  /*
-  if (Comms.hasMessage()) {
+  /*if (Comms.hasMessage()) {
     if (config.verbose) trace("DEBUGGER: interrupt");
     return "interrupt";
-  }
-  */
-  return void 0;
+  }*/
+  return null;
 }
 
 let stepCount = 0;
@@ -945,7 +932,6 @@ function stateDescr(
 function run() {
   context.top = context.pausedTop;
   context.brk = context.pausedTop && context.pausedTop.brk;
-  reason = void 0;
   if (config.verbose)
     trace(`DEBUGGER: run ${stateDescr(stepCount++, context.threadId, true)}`);
   context.pausedTop = null;
@@ -971,7 +957,7 @@ const step: () => void = config.timeTravel
             context.error &&
             Engine.checkErrBrk(<State.Frame>top, context.value)
           ) {
-            reason = "exception";
+            if (top) top.stopReason = "exception";
             context.onStop();
             return;
           }
@@ -982,7 +968,9 @@ const step: () => void = config.timeTravel
               if (brk) {
                 if (brk === lastBrk) continue;
                 lastBrk = brk;
-                if ((reason = checkPause(brk, top)) != null) {
+                const reason = checkPause(brk, top);
+                if (reason != null) {
+                  top.stopReason = reason;
                   context.onStop();
                   return;
                 }
@@ -994,7 +982,7 @@ const step: () => void = config.timeTravel
       runningTrace = false;
       if (context.top) {
         if (backward) {
-          reason = "entry";
+          context.top.stopReason = "entry";
           context.onStop();
         } else Engine.step();
       } else {
@@ -1005,6 +993,9 @@ const step: () => void = config.timeTravel
   : Engine.step;
 
 function signalStopped() {
+  if (stopped) return;
+  stopped = true;
+  const reason = context.pausedTop?.stopReason;
   resetScopes();
   event(
     "stopped",
@@ -1022,17 +1013,21 @@ function signalStopped() {
 }
 
 context.onStop = function onStop(_description?: string) {
+  const top = context.top;
+  if (!top) return;
+  const reason = top.stopReason;
+  if (!reason) return;
   if (config.verbose) trace(`DEBUGGER: stop signal ${reason || "?"}`);
-  if (!context.top) return;
   State.pauseEventQueue();
   if (reason === "interrupt") {
-    reason = void 0;
     State.afterInterrupt(interruptibleStep);
+    top.stopReason = null;
     return;
   }
-  context.pausedTop = context.top;
+  context.pausedTop = top;
   context.top = null;
   signalStopped();
+  top.stopReason = null;
 };
 
 function interruptibleStep() {
@@ -1110,7 +1105,7 @@ handlers.continue = function(_, res) {
 
 handlers.next = function(_, res) {
   send(res);
-  const top = brkFrame || context.pausedTop;
+  const top = context.pausedTop;
   reset();
   brkNext = top;
   if (brkNext && brkNext.brk && brkNext.brk.flags & State.BrkFlag.EXIT)
@@ -1120,7 +1115,7 @@ handlers.next = function(_, res) {
 
 handlers.stepOut = function(_, res) {
   send(res);
-  const top = brkFrame || context.pausedTop;
+  const top = context.pausedTop;
   reset();
   brkOut = top;
   if (brkOut && brkOut.brk && brkOut.brk.flags & State.BrkFlag.EXIT)
@@ -1444,7 +1439,6 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
         syncStack: context.syncStack,
         queue: context.queue,
         brk: context.brk,
-        brkFrame,
         journal: {
           now: journal.now,
           past: journal.past,
@@ -1559,7 +1553,6 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
           queue: context.queue,
           brk: context.brk,
           error: context.error,
-          brkFrame,
           journal: {
             now: journal.now,
             past: journal.past,
@@ -1588,11 +1581,13 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
         }
         const top = context.pausedTop;
         reset();
+        let reason: string | null;
         if (
           top &&
           (reason = checkPause(top.meta.states[top.state], top)) &&
           reason !== "interrupt"
         ) {
+          top.stopReason = reason;
           firstThread = false;
           signalStopped();
         } else run();

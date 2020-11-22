@@ -72,6 +72,11 @@ async function main() {
       (async () => {
         await lib("object-assign", "index.js");
         await lib("react", "cjs/react.development.js");
+        await lib("react/jsx-runtime", "cjs/react-jsx-runtime.development.js");
+        await lib(
+          "react/jsx-dev-runtime",
+          "cjs/react-jsx-dev-runtime.development.js"
+        );
         await lib("scheduler", "cjs/scheduler.development.js");
         await lib("scheduler/tracing", "cjs/scheduler-tracing.development.js");
         await lib("react-dom", "cjs/react-dom.development.js");

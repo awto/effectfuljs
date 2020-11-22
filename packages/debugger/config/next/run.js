@@ -43,8 +43,12 @@ const sharedCompilerConfig = require("@effectful/core/v2/config").default;
 const defaultCompilerConfig = require("@effectful/core/v2/compiler")
   .defaultConfig;
 
-function blackbox(name) {
-  return /node_modules/.test(name);
+function blackbox(filename) {
+  filename = normalizePath(filename);
+  if (!debuggerConfig.blackbox.test(filename)) {
+    return false;
+  }
+  return true;
 }
 
 const SKIP = [
@@ -73,7 +77,6 @@ const SKIP = [
   path.join(NODE_MODULES, "ieee754"),
   path.join(NODE_MODULES, "isarray"),
   path.join(NODE_MODULES, "next", "node_modules"),
-  fs.realpathSync(debuggerConfig.runtimePackages),
   path.resolve(__dirname, "..", ".."),
   path.join(debuggerConfig.packageRoot, ".next"),
   path.join(NODE_MODULES, "css-loader"),
@@ -81,15 +84,66 @@ const SKIP = [
   path.join(NODE_MODULES, "style-loader"),
   path.join(NODE_MODULES, "strip-ansi"),
   path.join(NODE_MODULES, "ansi-regex"),
-  path.join(NODE_MODULES, "caniuse-lite")
-];
+  path.join(NODE_MODULES, "caniuse-lite"),
+  path.join(NODE_MODULES, "watchpack"),
+  path.join(NODE_MODULES, "chalk"),
+  path.join(NODE_MODULES, "lodash"),
+  path.join(NODE_MODULES, "graceful-fs"),
+  path.join(NODE_MODULES, "enhanced-resolve"),
+  path.join(NODE_MODULES, "mkdirp"),
 
-const refreshLoader = targetResolve("@next/react-refresh-utils/loader");
+  /*
+  path.join(NODE_MODULES, "json-parse-better-errors"),
+  path.join(NODE_MODULES, "escape-string-regexp"),
+  path.join(NODE_MODULES, "color-convert"),
+  path.join(NODE_MODULES, "source-map"),
+  path.join(NODE_MODULES, "neo-async"),
+  path.join(NODE_MODULES, "source-list-map"),
+  path.join(NODE_MODULES, "loader-runner"),
+  path.join(NODE_MODULES, "fast-json-stable-stringify"),
+  path.join(NODE_MODULES, "json-schema-traverse"),
+  path.join(NODE_MODULES, "fast-deep-equal"),
+  path.join(NODE_MODULES, "mkdirp"),
+  path.join(NODE_MODULES, "data-uri-to-buffer"),
+  path.join(NODE_MODULES, "schema-utils"),
+  path.join(NODE_MODULES, "loader-utils"),
+  path.join(NODE_MODULES, "emojis-list"),
+  path.join(NODE_MODULES, "postcss"),
+  path.join(NODE_MODULES, "supports-color"),
+  path.join(NODE_MODULES, "line-column"),
+  path.join(NODE_MODULES, "picomatch"),
+  path.join(NODE_MODULES, "anymatch"),
+  path.join(NODE_MODULES, "normalize-path"),
+  path.join(NODE_MODULES, "glob-parent"),
+  path.join(NODE_MODULES, "is-extglob"),
+  path.join(NODE_MODULES, "prop-types"),
+  path.join(NODE_MODULES, "resolve"),
+  path.join(NODE_MODULES, "babel-plugin"),
+  path.join(NODE_MODULES, "semver"),
+  path.join(NODE_MODULES, "browserslist"),
+  path.join(NODE_MODULES, "regexpu-core"),
+  path.join(NODE_MODULES, "regenerator"),
+  path.join(NODE_MODULES, "core-js"),
+  path.join(NODE_MODULES, "styled-jsx"),
+  path.join(NODE_MODULES, "esutils"),*/
+  debuggerConfig.runtimePackages
+]
+  .filter(Boolean)
+  .map(normalizePath);
 
 function exclude(filename) {
-  for (const i of SKIP) if (filename.startsWith(i)) return true;
+  filename = normalizePath(filename);
+  for (const i of SKIP)
+    if (filename.startsWith(i)) {
+      return true;
+    }
+  if (!debuggerConfig.include.test(filename)) return true;
+  if (debuggerConfig.exclude && debuggerConfig.exclude.test(filename))
+    return true;
   return false;
 }
+
+const refreshLoader = targetResolve("@next/react-refresh-utils/loader");
 
 const compilerConfig = {
   ...defaultCompilerConfig,

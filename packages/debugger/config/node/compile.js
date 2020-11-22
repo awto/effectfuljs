@@ -184,10 +184,10 @@ module.exports = function compile(content, filename, module) {
   const State = require("../../state");
   const context = State.context;
   const journal = State.journal;
-  const savedDebug = context.debug;
+  const savedEnabled = context.enabled;
   const savedJournalEnabled = journal.enabled;
   try {
-    context.debug = false;
+    context.enabled = false;
     journal.enabled = false;
     if (config.instrument) {
       opts = new babel.OptionManager().init(
@@ -291,11 +291,11 @@ module.exports = function compile(content, filename, module) {
           const State = require("../../state");
           const context = State.context;
           const journal = State.journal;
-          const savedDebug = context.debug;
+          const savedEnabled = context.enabled;
           const savedJournalEnabled = journal.enabled;
           try {
             disabled = true;
-            context.debug = false;
+            context.enabled = false;
             journal.enabled = false;
             let run;
             const event =
@@ -326,7 +326,7 @@ module.exports = function compile(content, filename, module) {
             } finally {
               event("progressEnd", { progressId });
               journal.enabled = savedJournalEnabled;
-              journal.savedDebug = savedDebug;
+              context.enabled = savedEnabled;
               disabled = false;
             }
             const emodule = context.modulesById[module.id];
@@ -351,7 +351,7 @@ module.exports = function compile(content, filename, module) {
     }
   } finally {
     disabled = false;
-    context.debug = savedDebug;
+    context.enabled = savedEnabled;
     journal.enabled = savedJournalEnabled;
   }
   return code;

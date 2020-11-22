@@ -88,6 +88,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:8@16:0,G:8@16:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -113,6 +117,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:6@15:0,G:8@16:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -138,6 +146,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -146,6 +160,12 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -158,6 +178,12 @@ Object {
             },
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -178,6 +204,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -190,6 +222,12 @@ Object {
             },
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -210,6 +248,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -232,20 +276,7 @@ Object {
           "file": "reverseContinuePlain.js",
           "line": 1,
           "name": "reverseContinuePlain.js",
-          "scopes": Array [
-            Object {
-              "[name]": "reverseContinuePlain.js",
-              "func1": Object {
-                "length": "1",
-                "name": "func1",
-                "prototype": Object {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
-                },
-              },
-              "i": "undefined",
-              "j": "undefined",
-            },
-          ],
+          "scopes": Array [],
         },
       ],
     },
@@ -260,6 +291,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -268,6 +305,12 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -280,6 +323,12 @@ Object {
             },
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -300,6 +349,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -312,6 +367,12 @@ Object {
             },
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -332,6 +393,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/reverseContinuePlain.js:7,S:2@9:4,G:3@10:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/reverseContinuePlain.js:3,S:2@5:2,G:3@12:1",
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:3@13:0,G:4@14:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -357,6 +424,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinuePlain.js",
+              "[top]": Array [
+                "F2:  reverseContinuePlain.js/m$0@test/__fixtures__/tt/reverseContinuePlain.js:1,S:6@15:0,G:8@16:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -391,6 +462,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS.js",
+              "[top]": Array [
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:5@3:0,G:5@3:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -407,6 +482,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS2.js",
+              "[top]": Array [
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:2@2:0,G:3@3:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -418,6 +499,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS.js",
+              "[top]": Array [
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:2@2:0,G:3@3:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -434,6 +521,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS3.js",
+              "[top]": Array [
+                "F6:  reverseContinueCJS3.js/m$0@test/__fixtures__/tt/reverseContinueCJS3.js:1,S:0@1:0,G:2@2:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -445,6 +540,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS2.js",
+              "[top]": Array [
+                "F6:  reverseContinueCJS3.js/m$0@test/__fixtures__/tt/reverseContinueCJS3.js:1,S:0@1:0,G:2@2:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -456,6 +559,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS.js",
+              "[top]": Array [
+                "F6:  reverseContinueCJS3.js/m$0@test/__fixtures__/tt/reverseContinueCJS3.js:1,S:0@1:0,G:2@2:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -469,11 +580,7 @@ Object {
           "file": "reverseContinueCJS.js",
           "line": 1,
           "name": "reverseContinueCJS.js",
-          "scopes": Array [
-            Object {
-              "[name]": "reverseContinueCJS.js",
-            },
-          ],
+          "scopes": Array [],
         },
       ],
     },
@@ -488,6 +595,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS3.js",
+              "[top]": Array [
+                "F6:  reverseContinueCJS3.js/m$0@test/__fixtures__/tt/reverseContinueCJS3.js:1,S:0@1:0,G:2@2:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -499,6 +614,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS2.js",
+              "[top]": Array [
+                "F6:  reverseContinueCJS3.js/m$0@test/__fixtures__/tt/reverseContinueCJS3.js:1,S:0@1:0,G:2@2:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -510,6 +633,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS.js",
+              "[top]": Array [
+                "F6:  reverseContinueCJS3.js/m$0@test/__fixtures__/tt/reverseContinueCJS3.js:1,S:0@1:0,G:2@2:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -526,6 +657,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS2.js",
+              "[top]": Array [
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:2@2:0,G:3@3:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -537,6 +674,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueCJS.js",
+              "[top]": Array [
+                "F4:  reverseContinueCJS2.js/m$0@test/__fixtures__/tt/reverseContinueCJS2.js:1,S:2@2:0,G:3@3:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueCJS.js/m$0@test/__fixtures__/tt/reverseContinueCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -562,6 +705,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueESM.js",
+              "[top]": Array [
+                "F2:  reverseContinueESM.js/m$0@test/__fixtures__/tt/reverseContinueESM.js:1,S:5@4:0,G:5@4:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -578,6 +725,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueESM3.js",
+              "[top]": Array [
+                "F6:  reverseContinueESM3.js/m$0@test/__fixtures__/tt/reverseContinueESM3.js:1,S:4@2:0,G:6@3:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueESM2.js/m$0@test/__fixtures__/tt/reverseContinueESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueESM.js/m$0@test/__fixtures__/tt/reverseContinueESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -589,6 +744,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueESM2.js",
+              "[top]": Array [
+                "F6:  reverseContinueESM3.js/m$0@test/__fixtures__/tt/reverseContinueESM3.js:1,S:4@2:0,G:6@3:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueESM2.js/m$0@test/__fixtures__/tt/reverseContinueESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueESM.js/m$0@test/__fixtures__/tt/reverseContinueESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -600,6 +763,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueESM.js",
+              "[top]": Array [
+                "F6:  reverseContinueESM3.js/m$0@test/__fixtures__/tt/reverseContinueESM3.js:1,S:4@2:0,G:6@3:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueESM2.js/m$0@test/__fixtures__/tt/reverseContinueESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueESM.js/m$0@test/__fixtures__/tt/reverseContinueESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -613,11 +784,7 @@ Object {
           "file": "reverseContinueESM.js",
           "line": 1,
           "name": "reverseContinueESM.js",
-          "scopes": Array [
-            Object {
-              "[name]": "reverseContinueESM.js",
-            },
-          ],
+          "scopes": Array [],
         },
       ],
     },
@@ -632,6 +799,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueESM3.js",
+              "[top]": Array [
+                "F6:  reverseContinueESM3.js/m$0@test/__fixtures__/tt/reverseContinueESM3.js:1,S:4@2:0,G:6@3:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueESM2.js/m$0@test/__fixtures__/tt/reverseContinueESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueESM.js/m$0@test/__fixtures__/tt/reverseContinueESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -643,6 +818,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueESM2.js",
+              "[top]": Array [
+                "F6:  reverseContinueESM3.js/m$0@test/__fixtures__/tt/reverseContinueESM3.js:1,S:4@2:0,G:6@3:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueESM2.js/m$0@test/__fixtures__/tt/reverseContinueESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueESM.js/m$0@test/__fixtures__/tt/reverseContinueESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -654,6 +837,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueESM.js",
+              "[top]": Array [
+                "F6:  reverseContinueESM3.js/m$0@test/__fixtures__/tt/reverseContinueESM3.js:1,S:4@2:0,G:6@3:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  reverseContinueESM2.js/m$0@test/__fixtures__/tt/reverseContinueESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  reverseContinueESM.js/m$0@test/__fixtures__/tt/reverseContinueESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -679,6 +870,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/reverseContinueAsync.js:3,S:11@20:1,G:11@20:1",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -691,6 +888,12 @@ Object {
             },
             Object {
               "[name]": "reverseContinueAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/reverseContinueAsync.js:3,S:11@20:1,G:11@20:1",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -711,6 +914,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "reverseContinueAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/reverseContinueAsync.js:3,S:11@20:1,G:11@20:1",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -742,9 +951,17 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": Object {
                 "length": "1",
                 "name": "$_anonymous_",
@@ -755,6 +972,10 @@ Object {
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -763,6 +984,10 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -771,6 +996,10 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -783,6 +1012,10 @@ Object {
             },
             Object {
               "[name]": "reverseContinueAsync.js",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -805,20 +1038,7 @@ Object {
           "file": "reverseContinueAsync.js",
           "line": 1,
           "name": "reverseContinueAsync.js",
-          "scopes": Array [
-            Object {
-              "[name]": "reverseContinueAsync.js",
-              "afunc1": Object {
-                "length": "1",
-                "name": "afunc1",
-                "prototype": Object {
-                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1",
-                },
-              },
-              "i": "undefined",
-              "j": "undefined",
-            },
-          ],
+          "scopes": Array [],
         },
       ],
     },
@@ -839,9 +1059,17 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": Object {
                 "length": "1",
                 "name": "$_anonymous_",
@@ -852,6 +1080,10 @@ Object {
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -860,6 +1092,10 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -868,6 +1104,10 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -880,6 +1120,10 @@ Object {
             },
             Object {
               "[name]": "reverseContinueAsync.js",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/reverseContinueAsync.js:10,S:0@11:10,G:1@12:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -914,6 +1158,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:8@15:0,G:8@15:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -939,6 +1187,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:6@14:0,G:8@15:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -964,6 +1216,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:4@13:0,G:5@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -989,6 +1245,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -997,6 +1259,12 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1009,6 +1277,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1029,6 +1303,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1041,6 +1321,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1061,6 +1347,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1086,6 +1378,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1094,6 +1393,13 @@ Object {
             },
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1102,6 +1408,13 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1114,6 +1427,13 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1134,6 +1454,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1142,6 +1469,13 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1154,6 +1488,13 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1174,6 +1515,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1186,6 +1534,13 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1206,6 +1561,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1231,6 +1593,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1239,6 +1607,12 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1251,6 +1625,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1271,6 +1651,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1283,6 +1669,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1303,6 +1695,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1328,6 +1726,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:1@5:2,G:2@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1340,6 +1743,11 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:1@5:2,G:2@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1360,6 +1768,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:1@5:2,G:2@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1385,6 +1798,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1397,6 +1815,11 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1417,6 +1840,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1442,6 +1870,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:2@12:0,G:3@12:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1467,6 +1899,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:1@2:2,G:2@12:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1482,7 +1918,7 @@ Object {
       ],
     },
     Object {
-      "reason": "entry",
+      "reason": "step",
       "stack": Array [
         Object {
           "column": 1,
@@ -1492,6 +1928,51 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:0@1:0,G:1@2:2",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
+              "func1": Object {
+                "length": "1",
+                "name": "func1",
+                "prototype": Object {
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                },
+              },
+              "i": "undefined",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "entry",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackPlain.js",
+          "line": 1,
+          "name": "stepBackPlain.js",
+          "scopes": Array [],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackPlain.js",
+          "line": 1,
+          "name": "stepBackPlain.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:0@1:0,G:1@2:2",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1517,6 +1998,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:1@2:2,G:2@12:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1542,6 +2027,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:2@12:0,G:3@12:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1567,6 +2056,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1579,6 +2073,11 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1599,6 +2098,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1624,6 +2128,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:1@5:2,G:2@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1636,6 +2145,11 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:1@5:2,G:2@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1656,6 +2170,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:1@5:2,G:2@5:2",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1681,6 +2200,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1689,6 +2214,12 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1701,6 +2232,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1721,6 +2258,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1733,6 +2276,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1753,6 +2302,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:0@8:4,G:1@8:9",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1778,6 +2333,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1786,6 +2348,13 @@ Object {
             },
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1794,6 +2363,13 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1806,6 +2382,13 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1826,6 +2409,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1834,6 +2424,13 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1846,6 +2443,13 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1866,6 +2470,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1878,6 +2489,13 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1898,6 +2516,13 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F5:  (anonymous)/m$3@test/__fixtures__/tt/stepBackPlain.js:8,S:0@8:15,G:1@8:15",
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:1@8:9,G:2@9:4",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1923,6 +2548,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func2",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -1931,6 +2562,12 @@ Object {
             },
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1943,6 +2580,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1963,6 +2606,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "func1",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func2": Object {
                 "length": "1",
                 "name": "func2",
@@ -1975,6 +2624,12 @@ Object {
             },
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -1995,6 +2650,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F4:  func2/m$2@test/__fixtures__/tt/stepBackPlain.js:7,S:2@9:4,G:3@9:14",
+                "F3:  func1/m$1@test/__fixtures__/tt/stepBackPlain.js:3,S:2@5:2,G:3@11:1",
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:3@12:0,G:4@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -2020,6 +2681,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:4@13:0,G:5@13:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -2045,6 +2710,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackPlain.js",
+              "[top]": Array [
+                "F2:  stepBackPlain.js/m$0@test/__fixtures__/tt/stepBackPlain.js:1,S:6@14:0,G:8@15:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "func1": Object {
                 "length": "1",
                 "name": "func1",
@@ -2079,6 +2748,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:5@3:0,G:5@3:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2095,6 +2768,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:2@2:0,G:3@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2111,6 +2788,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS2.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:2@2:0,G:3@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2122,6 +2805,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:2@2:0,G:3@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2138,6 +2827,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS3.js",
+              "[top]": Array [
+                "F6:  stepBackCJS3.js/m$0@test/__fixtures__/tt/stepBackCJS3.js:1,S:0@1:0,G:1@1:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2149,6 +2846,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS2.js",
+              "[top]": Array [
+                "F6:  stepBackCJS3.js/m$0@test/__fixtures__/tt/stepBackCJS3.js:1,S:0@1:0,G:1@1:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2160,6 +2865,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F6:  stepBackCJS3.js/m$0@test/__fixtures__/tt/stepBackCJS3.js:1,S:0@1:0,G:1@1:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2176,6 +2889,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS2.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:0@1:0,G:1@1:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2187,6 +2906,32 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:0@1:0,G:1@1:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackCJS.js",
+          "line": 1,
+          "name": "stepBackCJS.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:0@1:0,G:1@1:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2200,15 +2945,25 @@ Object {
           "file": "stepBackCJS.js",
           "line": 1,
           "name": "stepBackCJS.js",
+          "scopes": Array [],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackCJS.js",
+          "line": 1,
+          "name": "stepBackCJS.js",
           "scopes": Array [
             Object {
-              "@result": Object {
-                "_U": "0",
-                "_V": "1",
-                "_W": "undefined",
-                "_X": "null",
-              },
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:0@1:0,G:1@1:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2225,6 +2980,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS2.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:0@1:0,G:1@1:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2236,6 +2997,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:0@1:0,G:1@1:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2252,6 +3019,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS3.js",
+              "[top]": Array [
+                "F6:  stepBackCJS3.js/m$0@test/__fixtures__/tt/stepBackCJS3.js:1,S:0@1:0,G:1@1:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2263,6 +3038,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS2.js",
+              "[top]": Array [
+                "F6:  stepBackCJS3.js/m$0@test/__fixtures__/tt/stepBackCJS3.js:1,S:0@1:0,G:1@1:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2274,6 +3057,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F6:  stepBackCJS3.js/m$0@test/__fixtures__/tt/stepBackCJS3.js:1,S:0@1:0,G:1@1:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:1@1:0,G:2@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2290,6 +3081,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS2.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:2@2:0,G:3@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2301,6 +3098,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F4:  stepBackCJS2.js/m$0@test/__fixtures__/tt/stepBackCJS2.js:1,S:2@2:0,G:3@2:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:1@1:0,G:2@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2317,6 +3120,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackCJS.js",
+              "[top]": Array [
+                "F2:  stepBackCJS.js/m$0@test/__fixtures__/tt/stepBackCJS.js:1,S:2@2:0,G:3@2:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2342,6 +3149,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM.js",
+              "[top]": Array [
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:5@4:0,G:5@4:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2358,6 +3169,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM3.js",
+              "[top]": Array [
+                "F6:  stepBackESM3.js/m$0@test/__fixtures__/tt/stepBackESM3.js:1,S:2@1:15,G:3@0:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2369,6 +3188,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM2.js",
+              "[top]": Array [
+                "F6:  stepBackESM3.js/m$0@test/__fixtures__/tt/stepBackESM3.js:1,S:2@1:15,G:3@0:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2380,6 +3207,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM.js",
+              "[top]": Array [
+                "F6:  stepBackESM3.js/m$0@test/__fixtures__/tt/stepBackESM3.js:1,S:2@1:15,G:3@0:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2396,6 +3231,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM2.js",
+              "[top]": Array [
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:3@1:0,G:4@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2407,6 +3248,32 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM.js",
+              "[top]": Array [
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:3@1:0,G:4@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackESM.js",
+          "line": 1,
+          "name": "stepBackESM.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackESM.js",
+              "[top]": Array [
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:0@1:0,G:1@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2420,9 +3287,25 @@ Object {
           "file": "stepBackESM.js",
           "line": 1,
           "name": "stepBackESM.js",
+          "scopes": Array [],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackESM.js",
+          "line": 1,
+          "name": "stepBackESM.js",
           "scopes": Array [
             Object {
               "[name]": "stepBackESM.js",
+              "[top]": Array [
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:0@1:0,G:1@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2439,6 +3322,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM2.js",
+              "[top]": Array [
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:3@1:0,G:4@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2450,6 +3339,12 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM.js",
+              "[top]": Array [
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:3@1:0,G:4@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2466,6 +3361,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM3.js",
+              "[top]": Array [
+                "F6:  stepBackESM3.js/m$0@test/__fixtures__/tt/stepBackESM3.js:1,S:2@1:15,G:3@0:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2477,6 +3380,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM2.js",
+              "[top]": Array [
+                "F6:  stepBackESM3.js/m$0@test/__fixtures__/tt/stepBackESM3.js:1,S:2@1:15,G:3@0:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2488,6 +3399,14 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackESM.js",
+              "[top]": Array [
+                "F6:  stepBackESM3.js/m$0@test/__fixtures__/tt/stepBackESM3.js:1,S:2@1:15,G:3@0:0",
+                "F5:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F4:  stepBackESM2.js/m$0@test/__fixtures__/tt/stepBackESM2.js:1,S:4@0:0,G:5@0:0",
+                "F3:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+                "F2:  stepBackESM.js/m$0@test/__fixtures__/tt/stepBackESM.js:1,S:1@0:0,G:2@0:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
             },
           ],
         },
@@ -2519,6 +3438,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:11@19:1,G:11@19:1",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2531,6 +3456,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:11@19:1,G:11@19:1",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2557,6 +3488,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:11@19:1,G:11@19:1",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2588,6 +3525,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:7@18:2,G:8@18:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2600,6 +3543,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:7@18:2,G:8@18:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2626,6 +3575,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:7@18:2,G:8@18:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2657,6 +3612,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2665,6 +3626,12 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2677,6 +3644,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2703,6 +3676,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2715,6 +3694,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2741,6 +3726,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2772,9 +3763,17 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": Object {
                 "length": "1",
                 "name": "$_anonymous_",
@@ -2785,6 +3784,10 @@ Object {
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2793,6 +3796,10 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2801,6 +3808,10 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2813,6 +3824,10 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2844,6 +3859,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": Object {
                 "length": "1",
                 "name": "$_anonymous_",
@@ -2854,6 +3881,18 @@ Object {
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2862,6 +3901,18 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2870,6 +3921,18 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2882,6 +3945,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2908,6 +3983,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2916,6 +4003,18 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2924,6 +4023,18 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2936,6 +4047,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -2962,6 +4085,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -2970,6 +4105,18 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -2982,6 +4129,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3008,6 +4167,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3020,6 +4191,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3046,6 +4229,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3077,6 +4272,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -3085,6 +4288,14 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -3093,6 +4304,14 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3105,6 +4324,14 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3131,6 +4358,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -3139,6 +4374,14 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3151,6 +4394,14 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3177,6 +4428,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3189,6 +4448,14 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3215,6 +4482,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3246,6 +4521,13 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -3254,6 +4536,13 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3266,6 +4555,13 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3292,6 +4588,13 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3304,6 +4607,13 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3330,6 +4640,13 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3361,6 +4678,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:4@6:2,G:5@6:8",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3373,6 +4696,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:4@6:2,G:5@6:8",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3399,6 +4728,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:4@6:2,G:5@6:8",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3424,6 +4759,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:1@5:2,G:2@5:8",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3436,6 +4776,11 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:1@5:2,G:2@5:8",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3456,6 +4801,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:1@5:2,G:2@5:8",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3481,6 +4831,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3493,6 +4848,11 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3513,6 +4873,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3538,6 +4903,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:2@20:0,G:3@20:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3563,6 +4932,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:1@2:2,G:2@20:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3578,7 +4951,7 @@ Object {
       ],
     },
     Object {
-      "reason": "entry",
+      "reason": "step",
       "stack": Array [
         Object {
           "column": 1,
@@ -3588,6 +4961,51 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:0@1:0,G:1@2:2",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
+              "afunc1": Object {
+                "length": "1",
+                "name": "afunc1",
+                "prototype": Object {
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                },
+              },
+              "i": "undefined",
+              "j": "undefined",
+            },
+          ],
+        },
+      ],
+    },
+    Object {
+      "reason": "entry",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackAsync.js",
+          "line": 1,
+          "name": "stepBackAsync.js",
+          "scopes": Array [],
+        },
+      ],
+    },
+    Object {
+      "reason": "step",
+      "stack": Array [
+        Object {
+          "column": 1,
+          "file": "stepBackAsync.js",
+          "line": 1,
+          "name": "stepBackAsync.js",
+          "scopes": Array [
+            Object {
+              "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:0@1:0,G:1@2:2",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3613,6 +5031,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:1@2:2,G:2@20:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3638,6 +5060,10 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:2@20:0,G:3@20:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3663,6 +5089,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3675,6 +5106,11 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3695,6 +5131,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:0@4:2,G:1@5:2",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3720,6 +5161,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:1@5:2,G:2@5:8",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3732,6 +5178,11 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:1@5:2,G:2@5:8",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3752,6 +5203,11 @@ Object {
           "scopes": Array [
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F3:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:1@5:2,G:2@5:8",
+                "F2:  stepBackAsync.js/m$0@test/__fixtures__/tt/stepBackAsync.js:1,S:3@20:0,G:5@21:0",
+                "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3783,6 +5239,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:4@6:2,G:5@6:8",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3795,6 +5257,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:4@6:2,G:5@6:8",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3821,6 +5289,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:4@6:2,G:5@6:8",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3852,6 +5326,13 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -3860,6 +5341,13 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3872,6 +5360,13 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3898,6 +5393,13 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3910,6 +5412,13 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3936,6 +5445,13 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:0@8:4,G:1@8:15",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -3967,6 +5483,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -3975,6 +5499,14 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -3983,6 +5515,14 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -3995,6 +5535,14 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4021,6 +5569,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4029,6 +5585,14 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4041,6 +5605,14 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4067,6 +5639,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4079,6 +5659,14 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4105,6 +5693,14 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:0@9:6,G:1@9:13",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4136,6 +5732,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": Object {
                 "length": "1",
                 "name": "$_anonymous_",
@@ -4146,6 +5754,18 @@ Object {
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4154,6 +5774,18 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4162,6 +5794,18 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4174,6 +5818,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4200,6 +5856,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4208,6 +5876,18 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4216,6 +5896,18 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4228,6 +5920,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4254,6 +5958,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4262,6 +5978,18 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4274,6 +6002,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4300,6 +6040,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4312,6 +6064,18 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4338,6 +6102,18 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F10:  (anonymous)/m$4@test/__fixtures__/tt/stepBackAsync.js:9,S:0@10:8,G:1@10:8",
+                "F9:  tryCallTwo/m$4@node_modules/promise/lib/core.js:43,S:1@45:4,G:2@0:0",
+                "F8:  doResolve/m$16@node_modules/promise/lib/core.js:198,S:0@200:12,G:1@200:6",
+                "F7:  Promise/m$5@node_modules/promise/lib/core.js:54,S:7@66:2,G:11@67:1",
+                "F6:  (anonymous)/m$3@test/__fixtures__/tt/stepBackAsync.js:8,S:1@9:13,G:2@9:7",
+                "F5:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:1@8:15,G:2@8:9",
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:5@6:8,G:6@6:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4369,9 +6145,17 @@ Object {
                 "_X": "null",
               },
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": Object {
                 "length": "1",
                 "name": "$_anonymous_",
@@ -4382,6 +6166,10 @@ Object {
             },
             Object {
               "[name]": "(anonymous)",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4390,6 +6178,10 @@ Object {
             },
             Object {
               "[name]": "afunc2",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4398,6 +6190,10 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4410,6 +6206,10 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F2:  (anonymous)/m$5@test/__fixtures__/tt/stepBackAsync.js:10,S:0@11:10,G:1@11:10",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4441,6 +6241,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc2",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "m": "100",
               "this": Object {
                 "i": "101",
@@ -4449,6 +6255,12 @@ Object {
             },
             Object {
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4461,6 +6273,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4487,6 +6305,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4499,6 +6323,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4525,6 +6355,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc2/m$2@test/__fixtures__/tt/stepBackAsync.js:7,S:3@16:4,G:4@16:14",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4556,6 +6392,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "afunc1",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:7@18:2,G:8@18:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc2": Object {
                 "length": "1",
                 "name": "afunc2",
@@ -4568,6 +6410,12 @@ Object {
             },
             Object {
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:7@18:2,G:8@18:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",
@@ -4594,6 +6442,12 @@ Object {
                 "_X": "null",
               },
               "[name]": "stepBackAsync.js",
+              "[top]": Array [
+                "F4:  afunc1/m$1@test/__fixtures__/tt/stepBackAsync.js:3,S:7@18:2,G:8@18:2",
+                "F3:  tryCallOne/m$3@node_modules/promise/lib/core.js:35,S:1@37:11,G:2@0:0",
+                "F2:  (anonymous)/m$11@node_modules/promise/lib/core.js:113,S:5@123:14,G:6@125:13",
+                "F1:  flush/m$2@node_modules/asap/raw.js:44,S:3@50:8,G:4@0:0",
+              ],
               "afunc1": Object {
                 "length": "1",
                 "name": "afunc1",

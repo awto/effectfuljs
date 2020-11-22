@@ -529,7 +529,7 @@ export class DebugSession extends SessionImpl {
         )
       )
     ];
-    logger.log(`Searching ${runtime} in ${resolvePaths}`);
+    logger.log(`Searching ${runtimeBase} in ${resolvePaths}`);
     try {
       debuggerImpl = resolvePaths
         ? require.resolve(runtimeBase, { paths: resolvePaths })
@@ -610,7 +610,10 @@ export class DebugSession extends SessionImpl {
     logger.log(`Using ${runtime} from ${debuggerImpl}`);
     debuggerImpl = path.dirname(normalizeDrive(debuggerImpl));
     const runJs = path.join(debuggerImpl, "config", preset, "run.js");
-    const debuggerDeps = path.resolve(path.join(debuggerImpl, "..", ".."));
+    const debuggerDeps =
+      process.env["EFFECTFUL_DEBUGGER_DEPS"] ||
+      (args.env && args.env["EFFECTFUL_DEBUGGER_DEPS"]) ||
+      path.resolve(path.join(debuggerImpl, "..", ".."));
     this.stopComms = subscribe(
       (remote: Handler) => {
         logger.verbose(`new debuggee: ${remote.id}`);
@@ -668,7 +671,12 @@ export class DebugSession extends SessionImpl {
       if (term === true) term = "externalTerminal";
       else if (!term) term = "internalConsole";
       const reuse = args.reuse && term === "internalConsole";
-      if (!env["EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES"])
+      if (
+        !(
+          "EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES" in env ||
+          "EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES" in process.env
+        )
+      )
         env["EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES"] = debuggerDeps;
       if (args.include) env["EFFECTFUL_DEBUGGER_INCLUDE"] = args.include;
       if (args.blackbox) env["EFFECTFUL_DEBUGGER_BLACKBOX"] = args.blackbox;

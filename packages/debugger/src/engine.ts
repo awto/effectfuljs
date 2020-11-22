@@ -549,6 +549,7 @@ export function loop(value: any): any {
       ) {
         context.value = e;
         context.error = true;
+        context.top = top;
         context.onStop();
         return token;
       }
@@ -634,6 +635,7 @@ export function checkErrBrk(frame: Frame, e: any): boolean {
       }
     }
   }
+  if (needsStop) frame.stopReason = "exception";
   return needsStop;
 }
 
@@ -641,6 +643,7 @@ export function handle(frame: Frame, e: any) {
   for (;;) {
     if (e === token) {
       if (context.running || frame.next) throw e;
+      context.onStop();
       return e;
     }
     if (frame !== context.top) throw e;
@@ -650,10 +653,8 @@ export function handle(frame: Frame, e: any) {
     if (!meta.blackbox && e !== context.exception && checkErrBrk(frame, e)) {
       context.value = e;
       context.error = true;
-      if (frame.next) {
-        context.onStop();
-        throw token;
-      }
+      context.top = frame;
+      if (frame.next) throw token;
       context.onStop();
       return token;
     }
@@ -828,23 +829,23 @@ if (config.patchRT) {
     writable: true,
     value: defaultBind
   });
-  if (!config.debuggerDebug)
-    defineProperty(FunctionConstr.prototype, "toString", {
-      configurable: true,
-      writable: true,
-      value() {
-        // nothing to see here (lodash refuses to work with not native functions)
-        let params: string = "";
-        let name = this.name;
-        const data = closures.get(this);
-        if (
-          (data && data[CLOSURE_META] && !data[CLOSURE_META].blackbox) ||
-          !State.nativeFuncs.has(this)
-        )
-          return nativeToString.call(this);
-        return `function ${name || ""}(${params}) { [native code] }`;
-      }
-    });
+
+  defineProperty(FunctionConstr.prototype, "toString", {
+    configurable: true,
+    writable: true,
+    value() {
+      // nothing to see here (lodash refuses to work with not native functions)
+      let params: string = "";
+      let name = this.name;
+      const data = closures.get(this);
+      if (
+        (data && data[CLOSURE_META] && !data[CLOSURE_META].blackbox) ||
+        !State.nativeFuncs.has(this)
+      )
+        return nativeToString.call(this);
+      return `function ${name || ""}(${params}) { [native code] }`;
+    }
+  });
 }
 
 regOpaqueObject(FunctionConstr, "@effectful/debugger/Function");
@@ -976,6 +977,7 @@ export function makeFrame(closure: State.Closure, newTarget: any): Frame {
     caller: null,
     restoreEnabled: undef,
     awaiting: token,
+    stopReason: null,
     onReturn: null,
     onError: null,
     promise: null,
@@ -990,14 +992,27 @@ export function makeFrame(closure: State.Closure, newTarget: any): Frame {
 
 let TOP_LINES_STACK_NUM = 2;
 
-function isStackFrameLine(line: string) {
-  return (
-    line.trim().length > 0 &&
-    !/\binternal[/\\\\]|__effectful__|\(events\.js\:|\(net\.js\:|\bprocess\/browser\.js|\bdrainQueue\b/g.test(
-      line
-    )
-  );
-}
+const isStackFrameLine = State.isNode
+  ? function isStackFrameLine(line: string) {
+      line = line.trim();
+      if (line.length === 0) return false;
+      let f = line;
+      for (;;) {
+        const m = /\((.+):\d+:\d+\)/g.exec(f);
+        if (!m) break;
+        f = m[1];
+      }
+      if (!path.isAbsolute(f) && f[0] !== ".") return false;
+      return !/__effectful__/g.test(line);
+    }
+  : function isStackFrameLine(line: string) {
+      return (
+        line.trim().length > 0 &&
+        !/__effectful__|\(events\.js\:|\(net\.js\:|\bprocess\/browser\.js|\bdrainQueue\b/g.test(
+          line
+        )
+      );
+    };
 
 function numFrames(e: any): number {
   let s = String(e.stack)
@@ -1083,7 +1098,6 @@ export function checkExitBrk(top: Frame, value: any) {
   if (brk && context.needsBreak(brk, top, value)) {
     context.value = value;
     context.error = false;
-    context.onStop();
     throw token;
   }
 }
@@ -1141,7 +1155,6 @@ export function brk(): any {
     needsBreak(p, top) &&
     context.enabled
   ) {
-    context.onStop();
     throw token;
   }
 }
@@ -1211,11 +1224,9 @@ export function iterNext(iter: any, value: any) {
 export function force(value: any): any {
   if (!value) return value;
   const thunk = thunks.get(value);
-  const topLevel = <Frame>context.top;
   if (thunk === void 0) {
     return value;
   }
-
   // defineProperty(value, thunkSymbol, { value: null, configurable: true });
   weakMapDelete.call(thunks, value);
   let tail = thunk;

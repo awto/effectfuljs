@@ -6,7 +6,6 @@ import {
   ILocation
 } from "vscode-debugadapter-testsupport/lib/debugClient";
 
-
 export class DebugClient extends Support.DebugClient {
   constructor(executable: string) {
     super("node", executable, "effectful", {}, true);
@@ -127,5 +126,47 @@ export class DebugClient extends Support.DebugClient {
       this.launch(launchArgs),
       this.assertStoppedLocation("breakpoint", expectedStopLocation || location)
     ]);
+  }
+  lastThreadId?: number;
+  async tillStopped(reason: string): Promise<DebugProtocol.StackTraceResponse> {
+    const event = await this.waitForEvent("stopped");
+    assert.strictEqual(event.body.reason, reason);
+    this.lastThreadId = event.body.threadId;
+    return this.stackTraceRequest({
+      threadId: event.body.threadId
+    });
+  }
+  async assertStoppedLocation(
+    reason: string,
+    expected: {
+      path?: string | RegExp;
+      line?: number;
+      column?: number;
+    }
+  ): Promise<DebugProtocol.StackTraceResponse> {
+    const response = await this.tillStopped(reason);
+    const frame = <any>response.body.stackFrames[0];
+    if (typeof expected.path === "string" || expected.path instanceof RegExp) {
+      this.assertPath(
+        frame.source.path,
+        expected.path,
+        "stopped location: path mismatch"
+      );
+    }
+    if (typeof expected.line === "number") {
+      assert.equal(
+        frame.line,
+        expected.line,
+        "stopped location: line mismatch"
+      );
+    }
+    if (typeof expected.column === "number") {
+      assert.equal(
+        frame.column,
+        expected.column,
+        "stopped location: column mismatch"
+      );
+    }
+    return response;
   }
 }

@@ -28,20 +28,25 @@ export class DebugClient extends Kit.DebugClient {
     this.browser = void 0;
     return super.stop();
   }
-  public async awaitWebpack(): Promise<string | undefined> {
+  public compile(re: RegExp) {
     const self = this;
-    const url = await new Promise<string | undefined>(cb =>
+    return new Promise<string | undefined>(cb =>
       this.on("output", function listener(event) {
         if (self.page) {
           const message = event.body.output;
           if (!message) return;
-          const m = debServerStartedRe.exec(message);
+          const m = re.exec(message);
           if (!m) return;
           cb(m[1]);
         } else cb();
         self.off("output", listener);
       })
     );
+  }
+  public async compileAndOpen(
+    re: RegExp = debServerStartedRe
+  ): Promise<string | undefined> {
+    const url = await this.compile(re);
     if (this.page && url)
       await this.page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
     return url;

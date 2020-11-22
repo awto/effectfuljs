@@ -92,7 +92,7 @@ describe("VSCode protocol handlers with time traveling", function() {
       done
     );
   });
-  test.only("data breakpoints", function(done) {
+  test("data breakpoints", function(done) {
     let state = "start";
     let topRef, ar1Ref, ar2Ref, objRef;
     let setRefs;

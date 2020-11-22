@@ -1,12 +1,10 @@
 /**
  * Full state of a currently running program
  */
-// ensuring it is loaded before anything patched
+// ensuring it process.release.name loaded before anything patched
 import "@effectful/serialization";
 import "@effectful/serialization/dom";
 import config from "./config";
-// tslint:disable-next-line
-const asap = require("asap");
 
 export interface Env {
   /** local variables */
@@ -48,7 +46,7 @@ export interface Frame extends ProtoFrame, Env {
   next: Frame | null;
   /** like `next` but keeps real caller for coroutines */
   caller: Frame | null;
-  /** set `context.debug = true` on exit */
+  /** set `context.enabled = true` on exit */
   restoreEnabled: any;
   /** called if function exits with some resulting value */
   onReturn: ((value: any) => void) | null;
@@ -68,6 +66,8 @@ export interface Frame extends ProtoFrame, Env {
   done: boolean;
   /** global env object (searched by name) */
   $g: any;
+  /** the stop's reason displayed in VSCode */
+  stopReason: string | null;
 }
 
 export interface Record {
@@ -464,14 +464,6 @@ export const native = {
   clearImmediate: typeof clearImmediate !== "undefined" && clearImmediate
 };
 
-export function returnToken() {
-  return token;
-}
-
-export function throwToken() {
-  throw token;
-}
-
 export const token = { _effectToken: true };
 
 export const sideEffectToken = { _sideEffectToken: true };
@@ -662,10 +654,13 @@ export function resumeEventQueue() {
   signalThread();
 }
 
+const nativeSetTimeout = setTimeout;
+const nativeClearTimeout = clearTimeout;
+
 export function afterInterrupt(cb: () => void) {
-  clearTimeout(interruptTimeoutHandler);
+  nativeClearTimeout(interruptTimeoutHandler);
   afterInterruptCallback = cb;
-  interruptTimeoutHandler = setTimeout(resumeAfterInterrupt, 0);
+  interruptTimeoutHandler = nativeSetTimeout(resumeAfterInterrupt, 0);
 }
 
 export function resumeAfterInterrupt() {
@@ -678,7 +673,7 @@ export function resumeAfterInterrupt() {
 }
 
 export function cancelInterrupt() {
-  clearTimeout(interruptTimeoutHandler);
+  nativeClearTimeout(interruptTimeoutHandler);
   afterInterruptCallback = null;
   interruptTimeoutHandler = 0;
 }
@@ -696,6 +691,13 @@ export function liftSync(fun: (this: any, ...args: any[]) => any): any {
     }
   };
 }
+
+const asap =
+  typeof process !== "undefined" && typeof process.nextTick === "function"
+    ? process.nextTick
+    : typeof setImmediate === "function"
+    ? setImmediate
+    : setTimeout;
 
 /**
  * scheduling some job (usually async calls) in managable event queue
@@ -800,3 +802,10 @@ export function mergeModule(mod: Module, prevMod: Module) {
     mergeVersions(prevCjs.exports, cjs.exports);
   }
 }
+
+export const isNode =
+  typeof "process" !== "undefined" &&
+  process.release &&
+  process.release.name === "node";
+
+export const isBrowser = typeof window !== "undefined" && !isNode;

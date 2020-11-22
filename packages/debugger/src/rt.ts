@@ -226,7 +226,7 @@ function scheduleInterval(
     nativeSetTimeout(
       Instr.setTimeoutCallback.bind(
         null,
-        resetInterval.bind(null, callback, id.handler),
+        resetInterval.bind(null, callback, id.handler, delay),
         id.handler
       ),
       delay,

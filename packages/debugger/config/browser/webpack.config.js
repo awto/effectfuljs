@@ -68,7 +68,11 @@ function blackboxFile(filename) {
 
 function includeFile(filename) {
   filename = normalizePath(filename);
-  if (config.instrumentDeps && filename.startsWith(config.runtimePackages))
+  if (
+    config.instrumentDeps &&
+    config.runtimePackages &&
+    filename.startsWith(config.runtimePackages)
+  )
     return false;
   if (!config.include.test(filename)) return false;
   if (config.blackbox.test(filename)) return false;
@@ -126,8 +130,6 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
   }
   return loaders;
 };
-
-console.log("config.runtimePackages", config.runtimePackages);
 
 module.exports = {
   mode: "development",

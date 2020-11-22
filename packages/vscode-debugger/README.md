@@ -93,6 +93,11 @@ Other specific parameters:
 
 - "htmlTemplate" - a template passed to [HtmlWebpackPlugin](https://webpack.js.org/plugins/html-webpack-plugin/)
 - "indexJs" - the main JS/TS file
+- "open" - opens the URL in a new Web Browser window
+
+## NextJS
+
+Enabled by `"preset": "next"` in "launch.json" ("Add Configuration..." in "launch.json" editor and choose "Effectful: NextJS".). This will run NextJS dev server.
 
 ## Custom configuration
 
@@ -268,7 +273,7 @@ Add `"timeTravelDisabled": true` so the initialization won't collect time-travel
 
 ## Data breakpoints
 
-Data breakpoints require time traveling to work. It can be disabled if not needed with `"timeTravelDisabled": true` option. However, they are especially useful with time traveling. If you need to know what set some value, add a data breakpoint to it and run the execution backward. 
+Data breakpoints require time traveling to work. It can be disabled if not needed with `"timeTravelDisabled": true` option. However, they are especially useful with time traveling. If you need to know what set some value, add a data breakpoint to it and run the execution backward.
 
 ## Interoperating with runtime/native modules
 

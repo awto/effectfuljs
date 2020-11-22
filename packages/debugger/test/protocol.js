@@ -4,7 +4,7 @@
  */
 const config = require("../config").default;
 const path = require("path");
-const { context, native, journal } = require("../state");
+const { context, native, journal, stackDescr } = require("../state");
 
 let socket;
 
@@ -29,7 +29,7 @@ class WS {
     return socket;
   }
   send(msg) {
-    nativeSetImmediate(recv, msg);
+    nativeSetTimeout(recv, 0, msg);
   }
   close() {}
 }
@@ -58,7 +58,7 @@ function recv(msg) {
       if ((cbs = eventsCbs[eventName])) {
         while (cbs.length) {
           const f = native.Array.pop.call(cbs, data.body);
-          wrappedSetImmediate(function() {
+          wrappedSetTimeout(function() {
             f(data.body);
           });
         }
@@ -87,6 +87,7 @@ function teardown() {
   responsesCbs = {};
   reverseRequestsCbs = {};
   terminated = false;
+  context.error = false;
   resetLoad();
 }
 
@@ -107,7 +108,7 @@ function send(data) {
 function request(req, cb) {
   const seq = (req.seq = ++curSeq);
   trace("request:", req);
-  nativeSetImmediate(send, req);
+  nativeSetTimeout(send, 0, req);
   responsesCbs[seq] = cb;
 }
 
@@ -228,6 +229,7 @@ function stackSnapshot(cb) {
                 varValue(j.variablesReference, 2, function(scope) {
                   scopes.push(scope);
                   scope["[name]"] = j.name;
+                  scope["[top]"] = stackDescr(context.pausedTop);
                   traverseScopes();
                 });
               })();
@@ -255,8 +257,8 @@ function setRedir(impl) {
   };
 }
 
-const nativeSetImmediate = native.setImmediate;
-const wrappedSetImmediate = setRedir(native.setImmediate);
+const nativeSetTimeout = native.setTimeout;
+const wrappedSetTimeout = setRedir(nativeSetTimeout);
 
 const savedOnThread = context.onThread;
 

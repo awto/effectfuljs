@@ -21,12 +21,12 @@ const packageJSON = fs.realpathSync(
 
 config.packageRoot = packageJSON ? path.dirname(packageJSON) : config.srcRoot;
 
-config.runtimePackages = normalizePath(
-  fs.realpathSync(
-    process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES ||
-      path.join(__dirname, "..", "..", "..")
-  )
-);
+config.runtimePackages =
+  process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES &&
+  process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES.length &&
+  normalizePath(
+    fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES)
+  );
 
 config.runtime =
   process.env.EFFECTFUL_DEBUGGER_RUNTIME || "@effectful/debugger";

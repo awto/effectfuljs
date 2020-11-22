@@ -33,7 +33,7 @@ export function moduleExports() {
     runTopLevel(mod);
   } catch (e) {
     if (e === token && !hot) {
-      let tail = context.pausedTop;
+      let tail = context.top;
       weakMapSet.call(State.thunks, cjs.exports, tail);
       if (tail) {
         while (tail) {

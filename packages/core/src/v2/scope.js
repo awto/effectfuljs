@@ -527,7 +527,7 @@ export function index(root) {
         break;
       }
       case Tag.BlockStatement:
-        isBlockScope = !isLoop && !isFunc;
+        isBlockScope = !isFunc;
         break;
       case Tag.SwitchStatement:
         isBlockScope = true;

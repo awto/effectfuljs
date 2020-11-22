@@ -3,6 +3,10 @@ import * as path from "path";
 import { DebugClient } from "./kit/browser/client";
 import * as puppeteer from "puppeteer";
 
+const MODULE_DIR = path.resolve(__dirname, "..", "..", "..");
+const PROJECT_DIR = path.resolve(MODULE_DIR, "..", "..");
+const EXAMPLES_DIR = path.join(PROJECT_DIR, "samples");
+
 const toBrowserPath: (p: string) => string =
   path.sep === "\\"
     ? function toBrowserPath(path: string) {
@@ -12,9 +16,11 @@ const toBrowserPath: (p: string) => string =
         return path;
       };
 process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS = "0";
-// process.env.EFFECTFUL_DEBUGGER_VERBOSE = "2"
+if (process.env.EFFECTFUL_DEBUG_CHROME)
+  process.env.EFFECTFUL_DEBUGGER_VERBOSE = "2";
 process.env.EFFECTFUL_DEBUGGER_EXCLUDE =
   "**/packages/{debugger,serialization,core,transducers}/**";
+process.env.EFFECTFUL_DEBUGGER_DEPS = path.join(MODULE_DIR, "node_modules");
 
 suite("Debugging on Chrome", function () {
   this.timeout(0);
@@ -40,7 +46,7 @@ suite("Debugging on Chrome", function () {
     dc.defaultTimeout = 1000000;
     await Promise.all([
       dc.configurationSequence(),
-      dc.awaitWebpack(),
+      dc.compileAndOpen(),
       dc.launch({
         indexJs: PROGRAM,
         stopOnEntry: true,
@@ -94,7 +100,7 @@ suite("Debugging on Chrome", function () {
     const BREAKPOINT_LINE = 2;
     dc.defaultTimeout = 30000;
     return Promise.all([
-      dc.awaitWebpack(),
+      dc.compileAndOpen(),
       dc.hitBreakpoint(
         {
           indexJs: PROGRAM,
@@ -111,7 +117,7 @@ suite("Debugging on Chrome", function () {
     dc.defaultTimeout = 60000;
     await Promise.all([
       dc.configurationSequence(),
-      dc.awaitWebpack(),
+      dc.compileAndOpen(),
       dc.launch({
         preset: "browser",
         cwd: PACKAGE,
@@ -125,7 +131,7 @@ suite("Debugging on Chrome", function () {
       await page.evaluate(
         () => (<any>document.querySelector("button.counter")).innerText
       );
-    assert.equal(await getCur(), "0");
+    assert.strictEqual(await getCur(), "0");
     await Promise.all([
       page.click("button.counter"),
       dc.assertStoppedLocation("debugger_statement", {
@@ -216,5 +222,127 @@ suite("Debugging on Chrome", function () {
 
     await new Promise(i => setTimeout(i, 4000));
     // const PROGRAM = toBrowserPath(path.join(NODE_DATA_ROOT, "program.js"));
+  });
+  test("should run NextJS applications", async function () {
+    const PACKAGE = path.join(EXAMPLES_DIR, "nextjs-debugger-test");
+    dc.defaultTimeout = 1000000;
+    let url: string | undefined;
+    await Promise.all([
+      dc
+        .compile(/^webpack: ready - started server on (.+)\n*$/m)
+        
+        .then(function (u) {
+          url = u;
+          return new Promise(i => setTimeout(function() {
+            dc.page && url && dc.page.goto(url, { timeout: 0, waitUntil:"load" });
+            i();
+          }, 500));
+        }),
+      dc.configurationSequence(),
+      dc.launch({
+        preset: "next",
+        cwd: PACKAGE,
+        timeTravel: true,
+        stopOnEntry: true,
+        env: {
+          EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES: path.join(
+            PROJECT_DIR,
+            "packages"
+          ),
+          EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS: "1"
+        }
+      }),
+      dc.assertStoppedLocation("entry", {
+        path: path.join(PACKAGE, "pages", "index.js"),
+        line: 1
+      })
+    ]);
+    const serverThread = <number>dc.lastThreadId;
+    await ensureStop(serverThread, "components/Header.js:3");
+    await ensureStop(serverThread, "pages/index.js:5");
+    await ensureStopAll(serverThread, [
+      "components/hello1.js:1",
+      "components/hello2.js:1",
+      "components/hello4.js:1",
+      "components/hello5.js:1"
+    ]);
+    await ensureStop(serverThread, "pages/index.js:26");
+    await ensureStop(serverThread, "components/Header.js:5");
+    await ensureStop(serverThread, "components/hello1.js:3");
+    await ensureStop(serverThread, "components/hello2.js:3");
+    await Promise.all([
+      dc.continueRequest({ threadId: serverThread }),
+      dc.assertStoppedLocation("entry", {
+        path: norm(path.join(PACKAGE, "pages", "index.js")),
+        line: 1
+      })
+    ]);
+    const clientThread = <number>dc.lastThreadId;
+    await ensureStop(clientThread, "components/Header.js:3");
+    await ensureStop(clientThread, "pages/index.js:5");
+    await ensureStopAll(clientThread, [
+      "components/hello1.js:1",
+      "components/hello2.js:1"
+    ]);
+    await ensureStop(clientThread, "pages/index.js:26");
+    await ensureStop(clientThread, "components/Header.js:5");
+    await ensureStop(clientThread, "components/hello1.js:3");
+    await ensureStop(clientThread, "components/hello2.js:3");
+    await ensureStop(clientThread, "components/hello3.js:1");
+    await ensureStop(clientThread, "components/hello3.js:3");
+    await dc.continueRequest({ threadId: clientThread });
+    const page = <puppeteer.Page>dc.page;
+    await Promise.all([
+      page.click("button.toggle"),
+      dc.assertStoppedLocation("debugger_statement", {
+        path: norm(path.join(PACKAGE, "pages", "index.js")),
+        line: 46
+      })
+    ]);
+    await ensureStop(clientThread, "pages/index.js:26");
+    await ensureStop(clientThread, "components/Header.js:5");
+    await ensureStop(clientThread, "components/hello1.js:3");
+    await ensureStop(clientThread, "components/hello2.js:3");
+    await ensureStop(clientThread, "components/hello3.js:3");
+    await ensureStop(clientThread, "components/hello5.js:1");
+    await ensureStop(clientThread, "components/hello5.js:3");
+    page.click("a.about"); //TODO: check why this hangs
+    await Promise.all([ensureStop(serverThread, "components/Header.js:5")]);
+    await Promise.all([
+      dc.continueRequest({ threadId: serverThread }),
+      dc.assertStoppedLocation("entry", {
+        path: norm(path.join(PACKAGE, "pages", "about.js")),
+        line: 1
+      })
+    ]);
+    const aboutThread = <number>dc.lastThreadId;
+    await ensureStop(aboutThread, "components/Header.js:3");
+    await ensureStop(aboutThread, "components/Header.js:5");
+    function norm(p: string) {
+      return p.replace(/\\/g, "/");
+    }
+    async function ensureStop(
+      threadId: number,
+      location?: string
+    ): Promise<string> {
+      const [stack] = await Promise.all([
+        dc.tillStopped("debugger_statement"),
+        dc.continueRequest({ threadId })
+      ]);
+      const frame = <any>stack.body.stackFrames[0];
+      const stopLocation = `${path.relative(PACKAGE, frame.source.path)}:${
+        frame.line
+      }`;
+      if (location) assert.strictEqual(stopLocation, path.normalize(location));
+      return stopLocation;
+    }
+    async function ensureStopAll(threadId: number, locations: string[]) {
+      const notSeen = new Set(locations.map(path.normalize));
+      while (notSeen.size) {
+        const stop = await ensureStop(threadId);
+        if (!notSeen.delete(stop))
+          assert.fail(`not expected stop location ${stop}`);
+      }
+    }
   });
 });
