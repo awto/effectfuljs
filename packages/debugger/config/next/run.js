@@ -6,6 +6,7 @@ const cache = require("../cacheId");
 const NODE_MODULES = fs.realpathSync(
   path.join(debuggerConfig.packageRoot, "node_modules")
 );
+debuggerConfig.hot = false;
 
 const cacheIdentifier = cache.key;
 
@@ -91,13 +92,10 @@ const SKIP = [
   path.join(NODE_MODULES, "graceful-fs"),
   path.join(NODE_MODULES, "enhanced-resolve"),
   path.join(NODE_MODULES, "mkdirp"),
-
-  /*
   path.join(NODE_MODULES, "json-parse-better-errors"),
   path.join(NODE_MODULES, "escape-string-regexp"),
   path.join(NODE_MODULES, "color-convert"),
   path.join(NODE_MODULES, "source-map"),
-  path.join(NODE_MODULES, "neo-async"),
   path.join(NODE_MODULES, "source-list-map"),
   path.join(NODE_MODULES, "loader-runner"),
   path.join(NODE_MODULES, "fast-json-stable-stringify"),
@@ -125,7 +123,7 @@ const SKIP = [
   path.join(NODE_MODULES, "regenerator"),
   path.join(NODE_MODULES, "core-js"),
   path.join(NODE_MODULES, "styled-jsx"),
-  path.join(NODE_MODULES, "esutils"),*/
+  path.join(NODE_MODULES, "esutils"),
   debuggerConfig.runtimePackages
 ]
   .filter(Boolean)

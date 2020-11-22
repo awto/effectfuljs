@@ -4,7 +4,7 @@ const assert = require("assert");
 
 describe("DOM serialization", function() {
   before(function() {
-    Dom.track();
+    Dom.track(true);
   });
   it("should preserve Event's options", function() {
     const ev = new MouseEvent("click", {

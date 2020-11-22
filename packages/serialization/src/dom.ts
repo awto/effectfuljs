@@ -89,7 +89,8 @@ declare global {
 
 function wrapOnceHandleEvent(this: EventListenerOnceHandler, event: Event) {
   if (event.currentTarget)
-    event.currentTarget.removeEventListener(
+    removeEventListenerInfo(
+      event.currentTarget,
       this.type,
       this.inner,
       this.capture
@@ -115,11 +116,9 @@ export function addEventListener(
     options = { capture: options };
   } else if (!options) options = {};
   const once = options.once;
+
   if (savedAddEventListener) {
-    savedAddEventListener.call(self, type, listener, {
-      capture: options.capture,
-      passive: options.passive
-    });
+    savedAddEventListener.call(self, type, listener, options);
     if (once || type === "load") {
       let onceHandler = onceHandlers.get(listener);
       if (!onceHandler) {
@@ -152,19 +151,15 @@ export function addEventListener(
   list.push(options);
 }
 
-/** `EventTarget#removeEventListener` wrapper which keeps the listener's reference */
-export function removeEventListener(
-  this: EventTarget,
+function removeEventListenerInfo(
+  self: EventTarget,
   type: string,
   listener: EventListenerOrEventListenerObject,
   options?: boolean | EventListenerOptions
 ) {
-  const self = this || global;
   if (typeof options === "boolean") {
     options = { capture: options };
   } else if (!options) options = {};
-  if (savedRemoveEventListener)
-    savedRemoveEventListener.call(self, type, listener, options);
   const byType = self[eventsSym];
   if (!byType) return;
   const byListener = byType.get(type);
@@ -177,6 +172,19 @@ export function removeEventListener(
   if (options.once && list.some(i => !i.once)) return;
   byCapture[index] = void 0;
   if (!byCapture.some(Boolean)) byListener.delete(listener);
+}
+
+/** `EventTarget#removeEventListener` wrapper which keeps the listener's reference */
+export function removeEventListener(
+  this: EventTarget,
+  type: string,
+  listener: EventListenerOrEventListenerObject,
+  options?: boolean | EventListenerOptions
+) {
+  const self = this || global;
+  if (savedRemoveEventListener)
+    savedRemoveEventListener.call(self, type, listener, options);
+  removeEventListenerInfo(self, type, listener, options);
 }
 
 /**
@@ -457,7 +465,7 @@ export function trackGlobalDocument() {
  * Monkey patching platform objects to make them serializable,
  * run it as soon as possible if a global serialization is needed
  */
-export function track() {
+export function track(withEvents?: boolean) {
   if (typeof EventTarget !== "undefined") trackEvents(EventTarget.prototype);
   trackGlobalDocument();
   S.regGlobal();

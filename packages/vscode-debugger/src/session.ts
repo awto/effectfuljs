@@ -23,7 +23,7 @@ import * as path from "path";
 import subscribe from "./wscomms";
 import { totalmem } from "os";
 
-const MAX_OLD_SPACE = Math.floor(totalmem() / (4 * 1024 * 1024));
+const MAX_OLD_SPACE = Math.floor(totalmem() /  (2 * 1024 * 1024));
 
 interface Handler extends CommsHandler {
   dataBreakpoints?: Set<P.Breakpoint>;

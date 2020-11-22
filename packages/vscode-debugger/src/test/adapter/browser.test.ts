@@ -230,13 +230,16 @@ suite("Debugging on Chrome", function () {
     await Promise.all([
       dc
         .compile(/^webpack: ready - started server on (.+)\n*$/m)
-        
         .then(function (u) {
           url = u;
-          return new Promise(i => setTimeout(function() {
-            dc.page && url && dc.page.goto(url, { timeout: 0, waitUntil:"load" });
-            i();
-          }, 500));
+          return new Promise(i =>
+            setTimeout(function () {
+              dc.page &&
+                url &&
+                dc.page.goto(url, { timeout: 0, waitUntil: "load" });
+              i();
+            }, 500)
+          );
         }),
       dc.configurationSequence(),
       dc.launch({
