@@ -1,13 +1,4 @@
-//
-// Note: This example test is leveraging the Mocha test framework.
-// Please refer to their documentation on https://mochajs.org/ for help.
-//
-
-// The module 'assert' provides assertion methods from node
 import * as assert from "assert";
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from "vscode";
 import * as path from "path";
 
@@ -29,8 +20,9 @@ suite("Extension Tests", function() {
     //TODO
   });
   test("should start a debug session", async function() {
+    const file = path.resolve(WORKSPACE, "extensionTest.js");
     const doc = await vscode.workspace.openTextDocument(
-      path.resolve(WORKSPACE, "extensionTest.js").replace(/\\/g, "/")
+      file.replace(/\\/g, "/")
     );
     await vscode.window.showTextDocument(doc, { preview: false });
     assert.ok(
@@ -41,11 +33,14 @@ suite("Extension Tests", function() {
         preset: "node",
         stopOnEntry: false,
         timeTravel: false,
-        cwd: "${workspaceRoot}",
+        cwd: WORKSPACE,
         command: 'node',
-        args: ["${file}"],
+        args: [file],
         console: "integratedTerminal",
-        env: {EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS:0,EFFECTFUL_DEBUGGER_EXCLUDE:"**/packages/{debugger,serialization,core,transducers}/**"}
+        env: {
+          EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS:0,
+          EFFECTFUL_DEBUGGER_EXCLUDE:"**/packages/{debugger,serialization,core,transducers}/**"
+        }
       })
     );
     // TODO: for now we are happy if nothing throws,
