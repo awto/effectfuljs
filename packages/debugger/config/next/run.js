@@ -131,10 +131,7 @@ const SKIP = [
 
 function exclude(filename) {
   filename = normalizePath(filename);
-  for (const i of SKIP)
-    if (filename.startsWith(i)) {
-      return true;
-    }
+  for (const i of SKIP) if (filename.startsWith(i)) return true;
   if (!debuggerConfig.include.test(filename)) return true;
   if (debuggerConfig.exclude && debuggerConfig.exclude.test(filename))
     return true;

@@ -67,14 +67,31 @@ config.instrumentDeps = isTrue(
   true
 );
 
-config.blackbox = mm.makeRe(
-  process.env.EFFECTFUL_DEBUGGER_BLACKBOX || "**/node_modules/**/*.?(m)js"
-);
-config.include = mm.makeRe(
-  process.env.EFFECTFUL_DEBUGGER_INCLUDE || "**/*.[jte]s?(x)"
-);
+//TODO: retor back to mm.matchRe after(if) it is fixed
+const BLACKBOX =
+  process.env.EFFECTFUL_DEBUGGER_BLACKBOX || "**/node_modules/**/*.?(m)js";
+
+config.blackbox = {
+  test(filename) {
+    return mm(filename, BLACKBOX);
+  }
+};
+
+const INCLUDE = process.env.EFFECTFUL_DEBUGGER_INCLUDE || "**/*.[jte]s?(x)";
+
+config.include = {
+  test(filename) {
+    return mm(filename, INCLUDE);
+  }
+};
+
+const EXCLUDE = process.env.EFFECTFUL_DEBUGGER_EXCLUDE;
 config.exclude = process.env.EFFECTFUL_DEBUGGER_EXCLUDE
-  ? mm.makeRe(process.env.EFFECTFUL_DEBUGGER_EXCLUDE)
+  ? {
+      test(filename) {
+        return mm(filename, EXCLUDE);
+      }
+    }
   : null;
 
 if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) {

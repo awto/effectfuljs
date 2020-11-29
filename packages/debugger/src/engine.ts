@@ -905,6 +905,7 @@ export function compileEval(
       T.run(ast, {
         preInstrumentedLibs: true,
         blackbox,
+        exclude: false,
         pureModule: true,
         evalContext,
         evalParams: params,
