@@ -116,6 +116,7 @@ export interface Brk {
   scopeDepth: number;
   logPoint: ((frame: Frame) => void) | null;
   breakpoint: {
+    id: number,
     condition: (frame: Frame) => boolean | null;
     hitCondition: (frame: Frame) => number;
     hits: number;

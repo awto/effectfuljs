@@ -55,7 +55,7 @@ const CONFIGURATION_DONE_REQUEST_TIMEOUT = 1000;
 interface BreakpointInfo {
   id: number;
   source: P.Source;
-  remotes: Set<number>;
+  remotes: Map<number, P.Breakpoint>;
   request: P.SourceBreakpoint;
   response: P.Breakpoint;
 }
@@ -780,10 +780,10 @@ export class DebugSession extends SessionImpl {
                       body: {
                         progressId: webpackProgress,
                         message,
-                        percentage: lastPercentage = Math.max(
+                        percentage: (lastPercentage = Math.max(
                           lastPercentage,
                           percentage
-                        )
+                        ))
                       }
                     });
                   } else {
@@ -938,7 +938,7 @@ export class DebugSession extends SessionImpl {
         };
         const bpi: BreakpointInfo = {
           id,
-          remotes: new Set(),
+          remotes: new Map(),
           source: args.source,
           request: i,
           response
@@ -985,9 +985,31 @@ export class DebugSession extends SessionImpl {
       const bpi = this.breakpointsIds.get(<any>i.id);
       if (!bpi) continue;
       const response = bpi.response;
+      // NextJS removes some functions from the sources, so breakpoints move to some next line
+      // we keep only the closest to the request breakpoints and ask the client to disable the
+      // moved breakpoint
       if (i.verified) {
-        bpi.remotes.add(remoteId);
-        Object.assign(bpi.response, i);
+        const origLine = bpi.request.line;
+        let diff = Infinity;
+        let minResponse: P.Breakpoint = response;
+        bpi.remotes.set(remoteId, i);
+        for (const bp of bpi.remotes.values()) {
+          if (!bp.line) continue;
+          const curDiff = Math.abs(bp.line - origLine);
+          if (curDiff > diff) continue;
+          diff = curDiff;
+          minResponse = bp;
+        }
+        for (const [remote, bp] of bpi.remotes) {
+          if (bp.line !== minResponse.line)
+            this.sendToThread(remote, {
+              seq: 0,
+              type: "request",
+              command: "childDisableBreakpoint",
+              arguments: { id: bp.id, source: bpi.source }
+            });
+        }
+        if (i.line === minResponse.line) Object.assign(bpi.response, i);
       } else bpi.remotes.delete(remoteId);
       if (!bpi.remotes.size) response.verified = false;
       if (!isResponse) this.sendEvent(new BreakpointEvent("changed", response));

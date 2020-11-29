@@ -897,10 +897,10 @@ function checkPause(brk: State.Brk, top: State.Frame): null | string {
   } else if (brk.flags & State.BrkFlag.EXIT) {
     if (brkOut && brkOut === top) return "stepOut";
   }
-  /*if (Comms.hasMessage()) {
+  if (Comms.hasMessage()) {
     if (config.verbose) trace("DEBUGGER: interrupt");
     return "interrupt";
-  }*/
+  }
   return null;
 }
 
@@ -1195,6 +1195,7 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
       ? <any>ignoreError(compileEval(conditionExpr, func, info), false)
       : null;
     info.breakpoint = {
+      id: i.id,
       condition,
       hitCondition:
         i.hitCondition &&
@@ -1207,6 +1208,19 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
   }
   return body;
 }
+
+handlers.childDisableBreakpoint = function(args, res) {
+  res.sent = true;
+  const source = args.source;
+  if (source.path) source.path = normalizeDir(source.path);
+  const modId = source.path || source.sourceReference;
+  const module = context.modules[modId];
+  const modBreakpoints = module.breakpoints;
+  if (!modBreakpoints) return;
+  const id = args.id;
+  const bp = modBreakpoints.find(i => i.breakpoint && i.breakpoint.id === id);
+  if (bp) bp.breakpoint = null;
+};
 
 handlers.breakpointLocations = function(args, res) {
   const source = args.source;
