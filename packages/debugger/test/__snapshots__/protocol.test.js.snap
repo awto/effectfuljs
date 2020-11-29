@@ -1733,14 +1733,14 @@ Object {
               "[name]": "(anonymous)",
               "[top]": Array [
                 "F2:  (anonymous)/m$5@test/__fixtures__/stepInAsync.js:10,S:0@11:10,G:1@11:10",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
             },
             Object {
               "[name]": "(anonymous)",
               "[top]": Array [
                 "F2:  (anonymous)/m$5@test/__fixtures__/stepInAsync.js:10,S:0@11:10,G:1@11:10",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "m": Object {
                 "length": "1",
@@ -1754,7 +1754,7 @@ Object {
               "[name]": "(anonymous)",
               "[top]": Array [
                 "F2:  (anonymous)/m$5@test/__fixtures__/stepInAsync.js:10,S:0@11:10,G:1@11:10",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "m": "100",
               "this": Object {
@@ -1766,7 +1766,7 @@ Object {
               "[name]": "afunc2",
               "[top]": Array [
                 "F2:  (anonymous)/m$5@test/__fixtures__/stepInAsync.js:10,S:0@11:10,G:1@11:10",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "m": "100",
               "this": Object {
@@ -1778,7 +1778,7 @@ Object {
               "[name]": "afunc1",
               "[top]": Array [
                 "F2:  (anonymous)/m$5@test/__fixtures__/stepInAsync.js:10,S:0@11:10,G:1@11:10",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "afunc2": Object {
                 "length": "1",
@@ -1794,7 +1794,7 @@ Object {
               "[name]": "stepInAsync.js",
               "[top]": Array [
                 "F2:  (anonymous)/m$5@test/__fixtures__/stepInAsync.js:10,S:0@11:10,G:1@11:10",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "afunc1": Object {
                 "length": "1",
@@ -21345,7 +21345,7 @@ Object {
               "[name]": "to1",
               "[top]": Array [
                 "F2:  to1/m$1@test/__fixtures__/timeouts.js:3,S:2@7:2,G:3@8:2",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "intervalCount": "undefined",
               "intervalHandler": "undefined",
@@ -21355,7 +21355,7 @@ Object {
               "[name]": "timeouts.js",
               "[top]": Array [
                 "F2:  to1/m$1@test/__fixtures__/timeouts.js:3,S:2@7:2,G:3@8:2",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "delayTermination": Object {
                 "arguments": "null",
@@ -21397,14 +21397,14 @@ Object {
               "[name]": "to3",
               "[top]": Array [
                 "F2:  to3/m$3@test/__fixtures__/timeouts.js:10,S:0@11:4,G:1@12:4",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
             },
             Object {
               "[name]": "to1",
               "[top]": Array [
                 "F2:  to3/m$3@test/__fixtures__/timeouts.js:10,S:0@11:4,G:1@12:4",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "intervalCount": "0",
               "intervalHandler": Object {},
@@ -21414,7 +21414,7 @@ Object {
               "[name]": "timeouts.js",
               "[top]": Array [
                 "F2:  to3/m$3@test/__fixtures__/timeouts.js:10,S:0@11:4,G:1@12:4",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "delayTermination": Object {
                 "arguments": "null",
@@ -21456,14 +21456,14 @@ Object {
               "[name]": "to3",
               "[top]": Array [
                 "F2:  to3/m$3@test/__fixtures__/timeouts.js:10,S:0@11:4,G:1@12:4",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
             },
             Object {
               "[name]": "to1",
               "[top]": Array [
                 "F2:  to3/m$3@test/__fixtures__/timeouts.js:10,S:0@11:4,G:1@12:4",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "intervalCount": "1",
               "intervalHandler": Object {},
@@ -21473,7 +21473,7 @@ Object {
               "[name]": "timeouts.js",
               "[top]": Array [
                 "F2:  to3/m$3@test/__fixtures__/timeouts.js:10,S:0@11:4,G:1@12:4",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "delayTermination": Object {
                 "arguments": "null",
@@ -21515,21 +21515,21 @@ Object {
               "[name]": "waitSome",
               "[top]": Array [
                 "F2:  waitSome/m$4@test/__fixtures__/timeouts.js:14,S:0@15:8,G:1@16:8",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
             },
             Object {
               "[name]": "to3",
               "[top]": Array [
                 "F2:  waitSome/m$4@test/__fixtures__/timeouts.js:14,S:0@15:8,G:1@16:8",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
             },
             Object {
               "[name]": "to1",
               "[top]": Array [
                 "F2:  waitSome/m$4@test/__fixtures__/timeouts.js:14,S:0@15:8,G:1@16:8",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "intervalCount": "2",
               "intervalHandler": Object {},
@@ -21539,7 +21539,7 @@ Object {
               "[name]": "timeouts.js",
               "[top]": Array [
                 "F2:  waitSome/m$4@test/__fixtures__/timeouts.js:14,S:0@15:8,G:1@16:8",
-                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:180,S:3@182:4,G:2@0:0",
+                "F1:  setTimeoutCallback/m$27@src/instr/rt.ts:181,S:3@183:4,G:2@0:0",
               ],
               "delayTermination": Object {
                 "arguments": "null",

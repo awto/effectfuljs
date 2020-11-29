@@ -275,7 +275,9 @@ export interface State {
   /** a current value to be passed into the top of `stack` (or an exception if `error:true`) */
   value: any;
   /** a callback called when some module's sources are changed */
-  onLoad?: (module: Module, hot: boolean) => void;
+  onLoad: ((module: Module, hot: boolean) => void) | null;
+  /** a callback called after module's top level is executed */
+  onAfterLoad: ((module: Module) => void) | null;
   /** current execution stack */
   top: Frame | null;
   /** queries if the engine should stop on this `brk` */
@@ -365,7 +367,9 @@ export const context: State = {
   pausedTop: null,
   threadId: 0,
   exception: undef,
-  stopNext: null
+  stopNext: null,
+  onLoad: null,
+  onAfterLoad: null
 };
 
 export function nop() {

@@ -8,6 +8,7 @@ const NODE_MODULES = fs.realpathSync(
 );
 debuggerConfig.hot = false;
 
+debuggerConfig.hot = false;
 const cacheIdentifier = cache.key;
 
 const { targetResolve } = require("../targetResolve");

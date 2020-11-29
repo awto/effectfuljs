@@ -103,6 +103,11 @@ config.expEagerModuleExport = false;
 
 config.patchVM = isTrue(process.env.EFFECTFUL_DEBUGGER_PATCH_VM, true);
 
+config.reactFastRefresh = isTrue(
+  process.env.EFFECTFUL_DEBUGGER_REACT_FAST_REFRESH,
+  false
+);
+
 module.exports = config;
 
 function isTrue(str, defaultValue = false) {

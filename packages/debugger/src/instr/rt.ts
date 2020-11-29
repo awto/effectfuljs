@@ -73,6 +73,7 @@ export function wrapModule(mod: any, cjsModule: any): any {
   topMeta(cjsModule, cjsModule.exports);
   mod.exports = cjsModule.exports;
   if (mod.prevVersion) mergeModule(mod, mod.prevVersion);
+  if (context.onAfterLoad) context.onAfterLoad(mod);
   return mod.exports;
 }
 
