@@ -2,9 +2,22 @@ import config from "./config";
 import * as State from "./state";
 import { wrapModule } from "./instr/rt";
 import { compileModule } from "./engine";
+import { regOpaqueObject } from "./persist";
 
 const { context, token, native } = State;
 const weakMapSet = native.WeakMap.set;
+
+function resumeModule(this: State.Frame | null) {
+  let tail = this;
+  if (tail) {
+    while (tail.next) tail = tail.next;
+    tail.next = context.top;
+    context.top = this;
+  }
+  throw token;
+}
+
+regOpaqueObject(resumeModule, "#resume");
 
 export function runTopLevel(mod: State.Module) {
   const cjs = mod.cjs;
@@ -34,7 +47,7 @@ export function moduleExports() {
   } catch (e) {
     if (e === token && !hot) {
       let tail = context.top;
-      weakMapSet.call(State.thunks, cjs.exports, tail);
+      weakMapSet.call(State.thunks, cjs.exports, resumeModule.bind(tail));
       if (tail) {
         while (tail) {
           const next: State.Frame | null = tail.next;

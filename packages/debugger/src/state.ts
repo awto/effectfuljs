@@ -116,7 +116,7 @@ export interface Brk {
   scopeDepth: number;
   logPoint: ((frame: Frame) => void) | null;
   breakpoint: {
-    id: number,
+    id: number;
     condition: (frame: Frame) => boolean | null;
     hitCondition: (frame: Frame) => number;
     hits: number;
@@ -310,7 +310,7 @@ export interface State {
 /** known closures */
 export const closures = new WeakMap<AnyFunc, Closure>();
 export const functions = new WeakMap<AnyFunc, FunctionDescr>();
-export const thunks = new WeakMap<any, Frame | null>();
+export const thunks = new WeakMap<any, () => void | null>();
 export const binds = new WeakMap<
   AnyFunc,
   { self: any; args: any[]; fun: AnyFunc }
@@ -814,3 +814,5 @@ export const isNode =
   process.release.name === "node";
 
 export const isBrowser = typeof window !== "undefined" && !isNode;
+
+if ((<any>module).hot) (<any>module).hot.addStatusHandler(resumeEventQueue);

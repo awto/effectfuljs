@@ -184,7 +184,9 @@ export function module(
   if (config.hot === true) curModule = <any>prevVersion;
   if (!require) require = <any>closSyms["__webpack_require__"];
   if (cjs) {
-    if (cjs.hot) cjs.hot.accept();
+    if (config.hot === true && cjs.hot) {
+      cjs.hot.accept();
+    }
     // something is loaded with node and webpack for example
     if (prevVersion && (!prevVersion.cjs || prevVersion.cjs.id !== cjs.id))
       prevVersion = curModule = <any>null;
@@ -1230,13 +1232,7 @@ export function force(value: any): any {
   }
   // defineProperty(value, thunkSymbol, { value: null, configurable: true });
   weakMapDelete.call(thunks, value);
-  let tail = thunk;
-  if (tail) {
-    while (tail.next) tail = tail.next;
-    tail.next = context.top;
-    context.top = thunk;
-  }
-  throw token;
+  return thunk();
 }
 
 regOpaqueObject(__effectful__nativeCall, "@effectful/debugger/native/call");

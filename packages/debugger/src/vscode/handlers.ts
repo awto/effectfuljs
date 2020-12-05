@@ -348,9 +348,9 @@ context.onFirstFrame = function() {
 };
 
 context.onThread = function() {
-  if (context.top || context.pausedTop) return;
-  if (!context.queue.length && !context.top && !context.pausedTop) {
-    if (!config.stopOnExit) {
+  if (context.top) return;
+  if (!context.queue.length && !context.top) {
+    if (!config.stopOnExit && !context.pausedTop) {
       cancelExit = nativeSetTimeout(function() {
         cancelExit = 0;
         if (!context.queue.length && !context.top && !context.pausedTop) {
@@ -374,7 +374,7 @@ function onEntry() {
   const savedDebug = context.enabled;
   try {
     context.enabled = false;
-    if (config.fastRestart === "entry")
+    if (!entrySnapshot && config.fastRestart === "entry")
       entrySnapshot = capture({ warnIgnored: true });
   } finally {
     context.enabled = savedDebug;
@@ -1522,20 +1522,16 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
           );
           continue;
         }
-        if (!i.cjs) continue;
-        if (!module || !module.cjs) {
-          for (const parent of i.parents) {
-            // this assumes parent modules are loaded first
-            const parentModule = context.modulesById[parent];
-            if (parentModule) {
-              const req = parentModule.require;
-              if (req) req(i.cjs);
-              break;
-            }
+        if (!i.cjs || (module && module.cjs)) continue;
+        for (const parent of i.parents) {
+          // this assumes parent modules are loaded first
+          const parentModule = context.modulesById[parent];
+          if (parentModule) {
+            const req = parentModule.require;
+            if (req) req(i.cjs);
+            break;
           }
         }
-        module = Engine.getCurModule();
-        if (!module || !module.cjs) continue;
       }
     }
     const state = S.read(
