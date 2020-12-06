@@ -105,7 +105,7 @@ config.patchVM = isTrue(process.env.EFFECTFUL_DEBUGGER_PATCH_VM, true);
 
 config.reactFastRefresh = isTrue(
   process.env.EFFECTFUL_DEBUGGER_REACT_FAST_REFRESH,
-  false
+  true
 );
 
 module.exports = config;
