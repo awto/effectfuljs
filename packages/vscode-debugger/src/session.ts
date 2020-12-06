@@ -556,7 +556,7 @@ export class DebugSession extends SessionImpl {
         );
       const env = { ...process.env };
       const execDir = path.dirname(process.execPath);
-      if (env.PATH) env.PATH = `${env.PATH}${path.delimiter}{execDir}`;
+      if (env.PATH) env.PATH = `${env.PATH}${path.delimiter}${execDir}`;
       else env.PATH = execDir;
       const child = spawn(
         "npm",
