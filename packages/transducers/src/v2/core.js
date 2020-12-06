@@ -516,6 +516,9 @@ export function clone(doc) {
     data.nextSibling = i.nextSibling.data;
   } while ((i = next(i)) !== doc);
   const res = doc.data;
+  do {
+    i.data = null;
+  } while ((i = next(i)) !== doc);
   res.prevSibling = res.nextSibling = res;
   return res;
 }
