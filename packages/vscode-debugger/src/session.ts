@@ -555,10 +555,7 @@ export class DebugSession extends SessionImpl {
           )
         );
       const env = { ...process.env };
-      const execDir = path.dirname(process.execPath);
-      if (env.PATH) env.PATH = `${env.PATH}${path.delimiter}${execDir}`;
-      else env.PATH = execDir;
-      const child = spawn(
+      const child = process.platform === "win32" ? spawn(
         "npm",
         [
           "install",
@@ -569,7 +566,10 @@ export class DebugSession extends SessionImpl {
           runtimeBase
         ],
         { shell: true, cwd: path.join(__dirname, ".."), env }
-      );
+      ) 
+      : spawn(process.env.SHELL || "bash", 
+        ["-ilc", `"npm install --no-package-lock --no-save --global-style --no-audit ${runtimeBase}"`],
+        { shell:true, cwd: path.join(__dirname, ".."), env });
       child.on("error", data => {
         this.sendErrorResponse(
           response,
