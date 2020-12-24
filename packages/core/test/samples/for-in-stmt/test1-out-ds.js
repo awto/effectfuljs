@@ -1023,7 +1023,7 @@ var $M = require("@effectful/debugger"),
       $.state = 4;
 
     case 4:
-      $l = $.$ = [$l, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0];
       $.goto = 5;
       $p = $forInIterator(obj);
       $.state = 5;
@@ -1271,7 +1271,7 @@ var $M = require("@effectful/debugger"),
       $.state = 48;
 
     case 48:
-      $l = $.$ = [$l[0], void 0, $l[2], void 0];
+      $l = $.$ = [$l[0], void 0, $l[2]];
       $.goto = 6;
       continue;
 

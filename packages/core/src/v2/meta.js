@@ -154,7 +154,7 @@ export function scopes(decls) {
     const exprs = i.pushScopeExpr;
     if (exprs) {
       const copyExprs = i.copyScopeExpr;
-      const numVars = i.scopeDecls.size + i.symScopePool.varCount;
+      const numVars = i.symScopePool.varCount;
       const loopScopeIdxs = new Set();
       for (const j of i.loopScope) loopScopeIdxs.add(j.varSym.index - 1);
       for (let i = 0; i < numVars; ++i) {

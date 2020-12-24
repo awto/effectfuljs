@@ -80,7 +80,7 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $l = $.$ = [$l, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0];
       $.goto = 2;
       $p = $iterator(some);
       $.state = 2;
@@ -138,7 +138,7 @@ var $M = require("@effectful/debugger"),
       $.state = 12;
 
     case 12:
-      $l = $.$ = [$l[0], void 0, $l[2], void 0];
+      $l = $.$ = [$l[0], void 0, $l[2]];
       $.goto = 4;
       continue;
 
@@ -250,7 +250,7 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $l = $.$ = [$l, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0];
       $.goto = 2;
       $p = ($x.call = eff)("d");
       $.state = 2;
@@ -313,7 +313,7 @@ var $M = require("@effectful/debugger"),
       $.state = 13;
 
     case 13:
-      $l = $.$ = [$l[0], void 0, $l[2], void 0];
+      $l = $.$ = [$l[0], void 0, $l[2]];
       $.goto = 5;
       continue;
 
@@ -425,7 +425,7 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $l = $.$ = [$l, void 0, void 0, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0, void 0];
       $.goto = 2;
       $p = $iterator(some);
       $.state = 2;
@@ -473,7 +473,7 @@ var $M = require("@effectful/debugger"),
       $.state = 10;
 
     case 10:
-      $l = $.$ = [$l, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0];
       $.goto = 11;
       $p = $iterator(other);
       $.state = 11;
@@ -531,7 +531,7 @@ var $M = require("@effectful/debugger"),
       $.state = 21;
 
     case 21:
-      $l = $.$ = [$l[0], void 0, $l[2], void 0];
+      $l = $.$ = [$l[0], void 0, $l[2]];
       $.goto = 13;
       continue;
 
@@ -561,7 +561,7 @@ var $M = require("@effectful/debugger"),
       $.state = 28;
 
     case 28:
-      $l = $.$ = [$l[0], void 0, void 0, $l[3], void 0, void 0];
+      $l = $.$ = [$l[0], void 0, void 0, $l[3]];
       $.goto = 4;
       continue;
 
@@ -730,7 +730,7 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $l = $.$ = [$l, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0];
       $.goto = 2;
       $p = $iterator(some);
       $.state = 2;
@@ -788,7 +788,7 @@ var $M = require("@effectful/debugger"),
       $.state = 12;
 
     case 12:
-      $l = $.$ = [$l[0], void 0, $l[2], void 0];
+      $l = $.$ = [$l[0], void 0, $l[2]];
       $.goto = 4;
       continue;
 
@@ -900,7 +900,7 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $l = $.$ = [$l, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0];
       $.goto = 2;
       $p = $iterator(some);
       $.state = 2;
@@ -958,7 +958,7 @@ var $M = require("@effectful/debugger"),
       $.state = 12;
 
     case 12:
-      $l = $.$ = [$l[0], void 0, $l[2], void 0];
+      $l = $.$ = [$l[0], void 0, $l[2]];
       $.goto = 4;
       continue;
 

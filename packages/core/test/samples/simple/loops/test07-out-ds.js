@@ -81,7 +81,7 @@ var $M = require("@effectful/debugger"),
       $.state = 6;
 
     case 6:
-      $l = $.$ = [$l, void 0, void 0];
+      $l = $.$ = [$l, void 0];
       $.state = 7;
 
     case 7:
@@ -100,7 +100,7 @@ var $M = require("@effectful/debugger"),
       $.state = 10;
 
     case 10:
-      $l = $.$ = [$l, void 0, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0];
       $.state = 11;
 
     case 11:

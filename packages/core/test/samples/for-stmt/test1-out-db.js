@@ -584,7 +584,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[1] = [];
-      $l = $.$ = [$l, void 0, void 0];
+      $l = $.$ = [$l, void 0];
       $.state = 1;
 
     case 1:
@@ -594,7 +594,7 @@ var $M = require("@effectful/debugger"),
     case 2:
       if ($l[1] < 10) {
         $l[0][1][$l[1]] = $m$13($);
-        $l = $.$ = [$l[0], $l[1], void 0];
+        $l = $.$ = [$l[0], $l[1]];
         $.goto = 2;
         continue;
       } else {
@@ -677,7 +677,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[1] = [];
-      $l = $.$ = [$l, void 0, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0, void 0];
       $.state = 1;
 
     case 1:
@@ -699,7 +699,7 @@ var $M = require("@effectful/debugger"),
 
     case 3:
       $l[2][$l[3]] = $p;
-      $l = $.$ = [$l[0], $l[1], void 0, void 0, void 0];
+      $l = $.$ = [$l[0], $l[1], void 0, void 0];
       $.goto = 2;
       continue;
 
@@ -781,7 +781,7 @@ var $M = require("@effectful/debugger"),
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[1] = [];
-      $l = $.$ = [$l, void 0, void 0, void 0, void 0];
+      $l = $.$ = [$l, void 0, void 0, void 0];
       $.state = 1;
 
     case 1:
@@ -811,7 +811,7 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $l[2][$l[3]] = $p;
-      $l = $.$ = [$l[0], $l[1], void 0, void 0, void 0];
+      $l = $.$ = [$l[0], $l[1], void 0, void 0];
       $.goto = 2;
       continue;
 
