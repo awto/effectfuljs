@@ -1062,7 +1062,7 @@ suite("Debugging on NodeJS", function () {
       await watch("i:I2,j:J2,k:K1+1");
       assert.deepEqual(await dc.scopeDescr(), [
         [
-          { this: { obj: "OBJ" }, j: "J2", "[name]": "VM0.js" },
+          { this: { obj: "OBJ" }, j: "J2", "[name]": "VM1024.js" },
           { this: { obj: "OBJ" }, i: "I2", j: "J1", "[name]": "(anonymous)" },
           { i: "I1", k: "K1+1", "[name]": "scopes.js" }
         ],
@@ -1075,7 +1075,7 @@ suite("Debugging on NodeJS", function () {
       await dc.continueRequest({ threadId: 0 });
       await watch("i:GI,j:J3,k:GK+2");
       assert.deepEqual(await dc.scopeDescr(), [
-        [{ j: "J3", "[name]": "VM2048.js" }],
+        [{ j: "J3", "[name]": "VM3072.js" }],
         [
           { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
           { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
@@ -1085,7 +1085,7 @@ suite("Debugging on NodeJS", function () {
       await dc.continueRequest({ threadId: 0 });
       await watch("i:I3,j:JF,k:GK+2-2+3");
       assert.deepEqual(await dc.scopeDescr(), [
-        [{ this: { obj: "OBJ" }, j: "JF", i: "I3", "[name]": "VM4096.js" }],
+        [{ this: { obj: "OBJ" }, j: "JF", i: "I3", "[name]": "VM5120.js" }],
         [
           { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
           { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
@@ -1096,7 +1096,7 @@ suite("Debugging on NodeJS", function () {
       await watch("i:I1,j:J4,k:KL");
       assert.deepEqual(await dc.scopeDescr(), [
         [
-          { this: { obj: "OBJ" }, j: "J4", "[name]": "VM6144.js" },
+          { this: { obj: "OBJ" }, j: "J4", "[name]": "VM7168.js" },
           { this: { obj: "OBJ" }, k: "KL", "[name]": "(anonymous)" },
           { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },
           { i: "I1", k: "K1+1-1", "[name]": "scopes.js" }
@@ -1115,7 +1115,7 @@ suite("Debugging on NodeJS", function () {
       await dc.continueRequest({ threadId: 0 });
       await watch("i:GI,j:J5,k:GK+2-2+3-3");
       assert.deepEqual(await dc.scopeDescr(), [
-        [{ j: "J5", "[name]": "VM8192.js" }],
+        [{ j: "J5", "[name]": "VM9216.js" }],
         [
           { this: { obj: "OBJ" }, k: "KL", "[name]": "(anonymous)" },
           { this: { obj: "OBJ" }, j: "J1", "[name]": "(anonymous)" },

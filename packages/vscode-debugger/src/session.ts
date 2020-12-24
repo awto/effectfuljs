@@ -23,7 +23,7 @@ import * as path from "path";
 import subscribe from "./wscomms";
 import { totalmem } from "os";
 
-const MAX_OLD_SPACE = Math.floor(totalmem() /  (2 * 1024 * 1024));
+const MAX_OLD_SPACE = Math.floor(totalmem() / (2 * 1024 * 1024));
 
 interface Handler extends CommsHandler {
   dataBreakpoints?: Set<P.Breakpoint>;
@@ -460,7 +460,7 @@ export class DebugSession extends SessionImpl {
     super.shutdown();
   }
 
-  private configurationCb?: () => void;
+  private configurationCb?: (args?: any) => void;
   private configurationDone = false;
   protected sendErrorResponse(
     response: P.Response,
@@ -555,21 +555,28 @@ export class DebugSession extends SessionImpl {
           )
         );
       const env = { ...process.env };
-      const child = process.platform === "win32" ? spawn(
-        "npm",
-        [
-          "install",
-          "--no-package-lock",
-          "--no-save",
-          "--global-style",
-          "--no-audit",
-          runtimeBase
-        ],
-        { shell: true, cwd: path.join(__dirname, ".."), env }
-      ) 
-      : spawn(process.env.SHELL || "bash", 
-        ["-ilc", `"npm install --no-package-lock --no-save --global-style --no-audit ${runtimeBase}"`],
-        { shell:true, cwd: path.join(__dirname, ".."), env });
+      const child =
+        process.platform === "win32"
+          ? spawn(
+              "npm",
+              [
+                "install",
+                "--no-package-lock",
+                "--no-save",
+                "--global-style",
+                "--no-audit",
+                runtimeBase
+              ],
+              { shell: true, cwd: path.join(__dirname, ".."), env }
+            )
+          : spawn(
+              process.env.SHELL || "bash",
+              [
+                "-ilc",
+                `"npm install --no-package-lock --no-save --global-style --no-audit ${runtimeBase}"`
+              ],
+              { shell: true, cwd: path.join(__dirname, ".."), env }
+            );
       child.on("error", data => {
         this.sendErrorResponse(
           response,
@@ -692,6 +699,8 @@ export class DebugSession extends SessionImpl {
           env.EFFECTFUL_DEBUGGER_HTML_TEMPLATE = args.htmlTemplate;
       }
       const launchArgs = [`--max-old-space-size=${MAX_OLD_SPACE}`, runJs];
+      if (typeof env["NODE_ARGS"] === "string")
+        launchArgs.unshift(env["NODE_ARGS"]);
       if (args.command) launchArgs.push(args.command);
       if (args.args) launchArgs.push(...args.args);
       if (term === "externalTerminal" || term === "integratedTerminal") {
@@ -922,7 +931,7 @@ export class DebugSession extends SessionImpl {
   private doSetBreakpoints(req: P.SetBreakpointsRequest): void {
     const args = req.arguments;
     const srcPath: string | number =
-      args.source.path || args.source.sourceReference || 0;
+      args.source.sourceReference || args.source.path || 0;
     if (args.source.path) args.source.path = normalizeDrive(args.source.path);
     // clear all breakpoints for this file
     const response = <P.SetBreakpointsResponse>new Response(req);

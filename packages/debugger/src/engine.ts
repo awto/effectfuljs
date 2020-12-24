@@ -731,7 +731,7 @@ export function compileEvalToString(
     const key = code + "@" + blackbox;
     let tgt = indirMemo.get(key);
     if (tgt) return tgt;
-    const id = toGlobal(evalCnt++);
+    const id = toGlobal(++evalCnt);
     if (!blackbox) context.onNewSource(id, code);
     const ast = babelParse(code, {
       allowReturnOutsideFunction: true
@@ -891,7 +891,7 @@ export function compileEval(
   blackbox = blackbox || !context.top || context.top.meta.blackbox;
   try {
     journal.enabled = false;
-    if (id == null) id = toGlobal(evalCnt++);
+    if (id == null) id = toGlobal(++evalCnt);
     if (!blackbox) context.onNewSource(id, code);
     const ast = babelParse(code, {
       allowReturnOutsideFunction: true

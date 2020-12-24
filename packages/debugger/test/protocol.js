@@ -132,7 +132,7 @@ function setBreakpoint(loc, cb) {
     "childSetBreakpoints",
     {
       breakpoints: [{ line: loc.line, column: loc.column }],
-      source: loc.path ? { path: loc.path } : { sourceReference: loc.id }
+      source: loc.id ? { sourceReference: loc.id } : { path: loc.path }
     },
     function(res) {
       let bp = res.breakpoints[0];
@@ -215,9 +215,7 @@ function stackSnapshot(cb) {
                 if (scopeNum >= scopeArr.length) {
                   res.push({
                     name: frame.name,
-                    file: frame.source.path
-                      ? path.basename(frame.source.path)
-                      : frame.source.sourceReference,
+                    file: frame.source.sourceReference || path.basename(frame.source.path),
                     line: frame.line,
                     column: frame.column,
                     scopes

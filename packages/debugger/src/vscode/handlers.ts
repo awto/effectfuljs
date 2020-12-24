@@ -493,6 +493,7 @@ function getSource(module: State.Module) {
       source = {
         name: module.name,
         sourceReference: module.id,
+        path: `eval${module.id}.js`,
         presentationHint: "emphasize"
       };
     }
@@ -526,16 +527,15 @@ function getLocation(frameId = 0): Location {
 }
 
 handlers.stackTrace = function(args, response) {
-  const startFrame =
-    typeof args.startFrame === "number" ? toLocal(args.startFrame) : 0;
-  const maxLevels = typeof args.levels === "number" ? args.levels : 1000;
-  const endFrame = startFrame + maxLevels;
+  const startFrame = typeof args.startFrame === "number" ? args.startFrame : 0;
   const visibleFrames = [];
   const top = context.pausedTop;
   for (let i = top; i; i = i.caller) {
     if (i.meta.blackbox || !i.meta.states[i.state]) continue;
     visibleFrames.push(i);
   }
+  const maxLevels = typeof args.levels === "number" ? args.levels : 1000;
+  const endFrame = maxLevels ? startFrame + maxLevels : visibleFrames.length;
   const stackFrames = [];
   for (let i = startFrame; i < Math.min(endFrame, visibleFrames.length); i++) {
     const f = visibleFrames[i];
@@ -558,7 +558,7 @@ handlers.stackTrace = function(args, response) {
   if (config.verbose) trace(`DEBUGGER: stack ${JSON.stringify(stackFrames)}`);
   response.body = {
     stackFrames,
-    totalFrames: stackFrames.length // context.stack.length
+    totalFrames: visibleFrames.length // context.stack.length
   };
 };
 
@@ -662,13 +662,15 @@ function iterableVariablesView(
   variables: VarValue[],
   start: number,
   count: number
-) {
+): number {
   let x = 0;
+  const stop = start + count;
   for (const i of val) {
     if (x++ < start) continue;
     variables.push(varValue(String(x), i));
-    if (x >= start + count) return;
+    if (x >= stop) return x;
   }
+  return x;
 }
 
 varBriefViewByClasses
@@ -708,12 +710,20 @@ handlers.variables = function(args, response) {
       )
         variables.push(varValue(i, val[i]));
       variables.push(varValue("length", val.length));
+      for (const i of savedObject.getOwnPropertySymbols(val)) {
+        const descr = savedObject.getOwnPropertyDescriptor(val, i);
+        if (descr && "value" in descr)
+          variables.push(varValue(str(i), descr.value));
+      }
     } else {
       const descrs = getOwnPropertyDescriptors(val);
       const arr = [];
       // tslint:disable-next-line:forin
-      for (const i in descrs) {
-        const descr = descrs[i];
+      for (const i of [
+        ...savedObject.getOwnPropertyNames(descrs),
+        ...savedObject.getOwnPropertySymbols(descrs)
+      ]) {
+        const descr = descrs[<any>i];
         if ("value" in descr) arr.push([str(i), descr.value]);
       }
       const proto = getPrototypeOf(val);
@@ -1136,7 +1146,7 @@ handlers.childTerminate = function() {
 function setBreakpoints(args: any, sourceUpdate?: boolean) {
   const source = args.source;
   if (source.path) source.path = normalizeDir(source.path);
-  const id = source.path || source.sourceReference;
+  const id = source.sourceReference || source.path;
   const module = context.modules[id];
   const diffs: P.Breakpoint[] = [];
   const body: any = { breakpoints: diffs };
@@ -1213,7 +1223,7 @@ handlers.childDisableBreakpoint = function(args, res) {
   res.sent = true;
   const source = args.source;
   if (source.path) source.path = normalizeDir(source.path);
-  const modId = source.path || source.sourceReference;
+  const modId = source.sourceReference || source.path;
   const module = context.modules[modId];
   const modBreakpoints = module.breakpoints;
   if (!modBreakpoints) return;
@@ -1225,7 +1235,7 @@ handlers.childDisableBreakpoint = function(args, res) {
 handlers.breakpointLocations = function(args, res) {
   const source = args.source;
   if (source.path) source.path = normalizeDir(source.path);
-  const id = source.path || source.sourceReference;
+  const id = source.sourceReference || source.path;
   const breakpoints: P.BreakpointLocation[] = [];
   res.body = { breakpoints };
   const module = context.modules[id];
@@ -1286,12 +1296,14 @@ handlers.evaluate = function(args, res) {
         val = State.native.eval(expr);
       } else {
         const frame = getFrame(args.frameId);
-        if (!frame || !frame.brk) val = "`eval` isn't available";
+        let brk: State.Brk;
+        if (!frame || !(brk = frame.meta.states[frame.state]))
+          val = "`eval` isn't available";
         else {
           let savedDebug = context.enabled;
           try {
             context.enabled = false;
-            let fun = compileEval(expr, frame.meta, frame.brk);
+            let fun = compileEval(expr, frame.meta, brk);
             if (args.context === "hover") fun = noSideEffects(fun);
             val = fun(frame);
           } finally {
@@ -1386,6 +1398,7 @@ context.onNewSource = function(id: number, code: string) {
     source: {
       name: `#eval_${id}.js`,
       sourceReference: id,
+      path: `#eval_${id}.js`,
       origin: "eval"
     }
   });
