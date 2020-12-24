@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-persist-serialization",
-  "version": "1.3.46",
+  "version": "1.3.48",
   "description": "@effectful/es-persist with @effectful/serialization for storing state",
   "main": "index.js",
   "module": "main.js",
@@ -34,7 +34,7 @@
     "mocha": "^5.0.5"
   },
   "dependencies": {
-    "@effectful/es-persist": "^1.3.46"
+    "@effectful/es-persist": "^1.3.48"
   },
   "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }
