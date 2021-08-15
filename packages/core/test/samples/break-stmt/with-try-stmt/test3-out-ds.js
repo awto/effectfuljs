@@ -12,7 +12,7 @@ var $M = require("@effectful/debugger"),
     $s$3 = [{
   e: [1, "6:13-6:14"]
 }, $s$2, 1],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-12:0", 32, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-12:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -78,9 +78,7 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 8:
-      $lset($l, 1,
-      /*e*/
-      $.error);
+      $lset($l, 1, $.error);
       $.error = void 0;
       $.goto = 9;
       $brk();

@@ -14,7 +14,7 @@ var $M = require("@effectful/debugger"),
     $s$2 = [{}, $s$1, 1],
     $s$3 = [{}, $s$1, 1],
     $s$4 = [{}, $s$1, 1],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 4, "1:0-33:0", 160, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 4, "1:0-33:0", 160, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[1] = $m$1($);
@@ -34,7 +34,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 0, [[0, "1:0-7:1", $s$1], [16, "33:0-33:0", $s$1], [16, "33:0-33:0", $s$1]]),
-    $m$1 = $M.fun("m$1", "a", null, $m$0, [], 0, 1, "1:0-7:1", 128, function a($, $l, $p) {
+    $m$1 = $M.fun("m$1", "a", null, $m$0, [], 0, 1, "1:0-7:1", 128, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -72,7 +72,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 1, [[2, "2:2-2:8", $s$2], [2, "3:2-3:8", $s$2], [2, "4:2-4:22", $s$2], [2, "5:2-5:8", $s$2], [2, "6:2-6:8", $s$2], [16, "7:1-7:1", $s$2], [16, "7:1-7:1", $s$2]]),
-    $m$2 = $M.fun("m$2", "b", null, $m$0, [], 0, 1, "9:0-19:1", 128, function b($, $l, $p) {
+    $m$2 = $M.fun("m$2", "b", null, $m$0, [], 0, 1, "9:0-19:1", 128, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -130,7 +130,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 1, [[2, "10:2-10:8", $s$3], [2, "11:2-11:8", $s$3], [2, "12:2-12:22", $s$3], [2, "13:2-13:8", $s$3], [2, "14:2-14:8", $s$3], [2, "15:2-15:19", $s$3], [2, "16:2-16:8", $s$3], [2, "17:2-17:8", $s$3], [2, "18:2-18:18", $s$3], [16, "19:1-19:1", $s$3], [16, "19:1-19:1", $s$3]]),
-    $m$3 = $M.fun("m$3", "c", null, $m$0, [], 0, 1, "21:0-32:1", 128, function c($, $l, $p) {
+    $m$3 = $M.fun("m$3", "c", null, $m$0, [], 0, 1, "21:0-32:1", 128, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;

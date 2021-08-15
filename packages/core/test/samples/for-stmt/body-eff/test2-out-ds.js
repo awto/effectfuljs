@@ -19,7 +19,7 @@ var $M = require("@effectful/debugger"),
 }, $s$1, 1],
     $s$3 = [{}, $s$2, 2],
     $s$4 = [{}, $s$3, 3],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-13:0", 32, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-13:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -55,9 +55,7 @@ var $M = require("@effectful/debugger"),
       $.state = 2;
 
     case 2:
-      $lset($l, 5,
-      /*ref*/
-      [1, 2, 3]);
+      $lset($l, 5, [1, 2, 3]);
       $.goto = 3;
       $brk();
       $.state = 3;
@@ -72,17 +70,13 @@ var $M = require("@effectful/debugger"),
       $.state = 5;
 
     case 5:
-      $lset($l[0], 1,
-      /*i*/
-      0);
+      $lset($l[0], 1, 0);
       $.goto = 6;
       $p = ($x.call = $get, $l[0][5].lenght);
       $.state = 6;
 
     case 6:
-      $lset($l[0], 4,
-      /*len*/
-      $p);
+      $lset($l[0], 4, $p);
       $.state = 7;
 
     case 7:
@@ -113,17 +107,13 @@ var $M = require("@effectful/debugger"),
       $.state = 12;
 
     case 12:
-      $lset($l[0][0], 2,
-      /*j*/
-      0);
+      $lset($l[0][0], 2, 0);
       $.goto = 13;
       $p = ($x.call = $get, $l[0][0][5].length);
       $.state = 13;
 
     case 13:
-      $lset($l[0][0], 4,
-      /*len*/
-      $p);
+      $lset($l[0][0], 4, $p);
       $.state = 14;
 
     case 14:
@@ -150,9 +140,7 @@ var $M = require("@effectful/debugger"),
       $.state = 18;
 
     case 18:
-      $lset($l[0][0], 3,
-      /*d*/
-      $p);
+      $lset($l[0][0], 3, $p);
       $.goto = 19;
       $brk();
       $.state = 19;
@@ -174,9 +162,7 @@ var $M = require("@effectful/debugger"),
       $.state = 22;
 
     case 22:
-      $lset($l[0][0], 2,
-      /*j*/
-      $l[0][0][2] + 1);
+      $lset($l[0][0], 2, $l[0][0][2] + 1);
       $.goto = 14;
       continue;
 
@@ -215,9 +201,7 @@ var $M = require("@effectful/debugger"),
       $.state = 30;
 
     case 30:
-      $lset($l[0], 1,
-      /*i*/
-      $l[0][1] + 1);
+      $lset($l[0], 1, $l[0][1] + 1);
       $.goto = 7;
       continue;
 

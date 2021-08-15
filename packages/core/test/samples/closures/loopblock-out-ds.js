@@ -30,12 +30,10 @@ var $M = require("@effectful/debugger"),
     $s$6 = [{
   k: [2, "12:14-12:15"]
 }, $s$5, 3],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-25:0", 32, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-25:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
-      $lset($l, 1,
-      /*a*/
-      $m$1($));
+      $lset($l, 1, $m$1($));
       $.goto = 2;
       continue;
 
@@ -50,7 +48,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 0, [[0, "1:0-24:1", $s$1], [16, "25:0-25:0", $s$1], [16, "25:0-25:0", $s$1]]),
-    $m$1 = $M.fun("m$1", "a", null, $m$0, ["p"], 0, 4, "1:0-24:1", 0, function a($, $l, $p) {
+    $m$1 = $M.fun("m$1", "a", null, $m$0, ["p"], 0, 4, "1:0-24:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -68,9 +66,7 @@ var $M = require("@effectful/debugger"),
       $.state = 3;
 
     case 3:
-      $lset($l, 2,
-      /*a*/
-      0);
+      $lset($l, 2, 0);
       $.goto = 4;
       $brk();
       $.state = 4;
@@ -121,9 +117,7 @@ var $M = require("@effectful/debugger"),
       continue;
 
     case 13:
-      $lset($l, 1,
-      /*i*/
-      $p.value);
+      $lset($l, 1, $p.value);
       $.goto = 14;
       $brk();
       $.state = 14;
@@ -139,25 +133,19 @@ var $M = require("@effectful/debugger"),
       $.state = 16;
 
     case 16:
-      $lset($l, 2,
-      /*j*/
-      $l[1] + 1);
+      $lset($l, 2, $l[1] + 1);
       $.goto = 17;
       $brk();
       $.state = 17;
 
     case 17:
-      $lset($l, 3,
-      /*k*/
-      $l[1] + 1);
+      $lset($l, 3, $l[1] + 1);
       $.goto = 18;
       $brk();
       $.state = 18;
 
     case 18:
-      $lset($l, 1,
-      /*i*/
-      $l[1] + 1);
+      $lset($l, 1, $l[1] + 1);
       $.goto = 19;
       $brk();
       $.state = 19;
@@ -301,7 +289,7 @@ var $M = require("@effectful/debugger"),
       break;
   }
 }, 1, [[4, "2:2-2:9", $s$2], [2, "2:2-2:8", $s$2], [4, "3:2-3:12", $s$2], [4, "4:2-22:3", $s$2], [2, "4:16-4:25", $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$3], [0, null, $s$3], [4, "4:11-4:12", $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [4, "5:4-5:17", $s$4], [2, "5:4-5:16", $s$4], [4, "6:4-7:16", $s$4], [4, "7:6-7:15", $s$4], [4, "8:4-8:8", $s$4], [4, "9:4-20:7", $s$4], [2, "9:4-20:6", $s$4], [4, "21:4-21:20", $s$4], [2, "21:4-21:19", $s$4], [36, "22:3-22:3", $s$3], [0, null, $s$3], [0, null, $s$3], [2, "4:16-4:25", $s$3], [0, null, $s$3], [0, null, $s$2], [0, null, $s$2], [4, "23:2-23:15", $s$2], [2, "23:2-23:14", $s$2], [36, "24:1-24:1", $s$2], [16, "24:1-24:1", $s$2], [16, "24:1-24:1", $s$2]]),
-    $m$2 = $M.fun("m$2", "b", null, $m$1, ["k"], 2, 3, "9:8-20:5", 0, function b($, $l, $p) {
+    $m$2 = $M.fun("m$2", "b", null, $m$1, ["k"], 2, 3, "9:8-20:5", 0, function ($, $l, $p) {
   var $2, $1;
 
   for (;;) switch ($.state = $.goto) {
@@ -313,9 +301,7 @@ var $M = require("@effectful/debugger"),
     case 1:
       $1 = $l[0][2];
       $2 = $l[1];
-      $lset($l, 1,
-      /*k*/
-      $2 + 1);
+      $lset($l, 1, $2 + 1);
       $.goto = 2;
       ($x.call = eff)(4, $l[0][0][2], $1, $2, $l[0][0][1]);
       $.state = 2;
@@ -326,44 +312,32 @@ var $M = require("@effectful/debugger"),
       $.state = 3;
 
     case 3:
-      $lset($l, 2,
-      /*k*/
-      10);
+      $lset($l, 2, 10);
       $.goto = 4;
       $brk();
       $.state = 4;
 
     case 4:
-      $lset($l[0], 2,
-      /*j*/
-      $l[0][2] + 1);
+      $lset($l[0], 2, $l[0][2] + 1);
       $.goto = 5;
       $brk();
       $.state = 5;
 
     case 5:
-      $lset($l[0][0], 2,
-      /*a*/
-      $l[0][0][2] + 1);
+      $lset($l[0][0], 2, $l[0][0][2] + 1);
       $.goto = 6;
       $brk();
       $.state = 6;
 
     case 6:
-      $lset($l[0], 1,
-      /*i*/
-      $l[0][1] + 1);
+      $lset($l[0], 1, $l[0][1] + 1);
       $.goto = 7;
       $brk();
       $.state = 7;
 
     case 7:
-      $lset($l, 2,
-      /*k*/
-      $l[2] + 1);
-      $lset($l[0][0], 1,
-      /*p*/
-      $l[0][0][1] + 1);
+      $lset($l, 2, $l[2] + 1);
+      $lset($l[0][0], 1, $l[0][0][1] + 1);
       $.goto = 8;
       $brk();
       $.state = 8;

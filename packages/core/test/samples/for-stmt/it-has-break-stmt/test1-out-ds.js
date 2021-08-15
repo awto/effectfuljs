@@ -17,7 +17,7 @@ var $M = require("@effectful/debugger"),
   ref: [4, "2:17-2:20"]
 }, $s$1, 1],
     $s$3 = [{}, $s$2, 2],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-11:0", 32, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-11:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -53,9 +53,7 @@ var $M = require("@effectful/debugger"),
       $.state = 2;
 
     case 2:
-      $lset($l, 4,
-      /*ref*/
-      [1, 2, 3]);
+      $lset($l, 4, [1, 2, 3]);
       $.goto = 3;
       $brk();
       $.state = 3;
@@ -70,17 +68,13 @@ var $M = require("@effectful/debugger"),
       $.state = 5;
 
     case 5:
-      $lset($l[0], 2,
-      /*j*/
-      0);
+      $lset($l[0], 2, 0);
       $.goto = 6;
       $p = ($x.call = $get, $l[0][4].length);
       $.state = 6;
 
     case 6:
-      $lset($l[0], 3,
-      /*len*/
-      $p);
+      $lset($l[0], 3, $p);
       $.state = 7;
 
     case 7:
@@ -107,9 +101,7 @@ var $M = require("@effectful/debugger"),
       $.state = 11;
 
     case 11:
-      $lset($l[0], 1,
-      /*i*/
-      $p);
+      $lset($l[0], 1, $p);
       $.goto = 12;
       $brk();
       $.state = 12;
@@ -144,9 +136,7 @@ var $M = require("@effectful/debugger"),
       $.state = 17;
 
     case 17:
-      $lset($l[0], 2,
-      /*j*/
-      $l[0][2] + 1);
+      $lset($l[0], 2, $l[0][2] + 1);
       $.goto = 7;
       continue;
 

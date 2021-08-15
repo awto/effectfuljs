@@ -7,10 +7,11 @@ const { Tag } = Kit;
 export function prepare() {
   const { root } = Ctx;
   const paramsFirst = !config.expInlineCalls;
+  const inline = config.inlineSubScopes !== false;
   for (let i = root.scopes; i; i = i.nextScope) {
     let varCount = 0;
     for (const j of i.scopeDecls)
-      if (j.bound && (paramsFirst || !j.param))
+      if (j.bound && (paramsFirst || !j.param) && (inline || j.temp))
         Kit.setSymName(j, varCount++, "$");
     i.varCount = varCount;
     const globList = (root.globBindSyms = {});

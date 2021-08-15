@@ -19,7 +19,7 @@ export const EXIT_SWITCH = 2;
 export const EXIT_DYN_BR = 3;
 export const EXIT_TERM = 4;
 
-const { tempId, tempSym, newSym } = Scope;
+const { id0, tempSym } = Scope;
 
 export function emptyBlock() {
   const res = {
@@ -154,6 +154,10 @@ function defaultNeedsSave(doc) {
   return true;
 }
 
+const pushScopeSym = Scope.sysSym("push");
+const popScopeSym = Scope.sysSym("pop");
+const copyScopeSym = Scope.sysSym("copy");
+
 export function build(needsSave = defaultNeedsSave) {
   let root, func, body, blocks, lastBlock, lastItem;
   let curBrk, curCnt, brkLabels, cntLabels, curFinalizer, curScope;
@@ -161,7 +165,18 @@ export function build(needsSave = defaultNeedsSave) {
   let finalizers, handlers, yieldSym, async, generator, lastInChain;
   const nsSym = Ctx.root.nsSym;
   const { patSym, ctxSym, localsSym } = Ctx.root;
-  const blackbox = config.blackbox;
+  const { wholeFrameCopy, singleAssign, blackbox } = config;
+  const copySym = wholeFrameCopy ? ctxSym : localsSym;
+  let pushPushScope = pushPushScopeInline;
+  let pushCopyScope = pushCopyScopeInline;
+  let pushPopScope = pushPopScopeInline;
+  if (config.inlineSubScopes === false) {
+    pushPushScope = pushOpItemLifted(copySym, pushScopeSym, copySym);
+    pushCopyScope = pushOpItemLifted(copySym, copyScopeSym, copySym);
+    pushPopScope = wholeFrameCopy
+      ? pushPopScopeWholeFrame
+      : pushOpItemLifted(copySym, popScopeSym, copySym);
+  }
 
   for (func = Ctx.root.firstChild; func; func = func.nextFunc) {
     root = func.funcDef;
@@ -185,12 +200,8 @@ export function build(needsSave = defaultNeedsSave) {
     errBlock.exitKind = EXIT_TERM;
     curHandler = errBlock;
     startBlock.handler = errBlock;
-    retSym = root.retSym = newSym("r");
-    retSym.decl = func;
-    retSym.fieldName = "result";
-    errSym = root.errSym = newSym("e");
-    errSym.decl = func;
-    errSym.fieldName = "error";
+    retSym = func.retSym;
+    errSym = func.errSym;
     finalizers = root.finalizers = new Set();
     handlers = root.handlers = new Set();
     patSym.decl = curScope;
@@ -204,9 +215,11 @@ export function build(needsSave = defaultNeedsSave) {
     if (
       func.type === Tag.ArrowFunctionExpression &&
       body.type !== Tag.BlockStatement
-    )
-      enter(body, retSym);
-    else traverse(body, after(body));
+    ) {
+      const sym = singleAssign ? tempSym(root, curScope) : retSym;
+      enter(body, sym);
+      if (singleAssign) pushSymAssign(retSym, sym);
+    } else traverse(body, after(body));
     lastBlock.br = retBlock;
     setBlock(errBlock);
     setBlock(retBlock);
@@ -272,7 +285,7 @@ export function build(needsSave = defaultNeedsSave) {
             Scope.iterNextSym,
             iterSym,
             itemSym,
-            tempId(Tag.push, yieldResSym, curScope)
+            id0(Tag.push, yieldResSym, curScope)
           );
           lastItem.doc.node.loc = doc.node.loc;
           lastItem.doc.refDoc = doc;
@@ -282,13 +295,13 @@ export function build(needsSave = defaultNeedsSave) {
           testBlock.exitKind = EXIT_COND;
           if (sym) {
             setBlock((testBlock.trueBr = newBlock()));
-            pushIterValue(async, sym, itemSym);
+            pushIterValue(sym, itemSym);
             lastBlock.br = exitBlock;
           } else testBlock.trueBr = exitBlock;
           testBlock.falseBr = bodyBlock;
           setBlock(bodyBlock);
           const nextValSym = tempSym(root, curScope);
-          pushIterValue(async, nextValSym, itemSym);
+          pushIterValue(nextValSym, itemSym);
           pushYield(async, yieldResSym, nextValSym);
           lastItem.eff = lastItem.result = true;
           lastItem.doc.refDoc = doc;
@@ -307,7 +320,7 @@ export function build(needsSave = defaultNeedsSave) {
             Scope.iterErrSym,
             iterSym,
             itemSym,
-            Kit.memExpr(Tag.push, ctxSym, "error")
+            id0(Tag.push, errSym, curScope)
           );
           lastBlock.br = testBlock;
           lastBlock.rec = true;
@@ -327,20 +340,23 @@ export function build(needsSave = defaultNeedsSave) {
             Scope.iterFinSym,
             iterSym,
             retItemSym,
-            Kit.memExpr(Tag.push, ctxSym, "result")
+            id0(Tag.push, retSym, curScope)
           );
           push(newItem(null, memExpr(Tag.right, retItemSym, "done"), curScope));
           lastBlock.exitKind = EXIT_COND;
           lastBlock.trueBr = finBlock.tail;
           setBlock((lastBlock.falseBr = newBlock()));
           const retValSym = tempSym(root, curScope);
-          pushIterValue(async, retValSym, retItemSym);
+          pushIterValue(retValSym, retItemSym);
           pushYield(async, yieldResSym, retValSym);
           lastItem.eff = lastItem.result = true;
           lastItem.doc.refDoc = doc;
           lastBlock.br = iterBlock;
           lastBlock.rec = true;
-          testBlock.finalizer = iterBlock.finalizer = bodyBlock.finalizer = finBlock;
+          testBlock.finalizer =
+            iterBlock.finalizer =
+            bodyBlock.finalizer =
+              finBlock;
           catchBlock.finalizer = reThrowBlock.finalizer = finBlock;
           setBlock(exitBlock);
           return;
@@ -359,31 +375,51 @@ export function build(needsSave = defaultNeedsSave) {
         const r = l.nextSibling;
         const altBr = newBlock();
         const exitBlock = newBlock();
+        let consBr = exitBlock;
         const op = doc.node.operator;
-        const lsym = sym || tempSym(root, curScope);
+        const lsym = singleAssign || !sym ? tempSym(root, curScope) : sym;
+        let rsym = sym;
+        let resSym = null;
+        if (singleAssign && sym) {
+          consBr = newBlock();
+          rsym = tempSym(root, curScope);
+          resSym = Scope.newSym();
+        }
         enter(l, lsym);
         if (op === "??") {
           const cmp = Kit.tok(Tag.push, Tag.BinaryExpression, {
             operator: "!="
           });
-          Kit.append(cmp, tempId(Tag.left, lsym, curScope));
+          Kit.append(cmp, id0(Tag.left, lsym, curScope));
           Kit.append(cmp, Kit.node(Tag.right, Tag.NullLiteral));
           push(newItem(null, cmp, curScope));
         } else {
-          push(newItem(null, tempId(Tag.right, lsym, curScope), curScope));
+          push(newItem(null, id0(Tag.right, lsym, curScope), curScope));
         }
         lastBlock.exitKind = EXIT_COND;
         if (op === "&&") {
           lastBlock.trueBr = altBr;
-          lastBlock.falseBr = exitBlock;
+          lastBlock.falseBr = consBr;
         } else {
-          lastBlock.trueBr = exitBlock;
+          lastBlock.trueBr = consBr;
           lastBlock.falseBr = altBr;
         }
+        if (resSym) {
+          setBlock(consBr);
+          pushSymAssign(resSym, lsym);
+          lastBlock.br = exitBlock;
+        }
         setBlock(altBr);
-        enter(r, sym);
+        enter(r, rsym);
+        if (resSym) pushSymAssign(resSym, rsym);
         lastBlock.br = exitBlock;
         setBlock(exitBlock);
+        if (resSym) {
+          curScope.scopeDecls.add(resSym);
+          curScope.blockDecls.add(resSym);
+          if (sym)
+            push(newItem(sym, id0(Tag.right, resSym, curScope), curScope));
+        }
         return;
       }
       case Tag.ConditionalExpression: {
@@ -396,15 +432,26 @@ export function build(needsSave = defaultNeedsSave) {
         const cond = tempSym(root, curScope);
         enter(test, cond);
         exitSym(cond, EXIT_COND);
+        const resSym = singleAssign ? Scope.newSym() : sym;
+        const lsym = singleAssign ? tempSym(root, curScope) : sym;
+        const rsym = singleAssign ? tempSym(root, curScope) : sym;
         lastBlock.trueBr = trueBr;
         lastBlock.falseBr = falseBr;
         setBlock(trueBr);
-        enter(cons, sym);
+        enter(cons, lsym);
+        if (singleAssign) pushSymAssign(resSym, lsym);
         lastBlock.br = exitBlock;
         setBlock(falseBr);
-        enter(alt, sym);
+        enter(alt, rsym);
+        if (singleAssign) pushSymAssign(resSym, rsym);
         lastBlock.br = exitBlock;
         setBlock(exitBlock);
+        if (singleAssign) {
+          curScope.scopeDecls.add(resSym);
+          curScope.blockDecls.add(resSym);
+          if (sym)
+            push(newItem(sym, id0(Tag.right, resSym, curScope), curScope));
+        }
         return;
       }
       case Tag.AssignmentExpression: {
@@ -424,7 +471,7 @@ export function build(needsSave = defaultNeedsSave) {
         item = newItem(sym, doc, curScope);
         // traverse(rhs, after(doc));
         const rsym = tempSym(root, curScope);
-        Kit.replace(rhs, tempId(Tag.right, rsym, curScope));
+        Kit.replace(rhs, id0(Tag.right, rsym, curScope));
         enter(rhs, rsym);
         Kit.detach(doc);
         push(item);
@@ -445,7 +492,7 @@ export function build(needsSave = defaultNeedsSave) {
     }
     push(opItem(resSym, yieldSym, argSym));
   }
-  function pushIterValue(async, valSym, itemSym) {
+  function pushIterValue(valSym, itemSym) {
     push(newItem(valSym, memExpr(Tag.right, itemSym, "value"), curScope));
   }
   function iterOp(async, opSym, iterSym, itemSym, passVal) {
@@ -453,7 +500,7 @@ export function build(needsSave = defaultNeedsSave) {
     Kit.append(call, Scope.sysId(Tag.callee, opSym));
     const args = Kit.tok(Tag.arguments, Tag.Array, []);
     Kit.append(call, args);
-    Kit.append(args, tempId(Tag.push, iterSym, curScope));
+    Kit.append(args, id0(Tag.push, iterSym, curScope));
     if (passVal) Kit.append(args, passVal);
     call.eff = true;
     pushAsync(async, itemSym, newItem(null, call, curScope));
@@ -461,7 +508,7 @@ export function build(needsSave = defaultNeedsSave) {
   }
   function iterMethod(pos, iterSym, method) {
     const res = Kit.node(pos, Tag.MemberExpression);
-    Kit.append(res, tempId(Tag.object, iterSym, curScope));
+    Kit.append(res, id0(Tag.object, iterSym, curScope));
     Kit.append(res, Kit.tok(Tag.property, Tag.Identifier, { name: method }));
     return res;
   }
@@ -515,13 +562,15 @@ export function build(needsSave = defaultNeedsSave) {
           const arg = i.firstChild;
           j = after(i);
           if (arg) {
+            const resSym = singleAssign ? tempSym(root, curScope) : retSym;
             if (async && generator) {
               const sym = tempSym(root, curScope);
               enter(arg, sym);
-              push(opItem(retSym, Scope.awaitSym, sym));
+              push(opItem(resSym, Scope.awaitSym, sym));
               lastItem.eff = lastItem.result = true;
               lastItem.doc.refDoc = i;
-            } else enter(arg, retSym);
+            } else enter(arg, resSym);
+            if (singleAssign) pushSymAssign(retSym, resSym);
           }
           lastBlock.br = retBlock;
           lastBlock.unwind = true;
@@ -550,7 +599,7 @@ export function build(needsSave = defaultNeedsSave) {
             const sym = tempSym(root, curScope);
             enter(init, sym);
             Kit.detach(init);
-            Kit.append(assign, tempId(Tag.right, sym, curScope));
+            Kit.append(assign, id0(Tag.right, sym, curScope));
           } else {
             Kit.append(assign, Kit.void0(Tag.right));
           }
@@ -613,12 +662,12 @@ export function build(needsSave = defaultNeedsSave) {
               handlerPat.pos = Tag.left;
               Kit.append(patAssign, handlerPat);
               Dom.regPat(handlerPat);
-              const patTok = Kit.memExpr(Tag.right, ctxSym, "error");
+              const patTok = id0(Tag.right, errSym, curScope);
               Kit.insertAfter(handlerPat, patTok);
               patAssign.node.loc = handlerPat.node.loc;
               push(newItem(null, patAssign, curScope));
-              const resetVal = Kit.assign(Tag.push);
-              Kit.append(resetVal, Kit.memExpr(Tag.left, ctxSym, "error"));
+              const resetVal = Scope.assign(Tag.push);
+              Kit.append(resetVal, id0(Tag.left, errSym, curScope));
               Kit.append(resetVal, Kit.void0(Tag.right));
               push(newItem(null, resetVal, curScope));
             }
@@ -718,6 +767,8 @@ export function build(needsSave = defaultNeedsSave) {
             setBlock(finalizer);
             finalizer.br = finalizer.tail;
             pushPopScope();
+            if (wholeFrameCopy) {
+            }
             curFinalizer = bodyBlock.finalizer = finalizer;
             curScope = i;
           }
@@ -785,12 +836,12 @@ export function build(needsSave = defaultNeedsSave) {
             if (needsSave(obj)) {
               const sym = tempSym(root, curScope);
               enter(obj, sym);
-              obj = tempId(Tag.object, sym, curScope);
+              obj = id0(Tag.object, sym, curScope);
             }
             if (left.node.computed && needsSave(prop)) {
               const sym = tempSym(root, curScope);
               enter(prop, sym);
-              prop = tempId(Tag.property, sym, curScope);
+              prop = id0(Tag.property, sym, curScope);
             }
             Kit.append(left, obj);
             Kit.append(left, prop);
@@ -801,8 +852,8 @@ export function build(needsSave = defaultNeedsSave) {
           Kit.append(assign, left);
           Dom.regPat(left);
           const valSym = tempSym(root, curScope);
-          pushIterValue(async, valSym, itemSym);
-          Kit.append(assign, tempId(Tag.right, valSym, curScope));
+          pushIterValue(valSym, itemSym);
+          Kit.append(assign, id0(Tag.right, valSym, curScope));
           push(newItem(null, assign, curScope));
           loopBody(i, body, testBlock, exitBlock);
           setBlock(exitBlock);
@@ -811,19 +862,20 @@ export function build(needsSave = defaultNeedsSave) {
           continue;
         }
         case Tag.SwitchStatement: {
-          let pureTests = true;
+          let pureTests = config.keepSwitchStatements;
           const discrim = i.firstChild;
           j = after(i);
           const cases = discrim.nextSibling.firstChild;
           let scase = cases;
           // trying not to break switch
-          do {
-            const test = scase.firstChild;
-            if (test.pos === Tag.test && !isPureCaseExpr(test)) {
-              pureTests = false;
-              break;
-            }
-          } while ((scase = scase.nextSibling) !== cases);
+          if (pureTests)
+            do {
+              const test = scase.firstChild;
+              if (test.pos === Tag.test && !isPureCaseExpr(test)) {
+                pureTests = false;
+                break;
+              }
+            } while ((scase = scase.nextSibling) !== cases);
           const exitBlock = newBlock();
           const parBrk = curBrk;
           curBrk = exitBlock;
@@ -878,8 +930,8 @@ export function build(needsSave = defaultNeedsSave) {
                 const cmp = Kit.tok(Tag.right, Tag.BinaryExpression, {
                   operator: "==="
                 });
-                Kit.append(cmp, tempId(Tag.left, lsym, curScope));
-                Kit.append(cmp, tempId(Tag.right, rsym, curScope));
+                Kit.append(cmp, id0(Tag.left, lsym, curScope));
+                Kit.append(cmp, id0(Tag.right, rsym, curScope));
                 const item = newItem(null, cmp, curScope);
                 cmp.node.loc = test.node.loc;
                 push(item);
@@ -944,7 +996,7 @@ export function build(needsSave = defaultNeedsSave) {
               if (i.parent) {
                 j = after(i);
                 const sym = tempSym(root, curScope);
-                const id = tempId(i.pos, sym, curScope);
+                const id = id0(i.pos, sym, curScope);
                 Scope.replaceRhs(i, id);
                 enter(i, sym);
                 lastItem.refDoc = i;
@@ -958,7 +1010,13 @@ export function build(needsSave = defaultNeedsSave) {
       j = next(i);
     } while (((i = j), i !== till));
   }
-  function pushPopScope() {
+  function pushSymAssign(lhs, rhs) {
+    const assign = Scope.assign(Tag.right);
+    Kit.append(assign, id0(Tag.left, lhs, curScope));
+    Kit.append(assign, id0(Tag.right, rhs, curScope));
+    push(newItem(null, assign, curScope));
+  }
+  function pushPopScopeInline() {
     const op = Kit.assign(Tag.push);
     Kit.append(op, Kit.memExpr(Tag.left, ctxSym, "$"));
     const closOp = Kit.tok(Tag.right, Tag.MemberExpression, {
@@ -969,6 +1027,20 @@ export function build(needsSave = defaultNeedsSave) {
     Kit.append(closOp, Kit.num(Tag.property, 0));
     push(newItem(localsSym, op, null));
   }
+  function pushPopScopeWholeFrame() {
+    push(opItem(copySym, popScopeSym, copySym));
+    const assign = Kit.assign(Tag.push);
+    Kit.append(assign, Kit.id(Tag.left, localsSym));
+    Kit.append(assign, Kit.memExpr(Tag.right, ctxSym, "$"));
+    push(newItem(null, assign, curScope));
+    return lastItem.doc;
+  }
+  function pushOpItemLifted(sym, opSym, argSym) {
+    return function () {
+      push(opItem(sym, opSym, argSym));
+      return lastItem.doc;
+    };
+  }
   function pushScope(parentExpr) {
     const op = Kit.assign(Tag.push);
     Kit.append(op, Kit.memExpr(Tag.left, ctxSym, "$"));
@@ -978,13 +1050,13 @@ export function build(needsSave = defaultNeedsSave) {
     push(newItem(localsSym, op, curScope));
     return exprs;
   }
-  function pushCopyScope() {
+  function pushCopyScopeInline() {
     const memExpr = Kit.tok(Tag.push, Tag.MemberExpression, { computed: true });
     Kit.append(memExpr, Kit.id(Tag.object, localsSym));
     Kit.append(memExpr, Kit.num(Tag.property, 0));
     return pushScope(memExpr);
   }
-  function pushPushScope() {
+  function pushPushScopeInline() {
     return pushScope(Kit.id(Tag.push, localsSym));
   }
   function loop(i, init, test, update, body, postTest) {
@@ -1105,7 +1177,7 @@ export function build(needsSave = defaultNeedsSave) {
   }
   function memExpr(pos, sym, name) {
     const res = Kit.node(pos, Tag.MemberExpression);
-    Kit.append(res, tempId(Tag.object, sym, curScope));
+    Kit.append(res, id0(Tag.object, sym, curScope));
     Kit.append(res, Kit.tok(Tag.property, Tag.Identifier, { name }));
     return res;
   }
@@ -1114,12 +1186,12 @@ export function build(needsSave = defaultNeedsSave) {
     const opId = Scope.sysId(Tag.callee, opsym);
     Kit.append(call, opId);
     const args = Kit.tok(Tag.arguments, Tag.Array, []);
-    if (argSym) Kit.append(args, tempId(Tag.push, argSym, curScope));
+    if (argSym) Kit.append(args, id0(Tag.push, argSym, curScope));
     Kit.append(call, args);
     return newItem(bsym, call, curScope);
   }
   function exitSym(sym, kind) {
-    push(newItem(null, tempId(Tag.right, sym, curScope), curScope));
+    push(newItem(null, id0(Tag.right, sym, curScope), curScope));
     lastBlock.exitKind = kind;
   }
 }

@@ -10,7 +10,7 @@ export { parentScope };
 export const sysSyms = new Map();
 
 export function prepare(root) {
-  Ctx.root = root;
+  Ctx.setRoot(root);
   for (const i of sysSyms.values()) i.hasRead = false;
   root.ctxSym = newSym("");
   root.localsSym = newSym("l");
@@ -18,7 +18,11 @@ export function prepare(root) {
   root.nsSym = newSym(config.ns || "M");
   root.modSym = newSym("m");
   root.nextId = root.prevId = root;
-  root.ctxSym.frameLocal = root.patSym.frameLocal = root.localsSym.frameLocal = true;
+  root.ctxSym.frameLocal =
+    root.patSym.frameLocal =
+    root.localsSym.frameLocal =
+      true;
+  Ctx.root.stage = 0;
   index(root);
   assignSym(root);
   funcSyms();
@@ -185,8 +189,11 @@ export function sysId(pos, sym) {
   return Kit.id(pos, sym);
 }
 
-export function id(pos, sym, scope) {
+/** creates identifiers node before `injectVarGetters` */
+export function id0(pos, sym, scope) {
+  if (sym.fieldName) return Kit.memExpr(pos, Ctx.root.ctxSym, sym.fieldName);
   const tok = Kit.id(pos, sym);
+  if (sym.frameLocal) return tok;
   regId(tok);
   tok.prevRHS = sym.rhs;
   sym.rhs = tok;
@@ -202,15 +209,24 @@ export function ensureUnique(sym) {
 /** injects functions constructors calls */
 export function funcConstrs() {
   const { ctxSym, firstChild: file } = Ctx.root;
+  let calleeSym = null;
+  if (config.funcConstrName) {
+    calleeSym = sysSym(config.funcConstrName);
+    calleeSym.hasRead = true;
+  }
   for (let i = file; i; i = i.nextFunc) {
     if (i.type !== Tag.File) {
       const constr = Kit.node(i.pos, Tag.CallExpression);
-      Kit.append(constr, Kit.id(Tag.callee, i.metaSym));
+      Kit.append(constr, Kit.id(Tag.callee, calleeSym || i.metaSym));
       const args = Kit.arr(Tag.arguments);
+      if (calleeSym) Kit.append(args, Kit.id(Tag.push, i.metaSym));
       Kit.append(constr, args);
       const scopeId = Kit.id(Tag.push, ctxSym);
       Kit.append(args, scopeId);
       Kit.replace(i, constr);
+      i.constrExpr = constr;
+    } else {
+      i.constrExpr = null;
     }
   }
 }
@@ -225,6 +241,13 @@ export function funcSyms() {
   let reservedSyms = new Set();
   for (let i of root.globals.keys()) if (i[0] === "$") reservedSyms.add(i);
   for (let i = file; i; i = i.nextFunc) {
+    const retSym = (i.retSym = newSym("r"));
+    retSym.decl = i;
+    retSym.fieldName = "result";
+    const errSym = (i.errSym = newSym("e"));
+    errSym.decl = i;
+    errSym.fieldName = "error";
+
     for (const { orig } of i.params)
       if (orig[0] === "$") reservedSyms.add(orig);
     const next = i.firstChild;
@@ -291,7 +314,7 @@ export function eraseFuncDecls() {
       i.pos = Tag.right;
       Kit.detach(idTok);
       Kit.detach(i);
-      Kit.append(funAssign, id(Tag.left, idSym, parentScope(i)));
+      Kit.append(funAssign, id0(Tag.left, idSym, parentScope(i)));
       Kit.append(funAssign, i);
       Kit.append(expr, funAssign);
       if (lastHoisted) {
@@ -321,6 +344,7 @@ export function replaceRhs(from, to) {
 /** replaces variable identifiers with getters of its context object */
 export function injectVarGetters() {
   const root = Ctx.root;
+  ++root.stage;
   const globalsEnv = config.expGlobalsEnv;
   if (config.expInlineCalls) {
     for (let i = root.firstChild; i; i = i.nextFunc) {
@@ -352,7 +376,7 @@ export function injectVarGetters() {
       sym = sym.varSym;
       if (sym.frameLocal) continue;
     }
-    replaceRhs(i, idExpr(i.pos, sym, i.scope));
+    replaceRhs(i, id1(i.pos, sym, i.scope));
   }
 }
 
@@ -363,7 +387,9 @@ export function scopeExpr(pos, fromScope, sym) {
   let depth = sym.extDepth;
   for (let i = fromScope; i && i !== toScope; i = i.parentScope) ++depth;
   for (let i = 0; i < depth; ++i) {
-    const memExpr = Kit.node(Tag.object, Tag.MemberExpression);
+    const memExpr = Kit.tok(Tag.object, Tag.MemberExpression, {
+      computed: true
+    });
     Kit.append(memExpr, res);
     Kit.append(memExpr, Kit.num(Tag.property, 0));
     res = memExpr;
@@ -372,7 +398,8 @@ export function scopeExpr(pos, fromScope, sym) {
   return res;
 }
 
-export function idExpr(pos, sym, fromScope) {
+/** creates identifiers node after `injectVarGetters` */
+export function id1(pos, sym, fromScope) {
   if (sym.frameLocal) return Kit.id(pos, sym);
   if (sym.fieldName) return Kit.memExpr(pos, Ctx.root.ctxSym, sym.fieldName);
   const res = Kit.node(pos, Tag.MemberExpression);
@@ -401,6 +428,13 @@ export function idExpr(pos, sym, fromScope) {
       }
     ];
   return res;
+}
+
+/** identifiers doc */
+export function idExpr(pos, sym, fromScope) {
+  return Ctx.root.stage === 0
+    ? id0(pos, sym, fromScope)
+    : id1(pos, sym, fromScope);
 }
 
 export const forInIteratorSym = sysSym("forInIterator");
@@ -432,10 +466,6 @@ export function tempSym(root, scope) {
   sym.usageBlock = null;
   root.bindIds = sym;
   return sym;
-}
-
-export function tempId(pos, sym, curScope) {
-  return id(pos, sym, curScope);
 }
 
 export function index(root) {
@@ -581,7 +611,8 @@ export function index(root) {
             if (i.node.property.name === "sent") {
               const before = root.prevFunctionSentExpression;
               i.nextFunctionSentExpression = root;
-              root.prevFunctionSentExpression = before.nextFunctionSentExpression = i;
+              root.prevFunctionSentExpression =
+                before.nextFunctionSentExpression = i;
               i.prevFunctionSentExpression = before;
             }
             break;
@@ -757,7 +788,11 @@ export const ArraySym = newSym("Array");
 export const SymbolSym = newSym("Symbol");
 export const evalSym = newSym("eval");
 export const requireSym = newSym("require");
-undefinedSym.strict = globalSym.strict = argumentsSym.strict = ObjectSym.strict = true;
+undefinedSym.strict =
+  globalSym.strict =
+  argumentsSym.strict =
+  ObjectSym.strict =
+    true;
 ArraySym.strict = SymbolSym.strict = evalSym.strict = requireSym.strict = true;
 export const pureSyms = {
   [PLAIN_FUNCTION_FLAG]: sysSym("ret"),
@@ -797,7 +832,7 @@ function assignSym(root) {
   root.nextArgumentsExpression = root.prevArgumentsExpression = root;
   let lastScope = null;
   const fileGlobals = (root.globals = new Map(globals));
-  const { evalContext, evalParams } = config;
+  const { evalContext, evalParams, expGlobalsEnv: globalsEnv } = config;
   const file = root.funcs;
   const rootScopeDepth = config.scopeDepth;
   let loopsSubscopeClosure = config.loopsSubScopes === "closure";
@@ -898,7 +933,7 @@ function assignSym(root) {
         if (!sym) {
           sym = newSym(name, true);
           sym.strict = true;
-          sym.fieldName = name;
+          if (globalsEnv) sym.fieldName = name;
           fileGlobals.set(name, sym);
         }
       } else {
@@ -975,7 +1010,7 @@ function assignSym(root) {
       if (!sym) {
         sym = newSym(name, true);
         sym.strict = true;
-        sym.fieldName = name;
+        if (globalsEnv) sym.fieldName = name;
         fileGlobals.set(name, sym);
       } else if (sym === argumentsSym) {
         const before = root.prevArgumentsExpression;

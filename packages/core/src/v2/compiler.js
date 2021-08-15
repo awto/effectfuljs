@@ -4,7 +4,6 @@ import * as CFG from "./cfg";
 import * as Kit from "./kit";
 import * as Scope from "./scope";
 import * as Optimization from "./optimization";
-import * as Debug from "./debug";
 import * as Emit from "./emit";
 import * as Meta from "./meta";
 import * as Operations from "./operations";
@@ -18,7 +17,6 @@ const helpers = {
   Kit,
   Scope,
   Optimization,
-  Debug,
   Emit,
   Meta,
   Operations

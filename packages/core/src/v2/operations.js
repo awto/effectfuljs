@@ -85,7 +85,7 @@ export function normalizeAssign() {
     } else if (arg.type === Tag.Identifier) {
       lhs = arg;
       lhs.pos = Tag.left;
-      larg = Scope.id(Tag.left, arg.sym, arg.scope);
+      larg = Scope.id0(Tag.left, arg.sym, arg.scope);
     } else {
       throw Kit.error(`Invalid left-hand side expression`, i);
     }
@@ -95,8 +95,8 @@ export function normalizeAssign() {
       larg.pos = Tag.right;
       insertAfter(append(expr, Kit.id(Tag.left, oldTmp)), larg);
       insertBefore(i, expr);
-      larg = Scope.tempId(Tag.left, oldTmp, scope);
-      insertAfter(i, Scope.tempId(Tag.push, oldTmp, scope));
+      larg = Scope.id0(Tag.left, oldTmp, scope);
+      insertAfter(i, Scope.id0(Tag.push, oldTmp, scope));
     }
     i.type = Tag.AssignmentExpression;
     i.node.operator = "=";
@@ -108,7 +108,7 @@ export function normalizeAssign() {
 }
 
 function copy(pos, doc, tempObj, scope) {
-  return tempObj ? Scope.tempId(pos, tempObj, scope) : Dom.clone(doc);
+  return tempObj ? Scope.id0(pos, tempObj, scope) : Dom.clone(doc);
 }
 
 function absTemp(root, doc, before) {
@@ -150,6 +150,7 @@ function isPure(doc) {
 /** replaces assignments with API calls */
 export function setters() {
   const file = Ctx.root;
+  const ctxSym = Ctx.root.ctxSym;
   const opSym = Scope.sysSym("set");
   const opLocSym = Scope.sysSym("lset");
   const opGlobSym = Scope.sysSym("gset");
@@ -161,9 +162,12 @@ export function setters() {
   ) {
     const arg = i.firstChild;
     if (
-      staticBundler &&
-      arg.type === Tag.Identifier &&
-      arg.sym === Scope.__webpack_public_path__Sym
+      (arg.type === Tag.Identifier &&
+        staticBundler &&
+        arg.sym === Scope.__webpack_public_path__Sym) ||
+      (arg.type === Tag.MemberExpression &&
+        arg.firstChild.type === Tag.Identifier &&
+        arg.firstChild.sym === ctxSym)
     )
       continue;
     const rarg = arg.nextSibling;

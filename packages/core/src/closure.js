@@ -361,11 +361,16 @@ export const contextDecls = Kit.map(function contextDecls(si) {
       root.origType === Tag.ArrowFunctionExpression
         ? [s.tok(Tag.push, Tag.Identifier, { sym: parentTag })]
         : [s.tok(Tag.push, Tag.ThisExpression)];
+    const node = {}
+    if (root.opts.bodyCommentHack)
+      node.leadingComments = [{
+        type: "CommentBlock", value: root.opts.bodyCommentHack
+      }]
     saved.set(contextSym, {
       raw: null,
       init: constr
         ? [
-            s.enter(Tag.init, Tag.CallExpression),
+            s.enter(Tag.init, Tag.CallExpression, {node}),
             s.tok(Tag.callee, Tag.Identifier, { sym: constrSym, ns: false }),
             s.enter(Tag.arguments, Tag.Array),
             ...(wrapId
@@ -393,7 +398,7 @@ export const contextDecls = Kit.map(function contextDecls(si) {
             ...s.leave()
           ]
         : [
-            s.enter(Tag.init, Tag.ObjectExpression),
+            s.enter(Tag.init, Tag.ObjectExpression, {node}),
             s.enter(Tag.properties, Tag.Array),
             ...prop(s.opts.varStorageField),
             ...prop(

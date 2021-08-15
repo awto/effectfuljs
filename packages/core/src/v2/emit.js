@@ -7,7 +7,6 @@ import * as Cfg from "./cfg";
 import config from "./config";
 import * as Ctx from "./context";
 import * as Meta from "./meta";
-import { isValidIdentifier } from "@babel/types";
 
 const { Tag } = Kit;
 
@@ -19,6 +18,7 @@ const locSetSym = Scope.sysSym("lset");
 export function calcFrames(root) {
   const { ctxSym, patSym } = Ctx.root;
   const { errBlock, origFunc: func } = root;
+  const { retSym, errSym } = func;
   const end = root.cfgBlock;
   const beg = end.nextBlock;
   let jobs = null;
@@ -46,14 +46,15 @@ export function calcFrames(root) {
   const assignTemp = config.expInjectTempSetters ? assignTempOp : assignTempDir;
   let endFuncLoc = funcLoc && { start: funcLoc.end, end: funcLoc.end };
   frame = root.resFrame = resFrame;
-  injectSysCall(pureSym, Kit.memExpr(Tag.left, ctxSym, "result"));
+  injectSysCall(pureSym, Scope.id0(Tag.left, retSym, func));
   end.frame = resFrame;
   initTop();
   const trampoline = config.inlineTrampolineLoop;
   const tagContinue = trampoline ? Tag.ContinueStatement : Tag.ReturnStatement;
-  const errFrame = (errBlock.frame = frame = newFrame(
-    (consequent = Kit.arr(Tag.consequent))
-  ));
+  const errFrame =
+    (errBlock.frame =
+    frame =
+      newFrame((consequent = Kit.arr(Tag.consequent))));
   let commonErrDynFrame = null;
   Kit.assignStmt(
     consequent,
@@ -66,7 +67,7 @@ export function calcFrames(root) {
   root.errFrame = errFrame;
   injectSysCall(
     Scope.unhandledSyms[flags & Scope.ASYNC_OR_GENERATOR_FUNCTION_FLAG],
-    Kit.memExpr(Tag.left, ctxSym, "error")
+    Scope.id0(Tag.left, errSym, func)
   );
   initTop();
   frame = beg.frame = newFrame((consequent = Kit.arr(Tag.consequent)));
@@ -90,6 +91,7 @@ export function calcFrames(root) {
     let rhs, lhs, sym, eff;
     let nextFrame, nextConsequent, lastEffBr;
     for (let n, last = i === block; !last; i = n) {
+      i.frame = frame;
       n = i.nextItem;
       last = n === block;
       rhs = i.doc;
@@ -129,7 +131,8 @@ export function calcFrames(root) {
         }
         if (i.result) {
           (frame.nextEffExit = (ref.nextEffExit =
-            frame.nextEffExit).prevEffExit = ref).prevEffExit = frame;
+            frame.nextEffExit).prevEffExit =
+            ref).prevEffExit = frame;
           const stmt = Kit.node(Tag.push, Tag.ReturnStatement);
           rhs.pos = Tag.argument;
           Kit.append(stmt, rhs);
@@ -137,7 +140,8 @@ export function calcFrames(root) {
           Kit.copyMeta(rhs, stmt);
         } else {
           (frame.nextEffSkipExit = (ref.nextEffSkipExit =
-            frame.nextEffSkipExit).prevEffSkipExit = ref).prevEffSkipExit = frame;
+            frame.nextEffSkipExit).prevEffSkipExit =
+            ref).prevEffSkipExit = frame;
           if (lhs && trampoline)
             Kit.assignStmt(consequent, Kit.id(Tag.left, patSym), rhs);
           else Kit.exprStmt(consequent, rhs);
@@ -212,15 +216,14 @@ export function calcFrames(root) {
           Scope.idExpr(Tag.right, ibr, block.scope)
         );
         (frame.nextDynExit = (block.nextDynExit =
-          frame.nextDynExit).prevDynExit = block).prevDynExit = frame;
+          frame.nextDynExit).prevDynExit =
+          block).prevDynExit = frame;
         Kit.append(consequent, Kit.node(Tag.push, tagContinue));
         if (errCopy || !commonErrDynFrame) {
           block.errDynFrame = newFrame((consequent = Kit.arr(Tag.consequent)));
           injectSysCall(
             Scope.raiseSym,
-            errCopy
-              ? Scope.idExpr(Tag.right, errCopy, block.scope)
-              : Kit.memExpr(Tag.left, ctxSym, "error")
+            Scope.idExpr(Tag.right, errCopy || errSym, block.scope)
           );
         } else block.errDynFrame = commonErrDynFrame;
         break;
@@ -311,8 +314,8 @@ export function calcFrames(root) {
       Kit.memExpr(Tag.left, ctxSym, "goto"),
       (ref = frameRef(Tag.right, nextFrame))
     );
-    (frame.prevPureExit = (ref.prevPureExit =
-      frame.prevPureExit).nextPureExit = ref).nextPureExit = frame;
+    (frame.prevPureExit = (ref.prevPureExit = frame.prevPureExit).nextPureExit =
+      ref).nextPureExit = frame;
     Kit.append(
       consequent,
       (ref.continueStmt = Kit.node(Tag.push, tagContinue))
@@ -333,7 +336,8 @@ export function calcFrames(root) {
         const { tail } = j;
         const ref = frameRef(Tag.right, pushFrame(last ? br : n));
         (tail.nextInstance = (ref.nextInstance =
-          tail.nextInstance).prevInstance = ref).prevInstance = tail;
+          tail.nextInstance).prevInstance =
+          ref).prevInstance = tail;
         assignTemp(consequent, tail.ibr, block.scope, ref);
       }
       return from;
@@ -381,14 +385,6 @@ function handler(root) {
     Kit.memExpr(Tag.left, ctxSym, "state")
   );
   const func = Kit.node(Tag.push, Tag.FunctionExpression);
-  const idSym = root.origFunc.idSym;
-  if (idSym && !idSym.anonymous) {
-    let name = idSym.orig;
-    if (root.origFunc.type === Tag.File)
-      name = name.replace(/(?:^\d)|\W/g, "_");
-    if (!isValidIdentifier(name)) name = "_" + name;
-    Kit.append(func, Kit.tok(Tag.id, Tag.Identifier, { name }));
-  }
   const params = Kit.append(func, Kit.arr(Tag.params));
   Kit.append(params, Kit.id(Tag.push, ctxSym));
   Kit.append(params, Kit.id(Tag.push, localsSym));
@@ -430,7 +426,8 @@ function errHandler(root) {
   if (!handlers.size && !finalizers.size)
     return Kit.node(Tag.push, Tag.NullLiteral);
   const ctxSym = Ctx.root.ctxSym;
-  const { lastFrame, errFrame } = root;
+  const { lastFrame, errFrame, origFunc: func } = root;
+  const { errSym } = func;
   const assignTemp = config.expInjectTempSetters ? assignTempOp : assignTempDir;
   handlers.add(errBlock);
   const cases = Kit.arr(Tag.cases);
@@ -479,7 +476,7 @@ function errHandler(root) {
           consequent,
           tail.errCopy,
           scope,
-          Kit.memExpr(Tag.right, ctxSym, "error")
+          Scope.id0(Tag.right, errSym, scope)
         );
       Kit.append(consequent, Kit.node(Tag.push, Tag.BreakStatement));
     }
@@ -648,6 +645,11 @@ export function constrs(decls) {
         ? Kit.id(Tag.push, func.parentFunc.metaSym)
         : Kit.node(Tag.push, Tag.NullLiteral)
     );
+    if (config.injectParentFrameNum) {
+      let expr = func.constrExpr;
+      while (expr && !expr.cfgItem) expr = expr.parent;
+      Kit.append(args, Kit.num(Tag.push, expr ? expr.cfgItem.frame.id : 0));
+    }
     Kit.append(
       args,
       Kit.emitConst(
@@ -751,7 +753,7 @@ export function module() {
   Meta.scopes(decls);
   constrs(decls);
   if (config.outFileDirective)
-    Kit.exprStmt(block, Kit.str(Tag.expression, config.outFileDirective))
+    Kit.exprStmt(block, Kit.str(Tag.expression, config.outFileDirective));
   if (decls.firstChild) Kit.append(Kit.append(block, Kit.varDecl()), decls);
   if (config.moduleExports)
     Kit.append(

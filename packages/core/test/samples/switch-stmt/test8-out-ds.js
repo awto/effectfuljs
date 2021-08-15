@@ -14,12 +14,10 @@ var $M = require("@effectful/debugger"),
     $s$2 = [{
   i: [1, "3:6-3:7"]
 }, $s$1, 1],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-17:0", 32, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-17:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
-      $lset($l, 1,
-      /*a*/
-      $m$1($));
+      $lset($l, 1, $m$1($));
       $.goto = 2;
       continue;
 
@@ -34,7 +32,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 0, [[0, "2:0-16:1", $s$1], [16, "17:0-17:0", $s$1], [16, "17:0-17:0", $s$1]]),
-    $m$1 = $M.fun("m$1", "a", null, $m$0, [], 0, 3, "2:0-16:1", 0, function a($, $l, $p) {
+    $m$1 = $M.fun("m$1", "a", null, $m$0, [], 0, 3, "2:0-16:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -42,9 +40,7 @@ var $M = require("@effectful/debugger"),
       $.state = 1;
 
     case 1:
-      $lset($l, 1,
-      /*i*/
-      0);
+      $lset($l, 1, 0);
       $.goto = 2;
       $brk();
       $.state = 2;
@@ -61,17 +57,13 @@ var $M = require("@effectful/debugger"),
 
     case 4:
       $.goto = 5;
-      $p = ($x.call = eff)($lset($l, 1,
-      /*i*/
-      $l[1] + 1));
+      $p = ($x.call = eff)($lset($l, 1, $l[1] + 1));
       $.state = 5;
 
     case 5:
       $l[2] = $p;
       $.goto = 6;
-      $p = ($x.call = check)($lset($l, 1,
-      /*i*/
-      $l[1] + 2));
+      $p = ($x.call = check)($lset($l, 1, $l[1] + 2));
       $.state = 6;
 
     case 6:
@@ -89,9 +81,7 @@ var $M = require("@effectful/debugger"),
 
     case 8:
       $.goto = 9;
-      ($x.call = effB)($lset($l, 1,
-      /*i*/
-      $l[1] + 3));
+      ($x.call = effB)($lset($l, 1, $l[1] + 3));
       $.state = 9;
 
     case 9:
@@ -116,9 +106,7 @@ var $M = require("@effectful/debugger"),
 
     case 13:
       $.goto = 14;
-      $p = ($x.call = check)($lset($l, 1,
-      /*i*/
-      $l[1] + 4));
+      $p = ($x.call = check)($lset($l, 1, $l[1] + 4));
       $.state = 14;
 
     case 14:
@@ -136,9 +124,7 @@ var $M = require("@effectful/debugger"),
 
     case 16:
       $.goto = 17;
-      ($x.call = effB)($lset($l, 1,
-      /*i*/
-      $l[1] + 5));
+      ($x.call = effB)($lset($l, 1, $l[1] + 5));
       $.state = 17;
 
     case 17:
@@ -148,9 +134,7 @@ var $M = require("@effectful/debugger"),
 
     case 18:
       $.goto = 19;
-      $p = ($x.call = check)($lset($l, 1,
-      /*i*/
-      $l[1] + 6));
+      $p = ($x.call = check)($lset($l, 1, $l[1] + 6));
       $.state = 19;
 
     case 19:

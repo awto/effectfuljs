@@ -21,7 +21,7 @@ var $M = require("@effectful/debugger"),
   j: [1, "5:15-5:16"],
   k: [2, "6:10-6:11"]
 }, $s$3, 3],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-14:0", 32, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 2, "1:0-14:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[1] = $m$1($);
@@ -39,7 +39,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 0, [[0, "1:0-13:1", $s$1], [16, "14:0-14:0", $s$1], [16, "14:0-14:0", $s$1]]),
-    $m$1 = $M.fun("m$1", "a2", null, $m$0, [], 0, 3, "1:0-13:1", 0, function a2($, $l, $p) {
+    $m$1 = $M.fun("m$1", "a2", null, $m$0, [], 0, 3, "1:0-13:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[2] = $m$2($);
@@ -74,7 +74,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 1, [[4, "2:2-2:12", $s$2], [4, "12:2-12:17", $s$2], [2, "12:9-12:16", $s$2], [0, null, $s$2], [16, "13:1-13:1", $s$2], [16, "13:1-13:1", $s$2]]),
-    $m$2 = $M.fun("m$2", "c", null, $m$1, [], 0, 3, "3:2-11:3", 0, function c($, $l, $p) {
+    $m$2 = $M.fun("m$2", "c", null, $m$1, [], 0, 3, "3:2-11:3", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[2] = $m$3($);
@@ -105,7 +105,7 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 2, [[4, "4:4-4:14", $s$3], [4, "10:4-10:8", $s$3], [36, "11:3-11:3", $s$3], [16, "11:3-11:3", $s$3], [16, "11:3-11:3", $s$3]]),
-    $m$3 = $M.fun("m$3", "b", null, $m$2, ["j"], 0, 3, "5:4-9:5", 0, function b($, $l, $p) {
+    $m$3 = $M.fun("m$3", "b", null, $m$2, ["j"], 0, 3, "5:4-9:5", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;

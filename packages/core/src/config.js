@@ -473,5 +473,7 @@ export default {
   // shifts line number values
   adjustLine: 0,
   // disables all optimizations if `false`
-  optimizations: true
+  optimizations: true,
+  // adding some comment inside body (to make regenerator tests happy)
+  bodyCommentHack: false
 };

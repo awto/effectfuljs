@@ -37,6 +37,17 @@ Object.assign(config, {
   implictCalls: true,
   // adds the string (if specified) as the first file statement
   // this way compiled files can be distinguished
-  outFileDirective: null
+  outFileDirective: null,
+  inlineSubScopes: true,
+  // not implemented
+  singleAssign: false,
+  // remove all `switch` statements from the output
+  keepSwitchStatements: true,
+  // inject a frame numbers for try-catch-finally into a frame meta-data
+  injectParentFrameNum: false,
+  // on scope changes assume the whole frame is cloned
+  wholeFrameCopy: false,
+  // a function closure constructor as a function
+  funcConstrName: null
 });
 export default config;

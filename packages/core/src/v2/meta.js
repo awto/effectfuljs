@@ -150,28 +150,29 @@ export function scopes(decls) {
   let num = 0;
   const rootScopeDepth = config.scopeDepth;
   const localsSym = file.localsSym;
-  for (let i = file.scopes; i; i = i.nextScope) {
-    const exprs = i.pushScopeExpr;
-    if (exprs) {
-      const copyExprs = i.copyScopeExpr;
-      const numVars = i.symScopePool.varCount;
-      const loopScopeIdxs = new Set();
-      for (const j of i.loopScope) loopScopeIdxs.add(j.varSym.index - 1);
-      for (let i = 0; i < numVars; ++i) {
-        Kit.append(exprs, Kit.void0(Tag.push));
-        if (loopScopeIdxs.has(i)) {
-          const memExpr = Kit.tok(Tag.push, Tag.MemberExpression, {
-            computed: true
-          });
-          Kit.append(memExpr, Kit.id(Tag.object, localsSym));
-          Kit.append(memExpr, Kit.num(Tag.property, i + 1));
-          Kit.append(copyExprs, memExpr);
-        } else {
-          Kit.append(copyExprs, Kit.void0(Tag.push));
+  if (config.inlineSubScopes)
+    for (let i = file.scopes; i; i = i.nextScope) {
+      const exprs = i.pushScopeExpr;
+      if (exprs) {
+        const copyExprs = i.copyScopeExpr;
+        const numVars = i.symScopePool.varCount;
+        const loopScopeIdxs = new Set();
+        for (const j of i.loopScope) loopScopeIdxs.add(j.varSym.index - 1);
+        for (let i = 0; i < numVars; ++i) {
+          Kit.append(exprs, Kit.void0(Tag.push));
+          if (loopScopeIdxs.has(i)) {
+            const memExpr = Kit.tok(Tag.push, Tag.MemberExpression, {
+              computed: true
+            });
+            Kit.append(memExpr, Kit.id(Tag.object, localsSym));
+            Kit.append(memExpr, Kit.num(Tag.property, i + 1));
+            Kit.append(copyExprs, memExpr);
+          } else {
+            Kit.append(copyExprs, Kit.void0(Tag.push));
+          }
         }
       }
     }
-  }
   for (let i = file.firstChild; i; i = i.nextFunc) {
     const root = i.funcDef;
     const { lastFrame } = root;
@@ -199,7 +200,10 @@ export function scopes(decls) {
     res.orig = res.name = `$s$${++num}`;
     for (const i of blockDecls)
       if (i.bound) {
-        const args = [i.index, Kit.locStr(i.declPos && i.declPos.node.loc)];
+        const args = [
+          i.index !== undefined ? i.index : i.name,
+          Kit.locStr(i.declPos && i.declPos.node.loc)
+        ];
         vars[i.orig] = args;
         if (i.metaArgs) args.push(...i.metaArgs);
       }
@@ -210,9 +214,11 @@ export function scopes(decls) {
       if (block.isScopeNode) ++depth;
     }
     block.scopeDepth = depth;
+    const blockMetaArgs = block.metaArgs ? [...block.metaArgs] : [];
+    blockMetaArgs.unshift(vars, parent, depth);
     Kit.insertAfter(
       Kit.append(decl, Kit.id(Tag.id, res)),
-      Kit.emitConst(Tag.init, [vars, parent, depth])
+      Kit.emitConst(Tag.init, blockMetaArgs)
     );
     Kit.append(decls, decl);
     return res;

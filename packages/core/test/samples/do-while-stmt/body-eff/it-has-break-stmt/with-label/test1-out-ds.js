@@ -11,7 +11,7 @@ var $M = require("@effectful/debugger"),
     $s$2 = [{}, $s$1, 1],
     $s$3 = [{}, $s$2, 2],
     $s$4 = [{}, $s$3, 3],
-    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-28:0", 32, function file_js($, $l, $p) {
+    $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 1, "1:0-28:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
