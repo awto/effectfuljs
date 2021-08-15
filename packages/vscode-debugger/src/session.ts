@@ -609,16 +609,9 @@ export class DebugSession extends SessionImpl {
         cb(true);
       });
       if (await new Promise(i => (cb = i))) return;
-      try {
-        debuggerImpl = require.resolve(runtimeBase);
-      } catch (e) {
-        this.sendErrorResponse(
-          response,
-          1002,
-          `Couldn't resolve the debuggers runtime - ${e} ${INSTAL_INSTRUCTION}`
-        );
-        return;
-      }
+      debuggerImpl = path.resolve(
+        path.join(__dirname, "..", "node_modules", runtimeBase, "vscode.js")
+      );
     }
     logger.log(`Using ${runtime} from ${debuggerImpl}`);
     debuggerImpl = path.dirname(normalizeDrive(debuggerImpl));
