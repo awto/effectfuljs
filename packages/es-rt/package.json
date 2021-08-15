@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-rt",
-  "version": "1.2.1",
+  "version": "1.4.0",
   "description": "Runtime for @effectful/es",
   "main": "index.js",
   "module": "main.js",

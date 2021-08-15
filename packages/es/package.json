@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es",
-  "version": "1.3.48",
+  "version": "1.4.0",
   "description": "Standard JavaScript effects using @effectful/core (abstract interface)",
   "main": "transform.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/es-rt": "^1.2.1",
+    "@effectful/es-rt": "^1.4.0",
     "benchmark": "^2.1.4",
     "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0",
@@ -40,7 +40,7 @@
     "test262-parser": "^2.0.7"
   },
   "dependencies": {
-    "@effectful/core": "^1.3.48"
+    "@effectful/core": "^1.4.0"
   },
   "publishConfig": {
     "access": "public"
