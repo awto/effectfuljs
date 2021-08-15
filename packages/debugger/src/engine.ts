@@ -342,7 +342,7 @@ export function fun(
   const api = curModule.api;
   let headCode;
   if (isGenerator) {
-    headCode = `return ${ctx}.iter`;
+    headCode = `return ${ctx}.iter /* regenerator */`;
   } else {
     headCode = `
       try {
@@ -1018,9 +1018,7 @@ const isStackFrameLine = State.isNode
     };
 
 function numFrames(e: any): number {
-  let s = String(e.stack)
-    .split("\n")
-    .filter(isStackFrameLine);
+  let s = String(e.stack).split("\n").filter(isStackFrameLine);
   return s.length;
 }
 
@@ -1083,16 +1081,14 @@ export function popFrame(top: Frame) {
   else recordFrame(next);
 }
 
-export const frame: (
-  closure: State.Closure,
-  newTarget: any
-) => any = config.timeTravel
-  ? function frame(closure: State.Closure, newTarget: any): any {
-      const top = context.top;
-      recordFrame(top);
-      return makeFrame(closure, newTarget);
-    }
-  : makeFrame;
+export const frame: (closure: State.Closure, newTarget: any) => any =
+  config.timeTravel
+    ? function frame(closure: State.Closure, newTarget: any): any {
+        const top = context.top;
+        recordFrame(top);
+        return makeFrame(closure, newTarget);
+      }
+    : makeFrame;
 
 export function checkExitBrk(top: Frame, value: any) {
   const meta = top.meta;

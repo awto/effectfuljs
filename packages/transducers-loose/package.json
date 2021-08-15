@@ -4,7 +4,7 @@
   "description": "@effectful/transducers built with faster generators",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -r ./test/kit/inject",
     "prepare-test": "babel --config-file ../es/babel.test.json ../transducers/test --out-dir test",
     "build-loose": "babel --config-file ../es/babel.loose.json ../transducers/src --out-dir=."
   },
@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
-    "cross-env": "^5.1.1",
-    "mocha": "^5.0.0"
+    "cross-env": "^7.0.3",
+    "mocha": "^9.0.3"
   },
   "publishConfig": {
     "access": "public"

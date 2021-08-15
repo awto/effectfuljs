@@ -14,7 +14,7 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "eslint src && mocha",
+    "test": "eslint src && mocha -r ./test/kit/inject",
     "build-module": "babel --env-name build src --out-dir .",
     "build-node": "babel --config-file ../es/babel.cjs.json -o index.js main.js",
     "build": "npm run build-module && npm run build-node"
@@ -27,8 +27,8 @@
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.7.2",
     "@effectful/serialization": "^1.3.43",
-    "eslint": "^5.15.1",
-    "mocha": "^5.2.0",
-    "react": "^16.3.2"
+    "eslint": "^7.31.0",
+    "mocha": "^9.0.3",
+    "react": "^17.0.2"
   }
 }

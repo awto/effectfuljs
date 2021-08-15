@@ -10,6 +10,8 @@ config.srcRoot = path.resolve(path.join(__dirname, ".."));
 config.localConsole = false;
 const Kit = require("./protocol");
 
+if (typeof jest !== "undefined") jest.setTimeout(30000);
+
 describe("VSCode protocol handlers with time traveling", function() {
   afterEach(Kit.teardown);
   test("step back calls", function(done) {

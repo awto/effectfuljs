@@ -4,8 +4,8 @@
   "description": "Standard JavaScript effects using @effectful/core (abstract interface)",
   "main": "transform.js",
   "scripts": {
-    "test": "eslint options.js && mocha",
-    "test-opt": "cross-env env-cmd $EJS_ENV mocha",
+    "test": "eslint options.js && mocha -r ./test/kit/inject",
+    "test-opt": "cross-env env-cmd -e $EJS_ENV mocha -r ./test/kit/inject",
     "test-deps": "git submodule update --remote --init --recursive --depth 1",
     "build-test262": "node ./test/kit/test262 default",
     "prepare-test": "npm run test-deps && npm run build-test262",
@@ -31,11 +31,11 @@
   "devDependencies": {
     "@effectful/es-rt": "^1.2.1",
     "benchmark": "^2.1.4",
-    "cross-env": "^5.1.1",
-    "env-cmd": "^8.0.2",
-    "eslint": "^5.15.1",
+    "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0",
+    "eslint": "^7.31.0",
     "glob": "^7.1.2",
-    "mocha": "^5.2.0",
+    "mocha": "^9.0.3",
     "promise": "^8.0.1",
     "test262-parser": "^2.0.7"
   },

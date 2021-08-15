@@ -33,7 +33,8 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 class DebugAdapterDescriptorFactory
-  implements vscode.DebugAdapterDescriptorFactory {
+  implements vscode.DebugAdapterDescriptorFactory
+{
   private server?: Net.Server;
 
   createDebugAdapterDescriptor(

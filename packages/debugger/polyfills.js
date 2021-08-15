@@ -7,6 +7,26 @@ const toIndexedObject = require("core-js-pure/internals/to-indexed-object");
 const createProperty = require("core-js-pure/internals/create-property");
 const max = Math.max;
 const SPECIES = Symbol.species;
+const staticToMethod = require("debugger-state");
+
+if (!path.ArrayPrototype) {
+  path.ArrayPrototype = {};
+  for (const i of [
+    "map",
+    "filter",
+    "find",
+    "findIndex",
+    "flatMap",
+    "forEach",
+    "reduce",
+    "reduceRight",
+    "some",
+    "every"
+  ]) {
+    const stat = path.Array[i];
+    path.ArrayPrototype[i] = staticToMethod(stat);
+  }
+}
 
 path.ArrayPrototype.push = function push() {
   path.ArrayPrototype.splice.apply(this, [this.length, 0].concat(arguments));
@@ -14,11 +34,11 @@ path.ArrayPrototype.push = function push() {
 };
 
 path.ArrayPrototype.pop = function pop() {
-  return path.ArrayPrototype.splice.call(this, -1, 1)[0];
+  return path.Array.splice(this, -1, 1)[0];
 };
 
 path.ArrayPrototype.shift = function shift() {
-  return path.ArrayPrototype.splice.call(this, 0, 1)[0];
+  return path.Array.splice(this, 0, 1)[0];
 };
 
 path.ArrayPrototype.unshift = function unshift() {

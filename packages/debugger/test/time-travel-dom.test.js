@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 require("./setup-time-travel");
 const trace = require("./run");
 trace.silent = true;

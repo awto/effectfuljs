@@ -1524,10 +1524,10 @@ function reflectGetPrototypeOf(obj: any) {
   return nativeReflect.getPrototypeOf(obj);
 }
 
-function reflectSetPrototypeOf(obj: any, prop: string | number | symbol) {
+function reflectSetPrototypeOf(obj: any, prot: object | null) {
   if (context.call === reflectSetPrototypeOf)
     context.call = Object.setPrototypeOf;
-  return nativeReflect.setPrototypeOf(obj, prop);
+  return nativeReflect.setPrototypeOf(obj, prot);
 }
 
 function reflectHas(obj: any, prop: string | number | symbol) {

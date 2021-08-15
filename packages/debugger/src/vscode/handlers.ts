@@ -128,7 +128,7 @@ const saveFlags =
   State.BrkFlag.STMT | State.BrkFlag.DEBUGGER_STMT | State.BrkFlag.EXIT;
 
 context.needsBreak = config.timeTravel
-  ? function(brk: State.Brk, top: State.Frame) {
+  ? function (brk: State.Brk, top: State.Frame) {
       if (brk.flags & saveFlags) TT.checkpoint();
       return defaultNeedsBreak(brk, top);
     }
@@ -145,7 +145,7 @@ const noSideEffects = config.timeTravel
   ? function noSideEffects(
       func: (this: any, ...args: any[]) => any
     ): (this: any, ...args: any[]) => any {
-      return function(this: any): any {
+      return function (this: any): any {
         const savedDebug = context.enabled;
         const savedEnabled = journal.enabled;
         const savedFuture = journal.future;
@@ -286,7 +286,7 @@ const RESTART_TIMEOUT = isBrowser ? 500 : 0;
 
 const savedOnLoad = context.onLoad;
 
-context.onLoad = function(module: State.Module, hot: boolean) {
+context.onLoad = function (module: State.Module, hot: boolean) {
   try {
     const source = getSource(module);
     if (config.verbose) trace(`DEBUGGER: loading ${JSON.stringify(source)}`);
@@ -336,7 +336,7 @@ function startThreadImpl(job: State.Job, brk: State.Brk | null) {
 let cancelExit: any = 0;
 let unref = false;
 
-context.onFirstFrame = function() {
+context.onFirstFrame = function () {
   if (cancelExit !== 0) {
     clearTimeout(cancelExit);
     cancelExit = 0;
@@ -347,11 +347,11 @@ context.onFirstFrame = function() {
   }
 };
 
-context.onThread = function() {
+context.onThread = function () {
   if (context.top) return;
   if (!context.queue.length && !context.top) {
     if (!config.stopOnExit && !context.pausedTop) {
-      cancelExit = nativeSetTimeout(function() {
+      cancelExit = nativeSetTimeout(function () {
         cancelExit = 0;
         if (!context.queue.length && !context.top && !context.pausedTop) {
           Comms.unref();
@@ -406,7 +406,7 @@ export function restart() {
   }
 }
 
-handlers.childRestart = function(res) {
+handlers.childRestart = function (res) {
   if (config.fastRestart) {
     scheduleRestart();
     return;
@@ -418,7 +418,10 @@ handlers.childRestart = function(res) {
   }
 };
 
-handlers.dataBreakpointInfo = function({ variablesReference, name }, response) {
+handlers.dataBreakpointInfo = function (
+  { variablesReference, name },
+  response
+) {
   response.body = {
     dataId: null,
     accessTypes: undefined
@@ -437,7 +440,7 @@ handlers.dataBreakpointInfo = function({ variablesReference, name }, response) {
 
 const emptyArr: any[] = [];
 
-handlers.setDataBreakpoints = function(args, response) {
+handlers.setDataBreakpoints = function (args, response) {
   response.body = { breakpoints: [] };
   resetDataBreakpoints();
   for (const i of args.breakpoints) {
@@ -526,7 +529,7 @@ function getLocation(frameId = 0): Location {
   return res;
 }
 
-handlers.stackTrace = function(args, response) {
+handlers.stackTrace = function (args, response) {
   const startFrame = typeof args.startFrame === "number" ? args.startFrame : 0;
   const visibleFrames = [];
   const top = context.pausedTop;
@@ -589,7 +592,7 @@ function resetScopes() {
 
 const variablesViewSym = Symbol("@effectful/debugger/variables");
 
-handlers.scopes = function(args, response) {
+handlers.scopes = function (args, response) {
   const frameReference = args.frameId;
   const root = getFrame(frameReference);
   const scopes = [];
@@ -685,7 +688,7 @@ varViewByClasses
   .set(Map.prototype, iterableVariablesView)
   .set(Set.prototype, iterableVariablesView);
 
-handlers.variables = function(args, response) {
+handlers.variables = function (args, response) {
   let variables: VarValue[] = [];
   const val = curValById.get(args.variablesReference);
   if (val != null) {
@@ -840,7 +843,7 @@ function reset() {
   resetScopes();
 }
 
-handlers.childLaunch = function(args, res) {
+handlers.childLaunch = function (args, res) {
   setDirSep(args.dirSep);
   config.timeTravelDisabled = !!args.timeTravelDisabled;
   let name = "Thread";
@@ -1056,7 +1059,7 @@ function pause() {
   }
 }
 
-handlers.pause = function(_, res) {
+handlers.pause = function (_, res) {
   send(res);
   pause();
 };
@@ -1079,14 +1082,14 @@ function checkTimeTravelEnabled(res: P.Response) {
   return false;
 }
 
-handlers.stepIn = function(_, res) {
+handlers.stepIn = function (_, res) {
   send(res);
   reset();
   stepIn = true;
   run();
 };
 
-handlers.reverseContinue = function(_, res) {
+handlers.reverseContinue = function (_, res) {
   if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
@@ -1094,7 +1097,7 @@ handlers.reverseContinue = function(_, res) {
   run();
 };
 
-handlers.stepBack = function(_, res) {
+handlers.stepBack = function (_, res) {
   if (checkTimeTravelEnabled(res)) return;
   send(res);
   reset();
@@ -1108,12 +1111,12 @@ export function cont() {
   run();
 }
 
-handlers.continue = function(_, res) {
+handlers.continue = function (_, res) {
   send(res);
   cont();
 };
 
-handlers.next = function(_, res) {
+handlers.next = function (_, res) {
   send(res);
   const top = context.pausedTop;
   reset();
@@ -1123,7 +1126,7 @@ handlers.next = function(_, res) {
   run();
 };
 
-handlers.stepOut = function(_, res) {
+handlers.stepOut = function (_, res) {
   send(res);
   const top = context.pausedTop;
   reset();
@@ -1133,7 +1136,7 @@ handlers.stepOut = function(_, res) {
   run();
 };
 
-handlers.childTerminate = function() {
+handlers.childTerminate = function () {
   Comms.close();
   if (
     typeof process !== "undefined" &&
@@ -1219,7 +1222,7 @@ function setBreakpoints(args: any, sourceUpdate?: boolean) {
   return body;
 }
 
-handlers.childDisableBreakpoint = function(args, res) {
+handlers.childDisableBreakpoint = function (args, res) {
   res.sent = true;
   const source = args.source;
   if (source.path) source.path = normalizeDir(source.path);
@@ -1232,7 +1235,7 @@ handlers.childDisableBreakpoint = function(args, res) {
   if (bp) bp.breakpoint = null;
 };
 
-handlers.breakpointLocations = function(args, res) {
+handlers.breakpointLocations = function (args, res) {
   const source = args.source;
   if (source.path) source.path = normalizeDir(source.path);
   const id = source.sourceReference || source.path;
@@ -1268,7 +1271,7 @@ handlers.breakpointLocations = function(args, res) {
   }
 };
 
-handlers.childSetBreakpoints = function(args, res) {
+handlers.childSetBreakpoints = function (args, res) {
   res.body = setBreakpoints(args, args.sourceModified);
 };
 
@@ -1283,11 +1286,11 @@ function setExceptionBreakpoints(args: P.SetExceptionBreakpointsArguments) {
   }
 }
 
-handlers.childSetExceptionBreakpoints = function(args) {
+handlers.childSetExceptionBreakpoints = function (args) {
   setExceptionBreakpoints(args);
 };
 
-handlers.evaluate = function(args, res) {
+handlers.evaluate = function (args, res) {
   let val;
   const expr = args.expression.trim();
   if (expr.length) {
@@ -1329,7 +1332,7 @@ function ignoreError(
   fun: (frame: State.Frame) => any,
   dflt: any
 ): (frame: State.Frame) => any {
-  return function(frame: State.Frame) {
+  return function (frame: State.Frame) {
     try {
       return fun(frame);
     } catch (e) {
@@ -1365,7 +1368,7 @@ function compileEval(
     true,
     null
   );
-  return function(frame: State.Frame) {
+  return function (frame: State.Frame) {
     const savedDebug = context.enabled;
     context.enabled = false;
     const func = meta.func(frame);
@@ -1377,7 +1380,7 @@ function compileEval(
   };
 }
 
-handlers.setExpression = function(args, res) {
+handlers.setExpression = function (args, res) {
   this.evaluate(
     assign({}, args, { expression: `${args.expression} = ${args.value}` }),
     res
@@ -1386,12 +1389,12 @@ handlers.setExpression = function(args, res) {
 
 const sources = new Map<number, string>();
 
-handlers.source = function(args, res) {
+handlers.source = function (args, res) {
   const content = sources.get(args.sourceReference);
   res.body = { content };
 };
 
-context.onNewSource = function(id: number, code: string) {
+context.onNewSource = function (id: number, code: string) {
   sources.set(id, code);
   event("loadedSources", {
     reason: "new",
@@ -1410,15 +1413,18 @@ const LOGMESSAGE_VARIABLE_REGEXP = /{(.*?)}/g;
 function logMessageToExpression(msg: string) {
   msg = msg.replace(/%/g, "%%");
   let args: string[] = [];
-  let format = msg.replace(LOGMESSAGE_VARIABLE_REGEXP, function(_match, group) {
-    const a = group.trim();
-    if (a) {
-      args.push(`(${a})`);
-      return "%s";
-    } else {
-      return "";
+  let format = msg.replace(
+    LOGMESSAGE_VARIABLE_REGEXP,
+    function (_match, group) {
+      const a = group.trim();
+      if (a) {
+        args.push(`(${a})`);
+        return "%s";
+      } else {
+        return "";
+      }
     }
-  });
+  );
   format = format.replace(/'/g, "\\'");
   return args.length > 0
     ? `console.log('${format}', ${args.join(", ")})`
@@ -1460,6 +1466,7 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
       }
       modulesExports.push(module);
     }
+    const gl = <any>global;
     const res = S.write(
       {
         top: context.pausedTop || context.top,
@@ -1472,8 +1479,8 @@ export function capture(opts: S.WriteOptions = {}): S.JSONObject {
           future: journal.future,
           enabled: savedEnabled
         },
-        global,
-        document: (<any>global).document,
+        global: gl,
+        document: gl.document,
         extra: Persist.extra,
         modules: modulesExports,
         closures: State.closures,
@@ -1561,7 +1568,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
     context.value = null;
     // reloading somehow breaks WebSockets
     nativeSetTimeout(
-      function() {
+      function () {
         if (typeof document !== "undefined") {
           if (config.mutationObserver && TT.DOM) {
             TT.DOM.observing.clear();

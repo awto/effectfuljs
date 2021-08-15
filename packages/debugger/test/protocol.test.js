@@ -10,6 +10,8 @@ config.localConsole = false;
 const Kit = require("./protocol");
 require("../vscode");
 
+if (typeof jest !== "undefined") jest.setTimeout(30000);
+
 describe("VSCode protocol handlers", function() {
   afterEach(Kit.teardown);
   test("step in", function(done) {

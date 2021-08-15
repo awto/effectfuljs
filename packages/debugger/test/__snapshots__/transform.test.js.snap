@@ -41,16 +41,16 @@ exports[`default transpiler 1`] = `
     $s$6 = [{
   v5: [1, \\"26:8-26:10\\"]
 }, $s$1, 1],
-    $m$code_js$0 = $M.fun(\\"m$code_js$0\\", \\"code.js\\", null, null, [], 1, 7, \\"1:0-29:0\\", 32, function code_js($, $l, $p) {
+    $m$0 = $M.fun(\\"m$0\\", \\"code.js\\", null, null, [], 1, 7, \\"1:0-29:0\\", 32, function ($, $l, $p) {
   var $1;
 
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[6
       /*C*/
-      ] = $m$C$1($);
+      ] = $m$1($);
       $.goto = 1;
-      $brk(\\"1:8-1:30\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -63,7 +63,7 @@ exports[`default transpiler 1`] = `
       /*_require*/
       ] = $p;
       $.goto = 3;
-      $brk(\\"1:8-1:11\\");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -73,7 +73,7 @@ exports[`default transpiler 1`] = `
       /*_require*/
       ].mod;
       $.goto = 4;
-      $brk(\\"2:0-2:33\\");
+      $brk();
       $.state = 4;
 
     case 4:
@@ -90,7 +90,7 @@ exports[`default transpiler 1`] = `
       /*n*/
       ] = $p;
       $.goto = 6;
-      $brk(\\"3:0-3:33\\");
+      $brk();
       $.state = 6;
 
     case 6:
@@ -106,7 +106,7 @@ exports[`default transpiler 1`] = `
       /*k*/
       ] = $p;
       $.goto = 8;
-      $brk(\\"4:0-4:4\\");
+      $brk();
       $.state = 8;
 
     case 8:
@@ -118,7 +118,7 @@ exports[`default transpiler 1`] = `
 
     case 9:
       $.goto = 10;
-      $brk(\\"5:0-5:4\\");
+      $brk();
       $.state = 10;
 
     case 10:
@@ -130,7 +130,7 @@ exports[`default transpiler 1`] = `
 
     case 11:
       $.goto = 12;
-      $brk(\\"7:0-7:12\\");
+      $brk();
       $.state = 12;
 
     case 12:
@@ -138,11 +138,11 @@ exports[`default transpiler 1`] = `
       /*v0*/
       ] = 10;
       $.goto = 13;
-      $brk(\\"25:0-28:2\\");
+      $brk();
       $.state = 13;
 
     case 13:
-      module.exports.fn2 = $m$fn1$2($);
+      module.exports.fn2 = $m$2($);
       $.goto = 15;
       continue;
 
@@ -156,12 +156,12 @@ exports[`default transpiler 1`] = `
     default:
       throw new Error(\\"Invalid state\\");
   }
-}, null, null, 0, [[4, \\"1:8-1:30\\", $s$1], [2, \\"1:16-1:30\\", $s$1], [4, \\"1:8-1:11\\", $s$1], [4, \\"2:0-2:33\\", $s$1], [2, \\"2:10-2:32\\", $s$1], [4, \\"3:0-3:33\\", $s$1], [2, \\"3:10-3:32\\", $s$1], [4, \\"4:0-4:4\\", $s$1], [2, \\"4:0-4:3\\", $s$1], [4, \\"5:0-5:4\\", $s$1], [2, \\"5:0-5:3\\", $s$1], [4, \\"7:0-7:12\\", $s$1], [4, \\"25:0-28:2\\", $s$1], [0, \\"25:0-28:1\\", $s$1], [16, \\"29:0-29:0\\", $s$1], [16, \\"29:0-29:0\\", $s$1]]),
-    $m$C$1 = $M.fun(\\"m$C$1\\", \\"C\\", null, $m$code_js$0, [\\"a\\"], 0, 12, \\"9:0-23:1\\", 0, function C($, $l, $p) {
+}, null, null, 0, [[4, \\"1:0-1:31\\", $s$1], [2, \\"1:16-1:30\\", $s$1], [4, \\"1:8-1:11\\", $s$1], [4, \\"2:0-2:33\\", $s$1], [2, \\"2:10-2:32\\", $s$1], [4, \\"3:0-3:33\\", $s$1], [2, \\"3:10-3:32\\", $s$1], [4, \\"4:0-4:4\\", $s$1], [2, \\"4:0-4:3\\", $s$1], [4, \\"5:0-5:4\\", $s$1], [2, \\"5:0-5:3\\", $s$1], [4, \\"7:0-7:12\\", $s$1], [4, \\"25:0-28:2\\", $s$1], [0, \\"25:0-28:1\\", $s$1], [16, \\"29:0-29:0\\", $s$1], [16, \\"29:0-29:0\\", $s$1]]),
+    $m$1 = $M.fun(\\"m$1\\", \\"C\\", null, $m$0, [\\"a\\"], 0, 12, \\"9:0-23:1\\", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk(\\"10:2-10:14\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -169,12 +169,12 @@ exports[`default transpiler 1`] = `
       /*v1*/
       ] = 10;
       $.goto = 2;
-      $brk(\\"11:2-22:3\\");
+      $brk();
       $.state = 2;
 
     case 2:
       $.goto = 3;
-      $brk(\\"12:4-12:18\\");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -182,12 +182,12 @@ exports[`default transpiler 1`] = `
       /*v2*/
       ] = 11;
       $.goto = 4;
-      $brk(\\"13:4-13:11\\");
+      $brk();
       $.state = 4;
 
     case 4:
       $.goto = 5;
-      $brk(\\"14:4-14:42\\");
+      $brk();
       $.state = 5;
 
     case 5:
@@ -216,7 +216,7 @@ exports[`default transpiler 1`] = `
 
     case 7:
       $.goto = 8;
-      $brk(\\"15:4-17:5\\");
+      $brk();
       $.state = 8;
 
     case 8:
@@ -230,7 +230,7 @@ exports[`default transpiler 1`] = `
 
     case 10:
       $.goto = 11;
-      $brk(\\"15:15-15:16\\");
+      $brk();
       $.state = 11;
 
     case 11:
@@ -252,7 +252,7 @@ exports[`default transpiler 1`] = `
 
     case 14:
       $.goto = 15;
-      $brk(\\"18:4-18:42\\");
+      $brk();
       $.state = 15;
 
     case 15:
@@ -266,7 +266,7 @@ exports[`default transpiler 1`] = `
 
     case 17:
       $.goto = 18;
-      $brk(\\"18:13-18:14\\");
+      $brk();
       $.state = 18;
 
     case 18:
@@ -288,7 +288,7 @@ exports[`default transpiler 1`] = `
 
     case 21:
       $.goto = 22;
-      $brk(\\"19:4-19:17\\");
+      $brk();
       $.state = 22;
 
     case 22:
@@ -296,12 +296,12 @@ exports[`default transpiler 1`] = `
       /*v4*/
       ] = 100;
       $.goto = 23;
-      $brk(\\"20:3-20:3\\");
+      $brk();
       $.state = 23;
 
     case 23:
       $.goto = 39;
-      $brk(\\"23:1-23:1\\");
+      $brk();
       continue;
 
     case 24:
@@ -309,7 +309,7 @@ exports[`default transpiler 1`] = `
       /*i*/
       ] = $p.value;
       $.goto = 25;
-      $brk(\\"18:29-18:42\\");
+      $brk();
       $.state = 25;
 
     case 25:
@@ -338,7 +338,7 @@ exports[`default transpiler 1`] = `
       /*i*/
       ] = $p.value;
       $.goto = 30;
-      $brk(\\"16:6-16:19\\");
+      $brk();
       $.state = 30;
 
     case 30:
@@ -352,7 +352,7 @@ exports[`default transpiler 1`] = `
 
     case 31:
       $.goto = 10;
-      $brk(\\"17:5-17:5\\");
+      $brk();
       continue;
 
     case 32:
@@ -373,7 +373,7 @@ exports[`default transpiler 1`] = `
       ] = $.error;
       $.error = void 0;
       $.goto = 36;
-      $brk(\\"21:4-21:24\\");
+      $brk();
       $.state = 36;
 
     case 36:
@@ -391,7 +391,7 @@ exports[`default transpiler 1`] = `
 
     case 37:
       $.goto = 23;
-      $brk(\\"22:3-22:3\\");
+      $brk();
       continue;
 
     case 38:
@@ -480,11 +480,11 @@ exports[`default transpiler 1`] = `
       break;
   }
 }, 1, [[4, \\"10:2-10:14\\", $s$2], [4, \\"11:2-22:3\\", $s$2], [5, \\"12:4-12:18\\", $s$3], [5, \\"13:4-13:11\\", $s$3], [5, \\"14:4-14:42\\", $s$3], [3, \\"14:14-14:24\\", $s$3], [3, \\"14:4-14:41\\", $s$3], [5, \\"15:4-17:5\\", $s$3], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [5, \\"15:15-15:16\\", $s$4], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [1, null, $s$2], [5, \\"18:4-18:42\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"18:13-18:14\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [1, null, $s$2], [5, \\"19:4-19:17\\", $s$3], [37, \\"20:3-20:3\\", $s$2], [36, \\"23:1-23:1\\", $s$2], [5, \\"18:29-18:42\\", $s$3], [3, \\"18:29-18:41\\", $s$3], [1, null, $s$2], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"16:6-16:19\\", $s$4], [3, \\"16:6-16:18\\", $s$4], [37, \\"17:5-17:5\\", $s$2], [1, null, $s$2], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [4, \\"21:4-21:24\\", $s$5], [2, \\"21:4-21:23\\", $s$5], [36, \\"22:3-22:3\\", $s$2], [16, \\"23:1-23:1\\", $s$2], [16, \\"23:1-23:1\\", $s$2]]),
-    $m$fn1$2 = $M.fun(\\"m$fn1$2\\", \\"fn1\\", null, $m$code_js$0, [], 0, 3, \\"25:14-28:1\\", 0, function fn1($, $l, $p) {
+    $m$2 = $M.fun(\\"m$2\\", \\"fn1\\", null, $m$0, [], 0, 3, \\"25:14-28:1\\", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk(\\"26:2-26:16\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -492,7 +492,7 @@ exports[`default transpiler 1`] = `
       /*v5*/
       ] = 10;
       $.goto = 2;
-      $brk(\\"27:2-27:55\\");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -564,38 +564,43 @@ exports[`default transpiler 2`] = `
   run: [5, \\"5:16-5:19\\"]
 }, null, 0],
     $s$2 = [{
-  cache: [1, null]
+  nodeInterop: [1, null],
+  cacheBabelInterop: [2, null],
+  cacheNodeInterop: [3, null]
 }, $s$1, 1],
-    $s$3 = [{}, $s$2, 2],
+    $s$3 = [{
+  nodeInterop: [1, null]
+}, $s$2, 2],
     $s$4 = [{
   obj: [1, null],
-  cache: [2, null],
-  newObj: [3, null],
-  hasPropertyDescriptor: [4, null],
-  key: [5, null],
-  desc: [6, null]
+  nodeInterop: [2, null],
+  cache: [3, null],
+  newObj: [4, null],
+  hasPropertyDescriptor: [5, null],
+  key: [6, null],
+  desc: [7, null]
 }, $s$1, 1],
     $s$5 = [{
   i: [1, \\"5:20-5:21\\"]
 }, $s$1, 1],
-    $m$mod1_js$0 = $M.fun(\\"m$mod1_js$0\\", \\"mod1.js\\", null, null, [], 0, 6, \\"1:0-14:0\\", 32, function mod1_js($, $l, $p) {
+    $m$0 = $M.fun(\\"m$0\\", \\"mod1.js\\", null, null, [], 0, 6, \\"1:0-14:0\\", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[2
       /*_getRequireWildcardCache*/
-      ] = $m$_getRequireWildcardCache$1($);
+      ] = $m$1($);
       $l[3
       /*_interopRequireWildcard*/
-      ] = $m$_interopRequireWildcard$3($);
+      ] = $m$3($);
       $l[5
       /*run*/
-      ] = $m$run$4($);
+      ] = $m$4($);
       module.exports.__esModule = true;
       module.exports.run = $l[5
       /*run*/
       ];
       $.goto = 1;
-      $brk(\\"1:0-1:29\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -615,7 +620,7 @@ exports[`default transpiler 2`] = `
       /*M2*/
       ] = $p;
       $.goto = 4;
-      $brk(\\"3:0-3:10\\");
+      $brk();
       $.state = 4;
 
     case 4:
@@ -623,7 +628,7 @@ exports[`default transpiler 2`] = `
       /*j*/
       ] = 0;
       $.goto = 5;
-      $brk(\\"12:0-12:6\\");
+      $brk();
       $.state = 5;
 
     case 5:
@@ -635,7 +640,7 @@ exports[`default transpiler 2`] = `
 
     case 6:
       $.goto = 7;
-      $brk(\\"13:0-13:6\\");
+      $brk();
       $.state = 7;
 
     case 7:
@@ -656,7 +661,7 @@ exports[`default transpiler 2`] = `
       throw new Error(\\"Invalid state\\");
   }
 }, null, null, 0, [[4, \\"1:0-1:29\\", $s$1], [2, null, $s$1], [2, null, $s$1], [4, \\"3:0-3:10\\", $s$1], [4, \\"12:0-12:6\\", $s$1], [2, \\"12:0-12:5\\", $s$1], [4, \\"13:0-13:6\\", $s$1], [2, \\"13:0-13:5\\", $s$1], [16, \\"14:0-14:0\\", $s$1], [16, \\"14:0-14:0\\", $s$1]]),
-    $m$_getRequireWildcardCache$1 = $M.fun(\\"m$_getRequireWildcardCache$1\\", \\"_getRequireWildcardCache\\", null, $m$mod1_js$0, [], 0, 2, null, 0, function _getRequireWildcardCache($, $l, $p) {
+    $m$1 = $M.fun(\\"m$1\\", \\"_getRequireWildcardCache\\", null, $m$0, [\\"nodeInterop\\"], 0, 4, null, 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       if (typeof WeakMap !== \\"function\\") {
@@ -668,7 +673,7 @@ exports[`default transpiler 2`] = `
 
     case 1:
       $.result = null;
-      $.goto = 5;
+      $.goto = 7;
       continue;
 
     case 2:
@@ -677,16 +682,68 @@ exports[`default transpiler 2`] = `
       $.state = 3;
 
     case 3:
-      $l[1
-      /*cache*/
+      $l[2
+      /*cacheBabelInterop*/
       ] = $p;
-      $l[0][2
-      /*_getRequireWildcardCache*/
-      ] = $m$f$2($);
-      $.result = $l[1
-      /*cache*/
-      ];
+      $.goto = 4;
+      $p = new ($x.call = WeakMap)();
+      $.state = 4;
+
+    case 4:
+      $l[3
+      /*cacheNodeInterop*/
+      ] = $p;
       $.goto = 5;
+      $p = ($x.call = $l[0][2
+      /*_getRequireWildcardCache*/
+      ] = $m$2($))($l[1
+      /*nodeInterop*/
+      ]);
+      $.state = 5;
+
+    case 5:
+      $.result = $p;
+      $.goto = 7;
+      continue;
+
+    case 6:
+      $.goto = 7;
+      return $unhandled($.error);
+
+    case 7:
+      return $ret($.result);
+
+    default:
+      throw new Error(\\"Invalid state\\");
+  }
+}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
+    $m$2 = $M.fun(\\"m$2\\", null, null, $m$1, [\\"nodeInterop\\"], 0, 2, null, 0, function ($, $l, $p) {
+  for (;;) switch ($.state = $.goto) {
+    case 0:
+      if ($l[1
+      /*nodeInterop*/
+      ]) {
+        $.state = 1;
+      } else {
+        $.goto = 3;
+        continue;
+      }
+
+    case 1:
+      $.result = $l[0][3
+      /*cacheNodeInterop*/
+      ];
+      $.state = 2;
+
+    case 2:
+      $.goto = 5;
+      continue;
+
+    case 3:
+      $.result = $l[0][2
+      /*cacheBabelInterop*/
+      ];
+      $.goto = 2;
       continue;
 
     case 4:
@@ -699,34 +756,14 @@ exports[`default transpiler 2`] = `
     default:
       throw new Error(\\"Invalid state\\");
   }
-}, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
-    $m$f$2 = $M.fun(\\"m$f$2\\", null, null, $m$_getRequireWildcardCache$1, [], 0, 1, null, 0, function ($, $l, $p) {
-  for (;;) switch ($.state = $.goto) {
-    case 0:
-      $.result = $l[0][1
-      /*cache*/
-      ];
-      $.goto = 2;
-      continue;
-
-    case 1:
-      $.goto = 2;
-      return $unhandled($.error);
-
-    case 2:
-      return $ret($.result);
-
-    default:
-      throw new Error(\\"Invalid state\\");
-  }
-}, null, null, 2, [[0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-    $m$_interopRequireWildcard$3 = $M.fun(\\"m$_interopRequireWildcard$3\\", \\"_interopRequireWildcard\\", null, $m$mod1_js$0, [\\"obj\\"], 1, 9, null, 0, function _interopRequireWildcard($, $l, $p) {
+}, null, null, 2, [[0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
+    $m$3 = $M.fun(\\"m$3\\", \\"_interopRequireWildcard\\", null, $m$0, [\\"obj\\", \\"nodeInterop\\"], 1, 10, null, 0, function ($, $l, $p) {
   var $1;
 
   for (;;) switch ($.state = $.goto) {
     case 0:
-      $1 = $l[1
-      /*obj*/
+      $1 = !$l[2
+      /*nodeInterop*/
       ];
 
       if ($1) {
@@ -739,7 +776,7 @@ exports[`default transpiler 2`] = `
     case 1:
       $1 = $l[1
       /*obj*/
-      ].__esModule;
+      ];
       $.state = 2;
 
     case 2:
@@ -751,343 +788,375 @@ exports[`default transpiler 2`] = `
       }
 
     case 3:
+      $1 = $l[1
+      /*obj*/
+      ].__esModule;
+      $.state = 4;
+
+    case 4:
+      if ($1) {
+        $.state = 5;
+      } else {
+        $.goto = 6;
+        continue;
+      }
+
+    case 5:
       $.result = $l[1
       /*obj*/
       ];
-      $.goto = 42;
+      $.goto = 46;
       continue;
 
-    case 4:
+    case 6:
       $1 = $l[1
       /*obj*/
       ] === null;
 
       if ($1) {
-        $.state = 5;
+        $.state = 7;
       } else {
-        $.goto = 38;
+        $.goto = 42;
         continue;
       }
 
-    case 5:
+    case 7:
       if ($1) {
-        $.state = 6;
+        $.state = 8;
       } else {
-        $.goto = 7;
+        $.goto = 9;
         continue;
       }
 
-    case 6:
+    case 8:
       $.result = {
         default: $l[1
         /*obj*/
         ]
       };
-      $.goto = 42;
+      $.goto = 46;
       continue;
-
-    case 7:
-      $.goto = 8;
-      $p = ($x.call = $l[0][2
-      /*_getRequireWildcardCache*/
-      ])();
-      $.state = 8;
-
-    case 8:
-      $l[2
-      /*cache*/
-      ] = $p;
-      $l[7] = $l[2
-      /*cache*/
-      ];
-
-      if ($l[7]) {
-        $.state = 9;
-      } else {
-        $.goto = 11;
-        continue;
-      }
 
     case 9:
       $.goto = 10;
-      $p = $mcall(\\"has\\", $l[2
-      /*cache*/
-      ], $l[1
-      /*obj*/
+      $p = ($x.call = $l[0][2
+      /*_getRequireWildcardCache*/
+      ])($l[2
+      /*nodeInterop*/
       ]);
       $.state = 10;
 
     case 10:
-      $l[7] = $p;
-      $.state = 11;
+      $l[3
+      /*cache*/
+      ] = $p;
+      $l[8] = $l[3
+      /*cache*/
+      ];
 
-    case 11:
-      if ($l[7]) {
-        $.state = 12;
+      if ($l[8]) {
+        $.state = 11;
       } else {
-        $.goto = 14;
+        $.goto = 13;
         continue;
       }
 
-    case 12:
-      $.goto = 13;
-      $p = $mcall(\\"get\\", $l[2
+    case 11:
+      $.goto = 12;
+      $p = $mcall(\\"has\\", $l[3
       /*cache*/
       ], $l[1
       /*obj*/
       ]);
+      $.state = 12;
+
+    case 12:
+      $l[8] = $p;
       $.state = 13;
 
     case 13:
-      $.result = $p;
-      $.goto = 42;
-      continue;
-
-    case 14:
-      $l[3
-      /*newObj*/
-      ] = {};
-      $1 = Object.defineProperty;
-
-      if ($1) {
-        $.state = 15;
+      if ($l[8]) {
+        $.state = 14;
       } else {
         $.goto = 16;
         continue;
       }
 
+    case 14:
+      $.goto = 15;
+      $p = $mcall(\\"get\\", $l[3
+      /*cache*/
+      ], $l[1
+      /*obj*/
+      ]);
+      $.state = 15;
+
     case 15:
-      $1 = Object.getOwnPropertyDescriptor;
-      $.state = 16;
+      $.result = $p;
+      $.goto = 46;
+      continue;
 
     case 16:
       $l[4
-      /*hasPropertyDescriptor*/
-      ] = $1;
-      $.goto = 17;
-      $p = $forInIterator($l[1
-      /*obj*/
-      ]);
-      $.state = 17;
+      /*newObj*/
+      ] = {};
+      $1 = Object.defineProperty;
 
-    case 17:
-      $l[7] = $p;
-      $.state = 18;
-
-    case 18:
-      $x.call = $l[7].next;
-      $.goto = 19;
-      $p = $l[7].next();
-      $.state = 19;
-
-    case 19:
-      if ($p.done) {
-        $.state = 20;
+      if ($1) {
+        $.state = 17;
       } else {
-        $.goto = 23;
+        $.goto = 18;
         continue;
       }
 
+    case 17:
+      $1 = Object.getOwnPropertyDescriptor;
+      $.state = 18;
+
+    case 18:
+      $l[5
+      /*hasPropertyDescriptor*/
+      ] = $1;
+      $.goto = 19;
+      $p = $forInIterator($l[1
+      /*obj*/
+      ]);
+      $.state = 19;
+
+    case 19:
+      $l[8] = $p;
+      $.state = 20;
+
     case 20:
-      $l[3
+      $x.call = $l[8].next;
+      $.goto = 21;
+      $p = $l[8].next();
+      $.state = 21;
+
+    case 21:
+      if ($p.done) {
+        $.state = 22;
+      } else {
+        $.goto = 25;
+        continue;
+      }
+
+    case 22:
+      $l[4
       /*newObj*/
       ].default = $l[1
       /*obj*/
       ];
 
-      if ($l[2
+      if ($l[3
       /*cache*/
       ]) {
-        $.state = 21;
+        $.state = 23;
       } else {
-        $.goto = 22;
+        $.goto = 24;
         continue;
       }
 
-    case 21:
-      $.goto = 22;
-      $mcall(\\"set\\", $l[2
+    case 23:
+      $.goto = 24;
+      $mcall(\\"set\\", $l[3
       /*cache*/
       ], $l[1
       /*obj*/
-      ], $l[3
+      ], $l[4
       /*newObj*/
-      ]);
-      $.state = 22;
-
-    case 22:
-      $.result = $l[3
-      /*newObj*/
-      ];
-      $.goto = 42;
-      continue;
-
-    case 23:
-      $l[5
-      /*key*/
-      ] = $p.value;
-      $.goto = 24;
-      $p = $mcall(\\"call\\", Object.prototype.hasOwnProperty, $l[1
-      /*obj*/
-      ], $l[5
-      /*key*/
       ]);
       $.state = 24;
 
     case 24:
-      if ($p) {
-        $.state = 25;
-      } else {
-        $.goto = 37;
-        continue;
-      }
+      $.result = $l[4
+      /*newObj*/
+      ];
+      $.goto = 46;
+      continue;
 
     case 25:
-      if ($l[4
-      /*hasPropertyDescriptor*/
-      ]) {
+      $l[6
+      /*key*/
+      ] = $p.value;
+      $l[9] = $l[6
+      /*key*/
+      ] !== \\"default\\";
+
+      if ($l[9]) {
         $.state = 26;
       } else {
-        $.goto = 36;
+        $.goto = 28;
         continue;
       }
 
     case 26:
       $.goto = 27;
-      $p = $mcall(\\"getOwnPropertyDescriptor\\", Object, $l[1
+      $p = $mcall(\\"call\\", Object.prototype.hasOwnProperty, $l[1
       /*obj*/
-      ], $l[5
+      ], $l[6
       /*key*/
       ]);
       $.state = 27;
 
     case 27:
-      $l[8] = $p;
+      $l[9] = $p;
       $.state = 28;
 
     case 28:
-      $l[6
-      /*desc*/
-      ] = $l[8];
-      $1 = $l[6
-      /*desc*/
-      ];
-
-      if ($1) {
+      if ($l[9]) {
         $.state = 29;
       } else {
-        $.goto = 32;
+        $.goto = 41;
         continue;
       }
 
     case 29:
-      $1 = $l[6
-      /*desc*/
-      ].get;
-
-      if ($1) {
+      if ($l[5
+      /*hasPropertyDescriptor*/
+      ]) {
         $.state = 30;
-      } else {
-        $.goto = 31;
-        continue;
-      }
-
-    case 30:
-      $.goto = 32;
-      continue;
-
-    case 31:
-      $1 = $l[6
-      /*desc*/
-      ].set;
-      $.goto = 30;
-      continue;
-
-    case 32:
-      if ($1) {
-        $.state = 33;
-      } else {
-        $.goto = 35;
-        continue;
-      }
-
-    case 33:
-      $.goto = 34;
-      $mcall(\\"defineProperty\\", Object, $l[3
-      /*newObj*/
-      ], $l[5
-      /*key*/
-      ], $l[6
-      /*desc*/
-      ]);
-      $.state = 34;
-
-    case 34:
-      $.goto = 37;
-      continue;
-
-    case 35:
-      $l[3
-      /*newObj*/
-      ][$l[5
-      /*key*/
-      ]] = $l[1
-      /*obj*/
-      ][$l[5
-      /*key*/
-      ]];
-      $.goto = 34;
-      continue;
-
-    case 36:
-      $l[8] = null;
-      $.goto = 28;
-      continue;
-
-    case 37:
-      $.goto = 18;
-      continue;
-
-    case 38:
-      $1 = typeof $l[1
-      /*obj*/
-      ] !== \\"object\\";
-
-      if ($1) {
-        $.state = 39;
       } else {
         $.goto = 40;
         continue;
       }
 
-    case 39:
-      $1 = typeof $l[1
+    case 30:
+      $.goto = 31;
+      $p = $mcall(\\"getOwnPropertyDescriptor\\", Object, $l[1
       /*obj*/
-      ] !== \\"function\\";
-      $.state = 40;
+      ], $l[6
+      /*key*/
+      ]);
+      $.state = 31;
+
+    case 31:
+      $l[9] = $p;
+      $.state = 32;
+
+    case 32:
+      $l[7
+      /*desc*/
+      ] = $l[9];
+      $1 = $l[7
+      /*desc*/
+      ];
+
+      if ($1) {
+        $.state = 33;
+      } else {
+        $.goto = 36;
+        continue;
+      }
+
+    case 33:
+      $1 = $l[7
+      /*desc*/
+      ].get;
+
+      if ($1) {
+        $.state = 34;
+      } else {
+        $.goto = 35;
+        continue;
+      }
+
+    case 34:
+      $.goto = 36;
+      continue;
+
+    case 35:
+      $1 = $l[7
+      /*desc*/
+      ].set;
+      $.goto = 34;
+      continue;
+
+    case 36:
+      if ($1) {
+        $.state = 37;
+      } else {
+        $.goto = 39;
+        continue;
+      }
+
+    case 37:
+      $.goto = 38;
+      $mcall(\\"defineProperty\\", Object, $l[4
+      /*newObj*/
+      ], $l[6
+      /*key*/
+      ], $l[7
+      /*desc*/
+      ]);
+      $.state = 38;
+
+    case 38:
+      $.goto = 41;
+      continue;
+
+    case 39:
+      $l[4
+      /*newObj*/
+      ][$l[6
+      /*key*/
+      ]] = $l[1
+      /*obj*/
+      ][$l[6
+      /*key*/
+      ]];
+      $.goto = 38;
+      continue;
 
     case 40:
-      $.goto = 5;
+      $l[9] = null;
+      $.goto = 32;
       continue;
 
     case 41:
-      $.goto = 42;
-      return $unhandled($.error);
+      $.goto = 20;
+      continue;
 
     case 42:
+      $1 = typeof $l[1
+      /*obj*/
+      ] !== \\"object\\";
+
+      if ($1) {
+        $.state = 43;
+      } else {
+        $.goto = 44;
+        continue;
+      }
+
+    case 43:
+      $1 = typeof $l[1
+      /*obj*/
+      ] !== \\"function\\";
+      $.state = 44;
+
+    case 44:
+      $.goto = 7;
+      continue;
+
+    case 45:
+      $.goto = 46;
+      return $unhandled($.error);
+
+    case 46:
       return $ret($.result);
 
     default:
       throw new Error(\\"Invalid state\\");
   }
-}, null, null, 1, [[0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
-    $m$run$4 = $M.fun(\\"m$run$4\\", \\"run\\", null, $m$mod1_js$0, [\\"i\\"], 1, 2, \\"5:7-10:1\\", 0, function run($, $l, $p) {
+}, null, null, 1, [[0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
+    $m$4 = $M.fun(\\"m$4\\", \\"run\\", null, $m$0, [\\"i\\"], 1, 2, \\"5:7-10:1\\", 0, function ($, $l, $p) {
   var $1;
 
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk(\\"5:20-5:25\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -1102,7 +1171,7 @@ exports[`default transpiler 2`] = `
 
     case 2:
       $.goto = 3;
-      $brk(\\"5:20-5:25\\");
+      $brk();
       $.state = 3;
 
     case 3:
@@ -1113,7 +1182,7 @@ exports[`default transpiler 2`] = `
 
     case 4:
       $.goto = 5;
-      $brk(\\"6:2-6:9\\");
+      $brk();
       $.state = 5;
 
     case 5:
@@ -1125,7 +1194,7 @@ exports[`default transpiler 2`] = `
       /*i*/
       ];
       $.goto = 6;
-      $brk(\\"7:2-7:23\\");
+      $brk();
       $.state = 6;
 
     case 6:
@@ -1152,7 +1221,7 @@ exports[`default transpiler 2`] = `
 
     case 8:
       $.goto = 9;
-      $brk(\\"8:2-8:9\\");
+      $brk();
       $.state = 9;
 
     case 9:
@@ -1164,7 +1233,7 @@ exports[`default transpiler 2`] = `
       /*i*/
       ];
       $.goto = 10;
-      $brk(\\"9:2-9:31\\");
+      $brk();
       $.state = 10;
 
     case 10:
@@ -1178,7 +1247,7 @@ exports[`default transpiler 2`] = `
 
     case 11:
       $.goto = 13;
-      $brk(\\"10:1-10:1\\");
+      $brk();
       continue;
 
     case 12:
@@ -1226,21 +1295,21 @@ exports[`default transpiler 3`] = `
     $s$5 = [{
   i: [1, \\"21:19-21:20\\"]
 }, $s$1, 1],
-    $m$mod2_js$0 = $M.fun(\\"m$mod2_js$0\\", \\"mod2.js\\", null, null, [], 0, 6, \\"1:0-25:0\\", 32, function mod2_js($, $l, $p) {
+    $m$0 = $M.fun(\\"m$0\\", \\"mod2.js\\", null, null, [], 0, 6, \\"1:0-25:0\\", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[2
       /*A*/
-      ] = $m$A$1($);
+      ] = $m$1($);
       $l[3
       /*B*/
-      ] = $m$B$2($);
+      ] = $m$2($);
       $l[4
       /*f1*/
-      ] = $m$f1$3($);
+      ] = $m$3($);
       $l[5
       /*f2*/
-      ] = $m$f2$4($);
+      ] = $m$4($);
       module.exports.__esModule = true;
       module.exports.f1 = $l[4
       /*f1*/
@@ -1249,7 +1318,7 @@ exports[`default transpiler 3`] = `
       /*f2*/
       ];
       $.goto = 1;
-      $brk(\\"1:0-1:12\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -1270,11 +1339,11 @@ exports[`default transpiler 3`] = `
       throw new Error(\\"Invalid state\\");
   }
 }, null, null, 0, [[4, \\"1:0-1:12\\", $s$1], [0, \\"1:4-1:11\\", $s$1], [16, \\"25:0-25:0\\", $s$1], [16, \\"25:0-25:0\\", $s$1]]),
-    $m$A$1 = $M.fun(\\"m$A$1\\", \\"A\\", null, $m$mod2_js$0, [\\"i\\"], 0, 2, \\"3:0-6:1\\", 8, function A($, $l, $p) {
+    $m$1 = $M.fun(\\"m$1\\", \\"A\\", null, $m$0, [\\"i\\"], 0, 2, \\"3:0-6:1\\", 8, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk(\\"4:2-4:24\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -1284,7 +1353,7 @@ exports[`default transpiler 3`] = `
       /*cnt*/
       ];
       $.goto = 2;
-      $brk(\\"5:2-5:22\\");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -1297,7 +1366,7 @@ exports[`default transpiler 3`] = `
     case 3:
       $.self.b = $p;
       $.goto = 5;
-      $brk(\\"6:1-6:1\\");
+      $brk();
       continue;
 
     case 4:
@@ -1311,11 +1380,11 @@ exports[`default transpiler 3`] = `
       throw new Error(\\"Invalid state\\");
   }
 }, null, null, 1, [[4, \\"4:2-4:24\\", $s$2], [4, \\"5:2-5:22\\", $s$2], [2, \\"5:11-5:21\\", $s$2], [36, \\"6:1-6:1\\", $s$2], [16, \\"6:1-6:1\\", $s$2], [16, \\"6:1-6:1\\", $s$2]]),
-    $m$B$2 = $M.fun(\\"m$B$2\\", \\"B\\", null, $m$mod2_js$0, [\\"i\\"], 0, 2, \\"8:0-11:1\\", 8, function B($, $l, $p) {
+    $m$2 = $M.fun(\\"m$2\\", \\"B\\", null, $m$0, [\\"i\\"], 0, 2, \\"8:0-11:1\\", 8, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk(\\"9:2-9:13\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -1323,7 +1392,7 @@ exports[`default transpiler 3`] = `
       /*i*/
       ];
       $.goto = 2;
-      $brk(\\"10:2-10:26\\");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -1347,11 +1416,11 @@ exports[`default transpiler 3`] = `
       throw new Error(\\"Invalid state\\");
   }
 }, null, null, 1, [[4, \\"9:2-9:13\\", $s$3], [4, \\"10:2-10:26\\", $s$3], [0, \\"10:9-10:25\\", $s$3], [16, \\"11:1-11:1\\", $s$3], [16, \\"11:1-11:1\\", $s$3]]),
-    $m$f1$3 = $M.fun(\\"m$f1$3\\", \\"f1\\", null, $m$mod2_js$0, [\\"i\\"], 0, 3, \\"13:7-19:1\\", 0, function f1($, $l, $p) {
+    $m$3 = $M.fun(\\"m$3\\", \\"f1\\", null, $m$0, [\\"i\\"], 0, 3, \\"13:7-19:1\\", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk(\\"14:2-14:8\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -1361,7 +1430,7 @@ exports[`default transpiler 3`] = `
       /*cnt*/
       ] + 1;
       $.goto = 2;
-      $brk(\\"15:2-15:32\\");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -1375,7 +1444,7 @@ exports[`default transpiler 3`] = `
 
     case 3:
       $.goto = 4;
-      $brk(\\"16:2-16:23\\");
+      $brk();
       $.state = 4;
 
     case 4:
@@ -1392,7 +1461,7 @@ exports[`default transpiler 3`] = `
       /*a*/
       ] = $p;
       $.goto = 6;
-      $brk(\\"17:2-17:23\\");
+      $brk();
       $.state = 6;
 
     case 6:
@@ -1404,7 +1473,7 @@ exports[`default transpiler 3`] = `
 
     case 7:
       $.goto = 8;
-      $brk(\\"18:2-18:13\\");
+      $brk();
       $.state = 8;
 
     case 8:
@@ -1425,11 +1494,11 @@ exports[`default transpiler 3`] = `
       throw new Error(\\"Invalid state\\");
   }
 }, null, null, 1, [[4, \\"14:2-14:8\\", $s$4], [4, \\"15:2-15:32\\", $s$4], [2, \\"15:2-15:31\\", $s$4], [4, \\"16:2-16:23\\", $s$4], [2, \\"16:12-16:22\\", $s$4], [4, \\"17:2-17:23\\", $s$4], [2, \\"17:2-17:22\\", $s$4], [4, \\"18:2-18:13\\", $s$4], [0, null, $s$4], [16, \\"19:1-19:1\\", $s$4], [16, \\"19:1-19:1\\", $s$4]]),
-    $m$f2$4 = $M.fun(\\"m$f2$4\\", \\"f2\\", null, $m$mod2_js$0, [\\"i\\"], 0, 2, \\"21:7-24:1\\", 0, function f2($, $l, $p) {
+    $m$4 = $M.fun(\\"m$4\\", \\"f2\\", null, $m$0, [\\"i\\"], 0, 2, \\"21:7-24:1\\", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
-      $brk(\\"22:2-22:8\\");
+      $brk();
       $.state = 1;
 
     case 1:
@@ -1439,7 +1508,7 @@ exports[`default transpiler 3`] = `
       /*cnt*/
       ] + 1;
       $.goto = 2;
-      $brk(\\"23:2-23:32\\");
+      $brk();
       $.state = 2;
 
     case 2:
@@ -1453,7 +1522,7 @@ exports[`default transpiler 3`] = `
 
     case 3:
       $.goto = 5;
-      $brk(\\"24:1-24:1\\");
+      $brk();
       continue;
 
     case 4:

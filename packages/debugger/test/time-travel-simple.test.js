@@ -24,8 +24,8 @@ function compareObj(exp, res) {
   expect(Object.getPrototypeOf(exp)).toBe(Object.getPrototypeOf(res));
 }
 
-describe("time traveling", function() {
-  test("Object tracing", function() {
+describe("time traveling", function () {
+  test("Object tracing", function () {
     const s1 = Symbol("S1");
     const s2 = Symbol("S2");
     const s3 = Symbol("S3");
@@ -74,10 +74,10 @@ describe("time traveling", function() {
         get
       });
     const changed = {
-      "10": "d4",
-      "50": "D2",
-      "55": "d5",
-      "100": "d1",
+      10: "d4",
+      50: "D2",
+      55: "d5",
+      100: "d1",
       c: "C",
       a: "a",
       [s2]: "s2",
@@ -102,11 +102,11 @@ describe("time traveling", function() {
         }
       });
     const changed2 = {
-      "10": "d4",
-      "50": "D2",
-      "60": "D3",
-      "55": "d5",
-      "100": "d1",
+      10: "d4",
+      50: "D2",
+      60: "D3",
+      55: "d5",
+      100: "d1",
       c: "C",
       a: "_a",
       [s2]: "_s",
@@ -132,15 +132,18 @@ describe("time traveling", function() {
     compareObj(changed2, v);
     const j = D.TimeTravel.journal;
     j.enabled = false;
-    const data = S.write({
-      now: j.now,
-      future: j.future,
-      past: j.past,
-      data: v,
-      objectKeysDict: Objects.objectKeysDict,
-      binds: State.binds,
-      wrappers: Objects.wrappers
-    },{alwaysByRef:true});
+    const data = S.write(
+      {
+        now: j.now,
+        future: j.future,
+        past: j.past,
+        data: v,
+        objectKeysDict: Objects.objectKeysDict,
+        binds: State.binds,
+        wrappers: Objects.wrappers
+      },
+      { alwaysByRef: true }
+    );
     expect(JSON.stringify(data)).toMatchSnapshot();
     const restored = S.read(data);
     const v2 = restored.data;
@@ -159,7 +162,7 @@ describe("time traveling", function() {
     compareObj(changed2, v);
     j.enabled = false;
   });
-  test("Array tracing", function() {
+  test("Array tracing", function () {
     const arr = [1, 2, 3, 4, 5];
     const orig = [...arr];
     D.TimeTravel.reset();
@@ -282,7 +285,7 @@ describe("time traveling", function() {
     expect([...arr]).toEqual(arr4);
     j.enabled = false;
   });
-  test("Map tracing", function() {
+  test("Map tracing", function () {
     const map = new Map([
       [1, "A"],
       [2, "B"],
@@ -378,7 +381,7 @@ describe("time traveling", function() {
     expect(map.deb_hi).toBe("THERE");
     j.enabled = false;
   });
-  test("Set tracing", function() {
+  test("Set tracing", function () {
     const set = new Set([1, 2, 3]);
     const orig = [...set];
     D.set(set, "deb_hi", "there");
@@ -472,7 +475,7 @@ describe("time traveling", function() {
     expect(set.deb_hi).toBe("THERE");
     j.enabled = false;
   });
-  test("WeakSet tracing", function() {
+  test("WeakSet tracing", function () {
     let objs = Array.from(Array(3), (_, x) => ({ x }));
     let objs2 = Array.from(Array(2), (_, y) => ({ y }));
     function state0(set) {
@@ -552,9 +555,9 @@ describe("time traveling", function() {
     const restored = S.read(data);
     const rset = restored.data;
     objs = restored.objs;
-    objs.forEach((o) => (o.retored = true));
+    objs.forEach(o => (o.retored = true));
     objs2 = restored.objs2;
-    objs2.forEach((o) => (o.retored = true));
+    objs2.forEach(o => (o.retored = true));
     Object.assign(D.TimeTravel.journal, restored);
     j.enabled = true;
     state0(rset);
@@ -582,7 +585,7 @@ describe("time traveling", function() {
     state0(set);
     j.enabled = false;
   });
-  test("WeakMap tracing", function() {
+  test("WeakMap tracing", function () {
     let objs = Array.from(Array(3), (_, x) => ({ x }));
     let objs2 = Array.from(Array(2), (_, y) => ({ y }));
     function state0(map) {
@@ -662,9 +665,9 @@ describe("time traveling", function() {
     const restored = S.read(data);
     const rmap = restored.data;
     objs = restored.objs;
-    objs.forEach((o) => (o.retored = true));
+    objs.forEach(o => (o.retored = true));
     objs2 = restored.objs2;
-    objs2.forEach((o) => (o.retored = true));
+    objs2.forEach(o => (o.retored = true));
     Object.assign(D.TimeTravel.journal, restored);
     j.enabled = true;
     state0(rmap);
@@ -692,7 +695,7 @@ describe("time traveling", function() {
     state0(map);
     j.enabled = false;
   });
-  test("Typed arrays tracing", function() {
+  test("Typed arrays tracing", function () {
     const arr = new Int8Array([1, 2, 3]);
     const orig = [...arr];
     D.TimeTravel.reset();
@@ -784,7 +787,7 @@ describe("time traveling", function() {
     expect(arr).not.toHaveProperty("deb_hi");
     j.enabled = false;
   });
-  test("Closures tracing", function() {
+  test("Closures tracing", function () {
     const savedConsole = global.console;
     try {
       const logs = [];

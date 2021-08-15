@@ -1152,6 +1152,8 @@ export function writeProps(
   let flags: number;
   for (const name of savedObject.getOwnPropertyNames(descrs)) {
     const descr = descrs[name];
+    // TODO: check why with jest + jsdom this sometimes returns `undefined`
+    if (!descr) continue;
     if (
       (flags = <number>propFlags(snapshot, pred, name, descr, mask)) === void 0
     )
@@ -1427,7 +1429,7 @@ export const BigIntDescriptor =
   typeof BigInt === "function"
     ? regDescriptor({
         read(_: ReadContext, json: JSONValue): BigInt {
-          return BigInt((<JSONObject>json).int);
+          return BigInt(<number>(<JSONObject>json).int);
         },
         write(_: WriteContext, value: BigInt) {
           return { int: value.toString() };
@@ -1963,7 +1965,7 @@ regConstructor(Number, {
 
 if (typeof ArrayBuffer !== "undefined") {
   const { encode, decode } = <any>require("base64-arraybuffer");
-  regConstructor(ArrayBuffer, {
+  const ArrayBufferDescr = regConstructor(ArrayBuffer, {
     name: "ArrayBuffer",
     write(_ctx, value: ArrayBuffer) {
       return { d: encode(value) };
@@ -1993,12 +1995,12 @@ if (typeof ArrayBuffer !== "undefined") {
       name,
       write(ctx, value: any) {
         const res: any = { o: value.byteOffset, l: value.length };
-        res.b = ctx.step(value.buffer, res, "b");
+        res.b = ArrayBufferDescr.write(ctx, value.buffer, res, "b");
         return res;
       },
       create(ctx, json) {
         return new Constr(
-          ctx.step((<any>json).b),
+          ArrayBufferDescr.read(ctx, (<any>json).b),
           (<any>json).o,
           (<any>json).l
         );

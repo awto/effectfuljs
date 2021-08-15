@@ -20719,7 +20719,7 @@ Object {
             Object {
               "[name]": "VM4096.js",
               "[top]": Array [
-                "F4:  VM4096.js/m$VM4096_js$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM4096.js/m$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
                 "F3:  dirEvalFunc/m$1@test/__fixtures__/evalDir.js:4,S:1@5:9,G:2@0:0",
                 "F2:  evalDir.js/m$0@test/__fixtures__/evalDir.js:1,S:4@13:0,G:5@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -20728,7 +20728,7 @@ Object {
             Object {
               "[name]": "dirEvalFunc",
               "[top]": Array [
-                "F4:  VM4096.js/m$VM4096_js$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM4096.js/m$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
                 "F3:  dirEvalFunc/m$1@test/__fixtures__/evalDir.js:4,S:1@5:9,G:2@0:0",
                 "F2:  evalDir.js/m$0@test/__fixtures__/evalDir.js:1,S:4@13:0,G:5@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -20738,7 +20738,7 @@ Object {
             Object {
               "[name]": "evalDir.js",
               "[top]": Array [
-                "F4:  VM4096.js/m$VM4096_js$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM4096.js/m$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
                 "F3:  dirEvalFunc/m$1@test/__fixtures__/evalDir.js:4,S:1@5:9,G:2@0:0",
                 "F2:  evalDir.js/m$0@test/__fixtures__/evalDir.js:1,S:4@13:0,G:5@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -20763,7 +20763,7 @@ Object {
             Object {
               "[name]": "dirEvalFunc",
               "[top]": Array [
-                "F4:  VM4096.js/m$VM4096_js$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM4096.js/m$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
                 "F3:  dirEvalFunc/m$1@test/__fixtures__/evalDir.js:4,S:1@5:9,G:2@0:0",
                 "F2:  evalDir.js/m$0@test/__fixtures__/evalDir.js:1,S:4@13:0,G:5@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -20773,7 +20773,7 @@ Object {
             Object {
               "[name]": "evalDir.js",
               "[top]": Array [
-                "F4:  VM4096.js/m$VM4096_js$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM4096.js/m$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
                 "F3:  dirEvalFunc/m$1@test/__fixtures__/evalDir.js:4,S:1@5:9,G:2@0:0",
                 "F2:  evalDir.js/m$0@test/__fixtures__/evalDir.js:1,S:4@13:0,G:5@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -20798,7 +20798,7 @@ Object {
             Object {
               "[name]": "evalDir.js",
               "[top]": Array [
-                "F4:  VM4096.js/m$VM4096_js$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM4096.js/m$0@#eval_4096.js:1,S:0@2:0,G:1@3:0",
                 "F3:  dirEvalFunc/m$1@test/__fixtures__/evalDir.js:4,S:1@5:9,G:2@0:0",
                 "F2:  evalDir.js/m$0@test/__fixtures__/evalDir.js:1,S:4@13:0,G:5@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -20837,7 +20837,7 @@ Object {
             Object {
               "[name]": "VM10240.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:3@12:0,G:4@13:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -20854,7 +20854,7 @@ Object {
             Object {
               "[name]": "funconstr.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:3@12:0,G:4@13:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -20889,7 +20889,7 @@ Object {
             Object {
               "[name]": "VM10240.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:3@12:0,G:4@13:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -20906,7 +20906,7 @@ Object {
             Object {
               "[name]": "funconstr.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:3@12:0,G:4@13:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -20941,7 +20941,7 @@ Object {
             Object {
               "[name]": "VM10240.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:5@13:0,G:7@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -20958,7 +20958,7 @@ Object {
             Object {
               "[name]": "funconstr.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:2@3:0,G:3@4:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:5@13:0,G:7@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -20993,7 +20993,7 @@ Object {
             Object {
               "[name]": "VM10240.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:5@13:0,G:7@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -21010,7 +21010,7 @@ Object {
             Object {
               "[name]": "funconstr.js",
               "[top]": Array [
-                "F3:  VM10240.js/m$VM10240_js$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
+                "F3:  VM10240.js/m$0@#eval_10240.js:1,S:15@8:0,G:15@8:0",
                 "F2:  funconstr.js/m$0@test/__fixtures__/funconstr.js:1,S:5@13:0,G:7@14:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
               ],
@@ -21088,7 +21088,7 @@ Object {
             Object {
               "[name]": "VM6144.js",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21105,7 +21105,7 @@ Object {
             Object {
               "[name]": "a",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21115,7 +21115,7 @@ Object {
             Object {
               "[name]": "evalIndir.js",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21140,7 +21140,7 @@ Object {
             Object {
               "[name]": "evalIndir.js",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21170,7 +21170,7 @@ Object {
             Object {
               "[name]": "VM6144.js",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21188,7 +21188,7 @@ Object {
             Object {
               "[name]": "a",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21198,7 +21198,7 @@ Object {
             Object {
               "[name]": "evalIndir.js",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21223,7 +21223,7 @@ Object {
             Object {
               "[name]": "evalIndir.js",
               "[top]": Array [
-                "F4:  VM6144.js/m$VM6144_js$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
+                "F4:  VM6144.js/m$0@#eval_6144.js:1,S:5@4:2,G:6@4:2",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:5@15:0,G:6@16:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21253,7 +21253,7 @@ Object {
             Object {
               "[name]": "VM9216.js",
               "[top]": Array [
-                "F4:  VM9216.js/m$VM9216_js$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM9216.js/m$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:7@16:0,G:8@17:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21270,7 +21270,7 @@ Object {
             Object {
               "[name]": "a",
               "[top]": Array [
-                "F4:  VM9216.js/m$VM9216_js$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM9216.js/m$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:7@16:0,G:8@17:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21280,7 +21280,7 @@ Object {
             Object {
               "[name]": "evalIndir.js",
               "[top]": Array [
-                "F4:  VM9216.js/m$VM9216_js$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM9216.js/m$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:7@16:0,G:8@17:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",
@@ -21305,7 +21305,7 @@ Object {
             Object {
               "[name]": "evalIndir.js",
               "[top]": Array [
-                "F4:  VM9216.js/m$VM9216_js$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
+                "F4:  VM9216.js/m$0@#eval_9216.js:1,S:0@2:0,G:1@3:0",
                 "F3:  a/m$1@test/__fixtures__/evalIndir.js:6,S:1@7:9,G:2@0:0",
                 "F2:  evalIndir.js/m$0@test/__fixtures__/evalIndir.js:1,S:7@16:0,G:8@17:0",
                 "F1:  wrapModule/m$15@src/instr/rt.ts:71,S:1@73:2,G:2@75:23",

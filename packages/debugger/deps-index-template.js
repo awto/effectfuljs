@@ -1,4 +1,4 @@
 module.exports = {
   Promise: require("./promise/lib"),
-  CoreJS: require("./core-js")
+  CoreJS: require("./core-js").corejs
 };

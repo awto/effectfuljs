@@ -275,7 +275,7 @@ if (nativeSetImmediate) {
       const handlerImpl = new TimeoutHandlerImpl();
       const handler = new TimeoutHandler(handlerImpl);
       handlerImpl._reset(
-        nativeSetImmediate(
+        (<any>nativeSetImmediate)(
           Instr.setTimeoutCallback.bind(null, callback, handler),
           ...args
         )

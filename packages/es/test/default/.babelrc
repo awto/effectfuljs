@@ -5,6 +5,7 @@
                 "defunct":true,
                 "contextState":true,
                 "contextBy":"this",
+                "generators": {"bodyCommentHack":"regenerator"},
                 "modules":"commonjs"}]]
 }
 

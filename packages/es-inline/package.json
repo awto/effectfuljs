@@ -4,7 +4,7 @@
   "description": "Standard JavaScript effects using @effectful/js",
   "main": "preset.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -r ../es/test/kit/inject",
     "link-test": "node ./test/kit/makeLinks"
   },
   "repository": {
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@effectful/es-rt": "^1.2.1",
     "glob": "^7.1.2",
-    "mocha": "^5.0.0",
+    "mocha": "^9.0.3",
     "promise": "^8.0.1",
     "test262-parser": "^2.0.7"
   },

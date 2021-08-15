@@ -75,6 +75,17 @@ WARNING: Installing it as your project local dependency won't work.
 The runtime and the project dependencies shouldn't be deduped together.
 `;
 
+const BROWSERS_ZERO_CONFIG_NOT_SUPPORTED = `
+Unfortunately, I had to remove zero-config for nextjs/browser. 
+I don't have time to cope with all the breaking changes in the 
+dependencies. Maybe I'll restore it in the future. 
+
+If you can help, please let me know.
+
+Meanwhile you still can use the debugger with nextjs and browser but 
+with a simple configuration (see README).
+`;
+
 export class DebugSession extends SessionImpl {
   private remotes: Map<number, Handler> = new Map();
   private connectCb?: (h?: Handler) => void;
@@ -500,25 +511,20 @@ export class DebugSession extends SessionImpl {
     let cwd = args.cwd;
     let progressId = this.supportsProgress && `LAUNCH$${progressCnt++}`;
     const preset = args.preset || "node";
-    const isWebpack = preset === "browser" || preset === "next";
-    const isNode = preset === "node" || preset === "next";
+    if (preset === "browser" || preset === "next") {
+      this.sendErrorResponse(
+        response,
+        1009,
+        BROWSERS_ZERO_CONFIG_NOT_SUPPORTED
+      );
+      return;
+    }
+    const isNode = preset === "node";
     const needsLaunch = preset !== "listener";
     if (!cwd) {
-      if (isWebpack) {
-        this.sendErrorResponse(
-          response,
-          1001,
-          `"${preset}" preset needs "cwd" parameter,` +
-            'please add it to launch.json (for example `..,"cwd":"${workspaceFolder}"...`)'
-        );
-        return;
-      }
       cwd = args.cwd = process.cwd();
     }
-    const runtime =
-      args.runtime ||
-      (preset === "next" && "@effectful/debugger/react") ||
-      "@effectful/debugger";
+    const runtime = args.runtime || "@effectful/debugger";
     const runtimeBase = packageBase(runtime);
     let debuggerImpl: string;
     const resolvePaths: string[] = require.resolve.paths && [
@@ -648,7 +654,6 @@ export class DebugSession extends SessionImpl {
     let errMessage: string | undefined;
     if (args.reconnectTimeout)
       this.awaitReconnect = args.reconnectTimeout * 1000;
-    let webpackProgress: string | null = null;
     if (needsLaunch) {
       const env: { [name: string]: string | null } = <any>{};
       const host =
@@ -691,12 +696,7 @@ export class DebugSession extends SessionImpl {
       if (isNode) {
         const node_path = [debuggerDeps];
         if (env.NODE_PATH) node_path.push(env.NODE_PATH);
-        if (preset === "next") node_path.push(path.join(cwd, "node_modules"));
         env.NODE_PATH = node_path.join(path.delimiter);
-      } else if (args.preset === "browser") {
-        if (args.indexJs) env.EFFECTFUL_DEBUGGER_INDEX_JS = args.indexJs;
-        if (args.htmlTemplate)
-          env.EFFECTFUL_DEBUGGER_HTML_TEMPLATE = args.htmlTemplate;
       }
       const launchArgs = [`--max-old-space-size=${MAX_OLD_SPACE}`, runJs];
       if (typeof env["NODE_ARGS"] === "string")
@@ -736,7 +736,7 @@ export class DebugSession extends SessionImpl {
         }
         let startBuf: string[] = [];
         let progressPrefix: string | null = null;
-        if (progressId && isWebpack)
+        if (progressId)
           progressPrefix = env[
             "EFFECTFUL_PROGRESS_ID"
           ] = `@progress@${progressId}:`;
@@ -744,7 +744,7 @@ export class DebugSession extends SessionImpl {
           const spawnArgs: any = {
             cwd,
             env: { ...process.env, ...env },
-            shell: !isWebpack
+            shell: true
           };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn("node", launchArgs, spawnArgs);
@@ -762,71 +762,22 @@ export class DebugSession extends SessionImpl {
               1001,
               `Cannot launch debug target in terminal (${data.message}).`
             );
-            if (webpackProgress)
-              this.sendEvent(new ProgressEndEvent(webpackProgress, message));
             this.terminate("spawn error: " + data.message);
           });
           child.stdout.on("data", data => {
             const txt = String(data);
-            if (isWebpack) {
-              if (progressPrefix && txt.startsWith(progressPrefix)) {
-                const m = txt
-                  .substring(progressPrefix.length)
-                  .match(/^(\d*)\:(.*)/);
-                if (m) {
-                  const percentage = m[1].length ? +m[1] : lastPercentage;
-                  message = m[2].length ? m[2] : message;
-                  if (percentage === 100 && webpackProgress) {
-                    this.sendEvent(
-                      new ProgressEndEvent(webpackProgress, message)
-                    );
-                    webpackProgress = null;
-                    lastPercentage = 0;
-                  } else if (webpackProgress) {
-                    this.sendEvent(<P.Event>{
-                      type: "event",
-                      event: "progressUpdate",
-                      body: {
-                        progressId: webpackProgress,
-                        message,
-                        percentage: (lastPercentage = Math.max(
-                          lastPercentage,
-                          percentage
-                        ))
-                      }
-                    });
-                  } else {
-                    webpackProgress = `b$${progressId}`;
-                    this.sendEvent(<P.Event>{
-                      type: "event",
-                      event: "progressStart",
-                      body: {
-                        progressId: webpackProgress,
-                        title: "Building",
-                        percentage
-                      }
-                    });
-                  }
-                }
-                return;
-              }
-              logger.log(`webpack: ${txt}`);
-            } else if (args.verbose) logger.verbose(txt);
+            if (args.verbose) logger.verbose(txt);
             if (!this.launched) startBuf.push(txt);
           });
           child.stderr.on("data", data => {
             const txt = String(data);
-            if (isWebpack) {
-              this.sendEvent(new OutputEvent(`webpack: ${txt}`, "stderr"));
-            } else if (args.verbose) logger.error(txt);
+            if (args.verbose) logger.error(txt);
             if (!this.launched) startBuf.push(txt);
           });
           child.on("exit", code => {
             if (!this.launched && startBuf.length) {
               errMessage = startBuf.join("");
             }
-            if (webpackProgress)
-              this.sendEvent(new ProgressEndEvent(webpackProgress));
             logger.verbose(`command "${cmdline}" exited with ${code}`);
             if (args.reuse && key) runningCommands.delete(key);
             this.closeRemote(0);
@@ -858,7 +809,6 @@ export class DebugSession extends SessionImpl {
       for (const remote of this.remotes.values()) this.launchChild(remote);
     }
     if (progressId) this.sendEvent(new ProgressEndEvent(`s$${progressId}`));
-    if (webpackProgress) this.sendEvent(new ProgressEndEvent(webpackProgress));
     if (this.stopped) {
       response.success = false;
       this.sendErrorResponse(

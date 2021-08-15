@@ -83,21 +83,13 @@ Other specific parameters:
 
 This runs `babel` transforms for all loaded modules, and applies many common plugins (including TypeScript and Flow), but it ignores your babel config and ".babelrc" files. If you need to add something custom specify `env:{"EFFECTFUL_DEBUGGER_ZERO_CONFIG": false}`. This also means the debugger plugins should be added manually into the babel configs in the correct order, e.g. using `BABEL_ENV`.
 
-## Browser
+## Browser and NextJS
 
-This on start runs [webpack-dev-server](https://webpack.js.org/configuration/dev-server/) with configuration mostly taken from [create-react-app](https://github.com/facebook/create-react-app).
+Unfortunately, I had to remove zero-config for nextjs and browser. Simply I don't have time to cope with all the breaking changes in webpack 5 and related libraries. Maybe I'll return it in some future.
 
-To enable specify `"preset": "node"` in "launch.json", or press "Add Configuration..." in "launch.json" editor and choose "Effectful: Browser".
+I'd appreciate any help with this.
 
-Other specific parameters:
-
-- "htmlTemplate" - a template passed to [HtmlWebpackPlugin](https://webpack.js.org/plugins/html-webpack-plugin/)
-- "indexJs" - the main JS/TS file
-- "open" - opens the URL in a new Web Browser window
-
-## NextJS
-
-Enabled by `"preset": "next"` in "launch.json" ("Add Configuration..." in "launch.json" editor and choose "Effectful: NextJS".). This will run NextJS dev server.
+Meanwhile you still can use the debugger with nextjs and browser but with adding simple configuration like described in the next version.
 
 ## Custom configuration
 
@@ -128,6 +120,8 @@ If it isn't possible to transpile, because, say, it is a native module, it is st
 If `preset` field isn't specified in "launch.json" ("Add configuration..." in "launch.json" and choose "Effectful: Listener") on start debugger just listens to WebSocket's port 20011 and by default, the transpiled code connects to it before running anything else.
 
 The port number along with a few other options can be changed in [require("@effectful/debugger/config")](../debugger/src/config.ts). It should be loaded and the options should be changed before the runtime is loaded, for example using some specific not-transpiled module.
+
+To pause long-running scripts it uses `SharedArrayBuffer`. In Chrome (after v92) and Firefox (after v76), this works only with [cross-origin isolation](https://web.dev/coop-coep/). You'll likely need to add the corresponding headers into your webpack DevServer config, otherwise, the debugger won't be able to stop long-running scripts.
 
 ### Runtime
 

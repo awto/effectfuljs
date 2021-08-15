@@ -182,7 +182,7 @@ Array [
           ],
         },
         Object {
-          "$": "Async$1",
+          "$": "Async",
           "f": Array [
             Array [
               "dest",
@@ -432,7 +432,7 @@ Array [
           ],
         },
         Object {
-          "$": "Async$1",
+          "$": "Async",
           "f": Array [
             Array [
               "dest",
@@ -682,7 +682,7 @@ Array [
           ],
         },
         Object {
-          "$": "Async$1",
+          "$": "Async",
           "f": Array [
             Array [
               "dest",

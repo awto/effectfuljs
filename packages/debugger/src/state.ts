@@ -542,7 +542,7 @@ export const normalizeDrive = isWindows
         ? path.charAt(0).toUpperCase() + path.slice(1)
         : path;
     }
-  : function(path: string) {
+  : function (path: string) {
       return path;
     };
 
@@ -686,7 +686,7 @@ export function cancelInterrupt() {
 let threadScheduled = false;
 
 export function liftSync(fun: (this: any, ...args: any[]) => any): any {
-  return function(this: any) {
+  return function (this: any) {
     const savedDebug = context.enabled;
     try {
       context.enabled = false;
@@ -809,10 +809,18 @@ export function mergeModule(mod: Module, prevMod: Module) {
 }
 
 export const isNode =
-  typeof "process" !== "undefined" &&
+  typeof process !== "undefined" &&
   process.release &&
   process.release.name === "node";
 
 export const isBrowser = typeof window !== "undefined" && !isNode;
 
 if ((<any>module).hot) (<any>module).hot.addStatusHandler(resumeEventQueue);
+
+export function staticToMethod(stat: (...args: unknown[]) => unknown) {
+  return function (this: unknown) {
+    const args = native.Array.from(arguments);
+    native.Array.unshift.call(args, this);
+    return stat.apply(undefined, args);
+  };
+}

@@ -11,7 +11,7 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "tslint -t verbose --project . && mocha",
+    "test": "tslint -t verbose --project . && mocha -r ./test/kit/inject",
     "build": "tsc --outDir .",
     "docs": "rimraf api && typedoc --plugin typedoc-plugin-markdown --out api --excludePrivate src --readme none"
   },
@@ -21,13 +21,13 @@
     "@babel/plugin-syntax-bigint": "^7.2.0",
     "@babel/plugin-transform-typescript": "^7.7.2",
     "@babel/register": "^7.4.4",
-    "jsdom": "^15.1.1",
-    "mocha": "^5.1.0",
+    "jsdom": "^16.6.0",
+    "mocha": "^9.0.3",
     "rimraf": "^3.0.2",
-    "tslint": "^5.17.0",
-    "typedoc": "^0.17.6",
-    "typedoc-plugin-markdown": "^2.2.17",
-    "typescript": "^3.5.1"
+    "tslint": "^6.1.3",
+    "typedoc": "^0.21.4",
+    "typedoc-plugin-markdown": "^3.10.4",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "base64-arraybuffer": "^0.2.0"

@@ -9,7 +9,8 @@ async function go() {
 
 		await runTests({
 			extensionDevelopmentPath,
-			extensionTestsPath
+			extensionTestsPath,
+			launchArgs: ["--disable-workspace-trust"]
 		});
 
 

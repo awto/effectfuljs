@@ -10,15 +10,15 @@
     "url": "git+https://github.com/awto/effectfuljs.git"
   },
   "scripts": {
-    "test": "eslint src && mocha",
-    "test-opt": "cross-env-shell env-cmd $EJS_ENV mocha",
-    "configure": "env-cmd configure,default babel src --out-dir .",
-    "configure-opt": "cross-env-shell env-cmd $EJS_ENV babel src --out-dir .",
+    "test": "eslint src && mocha -r ./test/kit/inject",
+    "test-opt": "cross-env-shell env-cmd -e $EJS_ENV mocha -r ./test/kit/inject",
+    "configure": "env-cmd -e configure,default babel src --out-dir .",
+    "configure-opt": "cross-env-shell env-cmd -e $EJS_ENV babel src --out-dir .",
     "lint": "eslint .",
-    "bundle": "env-cmd configure,default rollup -c",
+    "bundle": "env-cmd -e configure,default rollup -c",
     "build": "npm run configure && rollup -c && npm run build-opts",
     "prepare-test": "npm run build-opts",
-    "build-bundle-opt": "cross-env-shell env-cmd configure,opt,$EJS_ENV rollup -c",
+    "build-bundle-opt": "cross-env-shell env-cmd -e configure,opt,$EJS_ENV rollup -c",
     "build-opts": "npm run build-f && npm run build-l && npm run build-i",
     "build-f": "cross-env EJS_ENV=default npm run build-bundle-opt",
     "build-l": "cross-env EJS_ENV=loose npm run build-bundle-opt",
@@ -36,11 +36,11 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
-    "cross-env": "^5.1.1",
-    "env-cmd": "^8.0.2",
-    "eslint": "^5.15.1",
-    "mocha": "^5.2.0",
-    "rollup": "^0.66.6"
+    "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0",
+    "eslint": "^7.31.0",
+    "mocha": "^9.0.3",
+    "rollup": "^2.55.1"
   },
   "publishConfig": {
     "access": "public"

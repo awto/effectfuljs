@@ -1,4 +1,4 @@
 {
   "sourceType": "script",
-  "plugins": [["../../transform",{"modules":"commonjs","left":false}]]
+  "plugins": [["../../transform",{"modules":"commonjs","left":false,"generators": {"bodyCommentHack":"regenerator"}}]]
 }

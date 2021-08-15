@@ -2,6 +2,6 @@
   "plugins":[
     ["../transform", {"importRT":"../index"}],
     ["@babel/plugin-transform-modules-commonjs",
-     {strict:false,loose:true}]]
+     {"strict":false,"loose":true}]]
 }
 

@@ -222,7 +222,7 @@ describe("scope diagnostics", function() {
         err = e;
       }
       expect(err && err.message).to.equal(
-        "Identifier 'a' has already been declared (3:15)"
+        "Identifier 'a' has already been declared. (3:15)"
       );
     });
   });
