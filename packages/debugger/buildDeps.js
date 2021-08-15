@@ -94,9 +94,7 @@ async function main() {
         module.exports = require("core-js-pure/internals/path");
         `
       );
-      const libRoot = await fs.realpath(
-        path.join(__dirname, "node_modules", "core-js-pure")
-      );
+      const libRoot = path.dirname(require.resolve("core-js-pure"));
       await webpack({
         mode: "none",
         entry: [path.join(__dirname, tempFile)],
@@ -145,6 +143,7 @@ async function main() {
     async function lib(name, main, include) {
       const rootPath = name.split("/");
       const root = rootPath[0];
+      const absoluteRoot = path.dirname(require.resolve(root));
       if (include) {
         await dirs();
       } else {
@@ -153,7 +152,7 @@ async function main() {
       alias[name] = `${name}/${main}`;
 
       async function compile(relPath) {
-        const src = path.join(__dirname, "node_modules", root, relPath);
+        const src = path.join(absoluteRoot, relPath);
         const dst = path.join(__dirname, "deps" + tag, name, relPath);
         if (process.env.EFFECTFUL_VERBOSE)
           console.log(`compiling ${src} into ${dst}`);
@@ -201,7 +200,7 @@ async function main() {
         await walk([]);
 
         async function walk(relPath) {
-          const src = path.join(__dirname, "node_modules", root, ...relPath);
+          const src = path.join(absoluteRoot, ...relPath);
           try {
             files = await fs.readdir(src);
           } catch (error) {

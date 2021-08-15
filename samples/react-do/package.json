@@ -19,20 +19,21 @@
     "babel-plugin-macros"
   ],
   "dependencies": {
-    "react": "^16.8.2"
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
     "@babel/generator": "^7.3.3",
     "@babel/parser": "^7.3.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.15.0",
     "@babel/preset-react": "^7.0.0",
     "@effectful/core": "^1.4.0",
-    "babel-jest": "^24.1.0",
-    "babel-plugin-macros": "^2.5.0",
-    "jest": "^24.1.0",
-    "react-dom": "^16.8.3",
-    "react-test-renderer": "^16.8.3"
+    "babel-jest": "^27.0.6",
+    "babel-plugin-macros": "^3.1.0",
+    "jest": "^27.0.6",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2"
   },
   "peerDependencies": {
     "@effectful/core": "^1.0.4"
