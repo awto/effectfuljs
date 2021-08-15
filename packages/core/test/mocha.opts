@@ -1,1 +1,0 @@
--r @babel/register --timeout 50000

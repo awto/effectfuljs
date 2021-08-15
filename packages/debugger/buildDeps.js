@@ -8,8 +8,8 @@ const babel = require("@babel/core");
 const minimatch = require("minimatch");
 const { promisify } = require("util");
 const rimraf = promisify(require("rimraf"));
-const mkdirp = require("mkdirp").sync;
 const webpack = promisify(require("webpack"));
+const makeDir = require("make-dir");
 
 const coreJsFeatures = {
   "es.array.concat": 1,
@@ -58,7 +58,7 @@ async function main() {
     } catch (e) {
       console.error("couldn't remove deps folder", e);
     }
-    mkdirp(depsFolder, {});
+    await makeDir(depsFolder, {});
 
     await Promise.all([
       coreJs(),
@@ -68,23 +68,6 @@ async function main() {
         await lib("promise", "lib/index.js", "lib/**/*.js");
         await lib("lodash", "lodash.js", "**/*.js");
         await lib("lodash.sortby", "index.js", "**/*.js");
-      })(),
-      (async () => {
-        await lib("object-assign", "index.js");
-        await lib("react", "cjs/react.development.js");
-        await lib("react/jsx-runtime", "cjs/react-jsx-runtime.development.js");
-        await lib(
-          "react/jsx-dev-runtime",
-          "cjs/react-jsx-dev-runtime.development.js"
-        );
-        await lib("scheduler", "cjs/scheduler.development.js");
-        await lib("scheduler/tracing", "cjs/scheduler-tracing.development.js");
-        await lib("react-dom", "cjs/react-dom.development.js");
-        await lib(
-          "react-dom/server",
-          "cjs/react-dom-server.node.development.js"
-        );
-        await lib("react-is", "cjs/react-is.development.js");
       })()
     ]);
     await fs.writeFile("deps-aliases.json", JSON.stringify(alias, null, 2));
@@ -97,11 +80,7 @@ async function main() {
       for (const [name, mask] of Object.entries(coreJsFeatures)) {
         if ((flag & mask) === 0) continue;
         features.push(
-          `"${name
-            .replace(/-/g, "")
-            .split(".")
-            .slice(1)
-            .join(".")}"`
+          `"${name.replace(/-/g, "").split(".").slice(1).join(".")}"`
         );
         requires.push(`  require("core-js-pure/modules/${name}");`);
       }
@@ -148,7 +127,11 @@ async function main() {
           ]
         },
         externals: {
-          "debugger-api": "commonjs2 ../api.js"
+          "debugger-api": "commonjs2 ../api.js",
+          "debugger-state": "commonjs2 ../state.js"
+        },
+        resolve: {
+          extensions: [".js"]
         },
         output: {
           library: "corejs",
@@ -174,7 +157,7 @@ async function main() {
         const dst = path.join(__dirname, "deps" + tag, name, relPath);
         if (process.env.EFFECTFUL_VERBOSE)
           console.log(`compiling ${src} into ${dst}`);
-        mkdirp(path.dirname(dst), { recursive: true });
+        await makeDir(path.dirname(dst), { recursive: true });
         const moduleAliases = {};
         const depsRoot = Array(relPath.split("/").length + rootPath.length - 1)
           .fill("..")
@@ -198,7 +181,9 @@ async function main() {
         };
         await fs.writeFile(
           dst,
-          (await babel.transformFileAsync(src, libOpts)).code
+          (
+            await babel.transformFileAsync(src, libOpts)
+          ).code
         );
         return dst;
       }
@@ -223,7 +208,7 @@ async function main() {
             console.log(`could not read dir ${src}`, error);
           }
           await Promise.all(
-            files.map(async function(i) {
+            files.map(async function (i) {
               const f = path.join(src, i);
               let s;
               try {
