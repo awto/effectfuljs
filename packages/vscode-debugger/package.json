@@ -134,8 +134,8 @@
                 ],
                 "enumDescriptions": [
                   "Run a command as a local process, intercepting all node processes to debug",
-                  "Run Create React App based project in a browser",
-                  "Run NextJS project",
+                  "Run Create React App based project in a browser (not implemented)",
+                  "Run NextJS project (not implemented)",
                   "Awaits debuggee connections"
                 ],
                 "default": "node",

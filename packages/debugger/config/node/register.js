@@ -20,7 +20,11 @@ const builtIn = Module.builtinModules.filter(i => {
 });
 
 for (const i of builtIn) {
-  Persist.regModule(require(i), `node#{i}`);
+  try {
+    Persist.regModule(require(i), `node#{i}`);
+  } catch (e) {
+    console.error(`coudn't make ${i} module storable`);
+  }
 }
 
 Mp._compile = function _compile(content, filename) {

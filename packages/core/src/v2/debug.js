@@ -10,7 +10,7 @@ export const dump = Lib.dumpDoc;
 
 export function nodeStr(node, pretty) {
   try {
-    return generate(node, { compact: !pretty /*, comments: false*/ }).code;
+    return generate(node, { compact: !pretty, comments: !!pretty }).code;
   } catch (e) {
     console.error("CONSUME ERROR", e);
     return "<not-JS>";
