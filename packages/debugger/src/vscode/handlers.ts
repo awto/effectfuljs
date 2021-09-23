@@ -274,7 +274,7 @@ function dispatch(req: P.Request) {
       handler(req.arguments, res);
     } catch (e) {
       // tslint:disable-next-line:no-console
-      console.error("DEBUGGER ERROR", e, e.stack);
+      console.error("DEBUGGER ERROR", e, (<any>e).stack);
     }
   }
   send(res);

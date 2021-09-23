@@ -188,7 +188,12 @@ export function approxLoc(i) {
 export function consume(root) {
   let i = root;
   let sym;
+  const seen = config.debug ? new Set() : null;
   do {
+    if (seen) {
+      if (seen.has(i)) throw new TypeError("INTERNAL: loop in a AST");
+      seen.add(i);
+    }
     const { parent, node } = i;
     if (parent) {
       if (i.pos === Tag.push) {

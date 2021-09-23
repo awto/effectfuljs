@@ -562,11 +562,11 @@ export function loop(value: any): any {
           console.error(
             `Uncaught exception: ${e}(on any:${!!context.brkOnAnyException},on uncaught:${!!context.brkOnUncaughtException})`
           );
-          if (config.debuggerDebug && e.stack) {
+          if (config.debuggerDebug && (<any>e).stack) {
             // tslint:disable-next-line:no-console
-            console.error("Real stack:", e.stack);
+            console.error("Real stack:", (<any>e).stack);
             // tslint:disable-next-line:no-console
-            console.error("Original stack:", e._deb_stack);
+            console.error("Original stack:", (<any>e)._deb_stack);
           }
         }
         throw e;
