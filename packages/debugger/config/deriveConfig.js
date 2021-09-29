@@ -15,9 +15,20 @@ config.srcRoot = fs.realpathSync(
   process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || "."
 );
 
-const packageJSON = fs.realpathSync(
-  require("find-up").sync("package.json", { cwd: config.srcRoot })
-);
+function findup(name, dir) {
+  const dirs = path.resolve(dir).split(path.sep);
+  while (dirs.length) {
+    const fp = path.join(...dirs, name);
+    try {
+      fs.accessSync(fp);
+      return fp;
+    } catch (e) {}
+    dirs.pop();
+  }
+  return null;
+}
+
+const packageJSON = fs.realpathSync(findup("package.json", config.srcRoot));
 
 config.packageRoot = packageJSON ? path.dirname(packageJSON) : config.srcRoot;
 
