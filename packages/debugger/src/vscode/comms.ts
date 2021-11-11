@@ -124,34 +124,42 @@ if (workerType === WorkerType.None) {
     WebSocketImpl,
     interpret
   );
-  post = function(msg: any) {
+  post = function (msg: any) {
     redir({ type: "send", msg });
   };
-  close = function() {
+  close = function () {
     redir({ type: "close" });
   };
-  impl.ref = function() {
+  impl.ref = function () {
     if (socket._socket && socket._socket.ref) socket._socket.ref();
   };
-  impl.unref = function() {
+  impl.unref = function () {
     if (socket._socket && socket._socket.unref) socket._socket.unref();
   };
 } else if (workerType === WorkerType.Ext) {
   extWorker(statusBuf);
-  impl.ref = (<any>global)[`${config.globalNS}#comms#ref`] || function() {};
-  impl.unref = (<any>global)[`${config.globalNS}#comms#unref`] || function() {};
+  const status = new Int32Array(statusBuf);
+  impl.hasMessage = function () {
+    return status[0] > 0;
+  };
+  impl.ref = (<any>global)[`${config.globalNS}#comms#ref`] || function () {};
+  impl.unref =
+    (<any>global)[`${config.globalNS}#comms#unref`] || function () {};
   post = (<any>global)[`${config.globalNS}#comms#post`];
   close = (<any>global)[`${config.globalNS}#comms#close`];
-  (<any>global)[`${config.globalNS}#comms#interpret`] = interpret;
+  (<any>global)[`${config.globalNS}#comms#interpret`] = function (data: any) {
+    Atomics.add(status, 0, -1);
+    interpret(data);
+  };
 } else {
   const status = new Int32Array(statusBuf);
-  impl.hasMessage = function() {
+  impl.hasMessage = function () {
     return status[0] > 0;
   };
   let worker: Worker;
   if (workerType === WorkerType.Node) {
     worker = new Worker(code, { eval: true, workerData: statusBuf });
-    (<any>worker).on("message", function(data: any) {
+    (<any>worker).on("message", function (data: any) {
       Atomics.add(status, 0, -1);
       interpret(data);
     });
@@ -166,16 +174,16 @@ if (workerType === WorkerType.None) {
       URL.createObjectURL(new Blob([code], { type: "text/javascript" }))
     );
     (<Worker>worker).postMessage(statusBuf);
-    worker.onmessage = function(msg: any) {
+    worker.onmessage = function (msg: any) {
       --status[0];
       const { data } = msg;
       interpret(data);
     };
   }
-  post = function(msg: any) {
+  post = function (msg: any) {
     worker.postMessage({ type: "send", msg });
   };
-  close = function() {
+  close = function () {
     worker.postMessage({ type: "close" });
   };
 }
