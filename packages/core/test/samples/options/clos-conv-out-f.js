@@ -10,7 +10,7 @@ var $module = M.module("*", module),
       _f: ctx
     });
     ctx._yh2 = meta$yh2({
-      _f: ctx.$
+      _f: ctx
     });
     {
       ctx._i = void 0;
@@ -23,6 +23,7 @@ var $module = M.module("*", module),
     var _yh2 = M.context(x);
 
     _yh2.$._a = a;
+    _yh2.$$._f = x._f;
     _yh2.$._j = _yh2.$$._f._i += _yh2.$._a;
     return M.chain(eff(), yh2_1);
   };
@@ -32,6 +33,7 @@ var $module = M.module("*", module),
     var _eh = M.context(x),
         a;
 
+    _eh.$$._f = x._f;
     a = _eh.$$._f._i += _eh.$$._yh2._j;
     return M.chain(eff(a), _eh_1);
   };

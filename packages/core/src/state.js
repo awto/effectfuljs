@@ -225,7 +225,7 @@ export function restoreDecls(s) {
     const loc = sl;
     sl = Kit.auto(
       Kit.toArray(
-        (function*() {
+        (function* () {
           let i;
           for (i of loc) {
             if (i.pos === Tag.body) break;
@@ -258,10 +258,10 @@ export function restoreDecls(s) {
     closArg = root.closureArgSym;
   }
   if (ctxDeps && ctxDeps.size && root.opts.closureShortcuts !== false) {
-    const varField = root.opts.varStorageField;
-    const closField = root.opts.closureStorageField;
-    for (const { copy, fld, ctx } of ctxDeps.values()) {
+    for (const [scope, { copy, fld, ctx }] of ctxDeps) {
       const init = [];
+      const varField = scope.opts.varStorageField;
+      const closField = scope.opts.closureStorageField;
       if (fld) {
         if (fld.interpr === Bind.ctxField) {
           init.push(sl.enter(Tag.init, Tag.MemberExpression));
@@ -288,9 +288,7 @@ export function restoreDecls(s) {
         if (varField) {
           init.unshift(sl.enter(Tag.init, Tag.MemberExpression));
           init.push(
-            sl.tok(Tag.property, Tag.Identifier, {
-              node: { name: root.opts.varStorageField }
-            }),
+            sl.tok(Tag.property, Tag.Identifier, { node: { name: varField } }),
             ...sl.leave()
           );
         }
@@ -330,17 +328,9 @@ export function restoreDecls(s) {
               const { funcId } = i.value;
               if (funcId) {
                 const copy = root.funcAlias;
-                /*
-                      Kit.scope.newSym(funcId.orig);
-                copy.num = -copy.num;
-                copy.strict = true;
-                funcId.strict = false;
-                i.value.funcAlias = copy;
-                */
                 if (
                   funcId.interpr === Bind.ctxField &&
                   funcId.declScope === i.value &&
-                  // funcId.hasReads
                   ((noOpts && funcId.bound) || funcId.hasReads)
                 ) {
                   assigns.push({
@@ -635,11 +625,10 @@ export function calcRefScopes(si) {
   for (const i of allDecls) {
     const si = i.sym;
     if (si.singleAssign && !si.byValStrict) si.byVal = false;
-    if (si.refScopes && si.track) {
-      if (si.captLoop) {
-        loops.add(si.captLoop);
-        si.captLoop.track = true;
-      }
+    if (si.refScopes && (si.track || si.declScope.track) && si.captLoop) {
+      loops.add(si.captLoop);
+      si.captLoop.track = true;
+      si.track = true;
     }
   }
   if (loops.size && s.opts.loopBlockScoping) {

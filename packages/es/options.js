@@ -275,11 +275,6 @@ module.exports = function esProfile(opts = {}) {
       console.error("`par` is ignored with `asyncClosure:false`");
     opts.par = false;
   }
-  if (opts.topLevel && opts.par !== false) {
-    if (opts.par === true)
-      console.error("`par` is ignored with `topLevel:true` (WIP)");
-    opts.par = false;
-  }
   if (opts.loose) opts.inline = true;
   if (opts.inline && opts.par !== false) {
     if (opts.par === true)
@@ -341,6 +336,7 @@ module.exports = function esProfile(opts = {}) {
       );
     }
   }
+  const all = Object.assign({}, opts.all);
   if (opts.par === false) {
     async.par = false;
   } else {
@@ -349,35 +345,33 @@ module.exports = function esProfile(opts = {}) {
     };
     Object.assign(file, newOpts);
     Object.assign(async, newOpts);
-    // Object.assign(asyncGenerators, newOpts)
+    async.closureStorageField = async.varStorageField = "$";
   }
-  Object.assign(pure, opts.all, opts.pure, {
+  Object.assign(pure, all, opts.pure, {
     generator: false,
     async: false,
     transform: false
   });
-  Object.assign(file, opts.all, opts.file, {
+  Object.assign(file, all, opts.file, {
     generator: false,
     async: false,
     transform: false
   });
-  Object.assign(generators, opts.all, opts.effectful, opts.generators, {
+  Object.assign(generators, all, opts.effectful, opts.generators, {
     generator: true,
     async: false,
     transform: true
   });
-  Object.assign(async, opts.all, opts.effectful, opts.async, {
+  Object.assign(async, all, opts.effectful, opts.async, {
     generator: false,
     async: true,
     transform: true
   });
-  Object.assign(
-    asyncGenerators,
-    opts.all,
-    opts.effectful,
-    opts.asyncGenerators,
-    { generator: true, async: true, transform: true }
-  );
+  Object.assign(asyncGenerators, all, opts.effectful, opts.asyncGenerators, {
+    generator: true,
+    async: true,
+    transform: true
+  });
   return {
     syntaxPlugins: ["asyncGenerators", "functionSent"],
     options: file,
@@ -399,10 +393,16 @@ module.exports = function esProfile(opts = {}) {
               if (node.generator || node.async) any = true;
               i.value.optsSet = node.generator
                 ? node.async
-                  ? asyncGenerators
+                  ? opts.asyncGenerators === false
+                    ? pure
+                    : asyncGenerators
+                  : opts.generators === false
+                  ? pure
                   : generators
                 : node.async
-                ? async
+                ? opts.async === false
+                  ? pure
+                  : async
                 : pure;
               break;
           }

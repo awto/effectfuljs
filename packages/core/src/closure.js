@@ -361,16 +361,19 @@ export const contextDecls = Kit.map(function contextDecls(si) {
       root.origType === Tag.ArrowFunctionExpression
         ? [s.tok(Tag.push, Tag.Identifier, { sym: parentTag })]
         : [s.tok(Tag.push, Tag.ThisExpression)];
-    const node = {}
+    const node = {};
     if (root.opts.bodyCommentHack)
-      node.leadingComments = [{
-        type: "CommentBlock", value: root.opts.bodyCommentHack
-      }]
+      node.leadingComments = [
+        {
+          type: "CommentBlock",
+          value: root.opts.bodyCommentHack
+        }
+      ];
     saved.set(contextSym, {
       raw: null,
       init: constr
         ? [
-            s.enter(Tag.init, Tag.CallExpression, {node}),
+            s.enter(Tag.init, Tag.CallExpression, { node }),
             s.tok(Tag.callee, Tag.Identifier, { sym: constrSym, ns: false }),
             s.enter(Tag.arguments, Tag.Array),
             ...(wrapId
@@ -398,7 +401,7 @@ export const contextDecls = Kit.map(function contextDecls(si) {
             ...s.leave()
           ]
         : [
-            s.enter(Tag.init, Tag.ObjectExpression, {node}),
+            s.enter(Tag.init, Tag.ObjectExpression, { node }),
             s.enter(Tag.properties, Tag.Array),
             ...prop(s.opts.varStorageField),
             ...prop(
@@ -598,6 +601,7 @@ export function topToIIFE(si) {
     yield s.tok(Tag.push, Tag.Identifier, { node: { name: "exports" } });
     yield* s.leave();
     yield s.enter(Tag.body, Tag.BlockStatement, {
+      opts: prog.opts,
       node: { loc: prog.node.loc }
     });
     yield s.enter(Tag.body, Tag.Array);

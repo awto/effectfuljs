@@ -10,7 +10,7 @@ var $module = M.module("*", module),
       _f: ctx
     });
     ctx._yh2 = meta$yh2({
-      _f: ctx.$
+      _f: ctx
     });
     {
       return M.scope(f_1);
@@ -22,6 +22,7 @@ var $module = M.module("*", module),
     var _yh2 = M.context(x);
 
     _yh2.$._a = a;
+    _yh2.$$._f = x._f;
     return M.scope(yh2_1);
   };
 }),
@@ -29,6 +30,7 @@ var $module = M.module("*", module),
   return function eh() {
     var _eh = M.context(x);
 
+    _eh.$$._f = x._f;
     return M.scope(_eh_1);
   };
 }),

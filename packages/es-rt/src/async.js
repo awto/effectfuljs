@@ -24,14 +24,17 @@ export function async(caller) {
     ctx = Object.create(esProto);
   if (!process.env.EJS_NO_ES_OBJECT_MODEL) ctx.constructor.call(ctx);
   if (process.env.EJS_INLINE) {
-    ctx.$resolve = function(v) {
+    ctx.$resolve = function (v) {
       return ctx.step(v);
     };
-    ctx.$reject = function(v) {
+    ctx.$reject = function (v) {
       return (ctx.$step = ctx.$err(ctx.$cur)), ctx.step(v);
     };
   }
-  if (!process.env.EJS_NO_PAR) ctx.$caller = caller;
+  if (!process.env.EJS_NO_PAR) {
+    ctx.$caller = caller;
+    ctx.$ = {};
+  }
   return ctx;
 }
 
@@ -42,15 +45,15 @@ function id(v) {
 export function par(threads) {
   var promise = Promise.all(threads).then(id, function parErr(err) {
     return Promise.all(threads.map(cancel)).then(
-      function() {
+      function () {
         throw err;
       },
-      function() {
+      function () {
         throw err;
       }
     );
   });
-  promise[cancelSym] = function() {
+  promise[cancelSym] = function () {
     return Promise.all(threads.map(cancel));
   };
   return promise;
@@ -89,10 +92,10 @@ if (!process.env.EJS_NO_ES_OBJECT_MODEL) {
   };
 }
 
-Ap.$err = function() {
+Ap.$err = function () {
   return 1;
 };
-Ap.$fin = function() {
+Ap.$fin = function () {
   return 0;
 };
 
@@ -114,7 +117,7 @@ if (!process.env.EJS_INLINE) {
   Ap.chain = function chain(arg, step) {
     var ctx = this;
     return Promise.resolve((ctx.$await = arg)).then(
-      function(v) {
+      function (v) {
         if (ctx.$await !== arg) return;
         ctx.$await = null;
         ctx.$step = step;
@@ -124,7 +127,7 @@ if (!process.env.EJS_INLINE) {
           return ctx.$run((ctx.$step = ctx.$err(ctx.$step)), e);
         }
       },
-      function(e) {
+      function (e) {
         if (ctx.$await !== arg) return;
         ctx.$await = null;
         return ctx.$run((ctx.$step = ctx.$err(ctx.$step)), e);
@@ -145,7 +148,7 @@ if (!process.env.EJS_INLINE) {
   Ap.raise = function raise(ex) {
     return Promise.reject(ex);
   };
-  Ap.share = function(v) {
+  Ap.share = function (v) {
     return v;
   };
   if (!process.env.EJS_NO_PAR) {
@@ -166,12 +169,12 @@ if (!process.env.EJS_INLINE) {
   Ap.join = par;
   function wrapCancel(ctx, promise) {
     if (promise)
-      promise[cancelSym] = function() {
+      promise[cancelSym] = function () {
         return ctx.cancel();
       };
     return promise;
   }
-  Ap.cancel = function() {
+  Ap.cancel = function () {
     return this.chain(ignore(cancel(this.$await)), this.$fin(this.$step));
   };
 }

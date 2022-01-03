@@ -544,7 +544,10 @@ export const normalizeFor = Kit.pipe(
                           origLoop: i.value,
                           node: i.value.node
                         });
-                        i.value.node.init = i.value.node.test = i.value.node.update = null;
+                        i.value.node.init =
+                          i.value.node.test =
+                          i.value.node.update =
+                            null;
                         yield sl.enter(Tag.push, Tag.BlockStatement);
                         yield* sl.peelTo(Tag.body);
                         if (test != null) {
@@ -670,7 +673,10 @@ export function blockScoping(sa) {
               }
               ctrl.retBlock = i.value.block;
               yield s.tok(pos, Tag.NumericLiteral, {
-                node: { value: ctrl.ret || (ctrl.ret = ctrl.cnt++) }
+                node: {
+                  value:
+                    ctrl.ret == undefined ? (ctrl.ret = ctrl.cnt++) : ctrl.ret
+                }
               });
               yield* lab();
               s.close(i);
@@ -698,9 +704,6 @@ export function blockScoping(sa) {
             break;
           case Tag.Identifier:
             const { sym } = i.value;
-            // TODO: capture can be avoided:
-            // if the body is not effectful
-            // and the var isn't captured in effectful closure
             if (sym && subst && sym.captLoop) {
               let copy;
               if (i.value.decl) {

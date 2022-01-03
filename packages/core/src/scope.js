@@ -242,7 +242,7 @@ export function restore(root, scopes) {
 }
 
 /** runs `pass` for each function in `s` */
-export const subScopes = Kit.curry(function(pass, s) {
+export const subScopes = Kit.curry(function (pass, s) {
   const res = [];
   for (const i of splitScopes(s)) res.push([...pass(i)]);
   return restore(res);
@@ -407,7 +407,7 @@ export function funcWraps(si) {
                   nsubst.set(
                     j.wrapId,
                     (j.buf = [
-                      ...(function*() {
+                      ...(function* () {
                         yield s.enter(Tag.push, Tag.MemberExpression, {
                           node: { computed: j.computed }
                         });
