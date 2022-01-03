@@ -541,7 +541,7 @@ export class DebugSession extends SessionImpl {
         ? require.resolve(runtimeBase, { paths: resolvePaths })
         : require.resolve(runtimeBase);
     } catch (e) {
-      if (e.code !== "MODULE_NOT_FOUND") {
+      if ((<any>e).code !== "MODULE_NOT_FOUND") {
         this.sendErrorResponse(
           response,
           1002,
@@ -630,7 +630,7 @@ export class DebugSession extends SessionImpl {
         if (this.launched) this.launchChild(remote);
         if (this.connectCb) this.connectCb();
       },
-      args.debuggerHost || "localhost",
+      args.debuggerHost || "127.0.0.1",
       args.debuggerPort || 20011
     );
     this.launchArgs = args;
@@ -653,7 +653,7 @@ export class DebugSession extends SessionImpl {
         !args.debuggerHost ||
         args.debuggerHost === "::" ||
         args.debuggerHost === "0.0.0.0"
-          ? "localhost"
+          ? "127.0.0.1"
           : args.debuggerHost;
       if (process.env["EFFECTFUL_DEBUGGER_VERBOSE"] == null)
         env["EFFECTFUL_DEBUGGER_VERBOSE"] = args.verbose
