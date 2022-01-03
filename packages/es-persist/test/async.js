@@ -6,7 +6,7 @@ const tasks = [];
 function Wait(value) {
   this.value = value;
 }
-Wait.prototype[R.awaitSymbol] = function(next) {
+Wait.prototype[R.awaitSymbol] = function (next) {
   tasks.push({ src: this, next });
 };
 
@@ -44,8 +44,8 @@ async function rejectedPromise() {
   throw new Error(":-(");
 }
 
-describe("async function", function() {
-  it("should support Promises", function(done) {
+describe("async function", function () {
+  it("should support Promises", function (done) {
     const state = R.context();
     const p = promise();
     assert.equal(state.running.size, 1);
@@ -66,13 +66,13 @@ describe("async function", function() {
       );
     });
   });
-  it("should be thenable", function(done) {
+  it("should be thenable", function (done) {
     promise().then(i => {
       assert.equal(i, 11);
       done();
     });
   });
-  it("should have its state visible", function() {
+  it("should have its state visible", function () {
     const state = R.context();
     const s = b1();
     const subThreads = () => [...state.running].filter(i => i.cont !== s);
@@ -143,8 +143,8 @@ describe("async function", function() {
   });
 });
 
-describe("`any` combinator", function() {
-  it("should settle to a first settled argument", function() {
+describe("`any` combinator", function () {
+  it("should settle to a first settled argument", function () {
     let called = false;
     return R.any([
       new Promise(r => setTimeout(() => r(1), 100)),
@@ -179,8 +179,8 @@ describe("`any` combinator", function() {
   });
 });
 
-describe("`all` combinator", function() {
-  it("should be resolved to array if the arguments are resolved", function() {
+describe("`all` combinator", function () {
+  it("should be resolved to array if the arguments are resolved", function () {
     let called = false;
     return R.all([
       Promise.resolve(0),
@@ -196,7 +196,7 @@ describe("`all` combinator", function() {
       () => assert.fail("never")
     );
   });
-  it("should be rejected if any argument is rejected", function() {
+  it("should be rejected if any argument is rejected", function () {
     let called = false;
     return R.all([
       new Promise(r => setTimeout(() => r(1), 100)),
@@ -218,8 +218,8 @@ describe("`all` combinator", function() {
   });
 });
 
-describe("`chain` function sample", function() {
-  it("should work like `Promise.prototype.then`", function(done) {
+describe("`chain` function sample", function () {
+  it("should work like `Promise.prototype.then`", function (done) {
     function chain(arg, cont) {
       var res = R.lock();
       cont.cont = res;

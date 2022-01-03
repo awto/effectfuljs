@@ -10,13 +10,15 @@ export {
   iteratorM,
   forInIterator
 } from "@effectful/es-rt";
-import { Generator, iteratorM } from "@effectful/es-rt";
+import { cancelSymbol, Generator, iteratorM, cancel } from "@effectful/es-rt";
 
 /**
  * Property name for accessing coroutines store.
  * @type {Symbol}
  */
 export var contextSymbol = Symbol("@effectful/es-persist/context");
+
+export { cancelSymbol, cancel };
 
 var prototypeSym = Symbol("@effectful/es-persist/prototype");
 
@@ -85,7 +87,7 @@ function EventLoopScheduler() {
   this._idle = [];
 }
 
-EventLoopScheduler.prototype.enqueue = function(job) {
+EventLoopScheduler.prototype.enqueue = function (job) {
   var self = this;
   ++this.jobs;
   Promise.resolve().then(function trampoline() {
@@ -95,7 +97,7 @@ EventLoopScheduler.prototype.enqueue = function(job) {
   });
 };
 
-EventLoopScheduler.prototype.onIdle = function(job) {
+EventLoopScheduler.prototype.onIdle = function (job) {
   if (this.jobs === 0) this.enqueue(job);
   else this._idle.push(job);
 };
@@ -127,14 +129,23 @@ export function Async() {
   this.dest = [];
   this.state = AsyncState.pending;
   this.value = void 0;
+  this.$ = {};
+  this.$await = null;
 }
 
 var Ap = Async.prototype;
 Ap.constructor = Async;
+Ap[cancelSymbol] = function () {
+  const val = this.$await;
+  if (val && cancelSymbol in val) val[cancelSymbol]();
+  else this.reject(new CancelToken());
+};
 
 function AsyncGenerator() {
   this[contextSymbol].reg(this);
   this.queue = [];
+  this.$await = null;
+  this.$ = {};
 }
 
 function construct(caller) {
@@ -148,20 +159,22 @@ export var async = construct;
 
 var AGp = AsyncGenerator.prototype;
 AGp.constructor = AsyncGenerator;
+AGp[cancelSymbol] = Ap[cancelSymbol];
 
-Ap.$err = AGp.$err = function() {
+Ap.$err = AGp.$err = function () {
   return 1;
 };
-AGp.$fin = function() {
+AGp.$fin = function () {
   return 0;
 };
 
-AGp[Symbol.asyncIterator] = function() {
+AGp[Symbol.asyncIterator] = function () {
   return this;
 };
 
-function Residual() {
+export function Residual(parent) {
   this.dest = [];
+  this.parent = parent;
   this.state = AsyncState.pending;
 }
 
@@ -176,12 +189,12 @@ constructors.push(Residual);
  *
  */
 export function lock() {
-  return new Residual();
+  return new Residual(null);
 }
 
 var Rp = Residual.prototype;
 
-Rp.resume = function(value) {
+Rp.resume = function (value) {
   var dest = this.dest,
     i;
   this.state = AsyncState.resolved;
@@ -189,7 +202,7 @@ Rp.resume = function(value) {
   while ((i = dest.pop())) i.resume(value);
 };
 
-Rp.reject = function(e) {
+Rp.reject = function (e) {
   var dest = this.dest,
     i;
   this.state = AsyncState.rejected;
@@ -197,7 +210,7 @@ Rp.reject = function(e) {
   while ((i = dest.pop())) i.reject(e);
 };
 
-Rp.run = function() {
+Rp.run = function () {
   var i,
     dest = this.dest;
   switch (this.state) {
@@ -210,11 +223,21 @@ Rp.run = function() {
   }
 };
 
-Rp.then = function(next, err) {
+Rp.then = function (next, err) {
   return this.toPromise().then(next, err);
 };
 
-Rp.toPromise = function() {
+export function CancelToken() {}
+
+constructors.push(CancelToken);
+
+Rp[cancelSymbol] = function () {
+  if (this.state !== AsyncState.pending) return;
+  if (this.parent) cancel(this.parent);
+  else this.reject(new CancelToken());
+};
+
+Rp.toPromise = function () {
   var ctx = this;
   switch (this.state) {
     case AsyncState.resolved:
@@ -222,13 +245,13 @@ Rp.toPromise = function() {
     case AsyncState.rejected:
       return Promise.reject(this.value);
     default:
-      return new Promise(function(r, e) {
+      return new Promise(function (r, e) {
         ctx.dest.push({ resume: r, reject: e });
       });
   }
 };
 
-Rp[awaitSymbol] = function(next) {
+Rp[awaitSymbol] = function (next) {
   switch (this.state) {
     case AsyncState.resolved:
       next.resume(this.value);
@@ -241,23 +264,23 @@ Rp[awaitSymbol] = function(next) {
   }
 };
 
-Promise.prototype[awaitSymbol] = function(next) {
+Promise.prototype[awaitSymbol] = function (next) {
   this.then(
-    function(v) {
+    function (v) {
       next.resume(v);
     },
-    function(e) {
+    function (e) {
       next.reject(e);
     }
   );
 };
 
-Ap.jump = AGp.jump = function(v, cont) {
+Ap.jump = AGp.jump = function (v, cont) {
   this.$step = cont;
   this.enqueue(v);
 };
 
-AGp.run = Ap.run = function() {
+AGp.run = Ap.run = function () {
   var value;
   try {
     return this.resume(((value = this.$arg), (this.$arg = void 0), value));
@@ -266,47 +289,48 @@ AGp.run = Ap.run = function() {
   }
 };
 
-AGp.scope = function(step) {
+AGp.scope = function (step) {
   this.$last = this.$step = step;
   return this;
 };
 
-AGp.chain = Ap.chain = function(v, cont) {
+AGp.chain = Ap.chain = function (v, cont) {
   this.$step = cont;
+  this.$await = v;
   if (!v || !v[awaitSymbol]) this.enqueue(v);
   else v[awaitSymbol](this);
 };
 
-Ap.scope = function(cont) {
+Ap.scope = function (cont) {
   this.$step = cont;
-  this.cont = new Residual();
+  this.cont = new Residual(this);
   this.resume();
   return this.cont;
 };
 
-Ap[awaitSymbol] = function(t) {
+Ap[awaitSymbol] = function (t) {
   this.cont[awaitSymbol](t);
 };
-Ap.then = function(t, e) {
+Ap.then = function (t, e) {
   return this.cont.then(t, e);
 };
 
-Ap.pure = function(value) {
+Ap.pure = function (value) {
   this[contextSymbol].unreg(this);
   this.cont.resume(value);
 };
 
-Ap.raise = function(error) {
+Ap.raise = function (error) {
   this[contextSymbol].unreg(this);
   this.cont.reject(error);
 };
 
-AGp.pure = function(value) {
+AGp.pure = function (value) {
   this[contextSymbol].unreg(this);
   result(this, { value: value, done: true }, AsyncState.resolved);
 };
 
-AGp.raise = function(error) {
+AGp.raise = function (error) {
   this[contextSymbol].unreg(this);
   result(this, error, AsyncState.rejected);
 };
@@ -339,12 +363,12 @@ AGp.enqueue = Ap.enqueue = function enqueue(v) {
   this[contextSymbol].scheduler.enqueue(this);
 };
 
-AGp.yld = function(value, step) {
+AGp.yld = function (value, step) {
   this.$step = step;
   result(this, { value: value, done: false }, AsyncState.resolved);
 };
 
-AGp.yldStar = function(iter, step) {
+AGp.yldStar = function (iter, step) {
   this.$sub = iteratorM(iter);
   this.$resume = step;
   return this.chain(this.$sub.next(), DELEGATE_RESUME);
@@ -390,9 +414,9 @@ function result(ctx, value, state) {
   frame.run();
 }
 
-AGp[sendSymbol] = function(value, methodId) {
+AGp[sendSymbol] = function (value, methodId) {
   var queue = this.queue,
-    cont = new Residual();
+    cont = new Residual(null);
   if (queue.push(cont) === 1) method(this, cont, value, methodId);
   else {
     cont.$arg = value;
@@ -401,25 +425,25 @@ AGp[sendSymbol] = function(value, methodId) {
   return cont;
 };
 
-AGp.next = function(value) {
+AGp.next = function (value) {
   return this[sendSymbol](value, NEXT_METHOD);
 };
 
-AGp.throw = function(value) {
+AGp.throw = function (value) {
   return this[sendSymbol](value, THROW_METHOD);
 };
 
-AGp.return = function(value) {
+AGp.return = function (value) {
   return this[sendSymbol](value, RETURN_METHOD);
 };
 
-Ap.reject = AGp.reject = function(e) {
+Ap.reject = AGp.reject = function (e) {
   if ((this.$step = this.$err(this.$last)) !== 1) this.enqueue(e);
   else this.raise(e);
 };
 
 function makeConstructor(proto, reg) {
-  return function(fun, handler, err, fin) {
+  return function (fun, handler, err, fin) {
     var p = handler[prototypeSym];
     if (p) {
       fun.prototype = p;
@@ -456,13 +480,15 @@ export function makeAsyncGeneratorFunctionConstructor(reg) {
 export var asyncFunction = makeConstructor(Ap, nop);
 export var asyncGeneratorFunction = makeConstructor(AGp, nop);
 
-function All(arr) {
+function All(arr, propagateCancel) {
   var len = arr.length,
     i;
   this.dest = [];
   this.state = len === 0 ? AsyncState.resolved : AsyncState.pending;
   this.value = new Array(len);
   this.countdown = len;
+  this.propagateCancel = propagateCancel;
+  this.children = arr;
   for (i = 0; i < len; ++i) arr[i][awaitSymbol](new AllCont(this, i));
 }
 
@@ -470,11 +496,21 @@ constructors.push(All);
 
 /** like `Promise.all` */
 export function all(iterable) {
-  return new All(Array.from(iterable));
+  return new All(Array.from(iterable), false);
 }
 
-var AllProto = (All.prototype = Object.create(Rp));
-AllProto.constructor = All;
+/** like `all` but cancels all other children if one of them is rejected */
+export function allWithCancel(iterable) {
+  return new All(Array.from(iterable), true);
+}
+
+All.prototype = Object.create(Rp);
+All.prototype.constructor = All;
+
+All.prototype.reject = function (reason) {
+  Rp.reject.call(this, reason);
+  if (this.propagateCancel) this.children.map(cancel);
+};
 
 function AllCont(src, index) {
   this.src = src;
@@ -483,7 +519,7 @@ function AllCont(src, index) {
 
 constructors.push(AllCont);
 
-AllCont.prototype.resume = function(value) {
+AllCont.prototype.resume = function (value) {
   var src = this.src;
   if (src.state !== AsyncState.rejected) {
     src.value[this.index] = value;
@@ -491,23 +527,43 @@ AllCont.prototype.resume = function(value) {
   }
 };
 
-AllCont.prototype.reject = function(value) {
+AllCont.prototype.reject = function (value) {
   this.src.reject(value);
 };
 
-function Any(arr) {
+function Any(arr, propagateCancel) {
   var len = arr.length,
     i;
   this.dest = [];
   this.state = AsyncState.pending;
+  this.propagateCancel = propagateCancel;
+  this.children = arr;
   for (i = 0; i < len; ++i) arr[i][awaitSymbol](new AnyCont(this));
 }
 
+Any.prototype = Object.create(Rp);
+Any.prototype.constructor = Any;
+
 constructors.push(Any);
+
+Any.prototype.resume = function (reason) {
+  Rp.resume.call(this, reason);
+  if (this.propagateCancel) this.children.map(cancel);
+};
+
+Any.prototype.reject = function (reason) {
+  Rp.reject.call(this, reason);
+  if (this.propagateCancel) this.children.map(cancel);
+};
 
 /** like `Promise.race` */
 export function any(iterable) {
-  return new Any(Array.from(iterable));
+  return new Any(Array.from(iterable), false);
+}
+
+/** like `any` but cancels all other children when one of them is settled */
+export function anyWithCancel(iterable) {
+  return new Any(Array.from(iterable), true);
 }
 
 function AnyCont(src) {
@@ -516,18 +572,24 @@ function AnyCont(src) {
 
 constructors.push(AnyCont);
 
-AnyCont.prototype.resume = function(value) {
+AnyCont.prototype.resume = function (value) {
   var src = this.src;
   if (src.state === AsyncState.pending) src.resume(value);
 };
 
-AnyCont.prototype.reject = function(value) {
+AnyCont.prototype.reject = function (value) {
   var src = this.src;
   if (src.state === AsyncState.pending) src.reject(value);
 };
 
-var AnyProto = (Any.prototype = Object.create(Rp));
-AnyProto.constructor = Any;
+All.prototype[cancelSymbol] = Any.prototype[cancelSymbol] = function () {
+  for (const i of this.children) cancel(i);
+};
+
+AllCont.prototype[cancelSymbol] = AnyCont.prototype[cancelSymbol] =
+  function () {
+    cancel(this.src);
+  };
 
 /**
  * returns async iterator where message can be sent using
@@ -544,24 +606,24 @@ function Producer() {
 
 constructors.push(Producer);
 
-Producer.prototype[Symbol.asyncIterator] = function() {
+Producer.prototype[Symbol.asyncIterator] = function () {
   return this;
 };
 
-Producer.prototype.next = function() {
-  var res = new Residual();
+Producer.prototype.next = function () {
+  var res = new Residual(null);
   if (this.oq.length) res.resume(this.oq.shift());
   else this.iq.push(res);
   return res;
 };
 
-Producer.prototype.stop = function(value) {
+Producer.prototype.stop = function (value) {
   var frame = this.iq.shift();
   if (frame) frame.resume({ value, done: true });
   else this.oq.push({ value, done: true });
 };
 
-Producer.prototype.send = function(value) {
+Producer.prototype.send = function (value) {
   var frame = this.iq.shift();
   if (frame) frame.resume({ value, done: false });
   else this.oq.push({ value, done: false });
@@ -573,7 +635,7 @@ constructors.push(Current);
 /** Returns current continuation */
 export var current = new Current();
 
-Current.prototype[awaitSymbol] = function(cont) {
+Current.prototype[awaitSymbol] = function (cont) {
   cont.resume(cont);
 };
 
@@ -583,7 +645,7 @@ constructors.push(Abort);
 /** Stops current continuation */
 export var abort = new Abort();
 
-Abort.prototype[awaitSymbol] = function() {};
+Abort.prototype[awaitSymbol] = function () {};
 
 function Idle() {}
 constructors.push(Idle);
@@ -594,7 +656,7 @@ constructors.push(Idle);
  */
 export var idle = new Idle();
 
-Idle.prototype[awaitSymbol] = function(next) {
+Idle.prototype[awaitSymbol] = function (next) {
   next.$arg = next;
   next[contextSymbol].scheduler.onIdle(next);
 };
@@ -608,9 +670,9 @@ constructors.push(Managed);
  */
 export var managed = new Managed();
 
-Managed.prototype[awaitSymbol] = function(next) {
+Managed.prototype[awaitSymbol] = function (next) {
   next.resume(true);
 };
-Managed.prototype.then = function(resolve) {
+Managed.prototype.then = function (resolve) {
   resolve(false);
 };

@@ -3,8 +3,6 @@
   "version": "1.4.0",
   "description": "Persistent state for ECMAScript effects",
   "main": "index.js",
-  "module": "main.js",
-  "jsnext:main": "main.js",
   "scripts": {
     "test": "eslint main.js && mocha -r ./test/kit/inject.js",
     "build": "rollup -c",

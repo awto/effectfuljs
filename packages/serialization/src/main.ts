@@ -2,18 +2,6 @@
  * # Serialization library for @effectful toolchain
  */
 
-const savedObject = Object /* {
-  defineProperty: Object.defineProperty,
-  getOwnPropertyDescriptors: Object.getOwnPropertyDescriptors,
-  assign: Object.assign,
-  create: Object.create,
-  setPrototypeOf: Object.setPrototypeOf,
-  getPrototypeOf: Object.getPrototypeOf,
-  getOwnPropertySymbols: Object.getOwnPropertySymbols,
-  getOwnPropertyNames: Object.getOwnPropertyNames,
-  getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor
-}*/;
-
 // tslint:disable-next-line
 const savedConsole = { log: console.log, warn: console.warn };
 
@@ -409,7 +397,7 @@ export function write(value: object, opts: WriteOptions = {}): JSONObject {
     if (resRefs != null) for (const info of refs) resRefs.push(info.value);
   }
   return x.length
-    ? savedObject.assign({ x }, <JSONObject>res[0])
+    ? Object.assign({ x }, <JSONObject>res[0])
     : <JSONObject>res[0];
 }
 
@@ -649,7 +637,7 @@ function defaultWrite<T>(
 ): JSONValue {
   const json: JSONObject = {};
   if (this.valuePrototype !== void 0) return json;
-  const proto = savedObject.getPrototypeOf(value);
+  const proto = Object.getPrototypeOf(value);
   if (proto === ObjectConstr.prototype || proto === this.defaultPrototype)
     return json;
   // ensuring prototype reference is ahead
@@ -664,13 +652,13 @@ function defaultCreate<T>(
 ): T {
   if (this.valueConstructor) return new this.valueConstructor();
   if (this.valuePrototype !== void 0 && this.valuePrototype !== false)
-    return savedObject.create(this.valuePrototype);
+    return Object.create(this.valuePrototype);
   const protoJson = <JSONObject>(<JSONObject>json).p;
   if (protoJson === void 0)
     return <T>(
-      (this.defaultPrototype ? savedObject.create(this.defaultPrototype) : {})
+      (this.defaultPrototype ? Object.create(this.defaultPrototype) : {})
     );
-  if (protoJson === null) return savedObject.create(null);
+  if (protoJson === null) return Object.create(null);
   let protoValue;
   // TODO: since prototypes cannot be cyclic it could ensure this
   // on proper ordering objects in `r`, this way there are no needs
@@ -679,7 +667,7 @@ function defaultCreate<T>(
     protoValue = ctx.sharedVals[<number>protoJson.r];
     if (protoValue === undef) protoValue = null;
   } else if (protoJson.$ && !protoJson.f) protoValue = ctx.step(protoJson);
-  return savedObject.create(protoValue || null);
+  return Object.create(protoValue || null);
 }
 
 /**
@@ -690,8 +678,8 @@ export const descriptorTemplate: Descriptor = {
   write: defaultWrite,
   create: defaultCreate,
   readContent(ctx: ReadContext, json: JSONValue, value: any) {
-    if ((<JSONObject>json).p && savedObject.getPrototypeOf(value) === null) {
-      savedObject.setPrototypeOf(value, ctx.step((<JSONObject>json).p));
+    if ((<JSONObject>json).p && Object.getPrototypeOf(value) === null) {
+      Object.setPrototypeOf(value, ctx.step((<JSONObject>json).p));
     }
   }
 };
@@ -702,7 +690,7 @@ export const descriptorTemplate: Descriptor = {
  * value in the output.
  */
 function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
-  return savedObject.assign({}, descriptor, {
+  return Object.assign({}, descriptor, {
     name: descriptor.name,
     read(ctx: ReadContext, json: JSONValue) {
       const ref = <number>(<JSONObject>json).r;
@@ -723,17 +711,18 @@ function refAwareDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
       if (info == null) {
         ctx.sharedRefsMap.set(
           value,
-          (ctx.jobs = info = {
-            ref: null,
-            data: null,
-            parent,
-            value,
-            descriptor,
-            index,
-            nextJob: ctx.jobs,
-            started: false,
-            debCtx
-          })
+          (ctx.jobs = info =
+            {
+              ref: null,
+              data: null,
+              parent,
+              value,
+              descriptor,
+              index,
+              nextJob: ctx.jobs,
+              started: false,
+              debCtx
+            })
         );
         ctx.jobs = info;
         if (!ctx.opts.alwaysByRef) return null;
@@ -795,8 +784,8 @@ export function regDescriptor<T>(
     descriptor.propsSnapshot !== false &&
     descriptor.value
   )
-    descriptor.defaultPrototype = savedObject.getPrototypeOf(descriptor.value);
-  const overrideProps = savedObject.assign(
+    descriptor.defaultPrototype = Object.getPrototypeOf(descriptor.value);
+  const overrideProps = Object.assign(
     {},
     defaultOverrideProps,
     descriptor.typeofHint === "function" && funcOverrideProps,
@@ -821,7 +810,7 @@ export function regDescriptor<T>(
   let i = 0;
   if (!descriptor.strictName)
     for (; descriptorByName.get(uniq) != null; uniq = `${name}_${++i}`) {}
-  let final: Descriptor = savedObject.assign({}, descriptor, {
+  let final: Descriptor = Object.assign({}, descriptor, {
     read: readImpl,
     readContent: readContentImpl,
     create: createImpl,
@@ -832,7 +821,7 @@ export function regDescriptor<T>(
   if (descriptor.props !== false) final = propsDescriptor(final);
   if (descriptor.default$ !== false && uniq !== "Object") {
     const saved = final;
-    final = savedObject.assign({}, final, {
+    final = Object.assign({}, final, {
       write(
         ctx: WriteContext,
         val: any,
@@ -875,10 +864,7 @@ export function updateInitialSnapshot(value: any) {
   if (!descriptor) throw new TypeError("not serializable value");
   if (!descriptor.snapshot || !descriptor.value || descriptor.value !== value)
     throw new TypeError("the object doesn't contain another snapshot");
-  savedObject.assign(
-    descriptor.snapshot,
-    savedObject.getOwnPropertyDescriptors(value)
-  );
+  Object.assign(descriptor.snapshot, Object.getOwnPropertyDescriptors(value));
 }
 
 /**
@@ -930,7 +916,7 @@ export function regOpaqueObject(
   let descr: Descriptor | undefined;
   if ((descr = descriptorByObject.get(value)) != null) return descr;
   descr = regDescriptor(
-    savedObject.assign(
+    Object.assign(
       {},
       OpaqueDescriptor,
       { name, typeofHint: typeof value },
@@ -953,7 +939,7 @@ export function regOpaquePrim<T>(
   let descriptor = descriptorByValue.get(value);
   if (descriptor) return descriptor;
   descriptor = regDescriptor(
-    savedObject.assign({}, OpaquePrimDescriptor, {
+    Object.assign({}, OpaquePrimDescriptor, {
       name,
       value,
       refAware: false
@@ -969,7 +955,7 @@ export function regPrim<T>(
   name: string = String(value)
 ) {
   descriptor = regDescriptor(
-    savedObject.assign({}, descriptor, { name, value, refAware: false })
+    Object.assign({}, descriptor, { name, value, refAware: false })
   );
   descriptorByValue.set(value, descriptor);
   return descriptor;
@@ -990,18 +976,18 @@ export function regConstructor<T>(
   inherit?: boolean
 ): Descriptor<T> {
   const descr = regDescriptor(
-    savedObject.assign(
+    Object.assign(
       { valuePrototype: constr.prototype, name: constr.name },
       descriptorTemplate,
       descriptor,
       {
-        overrideProps: savedObject.assign({}, descriptor.overrideProps),
+        overrideProps: Object.assign({}, descriptor.overrideProps),
         propsSnapshot: descriptor.propsSnapshot
       }
     )
   );
   if (inherit)
-    savedObject.defineProperty(constr.prototype, descriptorSymbol, {
+    Object.defineProperty(constr.prototype, descriptorSymbol, {
       value: descr,
       configurable: true
     });
@@ -1050,11 +1036,7 @@ export function regNewConstructor<T>(
 ): Descriptor {
   return regConstructor(
     constr,
-    savedObject.assign(
-      { valueConstructor: constr },
-      descriptorTemplate,
-      descriptor
-    )
+    Object.assign({ valueConstructor: constr }, descriptorTemplate, descriptor)
   );
 }
 
@@ -1150,7 +1132,7 @@ export function writeProps(
 ) {
   const props = [];
   let flags: number;
-  for (const name of savedObject.getOwnPropertyNames(descrs)) {
+  for (const name of Object.getOwnPropertyNames(descrs)) {
     const descr = descrs[name];
     // TODO: check why with jest + jsdom this sometimes returns `undefined`
     if (!descr) continue;
@@ -1162,7 +1144,7 @@ export function writeProps(
     const propInfo = writeProp(ctx, [name], descr, flags);
     if (propInfo) props.push(propInfo);
   }
-  for (const name of savedObject.getOwnPropertySymbols(descrs)) {
+  for (const name of Object.getOwnPropertySymbols(descrs)) {
     const descr = descrs[<any>name];
     if (
       (flags = <number>propFlags(snapshot, pred, <any>name, descr, mask)) ===
@@ -1224,10 +1206,10 @@ export function readProps<T>(ctx: ReadContext, props: any[], value: T) {
     if (flags != null) {
       const pdescr = readPropDescriptor(ctx, pjson, flags, get, set, {});
       try {
-        savedObject.defineProperty(value, name, pdescr);
+        Object.defineProperty(value, name, pdescr);
         continue;
       } catch (e) {
-        const sdescr = savedObject.getOwnPropertyDescriptor(value, name);
+        const sdescr = Object.getOwnPropertyDescriptor(value, name);
         if (!sdescr || sdescr.configurable || !sdescr.writable) throw e;
       }
     }
@@ -1268,7 +1250,7 @@ function propsDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
     descriptor.propsSnapshot !== false &&
     descriptor.value
   ) {
-    snapshot = savedObject.getOwnPropertyDescriptors(descriptor.value);
+    snapshot = Object.getOwnPropertyDescriptors(descriptor.value);
   }
   return {
     name: descriptor.name,
@@ -1281,7 +1263,7 @@ function propsDescriptor<T>(descriptor: Descriptor<T>): Descriptor<T> {
       const json = <JSONObject>descriptor.write(ctx, value, parent, index);
       const props = writeProps(
         ctx,
-        savedObject.getOwnPropertyDescriptors(value),
+        Object.getOwnPropertyDescriptors(value),
         pred,
         descriptor.propsDescrMask || 0,
         this.snapshot
@@ -1450,21 +1432,20 @@ export const BigIntDescriptor =
         props: false
       });
 
-export let getObjectDescriptor: (
-  value: any
-) => Descriptor | undefined = function getObjectDescriptorImpl<
-  T extends WithTypeofTag
->(value: T): Descriptor<T> | undefined {
-  let descriptor = descriptorByObject.get(value);
-  if (descriptor) return descriptor;
-  const proto = savedObject.getPrototypeOf(value);
-  descriptor = descriptorByPrototype.get(proto);
-  if (descriptor) return descriptor;
-  if (proto && proto !== Object && descriptorSymbol in proto)
-    return (<any>proto)[descriptorSymbol];
-  if (value.$$typeof) descriptor = descriptorByTypeOfProp.get(value.$$typeof);
-  return descriptor;
-};
+export let getObjectDescriptor: (value: any) => Descriptor | undefined =
+  function getObjectDescriptorImpl<T extends WithTypeofTag>(
+    value: T
+  ): Descriptor<T> | undefined {
+    let descriptor = descriptorByObject.get(value);
+    if (descriptor) return descriptor;
+    const proto = Object.getPrototypeOf(value);
+    descriptor = descriptorByPrototype.get(proto);
+    if (descriptor) return descriptor;
+    if (proto && proto !== Object && descriptorSymbol in proto)
+      return (<any>proto)[descriptorSymbol];
+    if (value.$$typeof) descriptor = descriptorByTypeOfProp.get(value.$$typeof);
+    return descriptor;
+  };
 
 export function regObjectDescriptorGetter(
   impl: (value: any) => Descriptor | undefined
@@ -1472,31 +1453,28 @@ export function regObjectDescriptorGetter(
   getObjectDescriptor = impl;
 }
 
-export let getValueDescriptor: (
-  value: any
-) => Descriptor | undefined = function getValueDescriptorImpl(
-  value: any
-): Descriptor | undefined {
-  if (value === void 0) return UndefDescriptor;
-  switch (typeof value) {
-    case "number":
-      if (isNaN(value)) return NaNDescriptor;
-    case "undefined":
-    case "boolean":
-    case "string":
-      return PrimDescriptor;
-    case "object":
-      if (!value) return PrimDescriptor;
-      return getObjectDescriptor(value) || PojsoDescriptor;
-    case "function":
-      return getObjectDescriptor(value);
-    case "symbol":
-      return SymbolDescriptor;
-    case "bigint":
-      return BigIntDescriptor;
-  }
-  return descriptorByValue.get(value);
-};
+export let getValueDescriptor: (value: any) => Descriptor | undefined =
+  function getValueDescriptorImpl(value: any): Descriptor | undefined {
+    if (value === void 0) return UndefDescriptor;
+    switch (typeof value) {
+      case "number":
+        if (isNaN(value)) return NaNDescriptor;
+      case "undefined":
+      case "boolean":
+      case "string":
+        return PrimDescriptor;
+      case "object":
+        if (!value) return PrimDescriptor;
+        return getObjectDescriptor(value) || PojsoDescriptor;
+      case "function":
+        return getObjectDescriptor(value);
+      case "symbol":
+        return SymbolDescriptor;
+      case "bigint":
+        return BigIntDescriptor;
+    }
+    return descriptorByValue.get(value);
+  };
 
 export function regValueDescriptorGetter(
   impl: (value: any) => Descriptor | undefined
@@ -1523,7 +1501,7 @@ export function getJsonDescriptor(
         throw new TypeError(`not registered type:${json.$}`);
       if (ctx.opts.ignore === "placeholder")
         return regDescriptor(
-          savedObject.assign({}, NotSerializablePlaceholderDescriptor, {
+          Object.assign({}, NotSerializablePlaceholderDescriptor, {
             name: <string>json.$
           })
         );
@@ -1554,7 +1532,7 @@ const ArrayDescriptor = regNewConstructor(Array, {
 function iterableDescriptor<T extends Iterable<unknown>>(
   descriptor: IncompleteDescriptor<T>
 ): IncompleteDescriptor<T> {
-  return savedObject.assign(
+  return Object.assign(
     {},
     descriptorTemplate,
     {
@@ -1581,7 +1559,7 @@ export const WeakSetWorkaround = class WeakSet {
     switch (typeof value) {
       case "function":
       case "object":
-        savedObject.defineProperty(value, this.prop, {
+        Object.defineProperty(value, this.prop, {
           configurable: true,
           writable: true,
           value: true
@@ -1611,7 +1589,7 @@ export const WeakMapWorkaround = class WeakMap {
     switch (typeof key) {
       case "function":
       case "object":
-        savedObject.defineProperty(key, this.prop, {
+        Object.defineProperty(key, this.prop, {
           configurable: true,
           writable: true,
           value
@@ -1757,15 +1735,15 @@ export function regOpaqueRec(
     descriptorByObject.has(value)
   )
     return;
-  const descrs = savedObject.getOwnPropertyDescriptors(value);
-  for (const i of savedObject.getOwnPropertySymbols(descrs)) {
+  const descrs = Object.getOwnPropertyDescriptors(value);
+  for (const i of Object.getOwnPropertySymbols(descrs)) {
     reg(descrs[<any>i], `${prefix}#${String(i)}`);
   }
   regOpaqueObject(value, prefix, opts.descriptor || { props: false });
-  for (const i of savedObject.getOwnPropertyNames(descrs))
+  for (const i of Object.getOwnPropertyNames(descrs))
     reg(descrs[i], `${prefix}#${i}`);
   if (opts.deep) {
-    const proto = savedObject.getPrototypeOf(value);
+    const proto = Object.getPrototypeOf(value);
     if (proto) regOpaqueRec(proto, `${prefix}#proto`, opts);
   }
   function reg(descr: PropertyDescriptor, name: string) {
@@ -1824,7 +1802,7 @@ export function rebindGlobal() {
     if (descriptor.globalName) {
       const value = (<any>global)[descriptor.globalName];
       if (!value) continue;
-      descriptor = savedObject.assign({}, descriptor, { value });
+      descriptor = Object.assign({}, descriptor, { value });
       weakMapSet.call(descriptorByObject, value, descriptor);
     }
     state.byName.set(name, descriptor);
@@ -1843,7 +1821,7 @@ export function regGlobal() {
     propsSnapshot: true,
     overrideProps: { AnonymousContent: false }
   });
-  for (const name of savedObject.getOwnPropertyNames(global)) {
+  for (const name of Object.getOwnPropertyNames(global)) {
     try {
       const obj = (<any>global)[name];
       if (!obj) continue;
@@ -1855,19 +1833,17 @@ export function regGlobal() {
       const descr = descriptorByObject.get(obj);
       if (descr && descr.props === false) continue;
       regOpaqueObject(obj, `#${name}`);
-      for (const i of savedObject.getOwnPropertyNames(obj)) {
+      for (const i of Object.getOwnPropertyNames(obj)) {
         // not registering prototypes to avoid unintended descriptor's inheritance
         if (i === "prototype") continue;
-        const descr = <any>savedObject.getOwnPropertyDescriptor(obj, i);
+        const descr = <any>Object.getOwnPropertyDescriptor(obj, i);
         if (typeof descr.value !== "function") continue;
         regOpaqueObject(descr.value, `#G#${name}#{j}`);
       }
       if (typeof obj === "function" && obj.prototype) {
-        for (const j of savedObject.getOwnPropertyNames(obj.prototype)) {
+        for (const j of Object.getOwnPropertyNames(obj.prototype)) {
           if (j === "prototype") continue;
-          const descr = <any>(
-            savedObject.getOwnPropertyDescriptor(obj.prototype, j)
-          );
+          const descr = <any>Object.getOwnPropertyDescriptor(obj.prototype, j);
           if (typeof descr.value !== "function") continue;
           regOpaqueObject(descr.value, `#G##${name}#{j}`);
         }

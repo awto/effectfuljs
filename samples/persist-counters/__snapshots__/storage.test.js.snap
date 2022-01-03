@@ -30,10 +30,10 @@ Array [
                   "r": 1,
                 },
                 Object {
-                  "r": 3,
+                  "r": 4,
                 },
                 Object {
-                  "r": 4,
+                  "r": 6,
                 },
               ],
             },
@@ -41,7 +41,7 @@ Array [
           Array [
             "resume",
             Object {
-              "r": 4,
+              "r": 6,
             },
           ],
         ],
@@ -60,6 +60,14 @@ Array [
               Array [
                 "queue",
                 Array [],
+              ],
+              Array [
+                "$await",
+                null,
+              ],
+              Array [
+                "$",
+                Object {},
               ],
               Array [
                 "$step",
@@ -95,6 +103,16 @@ Array [
                 },
               ],
               Array [
+                "$",
+                Object {},
+              ],
+              Array [
+                "$await",
+                Object {
+                  "r": 3,
+                },
+              ],
+              Array [
                 "_f",
                 Object {
                   "f": Array [
@@ -125,6 +143,12 @@ Array [
                       ],
                     ],
                     Array [
+                      "parent",
+                      Object {
+                        "r": 2,
+                      },
+                    ],
+                    Array [
                       "state",
                       0,
                     ],
@@ -138,7 +162,7 @@ Array [
               Array [
                 "_loop",
                 Object {
-                  "r": 3,
+                  "r": 4,
                 },
               ],
               Array [
@@ -156,29 +180,46 @@ Array [
             ],
           },
           Object {
+            "$": "Residual",
+            "f": Array [
+              Array [
+                "dest",
+                Array [
+                  Object {
+                    "r": 2,
+                  },
+                ],
+              ],
+              Array [
+                "parent",
+                null,
+              ],
+              Array [
+                "state",
+                0,
+              ],
+            ],
+          },
+          Object {
             "$": "saveLocal",
             "f": Array [
               Array [
                 "queue",
                 Array [
                   Object {
-                    "$": "Residual",
-                    "f": Array [
-                      Array [
-                        "dest",
-                        Array [
-                          Object {
-                            "r": 2,
-                          },
-                        ],
-                      ],
-                      Array [
-                        "state",
-                        0,
-                      ],
-                    ],
+                    "r": 3,
                   },
                 ],
+              ],
+              Array [
+                "$await",
+                Object {
+                  "r": 5,
+                },
+              ],
+              Array [
+                "$",
+                Object {},
               ],
               Array [
                 "_input",
@@ -213,6 +254,29 @@ Array [
             ],
           },
           Object {
+            "$": "Residual",
+            "f": Array [
+              Array [
+                "dest",
+                Array [
+                  Object {
+                    "r": 4,
+                  },
+                ],
+              ],
+              Array [
+                "parent",
+                Object {
+                  "r": 6,
+                },
+              ],
+              Array [
+                "state",
+                0,
+              ],
+            ],
+          },
+          Object {
             "$": "save",
             "f": Array [
               Array [
@@ -230,27 +294,23 @@ Array [
                 },
               ],
               Array [
+                "$",
+                Object {},
+              ],
+              Array [
+                "$await",
+                Object {
+                  "$": "Idle",
+                },
+              ],
+              Array [
                 "$step",
                 6,
               ],
               Array [
                 "cont",
                 Object {
-                  "$": "Residual",
-                  "f": Array [
-                    Array [
-                      "dest",
-                      Array [
-                        Object {
-                          "r": 3,
-                        },
-                      ],
-                    ],
-                    Array [
-                      "state",
-                      0,
-                    ],
-                  ],
+                  "r": 5,
                 },
               ],
               Array [

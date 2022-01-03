@@ -23,7 +23,7 @@ export interface Thenable<T = any> {
  * @typeparam T - type of a `await` result
  */
 export interface AsyncValue<T = any> extends Thenable<T> {
-  [awaitSymbol](cont: Continuation<T>);
+  [awaitSymbol](cont: Continuation<T>): void;
 }
 
 /**
@@ -32,9 +32,9 @@ export interface AsyncValue<T = any> extends Thenable<T> {
  */
 export interface Context {
   /** Called when either async function or async generators started */
-  reg(thread: Async | AsyncGenerator);
+  reg(thread: Async | AsyncGenerator): void;
   /** Called when either async function or async generators exited */
-  unreg(thread: Async | AsyncGenerator);
+  unreg(thread: Async | AsyncGenerator): void;
   /**
    * Stores currently running an async generator and async functions. The
    * default implementation provides it, but it isn't necessary for overrides
@@ -55,6 +55,16 @@ export declare const contextSymbol: unique symbol;
 export declare const awaitSymbol: unique symbol;
 
 /**
+ * Custom cancelation handler
+ */
+export declare const cancelSymbol: unique symbol;
+
+/**
+ * Executes cancelation if available or ignore everything
+ */
+export declare function cancel(value: any);
+
+/**
  * Callbacks for specifying what to do next after async action is settled.
  */
 export interface Continuation<T = any> {
@@ -64,13 +74,13 @@ export interface Continuation<T = any> {
    * @param value - result of the async action
    */
 
-  resume(value: T);
+  resume(value: T): void;
   /**
    * Called if the async action has thrown an exception (rejected)
    *
    * @param reason - the thrown exception object
    */
-  reject(reason: any);
+  reject(reason: any): void;
 }
 
 /**
@@ -78,7 +88,7 @@ export interface Continuation<T = any> {
  */
 export interface Job {
   /** Called by the scheduler */
-  run();
+  run(): void;
 }
 
 /**
@@ -147,14 +157,14 @@ export declare function context(newContext?: Context): Context;
  */
 export interface Scheduler {
   /** Pushes task in the end of the queue */
-  enqueue(job: Job);
+  enqueue(job: Job): void;
   /**
    * Same as `enqueue` but the `job` will be executed only if there are
    * no other jobs scheduled.
    *
    * @see idle
    */
-  onIdle(job: Job);
+  onIdle(job: Job): void;
 }
 
 /**
@@ -223,10 +233,28 @@ export interface Producer<T = any> extends AsyncIterator<T, T> {
    * Yields `{value, done false}` as a result of next/current Iterator
    * method (next/return/throw)
    */
-  send(value: T);
+  send(value: T): void;
   /** Yields `{value,done:true}` as a result of next/current Iterator method */
-  stop(value: any);
+  stop(value: any): void;
 }
 
 /** Creates new Producer */
 export declare function producer(): Producer;
+
+export declare class Residual<T> {
+  [awaitSymbol](cont: Continuation<T>): void;
+  then<U>(
+    resolve?: (value: T) => U | Thenable<U>,
+    reject?: (reason: any) => U | Thenable<U>
+  ): Thenable<U>;
+  resume(value: T): void;
+  reject(reason: any): void;
+  value?: unknown;
+  state: number;
+}
+
+export declare enum AsyncState {
+  pending,
+  resolved,
+  rejected
+}

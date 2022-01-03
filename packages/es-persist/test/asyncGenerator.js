@@ -6,7 +6,7 @@ const tasks = [];
 function Wait(value) {
   this.value = value;
 }
-Wait.prototype[R.awaitSymbol] = function(next) {
+Wait.prototype[R.awaitSymbol] = function (next) {
   tasks.push({ src: this, next });
 };
 
@@ -48,8 +48,8 @@ fn.prototype[R.contextSymbol] = run.prototype[R.contextSymbol] = ctx;
 
 // what I need to have is a separate layer for this
 
-describe("async generator function", function() {
-  it("should have its state visible", function() {
+describe("async generator function", function () {
+  it("should have its state visible", function () {
     const s = run();
     const t = [...ctx.running].find(i => i.cont === s);
     const subThreads = () => [...ctx.running].filter(i => i.cont !== s);
@@ -117,7 +117,7 @@ describe("async generator function", function() {
     assert.equal(running.length, 0);
     assert.equal(s.awaiting, void 0);
   });
-  it("should conform to ES", function() {
+  it("should conform to ES", function () {
     let finallyCalledSrc = 0;
     let finallyCalled1 = 0;
     let finallyCalled2 = 0;
@@ -225,7 +225,7 @@ describe("async generator function", function() {
     );
     return res;
   });
-  it("should propagate exceptions", function(done) {
+  it("should propagate exceptions", function (done) {
     async function* a1() {
       yield 1;
       throw new Error(":-(");
@@ -251,8 +251,8 @@ describe("async generator function", function() {
       }
     );
   });
-  describe("current continuation clone", function() {
-    it("should be possible to resume", async function() {
+  describe("current continuation clone", function () {
+    it("should be possible to resume", async function () {
       const ctx = R.context();
       let resume;
       const save = {};
@@ -284,8 +284,8 @@ describe("async generator function", function() {
       });
     });
   });
-  describe("current idle continuation clone", function() {
-    it("should wait for other jobs to finish", async function() {
+  describe("current idle continuation clone", function () {
+    it("should wait for other jobs to finish", async function () {
       let delayDone = false;
       async function delay() {
         for (let i = 0; i < 100; ++i) await null;
@@ -304,8 +304,8 @@ describe("async generator function", function() {
   });
 });
 
-describe("producer", function() {
-  it("should follow generators protocol", function() {
+describe("producer", function () {
+  it("should follow generators protocol", function () {
     return (async function producer1() {
       const s = R.producer();
       s.send(1);
