@@ -33,6 +33,5 @@ function Comp_3(Comp, a) {
       {Comp._z}
       <C>{Comp._x}</C>
       {a}
-      {...ch}
-    </EffR>;
+      {...ch}</EffR>;
 }

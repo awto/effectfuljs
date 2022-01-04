@@ -27,7 +27,6 @@ function Comp() {
       {z}
       <C>{x}</C>
       {a}
-      {...ch}
-    </EffR>;
+      {...ch}</EffR>;
   }
 }

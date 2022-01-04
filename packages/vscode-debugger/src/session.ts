@@ -741,8 +741,6 @@ export class DebugSession extends SessionImpl {
           };
           if (args.argv0) spawnArgs.argv0 = args.argv0;
           child = spawn("node", launchArgs, spawnArgs);
-          let lastPercentage = 0;
-          let message = "";
           logger.verbose(
             `SPAWN: node ${cmdline} ${JSON.stringify({
               ...spawnArgs,
@@ -757,12 +755,15 @@ export class DebugSession extends SessionImpl {
             );
             this.terminate("spawn error: " + data.message);
           });
-          child.stdout.on("data", data => {
+          const {stdout, stderr} = child;
+          if (!stdout || !stderr)
+            throw new TypeError("INTERNAL: spawn channels errors")
+          stdout.on("data", data => {
             const txt = String(data);
             if (args.verbose) logger.verbose(txt);
             if (!this.launched) startBuf.push(txt);
           });
-          child.stderr.on("data", data => {
+          stderr.on("data", data => {
             const txt = String(data);
             if (args.verbose) logger.error(txt);
             if (!this.launched) startBuf.push(txt);

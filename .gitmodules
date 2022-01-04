@@ -2,3 +2,4 @@
         shallow = true 
         path = packages/es/test/deps/regenerator
         url = https://github.com/facebook/regenerator.git
+	branch = main

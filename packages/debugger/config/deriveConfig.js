@@ -18,7 +18,7 @@ config.srcRoot = fs.realpathSync(
 function findup(name, dir) {
   const dirs = path.resolve(dir).split(path.sep);
   while (dirs.length) {
-    const fp = path.join(...dirs, name);
+    const fp = [...dirs, name].join(path.sep);
     try {
       fs.accessSync(fp);
       return fp;
@@ -28,7 +28,11 @@ function findup(name, dir) {
   return null;
 }
 
-const packageJSON = fs.realpathSync(findup("package.json", config.srcRoot));
+
+let packageJSON = findup("package.json", config.srcRoot);
+console.log(packageJSON, config.srcRoot);
+if (packageJSON)
+  packageJSON = fs.realpathSync(packageJSON);
 
 config.packageRoot = packageJSON ? path.dirname(packageJSON) : config.srcRoot;
 

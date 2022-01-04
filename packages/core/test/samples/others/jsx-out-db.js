@@ -67,8 +67,7 @@ var $M = require("@effectful/debugger"),
       {$l[2]}
       $l[3]
       {$p}
-      {...ch}
-    </EffR>;
+      {...ch}</EffR>;
       $.goto = 4;
       continue;
 

@@ -217,21 +217,28 @@ var $M = require("@effectful/debugger"),
       $.state = 4;
 
     case 4:
-      $.result = $l[1];
-      $.goto = 6;
-      continue;
+      $.goto = 5;
+      $mcall("defineProperty", Object, $l[1], "prototype", {
+        writable: false
+      });
+      $.state = 5;
 
     case 5:
-      $.goto = 6;
-      return $unhandled($.error);
+      $.result = $l[1];
+      $.goto = 7;
+      continue;
 
     case 6:
+      $.goto = 7;
+      return $unhandled($.error);
+
+    case 7:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
+}, null, null, 1, [[0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
     $m$3 = $M.fun("m$3", "C", null, $m$0, ["a"], 0, 3, "3:0-10:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

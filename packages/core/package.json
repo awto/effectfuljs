@@ -27,7 +27,7 @@
     "@babel/cli": "^7.0.0",
     "@babel/node": "^7.8.7",
     "cross-env": "^7.0.0",
-    "eslint": "^7.31.0",
+    "eslint": "^8.6.0",
     "mocha": "^9.0.3"
   },
   "engines": {

@@ -1,6 +1,6 @@
 # JavaScript embedded effects compiler
 
-[![Build Status](https://dev.azure.com/effectful/js/_apis/build/status/awto.effectfuljs?branchName=master)](https://dev.azure.com/effectful/js/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/effectful/js/_apis/build/status/awto.effectfuljs?branchName=main)](https://dev.azure.com/effectful/js/_build/latest?definitionId=1&branchName=main)
 
 This is a tool to build JavaScript to JavaScript transpilers(babel plugins)
 along with a few predefined ones. It extends JavaScript language with

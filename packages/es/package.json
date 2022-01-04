@@ -33,7 +33,7 @@
     "benchmark": "^2.1.4",
     "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0",
-    "eslint": "^7.31.0",
+    "eslint": "^8.6.0",
     "glob": "^7.1.2",
     "mocha": "^9.0.3",
     "promise": "^8.0.1",

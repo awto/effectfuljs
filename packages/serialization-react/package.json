@@ -27,7 +27,7 @@
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.7.2",
     "@effectful/serialization": "^1.4.0",
-    "eslint": "^7.31.0",
+    "eslint": "^8.6.0",
     "mocha": "^9.0.3",
     "react": "^17.0.2"
   }

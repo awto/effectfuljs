@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@effectful/es": "^1.4.0",
-    "eslint": "^7.31.0",
+    "eslint": "^8.6.0",
     "mocha": "^9.0.3",
     "rimraf": "^3.0.2",
     "rollup": "^2.55.1",
