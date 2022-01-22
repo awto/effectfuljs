@@ -2,7 +2,7 @@
 
 [![Build Status](https://dev.azure.com/effectful/js/_apis/build/status/awto.effectfuljs?branchName=main)](https://dev.azure.com/effectful/js/_build/latest?definitionId=1&branchName=main)
 
-This is a tool to build JavaScript to JavaScript transpilers(babel plugins)
+This is a tool to build JavaScript to JavaScript transpilers (babel plugins)
 along with a few predefined ones. It extends JavaScript language with
 various computation effects by means of runtime libraries but without any syntax extension.
 
@@ -42,7 +42,7 @@ Observables.
 
 The compiler converts ES2018 to ES2018 and doesn't need any syntax
 extensions. So it may be applied to results of other compilers
-targeting JS such as CoffeeScript, TypeScript etc.
+targeting JavaScript such as CoffeeScript, TypeScript etc.
 
 ## Usage
 
