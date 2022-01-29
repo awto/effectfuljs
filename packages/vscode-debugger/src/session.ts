@@ -9,7 +9,6 @@ import {
   Thread,
   ThreadEvent,
   CapabilitiesEvent,
-  OutputEvent,
   DebugSession as SessionImpl,
   ProgressStartEvent,
   ProgressEndEvent
@@ -49,8 +48,8 @@ function packageBase(name: string) {
 
 const runningCommands: Map<string, ChildProcess> = new Map();
 
-const RUNINTERMINAL_TIMEOUT = 5000;
-const CONFIGURATION_DONE_REQUEST_TIMEOUT = 1000;
+const RUNINTERMINAL_TIMEOUT = 60000;
+const CONFIGURATION_DONE_REQUEST_TIMEOUT = 10000;
 
 interface BreakpointInfo {
   id: number;
