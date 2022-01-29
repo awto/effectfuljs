@@ -1,6 +1,6 @@
 {
   "name": "persist-boxes",
-  "version": "1.4.0",
+  "version": "1.4.2",
   "description": "drawing boxes - @effectful/es-persist with @effectful/es-serialization demo",
   "main": "index.html",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
@@ -20,7 +20,7 @@
     "@babel/plugin-syntax-async-generators": "^7.0.0-beta.49",
     "@babel/plugin-transform-modules-commonjs": "^7.0.0-beta.49",
     "@babel/preset-react": "^7.0.0-beta.49",
-    "@effectful/es": "^1.4.0",
+    "@effectful/es": "^1.4.2",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^27.0.6",
     "babel-loader": "^8.0.0-beta",
@@ -29,9 +29,9 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
-    "@effectful/es-persist-serialization": "^1.4.0",
-    "@effectful/serialization": "^1.4.0",
-    "@effectful/serialization-react": "^1.4.0",
+    "@effectful/es-persist-serialization": "^1.4.2",
+    "@effectful/serialization": "^1.4.2",
+    "@effectful/serialization-react": "^1.4.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }

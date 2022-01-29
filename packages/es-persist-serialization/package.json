@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-persist-serialization",
-  "version": "1.4.0",
+  "version": "1.4.2",
   "description": "@effectful/es-persist with @effectful/serialization for storing state",
   "main": "index.js",
   "module": "main.js",
@@ -30,11 +30,11 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
-    "@effectful/serialization": "^1.4.0",
+    "@effectful/serialization": "^1.4.2",
     "mocha": "^9.0.3"
   },
   "dependencies": {
-    "@effectful/es-persist": "^1.4.0"
+    "@effectful/es-persist": "^1.4.2"
   },
   "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }
