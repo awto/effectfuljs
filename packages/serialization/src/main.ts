@@ -1151,7 +1151,7 @@ export function writeProps(
       void 0
     )
       continue;
-    debCtx = name;
+    debCtx = String(name);
     const propJson: JSONArray = [];
     const sym = writeSym(
       ctx,

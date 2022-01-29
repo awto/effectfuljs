@@ -280,6 +280,10 @@ Ap.jump = AGp.jump = function (v, cont) {
   this.enqueue(v);
 };
 
+Ap.share = function (v) {
+  return v;
+};
+
 AGp.run = Ap.run = function () {
   var value;
   try {
@@ -480,10 +484,13 @@ export function makeAsyncGeneratorFunctionConstructor(reg) {
 export var asyncFunction = makeConstructor(Ap, nop);
 export var asyncGeneratorFunction = makeConstructor(AGp, nop);
 
+let all_count= 0;
+
 function All(arr, propagateCancel) {
   var len = arr.length,
     i;
   this.dest = [];
+  this.id=all_count++;
   this.state = len === 0 ? AsyncState.resolved : AsyncState.pending;
   this.value = new Array(len);
   this.countdown = len;
@@ -523,11 +530,14 @@ AllCont.prototype.resume = function (value) {
   var src = this.src;
   if (src.state !== AsyncState.rejected) {
     src.value[this.index] = value;
-    if (--src.countdown === 0) src.resume(src.value);
+    if (--src.countdown === 0) {
+      src.resume(src.value);
+    }
   }
 };
 
 AllCont.prototype.reject = function (value) {
+  
   this.src.reject(value);
 };
 

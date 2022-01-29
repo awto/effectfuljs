@@ -264,7 +264,7 @@ Array [
                   Array [
                     "_data",
                     Object {
-                      "$": "saveLocalData",
+                      "$": "_data_1",
                     },
                   ],
                 ],
@@ -596,7 +596,7 @@ Array [
                   Array [
                     "_data",
                     Object {
-                      "$": "saveLocalData",
+                      "$": "_data_1",
                     },
                   ],
                 ],
@@ -928,7 +928,7 @@ Array [
                   Array [
                     "_data",
                     Object {
-                      "$": "saveLocalData",
+                      "$": "_data_1",
                     },
                   ],
                 ],

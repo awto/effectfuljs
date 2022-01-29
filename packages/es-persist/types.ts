@@ -62,7 +62,7 @@ export declare const cancelSymbol: unique symbol;
 /**
  * Executes cancelation if available or ignore everything
  */
-export declare function cancel(value: any);
+export declare function cancel(value: any): void;
 
 /**
  * Callbacks for specifying what to do next after async action is settled.
@@ -213,18 +213,34 @@ export declare const managed: AsyncValue<boolean>;
  */
 export declare const constructors: Function[];
 
+export type MaybeAsync<T> = AsyncValue<T> | T | Thenable<T>;
+
 /**
  * Same as `Promise.all` but for `AsyncValue` objects. If all the objects are
  * serializable the result is serializable too
  */
-export declare function all(iterable: Iterable<AsyncValue>): AsyncValue;
+export declare function all<T>(
+  iterable: Iterable<MaybeAsync<T>>
+): AsyncValue<T[]>;
+
+/** like `all` but cancels all other children if one of them is rejected */
+export declare function allWithCancel<T>(
+  iterable: Iterable<MaybeAsync<T> | T>
+): AsyncValue<T[]>;
 
 /**
  * Same as `Promise.race` but for `AsyncValue` objects. If all the objects are
  * serializable the result is serializable too
  */
 export declare function any<T>(
-  iterable: Iterable<AsyncValue<T>>
+  iterable: Iterable<MaybeAsync<T>>
+): AsyncValue<T>;
+
+/**
+ * like `any` but cancels all other children when one of them is settled
+ */
+export declare function anyWithCancel<T>(
+  iterable: Iterable<MaybeAsync<T>>
 ): AsyncValue<T>;
 
 /** Async Iterator builder */
@@ -241,7 +257,10 @@ export interface Producer<T = any> extends AsyncIterator<T, T> {
 /** Creates new Producer */
 export declare function producer(): Producer;
 
+export declare class CancelToken {}
+
 export declare class Residual<T> {
+  constructor(parent?: AsyncValue<unknown>);
   [awaitSymbol](cont: Continuation<T>): void;
   then<U>(
     resolve?: (value: T) => U | Thenable<U>,
