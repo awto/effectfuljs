@@ -1,8 +1,0 @@
-{
-  "libs": ["browser", "chai"],
-  "plugins": {
-    "node": {},
-    "es_modules": {}
-  }
-}
-
