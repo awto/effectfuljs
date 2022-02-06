@@ -1,6 +1,6 @@
 {
   "name": "persist-counters",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "@effectful/es-persist with @effectful/es-serialization demo",
   "main": "index.html",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
@@ -31,7 +31,7 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
-    "@effectful/es-persist-serialization": "^1.4.2",
+    "@effectful/es-persist-serialization": "^1.4.3",
     "@effectful/serialization": "^1.4.2",
     "@effectful/serialization-react": "^1.4.2",
     "react": "^17.0.2",
