@@ -18,14 +18,14 @@ There are such libraries for:
     - Concrete API -
       [@effectful/es-inline](packages/es-inline),
       the best performance
-    - Implicit parallelism
+    - Implicit parallelism (experimental)
     - Deriving program's static graphs for analysis and conversion to other
       languages - WIP
 - Multi-prompt delimited continuations -
   [@effectful/cc](packages/cc)
-- Logical programming - WIP [Old version](https://github.com/awto/mfjs-logic)
 - Debugger API -
   [@effectful/debugger](packages/debugger) and VSCode plugin [effectful/debugger](packages/vscode-debugger)
+- Workflow-as-Code on Kafka - [kafka-workflow](https://github.com/awto/kafka-workflow)
 
 Not yet implemented:
 
@@ -34,6 +34,7 @@ Not yet implemented:
 - parallel and distributed programming
 - persistent continuations
 - adaptive computations
+- logical programming - [Old version](https://github.com/awto/mfjs-logic)
 - reactive programming (with RxJS) - [Old version](https://github.com/awto/mfjs-rx)
 
 They are typically small libraries, some of them are just tiny

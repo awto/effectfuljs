@@ -34,13 +34,7 @@ export {
   regOpaquePrim
 } from "@effectful/serialization";
 
-function reg(v) {
-  S.regConstructor(v);
-  S.regOpaqueObject(v);
-}
-
-R.constructors.forEach(reg);
-export const asyncFunction = R.makeAsyncFunctionConstructor(reg);
-export const asyncGeneratorFunction = R.makeAsyncGeneratorFunctionConstructor(
-  reg
-);
+R.constructors.forEach(S.regConstructor);
+export const asyncFunction = R.makeAsyncFunctionConstructor(S.regConstructor);
+export const asyncGeneratorFunction =
+  R.makeAsyncGeneratorFunctionConstructor(S.regConstructor);
