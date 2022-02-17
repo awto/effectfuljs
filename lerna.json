@@ -4,7 +4,7 @@
     "packages/*",
     "samples/*"
   ],
-  "version": "1.4.5",
+  "version": "1.4.6",
   "npmClientArgs": [
     "--no-package-lock",
     "--scripts-prepend-node-path"
