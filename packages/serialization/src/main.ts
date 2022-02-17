@@ -1798,10 +1798,10 @@ export function rebindGlobal() {
     byObject: state.byObject,
     byTypeOfProp: new LocMap(state.byTypeOfProp)
   };
-  (<any>global).__effectfulSerializationState = {};
+  (<any>globalThis).__effectfulSerializationState = {};
   for (let [name, descriptor] of oldState.byName) {
     if (descriptor.globalName) {
-      const value = (<any>global)[descriptor.globalName];
+      const value = (<any>globalThis)[descriptor.globalName];
       if (!value) continue;
       descriptor = Object.assign({}, descriptor, { value });
       weakMapSet.call(descriptorByObject, value, descriptor);
@@ -1816,19 +1816,19 @@ export function rebindGlobal() {
  * run it as soon as possible if a global serialization is needed
  */
 export function regGlobal() {
-  if (descriptorByObject.has(global)) return;
-  regOpaqueObject(<any>global, "#global", {
+  if (descriptorByObject.has(globalThis)) return;
+  regOpaqueObject(<any>globalThis, "#global", {
     props: true,
     propsSnapshot: true,
     overrideProps: { AnonymousContent: false }
   });
-  for (const name of Object.getOwnPropertyNames(global)) {
+  for (const name of Object.getOwnPropertyNames(globalThis)) {
     try {
-      const obj = (<any>global)[name];
+      const obj = (<any>globalThis)[name];
       if (!obj) continue;
       if (typeof obj !== "function" && typeof obj !== "object") continue;
       if (name === "location") {
-        regOpaqueObject((<any>global).location, "location", { props: false });
+        regOpaqueObject((<any>globalThis).location, "location", { props: false });
         continue;
       }
       const descr = descriptorByObject.get(obj);
@@ -1966,7 +1966,7 @@ if (typeof ArrayBuffer !== "undefined") {
     "BigInt64Array",
     "BigUint64Array"
   ]) {
-    const Constr = (<any>global)[name];
+    const Constr = (<any>globalThis)[name];
     if (!Constr) continue;
     regConstructor(Constr, {
       name,

@@ -181,7 +181,7 @@ export function removeEventListener(
   listener: EventListenerOrEventListenerObject,
   options?: boolean | EventListenerOptions
 ) {
-  const self = this || global;
+  const self = this || globalThis;
   if (savedRemoveEventListener)
     savedRemoveEventListener.call(self, type, listener, options);
   removeEventListenerInfo(self, type, listener, options);
