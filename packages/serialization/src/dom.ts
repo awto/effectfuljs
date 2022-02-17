@@ -111,7 +111,7 @@ export function addEventListener(
   listener: EventListenerOrEventListenerObject,
   options?: boolean | AddEventListenerOptions
 ) {
-  const self = this || global;
+  const self = this || globalThis;
   if (typeof options === "boolean") {
     options = { capture: options };
   } else if (!options) options = {};
@@ -358,8 +358,8 @@ export function trackGlobalDocument() {
       overrideProps
     });
 
-  if ((<any>global).CSS2Properties)
-    S.regConstructor((<any>global).CSS2Properties, {
+  if ((<any>globalThis).CSS2Properties)
+    S.regConstructor((<any>globalThis).CSS2Properties, {
       name: "dom#CSS2Properties",
       write(_, value) {
         return { text: (<any>value).cssText };

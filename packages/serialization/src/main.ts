@@ -64,8 +64,9 @@ function initializeState(init: IncompleteState): State {
   return <State>init;
 }
 
-if (!(<any>global).__effectfulSerializationState)
-  (<any>global).__effectfulSerializationState = {};
+
+if (!(<any>globalThis).__effectfulSerializationState)
+  (<any>globalThis).__effectfulSerializationState = {};
 
 let state: State = initializeState(__effectfulSerializationState);
 
@@ -1320,8 +1321,8 @@ function writeSym(
 ): JSONValue {
   const key = Symbol.keyFor(sym);
   if (key) return { key };
-  const global = descriptorByValue.get(sym);
-  if (global) return global.write(ctx, sym, parent, index);
+  const globalSym = descriptorByValue.get(sym);
+  if (globalSym) return globalSym.write(ctx, sym, parent, index);
   if (!ignore && ctx.knownSyms) {
     let descr = ctx.knownSyms.get(sym);
     if (!descr) {
@@ -1788,9 +1789,9 @@ export function regAutoOpaqueConstr(constr: any, silent?: boolean) {
 }
 
 export function rebindGlobal() {
-  if (descriptorByObject.has(global)) return;
+  if (descriptorByObject.has(globalThis)) return;
   const oldState = state;
-  ObjectConstr = (<any>global).Object;
+  ObjectConstr = (<any>globalThis).Object;
   state = <State>{
     byName: new LocMap(),
     byValue: new LocMap(state.byValue),
