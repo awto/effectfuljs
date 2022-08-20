@@ -1238,4 +1238,30 @@ suite("Debugging on NodeJS", function () {
       await out;
     });
   });
+  suite("v8 stack API", function () {
+    test("captureStackTrace", async function () {
+      const PROGRAM = path.join(DATA_ROOT, "stack-api-usage.js");
+      const [, , stopResp] = await Promise.all([
+        dc.configurationSequence(),
+        dc.launch({
+          command: `node "${PROGRAM}"`,
+          preset: "node"
+        }),
+        dc.assertStoppedLocation("debugger_statement", {
+          line: 56
+        })
+      ]);
+      const frame = stopResp.body.stackFrames[0];
+      const response = await dc.evaluateRequest({
+        context: "watch",
+        frameId: frame.id,
+        expression: "ret"
+      });
+      // fs.writeFileSync(path.join(DATA_ROOT, "stack-api-out.txt"), response.body.result);
+      assert.equal(
+        response.body.result.replace(/\r/g, ""),
+        fs.readFileSync(path.join(DATA_ROOT, "stack-api-out.txt"), "utf-8").replace(/\r/g, "")
+      );
+    });
+  });
 });

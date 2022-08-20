@@ -40,6 +40,7 @@ import {
   FunctionDescriptor
 } from "./persist";
 import { isValidIdentifier } from "@babel/types";
+import { captureStackTraceFrom } from "./stackTrace";
 
 const globalNS = config.globalNS;
 
@@ -611,18 +612,7 @@ export function checkErrBrk(frame: Frame, e: any): boolean {
   if (!context.enabled) return false;
   context.exception = e;
   if (e && e.stack) {
-    const stack = [String(e)];
-    for (let i: Frame | null = frame; i; i = i.next) {
-      if (i.brk)
-        stack.push(
-          `    at ${i.meta.origName} (${i.meta.module.name}:${i.brk.line}:${i.brk.column})`
-        );
-    }
-    if (config.debuggerDebug) {
-      try {
-        defineProperty(e, "_deb_stack", { value: stack.join("\n") });
-      } catch (e) {}
-    } else e.stack = stack.join("\n");
+    captureStackTraceFrom(e, null, frame, true);
   }
   let needsStop = false;
   if (context.brkOnAnyException) {

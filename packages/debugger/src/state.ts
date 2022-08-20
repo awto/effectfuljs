@@ -459,14 +459,18 @@ export const native = {
   },
   WeakSet: {
     add: WeakSet.prototype.add,
-    delete: WeakSet.prototype.delete
+    delete: WeakSet.prototype.delete  
   },
   setInterval,
   setTimeout,
   clearTimeout,
   clearInterval,
   setImmediate: typeof setImmediate !== "undefined" && setImmediate,
-  clearImmediate: typeof clearImmediate !== "undefined" && clearImmediate
+  clearImmediate: typeof clearImmediate !== "undefined" && clearImmediate,
+  Error,
+  ErrorMethods: {
+    prepareStackTrace:Error.prepareStackTrace
+  }
 };
 
 export const token = { _effectToken: true };

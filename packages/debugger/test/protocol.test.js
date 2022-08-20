@@ -11,6 +11,7 @@ const Kit = require("./protocol");
 require("../vscode");
 
 if (typeof jest !== "undefined") jest.setTimeout(30000);
+Error._edbg_short_file_names = true;
 
 describe("VSCode protocol handlers", function() {
   afterEach(Kit.teardown);
