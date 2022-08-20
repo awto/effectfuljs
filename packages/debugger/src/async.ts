@@ -8,7 +8,6 @@ import {
   popFrame
 } from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
-import config from "./config";
 
 const { context, token } = State;
 

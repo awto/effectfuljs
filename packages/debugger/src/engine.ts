@@ -630,7 +630,7 @@ export function checkErrBrk(frame: Frame, e: any): boolean {
   } else if (context.brkOnUncaughtException) {
     // avoiding running finally blocks
     needsStop = true;
-    for (let i: Frame | null = frame; i; i = i.next) {
+    for (let i: Frame | null = frame; i; i = i.caller) {
       if (hasEH(i)) {
         needsStop = (i.meta.flags & Flag.EXCEPTION_BOUNDARY) !== 0;
         break;

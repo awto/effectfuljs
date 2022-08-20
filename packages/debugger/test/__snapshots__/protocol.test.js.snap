@@ -19461,7 +19461,8 @@ Object {
                 "stack": "Error: error
     at func1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
     at func2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
-    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11)
+    at wrapModule (src/instr/rt.ts:0)",
               },
               "[name]": "func1",
               "[top]": Array [
@@ -19508,7 +19509,8 @@ Object {
                 "stack": "Error: error
     at func1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
     at func2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
-    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11)
+    at wrapModule (src/instr/rt.ts:0)",
               },
               "[name]": "func2",
               "[top]": Array [
@@ -19555,7 +19557,8 @@ Object {
                 "stack": "Error: error
     at func1 (test/__fixtures__/exceptionBreakpoints.js:2:2)
     at func2 (test/__fixtures__/exceptionBreakpoints.js:6:4)
-    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11)
+    at wrapModule (src/instr/rt.ts:0)",
               },
               "[name]": "exceptionBreakpoints.js",
               "[top]": Array [
@@ -19597,7 +19600,8 @@ Object {
                 "message": "error",
                 "stack": "Error: error
     at func2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
-    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11)
+    at wrapModule (src/instr/rt.ts:0)",
               },
               "[name]": "func2",
               "[top]": Array [
@@ -19609,7 +19613,8 @@ Object {
                 "message": "error",
                 "stack": "Error: error
     at func2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
-    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11)
+    at wrapModule (src/instr/rt.ts:0)",
               },
             },
             Object {
@@ -19647,7 +19652,8 @@ Object {
                 "message": "error",
                 "stack": "Error: error
     at func2 (test/__fixtures__/exceptionBreakpoints.js:8:4)
-    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11:0)",
+    at exceptionBreakpoints.js (test/__fixtures__/exceptionBreakpoints.js:11)
+    at wrapModule (src/instr/rt.ts:0)",
               },
               "[name]": "exceptionBreakpoints.js",
               "[top]": Array [

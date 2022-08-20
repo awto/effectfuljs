@@ -525,6 +525,75 @@ suite("Debugging on NodeJS", function () {
     });
   });
 
+  suite("setExceptionBreakpoints in async functions", function () {
+    const PROGRAM = path.join(DATA_ROOT, "programWithExceptionAsync.js");
+
+    test("should not stop on an exception", function () {
+      return Promise.all<DebugProtocol.ProtocolMessage>([
+        dc
+          .waitForEvent("initialized")
+          .then(event => {
+            return dc.setExceptionBreakpointsRequest({
+              filters: []
+            });
+          })
+          .then(response => {
+            return dc.configurationDoneRequest();
+          }),
+        dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
+        dc.waitForEvent("terminated")
+      ]);
+    });
+
+    test("should stop on a caught exception", function () {
+      const EXCEPTION_LINE = 8;
+
+      return Promise.all([
+        dc
+          .waitForEvent("initialized")
+          .then(event => {
+            return dc.setExceptionBreakpointsRequest({
+              filters: ["all"]
+            });
+          })
+          .then(response => {
+            return dc.configurationDoneRequest();
+          }),
+
+        dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
+
+        dc.assertStoppedLocation("exception", {
+          path: PROGRAM,
+          line: EXCEPTION_LINE
+        })
+      ]);
+    });
+
+    test("should stop on uncaught exception", function () {
+      const UNCAUGHT_EXCEPTION_LINE = 14;
+
+      return Promise.all([
+        dc
+          .waitForEvent("initialized")
+          .then(event => {
+            return dc.setExceptionBreakpointsRequest({
+              filters: ["uncaught"]
+            });
+          })
+          .then(response => {
+            return dc.configurationDoneRequest();
+          }),
+
+        dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
+
+        dc.assertStoppedLocation("exception", {
+          path: PROGRAM,
+          line: UNCAUGHT_EXCEPTION_LINE
+        })
+      ]);
+    });
+  });
+
   suite("setExceptionBreakpoints in eval", function () {
     const PROGRAM = path.join(DATA_ROOT, "evalWithException.js");
 
