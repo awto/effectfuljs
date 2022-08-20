@@ -698,47 +698,52 @@ var $M = require("@effectful/debugger"),
       throw new Error("Invalid state");
   }
 }, null, null, 1, [[2, null, $s$3], [2, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-    $m$3 = $M.fun("m$3", "_setPrototypeOf", null, $m$0, ["o", "p"], 1, 3, null, 0, function ($, $l, $p) {
-  var $1;
-
+    $m$3 = $M.fun("m$3", "_setPrototypeOf", null, $m$0, ["o", "p"], 0, 4, null, 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
-      $1 = Object.setPrototypeOf;
-
-      if ($1) {
+      if (Object.setPrototypeOf) {
         $.state = 1;
       } else {
-        $.goto = 3;
+        $.goto = 5;
         continue;
       }
 
     case 1:
-      $l[0][3] = $1;
       $.goto = 2;
-      $p = ($x.call = $l[0][3])($l[1], $l[2]);
+      $p = $mcall("bind", Object.setPrototypeOf);
       $.state = 2;
 
     case 2:
-      $.result = $p;
-      $.goto = 5;
-      continue;
+      $l[3] = $p;
+      $.state = 3;
 
     case 3:
-      $1 = $m$4($);
-      $.goto = 1;
-      continue;
+      $l[0][3] = $l[3];
+      $.goto = 4;
+      $p = ($x.call = $l[0][3])($l[1], $l[2]);
+      $.state = 4;
 
     case 4:
-      $.goto = 5;
-      return $unhandled($.error);
+      $.result = $p;
+      $.goto = 7;
+      continue;
 
     case 5:
+      $l[3] = $m$4($);
+      $.goto = 3;
+      continue;
+
+    case 6:
+      $.goto = 7;
+      return $unhandled($.error);
+
+    case 7:
       return $ret($.result);
 
     default:
       throw new Error("Invalid state");
   }
-}, null, null, 1, [[0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
+}, null, null, 1, [[0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
     $m$4 = $M.fun("m$4", "_setPrototypeOf", null, $m$3, ["o", "p"], 0, 3, null, 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:

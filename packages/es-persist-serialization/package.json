@@ -31,7 +31,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@effectful/serialization": "^1.4.6",
-    "mocha": "^9.0.3"
+    "mocha": "^10.0.0"
   },
   "dependencies": {
     "@effectful/es-persist": "^1.4.2"

@@ -20,32 +20,31 @@ suite("Extension Tests", function() {
     //TODO
   });
   // this test randomly hangs on CI only, maybe because of timeouts
-  if (process.env.EFFECTFUL_DISABLE_IDE_TEST !== "1")
-    test("should start a debug session", async function() {
-      const file = path.resolve(WORKSPACE, "extensionTest.js");
-      const doc = await vscode.workspace.openTextDocument(
-        file.replace(/\\/g, "/")
-      );
-      await vscode.window.showTextDocument(doc, { preview: false });
-      assert.ok(
-        await vscode.debug.startDebugging(void 0, {
-          type: "effectful",
-          request: "launch",
-          name: "Launch Node application",
-          preset: "node",
-          stopOnEntry: false,
-          timeTravel: false,
-          cwd: WORKSPACE,
-          command: 'node',
-          args: [file],
-          console: "integratedTerminal",
-          env: {
-            EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS:0,
-            EFFECTFUL_DEBUGGER_EXCLUDE:"**/packages/{debugger,serialization,core,transducers}/**"
-          }
-        })
-      );
-      // TODO: for now we are happy if nothing throws,
-      // but more checks should be added here
-    });
+  test("should start a debug session", async function() {
+    const file = path.resolve(WORKSPACE, "extensionTest.js");
+    const doc = await vscode.workspace.openTextDocument(
+      file.replace(/\\/g, "/")
+    );
+    await vscode.window.showTextDocument(doc, { preview: false });
+    assert.ok(
+      await vscode.debug.startDebugging(void 0, {
+        type: "effectful",
+        request: "launch",
+        name: "Launch Node application",
+        preset: "node",
+        stopOnEntry: false,
+        timeTravel: false,
+        cwd: WORKSPACE,
+        command: 'node',
+        args: [file],
+        console: "integratedTerminal",
+        env: {
+          EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS:0,
+          EFFECTFUL_DEBUGGER_EXCLUDE:"**/packages/{debugger,serialization,core,transducers}/**"
+        }
+      })
+    );
+    // TODO: for now we are happy if nothing throws,
+    // but more checks should be added here
+  });
 });
