@@ -9,18 +9,25 @@ if (VERBOSE) {
   VERBOSE = VERBOSE[0].toLowerCase() === "t" || (!isNaN(VERBOSE) && +VERBOSE);
 } else VERBOSE = false;
 
+const enableProgress = process.env.EFFECTFUL_ENABLE_PROGRESS
+
 const progressPrefix = process.env.EFFECTFUL_PROGRESS_ID;
 let progressUpdate = function() {};
-if (progressPrefix) {
+let progressClear = function() {};
+if (enableProgress && progressPrefix) {
   progressUpdate = function fn() {
     if (config.filename)
       console.log(
-        `${progressPrefix}:${config.blackbox ? "% " : ""}${path.relative(
+        `${progressPrefix}|${config.blackbox ? "% " : ""}${path.relative(
           config.srcRoot,
           config.filename
         )}`
       );
   };
+  progressClear = function fn() {
+    if (config.filename)
+      console.log(progressPrefix)
+  }
 }
 
 const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
@@ -51,6 +58,8 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
     transform(ast);
   } catch (e) {
     throw e;
+  } finally {
+    progressClear();
   }
   if (VERBOSE) {
     console.timeEnd(`Instrumented ${config.filename}`);

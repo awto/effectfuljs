@@ -394,6 +394,17 @@ export class DebugSession extends SessionImpl {
     if (data.type === "event") {
       let ev = <Event>data;
       switch (ev.event) {
+        case "output":
+          const outev = <any>ev;
+          if (outev.body.output.startsWith(`@progress@:`)) {
+            const [id,...msg] = outev.body.output.split("|");
+            if (msg.length)
+              this.sendEvent(new ProgressStartEvent(`o$${id}`,msg.join("|")));
+            else
+              this.sendEvent(new ProgressEndEvent(`o$${id}`));
+            return;
+          }
+          break
         case "loadedSources":
           const lsev = <any>ev;
           if (lsev.body.breakpoints)
@@ -727,11 +738,8 @@ export class DebugSession extends SessionImpl {
           child = runningCommands.get(key);
         }
         let startBuf: string[] = [];
-        let progressPrefix: string | null = null;
         if (progressId)
-          progressPrefix = env[
-            "EFFECTFUL_PROGRESS_ID"
-          ] = `@progress@${progressId}:`;
+          env["EFFECTFUL_PROGRESS_ID"] = `@progress@:`;
         if (!child) {
           const spawnArgs: any = {
             cwd,
@@ -858,7 +866,7 @@ export class DebugSession extends SessionImpl {
     this.sendAll(req);
 
     while (awaiting.size) {
-      const [remote, clientResp] = await new Promise(i =>
+      const [remote, clientResp] = await new Promise<[number,P.BreakpointLocationsResponse]>(i =>
         this.breakpointLocationsCb.set(req.seq, i)
       );
       awaiting.delete(remote);

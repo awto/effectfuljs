@@ -128,47 +128,19 @@
 								"type": "string",
 								"enum": [
 									"node",
-									"browser",
-									"next",
 									"listener"
 								],
 								"enumDescriptions": [
 									"Run a command as a local process, intercepting all node processes to debug",
-									"Run Create React App based project in a browser (not implemented)",
-									"Run NextJS project (not implemented)",
 									"Awaits debuggee connections"
 								],
 								"default": "node",
 								"description": "Zero-config presets"
 							},
-							"open": {
-								"type": [
-									"boolean",
-									"string"
-								],
-								"default": true,
-								"description": "Open the URL (default if `true`) in the local browser for `preset:\"browser\"`."
-							},
 							"reuse": {
 								"type": "boolean",
 								"default": false,
 								"description": "Don't kill the launched process on stopping sessions, and reuse it on its next start (if it still runs)."
-							},
-							"htmlTemplate": {
-								"type": [
-									"null",
-									"string"
-								],
-								"default": null,
-								"description": "A template file for HtmlWebpackPlugin (for \"browser\" preset)"
-							},
-							"indexJs": {
-								"type": [
-									"null",
-									"string"
-								],
-								"default": null,
-								"description": "webpack entry file for \"browser\" preset"
 							},
 							"reconnectTimeout": {
 								"type": "number",
@@ -192,7 +164,7 @@
 							},
 							"srcRoot": {
 								"type": "string",
-								"default": "^\"\\${workspaceRoot}\"",
+								"default": "${workspaceRoot}",
 								"description": "The project's root, files outside of the root won't be instrumented"
 							},
 							"fastRestart": {
@@ -240,10 +212,10 @@
 						"request": "launch",
 						"name": "Launch Node application",
 						"preset": "node",
-						"cwd": "^\"\\${workspaceRoot}\"",
+						"cwd": "${workspaceRoot}",
 						"command": "node",
 						"args": [
-							"^\"\\${file}\""
+							"${file}"
 						]
 					}
 				],
@@ -262,20 +234,6 @@
 						}
 					},
 					{
-						"label": "Effectful: Browser",
-						"description": "Launch a browser's application (uses react-scripts to derive configs)",
-						"body": {
-							"type": "effectful",
-							"request": "launch",
-							"name": "Browser application",
-							"preset": "browser",
-							"cwd": "^\"\\${workspaceRoot}\"",
-							"reconnectTimeout": 5,
-							"timeTravel": true,
-							"open": true
-						}
-					},
-					{
 						"label": "Effectful: Node",
 						"description": "Launch for create-react-app created project",
 						"body": {
@@ -283,27 +241,13 @@
 							"request": "launch",
 							"name": "Node application",
 							"preset": "node",
-							"cwd": "^\"\\${workspaceRoot}\"",
+							"cwd": "${workspaceRoot}",
 							"command": "node",
 							"args": [
-								"^\"\\${file}\""
+								"${file}"
 							],
 							"console": "integratedTerminal",
 							"timeTravel": true,
-							"env": {}
-						}
-					},
-					{
-						"label": "Effectful: NextJS",
-						"description": "Launch NextJS project",
-						"body": {
-							"type": "effectful",
-							"request": "launch",
-							"name": "NextJS application",
-							"preset": "next",
-							"cwd": "^\"\\${workspaceRoot}\"",
-							"timeTravel": true,
-							"console": "integratedTerminal",
 							"env": {}
 						}
 					}

@@ -49,9 +49,16 @@ Here is an example from `launch.json`:
     {
       "type": "effectful",
       "request": "launch",
-      "name": "Launch Browser application",
-      "preset": "browser",
-      "timeTravel": true
+      "name": "Node application",
+      "preset": "node",
+      "cwd": "${workspaceRoot}",
+      "command": "node",
+      "args": [
+          "${file}"
+      ],
+      "console": "integratedTerminal",
+      "timeTravel": true,
+      "env": {}
     }
   ]
 }
