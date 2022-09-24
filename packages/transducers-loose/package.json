@@ -1,6 +1,6 @@
 {
   "name": "@effectful/transducers-loose",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "@effectful/transducers built with faster generators",
   "main": "index.js",
   "scripts": {

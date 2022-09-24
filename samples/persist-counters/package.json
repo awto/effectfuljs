@@ -1,6 +1,6 @@
 {
   "name": "persist-counters",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "@effectful/es-persist with @effectful/es-serialization demo",
   "main": "index.html",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
