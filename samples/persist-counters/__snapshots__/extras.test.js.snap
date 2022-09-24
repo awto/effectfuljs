@@ -1,52 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`incrementAsync 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       300,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
+        "children": [
           "Increment Async",
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "onClick",
-              Object {
+              {
                 "$": "Bind",
-                "f": Array [
-                  Array [
-                    Object {
+                "f": [
+                  [
+                    {
                       "$": "#this",
                     },
-                    Object {
+                    {
                       "$": "undefined",
                     },
                   ],
-                  Array [
-                    Object {
+                  [
+                    {
                       "$": "#fun",
                     },
-                    Object {
+                    {
                       "$": "runIncrementAsync",
                     },
                   ],
-                  Array [
-                    Object {
+                  [
+                    {
                       "$": "#args",
                     },
-                    Array [
-                      Object {
+                    [
+                      {
                         "$": "extrasDispatch",
                       },
                     ],
@@ -54,9 +54,9 @@ Object {
                 ],
               },
             ],
-            Array [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
@@ -70,54 +70,54 @@ Object {
 `;
 
 exports[`incrementIfOdd 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       400,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
+        "children": [
           "Increment if odd",
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "onClick",
-              Object {
+              {
                 "$": "Bind",
-                "f": Array [
-                  Array [
-                    Object {
+                "f": [
+                  [
+                    {
                       "$": "#this",
                     },
                     null,
                   ],
-                  Array [
-                    Object {
+                  [
+                    {
                       "$": "#fun",
                     },
-                    Object {
+                    {
                       "$": "_signal",
                     },
                   ],
-                  Array [
-                    Object {
+                  [
+                    {
                       "$": "#args",
                     },
-                    Array [
-                      Object {
+                    [
+                      {
                         "$": "extrasDispatch",
                       },
                       "INCREMENT",
-                      Object {
+                      {
                         "$": "undefined",
                       },
                     ],
@@ -125,9 +125,9 @@ Object {
                 ],
               },
             ],
-            Array [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
@@ -141,34 +141,34 @@ Object {
 `;
 
 exports[`incrementIfOdd 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       400,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
+        "children": [
           "Increment if odd",
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "onClick",
-              Object {
+              {
                 "$": "nop",
               },
             ],
-            Array [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],

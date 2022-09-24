@@ -1,212 +1,212 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`async function's time traveling 1`] = `
-Array [
-  Array [
+[
+  [
     "I",
     0,
     0,
   ],
-  Array [
+  [
     "CHECKPOINT - 1",
   ],
-  Array [
+  [
     "J",
     0,
     100,
   ],
-  Array [
+  [
     "I",
     1,
     100,
   ],
-  Array [
+  [
     "A:R1",
     100,
     0,
   ],
-  Array [
+  [
     "CHECKPOINT - 2",
   ],
-  Array [
+  [
     "J",
     1,
     300,
   ],
-  Array [
+  [
     "I",
     2,
     300,
   ],
-  Array [
+  [
     "A:R2",
     300,
     300,
   ],
-  Array [
+  [
     "CHECKPOINT - 3",
   ],
-  Array [
+  [
     "J",
     2,
     600,
   ],
-  Array [
+  [
     "EXIT:",
     600,
   ],
-  Array [
+  [
     "A:R3",
     600,
     1200,
   ],
-  Array [
+  [
     "UNDO 1",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/2",
   ],
-  Array [
+  [
     "J",
     2,
     601,
   ],
-  Array [
+  [
     "EXIT:",
     601,
   ],
-  Array [
+  [
     "A:R3/1",
     601,
     1202,
   ],
-  Array [
+  [
     "UNDO 2",
   ],
-  Array [
+  [
     "CHECKPOINT/3",
   ],
-  Array [
+  [
     "CONT 2",
     undefined,
   ],
-  Array [
+  [
     "CHECKPOINT - 3/3",
   ],
-  Array [
+  [
     "J",
     1,
     402,
   ],
-  Array [
+  [
     "I",
     2,
     402,
   ],
-  Array [
+  [
     "A:R3/2",
     402,
     402,
   ],
-  Array [
+  [
     "UNDO3",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/3",
   ],
-  Array [
+  [
     "J",
     2,
     705,
   ],
-  Array [
+  [
     "EXIT:",
     705,
   ],
-  Array [
+  [
     "A:R3/3",
     705,
     1410,
   ],
-  Array [
+  [
     "UNDO4",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/4",
   ],
-  Array [
+  [
     "J",
     2,
     706,
   ],
-  Array [
+  [
     "EXIT:",
     706,
   ],
-  Array [
+  [
     "A:R3/4",
     706,
     1412,
   ],
-  Array [
+  [
     "UNDO5",
   ],
-  Array [
+  [
     "WRITE",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/5",
   ],
-  Array [
+  [
     "J",
     2,
     707,
   ],
-  Array [
+  [
     "EXIT:",
     707,
   ],
-  Array [
+  [
     "A:R3/5",
     707,
     1414,
   ],
-  Array [
+  [
     "UNDO 6",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/6",
   ],
-  Array [
+  [
     "J",
     2,
     708,
   ],
-  Array [
+  [
     "EXIT:",
     708,
   ],
-  Array [
+  [
     "A:R3/6",
     708,
     1416,
   ],
-  Array [
+  [
     "UNDO 7",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/7",
   ],
-  Array [
+  [
     "J",
     2,
     709,
   ],
-  Array [
+  [
     "EXIT:",
     709,
   ],
-  Array [
+  [
     "A:R3/7",
     709,
     1418,
@@ -215,262 +215,262 @@ Array [
 `;
 
 exports[`async generator functions time traveling 1`] = `
-Array [
-  Array [
+[
+  [
     "I",
     0,
     0,
   ],
-  Array [
+  [
     "CHECKPOINT - 1",
   ],
-  Array [
+  [
     "K",
     100,
     100,
   ],
-  Array [
+  [
     "J",
     0,
     100,
   ],
-  Array [
+  [
     "I",
     1,
     100,
   ],
-  Array [
+  [
     "A:R1",
     100,
     0,
   ],
-  Array [
+  [
     "CHECKPOINT - 2",
   ],
-  Array [
+  [
     "K",
     300,
     300,
   ],
-  Array [
+  [
     "J",
     1,
     300,
   ],
-  Array [
+  [
     "I",
     2,
     300,
   ],
-  Array [
+  [
     "A:R2",
     300,
     300,
   ],
-  Array [
+  [
     "CHECKPOINT - 3",
   ],
-  Array [
+  [
     "K",
     600,
     600,
   ],
-  Array [
+  [
     "J",
     2,
     600,
   ],
-  Array [
+  [
     "EXIT:",
     600,
   ],
-  Array [
+  [
     "A:R3",
     600,
     1200,
   ],
-  Array [
+  [
     "UNDO 1",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/2",
   ],
-  Array [
+  [
     "K",
     601,
     601,
   ],
-  Array [
+  [
     "J",
     2,
     601,
   ],
-  Array [
+  [
     "EXIT:",
     601,
   ],
-  Array [
+  [
     "A:R3/1",
     601,
     1202,
   ],
-  Array [
+  [
     "UNDO 2",
   ],
-  Array [
+  [
     "CHECKPOINT/3",
   ],
-  Array [
+  [
     "CONT 2",
     undefined,
   ],
-  Array [
+  [
     "CHECKPOINT - 3/3",
   ],
-  Array [
+  [
     "K",
     402,
     402,
   ],
-  Array [
+  [
     "J",
     1,
     402,
   ],
-  Array [
+  [
     "I",
     2,
     402,
   ],
-  Array [
+  [
     "A:R3/2",
     402,
     402,
   ],
-  Array [
+  [
     "UNDO3",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/3",
   ],
-  Array [
+  [
     "K",
     705,
     705,
   ],
-  Array [
+  [
     "J",
     2,
     705,
   ],
-  Array [
+  [
     "EXIT:",
     705,
   ],
-  Array [
+  [
     "A:R3/3",
     705,
     1410,
   ],
-  Array [
+  [
     "UNDO4",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/4",
   ],
-  Array [
+  [
     "K",
     706,
     706,
   ],
-  Array [
+  [
     "J",
     2,
     706,
   ],
-  Array [
+  [
     "EXIT:",
     706,
   ],
-  Array [
+  [
     "A:R3/4",
     706,
     1412,
   ],
-  Array [
+  [
     "UNDO5",
   ],
-  Array [
+  [
     "WRITE",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/5",
   ],
-  Array [
+  [
     "K",
     707,
     707,
   ],
-  Array [
+  [
     "J",
     2,
     707,
   ],
-  Array [
+  [
     "EXIT:",
     707,
   ],
-  Array [
+  [
     "A:R3/5",
     707,
     1414,
   ],
-  Array [
+  [
     "UNDO 6",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/6",
   ],
-  Array [
+  [
     "K",
     708,
     708,
   ],
-  Array [
+  [
     "J",
     2,
     708,
   ],
-  Array [
+  [
     "EXIT:",
     708,
   ],
-  Array [
+  [
     "A:R3/6",
     708,
     1416,
   ],
-  Array [
+  [
     "UNDO 7",
   ],
-  Array [
+  [
     "CHECKPOINT - 3/7",
   ],
-  Array [
+  [
     "K",
     709,
     709,
   ],
-  Array [
+  [
     "J",
     2,
     709,
   ],
-  Array [
+  [
     "EXIT:",
     709,
   ],
-  Array [
+  [
     "A:R3/7",
     709,
     1418,
@@ -479,60 +479,60 @@ Array [
 `;
 
 exports[`pure generator functions time traveling 1`] = `
-Array [
-  Array [
+[
+  [
     "I",
     0,
     0,
   ],
-  Array [
+  [
     "C",
     1,
     0,
   ],
-  Array [
+  [
     "I",
     1,
     1,
   ],
-  Array [
+  [
     "C",
     3,
     1,
   ],
-  Array [
+  [
     "I",
     2,
     3,
   ],
-  Array [
+  [
     "C",
     10,
     6,
   ],
-  Array [
+  [
     "DONE 1",
     10,
   ],
-  Array [
+  [
     "DONE 2",
-    Object {
+    {
       "done": true,
       "value": undefined,
     },
   ],
-  Array [
+  [
     "DONE 3",
-    Object {
+    {
       "done": true,
       "value": undefined,
     },
   ],
-  Array [
+  [
     "DONE 4",
     undefined,
   ],
-  Array [
+  [
     "DONE 5",
     undefined,
   ],

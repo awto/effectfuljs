@@ -1,24 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`fork 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "ITEM",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR",
           ],
         ],
       },
     ],
-    Array [
+    [
       "key",
       1,
     ],
@@ -27,24 +27,24 @@ Object {
 `;
 
 exports[`fork 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "ITEM",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR",
           ],
         ],
       },
     ],
-    Array [
+    [
       "key",
       2,
     ],
@@ -53,24 +53,24 @@ Object {
 `;
 
 exports[`fork 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "ITEM",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR2",
           ],
         ],
       },
     ],
-    Array [
+    [
       "key",
       2,
     ],
@@ -79,24 +79,24 @@ Object {
 `;
 
 exports[`fork 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "ITEM",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "DELETE",
           ],
         ],
       },
     ],
-    Array [
+    [
       "key",
       1,
     ],
@@ -105,24 +105,24 @@ Object {
 `;
 
 exports[`fork 5`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "ITEM",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR",
           ],
         ],
       },
     ],
-    Array [
+    [
       "key",
       2,
     ],
@@ -131,24 +131,24 @@ Object {
 `;
 
 exports[`fork 6`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "ITEM",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR2",
           ],
         ],
       },
     ],
-    Array [
+    [
       "key",
       2,
     ],
@@ -157,24 +157,24 @@ Object {
 `;
 
 exports[`fork 7`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "ITEM",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "DELETE",
           ],
         ],
       },
     ],
-    Array [
+    [
       "key",
       2,
     ],

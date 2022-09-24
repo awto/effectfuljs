@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`saveLocal 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "START",
     ],
@@ -12,9 +12,9 @@ Object {
 `;
 
 exports[`saveLocal 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "DONE",
     ],
@@ -23,9 +23,9 @@ Object {
 `;
 
 exports[`saveLocal 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -34,9 +34,9 @@ Object {
 `;
 
 exports[`saveLocal 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "DELETE",
     ],
@@ -45,9 +45,9 @@ Object {
 `;
 
 exports[`saveLocal 5`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -56,9 +56,9 @@ Object {
 `;
 
 exports[`saveLocal 6`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "DONE",
     ],
@@ -67,9 +67,9 @@ Object {
 `;
 
 exports[`saveLocal 7`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -78,113 +78,113 @@ Object {
 `;
 
 exports[`saveLocal 8`] = `
-Array [
-  Array [
+[
+  [
     "boxes",
-    Object {
-      "f": Array [
-        Array [
+    {
+      "f": [
+        [
           "running",
-          Object {
+          {
             "$": "Set",
-            "l": Array [
-              Object {
+            "l": [
+              {
                 "r": 3,
               },
-              Object {
+              {
                 "r": 1,
               },
-              Object {
+              {
                 "r": 5,
               },
-              Object {
+              {
                 "r": 2,
               },
             ],
           },
         ],
-        Array [
+        [
           "resume",
-          Object {
+          {
             "r": 5,
           },
         ],
       ],
-      "x": Array [
-        Object {
-          "f": Array [
-            Array [
+      "x": [
+        {
+          "f": [
+            [
               "type",
               "DONE",
             ],
           ],
         },
-        Object {
+        {
           "$": "_data",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "$await",
               null,
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "$step",
               7,
             ],
-            Array [
+            [
               "$last",
               6,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "addFlush",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "$": "Residual",
-                "f": Array [
-                  Array [
+                "f": [
+                  [
                     "dest",
-                    Array [],
+                    [],
                   ],
-                  Array [
+                  [
                     "parent",
                     null,
                   ],
-                  Array [
+                  [
                     "state",
                     1,
                   ],
-                  Array [
+                  [
                     "value",
-                    Object {
-                      "f": Array [
-                        Array [
+                    {
+                      "f": [
+                        [
                           "value",
-                          Object {
+                          {
                             "r": 0,
                           },
                         ],
-                        Array [
+                        [
                           "done",
                           false,
                         ],
@@ -194,215 +194,215 @@ Array [
                 ],
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "_input",
               null,
             ],
-            Array [
+            [
               "$step",
               8,
             ],
-            Array [
+            [
               "$last",
               7,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 1,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "Async",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "dest",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "state",
               0,
             ],
-            Array [
+            [
               "value",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "r": 4,
               },
             ],
-            Array [
+            [
               "_f",
-              Object {
-                "f": Array [
-                  Array [
+              {
+                "f": [
+                  [
                     "_data",
-                    Object {
+                    {
                       "$": "saveLocalData",
                     },
                   ],
                 ],
               },
             ],
-            Array [
+            [
               "$step",
               9,
             ],
-            Array [
+            [
               "cont",
-              Object {
+              {
                 "$": "Residual",
-                "f": Array [
-                  Array [
+                "f": [
+                  [
                     "dest",
-                    Array [
-                      Object {
+                    [
+                      {
                         "$": "saveLocalExit",
                       },
                     ],
                   ],
-                  Array [
+                  [
                     "parent",
-                    Object {
+                    {
                       "r": 3,
                     },
                   ],
-                  Array [
+                  [
                     "state",
                     0,
                   ],
                 ],
               },
             ],
-            Array [
+            [
               "$last",
               8,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 5,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "Residual",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "dest",
-              Array [
-                Object {
+              [
+                {
                   "r": 3,
                 },
               ],
             ],
-            Array [
+            [
               "parent",
               null,
             ],
-            Array [
+            [
               "state",
               0,
             ],
           ],
         },
-        Object {
+        {
           "$": "saveLocal",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [
-                Object {
+              [
+                {
                   "r": 4,
                 },
               ],
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "$": "Idle",
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "_input",
               null,
             ],
-            Array [
+            [
               "$step",
               13,
             ],
-            Array [
+            [
               "$last",
               13,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_state",
               null,
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 2,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
-            Array [
+            [
               "_frame",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
@@ -411,112 +411,112 @@ Array [
       ],
     },
   ],
-  Array [
+  [
     "boxes",
-    Object {
-      "f": Array [
-        Array [
+    {
+      "f": [
+        [
           "running",
-          Object {
+          {
             "$": "Set",
-            "l": Array [
-              Object {
+            "l": [
+              {
                 "r": 3,
               },
-              Object {
+              {
                 "r": 1,
               },
-              Object {
+              {
                 "r": 5,
               },
-              Object {
+              {
                 "r": 2,
               },
             ],
           },
         ],
-        Array [
+        [
           "resume",
-          Object {
+          {
             "r": 5,
           },
         ],
       ],
-      "x": Array [
-        Object {
-          "f": Array [
-            Array [
+      "x": [
+        {
+          "f": [
+            [
               "type",
               "DELETE",
             ],
           ],
         },
-        Object {
+        {
           "$": "_data",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "$await",
               null,
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "$step",
               8,
             ],
-            Array [
+            [
               "$last",
               7,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "addFlush",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "$": "Residual",
-                "f": Array [
-                  Array [
+                "f": [
+                  [
                     "dest",
-                    Array [],
+                    [],
                   ],
-                  Array [
+                  [
                     "parent",
                     null,
                   ],
-                  Array [
+                  [
                     "state",
                     1,
                   ],
-                  Array [
+                  [
                     "value",
-                    Object {
-                      "f": Array [
-                        Array [
+                    {
+                      "f": [
+                        [
                           "value",
-                          Object {
+                          {
                             "r": 0,
                           },
                         ],
-                        Array [
+                        [
                           "done",
                           false,
                         ],
@@ -526,215 +526,215 @@ Array [
                 ],
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "_input",
               null,
             ],
-            Array [
+            [
               "$step",
               8,
             ],
-            Array [
+            [
               "$last",
               7,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 1,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "Async",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "dest",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "state",
               0,
             ],
-            Array [
+            [
               "value",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "r": 4,
               },
             ],
-            Array [
+            [
               "_f",
-              Object {
-                "f": Array [
-                  Array [
+              {
+                "f": [
+                  [
                     "_data",
-                    Object {
+                    {
                       "$": "saveLocalData",
                     },
                   ],
                 ],
               },
             ],
-            Array [
+            [
               "$step",
               9,
             ],
-            Array [
+            [
               "cont",
-              Object {
+              {
                 "$": "Residual",
-                "f": Array [
-                  Array [
+                "f": [
+                  [
                     "dest",
-                    Array [
-                      Object {
+                    [
+                      {
                         "$": "saveLocalExit",
                       },
                     ],
                   ],
-                  Array [
+                  [
                     "parent",
-                    Object {
+                    {
                       "r": 3,
                     },
                   ],
-                  Array [
+                  [
                     "state",
                     0,
                   ],
                 ],
               },
             ],
-            Array [
+            [
               "$last",
               8,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 5,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "Residual",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "dest",
-              Array [
-                Object {
+              [
+                {
                   "r": 3,
                 },
               ],
             ],
-            Array [
+            [
               "parent",
               null,
             ],
-            Array [
+            [
               "state",
               0,
             ],
           ],
         },
-        Object {
+        {
           "$": "saveLocal",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [
-                Object {
+              [
+                {
                   "r": 4,
                 },
               ],
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "$": "Idle",
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "_input",
               null,
             ],
-            Array [
+            [
               "$step",
               13,
             ],
-            Array [
+            [
               "$last",
               13,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_state",
               null,
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 2,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
-            Array [
+            [
               "_frame",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
@@ -743,112 +743,112 @@ Array [
       ],
     },
   ],
-  Array [
+  [
     "boxes",
-    Object {
-      "f": Array [
-        Array [
+    {
+      "f": [
+        [
           "running",
-          Object {
+          {
             "$": "Set",
-            "l": Array [
-              Object {
+            "l": [
+              {
                 "r": 3,
               },
-              Object {
+              {
                 "r": 1,
               },
-              Object {
+              {
                 "r": 5,
               },
-              Object {
+              {
                 "r": 2,
               },
             ],
           },
         ],
-        Array [
+        [
           "resume",
-          Object {
+          {
             "r": 5,
           },
         ],
       ],
-      "x": Array [
-        Object {
-          "f": Array [
-            Array [
+      "x": [
+        {
+          "f": [
+            [
               "type",
               "DONE",
             ],
           ],
         },
-        Object {
+        {
           "$": "_data",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "$await",
               null,
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "$step",
               9,
             ],
-            Array [
+            [
               "$last",
               8,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "addFlush",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "$": "Residual",
-                "f": Array [
-                  Array [
+                "f": [
+                  [
                     "dest",
-                    Array [],
+                    [],
                   ],
-                  Array [
+                  [
                     "parent",
                     null,
                   ],
-                  Array [
+                  [
                     "state",
                     1,
                   ],
-                  Array [
+                  [
                     "value",
-                    Object {
-                      "f": Array [
-                        Array [
+                    {
+                      "f": [
+                        [
                           "value",
-                          Object {
+                          {
                             "r": 0,
                           },
                         ],
-                        Array [
+                        [
                           "done",
                           false,
                         ],
@@ -858,215 +858,215 @@ Array [
                 ],
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "_input",
               null,
             ],
-            Array [
+            [
               "$step",
               8,
             ],
-            Array [
+            [
               "$last",
               7,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 1,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "Async",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "dest",
-              Array [],
+              [],
             ],
-            Array [
+            [
               "state",
               0,
             ],
-            Array [
+            [
               "value",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "r": 4,
               },
             ],
-            Array [
+            [
               "_f",
-              Object {
-                "f": Array [
-                  Array [
+              {
+                "f": [
+                  [
                     "_data",
-                    Object {
+                    {
                       "$": "saveLocalData",
                     },
                   ],
                 ],
               },
             ],
-            Array [
+            [
               "$step",
               9,
             ],
-            Array [
+            [
               "cont",
-              Object {
+              {
                 "$": "Residual",
-                "f": Array [
-                  Array [
+                "f": [
+                  [
                     "dest",
-                    Array [
-                      Object {
+                    [
+                      {
                         "$": "saveLocalExit",
                       },
                     ],
                   ],
-                  Array [
+                  [
                     "parent",
-                    Object {
+                    {
                       "r": 3,
                     },
                   ],
-                  Array [
+                  [
                     "state",
                     0,
                   ],
                 ],
               },
             ],
-            Array [
+            [
               "$last",
               8,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 5,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
           ],
         },
-        Object {
+        {
           "$": "Residual",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "dest",
-              Array [
-                Object {
+              [
+                {
                   "r": 3,
                 },
               ],
             ],
-            Array [
+            [
               "parent",
               null,
             ],
-            Array [
+            [
               "state",
               0,
             ],
           ],
         },
-        Object {
+        {
           "$": "saveLocal",
-          "f": Array [
-            Array [
+          "f": [
+            [
               "queue",
-              Array [
-                Object {
+              [
+                {
                   "r": 4,
                 },
               ],
             ],
-            Array [
+            [
               "$await",
-              Object {
+              {
                 "$": "Idle",
               },
             ],
-            Array [
+            [
               "$",
-              Object {},
+              {},
             ],
-            Array [
+            [
               "_input",
               null,
             ],
-            Array [
+            [
               "$step",
               13,
             ],
-            Array [
+            [
               "$last",
               13,
             ],
-            Array [
+            [
               "$arg",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
-            Array [
+            [
               "_state",
               null,
             ],
-            Array [
+            [
               "_loop",
-              Object {
+              {
                 "r": 2,
               },
             ],
-            Array [
+            [
               "_i",
-              Object {
+              {
                 "r": 0,
               },
             ],
-            Array [
+            [
               "_frame",
-              Object {
+              {
                 "$": "undefined",
               },
             ],

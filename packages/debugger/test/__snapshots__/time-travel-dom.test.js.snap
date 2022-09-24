@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DOM time traveling 1`] = `"<div id=\\"root\\"></div>"`;
+exports[`DOM time traveling 1`] = `"<div id="root"></div>"`;
 
-exports[`DOM time traveling 2`] = `"<div id=\\"root\\"><div style=\\"color:green\\" id=\\"i1\\">Hi</div></div>"`;
+exports[`DOM time traveling 2`] = `"<div id="root"><div style="color:green" id="i1">Hi</div></div>"`;
 
-exports[`DOM time traveling 3`] = `"<div id=\\"root\\"><div style=\\"color:red\\" id=\\"i1\\"><div id=\\"i2\\">There</div></div></div>"`;
+exports[`DOM time traveling 3`] = `"<div id="root"><div style="color:red" id="i1"><div id="i2">There</div></div></div>"`;
 
-exports[`DOM time traveling 4`] = `"<div id=\\"root\\"><div style=\\"color:blue\\" id=\\"i1\\"><h1 id=\\"i3\\"></h1><div id=\\"i2\\">There</div><h2 id=\\"i4\\"></h2></div></div>"`;
+exports[`DOM time traveling 4`] = `"<div id="root"><div style="color:blue" id="i1"><h1 id="i3"></h1><div id="i2">There</div><h2 id="i4"></h2></div></div>"`;
 
-exports[`DOM time traveling 5`] = `"<div id=\\"root\\"><div style=\\"color:blue\\" id=\\"i1\\"><h1 id=\\"i3\\"></h1><div id=\\"i2\\">THERE</div></div></div>"`;
+exports[`DOM time traveling 5`] = `"<div id="root"><div style="color:blue" id="i1"><h1 id="i3"></h1><div id="i2">THERE</div></div></div>"`;

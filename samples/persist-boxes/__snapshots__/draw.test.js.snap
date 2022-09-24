@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`animateDelete 1`] = `
-Object {
+{
   "type": "SOMETHING",
   "value": <div
     id="box"
@@ -10,13 +10,13 @@ Object {
 `;
 
 exports[`animateDelete 2`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
     className="box"
     style={
-      Object {
+      {
         "height": 1000,
         "left": 1010,
         "top": 2020,
@@ -28,13 +28,13 @@ Object {
 `;
 
 exports[`animateDelete 3`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
     className="box"
     style={
-      Object {
+      {
         "height": 800,
         "left": 1012,
         "top": 2024,
@@ -46,13 +46,13 @@ Object {
 `;
 
 exports[`animateDelete 4`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
     className="box"
     style={
-      Object {
+      {
         "height": 600,
         "left": 1014,
         "top": 2028,
@@ -64,13 +64,13 @@ Object {
 `;
 
 exports[`animateDelete 5`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
     className="box"
     style={
-      Object {
+      {
         "height": 400,
         "left": 1016,
         "top": 2032,
@@ -82,13 +82,13 @@ Object {
 `;
 
 exports[`animateDelete 6`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
     className="box"
     style={
-      Object {
+      {
         "height": 200,
         "left": 1018,
         "top": 2036,
@@ -100,13 +100,13 @@ Object {
 `;
 
 exports[`animateDelete 7`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
     className="box"
     style={
-      Object {
+      {
         "height": 0,
         "left": 1020,
         "top": 2040,
@@ -118,9 +118,9 @@ Object {
 `;
 
 exports[`animateDelete 8`] = `
-Object {
+{
   "key": 1,
-  "rect": Object {
+  "rect": {
     "height": 1000,
     "width": 100,
     "x": 10,
@@ -133,7 +133,7 @@ Object {
 `;
 
 exports[`collectBoxes 1`] = `
-Object {
+{
   "type": "ROOT",
   "value": <div
     id="root"
@@ -142,7 +142,7 @@ Object {
 `;
 
 exports[`collectBoxes 2`] = `
-Object {
+{
   "key": 2,
   "type": "BOX",
   "value": <div
@@ -152,7 +152,7 @@ Object {
 `;
 
 exports[`collectBoxes 3`] = `
-Object {
+{
   "key": 2,
   "type": "BOX",
   "value": <div
@@ -162,7 +162,7 @@ Object {
 `;
 
 exports[`collectBoxes 4`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
@@ -172,7 +172,7 @@ Object {
 `;
 
 exports[`collectBoxes 5`] = `
-Object {
+{
   "key": 1,
   "type": "BOX",
   "value": <div
@@ -182,7 +182,7 @@ Object {
 `;
 
 exports[`collectBoxes 6`] = `
-Object {
+{
   "key": 3,
   "type": "BOX",
   "value": <div
@@ -192,7 +192,7 @@ Object {
 `;
 
 exports[`collectBoxes 7`] = `
-Object {
+{
   "key": 3,
   "type": "BOX",
   "value": <div
@@ -202,7 +202,7 @@ Object {
 `;
 
 exports[`collectBoxes 8`] = `
-Object {
+{
   "key": 2,
   "type": "DELETE",
   "value": <div
@@ -212,7 +212,7 @@ Object {
 `;
 
 exports[`collectBoxes 9`] = `
-Object {
+{
   "key": 2,
   "type": "DELETE",
   "value": <div
@@ -222,7 +222,7 @@ Object {
 `;
 
 exports[`insertBox 1`] = `
-Object {
+{
   "button": 0,
   "key": 10,
   "type": "START",
@@ -232,19 +232,19 @@ Object {
 `;
 
 exports[`insertBox 2`] = `
-Object {
+{
   "key": 10,
   "type": "BOX",
   "value": <div
     className="drawing"
     onContextMenu={
-      Object {
+      {
         "key": 10,
         "type": "DELETE",
       }
     }
     style={
-      Object {
+      {
         "height": 20,
         "left": 1100,
         "top": 2200,
@@ -256,9 +256,9 @@ Object {
 `;
 
 exports[`insertBox 3`] = `
-Object {
+{
   "key": 10,
-  "start": Object {
+  "start": {
     "x": 100,
     "y": 200,
   },
@@ -269,19 +269,19 @@ Object {
 `;
 
 exports[`insertBox 4`] = `
-Object {
+{
   "key": 10,
   "type": "BOX",
   "value": <div
     className="drawing"
     onContextMenu={
-      Object {
+      {
         "key": 10,
         "type": "DELETE",
       }
     }
     style={
-      Object {
+      {
         "height": 40,
         "left": 1100,
         "top": 2200,
@@ -293,9 +293,9 @@ Object {
 `;
 
 exports[`insertBox 5`] = `
-Object {
+{
   "key": 10,
-  "start": Object {
+  "start": {
     "x": 100,
     "y": 200,
   },
@@ -306,19 +306,19 @@ Object {
 `;
 
 exports[`insertBox 6`] = `
-Object {
+{
   "key": 10,
   "type": "BOX",
   "value": <div
     className="box"
     onContextMenu={
-      Object {
+      {
         "key": 10,
         "type": "DELETE",
       }
     }
     style={
-      Object {
+      {
         "height": 60,
         "left": 1100,
         "top": 2200,
@@ -330,9 +330,9 @@ Object {
 `;
 
 exports[`insertBox 7`] = `
-Object {
+{
   "key": 10,
-  "start": Object {
+  "start": {
     "x": 100,
     "y": 200,
   },
@@ -343,11 +343,11 @@ Object {
 `;
 
 exports[`rootContainer 1`] = `
-Object {
+{
   "type": "ROOT",
   "value": <div
     onMouseDown={
-      Object {
+      {
         "key": 1,
         "type": "START",
       }
@@ -357,7 +357,7 @@ Object {
 `;
 
 exports[`rootContainer 2`] = `
-Object {
+{
   "button": 0,
   "key": 10,
   "type": "START",
@@ -367,13 +367,13 @@ Object {
 `;
 
 exports[`rootContainer 3`] = `
-Object {
+{
   "type": "ROOT",
   "value": <div
     onMouseMove={
-      Object {
+      {
         "key": 1,
-        "start": Object {
+        "start": {
           "button": 0,
           "key": 10,
           "type": "START",
@@ -384,9 +384,9 @@ Object {
       }
     }
     onMouseUp={
-      Object {
+      {
         "key": 1,
-        "start": Object {
+        "start": {
           "button": 0,
           "key": 10,
           "type": "START",
@@ -401,7 +401,7 @@ Object {
 `;
 
 exports[`rootContainer 4`] = `
-Object {
+{
   "key": 10,
   "type": "MARK",
   "x": 110,
@@ -410,7 +410,7 @@ Object {
 `;
 
 exports[`rootContainer 5`] = `
-Object {
+{
   "key": 10,
   "type": "MARK",
   "x": 120,
@@ -419,7 +419,7 @@ Object {
 `;
 
 exports[`rootContainer 6`] = `
-Object {
+{
   "key": 10,
   "type": "DONE",
   "x": 150,
@@ -428,11 +428,11 @@ Object {
 `;
 
 exports[`rootContainer 7`] = `
-Object {
+{
   "type": "ROOT",
   "value": <div
     onMouseDown={
-      Object {
+      {
         "key": 2,
         "type": "START",
       }
@@ -442,7 +442,7 @@ Object {
 `;
 
 exports[`rootContainer 8`] = `
-Object {
+{
   "type": "STOP",
 }
 `;

@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`collect 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "FOO",
       "f2",
     ],
-    Array [
+    [
       "BAR",
       "f1",
     ],
@@ -16,13 +16,13 @@ Object {
 `;
 
 exports[`collect 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "FOO",
       "f2",
     ],
-    Array [
+    [
       "BAR",
       "f1",
     ],
@@ -31,9 +31,9 @@ Object {
 `;
 
 exports[`flushing 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -42,9 +42,9 @@ Object {
 `;
 
 exports[`flushing 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FOO",
     ],
@@ -53,9 +53,9 @@ Object {
 `;
 
 exports[`flushing 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -64,9 +64,9 @@ Object {
 `;
 
 exports[`flushing 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "BAR",
     ],
@@ -75,9 +75,9 @@ Object {
 `;
 
 exports[`flushing 5`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -86,13 +86,13 @@ Object {
 `;
 
 exports[`map 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FOO",
     ],
-    Array [
+    [
       "value",
       "f1",
     ],
@@ -101,21 +101,21 @@ Object {
 `;
 
 exports[`map 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "BAZ",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR",
           ],
-          Array [
+          [
             "value",
             "f1",
           ],
@@ -127,13 +127,13 @@ Object {
 `;
 
 exports[`map 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FOO",
     ],
-    Array [
+    [
       "value",
       "f2",
     ],
@@ -142,21 +142,21 @@ Object {
 `;
 
 exports[`map 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "BAZ",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR",
           ],
-          Array [
+          [
             "value",
             "f1",
           ],
@@ -168,9 +168,9 @@ Object {
 `;
 
 exports[`map 5`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -179,21 +179,21 @@ Object {
 `;
 
 exports[`map 6`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "BAZ",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "type",
             "BAR",
           ],
-          Array [
+          [
             "value",
             "f1",
           ],
@@ -205,9 +205,9 @@ Object {
 `;
 
 exports[`map 7`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -216,13 +216,13 @@ Object {
 `;
 
 exports[`pipe 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FOO",
     ],
-    Array [
+    [
       "value",
       "f1--s-foo",
     ],
@@ -231,13 +231,13 @@ Object {
 `;
 
 exports[`pipe 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "BAR",
     ],
-    Array [
+    [
       "value",
       "f1--s-bar",
     ],
@@ -246,13 +246,13 @@ Object {
 `;
 
 exports[`pipe 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FOO",
     ],
-    Array [
+    [
       "value",
       "f2--s-foo",
     ],
@@ -261,13 +261,13 @@ Object {
 `;
 
 exports[`pipe 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "BAR",
     ],
-    Array [
+    [
       "value",
       "f1--s-bar",
     ],
@@ -276,9 +276,9 @@ Object {
 `;
 
 exports[`pipe 5`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -287,13 +287,13 @@ Object {
 `;
 
 exports[`pipe 6`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "BAR",
     ],
-    Array [
+    [
       "value",
       "f1--s-bar",
     ],
@@ -302,9 +302,9 @@ Object {
 `;
 
 exports[`pipe 7`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],

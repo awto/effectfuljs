@@ -1,33 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ECMAScript containers stepping Array#every 1`] = `
-Array [
-  Array [
+[
+  [
     "every@0[9]:true/true",
     1,
   ],
-  Array [
+  [
     "every@1[10]:true/true",
     2,
   ],
-  Array [
+  [
     "> every:Array",
-    Array [
+    [
       false,
       true,
     ],
   ],
-  Array [
+  [
     "every@0[11]:true/true",
     1,
   ],
-  Array [
+  [
     "every@1[12]:true/true",
     2,
   ],
-  Array [
+  [
     "> every:TypedArray",
-    Array [
+    [
       false,
       true,
     ],
@@ -36,41 +36,41 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Array#filter 1`] = `
-Array [
-  Array [
+[
+  [
     "filter@0[0]:true/true",
     1,
   ],
-  Array [
+  [
     "filter@1[1]:true/true",
     2,
   ],
-  Array [
+  [
     "filter@2[2]:true/true",
     3,
   ],
-  Array [
+  [
     "> filter:Array",
-    Array [
+    [
       1,
       3,
     ],
   ],
-  Array [
+  [
     "filter@0[0]:true/true",
     1,
   ],
-  Array [
+  [
     "filter@1[1]:true/true",
     2,
   ],
-  Array [
+  [
     "filter@2[2]:true/true",
     3,
   ],
-  Array [
+  [
     "> filter:TypedArray",
-    Array [
+    [
       1,
       3,
     ],
@@ -79,68 +79,68 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Array#forEach 1`] = `
-Array [
-  Array [
+[
+  [
     "forEachTest@0[0]:true",
     1,
   ],
-  Array [
+  [
     "forEachTest@1[1]:true",
     2,
   ],
-  Array [
+  [
     "forEachTest@2[2]:true",
     3,
   ],
-  Array [
+  [
     "> forEach:Array",
     undefined,
   ],
-  Array [
+  [
     "forEachTest@0[0]:true",
     1,
   ],
-  Array [
+  [
     "forEachTest@1[1]:true",
     2,
   ],
-  Array [
+  [
     "forEachTest@2[2]:true",
     3,
   ],
-  Array [
+  [
     "> forEach:TypedArray",
     undefined,
   ],
-  Array [
+  [
     "forEachTest@1[0]:true",
     1,
   ],
-  Array [
+  [
     "forEachTest@2[1]:true",
     2,
   ],
-  Array [
+  [
     "forEachTest@3[2]:true",
     3,
   ],
-  Array [
+  [
     "> forEach:Set",
     undefined,
   ],
-  Array [
+  [
     "forEachTest@1[0]:true",
     "a",
   ],
-  Array [
+  [
     "forEachTest@2[1]:true",
     "b",
   ],
-  Array [
+  [
     "forEachTest@3[2]:true",
     "c",
   ],
-  Array [
+  [
     "> forEach:Map",
     undefined,
   ],
@@ -148,42 +148,42 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Array#map 1`] = `
-Array [
-  Array [
+[
+  [
     "map@0[0]:true/true",
     1,
   ],
-  Array [
+  [
     "map@1[1]:true/true",
     2,
   ],
-  Array [
+  [
     "map@2[2]:true/true",
     3,
   ],
-  Array [
+  [
     "> map:Array",
-    Array [
+    [
       1,
       3,
       5,
     ],
   ],
-  Array [
+  [
     "map@0[0]:true/true",
     1,
   ],
-  Array [
+  [
     "map@1[1]:true/true",
     2,
   ],
-  Array [
+  [
     "map@2[2]:true/true",
     3,
   ],
-  Array [
+  [
     "> map:TypedArray",
-    Array [
+    [
       1,
       3,
       5,
@@ -193,57 +193,57 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Array#reduce 1`] = `
-Array [
-  Array [
+[
+  [
     "reduce:~@0[0]:true",
     "a",
   ],
-  Array [
+  [
     "reduce:~/a@1[1]:true",
     "b",
   ],
-  Array [
+  [
     "reduce:~/a/b@2[2]:true",
     "c",
   ],
-  Array [
+  [
     "reduce:a@1[3]:true",
     "b",
   ],
-  Array [
+  [
     "reduce:a/b@2[4]:true",
     "c",
   ],
-  Array [
+  [
     "> reduce:Array",
-    Array [
+    [
       "~/a/b/c",
       "a/b/c",
     ],
   ],
-  Array [
+  [
     "reduce:~@0[0]:true",
     1,
   ],
-  Array [
+  [
     "reduce:~/1@1[1]:true",
     2,
   ],
-  Array [
+  [
     "reduce:~/1/2@2[2]:true",
     3,
   ],
-  Array [
+  [
     "reduce:1@1[3]:true",
     2,
   ],
-  Array [
+  [
     "reduce:1/2@2[4]:true",
     3,
   ],
-  Array [
+  [
     "> reduce:TypedArray",
-    Array [
+    [
       "~/1/2/3",
       "1/2/3",
     ],
@@ -252,57 +252,57 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Array#reduceRight 1`] = `
-Array [
-  Array [
+[
+  [
     "reduceRight:~@2[0]:true",
     "c",
   ],
-  Array [
+  [
     "reduceRight:~/c@1[1]:true",
     "b",
   ],
-  Array [
+  [
     "reduceRight:~/c/b@0[2]:true",
     "a",
   ],
-  Array [
+  [
     "reduceRight:c@1[3]:true",
     "b",
   ],
-  Array [
+  [
     "reduceRight:c/b@0[4]:true",
     "a",
   ],
-  Array [
+  [
     "> reduceRight:Array",
-    Array [
+    [
       "~/c/b/a",
       "c/b/a",
     ],
   ],
-  Array [
+  [
     "reduceRight:~@2[0]:true",
     3,
   ],
-  Array [
+  [
     "reduceRight:~/3@1[1]:true",
     2,
   ],
-  Array [
+  [
     "reduceRight:~/3/2@0[2]:true",
     1,
   ],
-  Array [
+  [
     "reduceRight:3@1[3]:true",
     2,
   ],
-  Array [
+  [
     "reduceRight:3/2@0[4]:true",
     1,
   ],
-  Array [
+  [
     "> reduceRight:TypedArray",
-    Array [
+    [
       "~/3/2/1",
       "3/2/1",
     ],
@@ -311,33 +311,33 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Array#some 1`] = `
-Array [
-  Array [
+[
+  [
     "some@0[5]:true/true",
     1,
   ],
-  Array [
+  [
     "some@1[6]:true/true",
     2,
   ],
-  Array [
+  [
     "> some:Array",
-    Array [
+    [
       true,
       false,
     ],
   ],
-  Array [
+  [
     "some@0[7]:true/true",
     1,
   ],
-  Array [
+  [
     "some@1[8]:true/true",
     2,
   ],
-  Array [
+  [
     "> some:TypedArray",
-    Array [
+    [
       true,
       false,
     ],
@@ -346,25 +346,25 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Array#sort 1`] = `
-Array [
-  Array [
+[
+  [
     "> sort:Array",
-    Array [
-      Array [
+    [
+      [
         1,
         2,
         3,
       ],
-      Array [
+      [
         "a",
         "b",
         "c",
       ],
     ],
   ],
-  Array [
+  [
     "> sort:TypedArray",
-    Array [
+    [
       Int8Array [
         1,
         2,
@@ -381,20 +381,20 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Map#forEach 1`] = `
-Array [
-  Array [
+[
+  [
     "forEachTest@1[0]:true",
     "a",
   ],
-  Array [
+  [
     "forEachTest@2[1]:true",
     "b",
   ],
-  Array [
+  [
     "forEachTest@3[2]:true",
     "c",
   ],
-  Array [
+  [
     "> forEach:Map",
     undefined,
   ],
@@ -402,20 +402,20 @@ Array [
 `;
 
 exports[`ECMAScript containers stepping Set#forEach 1`] = `
-Array [
-  Array [
+[
+  [
     "forEachTest@1[0]:true",
     1,
   ],
-  Array [
+  [
     "forEachTest@2[1]:true",
     2,
   ],
-  Array [
+  [
     "forEachTest@3[2]:true",
     3,
   ],
-  Array [
+  [
     "> forEach:Set",
     undefined,
   ],

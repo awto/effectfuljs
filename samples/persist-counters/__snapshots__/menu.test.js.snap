@@ -1,55 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`menu 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU",
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Menu3",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "$": "_signal",
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "menuDispatch",
                           },
                           "Menu3",
-                          Object {
-                            "f": Array [
-                              Array [
+                          {
+                            "f": [
+                              [
                                 "type",
                                 "Menu3",
                               ],
@@ -60,13 +60,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".$3",
                 ],
@@ -75,17 +75,17 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
@@ -96,55 +96,55 @@ Object {
 `;
 
 exports[`menu 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU",
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Menu1",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 1,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "r": 0,
                           },
                           "Menu1",
-                          Object {
-                            "f": Array [
-                              Array [
+                          {
+                            "f": [
+                              [
                                 "type",
                                 "Menu1",
                               ],
@@ -155,13 +155,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".$1",
                 ],
@@ -169,44 +169,44 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Menu3",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 1,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "r": 0,
                           },
                           "Menu3",
-                          Object {
-                            "f": Array [
-                              Array [
+                          {
+                            "f": [
+                              [
                                 "type",
                                 "Menu3",
                               ],
@@ -217,13 +217,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".$3",
                 ],
@@ -232,28 +232,28 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
       },
     ],
   ],
-  "x": Array [
-    Object {
+  "x": [
+    {
       "$": "menuDispatch",
     },
-    Object {
+    {
       "$": "_signal",
     },
   ],
@@ -261,55 +261,55 @@ Object {
 `;
 
 exports[`menu 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU",
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Menu1",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 1,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "r": 0,
                           },
                           "Menu1",
-                          Object {
-                            "f": Array [
-                              Array [
+                          {
+                            "f": [
+                              [
                                 "type",
                                 "Menu1",
                               ],
@@ -320,13 +320,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".$1",
                 ],
@@ -334,44 +334,44 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Menu2",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 1,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "r": 0,
                           },
                           "Menu2",
-                          Object {
-                            "f": Array [
-                              Array [
+                          {
+                            "f": [
+                              [
                                 "type",
                                 "Menu2",
                               ],
@@ -382,13 +382,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".$2",
                 ],
@@ -396,44 +396,44 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Menu3",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 1,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "r": 0,
                           },
                           "Menu3",
-                          Object {
-                            "f": Array [
-                              Array [
+                          {
+                            "f": [
+                              [
                                 "type",
                                 "Menu3",
                               ],
@@ -444,13 +444,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".$3",
                 ],
@@ -459,28 +459,28 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
       },
     ],
   ],
-  "x": Array [
-    Object {
+  "x": [
+    {
       "$": "menuDispatch",
     },
-    Object {
+    {
       "$": "_signal",
     },
   ],
@@ -488,9 +488,9 @@ Object {
 `;
 
 exports[`menu 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],

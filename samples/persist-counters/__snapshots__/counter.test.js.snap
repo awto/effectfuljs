@@ -7,7 +7,7 @@ exports[`controlsList 1`] = `
 `;
 
 exports[`controlsList 2`] = `
-Array [
+[
   <span>
     Item 1
   </span>,
@@ -18,7 +18,7 @@ Array [
 `;
 
 exports[`controlsList 3`] = `
-Array [
+[
   <span>
     Item 3
   </span>,
@@ -32,7 +32,7 @@ Array [
 `;
 
 exports[`controlsList 4`] = `
-Array [
+[
   <span>
     Item 3
   </span>,
@@ -49,7 +49,7 @@ exports[`counterControl 1`] = `
 `;
 
 exports[`counterControl 2`] = `
-Array [
+[
   <p>
     Clicked: 
     10
@@ -70,7 +70,7 @@ Array [
   </p>,
   <div
     style={
-      Object {
+      {
         "paddingLeft": 10,
       }
     }
@@ -83,7 +83,7 @@ Array [
 `;
 
 exports[`counterControl 3`] = `
-Array [
+[
   <p>
     Clicked: 
     11
@@ -104,7 +104,7 @@ Array [
   </p>,
   <div
     style={
-      Object {
+      {
         "paddingLeft": 10,
       }
     }
@@ -117,24 +117,24 @@ Array [
 `;
 
 exports[`prepControl 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU",
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
+        "children": [
           "Menu",
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
@@ -148,13 +148,13 @@ Object {
 `;
 
 exports[`prepControl 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       10,
     ],
@@ -163,24 +163,24 @@ Object {
 `;
 
 exports[`prepControl 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "CONTROL",
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
+        "children": [
           "Control",
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
@@ -194,28 +194,28 @@ Object {
 `;
 
 exports[`prepControl 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "COLLECTION",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "MENU",
-            Object {
+            {
               "$": "ReactElement",
-              "children": Array [
+              "children": [
                 "Menu",
               ],
-              "props": Object {
-                "f": Array [
-                  Array [
+              "props": {
+                "f": [
+                  [
                     "children",
-                    Object {
+                    {
                       "$": "undefined",
                     },
                   ],
@@ -224,22 +224,22 @@ Object {
               "type": "span",
             },
           ],
-          Array [
+          [
             "VALUE",
             10,
           ],
-          Array [
+          [
             "CONTROL",
-            Object {
+            {
               "$": "ReactElement",
-              "children": Array [
+              "children": [
                 "Control",
               ],
-              "props": Object {
-                "f": Array [
-                  Array [
+              "props": {
+                "f": [
+                  [
                     "children",
-                    Object {
+                    {
                       "$": "undefined",
                     },
                   ],
@@ -256,9 +256,9 @@ Object {
 `;
 
 exports[`prepControl 5`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],
@@ -267,13 +267,13 @@ Object {
 `;
 
 exports[`prepControl 6`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       11,
     ],
@@ -282,28 +282,28 @@ Object {
 `;
 
 exports[`prepControl 7`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "COLLECTION",
     ],
-    Array [
+    [
       "value",
-      Object {
-        "f": Array [
-          Array [
+      {
+        "f": [
+          [
             "MENU",
-            Object {
+            {
               "$": "ReactElement",
-              "children": Array [
+              "children": [
                 "Menu",
               ],
-              "props": Object {
-                "f": Array [
-                  Array [
+              "props": {
+                "f": [
+                  [
                     "children",
-                    Object {
+                    {
                       "$": "undefined",
                     },
                   ],
@@ -312,22 +312,22 @@ Object {
               "type": "span",
             },
           ],
-          Array [
+          [
             "VALUE",
             11,
           ],
-          Array [
+          [
             "CONTROL",
-            Object {
+            {
               "$": "ReactElement",
-              "children": Array [
+              "children": [
                 "Control",
               ],
-              "props": Object {
-                "f": Array [
-                  Array [
+              "props": {
+                "f": [
+                  [
                     "children",
-                    Object {
+                    {
                       "$": "undefined",
                     },
                   ],
@@ -344,9 +344,9 @@ Object {
 `;
 
 exports[`prepControl 8`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "FLUSH",
     ],

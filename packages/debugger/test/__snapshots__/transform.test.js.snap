@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`default transpiler 1`] = `
-"var $M = require(\\"../../../api\\"),
+"var $M = require("../../../api"),
     $iterator = $M.iterator,
     $iterFin = $M.iterFin,
     $x = $M.context,
@@ -11,37 +11,37 @@ exports[`default transpiler 1`] = `
     $brk = $M.brk,
     $force = $M.force,
     $mcall = $M.mcall,
-    $m = $M.module(\\"test/__fixtures__/transform/code.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
-  __webpack_require__: typeof __webpack_require__ !== \\"undefined\\" && __webpack_require__
+    $m = $M.module("test/__fixtures__/transform/code.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
     $s$1 = [{
   _require: [1, null],
-  mod: [2, \\"1:8-1:11\\"],
-  n: [3, \\"2:6-2:7\\"],
-  k: [4, \\"3:6-3:7\\"],
-  v0: [5, \\"7:4-7:6\\"],
-  C: [6, \\"9:9-9:10\\"]
+  mod: [2, "1:8-1:11"],
+  n: [3, "2:6-2:7"],
+  k: [4, "3:6-3:7"],
+  v0: [5, "7:4-7:6"],
+  C: [6, "9:9-9:10"]
 }, null, 0],
     $s$2 = [{
-  a: [1, \\"9:11-9:12\\"],
-  v1: [2, \\"10:6-10:8\\"],
-  v3: [4, \\"13:8-13:10\\"],
-  i: [6, \\"18:13-18:14\\"],
-  v4: [7, \\"19:8-19:10\\"]
+  a: [1, "9:11-9:12"],
+  v1: [2, "10:6-10:8"],
+  v3: [4, "13:8-13:10"],
+  i: [6, "18:13-18:14"],
+  v4: [7, "19:8-19:10"]
 }, $s$1, 1],
     $s$3 = [{
-  v2: [3, \\"12:10-12:12\\"]
+  v2: [3, "12:10-12:12"]
 }, $s$2, 1],
     $s$4 = [{
-  i: [5, \\"15:15-15:16\\"]
+  i: [5, "15:15-15:16"]
 }, $s$3, 1],
     $s$5 = [{
-  e: [8, \\"20:11-20:12\\"]
+  e: [8, "20:11-20:12"]
 }, $s$2, 1],
     $s$6 = [{
-  v5: [1, \\"26:8-26:10\\"]
+  v5: [1, "26:8-26:10"]
 }, $s$1, 1],
-    $m$0 = $M.fun(\\"m$0\\", \\"code.js\\", null, null, [], 1, 7, \\"1:0-29:0\\", 32, function ($, $l, $p) {
+    $m$0 = $M.fun("m$0", "code.js", null, null, [], 1, 7, "1:0-29:0", 32, function ($, $l, $p) {
   var $1;
 
   for (;;) switch ($.state = $.goto) {
@@ -55,7 +55,7 @@ exports[`default transpiler 1`] = `
 
     case 1:
       $.goto = 2;
-      $p = ($x.moduleId = require.resolve(\\"mod\\"), $force(require(\\"mod\\")));
+      $p = ($x.moduleId = require.resolve("mod"), $force(require("mod")));
       $.state = 2;
 
     case 2:
@@ -78,9 +78,9 @@ exports[`default transpiler 1`] = `
 
     case 4:
       $.goto = 5;
-      $p = ($x.moduleId = require.resolve(\\"mod2_\\" + $l[2
+      $p = ($x.moduleId = require.resolve("mod2_" + $l[2
       /*mod*/
-      ]), $force(require(\\"mod2_\\" + $l[2
+      ]), $force(require("mod2_" + $l[2
       /*mod*/
       ])));
       $.state = 5;
@@ -98,7 +98,7 @@ exports[`default transpiler 1`] = `
       /*n*/
       ].n;
       $.goto = 7;
-      $p = ($x.moduleId = require.resolve(\\"mod3_\\" + $1), $force(require(\\"mod3_\\" + $1)));
+      $p = ($x.moduleId = require.resolve("mod3_" + $1), $force(require("mod3_" + $1)));
       $.state = 7;
 
     case 7:
@@ -154,10 +154,10 @@ exports[`default transpiler 1`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 0, [[4, \\"1:0-1:31\\", $s$1], [2, \\"1:16-1:30\\", $s$1], [4, \\"1:8-1:11\\", $s$1], [4, \\"2:0-2:33\\", $s$1], [2, \\"2:10-2:32\\", $s$1], [4, \\"3:0-3:33\\", $s$1], [2, \\"3:10-3:32\\", $s$1], [4, \\"4:0-4:4\\", $s$1], [2, \\"4:0-4:3\\", $s$1], [4, \\"5:0-5:4\\", $s$1], [2, \\"5:0-5:3\\", $s$1], [4, \\"7:0-7:12\\", $s$1], [4, \\"25:0-28:2\\", $s$1], [0, \\"25:0-28:1\\", $s$1], [16, \\"29:0-29:0\\", $s$1], [16, \\"29:0-29:0\\", $s$1]]),
-    $m$1 = $M.fun(\\"m$1\\", \\"C\\", null, $m$0, [\\"a\\"], 0, 12, \\"9:0-23:1\\", 0, function ($, $l, $p) {
+}, null, null, 0, [[4, "1:0-1:31", $s$1], [2, "1:16-1:30", $s$1], [4, "1:8-1:11", $s$1], [4, "2:0-2:33", $s$1], [2, "2:10-2:32", $s$1], [4, "3:0-3:33", $s$1], [2, "3:10-3:32", $s$1], [4, "4:0-4:4", $s$1], [2, "4:0-4:3", $s$1], [4, "5:0-5:4", $s$1], [2, "5:0-5:3", $s$1], [4, "7:0-7:12", $s$1], [4, "25:0-28:2", $s$1], [0, "25:0-28:1", $s$1], [16, "29:0-29:0", $s$1], [16, "29:0-29:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "C", null, $m$0, ["a"], 0, 12, "9:0-23:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -192,7 +192,7 @@ exports[`default transpiler 1`] = `
 
     case 5:
       $.goto = 6;
-      $p = $mcall(\\"fn1\\", $l[0][2
+      $p = $mcall("fn1", $l[0][2
       /*mod*/
       ], $l[1
       /*a*/
@@ -201,7 +201,7 @@ exports[`default transpiler 1`] = `
 
     case 6:
       $.goto = 7;
-      $mcall(\\"proc1\\", $l[0][2
+      $mcall("proc1", $l[0][2
       /*mod*/
       ], $p, $l[0][5
       /*v0*/
@@ -314,7 +314,7 @@ exports[`default transpiler 1`] = `
 
     case 25:
       $.goto = 17;
-      $mcall(\\"proc3\\", $l[0][2
+      $mcall("proc3", $l[0][2
       /*mod*/
       ], $l[6
       /*i*/
@@ -343,7 +343,7 @@ exports[`default transpiler 1`] = `
 
     case 30:
       $.goto = 31;
-      $mcall(\\"proc2\\", $l[0][2
+      $mcall("proc2", $l[0][2
       /*mod*/
       ], $l[5
       /*i*/
@@ -378,7 +378,7 @@ exports[`default transpiler 1`] = `
 
     case 36:
       $.goto = 37;
-      $mcall(\\"proc4\\", $l[0][2
+      $mcall("proc4", $l[0][2
       /*mod*/
       ], $l[8
       /*e*/
@@ -402,7 +402,7 @@ exports[`default transpiler 1`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
 }, function ($, $l) {
   switch ($.state) {
@@ -479,8 +479,8 @@ exports[`default transpiler 1`] = `
       $.goto = 39;
       break;
   }
-}, 1, [[4, \\"10:2-10:14\\", $s$2], [4, \\"11:2-22:3\\", $s$2], [5, \\"12:4-12:18\\", $s$3], [5, \\"13:4-13:11\\", $s$3], [5, \\"14:4-14:42\\", $s$3], [3, \\"14:14-14:24\\", $s$3], [3, \\"14:4-14:41\\", $s$3], [5, \\"15:4-17:5\\", $s$3], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [5, \\"15:15-15:16\\", $s$4], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [1, null, $s$2], [5, \\"18:4-18:42\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"18:13-18:14\\", $s$3], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [1, null, $s$2], [5, \\"19:4-19:17\\", $s$3], [37, \\"20:3-20:3\\", $s$2], [36, \\"23:1-23:1\\", $s$2], [5, \\"18:29-18:42\\", $s$3], [3, \\"18:29-18:41\\", $s$3], [1, null, $s$2], [3, \\"18:18-18:27\\", $s$3], [1, null, $s$2], [5, \\"16:6-16:19\\", $s$4], [3, \\"16:6-16:18\\", $s$4], [37, \\"17:5-17:5\\", $s$2], [1, null, $s$2], [3, \\"15:20-15:29\\", $s$4], [1, null, $s$2], [4, \\"21:4-21:24\\", $s$5], [2, \\"21:4-21:23\\", $s$5], [36, \\"22:3-22:3\\", $s$2], [16, \\"23:1-23:1\\", $s$2], [16, \\"23:1-23:1\\", $s$2]]),
-    $m$2 = $M.fun(\\"m$2\\", \\"fn1\\", null, $m$0, [], 0, 3, \\"25:14-28:1\\", 0, function ($, $l, $p) {
+}, 1, [[4, "10:2-10:14", $s$2], [4, "11:2-22:3", $s$2], [5, "12:4-12:18", $s$3], [5, "13:4-13:11", $s$3], [5, "14:4-14:42", $s$3], [3, "14:14-14:24", $s$3], [3, "14:4-14:41", $s$3], [5, "15:4-17:5", $s$3], [3, "15:20-15:29", $s$4], [1, null, $s$2], [5, "15:15-15:16", $s$4], [3, "15:20-15:29", $s$4], [1, null, $s$2], [1, null, $s$2], [5, "18:4-18:42", $s$3], [3, "18:18-18:27", $s$3], [1, null, $s$2], [5, "18:13-18:14", $s$3], [3, "18:18-18:27", $s$3], [1, null, $s$2], [1, null, $s$2], [5, "19:4-19:17", $s$3], [37, "20:3-20:3", $s$2], [36, "23:1-23:1", $s$2], [5, "18:29-18:42", $s$3], [3, "18:29-18:41", $s$3], [1, null, $s$2], [3, "18:18-18:27", $s$3], [1, null, $s$2], [5, "16:6-16:19", $s$4], [3, "16:6-16:18", $s$4], [37, "17:5-17:5", $s$2], [1, null, $s$2], [3, "15:20-15:29", $s$4], [1, null, $s$2], [4, "21:4-21:24", $s$5], [2, "21:4-21:23", $s$5], [36, "22:3-22:3", $s$2], [16, "23:1-23:1", $s$2], [16, "23:1-23:1", $s$2]]),
+    $m$2 = $M.fun("m$2", "fn1", null, $m$0, [], 0, 3, "25:14-28:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -497,7 +497,7 @@ exports[`default transpiler 1`] = `
 
     case 2:
       $.goto = 3;
-      $p = $mcall(\\"f2\\", $l[0][2
+      $p = $mcall("f2", $l[0][2
       /*mod*/
       ]);
       $.state = 3;
@@ -516,7 +516,7 @@ exports[`default transpiler 1`] = `
 
     case 4:
       $.goto = 5;
-      $p = $mcall(\\"some\\", $l[0][2
+      $p = $mcall("some", $l[0][2
       /*mod*/
       ], {
         a: $l[2],
@@ -537,15 +537,15 @@ exports[`default transpiler 1`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, \\"26:2-26:16\\", $s$6], [4, \\"27:2-27:55\\", $s$6], [2, \\"27:23-27:31\\", $s$6], [2, \\"27:37-27:50\\", $s$6], [2, \\"27:9-27:54\\", $s$6], [0, null, $s$6], [16, \\"28:1-28:1\\", $s$6], [16, \\"28:1-28:1\\", $s$6]]);
+}, null, null, 1, [[4, "26:2-26:16", $s$6], [4, "27:2-27:55", $s$6], [2, "27:23-27:31", $s$6], [2, "27:37-27:50", $s$6], [2, "27:9-27:54", $s$6], [0, null, $s$6], [16, "28:1-28:1", $s$6], [16, "28:1-28:1", $s$6]]);
 
 $M.moduleExports();"
 `;
 
 exports[`default transpiler 2`] = `
-"var $M = require(\\"../../../api\\"),
+"var $M = require("../../../api"),
     $forInIterator = $M.forInIterator,
     $x = $M.context,
     $ret = $M.ret,
@@ -553,15 +553,15 @@ exports[`default transpiler 2`] = `
     $brk = $M.brk,
     $force = $M.force,
     $mcall = $M.mcall,
-    $m = $M.module(\\"test/__fixtures__/transform/mod1.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
-  __webpack_require__: typeof __webpack_require__ !== \\"undefined\\" && __webpack_require__
+    $m = $M.module("test/__fixtures__/transform/mod1.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
     $s$1 = [{
   M2: [1, null],
   _getRequireWildcardCache: [2, null],
   _interopRequireWildcard: [3, null],
-  j: [4, \\"3:4-3:5\\"],
-  run: [5, \\"5:16-5:19\\"]
+  j: [4, "3:4-3:5"],
+  run: [5, "5:16-5:19"]
 }, null, 0],
     $s$2 = [{
   nodeInterop: [1, null],
@@ -581,9 +581,9 @@ exports[`default transpiler 2`] = `
   desc: [7, null]
 }, $s$1, 1],
     $s$5 = [{
-  i: [1, \\"5:20-5:21\\"]
+  i: [1, "5:20-5:21"]
 }, $s$1, 1],
-    $m$0 = $M.fun(\\"m$0\\", \\"mod1.js\\", null, null, [], 0, 6, \\"1:0-14:0\\", 32, function ($, $l, $p) {
+    $m$0 = $M.fun("m$0", "mod1.js", null, null, [], 0, 6, "1:0-14:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[2
@@ -605,7 +605,7 @@ exports[`default transpiler 2`] = `
 
     case 1:
       $.goto = 2;
-      $p = ($x.moduleId = require.resolve(\\"./mod2\\"), $force(require(\\"./mod2\\")));
+      $p = ($x.moduleId = require.resolve("./mod2"), $force(require("./mod2")));
       $.state = 2;
 
     case 2:
@@ -658,13 +658,13 @@ exports[`default transpiler 2`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 0, [[4, \\"1:0-1:29\\", $s$1], [2, null, $s$1], [2, null, $s$1], [4, \\"3:0-3:10\\", $s$1], [4, \\"12:0-12:6\\", $s$1], [2, \\"12:0-12:5\\", $s$1], [4, \\"13:0-13:6\\", $s$1], [2, \\"13:0-13:5\\", $s$1], [16, \\"14:0-14:0\\", $s$1], [16, \\"14:0-14:0\\", $s$1]]),
-    $m$1 = $M.fun(\\"m$1\\", \\"_getRequireWildcardCache\\", null, $m$0, [\\"nodeInterop\\"], 0, 4, null, 0, function ($, $l, $p) {
+}, null, null, 0, [[4, "1:0-1:29", $s$1], [2, null, $s$1], [2, null, $s$1], [4, "3:0-3:10", $s$1], [4, "12:0-12:6", $s$1], [2, "12:0-12:5", $s$1], [4, "13:0-13:6", $s$1], [2, "13:0-13:5", $s$1], [16, "14:0-14:0", $s$1], [16, "14:0-14:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "_getRequireWildcardCache", null, $m$0, ["nodeInterop"], 0, 4, null, 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
-      if (typeof WeakMap !== \\"function\\") {
+      if (typeof WeakMap !== "function") {
         $.state = 1;
       } else {
         $.goto = 2;
@@ -714,10 +714,10 @@ exports[`default transpiler 2`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
 }, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
-    $m$2 = $M.fun(\\"m$2\\", null, null, $m$1, [\\"nodeInterop\\"], 0, 2, null, 0, function ($, $l, $p) {
+    $m$2 = $M.fun("m$2", null, null, $m$1, ["nodeInterop"], 0, 2, null, 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       if ($l[1
@@ -754,10 +754,10 @@ exports[`default transpiler 2`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
 }, null, null, 2, [[0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-    $m$3 = $M.fun(\\"m$3\\", \\"_interopRequireWildcard\\", null, $m$0, [\\"obj\\", \\"nodeInterop\\"], 1, 10, null, 0, function ($, $l, $p) {
+    $m$3 = $M.fun("m$3", "_interopRequireWildcard", null, $m$0, ["obj", "nodeInterop"], 1, 10, null, 0, function ($, $l, $p) {
   var $1;
 
   for (;;) switch ($.state = $.goto) {
@@ -863,7 +863,7 @@ exports[`default transpiler 2`] = `
 
     case 11:
       $.goto = 12;
-      $p = $mcall(\\"has\\", $l[3
+      $p = $mcall("has", $l[3
       /*cache*/
       ], $l[1
       /*obj*/
@@ -884,7 +884,7 @@ exports[`default transpiler 2`] = `
 
     case 14:
       $.goto = 15;
-      $p = $mcall(\\"get\\", $l[3
+      $p = $mcall("get", $l[3
       /*cache*/
       ], $l[1
       /*obj*/
@@ -959,7 +959,7 @@ exports[`default transpiler 2`] = `
 
     case 23:
       $.goto = 24;
-      $mcall(\\"set\\", $l[3
+      $mcall("set", $l[3
       /*cache*/
       ], $l[1
       /*obj*/
@@ -981,7 +981,7 @@ exports[`default transpiler 2`] = `
       ] = $p.value;
       $l[9] = $l[6
       /*key*/
-      ] !== \\"default\\";
+      ] !== "default";
 
       if ($l[9]) {
         $.state = 26;
@@ -992,7 +992,7 @@ exports[`default transpiler 2`] = `
 
     case 26:
       $.goto = 27;
-      $p = $mcall(\\"call\\", Object.prototype.hasOwnProperty, $l[1
+      $p = $mcall("call", Object.prototype.hasOwnProperty, $l[1
       /*obj*/
       ], $l[6
       /*key*/
@@ -1023,7 +1023,7 @@ exports[`default transpiler 2`] = `
 
     case 30:
       $.goto = 31;
-      $p = $mcall(\\"getOwnPropertyDescriptor\\", Object, $l[1
+      $p = $mcall("getOwnPropertyDescriptor", Object, $l[1
       /*obj*/
       ], $l[6
       /*key*/
@@ -1082,7 +1082,7 @@ exports[`default transpiler 2`] = `
 
     case 37:
       $.goto = 38;
-      $mcall(\\"defineProperty\\", Object, $l[4
+      $mcall("defineProperty", Object, $l[4
       /*newObj*/
       ], $l[6
       /*key*/
@@ -1120,7 +1120,7 @@ exports[`default transpiler 2`] = `
     case 42:
       $1 = typeof $l[1
       /*obj*/
-      ] !== \\"object\\";
+      ] !== "object";
 
       if ($1) {
         $.state = 43;
@@ -1132,7 +1132,7 @@ exports[`default transpiler 2`] = `
     case 43:
       $1 = typeof $l[1
       /*obj*/
-      ] !== \\"function\\";
+      ] !== "function";
       $.state = 44;
 
     case 44:
@@ -1147,10 +1147,10 @@ exports[`default transpiler 2`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
 }, null, null, 1, [[0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
-    $m$4 = $M.fun(\\"m$4\\", \\"run\\", null, $m$0, [\\"i\\"], 1, 2, \\"5:7-10:1\\", 0, function ($, $l, $p) {
+    $m$4 = $M.fun("m$4", "run", null, $m$0, ["i"], 1, 2, "5:7-10:1", 0, function ($, $l, $p) {
   var $1;
 
   for (;;) switch ($.state = $.goto) {
@@ -1205,14 +1205,14 @@ exports[`default transpiler 2`] = `
       /*i*/
       ] = $1 + 1;
       $.goto = 7;
-      $p = $mcall(\\"f1\\", $l[0][1
+      $p = $mcall("f1", $l[0][1
       /*M2*/
       ], $1);
       $.state = 7;
 
     case 7:
       $.goto = 8;
-      $mcall(\\"f2\\", $l[0][1
+      $mcall("f2", $l[0][1
       /*M2*/
       ], $p, $l[1
       /*i*/
@@ -1238,7 +1238,7 @@ exports[`default transpiler 2`] = `
 
     case 10:
       $.goto = 11;
-      $mcall(\\"log\\", console, \`i:\${$l[1
+      $mcall("log", console, \`i:\${$l[1
       /*i*/
       ]},j:\${$l[0][4
       /*j*/
@@ -1258,44 +1258,44 @@ exports[`default transpiler 2`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, \\"5:20-5:25\\", $s$5], [0, null, $s$5], [4, \\"5:20-5:25\\", $s$5], [0, null, $s$5], [4, \\"6:2-6:9\\", $s$5], [4, \\"7:2-7:23\\", $s$5], [2, \\"7:8-7:18\\", $s$5], [2, \\"7:2-7:22\\", $s$5], [4, \\"8:2-8:9\\", $s$5], [4, \\"9:2-9:31\\", $s$5], [2, \\"9:2-9:30\\", $s$5], [36, \\"10:1-10:1\\", $s$5], [16, \\"10:1-10:1\\", $s$5], [16, \\"10:1-10:1\\", $s$5]]);
+}, null, null, 1, [[4, "5:20-5:25", $s$5], [0, null, $s$5], [4, "5:20-5:25", $s$5], [0, null, $s$5], [4, "6:2-6:9", $s$5], [4, "7:2-7:23", $s$5], [2, "7:8-7:18", $s$5], [2, "7:2-7:22", $s$5], [4, "8:2-8:9", $s$5], [4, "9:2-9:31", $s$5], [2, "9:2-9:30", $s$5], [36, "10:1-10:1", $s$5], [16, "10:1-10:1", $s$5], [16, "10:1-10:1", $s$5]]);
 
 $M.moduleExports();"
 `;
 
 exports[`default transpiler 3`] = `
-"var $M = require(\\"../../../api\\"),
+"var $M = require("../../../api"),
     $x = $M.context,
     $ret = $M.ret,
     $unhandled = $M.unhandled,
     $brk = $M.brk,
     $mcall = $M.mcall,
-    $m = $M.module(\\"test/__fixtures__/transform/mod2.js\\", null, typeof module === \\"undefined\\" ? null : module, null, \\"$\\", {
-  __webpack_require__: typeof __webpack_require__ !== \\"undefined\\" && __webpack_require__
+    $m = $M.module("test/__fixtures__/transform/mod2.js", null, typeof module === "undefined" ? null : module, null, "$", {
+  __webpack_require__: typeof __webpack_require__ !== "undefined" && __webpack_require__
 }, null),
     $s$1 = [{
-  cnt: [1, \\"1:4-1:7\\"],
-  A: [2, \\"3:9-3:10\\"],
-  B: [3, \\"8:9-8:10\\"],
-  f1: [4, \\"13:16-13:18\\"],
-  f2: [5, \\"21:16-21:18\\"]
+  cnt: [1, "1:4-1:7"],
+  A: [2, "3:9-3:10"],
+  B: [3, "8:9-8:10"],
+  f1: [4, "13:16-13:18"],
+  f2: [5, "21:16-21:18"]
 }, null, 0],
     $s$2 = [{
-  i: [1, \\"3:11-3:12\\"]
+  i: [1, "3:11-3:12"]
 }, $s$1, 1],
     $s$3 = [{
-  i: [1, \\"8:11-8:12\\"]
+  i: [1, "8:11-8:12"]
 }, $s$1, 1],
     $s$4 = [{
-  i: [1, \\"13:19-13:20\\"],
-  a: [2, \\"16:8-16:9\\"]
+  i: [1, "13:19-13:20"],
+  a: [2, "16:8-16:9"]
 }, $s$1, 1],
     $s$5 = [{
-  i: [1, \\"21:19-21:20\\"]
+  i: [1, "21:19-21:20"]
 }, $s$1, 1],
-    $m$0 = $M.fun(\\"m$0\\", \\"mod2.js\\", null, null, [], 0, 6, \\"1:0-25:0\\", 32, function ($, $l, $p) {
+    $m$0 = $M.fun("m$0", "mod2.js", null, null, [], 0, 6, "1:0-25:0", 32, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $l[2
@@ -1336,10 +1336,10 @@ exports[`default transpiler 3`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 0, [[4, \\"1:0-1:12\\", $s$1], [0, \\"1:4-1:11\\", $s$1], [16, \\"25:0-25:0\\", $s$1], [16, \\"25:0-25:0\\", $s$1]]),
-    $m$1 = $M.fun(\\"m$1\\", \\"A\\", null, $m$0, [\\"i\\"], 0, 2, \\"3:0-6:1\\", 8, function ($, $l, $p) {
+}, null, null, 0, [[4, "1:0-1:12", $s$1], [0, "1:4-1:11", $s$1], [16, "25:0-25:0", $s$1], [16, "25:0-25:0", $s$1]]),
+    $m$1 = $M.fun("m$1", "A", null, $m$0, ["i"], 0, 2, "3:0-6:1", 8, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -1377,10 +1377,10 @@ exports[`default transpiler 3`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, \\"4:2-4:24\\", $s$2], [4, \\"5:2-5:22\\", $s$2], [2, \\"5:11-5:21\\", $s$2], [36, \\"6:1-6:1\\", $s$2], [16, \\"6:1-6:1\\", $s$2], [16, \\"6:1-6:1\\", $s$2]]),
-    $m$2 = $M.fun(\\"m$2\\", \\"B\\", null, $m$0, [\\"i\\"], 0, 2, \\"8:0-11:1\\", 8, function ($, $l, $p) {
+}, null, null, 1, [[4, "4:2-4:24", $s$2], [4, "5:2-5:22", $s$2], [2, "5:11-5:21", $s$2], [36, "6:1-6:1", $s$2], [16, "6:1-6:1", $s$2], [16, "6:1-6:1", $s$2]]),
+    $m$2 = $M.fun("m$2", "B", null, $m$0, ["i"], 0, 2, "8:0-11:1", 8, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -1413,10 +1413,10 @@ exports[`default transpiler 3`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, \\"9:2-9:13\\", $s$3], [4, \\"10:2-10:26\\", $s$3], [0, \\"10:9-10:25\\", $s$3], [16, \\"11:1-11:1\\", $s$3], [16, \\"11:1-11:1\\", $s$3]]),
-    $m$3 = $M.fun(\\"m$3\\", \\"f1\\", null, $m$0, [\\"i\\"], 0, 3, \\"13:7-19:1\\", 0, function ($, $l, $p) {
+}, null, null, 1, [[4, "9:2-9:13", $s$3], [4, "10:2-10:26", $s$3], [0, "10:9-10:25", $s$3], [16, "11:1-11:1", $s$3], [16, "11:1-11:1", $s$3]]),
+    $m$3 = $M.fun("m$3", "f1", null, $m$0, ["i"], 0, 3, "13:7-19:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -1435,7 +1435,7 @@ exports[`default transpiler 3`] = `
 
     case 2:
       $.goto = 3;
-      $mcall(\\"log\\", console, \`f1:\${$l[1
+      $mcall("log", console, \`f1:\${$l[1
       /*i*/
       ]}@\${$l[0][1
       /*cnt*/
@@ -1466,7 +1466,7 @@ exports[`default transpiler 3`] = `
 
     case 6:
       $.goto = 7;
-      $mcall(\\"log\\", console, \\"A:\\", $l[2
+      $mcall("log", console, "A:", $l[2
       /*a*/
       ]);
       $.state = 7;
@@ -1491,10 +1491,10 @@ exports[`default transpiler 3`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, \\"14:2-14:8\\", $s$4], [4, \\"15:2-15:32\\", $s$4], [2, \\"15:2-15:31\\", $s$4], [4, \\"16:2-16:23\\", $s$4], [2, \\"16:12-16:22\\", $s$4], [4, \\"17:2-17:23\\", $s$4], [2, \\"17:2-17:22\\", $s$4], [4, \\"18:2-18:13\\", $s$4], [0, null, $s$4], [16, \\"19:1-19:1\\", $s$4], [16, \\"19:1-19:1\\", $s$4]]),
-    $m$4 = $M.fun(\\"m$4\\", \\"f2\\", null, $m$0, [\\"i\\"], 0, 2, \\"21:7-24:1\\", 0, function ($, $l, $p) {
+}, null, null, 1, [[4, "14:2-14:8", $s$4], [4, "15:2-15:32", $s$4], [2, "15:2-15:31", $s$4], [4, "16:2-16:23", $s$4], [2, "16:12-16:22", $s$4], [4, "17:2-17:23", $s$4], [2, "17:2-17:22", $s$4], [4, "18:2-18:13", $s$4], [0, null, $s$4], [16, "19:1-19:1", $s$4], [16, "19:1-19:1", $s$4]]),
+    $m$4 = $M.fun("m$4", "f2", null, $m$0, ["i"], 0, 2, "21:7-24:1", 0, function ($, $l, $p) {
   for (;;) switch ($.state = $.goto) {
     case 0:
       $.goto = 1;
@@ -1513,7 +1513,7 @@ exports[`default transpiler 3`] = `
 
     case 2:
       $.goto = 3;
-      $mcall(\\"log\\", console, \`f2:\${$l[1
+      $mcall("log", console, \`f2:\${$l[1
       /*i*/
       ]}@\${$l[0][1
       /*cnt*/
@@ -1533,9 +1533,9 @@ exports[`default transpiler 3`] = `
       return $ret($.result);
 
     default:
-      throw new Error(\\"Invalid state\\");
+      throw new Error("Invalid state");
   }
-}, null, null, 1, [[4, \\"22:2-22:8\\", $s$5], [4, \\"23:2-23:32\\", $s$5], [2, \\"23:2-23:31\\", $s$5], [36, \\"24:1-24:1\\", $s$5], [16, \\"24:1-24:1\\", $s$5], [16, \\"24:1-24:1\\", $s$5]]);
+}, null, null, 1, [[4, "22:2-22:8", $s$5], [4, "23:2-23:32", $s$5], [2, "23:2-23:31", $s$5], [36, "24:1-24:1", $s$5], [16, "24:1-24:1", $s$5], [16, "24:1-24:1", $s$5]]);
 
 $M.moduleExports();"
 `;

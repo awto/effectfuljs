@@ -1,57 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`undoRedo 1`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "$": "_signal",
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -59,13 +59,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -74,17 +74,17 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
@@ -95,13 +95,13 @@ Object {
 `;
 
 exports[`undoRedo 2`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       1,
     ],
@@ -110,57 +110,57 @@ Object {
 `;
 
 exports[`undoRedo 3`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "$": "_signal",
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -168,13 +168,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -183,17 +183,17 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
@@ -204,13 +204,13 @@ Object {
 `;
 
 exports[`undoRedo 4`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       2,
     ],
@@ -219,57 +219,57 @@ Object {
 `;
 
 exports[`undoRedo 5`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "$": "_signal",
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -277,13 +277,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -292,17 +292,17 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
@@ -313,13 +313,13 @@ Object {
 `;
 
 exports[`undoRedo 6`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       3,
     ],
@@ -328,57 +328,57 @@ Object {
 `;
 
 exports[`undoRedo 7`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -386,13 +386,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -400,42 +400,42 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Redo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "REDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -443,13 +443,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".1",
                 ],
@@ -458,25 +458,25 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
       },
     ],
   ],
-  "x": Array [
-    Object {
+  "x": [
+    {
       "$": "_signal",
     },
   ],
@@ -484,13 +484,13 @@ Object {
 `;
 
 exports[`undoRedo 8`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       2,
     ],
@@ -499,57 +499,57 @@ Object {
 `;
 
 exports[`undoRedo 9`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -557,13 +557,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -571,42 +571,42 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Redo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "REDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -614,13 +614,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".1",
                 ],
@@ -629,25 +629,25 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
       },
     ],
   ],
-  "x": Array [
-    Object {
+  "x": [
+    {
       "$": "_signal",
     },
   ],
@@ -655,13 +655,13 @@ Object {
 `;
 
 exports[`undoRedo 10`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       1,
     ],
@@ -670,57 +670,57 @@ Object {
 `;
 
 exports[`undoRedo 11`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -728,13 +728,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -742,42 +742,42 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Redo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "REDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -785,13 +785,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".1",
                 ],
@@ -800,25 +800,25 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
       },
     ],
   ],
-  "x": Array [
-    Object {
+  "x": [
+    {
       "$": "_signal",
     },
   ],
@@ -826,13 +826,13 @@ Object {
 `;
 
 exports[`undoRedo 12`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       2,
     ],
@@ -841,57 +841,57 @@ Object {
 `;
 
 exports[`undoRedo 13`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "$": "_signal",
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -899,13 +899,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -914,17 +914,17 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
@@ -935,13 +935,13 @@ Object {
 `;
 
 exports[`undoRedo 14`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       3,
     ],
@@ -950,57 +950,57 @@ Object {
 `;
 
 exports[`undoRedo 15`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -1008,13 +1008,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -1022,42 +1022,42 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Redo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "REDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -1065,13 +1065,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".1",
                 ],
@@ -1080,25 +1080,25 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
       },
     ],
   ],
-  "x": Array [
-    Object {
+  "x": [
+    {
       "$": "_signal",
     },
   ],
@@ -1106,13 +1106,13 @@ Object {
 `;
 
 exports[`undoRedo 16`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       2,
     ],
@@ -1121,57 +1121,57 @@ Object {
 `;
 
 exports[`undoRedo 17`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "$": "_signal",
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -1179,13 +1179,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -1194,17 +1194,17 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
@@ -1215,13 +1215,13 @@ Object {
 `;
 
 exports[`undoRedo 18`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       3,
     ],
@@ -1230,57 +1230,57 @@ Object {
 `;
 
 exports[`undoRedo 19`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "MENU_ITEM",
     ],
-    Array [
+    [
       "index",
       200,
     ],
-    Array [
+    [
       "value",
-      Object {
+      {
         "$": "ReactElement",
-        "children": Array [
-          Object {
+        "children": [
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Undo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "UNDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -1288,13 +1288,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".0",
                 ],
@@ -1302,42 +1302,42 @@ Object {
             },
             "type": "button",
           },
-          Object {
+          {
             "$": "ReactElement",
-            "children": Array [
+            "children": [
               "Redo",
             ],
-            "props": Object {
-              "f": Array [
-                Array [
+            "props": {
+              "f": [
+                [
                   "onClick",
-                  Object {
+                  {
                     "$": "Bind",
-                    "f": Array [
-                      Array [
-                        Object {
+                    "f": [
+                      [
+                        {
                           "$": "#this",
                         },
                         null,
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#fun",
                         },
-                        Object {
+                        {
                           "r": 0,
                         },
                       ],
-                      Array [
-                        Object {
+                      [
+                        {
                           "$": "#args",
                         },
-                        Array [
-                          Object {
+                        [
+                          {
                             "$": "undefined",
                           },
                           "REDO",
-                          Object {
+                          {
                             "$": "undefined",
                           },
                         ],
@@ -1345,13 +1345,13 @@ Object {
                     ],
                   },
                 ],
-                Array [
+                [
                   "children",
-                  Object {
+                  {
                     "$": "undefined",
                   },
                 ],
-                Array [
+                [
                   "key",
                   ".1",
                 ],
@@ -1360,25 +1360,25 @@ Object {
             "type": "button",
           },
         ],
-        "props": Object {
-          "f": Array [
-            Array [
+        "props": {
+          "f": [
+            [
               "children",
-              Object {
+              {
                 "$": "undefined",
               },
             ],
           ],
         },
-        "type": Object {
+        "type": {
           "$": "Symbol",
           "key": "react.fragment",
         },
       },
     ],
   ],
-  "x": Array [
-    Object {
+  "x": [
+    {
       "$": "_signal",
     },
   ],
@@ -1386,13 +1386,13 @@ Object {
 `;
 
 exports[`undoRedo 20`] = `
-Object {
-  "f": Array [
-    Array [
+{
+  "f": [
+    [
       "type",
       "VALUE",
     ],
-    Array [
+    [
       "value",
       2,
     ],

@@ -1,165 +1,165 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`persist 1`] = `
-Object {
-  "resume": Object {
-    "f": Array [
-      Array [
+{
+  "resume": {
+    "f": [
+      [
         "running",
-        Object {
+        {
           "$": "Set",
-          "l": Array [
-            Object {
+          "l": [
+            {
               "r": 0,
             },
-            Object {
+            {
               "r": 2,
             },
           ],
         },
       ],
-      Array [
+      [
         "resume",
-        Object {
+        {
           "r": 2,
         },
       ],
     ],
-    "x": Array [
-      Object {
+    "x": [
+      {
         "$": "Async",
-        "f": Array [
-          Array [
+        "f": [
+          [
             "dest",
-            Array [],
+            [],
           ],
-          Array [
+          [
             "state",
             0,
           ],
-          Array [
+          [
             "value",
-            Object {
+            {
               "$": "undefined",
             },
           ],
-          Array [
+          [
             "$",
-            Object {},
+            {},
           ],
-          Array [
+          [
             "$await",
-            Object {
+            {
               "r": 1,
             },
           ],
-          Array [
+          [
             "$step",
             7,
           ],
-          Array [
+          [
             "cont",
-            Object {
+            {
               "$": "Residual",
-              "f": Array [
-                Array [
+              "f": [
+                [
                   "dest",
-                  Array [
-                    Object {
+                  [
+                    {
                       "$": "persistExit",
                     },
                   ],
                 ],
-                Array [
+                [
                   "parent",
-                  Object {
+                  {
                     "r": 0,
                   },
                 ],
-                Array [
+                [
                   "state",
                   0,
                 ],
               ],
             },
           ],
-          Array [
+          [
             "$last",
             6,
           ],
-          Array [
+          [
             "_i",
             "hi",
           ],
         ],
       },
-      Object {
+      {
         "$": "Residual",
-        "f": Array [
-          Array [
+        "f": [
+          [
             "dest",
-            Array [
-              Object {
+            [
+              {
                 "r": 0,
               },
             ],
           ],
-          Array [
+          [
             "parent",
-            Object {
+            {
               "r": 2,
             },
           ],
-          Array [
+          [
             "state",
             0,
           ],
         ],
       },
-      Object {
+      {
         "$": "save",
-        "f": Array [
-          Array [
+        "f": [
+          [
             "dest",
-            Array [],
+            [],
           ],
-          Array [
+          [
             "state",
             0,
           ],
-          Array [
+          [
             "value",
-            Object {
+            {
               "$": "undefined",
             },
           ],
-          Array [
+          [
             "$",
-            Object {},
+            {},
           ],
-          Array [
+          [
             "$await",
-            Object {
+            {
               "$": "Idle",
             },
           ],
-          Array [
+          [
             "$step",
             6,
           ],
-          Array [
+          [
             "cont",
-            Object {
+            {
               "r": 1,
             },
           ],
-          Array [
+          [
             "$last",
             6,
           ],
-          Array [
+          [
             "$arg",
-            Object {
+            {
               "$": "undefined",
             },
           ],
