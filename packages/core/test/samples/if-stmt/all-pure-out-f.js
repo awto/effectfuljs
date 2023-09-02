@@ -2,7 +2,6 @@ function a() {
   if (true) 2;else 3;
   return 1;
 }
-
 function b() {
   if (true) {
     console.log("a");

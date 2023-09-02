@@ -3,6 +3,9 @@
 exports[`async function's time traveling 1`] = `
 [
   [
+    "CHECKPOINT",
+  ],
+  [
     "I",
     0,
     0,
@@ -14,6 +17,9 @@ exports[`async function's time traveling 1`] = `
     "J",
     0,
     100,
+  ],
+  [
+    "CHECKPOINT",
   ],
   [
     "I",
@@ -32,6 +38,9 @@ exports[`async function's time traveling 1`] = `
     "J",
     1,
     300,
+  ],
+  [
+    "CHECKPOINT",
   ],
   [
     "I",
@@ -87,6 +96,11 @@ exports[`async function's time traveling 1`] = `
     "CHECKPOINT/3",
   ],
   [
+    "I",
+    2,
+    300,
+  ],
+  [
     "CONT 2",
     undefined,
   ],
@@ -95,18 +109,17 @@ exports[`async function's time traveling 1`] = `
   ],
   [
     "J",
-    1,
-    402,
+    2,
+    602,
   ],
   [
-    "I",
-    2,
-    402,
+    "EXIT:",
+    602,
   ],
   [
     "A:R3/2",
-    402,
-    402,
+    602,
+    1204,
   ],
   [
     "UNDO3",
@@ -117,16 +130,16 @@ exports[`async function's time traveling 1`] = `
   [
     "J",
     2,
-    705,
+    603,
   ],
   [
     "EXIT:",
-    705,
+    603,
   ],
   [
     "A:R3/3",
-    705,
-    1410,
+    603,
+    1206,
   ],
   [
     "UNDO4",
@@ -137,16 +150,16 @@ exports[`async function's time traveling 1`] = `
   [
     "J",
     2,
-    706,
+    604,
   ],
   [
     "EXIT:",
-    706,
+    604,
   ],
   [
     "A:R3/4",
-    706,
-    1412,
+    604,
+    1208,
   ],
   [
     "UNDO5",
@@ -160,16 +173,16 @@ exports[`async function's time traveling 1`] = `
   [
     "J",
     2,
-    707,
+    605,
   ],
   [
     "EXIT:",
-    707,
+    605,
   ],
   [
     "A:R3/5",
-    707,
-    1414,
+    605,
+    1210,
   ],
   [
     "UNDO 6",
@@ -180,16 +193,16 @@ exports[`async function's time traveling 1`] = `
   [
     "J",
     2,
-    708,
+    606,
   ],
   [
     "EXIT:",
-    708,
+    606,
   ],
   [
     "A:R3/6",
-    708,
-    1416,
+    606,
+    1212,
   ],
   [
     "UNDO 7",
@@ -200,16 +213,16 @@ exports[`async function's time traveling 1`] = `
   [
     "J",
     2,
-    709,
+    607,
   ],
   [
     "EXIT:",
-    709,
+    607,
   ],
   [
     "A:R3/7",
-    709,
-    1418,
+    607,
+    1214,
   ],
 ]
 `;
@@ -217,6 +230,9 @@ exports[`async function's time traveling 1`] = `
 exports[`async generator functions time traveling 1`] = `
 [
   [
+    "CHECKPOINT",
+  ],
+  [
     "I",
     0,
     0,
@@ -233,6 +249,9 @@ exports[`async generator functions time traveling 1`] = `
     "J",
     0,
     100,
+  ],
+  [
+    "CHECKPOINT",
   ],
   [
     "I",
@@ -256,6 +275,9 @@ exports[`async generator functions time traveling 1`] = `
     "J",
     1,
     300,
+  ],
+  [
+    "CHECKPOINT",
   ],
   [
     "I",
@@ -321,6 +343,11 @@ exports[`async generator functions time traveling 1`] = `
     "CHECKPOINT/3",
   ],
   [
+    "I",
+    2,
+    300,
+  ],
+  [
     "CONT 2",
     undefined,
   ],
@@ -329,23 +356,22 @@ exports[`async generator functions time traveling 1`] = `
   ],
   [
     "K",
-    402,
-    402,
+    602,
+    602,
   ],
   [
     "J",
-    1,
-    402,
+    2,
+    602,
   ],
   [
-    "I",
-    2,
-    402,
+    "EXIT:",
+    602,
   ],
   [
     "A:R3/2",
-    402,
-    402,
+    602,
+    1204,
   ],
   [
     "UNDO3",
@@ -355,22 +381,22 @@ exports[`async generator functions time traveling 1`] = `
   ],
   [
     "K",
-    705,
-    705,
+    603,
+    603,
   ],
   [
     "J",
     2,
-    705,
+    603,
   ],
   [
     "EXIT:",
-    705,
+    603,
   ],
   [
     "A:R3/3",
-    705,
-    1410,
+    603,
+    1206,
   ],
   [
     "UNDO4",
@@ -380,22 +406,22 @@ exports[`async generator functions time traveling 1`] = `
   ],
   [
     "K",
-    706,
-    706,
+    604,
+    604,
   ],
   [
     "J",
     2,
-    706,
+    604,
   ],
   [
     "EXIT:",
-    706,
+    604,
   ],
   [
     "A:R3/4",
-    706,
-    1412,
+    604,
+    1208,
   ],
   [
     "UNDO5",
@@ -408,22 +434,22 @@ exports[`async generator functions time traveling 1`] = `
   ],
   [
     "K",
-    707,
-    707,
+    605,
+    605,
   ],
   [
     "J",
     2,
-    707,
+    605,
   ],
   [
     "EXIT:",
-    707,
+    605,
   ],
   [
     "A:R3/5",
-    707,
-    1414,
+    605,
+    1210,
   ],
   [
     "UNDO 6",
@@ -433,22 +459,22 @@ exports[`async generator functions time traveling 1`] = `
   ],
   [
     "K",
-    708,
-    708,
+    606,
+    606,
   ],
   [
     "J",
     2,
-    708,
+    606,
   ],
   [
     "EXIT:",
-    708,
+    606,
   ],
   [
     "A:R3/6",
-    708,
-    1416,
+    606,
+    1212,
   ],
   [
     "UNDO 7",
@@ -458,28 +484,31 @@ exports[`async generator functions time traveling 1`] = `
   ],
   [
     "K",
-    709,
-    709,
+    607,
+    607,
   ],
   [
     "J",
     2,
-    709,
+    607,
   ],
   [
     "EXIT:",
-    709,
+    607,
   ],
   [
     "A:R3/7",
-    709,
-    1418,
+    607,
+    1214,
   ],
 ]
 `;
 
 exports[`pure generator functions time traveling 1`] = `
 [
+  [
+    "CHECKPOINT",
+  ],
   [
     "I",
     0,
@@ -489,6 +518,9 @@ exports[`pure generator functions time traveling 1`] = `
     "C",
     1,
     0,
+  ],
+  [
+    "CHECKPOINT",
   ],
   [
     "I",
@@ -499,6 +531,9 @@ exports[`pure generator functions time traveling 1`] = `
     "C",
     3,
     1,
+  ],
+  [
+    "CHECKPOINT",
   ],
   [
     "I",
@@ -515,26 +550,86 @@ exports[`pure generator functions time traveling 1`] = `
     10,
   ],
   [
+    "I",
+    2,
+    3,
+  ],
+  [
+    "C",
+    10,
+    6,
+  ],
+  [
     "DONE 2",
-    {
-      "done": true,
-      "value": undefined,
-    },
+    10,
+  ],
+  [
+    "I",
+    0,
+    0,
+  ],
+  [
+    "C",
+    1,
+    0,
+  ],
+  [
+    "CHECKPOINT",
+  ],
+  [
+    "I",
+    1,
+    1,
+  ],
+  [
+    "C",
+    3,
+    1,
+  ],
+  [
+    "CHECKPOINT",
+  ],
+  [
+    "I",
+    2,
+    3,
+  ],
+  [
+    "C",
+    10,
+    6,
   ],
   [
     "DONE 3",
-    {
-      "done": true,
-      "value": undefined,
-    },
+    10,
+  ],
+  [
+    "I",
+    2,
+    3,
+  ],
+  [
+    "C",
+    10,
+    6,
   ],
   [
     "DONE 4",
-    undefined,
+    10,
+  ],
+  [
+    "I",
+    2,
+    3,
+  ],
+  [
+    "C",
+    10,
+    6,
   ],
   [
     "DONE 5",
-    undefined,
+    10,
   ],
 ]
 `;

@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as path from "path";
 import * as fs from "fs";
 import * as util from "util";
-import { DebugProtocol } from "vscode-debugprotocol";
+import { DebugProtocol } from "@vscode/debugprotocol";
 import { DebugClient } from "./kit/client";
 
 suite("Debugging on NodeJS", function () {

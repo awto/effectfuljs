@@ -48,7 +48,8 @@ module.exports = (
         require.resolve("@babel/plugin-syntax-bigint"),
         require.resolve("@babel/plugin-proposal-numeric-separator"),
         require.resolve("@babel/plugin-proposal-export-namespace-from"),
-        require.resolve("@babel/plugin-syntax-dynamic-import")
+        require.resolve("@babel/plugin-syntax-dynamic-import"),
+        require.resolve("@babel/plugin-transform-template-literals")
       ]
     },
     {

@@ -12,11 +12,11 @@ import {
   DebugSession as SessionImpl,
   ProgressStartEvent,
   ProgressEndEvent
-} from "vscode-debugadapter";
+} from "@vscode/debugadapter";
 
 import { DebugProtocol as P } from "./protocol";
 import { toThread, Handler as CommsHandler } from "./comms";
-import { Message } from "vscode-debugadapter/lib/messages";
+import { Message } from "@vscode/debugadapter/lib/messages";
 import { spawn, ChildProcess } from "child_process";
 import * as path from "path";
 import subscribe from "./wscomms";
@@ -669,6 +669,9 @@ export class DebugSession extends SessionImpl {
         env["EFFECTFUL_DEBUGGER_VERBOSE"] = args.verbose
           ? String(args.verbose)
           : "0";
+      if (args.moduleAliases != null) {
+        env["EFFECTFUL_MODULE_ALIASES"] = JSON.stringify(args.moduleAliases);
+      }      
       if (process.env["EFFECTFUL_DEBUGGER_URL"] == null)
         env["EFFECTFUL_DEBUGGER_URL"] = `ws://${host}:${
           args.debuggerPort || 20011

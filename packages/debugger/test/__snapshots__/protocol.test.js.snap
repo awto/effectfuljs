@@ -891,10 +891,10 @@ exports[`VSCode protocol handlers \`step in\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -941,10 +941,10 @@ exports[`VSCode protocol handlers \`step in\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepInAsync.js",
               "[top]": [
@@ -1725,10 +1725,10 @@ exports[`VSCode protocol handlers \`step in\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -3453,10 +3453,10 @@ exports[`VSCode protocol handlers \`step in\` in async generators 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "agfunc1",
               "[top]": [
@@ -3510,10 +3510,10 @@ exports[`VSCode protocol handlers \`step in\` in async generators 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -3559,10 +3559,10 @@ exports[`VSCode protocol handlers \`step in\` in async generators 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepInAsyncGenerator.js",
               "[top]": [
@@ -4914,10 +4914,10 @@ exports[`VSCode protocol handlers \`step in\` in async generators 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -4962,10 +4962,10 @@ exports[`VSCode protocol handlers \`step in\` in async generators 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepInAsyncGenerator.js",
               "[top]": [
@@ -6184,10 +6184,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "func1",
               "[top]": [
@@ -6245,10 +6245,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "func2",
               "[top]": [
@@ -6306,10 +6306,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "sub",
               "[top]": [
@@ -6376,10 +6376,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "func3",
               "[top]": [
@@ -6437,10 +6437,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepOutAsync.js",
               "[top]": [
@@ -6655,10 +6655,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "func1",
               "[top]": [
@@ -6716,10 +6716,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "func3",
               "[top]": [
@@ -6777,10 +6777,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "stepOutAsync.js",
               "[top]": [
@@ -7114,10 +7114,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "func1",
               "[top]": [
@@ -7175,10 +7175,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "func2",
               "[top]": [
@@ -7236,10 +7236,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "sub",
               "[top]": [
@@ -7306,10 +7306,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "func3",
               "[top]": [
@@ -7367,10 +7367,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "stepOutAsync.js",
               "[top]": [
@@ -7424,10 +7424,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "func2",
               "[top]": [
@@ -7485,10 +7485,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "sub",
               "[top]": [
@@ -7555,10 +7555,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "func3",
               "[top]": [
@@ -7616,10 +7616,10 @@ exports[`VSCode protocol handlers \`step out\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "stepOutAsync.js",
               "[top]": [
@@ -12123,10 +12123,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -12178,10 +12178,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepOverAsync.js",
               "[top]": [
@@ -12229,10 +12229,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -12285,10 +12285,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -12340,10 +12340,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepOverAsync.js",
               "[top]": [
@@ -12535,10 +12535,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -12591,10 +12591,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -12646,10 +12646,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepOverAsync.js",
               "[top]": [
@@ -12791,10 +12791,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -12846,10 +12846,10 @@ exports[`VSCode protocol handlers \`step over\` in async functions 1`] = `
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepOverAsync.js",
               "[top]": [
@@ -14500,10 +14500,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "agfunc3",
               "[top]": [
@@ -14567,10 +14567,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -14635,10 +14635,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepOverAsyncGenerator.js",
               "[top]": [
@@ -15270,10 +15270,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "agfunc3",
               "[top]": [
@@ -15338,10 +15338,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "main",
               "[top]": [
@@ -15406,10 +15406,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "stepOverAsyncGenerator.js",
               "[top]": [
@@ -16058,10 +16058,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "agfunc3",
               "[top]": [
@@ -16126,10 +16126,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "main",
               "[top]": [
@@ -16194,10 +16194,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "1",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "1",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "stepOverAsyncGenerator.js",
               "[top]": [
@@ -16455,10 +16455,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "agfunc3",
               "[top]": [
@@ -16522,10 +16522,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "main",
               "[top]": [
@@ -16590,10 +16590,10 @@ exports[`VSCode protocol handlers \`step over\` in async generator functions 1`]
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepOverAsyncGenerator.js",
               "[top]": [

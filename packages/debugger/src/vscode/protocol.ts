@@ -1,8 +1,8 @@
-import { DebugProtocol } from "vscode-debugprotocol";
+import { DebugProtocol } from "@vscode/debugprotocol";
 
 export { DebugProtocol };
 
-declare module "vscode-debugprotocol" {
+declare module "@vscode/debugprotocol" {
   namespace DebugProtocol {
     export interface ChildLaunch extends Request {
       // command: "childLaunch",

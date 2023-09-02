@@ -202,6 +202,17 @@
 								"type": "string",
 								"default": "",
 								"description": "a glob for selecting files which won't be transpiled"
+							},
+							"moduleAliases": {
+								"type": "object",
+								"default": {
+									"node:stream":"readable-stream",
+									"stream":"readable-stream"
+								},
+								"additionalProperties": {
+									"type": "string"
+								},
+								"description": "replacing module imports for loading debug version of dependencies"
 							}
 						}
 					}
@@ -270,22 +281,22 @@
 	"devDependencies": {
 		"@effectful/debugger": "^1.4.8",
 		"@types/glob": "^8.0.0",
-		"@types/mocha": "^9.0.0",
-		"@types/node": "^18.7.3",
-		"@types/puppeteer": "^5.4.4",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^20.5.7",
+		"@types/puppeteer": "^7.0.4",
 		"@types/vscode": "^1.51.0",
 		"@types/ws": "^8.2.2",
+		"@vscode/debugadapter-testsupport": "^1.34.0",
+		"@vscode/test-electron": "^2.3.4",
 		"cross-env": "^7.0.3",
 		"mocha": "^10.0.0",
-		"puppeteer": "^18.0.5",
+		"puppeteer": "^21.1.1",
 		"tslint": "^6.1.3",
-		"typescript": "^4.5.4",
-		"vscode-debugadapter-testsupport": "^1.34.0",
-		"vscode-test": "^1.2.2"
+		"typescript": "^5.2.2"
 	},
 	"dependencies": {
-		"vscode-debugadapter": "^1.34.0",
-		"vscode-debugprotocol": "^1.40.0",
+		"@vscode/debugadapter": "^1.34.0",
+		"@vscode/debugprotocol": "^1.40.0",
 		"ws": "^8.4.0"
 	},
 	"private": true,

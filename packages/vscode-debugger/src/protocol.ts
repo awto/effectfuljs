@@ -1,8 +1,8 @@
-import { DebugProtocol } from "vscode-debugprotocol";
+import { DebugProtocol } from "@vscode/debugprotocol";
 
 export { DebugProtocol };
 
-declare module "vscode-debugprotocol" {
+declare module "@vscode/debugprotocol" {
   namespace DebugProtocol {
     type BreakpointInfo = DebugProtocol.SourceBreakpoint &
       DebugProtocol.Breakpoint;
@@ -39,6 +39,7 @@ declare module "vscode-debugprotocol" {
       include?: string;
       exclude?: string;
       blackbox?: string;
+      moduleAliases?: { [name: string]: string };
     }
   }
 }

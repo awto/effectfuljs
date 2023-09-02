@@ -119,7 +119,7 @@ interface VarValue {
 let runningTrace: boolean = false;
 
 function defaultNeedsBreak(brk: State.Brk, top: State.Frame) {
-  const reason = checkPause(brk, top);
+  const reason = checkPause(brk, top, false);
   top.stopReason = reason;
   return reason != null;
 }
@@ -164,8 +164,8 @@ const noSideEffects = config.timeTravel
       };
     }
   : function noSideEffects(
-      func: (this: any, args: any[]) => any
-    ): (this: any, args: any[]) => any {
+      func: (this: any, ...args: any[]) => any
+    ): (this: any, ...args: any[]) => any {
       return func;
     };
 
@@ -882,8 +882,8 @@ handlers.childLaunch = function (args, res) {
   State.resumeEventQueue();
 };
 
-function checkPause(brk: State.Brk, top: State.Frame): null | string {
-  if (!context.enabled) return null;
+function checkPause(brk: State.Brk, top: State.Frame, ignoreEnabled:boolean): null | string {
+  if (!ignoreEnabled && !context.enabled) return null;
   if (firstThread) {
     firstThread = false;
     onEntry();
@@ -981,7 +981,7 @@ const step: () => void = config.timeTravel
               if (brk) {
                 if (brk === lastBrk) continue;
                 lastBrk = brk;
-                const reason = checkPause(brk, top);
+                const reason = checkPause(brk, top, true);
                 if (reason != null) {
                   top.stopReason = reason;
                   context.onStop();
@@ -1614,7 +1614,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
         let reason: string | null;
         if (
           top &&
-          (reason = checkPause(top.meta.states[top.state], top)) &&
+          (reason = checkPause(top.meta.states[top.state], top, false)) &&
           reason !== "interrupt"
         ) {
           top.stopReason = reason;

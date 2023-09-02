@@ -40,7 +40,7 @@
     "env-cmd": "^10.1.0",
     "eslint": "^8.6.0",
     "mocha": "^10.0.0",
-    "rollup": "^2.55.1"
+    "rollup": "^3.28.1"
   },
   "publishConfig": {
     "access": "public"

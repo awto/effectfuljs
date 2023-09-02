@@ -288,6 +288,21 @@ Calling JS asynchronously works fine and doesn't need a wrapper. Only synchronou
 
 Even now, even if our program's logic heavily depends on the propagation of events we can still use time-traveling, and debug after the event handling is finished.
 
+Many native modules have alternative pure JavaScript implementation. Typically, they are used to run NodeJS modules in a web browser using tools such as webpack or browserify. They can be used for debugging purposes. By default, the debugger replaces NodeJs `events` module with the one from browserify. However, this can be done for other modules too.
+
+A `moduleAliases` configuration parameter offers to replace the module with an alternative only during debugging. The object's key is the original module name, and the key is what it's replaced with.
+
+### Debugging NodeJS streams
+
+As described before, the debugger cannot stop inside a callback called by native or not transpiled modules. Fortunately, pure JavaScript alternatives are offering at least part of it. Here's an example for NodeJS streams. There is their pure implementation in [readable-stream](https://github.com/nodejs/readable-stream). So, to make applications extensively using NodeJS streams, install the module (save for development only), and add the following option into the `launch.json`:
+
+```json
+   "moduleAliases": {
+        "node:stream": "readable-stream",
+        "stream": "readable-stream"   
+   }
+``` 
+
 ## Firefox
 
 For preventing Spectre attack Firefox disabled `SharedArrayBuffer`. But it is used by the debugger to pause running code (when, for example, it is frozen due to some error/. To enable shared memory in Firefox, navigate to `about:config` -> `I accept the risk!` -> set `javascript.options.shared_memory` to true.

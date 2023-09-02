@@ -1,13 +1,23 @@
 const config = require("../config").default;
 const fs = require("fs");
 const path = require("path");
-const mm = require("minimatch");
+const {minimatch:mm} = require("minimatch");
 if (process.env.EFFECTFUL_DEBUGGER_URL)
   config.url = process.env.EFFECTFUL_DEBUGGER_URL;
-config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL);
+config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL, true);
 config.timeTravelDisabled = isTrue(
   process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED
 );
+
+const moduleAliases = process.env.EFFECTFUL_MODULE_ALIASES;
+
+if (moduleAliases != null) {
+  try {
+    config.moduleAliases = JSON.parse(moduleAliases);
+  } catch(e) {
+    console.error(`couldn't parse module aliases, ignoring them (${e})`)
+  }
+}
 
 const { normalizePath } = require("../state");
 
@@ -30,7 +40,6 @@ function findup(name, dir) {
 
 
 let packageJSON = findup("package.json", config.srcRoot);
-console.log(packageJSON, config.srcRoot);
 if (packageJSON)
   packageJSON = fs.realpathSync(packageJSON);
 
@@ -46,8 +55,8 @@ config.runtimePackages =
 config.runtime =
   process.env.EFFECTFUL_DEBUGGER_RUNTIME || "@effectful/debugger";
 config.cache =
-  isTrue(process.env.EFFECTFUL_DEBUGGER_CACHE) ||
-  !isTrue(process.BABEL_DISABLE_CACHE);
+  isTrue(process.env.EFFECTFUL_DEBUGGER_CACHE, true) &&
+  !isTrue(process.env.BABEL_DISABLE_CACHE);
 config.zeroConfig = isTrue(process.env.EFFECTFUL_DEBUGGER_ZERO_CONFIG, true);
 config.verbose = isNaN(process.env.EFFECTFUL_DEBUGGER_VERBOSE)
   ? isTrue(process.env.EFFECTFUL_DEBUGGER_VERBOSE)
