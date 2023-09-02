@@ -5,9 +5,9 @@ const path = require("path");
 const fs = require("fs").promises;
 const babel = require("@babel/core");
 
-const minimatch = require("minimatch");
+const { minimatch } = require("minimatch");
 const { promisify } = require("util");
-const rimraf = promisify(require("rimraf"));
+const { rimraf } = require("rimraf");
 const webpack = promisify(require("webpack"));
 const makeDir = require("make-dir");
 
@@ -68,6 +68,8 @@ async function main() {
         await lib("promise", "lib/index.js", "lib/**/*.js");
         await lib("lodash", "lodash.js", "**/*.js");
         await lib("lodash.sortby", "index.js", "**/*.js");
+        await lib("events", "events.js");
+        alias["node:events"] = alias["events"];
       })()
     ]);
     await fs.writeFile("deps-aliases.json", JSON.stringify(alias, null, 2));
@@ -143,7 +145,7 @@ async function main() {
     async function lib(name, main, include) {
       const rootPath = name.split("/");
       const root = rootPath[0];
-      const absoluteRoot = path.dirname(require.resolve(root));
+      const absoluteRoot = path.join(__dirname, "node_modules", name);
       if (include) {
         await dirs();
       } else {

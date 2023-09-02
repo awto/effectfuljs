@@ -47,5 +47,7 @@ export default {
   /** executed before/after executing async job (event handler, setTimeout etc) */
   onBeforeExec: <(() => void) | null>null,
   /** stepping into implicit calls support */
-  implicitCalls: true
+  implicitCalls: true,
+  /** replacing module imports for loading debug version of dependencies */
+  moduleAliases: <{[name:string]:string}>{}
 };

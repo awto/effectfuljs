@@ -945,10 +945,10 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -1053,10 +1053,10 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -3432,10 +3432,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -3482,10 +3482,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "1",
-                "_3": "undefined",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "1",
+                "_z": "undefined",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -3519,10 +3519,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -3569,10 +3569,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -3606,10 +3606,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -3670,10 +3670,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -3720,10 +3720,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -3757,10 +3757,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -3853,10 +3853,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -3977,10 +3977,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -4079,10 +4079,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -4161,10 +4161,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -4223,10 +4223,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -4266,10 +4266,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -4352,10 +4352,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -4422,10 +4422,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -4476,10 +4476,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -4515,10 +4515,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -4582,10 +4582,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -4634,10 +4634,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -4672,10 +4672,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -4722,10 +4722,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -5233,10 +5233,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -5283,10 +5283,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -5320,10 +5320,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -5387,10 +5387,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -5439,10 +5439,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -5477,10 +5477,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -5563,10 +5563,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -5633,10 +5633,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -5687,10 +5687,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -5726,10 +5726,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -5850,10 +5850,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -5952,10 +5952,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -6034,10 +6034,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -6096,10 +6096,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -6139,10 +6139,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "(anonymous)",
               "[top]": [
@@ -6235,10 +6235,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc2",
               "[top]": [
@@ -6299,10 +6299,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -6349,10 +6349,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [
@@ -6386,10 +6386,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "afunc1",
               "[top]": [
@@ -6436,10 +6436,10 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
           "scopes": [
             {
               "@result": {
-                "_1": "0",
-                "_2": "0",
-                "_3": "null",
-                "_4": "null",
+                "_A": "null",
+                "_x": "0",
+                "_y": "0",
+                "_z": "null",
               },
               "[name]": "stepBackAsync.js",
               "[top]": [

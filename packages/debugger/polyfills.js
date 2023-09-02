@@ -8,6 +8,7 @@ const createProperty = require("core-js-pure/internals/create-property");
 const max = Math.max;
 const SPECIES = Symbol.species;
 const staticToMethod = require("debugger-state");
+const $forEach = require("core-js-pure/internals/array-iteration").forEach;
 
 if (!path.ArrayPrototype) {
   path.ArrayPrototype = {};
@@ -27,6 +28,11 @@ if (!path.ArrayPrototype) {
     path.ArrayPrototype[i] = staticToMethod(stat);
   }
 }
+
+if (path.ArrayPrototype.forEach === [].forEach)
+  path.ArrayPrototype.forEach = function forEach(callbackfn) {
+    return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+  }
 
 path.ArrayPrototype.push = function push() {
   path.ArrayPrototype.splice.apply(this, [this.length, 0].concat(arguments));

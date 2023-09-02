@@ -1135,17 +1135,15 @@ export function unhandled(e: any) {
 }
 
 export function brk(): any {
-  if (context.enabled === false) return;
   const { needsBreak, top } = context;
-  let p: Brk;
-  if (
-    top &&
-    (p = top.brk = context.brk = top.meta.states[top.state]) &&
-    needsBreak(p, top) &&
-    context.enabled
-  ) {
-    throw token;
-  }
+  if (!top)
+    return;
+  let p = top.brk = context.brk = top.meta.states[top.state];
+  if (!p)
+    return;
+  if (!needsBreak(p, top) || !context.enabled)
+    return;
+  throw token;
 }
 
 export function iterator<T>(v: Iterable<T>) {

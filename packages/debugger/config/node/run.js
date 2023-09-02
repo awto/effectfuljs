@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const sw = require("spawn-wrap");
-const foreground = require("foreground-child");
+const {foregroundChild} = require("foreground-child");
 
 const config = require("../deriveConfig");
 const wrapper = require.resolve("./wrap");
@@ -23,4 +23,4 @@ process.exitCode = 0;
 
 if (/\.[jte]sx?$/.test(command[0])) command.unshift("node");
 
-foreground(command[0], command.slice(1));
+foregroundChild(command[0], command.slice(1));

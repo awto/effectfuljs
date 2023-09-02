@@ -200,7 +200,9 @@ module.exports = function compile(content, filename, module) {
                     blackbox,
                     timeTravel: config.timeTravel,
                     rt,
-                    staticBundler: false
+                    staticBundler: false,
+                    moduleAliases: config.moduleAliases,
+                    preInstrumentedLibs: true
                   }
                 ]
               ],

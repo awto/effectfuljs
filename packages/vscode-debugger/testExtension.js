@@ -3,7 +3,7 @@ const cp = require("child_process");
 const fs = require("fs");
 const ROOT = __dirname;
 
-const downloadAndUnzipVSCode = require("vscode-test").downloadAndUnzipVSCode;
+const downloadAndUnzipVSCode = require("@vscode/test-electron").downloadAndUnzipVSCode;
 
 const testsWorkspace = path.resolve(ROOT, "testdata");
 const testsFolder = path.resolve(ROOT, "out", "test", "extension");

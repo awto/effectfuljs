@@ -575,7 +575,7 @@ export class ForInIterator implements Iterable<string>, Iterator<string> {
       if (this.pos >= this.fields.length)
         return { done: true, value: undefined };
       const value = this.fields[this.pos++];
-      if (value in this.obj) return { done: false, value };
+      if (typeof this.obj !== "object" || value in this.obj) return { done: false, value };
     }
   }
 }

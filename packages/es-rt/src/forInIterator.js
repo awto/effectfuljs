@@ -7,6 +7,7 @@ function ForInIterator(obj) {
   for (i in obj) arr.push(i);
   this.fields = arr;
   this.x = 0;
+  this.useObjIn = typeof obj === "object";
 }
 
 ForInIterator.prototype = Object.create(LeanIteratorPrototype);
@@ -18,7 +19,8 @@ ForInIterator.prototype.step = function step() {
       this.value = void 0;
       return this;
     }
-    if ((this.value = this.fields[this.x++]) in this.obj) return this;
+    var val = (this.value = this.fields[this.x++]);
+    if (!this.useObjIn || val in this.obj) return this;
   }
 };
 

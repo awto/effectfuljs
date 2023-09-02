@@ -1,10 +1,10 @@
 import * as assert from "assert";
-import * as Support from "vscode-debugadapter-testsupport";
-import { DebugProtocol } from "vscode-debugprotocol";
+import * as Support from "@vscode/debugadapter-testsupport";
+import { DebugProtocol } from "@vscode/debugprotocol";
 import {
   IPartialLocation,
   ILocation
-} from "vscode-debugadapter-testsupport/lib/debugClient";
+} from "@vscode/debugadapter-testsupport/lib/debugClient";
 
 export class DebugClient extends Support.DebugClient {
   constructor(executable: string) {
