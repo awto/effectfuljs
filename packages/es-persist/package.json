@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-persist",
-  "version": "1.4.7",
+  "version": "1.4.9",
   "description": "Persistent state for ECMAScript effects",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "@effectful/es": "^1.0.0"
   },
   "devDependencies": {
-    "@effectful/es": "^1.4.7",
+    "@effectful/es": "^1.4.9",
     "eslint": "^8.6.0",
     "mocha": "^10.0.0",
     "rimraf": "^5.0.1",
@@ -35,7 +35,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@effectful/es-rt": "^1.4.7"
+    "@effectful/es-rt": "^1.4.9"
   },
   "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }
