@@ -5,6 +5,9 @@ module.exports = (
   }
 ) => ({
   passPerPreset: true,
+  parserOpts: {
+    allowReturnOutsideFunction: true
+  },
   presets: [
     {
       plugins: [
@@ -49,7 +52,8 @@ module.exports = (
         require.resolve("@babel/plugin-proposal-numeric-separator"),
         require.resolve("@babel/plugin-proposal-export-namespace-from"),
         require.resolve("@babel/plugin-syntax-dynamic-import"),
-        require.resolve("@babel/plugin-transform-template-literals")
+        require.resolve("@babel/plugin-transform-template-literals"),
+        [require.resolve("@babel/plugin-transform-private-methods"), {loose:true}]
       ]
     },
     {
