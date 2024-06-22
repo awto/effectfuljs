@@ -83,19 +83,19 @@ var $M = require("@effectful/debugger"),
     switches: [65, "616:10-616:18"]
   }, null, 0],
   $s$2 = [{
-    self: [1, null]
+    e: [1, null]
   }, $s$1, 1],
   $s$3 = [{
-    subClass: [1, null],
-    superClass: [2, null]
+    t: [1, null],
+    o: [2, null]
   }, $s$1, 1],
   $s$4 = [{
-    o: [1, null],
-    p: [2, null]
+    t: [1, null],
+    e: [2, null]
   }, $s$1, 1],
   $s$5 = [{
-    o: [1, null],
-    p: [2, null]
+    t: [1, null],
+    e: [2, null]
   }, $s$4, 2],
   $s$6 = [{}, $s$1, 1],
   $s$7 = [{}, $s$1, 1],
@@ -588,10 +588,10 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 0, [[2, "1:0-1:21", $s$1], [2, "2:0-2:23", $s$1], [2, "4:0-14:2", $s$1], [2, "397:4-397:16", $s$1], [2, null, $s$1], [2, null, $s$1], [0, null, $s$1], [16, "780:0-780:0", $s$1], [16, "780:0-780:0", $s$1]]),
-  $m$1 = $M.fun("m$1", "_assertThisInitialized", null, $m$0, ["self"], 0, 2, null, 128, function ($, $l, $p) {
+  $m$1 = $M.fun("m$1", "_assertThisInitialized", null, $m$0, ["e"], 0, 2, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
-        if ($l[1] === void 0) {
+        if (void 0 === $l[1]) {
           $.goto = 2;
           $p = new ($x.call = ReferenceError)("this hasn't been initialised - super() hasn't been called");
           continue;
@@ -614,7 +614,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[2, null, $s$2], [0, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
-  $m$2 = $M.fun("m$2", "_inheritsLoose", null, $m$0, ["subClass", "superClass"], 0, 3, null, 128, function ($, $l, $p) {
+  $m$2 = $M.fun("m$2", "_inheritsLoose", null, $m$0, ["t", "o"], 0, 3, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $.goto = 1;
@@ -635,7 +635,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[2, null, $s$3], [2, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-  $m$3 = $M.fun("m$3", "_setPrototypeOf", null, $m$0, ["o", "p"], 0, 4, null, 128, function ($, $l, $p) {
+  $m$3 = $M.fun("m$3", "_setPrototypeOf", null, $m$0, ["t", "e"], 0, 4, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         if (Object.setPrototypeOf) {
@@ -668,7 +668,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[2, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
-  $m$4 = $M.fun("m$4", "_setPrototypeOf", null, $m$3, ["o", "p"], 0, 3, null, 128, function ($, $l, $p) {
+  $m$4 = $M.fun("m$4", null, null, $m$3, ["t", "e"], 0, 3, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $l[1].__proto__ = $l[2];

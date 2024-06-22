@@ -384,7 +384,7 @@ declare global {
 }
 
 /** original global objects monkey-patched by this runtime */
-export const native = {
+export const native: { [name: string]: any } = {
   // tslint:disable-next-line:no-console
   console: { log: console.log, error: console.error, warn: console.warn },
   Proxy,
@@ -454,12 +454,13 @@ export const native = {
     getPrototypeOf: Reflect.getPrototypeOf
   },
   WeakMap: {
-    set: WeakMap.prototype.set,
-    delete: WeakMap.prototype.delete
+    // changes in TS lib makes it unusable with some different TS versions
+    set: WeakMap.prototype.set as any,
+    delete: WeakMap.prototype.delete as any
   },
   WeakSet: {
-    add: WeakSet.prototype.add,
-    delete: WeakSet.prototype.delete  
+    add: WeakSet.prototype.add as any,
+    delete: WeakSet.prototype.delete as any
   },
   setInterval,
   setTimeout,
@@ -469,7 +470,7 @@ export const native = {
   clearImmediate: typeof clearImmediate !== "undefined" && clearImmediate,
   Error,
   ErrorMethods: {
-    prepareStackTrace:Error.prepareStackTrace
+    prepareStackTrace: Error.prepareStackTrace
   }
 };
 
@@ -575,7 +576,8 @@ export class ForInIterator implements Iterable<string>, Iterator<string> {
       if (this.pos >= this.fields.length)
         return { done: true, value: undefined };
       const value = this.fields[this.pos++];
-      if (typeof this.obj !== "object" || value in this.obj) return { done: false, value };
+      if (typeof this.obj !== "object" || value in this.obj)
+        return { done: false, value };
     }
   }
 }

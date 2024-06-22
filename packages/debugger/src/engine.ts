@@ -701,7 +701,7 @@ export function location(str: string): number[] {
 
 let evalCnt = 0;
 
-const indirMemo = new native.Map<string, string>();
+const indirMemo: Map<string, string> = new native.Map();
 
 /**
  * Like `compileEval` but returns a self-sufficient string, which can be
@@ -775,7 +775,7 @@ export function retModule() {
   return curModule.topLevel.func(null);
 }
 
-const functionConstrMemo = new native.Map<string, FunctionDescr>();
+const functionConstrMemo: Map<string, FunctionDescr> = new native.Map();
 
 const savedEval = eval;
 
@@ -1136,13 +1136,10 @@ export function unhandled(e: any) {
 
 export function brk(): any {
   const { needsBreak, top } = context;
-  if (!top)
-    return;
-  let p = top.brk = context.brk = top.meta.states[top.state];
-  if (!p)
-    return;
-  if (!needsBreak(p, top) || !context.enabled)
-    return;
+  if (!top) return;
+  let p = (top.brk = context.brk = top.meta.states[top.state]);
+  if (!p) return;
+  if (!needsBreak(p, top) || !context.enabled) return;
   throw token;
 }
 

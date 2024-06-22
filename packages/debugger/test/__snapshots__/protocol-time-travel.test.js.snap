@@ -96,7 +96,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#101",
                 },
               },
               "i": "675411",
@@ -125,7 +125,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#114",
                 },
               },
               "i": "675411",
@@ -170,7 +170,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3",
+                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3#130",
                 },
               },
               "j": "3000",
@@ -188,7 +188,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#142",
                 },
               },
               "i": "3201",
@@ -214,7 +214,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3",
+                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3#130",
                 },
               },
               "j": "3000",
@@ -232,7 +232,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#142",
                 },
               },
               "i": "3201",
@@ -258,7 +258,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#142",
                 },
               },
               "i": "3201",
@@ -315,7 +315,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3",
+                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3#151",
                 },
               },
               "j": "3000",
@@ -333,7 +333,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#163",
                 },
               },
               "i": "3201",
@@ -359,7 +359,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3",
+                  "constructor": "func2@reverseContinuePlain.js:7:2-11:3#151",
                 },
               },
               "j": "3000",
@@ -377,7 +377,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#163",
                 },
               },
               "i": "3201",
@@ -403,7 +403,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#163",
                 },
               },
               "i": "3201",
@@ -432,7 +432,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1",
+                  "constructor": "func1@reverseContinuePlain.js:3:0-12:1#169",
                 },
               },
               "i": "675411",
@@ -880,7 +880,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@reverseContinueAsync.js:7:2-18:3",
+                  "constructor": "afunc2@reverseContinueAsync.js:7:2-18:3#102",
                 },
               },
               "j": "3000",
@@ -898,7 +898,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1",
+                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1#114",
                 },
               },
               "i": "886411",
@@ -924,7 +924,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1",
+                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1#114",
                 },
               },
               "i": "886411",
@@ -966,7 +966,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": {
-                  "constructor": "(anonymous)@core.js:200:27-204:3",
+                  "constructor": "(anonymous)@core.js:200:27-204:3#131",
                 },
               },
             },
@@ -1004,7 +1004,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@reverseContinueAsync.js:7:2-18:3",
+                  "constructor": "afunc2@reverseContinueAsync.js:7:2-18:3#144",
                 },
               },
               "j": "3000",
@@ -1020,7 +1020,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1",
+                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1#146",
                 },
               },
               "i": "101",
@@ -1074,7 +1074,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": {
-                  "constructor": "(anonymous)@core.js:200:27-204:3",
+                  "constructor": "(anonymous)@core.js:200:27-204:3#162",
                 },
               },
             },
@@ -1112,7 +1112,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@reverseContinueAsync.js:7:2-18:3",
+                  "constructor": "afunc2@reverseContinueAsync.js:7:2-18:3#175",
                 },
               },
               "j": "3000",
@@ -1128,7 +1128,7 @@ exports[`VSCode protocol handlers with time traveling reverse continue in async 
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1",
+                  "constructor": "afunc1@reverseContinueAsync.js:3:0-20:1#177",
                 },
               },
               "i": "101",
@@ -1166,7 +1166,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#101",
                 },
               },
               "i": "675411",
@@ -1195,7 +1195,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#114",
                 },
               },
               "i": "675411",
@@ -1224,7 +1224,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#127",
                 },
               },
               "i": "675411",
@@ -1269,7 +1269,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#143",
                 },
               },
               "j": "3000",
@@ -1287,7 +1287,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#155",
                 },
               },
               "i": "3201",
@@ -1313,7 +1313,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#143",
                 },
               },
               "j": "3000",
@@ -1331,7 +1331,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#155",
                 },
               },
               "i": "3201",
@@ -1357,7 +1357,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#155",
                 },
               },
               "i": "3201",
@@ -1419,7 +1419,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#165",
                 },
               },
               "j": "3000",
@@ -1438,7 +1438,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#177",
                 },
               },
               "i": "101",
@@ -1480,7 +1480,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#165",
                 },
               },
               "j": "3000",
@@ -1499,7 +1499,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#177",
                 },
               },
               "i": "101",
@@ -1526,7 +1526,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#165",
                 },
               },
               "j": "3000",
@@ -1545,7 +1545,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#177",
                 },
               },
               "i": "101",
@@ -1572,7 +1572,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#177",
                 },
               },
               "i": "101",
@@ -1617,7 +1617,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#189",
                 },
               },
               "j": "3000",
@@ -1635,7 +1635,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#201",
                 },
               },
               "i": "101",
@@ -1661,7 +1661,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#189",
                 },
               },
               "j": "3000",
@@ -1679,7 +1679,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#201",
                 },
               },
               "i": "101",
@@ -1705,7 +1705,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#201",
                 },
               },
               "i": "101",
@@ -1735,7 +1735,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#208",
                 },
               },
               "j": "3000",
@@ -1752,7 +1752,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#220",
                 },
               },
               "i": "101",
@@ -1777,7 +1777,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#220",
                 },
               },
               "i": "101",
@@ -1807,7 +1807,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#225",
                 },
               },
               "j": "3000",
@@ -1824,7 +1824,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#237",
                 },
               },
               "i": "100",
@@ -1849,7 +1849,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#237",
                 },
               },
               "i": "100",
@@ -1878,7 +1878,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#241",
                 },
               },
               "i": "100",
@@ -1907,7 +1907,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#254",
                 },
               },
               "i": "100",
@@ -1936,7 +1936,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#267",
                 },
               },
               "i": "undefined",
@@ -1977,7 +1977,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#280",
                 },
               },
               "i": "undefined",
@@ -2006,7 +2006,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#293",
                 },
               },
               "i": "100",
@@ -2035,7 +2035,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#306",
                 },
               },
               "i": "100",
@@ -2065,7 +2065,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#320",
                 },
               },
               "j": "3000",
@@ -2082,7 +2082,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#332",
                 },
               },
               "i": "100",
@@ -2107,7 +2107,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#332",
                 },
               },
               "i": "100",
@@ -2137,7 +2137,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#337",
                 },
               },
               "j": "3000",
@@ -2154,7 +2154,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#349",
                 },
               },
               "i": "101",
@@ -2179,7 +2179,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#349",
                 },
               },
               "i": "101",
@@ -2224,7 +2224,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#356",
                 },
               },
               "j": "3000",
@@ -2242,7 +2242,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#368",
                 },
               },
               "i": "101",
@@ -2268,7 +2268,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#356",
                 },
               },
               "j": "3000",
@@ -2286,7 +2286,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#368",
                 },
               },
               "i": "101",
@@ -2312,7 +2312,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#368",
                 },
               },
               "i": "101",
@@ -2374,7 +2374,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#378",
                 },
               },
               "j": "3000",
@@ -2393,7 +2393,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#390",
                 },
               },
               "i": "101",
@@ -2435,7 +2435,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#378",
                 },
               },
               "j": "3000",
@@ -2454,7 +2454,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#390",
                 },
               },
               "i": "101",
@@ -2481,7 +2481,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#378",
                 },
               },
               "j": "3000",
@@ -2500,7 +2500,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#390",
                 },
               },
               "i": "101",
@@ -2527,7 +2527,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#390",
                 },
               },
               "i": "101",
@@ -2572,7 +2572,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#402",
                 },
               },
               "j": "3000",
@@ -2590,7 +2590,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#414",
                 },
               },
               "i": "3201",
@@ -2616,7 +2616,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func2",
                 "prototype": {
-                  "constructor": "func2@stepBackPlain.js:7:2-10:3",
+                  "constructor": "func2@stepBackPlain.js:7:2-10:3#402",
                 },
               },
               "j": "3000",
@@ -2634,7 +2634,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#414",
                 },
               },
               "i": "3201",
@@ -2660,7 +2660,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#414",
                 },
               },
               "i": "3201",
@@ -2689,7 +2689,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#420",
                 },
               },
               "i": "675411",
@@ -2718,7 +2718,7 @@ exports[`VSCode protocol handlers with time traveling step back calls 1`] = `
                 "length": "1",
                 "name": "func1",
                 "prototype": {
-                  "constructor": "func1@stepBackPlain.js:3:0-11:1",
+                  "constructor": "func1@stepBackPlain.js:3:0-11:1#433",
                 },
               },
               "i": "675411",
@@ -3448,7 +3448,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#103",
                 },
               },
               "j": "3000",
@@ -3466,7 +3466,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#122",
                 },
               },
               "i": "886411",
@@ -3498,7 +3498,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#122",
                 },
               },
               "i": "886411",
@@ -3535,7 +3535,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#128",
                 },
               },
               "j": "3000",
@@ -3553,7 +3553,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#147",
                 },
               },
               "i": "886411",
@@ -3585,7 +3585,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#147",
                 },
               },
               "i": "886411",
@@ -3636,7 +3636,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#162",
                 },
               },
               "j": "3000",
@@ -3654,7 +3654,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#174",
                 },
               },
               "i": "4201",
@@ -3686,7 +3686,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#162",
                 },
               },
               "j": "3000",
@@ -3704,7 +3704,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#174",
                 },
               },
               "i": "4201",
@@ -3736,7 +3736,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#174",
                 },
               },
               "i": "4201",
@@ -3778,7 +3778,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": {
-                  "constructor": "(anonymous)@core.js:200:27-204:3",
+                  "constructor": "(anonymous)@core.js:200:27-204:3#193",
                 },
               },
             },
@@ -3816,7 +3816,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#206",
                 },
               },
               "j": "3000",
@@ -3832,7 +3832,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#208",
                 },
               },
               "i": "101",
@@ -3875,7 +3875,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": {
-                  "constructor": "(anonymous)@core.js:200:27-204:3",
+                  "constructor": "(anonymous)@core.js:200:27-204:3#216",
                 },
               },
             },
@@ -3937,7 +3937,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#236",
                 },
               },
               "j": "3000",
@@ -3961,7 +3961,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#238",
                 },
               },
               "i": "101",
@@ -4039,7 +4039,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#236",
                 },
               },
               "j": "3000",
@@ -4063,7 +4063,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#238",
                 },
               },
               "i": "101",
@@ -4121,7 +4121,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#236",
                 },
               },
               "j": "3000",
@@ -4145,7 +4145,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#238",
                 },
               },
               "i": "101",
@@ -4183,7 +4183,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#236",
                 },
               },
               "j": "3000",
@@ -4207,7 +4207,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#238",
                 },
               },
               "i": "101",
@@ -4245,7 +4245,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#238",
                 },
               },
               "i": "101",
@@ -4316,7 +4316,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#263",
                 },
               },
               "j": "3000",
@@ -4336,7 +4336,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#275",
                 },
               },
               "i": "101",
@@ -4386,7 +4386,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#263",
                 },
               },
               "j": "3000",
@@ -4406,7 +4406,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#275",
                 },
               },
               "i": "101",
@@ -4440,7 +4440,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#263",
                 },
               },
               "j": "3000",
@@ -4460,7 +4460,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#275",
                 },
               },
               "i": "101",
@@ -4494,7 +4494,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#275",
                 },
               },
               "i": "101",
@@ -4547,7 +4547,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#295",
                 },
               },
               "j": "3000",
@@ -4566,7 +4566,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#307",
                 },
               },
               "i": "101",
@@ -4599,7 +4599,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#295",
                 },
               },
               "j": "3000",
@@ -4618,7 +4618,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#307",
                 },
               },
               "i": "101",
@@ -4651,7 +4651,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#307",
                 },
               },
               "i": "101",
@@ -4688,7 +4688,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#315",
                 },
               },
               "j": "3000",
@@ -4706,7 +4706,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#334",
                 },
               },
               "i": "101",
@@ -4738,7 +4738,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#334",
                 },
               },
               "i": "101",
@@ -4768,7 +4768,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#339",
                 },
               },
               "j": "3000",
@@ -4785,7 +4785,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#351",
                 },
               },
               "i": "101",
@@ -4810,7 +4810,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#351",
                 },
               },
               "i": "101",
@@ -4840,7 +4840,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#356",
                 },
               },
               "j": "3000",
@@ -4857,7 +4857,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#368",
                 },
               },
               "i": "100",
@@ -4882,7 +4882,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#368",
                 },
               },
               "i": "100",
@@ -4911,7 +4911,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#372",
                 },
               },
               "i": "100",
@@ -4940,7 +4940,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#385",
                 },
               },
               "i": "100",
@@ -4969,7 +4969,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#398",
                 },
               },
               "i": "undefined",
@@ -5010,7 +5010,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#411",
                 },
               },
               "i": "undefined",
@@ -5039,7 +5039,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#424",
                 },
               },
               "i": "100",
@@ -5068,7 +5068,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#437",
                 },
               },
               "i": "100",
@@ -5098,7 +5098,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#451",
                 },
               },
               "j": "3000",
@@ -5115,7 +5115,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#463",
                 },
               },
               "i": "100",
@@ -5140,7 +5140,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#463",
                 },
               },
               "i": "100",
@@ -5170,7 +5170,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#468",
                 },
               },
               "j": "3000",
@@ -5187,7 +5187,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#480",
                 },
               },
               "i": "101",
@@ -5212,7 +5212,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#480",
                 },
               },
               "i": "101",
@@ -5249,7 +5249,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#486",
                 },
               },
               "j": "3000",
@@ -5267,7 +5267,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#505",
                 },
               },
               "i": "101",
@@ -5299,7 +5299,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#505",
                 },
               },
               "i": "101",
@@ -5352,7 +5352,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#520",
                 },
               },
               "j": "3000",
@@ -5371,7 +5371,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#532",
                 },
               },
               "i": "101",
@@ -5404,7 +5404,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#520",
                 },
               },
               "j": "3000",
@@ -5423,7 +5423,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#532",
                 },
               },
               "i": "101",
@@ -5456,7 +5456,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#532",
                 },
               },
               "i": "101",
@@ -5527,7 +5527,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#550",
                 },
               },
               "j": "3000",
@@ -5547,7 +5547,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#562",
                 },
               },
               "i": "101",
@@ -5597,7 +5597,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#550",
                 },
               },
               "j": "3000",
@@ -5617,7 +5617,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#562",
                 },
               },
               "i": "101",
@@ -5651,7 +5651,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#550",
                 },
               },
               "j": "3000",
@@ -5671,7 +5671,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#562",
                 },
               },
               "i": "101",
@@ -5705,7 +5705,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#562",
                 },
               },
               "i": "101",
@@ -5748,7 +5748,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": {
-                  "constructor": "(anonymous)@core.js:200:27-204:3",
+                  "constructor": "(anonymous)@core.js:200:27-204:3#576",
                 },
               },
             },
@@ -5810,7 +5810,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#596",
                 },
               },
               "j": "3000",
@@ -5834,7 +5834,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#598",
                 },
               },
               "i": "101",
@@ -5912,7 +5912,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#596",
                 },
               },
               "j": "3000",
@@ -5936,7 +5936,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#598",
                 },
               },
               "i": "101",
@@ -5994,7 +5994,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#596",
                 },
               },
               "j": "3000",
@@ -6018,7 +6018,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#598",
                 },
               },
               "i": "101",
@@ -6056,7 +6056,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#596",
                 },
               },
               "j": "3000",
@@ -6080,7 +6080,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#598",
                 },
               },
               "i": "101",
@@ -6118,7 +6118,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#598",
                 },
               },
               "i": "101",
@@ -6160,7 +6160,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "$_anonymous_",
                 "prototype": {
-                  "constructor": "(anonymous)@core.js:200:27-204:3",
+                  "constructor": "(anonymous)@core.js:200:27-204:3#624",
                 },
               },
             },
@@ -6198,7 +6198,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#637",
                 },
               },
               "j": "3000",
@@ -6214,7 +6214,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#639",
                 },
               },
               "i": "101",
@@ -6265,7 +6265,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#653",
                 },
               },
               "j": "3000",
@@ -6283,7 +6283,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#665",
                 },
               },
               "i": "4201",
@@ -6315,7 +6315,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#653",
                 },
               },
               "j": "3000",
@@ -6333,7 +6333,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#665",
                 },
               },
               "i": "4201",
@@ -6365,7 +6365,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#665",
                 },
               },
               "i": "4201",
@@ -6402,7 +6402,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc2",
                 "prototype": {
-                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3",
+                  "constructor": "afunc2@stepBackAsync.js:7:2-17:3#673",
                 },
               },
               "j": "3000",
@@ -6420,7 +6420,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#692",
                 },
               },
               "i": "886411",
@@ -6452,7 +6452,7 @@ exports[`VSCode protocol handlers with time traveling step back in async functio
                 "length": "1",
                 "name": "afunc1",
                 "prototype": {
-                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1",
+                  "constructor": "afunc1@stepBackAsync.js:3:0-19:1#692",
                 },
               },
               "i": "886411",

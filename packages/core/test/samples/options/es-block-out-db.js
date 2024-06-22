@@ -21,21 +21,21 @@ var $M = require("@effectful/debugger"),
     d: [7, "48:15-48:16"]
   }, null, 0],
   $s$2 = [{
-    nodeInterop: [1, null],
-    cacheBabelInterop: [2, null],
-    cacheNodeInterop: [3, null]
+    e: [1, null],
+    r: [2, null],
+    t: [3, null]
   }, $s$1, 1],
   $s$3 = [{
-    nodeInterop: [1, null]
+    e: [1, null]
   }, $s$2, 2],
   $s$4 = [{
-    obj: [1, null],
-    nodeInterop: [2, null],
-    cache: [3, null],
-    newObj: [4, null],
-    hasPropertyDescriptor: [5, null],
-    key: [6, null],
-    desc: [7, null]
+    e: [1, null],
+    r: [2, null],
+    t: [3, null],
+    n: [4, null],
+    a: [5, null],
+    u: [6, null],
+    i: [7, null]
   }, $s$1, 1],
   $s$5 = [{}, $s$1, 1],
   $s$6 = [{}, $s$1, 1],
@@ -86,10 +86,10 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 0, [[2, null, $s$1], [2, null, $s$1], [2, "4:0-19:2", $s$1], [16, "56:0-56:0", $s$1], [16, "56:0-56:0", $s$1]]),
-  $m$1 = $M.fun("m$1", "_getRequireWildcardCache", null, $m$0, ["nodeInterop"], 0, 4, null, 128, function ($, $l, $p) {
+  $m$1 = $M.fun("m$1", "_getRequireWildcardCache", null, $m$0, ["e"], 0, 4, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
-        if (typeof WeakMap !== "function") {
+        if ("function" != typeof WeakMap) {
           $.result = null;
           $.goto = 6;
           continue;
@@ -123,7 +123,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[0, null, $s$2], [2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
-  $m$2 = $M.fun("m$2", null, null, $m$1, ["nodeInterop"], 0, 2, null, 128, function ($, $l, $p) {
+  $m$2 = $M.fun("m$2", null, null, $m$1, ["e"], 0, 2, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         if ($l[1]) {
@@ -145,7 +145,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 2, [[0, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-  $m$3 = $M.fun("m$3", "_interopRequireWildcard", null, $m$0, ["obj", "nodeInterop"], 1, 10, null, 128, function ($, $l, $p) {
+  $m$3 = $M.fun("m$3", "_interopRequireWildcard", null, $m$0, ["e", "r"], 1, 10, null, 128, function ($, $l, $p) {
     var $1;
     for (;;) switch ($.state = $.goto) {
       case 0:
@@ -172,13 +172,13 @@ var $M = require("@effectful/debugger"),
           $.state = 3;
         }
       case 3:
-        $1 = $l[1] === null;
+        $1 = null === $l[1];
         if ($1) {
           $.state = 4;
         } else {
-          $1 = typeof $l[1] !== "object";
+          $1 = "object" != typeof $l[1];
           if ($1) {
-            $1 = typeof $l[1] !== "function";
+            $1 = "function" != typeof $l[1];
             $.goto = 24;
             continue;
           } else {
@@ -219,7 +219,9 @@ var $M = require("@effectful/debugger"),
           $.state = 8;
         }
       case 8:
-        $l[4] = {};
+        $l[4] = {
+          __proto__: null
+        };
         $1 = Object.defineProperty;
         if ($1) {
           $1 = Object.getOwnPropertyDescriptor;
@@ -253,10 +255,10 @@ var $M = require("@effectful/debugger"),
           }
         } else {
           $l[6] = $p.value;
-          $l[9] = $l[6] !== "default";
+          $l[9] = "default" !== $l[6];
           if ($l[9]) {
             $.goto = 20;
-            $p = $mcall("call", Object.prototype.hasOwnProperty, $l[1], $l[6]);
+            $p = $mcall("call", {}.hasOwnProperty, $l[1], $l[6]);
             continue;
           } else {
             $.state = 13;

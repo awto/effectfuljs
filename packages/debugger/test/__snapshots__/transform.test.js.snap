@@ -415,21 +415,21 @@ exports[`default transpiler 2`] = `
     run: [5, "5:16-5:19"]
   }, null, 0],
   $s$2 = [{
-    nodeInterop: [1, null],
-    cacheBabelInterop: [2, null],
-    cacheNodeInterop: [3, null]
+    e: [1, null],
+    r: [2, null],
+    t: [3, null]
   }, $s$1, 1],
   $s$3 = [{
-    nodeInterop: [1, null]
+    e: [1, null]
   }, $s$2, 2],
   $s$4 = [{
-    obj: [1, null],
-    nodeInterop: [2, null],
-    cache: [3, null],
-    newObj: [4, null],
-    hasPropertyDescriptor: [5, null],
-    key: [6, null],
-    desc: [7, null]
+    e: [1, null],
+    r: [2, null],
+    t: [3, null],
+    n: [4, null],
+    a: [5, null],
+    u: [6, null],
+    i: [7, null]
   }, $s$1, 1],
   $s$5 = [{
     i: [1, "5:20-5:21"]
@@ -484,10 +484,10 @@ exports[`default transpiler 2`] = `
         throw new Error("Invalid state");
     }
   }, null, null, 0, [[4, "1:0-1:29", $s$1], [2, null, $s$1], [2, null, $s$1], [4, "3:0-3:10", $s$1], [4, "12:0-12:6", $s$1], [2, "12:0-12:5", $s$1], [4, "13:0-13:6", $s$1], [2, "13:0-13:5", $s$1], [16, "14:0-14:0", $s$1], [16, "14:0-14:0", $s$1]]),
-  $m$1 = $M.fun("m$1", "_getRequireWildcardCache", null, $m$0, ["nodeInterop"], 0, 4, null, 0, function ($, $l, $p) {
+  $m$1 = $M.fun("m$1", "_getRequireWildcardCache", null, $m$0, ["e"], 0, 4, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
-        if (typeof WeakMap !== "function") {
+        if ("function" != typeof WeakMap) {
           $.state = 1;
         } else {
           $.goto = 2;
@@ -502,14 +502,14 @@ exports[`default transpiler 2`] = `
         $p = new ($x.call = WeakMap)();
         $.state = 3;
       case 3:
-        $l[2 /*cacheBabelInterop*/] = $p;
+        $l[2 /*r*/] = $p;
         $.goto = 4;
         $p = new ($x.call = WeakMap)();
         $.state = 4;
       case 4:
-        $l[3 /*cacheNodeInterop*/] = $p;
+        $l[3 /*t*/] = $p;
         $.goto = 5;
-        $p = ($x.call = $l[0][2 /*_getRequireWildcardCache*/] = $m$2($))($l[1 /*nodeInterop*/]);
+        $p = ($x.call = $l[0][2 /*_getRequireWildcardCache*/] = $m$2($))($l[1 /*e*/]);
         $.state = 5;
       case 5:
         $.result = $p;
@@ -524,23 +524,23 @@ exports[`default transpiler 2`] = `
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [2, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
-  $m$2 = $M.fun("m$2", null, null, $m$1, ["nodeInterop"], 0, 2, null, 0, function ($, $l, $p) {
+  $m$2 = $M.fun("m$2", null, null, $m$1, ["e"], 0, 2, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
-        if ($l[1 /*nodeInterop*/]) {
+        if ($l[1 /*e*/]) {
           $.state = 1;
         } else {
           $.goto = 3;
           continue;
         }
       case 1:
-        $.result = $l[0][3 /*cacheNodeInterop*/];
+        $.result = $l[0][3 /*t*/];
         $.state = 2;
       case 2:
         $.goto = 5;
         continue;
       case 3:
-        $.result = $l[0][2 /*cacheBabelInterop*/];
+        $.result = $l[0][2 /*r*/];
         $.goto = 2;
         continue;
       case 4:
@@ -552,11 +552,11 @@ exports[`default transpiler 2`] = `
         throw new Error("Invalid state");
     }
   }, null, null, 2, [[0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-  $m$3 = $M.fun("m$3", "_interopRequireWildcard", null, $m$0, ["obj", "nodeInterop"], 1, 10, null, 0, function ($, $l, $p) {
+  $m$3 = $M.fun("m$3", "_interopRequireWildcard", null, $m$0, ["e", "r"], 1, 10, null, 0, function ($, $l, $p) {
     var $1;
     for (;;) switch ($.state = $.goto) {
       case 0:
-        $1 = !$l[2 /*nodeInterop*/];
+        $1 = !$l[2 /*r*/];
         if ($1) {
           $.state = 1;
         } else {
@@ -564,7 +564,7 @@ exports[`default transpiler 2`] = `
           continue;
         }
       case 1:
-        $1 = $l[1 /*obj*/];
+        $1 = $l[1 /*e*/];
         $.state = 2;
       case 2:
         if ($1) {
@@ -574,7 +574,7 @@ exports[`default transpiler 2`] = `
           continue;
         }
       case 3:
-        $1 = $l[1 /*obj*/].__esModule;
+        $1 = $l[1 /*e*/].__esModule;
         $.state = 4;
       case 4:
         if ($1) {
@@ -584,11 +584,11 @@ exports[`default transpiler 2`] = `
           continue;
         }
       case 5:
-        $.result = $l[1 /*obj*/];
+        $.result = $l[1 /*e*/];
         $.goto = 46;
         continue;
       case 6:
-        $1 = $l[1 /*obj*/] === null;
+        $1 = null === $l[1 /*e*/];
         if ($1) {
           $.state = 7;
         } else {
@@ -604,17 +604,17 @@ exports[`default transpiler 2`] = `
         }
       case 8:
         $.result = {
-          default: $l[1 /*obj*/]
+          default: $l[1 /*e*/]
         };
         $.goto = 46;
         continue;
       case 9:
         $.goto = 10;
-        $p = ($x.call = $l[0][2 /*_getRequireWildcardCache*/])($l[2 /*nodeInterop*/]);
+        $p = ($x.call = $l[0][2 /*_getRequireWildcardCache*/])($l[2 /*r*/]);
         $.state = 10;
       case 10:
-        $l[3 /*cache*/] = $p;
-        $l[8] = $l[3 /*cache*/];
+        $l[3 /*t*/] = $p;
+        $l[8] = $l[3 /*t*/];
         if ($l[8]) {
           $.state = 11;
         } else {
@@ -623,7 +623,7 @@ exports[`default transpiler 2`] = `
         }
       case 11:
         $.goto = 12;
-        $p = $mcall("has", $l[3 /*cache*/], $l[1 /*obj*/]);
+        $p = $mcall("has", $l[3 /*t*/], $l[1 /*e*/]);
         $.state = 12;
       case 12:
         $l[8] = $p;
@@ -637,14 +637,16 @@ exports[`default transpiler 2`] = `
         }
       case 14:
         $.goto = 15;
-        $p = $mcall("get", $l[3 /*cache*/], $l[1 /*obj*/]);
+        $p = $mcall("get", $l[3 /*t*/], $l[1 /*e*/]);
         $.state = 15;
       case 15:
         $.result = $p;
         $.goto = 46;
         continue;
       case 16:
-        $l[4 /*newObj*/] = {};
+        $l[4 /*n*/] = {
+          __proto__: null
+        };
         $1 = Object.defineProperty;
         if ($1) {
           $.state = 17;
@@ -656,9 +658,9 @@ exports[`default transpiler 2`] = `
         $1 = Object.getOwnPropertyDescriptor;
         $.state = 18;
       case 18:
-        $l[5 /*hasPropertyDescriptor*/] = $1;
+        $l[5 /*a*/] = $1;
         $.goto = 19;
-        $p = $forInIterator($l[1 /*obj*/]);
+        $p = $forInIterator($l[1 /*e*/]);
         $.state = 19;
       case 19:
         $l[8] = $p;
@@ -676,8 +678,8 @@ exports[`default transpiler 2`] = `
           continue;
         }
       case 22:
-        $l[4 /*newObj*/].default = $l[1 /*obj*/];
-        if ($l[3 /*cache*/]) {
+        $l[4 /*n*/].default = $l[1 /*e*/];
+        if ($l[3 /*t*/]) {
           $.state = 23;
         } else {
           $.goto = 24;
@@ -685,15 +687,15 @@ exports[`default transpiler 2`] = `
         }
       case 23:
         $.goto = 24;
-        $mcall("set", $l[3 /*cache*/], $l[1 /*obj*/], $l[4 /*newObj*/]);
+        $mcall("set", $l[3 /*t*/], $l[1 /*e*/], $l[4 /*n*/]);
         $.state = 24;
       case 24:
-        $.result = $l[4 /*newObj*/];
+        $.result = $l[4 /*n*/];
         $.goto = 46;
         continue;
       case 25:
-        $l[6 /*key*/] = $p.value;
-        $l[9] = $l[6 /*key*/] !== "default";
+        $l[6 /*u*/] = $p.value;
+        $l[9] = "default" !== $l[6 /*u*/];
         if ($l[9]) {
           $.state = 26;
         } else {
@@ -702,7 +704,7 @@ exports[`default transpiler 2`] = `
         }
       case 26:
         $.goto = 27;
-        $p = $mcall("call", Object.prototype.hasOwnProperty, $l[1 /*obj*/], $l[6 /*key*/]);
+        $p = $mcall("call", {}.hasOwnProperty, $l[1 /*e*/], $l[6 /*u*/]);
         $.state = 27;
       case 27:
         $l[9] = $p;
@@ -715,7 +717,7 @@ exports[`default transpiler 2`] = `
           continue;
         }
       case 29:
-        if ($l[5 /*hasPropertyDescriptor*/]) {
+        if ($l[5 /*a*/]) {
           $.state = 30;
         } else {
           $.goto = 40;
@@ -723,14 +725,14 @@ exports[`default transpiler 2`] = `
         }
       case 30:
         $.goto = 31;
-        $p = $mcall("getOwnPropertyDescriptor", Object, $l[1 /*obj*/], $l[6 /*key*/]);
+        $p = $mcall("getOwnPropertyDescriptor", Object, $l[1 /*e*/], $l[6 /*u*/]);
         $.state = 31;
       case 31:
         $l[9] = $p;
         $.state = 32;
       case 32:
-        $l[7 /*desc*/] = $l[9];
-        $1 = $l[7 /*desc*/];
+        $l[7 /*i*/] = $l[9];
+        $1 = $l[7 /*i*/];
         if ($1) {
           $.state = 33;
         } else {
@@ -738,7 +740,7 @@ exports[`default transpiler 2`] = `
           continue;
         }
       case 33:
-        $1 = $l[7 /*desc*/].get;
+        $1 = $l[7 /*i*/].get;
         if ($1) {
           $.state = 34;
         } else {
@@ -749,7 +751,7 @@ exports[`default transpiler 2`] = `
         $.goto = 36;
         continue;
       case 35:
-        $1 = $l[7 /*desc*/].set;
+        $1 = $l[7 /*i*/].set;
         $.goto = 34;
         continue;
       case 36:
@@ -761,13 +763,13 @@ exports[`default transpiler 2`] = `
         }
       case 37:
         $.goto = 38;
-        $mcall("defineProperty", Object, $l[4 /*newObj*/], $l[6 /*key*/], $l[7 /*desc*/]);
+        $mcall("defineProperty", Object, $l[4 /*n*/], $l[6 /*u*/], $l[7 /*i*/]);
         $.state = 38;
       case 38:
         $.goto = 41;
         continue;
       case 39:
-        $l[4 /*newObj*/][$l[6 /*key*/]] = $l[1 /*obj*/][$l[6 /*key*/]];
+        $l[4 /*n*/][$l[6 /*u*/]] = $l[1 /*e*/][$l[6 /*u*/]];
         $.goto = 38;
         continue;
       case 40:
@@ -778,7 +780,7 @@ exports[`default transpiler 2`] = `
         $.goto = 20;
         continue;
       case 42:
-        $1 = typeof $l[1 /*obj*/] !== "object";
+        $1 = "object" != typeof $l[1 /*e*/];
         if ($1) {
           $.state = 43;
         } else {
@@ -786,7 +788,7 @@ exports[`default transpiler 2`] = `
           continue;
         }
       case 43:
-        $1 = typeof $l[1 /*obj*/] !== "function";
+        $1 = "function" != typeof $l[1 /*e*/];
         $.state = 44;
       case 44:
         $.goto = 7;

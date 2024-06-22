@@ -111,9 +111,8 @@ var $M = require("@effectful/debugger"),
   $s$36 = [{}, $s$34, 4],
   $s$37 = [{
     _getName: [1, null],
-    _Symbol$iterator: [2, null],
-    C: [3, null],
-    _proto4: [4, null]
+    C: [2, null],
+    _proto4: [3, null]
   }, $s$1, 1],
   $s$38 = [{}, $s$37, 2],
   $s$39 = [{}, $s$37, 2],
@@ -201,7 +200,7 @@ var $M = require("@effectful/debugger"),
         $.state = 11;
       case 11:
         $.goto = 12;
-        $p = /*#__PURE__*/($x.call = $l[16])($p, Symbol.iterator);
+        $p = /*#__PURE__*/($x.call = $l[16])($p);
         $.state = 12;
       case 12:
         $.goto = 13;
@@ -3204,22 +3203,22 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 4, [[4, "238:8-238:24", $s$36], [2, "238:8-238:23", $s$36], [36, "239:7-239:7", $s$36], [16, "239:7-239:7", $s$36], [16, "239:7-239:7", $s$36]]),
-  $m$24 = $M.fun("m$24", null, null, $m$0, ["_getName", "_Symbol$iterator"], 0, 5, "245:2-250:3", 0, function ($, $l, $p) {
+  $m$24 = $M.fun("m$24", null, null, $m$0, ["_getName"], 0, 4, "245:2-250:31", 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
-        $l[3] = $m$25($);
-        $l[4] = $l[3].prototype;
+        $l[2] = $m$25($);
+        $l[3] = $l[2].prototype;
         $.goto = 1;
         $brk();
         $.state = 1;
       case 1:
-        $l[4][$l[1]] = $m$26($);
+        $l[3][$l[1]] = $m$26($);
         $.goto = 2;
         $brk();
         $.state = 2;
       case 2:
-        $l[3][$l[2]] = $m$27($);
-        $.result = $l[3];
+        $l[2][Symbol.iterator] = $m$27($);
+        $.result = $l[2];
         $.goto = 4;
         continue;
       case 3:
@@ -3230,7 +3229,7 @@ var $M = require("@effectful/debugger"),
       default:
         throw new Error("Invalid state");
     }
-  }, null, null, 1, [[4, "245:2-247:3", $s$37], [4, "248:2-250:3", $s$37], [0, null, $s$37], [16, "250:3-250:3", $s$37], [16, "250:3-250:3", $s$37]]),
+  }, null, null, 1, [[4, "245:2-247:3", $s$37], [4, "248:2-250:31", $s$37], [0, null, $s$37], [16, "250:31-250:31", $s$37], [16, "250:31-250:31", $s$37]]),
   $m$25 = $M.fun("m$25", "C", null, $m$24, [], 0, 1, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:

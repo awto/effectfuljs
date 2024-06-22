@@ -18,7 +18,7 @@ var $M = require("@effectful/debugger"),
     a: [3, "3:10-3:11"]
   }, null, 0],
   $s$2 = [{
-    obj: [1, null]
+    e: [1, null]
   }, $s$1, 1],
   $s$3 = [{}, $s$1, 1],
   $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 4, "1:0-7:0", 32, function ($, $l, $p) {
@@ -50,7 +50,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 0, [[4, "1:0-1:38", $s$1], [2, null, $s$1], [2, null, $s$1], [0, null, $s$1], [16, "7:0-7:0", $s$1], [16, "7:0-7:0", $s$1]]),
-  $m$1 = $M.fun("m$1", "_interopRequireDefault", null, $m$0, ["obj"], 0, 3, null, 0, function ($, $l, $p) {
+  $m$1 = $M.fun("m$1", "_interopRequireDefault", null, $m$0, ["e"], 0, 3, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $l[2] = $l[1];

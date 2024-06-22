@@ -89,14 +89,14 @@ const isBrowser = State.isBrowser;
 let normalizeDir = (v: string) =>
   State.normalizeDrive(path.resolve(config.srcRoot, v));
 let curDirSep: string = path.sep;
-const knownBreakpoints = new Map<
+const knownBreakpoints: Map<
   string,
   Map<number, P.SetBreakpointsArguments>
->();
+> = new Map();
 
 function setDirSep(sep: string | undefined) {
   if (!sep || sep === curDirSep || sep === "/") return;
-  normalizeDir = dir => State.normalizeDrive(dir.replace(/\\/g, "/"));
+  normalizeDir = (dir) => State.normalizeDrive(dir.replace(/\\/g, "/"));
 }
 
 interface Location {
@@ -786,7 +786,7 @@ function varValue(name: string, value: any): VarValue {
         }
         const res: VarValue = {
           name: String(name),
-          value: textValue || str(value),
+          value: `${textValue || str(value)}#${State.toLocal(ref)}`,
           type,
           variablesReference: ref
         };
@@ -799,8 +799,10 @@ function varValue(name: string, value: any): VarValue {
           res.indexedVariables = value.length;
         } else {
           res.namedVariables = filter(
-            getValues(getOwnPropertyDescriptors(value)),
-            i => "value" in i
+            getValues(getOwnPropertyDescriptors(value)) as {
+              value?: unknown;
+            }[],
+            (i) => "value" in i
           ).length;
           const proto = getPrototypeOf(value);
           if (proto !== null && proto !== Object.prototype)
@@ -882,7 +884,11 @@ handlers.childLaunch = function (args, res) {
   State.resumeEventQueue();
 };
 
-function checkPause(brk: State.Brk, top: State.Frame, ignoreEnabled:boolean): null | string {
+function checkPause(
+  brk: State.Brk,
+  top: State.Frame,
+  ignoreEnabled: boolean
+): null | string {
   if (!ignoreEnabled && !context.enabled) return null;
   if (firstThread) {
     firstThread = false;
@@ -1231,7 +1237,7 @@ handlers.childDisableBreakpoint = function (args, res) {
   const modBreakpoints = module.breakpoints;
   if (!modBreakpoints) return;
   const id = args.id;
-  const bp = modBreakpoints.find(i => i.breakpoint && i.breakpoint.id === id);
+  const bp = modBreakpoints.find((i) => i.breakpoint && i.breakpoint.id === id);
   if (bp) bp.breakpoint = null;
 };
 
@@ -1387,7 +1393,7 @@ handlers.setExpression = function (args, res) {
   );
 };
 
-const sources = new Map<number, string>();
+const sources: Map<number, string> = new Map();
 
 handlers.source = function (args, res) {
   const content = sources.get(args.sourceReference);
@@ -1523,7 +1529,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
   if (!json) return;
   try {
     journal.enabled = false;
-    const loadedModules = new Set<string>();
+    const loadedModules: Set<string> = new Set();
     if (json.modules) {
       for (const i of (<any>json).modules) {
         let module = context.modules[i.id];

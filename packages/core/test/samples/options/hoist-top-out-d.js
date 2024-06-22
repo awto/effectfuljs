@@ -34,23 +34,23 @@ var $M = require("@effectful/debugger"),
     somethingElse: [17, "13:17-13:30"]
   }, $s$1, 0],
   $s$3 = [{
-    obj: [1, null]
+    e: [1, null]
   }, $s$1, 1],
   $s$4 = [{
-    arr: [1, null],
-    i: [2, null]
+    r: [1, null],
+    e: [2, null]
   }, $s$1, 1],
   $s$5 = [{}, $s$1, 1],
   $s$6 = [{
-    o: [1, null],
-    minLen: [2, null],
-    n: [3, null]
+    r: [1, null],
+    a: [2, null],
+    t: [3, null]
   }, $s$1, 1],
   $s$7 = [{
-    arr: [1, null],
-    len: [2, null],
-    i: [3, null],
-    arr2: [4, null]
+    r: [1, null],
+    a: [2, null],
+    e: [3, null],
+    n: [4, null]
   }, $s$1, 1],
   $s$8 = [{
     r: [1, null],
@@ -68,7 +68,7 @@ var $M = require("@effectful/debugger"),
     r: [11, null]
   }, $s$8, 1],
   $s$10 = [{
-    arr: [1, null]
+    r: [1, null]
   }, $s$1, 1],
   $s$11 = [{}, $s$1, 1],
   $s$12 = [{
@@ -126,8 +126,7 @@ var $M = require("@effectful/debugger"),
         $brk();
         $.state = 8;
       case 8:
-        $l[10] = $l[9][1];
-        module.exports.a = $l[10];
+        $l[10] = module.exports.a = $l[9][1];
         $l[17] = $m$12($);
         $.goto = 9;
         $brk();
@@ -174,7 +173,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 0, [[4, "2:0-2:21", $s$1], [2, null, $s$1], [2, null, $s$1], [4, "1:0-1:16", $s$1], [2, "1:0-1:15", $s$1], [4, "3:7-3:21", $s$1], [2, null, $s$1], [4, "3:14-3:15", $s$1], [4, "6:8-9:12", $s$2], [2, null, $s$2], [4, "11:2-11:12", $s$2], [4, "12:2-12:29", $s$2], [2, null, $s$2], [4, "12:11-12:16", $s$2], [4, "12:18-12:20", $s$2], [36, "19:1-19:1", $s$1], [16, "20:0-20:0", $s$1], [16, "20:0-20:0", $s$1]]),
-  $m$1 = $M.fun("m$1", "_interopRequireDefault", null, $m$0, ["obj"], 1, 2, null, 0, function ($, $l, $p) {
+  $m$1 = $M.fun("m$1", "_interopRequireDefault", null, $m$0, ["e"], 1, 2, null, 0, function ($, $l, $p) {
     var $1;
     for (;;) switch ($.state = $.goto) {
       case 0:
@@ -216,7 +215,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-  $m$2 = $M.fun("m$2", "_slicedToArray", null, $m$0, ["arr", "i"], 0, 3, null, 0, function ($, $l, $p) {
+  $m$2 = $M.fun("m$2", "_slicedToArray", null, $m$0, ["r", "e"], 0, 3, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $.goto = 1;
@@ -298,89 +297,88 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[2, null, $s$5], [0, null, $s$5], [16, null, $s$5], [16, null, $s$5]]),
-  $m$4 = $M.fun("m$4", "_unsupportedIterableToArray", null, $m$0, ["o", "minLen"], 1, 5, null, 0, function ($, $l, $p) {
+  $m$4 = $M.fun("m$4", "_unsupportedIterableToArray", null, $m$0, ["r", "a"], 1, 5, null, 0, function ($, $l, $p) {
     var $1;
     for (;;) switch ($.state = $.goto) {
       case 0:
-        if (!$l[1]) {
+        if ($l[1]) {
           $.state = 1;
         } else {
-          $.goto = 2;
+          $.goto = 23;
           continue;
         }
       case 1:
-        $.goto = 24;
-        continue;
-      case 2:
-        if (typeof $l[1] === "string") {
-          $.state = 3;
+        if ("string" == typeof $l[1]) {
+          $.state = 2;
         } else {
-          $.goto = 5;
+          $.goto = 4;
           continue;
         }
-      case 3:
-        $.goto = 4;
+      case 2:
+        $.goto = 3;
         $p = ($x.call = $l[0][6])($l[1], $l[2]);
-        $.state = 4;
-      case 4:
+        $.state = 3;
+      case 3:
         $.result = $p;
-        $.goto = 24;
+        $.goto = 25;
         continue;
+      case 4:
+        $.goto = 5;
+        $p = $mcall("call", {}.toString, $l[1]);
+        $.state = 5;
       case 5:
         $.goto = 6;
-        $p = $mcall("call", Object.prototype.toString, $l[1]);
+        $p = $mcall("slice", $p, 8, -1);
         $.state = 6;
       case 6:
-        $.goto = 7;
-        $p = $mcall("slice", $p, 8, -1);
-        $.state = 7;
-      case 7:
         $l[3] = $p;
-        $1 = $l[3] === "Object";
+        $1 = "Object" === $l[3];
         if ($1) {
-          $.state = 8;
+          $.state = 7;
         } else {
-          $.goto = 9;
+          $.goto = 8;
           continue;
         }
-      case 8:
+      case 7:
         $1 = $l[1].constructor;
-        $.state = 9;
-      case 9:
+        $.state = 8;
+      case 8:
         if ($1) {
-          $.state = 10;
+          $.state = 9;
         } else {
-          $.goto = 11;
+          $.goto = 10;
           continue;
         }
-      case 10:
+      case 9:
         $l[3] = $l[1].constructor.name;
-        $.state = 11;
-      case 11:
-        $1 = $l[3] === "Map";
+        $.state = 10;
+      case 10:
+        $1 = "Map" === $l[3];
         if ($1) {
-          $.state = 12;
+          $.state = 11;
         } else {
           $.goto = 22;
           continue;
         }
-      case 12:
+      case 11:
         if ($1) {
-          $.state = 13;
+          $.state = 12;
         } else {
           $.goto = 15;
           continue;
         }
-      case 13:
-        $.goto = 14;
+      case 12:
+        $.goto = 13;
         $p = $mcall("from", Array, $l[1]);
+        $.state = 13;
+      case 13:
+        $.result = $p;
         $.state = 14;
       case 14:
-        $.result = $p;
-        $.goto = 24;
+        $.goto = 25;
         continue;
       case 15:
-        $l[4] = $l[3] === "Arguments";
+        $l[4] = "Arguments" === $l[3];
         if ($l[4]) {
           $.state = 16;
         } else {
@@ -400,10 +398,11 @@ var $M = require("@effectful/debugger"),
         $.state = 18;
       case 18:
         $.result = $p;
-        $.goto = 24;
+        $.goto = 14;
         continue;
       case 19:
-        $.goto = 24;
+        $.result = void 0;
+        $.goto = 14;
         continue;
       case 20:
         $.goto = 21;
@@ -414,23 +413,26 @@ var $M = require("@effectful/debugger"),
         $.goto = 16;
         continue;
       case 22:
-        $1 = $l[3] === "Set";
-        $.goto = 12;
+        $1 = "Set" === $l[3];
+        $.goto = 11;
         continue;
       case 23:
-        $.goto = 24;
-        return $unhandled($.error);
+        $.goto = 25;
+        continue;
       case 24:
+        $.goto = 25;
+        return $unhandled($.error);
+      case 25:
         return $ret($.result);
       default:
         throw new Error("Invalid state");
     }
-  }, null, null, 1, [[0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [2, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [16, null, $s$6], [16, null, $s$6]]),
-  $m$5 = $M.fun("m$5", "_arrayLikeToArray", null, $m$0, ["arr", "len"], 1, 5, null, 0, function ($, $l, $p) {
+  }, null, null, 1, [[0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [2, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [2, null, $s$6], [0, null, $s$6], [0, null, $s$6], [0, null, $s$6], [16, null, $s$6], [16, null, $s$6]]),
+  $m$5 = $M.fun("m$5", "_arrayLikeToArray", null, $m$0, ["r", "a"], 1, 5, null, 0, function ($, $l, $p) {
     var $1;
     for (;;) switch ($.state = $.goto) {
       case 0:
-        $1 = $l[2] == null;
+        $1 = null == $l[2];
         if ($1) {
           $.state = 1;
         } else {
@@ -450,7 +452,7 @@ var $M = require("@effectful/debugger"),
       case 3:
         $l[3] = 0;
         $.goto = 4;
-        $p = new ($x.call = Array)($l[2]);
+        $p = ($x.call = Array)($l[2]);
         $.state = 4;
       case 4:
         $l[4] = $p;
@@ -760,7 +762,7 @@ var $M = require("@effectful/debugger"),
         break;
     }
   }, 1, [[0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [3, null, $s$8], [1, null, $s$8], [3, null, $s$8], [1, null, $s$8], [1, null, $s$8], [1, null, $s$8], [1, null, $s$8], [3, null, $s$8], [1, null, $s$8], [3, null, $s$8], [1, null, $s$8], [1, null, $s$8], [1, null, $s$8], [0, null, $s$9], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [2, null, $s$8], [2, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [0, null, $s$8], [16, null, $s$8], [16, null, $s$8]]),
-  $m$7 = $M.fun("m$7", "_arrayWithHoles", null, $m$0, ["arr"], 0, 2, null, 0, function ($, $l, $p) {
+  $m$7 = $M.fun("m$7", "_arrayWithHoles", null, $m$0, ["r"], 0, 2, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $.goto = 1;

@@ -24,25 +24,25 @@ var $M = require("@effectful/debugger"),
     obj1: [9, "30:6-30:10"]
   }, null, 0],
   $s$2 = [{
-    target: [1, null],
-    props: [2, null],
-    i: [3, null],
-    descriptor: [4, null]
+    e: [1, null],
+    r: [2, null],
+    t: [3, null],
+    o: [4, null]
   }, $s$1, 1],
   $s$3 = [{
-    Constructor: [1, null],
-    protoProps: [2, null],
-    staticProps: [3, null]
+    e: [1, null],
+    r: [2, null],
+    t: [3, null]
   }, $s$1, 1],
   $s$4 = [{
-    arg: [1, null],
-    key: [2, null]
+    t: [1, null],
+    i: [2, null]
   }, $s$1, 1],
   $s$5 = [{
-    input: [1, null],
-    hint: [2, null],
-    prim: [3, null],
-    res: [4, null]
+    t: [1, null],
+    r: [2, null],
+    e: [3, null],
+    i: [4, null]
   }, $s$1, 1],
   $s$6 = [{
     a: [1, "3:11-3:12"]
@@ -100,7 +100,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 0, [[2, "1:16-1:30", $s$1], [2, null, $s$1], [0, null, $s$1], [16, "39:0-39:0", $s$1], [16, "39:0-39:0", $s$1]]),
-  $m$1 = $M.fun("m$1", "_defineProperties", null, $m$0, ["target", "props"], 1, 5, null, 128, function ($, $l, $p) {
+  $m$1 = $M.fun("m$1", "_defineProperties", null, $m$0, ["e", "r"], 1, 5, null, 128, function ($, $l, $p) {
     var $1;
     for (;;) switch ($.state = $.goto) {
       case 0:
@@ -113,7 +113,7 @@ var $M = require("@effectful/debugger"),
           if ($1) {
             $.state = 2;
           } else {
-            $1 = false;
+            $1 = !1;
             $.state = 2;
           }
         } else {
@@ -122,9 +122,9 @@ var $M = require("@effectful/debugger"),
         }
       case 2:
         $l[4].enumerable = $1;
-        $l[4].configurable = true;
+        $l[4].configurable = !0;
         if ("value" in $l[4]) {
-          $l[4].writable = true;
+          $l[4].writable = !0;
           $.state = 3;
         } else {
           $.state = 3;
@@ -150,7 +150,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[0, null, $s$2], [0, null, $s$2], [0, null, $s$2], [2, null, $s$2], [2, null, $s$2], [0, null, $s$2], [16, null, $s$2], [16, null, $s$2]]),
-  $m$2 = $M.fun("m$2", "_createClass", null, $m$0, ["Constructor", "protoProps", "staticProps"], 0, 4, null, 128, function ($, $l, $p) {
+  $m$2 = $M.fun("m$2", "_createClass", null, $m$0, ["e", "r", "t"], 0, 4, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         if ($l[2]) {
@@ -171,7 +171,7 @@ var $M = require("@effectful/debugger"),
       case 2:
         $.goto = 3;
         $mcall("defineProperty", Object, $l[1], "prototype", {
-          writable: false
+          writable: !1
         });
         $.state = 3;
       case 3:
@@ -187,7 +187,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 1, [[2, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-  $m$3 = $M.fun("m$3", "_toPropertyKey", null, $m$0, ["arg"], 0, 3, null, 128, function ($, $l, $p) {
+  $m$3 = $M.fun("m$3", "_toPropertyKey", null, $m$0, ["t"], 0, 3, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $.goto = 1;
@@ -195,39 +195,34 @@ var $M = require("@effectful/debugger"),
         $.state = 1;
       case 1:
         $l[2] = $p;
-        if (typeof $l[2] === "symbol") {
+        if ("symbol" == typeof $l[2]) {
           $.result = $l[2];
           $.state = 2;
         } else {
-          $.goto = 3;
-          $p = ($x.call = String)($l[2]);
-          continue;
+          $.result = $l[2] + "";
+          $.state = 2;
         }
       case 2:
-        $.goto = 5;
+        $.goto = 4;
         continue;
       case 3:
-        $.result = $p;
-        $.goto = 2;
-        continue;
-      case 4:
-        $.goto = 5;
+        $.goto = 4;
         return $unhandled($.error);
-      case 5:
+      case 4:
         return $ret($.result);
       default:
         throw new Error("Invalid state");
     }
-  }, null, null, 1, [[2, null, $s$4], [2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
-  $m$4 = $M.fun("m$4", "_toPrimitive", null, $m$0, ["input", "hint"], 1, 5, null, 128, function ($, $l, $p) {
+  }, null, null, 1, [[2, null, $s$4], [0, null, $s$4], [0, null, $s$4], [16, null, $s$4], [16, null, $s$4]]),
+  $m$4 = $M.fun("m$4", "_toPrimitive", null, $m$0, ["t", "r"], 1, 5, null, 128, function ($, $l, $p) {
     var $1;
     for (;;) switch ($.state = $.goto) {
       case 0:
-        $1 = typeof $l[1] !== "object";
+        $1 = "object" != typeof $l[1];
         if ($1) {
           $.state = 1;
         } else {
-          $1 = $l[1] === null;
+          $1 = !$l[1];
           $.state = 1;
         }
       case 1:
@@ -240,7 +235,7 @@ var $M = require("@effectful/debugger"),
         }
       case 2:
         $l[3] = $l[1][Symbol.toPrimitive];
-        if ($l[3] !== undefined) {
+        if (void 0 !== $l[3]) {
           $1 = $l[2];
           if ($1) {
             $.goto = 6;
@@ -254,7 +249,7 @@ var $M = require("@effectful/debugger"),
           $.state = 3;
         }
       case 3:
-        if ($l[2] === "string") {
+        if ("string" === $l[2]) {
           $1 = String;
           $.state = 4;
         } else {
@@ -275,7 +270,7 @@ var $M = require("@effectful/debugger"),
         $.state = 7;
       case 7:
         $l[4] = $p;
-        if (typeof $l[4] !== "object") {
+        if ("object" != typeof $l[4]) {
           $.result = $l[4];
           $.goto = 11;
           continue;
@@ -350,14 +345,14 @@ var $M = require("@effectful/debugger"),
         $l[2].func = $m$8($);
         $l[2].func = $m$9($);
         $.goto = 1;
-        ($x.call = $l[0][2])($l[1], [{
+        $p = ($x.call = $l[0][2])($l[1], [{
           key: "prop1",
           get: $m$11($),
           set: $m$12($)
         }]);
         $.state = 1;
       case 1:
-        $.result = $l[1];
+        $.result = $p;
         $.goto = 3;
         continue;
       case 2:

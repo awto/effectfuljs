@@ -110,9 +110,8 @@ var $M = require("@effectful/debugger"),
   $s$36 = [{}, $s$34, 4],
   $s$37 = [{
     _getName: [1, null],
-    _Symbol$iterator: [2, null],
-    C: [3, null],
-    _proto4: [4, null]
+    C: [2, null],
+    _proto4: [3, null]
   }, $s$1, 1],
   $s$38 = [{}, $s$37, 2],
   $s$39 = [{}, $s$37, 2],
@@ -180,7 +179,7 @@ var $M = require("@effectful/debugger"),
         $.state = 6;
       case 6:
         $.goto = 7;
-        $p = /*#__PURE__*/($x.call = $l[16])($p, Symbol.iterator);
+        $p = /*#__PURE__*/($x.call = $l[16])($p);
         $.state = 7;
       case 7:
         $.goto = 8;
@@ -2282,14 +2281,14 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 4, [[2, "238:8-238:23", $s$36], [16, "239:7-239:7", $s$36], [16, "239:7-239:7", $s$36]]),
-  $m$24 = $M.fun("m$24", null, null, $m$0, ["_getName", "_Symbol$iterator"], 0, 5, "245:2-250:3", 128, function ($, $l, $p) {
+  $m$24 = $M.fun("m$24", null, null, $m$0, ["_getName"], 0, 4, "245:2-250:31", 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
-        $l[3] = $m$25($);
-        $l[4] = $l[3].prototype;
-        $l[4][$l[1]] = $m$26($);
-        $l[3][$l[2]] = $m$27($);
-        $.result = $l[3];
+        $l[2] = $m$25($);
+        $l[3] = $l[2].prototype;
+        $l[3][$l[1]] = $m$26($);
+        $l[2][Symbol.iterator] = $m$27($);
+        $.result = $l[2];
         $.goto = 2;
         continue;
       case 1:
@@ -2300,7 +2299,7 @@ var $M = require("@effectful/debugger"),
       default:
         throw new Error("Invalid state");
     }
-  }, null, null, 1, [[0, null, $s$37], [16, "250:3-250:3", $s$37], [16, "250:3-250:3", $s$37]]),
+  }, null, null, 1, [[0, null, $s$37], [16, "250:31-250:31", $s$37], [16, "250:31-250:31", $s$37]]),
   $m$25 = $M.fun("m$25", "C", null, $m$24, [], 0, 1, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
