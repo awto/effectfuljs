@@ -1,6 +1,6 @@
 {
   "name": "@effectful/debugger",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "description": "User space debugging",
   "main": "vscode.js",
   "repository": "https://github.com/awto/effectfuljs.git",
@@ -75,7 +75,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.6.2",
-    "@effectful/core": "^1.4.9",
+    "@effectful/core": "^1.4.10",
     "@effectful/serialization": "^1.4.9",
     "@vscode/debugprotocol": "^1.35.0",
     "asap": "^2.0.6",
