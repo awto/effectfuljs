@@ -1,6 +1,6 @@
 {
   "name": "@effectful/js",
-  "version": "1.4.10",
+  "version": "1.5.0",
   "description": "Single level computation effects syntax",
   "main": "transform.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es",
-  "version": "1.4.10",
+  "version": "1.5.0",
   "description": "Standard JavaScript effects using @effectful/core (abstract interface)",
   "main": "transform.js",
   "scripts": {
