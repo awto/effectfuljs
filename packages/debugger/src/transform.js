@@ -35,6 +35,8 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
 ) {
   if (typeof config.exclude === "function" && config.exclude(config.filename))
     return;
+  if (/@effectful[/\\]debugger|[/\\]effectful-dev[/\\]/.test(config.filename))
+    return;
   if (config.preInstrumentedLibs) {
     const root =
       config.preInstrumentedLibs && config.preInstrumentedLibs.substr
@@ -55,10 +57,10 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
   }
   progressUpdate();
   try {
+    config.inDebugger = true;
     transform(ast);
-  } catch (e) {
-    throw e;
   } finally {
+    config.inDebugger = false;
     progressClear();
   }
   if (VERBOSE) {

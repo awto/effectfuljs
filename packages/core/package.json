@@ -4,9 +4,10 @@
   "description": "Embedding effects in JavaScript using Monads",
   "main": "compiler.js",
   "scripts": {
-    "test": "eslint src && cross-env EFFECTFUL_TRANSFORM_V2=1 mocha --timeout 50000 -r @babel/register",
+    "test": "eslint src && cross-env EFFECTFUL_TRANSFORM_V2=1 mocha --timeout 50000 --require ./test/kit/inject.js",
     "build": "babel src --out-dir .",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "gen-tests": "babel-node test/kit/generate-cmd.js"
   },
   "repository": "https://github.com/awto/effectfuljs.git",
   "keywords": [
@@ -19,19 +20,25 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/generator": "^7.0.0",
-    "@babel/types": "^7.0.0",
-    "@effectful/transducers": "^1.4.7"
+    "@babel/generator": "^7.26.2",
+    "@babel/types": "^7.26.0",
+    "@effectful/transducers": "workspace:^"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/node": "^7.8.7",
-    "cross-env": "^7.0.0",
-    "eslint": "^8.6.0",
-    "mocha": "^10.0.0"
-  },
-  "engines": {
-    "node": ">=0.10.0"
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/node": "^7.26.0",
+    "@babel/parser": "^7.26.2",
+    "@babel/plugin-syntax-async-generators": "^7.8.4",
+    "@babel/plugin-syntax-function-sent": "^7.25.9",
+    "@babel/plugin-transform-modules-commonjs": "^7.25.9",
+    "@babel/plugin-transform-object-rest-spread": "^7.25.9",
+    "@babel/plugin-transform-spread": "^7.25.9",
+    "@babel/register": "^7.25.9",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.15.0",
+    "mocha": "^10.8.2",
+    "terminal-kit": "^3.1.1"
   },
   "publishConfig": {
     "access": "public"

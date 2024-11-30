@@ -4,6 +4,7 @@ import generate from "@babel/generator";
 import * as Kit from "../kit";
 import * as Scope from "../scope";
 import * as Trace from "../trace";
+import assert from "node:assert";
 
 const gen = ast =>
   generate(ast, { retainLines: false, concise: true, quotes: "'" }).code;
@@ -126,49 +127,46 @@ describe("generating new names", function() {
     })(s);
   };
   it("all new variable should have valid name 1", function() {
-    expect(
+    assert.strictEqual(
       convert(
         `function a() {
         var a = 10, b = 10;
       }`,
         ["a", "b", "c", "d", "a"]
-      )
-    ).to.equal(
+      ),
       pretty(`function a() {
       var a = 10, b = 10, _a, _b = _a, c = _b, d = c, a1 = d;
     }`)
     );
   });
   it("all new variable should have valid name 2", function() {
-    expect(
+    assert.strictEqual(
       convert(
         `function a() {
         var a = 10, b = 10;
       }`,
         ["a", "b", "c", "d", "a", "a"]
-      )
-    ).to.equal(
+      ),
       pretty(`function a() {
         var a = 10, b = 10, _a, _b = _a, c = _b, d = c, a1 = d, a2 = a1;
       }`)
     );
   });
   it("all new variable should have valid name 3", function() {
-    expect(
+    assert.strictEqual(
       convert(
         `function a() {
         var a = 10, b = 10;
       }`,
         ["a", "b", "a", ""]
-      )
-    ).to.equal(
+      ),
       pretty(`function a() {
         var a = 10, b = 10, _a, _b = _a, a1 = _b, c = a1;
       }`)
     );
   });
   it("all new variable should have valid name 4", function() {
-    expect(
+    assert.strictEqual(
       convert(
         `function a() {
         var a = 10, b = 10;
@@ -178,8 +176,7 @@ describe("generating new names", function() {
         c()
       }`,
         ["a", "b", "a", ""]
-      )
-    ).to.equal(
+      ),
       pretty(`function a() {
         var a = 10, b = 10, _a, _b = _a, a1 = _b, d = a1;
         function c() {
@@ -190,14 +187,13 @@ describe("generating new names", function() {
     );
   });
   it("all new variable should have valid name 5", function() {
-    expect(
+    assert.strictEqual(
       convert(
         `function a() {
         var a = 10, b = 10,c,d,e,f,g,h,k,m,n,x,y,z;
       }`,
         ["a", "b", "a", ""]
-      )
-    ).to.equal(
+      ),
       pretty(`function a() {
         var a = 10, b = 10, c, d, e, f, g, h,
             k, m, n, x, y, z, _a,
@@ -205,7 +201,7 @@ describe("generating new names", function() {
     );
   });
   it("all new variable should have valid name 6", function() {
-    expect(
+    assert.strictEqual(
       convert(
         `function f() {
         let a = 10, b = 10;
@@ -220,8 +216,7 @@ describe("generating new names", function() {
         }
       }`,
         ["a", "b", "a", ""]
-      )
-    ).to.equal(
+      ),
       pretty(`function f() {
         let a = 10, b = 10, _a, _b = _a, a1 = _b, c = a1;
         {
@@ -252,8 +247,8 @@ describe("scope diagnostics", function() {
       }
       // TODO: expect.to (get rid of qunit-bdd)
       const exp = "Identifier 'a' has already been declared"
-      expect(err && err.message.substr(0,exp.length)).to.equal(exp);
-      expect(convert(`function a({a,b}) { var {a,c} = b }`)).to.equal(
+      assert.strictEqual(err && err.message.substr(0,exp.length), exp);
+      assert.strictEqual(convert(`function a({a,b}) { var {a,c} = b }`),
         `function a({ a, b }) { var { a: _a, c } = b; }`
       );
     });
@@ -267,7 +262,7 @@ describe("scope diagnostics", function() {
       } catch (e) {
         err = e;
       }
-      expect(err && err.message).to.equal(
+      assert.strictEqual(err && err.message,
         "Identifier 'a' has already been declared. (3:15)"
       );
     });
@@ -278,7 +273,7 @@ describe("converting const/let to var", function() {
   context("if just kind is updated", function() {
     const convert = convertImpl(allToVar);
     it("should keep names uniq 1", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
         var a = 10;
         {
@@ -289,8 +284,7 @@ describe("converting const/let to var", function() {
             a++;
           }
         }
-      }`)
-      ).to.equal(
+      }`),
         pretty(`function a() {
         var a = 10;
         {
@@ -305,7 +299,7 @@ describe("converting const/let to var", function() {
       );
     });
     it("should keep names uniq 2", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
         function a() {
           a()
@@ -320,27 +314,28 @@ describe("converting const/let to var", function() {
           }
         }
         a()
-      }`)
-      ).to.equal(
+      }`),
         pretty(`function a() {
-        function a() {
-          a()
-          var a = 10;
-        }
-        {
-          var _a = 20;
-          _a++;
-          {
-            var a1 = 30, a2 = 40, a3 = 50;
-            a1++;
+          function a() {
+            a();
+            var a = 10;
           }
-        }
-        a()
-      }`)
+          {
+            var _a = 20;
+            _a++;
+            {
+              var a1 = 30,
+                a2 = 40,
+                a3 = 50;
+              a1++;
+            }
+          }
+          a();
+        }`)
       );
     });
     it("should keep names uniq 3", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
         function a() {
           a()
@@ -360,53 +355,70 @@ describe("converting const/let to var", function() {
           }
         }
         a()
-      }`)
-      ).to.equal(
+      }`),
         pretty(`function a() {
-        function a() { _a(); { var a = 10; a++; } var _a = 20; _a++; }
-        { var a3 = 20; a3++;
-          { var a4 = 30, _a = 40, a1 = 50, a2 = 60; a4++; }
-        } a();
-      }`)
+          function a() {
+            _a();
+            {
+              var a = 10;
+              a++;
+            }
+            var _a = 20;
+            _a++;
+          }
+          {
+            var a3 = 20;
+            a3++;
+            {
+              var a4 = 30,
+                _a = 40,
+                a1 = 50,
+                a2 = 60;
+              a4++;
+            }
+          }
+          a();
+        }`)
       );
     });
     it("should keep names uniq 4", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
-          a()
-          var a = 10; 
-          {
-            let a = 10;
-          }
-      }`)
-      ).to.equal(
+        a()
+        var a = 10; 
+        {
+          let a = 10;
+        }
+      }`),
         pretty(`function a() {
         a();
         var a = 10;
-        { var _a = 10; } }`)
+        {
+          var _a = 10;
+        }
+      }`)
       );
     });
     it("should keep names uniq 5", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
         const a = [1,2,3];
         for(const b of a) {
           let a = b+1
           console.log(a)
         }
-      }`)
-      ).to.equal(
+      }`),
         pretty(`function a() {
-        var a = [1,2,3];
+        var a = [1, 2, 3];
         for (var b of a) {
-          var _a = b+1;
+          var _a = b + 1;
           console.log(_a);
         }
       }`)
       );
     });
     it("should keep names uniq 6", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
         const a = {} 
         {
@@ -416,25 +428,21 @@ describe("converting const/let to var", function() {
             console.log(_a,a,b)
           }
         }
-      }`)
-      ).to.equal(
-        pretty(
-          `function a() {
-          var a = {};
-          {
-            var { a: _a, b } = a;
-            console.log(a, b);
-            for (var {a: a1,c:_b} of {_a})
-            {
-              console.log(_a, a1, _b);
-            }
+      }`),
+        pretty(`function a() {
+        var a = {};
+        {
+          var { a: _a, b } = a;
+          console.log(a, b);
+          for (var { a: a1, c: _b } of { _a }) {
+            console.log(_a, a1, _b);
           }
-        }`
-        )
+        }
+      }`)
       );
     });
     it("should keep names uniq 7", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
         const a = {} 
         {
@@ -444,8 +452,7 @@ describe("converting const/let to var", function() {
             console.log(a,_a,c,b,...d,...e)
           }
         }
-      }`)
-      ).to.equal(
+      }`),
         pretty(`function a() {
         var a = {};
         {
@@ -462,7 +469,7 @@ describe("converting const/let to var", function() {
   context("if every declaration is moved to its scope start", function() {
     const convert = convertImpl(varDeclsEs5);
     it("should keep names uniq 1", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
       var a = 10;
       {
@@ -473,8 +480,7 @@ describe("converting const/let to var", function() {
           a++;
         }
       }
-      }`)
-      ).to.equal(
+      }`),
         pretty(`function a() {
         var a;
         var _a;
@@ -494,47 +500,132 @@ describe("converting const/let to var", function() {
       );
     });
     it("should keep names uniq 2", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
-        const a = {a:1,b:2};
-        for(const b in a) {
-          let a = b
-          console.log(a,b)
+      function a() {
+        a()
+        var a = 10
+      }
+      {
+        let a = 20;
+        a++
+        {
+          let a = 30, a2 = 40, a3 = 50;
+          a++;
         }
-      }`)
-      ).to.equal(
+      }
+      a()
+      }`),
         pretty(`function a() {
-        var a;
-        var b;
         var _a;
-        a = { a: 1, b: 2 };
-        for (b in a) {
-          _a = b;
-          console.log(_a,b);
+        var a1, a2, a3;
+        function a() {
+          var a;
+          a();
+          a = 10;
         }
+        {
+          _a = 20;
+          _a++;
+          {
+            a1 = 30;
+            a2 = 40;
+            a3 = 50;
+            a1++;
+          }
+        }
+        a();
       }`)
       );
     });
     it("should keep names uniq 3", function() {
-      expect(
+      assert.strictEqual(
         convert(`function a() {
-        const a = 1; 
-        { 
-          const b = function b() {
-            return a || b();
+      function a() {
+        a()
+        {
+          let a = 10
+          a++
+        }
+        let a = 20
+        a++
+      }
+      {
+        let a = 20;
+        a++
+        {
+          let a = 30, _a = 40, a1 = 50, a2 = 60;
+          a++;
+        }
+      }
+      a()
+      }`),
+        pretty(`function a() {
+        var a3;
+        var a4, _a, a1, a2;
+        function a() {
+          var a;
+          var _a;
+          _a();
+          {
+            a = 10;
+            a++;
           }
-          const a = 2;
-          b()
+          _a = 20;
+          _a++;
+        }
+        {
+          a3 = 20;
+          a3++;
+          {
+            a4 = 30;
+            _a = 40;
+            a1 = 50;
+            a2 = 60;
+            a4++;
+          }
+        }
+        a();
+      }`)
+      );
+    });
+    it("should keep names uniq 4", function() {
+      assert.strictEqual(
+        convert(`function a() {
+        a()
+        var a = 10; 
+        {
+          let a = 10;
+        }
+      }`),
+        pretty(`function a() {
+        var a;
+        var _a;
+        a();
+        a = 10;
+        {
+          _a = 10;
         }
       }`)
-      ).to.equal(
+      );
+    });
+    it("should keep names uniq 5", function() {
+      assert.strictEqual(
+        convert(`function a() {
+        const a = [1,2,3];
+        for(const b of a) {
+          let a = b+1
+          console.log(a)
+        }
+      }`),
         pretty(`function a() {
         var a;
         var b;
         var _a;
-        a = 1; {
-          b = function b() { return _a || b(); };
-          _a = 2; b();
+        a = [1, 2, 3];
+        for (b of a) {
+          _a = b + 1;
+          console.log(_a);
         }
       }`)
       );

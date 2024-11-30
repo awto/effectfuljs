@@ -205,7 +205,6 @@ export function skip(s) {
   let node = i.value.node;
   const babel = _opts.babel;
   if (!babel || _opts.debug || BROWSER_DEBUG) {
-    /* eslint-disable no-empty */
     for (; !(i = i.step()).done; ) {}
   } else {
     try {
@@ -358,7 +357,6 @@ export function* toBlockBody(s) {
   if (i.type === Tag.BlockStatement) {
     s.peel();
     skip(s.peelTo(Tag.body));
-    /* eslint-disable require-yield */
     return function*() {
       skip(lab());
     };
@@ -569,7 +567,6 @@ export const babelBridge = curry(function babelBridge(pass, path, state) {
     try {
       pass(produce(state.file.ast));
     } catch (e) {
-      /* eslint-disable-next-line no-console */
       if (_opts.verbose) console.log(e);
       throw path.hub.file.buildCodeFrameError(e.esNode, e.message);
     }
@@ -1035,7 +1032,6 @@ export const cleanEmptyExprs = pipe(
 
 /** console.time for generator `s` */
 export const time = curry(function*(name, s) {
-  // eslint-disable-next-line no-console
   console.time(name);
   return yield* s;
 });
@@ -1045,7 +1041,6 @@ export const timeEnd = curry(function*(name, s) {
   try {
     return yield* s;
   } finally {
-    // eslint-disable-next-line no-console
     console.timeEnd(name);
   }
 });

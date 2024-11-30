@@ -713,7 +713,6 @@ function solve(si) {
       j.name = `${j.name}_UNDECL_${j.num}`;
       const opts = sa[0].value.opts;
       const fn = opts && opts.file && opts.file.filename;
-      /* eslint-disable no-console */
       console.warn(
         `INTERNAL ERROR: not declared generated symbol name ${j.name}(${fn})`
       );

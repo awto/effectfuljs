@@ -1,4 +1,5 @@
 import CC from "../main";
+import assert from "node:assert";
 
 describe("order of execution", function() {
   const p = CC.newPrompt();
@@ -7,7 +8,7 @@ describe("order of execution", function() {
     _state.push(v);
   }
   function check() {
-    expect(_state).to.eql(Array.from(arguments));
+    assert.deepStrictEqual(_state, Array.from(arguments));
     _state.length = 0;
   }
   it("should respect js semantics", function() {

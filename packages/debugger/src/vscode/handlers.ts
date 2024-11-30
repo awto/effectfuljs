@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import config from "../config";
 import * as State from "../state";
 import * as Engine from "../engine";
@@ -88,7 +89,7 @@ const isBrowser = State.isBrowser;
 
 let normalizeDir = (v: string) =>
   State.normalizeDrive(path.resolve(config.srcRoot, v));
-let curDirSep: string = path.sep;
+const curDirSep: string = path.sep;
 const knownBreakpoints: Map<
   string,
   Map<number, P.SetBreakpointsArguments>
@@ -472,8 +473,8 @@ handlers.setDataBreakpoints = function (args, response) {
   }
 };
 
-let linStartAt1 = true;
-let colStartAt1 = true;
+const linStartAt1 = true;
+const colStartAt1 = true;
 
 function adjLine(num: number): number {
   return linStartAt1 ? num : num - 1;
@@ -689,7 +690,7 @@ varViewByClasses
   .set(Set.prototype, iterableVariablesView);
 
 handlers.variables = function (args, response) {
-  let variables: VarValue[] = [];
+  const variables: VarValue[] = [];
   const val = curValById.get(args.variablesReference);
   if (val != null) {
     const unwrapped = proxies && proxies.get(val);
@@ -1309,7 +1310,7 @@ handlers.evaluate = function (args, res) {
         if (!frame || !(brk = frame.meta.states[frame.state]))
           val = "`eval` isn't available";
         else {
-          let savedDebug = context.enabled;
+          const savedDebug = context.enabled;
           try {
             context.enabled = false;
             let fun = compileEval(expr, frame.meta, brk);
@@ -1418,7 +1419,7 @@ const LOGMESSAGE_VARIABLE_REGEXP = /{(.*?)}/g;
 
 function logMessageToExpression(msg: string) {
   msg = msg.replace(/%/g, "%%");
-  let args: string[] = [];
+  const args: string[] = [];
   let format = msg.replace(
     LOGMESSAGE_VARIABLE_REGEXP,
     function (_match, group) {
@@ -1532,7 +1533,7 @@ export function restore(json: S.JSONObject, opts: S.ReadOptions = {}) {
     const loadedModules: Set<string> = new Set();
     if (json.modules) {
       for (const i of (<any>json).modules) {
-        let module = context.modules[i.id];
+        const module = context.modules[i.id];
         loadedModules.add(i.id);
         const { params } = i;
         if (params) {

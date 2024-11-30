@@ -29,18 +29,23 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/es-rt": "^1.4.9",
+    "@babel/plugin-syntax-async-generators": "^7.8.4",
+    "@babel/plugin-syntax-function-sent": "^7.25.9",
+    "@babel/plugin-transform-modules-commonjs": "^7.25.9",
+    "@babel/register": "^7.25.9",
+    "@effectful/es-rt": "workspace:^",
     "benchmark": "^2.1.4",
     "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0",
-    "eslint": "^8.6.0",
-    "glob": "^10.3.4",
-    "mocha": "^10.0.0",
-    "promise": "^8.0.1",
-    "test262-parser": "^2.0.7"
+    "eslint": "^9.15.0",
+    "glob": "^11.0.0",
+    "mocha": "^10.8.2",
+    "promise": "^8.3.0",
+    "test262-parser": "^2.2.0"
   },
   "dependencies": {
-    "@effectful/core": "^1.4.10"
+    "@babel/core": "^7.26.0",
+    "@effectful/core": "workspace:^"
   },
   "publishConfig": {
     "access": "public"

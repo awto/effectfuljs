@@ -48,6 +48,7 @@ const {
   journal,
   context,
   token,
+  ctrlToken,
   closures,
   functions,
   thunks,
@@ -114,7 +115,7 @@ export function compileModule(): Module | null {
   if (!curModule.topLevel || curModule.topLevel.blackbox) return curModule;
   const funcs = objectValues(curModule.functions).reverse();
   const lines = (curModule.lines = new Array(curModule.topLevel.endLine));
-  for (let meta of funcs) {
+  for (const meta of funcs) {
     const states = meta.states;
     for (const state of states) {
       if (state.flags | State.BrkFlag.STMT && state.line) {
@@ -270,7 +271,7 @@ export function fun(
   }
   for (const [flags, loc, scope] of states) {
     const [line, column, endLine, endColumn] = location(loc);
-    let id = memo.length;
+    const id = memo.length;
     const brk: Brk = {
       flags,
       id,
@@ -324,7 +325,7 @@ export function fun(
   } else {
     funcName = ctx + meta.name;
   }
-  let varsInit = [`${ctx}.$`];
+  const varsInit = [`${ctx}.$`];
   if (meta.calleeName) varsInit.push(funcName);
   varsInit.push(...meta.params);
   varsInit.fill("void 0", varsInit.length, (varsInit.length = meta.varsNum));
@@ -378,8 +379,8 @@ export function fun(
         ? api.frameAG
         : api.frameA
       : isGenerator
-      ? api.frameG
-      : api.frame,
+        ? api.frameG
+        : api.frame,
     api.pushFrame
   ];
   constrParams.push(`return (function(${ctx}$){
@@ -540,15 +541,20 @@ export function loop(value: any): any {
       value = top.meta.handler(top, top.$, value);
       top = context.top;
     } catch (e) {
+      if (e === ctrlToken) {
+        top = context.top;
+        continue;
+      }
       if (e === token) {
         context.onStop();
         return e;
       }
-      (<Frame>top).error = e;
+      const frame = top as Frame;
+      frame.error = e;
       if (
-        !(<Frame>top).meta.blackbox &&
+        !frame.meta.blackbox &&
         context.exception !== e &&
-        checkErrBrk(<Frame>top, e)
+        checkErrBrk(frame, e)
       ) {
         context.value = e;
         context.error = true;
@@ -609,14 +615,18 @@ function hasEH(frame: Frame): boolean {
 }
 
 export function checkErrBrk(frame: Frame, e: any): boolean {
-  if (!context.enabled) return false;
+  if (!context.enabled || e === ctrlToken) return false;
   context.exception = e;
   if (e && e.stack) {
     captureStackTraceFrom(e, null, frame, true);
   }
   let needsStop = false;
   if (context.brkOnAnyException) {
-    needsStop = true;
+    if (
+      context.brkOnAnyExceptionFilter == null ||
+      context.brkOnAnyExceptionFilter(e)
+    )
+      needsStop = true;
   } else if (context.brkOnUncaughtException) {
     // avoiding running finally blocks
     needsStop = true;
@@ -632,6 +642,10 @@ export function checkErrBrk(frame: Frame, e: any): boolean {
 }
 
 export function handle(frame: Frame, e: any) {
+  // if (unwindCtrl(e)) return;
+  if (e === ctrlToken) {
+    throw e;
+  }
   for (;;) {
     if (e === token) {
       if (context.running || frame.next) throw e;
@@ -827,8 +841,8 @@ if (config.patchRT) {
     writable: true,
     value() {
       // nothing to see here (lodash refuses to work with not native functions)
-      let params: string = "";
-      let name = this.name;
+      const params: string = "";
+      const name = this.name;
       const data = closures.get(this);
       if (
         (data && data[CLOSURE_META] && !data[CLOSURE_META].blackbox) ||
@@ -952,7 +966,7 @@ export function isDelayedResult(value: any): boolean {
 }
 
 export function makeFrame(closure: State.Closure, newTarget: any): Frame {
-  let $g = global;
+  const $g = global;
   const frame: Frame = {
     $: <any>closure[CLOSURE_VARS],
     closure,
@@ -961,8 +975,7 @@ export function makeFrame(closure: State.Closure, newTarget: any): Frame {
     meta: closure[CLOSURE_META],
     state: 0,
     goto: 0,
-    done: false,
-    running: false,
+    flags: 0,
     parent: closure[CLOSURE_PARENT],
     newTarget,
     brk: null,
@@ -1001,14 +1014,14 @@ const isStackFrameLine = State.isNode
   : function isStackFrameLine(line: string) {
       return (
         line.trim().length > 0 &&
-        !/__effectful__|\(events\.js\:|\(net\.js\:|\bprocess\/browser\.js|\bdrainQueue\b/g.test(
+        !/__effectful__|\(events\.js:|\(net\.js:|\bprocess\/browser\.js|\bdrainQueue\b/g.test(
           line
         )
       );
     };
 
 function numFrames(e: any): number {
-  let s = String(e.stack).split("\n").filter(isStackFrameLine);
+  const s = String(e.stack).split("\n").filter(isStackFrameLine);
   return s.length;
 }
 
@@ -1099,7 +1112,7 @@ export function ret(value: any): any {
   )
     value = top.self;
   top.result = void 0;
-  top.done = true;
+  top.flags |= State.FrameFlags.Done;
   if (top.onReturn) {
     context.call = top.onReturn;
     top.onReturn(value);
@@ -1122,7 +1135,7 @@ export function unhandled(e: any) {
     top.onError(e);
   }
   top.error = void 0;
-  top.done = true;
+  top.flags |= State.FrameFlags.Done;
   if (!context.enabled) {
     const restoreDebug = top.restoreEnabled;
     if (restoreDebug !== undef) {
@@ -1137,7 +1150,7 @@ export function unhandled(e: any) {
 export function brk(): any {
   const { needsBreak, top } = context;
   if (!top) return;
-  let p = (top.brk = context.brk = top.meta.states[top.state]);
+  const p = (top.brk = context.brk = top.meta.states[top.state]);
   if (!p) return;
   if (!needsBreak(p, top) || !context.enabled) return;
   throw token;

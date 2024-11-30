@@ -58,12 +58,12 @@ suite("Debugging on NodeJS", function () {
         columnsStartAt1: true,
         pathFormat: "url"
       })
-        .then(function (response) {
+        .then(function () {
           done(
             new Error("does not report error on invalid 'pathFormat' attribute")
           );
         })
-        .catch(function (err) {
+        .catch(function () {
           // error expected
           done();
         });
@@ -264,7 +264,7 @@ suite("Debugging on NodeJS", function () {
       const COND_BREAKPOINT_COLUMN = 2;
 
       return Promise.all([
-        dc.waitForEvent("initialized").then(async function (event) {
+        dc.waitForEvent("initialized").then(async function () {
           const response = await dc.setBreakpointsRequest({
             breakpoints: [{ line: COND_BREAKPOINT_LINE, condition: "i === 3" }],
             source: { path: PROGRAM }
@@ -419,7 +419,7 @@ suite("Debugging on NodeJS", function () {
 
         // since we can only set a function breakpoint for *known* functions,
         // we use the program output as an indication that function 'foo' has been defined.
-        dc.assertOutput("stdout", "foo defined").then(event => {
+        dc.assertOutput("stdout", "foo defined").then(() => {
           return dc
             .setFunctionBreakpointsRequest({
               breakpoints: [{ name: FUNCTION_NAME_2 }]
@@ -463,12 +463,12 @@ suite("Debugging on NodeJS", function () {
       return Promise.all<DebugProtocol.ProtocolMessage>([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: []
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
         dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
@@ -482,12 +482,12 @@ suite("Debugging on NodeJS", function () {
       return Promise.all([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: ["all"]
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
 
@@ -506,12 +506,12 @@ suite("Debugging on NodeJS", function () {
       return Promise.all([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: ["uncaught"]
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
 
@@ -532,12 +532,12 @@ suite("Debugging on NodeJS", function () {
       return Promise.all<DebugProtocol.ProtocolMessage>([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: []
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
         dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
@@ -551,12 +551,12 @@ suite("Debugging on NodeJS", function () {
       return Promise.all([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: ["all"]
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
 
@@ -575,12 +575,12 @@ suite("Debugging on NodeJS", function () {
       return Promise.all([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: ["uncaught"]
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
 
@@ -601,12 +601,12 @@ suite("Debugging on NodeJS", function () {
       return Promise.all<DebugProtocol.ProtocolMessage>([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: []
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
         dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),
@@ -618,12 +618,12 @@ suite("Debugging on NodeJS", function () {
       await Promise.all([
         dc
           .waitForEvent("initialized")
-          .then(event => {
+          .then(() => {
             return dc.setExceptionBreakpointsRequest({
               filters: ["all"]
             });
           })
-          .then(response => {
+          .then(() => {
             return dc.configurationDoneRequest();
           }),
         dc.launch({ command: `node ${PROGRAM}`, preset: "node" }),

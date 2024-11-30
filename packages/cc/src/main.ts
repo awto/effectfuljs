@@ -25,12 +25,12 @@ export const stepSymbol = Symbol("Effectful.ccStep");
 
 /** effectful value */
 export interface CC<A> {
-  [stepSymbol](k: Seq<A, any>): CCV<any>;
+  [stepSymbol](_k: Seq<A, any>): CCV<any>;
 }
 
 export type CCV<A> = CC<A> | A;
 
-export type Step<A, B> = (x: Context, a: A) => CCV<B>;
+export type Step<A, B> = (_x: Context, _a: A) => CCV<B>;
 
 /** EffectfulJS abstract interface implementation */
 export class Context {
@@ -46,7 +46,7 @@ export class Context {
   pure<A>(v: A): CC<A> {
     return new Pure<A>(v);
   }
-  scope<A>(f: (t: Context) => CC<A>): CC<A> {
+  scope<A>(f: (_t: Context) => CC<A>): CC<A> {
     return f(this);
   }
 }
@@ -55,7 +55,7 @@ export function context() {
   return new Context();
 }
 
-export type Seq<A, B> = Frame<any>[];
+export type Seq<_A, _B> = Frame<any>[];
 
 export type Frame<A> = {
   prompt?: Prompt<A>;
@@ -101,10 +101,10 @@ class Chain<A, B> implements CC<B> {
   private ctx?: Context;
 }
 
-export type SubCont<A, B> = Frame<any>[];
+export type SubCont<_A, _B> = Frame<any>[];
 
 class WithSubCont<A, B> implements CC<A> {
-  constructor(p: Prompt<B>, k: (sc: SubCont<A, B>) => CCV<B>) {
+  constructor(p: Prompt<B>, k: (_sc: SubCont<A, B>) => CCV<B>) {
     this.prompt = p;
     this.handler = k;
   }
@@ -112,7 +112,7 @@ class WithSubCont<A, B> implements CC<A> {
     return this.handler(splitAt(k, this.prompt));
   }
   private prompt: Prompt<B>;
-  private handler: (sc: SubCont<A, B>) => CCV<B>;
+  private handler: (_sc: SubCont<A, B>) => CCV<B>;
 }
 
 class PushSubCont<A, B> implements CC<B> {
@@ -121,7 +121,7 @@ class PushSubCont<A, B> implements CC<B> {
     this.cont = c;
   }
   [stepSymbol](k: Seq<B, any>): CCV<any> {
-    k.push.apply(k, this.subCont);
+    k.push(...this.subCont);
     return this.cont;
   }
   private subCont: SubCont<A, B>;
@@ -132,7 +132,7 @@ class Pure<A> implements CC<A> {
   constructor(value: A) {
     this.value = value;
   }
-  [stepSymbol](k: Seq<A, any>): CCV<any> {
+  [stepSymbol](_k: Seq<A, any>): CCV<any> {
     return this.value;
   }
   value: A;
@@ -149,7 +149,7 @@ class Pure<A> implements CC<A> {
  */
 export function withSubCont<A, B>(
   p: Prompt<B>,
-  f: (sc: SubCont<A, B>) => CCV<B>
+  f: (_sc: SubCont<A, B>) => CCV<B>
 ): CC<A> {
   return new WithSubCont<A, B>(p, f);
 }
@@ -222,7 +222,7 @@ export function run<A>(c: CCV<A>): A {
  */
 export function shift<A, B>(
   p: Prompt<B>,
-  f: (k: (v: A) => CCV<B>) => CCV<B>
+  f: (_k: (_v: A) => CCV<B>) => CCV<B>
 ): CCV<A> {
   return withSubCont<A, B>(p, sk =>
     pushPrompt(p, f(a => pushPrompt(p, pushSubCont(sk, a))))
@@ -236,7 +236,7 @@ export function shift<A, B>(
  */
 export function control<A, B>(
   p: Prompt<B>,
-  f: (k: (v: A) => CCV<B>) => CCV<B>
+  f: (_k: (_v: A) => CCV<B>) => CCV<B>
 ): CCV<A> {
   return withSubCont<A, B>(p, sk => pushPrompt(p, f(a => pushSubCont(sk, a))));
 }
@@ -248,7 +248,7 @@ export function control<A, B>(
  */
 export function shift0<A, B>(
   p: Prompt<B>,
-  f: (k: (v: A) => CCV<B>) => CCV<B>
+  f: (_k: (_v: A) => CCV<B>) => CCV<B>
 ): CCV<A> {
   return withSubCont<A, B>(p, sk => f(a => pushPrompt(p, pushSubCont(sk, a))));
 }
@@ -260,7 +260,7 @@ export function shift0<A, B>(
  */
 export function control0<A, B>(
   p: Prompt<B>,
-  f: (k: (v: A) => CCV<B>) => CCV<B>
+  f: (_k: (_v: A) => CCV<B>) => CCV<B>
 ): CCV<A> {
   return withSubCont<A, B>(p, sk => f(a => pushSubCont(sk, a)));
 }
@@ -269,14 +269,14 @@ export function control0<A, B>(
  * creates new prompt, and calls `e` passing this new prompt,
  * delimiting resulting continuation with it
  */
-export function reset<A>(e: (p: Prompt<A>) => CCV<A>): CC<A> {
-  let p = newPrompt<A>();
+export function reset<A>(e: (_p: Prompt<A>) => CCV<A>): CC<A> {
+  const p = newPrompt<A>();
   return pushPrompt(p, e(p));
 }
 
 /** aborts current continution up to the prompt `p` */
 export function abort<A, B>(p: Prompt<B>, e: CCV<B>): CC<A> {
-  return withSubCont<A, B>(p, sk => e);
+  return withSubCont<A, B>(p, _sk => e);
 }
 
 /**

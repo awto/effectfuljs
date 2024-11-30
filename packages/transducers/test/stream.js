@@ -4,33 +4,34 @@ import generate from "@babel/generator";
 import * as T from "@babel/types";
 import * as Kit from "../kit";
 import * as Trace from "../trace";
+import assert from "node:assert";
 
 describe("lookahead iterator", function() {
   const COUNT = 1000; // ensuring no stack overflows
   it("should provide access to the next element", function() {
     const buf = Array.from(Array(COUNT + 1).keys());
     const s = Kit.auto(buf);
-    expect(s.cur()).to.equal(0);
+    assert.strictEqual(s.cur(), 0);
     let res = 0;
     for (const i of s) {
       if (i === COUNT) {
-        expect(s.cur()).to.equal(undefined);
+        assert.strictEqual(s.cur(), undefined);
       } else {
-        expect(s.cur()).to.equal(i + 1);
+        assert.strictEqual(s.cur(), i + 1);
       }
     }
   });
   context("with array container", function() {
-    it("should provide accesst to the next element", function() {
+    it("should provide access to the next element", function() {
       const buf = Array.from(Array(COUNT + 1).keys());
       const s = Kit.auto(buf);
-      expect(s.cur()).to.equal(0);
+      assert.strictEqual(s.cur(), 0);
       let res = 0;
       for (const i of s) {
         if (i === COUNT) {
-          expect(s.cur()).to.equal(undefined);
+          assert.strictEqual(s.cur(), undefined);
         } else {
-          expect(s.cur()).to.equal(i + 1);
+          assert.strictEqual(s.cur(), i + 1);
         }
       }
     });
@@ -60,8 +61,8 @@ describe("scoped output", function() {
     yield s.tok(Tag.argument, T.numericLiteral(10));
     yield* lab();
   }
-  it("should auto close all openned elements", function() {
-    expect(toStr(gen())).to.equal("function(){return 10;}");
+  it("should auto close all opened elements", function() {
+    assert.strictEqual(toStr(gen()), "function(){return 10;}");
   });
 });
 
@@ -79,20 +80,20 @@ describe("hierarchical iterator", function() {
   it("should be able to traverse sub-levels", function() {
     const s = Kit.auto(produce(parse(prog)));
     let cnt = 0;
-    expect(s.cur().type).to.equal(Tag.File);
+    assert.strictEqual(s.cur().type, Tag.File);
     for (const i of s) {
       if (i.enter && i.type === Tag.Array && i.pos === Tag.body) {
-        expect(s.level).to.equal(3);
-        expect(s.cur().type).to.equal(Tag.FunctionDeclaration);
+        assert.strictEqual(s.level, 3);
+        assert.strictEqual(s.cur().type, Tag.FunctionDeclaration);
         for (const j of s.one()) {
           if (j.enter && j.type === Tag.Array && j.pos === Tag.body) {
-            expect(s.cur().type).to.equal(Tag.VariableDeclaration);
-            expect(toStr(s.one())).to.equal("const i=10,j=20;");
-            expect(s.cur().type).to.equal(Tag.BlockStatement);
+            assert.strictEqual(s.cur().type, Tag.VariableDeclaration);
+            assert.strictEqual(toStr(s.one()), "const i=10,j=20;");
+            assert.strictEqual(s.cur().type, Tag.BlockStatement);
             for (const j of s.one()) {
               if (j.enter && j.type === Tag.Array && j.pos === Tag.body) {
                 cnt++;
-                expect(s.cur().type).to.equal(Tag.ExpressionStatement);
+                assert.strictEqual(s.cur().type, Tag.ExpressionStatement);
                 const j = [
                   s.enter(Tag.top, Tag.BlockStatement),
                   s.enter(Tag.body, Tag.Array),
@@ -100,14 +101,14 @@ describe("hierarchical iterator", function() {
                   ...s.leave(),
                   ...s.leave()
                 ];
-                expect(s.curLev()).to.equal(null);
-                expect([...s.one()].length).to.equal(0);
-                expect([...s.sub()].length).to.equal(0);
-                expect(toStr(j)).to.equal("{console.log(i);console.log(j);}");
+                assert.strictEqual(s.curLev(), null);
+                assert.strictEqual([...s.one()].length, 0);
+                assert.strictEqual([...s.sub()].length, 0);
+                assert.strictEqual(toStr(j), "{console.log(i);console.log(j);}");
               }
             }
-            expect(s.curLev().type).to.equal(Tag.VariableDeclaration);
-            expect(s.cur().type).to.equal(Tag.VariableDeclaration);
+            assert.strictEqual(s.curLev().type, Tag.VariableDeclaration);
+            assert.strictEqual(s.cur().type, Tag.VariableDeclaration);
             const j = [
               s.enter(Tag.top, Tag.BlockStatement),
               s.enter(Tag.body, Tag.Array),
@@ -115,43 +116,43 @@ describe("hierarchical iterator", function() {
               ...s.leave(),
               ...s.leave()
             ];
-            expect(toStr(j)).to.equal("{let k=i+j;console.log(k);}");
-            expect(s.cur().type).to.equal(Tag.Array);
-            expect(s.curLev()).to.equal(null);
-            expect([...s.sub()].length).to.equal(0);
-            expect([...s.one()].length).to.equal(0);
+            assert.strictEqual(toStr(j), "{let k=i+j;console.log(k);}");
+            assert.strictEqual(s.cur().type, Tag.Array);
+            assert.strictEqual(s.curLev(), null);
+            assert.strictEqual([...s.sub()].length, 0);
+            assert.strictEqual([...s.one()].length, 0);
           }
         }
       }
     }
-    expect(cnt).to.equal(1);
+    assert.strictEqual(cnt, 1);
   });
   context("with peel", function() {
     it("should manage input levels", function() {
       let cnt = 0;
       const s = Kit.auto(produce(parse(prog)));
-      expect(s.cur().type).to.equal(Tag.File);
+      assert.strictEqual(s.cur().type, Tag.File);
       const i = [
         ...(function*() {
           const exit = s.label();
           yield s.peel();
-          expect(s.cur().type).to.equal(Tag.Program);
+          assert.strictEqual(s.cur().type, Tag.Program);
           yield s.peel();
           yield* s.peelTo(Tag.body);
-          expect(s.cur().type).to.equal(Tag.FunctionDeclaration);
+          assert.strictEqual(s.cur().type, Tag.FunctionDeclaration);
           yield s.peel();
           yield* s.peelTo(Tag.body);
-          expect(s.cur().type).to.equal(Tag.Array);
+          assert.strictEqual(s.cur().type, Tag.Array);
           yield* s.peelTo(Tag.body);
-          expect(s.cur().type).to.equal(Tag.VariableDeclaration);
+          assert.strictEqual(s.cur().type, Tag.VariableDeclaration);
           yield* s.one();
           const iflab = s.label();
-          expect(s.cur().type).to.equal(Tag.BlockStatement);
+          assert.strictEqual(s.cur().type, Tag.BlockStatement);
           const j = s.peel();
-          expect(s.cur().type).to.equal(Tag.Array);
+          assert.strictEqual(s.cur().type, Tag.Array);
           yield j;
           yield* s.peelTo(Tag.body);
-          expect(s.curLev().pos).to.equal(Tag.push);
+          assert.strictEqual(s.curLev().pos, Tag.push);
           yield s.enter(Tag.push, Tag.IfStatement);
           yield s.tok(Tag.test, T.identifier("i"));
           yield s.enter(Tag.consequent, Tag.BlockStatement);
@@ -162,8 +163,7 @@ describe("hierarchical iterator", function() {
           yield* exit();
         })()
       ];
-      expect(toStr(i)).to.equal(
-        compact(`function a(){
+      assert.strictEqual(toStr(i), compact(`function a(){
         const i=10,j=20;
         {
             if(i) {
@@ -173,26 +173,25 @@ describe("hierarchical iterator", function() {
         }
         let k=i+j;
         console.log(k);
-      }`)
-      );
+      }`));
       let sn = Kit.auto(i);
       for (const j of sn) {
         if (j.pos === Tag.test) {
           cnt++;
           sn.peel(j);
-          expect([...sn.sub()].length).to.equal(0);
+          assert.strictEqual([...sn.sub()].length, 0);
           Kit.skip(sn.leave());
-          expect([...sn.sub()].length).to.equal(32);
+          assert.strictEqual([...sn.sub()].length, 32);
         }
       }
       sn = Kit.auto(i);
       for (const j of sn) {
         if (j.pos === Tag.test) {
           cnt++;
-          expect([...sn.sub()].length).to.equal(32);
+          assert.strictEqual([...sn.sub()].length, 32);
         }
       }
-      expect(cnt).to.equal(2);
+      assert.strictEqual(cnt, 2);
     });
   });
 });
@@ -227,7 +226,7 @@ describe("template", function() {
     const res =
       'function F(a,X){console.log("hi");' +
       'console.log("there");console.log(a+b);a=b;}';
-    expect(toStr(gen())).to.equal(res);
-    expect(toStr(gen())).to.equal(res);
+    assert.strictEqual(toStr(gen()), res);
+    assert.strictEqual(toStr(gen()), res);
   });
 });

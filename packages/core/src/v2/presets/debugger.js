@@ -8,12 +8,16 @@ import * as Emit from "../emit";
 import * as Meta from "../meta";
 import * as Eval from "../eval";
 
+
 export default function debuggerTransform(ast) {
-  config.loopsSubScopes = config.timeTravel ? "always" : "closure";
+  if (config.loopsSubScopes === "default")
+    config.loopsSubScopes = config.timeTravel ? "always" : "closure";
   config.reuseTempVars = !config.timeTravel;
   config.expInjectTempSetters = false;
   config.debug = true;
-  if (Kit.hasDirective(ast.program, "no-debug")) return;
+  if (config.rt === "default")
+    config.rt = "@effectful/debugger";
+  if (Kit.hasDirective(ast.program, "no-debug") || Kit.hasDirective(ast.program, "no-ctrl")) return;
   const root = Kit.produce(ast);
   Scope.prepare(root);
   Eval.replaceEvalDir();

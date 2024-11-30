@@ -25,7 +25,7 @@ if (extWorker) {
       workerType = WorkerType.Node;
       Worker = Node.Worker;
     }
-  } catch (e) {}
+  } catch (_e) {}
 
   if (!Worker && (<any>global).Worker) {
     Worker = (<any>global).Worker;
@@ -118,7 +118,7 @@ if (workerType === WorkerType.None) {
   if (!WebSocketImpl) {
     try {
       WebSocketImpl = require("ws");
-    } catch (e) {}
+    } catch (_e) {}
   }
   const [socket, redir] = new Function("WebSocket", "post", code)(
     WebSocketImpl,

@@ -4,8 +4,6 @@ import * as path from "path";
 
 const WORKSPACE = path.resolve(__dirname, "..", "..", "..", "testdata");
 
-declare const document: any;
-
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", function() {
   this.timeout(0);

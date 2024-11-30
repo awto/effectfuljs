@@ -29,16 +29,17 @@
     "resolve": false
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
     "cross-env": "^7.0.3",
-    "mocha": "^10.0.0"
+    "mocha": "^10.8.2"
   },
   "dependencies": {
-    "@babel/generator": "^7.0.0",
-    "@babel/types": "^7.0.0",
-    "@effectful/es-rt": "^1.4.9",
-    "@effectful/transducers-loose": "^1.4.10",
-    "resolve": "^1.5.0"
+    "@babel/generator": "^7.26.2",
+    "@babel/types": "^7.26.0",
+    "@effectful/es-rt": "workspace:^",
+    "@effectful/transducers-loose": "workspace:^",
+    "resolve": "^1.22.8"
   },
   "publishConfig": {
     "access": "public"

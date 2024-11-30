@@ -87,9 +87,9 @@ with a simple configuration (see README).
 
 export class DebugSession extends SessionImpl {
   private remotes: Map<number, Handler> = new Map();
-  private connectCb?: (h?: Handler) => void;
-  public progressHandler?: (n: string) => () => void;
-  public showError?: (n: string) => void;
+  private connectCb?: (_h?: Handler) => void;
+  public progressHandler?: (_n: string) => () => void;
+  public showError?: (_n: string) => void;
   private childProcess: ChildProcess | undefined;
   private stopped: boolean = false;
   private supportsRunInTerminalRequest = false;
@@ -145,7 +145,7 @@ export class DebugSession extends SessionImpl {
     command: string,
     args: any,
     timeout: number,
-    cb: (response: P.Response) => void
+    cb: (_response: P.Response) => void
   ) {
     logger.verbose(
       `sendRequest: ${JSON.stringify(command)}(${JSON.stringify(
@@ -342,7 +342,6 @@ export class DebugSession extends SessionImpl {
       case "goto":
       case "pause":
       case "exceptionInfo":
-      case "stackTrace":
       case "scopes":
       case "variables":
       case "evaluate":
@@ -392,7 +391,7 @@ export class DebugSession extends SessionImpl {
     if ((<any>data).event !== "output")
       logger.verbose(`response: ${JSON.stringify(data)}`);
     if (data.type === "event") {
-      let ev = <Event>data;
+      const ev = <Event>data;
       switch (ev.event) {
         case "output":
           const outev = <any>ev;
@@ -481,7 +480,7 @@ export class DebugSession extends SessionImpl {
     super.shutdown();
   }
 
-  private configurationCb?: (args?: any) => void;
+  private configurationCb?: (_args?: any) => void;
   private configurationDone = false;
   protected sendErrorResponse(
     response: P.Response,
@@ -519,7 +518,7 @@ export class DebugSession extends SessionImpl {
       false
     );
     let cwd = args.cwd;
-    let progressId = this.supportsProgress && `LAUNCH$${progressCnt++}`;
+    const progressId = this.supportsProgress && `LAUNCH$${progressCnt++}`;
     const preset = args.preset || "node";
     if (preset === "browser" || preset === "next") {
       this.sendErrorResponse(
@@ -562,7 +561,7 @@ export class DebugSession extends SessionImpl {
       logger.log(
         `couldn't find "${runtimeBase}" runtime, installing it....(please wait, this may take a few minutes)`
       );
-      let cb: (b: boolean) => void;
+      let cb: (_b: boolean) => void;
       if (progressId)
         this.sendEvent(
           new ProgressStartEvent(
@@ -589,7 +588,8 @@ export class DebugSession extends SessionImpl {
               process.env.SHELL || "bash",
               [
                 "-ilc",
-                `"npm install --no-package-lock --no-save --global-style --no-audit ${runtimeBase}"`
+                `"npm install --omit=dev --no-package-lock --no-save --install-strategy=shallow --no-audit ${runtimeBase}"`
+                // `"npm install --no-package-lock --no-save --global-style --no-audit ${runtimeBase}"`
               ],
               { shell: true, cwd: path.join(__dirname, ".."), env }
             );
@@ -740,7 +740,7 @@ export class DebugSession extends SessionImpl {
           key = `${cmdline}@${cwd}/${timeTravel}/${JSON.stringify(env)}`;
           child = runningCommands.get(key);
         }
-        let startBuf: string[] = [];
+        const startBuf: string[] = [];
         if (progressId)
           env["EFFECTFUL_PROGRESS_ID"] = `@progress@:`;
         if (!child) {
@@ -857,7 +857,7 @@ export class DebugSession extends SessionImpl {
 
   private breakpointLocationsCb: Map<
     number,
-    (arg: [number, P.BreakpointLocationsResponse]) => void
+    (_arg: [number, P.BreakpointLocationsResponse]) => void
   > = new Map();
 
   private async doBreakpointsLocations(req: P.BreakpointLocationsRequest) {

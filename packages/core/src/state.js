@@ -1055,7 +1055,7 @@ export function allUniqFields(syms, pref = "", postf = "") {
       let cnt = 0;
       names.has(name);
       cnt++, name = `${pref}${sym.orig || epref}${cnt}${postf}`
-    ) {} // eslint-disable-line no-empty
+    ) {}
     names.add(name);
     sym.fieldName = name;
   }

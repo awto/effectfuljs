@@ -2,7 +2,7 @@
  * # Serialization library for @effectful toolchain
  */
 
-// tslint:disable-next-line
+/* eslint-disable @typescript-eslint/no-wrapper-object-types */
 const savedConsole = { log: console.log, warn: console.warn };
 
 const weakMapSet = WeakMap.prototype.set;
@@ -198,7 +198,7 @@ export interface ReadDescriptor<T = unknown> {
    * @param json - input JSON
    * @returns     - resulting JS value
    */
-  read: (ctx: ReadContext, json: JSONValue) => T;
+  read: (_ctx: ReadContext, _json: JSONValue) => T;
   /**
    * The first part of `read`, just creates a corresponding value without traversing into children.
    * This is needed to avoid infinite loops on recursive values.
@@ -206,7 +206,7 @@ export interface ReadDescriptor<T = unknown> {
    * @param json - input JSON
    * @returns - resulting JS value
    */
-  create: (ctx: ReadContext, json: JSONValue) => T;
+  create: (_ctx: ReadContext, _json: JSONValue) => T;
   /**
    * The second part of `read`, creates children and sets them into `value`.
    * This is needed to avoid infinite loops on recursive values.
@@ -214,7 +214,7 @@ export interface ReadDescriptor<T = unknown> {
    * @param json - input JSON
    * @param value - resulting JS value
    */
-  readContent: (ctx: ReadContext, json: JSONValue, value: T) => void;
+  readContent: (_ctx: ReadContext, _json: JSONValue, _value: T) => void;
 }
 
 export interface WithTypeofTag {
@@ -303,10 +303,10 @@ export interface WriteDescriptor<T = unknown> {
    *                 or number index if it is an array
    */
   write: (
-    ctx: WriteContext,
-    value: T,
-    parent: JSONObject | JSONArray,
-    index: number | string
+    _ctx: WriteContext,
+    _value: T,
+    _parent: JSONObject | JSONArray,
+    _index: number | string
   ) => JSONValue;
 }
 
@@ -318,14 +318,14 @@ export type Descriptor<T = any> = WriteDescriptor<T> &
  * simplified version of a descriptor where missed properties can be calculated
  */
 export type IncompleteDescriptor<T = unknown> = DescriptorOpts<T> & {
-  create?: (ctx: ReadContext, json: JSONValue) => T;
-  readContent?: (ctx: ReadContext, json: JSONValue, value: T) => void;
-  read?: (ctx: ReadContext, json: JSONValue) => T;
+  create?: (_ctx: ReadContext, _json: JSONValue) => T;
+  readContent?: (_ctx: ReadContext, _json: JSONValue, _value: T) => void;
+  read?: (_ctx: ReadContext, _json: JSONValue) => T;
   write?: (
-    ctx: WriteContext,
-    value: T,
-    parent: JSONObject | JSONArray,
-    index: number | string
+    _ctx: WriteContext,
+    _value: T,
+    _parent: JSONObject | JSONArray,
+    _index: number | string
   ) => JSONValue;
 };
 
@@ -1411,10 +1411,10 @@ const SymbolDescriptor = regDescriptor<symbol>({
 export const BigIntDescriptor =
   typeof BigInt === "function"
     ? regDescriptor({
-        read(_: ReadContext, json: JSONValue): BigInt {
+        read(_: ReadContext, json: JSONValue): bigint {
           return BigInt(<number>(<JSONObject>json).int);
         },
-        write(_: WriteContext, value: BigInt) {
+        write(_: WriteContext, value: bigint) {
           return { int: value.toString() };
         },
         name: "Int",
@@ -1849,7 +1849,7 @@ export function regGlobal() {
           regOpaqueObject(descr.value, `#G##${name}#{j}`);
         }
       }
-    } catch (e) {
+    } catch (_e) {
       continue;
     }
   }

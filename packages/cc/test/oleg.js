@@ -1,4 +1,5 @@
 import CC from "../main";
+import assert from "node:assert";
 
 describe("test cases from Oleg Kiselyov's samples", function() {
   const p = CC.newPrompt();
@@ -6,7 +7,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
     const r = CC.run(
       CC(async () => 4 + (await CC.pushPrompt(p, CC.pushPrompt(p, 5))))
     );
-    expect(r).to.equal(9);
+    assert.strictEqual(r, 9);
   });
   it("test2", function() {
     const r = CC.run(
@@ -21,7 +22,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           ))
       )
     );
-    expect(r).to.equal(9);
+    assert.strictEqual(r, 9);
   });
   it("test3", function() {
     const r = CC.run(
@@ -41,7 +42,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           ))
       )
     );
-    expect(r).to.equal(27);
+    assert.strictEqual(r, 27);
     try {
       CC.run(
         CC(async function() {
@@ -57,9 +58,9 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           return v + 20;
         })
       );
-      fail("should throw");
+      assert.fail("should throw");
     } catch (e) {
-      expect(e.message).to.equal(`prompt ${p.name}@${p.id} wasn't found`);
+      assert.strictEqual(e.message, `prompt ${p.name}@${p.id} wasn't found`);
     }
   });
   it("test4", function() {
@@ -80,7 +81,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           ))
       )
     );
-    expect(r).to.equal(35);
+    assert.strictEqual(r, 35);
     r = CC.run(
       CC(
         async () =>
@@ -102,7 +103,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           ))
       )
     );
-    expect(r).to.equal(35);
+    assert.strictEqual(r, 35);
   });
   it("test5", function() {
     const r = CC.run(
@@ -118,7 +119,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           ))
       )
     );
-    expect(r).to.equal(117);
+    assert.strictEqual(r, 117);
     const p2L = CC.newPrompt();
     const p2R = CC.newPrompt();
     r = CC.run(
@@ -140,7 +141,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           ))
       )
     );
-    expect(r).to.equal(115);
+    assert.strictEqual(r, 115);
   });
   it("test6", function() {
     const p1 = CC.newPrompt();
@@ -162,7 +163,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         );
       })
     );
-    expect(r).to.equal(15);
+    assert.strictEqual(r, 15);
   });
   it("test7", async function() {
     var p1 = CC.newPrompt();
@@ -201,7 +202,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         );
       })
     );
-    expect(r).to.equal(135);
+    assert.strictEqual(r, 135);
     r = CC.run(
       CC(async function() {
         function pushtwice(f) {
@@ -226,7 +227,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         );
       })
     );
-    expect(r).to.equal(135);
+    assert.strictEqual(r, 135);
     r = CC.run(
       CC(async function() {
         async function pushtwice(f) {
@@ -253,7 +254,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         );
       })
     );
-    expect(r).to.equal(135);
+    assert.strictEqual(r, 135);
   });
   it("test shift", function() {
     const r = CC.run(
@@ -265,7 +266,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         })
       )
     );
-    expect(r).to.eql(["a"]);
+    assert.deepStrictEqual(r, ["a"]);
   });
   it("test shift0", function() {
     const r = CC.run(
@@ -284,7 +285,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
           )
       )
     );
-    expect(r).to.eql([]);
+    assert.deepStrictEqual(r, []);
     r = CC.run(
       CC(async () =>
         CC.pushPrompt(
@@ -300,7 +301,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         )
       )
     );
-    expect(r).to.eql(["a"]);
+    assert.deepStrictEqual(r, ["a"]);
   });
   it("test control", function() {
     const r = CC.run(
@@ -312,7 +313,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         })
       )
     );
-    expect(r).to.eql([]);
+    assert.deepStrictEqual(r, []);
     r = CC.run(
       CC.pushPrompt(
         p,
@@ -322,7 +323,7 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         })
       )
     );
-    expect(r).to.eql(["a"]);
+    assert.deepStrictEqual(r, ["a"]);
   });
   it("test control0", function() {
     const r = CC.run(
@@ -336,6 +337,6 @@ describe("test cases from Oleg Kiselyov's samples", function() {
         })
       )
     );
-    expect(r).to.equal(2);
+    assert.strictEqual(r, 2);
   });
 });

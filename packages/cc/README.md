@@ -71,9 +71,7 @@ way your program needs (shallow/deep) to restore variables
 values. Alternatively, it may be Proxy based copy-on-write for better
 performance.
 
-If the program is built with `topLevel:true` the continuation object
-may be even serialized and restored in some other process. This, of
-course, requires all the captured variables to be serializable.
+The continuations are serializable using [@effectful/serialization](../serialization/).
 
 Why do we need the other libraries if this library is the more
 generic? Becuase of performance, no indirection layer, and another
@@ -88,7 +86,6 @@ function API).
 For single level syntax and activating by import:
 
 ```
-$ npm install --save-dev @effectful/js
 $ npm install --save @effectful/cc
 ```
 

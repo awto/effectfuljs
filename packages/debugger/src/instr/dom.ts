@@ -17,7 +17,7 @@ export function dispatchEventImpl(
       try {
         if (typeof window !== "undefined" && window.dispatchEvent)
           window.dispatchEvent(new ErrorEvent("error", { error }));
-      } catch (e) {
+      } catch (_e) {
         throw error;
       }
     }

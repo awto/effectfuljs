@@ -303,13 +303,13 @@ function es6_4(es6, a) {
 }
 function es6_5(es6, b) {
   var e, f, m, obj, a, c;
-  a = ({
+  a = {
     m: [e, {
       b: f,
       m,
       ...obj
     }]
-  } = b);
+  } = b;
   c = es6._, es6._ = null;
   return M.chain(c(a), es6_6);
 }

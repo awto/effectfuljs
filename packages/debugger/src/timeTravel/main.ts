@@ -32,7 +32,7 @@ export const undo: () => Record | null = config.timeTravel
         i.call();
       }
       flush();
-      let { future, past } = journal;
+      const { future, past } = journal;
       now.prev = future;
       journal.future = now;
       journal.now = past;

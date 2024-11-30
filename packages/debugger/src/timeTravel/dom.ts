@@ -10,7 +10,7 @@ const journal = State.journal;
 const domObserverSymbol = Symbol("@effectful/debugger/dom");
 
 /** currently observed elements */
-export let observing = new Set<ElementExt>();
+export const observing = new Set<ElementExt>();
 
 interface ObserverData {
   root: Element;
@@ -141,7 +141,7 @@ export function track(rootEl: Element) {
  */
 export function untrack(rootEl: Element) {
   const root = <ElementExt>rootEl;
-  let data = root[domObserverSymbol];
+  const data = root[domObserverSymbol];
   if (data && data.observer) {
     flush();
     data.observer.disconnect();

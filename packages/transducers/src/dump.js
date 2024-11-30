@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as Kit from "./kit";
 import { tempNames } from "./scope";
 import * as Trace from "./trace";

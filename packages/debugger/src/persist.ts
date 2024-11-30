@@ -93,33 +93,6 @@ export const FunctionDescriptor = S.regDescriptor<any>({
 
 export function regFun(meta: State.FunctionDescr) {
   const constr = meta.func;
-  /*
-  const funcDescr = S.regDescriptor<any>({
-    name: `p#${meta.persistName}`,
-    create() {
-      return constr();
-    },
-    readContent(ctx, json, value) {
-      let data = <State.ProtoFrame>closures.get(value);
-      data.$ = ctx.step((<any>json).$$);
-      data.parent = ctx.step((<any>json).p);
-    },
-    write(ctx, value) {
-      const json: any = {};
-      const proto = <State.ProtoFrame>closures.get(value);
-      json.$$ = ctx.step(proto.$, json, "$$");
-      json.p = ctx.step(proto.parent, json, "p");
-      return json;
-    },
-    // TODO: save the props in snapshot so they can be updated
-    overrideProps: {
-      call: false,
-      apply: false
-    },
-    typeofHint: "function"
-  });
-  (<any>meta).descriptor = funcDescr;
-  */
   regOpaqueObject(constr, `c#${meta.persistName}`);
   regOpaqueObject(meta, `i#${meta.persistName}`);
   regOpaqueObject(meta.handler, `h#${meta.persistName}`);

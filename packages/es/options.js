@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const C = require("@effectful/core");
 const config = C.config;
 const Policy = C.Policy;

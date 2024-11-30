@@ -31,19 +31,19 @@ module.exports = (
         ],
         require.resolve("@babel/plugin-transform-spread"),
         [
-          require.resolve("@babel/plugin-proposal-class-properties"),
+          require.resolve("@babel/plugin-transform-class-properties"),
           {
             loose: true
           }
         ],
         [
           require.resolve("@babel/plugin-transform-classes"),
-          {
+        {
             loose: true
           }
         ],
         [
-          require("@babel/plugin-proposal-object-rest-spread"),
+          require("@babel/plugin-transform-object-rest-spread"),
           {
             useBuiltIns: true
           }

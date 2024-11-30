@@ -63,7 +63,7 @@ var $M = require("@effectful/debugger"),
     o: [3, null],
     r: [4, null],
     i: [5, null],
-    n: [6, null]
+    s: [6, null]
   }, $s$1, 1],
   $s$7 = [{}, $s$6, 2],
   $s$8 = [{
@@ -671,10 +671,10 @@ var $M = require("@effectful/debugger"),
       case 11:
         $lset($l[0], 3, $p);
         $.goto = 12;
-        $p = $mcall("indexOf", $l[0][2], $l[0][3]);
+        $p = $mcall("includes", $l[0][2], $l[0][3]);
         $.state = 12;
       case 12:
-        if ($p >= 0) {
+        if ($p) {
           $.state = 13;
         } else {
           $.goto = 14;
@@ -839,10 +839,10 @@ var $M = require("@effectful/debugger"),
         }
       case 11:
         $.goto = 12;
-        $p = $mcall("indexOf", $l[0][2], $l[0][4]);
+        $p = $mcall("includes", $l[0][2], $l[0][4]);
         $.state = 12;
       case 12:
-        if ($p >= 0) {
+        if ($p) {
           $.state = 13;
         } else {
           $.goto = 14;

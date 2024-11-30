@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import generate from "@babel/generator";
 import * as T from "@babel/types";
 import { symName } from "@effectful/transducers";

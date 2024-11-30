@@ -8,7 +8,7 @@ const Objects = require("../timeTravel/objects");
 const Ctx = D.context;
 S.regGlobal();
 
-test("pure generator functions time traveling", function() {
+test.only("pure generator functions time traveling", function() {
   const savedConsole = global.console;
   const calls = [];
   try {

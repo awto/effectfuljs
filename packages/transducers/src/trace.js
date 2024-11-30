@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import generate from "@babel/generator";
 import * as T from "@babel/types";
 import {
@@ -122,16 +121,16 @@ const traceImpl = BROWSER_DEBUG ? browserTraceImpl : traceNodeImpl;
 function* traceNodeImpl(prefix, s) {
   let level = 0;
   let x = 0;
-  const chalk = require("chalk");
+  const term = require("terminal-kit").terminal;
   for (const i of s) {
     if (i.enter) level++;
-    const dir = chalk.bold(i.leave ? (i.enter ? "|" : "/") : "\\");
+    const dir = term.bold(i.leave ? (i.enter ? "|" : "/") : "\\");
 
     const clevel = s.level ? `/${s.level}` : "";
-    const descr = `${chalk.green(symName(i.pos))}:${
+    const descr = `${term.green(symName(i.pos))}:${
       i.type.ctrl
-        ? chalk.green(symName(i.type))
-        : chalk.green.bold(symName(i.type))
+        ? term.green(symName(i.type))
+        : term.green.bold(symName(i.type))
     }[${level}${clevel}]`;
     let n = "";
     const { node } = i.value;
@@ -140,21 +139,21 @@ function* traceNodeImpl(prefix, s) {
     const t = [].concat(i.value.comments || [], i.value.tcomments || []);
     if (t.length) {
       if (comments.length)
-        commentsTxt = chalk.bold("[") + comments.join(" ") + chalk.bold("]");
+        commentsTxt = term.bold("[") + comments.join(" ") + term.bold("]");
     }
     if (node != null && i.type !== Tag.Array && symKind(i.type) !== "ctrl") {
       n = ccg(node);
       if (n.length > MAX_TRACE_CODE_LEN)
         n = n.substr(0, MAX_TRACE_CODE_LEN) + "...";
-      n = chalk.yellow(n);
+      n = term.yellow(n);
       const { loc } = node;
       if (loc != null) {
         let { source: f, start: s, end: e } = loc;
-        n += chalk.blue(
+        n += term.blue(
           ` @${f || "?"}-${s.line}:${s.column}..${e.line}:${e.column}`
         );
       } else {
-        n += chalk.bold(" @new");
+        n += term.bold(" @new");
       }
     }
     console.log(

@@ -18,9 +18,9 @@ pool:
   vmImage: $(imageName)
 
 steps:
-- task: NodeTool@0
+- task: UseNode@1
   inputs:
-    versionSpec: '>=11.1.0'
+    version: '20.9.0'
   displayName: 'Install Node.js'
 - script: |
     /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
@@ -28,7 +28,16 @@ steps:
   displayName: Start xvfb
   condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 - script: |
-    npm install && npm run test
-  displayName: Build and test
+    corepack enable
+  displayName: Corepack
+- script: |
+    yarn install
+  displayName: Install
+- script: |
+    yarn build
+  displayName: Build
+- script: |
+    yarn test
+  displayName: Test
   env:
     DISPLAY: ':99.0'

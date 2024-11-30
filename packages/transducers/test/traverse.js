@@ -1,4 +1,5 @@
 import { produce, consume } from "..";
+import assert from "node:assert";
 
 describe("function declaration", function() {
   it("traverse", function() {
@@ -34,8 +35,8 @@ describe("function declaration", function() {
       }
     };
     const arr = Array.from(produce(tree));
-    expect(arr.length).to.eql(19);
+    assert.strictEqual(arr.length, 19);
     const rtree = consume(arr).top;
-    expect(rtree).to.eql(tree);
+    assert.deepStrictEqual(rtree, tree);
   });
 });

@@ -4,7 +4,7 @@
   "description": "Multi-prompt delimited continuations runtime",
   "main": "main.js",
   "scripts": {
-    "test": "mocha -r ./test/kit/inject",
+    "test": "eslint && mocha -r ./test/kit/inject",
     "build": "tsc",
     "prepare": "npm run build",
     "docs": "rimraf api && typedoc --plugin typedoc-plugin-markdown --out api --excludePrivate src --readme none"
@@ -27,15 +27,22 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/js": "^1.4.10",
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.25.9",
+    "@babel/register": "^7.25.9",
+    "@effectful/js": "workspace:^",
+    "@eslint/js": "^9.16.0",
+    "@types/babel__core": "^7",
+    "@types/babel__register": "^7",
     "cross-env": "^7.0.3",
-    "mocha": "^10.0.0",
-    "rimraf": "^5.0.1",
-    "rollup": "^3.28.1",
-    "typescript": "^5.2.2"
+    "eslint": "^9.16.0",
+    "mocha": "^10.8.2",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.27.4",
+    "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "@effectful/js": "^1.0.0"
+    "@effectful/js": "workspace:^"
   },
   "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }

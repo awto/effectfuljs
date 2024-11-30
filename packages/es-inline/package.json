@@ -25,15 +25,15 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
-    "@effectful/es-rt": "^1.4.9",
-    "glob": "^10.3.4",
-    "mocha": "^10.0.0",
-    "promise": "^8.0.1",
-    "test262-parser": "^2.0.7"
+    "@effectful/es-rt": "workspace:^",
+    "glob": "^11.0.0",
+    "mocha": "^10.8.2",
+    "promise": "^8.3.0",
+    "test262-parser": "^2.2.0"
   },
   "dependencies": {
-    "@effectful/core": "^1.4.10",
-    "@effectful/es": "^1.4.10"
+    "@effectful/core": "workspace:^",
+    "@effectful/es": "workspace:^"
   },
   "publishConfig": {
     "access": "public"

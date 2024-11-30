@@ -92,7 +92,7 @@ export class DebugClient extends Support.DebugClient {
     expectedBPLocation?: IPartialLocation
   ): Promise<any> {
     return Promise.all([
-      this.waitForEvent("initialized").then(async event => {
+      this.waitForEvent("initialized").then(async _event => {
         const response = await this.setBreakpointsRequest({
           lines: [location.line],
           breakpoints: [{ line: location.line, column: location.column }],

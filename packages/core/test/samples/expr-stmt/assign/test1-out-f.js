@@ -224,13 +224,13 @@ function es6() {
   }
   function _4(b) {
     var a;
-    a = ({
+    a = {
       m: [e, {
         b: f,
         m,
         ...obj
       }]
-    } = b);
+    } = b;
     return M.chain(c(a), _5);
   }
   function _5(c) {

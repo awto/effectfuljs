@@ -23,6 +23,12 @@ export interface ProtoFrame extends Env {
   parent: Frame | null;
 }
 
+export const enum FrameFlags {
+  Running          = 1 << 0,
+  Done             = 1 << 1,
+  CatchesCtrlToken = 1 << 2
+}
+
 /** function's call desciption */
 export interface Frame extends ProtoFrame, Env {
   closure: Closure;
@@ -61,9 +67,8 @@ export interface Frame extends ProtoFrame, Env {
    * information what exactly it is awaiting
    */
   awaiting?: any;
-  /** the control flow is currently within generator's */
-  running: boolean;
-  done: boolean;
+  /** the control flow is currently within generator's `FrameFlags` */
+  flags: number;
   /** global env object (searched by name) */
   $g: any;
   /** the stop's reason displayed in VSCode */
@@ -292,6 +297,8 @@ export interface State {
   brkOnAnyException: boolean;
   /** stop on uncaught exceptions */
   brkOnUncaughtException: boolean;
+  /** if this returns `false` the execution won't stop on this breakpoint */
+  brkOnAnyExceptionFilter: ((e: any) => boolean) | null;
   /**
    * `top` of currently debugging thread,
    * the value is saved here while some blackbox thread may run
@@ -360,6 +367,7 @@ export const context: State = {
   moduleId: null,
   brkOnAnyException: false,
   brkOnUncaughtException: false,
+  brkOnAnyExceptionFilter: null,
   onNewSource: nop,
   onThread: nop,
   onFirstFrame: nop,
@@ -475,8 +483,8 @@ export const native: { [name: string]: any } = {
 };
 
 export const token = { _effectToken: true };
-
 export const sideEffectToken = { _sideEffectToken: true };
+export const ctrlToken = { _ctrlEffectToken: true };
 
 interface IdsStore {
   free(descriptor: number): void;
@@ -583,7 +591,7 @@ export class ForInIterator implements Iterable<string>, Iterator<string> {
 }
 export function forInIterator(obj: object): Iterable<string> {
   const fields: string[] = [];
-  for (let i in obj) fields.push(i);
+  for (const i in obj) fields.push(i);
   return new ForInIterator(obj, fields);
 }
 
@@ -642,7 +650,7 @@ let statusBufImpl: SharedArrayBuffer = <any>null;
 
 try {
   statusBufImpl = new SharedArrayBuffer(4);
-} catch (e) {
+} catch (_e) {
   // this may be disabled in some browsers due to Spectre
   // tslint:disable-next-line
   console.warn(

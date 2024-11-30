@@ -7,8 +7,7 @@ import joinMemExprs from "../samples/joinMemExprs";
 import looseForOf from "../samples/looseForOf";
 import instrumentation from "../samples/instrumentation";
 import closConv from "../samples/closConvPass";
-import * as RT from "../rt";
-import * as Trace from "../trace";
+import assert from "node:assert";
 
 const gen = ast =>
   generate(ast, { retainLines: false, concise: true }, "").code;
@@ -29,7 +28,7 @@ describe("join member expression", function() {
     gen
   );
   it("sample1", function() {
-    expect(
+    assert.strictEqual(
       run(`function a() {
       const a = create(), b = create(), /*@PACK*/d = create(), e = cr()
       d.a = 10
@@ -39,8 +38,7 @@ describe("join member expression", function() {
         let d = create(e)
         console.log(a.a,a.c,b.a,d)
       }
-    }`)
-    ).to.equal(
+    }`),
       pretty(`function a() {
       const a = create(), b = create(), /*@PACK*/ d = create(), e = cr();
       let a$a = a && a.a;
@@ -71,7 +69,7 @@ describe("instrumentation", function() {
     gen
   );
   it("sample1", function() {
-    expect(
+    assert.strictEqual(
       run(`function a() {
       function* b() {
         console.log("1")
@@ -88,8 +86,7 @@ describe("instrumentation", function() {
       c(v => v + 1, 
         v => {return v + 1},
         function(v) { return v + 1 })
-    }`)
-    ).to.equal(
+    }`),
       pretty(`function a() {
       return e$y$prof("a@?", "1[0]",
                       function () {
@@ -125,7 +122,7 @@ describe("instrumentation", function() {
   });
   context("with `this` or `arguments`", function() {
     it("sample2", function() {
-      expect(
+      assert.strictEqual(
         run(`function a() {
       function* b() {
         console.log("1",this,arguments)
@@ -138,8 +135,7 @@ describe("instrumentation", function() {
       c(v => v + this.id + arguments[0], 
         v => {return v + this.id + arguments[0]},
         function x(v) {return v + this.id + arguments[0]})
-    }`)
-      ).to.equal(
+    }`),
         pretty(
           `function a() {
         return e$y$prof("a@?", "1[0]",
@@ -204,7 +200,7 @@ describe("eager generators", function() {
     gen
   );
   it("sample1", function() {
-    expect(
+    assert.strictEqual(
       run(`
       function* a() {
         function* b() {
@@ -221,8 +217,7 @@ describe("eager generators", function() {
         }
         yield* b()
       }
-    `)
-    ).to.equal(
+    `),
       pretty(
         `function a() {
         return e$y$make(e$y$buf => {
@@ -259,13 +254,12 @@ describe("extra loose for-ofs", function() {
     gen
   );
   it("sample1", function() {
-    expect(
+    assert.strictEqual(
       run(`function a() {
       for(const i of a) {
         zzz
       }
-    }`)
-    ).to.equal(
+    }`),
       pretty(`function a() {
       {
         const _e = a;
@@ -288,12 +282,11 @@ describe("extra loose for-ofs", function() {
     );
   });
   it("sample2", function() {
-    expect(
+    assert.strictEqual(
       run(`function a() {
       for(const i of a)
         zzz
-    }`)
-    ).to.equal(
+    }`),
       pretty(`function a() {
       {
         const _e = a;
@@ -316,13 +309,12 @@ describe("extra loose for-ofs", function() {
     );
   });
   it("sample3", function() {
-    expect(
+    assert.strictEqual(
       run(`function a() {
       var i
       for(i of a)
         zzz
-    }`)
-    ).to.equal(
+    }`),
       pretty(`function a() {
       var i
       {
@@ -346,15 +338,14 @@ describe("extra loose for-ofs", function() {
     );
   });
   it("sample4", function() {
-    expect(
+    assert.strictEqual(
       run(`function a() {
       var i
       for(i of a)
         for(const j of b) {
           zzz
         }
-    }`)
-    ).to.equal(
+    }`),
       pretty(`function a() {
       var i;
       {
@@ -410,13 +401,12 @@ describe("extra loose for-ofs", function() {
     );
   });
   it("sample5", function() {
-    expect(
+    assert.strictEqual(
       run(`function a() {
       var i
       loo: for(i of a)
         zzz
-    }`)
-    ).to.equal(
+    }`),
       pretty(`function a() {
       var i
       {
@@ -453,7 +443,7 @@ describe("closure conversion", function() {
     gen
   );
   it("sample1", function() {
-    expect(
+    assert.strictEqual(
       run(`
       function apply() {
         return new ff(10);
@@ -474,8 +464,7 @@ describe("closure conversion", function() {
         }
         gg(j).kk(1);
         new gg(0);
-      }`)
-    ).to.equal(
+      }`),
       pretty(`
         var g = {};
         var apply;
@@ -524,7 +513,7 @@ describe("closure conversion", function() {
     );
   });
   it("sample2", function() {
-    expect(
+    assert.strictEqual(
       run(`
       var i = 0;
       function a(j) {
@@ -547,8 +536,7 @@ describe("closure conversion", function() {
       console.timeEnd("R")
       console.log("E", res)
       
-      console.log([{num:2},{num:1},{num:3}].sort(function(a, b) { return a.num - b.num; }))`)
-    ).to.equal(
+      console.log([{num:2},{num:1},{num:3}].sort(function(a, b) { return a.num - b.num; }))`),
       pretty(`
         var g = {};
         var a, res, i, k, j, temp;

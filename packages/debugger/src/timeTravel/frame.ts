@@ -78,7 +78,7 @@ function restoreGeneratorFrameOp(this: any) {
     c: state,
     d: brk,
     e: $,
-    f: running,
+    f: flags,
     g: sent,
     h: next,
     i: caller
@@ -87,7 +87,7 @@ function restoreGeneratorFrameOp(this: any) {
   this.c = frame.state;
   this.d = frame.brk;
   this.e = frame.$;
-  this.f = frame.running;
+  this.f = frame.flags;
   this.g = frame.sent;
   this.h = frame.next;
   this.i = frame.caller;
@@ -96,7 +96,7 @@ function restoreGeneratorFrameOp(this: any) {
   frame.state = state;
   frame.brk = brk;
   frame.$ = $;
-  frame.running = running;
+  frame.flags = flags;
   frame.sent = sent;
   frame.timestamp = journal.now;
   frame.next = next;
@@ -127,7 +127,7 @@ export function recordFrame(frame: State.Frame) {
           frame.state,
           frame.brk,
           frame.$,
-          (<State.GeneratorFrame>frame).running,
+          (<State.GeneratorFrame>frame).flags,
           (<State.GeneratorFrame>frame).sent,
           frame.next,
           frame.caller

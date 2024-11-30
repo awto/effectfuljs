@@ -49,9 +49,9 @@ defineProperty(Gp, "throw", {
 
 function next(this: any, value: any) {
   const frame = this._frame;
-  if (frame.running) throw new Error("Generator is already running");
+  if ((frame.flags & State.FrameFlags.Running) !== 0) throw new Error("Generator is already running");
   frame.sent = value;
-  frame.running = true;
+  frame.flags |= State.FrameFlags.Running;
   pushFrame(frame, next);
   context.call = null;
   try {
@@ -123,7 +123,7 @@ export function yld(value: any): any {
   if (!context.enabled && frame.restoreEnabled !== State.undef)
     context.enabled = true;
   popFrame(frame);
-  frame.running = false;
+  frame.flags &= ~State.FrameFlags.Running;
   return res;
 }
 
@@ -131,8 +131,7 @@ export function retG(value: any): any {
   const frame = <GeneratorFrame>context.top;
   const res = (context.value = { value, done: true });
   frame.result = void 0;
-  frame.running = false;
-  frame.done = true;
+  frame.flags = frame.flags & ~State.FrameFlags.Running | State.FrameFlags.Done;
   if (context.enabled) checkExitBrk(frame, res);
   else if (frame.restoreEnabled !== State.undef) context.enabled = true;
   popFrame(frame);
@@ -141,7 +140,6 @@ export function retG(value: any): any {
 
 export function unhandledG(e: any) {
   const frame = <GeneratorFrame>context.top;
-  frame.running = false;
-  frame.done = true;
+  frame.flags = frame.flags & ~State.FrameFlags.Running | State.FrameFlags.Done;
   return unhandled(e);
 }

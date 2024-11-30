@@ -7,7 +7,7 @@ const {
   normalizeDrive,
   normalizePath,
   cancelInterrupt,
-  statusBuf
+  statusBuf,
 } = require("../../state");
 
 const babel = require("@babel/core");
@@ -17,8 +17,8 @@ const CACHE_FILENAME =
   process.env.BABEL_CACHE_PATH ||
   path.join(cacheId.dir, `.babel.${babel.version}.${babel.getEnv()}.json`);
 
-let watch = function(filename, handler) {
-  fs.watch(filename, { persistent: false, encoding: "utf-8" }, type => {
+let watch = function (filename, handler) {
+  fs.watch(filename, { persistent: false, encoding: "utf-8" }, (type) => {
     handler(type);
   });
 };
@@ -26,16 +26,16 @@ if (!process.env.EFFECTFUL_DISABLE_WATCH_WORKER) {
   try {
     const { Worker } = require("worker_threads");
     const worker = new Worker(path.join(__dirname, "reloadWorker.js"), {
-      workerData: statusBuf
+      workerData: statusBuf,
     });
     const status = new Int32Array(statusBuf);
     const files = new Map();
-    worker.on("message", function({ type, filename }) {
+    worker.on("message", function ({ type, filename }) {
       Atomics.add(status, 0, -1);
       const handler = files.get(filename);
       if (handler) handler(type);
     });
-    watch = function(filename, handler) {
+    watch = function (filename, handler) {
       files.set(filename, handler);
       worker.postMessage(filename);
     };
@@ -51,8 +51,8 @@ babelOpts = {
   ...babelOpts,
   caller: {
     name: "@effectful/debugger",
-    ...(babelOpts.caller || {})
-  }
+    ...(babelOpts.caller || {}),
+  },
 };
 
 const log = (...args) => console.log(...args);
@@ -63,12 +63,13 @@ function mtime(filename) {
 
 let disabled = false;
 
-require.extensions[".ts"] = require.extensions[".tsx"] = require.extensions[
-  ".jsx"
-] = require.extensions[".js"];
+require.extensions[".ts"] =
+  require.extensions[".tsx"] =
+  require.extensions[".jsx"] =
+    require.extensions[".js"];
 
 const debuggerPath = normalizeDrive(
-  fs.realpathSync(path.join(__dirname, "../../"))
+  fs.realpathSync(path.join(__dirname, "../../")),
 );
 
 const requirePath =
@@ -81,8 +82,6 @@ const requirePath =
       };
 
 let cacheSaveScheduled = false;
-
-const makeDir = require("make-dir");
 
 // copy-pasted from @babel/register but with ability to merge
 function saveCache() {
@@ -102,7 +101,7 @@ function saveCache() {
     }
   }
   try {
-    makeDir.sync(path.dirname(CACHE_FILENAME));
+    fs.mkdirSync(path.dirname(CACHE_FILENAME), { recursive: true });
     if (config.verbose > 1) {
       log("DEBUGGER: saving babel cache");
     }
@@ -202,20 +201,20 @@ module.exports = function compile(content, filename, module) {
                     rt,
                     staticBundler: false,
                     moduleAliases: config.moduleAliases,
-                    preInstrumentedLibs: true
-                  }
-                ]
+                    preInstrumentedLibs: true,
+                  },
+                ],
               ],
               babelrc: false,
               configFile: false,
               ...babelOpts,
-              filename
+              filename,
             }
           : {
               sourceRoot: path.dirname(filename),
               ...deepClone(babelOpts),
-              filename
-            }
+              filename,
+            },
       );
       cacheKey = `${filename}@${cacheId.key}`;
       const env = babel.getEnv(false);
@@ -234,10 +233,10 @@ module.exports = function compile(content, filename, module) {
         }
         const event =
           (global[config.globalNS] && global[config.globalNS].event) ||
-          function() {};
+          function () {};
         const progressId = `Compiling: ${path.relative(
           config.srcRoot,
-          filename
+          filename,
         )}`;
         event("progressStart", { progressId, title: progressId });
         try {
@@ -249,7 +248,7 @@ module.exports = function compile(content, filename, module) {
           cached.mtime = mtime(filename);
           cacheData[cacheKey] = {
             mtime: cached.mtime,
-            code: cached.code
+            code: cached.code,
           };
         }
         if (config.cache && !cacheSaveScheduled) {
@@ -270,14 +269,14 @@ module.exports = function compile(content, filename, module) {
       let reloading = 0;
       if (config.verbose > 1)
         console.log(`DEBUGGER: enabling hot swapping for ${filename}`);
-      watch(filename, type => {
+      watch(filename, (type) => {
         const nextMtime = mtime(filename);
         if (config.verbose > 1)
           console.log(
             `DEBUGGER: updating ${filename}`,
             type,
             curMtime,
-            nextMtime
+            nextMtime,
           );
         if (type !== "change" || curMtime === nextMtime) return;
         curMtime = nextMtime;
@@ -288,7 +287,7 @@ module.exports = function compile(content, filename, module) {
           if (config.verbose) console.log(`DEBUGGER: Reloading ${filename}`);
           const progressId = `Re-compiling: ${path.relative(
             config.srcRoot,
-            filename
+            filename,
           )}`;
           const State = require("../../state");
           const context = State.context;
@@ -302,7 +301,7 @@ module.exports = function compile(content, filename, module) {
             let run;
             const event =
               (global[config.globalNS] && global[config.globalNS].event) ||
-              function() {};
+              function () {};
             try {
               content = fs.readFileSync(filename, "utf-8");
               if (config.instrument) {
@@ -311,7 +310,7 @@ module.exports = function compile(content, filename, module) {
                 if (cacheData) {
                   cacheData[cacheKey] = {
                     mtime: curMtime,
-                    code: cached.code
+                    code: cached.code,
                   };
                   cached.mtime = curMtime;
                 }
@@ -323,7 +322,7 @@ module.exports = function compile(content, filename, module) {
                 "module",
                 "__filename",
                 "__dirname",
-                code
+                code,
               );
             } finally {
               event("progressEnd", { progressId });
@@ -338,7 +337,7 @@ module.exports = function compile(content, filename, module) {
               emodule && emodule.require,
               module,
               filename,
-              path.dirname(filename)
+              path.dirname(filename),
             );
           } catch (e) {
             console.log(`DEBUGGER: Error on building:${filename}`, e);

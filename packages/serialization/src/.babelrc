@@ -3,7 +3,7 @@
     "build": {
       "plugins": [
         [
-          "@babel/proposal-object-rest-spread",
+          "@babel/plugin-transform-object-rest-spread",
           { "loose": true, "useBuiltIns": true }
         ],
         ["@babel/transform-spread", { "loose": true }],
@@ -16,7 +16,7 @@
     "development": {
       "plugins": [
         "@babel/plugin-transform-typescript",
-        "@babel/proposal-object-rest-spread",
+        "@babel/plugin-transform-object-rest-spread",
         "@babel/transform-modules-commonjs"
       ]
     }

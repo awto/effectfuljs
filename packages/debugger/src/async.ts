@@ -23,7 +23,7 @@ try {
   AsyncFunctionPrototype = Object.getPrototypeOf(
     native.eval("(async function(){})")
   );
-} catch (e) {
+} catch (_e) {
   function AsyncFunction() {}
   AsyncFunctionPrototype = AsyncFunction.prototype;
   AsyncFunctionPrototype[Symbol.toStringTag] = "AsyncFunction";
@@ -53,7 +53,7 @@ export function retA(value: any): any {
   const top = <AsyncFrame>context.top;
   context.call = top.onReturn;
   top.onReturn(value);
-  top.done = true;
+  top.flags |= State.FrameFlags.Done;
   top.result = void 0;
   if (context.enabled) {
     checkExitBrk(top, top.promise);
@@ -66,7 +66,7 @@ export function unhandledA(reason: any): any {
   const top = <AsyncFrame>context.top;
   context.call = top.onError;
   top.onError(reason);
-  top.done = true;
+  top.flags |= State.FrameFlags.Done;
   if (!context.enabled && top.restoreEnabled !== State.undef)
     context.enabled = true;
   popFrame(top);

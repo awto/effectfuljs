@@ -26,6 +26,7 @@ export function prepare(root) {
   index(root);
   assignSym(root);
   funcSyms();
+  ctrlMacros();
 }
 
 export const ASYNC_FUNCTION_FLAG = 1;
@@ -408,7 +409,6 @@ export function id1(pos, sym, fromScope) {
   const { index } = sym;
   let num;
   if (isNaN(index)) {
-    // eslint-disable-next-line no-console
     console.warn(
       `WARNING: UNDEFINDED identifier: "${config.filename} ${sym.name}"`,
       sym.decl.type
@@ -1123,4 +1123,28 @@ export function brkExpr(i) {
 export function isSysCall(i) {
   const callee = i.firstChild;
   return callee.type === Tag.Identifier && callee.sym && callee.sym.lib;
+}
+
+const macrosRegex = /([./])macro(\.c?js)?$/
+const isCtrlEff = /(?:\beffectful\b)|(?:\bctrl\b)/
+
+/** handling control flow macroses  */
+export function ctrlMacros() {
+  const { root } = Ctx;
+  for (let i = root.nextCallExpression; i !== root; i = i.nextCallExpression) {
+    let callee = i.firstChild;
+    if (callee.type === Tag.SequenceExpression)
+      callee = callee.firstChild.firstChild.prevSibling;
+    if (callee.type === Tag.Identifier) {
+      const {sym} = callee;
+      if (sym && !sym.scope && sym.name === "require") {
+        const args = callee.nextSibling.firstChild;
+        if (args && args.type === Tag.StringLiteral) {
+          const moduleName = args.node.value;
+          if (macrosRegex.test(moduleName) && isCtrlEff.test(moduleName))
+            args.node.value = moduleName.replace(macrosRegex, "$1rt$2");
+        }
+      }
+    }
+  }
 }

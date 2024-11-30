@@ -315,7 +315,7 @@ export function uniqFields(syms, pref = "", postf = "") {
       let cnt = 0;
       names.has(name);
       cnt++, name = `${pref}${namePos(orig, cnt)}${postf}`
-    ) {} // eslint-disable-line no-empty
+    ) {} 
     names.add(name);
     sym.name = name;
   }

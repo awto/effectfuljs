@@ -452,7 +452,6 @@ export function resetFieldInfo(root) {
 export function skip(s) {
   const iter = s[Symbol.iterator]();
   let item;
-  /* eslint-disable no-empty */
   for (; !(item = iter.next()).done; ) {}
   return item.value;
 }

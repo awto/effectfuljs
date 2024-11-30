@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as Kit from "./kit";
 import * as Trace from "./kit/trace";
 import { Tag, symName, symInfo, scope } from "@effectful/transducers";

@@ -5,6 +5,7 @@ import { Tag } from "../v2/types";
 import * as Core from "../v2/core";
 import * as Scope from "../v2/scope";
 import { toks, template, emitConst } from "../v2/template";
+import assert from "node:assert";
 
 const gen = ast =>
   generate(ast, { retainLines: false, concise: true, quotes: "'" }).code;
@@ -24,7 +25,7 @@ const impl = pass =>
     gen
   );
 
-describe("templates substitutions", function() {
+describe("templates substitutions v2", function() {
   const code = `function a() {
     fn1("A");
     fn2("B"+"C","D");
@@ -32,15 +33,14 @@ describe("templates substitutions", function() {
   }`;
 
   it("should substitute `toks` expression", function() {
-    expect(
+    assert.strictEqual(
       impl(function(root) {
         for (const i of Core.dft(root)) {
           if (i.type === Tag.Identifier && i.pos === Tag.callee && i.sym)
             Core.replace(i, toks(i.pos, `=call($I)`, i.sym));
         }
         return root;
-      })(code)
-    ).to.equal(
+      })(code),
       pretty(`function a() {
         call(fn1)("A");
         call(fn2)("B" + "C", "D");
@@ -49,7 +49,7 @@ describe("templates substitutions", function() {
     );
   });
   it("should substitute `emitConst` expressions", function() {
-    expect(
+    assert.strictEqual(
       impl(function(root) {
         let num = 0;
         for (let i = root.firstChild, j; i !== root; i = j) {
@@ -64,8 +64,7 @@ describe("templates substitutions", function() {
             );
         }
         return root;
-      })(code)
-    ).to.equal(
+      })(code),
       pretty(`function a() {
         fn1({ str: { val: "A" }, num: [0, 1] });
         fn2(
@@ -82,7 +81,7 @@ describe("templates substitutions", function() {
     );
   });
   it("should substitute `template` expressions", function() {
-    expect(
+    assert.strictEqual(
       impl(function(root) {
         let num = 0;
         for (const i of Core.dft(root)) {
@@ -105,8 +104,7 @@ describe("templates substitutions", function() {
           }
         }
         return root;
-      })(code)
-    ).to.equal(
+      })(code),
       pretty(`function a() {
         fn1({ a: "A", b: null });
         fn2({ a: "B" + "C", b: "D" });

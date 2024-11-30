@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import config from "./config";
 import * as State from "./state";
 import { wrapModule } from "./instr/rt";

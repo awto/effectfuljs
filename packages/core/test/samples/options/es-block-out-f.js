@@ -33,22 +33,18 @@ function b() {
   b.$run = _1;
   return b.scope(5);
   function _1(b, p) {
-    var a, c;
     switch (b.$state) {
       case 5:
-        return b.chain(s_1, 7);
+        return b.chain(s_1, 6);
       case 6:
+        opts("par");
+        return b.chain(p_1, 7);
+      case 7:
+        return b.chain(p_2, 8);
+      case 8:
         return b.pure();
       case 0:
         return b.pure(p);
-      case 7:
-        a = b.fork(null, 8);
-        c = b.fork(null, 9);
-        return b.chain(b.join([a, c]), 6);
-      case 8:
-        return b.chain(p_1, 0);
-      case 9:
-        return b.chain(p_2, 0);
       default:
         throw new Error("invalid state");
     }
@@ -60,22 +56,18 @@ function c() {
   c.$run = _1;
   return c.scope(5);
   function _1(c, p) {
-    var a, b;
     switch (c.$state) {
       case 5:
-        return c.chain(s_1, 7);
+        return c.chain(s_1, 6);
       case 6:
+        block("par");
+        return c.chain(p_1, 7);
+      case 7:
+        return c.chain(p_2, 8);
+      case 8:
         return c.pure();
       case 0:
         return c.pure(p);
-      case 7:
-        a = c.fork(null, 8);
-        b = c.fork(null, 9);
-        return c.chain(c.join([a, b]), 6);
-      case 8:
-        return c.chain(p_1, 0);
-      case 9:
-        return c.chain(p_2, 0);
       default:
         throw new Error("invalid state");
     }

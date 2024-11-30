@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as Kit from "./kit";
 import * as Lib from "@effectful/transducers/v2/debug";
 import generate from "@babel/generator";

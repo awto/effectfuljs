@@ -5,7 +5,7 @@ import * as Net from "net";
 const EMBED_DEBUG_ADAPTER = true;
 
 function progress(title: string): () => void {
-  let cb = (t?: any) => {};
+  let cb = (_t?: any) => {};
   vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Window,

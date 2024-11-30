@@ -20,7 +20,7 @@ export function postproc(f) {
       let cur = s, curf = f;
       (curf = Kit.result(curf(cur), nxt)) != null;
       cur = nxt, nxt = []
-    ) {} // eslint-disable-line no-empty
+    ) {}
     return nxt;
   };
 }
@@ -328,7 +328,6 @@ function namespaces(si) {
   for (const i of presets) cur = applyLib(i, false, cur);
   function applyLib(lib, optional, si) {
     if (verbose)
-      // eslint-disable-next-line no-console
       console.log(
         `${optional ? "trying to apply" : "applying"} presets from ${lib}...`
       );
@@ -338,7 +337,6 @@ function namespaces(si) {
     if (r != null) {
       return r(s);
     } else if (verbose) {
-      // eslint-disable-next-line no-console
       console.log(`no preset ${lib} found, that's probably ok`);
     }
     return s;

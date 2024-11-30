@@ -30,14 +30,14 @@ export function run(transform, state) {
   const path = state.file.path;
   config.babelFile = state.file;
   const ast = state.file.ast;
+  let ret;
   if (config.debug) {
-    transform(ast, helpers);
+    ret = transform(ast, helpers);
   } else {
     try {
-      transform(state.file.ast, helpers);
+      ret = transform(state.file.ast, helpers);
     } catch (e) {
       if (e instanceof SyntaxError) throw e;
-      /* eslint-disable-next-line no-console */
       if (config.verbose) console.log(e);
       throw state.file.buildCodeFrameError(e.esNode || ast, e.message);
     }
@@ -46,6 +46,7 @@ export function run(transform, state) {
   babel.traverse.clearNode(path.node);
   /** I don't know why but this prevents crashes in babel sometimes */
   state.file.scope.path.traverse(rescopeVisitor);
+  return ret;
 }
 
 /** returns babel's plugin definition suitable for assigning to `module.exports` */
@@ -97,17 +98,12 @@ export function babelPlugin(transform) {
 function babelMacro(transform) {
   const configName = transform.name;
   return createMacro(
-    function effectfulMacro({ references, state, babel, config: args }) {
+    function effectfulMacro({ references, state, source, babel, config: args }) {
       Object.assign(config, args, { babel });
       if (references.default && references.default.length)
         config.preprocNS = references.default[0].node.name;
-      if (config.macroAdapt !== false) {
-        if (config.detectRT) {
-          if (!config.importRT) config.importRT = config.detectRT;
-          config.detectRT = null;
-        }
-      }
-      run(transform, state);
+      config.macroSource = source;
+      return run(transform, state);
     },
     { configName }
   );

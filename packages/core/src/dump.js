@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as Kit from "./kit";
 import { Tag, consume, symName } from "./kit";
 import generate from "@babel/generator";

@@ -2,7 +2,7 @@ import config from "@effectful/transducers/v2/config";
 Object.assign(config, {
   srcRoot: ".",
   filename: "file.js",
-  rt: "@effectful/debugger",
+  rt: "default",
   // information about the current scope
   evalContext: null,
   evalParams: null,
@@ -19,7 +19,7 @@ Object.assign(config, {
   closureVars: ["__webpack_require__"],
   expInline: false,
   // "always" | "closure" | "never"
-  loopsSubScopes: "closure",
+  loopsSubScopes: "default",
   // optimize number of variables for storing temporal values
   reuseTempVars: false,
   // injects setters operators for temporal variables
@@ -48,6 +48,8 @@ Object.assign(config, {
   // on scope changes assume the whole frame is cloned
   wholeFrameCopy: false,
   // a function closure constructor as a function
-  funcConstrName: null
+  funcConstrName: null,
+  // the transformation is done as debugger run (not ctrl effects library)
+  inDebugger: false
 });
 export default config;

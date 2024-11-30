@@ -24,18 +24,19 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "peerDependencies": {
-    "@effectful/es": "^1.0.0"
+    "@effectful/es": "workspace:^"
   },
   "devDependencies": {
-    "@effectful/es": "^1.4.10",
-    "eslint": "^8.6.0",
-    "mocha": "^10.0.0",
-    "rimraf": "^5.0.1",
-    "rollup": "^3.28.1",
-    "typescript": "^5.2.2"
+    "@effectful/es": "workspace:^",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "eslint": "^9.15.0",
+    "mocha": "^10.8.2",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.27.4",
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@effectful/es-rt": "^1.4.9"
+    "@effectful/es-rt": "workspace:^"
   },
   "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }

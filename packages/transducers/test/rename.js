@@ -2,6 +2,7 @@ import { produce, consume, Tag, symbol } from "..";
 import * as Kit from "../kit";
 import { parse } from "@babel/parser";
 import generate from "@babel/generator";
+import assert from "node:assert";
 
 const Scope = symbol("Scope", "ctrl");
 
@@ -97,38 +98,33 @@ function pretty(txt) {
 
 describe("transducers composition", function() {
   it("rename", function() {
-    expect(rename(`var i;`)).to.equal(pretty(`var j;`));
-    expect(rename(`i;`)).to.equal(pretty(`j;`));
-    expect(rename(`function a() { return i; }`)).to.equal(
-      pretty(`function a() { return j; }`)
-    );
-    expect(
+    assert.strictEqual(rename(`var i;`), pretty(`var j;`));
+    assert.strictEqual(rename(`i;`), pretty(`j;`));
+    assert.strictEqual(rename(`function a() { return i; }`), pretty(`function a() { return j; }`));
+    assert.strictEqual(
       rename(`
                   i + k;
-                  `)
-    ).to.equal(
+                  `),
       pretty(`
                                       j + k;
                                       `)
     );
-    expect(
+    assert.strictEqual(
       rename(`
                   console.log(i + k);
-                  `)
-    ).to.equal(
+                  `),
       pretty(`
                                       console.log(j + k);
                                       `)
     );
-    expect(
+    assert.strictEqual(
       rename(`
                   console.log(i + k);
                   function a() {
                     var i;
                     console.log(i + k);
                   }
-                  `)
-    ).to.equal(
+                  `),
       pretty(`
                                        console.log(j + k);
                                        function a() {
@@ -136,14 +132,13 @@ describe("transducers composition", function() {
                                          console.log(i + k);
                                        }`)
     );
-    expect(
+    assert.strictEqual(
       rename(`
                   console.log(i + k);
                   function a(i) {
                     console.log(i + k);
                   }
-                  `)
-    ).to.equal(
+                  `),
       pretty(`
                                       console.log(j + k);
                                       function a(i) {

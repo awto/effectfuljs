@@ -148,7 +148,7 @@ $ npm link @effectful/debugger
 3. Use `--global-style` option for `npm install` (this doesn't work for yarn)
 
 ```
-$ npm install --global-style --no-package-lock --no-save @effectful/debugger
+$ npm install --global-style --production --no-package-lock --no-save @effectful/debugger
 ```
 
 The runtime package can be changed by specifying `runtime: "module"` in `launch.json`.

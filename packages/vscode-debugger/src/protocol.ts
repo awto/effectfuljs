@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { DebugProtocol } from "@vscode/debugprotocol";
 
 export { DebugProtocol };

@@ -2,7 +2,7 @@ import { produce, consume, Tag } from "..";
 import * as Kit from "../kit";
 import { parse } from "@babel/parser";
 import generate from "@babel/generator";
-import * as T from "@babel/types";
+import assert from "node:assert";
 
 function toStr(iter) {
   const a = Array.from(iter);
@@ -35,17 +35,17 @@ describe("pack", function() {
       else if (i.type === Kit.packed) numPacks++;
       else others++;
     }
-    expect(numBlocks).to.equal(4);
-    expect(numPacks).to.equal(5);
-    expect(others).to.equal(0);
-    expect(toStr(Kit.unpack(packed))).to.equal(pretty(prog));
+    assert.strictEqual(numBlocks, 4);
+    assert.strictEqual(numPacks, 5);
+    assert.strictEqual(others, 0);
+    assert.strictEqual(toStr(Kit.unpack(packed)), pretty(prog));
   });
 });
 
 describe("iterator utils", function() {
   it("to follow array's semantics", function() {
-    expect([...Kit.filter(i => i > 2, [1, 2, 3, 4, 5])]).to.eql([3, 4, 5]);
-    expect([...Kit.flatMap(i => [i, i + 1], [1, 2, 3])]).to.eql([
+    assert.deepStrictEqual([...Kit.filter(i => i > 2, [1, 2, 3, 4, 5])], [3, 4, 5]);
+    assert.deepStrictEqual([...Kit.flatMap(i => [i, i + 1], [1, 2, 3])], [
       1,
       2,
       2,
@@ -53,32 +53,36 @@ describe("iterator utils", function() {
       3,
       4
     ]);
-    expect([...Kit.map(i => i * 10, [1, 2, 3])]).to.eql([10, 20, 30]);
-    expect([...Kit.cons(1, Kit.cons(2, []))]).to.eql([1, 2]);
+    assert.deepStrictEqual([...Kit.map(i => i * 10, [1, 2, 3])], [10, 20, 30]);
+    assert.deepStrictEqual([...Kit.cons(1, Kit.cons(2, []))], [1, 2]);
     const [h, r] = Kit.la([1, 2, 3]);
-    expect(h).to.equal(1);
-    expect([...r]).to.eql([1, 2, 3]);
+    assert.strictEqual(h, 1);
+    assert.deepStrictEqual([...r], [1, 2, 3]);
     let n = 0;
     Kit.forEach(i => (n += i), [1, 2, 3]);
-    expect(n).to.equal(6);
-    expect([...Kit.reverse([1, 2, 3])]).to.eql([3, 2, 1]);
-    expect([...Kit.group([[1, 1], [1, 2], [2, 1], [2, 2]])]).to.eql([
+    assert.strictEqual(n, 6);
+    assert.deepStrictEqual([...Kit.reverse([1, 2, 3])], [3, 2, 1]);
+    assert.deepStrictEqual([...Kit.group([[1, 1], [1, 2], [2, 1], [2, 2]])], [
       [1, [1, 2]],
       [2, [1, 2]]
     ]);
-    expect(
+    assert.deepStrictEqual(
       [...Kit.groupUniq([[1, 1], [1, 1], [2, 2], [2, 2]])].map(([k, v]) => [
         k,
         [...v]
-      ])
-    ).to.eql([[1, [1]], [2, [2]]]);
-    expect([
-      ...Kit.groupWith(
-        [[1, 1], [1, 2], [2, 1], [2, 2]],
-        (w, v) => (w.push(v), w),
-        v => []
-      )
-    ]).to.eql([[1, [1, 2]], [2, [1, 2]]]);
+      ]),
+      [[1, [1]], [2, [2]]]
+    );
+    assert.deepStrictEqual(
+      [
+        ...Kit.groupWith(
+          [[1, 1], [1, 2], [2, 1], [2, 2]],
+          (w, v) => (w.push(v), w),
+          v => []
+        )
+      ],
+      [[1, [1, 2]], [2, [1, 2]]]
+    );
   });
 });
 
@@ -101,7 +105,8 @@ describe("empty expressions cleaner", function() {
     const res = toStr(
       Kit.cleanEmptyExprs(Array.from(ignoreIds(produce(parse(prog)))))
     );
-    expect(res).to.equal(
+    assert.strictEqual(
+      res,
       pretty(`
       function a() {
         console.log(j,(k=10,j));

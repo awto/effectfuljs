@@ -1,4 +1,4 @@
-import { Item, AsyncGeneratorFrame, Frame } from "./state";
+import { Item, AsyncGeneratorFrame } from "./state";
 import * as State from "./state";
 import {
   resumeLocal,
@@ -62,9 +62,9 @@ export function asyncGeneratorMethod(
   return function(this: { _frame: AsyncGeneratorFrame }, value: any) {
     const frame = this._frame;
     context.call = Promise;
-    if (frame.running)
+    if ((frame.flags & State.FrameFlags.Running) !== 0) 
       return new Promise<Item>(enqueue.bind(frame, step, value));
-    frame.running = true;
+    frame.flags |= State.FrameFlags.Running;
     frame.sent = value;
     frame.promise = new Promise<Item>(scopeInit.bind(frame));
     return step(frame, value);
@@ -108,7 +108,7 @@ regOpaqueObject(nextReturnStep, "@effectful/debugger/ag#return");
 
 function dequeue(frame: AsyncGeneratorFrame) {
   if (frame.queue.length) (<() => void>frame.queue.shift())();
-  else frame.running = false;
+  else frame.flags &= ~State.FrameFlags.Running;
 }
 
 export function frameAG(closure: State.Closure, newTarget: any) {
@@ -117,7 +117,7 @@ export function frameAG(closure: State.Closure, newTarget: any) {
   frame.iter = <any>iter;
   frame.next = null;
   frame.queue = [];
-  frame.running = false;
+  frame.flags &= ~State.FrameFlags.Running;
   return frame;
 }
 
@@ -138,7 +138,7 @@ export function retAG(value: any): any {
   top.awaiting = token;
   context.call = top.onReturn;
   top.onReturn({ value, done: true });
-  top.done = true;
+  top.flags = State.FrameFlags.Done;
   top.result = void 0;
   dequeue(top);
   if (context.enabled) {

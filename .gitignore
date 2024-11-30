@@ -11,3 +11,7 @@ input.json
 err-log.json
 .cache
 @effectful
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*

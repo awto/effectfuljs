@@ -9,7 +9,6 @@ const { minimatch } = require("minimatch");
 const { promisify } = require("util");
 const { rimraf } = require("rimraf");
 const webpack = promisify(require("webpack"));
-const makeDir = require("make-dir");
 
 const coreJsFeatures = {
   "es.array.concat": 1,
@@ -28,7 +27,7 @@ const coreJsFeatures = {
   "es.array.reduce": 3,
   "es.array.slice": 1,
   "es.array.splice": 1,
-  "es.array.some": 3
+  "es.array.some": 3,
   /*,
   "es.typed-array.every": 3,
   "es.typed-array.filter": 3,
@@ -48,7 +47,7 @@ async function main() {
 
   await Promise.all([
     config({ timeTravel: true }, "-t", 1),
-    config({ timeTravel: false }, "-n", 2)
+    config({ timeTravel: false }, "-n", 2),
   ]);
 
   async function config(config, tag, flag) {
@@ -58,7 +57,7 @@ async function main() {
     } catch (e) {
       console.error("couldn't remove deps folder", e);
     }
-    await makeDir(depsFolder, {});
+    await fs.mkdir(depsFolder, { recursive: true });
 
     await Promise.all([
       coreJs(),
@@ -70,7 +69,7 @@ async function main() {
         await lib("lodash.sortby", "index.js", "**/*.js");
         await lib("events", "events.js");
         alias["node:events"] = alias["events"];
-      })()
+      })(),
     ]);
     await fs.writeFile("deps-aliases.json", JSON.stringify(alias, null, 2));
 
@@ -82,7 +81,7 @@ async function main() {
       for (const [name, mask] of Object.entries(coreJsFeatures)) {
         if ((flag & mask) === 0) continue;
         features.push(
-          `"${name.replace(/-/g, "").split(".").slice(1).join(".")}"`
+          `"${name.replace(/-/g, "").split(".").slice(1).join(".")}"`,
         );
         requires.push(`  require("core-js-pure/modules/${name}");`);
       }
@@ -94,7 +93,7 @@ async function main() {
         ${requires.join("\n")}
         require("./polyfills")
         module.exports = require("core-js-pure/internals/path");
-        `
+        `,
       );
       const libRoot = path.dirname(require.resolve("core-js-pure"));
       await webpack({
@@ -115,37 +114,43 @@ async function main() {
                         blackbox: true,
                         preInstrumentedLibs: false,
                         rt: "debugger-api",
-                        ...config
-                      }
-                    ]
+                        ...config,
+                      },
+                    ],
                   ],
                   compact: false,
-                  sourceMaps: false
-                }
-              }
-            }
-          ]
+                  sourceMaps: false,
+                },
+              },
+            },
+          ],
         },
         externals: {
           "debugger-api": "commonjs2 ../api.js",
-          "debugger-state": "commonjs2 ../state.js"
+          "debugger-state": "commonjs2 ../state.js",
         },
         resolve: {
-          extensions: [".js"]
+          extensions: [".js"],
         },
         output: {
           library: "corejs",
           libraryTarget: "commonjs2",
           path: depsFolder,
-          filename: "core-js.js"
-        }
+          filename: "core-js.js",
+        },
       });
     }
 
     async function lib(name, main, include) {
       const rootPath = name.split("/");
       const root = rootPath[0];
-      const absoluteRoot = path.join(__dirname, "node_modules", name);
+      const absoluteRoot = path.join(
+        __dirname,
+        "..",
+        "..",
+        "node_modules",
+        name,
+      );
       if (include) {
         await dirs();
       } else {
@@ -158,7 +163,7 @@ async function main() {
         const dst = path.join(__dirname, "deps" + tag, name, relPath);
         if (process.env.EFFECTFUL_VERBOSE)
           console.log(`compiling ${src} into ${dst}`);
-        await makeDir(path.dirname(dst), { recursive: true });
+        await fs.mkdir(path.dirname(dst), { recursive: true });
         const moduleAliases = {};
         const depsRoot = Array(relPath.split("/").length + rootPath.length - 1)
           .fill("..")
@@ -174,17 +179,15 @@ async function main() {
                 preInstrumentedLibs: false,
                 moduleAliases,
                 rt: `${depsRoot}/../api.js`,
-                ...config
-              }
-            ]
+                ...config,
+              },
+            ],
           ],
-          compact: false
+          compact: false,
         };
         await fs.writeFile(
           dst,
-          (
-            await babel.transformFileAsync(src, libOpts)
-          ).code
+          (await babel.transformFileAsync(src, libOpts)).code,
         );
         return dst;
       }
@@ -207,6 +210,7 @@ async function main() {
             files = await fs.readdir(src);
           } catch (error) {
             console.log(`could not read dir ${src}`, error);
+            process.exit(1);
           }
           await Promise.all(
             files.map(async function (i) {
@@ -225,7 +229,7 @@ async function main() {
               const pathStr = nextPath.join("/");
               if (!s.isFile() || !minimatch(pathStr, include)) return;
               await file(pathStr);
-            })
+            }),
           );
         }
       }

@@ -14,7 +14,7 @@ import * as Instr from "../instr/rt";
 import * as Engine from "../engine";
 
 const { record } = Core;
-const { journal, context, native, token, CLOSURE_META, CLOSURE_PARENT } = State;
+const { journal, context, native, token } = State;
 const { record1, record2, record3, record4 } = Binds;
 const __effectful__nativeCall = native.FunctionMethods.call;
 const __effectful__nativeApply = native.Reflect.apply;
@@ -173,11 +173,11 @@ function getOrCreateObjKeys(
 ): KeysDescr | undefined | false {
   let descr = getObjKeys(obj);
   if (descr != null || optional) return descr;
-  let strKeys: KeysOrder = <any>{ name: null };
+  const strKeys: KeysOrder = <any>{ name: null };
   strKeys.next = strKeys;
   strKeys.prev = strKeys;
   const strMap: { [name: string]: KeysOrder } = {};
-  let symKeys: KeysOrder = <any>{ name: null };
+  const symKeys: KeysOrder = <any>{ name: null };
   symKeys.next = symKeys;
   symKeys.prev = symKeys;
   const symMap: { [name: string]: KeysOrder } = {};
@@ -480,7 +480,7 @@ function objectGetOwnPropertyNames(obj: any): string[] {
     }
     obj = unwrapped.obj;
   }
-  let descr = getObjKeys(obj);
+  const descr = getObjKeys(obj);
   if (!descr) return nativeObject.getOwnPropertyNames(obj);
   const res = nativeObject.getOwnPropertyNames(obj).filter(isInt);
   const keys = descr.strKeys;
@@ -498,7 +498,7 @@ function objectGetOwnPropertySymbols(obj: any): symbol[] {
     }
     obj = unwrapped.obj;
   }
-  let descr = getObjKeys(obj);
+  const descr = getObjKeys(obj);
   if (!descr) return nativeObject.getOwnPropertySymbols(obj);
   const res: symbol[] = [];
   const keys = descr.symKeys;
@@ -530,7 +530,7 @@ const objectGetOwnPropertyDescriptors = config.implicitCalls
   : function objectGetOwnPropertyDescriptors(
       obj: any
     ): { [name: string]: PropertyDescriptor } {
-      let descr = getObjKeys(obj);
+      const descr = getObjKeys(obj);
       if (!descr) return nativeObject.getOwnPropertyDescriptors(obj);
       const res: { [name: string]: PropertyDescriptor } = {};
       const descrs = nativeObject.getOwnPropertyDescriptors(obj);
@@ -1199,7 +1199,7 @@ export const nativeTypedArray = {
 };
 
 function spliceOp(this: any) {
-  let { a: arr, b: start, c: del, d: ins } = this;
+  const { a: arr, b: start, c: del, d: ins } = this;
   const insNum = (this.c = ins.length);
   nativeArray.unshift.__effectful__nativeCall(ins, start, del);
   const res = __effectful__nativeApply(nativeArray.splice, arr, ins);
@@ -1563,7 +1563,7 @@ function reflectOwnKeys(value: any) {
     }
     value = unwrap.obj;
   }
-  let descr = getObjKeys(value);
+  const descr = getObjKeys(value);
   if (!descr) return nativeReflect.ownKeys(value);
   const res = nativeObject.getOwnPropertyNames(value).filter(isInt);
   const keys = descr.strKeys;

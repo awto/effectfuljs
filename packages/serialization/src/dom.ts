@@ -240,7 +240,7 @@ export function trackGlobalDocument() {
       Element,
       {
         name: "dom#Element",
-        write(ctx, value: Element, par, key) {
+        write(ctx, value: Element, _parent, _key) {
           const json: S.JSONObject = { tag: value.tagName };
           const nodes: S.JSONArray = (json.c = []);
           for (const i of nodeListIter(value.childNodes))
@@ -465,7 +465,7 @@ export function trackGlobalDocument() {
  * Monkey patching platform objects to make them serializable,
  * run it as soon as possible if a global serialization is needed
  */
-export function track(withEvents?: boolean) {
+export function track(_withEvents?: boolean) {
   if (typeof EventTarget !== "undefined") trackEvents(EventTarget.prototype);
   trackGlobalDocument();
   S.regGlobal();
