@@ -1,16 +1,14 @@
 import {
-  VISITOR_KEYS as B_VISITOR_KEYS,
   NODE_FIELDS,
   ALIAS_KEYS,
   BUILDER_KEYS
 } from "@babel/types";
 
+import { VISITOR_KEYS } from "./visitor_keys.js";
+
+export { VISITOR_KEYS };
+
 const SYMBOLS_IMPL = "sym";
-
-export const VISITOR_KEYS = {...B_VISITOR_KEYS};
-
-// babel fixed the order at some version, but we need to keep the old one for now
-VISITOR_KEYS.DoWhileStatement = ["test", "body"];
 
 const GLOBAL_SYMBOLS = SYMBOLS_IMPL === "sym";
 const OBJ_SYMBOLS = SYMBOLS_IMPL === "obj";

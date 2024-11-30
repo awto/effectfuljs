@@ -12,7 +12,8 @@
   "scripts": {
     "test": "eslint src && mocha --require ./test/kit/inject.js",
     "build": "babel src --out-dir=.",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "dump-visitor-keys": "node dump_visitor_keys.mjs"
   },
   "repository": "git+https://github.com/awto/effectfuljs.git",
   "keywords": [
