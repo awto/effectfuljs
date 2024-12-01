@@ -9,7 +9,7 @@
 	"homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
 	"icon": "icon.png",
 	"engines": {
-		"vscode": "^1.51.0"
+		"vscode": "^1.93.0"
 	},
 	"bugs": {
 		"url": "https://github.com/awto/effectfuljs/issues"
@@ -271,7 +271,6 @@
 		"url": "https://github.com/awto/effectfuljs.git"
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run build",
 		"build": "tsc -p ./",
 		"eslint": "eslint src",
 		"test:adapter": "mocha -u tdd ./out/test/adapter",
@@ -283,7 +282,7 @@
 		"@types/mocha": "^10.0.10",
 		"@types/node": "^22.10.0",
 		"@types/puppeteer": "^7.0.4",
-		"@types/vscode": "^1.95.0",
+		"@types/vscode": "^1.93.0",
 		"@types/ws": "^8.5.13",
 		"@typescript-eslint/eslint-plugin": "^8.16.0",
 		"@typescript-eslint/parser": "^8.16.0",
