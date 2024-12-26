@@ -2,12 +2,14 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
-    "outDir": ".",
     "lib": ["es6"],
+    "outDir": "lib",
     "sourceMap": false,
     "removeComments": false,
     "strict": true,
-    "allowJs": false
+    "allowJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
-  "files": ["src/main.ts"]
+  "include": ["src/**/*.ts"]
 }

@@ -49,8 +49,26 @@ export function run(transform, state) {
   return ret;
 }
 
+function fileOpts(state) {
+  const file = state.file;
+  if (file) {
+    const opts = file.opts;
+    let root = config.srcRoot;
+    if (!root || !root.substr)
+      root = config.srcRoot = opts.root || opts.cwd || ".";
+    root = path.resolve(root);
+    config.filename = opts.filename || "file.js";
+    let rel = path.relative(root, config.filename);
+    if (Kit.isWindows) rel = rel.replace(/\\/g, "/");
+    config.relativeName = rel;
+  } else {
+    config.srcRoot = ".";
+    config.relativeName = config.filename = "file.js";
+  }
+}
+
 /** returns babel's plugin definition suitable for assigning to `module.exports` */
-export function babelPlugin(transform) {
+export function babelPlugin(transform, mainConfig = {}) {
   const res = function effectfulPlugin(babel, args) {
     return {
       name: config.pluginName || transform.name || "effectful",
@@ -60,33 +78,20 @@ export function babelPlugin(transform) {
       },
       visitor: {
         Program(_path, state) {
-          Object.assign(config, defaultConfig, args, { babel });
-          const file = state.file;
-          if (file) {
-            const opts = file.opts;
-            let root = config.srcRoot;
-            if (!root || !root.substr)
-              root = config.srcRoot = opts.root || opts.cwd || ".";
-            root = path.resolve(root);
-            config.filename = opts.filename || "file.js";
-            let rel = path.relative(root, config.filename);
-            if (Kit.isWindows) rel = rel.replace(/\\/g, "/");
-            config.relativeName = rel;
-          } else {
-            config.srcRoot = ".";
-            config.relativeName = config.filename = "file.js";
-          }
+          Object.assign(config, defaultConfig, mainConfig, args, { babel });
+          fileOpts(state);
           run(transform, state);
         }
       }
     };
   };
-  res.macro = () => babelMacro(transform);
+  res.macro = () => babelMacro(transform, mainConfig);
   res.run = function (ast, opts) {
     Object.assign(config, opts);
     transform(ast, helpers);
     return ast;
   };
+  res.config = (mainConfig) => babelPlugin(transform, mainConfig);
   return res;
 }
 
@@ -95,15 +100,14 @@ export function babelPlugin(transform) {
  * it transforms the result of `babelPreset` into a function suitable
  * for supplying to "babel-plugin-macros" `createMacro` call
  */
-function babelMacro(transform) {
+function babelMacro(transform, mainConfig = {}) {
   const configName = transform.name;
   return createMacro(
     function effectfulMacro({ references, state, source, babel, config: args }) {
-      Object.assign(config, args, { babel });
-      if (references.default && references.default.length)
-        config.preprocNS = references.default[0].node.name;
+      Object.assign(config, mainConfig, args, { babel, macroReferences: references });
+      fileOpts(state);
       config.macroSource = source;
-      return run(transform, state);
+      run(transform, state);
     },
     { configName }
   );

@@ -1,3 +1,5 @@
+"no-ctrl";
+
 var $M = require("@effectful/debugger"),
   $x = $M.context,
   $ret = $M.ret,

@@ -688,6 +688,8 @@ export function module() {
   Scope.ensureUnique(modSym);
   Scope.ensureUnique(localsSym);
   if (!config.ns) Scope.ensureUnique(nsSym);
+  const dir = Kit.append(Kit.append(prog, Kit.arr(Tag.directives)), Kit.node(Tag.push, Tag.Directive));
+  Kit.append(dir, Kit.tok(Tag.value, Tag.DirectiveLiteral, { value: "no-ctrl" }));
   const block = Kit.append(prog, Kit.arr(Tag.body));
   const decls = Kit.arr(Tag.declarations);
   if (config.rt)
@@ -727,7 +729,7 @@ export function module() {
     Kit.append(moduleCall, Kit.memExpr(Tag.callee, nsSym, "module")),
     Kit.arr(Tag.arguments)
   );
-  Kit.append(args, Kit.str(Tag.push, config.relativeName));
+  Kit.append(args, Kit.str(Tag.push, config.relativeName || "?"));
   Kit.append(args, Kit.emitConst(Tag.push, config.evalContext));
   Kit.append(
     args,

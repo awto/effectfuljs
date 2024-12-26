@@ -1,218 +1,74 @@
-/**
- * # Monadic framework for delimited continuations
+import _ctrl from "@effectful/js/macro";
 
- import * as CC from "@effectful/cc"
+import {
+  Prompt,
+  SubCont,
+  newPrompt,
+  context,
+  copyFrame,
+  Frame,
+  push,
+  pop
+} from "./types";
 
- CC.run(function() {
- // .....
- });
+export { newPrompt, SubCont as SubCont, Prompt };
 
-*/
-
-let promptId = 0;
-
-export class Prompt<A> {
-  constructor(name: string) {
-    this.name = name;
-    this.id = promptId++;
-  }
-  name: string;
-  id: number;
-  ___promt_tag_?: A;
-}
-
-export const stepSymbol = Symbol("Effectful.ccStep");
-
-/** effectful value */
-export interface CC<A> {
-  [stepSymbol](_k: Seq<A, any>): CCV<any>;
-}
-
-export type CCV<A> = CC<A> | A;
-
-export type Step<A, B> = (_x: Context, _a: A) => CCV<B>;
-
-/** EffectfulJS abstract interface implementation */
-export class Context {
-  chain<A, B>(v: CCV<A>, f: Step<A, B>): CC<B> {
-    return new Chain(v, f, this);
-  }
-  jump<A, B>(v: A, f: Step<A, B>): CCV<B> {
-    return f(this, v);
-  }
-  jumpR<A, B>(v: A, f: Step<A, B>): CC<B> {
-    return new Chain(v, f, this);
-  }
-  pure<A>(v: A): CC<A> {
-    return new Pure<A>(v);
-  }
-  scope<A>(f: (_t: Context) => CC<A>): CC<A> {
-    return f(this);
-  }
-}
-
-export function context() {
-  return new Context();
-}
-
-export type Seq<_A, _B> = Frame<any>[];
-
-export type Frame<A> = {
-  prompt?: Prompt<A>;
-  seg?: Step<A, any>;
-  ctx?: Context;
-};
-
-function splitAt(seq: Seq<any, any>, p: Prompt<any>): Seq<any, any> {
-  const res: Seq<any, any> = [];
-  for (let i; (i = seq.pop()) != null; ) {
-    if (i.prompt === p) return res;
-    res.unshift(i);
-  }
-  throw new TypeError(`prompt ${p.name}@${p.id} wasn't found`);
-}
-
-class PushPrompt<A> implements CC<A> {
-  constructor(p: Prompt<A>, c: CCV<A>) {
-    this.prompt = p;
-    this.cont = c;
-  }
-  [stepSymbol](k: Seq<A, any>): CCV<any> {
-    k.push({ prompt: this.prompt, seg: undefined, ctx: undefined });
-    return this.cont;
-  }
-  private prompt: Prompt<A>;
-  private cont: CCV<A>;
-}
-
-class Chain<A, B> implements CC<B> {
-  constructor(a: CCV<A>, f: Step<A, B>, x?: Context) {
-    this.arg = a;
-    this.fun = f;
-    this.ctx = x;
-  }
-  [stepSymbol](k: Seq<B, any>): CCV<any> {
-    k.push({ prompt: undefined, seg: this.fun, ctx: this.ctx });
-    // TODO: stepCoerce (no tail)
-    return this.arg;
-  }
-  private arg: CCV<A>;
-  private fun: Step<A, B>;
-  private ctx?: Context;
-}
-
-export type SubCont<_A, _B> = Frame<any>[];
-
-class WithSubCont<A, B> implements CC<A> {
-  constructor(p: Prompt<B>, k: (_sc: SubCont<A, B>) => CCV<B>) {
-    this.prompt = p;
-    this.handler = k;
-  }
-  [stepSymbol](k: Seq<A, any>): CCV<any> {
-    return this.handler(splitAt(k, this.prompt));
-  }
-  private prompt: Prompt<B>;
-  private handler: (_sc: SubCont<A, B>) => CCV<B>;
-}
-
-class PushSubCont<A, B> implements CC<B> {
-  constructor(sc: SubCont<A, B>, c: CCV<A>) {
-    this.subCont = sc;
-    this.cont = c;
-  }
-  [stepSymbol](k: Seq<B, any>): CCV<any> {
-    k.push(...this.subCont);
-    return this.cont;
-  }
-  private subCont: SubCont<A, B>;
-  private cont: CCV<A>;
-}
-
-class Pure<A> implements CC<A> {
-  constructor(value: A) {
-    this.value = value;
-  }
-  [stepSymbol](_k: Seq<A, any>): CCV<any> {
-    return this.value;
-  }
-  value: A;
-}
-
-/**
- * Captures a portion of the current continuation back to
- * but not including the activation of pushPrompt with prompt `p`, aborts the
- * current continuation back to and including the activation of `pushPrompt`, and
- * invokes `f`, passing it an abstract value representing the captured subcontinuation.
- * If more than one activation of pushPrompt with prompt p is still active,
- * the most recent enclosing activation, i.e., the one that delimits the smallest
- * subcontinuation, is selected.
- */
-export function withSubCont<A, B>(
-  p: Prompt<B>,
-  f: (_sc: SubCont<A, B>) => CCV<B>
-): CC<A> {
-  return new WithSubCont<A, B>(p, f);
-}
-
-/** returns effectful value returning `v` */
-export function pure<A>(v: A): CC<A> {
-  return new Pure<A>(v);
-}
-
-/**
- * Creates a new prompt, distinct from all existing prompts
- */
-export function newPrompt<A>(name: string = "p"): Prompt<A> {
-  return new Prompt<A>(name);
-}
+const state = context;
 
 /**
  * uses prompt in its first operand to delimit the current continuation during
  * the evaluation of its second operand.
  */
-export function pushPrompt<A>(p: Prompt<A>, cont: CCV<A>): CC<A> {
-  return new PushPrompt<A>(p, cont);
+export function pushPrompt<A>(_prompt: Prompt<A>, body: () => A): A {
+    return body();
 }
 
 /**
  * composes sub-continuation `subk` with current continuation and evaluates
- * its second argument
+ * its second argument `body`
  */
-export function pushSubCont<A, B>(subk: SubCont<A, B>, cont: CCV<A>): CC<B> {
-  return new PushSubCont<A, B>(subk, cont);
+export function pushSubCont<A, B>(subk: SubCont<A, B>, body: () => A): B {
+  const cfrom = copyFrame(subk.from);
+  const ctill = subk.till;
+  let prev: Frame = cfrom;
+  const top = state.top;
+  if (top == null) throw new Error("`pushSubCont` isn't instrumeted");
+  for (let i = cfrom.caller; i && i != ctill; i = i.caller)
+    prev = prev.next = prev.caller = copyFrame(i);
+  prev.next = prev.caller = top;
+  context.top = cfrom;
+  return push(top, body) as any;
 }
 
 /**
- * for single-level mode, can be used for converting pure value into effectful
+ * Captures a portion of the current continuation back to
+ * but not including the activation of pushPrompt with prompt `prompt`, aborts the
+ * current continuation back to and including the activation of `pushPrompt`, and
+ * invokes `body`, passing it an abstract value representing the captured subcontinuation.
+ * If more than one activation of pushPrompt with prompt `prompt` is still active,
+ * the most recent enclosing activation, i.e., the one that delimits the smallest
+ * subcontinuation, is selected.
  */
-export function reify<A>(f: () => CCV<A>): CC<CCV<A>> {
-  // if wrapped with pure - doesn't require
-  return pure(f());
-}
-
-/**
- * for single-level mode, can be used for converting effectful value
- * into pure value
- */
-export function reflect<A>(v: CCV<A>): CCV<A> {
-  return v;
-}
-
-/**
- * evaluate all frames till resulting value
- */
-export function run<A>(c: CCV<A>): A {
-  const k: Seq<any, any> = [];
-  let cur: any = c;
-  for (;;) {
-    if (cur && cur[stepSymbol]) {
-      cur = cur[stepSymbol](k);
-    } else {
-      if (!k.length) return cur;
-      const n: Frame<any> = k.pop() as any;
-      if (n.seg != null) cur = n.seg(n.ctx as any, cur);
+export function withSubCont<A, B>(
+  prompt: Prompt<B>,
+  body: (seg: SubCont<A, B>) => B
+): A {
+  const top = context.top;
+  if (!top) throw new Error("`withSubCont` isn't instrumented");
+  const caller = top.next;
+  if (!caller)
+    throw new Error("`withSubCont` is called from not instrumented code");
+  for (let i: Frame<B> | null = caller; i != null; i = i.next) {
+    if (i.func === pushPrompt && i.$[1] === prompt) {
+      const till = i.next;
+      if (till === null) throw new TypeError("`pushPrompt` was called from not instrumented code");
+      return pop(till, function popBody() {
+        top.next = top.caller = till;
+        return body(new SubCont<A, B>(caller, i));
+      }) as any;
     }
   }
+  throw new Error(`prompt "${prompt.name}" wasn't found`);
 }
 
 /**
@@ -220,12 +76,9 @@ export function run<A>(c: CCV<A>): A {
  * passing captured continuation as a function to its argument,
  * delimits captured and resulting continuations
  */
-export function shift<A, B>(
-  p: Prompt<B>,
-  f: (_k: (_v: A) => CCV<B>) => CCV<B>
-): CCV<A> {
-  return withSubCont<A, B>(p, sk =>
-    pushPrompt(p, f(a => pushPrompt(p, pushSubCont(sk, a))))
+export function shift<A, B>(prompt: Prompt<B>, body: (k: (v: () => A) => B) => B): A {
+  return withSubCont<A, B>(prompt, (sk) =>
+    pushPrompt(prompt, () => body((a) => pushPrompt(prompt, () => pushSubCont(sk, a))))
   );
 }
 
@@ -234,78 +87,73 @@ export function shift<A, B>(
  * passing captured continuation as a function to its argument,
  * deoesn't delimit captured, delimits resultinging continuation
  */
-export function control<A, B>(
-  p: Prompt<B>,
-  f: (_k: (_v: A) => CCV<B>) => CCV<B>
-): CCV<A> {
-  return withSubCont<A, B>(p, sk => pushPrompt(p, f(a => pushSubCont(sk, a))));
+export function control<A, B>(prompt: Prompt<B>, body: (k: (v: () => A) => B) => B): A {
+  return withSubCont<A, B>(prompt, (sk) =>
+    pushPrompt(prompt, () => body((a) => pushSubCont(sk, a)))
+  );
 }
 
 /**
- * caputes and aborts the current continuation until prompt `p` and calls `f`
+ * caputes and aborts the current continuation until prompt `prompt` and calls `body`
  * passing captured continuation as a function to its argument,
  * delimits captured, doesn't delimit resultinging continuation
  */
-export function shift0<A, B>(
-  p: Prompt<B>,
-  f: (_k: (_v: A) => CCV<B>) => CCV<B>
-): CCV<A> {
-  return withSubCont<A, B>(p, sk => f(a => pushPrompt(p, pushSubCont(sk, a))));
+export function shift0<A, B>(prompt: Prompt<B>, body: (k: (v: () => A) => B) => B): A {
+  return withSubCont<A, B>(prompt, (sk) =>
+    body((a) => pushPrompt(prompt, () => pushSubCont(sk, a)))
+  );
 }
 
 /**
- * caputes and aborts the current continuation until prompt `p` and calls `f`
+ * caputes and aborts the current continuation until prompt `prompt` and calls `body`
  * passing captured continuation as a function to its argument,
  * doesn't delimit captured and resulting continuations
  */
-export function control0<A, B>(
-  p: Prompt<B>,
-  f: (_k: (_v: A) => CCV<B>) => CCV<B>
-): CCV<A> {
-  return withSubCont<A, B>(p, sk => f(a => pushSubCont(sk, a)));
+export function control0<A, B>(prompt: Prompt<B>, body: (k: (v: () => A) => B) => B): A {
+  return withSubCont<A, B>(prompt, (sk) => body((a) => pushSubCont(sk, a)));
 }
 
 /**
- * creates new prompt, and calls `e` passing this new prompt,
- * delimiting resulting continuation with it
+ * Creates a new prompt and calls the `body` function, passing this new prompt as an argument.
+ * The resulting continuation is delimited by the new prompt.
  */
-export function reset<A>(e: (_p: Prompt<A>) => CCV<A>): CC<A> {
-  const p = newPrompt<A>();
-  return pushPrompt(p, e(p));
+export function reset<A>(body: (prompt: Prompt<A>) => A): A {
+  const prompt = newPrompt<A>();
+  return pushPrompt(prompt, () => body(prompt));
 }
 
-/** aborts current continution up to the prompt `p` */
-export function abort<A, B>(p: Prompt<B>, e: CCV<B>): CC<A> {
-  return withSubCont<A, B>(p, _sk => e);
+/** 
+ * Aborts the current continuation up to the specified prompt `prompt`.
+ * 
+ * @param prompt - The prompt up to which the continuation is aborted.
+ * @param result - The value to return after aborting the continuation.
+ * @returns This should never exit
+ */
+export function abort<B, A = any>(prompt: Prompt<B>, result: B): A {
+  return withSubCont<A, B>(prompt, (_sk) => result);
 }
 
 /**
- * returns `v` if is instance of `CC` or `pure(v)` otherwise
+ * Composes a series of functions into a single function.
+ * 
+ * @param funs - A list of functions to compose.
+ * @returns A function that applies the composed functions to a value.
  */
-export function coerce<A>(v: CCV<A>): CC<A> {
-  if ((v as any)[stepSymbol]) return v as any;
-  return pure<A>(v as any);
+export function pipe(...funs: ((a: any) => any)[]): (arg: any) => any {
+  return function (val: any) {
+    for (const i of funs) val = val(i);
+    return val;
+  };
 }
 
-function CC<A>(f: () => A) {
-  return f();
+/**
+ * Applies a series of functions to a value in sequence.
+ * 
+ * @param val - The initial value.
+ * @param funs - A list of functions to apply to the value.
+ * @returns The final value.
+ */
+export function chain(val: any, ...funs: ((a: any) => any)[]): any {
+  for (const i of funs) val = val(i);
+  return val;
 }
-
-export default Object.assign(CC, {
-  newPrompt,
-  withSubCont,
-  pushPrompt,
-  pushSubCont,
-  reify,
-  reflect,
-  pure,
-  context,
-  reset,
-  control0,
-  shift0,
-  control,
-  shift,
-  run,
-  abort,
-  coerce
-});

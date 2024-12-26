@@ -504,19 +504,32 @@ export function __effectful_mcall(prop: string, ...args: [any, ...any[]]) {
 }
 
 /**
- * runs a computation until it encounters some breakpoint (returns `token)
+ * runs a computation until it encounters some breakpoint (returns `token`)
  * or finishes the whole computation (returns the resulting value or throws an exception)
  */
-export function step() {
+export function step(till: Frame | null = null) {
   try {
     context.running = true;
-    const value = context.value;
-    const top = context.top;
-    const error = context.error;
+    let value = context.value;
+    let top = context.top;
+    let error = context.error;
     context.value = void 0;
     context.error = false;
     if (!top) return value;
-    if (error) top.meta.errHandler(top, top.$);
+    if (error) {
+      if (value === ctrlToken) { 
+        if (checkCtrlToken(value, top, till))
+          return loop(context.value, till);
+        top = context.top;
+        value = context.value;
+        context.value = void 0;
+        if (!top)
+          throw value;
+        error = true;
+      }
+      top.error = value;
+      top.meta.errHandler(top, top.$);
+    }
     if (top.brk && top.brk.flags & BrkFlag.EXIT) {
       if (!context.enabled) {
         const restoreDebug = top.restoreEnabled;
@@ -527,25 +540,80 @@ export function step() {
       }
       popFrame(top);
     }
-    return loop(value);
+    return loop(value, till);
   } finally {
     context.running = false;
   }
 }
 
-export function loop(value: any): any {
+
+function checkCtrlToken(e: any, top: Frame, till: Frame | null): boolean {
+  for (let i = top.next; i; i = i.next) {
+    if (i === till)
+      throw e;
+    if (i === context.unwindingTill) {
+      context.unwindingTill = null;
+      const body = context.unwindingBody as () => unknown;
+      context.unwindingBody = null;
+      context.top = i;
+      try {
+        context.value = body();
+        return true;
+      } catch (e) {
+        if (e === ctrlToken)
+          continue;
+        context.value = e;
+        return false;
+      }
+    }
+  }
+  throw new Error("INTERNAL: shouldn't happen");
+}
+
+export function loop(value: any, till: Frame | null = null): any {
   let top: Frame | null = context.top;
-  while (top) {
+  while (top && top !== till) {
     try {
       recordFrame(top);
       value = top.meta.handler(top, top.$, value);
       top = context.top;
-    } catch (e) {
+    } catch (ep) {
+      let e = ep;
       if (e === ctrlToken) {
+        const cont = checkCtrlToken(e, top as Frame, till);
         top = context.top;
-        continue;
+        if (cont) {
+          value = context.value;
+          context.value = void 0;
+          continue;
+        }
+        e = context.value;
+        context.value = void 0;
+        // for (let i = (top as Frame).next; i; i = i.next) {
+        //   if (i === till)
+        //     throw e;
+        //   if (i === context.unwindingTill) {
+        //     top = i;
+        //     context.unwindingTill = null;
+        //     const body = context.unwindingBody as () => unknown;
+        //     context.unwindingBody = null;
+        //     context.top = i.next;
+        //     try {
+        //       value = body();
+        //       top = context.top;
+        //       continue up;
+        //     } catch (e) {
+        //       if (e === ctrlToken)
+        //         continue;
+        //       top = context.top;
+        //       break;
+        //     }
+        //   }
+        // }
       }
       if (e === token) {
+        if (till)
+          throw e;
         context.onStop();
         return e;
       }
@@ -563,7 +631,7 @@ export function loop(value: any): any {
         return token;
       }
       top = context.top;
-      if (!top) {
+      if (!top || top === till) {
         if (config.verbose) {
           // tslint:disable-next-line:no-console
           console.error(
@@ -642,8 +710,14 @@ export function checkErrBrk(frame: Frame, e: any): boolean {
 }
 
 export function handle(frame: Frame, e: any) {
-  // if (unwindCtrl(e)) return;
   if (e === ctrlToken) {
+    if (frame.next === context.unwindingTill) {
+      const body = context.unwindingBody as () => unknown;
+      context.unwindingTill = null;
+      context.unwindingBody = null;
+      context.top = frame.next;
+      return body();
+    }
     throw e;
   }
   for (;;) {
@@ -965,10 +1039,13 @@ export function isDelayedResult(value: any): boolean {
   return value === token;
 }
 
+let frameCounter = 0;
+
 export function makeFrame(closure: State.Closure, newTarget: any): Frame {
   const $g = global;
   const frame: Frame = {
     $: <any>closure[CLOSURE_VARS],
+    id: frameCounter++,
     closure,
     func: closure[CLOSURE_FUNC],
     $g,

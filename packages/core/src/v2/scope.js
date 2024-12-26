@@ -26,7 +26,8 @@ export function prepare(root) {
   index(root);
   assignSym(root);
   funcSyms();
-  ctrlMacros();
+  if (config.macroSource)
+    ctrlMacros();
 }
 
 export const ASYNC_FUNCTION_FLAG = 1;
@@ -1125,9 +1126,6 @@ export function isSysCall(i) {
   return callee.type === Tag.Identifier && callee.sym && callee.sym.lib;
 }
 
-const macrosRegex = /([./])macro(\.c?js)?$/
-const isCtrlEff = /(?:\beffectful\b)|(?:\bctrl\b)/
-
 /** handling control flow macroses  */
 export function ctrlMacros() {
   const { root } = Ctx;
@@ -1139,10 +1137,8 @@ export function ctrlMacros() {
       const {sym} = callee;
       if (sym && !sym.scope && sym.name === "require") {
         const args = callee.nextSibling.firstChild;
-        if (args && args.type === Tag.StringLiteral) {
-          const moduleName = args.node.value;
-          if (macrosRegex.test(moduleName) && isCtrlEff.test(moduleName))
-            args.node.value = moduleName.replace(macrosRegex, "$1rt$2");
+        if (config.macroSource === args.node.value) {
+          Kit.replace(i, Kit.node(i.pos, Tag.NullLiteral));
         }
       }
     }

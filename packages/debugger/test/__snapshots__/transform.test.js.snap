@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`default transpiler 1`] = `
-"var $M = require("../../../api"),
+""no-ctrl";
+
+var $M = require("../../../api"),
   $iterator = $M.iterator,
   $iterFin = $M.iterFin,
   $x = $M.context,
@@ -396,7 +398,9 @@ $M.moduleExports();"
 `;
 
 exports[`default transpiler 2`] = `
-"var $M = require("../../../api"),
+""no-ctrl";
+
+var $M = require("../../../api"),
   $forInIterator = $M.forInIterator,
   $x = $M.context,
   $ret = $M.ret,
@@ -872,7 +876,9 @@ $M.moduleExports();"
 `;
 
 exports[`default transpiler 3`] = `
-"var $M = require("../../../api"),
+""no-ctrl";
+
+var $M = require("../../../api"),
   $x = $M.context,
   $ret = $M.ret,
   $unhandled = $M.unhandled,

@@ -1,3 +1,5 @@
+"no-ctrl";
+
 var $M = require("@effectful/debugger"),
   $ret = $M.ret,
   $unhandled = $M.unhandled,

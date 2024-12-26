@@ -1,4 +1,0 @@
-{
-  "plugins":[["../transform-async-do",{"detectRT":"../main"}],
-             "@babel/plugin-transform-modules-commonjs"]
-}

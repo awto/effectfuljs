@@ -31,6 +31,7 @@ export const enum FrameFlags {
 
 /** function's call desciption */
 export interface Frame extends ProtoFrame, Env {
+  id: number;
   closure: Closure;
   /** current state */
   state: number;
@@ -312,6 +313,10 @@ export interface State {
   threadId: number;
   /* signals we need to stop on next breakpoint with the reason */
   stopNext: string | null;
+  /** ctrl token for unwinding stack till this frame */
+  unwindingTill: Frame | null;
+  /** the function to evaluate on top of the new frame */
+  unwindingBody: (() => unknown) | null;
 }
 
 /** known closures */
@@ -377,7 +382,9 @@ export const context: State = {
   exception: undef,
   stopNext: null,
   onLoad: null,
-  onAfterLoad: null
+  onAfterLoad: null,
+  unwindingTill: null,
+  unwindingBody: null
 };
 
 export function nop() {

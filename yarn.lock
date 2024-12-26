@@ -42,6 +42,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/cli@npm:^7.26.4":
+  version: 7.26.4
+  resolution: "@babel/cli@npm:7.26.4"
+  dependencies:
+    "@jridgewell/trace-mapping": "npm:^0.3.25"
+    "@nicolo-ribaudo/chokidar-2": "npm:2.1.8-no-fsevents.3"
+    chokidar: "npm:^3.6.0"
+    commander: "npm:^6.2.0"
+    convert-source-map: "npm:^2.0.0"
+    fs-readdir-recursive: "npm:^1.1.0"
+    glob: "npm:^7.2.0"
+    make-dir: "npm:^2.1.0"
+    slash: "npm:^2.0.0"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  dependenciesMeta:
+    "@nicolo-ribaudo/chokidar-2":
+      optional: true
+    chokidar:
+      optional: true
+  bin:
+    babel: ./bin/babel.js
+    babel-external-helpers: ./bin/babel-external-helpers.js
+  checksum: 10c0/f2d4fc3c4a34dd3001e3bd7084b78b38211003c36afaf2dc8fedf4565c0442bd59b1c64a9f91a0b7b2450e089123f197e09577ae50dc994307c3348b310ce34c
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.25.9, @babel/code-frame@npm:^7.26.0":
   version: 7.26.2
   resolution: "@babel/code-frame@npm:7.26.2"
@@ -962,9 +989,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@effectful/cc@workspace:packages/cc"
   dependencies:
+    "@babel/cli": "npm:^7.26.4"
     "@babel/core": "npm:^7.26.0"
     "@babel/plugin-transform-modules-commonjs": "npm:^7.25.9"
-    "@babel/register": "npm:^7.25.9"
+    "@effectful/debugger": "workspace:^"
     "@effectful/js": "workspace:^"
     "@eslint/js": "npm:^9.16.0"
     "@types/babel__core": "npm:^7"
@@ -975,8 +1003,6 @@ __metadata:
     rimraf: "npm:^6.0.1"
     rollup: "npm:^4.27.4"
     typescript: "npm:^5.7.2"
-  peerDependencies:
-    "@effectful/js": "workspace:^"
   languageName: unknown
   linkType: soft
 
@@ -996,7 +1022,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/core@npm:^1.5.3, @effectful/core@workspace:^, @effectful/core@workspace:packages/core":
+"@effectful/core@npm:^1.5.3, @effectful/core@workspace:^, @effectful/core@workspace:^1.5.1, @effectful/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@effectful/core@workspace:packages/core"
   dependencies:
@@ -1020,7 +1046,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/debugger@workspace:packages/debugger":
+"@effectful/debugger@workspace:^, @effectful/debugger@workspace:^1.5.1, @effectful/debugger@workspace:packages/debugger":
   version: 0.0.0-use.local
   resolution: "@effectful/debugger@workspace:packages/debugger"
   dependencies:
@@ -1182,7 +1208,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@effectful/js@workspace:packages/js"
   dependencies:
-    "@effectful/core": "workspace:^"
+    "@effectful/core": "workspace:^1.5.1"
+    "@effectful/debugger": "workspace:^1.5.1"
   languageName: unknown
   linkType: soft
 

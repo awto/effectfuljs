@@ -50,6 +50,6 @@ Object.assign(config, {
   // a function closure constructor as a function
   funcConstrName: null,
   // the transformation is done as debugger run (not ctrl effects library)
-  inDebugger: false
+  inDebugger: false,
 });
 export default config;

@@ -4,3 +4,4 @@
 !samples/**/*.js
 !tests/**/*.js
 !bin.js
+!babel/**/*.js

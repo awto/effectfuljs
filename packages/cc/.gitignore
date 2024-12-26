@@ -1,5 +1,2 @@
-/*.js
-!rollup.config.js
-!transform*.js
-opts
+lib
 

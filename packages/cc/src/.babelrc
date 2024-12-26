@@ -1,0 +1,22 @@
+{
+  "presets": [
+    {
+      "plugins": [
+        ["@babel/transform-typescript", { "onlyRemoveTypeImports": true }],
+        [
+          "@babel/transform-modules-commonjs",
+          { "loose": true, "noInterop": true, "lazy": false }
+        ],
+        "@babel/plugin-transform-spread",
+        "@babel/plugin-transform-template-literals",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-transform-destructuring",
+        "@babel/plugin-transform-parameters"
+      ]
+    },
+    {
+      "plugins": ["babel-plugin-macros"]
+    }
+  ],
+  "passPerPreset": true
+}

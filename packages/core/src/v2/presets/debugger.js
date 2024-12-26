@@ -9,7 +9,7 @@ import * as Meta from "../meta";
 import * as Eval from "../eval";
 
 
-export default function debuggerTransform(ast) {
+export default function effectful(ast) {
   if (config.loopsSubScopes === "default")
     config.loopsSubScopes = config.timeTravel ? "always" : "closure";
   config.reuseTempVars = !config.timeTravel;

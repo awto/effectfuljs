@@ -1,13 +1,17 @@
 {
   "name": "@effectful/cc",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "Multi-prompt delimited continuations runtime",
-  "main": "main.js",
+  "exports": {
+    ".": "./lib/main.js",
+    "./*.js": "./lib/*.js"
+  },
   "scripts": {
-    "test": "eslint && mocha -r ./test/kit/inject",
-    "build": "tsc",
-    "prepare": "npm run build",
-    "docs": "rimraf api && typedoc --plugin typedoc-plugin-markdown --out api --excludePrivate src --readme none"
+    "test": "eslint && mocha lib/test/*.js",
+    "build:decls": "tsc",
+    "build:lib": "babel src --out-dir lib --extensions .ts,.js",
+    "build": "npm run build:decls && npm run build:lib",
+    "docs": "tsdoc --src=src/main.ts,src/types.ts --dest=api.md"
   },
   "repository": {
     "type": "git",
@@ -27,9 +31,9 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
+    "@babel/cli": "^7.26.4",
     "@babel/core": "^7.26.0",
     "@babel/plugin-transform-modules-commonjs": "^7.25.9",
-    "@babel/register": "^7.25.9",
     "@effectful/js": "workspace:^",
     "@eslint/js": "^9.16.0",
     "@types/babel__core": "^7",
@@ -41,8 +45,8 @@
     "rollup": "^4.27.4",
     "typescript": "^5.7.2"
   },
-  "peerDependencies": {
-    "@effectful/js": "workspace:^"
+  "dependencies": {
+    "@effectful/debugger": "workspace:^"
   },
   "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }

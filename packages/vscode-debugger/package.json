@@ -4,7 +4,7 @@
 	"displayName": "Effectful JavaScript Debugger",
 	"description": "Time-Traveling, Persistent State, Hot-Swapping, API and more",
 	"author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-	"version": "1.5.4",
+	"version": "1.5.5",
 	"license": "MIT",
 	"homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
 	"icon": "icon.png",
@@ -302,6 +302,9 @@
 		"ws": "^8.18.0"
 	},
 	"private": true,
+	"sponsor": {
+		"url": "https://github.com/sponsors/javactrl"
+	},
 	"__metadata": {
 		"id": "c405cb0f-9eb4-4e77-aa83-d67b1bd68788",
 		"publisherDisplayName": "effectful",

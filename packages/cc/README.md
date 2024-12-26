@@ -3,7 +3,18 @@
 Runtime library for multi-prompt delimited continuations with
 [EffectfulJS](https://github.com/awto/effectfuljs).
 
-[API documentation](api/README.md)
+From v2 the library uses [@effectful/debugger](../debugger) for implementation of control effects.
+This makes the transpilation to be heavier, but many useful features are enabled by default. Such us:
+
+* code is debuggable in VSCode using [effectfuk.debugger](https://marketplace.visualstudio.com/items?itemName=effectful.debugger) extension
+* continuations and all the functions are serializable
+* and more
+
+It's also now only supports one-layer JavaScript (no overriding of async/await and generators syntaxes at the moment). I simply don't need them, but they are quite simple to add if needed. Let me know if you need them. 
+
+Async/await and genrators are still available, though, with the same semantics as in JavaScript. However, it's not clear, why you would need them in the presence of delimited continuations.
+
+[API documentation](api.md)
 
 ## Description
 
@@ -26,10 +37,10 @@ using `CC.newPrompt` function.
 Function `CC.pushPrompt` is a replacement of `try` block. Its first
 argument is a prompt object (specifying which exceptions) to catch,
 and the second argument is a `try` body where an exception (with same
-prompt) may raise.  Note, there is no `catch` block, it is specified
+prompt) may raise. Note, there is no `catch` block, it is specified
 with `throw` replacement.
 
-The `throw` replacement is `CC.withSubCont`.  Its first argument is a
+The `throw` replacement is `CC.withSubCont`. Its first argument is a
 prompt object again, specifying which `CC.pushPrompt` should catch
 it. If there are a few `CC.pushPrompt` with the same prompt, the
 innermost will be selected. The second argument is a `catch`
@@ -73,144 +84,52 @@ performance.
 
 The continuations are serializable using [@effectful/serialization](../serialization/).
 
-Why do we need the other libraries if this library is the more
-generic? Becuase of performance, no indirection layer, and another
-effects API may be inlined.  The compiler is also able to derive more
-efficient combinators, for example, implicit parallelism (Applicative
-function API).
-
 ## Usage
 
-### babel plugin
-
-For single level syntax and activating by import:
-
 ```
-$ npm install --save @effectful/cc
+npm install @effectful/cc
+npm install --save-dev @effectful/js
 ```
 
-In .babelrc:
+Note, if you need to use `eval` or Function constructor, `--save` "@effectful/js" too.
 
-For two-level syntax with `async/await` overloading:
+Import into your code, and use [babel-plugin-macro](https://github.com/kentcdodds/babel-plugin-macros) to transform the whole file:
+
+```
+import ctrl from "@effectful/js/macro";
+import * as CC from "@effectful/cc";
+
+```
+
+WARNING: the babel plugin for the transpilation must run in a separate pass in the preset, for example:
 
 ```json
 {
-  "plugins": "@effectful/cc/transform-async-do"
+  "passPerPreset": true,
+  "presets": [
+    "some-other-preset",
+    {
+      "plugins": ["babel-plugin-macro"]
+    }
+  ]
 }
 ```
 
-Or
+See [@effectful/js](../js) for more details about alternative ways to transpile the code.
 
-```
-$ babel --plugins @effectful/cc/transform-async-do index.js
-```
+Since the transpiler currently doesn't support `import` and thus must be pre-transpiled into CommonJS with 
+[@babel/plugin-transform-modules-commonjs](https://babeljs.io/docs/babel-plugin-transform-modules-commonjs). And babel-plugin-macros ignores `require` if it isn't in variable declarations, we cannot use a shorthand syntax with just `import`. It must be default import (or some variable declaration for CommonJS `require`), with the actual imported value never used.
 
-In JS files to transpile:
-
-```javascript
-import * as CC from "@effectful/cc"
-```
-
-or
-
-```javascript
-var CC = require("@effectful/cc")
-
-```
-
-All async functions in files with the imports will be transpiled into delimited
-continuations functions.
-
-### Zero configuration transform
-
-Zero-configuration using
-[babel-plugin-macros](https://github.com/kentcdodds/babel-plugin-macros),
-or any other tool where it is enabled by default (such as 
-[Create Reat App](https://github.com/facebook/create-react-app) since v2).
-
-Import corresponding macro definition in the module to transpile:
-
-```javascript
-
-import "@effectful/cc/async-do.macro"
-
-```
-
-### List of available profiles
-
-EffectfulJS offers quite a few options, there are groups of them called
-profiles.  Different profiles may be enabled either by calling pre-processing
-function `CC.profile("name")` in code, or using corresponding babel plugin or
-macros.
-
- * "asyncDo" - transpile
-    only async functions treating await expression as effectful expressions
-    mark - double levels syntax. Babel plugin module is "@effectful/cc/transform-async-do" 
-    and macro module is "@effectful/cc/async-do.macro" 
- * "defaultFull" - transpiles all sub-functions treating all function calls as effectful. 
-    It is a single level syntax. Babel plugin module is "@effectful/cc/transform-full" 
-    and macro module is "@effectful/cc/full.macro".
- * "defaultMinimal" - transpiles all functions but considers as effectful only
-    expressions wrapped with imported namespace call , e.g. `CC(expr)`. Babel plugin
-    module is "@effectful/cc/transform-minimal" and macro module is
-    "@effectful/cc/minimal.macro".
- * "disabled" - nothing is transpilied, use compile time directives to specify
-   needed profiles in the code.  Babel plugin module is "@effectful/cc/transform" and
-   macro module is "@effectful/cc/macro".
-
-For example, here is a module switching different profiles but nothing enabled
-by default:
-
-```javascript
-import CC from "@effectful/cc"
-import "@effectful/cc/macro"
-
-// not transpiled
-function notEffectful() {
-}
-
-CC.profile("defaultFull")
-
-// transpiled, both `something and `somethingElse` are effectful
-function effectful() {
-  return something() + somethingElse()
-}
-
-CC.profile("minimal")
-
-// transpiled, only `somethingElse` is effectful
-function effectful() {
-  return something() + CC(somethingElse)
-}
-
-CC.profile("disabled")
-
-// not transpiled
-async function justAsyncFunction() {
-  await something
-}
-
-CC.profile("asyncDo")
-
-// transpiled, only `somethingElse` is effectful
-async function effectful() {
-  return something() + await somethingElse
-}
-```
-
-To get effectful value in single-level mode use `CC.reify` function.
+Also [@babel/plugin-transform-typescript](https://babeljs.io/docs/babel-plugin-transform-typescript) may remove this import since it isn't used. To avoid this pass `{ "onlyRemoveTypeImports": true }` argument.
 
 ## References
 
 The library implements interface from [A Monadic Framework for Delimited Continuations][2]
 paper.
 
-[1]: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.8213
-     "Representing Monads, Andrzej Filinski."
-[2]: http://www.cs.indiana.edu/cgi-bin/techreports/TRNNN.cgi?trnum=TR615
-     "A Monadic Framework for Delimited Continuations, R. Kent Dybvig, Simon Peyton Jones, Amr Sabry."
+[1]: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.8213 "Representing Monads, Andrzej Filinski."
+[2]: http://www.cs.indiana.edu/cgi-bin/techreports/TRNNN.cgi?trnum=TR615 "A Monadic Framework for Delimited Continuations, R. Kent Dybvig, Simon Peyton Jones, Amr Sabry."
 
 ## License
 
-Distributed under the terms of the [The MIT License (MIT)](LICENSE). 
-
+Distributed under the terms of the [The MIT License (MIT)](LICENSE).

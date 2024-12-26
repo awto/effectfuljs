@@ -1,6 +1,5 @@
 const config = require("../deriveConfig");
 const path = require("path");
-const deepClone = require("lodash/cloneDeep");
 const fs = require("fs");
 const cacheId = require("../cacheId");
 const {
@@ -212,7 +211,7 @@ module.exports = function compile(content, filename, module) {
             }
           : {
               sourceRoot: path.dirname(filename),
-              ...deepClone(babelOpts),
+              ...babelOpts,
               filename,
             },
       );
