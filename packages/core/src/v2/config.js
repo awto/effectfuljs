@@ -51,5 +51,7 @@ Object.assign(config, {
   funcConstrName: null,
   // the transformation is done as debugger run (not ctrl effects library)
   inDebugger: false,
+  // prefix to be added for each `require` calls (ESM aren't supported so only there)
+  importPrefix: null 
 });
 export default config;

@@ -370,9 +370,15 @@ export function assignCall() {
       (i.prevCallExpression = i.nextCallExpression).prevCallExpression =
         i.prevCallExpression;
       const arg = callee.nextSibling.firstChild;
+      let hasAlias = false;
       if (arg.type === Tag.StringLiteral) {
         const alias = getAlias(arg.node.value);
-        if (alias) arg.node.value = alias;
+        if (alias) {
+          arg.node.value = alias;
+          hasAlias = true;
+        }
+        // else if (config.importPrefix) 
+        //   arg.node.value = `${config.importPrefix}${arg.node.value}`;
       }
       const seq = node(i.pos, Tag.SequenceExpression);
       Scope.replaceRhs(i, seq);
@@ -394,11 +400,21 @@ export function assignCall() {
         ),
         Dom.clone(arg)
       );
+      if (config.importPrefix) {
+        if (arg.type === Tag.StringLiteral && !hasAlias) {
+          arg.node.value = `${config.importPrefix}${arg.node.value}`;
+        } else {
+          const addPrefix = node(arg.pos, Tag.BinaryExpression );
+          addPrefix.node.operator = "+";
+          Kit.append(addPrefix, Kit.str(Tag.left, config.importPrefix));
+          Kit.append(addPrefix, Dom.clone(arg)).pos = Tag.right;
+          Kit.replace(arg, addPrefix);
+        }
+      }
       append(
         insertAfter(
           append(
             append(exprs, node(Tag.push, Tag.CallExpression)),
-            // Kit.memExpr(Tag.callee, nsSym, "force")
             Scope.sysId(Tag.callee, forceSym)
           ),
           arr(Tag.arguments)
