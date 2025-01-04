@@ -1,3 +1,4 @@
+"no-ctrl";
 const { parentPort, workerData } = require("worker_threads");
 const fs = require("fs");
 const status = new Int32Array(workerData);

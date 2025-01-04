@@ -1,3 +1,4 @@
+"no-ctrl";
 const vm = require("vm");
 const { compileEvalToString } = require("../../engine");
 const config = require("../../config").default;

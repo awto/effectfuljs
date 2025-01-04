@@ -27,5 +27,8 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.16.0"
   },
-  "packageManager": "yarn@4.5.3"
+  "packageManager": "yarn@4.5.3",
+  "resolutions": {
+    "scratch": "portal:/Users/vitaliiakimov/work/proto/private/scratch"
+  }
 }

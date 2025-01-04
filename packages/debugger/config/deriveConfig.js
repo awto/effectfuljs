@@ -1,12 +1,12 @@
 const config = require("../config").default;
 const fs = require("fs");
 const path = require("path");
-const {minimatch:mm} = require("minimatch");
+const { minimatch: mm } = require("minimatch");
 if (process.env.EFFECTFUL_DEBUGGER_URL)
   config.url = process.env.EFFECTFUL_DEBUGGER_URL;
 config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL, true);
 config.timeTravelDisabled = isTrue(
-  process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED
+  process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED,
 );
 
 const moduleAliases = process.env.EFFECTFUL_MODULE_ALIASES;
@@ -14,15 +14,15 @@ const moduleAliases = process.env.EFFECTFUL_MODULE_ALIASES;
 if (moduleAliases != null) {
   try {
     config.moduleAliases = JSON.parse(moduleAliases);
-  } catch(e) {
-    console.error(`couldn't parse module aliases, ignoring them (${e})`)
+  } catch (e) {
+    console.error(`couldn't parse module aliases, ignoring them (${e})`);
   }
 }
 
 const { normalizePath } = require("../state");
 
 config.srcRoot = fs.realpathSync(
-  process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || "."
+  process.env.EFFECTFUL_DEBUGGER_SRC_ROOT || ".",
 );
 
 function findup(name, dir) {
@@ -38,10 +38,8 @@ function findup(name, dir) {
   return null;
 }
 
-
 let packageJSON = findup("package.json", config.srcRoot);
-if (packageJSON)
-  packageJSON = fs.realpathSync(packageJSON);
+if (packageJSON) packageJSON = fs.realpathSync(packageJSON);
 
 config.packageRoot = packageJSON ? path.dirname(packageJSON) : config.srcRoot;
 
@@ -49,7 +47,7 @@ config.runtimePackages =
   process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES &&
   process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES.length &&
   normalizePath(
-    fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES)
+    fs.realpathSync(process.env.EFFECTFUL_DEBUGGER_RUNTIME_PACKAGES),
   );
 
 config.runtime =
@@ -88,7 +86,7 @@ config.instrument = isTrue(process.env.EFFECTFUL_DEBUGGER_INSTRUMENT, true);
 
 config.instrumentDeps = isTrue(
   process.env.EFFECTFUL_DEBUGGER_INSTRUMENT_DEPS,
-  true
+  true,
 );
 
 //TODO: retor back to mm.matchRe after(if) it is fixed
@@ -97,26 +95,26 @@ const BLACKBOX =
 
 config.blackbox = {
   test(filename) {
-    return mm(filename, BLACKBOX);
-  }
-};
-
-const INCLUDE = process.env.EFFECTFUL_DEBUGGER_INCLUDE || "**/*.[jte]s?(x)";
-
-config.include = {
-  test(filename) {
-    return mm(filename, INCLUDE);
-  }
+    return mm(filename, BLACKBOX, { dot: true });
+  },
 };
 
 const EXCLUDE = process.env.EFFECTFUL_DEBUGGER_EXCLUDE;
 config.exclude = process.env.EFFECTFUL_DEBUGGER_EXCLUDE
   ? {
       test(filename) {
-        return mm(filename, EXCLUDE);
-      }
+        return mm(filename, EXCLUDE, { dot: true });
+      },
     }
   : null;
+
+const INCLUDE = process.env.EFFECTFUL_DEBUGGER_INCLUDE || "**/*.?([mc])[jte]s?(x)";
+
+config.include = {
+  test(filename) {
+    return mm(filename, INCLUDE, { dot: true });
+  },
+};
 
 if (isTrue(process.env.EFFECTFUL_DEBUG_DEBUGGER)) {
   config.debuggerDebug = true;
@@ -129,12 +127,21 @@ config.patchVM = isTrue(process.env.EFFECTFUL_DEBUGGER_PATCH_VM, true);
 
 config.reactFastRefresh = isTrue(
   process.env.EFFECTFUL_DEBUGGER_REACT_FAST_REFRESH,
-  true
+  true,
 );
+
+config.loaderPrefix = process.env.EFFECTFUL_DEBUGGER_LOADER_PREFIX || null;
+
+if (isTrue(config.loaderPrefix, false, true))
+  config.loaderPrefix = "@effectful/debugger/loader!";
+
+config.loaderPostfix = process.env.EFFECTFUL_DEBUGGER_LOADER_POSTFIX || null;
+
+if (isTrue(config.loaderPostfix, false, true)) config.loaderPostfix = ".edbg";
 
 module.exports = config;
 
-function isTrue(str, defaultValue = false) {
+function isTrue(str, defaultValue = false, optional = false) {
   if (!str) return defaultValue;
   switch (str.toLowerCase()) {
     case "yes":
@@ -152,6 +159,7 @@ function isTrue(str, defaultValue = false) {
     case "false":
       return false;
     default:
+      if (optional) return defaultValue;
       throw new Error(`incorrect format for boolean: "${str}"`);
   }
 }

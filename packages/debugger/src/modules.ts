@@ -23,7 +23,7 @@ regOpaqueObject(resumeModule, "#resume");
 export function runTopLevel(mod: State.Module) {
   const cjs = mod.cjs;
   const id = (mod.cjs && mod.cjs.id) || "anonymous";
-  context.call = id === context.moduleId ? wrapModule : null;
+  context.call = id === context.moduleId || config.loaderPrefix || config.loaderPostfix ? wrapModule : null;
   context.moduleId = null;
   wrapModule(mod, cjs);
   return cjs.exports;
@@ -36,7 +36,7 @@ export function moduleExports() {
   const hot = mod.version > 0;
   if (config.verbose)
     native.console.log(
-      `DEBUGGER: exporting:"${cjs.id}", "${context.moduleId}", fullPath:"${mod.fullPath}", name:"${mod.name}"`
+      `DEBUGGER: exporting:"${cjs.id}", fullPath:"${mod.fullPath}", name:"${mod.name}"`
     );
   if (context.onLoad) context.onLoad(mod, hot);
   if (hot && config.hot === true) return;

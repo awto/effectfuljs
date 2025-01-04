@@ -46,7 +46,7 @@
     "prop-types": "^15.8.1",
     "rimraf": "^6.0.1",
     "typescript": "^5.7.2",
-    "webpack": "^5.96.1",
+    "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
@@ -63,11 +63,15 @@
     "@babel/plugin-syntax-function-sent": "^7.25.9",
     "@babel/plugin-transform-arrow-functions": "^7.25.9",
     "@babel/plugin-transform-class-properties": "^7.18.6",
+    "@babel/plugin-transform-class-static-block": "^7.26.0",
     "@babel/plugin-transform-classes": "^7.25.9",
     "@babel/plugin-transform-destructuring": "^7.25.9",
+    "@babel/plugin-transform-dynamic-import": "^7.25.9",
     "@babel/plugin-transform-flow-strip-types": "^7.25.9",
+    "@babel/plugin-transform-logical-assignment-operators": "^7.25.9",
     "@babel/plugin-transform-modules-commonjs": "^7.25.9",
     "@babel/plugin-transform-object-rest-spread": "^7.20.7",
+    "@babel/plugin-transform-optional-catch-binding": "^7.25.9",
     "@babel/plugin-transform-parameters": "^7.25.9",
     "@babel/plugin-transform-private-methods": "^7.25.9",
     "@babel/plugin-transform-property-mutators": "^7.25.9",
@@ -84,11 +88,8 @@
     "@effectful/serialization": "workspace:^",
     "@vscode/debugprotocol": "^1.68.0",
     "asap": "^2.0.6",
-    "babel-plugin-dynamic-import-node": "^2.3.3",
-    "foreground-child": "^3.3.0",
     "minimatch": "^10.0.1",
     "promise": "^8.3.0",
-    "spawn-wrap": "^2.0.0",
     "ws": "^8.18.0"
   },
   "preferUnplugged": true

@@ -49,5 +49,9 @@ export default {
   /** stepping into implicit calls support */
   implicitCalls: true,
   /** replacing module imports for loading debug version of dependencies */
-  moduleAliases: <{[name:string]:string}>{}
+  moduleAliases: <{[name:string]:string}>{},
+  /** prefix to be added for each `require` calls (ESM aren't not supported so only there) */
+  loaderPrefix: null,
+  /** postfix to be added for each `require` calls (ESM aren't not supported so only there) */
+  loaderPostfix: null,
 };

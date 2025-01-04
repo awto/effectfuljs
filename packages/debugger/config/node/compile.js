@@ -23,22 +23,25 @@ let watch = function (filename, handler) {
 };
 if (!process.env.EFFECTFUL_DISABLE_WATCH_WORKER) {
   try {
-    const { Worker } = require("worker_threads");
-    const worker = new Worker(path.join(__dirname, "reloadWorker.js"), {
-      workerData: statusBuf,
-    });
-    const status = new Int32Array(statusBuf);
-    const files = new Map();
-    worker.on("message", function ({ type, filename }) {
-      Atomics.add(status, 0, -1);
-      const handler = files.get(filename);
-      if (handler) handler(type);
-    });
-    watch = function (filename, handler) {
-      files.set(filename, handler);
-      worker.postMessage(filename);
-    };
-    worker.unref();
+    const { Worker, isMainThread } = require("worker_threads");
+    if (isMainThread) {   
+      //TODO: send watch requests from other workers to the main thread
+      const worker = new Worker(path.join(__dirname, "reloadWorker.js"), {
+        workerData: statusBuf,
+      });
+      const status = new Int32Array(statusBuf);
+      const files = new Map();
+      worker.on("message", function ({ type, filename }) {
+        Atomics.add(status, 0, -1);
+        const handler = files.get(filename);
+        if (handler) handler(type);
+      });
+      watch = function (filename, handler) {
+        files.set(filename, handler);
+        worker.postMessage(filename);
+      };
+      worker.unref();
+    }
   } catch (e) {
     console.error("couldn't set up a file watching worker", e);
   }
@@ -65,7 +68,7 @@ let disabled = false;
 require.extensions[".ts"] =
   require.extensions[".tsx"] =
   require.extensions[".jsx"] =
-    require.extensions[".js"];
+  require.extensions[".js"];
 
 const debuggerPath = normalizeDrive(
   fs.realpathSync(path.join(__dirname, "../../")),
@@ -155,10 +158,11 @@ module.exports = function compile(content, filename, module) {
   const ext = path.extname(filename);
   const fileTest = normalizePath(filename);
   const blackbox = config.blackbox.test(fileTest);
+  const makedImport = config.loaderPrefix || config.loaderPostfix;
   if (
     disabled ||
     ext === ".json" ||
-    (config.instrumentDeps && fileTest.startsWith(config.runtimePackages)) ||
+    (config.instrumentDeps && !makedImport && fileTest.startsWith(config.runtimePackages)) ||
     (config.exclude && config.exclude.test(fileTest)) ||
     !((config.instrumentDeps && blackbox) || config.include.test(fileTest))
   ) {
@@ -201,6 +205,7 @@ module.exports = function compile(content, filename, module) {
                     staticBundler: false,
                     moduleAliases: config.moduleAliases,
                     preInstrumentedLibs: true,
+                    
                   },
                 ],
               ],

@@ -38,7 +38,7 @@ ext install effectful.debugger
 
 Next create `.vscode/launch.json`, if it doesn't exist yet. For this open Debugger view (Ctrl(Command)-Shift-D) and press `create a launch.json file` link, and choose "Debug with EffectfulJS".
 
-By default it adds NodeJS debugging configuration, to add browser's debugger, press "Add Configuration..." button in the left bottom corner of `launch.json` editor and choose "Effectful: Browser". By default, it doesn't require any other configs and expects a project with structure from [create-react-app](https://github.com/facebook/create-react-app).
+By default it adds NodeJS debugging configuration, to add browser's debugger, press "Add Configuration..." button in the left bottom corner of `launch.json` editor and choose "Effectful: Node".
 
 Here is an example from `launch.json`:
 
@@ -73,6 +73,8 @@ The common parameters in the configurations:
 - "timeTravel" - run with time-traveling
 - "timeTravelDisable" - start debugging with time-traveling but don't enable trace's collection by default, this should be enabled after with API
 - "preset" - zero-config preset name
+- "skipRuntimeInstall" - skip runtime installation
+
 
 The debugger requires all the sources (including third parties from node_modules) to be transpiled. The configuration may be tricky but there are a few zero-config options available.
 
@@ -87,6 +89,7 @@ Other specific parameters:
 - "args" - arguments for the command
 - "console" - which terminal kind to use
 - "env" - a dictionary for environment variables
+- "shell" - use shell to run the command
 
 This runs `babel` transforms for all loaded modules, and applies many common plugins (including TypeScript and Flow), but it ignores your babel config and ".babelrc" files. If you need to add something custom specify `env:{"EFFECTFUL_DEBUGGER_ZERO_CONFIG": false}`. This also means the debugger plugins should be added manually into the babel configs in the correct order, e.g. using `BABEL_ENV`.
 
@@ -130,31 +133,17 @@ The port number along with a few other options can be changed in [require("@effe
 
 To pause long-running scripts it uses `SharedArrayBuffer`. In Chrome (after v92) and Firefox (after v76), this works only with [cross-origin isolation](https://web.dev/coop-coep/). You'll likely need to add the corresponding headers into your webpack DevServer config, otherwise, the debugger won't be able to stop long-running scripts.
 
+Using `"listener"` preset the debugger just listens a WebSocket port for connections either from web browsers or from NodeJS. There is a [@effectful/debugger/register](../debugger/src/register.js) module which can be used, for example, with `NODE_OPTIONS="--require=@effectful/debugger/register"`.
+
+There is also a webpack loader [@effectful/debugger/loader](../debugger/loader.js) which can be used to load the debugger's runtime into browsers. You may want to have a separate index file just for debugging. It's enough to have the prefix only in the first import, the rest of the imports will be processed by the loader.
+
 ### Runtime
 
-The transpiled code calls debugger API functions. This API is installed separately from the plugin into the plugins directory. This may be inconvenient, but you can install it manually. However, the API dependencies should be hoisted in `node_modules`. There are a few ways to do this.
-
-Here are some of them:
-
-1. Install "@effectful/debugger" into a separate folder and add it into NODE_PATH, or put it into some parent folder of your project.
-
-2. Install "@effectful/debugger" globally and add link it into the project.
+The transpiled code calls debugger API functions. This API is installed separately from the plugin into the plugins directory. This may be inconvenient, but you can install it manually as dev dependency into your project.
 
 ```
-$ npm install --global @effectful/debugger
-$ npm link @effectful/debugger
+$ npm install --save-dev @effectful/debugger
 ```
-
-3. Use `--global-style` option for `npm install` (this doesn't work for yarn)
-
-```
-$ npm install --global-style --production --no-package-lock --no-save @effectful/debugger
-```
-
-The runtime package can be changed by specifying `runtime: "module"` in `launch.json`.
-
-If we need some own runtime which adjusts some things we can make a package which just
-re-exports modules from "@effectful/debugger" changing anything we need.
 
 ## API
 
@@ -193,8 +182,8 @@ So to make react state to be fully serializable just add "runtime" in `launch.js
     {
       "type": "effectful",
       "request": "launch",
-      "name": "Launch Browser application",
-      "preset": "browser",
+      "name": "Launch NodeJS application",
+      "preset": "node",
       "runtime": "@effectful/debugger/react"
     }
   ]

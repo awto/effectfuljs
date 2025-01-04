@@ -76,6 +76,16 @@
 								"description": "Transpile sources with time-traveling support",
 								"default": true
 							},
+							"shell": {
+								"type": "boolean",
+								"description": "Use shell to run the command",
+								"default": true
+							},
+							"skipRuntimeInstall": {
+								"type": "boolean",
+								"description": "Skip debugger runtime installation (it must be installed manually)",
+								"default": false
+							},
 							"timeTravelDisabled": {
 								"type": "boolean",
 								"description": "Don't start time traveling trace collection immediately (use `EDBG.journal.enabled = true` to enable in code)",
@@ -272,10 +282,11 @@
 	},
 	"scripts": {
 		"build": "tsc -p ./",
+		"watch": "yarn build -w",
 		"eslint": "eslint src",
 		"test:adapter": "mocha -u tdd ./out/test/adapter",
 		"test:ide": "vscode-test",
-		"test": "eslint src && run test:adapter && npm run test:ide"
+		"test": "eslint src && run test:adapter"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.16.0",
@@ -299,6 +310,7 @@
 	"dependencies": {
 		"@vscode/debugadapter": "^1.68.0",
 		"@vscode/debugprotocol": "^1.68.0",
+		"string-argv": "^0.3.2",
 		"ws": "^8.18.0"
 	},
 	"private": true,

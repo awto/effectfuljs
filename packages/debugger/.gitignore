@@ -19,3 +19,5 @@
 !deps-index-template.js
 !polyfills.js
 tmp-*
+!loader.js
+!register.js

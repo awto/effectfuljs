@@ -19,6 +19,8 @@ declare module "@vscode/debugprotocol" {
       env?: { [name: string]: string | undefined };
       argv0?: string;
       args?: string[];
+      shell?: boolean | string;
+      skipRuntimeInstall?: boolean;
       timeTravel?: boolean;
       timeTravelDisabled?: boolean;
       keepRunning?: boolean;

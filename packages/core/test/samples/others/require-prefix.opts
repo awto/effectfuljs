@@ -1,0 +1,4 @@
+{
+  "loaderPrefix": "@effectful/debugger/loader!",
+  "loaderPostfix": ".edbg"
+}

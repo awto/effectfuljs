@@ -16,9 +16,15 @@ var $M = require("@effectful/debugger"),
     b: [2, "1:15-1:16"]
   }, $s$1, 1],
   $s$3 = [{
+    _unused: [3, null]
+  }, $s$2, 1],
+  $s$4 = [{
     a: [1, "9:12-9:13"],
     b: [2, "9:15-9:16"]
   }, $s$1, 1],
+  $s$5 = [{
+    _unused2: [3, null]
+  }, $s$4, 1],
   $m$0 = $M.fun("m$0", "file.js", null, null, [], 0, 3, "1:0-16:0", 160, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
@@ -35,7 +41,7 @@ var $M = require("@effectful/debugger"),
         throw new Error("Invalid state");
     }
   }, null, null, 0, [[0, "1:0-7:1", $s$1], [16, "16:0-16:0", $s$1], [16, "16:0-16:0", $s$1]]),
-  $m$1 = $M.fun("m$1", "a1", null, $m$0, ["a", "b"], 0, 3, "1:0-7:1", 128, function ($, $l, $p) {
+  $m$1 = $M.fun("m$1", "a1", null, $m$0, ["a", "b"], 0, 4, "1:0-7:1", 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $.state = 1;
@@ -47,6 +53,8 @@ var $M = require("@effectful/debugger"),
         $.goto = 5;
         continue;
       case 3:
+        $l[3] = $.error;
+        $.error = void 0;
         $.goto = 2;
         ($x.call = eff)($l[2]);
         continue;
@@ -66,8 +74,8 @@ var $M = require("@effectful/debugger"),
       default:
         $.goto = 4;
     }
-  }, null, 1, [[0, null, $s$2], [3, "3:4-3:10", $s$2], [0, null, $s$2], [2, "5:4-5:10", $s$2], [16, "7:1-7:1", $s$2], [16, "7:1-7:1", $s$2]]),
-  $m$2 = $M.fun("m$2", "a2", null, $m$0, ["a", "b"], 0, 3, "9:0-15:1", 128, function ($, $l, $p) {
+  }, null, 1, [[0, null, $s$2], [3, "3:4-3:10", $s$2], [0, null, $s$2], [2, "5:4-5:10", $s$3], [16, "7:1-7:1", $s$2], [16, "7:1-7:1", $s$2]]),
+  $m$2 = $M.fun("m$2", "a2", null, $m$0, ["a", "b"], 0, 4, "9:0-15:1", 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         $.state = 1;
@@ -79,6 +87,8 @@ var $M = require("@effectful/debugger"),
         $.goto = 5;
         continue;
       case 3:
+        $l[3] = $.error;
+        $.error = void 0;
         $.result = $l[2];
         $.goto = 5;
         continue;
@@ -98,5 +108,5 @@ var $M = require("@effectful/debugger"),
       default:
         $.goto = 4;
     }
-  }, null, 1, [[0, null, $s$3], [3, "11:4-11:10", $s$3], [0, null, $s$3], [0, null, $s$3], [16, "15:1-15:1", $s$3], [16, "15:1-15:1", $s$3]]);
+  }, null, 1, [[0, null, $s$4], [3, "11:4-11:10", $s$4], [0, null, $s$4], [0, null, $s$5], [16, "15:1-15:1", $s$4], [16, "15:1-15:1", $s$4]]);
 $M.moduleExports();

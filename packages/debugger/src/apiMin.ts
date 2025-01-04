@@ -14,7 +14,7 @@ export function moduleExports() {
   const cjs = mod.cjs;
   if (config.verbose)
     native.console.log(
-      `DEBUGGER: exporting pure module "${cjs.id}", "${context.moduleId}", fullPath:"${mod.fullPath}", name:"${mod.name}"`
+      `DEBUGGER: exporting pure module "${cjs.id}", fullPath:"${mod.fullPath}", name:"${mod.name}"`
     );
   context.moduleId = null;
   const func = topMeta.func(null);

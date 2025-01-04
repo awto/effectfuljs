@@ -589,27 +589,6 @@ export function loop(value: any, till: Frame | null = null): any {
         }
         e = context.value;
         context.value = void 0;
-        // for (let i = (top as Frame).next; i; i = i.next) {
-        //   if (i === till)
-        //     throw e;
-        //   if (i === context.unwindingTill) {
-        //     top = i;
-        //     context.unwindingTill = null;
-        //     const body = context.unwindingBody as () => unknown;
-        //     context.unwindingBody = null;
-        //     context.top = i.next;
-        //     try {
-        //       value = body();
-        //       top = context.top;
-        //       continue up;
-        //     } catch (e) {
-        //       if (e === ctrlToken)
-        //         continue;
-        //       top = context.top;
-        //       break;
-        //     }
-        //   }
-        // }
       }
       if (e === token) {
         if (till)
@@ -768,7 +747,7 @@ export function evalAt(src: string) {
     );
     memo.set(key, resMeta);
   }
-  const func = resMeta.func(top);
+const func = resMeta.func(top);
   context.call = func;
   return __effectful__nativeCall.call(func, top.self);
 }
@@ -1108,6 +1087,8 @@ const nativeSetTimeout = native.setTimeout;
 nativeSetTimeout(function setupTopNumFrames() {
   TOP_LINES_STACK_NUM = numFrames(new Error("__effectful__stack")) + 1;
 }, 0);
+
+// let schedulingThread = false;
 
 function scheduleCurrentThread() {
   context.queue.push({

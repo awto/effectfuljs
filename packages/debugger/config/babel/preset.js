@@ -15,9 +15,12 @@ function makePreset(transformPlugin) {
         {
           plugins: [
             require.resolve("@babel/plugin-proposal-optional-chaining"),
+            require.resolve("@babel/plugin-transform-logical-assignment-operators"),
+            require.resolve("@babel/plugin-transform-optional-catch-binding"),
             require.resolve(
               "@babel/plugin-proposal-nullish-coalescing-operator",
             ),
+            // require.resolve("@babel/plugin-transform-dynamic-import"),
             [
               require.resolve("@babel/plugin-transform-modules-commonjs"),
               {
@@ -35,6 +38,7 @@ function makePreset(transformPlugin) {
               { loose: true },
             ],
             require.resolve("@babel/plugin-transform-spread"),
+            require.resolve("@babel/plugin-transform-class-static-block"),
             [
               require.resolve("@babel/plugin-transform-class-properties"),
               {

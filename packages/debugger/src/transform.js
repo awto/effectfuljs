@@ -1,6 +1,7 @@
 const config = require("@effectful/core/v2/config").default;
 const transform = require("@effectful/core/v2/presets/debugger").default;
 const path = require("path");
+const debuggerConfig = require("./config").default;
 
 let VERBOSE =
   process.env.EFFECTFUL_DEBUGGER_VERBOSE || process.env.EFFECTFUL_VERBOSE;
@@ -41,7 +42,7 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
     const root =
       config.preInstrumentedLibs && config.preInstrumentedLibs.substr
         ? config.preInstrumentedLibs
-        : `@effectful/debugger/deps${config.timeTravel ? "-t" : "-n"}`;
+        : `${config.rt || "@effectful/debugger"}/deps${config.timeTravel ? "-t" : "-n"}`;
     const moduleAliases = {};
     for (const [src, dst] of Object.entries(require("./deps-aliases.json")))
       moduleAliases[src] = path.join(root, dst);
@@ -58,6 +59,8 @@ const plugin = require("@effectful/core/v2/compiler").babelPlugin(function(
   progressUpdate();
   try {
     config.inDebugger = true;
+    if (!config.loaderPrefix) config.loaderPrefix = debuggerConfig.loaderPrefix;
+    if (!config.loaderPostfix) config.loaderPostfix = debuggerConfig.loaderPostfix;
     transform(ast);
   } finally {
     config.inDebugger = false;

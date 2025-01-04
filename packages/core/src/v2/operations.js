@@ -336,6 +336,32 @@ export function methodCalls() {
   }
 }
 
+function wrapRequireArgs(arg) {
+  if (arg.type === Tag.StringLiteral) {
+    const orig = arg.node.value;
+    if (!orig.startsWith("@effectful") && !orig.startsWith("node:") && !orig.startsWith("data:"))
+      arg.node.value = `${config.loaderPrefix || ""}${orig}${config.loaderPostfix || ""}`;
+    return arg;
+  } 
+  if (config.loaderPrefix) {
+    const argPrefix = node(arg.pos, Tag.BinaryExpression);
+    argPrefix.node.operator = "+";
+    Kit.append(argPrefix, Kit.str(Tag.left, config.loaderPrefix));
+    Kit.replace(arg, argPrefix);
+    Kit.append(argPrefix, arg).pos = Tag.right;
+    arg = argPrefix;
+  }
+  if (config.loaderPostfix) {
+    const argPostfix = node(arg.pos, Tag.BinaryExpression);
+    argPostfix.node.operator = "+";
+    Kit.replace(arg, argPostfix);
+    Kit.append(argPostfix, arg).pos = Tag.left;
+    Kit.append(argPostfix, Kit.str(Tag.right, config.loaderPostfix));
+    arg = argPostfix;
+  }
+  return arg;
+}
+
 /** replaces `a(...args)` with `(context.call = a)(...args)` */
 export function assignCall() {
   const { root } = Ctx;
@@ -346,6 +372,9 @@ export function assignCall() {
   for (let i = root.nextCallExpression; i !== root; i = i.nextCallExpression) {
     const callee = i.firstChild;
     if (callee.type === Tag.Import) {
+      let arg = callee.nextSibling.firstChild;      
+      if (config.loaderPrefix || config.loaderPostfix)
+        arg = wrapRequireArgs(arg);
       const wrap = node(Tag.push, Tag.CallExpression);
       append(wrap, Scope.sysId(Tag.callee, dynImportSym));
       Scope.replaceRhs(i, wrap);
@@ -369,42 +398,50 @@ export function assignCall() {
     ) {
       (i.prevCallExpression = i.nextCallExpression).prevCallExpression =
         i.prevCallExpression;
-      const arg = callee.nextSibling.firstChild;
+      let arg = callee.nextSibling.firstChild;
+      const needWrap = config.loaderPrefix || config.loaderPostfix;
       if (arg.type === Tag.StringLiteral) {
         const alias = getAlias(arg.node.value);
-        if (alias) arg.node.value = alias;
+        if (alias) {
+          arg.node.value = alias;
+        } else if (needWrap) {
+          arg = wrapRequireArgs(arg);
+        }
+      } else if (needWrap) {
+        arg = wrapRequireArgs(arg);
       }
-      const seq = node(i.pos, Tag.SequenceExpression);
-      Scope.replaceRhs(i, seq);
-      const exprs = append(seq, arr(Tag.expressions));
-      i.pos = Tag.push;
-      append(
-        insertAfter(
-          append(
-            insertAfter(
-              append(
-                append(exprs, Kit.assign(Tag.push)),
-                Scope.sysMemExpr(Tag.left, opSym, "moduleId")
+      // if (!needWrap) {
+        const seq = node(i.pos, Tag.SequenceExpression);
+        Scope.replaceRhs(i, seq);
+        const exprs = append(seq, arr(Tag.expressions));
+        i.pos = Tag.push;
+        append(
+          insertAfter(
+            append(
+              insertAfter(
+                append(
+                  append(exprs, Kit.assign(Tag.push)),
+                  Scope.sysMemExpr(Tag.left, opSym, "moduleId")
+                ),
+                node(Tag.right, Tag.CallExpression)
               ),
-              node(Tag.right, Tag.CallExpression)
+              Kit.memExpr(Tag.callee, Scope.requireSym, "resolve")
             ),
-            Kit.memExpr(Tag.callee, Scope.requireSym, "resolve")
+            arr(Tag.arguments)
           ),
-          arr(Tag.arguments)
-        ),
-        Dom.clone(arg)
-      );
-      append(
-        insertAfter(
-          append(
-            append(exprs, node(Tag.push, Tag.CallExpression)),
-            // Kit.memExpr(Tag.callee, nsSym, "force")
-            Scope.sysId(Tag.callee, forceSym)
+          Dom.clone(arg)
+        );
+        append(
+          insertAfter(
+            append(
+              append(exprs, node(Tag.push, Tag.CallExpression)),
+              Scope.sysId(Tag.callee, forceSym)
+            ),
+            arr(Tag.arguments)
           ),
-          arr(Tag.arguments)
-        ),
-        i
-      );
+          i
+        );
+      // }
       continue;
     }
     if (config.expInlineCalls && i.type === Tag.CallExpression) {
