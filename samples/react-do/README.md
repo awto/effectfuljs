@@ -64,7 +64,7 @@ expressions.
 
 ```javascript
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import "@effectful/react-do/macro";
 import { useState, usePromise, Suspense } from "@effectful/react-do";
 
@@ -115,7 +115,8 @@ function App() {
 }
 
 const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+const root = ReactDOM.createRoot(rootElement);
+root.render(<App />);
 ```
 
 ### JSX

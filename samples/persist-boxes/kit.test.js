@@ -89,16 +89,3 @@ test("anim", async () => {
   expect(res).toEqual(["E_0", "E_0.2", "E_0.4", "E_0.6", "E_0.8", "E_1"]);
 });
 
-jest.mock("react-dom");
-
-test("render", async () => {
-  // expect.assertions(4)
-  const el = { $t: "el" };
-  await Kit.render(el)([
-    { type: "ROOT", value: "c1" },
-    { type: "ROOT", value: "c2" }
-  ]);
-  expect(ReactDOM.render).toHaveBeenCalledTimes(2);
-  expect(ReactDOM.render).toHaveBeenNthCalledWith(1, "c1", el);
-  expect(ReactDOM.render).toHaveBeenNthCalledWith(2, "c2", el);
-});

@@ -1,6 +1,6 @@
 /** @file debugging tools */
-import prettyFormat from "pretty-format";
-const { ReactElement, ReactTestComponent } = prettyFormat.plugins;
+import {format as prettyFormat, plugins as prettyPlugins} from "pretty-format";
+const { ReactElement } = prettyPlugins;
 import * as R from "@effectful/es-persist-serialization";
 
 /**

@@ -5,6 +5,6 @@ module.exports = require("@effectful/es").options({
   defunct: true,
   par: false,
   effectful: {
-    cleanupFrameVars: true
+    cleanupFrameVars: false
   }
 });

@@ -153,11 +153,14 @@ exports[`collectBoxes 2`] = `
 
 exports[`collectBoxes 3`] = `
 {
-  "key": 2,
-  "type": "BOX",
+  "type": "ROOT",
   "value": <div
-    id="box-2"
-  />,
+    id="root"
+  >
+    <div
+      id="box-2"
+    />
+  </div>,
 }
 `;
 
@@ -173,11 +176,17 @@ exports[`collectBoxes 4`] = `
 
 exports[`collectBoxes 5`] = `
 {
-  "key": 1,
-  "type": "BOX",
+  "type": "ROOT",
   "value": <div
-    id="box-1"
-  />,
+    id="root"
+  >
+    <div
+      id="box-1"
+    />
+    <div
+      id="box-2"
+    />
+  </div>,
 }
 `;
 
@@ -193,11 +202,20 @@ exports[`collectBoxes 6`] = `
 
 exports[`collectBoxes 7`] = `
 {
-  "key": 3,
-  "type": "BOX",
+  "type": "ROOT",
   "value": <div
-    id="box-3"
-  />,
+    id="root"
+  >
+    <div
+      id="box-1"
+    />
+    <div
+      id="box-2"
+    />
+    <div
+      id="box-3"
+    />
+  </div>,
 }
 `;
 
@@ -213,11 +231,17 @@ exports[`collectBoxes 8`] = `
 
 exports[`collectBoxes 9`] = `
 {
-  "key": 2,
-  "type": "DELETE",
+  "type": "ROOT",
   "value": <div
-    id="box-1"
-  />,
+    id="root"
+  >
+    <div
+      id="box-1"
+    />
+    <div
+      id="box-3"
+    />
+  </div>,
 }
 `;
 

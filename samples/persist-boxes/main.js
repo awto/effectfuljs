@@ -5,10 +5,6 @@
 import * as D from "./draw";
 import * as S from "./state";
 import { run, render } from "./kit";
-import * as R from "@effectful/es-persist-serialization";
-
-const root = document.getElementById("root");
-R.regOpaqueObject(root, "root");
 
 run(
   D.rootContainer,

@@ -3,7 +3,7 @@
  */
 import * as R from "@effectful/es-persist-serialization";
 import "@effectful/serialization-react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 
 /**
  * @typedef Message
@@ -143,12 +143,14 @@ export async function* flushing(input) {
  */
 export const render = el =>
   async function* render(input) {
-    R.regOpaqueObject(el);
     let control;
+    const root = ReactDOM.createRoot(el);
+    R.regOpaqueObject(el, "rootElement", { props: false, propsSnapshot: false });
+    R.regOpaqueObject(root, "reactRoot", { props: false, propsSnapshot: false });
     for await (const i of input) {
       if (i.type === "CONTROL") control = i.value;
       else if (i.type === "FLUSH" && control) {
-        ReactDOM.render(control, el);
+        root.render(control);
         control = null;
       }
       yield i;

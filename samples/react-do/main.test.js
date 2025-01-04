@@ -1,6 +1,5 @@
 import "./development.macro.js";
 import React from "react";
-import ReactDOM from "react-dom";
 import * as M from "./main";
 import renderer from "react-test-renderer";
 

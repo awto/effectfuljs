@@ -8,9 +8,8 @@ import React from "react";
  */
 export async function* collectBoxes(input) {
   const boxes = {};
-  let root;
+  let root = null;
   for await (const i of input) {
-    if (i.type !== "ROOT") yield i;
     switch (i.type) {
       case "BOX":
         boxes[i.key] = i.value;
@@ -27,11 +26,12 @@ export async function* collectBoxes(input) {
         yield i;
         continue;
     }
-    if (root != null)
+    if (root != null) {
       yield {
         type: "ROOT",
         value: React.cloneElement(root, {}, ...Object.values(boxes))
       };
+    }
   }
 }
 
@@ -41,7 +41,7 @@ export async function* collectBoxes(input) {
  */
 export async function* insertBox(input, event) {
   for await (const i of input) {
-    if (i.type === "DONE" || i.type === "MARK")
+    if (i.type === "DONE" || i.type === "MARK") {
       yield {
         type: "BOX",
         key: i.key,
@@ -59,6 +59,7 @@ export async function* insertBox(input, event) {
           />
         )
       };
+    }
     yield i;
   }
 }

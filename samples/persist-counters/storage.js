@@ -13,13 +13,14 @@ export default async function* saveLocal(input) {
   try {
     const init = localStorage.getItem("counters");
     if (init) await load(JSON.parse(init));
-  } catch (e) {}
+  } catch (e) {
+    console.log("could not load", e)
+  }
   for await (const i of input) {
-    yield i;
     if (i.type === "FLUSH") {
       const frame = await save();
       if (frame) localStorage.setItem("counters", JSON.stringify(frame));
-      else yield i;
     }
+    yield i;
   }
 }

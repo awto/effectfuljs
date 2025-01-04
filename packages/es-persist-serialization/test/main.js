@@ -36,6 +36,7 @@ describe("serialization", function() {
           throw e;
         }
       }
+      R.regOpaqueObject(thread);
       assert.strictEqual(await thread(), 2);
       if (called) await R.abort;
       assert.ok(state);

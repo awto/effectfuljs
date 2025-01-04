@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "test": "jest"
+    "test": "jest",
+    "start": "webpack serve"
   },
   "jest": {
     "testEnvironment": "node"
@@ -20,18 +21,19 @@
     "@babel/plugin-syntax-async-generators": "^7.8.4",
     "@babel/plugin-transform-modules-commonjs": "^7.25.9",
     "@babel/preset-react": "^7.25.9",
-    "@effectful/es": "^1.4.10",
+    "@effectful/es": "workspace:^",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.2.1",
     "jest": "^29.7.0",
     "webpack": "^5.96.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
-    "@effectful/es-persist-serialization": "^1.4.10",
-    "@effectful/serialization": "^1.4.9",
-    "@effectful/serialization-react": "^1.4.9",
+    "@effectful/es-persist-serialization": "workspace:^",
+    "@effectful/serialization": "workspace:^",
+    "@effectful/serialization-react": "workspace:^",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }

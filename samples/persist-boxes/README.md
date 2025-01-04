@@ -6,7 +6,7 @@
 $ npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:8080](http://localhost:8080)
 
 Draw boxes by holding mouse left button when moving,
 delete them with right mouse click.

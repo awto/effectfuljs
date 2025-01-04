@@ -8,8 +8,6 @@ import saveLocal from "./storage";
 import undoRedo from "./undoredo";
 import { incrementAsync, incrementIfOdd } from "./extras";
 
-import trace from "./trace";
-
 /**
  * outputs root's control on each `MENU` or `CONTROL` change
  * @type {Transducer}

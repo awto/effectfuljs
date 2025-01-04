@@ -2,7 +2,6 @@
  * Implementation of storing state in localStorage and Undo/Redo
  */
 import * as R from "@effectful/es-persist-serialization";
-import React from "react";
 
 async function* addFlush(input) {
   for await (const i of input) {

@@ -28,7 +28,7 @@
     "@babel/parser": "^7.26.2",
     "@babel/plugin-transform-modules-commonjs": "^7.25.9",
     "@babel/preset-react": "^7.25.9",
-    "@effectful/core": "^1.5.3",
+    "@effectful/core": "workspace:^",
     "babel-jest": "^29.7.0",
     "babel-plugin-macros": "^3.1.0",
     "jest": "^29.7.0",
@@ -36,7 +36,7 @@
     "react-test-renderer": "^18.3.1"
   },
   "peerDependencies": {
-    "@effectful/core": "^1.0.4"
+    "@effectful/core": "workspace:^"
   },
   "gitHead": "d3b25d1148c0b8da0bb45a6a52b8b8cac3150ca5"
 }

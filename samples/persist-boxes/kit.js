@@ -1,6 +1,6 @@
 import * as R from "@effectful/es-persist-serialization";
 import "@effectful/serialization-react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 
 function eventHandler(props, propagate, e) {
   if (!propagate) {
@@ -77,7 +77,12 @@ export async function* anim({ delay = 400, easing = id }) {
 
 export const render = el =>
   async function render(input) {
+    const root = ReactDOM.createRoot(el);
+    R.regOpaqueObject(el, "rootElement", { props: false, propsSnapshot: false });
+    R.regOpaqueObject(root, "reactRoot", { props: false, propsSnapshot: false });
     for await (const i of input) {
-      if (i.type === "ROOT") ReactDOM.render(i.value, el);
+      if (i.type === "ROOT") {
+        root.render(i.value);
+      }
     }
   };

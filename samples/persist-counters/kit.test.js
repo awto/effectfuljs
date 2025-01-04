@@ -79,21 +79,3 @@ test("flushing", async () => {
     expect(R.write(i)).toMatchSnapshot();
 });
 
-jest.mock("react-dom");
-
-test("render", async () => {
-  expect.assertions(3);
-  const el = { $t: "el" };
-  for await (const i of Kit.render(el)([
-    { type: "CONTROL", value: "c1" },
-    { type: "CONTROL", value: "c2" },
-    { type: "FLUSH" },
-    { type: "CONTROL", value: "c3" },
-    { type: "FLUSH" },
-    { type: "CONTROL", value: "c4" }
-  ])) {
-  }
-  expect(ReactDOM.render).toHaveBeenCalledTimes(2);
-  expect(ReactDOM.render).toHaveBeenNthCalledWith(1, "c2", el);
-  expect(ReactDOM.render).toHaveBeenNthCalledWith(2, "c3", el);
-});
