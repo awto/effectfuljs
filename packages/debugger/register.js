@@ -35,8 +35,8 @@ if (loaderPostfix) {
       if (
         /(?:^\s*(?:@effectful|node:|data:))|node\/reloadWorker\.js$/.test(
           request,
-        ) ||
-        !path.isAbsolute(result)
+        ) || !path.isAbsolute(result)
+        || !result.startsWith(config.srcRoot)
       )
         return result;
       return "edbg+" + result;

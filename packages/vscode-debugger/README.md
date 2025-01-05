@@ -64,6 +64,28 @@ Here is an example from `launch.json`:
 }
 ```
 
+Or running some package.json script:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "effectful",
+      "request": "launch",
+      "name": "Node application",
+      "preset": "node",
+      "cwd": "${workspaceRoot}",
+      "command": "npm",
+      "args": ["run", "start"],
+      "console": "integratedTerminal",
+      "timeTravel": true,
+      "env": {}
+    }
+  ]
+}
+```
+
 After configured, start debugging (F5). The first run takes more time because it needs to install its runtime.
 
 The common parameters in the configurations:

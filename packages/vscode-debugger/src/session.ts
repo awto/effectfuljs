@@ -699,11 +699,12 @@ export class DebugSession extends SessionImpl {
         const node_path = [debuggerDeps];
         if (env.NODE_PATH) node_path.push(env.NODE_PATH);
         env.NODE_PATH = node_path.join(path.delimiter);
-        let node_opts = env.NODE_OPTIONS || process.env.NODE_ARGS || "";
-        node_opts = `${node_opts} --require ${runtime}/register.js`;
-        if (!node_opts.includes("--max-old-space-size") && MAX_OLD_SPACE > 1536)
-          node_opts = `${node_opts} --max-old-space-size=${MAX_OLD_SPACE}`;
-        env.NODE_OPTIONS = node_opts;
+        const node_opts = [];
+        if (env.NODE_OPTIONS) node_opts.push(env.NODE_OPTIONS);
+        if (process.env.NODE_OPTIONS) node_opts.push(process.env.NODE_OPTIONS);
+        node_opts.push(`--require=${runtime}/register.js`);
+        node_opts.unshift(`--max-old-space-size=${MAX_OLD_SPACE}`);
+        env.NODE_OPTIONS = node_opts.join(" ");
       }
       if (term === "externalTerminal" || term === "integratedTerminal") {
         const termArgs: P.RunInTerminalRequestArguments = {

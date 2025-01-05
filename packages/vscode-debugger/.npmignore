@@ -1,0 +1,6 @@
+log
+.DS_Store
+src
+testdata
+.vscode-test
+*.vsix
