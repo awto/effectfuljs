@@ -1030,7 +1030,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/debugger@workspace:^, @effectful/debugger@workspace:^2.0.3, @effectful/debugger@workspace:packages/debugger":
+"@effectful/debugger@workspace:^, @effectful/debugger@workspace:^2.0.4, @effectful/debugger@workspace:packages/debugger":
   version: 0.0.0-use.local
   resolution: "@effectful/debugger@workspace:packages/debugger"
   dependencies:
@@ -1195,7 +1195,7 @@ __metadata:
   resolution: "@effectful/js@workspace:packages/js"
   dependencies:
     "@effectful/core": "workspace:^2.0.1"
-    "@effectful/debugger": "workspace:^2.0.3"
+    "@effectful/debugger": "workspace:^2.0.4"
   languageName: unknown
   linkType: soft
 
