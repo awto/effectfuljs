@@ -2,7 +2,7 @@
 
 import _ctrl from "@effectful/js/macro";
 import * as CC from "../main";
-import * as assert from "assert";
+import * as assert from "node:assert";
 import { wrappedIt } from "./kit/debugger";
 
 describe("cc without debugger", function() { runTests(false) })

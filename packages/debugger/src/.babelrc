@@ -2,8 +2,8 @@
   "plugins": [
     "@babel/transform-typescript",
     ["@babel/transform-modules-commonjs", { "loose": true, "noInterop": true }],
-    "@babel/proposal-optional-chaining",
+    "@babel/transform-optional-chaining",
     "@babel/transform-spread",
-    "@babel/proposal-object-rest-spread"
+    "@babel/transform-object-rest-spread"
   ]
 }

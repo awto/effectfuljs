@@ -11,8 +11,8 @@ module.exports = (plugin) => (
   presets: [
     {
       plugins: [
-        require.resolve("@babel/plugin-proposal-optional-chaining"),
-        require.resolve("@babel/plugin-proposal-nullish-coalescing-operator"),
+        require.resolve("@babel/plugin-transform-optional-chaining"),
+        require.resolve("@babel/plugin-transform-nullish-coalescing-operator"),
         [
           require.resolve("@babel/plugin-transform-modules-commonjs"),
           {
@@ -49,8 +49,8 @@ module.exports = (plugin) => (
           }
         ],
         require.resolve("@babel/plugin-syntax-bigint"),
-        require.resolve("@babel/plugin-proposal-numeric-separator"),
-        require.resolve("@babel/plugin-proposal-export-namespace-from"),
+        require.resolve("@babel/plugin-transform-numeric-separator"),
+        require.resolve("@babel/plugin-transform-export-namespace-from"),
         require.resolve("@babel/plugin-syntax-dynamic-import"),
         require.resolve("@babel/plugin-transform-template-literals"),
         [require.resolve("@babel/plugin-transform-private-methods"), {loose:true}]

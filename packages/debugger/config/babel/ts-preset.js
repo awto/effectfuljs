@@ -20,7 +20,7 @@ function makePreset(transformPlugin) {
             [require.resolve("@babel/plugin-transform-parameters")],
             [require.resolve("@babel/plugin-transform-spread")],
             [
-              require.resolve("@babel/plugin-proposal-class-properties"),
+              require.resolve("@babel/plugin-transform-class-properties"),
               {
                 loose: true
               }

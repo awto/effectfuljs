@@ -729,13 +729,13 @@ export function index(root) {
         throw notSupported(
           i,
           "private methods",
-          "@babel/plugin-proposal-private-methods"
+          "@babel/plugin-transform-private-methods"
         );
       case Tag.ClassProperty:
         throw notSupported(
           i,
           "classes properties",
-          "@babel/plugin-proposal-class-properties"
+          "@babel/plugin-transform-class-properties"
         );
       case Tag.ClassExpression:
       case Tag.ClassDeclaration:

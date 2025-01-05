@@ -9,7 +9,7 @@
         ],
         "@babel/plugin-transform-spread",
         "@babel/plugin-transform-template-literals",
-        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-transform-object-rest-spread",
         "@babel/plugin-transform-destructuring",
         "@babel/plugin-transform-parameters"
       ]

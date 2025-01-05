@@ -14,7 +14,7 @@ module.exports = function(api) {
           ],
           "@babel/plugin-transform-shorthand-properties",
           [
-            "@babel/plugin-proposal-class-properties",
+            "@babel/plugin-transform-class-properties",
             {
               loose: true
             }

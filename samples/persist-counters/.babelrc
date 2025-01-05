@@ -4,17 +4,17 @@
       "presets": ["@babel/preset-react",
                   {"plugins":["@effectful/es-persist-serialization/transform",
                               "@babel/plugin-syntax-async-generators",
-                              "@babel/plugin-proposal-object-rest-spread"]}]
+                              "@babel/plugin-transform-object-rest-spread"]}]
     },
     "production": {
       "presets": ["@babel/preset-react",
                   {"plugins":["@effectful/es-persist-serialization/transform",
                               "@babel/plugin-syntax-async-generators",
-                              "@babel/plugin-proposal-object-rest-spread"]}]
+                              "@babel/plugin-transform-object-rest-spread"]}]
     },
     "es": {
       "presets": ["@babel/preset-react"],
-      "plugins":["@babel/plugin-proposal-object-rest-spread",
+      "plugins":["@babel/plugin-transform-object-rest-spread",
                  "@babel/plugin-syntax-async-generators"]
     },
     "test": {
@@ -22,11 +22,11 @@
                   {"plugins":["@effectful/es-persist-serialization/transform",
                               "@babel/plugin-syntax-async-generators",
                               "@babel/plugin-transform-modules-commonjs",
-                              "@babel/plugin-proposal-object-rest-spread"]}]
+                              "@babel/plugin-transform-object-rest-spread"]}]
     },
     "testES": {
       "presets": ["@babel/preset-react"],
-      "plugins":["@babel/plugin-proposal-object-rest-spread",
+      "plugins":["@babel/plugin-transform-object-rest-spread",
                  "@babel/plugin-syntax-async-generators",
                  "@babel/plugin-transform-modules-commonjs"]
     }
