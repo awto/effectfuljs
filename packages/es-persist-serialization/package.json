@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-persist-serialization",
-  "version": "1.5.6",
+  "version": "2.0.1",
   "description": "@effectful/es-persist with @effectful/serialization for storing state",
   "main": "index.js",
   "module": "main.js",
