@@ -2,14 +2,12 @@
   "name": "@effectful/cc",
   "version": "2.0.4",
   "description": "Multi-prompt delimited continuations runtime",
-  "exports": {
-    ".": "./lib/main.js",
-    "./*.js": "./lib/*.js"
-  },
+  "main": "./main.js",
+  "types": "./main.d.ts",
   "scripts": {
-    "test": "eslint && mocha lib/test/*.js",
+    "test": "eslint && mocha test/*.js",
     "build:decls": "tsc",
-    "build:lib": "babel src --out-dir lib --extensions .ts,.js",
+    "build:lib": "babel src --out-dir . --extensions .ts,.js",
     "build": "npm run build:decls && npm run build:lib",
     "docs": "tsdoc --src=src/main.ts,src/types.ts --dest=api.md"
   },

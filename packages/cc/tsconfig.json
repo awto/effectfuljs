@@ -3,7 +3,8 @@
     "target": "es2015",
     "module": "commonjs",
     "lib": ["es6","es2018","dom"],
-    "outDir": "lib",
+    "outDir": ".",
+    "rootDir": "src",
     "sourceMap": false,
     "removeComments": false,
     "strict": true,
@@ -11,5 +12,6 @@
     "declaration": true,
     "emitDeclarationOnly": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.js", "node_modules"]
 }

@@ -236,7 +236,7 @@
 						"request": "launch",
 						"name": "Launch Node application",
 						"preset": "node",
-						"cwd": "${workspaceRoot}",
+						"cwd": "\\${workspaceRoot}",
 						"command": "node",
 						"args": [
 							"${file}"
@@ -253,22 +253,42 @@
 							"name": "Listen for incoming connections",
 							"preset": "listener",
 							"reconnectTimeout": -1,
+							"timeTravel": true,
 							"console": "integratedTerminal",
 							"env": {}
 						}
 					},
 					{
-						"label": "Effectful: Node",
-						"description": "Launch for create-react-app created project",
+						"label": "Effectful: Node file",
+						"description": "Launch for NodeJS file",
 						"body": {
 							"type": "effectful",
 							"request": "launch",
 							"name": "Node application",
 							"preset": "node",
-							"cwd": "${workspaceRoot}",
+							"cwd": "^\"\\${workspaceRoot}\"",
 							"command": "node",
 							"args": [
-								"${file}"
+								"^\"\\${file}\""
+							],
+							"console": "integratedTerminal",
+							"timeTravel": true,
+							"env": {}
+						}
+					},
+					{
+						"label": "Effectful: NPM script",
+						"description": "Launch for NodeJS file",
+						"body": {
+							"type": "effectful",
+							"request": "launch",
+							"name": "NPM Script",
+							"preset": "node",
+							"cwd": "^\"\\${workspaceRoot}\"",
+							"command": "npm",
+							"args": [
+								"run",
+								"start"
 							],
 							"console": "integratedTerminal",
 							"timeTravel": true,
