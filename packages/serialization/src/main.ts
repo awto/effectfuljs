@@ -1131,7 +1131,7 @@ export function writeProps(
   mask: number,
   snapshot?: { [name: string]: PropertyDescriptor }
 ) {
-  const props = [];
+  const props: any[] = [];
   let flags: number;
   for (const name of Object.getOwnPropertyNames(descrs)) {
     const descr = descrs[name];

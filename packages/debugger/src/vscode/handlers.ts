@@ -532,7 +532,7 @@ function getLocation(frameId = 0): Location {
 
 handlers.stackTrace = function (args, response) {
   const startFrame = typeof args.startFrame === "number" ? args.startFrame : 0;
-  const visibleFrames = [];
+  const visibleFrames: State.Frame[] = [];
   const top = context.pausedTop;
   for (let i = top; i; i = i.caller) {
     if (i.meta.blackbox || !i.meta.states[i.state]) continue;
@@ -540,7 +540,7 @@ handlers.stackTrace = function (args, response) {
   }
   const maxLevels = typeof args.levels === "number" ? args.levels : 1000;
   const endFrame = maxLevels ? startFrame + maxLevels : visibleFrames.length;
-  const stackFrames = [];
+  const stackFrames: any[] = [];
   for (let i = startFrame; i < Math.min(endFrame, visibleFrames.length); i++) {
     const f = visibleFrames[i];
     const meta = f.meta;
@@ -596,7 +596,7 @@ const variablesViewSym = Symbol("@effectful/debugger/variables");
 handlers.scopes = function (args, response) {
   const frameReference = args.frameId;
   const root = getFrame(frameReference);
-  const scopes = [];
+  const scopes: any[] = [];
   if (root) walk(root, true);
   scopes.push(globalScope);
   response.body = { scopes };
@@ -721,7 +721,7 @@ handlers.variables = function (args, response) {
       }
     } else {
       const descrs = getOwnPropertyDescriptors(val);
-      const arr = [];
+      const arr: any[] = [];
       // tslint:disable-next-line:forin
       for (const i of [
         ...savedObject.getOwnPropertyNames(descrs),
@@ -931,7 +931,7 @@ function stateDescr(
   threadId: number,
   verbose?: boolean
 ): string {
-  const res = [];
+  const res: string[] = [];
   res.push(
     `#${threadId}: Step #${stepId}@${
       context.brk ? "stopped" : "running"

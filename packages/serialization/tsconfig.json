@@ -7,7 +7,9 @@
     "strict": true,
     "alwaysStrict": true,
     "declaration": true,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitAny": false
+
   },
   "files": ["src/main.ts", "src/dom.ts"]
 }

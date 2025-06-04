@@ -26,16 +26,16 @@
   },
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "dependencies": {
-    "@babel/generator": "^7.26.2",
-    "@babel/parser": "^7.26.2",
-    "@babel/types": "^7.26.0",
+    "@babel/generator": "^7.27.5",
+    "@babel/parser": "^7.27.5",
+    "@babel/types": "^7.27.3",
     "@effectful/es-rt": "workspace:^"
   },
   "devDependencies": {
-    "@babel/cli": "^7.25.9",
-    "@babel/core": "^7.26.0",
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.4",
     "cross-env": "^7.0.3",
-    "mocha": "^10.8.2"
+    "mocha": "^11.5.0"
   },
   "publishConfig": {
     "access": "public"

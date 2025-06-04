@@ -7,9 +7,9 @@ const React = require("react");
 describe("serializable react element", function() {
   it("should be convertible to/from JSON", function() {
     const el = (
-      <div class="myClass" style={{ paddingLeft: 10 }}>
+      <div className="myClass" style={{ paddingLeft: 10 }}>
         hi
-      </div>
+      </div>  
     );
     const elJson = Lib.write({ el });
     assert.deepStrictEqual(elJson, {
@@ -20,7 +20,7 @@ describe("serializable react element", function() {
             $: "ReactElement",
             props: {
               f: [
-                ["class", "myClass"],
+                ["className", "myClass"],
                 ["style", { f: [["paddingLeft", 10]] }],
                 ["children", { $: "undefined" }]
               ]

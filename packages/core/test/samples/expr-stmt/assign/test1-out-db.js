@@ -60,7 +60,7 @@ var $M = require("@effectful/debugger"),
     o: [3, null],
     r: [4, null],
     i: [5, null],
-    s: [6, null]
+    n: [6, null]
   }, $s$1, 1],
   $s$6 = [{
     r: [1, null],
@@ -476,7 +476,7 @@ var $M = require("@effectful/debugger"),
         break;
     }
   }, 1, [[0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [3, null, $s$3], [3, null, $s$3], [3, null, $s$3], [3, null, $s$3], [1, null, $s$3], [1, null, $s$3], [1, null, $s$3], [1, null, $s$3], [1, null, $s$3], [0, null, $s$4], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [0, null, $s$3], [2, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-  $m$3 = $M.fun("m$3", "_objectWithoutProperties", null, $m$0, ["e", "t"], 0, 7, null, 128, function ($, $l, $p) {
+  $m$3 = $M.fun("m$3", "_objectWithoutProperties", null, $m$0, ["e", "t"], 0, 8, null, 128, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         if (null == $l[1]) {
@@ -511,32 +511,34 @@ var $M = require("@effectful/debugger"),
         if ($l[4] < $l[6].length) {
           $l[3] = $l[6][$l[4]];
           $.goto = 6;
-          $p = $mcall("includes", $l[2], $l[3]);
+          $p = $mcall("indexOf", $l[2], $l[3]);
           $.state = 6;
         } else {
           $.goto = 3;
           continue;
         }
       case 6:
-        if ($p) {
-          $.state = 7;
-        } else {
-          $.goto = 8;
+        $l[7] = -1 === $p;
+        if ($l[7]) {
+          $.goto = 9;
           $p = $mcall("call", {}.propertyIsEnumerable, $l[1], $l[3]);
           continue;
+        } else {
+          $.state = 7;
         }
       case 7:
+        if ($l[7]) {
+          $l[5][$l[3]] = $l[1][$l[3]];
+          $.state = 8;
+        } else {
+          $.state = 8;
+        }
+      case 8:
         $l[4] = $l[4] + 1;
         $.goto = 5;
         continue;
-      case 8:
-        if ($p) {
-          $l[5][$l[3]] = $l[1][$l[3]];
-          $.state = 9;
-        } else {
-          $.state = 9;
-        }
       case 9:
+        $l[7] = $p;
         $.goto = 7;
         continue;
       case 10:
@@ -585,7 +587,7 @@ var $M = require("@effectful/debugger"),
       case 5:
         if ($p) {
           $.goto = 7;
-          $p = $mcall("includes", $l[2], $l[4]);
+          $p = $mcall("indexOf", $l[2], $l[4]);
           continue;
         } else {
           $.state = 6;
@@ -594,7 +596,7 @@ var $M = require("@effectful/debugger"),
         $.goto = 3;
         continue;
       case 7:
-        if ($p) {
+        if (-1 !== $p) {
           $.goto = 3;
           continue;
         } else {

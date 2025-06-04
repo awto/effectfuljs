@@ -9,7 +9,8 @@
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": false,
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "noImplicitAny": false
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.js", "node_modules"]

@@ -10,7 +10,8 @@
     "strict": true,
     "allowJs": false,
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "noImplicitAny": false
   },
   "include": ["src/**/*.ts"],
   "exclude": ["**/*.js", "node_modules"]

@@ -26,8 +26,8 @@
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
     "@effectful/es-rt": "workspace:^",
-    "glob": "^11.0.0",
-    "mocha": "^10.8.2",
+    "glob": "^11.0.2",
+    "mocha": "^11.5.0",
     "promise": "^8.3.0",
     "test262-parser": "^2.2.0"
   },

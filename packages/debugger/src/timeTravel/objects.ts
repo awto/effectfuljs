@@ -1271,7 +1271,7 @@ function arraySet(arr: any[], name: string, value: any) {
         arr[index] = value;
         return value;
       }
-      const ins = [];
+      const ins: any[] = [];
       ins[diff] = value;
       spliceImpl(arr, len, 0, ins);
       if (dataBreakpoints) checkDataBreakpointFromTo(arr, len, true);

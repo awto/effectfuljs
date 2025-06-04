@@ -29,11 +29,11 @@
     "@effectful/serialization": "workspace:^"
   },
   "devDependencies": {
-    "@babel/cli": "^7.25.9",
-    "@babel/core": "^7.26.0",
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.4",
     "@effectful/serialization": "workspace:^",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "mocha": "^10.8.2"
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "mocha": "^11.5.0"
   },
   "dependencies": {
     "@effectful/es-persist": "workspace:^"

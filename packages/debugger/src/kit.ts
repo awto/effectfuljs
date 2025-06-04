@@ -8,7 +8,7 @@ export function map<T, U>(arr: T[], f: (v: T) => U): U[] {
 }
 
 export function filter<T>(arr: T[], pred: (v: T) => boolean): T[] {
-  const res = [];
+  const res: T[] = [];
   for (const i of arr) if (pred(i)) res.push(i);
   return res;
 }

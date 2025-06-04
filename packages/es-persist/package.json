@@ -28,12 +28,12 @@
   },
   "devDependencies": {
     "@effectful/es": "workspace:^",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "eslint": "^9.15.0",
-    "mocha": "^10.8.2",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "eslint": "^9.28.0",
+    "mocha": "^11.5.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.27.4",
-    "typescript": "^5.7.2"
+    "rollup": "^4.41.1",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@effectful/es-rt": "workspace:^"

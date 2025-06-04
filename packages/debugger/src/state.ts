@@ -781,7 +781,7 @@ function frameInfoDescr(frame: Frame) {
 }
 
 export function stackDescr(top = context.top || context.pausedTop): string[] {
-  const res = [];
+  const res: string[] = [];
   for (let i = top; i; i = i.next) {
     res.push(frameInfoDescr(i));
   }

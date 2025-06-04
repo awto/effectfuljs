@@ -699,7 +699,7 @@ export class DebugSession extends SessionImpl {
         const node_path = [debuggerDeps];
         if (env.NODE_PATH) node_path.push(env.NODE_PATH);
         env.NODE_PATH = node_path.join(path.delimiter);
-        const node_opts = [];
+        const node_opts: string[] = [];
         if (env.NODE_OPTIONS) node_opts.push(env.NODE_OPTIONS);
         if (process.env.NODE_OPTIONS) node_opts.push(process.env.NODE_OPTIONS);
         node_opts.push(`--require=${runtime}/register.js`);

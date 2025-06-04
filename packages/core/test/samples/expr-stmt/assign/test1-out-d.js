@@ -61,7 +61,7 @@ var $M = require("@effectful/debugger"),
     o: [3, null],
     r: [4, null],
     i: [5, null],
-    s: [6, null]
+    n: [6, null]
   }, $s$1, 1],
   $s$6 = [{
     r: [1, null],
@@ -538,7 +538,7 @@ var $M = require("@effectful/debugger"),
         break;
     }
   }, 1, [[0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [3, null, $s$3], [1, null, $s$3], [3, null, $s$3], [1, null, $s$3], [1, null, $s$3], [1, null, $s$3], [1, null, $s$3], [3, null, $s$3], [1, null, $s$3], [3, null, $s$3], [1, null, $s$3], [1, null, $s$3], [1, null, $s$3], [0, null, $s$4], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [2, null, $s$3], [2, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [0, null, $s$3], [16, null, $s$3], [16, null, $s$3]]),
-  $m$3 = $M.fun("m$3", "_objectWithoutProperties", null, $m$0, ["e", "t"], 0, 7, null, 0, function ($, $l, $p) {
+  $m$3 = $M.fun("m$3", "_objectWithoutProperties", null, $m$0, ["e", "t"], 0, 8, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
         if (null == $l[1]) {
@@ -581,25 +581,25 @@ var $M = require("@effectful/debugger"),
       case 7:
         $l[3] = $l[6][$l[4]];
         $.goto = 8;
-        $p = $mcall("includes", $l[2], $l[3]);
+        $p = $mcall("indexOf", $l[2], $l[3]);
         $.state = 8;
       case 8:
-        if ($p) {
+        $l[7] = -1 === $p;
+        if ($l[7]) {
           $.state = 9;
         } else {
-          $.goto = 10;
+          $.goto = 11;
           continue;
         }
       case 9:
-        $l[4] = $l[4] + 1;
-        $.goto = 6;
-        continue;
-      case 10:
-        $.goto = 11;
+        $.goto = 10;
         $p = $mcall("call", {}.propertyIsEnumerable, $l[1], $l[3]);
+        $.state = 10;
+      case 10:
+        $l[7] = $p;
         $.state = 11;
       case 11:
-        if ($p) {
+        if ($l[7]) {
           $.state = 12;
         } else {
           $.goto = 13;
@@ -609,7 +609,8 @@ var $M = require("@effectful/debugger"),
         $l[5][$l[3]] = $l[1][$l[3]];
         $.state = 13;
       case 13:
-        $.goto = 9;
+        $l[4] = $l[4] + 1;
+        $.goto = 6;
         continue;
       case 14:
         $.state = 15;
@@ -625,7 +626,7 @@ var $M = require("@effectful/debugger"),
       default:
         throw new Error("Invalid state");
     }
-  }, null, null, 1, [[0, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [16, null, $s$5], [16, null, $s$5]]),
+  }, null, null, 1, [[0, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [2, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [0, null, $s$5], [16, null, $s$5], [16, null, $s$5]]),
   $m$4 = $M.fun("m$4", "_objectWithoutPropertiesLoose", null, $m$0, ["r", "e"], 0, 6, null, 0, function ($, $l, $p) {
     for (;;) switch ($.state = $.goto) {
       case 0:
@@ -677,10 +678,10 @@ var $M = require("@effectful/debugger"),
         }
       case 9:
         $.goto = 10;
-        $p = $mcall("includes", $l[2], $l[4]);
+        $p = $mcall("indexOf", $l[2], $l[4]);
         $.state = 10;
       case 10:
-        if ($p) {
+        if (-1 !== $p) {
           $.state = 11;
         } else {
           $.goto = 12;

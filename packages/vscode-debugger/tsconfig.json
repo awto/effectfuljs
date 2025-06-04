@@ -6,6 +6,7 @@
     "lib": ["es6","dom"],
     "sourceMap": true,
     "rootDir": "src",
+    "noImplicitAny": false,
     "strict": true /* enable all strict type-checking options */
   },
   "exclude": ["node_modules", ".vscode-test", "testdata"]

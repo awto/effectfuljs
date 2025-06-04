@@ -209,6 +209,7 @@ describe("`usePromise`", function() {
   });
 });
 
+// TODO: broken in React 19
 describe("<Suspense/>", function() {
   async function exec(test) {
     for (let i = 0; i < 6; i++) {
