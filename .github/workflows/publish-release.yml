@@ -1,0 +1,64 @@
+name: Publish Extension Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish-extension:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'yarn'
+        
+    - name: Enable corepack
+      run: corepack enable
+      
+    - name: Install dependencies
+      run: yarn install
+      
+    - name: Build extension
+      run: |
+        cd packages/vscode-debugger
+        yarn build
+      working-directory: packages/vscode-debugger
+      
+    - name: Install vsce
+      run: npm install -g @vscode/vsce
+      
+    - name: Package VSIX
+      run: |
+        cd packages/vscode-debugger
+        vsce package
+      working-directory: packages/vscode-debugger
+      
+    - name: Upload VSIX artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: debugger-vsix
+        path: packages/vscode-debugger/*.vsix
+        retention-days: 30
+        
+    - name: Publish to VS Code Marketplace
+      run: |
+        cd packages/vscode-debugger
+        vsce publish -p ${{ secrets.VSCE_PAT }}
+      working-directory: packages/vscode-debugger
+      env:
+        VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        
+    - name: Publish to Open VSX Registry
+      run: |
+        cd packages/vscode-debugger
+        npm i -g ovsx
+        npx ovsx publish *.vsix -p ${{ secrets.VSX_PUBLISHER_TOKEN }}
+      working-directory: packages/vscode-debugger
+      env:
+        VSX_PUBLISHER_TOKEN: ${{ secrets.VSX_PUBLISHER_TOKEN }} 
