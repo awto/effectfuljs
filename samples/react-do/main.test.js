@@ -3,6 +3,23 @@ import React from "react";
 import * as M from "./main";
 import renderer from "react-test-renderer";
 
+global.IS_REACT_ACT_ENVIRONMENT = true;
+
+const renderWithAct = element => {
+  let tree;
+  renderer.act(() => {
+    tree = renderer.create(element);
+  });
+  return tree;
+};
+
+const advanceTimers = async ms => {
+  await renderer.act(async () => {
+    jest.advanceTimersByTime(ms);
+    await null;
+  });
+};
+
 jest.useFakeTimers();
 
 describe("`useState`", function() {
@@ -17,27 +34,27 @@ describe("`useState`", function() {
     expect(effectful[M.tagSymbol]).toBe(true);
     const mockCont = jest.fn();
     effectful(mockCont);
-    expect(mockCont).toBeCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledTimes(1);
     const [[first, incr]] = mockCont.mock.calls[0];
     expect(first).toBe(0);
     incr();
-    expect(mockCont).toBeCalledTimes(2);
+    expect(mockCont).toHaveBeenCalledTimes(2);
     expect(mockCont).toHaveBeenLastCalledWith([1, expect.any(Function)]);
     incr();
-    expect(mockCont).toBeCalledTimes(3);
+    expect(mockCont).toHaveBeenCalledTimes(3);
     expect(mockCont).toHaveBeenLastCalledWith([2, expect.any(Function)]);
     mockCont.mock.calls[2][0][1]();
-    expect(mockCont).toBeCalledTimes(4);
+    expect(mockCont).toHaveBeenCalledTimes(4);
     expect(mockCont).toHaveBeenLastCalledWith([3, expect.any(Function)]);
     const mockCont2 = jest.fn();
     effectful(mockCont2);
-    expect(mockCont).toBeCalledTimes(4);
-    expect(mockCont2).toBeCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledTimes(4);
+    expect(mockCont2).toHaveBeenCalledTimes(1);
     expect(mockCont2).toHaveBeenCalledWith([0, expect.any(Function)]);
     expect(mockCont2.mock.calls[0][0][0]).toBe(0);
     mockCont2.mock.calls[0][0][1]();
-    expect(mockCont).toBeCalledTimes(4);
-    expect(mockCont2).toBeCalledTimes(2);
+    expect(mockCont).toHaveBeenCalledTimes(4);
+    expect(mockCont2).toHaveBeenCalledTimes(2);
     expect(mockCont2).toHaveBeenLastCalledWith([1, expect.any(Function)]);
   });
 
@@ -54,19 +71,19 @@ describe("`useState`", function() {
     expect(effectful[M.tagSymbol]).toBe(true);
     const mockCont = jest.fn();
     effectful(mockCont);
-    expect(mockCont).toBeCalledTimes(1);
-    expect(mockCont).toBeCalledWith([0, 0]);
+    expect(mockCont).toHaveBeenCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledWith([0, 0]);
     incr1();
-    expect(mockCont).toBeCalledTimes(2);
+    expect(mockCont).toHaveBeenCalledTimes(2);
     expect(mockCont).toHaveBeenLastCalledWith([1, 0]);
     incr2();
-    expect(mockCont).toBeCalledTimes(3);
+    expect(mockCont).toHaveBeenCalledTimes(3);
     expect(mockCont).toHaveBeenLastCalledWith([1, 1]);
     incr2();
-    expect(mockCont).toBeCalledTimes(4);
+    expect(mockCont).toHaveBeenCalledTimes(4);
     expect(mockCont).toHaveBeenLastCalledWith([1, 2]);
     incr1();
-    expect(mockCont).toBeCalledTimes(5);
+    expect(mockCont).toHaveBeenCalledTimes(5);
     expect(mockCont).toHaveBeenLastCalledWith([2, 0]);
   });
 
@@ -84,19 +101,19 @@ describe("`useState`", function() {
     expect(effectful[M.tagSymbol]).toBe(true);
     const mockCont = jest.fn();
     effectful(mockCont);
-    expect(mockCont).toBeCalledTimes(1);
-    expect(mockCont).toBeCalledWith([0, 0]);
+    expect(mockCont).toHaveBeenCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledWith([0, 0]);
     incr1();
-    expect(mockCont).toBeCalledTimes(2);
+    expect(mockCont).toHaveBeenCalledTimes(2);
     expect(mockCont).toHaveBeenLastCalledWith([1, 0]);
     incr2();
-    expect(mockCont).toBeCalledTimes(3);
+    expect(mockCont).toHaveBeenCalledTimes(3);
     expect(mockCont).toHaveBeenLastCalledWith([1, 1]);
     incr2();
-    expect(mockCont).toBeCalledTimes(4);
+    expect(mockCont).toHaveBeenCalledTimes(4);
     expect(mockCont).toHaveBeenLastCalledWith([1, 2]);
     incr1();
-    expect(mockCont).toBeCalledTimes(5);
+    expect(mockCont).toHaveBeenCalledTimes(5);
     expect(mockCont).toHaveBeenLastCalledWith([2, 2]);
   });
 
@@ -114,19 +131,19 @@ describe("`useState`", function() {
     expect(effectful[M.tagSymbol]).toBe(true);
     const mockCont = jest.fn();
     effectful(mockCont);
-    expect(mockCont).toBeCalledTimes(1);
-    expect(mockCont).toBeCalledWith([0, 0]);
+    expect(mockCont).toHaveBeenCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledWith([0, 0]);
     incr1();
-    expect(mockCont).toBeCalledTimes(2);
+    expect(mockCont).toHaveBeenCalledTimes(2);
     expect(mockCont).toHaveBeenLastCalledWith([1, 1]);
     incr2();
-    expect(mockCont).toBeCalledTimes(3);
+    expect(mockCont).toHaveBeenCalledTimes(3);
     expect(mockCont).toHaveBeenLastCalledWith([1, 2]);
     incr2();
-    expect(mockCont).toBeCalledTimes(4);
+    expect(mockCont).toHaveBeenCalledTimes(4);
     expect(mockCont).toHaveBeenLastCalledWith([1, 3]);
     incr1();
-    expect(mockCont).toBeCalledTimes(5);
+    expect(mockCont).toHaveBeenCalledTimes(5);
     expect(mockCont).toHaveBeenLastCalledWith([2, 2]);
   });
 });
@@ -150,9 +167,9 @@ describe("`usePromise`", function() {
     effectful(mockCont);
     expect(typeof step).toBe("function");
     step("hi");
-    expect(mockCont).toBeCalledTimes(0);
+    expect(mockCont).toHaveBeenCalledTimes(0);
     while (mockCont.mock.calls.length === 0) await null;
-    expect(mockCont).toBeCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledTimes(1);
     expect(mockCont).toHaveBeenLastCalledWith("hi");
   });
 
@@ -179,7 +196,7 @@ describe("`usePromise`", function() {
     expect(typeof step2).toBe("function");
     step2("there");
     while (mockCont.mock.calls.length === 0) await null;
-    expect(mockCont).toBeCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledTimes(1);
     expect(mockCont).toHaveBeenLastCalledWith("hi there");
   });
 
@@ -204,20 +221,19 @@ describe("`usePromise`", function() {
     step1("hi");
     step2("there");
     while (mockCont.mock.calls.length === 0) await null;
-    expect(mockCont).toBeCalledTimes(1);
+    expect(mockCont).toHaveBeenCalledTimes(1);
     expect(mockCont).toHaveBeenCalledWith("hi there");
   });
 });
 
 // TODO: broken in React 19
 describe("<Suspense/>", function() {
-  async function exec(test) {
-    for (let i = 0; i < 6; i++) {
-      jest.advanceTimersByTime(600);
-      await null;
-      expect(test.toJSON()).toMatchSnapshot();
-    }
+async function exec(test) {
+  for (let i = 0; i < 6; i++) {
+    await advanceTimers(600);
+    expect(test.toJSON()).toMatchSnapshot();
   }
+}
   test("with pure child", function() {
     function Component1() {
       "component";
@@ -229,64 +245,64 @@ describe("<Suspense/>", function() {
         </h1>
       );
     }
-    expect(renderer.create(<Component1 />).toJSON()).toMatchSnapshot();
+    expect(renderWithAct(<Component1 />).toJSON()).toMatchSnapshot();
   });
   describe("with only a single async child", function() {
     test("the child is available after `maxDuration`", async function() {
       function Component2() {
         "component";
-        return (
-          <h1>
-            <M.Suspense maxDuration={1000} fallback={<div>Loading...</div>}>
-              {M.usePromise(delay(<i>hi</i>, 2000))}
-            </M.Suspense>
-          </h1>
-        );
-      }
-      await exec(renderer.create(<Component2 />));
-    });
-    test("the child is available before `maxDuration`", async function() {
-      function Component3() {
-        "component";
-        return (
+      return (
+        <h1>
+          <M.Suspense maxDuration={1000} fallback={<div>Loading...</div>}>
+            {M.usePromise(delay(<i>hi</i>, 2000))}
+          </M.Suspense>
+        </h1>
+      );
+    }
+    await exec(renderWithAct(<Component2 />));
+  });
+  test("the child is available before `maxDuration`", async function() {
+    function Component3() {
+      "component";
+      return (
           <h1>
             <M.Suspense maxDuration={2000} fallback={<div>Loading...</div>}>
               {M.usePromise(delay(<i>hi</i>, 1000))}
-            </M.Suspense>
-          </h1>
-        );
-      }
-      await exec(renderer.create(<Component3 />));
-    });
+          </M.Suspense>
+        </h1>
+      );
+    }
+    await exec(renderWithAct(<Component3 />));
   });
-  describe("with a nested async child", function() {
-    test("the child is available after `maxDuration`", async function() {
-      function Component4() {
+});
+describe("with a nested async child", function() {
+  test("the child is available after `maxDuration`", async function() {
+    function Component4() {
         "component";
         return (
           <h1>
             <M.Suspense maxDuration={1000} fallback={<div>Loading...</div>}>
               <p>{M.usePromise(delay(<i>hi</i>, 2000))}</p>
-            </M.Suspense>
-          </h1>
-        );
-      }
-      await exec(renderer.create(<Component4 />));
-    });
-    test("the child is available before `maxDuration`", async function() {
-      function Component5() {
-        "component";
-        return (
+          </M.Suspense>
+        </h1>
+      );
+    }
+    await exec(renderWithAct(<Component4 />));
+  });
+  test("the child is available before `maxDuration`", async function() {
+    function Component5() {
+      "component";
+      return (
           <h1>
             <M.Suspense maxDuration={2000} fallback={<div>Loading...</div>}>
               <p>{M.usePromise(delay(<i>hi</i>, 1000))}</p>
-            </M.Suspense>
-          </h1>
-        );
-      }
-      await exec(renderer.create(<Component5 />));
-    });
+          </M.Suspense>
+        </h1>
+      );
+    }
+    await exec(renderWithAct(<Component5 />));
   });
+});
   test("several async children", async function() {
     function Component6() {
       "component";
@@ -299,7 +315,7 @@ describe("<Suspense/>", function() {
         </h1>
       );
     }
-    await exec(renderer.create(<Component6 />));
+    await exec(renderWithAct(<Component6 />));
   });
   test("several <Suspense> tags", async function() {
     function Component6() {
@@ -317,7 +333,7 @@ describe("<Suspense/>", function() {
         </h1>
       );
     }
-    await exec(renderer.create(<Component6 />));
+    await exec(renderWithAct(<Component6 />));
   });
 });
 
@@ -374,10 +390,9 @@ test.skip("errors handling", async function() {
     );
   }
 
-  const test = renderer.create(<TestComponent />);
+  const test = renderWithAct(<TestComponent />);
   for (let i = 0; i < 20; i++) {
-    jest.advanceTimersByTime(50);
-    await null;
+    await advanceTimers(50);
     expect(test.toJSON()).toMatchSnapshot();
   }
 });

@@ -16,16 +16,16 @@
     "samples/*"
   ],
   "devDependencies": {
-    "@eslint/compat": "^1.2.9",
+    "@eslint/compat": "^2.0.0",
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.28.0",
+    "@eslint/js": "^9.39.1",
     "assert": "^2.1.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^9.28.0",
-    "globals": "^16.2.0",
-    "lerna": "^8.2.2",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1"
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "lerna": "^9.0.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0"
   },
   "packageManager": "yarn@4.9.1",
   "resolutions": {

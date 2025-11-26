@@ -12,6 +12,11 @@
     "test": "jest",
     "prepare": "babel main.js --out-file index.js"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ]
+  },
   "keywords": [
     "effectful",
     "react",
@@ -19,21 +24,21 @@
     "babel-plugin-macros"
   ],
   "dependencies": {
-    "react": "^18.3.1"
+    "react": "^19.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.2",
-    "@babel/core": "^7.27.4",
-    "@babel/generator": "^7.27.5",
-    "@babel/parser": "^7.27.5",
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.5",
+    "@babel/generator": "^7.28.5",
+    "@babel/parser": "^7.28.5",
     "@babel/plugin-transform-modules-commonjs": "^7.27.1",
-    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-react": "^7.28.5",
     "@effectful/core": "workspace:^",
-    "babel-jest": "^29.7.0",
+    "babel-jest": "^30.2.0",
     "babel-plugin-macros": "^3.1.0",
-    "jest": "^29.7.0",
-    "react-dom": "^18.3.1",
-    "react-test-renderer": "^18.1.0"
+    "jest": "^30.2.0",
+    "react-dom": "^19.2.0",
+    "react-test-renderer": "^19.2.0"
   },
   "peerDependencies": {
     "@effectful/core": "workspace:^"

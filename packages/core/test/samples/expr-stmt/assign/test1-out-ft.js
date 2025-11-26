@@ -302,7 +302,7 @@ function es6_4(es6, a) {
   return M.chain(eff(2), es6_5);
 }
 function es6_5(es6, b) {
-  var e, f, m, obj, a, c;
+  var e, f, m, a, c;
   a = {
     m: [e, {
       b: f,
@@ -319,6 +319,6 @@ function es6_6(es6, c) {
   return M.chain(eff_4(), es6_7);
 }
 function es6_7(es6, b) {
-  var a, arr1;
+  var a;
   [a, ...arr1] = b;
 }

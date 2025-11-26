@@ -5,7 +5,7 @@
   "main": "transform.js",
   "scripts": {
     "test": "eslint options.js && mocha -r ./test/kit/inject",
-    "test-opt": "cross-env env-cmd -e $EJS_ENV mocha -r ./test/kit/inject",
+    "test-opt": "cross-env env-cmd -e $EJS_ENV -- mocha -r ./test/kit/inject",
     "test-deps": "git submodule update --remote --init --recursive --depth 1",
     "build-test262": "node ./test/kit/test262 default",
     "prepare-test": "npm run test-deps && npm run build-test262",
@@ -32,19 +32,19 @@
     "@babel/plugin-syntax-async-generators": "^7.8.4",
     "@babel/plugin-syntax-function-sent": "^7.27.1",
     "@babel/plugin-transform-modules-commonjs": "^7.27.1",
-    "@babel/register": "^7.27.1",
+    "@babel/register": "^7.28.3",
     "@effectful/es-rt": "workspace:^",
     "benchmark": "^2.1.4",
-    "cross-env": "^7.0.3",
-    "env-cmd": "^10.1.0",
-    "eslint": "^9.28.0",
-    "glob": "^11.0.2",
-    "mocha": "^11.5.0",
+    "cross-env": "^10.1.0",
+    "env-cmd": "^11.0.0",
+    "eslint": "^9.39.1",
+    "glob": "^13.0.0",
+    "mocha": "^11.7.5",
     "promise": "^8.3.0",
     "test262-parser": "^2.2.0"
   },
   "dependencies": {
-    "@babel/core": "^7.27.4",
+    "@babel/core": "^7.28.5",
     "@effectful/core": "workspace:^"
   },
   "publishConfig": {

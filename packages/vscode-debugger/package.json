@@ -1,349 +1,349 @@
 {
-	"name": "debugger",
-	"publisher": "effectful",
-	"displayName": "Effectful JavaScript Debugger",
-	"description": "Time-Traveling, Persistent State, Hot-Swapping, API and more",
-	"author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-	"version": "2.0.6",
-	"license": "MIT",
-	"homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
-	"icon": "icon.png",
-	"engines": {
-		"vscode": "^1.93.0"
-	},
-	"bugs": {
-		"url": "https://github.com/awto/effectfuljs/issues"
-	},
-	"keywords": [
-		"javascript",
-		"typescript",
-		"node",
-		"web"
-	],
-	"categories": [
-		"Debuggers"
-	],
-	"activationEvents": [
-		"onDebugInitialConfigurations",
-		"onDebugResolve:effectful"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"breakpoints": [
-			{
-				"language": "javascript"
-			},
-			{
-				"language": "typescript"
-			},
-			{
-				"language": "typescriptreact"
-			},
-			{
-				"language": "javascriptreact"
-			}
-		],
-		"commands": [],
-		"debuggers": [
-			{
-				"type": "effectful",
-				"label": "Debug with EffectfulJS",
-				"program": "./out/debugAdapter.js",
-				"runtime": "node",
-				"configurationAttributes": {
-					"launch": {
-						"properties": {
-							"stopOnEntry": {
-								"type": "boolean",
-								"description": "Automatically stop after launch",
-								"default": true
-							},
-							"stopOnExit": {
-								"type": "boolean",
-								"description": "Automatically stop just before program's exit (for traveling backward in time)",
-								"default": true
-							},
-							"verbose": {
-								"type": [
-									"boolean",
-									"number"
-								],
-								"description": "Enable logging.",
-								"default": 2
-							},
-							"timeTravel": {
-								"type": "boolean",
-								"description": "Transpile sources with time-traveling support",
-								"default": true
-							},
-							"shell": {
-								"type": [
-									"boolean",
-									"string"
-								],
-								"description": "Use shell to run the command (only for internalConsole)",
-								"default": true
-							},
-							"skipRuntimeInstall": {
-								"type": "boolean",
-								"description": "Skip debugger runtime installation (it must be installed manually)",
-								"default": false
-							},
-							"timeTravelDisabled": {
-								"type": "boolean",
-								"description": "Don't start time traveling trace collection immediately (use `EDBG.journal.enabled = true` to enable in code)",
-								"default": true
-							},
-							"command": {
-								"type": "string",
-								"description": "A command to run on launch"
-							},
-							"cwd": {
-								"type": "string",
-								"default": "${workspaceFolder}",
-								"description": "Working folder for the launched command"
-							},
-							"args": {
-								"items": {
-									"type": "string"
-								},
-								"type": "array",
-								"description": "Arguments for the command",
-								"default": []
-							},
-							"console": {
-								"type": "string",
-								"enum": [
-									"internalConsole",
-									"integratedTerminal",
-									"externalTerminal"
-								],
-								"enumDescriptions": [
-									"VS Code Debug Console (which doesn't support to read input from a program)",
-									"VS Code's integrated terminal",
-									"External terminal that can be configured via user settings"
-								],
-								"description": "Where to launch the debug target (for preset:\"node\")",
-								"default": "internalConsole"
-							},
-							"env": {
-								"type": "object",
-								"additionalProperties": {
-									"type": [
-										"string",
-										"null"
-									]
-								},
-								"description": "Environment variables for the command",
-								"default": {}
-							},
-							"preset": {
-								"type": "string",
-								"enum": [
-									"node",
-									"listener"
-								],
-								"enumDescriptions": [
-									"Run a command as a local process, intercepting all node processes to debug",
-									"Awaits debuggee connections"
-								],
-								"default": "node",
-								"description": "Zero-config presets"
-							},
-							"reuse": {
-								"type": "boolean",
-								"default": false,
-								"description": "Don't kill the launched process on stopping sessions, and reuse it on its next start (if it still runs)."
-							},
-							"reconnectTimeout": {
-								"type": "number",
-								"default": -1,
-								"description": "Number of seconds to wait for more remotes before exiting the session (always if less than 0)"
-							},
-							"debuggerHost": {
-								"type": "string",
-								"default": "localhost",
-								"description": "WebSocket host where the debugger listens for applications connections"
-							},
-							"debuggerPort": {
-								"type": "number",
-								"default": 20011,
-								"description": "WebSocket port number where the debugger listens for applications connections"
-							},
-							"runtime": {
-								"type": "string",
-								"default": "vscode",
-								"description": "Debugger's runtime"
-							},
-							"srcRoot": {
-								"type": "string",
-								"default": "${workspaceRoot}",
-								"description": "The project's root, files outside of the root won't be instrumented"
-							},
-							"fastRestart": {
-								"enum": [
-									null,
-									true,
-									"entry"
-								],
-								"default": "entry",
-								"description": "Restart from previously stored snapshot, without restarting the whole process"
-							},
-							"onChange": {
-								"type": [
-									"null",
-									"string"
-								],
-								"enum": [
-									"restart",
-									"merge"
-								],
-								"default": "restart",
-								"description": "what to do when sources changed during debugging"
-							},
-							"include": {
-								"type": "string",
-								"default": "",
-								"description": "a glob for selecting files which will be transpiled"
-							},
-							"blackbox": {
-								"type": "string",
-								"default": "",
-								"description": "a glob for selecting files which will be transpiled in blackbox mode"
-							},
-							"exclude": {
-								"type": "string",
-								"default": "",
-								"description": "a glob for selecting files which won't be transpiled"
-							},
-							"moduleAliases": {
-								"type": "object",
-								"default": {
-									"node:stream": "readable-stream",
-									"stream": "readable-stream"
-								},
-								"additionalProperties": {
-									"type": "string"
-								},
-								"description": "replacing module imports for loading debug version of dependencies"
-							}
-						}
-					}
-				},
-				"initialConfigurations": [
-					{
-						"type": "effectful",
-						"request": "launch",
-						"name": "Launch Node application",
-						"preset": "node",
-						"cwd": "\\${workspaceRoot}",
-						"command": "node",
-						"args": [
-							"${file}"
-						]
-					}
-				],
-				"configurationSnippets": [
-					{
-						"label": "Effectful: Listener",
-						"description": "Don't launch anything, just listen for incoming connections.",
-						"body": {
-							"type": "effectful",
-							"request": "launch",
-							"name": "Listen for incoming connections",
-							"preset": "listener",
-							"reconnectTimeout": -1,
-							"timeTravel": true,
-							"console": "integratedTerminal",
-							"env": {}
-						}
-					},
-					{
-						"label": "Effectful: Node file",
-						"description": "Launch for NodeJS file",
-						"body": {
-							"type": "effectful",
-							"request": "launch",
-							"name": "Node application",
-							"preset": "node",
-							"cwd": "^\"\\${workspaceRoot}\"",
-							"command": "node",
-							"args": [
-								"^\"\\${file}\""
-							],
-							"console": "integratedTerminal",
-							"timeTravel": true,
-							"env": {}
-						}
-					},
-					{
-						"label": "Effectful: NPM script",
-						"description": "Launch for NodeJS file",
-						"body": {
-							"type": "effectful",
-							"request": "launch",
-							"name": "NPM Script",
-							"preset": "node",
-							"cwd": "^\"\\${workspaceRoot}\"",
-							"command": "npm",
-							"args": [
-								"run",
-								"start"
-							],
-							"console": "integratedTerminal",
-							"timeTravel": true,
-							"env": {}
-						}
-					}
-				]
-			}
-		]
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/awto/effectfuljs.git"
-	},
-	"scripts": {
-		"build": "tsc -p ./",
-		"watch": "yarn build -w",
-		"eslint": "eslint src",
-		"test:adapter": "mocha -u tdd ./out/test/adapter",
-		"test:ide": "vscode-test",
-		"test": "eslint src && run test:adapter"
-	},
-	"devDependencies": {
-		"@eslint/js": "^9.28.0",
-		"@types/mocha": "^10.0.10",
-		"@types/node": "^22.15.29",
-		"@types/puppeteer": "^7.0.4",
-		"@types/vscode": "^1.100.0",
-		"@types/ws": "^8.18.1",
-		"@typescript-eslint/eslint-plugin": "^8.33.1",
-		"@typescript-eslint/parser": "^8.33.1",
-		"@vscode/debugadapter-testsupport": "^1.68.0",
-		"@vscode/test-cli": "^0.0.11",
-		"@vscode/test-electron": "^2.5.2",
-		"cross-env": "^7.0.3",
-		"eslint": "^9.28.0",
-		"mocha": "^11.5.0",
-		"puppeteer": "^24.10.0",
-		"typescript": "^5.8.3",
-		"typescript-eslint": "^8.33.1"
-	},
-	"dependencies": {
-		"@vscode/debugadapter": "^1.68.0",
-		"@vscode/debugprotocol": "^1.68.0",
-		"string-argv": "^0.3.2",
-		"ws": "^8.18.2"
-	},
-	"private": true,
-	"sponsor": {
-		"url": "https://github.com/sponsors/javactrl"
-	},
-	"__metadata": {
-		"id": "c405cb0f-9eb4-4e77-aa83-d67b1bd68788",
-		"publisherDisplayName": "effectful",
-		"publisherId": "b496913d-941e-4f52-9a31-7fe8761a65f4",
-		"isPreReleaseVersion": false
-	}
+  "name": "debugger",
+  "publisher": "effectful",
+  "displayName": "Effectful JavaScript Debugger",
+  "description": "Time-Traveling, Persistent State, Hot-Swapping, API and more",
+  "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
+  "version": "2.0.6",
+  "license": "MIT",
+  "homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "bugs": {
+    "url": "https://github.com/awto/effectfuljs/issues"
+  },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "node",
+    "web"
+  ],
+  "categories": [
+    "Debuggers"
+  ],
+  "activationEvents": [
+    "onDebugInitialConfigurations",
+    "onDebugResolve:effectful"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "breakpoints": [
+      {
+        "language": "javascript"
+      },
+      {
+        "language": "typescript"
+      },
+      {
+        "language": "typescriptreact"
+      },
+      {
+        "language": "javascriptreact"
+      }
+    ],
+    "commands": [],
+    "debuggers": [
+      {
+        "type": "effectful",
+        "label": "Debug with EffectfulJS",
+        "program": "./out/debugAdapter.js",
+        "runtime": "node",
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop after launch",
+                "default": true
+              },
+              "stopOnExit": {
+                "type": "boolean",
+                "description": "Automatically stop just before program's exit (for traveling backward in time)",
+                "default": true
+              },
+              "verbose": {
+                "type": [
+                  "boolean",
+                  "number"
+                ],
+                "description": "Enable logging.",
+                "default": 2
+              },
+              "timeTravel": {
+                "type": "boolean",
+                "description": "Transpile sources with time-traveling support",
+                "default": true
+              },
+              "shell": {
+                "type": [
+                  "boolean",
+                  "string"
+                ],
+                "description": "Use shell to run the command (only for internalConsole)",
+                "default": true
+              },
+              "skipRuntimeInstall": {
+                "type": "boolean",
+                "description": "Skip debugger runtime installation (it must be installed manually)",
+                "default": false
+              },
+              "timeTravelDisabled": {
+                "type": "boolean",
+                "description": "Don't start time traveling trace collection immediately (use `EDBG.journal.enabled = true` to enable in code)",
+                "default": true
+              },
+              "command": {
+                "type": "string",
+                "description": "A command to run on launch"
+              },
+              "cwd": {
+                "type": "string",
+                "default": "${workspaceFolder}",
+                "description": "Working folder for the launched command"
+              },
+              "args": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "description": "Arguments for the command",
+                "default": []
+              },
+              "console": {
+                "type": "string",
+                "enum": [
+                  "internalConsole",
+                  "integratedTerminal",
+                  "externalTerminal"
+                ],
+                "enumDescriptions": [
+                  "VS Code Debug Console (which doesn't support to read input from a program)",
+                  "VS Code's integrated terminal",
+                  "External terminal that can be configured via user settings"
+                ],
+                "description": "Where to launch the debug target (for preset:\"node\")",
+                "default": "internalConsole"
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": "Environment variables for the command",
+                "default": {}
+              },
+              "preset": {
+                "type": "string",
+                "enum": [
+                  "node",
+                  "listener"
+                ],
+                "enumDescriptions": [
+                  "Run a command as a local process, intercepting all node processes to debug",
+                  "Awaits debuggee connections"
+                ],
+                "default": "node",
+                "description": "Zero-config presets"
+              },
+              "reuse": {
+                "type": "boolean",
+                "default": false,
+                "description": "Don't kill the launched process on stopping sessions, and reuse it on its next start (if it still runs)."
+              },
+              "reconnectTimeout": {
+                "type": "number",
+                "default": -1,
+                "description": "Number of seconds to wait for more remotes before exiting the session (always if less than 0)"
+              },
+              "debuggerHost": {
+                "type": "string",
+                "default": "localhost",
+                "description": "WebSocket host where the debugger listens for applications connections"
+              },
+              "debuggerPort": {
+                "type": "number",
+                "default": 20011,
+                "description": "WebSocket port number where the debugger listens for applications connections"
+              },
+              "runtime": {
+                "type": "string",
+                "default": "vscode",
+                "description": "Debugger's runtime"
+              },
+              "srcRoot": {
+                "type": "string",
+                "default": "${workspaceRoot}",
+                "description": "The project's root, files outside of the root won't be instrumented"
+              },
+              "fastRestart": {
+                "enum": [
+                  null,
+                  true,
+                  "entry"
+                ],
+                "default": "entry",
+                "description": "Restart from previously stored snapshot, without restarting the whole process"
+              },
+              "onChange": {
+                "type": [
+                  "null",
+                  "string"
+                ],
+                "enum": [
+                  "restart",
+                  "merge"
+                ],
+                "default": "restart",
+                "description": "what to do when sources changed during debugging"
+              },
+              "include": {
+                "type": "string",
+                "default": "",
+                "description": "a glob for selecting files which will be transpiled"
+              },
+              "blackbox": {
+                "type": "string",
+                "default": "",
+                "description": "a glob for selecting files which will be transpiled in blackbox mode"
+              },
+              "exclude": {
+                "type": "string",
+                "default": "",
+                "description": "a glob for selecting files which won't be transpiled"
+              },
+              "moduleAliases": {
+                "type": "object",
+                "default": {
+                  "node:stream": "readable-stream",
+                  "stream": "readable-stream"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "replacing module imports for loading debug version of dependencies"
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "effectful",
+            "request": "launch",
+            "name": "Launch Node application",
+            "preset": "node",
+            "cwd": "\\${workspaceRoot}",
+            "command": "node",
+            "args": [
+              "${file}"
+            ]
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "Effectful: Listener",
+            "description": "Don't launch anything, just listen for incoming connections.",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "Listen for incoming connections",
+              "preset": "listener",
+              "reconnectTimeout": -1,
+              "timeTravel": true,
+              "console": "integratedTerminal",
+              "env": {}
+            }
+          },
+          {
+            "label": "Effectful: Node file",
+            "description": "Launch for NodeJS file",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "Node application",
+              "preset": "node",
+              "cwd": "^\"\\${workspaceRoot}\"",
+              "command": "node",
+              "args": [
+                "^\"\\${file}\""
+              ],
+              "console": "integratedTerminal",
+              "timeTravel": true,
+              "env": {}
+            }
+          },
+          {
+            "label": "Effectful: NPM script",
+            "description": "Launch for NodeJS file",
+            "body": {
+              "type": "effectful",
+              "request": "launch",
+              "name": "NPM Script",
+              "preset": "node",
+              "cwd": "^\"\\${workspaceRoot}\"",
+              "command": "npm",
+              "args": [
+                "run",
+                "start"
+              ],
+              "console": "integratedTerminal",
+              "timeTravel": true,
+              "env": {}
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/awto/effectfuljs.git"
+  },
+  "scripts": {
+    "build": "tsc -p ./",
+    "watch": "yarn build -w",
+    "eslint": "eslint src",
+    "test:adapter": "mocha -u tdd ./out/test/adapter",
+    "test:ide": "vscode-test",
+    "test": "eslint src && run test:adapter"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.10.1",
+    "@types/puppeteer": "^7.0.4",
+    "@types/vscode": "^1.106.1",
+    "@types/ws": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "@vscode/debugadapter-testsupport": "^1.68.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.1",
+    "mocha": "^11.7.5",
+    "puppeteer": "^24.31.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0"
+  },
+  "dependencies": {
+    "@vscode/debugadapter": "^1.68.0",
+    "@vscode/debugprotocol": "^1.68.0",
+    "string-argv": "^0.3.2",
+    "ws": "^8.18.3"
+  },
+  "private": true,
+  "sponsor": {
+    "url": "https://github.com/sponsors/javactrl"
+  },
+  "__metadata": {
+    "id": "c405cb0f-9eb4-4e77-aa83-d67b1bd68788",
+    "publisherDisplayName": "effectful",
+    "publisherId": "b496913d-941e-4f52-9a31-7fe8761a65f4",
+    "isPreReleaseVersion": false
+  }
 }

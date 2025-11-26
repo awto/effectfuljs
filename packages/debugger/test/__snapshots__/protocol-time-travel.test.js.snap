@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`VSCode protocol handlers with time traveling \`step in\` into Proxies/setters/getters 1`] = `
 {
