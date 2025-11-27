@@ -1,6 +1,6 @@
 {
   "name": "@effectful/cc",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Multi-prompt delimited continuations runtime",
   "main": "./main.js",
   "types": "./main.d.ts",
