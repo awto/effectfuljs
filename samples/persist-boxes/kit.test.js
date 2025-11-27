@@ -63,8 +63,8 @@ test("createProducer", async () => {
   expect(i.value.x).toBe(x);
   expect(i.value.y).toBe(y);
   expect(i.value.rect).toBe(r);
-  expect(e1.stopPropagation).toBeCalled();
-  expect(e1.preventDefault).toBeCalled();
+  expect(e1.stopPropagation).toHaveBeenCalled();
+  expect(e1.preventDefault).toHaveBeenCalled();
   const e2 = {
     stopPropagation: jest.fn(),
     preventDefault: jest.fn()
@@ -73,8 +73,8 @@ test("createProducer", async () => {
   const j = await producer.next();
   expect(i.done).toBeFalsy();
   expect(i.value.f).toBe(f);
-  expect(e2.stopPropagation).not.toBeCalled();
-  expect(e2.preventDefault).not.toBeCalled();
+  expect(e2.stopPropagation).not.toHaveBeenCalled();
+  expect(e2.preventDefault).not.toHaveBeenCalled();
 });
 
 test("anim", async () => {

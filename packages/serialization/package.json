@@ -1,6 +1,6 @@
 {
   "name": "@effectful/serialization",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "References-aware JS values serialization library",
   "main": "main.js",
   "types": "main.d.ts",
@@ -17,20 +17,20 @@
     "docs": "rimraf api && typedoc --plugin typedoc-plugin-markdown --out api --excludePrivate src --readme none"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.2",
-    "@babel/core": "^7.27.4",
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.5",
     "@babel/plugin-syntax-bigint": "^7.8.3",
-    "@babel/plugin-transform-classes": "^7.27.1",
+    "@babel/plugin-transform-classes": "^7.28.4",
     "@babel/plugin-transform-modules-commonjs": "^7.27.1",
-    "@babel/plugin-transform-object-rest-spread": "^7.27.3",
-    "@babel/plugin-transform-typescript": "^7.27.1",
-    "@babel/register": "^7.27.1",
-    "@types/node": "^22.15.29",
-    "eslint": "^9.28.0",
-    "jsdom": "^26.1.0",
-    "mocha": "^11.5.0",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.8.3"
+    "@babel/plugin-transform-object-rest-spread": "^7.28.4",
+    "@babel/plugin-transform-typescript": "^7.28.5",
+    "@babel/register": "^7.28.3",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
+    "jsdom": "^27.2.0",
+    "mocha": "^11.7.5",
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "base64-arraybuffer": "^1.0.2"

@@ -1,11 +1,18 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`animateDelete 1`] = `
 {
   "type": "SOMETHING",
-  "value": <div
-    id="box"
-  />,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "id": "box",
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -13,17 +20,22 @@ exports[`animateDelete 2`] = `
 {
   "key": 1,
   "type": "BOX",
-  "value": <div
-    className="box"
-    style={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "className": "box",
+      "style": {
         "height": 1000,
         "left": 1010,
         "top": 2020,
         "width": 100,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -31,17 +43,22 @@ exports[`animateDelete 3`] = `
 {
   "key": 1,
   "type": "BOX",
-  "value": <div
-    className="box"
-    style={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "className": "box",
+      "style": {
         "height": 800,
         "left": 1012,
         "top": 2024,
         "width": 80,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -49,17 +66,22 @@ exports[`animateDelete 4`] = `
 {
   "key": 1,
   "type": "BOX",
-  "value": <div
-    className="box"
-    style={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "className": "box",
+      "style": {
         "height": 600,
         "left": 1014,
         "top": 2028,
         "width": 60,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -67,17 +89,22 @@ exports[`animateDelete 5`] = `
 {
   "key": 1,
   "type": "BOX",
-  "value": <div
-    className="box"
-    style={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "className": "box",
+      "style": {
         "height": 400,
         "left": 1016,
         "top": 2032,
         "width": 40,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -85,17 +112,22 @@ exports[`animateDelete 6`] = `
 {
   "key": 1,
   "type": "BOX",
-  "value": <div
-    className="box"
-    style={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "className": "box",
+      "style": {
         "height": 200,
         "left": 1018,
         "top": 2036,
         "width": 20,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -103,17 +135,22 @@ exports[`animateDelete 7`] = `
 {
   "key": 1,
   "type": "BOX",
-  "value": <div
-    className="box"
-    style={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "className": "box",
+      "style": {
         "height": 0,
         "left": 1020,
         "top": 2040,
         "width": 0,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -135,9 +172,16 @@ exports[`animateDelete 8`] = `
 exports[`collectBoxes 1`] = `
 {
   "type": "ROOT",
-  "value": <div
-    id="root"
-  />,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "id": "root",
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -145,22 +189,42 @@ exports[`collectBoxes 2`] = `
 {
   "key": 2,
   "type": "BOX",
-  "value": <div
-    id="box-2"
-  />,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "id": "box-2",
+    },
+    "type": "div",
+  },
 }
 `;
 
 exports[`collectBoxes 3`] = `
 {
   "type": "ROOT",
-  "value": <div
-    id="root"
-  >
-    <div
-      id="box-2"
-    />
-  </div>,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "children": {
+        "$$typeof": Symbol(react.transitional.element),
+        "_owner": null,
+        "_store": {},
+        "key": null,
+        "props": {
+          "id": "box-2",
+        },
+        "type": "div",
+      },
+      "id": "root",
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -168,25 +232,54 @@ exports[`collectBoxes 4`] = `
 {
   "key": 1,
   "type": "BOX",
-  "value": <div
-    id="box-1"
-  />,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "id": "box-1",
+    },
+    "type": "div",
+  },
 }
 `;
 
 exports[`collectBoxes 5`] = `
 {
   "type": "ROOT",
-  "value": <div
-    id="root"
-  >
-    <div
-      id="box-1"
-    />
-    <div
-      id="box-2"
-    />
-  </div>,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "children": [
+        {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {
+            "id": "box-1",
+          },
+          "type": "div",
+        },
+        {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {
+            "id": "box-2",
+          },
+          "type": "div",
+        },
+      ],
+      "id": "root",
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -194,28 +287,64 @@ exports[`collectBoxes 6`] = `
 {
   "key": 3,
   "type": "BOX",
-  "value": <div
-    id="box-3"
-  />,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "id": "box-3",
+    },
+    "type": "div",
+  },
 }
 `;
 
 exports[`collectBoxes 7`] = `
 {
   "type": "ROOT",
-  "value": <div
-    id="root"
-  >
-    <div
-      id="box-1"
-    />
-    <div
-      id="box-2"
-    />
-    <div
-      id="box-3"
-    />
-  </div>,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "children": [
+        {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {
+            "id": "box-1",
+          },
+          "type": "div",
+        },
+        {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {
+            "id": "box-2",
+          },
+          "type": "div",
+        },
+        {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {
+            "id": "box-3",
+          },
+          "type": "div",
+        },
+      ],
+      "id": "root",
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -223,25 +352,54 @@ exports[`collectBoxes 8`] = `
 {
   "key": 2,
   "type": "DELETE",
-  "value": <div
-    id="box-1"
-  />,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "id": "box-1",
+    },
+    "type": "div",
+  },
 }
 `;
 
 exports[`collectBoxes 9`] = `
 {
   "type": "ROOT",
-  "value": <div
-    id="root"
-  >
-    <div
-      id="box-1"
-    />
-    <div
-      id="box-3"
-    />
-  </div>,
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "children": [
+        {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {
+            "id": "box-1",
+          },
+          "type": "div",
+        },
+        {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {
+            "id": "box-3",
+          },
+          "type": "div",
+        },
+      ],
+      "id": "root",
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -259,23 +417,26 @@ exports[`insertBox 2`] = `
 {
   "key": 10,
   "type": "BOX",
-  "value": <div
-    className="drawing"
-    onContextMenu={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": "10",
+    "props": {
+      "className": "drawing",
+      "onContextMenu": {
         "key": 10,
         "type": "DELETE",
-      }
-    }
-    style={
-      {
+      },
+      "style": {
         "height": 20,
         "left": 1100,
         "top": 2200,
         "width": 10,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -296,23 +457,26 @@ exports[`insertBox 4`] = `
 {
   "key": 10,
   "type": "BOX",
-  "value": <div
-    className="drawing"
-    onContextMenu={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": "10",
+    "props": {
+      "className": "drawing",
+      "onContextMenu": {
         "key": 10,
         "type": "DELETE",
-      }
-    }
-    style={
-      {
+      },
+      "style": {
         "height": 40,
         "left": 1100,
         "top": 2200,
         "width": 20,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -333,23 +497,26 @@ exports[`insertBox 6`] = `
 {
   "key": 10,
   "type": "BOX",
-  "value": <div
-    className="box"
-    onContextMenu={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": "10",
+    "props": {
+      "className": "box",
+      "onContextMenu": {
         "key": 10,
         "type": "DELETE",
-      }
-    }
-    style={
-      {
+      },
+      "style": {
         "height": 60,
         "left": 1100,
         "top": 2200,
         "width": 50,
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -369,14 +536,19 @@ exports[`insertBox 7`] = `
 exports[`rootContainer 1`] = `
 {
   "type": "ROOT",
-  "value": <div
-    onMouseDown={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "onMouseDown": {
         "key": 1,
         "type": "START",
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -393,9 +565,13 @@ exports[`rootContainer 2`] = `
 exports[`rootContainer 3`] = `
 {
   "type": "ROOT",
-  "value": <div
-    onMouseMove={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "onMouseMove": {
         "key": 1,
         "start": {
           "button": 0,
@@ -405,10 +581,8 @@ exports[`rootContainer 3`] = `
           "y": 200,
         },
         "type": "MARK",
-      }
-    }
-    onMouseUp={
-      {
+      },
+      "onMouseUp": {
         "key": 1,
         "start": {
           "button": 0,
@@ -418,9 +592,10 @@ exports[`rootContainer 3`] = `
           "y": 200,
         },
         "type": "DONE",
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 
@@ -454,14 +629,19 @@ exports[`rootContainer 6`] = `
 exports[`rootContainer 7`] = `
 {
   "type": "ROOT",
-  "value": <div
-    onMouseDown={
-      {
+  "value": {
+    "$$typeof": Symbol(react.transitional.element),
+    "_owner": null,
+    "_store": {},
+    "key": null,
+    "props": {
+      "onMouseDown": {
         "key": 2,
         "type": "START",
-      }
-    }
-  />,
+      },
+    },
+    "type": "div",
+  },
 }
 `;
 

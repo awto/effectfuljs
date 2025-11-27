@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-inline",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Standard JavaScript effects using @effectful/js",
   "main": "preset.js",
   "scripts": {
@@ -26,8 +26,8 @@
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
     "@effectful/es-rt": "workspace:^",
-    "glob": "^11.0.2",
-    "mocha": "^11.5.0",
+    "glob": "^13.0.0",
+    "mocha": "^11.7.5",
     "promise": "^8.3.0",
     "test262-parser": "^2.2.0"
   },

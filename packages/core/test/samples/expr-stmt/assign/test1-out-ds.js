@@ -2023,200 +2023,212 @@ var $M = require("@effectful/debugger"),
         $.state = 8;
       case 8:
         $.goto = 9;
-        $p = $mcall("slice", $l[5], 3);
+        $p = ($x.call = $l[0][10])($l[5]);
         $.state = 9;
       case 9:
-        $lset($l, 8, $p);
         $.goto = 10;
-        $brk();
+        $p = $mcall("slice", $p, 3);
         $.state = 10;
       case 10:
+        $lset($l, 8, $p);
         $.goto = 11;
-        $p = ($x.call = eff)(2);
+        $brk();
         $.state = 11;
       case 11:
-        $lset($l, 9, $p);
         $.goto = 12;
-        $brk();
+        $p = ($x.call = eff)(2);
         $.state = 12;
       case 12:
+        $lset($l, 9, $p);
         $.goto = 13;
-        $p = ($x.call = $get, $l[9].m);
+        $brk();
         $.state = 13;
       case 13:
         $.goto = 14;
-        $p = ($x.call = $l[0][7])($p);
+        $p = ($x.call = $get, $l[9].m);
         $.state = 14;
       case 14:
-        $lset($l, 10, $p);
         $.goto = 15;
-        $brk();
+        $p = ($x.call = $l[0][7])($p);
         $.state = 15;
       case 15:
+        $lset($l, 10, $p);
         $.goto = 16;
-        $p = ($x.call = $get, $l[10][0]);
+        $brk();
         $.state = 16;
       case 16:
-        $lset($l, 11, $p);
         $.goto = 17;
-        $p = ($x.call = $get, $l[10][1]);
+        $p = ($x.call = $get, $l[10][0]);
         $.state = 17;
       case 17:
-        $lset($l, 12, $p);
+        $lset($l, 11, $p);
         $.goto = 18;
-        $brk();
+        $p = ($x.call = $get, $l[10][1]);
         $.state = 18;
       case 18:
+        $lset($l, 12, $p);
         $.goto = 19;
-        $p = ($x.call = $get, $l[12].b);
+        $brk();
         $.state = 19;
       case 19:
-        $lset($l, 13, $p);
         $.goto = 20;
-        $brk();
+        $p = ($x.call = $get, $l[12].b);
         $.state = 20;
       case 20:
+        $lset($l, 13, $p);
         $.goto = 21;
-        $p = ($x.call = $get, $l[12].m);
+        $brk();
         $.state = 21;
       case 21:
-        $lset($l, 14, $p);
         $.goto = 22;
-        $brk();
+        $p = ($x.call = $get, $l[12].m);
         $.state = 22;
       case 22:
+        $lset($l, 14, $p);
         $.goto = 23;
-        $p = ($x.call = $l[0][5])($l[12], $l[0][1]);
+        $brk();
         $.state = 23;
       case 23:
-        $lset($l, 15, $p);
         $.goto = 24;
-        $brk();
+        $p = ($x.call = $l[0][5])($l[12], $l[0][1]);
         $.state = 24;
       case 24:
+        $lset($l, 15, $p);
         $.goto = 25;
-        $p = $mcall("slice", $l[10], 2);
+        $brk();
         $.state = 25;
       case 25:
-        $lset($l, 16, $p);
         $.goto = 26;
-        $brk();
+        $p = ($x.call = $l[0][10])($l[10]);
         $.state = 26;
       case 26:
         $.goto = 27;
-        $p = ($x.call = eff_1)();
+        $p = $mcall("slice", $p, 2);
         $.state = 27;
       case 27:
-        $l[21] = $p;
+        $lset($l, 16, $p);
         $.goto = 28;
-        $p = ($x.call = eff)(2);
+        $brk();
         $.state = 28;
       case 28:
-        $lset($l, 1, $p);
         $.goto = 29;
-        $p = ($x.call = $get, $l[1].m);
+        $p = ($x.call = eff_1)();
         $.state = 29;
       case 29:
+        $l[21] = $p;
         $.goto = 30;
-        $p = ($x.call = $l[0][3])($p, 2);
+        $p = ($x.call = eff)(2);
         $.state = 30;
       case 30:
-        $lset($l, 2, $p);
+        $lset($l, 1, $p);
         $.goto = 31;
-        $p = ($x.call = $get, $l[2][0]);
+        $p = ($x.call = $get, $l[1].m);
         $.state = 31;
       case 31:
-        $lset($l, 11, $p);
         $.goto = 32;
-        $p = ($x.call = $get, $l[2][1]);
+        $p = ($x.call = $l[0][3])($p, 2);
         $.state = 32;
       case 32:
-        $lset($l, 3, $p);
+        $lset($l, 2, $p);
         $.goto = 33;
-        $p = ($x.call = $get, $l[3].b);
+        $p = ($x.call = $get, $l[2][0]);
         $.state = 33;
       case 33:
-        $lset($l, 13, $p);
+        $lset($l, 11, $p);
         $.goto = 34;
-        $p = ($x.call = $get, $l[3].m);
+        $p = ($x.call = $get, $l[2][1]);
         $.state = 34;
       case 34:
-        $lset($l, 14, $p);
+        $lset($l, 3, $p);
         $.goto = 35;
-        $p = ($x.call = $l[0][5])($l[3], $l[0][2]);
+        $p = ($x.call = $get, $l[3].b);
         $.state = 35;
       case 35:
-        $lset($l, 15, $p);
+        $lset($l, 13, $p);
         $.goto = 36;
-        $p = ($x.call = $l[21])($l[1]);
+        $p = ($x.call = $get, $l[3].m);
         $.state = 36;
       case 36:
-        $lset($l, 17, $p);
+        $lset($l, 14, $p);
         $.goto = 37;
-        $p = ($x.call = $l[0][3])($l[17], 3);
+        $p = ($x.call = $l[0][5])($l[3], $l[0][2]);
         $.state = 37;
       case 37:
-        $lset($l, 18, $p);
+        $lset($l, 15, $p);
         $.goto = 38;
-        $brk();
+        $p = ($x.call = $l[21])($l[1]);
         $.state = 38;
       case 38:
+        $lset($l, 17, $p);
         $.goto = 39;
-        $p = ($x.call = $get, $l[18][1]);
+        $p = ($x.call = $l[0][3])($l[17], 3);
         $.state = 39;
       case 39:
-        $lset($l, 6, $p);
+        $lset($l, 18, $p);
         $.goto = 40;
         $brk();
         $.state = 40;
       case 40:
         $.goto = 41;
-        $p = ($x.call = $get, $l[18][2]);
+        $p = ($x.call = $get, $l[18][1]);
         $.state = 41;
       case 41:
-        $lset($l, 7, $p);
+        $lset($l, 6, $p);
         $.goto = 42;
         $brk();
         $.state = 42;
       case 42:
         $.goto = 43;
-        $p = ($x.call = eff_4)();
+        $p = ($x.call = $get, $l[18][2]);
         $.state = 43;
       case 43:
-        $lset($l, 19, $p);
+        $lset($l, 7, $p);
         $.goto = 44;
-        $p = ($x.call = $l[0][7])($l[19]);
+        $brk();
         $.state = 44;
       case 44:
-        $lset($l, 20, $p);
         $.goto = 45;
-        $brk();
+        $p = ($x.call = eff_4)();
         $.state = 45;
       case 45:
+        $lset($l, 19, $p);
         $.goto = 46;
-        $p = ($x.call = $get, $l[20][0]);
+        $p = ($x.call = $l[0][7])($l[19]);
         $.state = 46;
       case 46:
-        $lset($l, 6, $p);
+        $lset($l, 20, $p);
         $.goto = 47;
         $brk();
         $.state = 47;
       case 47:
         $.goto = 48;
-        $p = $mcall("slice", $l[20], 1);
+        $p = ($x.call = $get, $l[20][0]);
         $.state = 48;
       case 48:
-        $lset($l, 8, $p);
-        $.goto = 50;
+        $lset($l, 6, $p);
+        $.goto = 49;
         $brk();
-        continue;
+        $.state = 49;
       case 49:
         $.goto = 50;
-        return $unhandled($.error);
+        $p = ($x.call = $l[0][10])($l[20]);
+        $.state = 50;
       case 50:
+        $.goto = 51;
+        $p = $mcall("slice", $p, 1);
+        $.state = 51;
+      case 51:
+        $lset($l, 8, $p);
+        $.goto = 53;
+        $brk();
+        continue;
+      case 52:
+        $.goto = 53;
+        return $unhandled($.error);
+      case 53:
         return $ret($.result);
       default:
         throw new Error("Invalid state");
     }
-  }, null, null, 1, [[4, "88:2-88:34", $s$28], [2, "88:26-88:33", $s$28], [2, null, $s$28], [4, "88:9-88:10", $s$28], [2, null, $s$28], [4, "88:12-88:13", $s$28], [2, null, $s$28], [4, "88:18-88:22", $s$28], [2, null, $s$28], [4, "89:2-91:13", $s$28], [2, "91:6-91:12", $s$28], [4, "90:4-90:5", $s$28], [2, null, $s$28], [2, null, $s$28], [4, "90:8-90:9", $s$28], [2, null, $s$28], [2, null, $s$28], [4, "90:13-90:17", $s$28], [2, null, $s$28], [4, "90:19-90:20", $s$28], [2, null, $s$28], [4, "90:25-90:28", $s$28], [2, null, $s$28], [4, "90:35-90:39", $s$28], [2, null, $s$28], [4, "92:13-96:3", $s$28], [2, "92:13-92:20", $s$28], [2, "95:8-95:14", $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, "92:13-96:3", $s$28], [2, null, $s$28], [4, "92:5-92:6", $s$28], [2, null, $s$28], [4, "92:8-92:9", $s$28], [2, null, $s$28], [4, "97:17-97:24", $s$28], [2, "97:17-97:24", $s$28], [2, null, $s$28], [4, "97:3-97:4", $s$28], [2, null, $s$28], [4, "97:9-97:13", $s$28], [2, null, $s$28], [36, "98:1-98:1", $s$28], [16, "98:1-98:1", $s$28], [16, "98:1-98:1", $s$28]]);
+  }, null, null, 1, [[4, "88:2-88:34", $s$28], [2, "88:26-88:33", $s$28], [2, null, $s$28], [4, "88:9-88:10", $s$28], [2, null, $s$28], [4, "88:12-88:13", $s$28], [2, null, $s$28], [4, "88:18-88:22", $s$28], [2, null, $s$28], [2, null, $s$28], [4, "89:2-91:13", $s$28], [2, "91:6-91:12", $s$28], [4, "90:4-90:5", $s$28], [2, null, $s$28], [2, null, $s$28], [4, "90:8-90:9", $s$28], [2, null, $s$28], [2, null, $s$28], [4, "90:13-90:17", $s$28], [2, null, $s$28], [4, "90:19-90:20", $s$28], [2, null, $s$28], [4, "90:25-90:28", $s$28], [2, null, $s$28], [4, "90:35-90:39", $s$28], [2, null, $s$28], [2, null, $s$28], [4, "92:13-96:3", $s$28], [2, "92:13-92:20", $s$28], [2, "95:8-95:14", $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, null, $s$28], [2, "92:13-96:3", $s$28], [2, null, $s$28], [4, "92:5-92:6", $s$28], [2, null, $s$28], [4, "92:8-92:9", $s$28], [2, null, $s$28], [4, "97:17-97:24", $s$28], [2, "97:17-97:24", $s$28], [2, null, $s$28], [4, "97:3-97:4", $s$28], [2, null, $s$28], [4, "97:9-97:13", $s$28], [2, null, $s$28], [2, null, $s$28], [36, "98:1-98:1", $s$28], [16, "98:1-98:1", $s$28], [16, "98:1-98:1", $s$28]]);
 $M.moduleExports();

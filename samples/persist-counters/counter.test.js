@@ -3,6 +3,16 @@ import React from "react";
 import * as Counter from "./counter";
 import renderer from "react-test-renderer";
 
+global.IS_REACT_ACT_ENVIRONMENT = true;
+
+const renderWithAct = element => {
+  let tree;
+  renderer.act(() => {
+    tree = renderer.create(element);
+  });
+  return tree;
+};
+
 async function snapshots(input) {
   for await (const i of input) expect(R.write(i)).toMatchSnapshot();
 }
@@ -49,7 +59,7 @@ test("counterControl", async () => {
   expect.assertions(3);
   for await (const i of Counter.mainControl(controlMenuSample))
     if (i.type === "CONTROL")
-      expect(renderer.create(i.value).toJSON()).toMatchSnapshot();
+      expect(renderWithAct(i.value).toJSON()).toMatchSnapshot();
 });
 
 test("prepControl", async () => {
@@ -83,12 +93,12 @@ test("controlsList", async () => {
   expect.assertions(4);
   for await (const i of Counter.controlsList(itemsSample))
     if (i.type === "CONTROL")
-      expect(renderer.create(i.value).toJSON()).toMatchSnapshot();
+      expect(renderWithAct(i.value).toJSON()).toMatchSnapshot();
 });
 
 test("totals", async () => {
   expect.assertions(4);
   for await (const i of Counter.totals(itemsSample))
     if (i.type === "MENU_ITEM")
-      expect(renderer.create(i.value).toJSON()).toMatchSnapshot();
+      expect(renderWithAct(i.value).toJSON()).toMatchSnapshot();
 });
