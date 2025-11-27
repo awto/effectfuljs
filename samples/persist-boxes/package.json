@@ -1,6 +1,6 @@
 {
   "name": "persist-boxes",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "drawing boxes - @effectful/es-persist with @effectful/es-serialization demo",
   "main": "index.html",
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",

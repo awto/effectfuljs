@@ -1,6 +1,6 @@
 {
   "name": "@effectful/core-loose",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "@effectful/core built with faster generators",
   "main": "compiler.js",
   "scripts": {

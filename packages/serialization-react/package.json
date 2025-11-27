@@ -1,6 +1,6 @@
 {
   "name": "@effectful/serialization-react",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Registering @effectful/serialization format descriptor for React Element",
   "module": "main.js",
   "jsnext:main": "main.js",

@@ -1,6 +1,6 @@
 {
   "name": "@effectful/serialization",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "References-aware JS values serialization library",
   "main": "main.js",
   "types": "main.d.ts",

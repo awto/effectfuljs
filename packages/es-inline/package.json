@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-inline",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Standard JavaScript effects using @effectful/js",
   "main": "preset.js",
   "scripts": {

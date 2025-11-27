@@ -4,7 +4,7 @@
   "displayName": "Effectful JavaScript Debugger",
   "description": "Time-Traveling, Persistent State, Hot-Swapping, API and more",
   "author": "Vitalii Akimov <vitaliy.akimov@gmail.com>",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "license": "MIT",
   "homepage": "https://marketplace.visualstudio.com/items?itemName=effectful.debugger",
   "icon": "icon.png",
