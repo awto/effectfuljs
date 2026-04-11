@@ -13,6 +13,8 @@ export default {
   verbose: 0,
   /** URL to connect back to debugger adapter */
   url: "ws://localhost:20011",
+  /** transport implementation for debugger protocol */
+  transport: <"auto" | "ws" | "embedded" | "none">"auto",
   /** the debuggee package root */
   root: ".",
   /** the debuggee package sources location folder */

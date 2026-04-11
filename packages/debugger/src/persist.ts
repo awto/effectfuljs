@@ -16,7 +16,7 @@ const {
 } = State;
 
 const weakMapSet = native.WeakMap.set;
-const __effectful__nativeCall = native.FunctionMethods.call;
+const nativeReflectApply = native.Reflect.apply;
 
 export const regOpaqueRec = config.persistState ? S.regOpaqueRec : nop;
 export const regAutoOpaqueConstr = config.persistState
@@ -102,13 +102,79 @@ export function regFun(meta: State.FunctionDescr) {
     regOpaqueObject(meta.finHandler, `fh#${meta.persistName}`);
 }
 
+function stripAsyncFrameRuntime(value: any): any {
+  if (!value || typeof value !== "object") return value;
+  if (!("meta" in value) || !("awaiting" in value) || !("promise" in value)) {
+    return null;
+  }
+  return {
+    next: value.next,
+    caller: value.caller,
+    onReturn: value.onReturn,
+    onError: value.onError,
+    promise: value.promise,
+    restoreEnabled: value.restoreEnabled
+  };
+}
+
+function stepDeferred(
+  ctx: S.WriteContext,
+  value: any,
+  parent: S.JSONObject | S.JSONArray,
+  index: string | number
+): S.JSONValue {
+  const json = ctx.step(value, parent, index);
+  if (
+    json !== null ||
+    value === null ||
+    (typeof value !== "object" && typeof value !== "function")
+  ) {
+    return json;
+  }
+  const info = (ctx as any).sharedRefsMap.get(value);
+  if (info) {
+    if (info.ref == null) info.ref = {};
+    return info.ref;
+  }
+  return json;
+}
+
+function stepAsyncFrame(
+  ctx: S.WriteContext,
+  value: any,
+  parent: S.JSONObject | S.JSONArray,
+  index: string | number
+): S.JSONValue {
+  if (!stripAsyncFrameRuntime(value)) return stepDeferred(ctx, value, parent, index);
+  value.next = null;
+  value.caller = null;
+  value.onReturn = null;
+  value.onError = null;
+  if (typeof value.restoreEnabled === "function") {
+    value.restoreEnabled = State.undef;
+  }
+  return stepDeferred(ctx, value, parent, index);
+}
+
 const BindDescriptor = regDescriptor({
   name: "#b",
-  create() {
-    return makeBind();
+  create(ctx, json: any) {
+    const res = makeBind();
+    weakMapSet.call(binds, res, {
+      fun: ctx.createStep(json.f),
+      self: ctx.createStep(json.s),
+      args: ctx.createStep(json.a) || []
+    });
+    return res;
   },
-  write() {
-    return {};
+  write(ctx, value: any) {
+    const binding = <any>binds.get(value);
+    const json: S.JSONObject = {};
+    if (!binding) return json;
+    json.f = stepDeferred(ctx, binding.fun, json, "f");
+    json.s = stepAsyncFrame(ctx, binding.self, json, "s");
+    json.a = stepDeferred(ctx, binding.args, json, "a");
+    return json;
   },
   overrideProps: {
     arguments: false,
@@ -116,22 +182,18 @@ const BindDescriptor = regDescriptor({
     length: false,
     name: false,
     prototype: false
-  }
+  },
+  props: false
 });
 
 function makeBind(): (...args: any[]) => any {
   function __effectful__Bind(this: any, ...rest: any[]): any {
     const { fun, self, args: boundArgs } = <any>binds.get(__effectful__Bind);
     if (context.call === __effectful__Bind) context.call = fun;
-    const arr: any[] = Array(rest.length + boundArgs.length + 1);
-    arr[0] = self === undef ? this : self;
-    let index = 0;
-    for (const i of boundArgs) arr[++index] = i;
-    for (const i of rest) arr[++index] = i;
-    return (<any>__effectful__nativeCall).__effectful__nativeApply(
-      fun,
-      <any>arr
-    );
+    return nativeReflectApply(fun, self === undef ? this : self, [
+      ...boundArgs,
+      ...rest
+    ]);
   }
   if (BindDescriptor) S.setObjectDescriptor(__effectful__Bind, BindDescriptor);
   return __effectful__Bind;

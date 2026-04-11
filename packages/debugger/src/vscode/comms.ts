@@ -5,18 +5,25 @@ let connectionQueue: any[] | null = [];
 let closed = false;
 
 enum WorkerType {
+  Disabled,
   None,
   Node,
   Web,
   Ext
 }
 
+const transportMode = (<any>config).transport || "auto";
 let workerType = WorkerType.None;
 
 // for simplified embedding
 const extWorker = (<any>global)[`${config.globalNS}#comms`];
 let Worker: any;
-if (extWorker) {
+if (transportMode === "none") {
+  workerType = WorkerType.Disabled;
+} else if (transportMode === "embedded") {
+  if (extWorker) workerType = WorkerType.Ext;
+  else workerType = WorkerType.Disabled;
+} else if (extWorker && transportMode !== "ws") {
   workerType = WorkerType.Ext;
 } else if (statusBuf && config.expUseWorker) {
   try {
@@ -35,7 +42,10 @@ if (extWorker) {
 
 let code = "";
 
-if (workerType !== WorkerType.Ext)
+if (
+  workerType !== WorkerType.Ext &&
+  workerType !== WorkerType.Disabled
+)
   code = `
    ${
      workerType === WorkerType.Node
@@ -113,7 +123,10 @@ function nop() {
 let post: any;
 let close: any;
 
-if (workerType === WorkerType.None) {
+if (workerType === WorkerType.Disabled) {
+  connectionQueue = null;
+  closed = true;
+} else if (workerType === WorkerType.None) {
   let WebSocketImpl = (<any>config).WebSocket || (<any>global).WebSocket;
   if (!WebSocketImpl) {
     try {
@@ -216,6 +229,7 @@ function interpret(data: any) {
 }
 
 function send(data: any, optional?: boolean) {
+  if (workerType === WorkerType.Disabled) return;
   const msg = JSON.stringify(data);
   if (config.verbose && data.event !== "output")
     sysConsole.log(`DEBUGGER: SEND ${msg} from ${context.threadId}`);

@@ -4,6 +4,20 @@ const path = require("path");
 const { minimatch: mm } = require("minimatch");
 if (process.env.EFFECTFUL_DEBUGGER_URL)
   config.url = process.env.EFFECTFUL_DEBUGGER_URL;
+if (process.env.EFFECTFUL_DEBUGGER_TRANSPORT) {
+  switch (process.env.EFFECTFUL_DEBUGGER_TRANSPORT.toLowerCase()) {
+    case "auto":
+    case "ws":
+    case "embedded":
+    case "none":
+      config.transport = process.env.EFFECTFUL_DEBUGGER_TRANSPORT.toLowerCase();
+      break;
+    default:
+      throw new Error(
+        `incorrect format for EFFECTFUL_DEBUGGER_TRANSPORT: "${process.env.EFFECTFUL_DEBUGGER_TRANSPORT}"`
+      );
+  }
+}
 config.timeTravel = isTrue(process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL, true);
 config.timeTravelDisabled = isTrue(
   process.env.EFFECTFUL_DEBUGGER_TIME_TRAVEL_DISABLED,

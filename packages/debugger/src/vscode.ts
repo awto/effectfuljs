@@ -1,6 +1,6 @@
 {
   let lib: any;
-  const config = require("./config").default;
+  const config = require("./config/deriveConfig");
   if (
     !config.globalNS ||
     !(lib = (<any>global)[config.globalNS]) ||

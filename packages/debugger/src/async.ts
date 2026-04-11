@@ -8,6 +8,7 @@ import {
   popFrame
 } from "./engine";
 import { regOpaqueObject } from "@effectful/serialization";
+import { binds } from "./state";
 
 const { context, token } = State;
 
@@ -100,4 +101,16 @@ export function awt(asyncValue: any): any {
   popFrame(top);
   top.next = null;
   return (context.value = top.promise);
+}
+
+export function getSuspendedFrameByPromise(promise: unknown): Frame | undefined {
+  for (const frame of context.suspended) {
+    if ((frame as AsyncFrame).promise === promise) return frame;
+  }
+  return undefined;
+}
+
+export function getBoundSelf(value: unknown): unknown {
+  if (typeof value !== "function") return undefined;
+  return binds.get(value as any)?.self;
 }

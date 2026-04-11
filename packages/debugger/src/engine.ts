@@ -1229,6 +1229,10 @@ export function then(
   onResolve: (value: any) => any,
   onReject?: (reason: any) => any
 ) {
+  if (p && typeof (<any>p).then === "function") {
+    context.call = (<any>p).then;
+    return (<any>p).then(onResolve, onReject);
+  }
   context.call = <any>Promise.resolve;
   const res = <any>Promise.resolve(p);
   context.call = res.then;
