@@ -312,29 +312,29 @@
     "test": "eslint src && run test:adapter"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^10.0.1",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.6.0",
     "@types/puppeteer": "^7.0.4",
-    "@types/vscode": "^1.106.1",
+    "@types/vscode": "^1.115.0",
     "@types/ws": "^8.18.1",
-    "@typescript-eslint/eslint-plugin": "^8.48.0",
-    "@typescript-eslint/parser": "^8.48.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.1",
+    "@typescript-eslint/parser": "^8.58.1",
     "@vscode/debugadapter-testsupport": "^1.68.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
     "cross-env": "^10.1.0",
-    "eslint": "^9.39.1",
+    "eslint": "^10.2.0",
     "mocha": "^11.7.5",
-    "puppeteer": "^24.31.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.0"
+    "puppeteer": "^24.40.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.1"
   },
   "dependencies": {
     "@vscode/debugadapter": "^1.68.0",
     "@vscode/debugprotocol": "^1.68.0",
     "string-argv": "^0.3.2",
-    "ws": "^8.18.3"
+    "ws": "^8.20.0"
   },
   "private": true,
   "sponsor": {

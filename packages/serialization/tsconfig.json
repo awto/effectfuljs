@@ -4,6 +4,8 @@
     "module": "commonjs",
     "lib": ["esnext", "dom", "dom.iterable"],
     "outDir": ".",
+    "rootDir": "src",
+    "types": ["node"],
     "strict": true,
     "alwaysStrict": true,
     "declaration": true,

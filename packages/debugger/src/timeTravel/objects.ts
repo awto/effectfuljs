@@ -427,7 +427,7 @@ export const mcall: (
   ...args: [any, ...any[]]
 ) => void = config.implicitCalls
   ? function mcall(prop: string, ...args: [any, ...any[]]) {
-      let func: any = null;
+      let func: any;
       const top = <State.Frame>context.top;
       try {
         context.call = get;

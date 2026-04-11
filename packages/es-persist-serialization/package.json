@@ -29,8 +29,8 @@
     "@effectful/serialization": "workspace:^"
   },
   "devDependencies": {
-    "@babel/cli": "^7.28.3",
-    "@babel/core": "^7.28.5",
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
     "@effectful/serialization": "workspace:^",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "mocha": "^11.7.5"

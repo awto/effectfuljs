@@ -30,21 +30,21 @@
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "devDependencies": {
     "@babel/plugin-syntax-async-generators": "^7.8.4",
-    "@babel/plugin-syntax-function-sent": "^7.27.1",
-    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
-    "@babel/register": "^7.28.3",
+    "@babel/plugin-syntax-function-sent": "^7.28.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.28.6",
+    "@babel/register": "^7.28.6",
     "@effectful/es-rt": "workspace:^",
     "benchmark": "^2.1.4",
     "cross-env": "^10.1.0",
     "env-cmd": "^11.0.0",
-    "eslint": "^9.39.1",
-    "glob": "^13.0.0",
+    "eslint": "^10.2.0",
+    "glob": "^13.0.6",
     "mocha": "^11.7.5",
     "promise": "^8.3.0",
     "test262-parser": "^2.2.0"
   },
   "dependencies": {
-    "@babel/core": "^7.28.5",
+    "@babel/core": "^7.29.0",
     "@effectful/core": "workspace:^"
   },
   "publishConfig": {

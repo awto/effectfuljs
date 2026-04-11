@@ -21,19 +21,19 @@
   },
   "peerDependencies": {
     "@effectful/serialization": "workspace:^",
-    "react": "^19.2.0"
+    "react": "^19.2.5"
   },
   "devDependencies": {
-    "@babel/cli": "^7.28.3",
-    "@babel/core": "^7.28.5",
-    "@babel/plugin-transform-block-scoping": "^7.28.5",
-    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
-    "@babel/plugin-transform-object-rest-spread": "^7.28.4",
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-transform-block-scoping": "^7.28.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.28.6",
+    "@babel/plugin-transform-object-rest-spread": "^7.28.6",
     "@babel/plugin-transform-shorthand-properties": "^7.27.1",
-    "@babel/plugin-transform-spread": "^7.27.1",
+    "@babel/plugin-transform-spread": "^7.28.6",
     "@effectful/serialization": "workspace:^",
-    "eslint": "^9.39.1",
+    "eslint": "^10.2.0",
     "mocha": "^11.7.5",
-    "react": "^19.2.0"
+    "react": "^19.2.5"
   }
 }

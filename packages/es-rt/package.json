@@ -35,18 +35,18 @@
   "author": "Vitaliy Akimov <vitaliy.akimov@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.28.3",
-    "@babel/core": "^7.28.5",
-    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
-    "@babel/register": "^7.28.3",
-    "@rollup/plugin-babel": "^6.1.0",
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.28.6",
+    "@babel/register": "^7.28.6",
+    "@rollup/plugin-babel": "^7.0.0",
     "babel-plugin-minify-dead-code-elimination": "^0.5.2",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "cross-env": "^10.1.0",
     "env-cmd": "^11.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^10.2.0",
     "mocha": "^11.7.5",
-    "rollup": "^4.53.3"
+    "rollup": "^4.60.1"
   },
   "publishConfig": {
     "access": "public"

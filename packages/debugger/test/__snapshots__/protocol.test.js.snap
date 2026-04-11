@@ -21382,6 +21382,7 @@ exports[`VSCode protocol handlers suspending \`setTimeout\`/\`setInterval\` 1`] 
                 "prototype": {
                   "constructor": "function signalTerminated() {
   delayedTermination = false;
+  signalStopped();
 }#110",
                 },
               },
@@ -21441,6 +21442,7 @@ exports[`VSCode protocol handlers suspending \`setTimeout\`/\`setInterval\` 1`] 
                 "prototype": {
                   "constructor": "function signalTerminated() {
   delayedTermination = false;
+  signalStopped();
 }#135",
                 },
               },
@@ -21500,6 +21502,7 @@ exports[`VSCode protocol handlers suspending \`setTimeout\`/\`setInterval\` 1`] 
                 "prototype": {
                   "constructor": "function signalTerminated() {
   delayedTermination = false;
+  signalStopped();
 }#160",
                 },
               },
@@ -21566,6 +21569,7 @@ exports[`VSCode protocol handlers suspending \`setTimeout\`/\`setInterval\` 1`] 
                 "prototype": {
                   "constructor": "function signalTerminated() {
   delayedTermination = false;
+  signalStopped();
 }#186",
                 },
               },

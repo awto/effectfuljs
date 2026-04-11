@@ -260,8 +260,18 @@ const wrappedSetTimeout = setRedir(nativeSetTimeout);
 
 const savedOnThread = context.onThread;
 
-context.onThread = function() {
+function signalStopped() {
+  if (terminated) return;
+  terminated = true;
+  if (socket)
+    socket.send(
+      JSON.stringify({ type: "event", event: "stopped", body: {} })
+    );
+}
+
+function maybeSignalStopped() {
   if (
+    !terminated &&
     !delayedTermination &&
     loaded &&
     context.pausedTop === null &&
@@ -269,12 +279,12 @@ context.onThread = function() {
     timeoutIds.size === 0 &&
     context.suspended.size === 0
   ) {
-    terminated = true;
-    if (socket)
-      socket.send(
-        JSON.stringify({ type: "event", event: "stopped", body: {} })
-      );
+    signalStopped();
   }
+}
+
+context.onThread = function() {
+  maybeSignalStopped();
   savedOnThread();
 };
 
@@ -365,6 +375,7 @@ function delayTermination() {
 
 function signalTerminated() {
   delayedTermination = false;
+  signalStopped();
 }
 
 function traverse(mod, opts, request, cb) {

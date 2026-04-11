@@ -18,27 +18,27 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "^7.28.3",
-    "@babel/core": "^7.28.5",
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
     "@babel/plugin-syntax-async-generators": "^7.8.4",
-    "@babel/plugin-transform-class-properties": "^7.27.1",
-    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
-    "@babel/plugin-transform-object-rest-spread": "^7.28.4",
+    "@babel/plugin-transform-class-properties": "^7.28.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.28.6",
+    "@babel/plugin-transform-object-rest-spread": "^7.28.6",
     "@babel/preset-react": "^7.28.5",
     "@effectful/es": "^2.0.8",
-    "babel-jest": "^30.2.0",
-    "babel-loader": "^10.0.0",
-    "jest": "^30.2.0",
-    "react-test-renderer": "^19.2.0",
-    "webpack": "^5.103.0",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2"
+    "babel-jest": "^30.3.0",
+    "babel-loader": "^10.1.1",
+    "jest": "^30.3.0",
+    "react-test-renderer": "^19.2.5",
+    "webpack": "^5.106.1",
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.3"
   },
   "dependencies": {
     "@effectful/es-persist-serialization": "^2.0.8",
     "@effectful/serialization": "^2.0.8",
     "@effectful/serialization-react": "^2.0.8",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   }
 }

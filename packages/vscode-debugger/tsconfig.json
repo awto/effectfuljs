@@ -6,6 +6,8 @@
     "lib": ["es6","dom"],
     "sourceMap": true,
     "rootDir": "src",
+    "types": ["node", "mocha", "vscode"],
+    "skipLibCheck": true,
     "noImplicitAny": false,
     "strict": true /* enable all strict type-checking options */
   },

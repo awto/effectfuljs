@@ -3,7 +3,7 @@ delayTermination();
 setTimeout(function to1() {
   const timeoutHandler = setTimeout(function to2() {
     debugger;
-  });
+  }, 2000);
   debugger;
   clearTimeout(timeoutHandler);
   let intervalCount = 0;

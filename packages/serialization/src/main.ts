@@ -361,7 +361,7 @@ export function write(value: object, opts: WriteOptions = {}): JSONObject {
         if (job.ref) job.ref.r = x.push(job.data) - 1;
         if (resRefs) resRefs.push(job.value);
       } else refs.push(job);
-      job = ctx.jobs = job.nextJob;
+      ctx.jobs = job.nextJob;
       continue;
     }
     job.started = true;
