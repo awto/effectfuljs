@@ -26,19 +26,19 @@
     "@babel/plugin-transform-object-rest-spread": "^7.28.6",
     "@babel/preset-react": "^7.28.5",
     "@effectful/es": "^2.0.11",
-    "babel-jest": "^30.3.0",
+    "babel-jest": "^30.4.1",
     "babel-loader": "^10.1.1",
-    "jest": "^30.3.0",
-    "react-test-renderer": "^19.2.5",
-    "webpack": "^5.106.1",
+    "jest": "^30.4.2",
+    "react-test-renderer": "^19.2.6",
+    "webpack": "^5.107.1",
     "webpack-cli": "^7.0.2",
-    "webpack-dev-server": "^5.2.3"
+    "webpack-dev-server": "^5.2.4"
   },
   "dependencies": {
     "@effectful/es-persist-serialization": "^2.0.11",
     "@effectful/serialization": "^2.0.11",
     "@effectful/serialization-react": "^2.0.11",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   }
 }

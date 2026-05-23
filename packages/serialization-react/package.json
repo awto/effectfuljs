@@ -32,8 +32,8 @@
     "@babel/plugin-transform-shorthand-properties": "^7.27.1",
     "@babel/plugin-transform-spread": "^7.28.6",
     "@effectful/serialization": "workspace:^",
-    "eslint": "^10.2.0",
-    "mocha": "^11.7.5",
-    "react": "^19.2.5"
+    "eslint": "^10.4.0",
+    "mocha": "^11.7.6",
+    "react": "^19.2.6"
   }
 }

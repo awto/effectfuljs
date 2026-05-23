@@ -32,14 +32,14 @@
     "@babel/cli": "^7.28.6",
     "@babel/core": "^7.29.0",
     "cross-env": "^10.1.0",
-    "mocha": "^11.7.5"
+    "mocha": "^11.7.6"
   },
   "dependencies": {
     "@babel/generator": "^7.29.1",
     "@babel/types": "^7.29.0",
     "@effectful/es-rt": "workspace:^",
     "@effectful/transducers-loose": "workspace:^",
-    "resolve": "^1.22.11"
+    "resolve": "^1.22.12"
   },
   "publishConfig": {
     "access": "public"

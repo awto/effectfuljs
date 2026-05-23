@@ -33,7 +33,7 @@
     "@babel/core": "^7.29.0",
     "@effectful/serialization": "workspace:^",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "mocha": "^11.7.5"
+    "mocha": "^11.7.6"
   },
   "dependencies": {
     "@effectful/es-persist": "workspace:^"

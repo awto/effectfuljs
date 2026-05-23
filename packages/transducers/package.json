@@ -24,7 +24,7 @@
   ],
   "dependencies": {
     "@babel/generator": "^7.29.1",
-    "@babel/parser": "^7.29.2",
+    "@babel/parser": "^7.29.3",
     "@babel/types": "^7.29.0"
   },
   "devDependencies": {
@@ -33,10 +33,10 @@
     "@babel/plugin-transform-modules-commonjs": "^7.28.6",
     "@babel/plugin-transform-object-rest-spread": "^7.28.6",
     "@babel/plugin-transform-spread": "^7.28.6",
-    "@babel/register": "^7.28.6",
+    "@babel/register": "^7.29.3",
     "cross-env": "^10.1.0",
-    "eslint": "^10.2.0",
-    "mocha": "^11.7.5",
+    "eslint": "^10.4.0",
+    "mocha": "^11.7.6",
     "terminal-kit": "^3.1.2"
   },
   "publishConfig": {

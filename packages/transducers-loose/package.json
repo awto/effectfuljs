@@ -27,7 +27,7 @@
   "homepage": "https://github.com/awto/effectfuljs#readme",
   "dependencies": {
     "@babel/generator": "^7.29.1",
-    "@babel/parser": "^7.29.2",
+    "@babel/parser": "^7.29.3",
     "@babel/types": "^7.29.0",
     "@effectful/es-rt": "workspace:^"
   },
@@ -35,7 +35,7 @@
     "@babel/cli": "^7.28.6",
     "@babel/core": "^7.29.0",
     "cross-env": "^10.1.0",
-    "mocha": "^11.7.5"
+    "mocha": "^11.7.6"
   },
   "publishConfig": {
     "access": "public"

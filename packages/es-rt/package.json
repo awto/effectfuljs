@@ -38,15 +38,15 @@
     "@babel/cli": "^7.28.6",
     "@babel/core": "^7.29.0",
     "@babel/plugin-transform-modules-commonjs": "^7.28.6",
-    "@babel/register": "^7.28.6",
+    "@babel/register": "^7.29.3",
     "@rollup/plugin-babel": "^7.0.0",
     "babel-plugin-minify-dead-code-elimination": "^0.5.2",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "cross-env": "^10.1.0",
     "env-cmd": "^11.0.0",
-    "eslint": "^10.2.0",
-    "mocha": "^11.7.5",
-    "rollup": "^4.60.1"
+    "eslint": "^10.4.0",
+    "mocha": "^11.7.6",
+    "rollup": "^4.60.4"
   },
   "publishConfig": {
     "access": "public"
