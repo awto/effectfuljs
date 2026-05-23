@@ -1539,7 +1539,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/core@workspace:^, @effectful/core@workspace:^2.0.11, @effectful/core@workspace:packages/core":
+"@effectful/core@workspace:^, @effectful/core@workspace:^2.0.12, @effectful/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@effectful/core@workspace:packages/core"
   dependencies:
@@ -1563,7 +1563,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/debugger@workspace:^, @effectful/debugger@workspace:^2.0.11, @effectful/debugger@workspace:packages/debugger":
+"@effectful/debugger@workspace:^, @effectful/debugger@workspace:^2.0.12, @effectful/debugger@workspace:packages/debugger":
   version: 0.0.0-use.local
   resolution: "@effectful/debugger@workspace:packages/debugger"
   dependencies:
@@ -1650,7 +1650,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/es-persist-serialization@npm:^2.0.11, @effectful/es-persist-serialization@workspace:^, @effectful/es-persist-serialization@workspace:packages/es-persist-serialization":
+"@effectful/es-persist-serialization@npm:^2.0.12, @effectful/es-persist-serialization@workspace:^, @effectful/es-persist-serialization@workspace:packages/es-persist-serialization":
   version: 0.0.0-use.local
   resolution: "@effectful/es-persist-serialization@workspace:packages/es-persist-serialization"
   dependencies:
@@ -1701,7 +1701,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/es@npm:^2.0.11, @effectful/es@workspace:^, @effectful/es@workspace:packages/es":
+"@effectful/es@npm:^2.0.12, @effectful/es@workspace:^, @effectful/es@workspace:packages/es":
   version: 0.0.0-use.local
   resolution: "@effectful/es@workspace:packages/es"
   dependencies:
@@ -1727,8 +1727,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@effectful/js@workspace:packages/js"
   dependencies:
-    "@effectful/core": "workspace:^2.0.11"
-    "@effectful/debugger": "workspace:^2.0.11"
+    "@effectful/core": "workspace:^2.0.12"
+    "@effectful/debugger": "workspace:^2.0.12"
   languageName: unknown
   linkType: soft
 
@@ -1754,7 +1754,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/serialization-react@npm:^2.0.11, @effectful/serialization-react@workspace:^, @effectful/serialization-react@workspace:packages/serialization-react":
+"@effectful/serialization-react@npm:^2.0.12, @effectful/serialization-react@workspace:^, @effectful/serialization-react@workspace:packages/serialization-react":
   version: 0.0.0-use.local
   resolution: "@effectful/serialization-react@workspace:packages/serialization-react"
   dependencies:
@@ -1775,7 +1775,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@effectful/serialization@npm:^2.0.11, @effectful/serialization@workspace:^, @effectful/serialization@workspace:packages/serialization":
+"@effectful/serialization@npm:^2.0.12, @effectful/serialization@workspace:^, @effectful/serialization@workspace:packages/serialization":
   version: 0.0.0-use.local
   resolution: "@effectful/serialization@workspace:packages/serialization"
   dependencies:
@@ -12246,10 +12246,10 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": "npm:^7.28.6"
     "@babel/plugin-transform-object-rest-spread": "npm:^7.28.6"
     "@babel/preset-react": "npm:^7.28.5"
-    "@effectful/es": "npm:^2.0.11"
-    "@effectful/es-persist-serialization": "npm:^2.0.11"
-    "@effectful/serialization": "npm:^2.0.11"
-    "@effectful/serialization-react": "npm:^2.0.11"
+    "@effectful/es": "npm:^2.0.12"
+    "@effectful/es-persist-serialization": "npm:^2.0.12"
+    "@effectful/serialization": "npm:^2.0.12"
+    "@effectful/serialization-react": "npm:^2.0.12"
     babel-jest: "npm:^30.4.1"
     babel-loader: "npm:^10.1.1"
     jest: "npm:^30.4.2"
