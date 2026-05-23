@@ -1,6 +1,6 @@
 {
   "name": "@effectful/es-persist",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "Persistent state for ECMAScript effects",
   "main": "index.js",
   "scripts": {
