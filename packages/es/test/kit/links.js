@@ -3,9 +3,7 @@ const fs = require("fs"),
 
 const srcRoot = path.join(__dirname, "..");
 const dstRoot = path.join(process.cwd(), "test");
-const deps = path.join(srcRoot, "deps");
 const samplesSrc = path.join(srcRoot, "samples", "src");
-const regeneratorSrc = path.join(deps, "regenerator", "test");
 
 const allFiles = [];
 const allDirs = [];
@@ -58,6 +56,5 @@ function target(name) {
 }
 
 source(samplesSrc, ".");
-source(regeneratorSrc, "regenerator");
 
 for (const i of process.argv.filter(i => i[0] === "=")) target(i.substr(1));

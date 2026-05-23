@@ -6,9 +6,8 @@
   "scripts": {
     "test": "eslint options.js && mocha -r ./test/kit/inject",
     "test-opt": "cross-env env-cmd -e $EJS_ENV -- mocha -r ./test/kit/inject",
-    "test-deps": "git submodule update --remote --init --recursive --depth 1",
     "build-test262": "node ./test/kit/test262 default",
-    "prepare-test": "npm run test-deps && npm run build-test262",
+    "prepare-test": "npm run build-test262",
     "link-test": "node ./test/kit/makeLinks"
   },
   "repository": {
